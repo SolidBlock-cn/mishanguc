@@ -1,8 +1,10 @@
-package net.fabricmc.example;
+package pers.solid.mishang.uc;
 
 import net.fabricmc.api.ModInitializer;
+import pers.solid.mishang.uc.block.MUBlocks;
+import pers.solid.mishang.uc.item.MUItems;
 
-public class ExampleMod implements ModInitializer {
+public class MishangUc implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -10,5 +12,7 @@ public class ExampleMod implements ModInitializer {
 		// Proceed with mild caution.
 
 		System.out.println("Hello Fabric world!");
+		new MUBlocks();
+		new MUItems();
 	}
 }

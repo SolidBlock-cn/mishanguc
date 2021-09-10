@@ -1,36 +1,36 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "mishanguc",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Mishang Urban Construction",
+  "description": "An amount of blocks that make a beautiful city!",
   "authors": [
-    "Me!"
+    "SolidBlock"
   ],
   "contact": {
     "homepage": "https://fabricmc.net/",
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
 
-  "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "license": "GPLv3",
+  "icon": "assets/mishanguc/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "pers.solid.mishang.uc.MishangUc"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "mishanguc.mixins.json"
   ],
 
   "depends": {
     "fabricloader": ">=0.11.3",
     "fabric": "*",
-    "minecraft": "1.17.x",
-    "java": ">=16"
+    "minecraft": ">=1.16",
+    "java": ">=8"
   },
   "suggests": {
     "another-mod": "*"

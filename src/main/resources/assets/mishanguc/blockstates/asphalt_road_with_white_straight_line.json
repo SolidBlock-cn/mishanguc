@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "mishanguc:block/asphalt_road_with_white_straight_line",
+      "y": 90
+    },
+    "axis=z": {
+      "model": "mishanguc:block/asphalt_road_with_white_straight_line",
+      "y": 0
+    }
+  }
+}

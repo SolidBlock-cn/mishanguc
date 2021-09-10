@@ -1,0 +1,35 @@
+{
+  "parent": "mishanguc:block/dual_layer_block",
+  "textures": {
+    "up": "mishanguc:block/white_corner_line",
+    "down": "mishanguc:block/white_corner_line",
+    "east": "mishanguc:block/white_straight_line",
+    "south": "mishanguc:block/white_straight_line",
+    "base": "mishanguc:block/asphalt",
+    "particle": "#base"
+  },
+  "elements": [
+    {
+      "from": [0,0,0],
+      "to": [16,16,16],
+      "faces": {
+        "down":  { "texture": "#base", "cullface": "down" },
+        "up":    { "texture": "#base", "cullface": "up" },
+        "north": { "texture": "#base", "cullface": "north" },
+        "south": { "texture": "#base", "cullface": "south" },
+        "west":  { "texture": "#base", "cullface": "west" },
+        "east":  { "texture": "#base", "cullface": "east" }
+      }
+    },
+    {
+      "from": [0,0,0],
+      "to": [16,16,16],
+      "faces": {
+        "down":  { "texture": "#down", "cullface": "down" },
+        "up":    { "texture": "#up", "cullface": "up" },
+        "east": { "texture": "#east", "cullface": "east" },
+        "south": { "texture": "#south", "cullface": "south" }
+      }
+    }
+  ]
+}
