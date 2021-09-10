@@ -1,0 +1,17 @@
+pluginManagement {
+    repositories {
+        maven {
+            name = 'Iced\'s loom Maven'
+            url = 'https://maven.icedlab.tech/loom/'
+        }
+        maven {
+            name = 'Hanbing\'s loom Maven'
+            url = 'https://repository.hanbings.io/proxy/'
+        }
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        gradlePluginPortal()
+    }
+}
