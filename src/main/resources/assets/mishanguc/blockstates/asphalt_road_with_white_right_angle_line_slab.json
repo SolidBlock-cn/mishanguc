@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "facing=north_east,type=bottom": {
+      "model": "mishanguc:block/asphalt_road_with_white_right_angle_line_slab",
+      "y": 0
+    },
+    "facing=south_east,type=bottom": {
+      "model": "mishanguc:block/asphalt_road_with_white_right_angle_line_slab",
+      "y": 90
+    },
+    "facing=south_west,type=bottom": {
+      "model": "mishanguc:block/asphalt_road_with_white_right_angle_line_slab",
+      "y": 180
+    },
+    "facing=north_west,type=bottom": {
+      "model": "mishanguc:block/asphalt_road_with_white_right_angle_line_slab",
+      "y": 270
+    },
+    "facing=north_east,type=top": {
+      "model": "mishanguc:block/asphalt_road_with_white_right_angle_line_slab_top",
+      "y": 0
+    },
+    "facing=south_east,type=top": {
+      "model": "mishanguc:block/asphalt_road_with_white_right_angle_line_slab_top",
+      "y": 90
+    },
+    "facing=south_west,type=top": {
+      "model": "mishanguc:block/asphalt_road_with_white_right_angle_line_slab_top",
+      "y": 180
+    },
+    "facing=north_west,type=top": {
+      "model": "mishanguc:block/asphalt_road_with_white_right_angle_line_slab_top",
+      "y": 270
+    },
+    "facing=north_east,type=double": {
+      "model": "mishanguc:block/asphalt_road_with_white_right_angle_line",
+      "y": 0
+    },
+    "facing=south_east,type=double": {
+      "model": "mishanguc:block/asphalt_road_with_white_right_angle_line",
+      "y": 90
+    },
+    "facing=south_west,type=double": {
+      "model": "mishanguc:block/asphalt_road_with_white_right_angle_line",
+      "y": 180
+    },
+    "facing=north_west,type=double": {
+      "model": "mishanguc:block/asphalt_road_with_white_right_angle_line",
+      "y": 270
+    }
+  }
+}

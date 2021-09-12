@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
@@ -81,5 +82,19 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
 
     public HorizontalCornerDirection mirror(BlockMirror mirror) {
         return fromDirections(mirror.apply(dir1),mirror.apply(dir2));
+    }
+
+    public HorizontalCornerDirection rotate(BlockRotation rotation) {
+        switch (rotation) {
+            case NONE:return this;
+            case CLOCKWISE_90:return this.rotateYClockwise();
+            case COUNTERCLOCKWISE_90:return this.rotateYCounterclockwise();
+            case CLOCKWISE_180:return this.getOpposite();
+            default:throw new IllegalStateException();
+        }
+    }
+
+    public HorizontalCornerDirection getOpposite() {
+        return fromDirections(dir1.getOpposite(),dir2.getOpposite());
     }
 }

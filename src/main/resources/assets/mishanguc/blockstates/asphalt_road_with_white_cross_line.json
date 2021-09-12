@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "mishanguc:block/asphalt_road_with_white_cross_line"
+      },{
+        "model": "mishanguc:block/asphalt_road_with_white_cross_line","y": 90
+      },{
+        "model": "mishanguc:block/asphalt_road_with_white_cross_line","y": 180
+      },{
+        "model": "mishanguc:block/asphalt_road_with_white_cross_line","y": 270
+      }
+    ]
+  }
+}

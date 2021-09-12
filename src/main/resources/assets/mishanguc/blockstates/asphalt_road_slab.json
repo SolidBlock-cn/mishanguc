@@ -1,0 +1,37 @@
+{
+  "variants": {
+    "type=bottom": [
+      {
+        "model": "mishanguc:block/asphalt_road_slab"
+      },{
+        "model": "mishanguc:block/asphalt_road_slab","y": 90
+      },{
+        "model": "mishanguc:block/asphalt_road_slab","y": 180
+      },{
+        "model": "mishanguc:block/asphalt_road_slab","y": 270
+      }
+    ],
+    "type=top": [
+      {
+        "model": "mishanguc:block/asphalt_road_slab_top"
+      },{
+        "model": "mishanguc:block/asphalt_road_slab_top","y": 90
+      },{
+        "model": "mishanguc:block/asphalt_road_slab_top","y": 180
+      },{
+        "model": "mishanguc:block/asphalt_road_slab_top","y": 270
+      }
+    ],
+    "type=double": [
+      {
+        "model": "mishanguc:block/asphalt_road_block"
+      },{
+        "model": "mishanguc:block/asphalt_road_block","y": 90
+      },{
+        "model": "mishanguc:block/asphalt_road_block","y": 180
+      },{
+        "model": "mishanguc:block/asphalt_road_block","y": 270
+      }
+    ]
+  }
+}

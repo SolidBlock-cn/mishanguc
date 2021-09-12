@@ -1,0 +1,41 @@
+{
+  "parent": "mishanguc:block/road_with_line",
+  "textures": {
+    "particle": "#base",
+    "line_bottom_straight": "#line_top_straight",
+    "line_bottom_angle": "#line_top_angle"
+  },
+  "elements": [
+    {
+      "from": [0,0,0],
+      "to": [16,8,16],
+      "faces": {
+        "down":  { "texture": "#base", "cullface": "down" },
+        "up":    { "texture": "#base" },
+        "north": { "texture": "#base", "cullface": "north" },
+        "south": { "texture": "#base", "cullface": "south" },
+        "west":  { "texture": "#base", "cullface": "west" },
+        "east":  { "texture": "#base", "cullface": "east" }
+      }
+    },
+    {
+      "from": [0,0,0],
+      "to": [16,8,16],
+      "faces": {
+        "down":  { "texture": "#line_bottom_straight", "cullface": "down", "uv": [0,16,16,0] },
+        "up":    { "texture": "#line_top_straight" },
+        "south": { "texture": "#line_side", "cullface": "south" },
+        "north": { "texture": "#line_side", "cullface": "north" }
+      }
+    },
+    {
+      "from": [0,0,0],
+      "to": [16,8,16],
+      "faces": {
+        "down":  { "texture": "#line_bottom_angle", "cullface": "down" },
+        "up":    { "texture": "#line_top_angle" },
+        "east": { "texture": "#line_side", "cullface": "east" }
+      }
+    }
+  ]
+}

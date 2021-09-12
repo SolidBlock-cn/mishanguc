@@ -1,5 +1,15 @@
 {
   "variants": {
-    "": {"model": "mishanguc:block/asphalt_road_block"}
+    "": [
+      {
+        "model": "mishanguc:block/asphalt_road_block"
+      },{
+        "model": "mishanguc:block/asphalt_road_block","y": 90
+      },{
+        "model": "mishanguc:block/asphalt_road_block","y": 180
+      },{
+        "model": "mishanguc:block/asphalt_road_block","y": 270
+      }
+    ]
   }
 }

@@ -20,6 +20,9 @@
   "entrypoints": {
     "main": [
       "pers.solid.mishang.uc.MishangUc"
+    ],
+    "rrp:pregen": [
+      "pers.solid.mishang.uc.arrp.ARRPMain"
     ]
   },
   "mixins": [
@@ -29,8 +32,7 @@
   "depends": {
     "fabricloader": ">=0.11.3",
     "fabric": "*",
-    "minecraft": ">=1.16",
-    "java": ">=8"
+    "minecraft": ">=1.16"
   },
   "suggests": {
     "another-mod": "*"

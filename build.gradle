@@ -1,10 +1,10 @@
 plugins {
-	id 'loomcn' version '0.9-SNAPSHOT'
+	id 'fabric-loom' version '0.7-SNAPSHOT'
 	id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_18
-targetCompatibility = JavaVersion.VERSION_18
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -16,7 +16,13 @@ repositories {
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
+	maven {
+		url = uri("https://storage.googleapis.com/devan-maven/")
+		// for 0.4.2 and older
+		// url uri("https://raw.githubusercontent.com/Devan-Kerman/Devan-Repo/master/")
+	}
 }
+
 
 dependencies {
 	// To change the versions see the gradle.properties file
@@ -29,6 +35,9 @@ dependencies {
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
+	modImplementation("net.devtech:arrp:0.4.4")
+	// I never break backwards compatibility, so just fetching the latest version should be fine
+	// modImplementation("net.devtech:arrp:0.+")
 }
 
 processResources {
@@ -46,8 +55,13 @@ tasks.withType(JavaCompile).configureEach {
 	// If Javadoc is generated, this must be specified in that task too.
 	it.options.encoding = "UTF-8"
 
-	// Minecraft 1.17 (21w19a) upwards uses Java 16.
-	it.options.release = 8
+	// The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too
+	// JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
+	// We'll use that if it's available, but otherwise we'll use the older option.
+	def targetVersion = 8
+	if (JavaVersion.current().isJava9Compatible()) {
+		it.options.release = targetVersion
+	}
 }
 
 java {

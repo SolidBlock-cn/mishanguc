@@ -21,7 +21,22 @@ public final class MUItems {
 
     static {
         registerBlockItemOfRoad(MUBlocks.ASPHALT_ROAD_BLOCK);
-        registerBlockItemOfRoad(MUBlocks.ASPHALT_ROAD_WITH_WHITE_CORNER_LINE);
         registerBlockItemOfRoad(MUBlocks.ASPHALT_ROAD_WITH_WHITE_STRAIGHT_LINE);
+        registerBlockItemOfRoad(MUBlocks.ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE);
+        registerBlockItemOfRoad(MUBlocks.ASPHALT_ROAD_WITH_WHITE_BEVEL_ANGLE_LINE);
+        registerBlockItemOfRoad(MUBlocks.ASPHALT_ROAD_WITH_WHITE_JOINT_LINE);
+        registerBlockItemOfRoad(MUBlocks.ASPHALT_ROAD_WITH_WHITE_STRAIGHT_AND_BEVEL_ANGLE_LINE);
+        registerBlockItemOfRoad(MUBlocks.ASPHALT_ROAD_WITH_WHITE_CROSS_LINE);
+        registerBlockItemOfRoad(MUBlocks.ASPHALT_ROAD_FILLED_WITH_WHITE);
+
+
+        registerBlockItemOfRoad(MUBlocks.ASPHALT_ROAD_SLAB);
+        registerBlockItemOfRoad(MUBlocks.ASPHALT_ROAD_WITH_WHITE_STRAIGHT_LINE_SLAB);
+        registerBlockItemOfRoad(MUBlocks.ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE_SLAB);
+        registerBlockItemOfRoad(MUBlocks.ASPHALT_ROAD_WITH_WHITE_BEVEL_ANGLE_LINE_SLAB);
+        registerBlockItemOfRoad(MUBlocks.ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_SLAB);
+        registerBlockItemOfRoad(MUBlocks.ASPHALT_ROAD_WITH_WHITE_STRAIGHT_AND_BEVEL_ANGLE_LINE_SLAB);
+        registerBlockItemOfRoad(MUBlocks.ASPHALT_ROAD_WITH_WHITE_CROSS_LINE_SLAB);
+        registerBlockItemOfRoad(MUBlocks.ASPHALT_ROAD_FILLED_WITH_WHITE_SLAB);
     }
 }

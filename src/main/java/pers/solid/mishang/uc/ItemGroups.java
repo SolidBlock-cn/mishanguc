@@ -8,5 +8,5 @@ import pers.solid.mishang.uc.block.MUBlocks;
 
 public class ItemGroups {
     public static final ItemGroup ROADS =
-            FabricItemGroupBuilder.create(new Identifier("mishanguc","roads")).icon(()->new ItemStack(MUBlocks.ASPHALT_ROAD_WITH_WHITE_CORNER_LINE)).build();
+            FabricItemGroupBuilder.create(new Identifier("mishanguc","roads")).icon(()->new ItemStack(MUBlocks.ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE)).build();
 }
