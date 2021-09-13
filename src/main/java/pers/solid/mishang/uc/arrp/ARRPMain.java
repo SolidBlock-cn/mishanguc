@@ -5,33 +5,20 @@ import net.devtech.arrp.api.RRPPreGenEntrypoint;
 import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.loot.JLootTable;
 import net.devtech.arrp.json.models.*;
+import net.minecraft.block.Block;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.annotations.BlockIdentifier;
+import pers.solid.mishang.uc.block.MUBlocks;
 
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Map;
 
 public class ARRPMain implements RRPPreGenEntrypoint {
 
     public static final RuntimeResourcePack PACK = RuntimeResourcePack.create("mishanguc");
-    private static final String[] BLOCK_NAMES = {
-            "asphalt_road_block",
-            "asphalt_road_with_white_bevel_angle_line",
-            "asphalt_road_with_white_right_angle_line",
-            "asphalt_road_with_white_straight_line",
-            "asphalt_road_with_white_straight_and_bevel_angle_line",
-            "asphalt_road_with_white_joint_line",
-            "asphalt_road_with_white_cross_line",
-            "asphalt_road_filled_with_white",
-            "asphalt_road_slab",
-            "asphalt_road_with_white_straight_line_slab",
-            "asphalt_road_with_white_right_angle_line_slab",
-            "asphalt_road_with_white_bevel_angle_line_slab",
-            "asphalt_road_with_white_straight_and_bevel_angle_line_slab",
-            "asphalt_road_with_white_joint_line_slab",
-            "asphalt_road_with_white_cross_line_slab",
-            "asphalt_road_filled_with_white_slab"
-    };
 
     static {
         addCubeAll(PACK, "asphalt_road_block", "asphalt");
@@ -44,10 +31,18 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         addRoadWithSlab(PACK, "asphalt_road_with_white_straight_and_bevel_angle_line_mirrored", "road_with_straight_and_angle_line_mirrored", textures("asphalt", "white_straight_line", "white_straight_line", "white_bevel_angle_line"));
         addRoadWithSlab(PACK, "asphalt_road_with_white_straight_line", "road_with_straight_line", textures("asphalt", "white_straight_line", "white_straight_line"));
         addRoadWithSlab(PACK, "asphalt_road_with_white_cross_line", "road_with_cross_line", textures("asphalt", "white_straight_line", "white_cross_line"));
-        for (String name : BLOCK_NAMES) {
-            addBlockItemModel(PACK, name);
-            addBlockLootTable(PACK, name);
-        }
+        addRoadWithSlab(PACK, "asphalt_road_with_white_side_line", "road_with_straight_line", textures("asphalt", "white_side_line", "white_side_line"));
+
+        // 利用反射，创建所有的方块物品。
+        Arrays.stream(MUBlocks.class.getFields()).filter(field -> {
+            int modifier = field.getModifiers();
+            return Modifier.isPublic(modifier) && Modifier.isStatic(modifier) && Block.class.isAssignableFrom(field.getType()) && field.isAnnotationPresent(BlockIdentifier.class);
+        }).forEach(field -> {
+                    String name = field.getAnnotation(BlockIdentifier.class).value();
+                    if (name.isEmpty()) name = field.getName().toLowerCase();
+                    addBlockItemModel(PACK, name);
+                }
+        );
     }
 
     private static Identifier blockIdentifier(String path) {

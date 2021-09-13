@@ -24,7 +24,7 @@
         "down":  { "texture": "#line_bottom", "cullface": "down","uv": [0,16,16,0] },
         "up":    { "texture": "#line_top", "cullface": "up" },
         "south": { "texture": "#line_side", "cullface": "south" },
-        "north": { "texture": "#line_side", "cullface": "north" }
+        "north": { "texture": "#line_side", "cullface": "north","uv": [16,0,0,16] }
       }
     }
   ]

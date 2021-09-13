@@ -23,6 +23,9 @@
     ],
     "rrp:pregen": [
       "pers.solid.mishang.uc.arrp.ARRPMain"
+    ],
+    "client": [
+      "pers.solid.mishang.uc.MishangUcClient"
     ]
   },
   "mixins": [

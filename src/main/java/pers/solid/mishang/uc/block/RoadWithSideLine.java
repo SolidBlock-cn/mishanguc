@@ -35,6 +35,6 @@ public interface RoadWithSideLine extends Road {
 
     @Override
     default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
-        return Road.super.withPlacementState(state, ctx).with(FACING,ctx.getPlayerFacing());
+        return Road.super.withPlacementState(state, ctx).with(FACING,ctx.getPlayerFacing().rotateYClockwise());
     }
 }
