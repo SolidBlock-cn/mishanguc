@@ -47,6 +47,12 @@ public final class MUBlocks {
     public static final RoadBlockWithSideLine ASPHALT_ROAD_WITH_WHITE_SIDE_LINE = new RoadBlockWithSideLine(ASPHALT_ROAD_SETTINGS);
     @BlockIdentifier("asphalt_road_filled_with_white")
     public static final RoadBlock ASPHALT_ROAD_FILLED_WITH_WHITE =new RoadBlock(FabricBlockSettings.copyOf(ASPHALT_ROAD_SETTINGS).materialColor(MapColor.WHITE));
+    @BlockIdentifier
+    @Cutout
+    public static final RoadBlockWithAutoLine ASPHALT_ROAD_WITH_WHITE_AUTO_BEVEL_LINE = new RoadBlockWithAutoLine(ASPHALT_ROAD_SETTINGS, RoadWithAutoLine.RoadAutoLineType.BEVEL, RoadWithAutoLine.RoadTexture.ASPHALT, RoadWithAutoLine.LineColor.WHITE);
+    @BlockIdentifier
+    @Cutout
+    public static final RoadBlockWithAutoLine ASPHALT_ROAD_WITH_WHITE_AUTO_RIGHT_ANGLE_LINE = new RoadBlockWithAutoLine(ASPHALT_ROAD_SETTINGS, RoadWithAutoLine.RoadAutoLineType.RIGHT_ANGLE, RoadWithAutoLine.RoadTexture.ASPHALT, RoadWithAutoLine.LineColor.WHITE);
 
     // 台阶部分
     @BlockIdentifier("asphalt_road_slab")

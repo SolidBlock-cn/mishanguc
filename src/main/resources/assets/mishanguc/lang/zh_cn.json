@@ -8,6 +8,8 @@
   "block.mishanguc.asphalt_road_with_white_cross_line": "白色十字标线柏油路",
   "block.mishanguc.asphalt_road_with_white_side_line": "白色侧线标线柏油路",
   "block.mishanguc.asphalt_road_filled_with_white": "填满白色的柏油路",
+  "block.mishanguc.asphalt_road_with_white_auto_bevel_line": "白色自动斜线标线柏油路",
+  "block.mishanguc.asphalt_road_with_white_auto_right_angle_line": "白色自动直角标线柏油路",
 
   "block.mishanguc.asphalt_road_slab": "柏油路台阶",
   "block.mishanguc.asphalt_road_with_white_straight_line_slab": "白色直线标线柏油路台阶",
@@ -18,6 +20,8 @@
   "block.mishanguc.asphalt_road_with_white_cross_line_slab": "白色十字标线柏油路台阶",
   "block.mishanguc.asphalt_road_with_white_side_line_slab": "白色侧线标线柏油路台阶",
   "block.mishanguc.asphalt_road_filled_with_white_slab": "填满白色的柏油路台阶",
+  "block.mishanguc.asphalt_road_with_white_auto_bevel_line_slab": "白色自动斜线标线柏油路台阶",
+  "block.mishanguc.asphalt_road_with_white_auto_right_angle_line_slab": "白色自动直角标线柏油路台阶",
 
   "itemGroup.mishanguc.roads": "迷上城建 | 道路"
 }

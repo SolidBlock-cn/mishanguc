@@ -8,6 +8,8 @@
   "block.mishanguc.asphalt_road_with_white_cross_line": "Asphalt Road with White Cross Line",
   "block.mishanguc.asphalt_road_with_white_side_line": "Asphalt Road with White Side Line",
   "block.mishanguc.asphalt_road_filled_with_white": "Asphalt Road Filled with White",
+  "block.mishanguc.asphalt_road_with_white_auto_bevel_line": "Asphalt Road with White Auto Bevel Line",
+  "block.mishanguc.asphalt_road_with_white_auto_right_angle_line": "Asphalt Road with White Auto Right Angle Line",
 
   "block.mishanguc.asphalt_road_slab": "Asphalt Road Slab",
   "block.mishanguc.asphalt_road_with_white_straight_line_slab": "Asphalt Road with White Straight Line Slab",
@@ -18,6 +20,8 @@
   "block.mishanguc.asphalt_road_with_white_cross_line_slab": "Asphalt Road with White Cross Line Slab",
   "block.mishanguc.asphalt_road_with_white_side_line_slab": "Asphalt Road with White Side Line Slab",
   "block.mishanguc.asphalt_road_filled_with_white_slab": "Asphalt Road Filled with White Slab",
+  "block.mishanguc.asphalt_road_with_white_auto_bevel_line_slab": "Asphalt Road with White Auto Bevel Line Slab",
+  "block.mishanguc.asphalt_road_with_white_auto_right_angle_line_slab": "Asphalt Road with White Auto Right Angle Line Slab",
 
   "itemGroup.mishanguc.roads": "Mishang Urban Construction | Roads"
 }

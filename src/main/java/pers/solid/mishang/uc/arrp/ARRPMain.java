@@ -32,6 +32,8 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         addRoadWithSlab(PACK, "asphalt_road_with_white_straight_line", "road_with_straight_line", textures("asphalt", "white_straight_line", "white_straight_line"));
         addRoadWithSlab(PACK, "asphalt_road_with_white_cross_line", "road_with_cross_line", textures("asphalt", "white_straight_line", "white_cross_line"));
         addRoadWithSlab(PACK, "asphalt_road_with_white_side_line", "road_with_straight_line", textures("asphalt", "white_side_line", "white_side_line"));
+        addRoadWithSlab(PACK,"asphalt_road_with_white_auto_bevel_line","road_with_auto_line",new JTextures().var("base",blockString("asphalt")).var("line",blockString("white_unknown_line")).var("particle",blockString("asphalt")));
+        addRoadWithSlab(PACK,"asphalt_road_with_white_auto_right_angle_line","road_with_auto_line",new JTextures().var("base",blockString("asphalt")).var("line",blockString("white_unknown_line")).var("particle",blockString("asphalt")));
 
         // 利用反射，创建所有的方块物品。
         Arrays.stream(MUBlocks.class.getFields()).filter(field -> {
