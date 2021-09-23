@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.datafixers.util.Either;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemPlacementContext;
@@ -21,7 +22,7 @@ public interface RoadWithJointLine extends Road {
 
     @Override
     default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
-        return RoadConnectionState.or(Road.super.getConnectionStateOf(state, direction), (state.get(FACING) == direction.getOpposite()) ? RoadConnectionState.NOT_CONNECTED_TO : RoadConnectionState.CONNECTED_TO);
+        return RoadConnectionState.or(Road.super.getConnectionStateOf(state, direction), RoadConnectionState.of(!(state.get(FACING) == direction.getOpposite()),getLineColor(),Either.left(direction)));
     }
 
     @Override

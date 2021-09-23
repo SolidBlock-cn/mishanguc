@@ -1,0 +1,14 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "mishanguc:block/white_lamp"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/white_lamp_glow"
+      }
+    }
+  ]
+}

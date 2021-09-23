@@ -84,6 +84,16 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
         return fromDirections(mirror.apply(dir1),mirror.apply(dir2));
     }
 
+    public HorizontalCornerDirection mirror(Direction direction) {
+        BlockMirror mirror;
+        switch (direction.getAxis()) {
+            case X: mirror = BlockMirror.LEFT_RIGHT; break;
+            case Z: mirror = BlockMirror.FRONT_BACK; break;
+            default: mirror = BlockMirror.NONE; break;
+        }
+        return mirror(mirror);
+    }
+
     public HorizontalCornerDirection rotate(BlockRotation rotation) {
         switch (rotation) {
             case NONE:return this;

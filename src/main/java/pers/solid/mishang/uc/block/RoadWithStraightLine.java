@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.datafixers.util.Either;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemPlacementContext;
@@ -20,7 +21,7 @@ public interface RoadWithStraightLine extends Road {
     @Override
     default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
         Direction.Axis axis = state.get(AXIS);
-        return direction.getAxis() == axis ? RoadConnectionState.CONNECTED_TO : RoadConnectionState.NOT_CONNECTED_TO;
+        return RoadConnectionState.of(direction.getAxis() == axis,getLineColor(), Either.left(direction));
     }
 
     default BlockState rotateRoad(BlockState state, BlockRotation rotation) {

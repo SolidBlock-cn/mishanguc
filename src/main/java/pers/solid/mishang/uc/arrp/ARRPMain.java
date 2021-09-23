@@ -32,8 +32,10 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         addRoadWithSlab(PACK, "asphalt_road_with_white_straight_line", "road_with_straight_line", textures("asphalt", "white_straight_line", "white_straight_line"));
         addRoadWithSlab(PACK, "asphalt_road_with_white_cross_line", "road_with_cross_line", textures("asphalt", "white_straight_line", "white_cross_line"));
         addRoadWithSlab(PACK, "asphalt_road_with_white_side_line", "road_with_straight_line", textures("asphalt", "white_side_line", "white_side_line"));
-        addRoadWithSlab(PACK,"asphalt_road_with_white_auto_bevel_line","road_with_auto_line",new JTextures().var("base",blockString("asphalt")).var("line",blockString("white_unknown_line")).var("particle",blockString("asphalt")));
-        addRoadWithSlab(PACK,"asphalt_road_with_white_auto_right_angle_line","road_with_auto_line",new JTextures().var("base",blockString("asphalt")).var("line",blockString("white_unknown_line")).var("particle",blockString("asphalt")));
+        addRoadWithSlab(PACK,"asphalt_road_with_white_auto_bevel_angle_line","road_with_auto_line",new JTextures().var("base",blockString("asphalt")).var("line",blockString("white_auto_bevel_angle_line")).var("particle",blockString("asphalt")));
+        addRoadWithSlab(PACK,"asphalt_road_with_white_auto_right_angle_line","road_with_auto_line",new JTextures().var("base",blockString("asphalt")).var("line",blockString("white_auto_right_angle_line")).var("particle",blockString("asphalt")));
+
+        PACK.addModel(JModel.model(blockIdentifier("lamp")).textures(new JTextures().var("base",blockString("white_lamp")).var("emission",blockString("white_lamp_emission"))),blockIdentifier("white_lamp"));
 
         // 利用反射，创建所有的方块物品。
         Arrays.stream(MUBlocks.class.getFields()).filter(field -> {
@@ -194,8 +196,16 @@ public class ARRPMain implements RRPPreGenEntrypoint {
      */
     private static void addRoadWithSlab(RuntimeResourcePack PACK, String path, String parent, JTextures textures) {
         PACK.addModel(JModel.model(blockIdentifier(parent)).textures(textures), blockIdentifier(path));
-        PACK.addModel(JModel.model(blockIdentifier(parent) + "_slab").textures(textures), blockIdentifier(path + "_slab"));
-        PACK.addModel(JModel.model(blockIdentifier(parent) + "_slab_top").textures(textures), blockIdentifier(path + "_slab_top"));
+        PACK.addModel(JModel.model(blockIdentifier(parent) + "_slab").textures(textures), blockIdentifier(plusSlab(path)));
+        PACK.addModel(JModel.model(blockIdentifier(parent) + "_slab_top").textures(textures), blockIdentifier(plusSlab(path)+"_top"));
+    }
+
+    private static String plusSlab(String string) {
+        if (string.contains("_with_")) {
+            return string.replace("_with_","_slab_with_");
+        } else {
+            return string + "_slab";
+        }
     }
 
     private static JTextures textures(String all) {

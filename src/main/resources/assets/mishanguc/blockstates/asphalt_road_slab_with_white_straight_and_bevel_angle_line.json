@@ -1,67 +1,67 @@
 {
   "variants": {
     "axis=z,facing=north_east,type=bottom": {
-      "model": "mishanguc:block/asphalt_road_with_white_straight_and_bevel_angle_line_slab",
+      "model": "mishanguc:block/asphalt_road_slab_with_white_straight_and_bevel_angle_line",
       "y": 0
     },
     "axis=x,facing=south_east,type=bottom": {
-      "model": "mishanguc:block/asphalt_road_with_white_straight_and_bevel_angle_line_slab",
+      "model": "mishanguc:block/asphalt_road_slab_with_white_straight_and_bevel_angle_line",
       "y": 90
     },
     "axis=z,facing=south_west,type=bottom": {
-      "model": "mishanguc:block/asphalt_road_with_white_straight_and_bevel_angle_line_slab",
+      "model": "mishanguc:block/asphalt_road_slab_with_white_straight_and_bevel_angle_line",
       "y": 180
     },
     "axis=x,facing=north_west,type=bottom": {
-      "model": "mishanguc:block/asphalt_road_with_white_straight_and_bevel_angle_line_slab",
+      "model": "mishanguc:block/asphalt_road_slab_with_white_straight_and_bevel_angle_line",
       "y": 270
     },
     "axis=x,facing=north_east,type=bottom": {
-      "model": "mishanguc:block/asphalt_road_with_white_straight_and_bevel_angle_line_mirrored_slab",
+      "model": "mishanguc:block/asphalt_road_slab_with_white_straight_and_bevel_angle_line_mirrored",
       "y": 0
     },
     "axis=z,facing=south_east,type=bottom": {
-      "model": "mishanguc:block/asphalt_road_with_white_straight_and_bevel_angle_line_mirrored_slab",
+      "model": "mishanguc:block/asphalt_road_slab_with_white_straight_and_bevel_angle_line_mirrored",
       "y": 90
     },
     "axis=x,facing=south_west,type=bottom": {
-      "model": "mishanguc:block/asphalt_road_with_white_straight_and_bevel_angle_line_mirrored_slab",
+      "model": "mishanguc:block/asphalt_road_slab_with_white_straight_and_bevel_angle_line_mirrored",
       "y": 180
     },
     "axis=z,facing=north_west,type=bottom": {
-      "model": "mishanguc:block/asphalt_road_with_white_straight_and_bevel_angle_line_mirrored_slab",
+      "model": "mishanguc:block/asphalt_road_slab_with_white_straight_and_bevel_angle_line_mirrored",
       "y": 270
     },
     "axis=z,facing=north_east,type=top": {
-      "model": "mishanguc:block/asphalt_road_with_white_straight_and_bevel_angle_line_slab_top",
+      "model": "mishanguc:block/asphalt_road_slab_with_white_straight_and_bevel_angle_line_top",
       "y": 0
     },
     "axis=x,facing=south_east,type=top": {
-      "model": "mishanguc:block/asphalt_road_with_white_straight_and_bevel_angle_line_slab_top",
+      "model": "mishanguc:block/asphalt_road_slab_with_white_straight_and_bevel_angle_line_top",
       "y": 90
     },
     "axis=z,facing=south_west,type=top": {
-      "model": "mishanguc:block/asphalt_road_with_white_straight_and_bevel_angle_line_slab_top",
+      "model": "mishanguc:block/asphalt_road_slab_with_white_straight_and_bevel_angle_line_top",
       "y": 180
     },
     "axis=x,facing=north_west,type=top": {
-      "model": "mishanguc:block/asphalt_road_with_white_straight_and_bevel_angle_line_slab_top",
+      "model": "mishanguc:block/asphalt_road_slab_with_white_straight_and_bevel_angle_line_top",
       "y": 270
     },
     "axis=x,facing=north_east,type=top": {
-      "model": "mishanguc:block/asphalt_road_with_white_straight_and_bevel_angle_line_mirrored_slab_top",
+      "model": "mishanguc:block/asphalt_road_slab_with_white_straight_and_bevel_angle_line_mirrored_top",
       "y": 0
     },
     "axis=z,facing=south_east,type=top": {
-      "model": "mishanguc:block/asphalt_road_with_white_straight_and_bevel_angle_line_mirrored_slab_top",
+      "model": "mishanguc:block/asphalt_road_slab_with_white_straight_and_bevel_angle_line_mirrored_top",
       "y": 90
     },
     "axis=x,facing=south_west,type=top": {
-      "model": "mishanguc:block/asphalt_road_with_white_straight_and_bevel_angle_line_mirrored_slab_top",
+      "model": "mishanguc:block/asphalt_road_slab_with_white_straight_and_bevel_angle_line_mirrored_top",
       "y": 180
     },
     "axis=z,facing=north_west,type=top": {
-      "model": "mishanguc:block/asphalt_road_with_white_straight_and_bevel_angle_line_mirrored_slab_top",
+      "model": "mishanguc:block/asphalt_road_slab_with_white_straight_and_bevel_angle_line_mirrored_top",
       "y": 270
     },
     "axis=z,facing=north_east,type=double": {

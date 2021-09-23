@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.datafixers.util.Either;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemPlacementContext;
@@ -20,7 +21,7 @@ public interface RoadWithSideLine extends Road {
 
     @Override
     default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
-        return RoadConnectionState.or(Road.super.getConnectionStateOf(state, direction), RoadConnectionState.of(direction.getAxis()!=state.get(FACING).getAxis()));
+        return RoadConnectionState.or(Road.super.getConnectionStateOf(state, direction), RoadConnectionState.of(direction.getAxis()!=state.get(FACING).getAxis(),getLineColor(), Either.left(direction)));
     }
 
     @Override

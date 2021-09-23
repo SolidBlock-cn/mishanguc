@@ -17,7 +17,7 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
 
     @Override
     default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
-        return RoadConnectionState.or(RoadWithAngleLine.super.getConnectionStateOf(state, direction), RoadWithStraightLine.super.getConnectionStateOf(state, direction));
+        return RoadConnectionState.or(RoadWithStraightLine.super.getConnectionStateOf(state, direction), RoadWithAngleLine.super.getConnectionStateOf(state, direction));
     }
 
     @Override

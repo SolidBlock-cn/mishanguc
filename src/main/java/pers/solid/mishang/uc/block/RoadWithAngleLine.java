@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.datafixers.util.Either;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemPlacementContext;
@@ -19,7 +20,7 @@ public interface RoadWithAngleLine extends Road {
 
     @Override
     default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
-        return state.get(FACING).hasDirection(direction) ? RoadConnectionState.CONNECTED_TO : RoadConnectionState.NOT_CONNECTED_TO;
+        return RoadConnectionState.of(state.get(FACING).hasDirection(direction),getLineColor(),isBevel() ? Either.right(state.get(FACING).mirror(direction)) : Either.left(direction));
     }
 
     default BlockState mirrorRoad(BlockState state, BlockMirror mirror) {
@@ -35,4 +36,6 @@ public interface RoadWithAngleLine extends Road {
         if (state==null) return null;
         return state.with(FACING, HorizontalCornerDirection.fromRotation(ctx.getPlayerYaw()));
     }
+
+    boolean isBevel();
 }

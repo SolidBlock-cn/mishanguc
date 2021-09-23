@@ -1,19 +1,27 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.datafixers.util.Either;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
+import pers.solid.mishang.uc.LineColor;
 
 /**
  * 所有道路方块的接口。接口可以多重继承，并直接实现与已有类上，因此使用接口。
  */
 public interface Road {
     default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
-        return RoadConnectionState.NOT_CONNECTED_TO;
+        return RoadConnectionState.notConnectedTo(getLineColor(),Either.left(direction));
     }
 
     /**
@@ -53,4 +61,12 @@ public interface Road {
     default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
         return state;
     }
+
+    default ActionResult onUseRoad(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        return ActionResult.PASS;
+    }
+
+    default void neighborRoadUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {}
+
+    LineColor getLineColor();
 }
