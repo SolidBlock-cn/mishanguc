@@ -25,6 +25,49 @@
 
   "block.mishanguc.white_lamp": "白色灯",
 
+  "item.mishanguc.road_connection_state_debugging_tool": "道路连接状态调试工具",
+  "item.mishanguc.id_checker_tool": "id检查工具",
+  "item.mishanguc.fast_building_tool": "快速建造工具",
+
+  "direction.none": "无",
+  "direction.north": "北",
+  "direction.south": "南",
+  "direction.east": "东",
+  "direction.west": "西",
+  "direction.north_west": "西北",
+  "direction.north_east": "东北",
+  "direction.south_west": "西南",
+  "direction.south_east": "东南",
+
+  "debug.mishanguc.notRoad": "这不是一个道路方块",
+  "debug.mishanguc.roadConnectionState": "位于%s的道路%s侧连接状态：",
+  "debug.mishanguc.roadConnectionState.allDir": "位于%s的道路连接状态: ",
+  "debug.mishanguc.roadConnectionState.direction": "连接方向：%s",
+  "debug.mishanguc.roadConnectionState.lineColor": "标线颜色：%s",
+  "debug.mishanguc.roadConnectionState.probability": "连接概率：%s",
+  "debug.mishanguc.roadConnectionState.brief": "[%s侧] 方向：%s, 颜色：%s, 概率：%s",
+
+  "debug.mishanguc.blockId": "位于%s的方块id信息: ",
+  "debug.mishanguc.blockId.name": "\u00a77名称: \u00a7r%s",
+  "debug.mishanguc.blockId.id": "\u00a77id: \u00a7r%s",
+  "debug.mishanguc.blockId.rawId": "\u00a77原始id: \u00a7r%s",
+
+  "debug.mishanguc.entityId": "位于%s的实体id信息: ",
+  "debug.mishanguc.entityId.name": "\u00a77名称: \u00a7r%s",
+  "debug.mishanguc.entityId.id": "\u00a77id: \u00a7r%s",
+  "debug.mishanguc.entityId.rawId": "\u00a77原始id: \u00a7r%s",
+
+  "roadConnectionState.lineColor.white": "白色",
+  "roadConnectionState.lineColor.yellow": "黄色",
+  "roadConnectionState.lineColor.unknown": "未知",
+  "roadConnectionState.lineColor.none": "无",
+
+  "roadConnectionState.probability.not_connected_to": "未连接",
+  "roadConnectionState.probability.may_connect_to": "可能连接",
+  "roadConnectionState.probability.probably_connect_to": "应当连接",
+  "roadConnectionState.probability.connected_to": "已连接",
+
   "itemGroup.mishanguc.roads": "迷上城建 | 道路",
-  "itemGroup.mishanguc.lights": "迷上城建 | 灯"
+  "itemGroup.mishanguc.lights": "迷上城建 | 灯",
+  "itemGroup.mishanguc.tools": "迷上城建 | 工具"
 }

@@ -25,6 +25,25 @@
 
   "block.mishanguc.white_lamp": "White Lamp",
 
+  "item.mishanguc.road_connection_state_debugging_tool": "Road Connection State Debugging Tool",
+
+  "direction.none": "None",
+  "direction.north": "North",
+  "direction.south": "South",
+  "direction.east": "East",
+  "direction.west": "West",
+  "direction.north_west": "Northwest",
+  "direction.north_east": "Northeast",
+  "direction.south_west": "Southwest",
+  "direction.south_east": "Southeast",
+
+  "debug.mishanguc.notRoad": "这不是一个道路方块",
+  "debug.mishanguc.roadConnectionState": "道路%s侧连接状态：",
+  "debug.mishanguc.roadConnectionState.direction": "连接方向：%s",
+  "debug.mishanguc.roadConnectionState.lineColor": "标线颜色：%s",
+  "debug.mishanguc.roadConnectionState.probability": "连接概率：%s",
+
   "itemGroup.mishanguc.roads": "Mishang Urban Construction | Roads",
-  "itemGroup.mishanguc.lights": "Mishang Urban Construction | Lights"
+  "itemGroup.mishanguc.lights": "Mishang Urban Construction | Lights",
+  "itemGroup.mishanguc.tools": "Mishang Urban Construction | Tools"
 }

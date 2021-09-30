@@ -6,11 +6,14 @@ import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.loot.JLootTable;
 import net.devtech.arrp.json.models.*;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.annotations.BlockIdentifier;
+import pers.solid.mishang.uc.annotations.SimpleModel;
+import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.block.MUBlocks;
+import pers.solid.mishang.uc.item.MUItems;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -40,13 +43,24 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         // 利用反射，创建所有的方块物品。
         Arrays.stream(MUBlocks.class.getFields()).filter(field -> {
             int modifier = field.getModifiers();
-            return Modifier.isPublic(modifier) && Modifier.isStatic(modifier) && Block.class.isAssignableFrom(field.getType()) && field.isAnnotationPresent(BlockIdentifier.class);
+            return Modifier.isPublic(modifier) && Modifier.isStatic(modifier) && Block.class.isAssignableFrom(field.getType()) && field.isAnnotationPresent(RegisterIdentifier.class);
         }).forEach(field -> {
-                    String name = field.getAnnotation(BlockIdentifier.class).value();
+                    String name = field.getAnnotation(RegisterIdentifier.class).value();
                     if (name.isEmpty()) name = field.getName().toLowerCase();
                     addBlockItemModel(PACK, name);
                 }
         );
+        Arrays.stream(MUItems.class.getFields()).filter(field -> {
+            int modifier = field.getModifiers();
+            return Modifier.isPublic(modifier) && Modifier.isStatic(modifier) && Item.class.isAssignableFrom(field.getType()) && field.isAnnotationPresent(RegisterIdentifier.class) && field.isAnnotationPresent(SimpleModel.class);
+        }).forEach(field -> {
+            String name = field.getAnnotation(RegisterIdentifier.class).value();
+            String parent = field.getAnnotation(SimpleModel.class).parent();
+            String texture = field.getAnnotation(SimpleModel.class).texture();
+            if (name.isEmpty()) name = field.getName().toLowerCase();
+            if (parent.isEmpty()) name = "item/generated";
+            PACK.addModel(JModel.model(parent).textures(JModel.textures().layer0(texture.isEmpty() ? "mishanguc:item/" + name : texture)),new Identifier("mishanguc","item/" + name));
+        });
     }
 
     private static Identifier blockIdentifier(String path) {
