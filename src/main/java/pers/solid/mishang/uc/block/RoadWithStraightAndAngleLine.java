@@ -2,11 +2,18 @@ package pers.solid.mishang.uc.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
+import net.minecraft.text.Text;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWithStraightLine {
     @Override
@@ -34,5 +41,11 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
     @Override
     default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
         return RoadWithStraightLine.super.withPlacementState(RoadWithAngleLine.super.withPlacementState(state, ctx),ctx);
+    }
+
+    @Override
+    default void appendRoadTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+        RoadWithAngleLine.super.appendRoadTooltip(stack, world, tooltip, options);
+        RoadWithStraightLine.super.appendRoadTooltip(stack, world, tooltip, options);
     }
 }

@@ -23,10 +23,10 @@ public final class MUItems {
     @SimpleModel(parent = "item/handheld")
     public static final RoadConnectionStateDebuggingToolItem ROAD_CONNECTION_STATE_DEBUGGING_TOOL = new RoadConnectionStateDebuggingToolItem(new FabricItemSettings().group(ItemGroups.TOOLS));
     @RegisterIdentifier
-    @SimpleModel(parent = "item/handheld", texture = "item/stick")
+    @SimpleModel(parent = "item/handheld")
     public static final IdCheckerToolItem ID_CHECKER_TOOL = new IdCheckerToolItem(new FabricItemSettings().group(ItemGroups.TOOLS));
     @RegisterIdentifier
-    @SimpleModel(parent = "item/handheld", texture = "item/stick")
+    @SimpleModel(parent = "item/handheld")
     public static final FastBuildingToolItem FAST_BUILDING_TOOL = new FastBuildingToolItem(new FabricItemSettings().group(ItemGroups.TOOLS));
 
     static {

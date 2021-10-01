@@ -3,13 +3,21 @@ package pers.solid.mishang.uc.block;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public interface RoadWithJointLine extends Road {
     DirectionProperty FACING = Properties.HORIZONTAL_FACING;
@@ -37,6 +45,14 @@ public interface RoadWithJointLine extends Road {
 
     @Override
     default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
-        return Road.super.withPlacementState(state, ctx).with(FACING, Direction.fromRotation(ctx.getPlayerYaw()));
+        final Direction rotation = Direction.fromRotation(ctx.getPlayerYaw());
+        return Road.super.withPlacementState(state, ctx).with(FACING, ctx.getPlayer()!=null && ctx.getPlayer().isSneaking() ? rotation.getOpposite() : rotation);
+    }
+
+    @Override
+    default void appendRoadTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+        Road.super.appendRoadTooltip(stack, world, tooltip, options);
+        tooltip.add(new TranslatableText("block.mishanguc.tooltip.road_with_joint_line.1").setStyle(GRAY_STYLE));
+        tooltip.add(new TranslatableText("block.mishanguc.tooltip.road_with_joint_line.2").setStyle(GRAY_STYLE));
     }
 }

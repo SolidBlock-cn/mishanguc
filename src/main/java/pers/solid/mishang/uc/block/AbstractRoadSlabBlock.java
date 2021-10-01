@@ -3,18 +3,24 @@ package pers.solid.mishang.uc.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.LineColor;
+
+import java.util.List;
 
 public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
     public final LineColor lineColor;
@@ -68,5 +74,11 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
     @Override
     public LineColor getLineColor() {
         return this.lineColor;
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+        super.appendTooltip(stack, world, tooltip, options);
+        appendRoadTooltip(stack, world, tooltip, options);
     }
 }

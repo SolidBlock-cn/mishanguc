@@ -3,23 +3,30 @@ package pers.solid.mishang.uc.block;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.LineColor;
+
+import java.util.List;
 
 /**
  * 所有道路方块的接口。接口可以多重继承，并直接实现与已有类上，因此使用接口。
  */
 public interface Road {
+    Style GRAY_STYLE = Style.EMPTY.withColor(Formatting.GRAY);
+
     default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
         return RoadConnectionState.notConnectedTo(getLineColor(),Either.left(direction));
     }
@@ -67,6 +74,8 @@ public interface Road {
     }
 
     default void neighborRoadUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {}
+
+    default void appendRoadTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {}
 
     LineColor getLineColor();
 }

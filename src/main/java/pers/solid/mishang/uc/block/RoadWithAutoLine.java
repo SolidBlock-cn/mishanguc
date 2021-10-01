@@ -5,18 +5,25 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Map;
 
 public interface RoadWithAutoLine extends Road {
@@ -71,6 +78,13 @@ public interface RoadWithAutoLine extends Road {
             // flags设为2从而使得 <code>flags&1 !=0</code> 不成立，从而不递归更新邻居，参考 {@link World#setBlockState}。
             world.setBlockState(pos, makeState(getConnectionStateMap(world, pos), state), 2);
         Road.super.neighborRoadUpdate(state, world, pos, block, fromPos, notify);
+    }
+
+    @Override
+    default void appendRoadTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+        Road.super.appendRoadTooltip(stack, world, tooltip, options);
+        tooltip.add(new TranslatableText("block.mishanguc.tooltip.road_with_auto_line.1").setStyle(GRAY_STYLE));
+        tooltip.add(new TranslatableText("block.mishanguc.tooltip.road_with_auto_line.2").setStyle(GRAY_STYLE));
     }
 
     /**

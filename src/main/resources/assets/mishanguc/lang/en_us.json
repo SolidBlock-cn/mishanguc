@@ -23,9 +23,20 @@
   "block.mishanguc.asphalt_road_slab_with_white_auto_bevel_angle_line": "Asphalt Road Slab with White Auto Bevel Angle Line",
   "block.mishanguc.asphalt_road_slab_with_white_auto_right_angle_line": "Asphalt Road Slab with White Auto Right Angle Line",
 
+  "block.mishanguc.tooltip.road_with_straight_line.1": "The straight line is in the direction of player's forward direction.",
+  "block.mishanguc.tooltip.road_with_straight_line.2": "Rotated 90 degree when sneaking.",
+  "block.mishanguc.tooltip.road_with_angle_line.1": "The inner side of the right angle is towards the player's forward direction.",
+  "block.mishanguc.tooltip.road_with_angle_line.2": "Opposite when sneaking.",
+  "block.mishanguc.tooltip.road_with_auto_line.1": "It will be converted to proper road block when there is a block update.",
+  "block.mishanguc.tooltip.road_with_auto_line.2": "You can manually trigger it by clicking the top of it.",
+  "block.mishanguc.tooltip.road_with_joint_line.1": "The half straight line of the road points to the direction of player's forward direction.",
+  "block.mishanguc.tooltip.road_with_joint_line.2": "Opposite when sneaking.",
+
   "block.mishanguc.white_lamp": "White Lamp",
 
   "item.mishanguc.road_connection_state_debugging_tool": "Road Connection State Debugging Tool",
+  "item.mishanguc.id_checker_tool": "Id Checker Tool",
+  "item.mishanguc.fast_building_tool": "Fast Building Tool",
 
   "direction.none": "None",
   "direction.north": "North",
@@ -37,11 +48,33 @@
   "direction.south_west": "Southwest",
   "direction.south_east": "Southeast",
 
-  "debug.mishanguc.notRoad": "这不是一个道路方块",
-  "debug.mishanguc.roadConnectionState": "道路%s侧连接状态：",
-  "debug.mishanguc.roadConnectionState.direction": "连接方向：%s",
-  "debug.mishanguc.roadConnectionState.lineColor": "标线颜色：%s",
-  "debug.mishanguc.roadConnectionState.probability": "连接概率：%s",
+  "debug.mishanguc.notRoad": "This is not a road block",
+  "debug.mishanguc.roadConnectionState": "The connection state of road at %s at %s side:",
+  "debug.mishanguc.roadConnectionState.allDir": "The connection state of road at %s:",
+  "debug.mishanguc.roadConnectionState.direction": "Connection direction: %s",
+  "debug.mishanguc.roadConnectionState.lineColor": "Color: %s",
+  "debug.mishanguc.roadConnectionState.probability": "Connection probability: %s",
+  "debug.mishanguc.roadConnectionState.brief": "[%s side] Direction: %s, Color: %s, Probability: %s",
+
+  "debug.mishanguc.blockId": "Id information of block at %s:",
+  "debug.mishanguc.blockId.name": "\u00a77Name: \u00a7r%s",
+  "debug.mishanguc.blockId.id": "\u00a77Id: \u00a7r%s",
+  "debug.mishanguc.blockId.rawId": "\u00a77Raw Id: \u00a7r%s",
+
+  "debug.mishanguc.entityId": "Id information of entity at %s:",
+  "debug.mishanguc.entityId.name": "\u00a77Name: \u00a7r%s",
+  "debug.mishanguc.entityId.id": "\u00a77Id: \u00a7r%s",
+  "debug.mishanguc.entityId.rawId": "\u00a77Raw Id: \u00a7r%s",
+
+  "roadConnectionState.lineColor.white": "White",
+  "roadConnectionState.lineColor.yellow": "Yellow",
+  "roadConnectionState.lineColor.unknown": "Unknown",
+  "roadConnectionState.lineColor.none": "None",
+
+  "roadConnectionState.probability.not_connected_to": "Not connected to",
+  "roadConnectionState.probability.may_connect_to": "May connect to",
+  "roadConnectionState.probability.probably_connect_to": "Probably connected to",
+  "roadConnectionState.probability.connected_to": "Connected to",
 
   "itemGroup.mishanguc.roads": "Mishang Urban Construction | Roads",
   "itemGroup.mishanguc.lights": "Mishang Urban Construction | Lights",
