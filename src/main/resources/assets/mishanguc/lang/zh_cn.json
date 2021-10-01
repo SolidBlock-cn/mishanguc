@@ -42,6 +42,11 @@
   "item.mishanguc.fast_building_tool.tooltip.range": "范围：%s",
   "item.mishanguc.fast_building_tool.tooltip.matchingRule": "匹配规则：%s",
 
+  "blockMatchingRule.mishanguc.same_state": "相同方块状态",
+  "blockMatchingRule.mishanguc.same_block": "相同方块",
+  "blockMatchingRule.mishanguc.same_material": "相同材料",
+  "blockMatchingRule.mishanguc.any": "任何",
+
   "direction.none": "无",
   "direction.north": "北",
   "direction.south": "南",

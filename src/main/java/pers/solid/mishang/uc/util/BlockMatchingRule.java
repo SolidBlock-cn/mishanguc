@@ -39,6 +39,12 @@ public abstract class BlockMatchingRule implements StringIdentifiable {
             return state1.getMaterial() == state2.getMaterial();
         }
     }.register("same_material");
+    public static final BlockMatchingRule ANY = new BlockMatchingRule() {
+        @Override
+        public boolean match(@NotNull BlockState state1, @NotNull BlockState state2) {
+            return state1.isAir() == state2.isAir();
+        }
+    }.register("any");
 
     public static @Nullable BlockMatchingRule fromString(String name) {
         return REGISTRY.get(new Identifier(name));
