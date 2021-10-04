@@ -6,6 +6,7 @@
   "mixins": [
   ],
   "client": [
+    "DebugRenderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

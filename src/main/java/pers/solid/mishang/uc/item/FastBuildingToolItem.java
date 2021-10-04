@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.item;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,6 +10,7 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.state.property.Properties;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -36,25 +36,25 @@ public class FastBuildingToolItem extends Item {
     public ActionResult useOnBlock(ItemUsageContext context) {
         final Direction side = context.getSide();
         final BlockPos centerBlockPos = context.getBlockPos();
-        final Direction.Axis axis = side.getAxis();
         final PlayerEntity player = context.getPlayer();
         final World world = context.getWorld();
+        final BlockState centerState = world.getBlockState(centerBlockPos);
+        BlockSoundGroup blockSoundGroup = centerState.getSoundGroup();
+        world.playSound(context.getPlayer(), centerBlockPos.offset(side), centerState.getSoundGroup().getPlaceSound(), SoundCategory.BLOCKS, (blockSoundGroup.getVolume() + 1.0F) / 2.0F, blockSoundGroup.getPitch() * 0.8F);
         if (!world.isClient() && player != null) {
-            final BlockState centerState = world.getBlockState(centerBlockPos);
-            BlockSoundGroup blockSoundGroup = centerState.getSoundGroup();
-            world.playSound(context.getPlayer(), centerBlockPos.offset(side), centerState.getSoundGroup().getPlaceSound(), SoundCategory.BLOCKS, (blockSoundGroup.getVolume() + 1.0F) / 2.0F, blockSoundGroup.getPitch() * 0.8F);
             final ItemStack stack = context.getStack();
             final int range = this.getRange(stack);
             final BlockMatchingRule matchingRule = this.getMatchingRule(stack);
-            for (BlockPos pos : BlockPos.iterateOutwards(centerBlockPos,
-                    axis == Direction.Axis.X ? 0 : range,
-                    axis == Direction.Axis.Y ? 0 : range,
-                    axis == Direction.Axis.Z ? 0 : range)) {
+            for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, centerBlockPos, side, range)) {
                 BlockState state = world.getBlockState(pos);
                 if (matchingRule.match(centerState, state)) {
-                    final BlockPos newPos = pos.offset(side);
-                    if (world.getBlockState(newPos).canReplace(new ItemPlacementContext(context))) {
-                        world.setBlockState(newPos, state);
+                    final BlockPos offsetPos = pos.offset(side);
+                    final BlockState offsetPosState = world.getBlockState(offsetPos);
+                    if (offsetPosState.canReplace(new ItemPlacementContext(context))) {
+                        if (state.getProperties().contains(Properties.WATERLOGGED)) {
+                            state = state.with(Properties.WATERLOGGED, offsetPosState.getFluidState().isStill());
+                        }
+                        world.setBlockState(offsetPos, state);
                     }
                 }
             }
@@ -65,22 +65,14 @@ public class FastBuildingToolItem extends Item {
     @Override
     public boolean canMine(BlockState centerState, World world, BlockPos centerPos, PlayerEntity miner) {
         if (!world.isClient()) {
-            Block block = centerState.getBlock();
             final BlockHitResult hit = ((BlockHitResult) miner.raycast(20, 0, false));
             final Direction side = hit.getSide();
             final BlockPos centerBlockPos = hit.getBlockPos();
-            final Direction.Axis axis = side.getAxis();
             final ItemStack stack = miner.getMainHandStack();
             final int range = this.getRange(stack);
             final BlockMatchingRule matchingRule = this.getMatchingRule(stack);
-            for (BlockPos pos : BlockPos.iterateOutwards(centerBlockPos,
-                    axis == Direction.Axis.X ? 0 : range,
-                    axis == Direction.Axis.Y ? 0 : range,
-                    axis == Direction.Axis.Z ? 0 : range)) {
-                BlockState state = world.getBlockState(pos);
-                if (matchingRule.match(centerState, state)) {
-                    world.removeBlock(pos, false);
-                }
+            for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, centerBlockPos, side, range)) {
+                world.removeBlock(pos, false);
             }
         }
         return true;
@@ -97,7 +89,7 @@ public class FastBuildingToolItem extends Item {
 
     public int getRange(ItemStack stack) {
         final NbtCompound tag = stack.getOrCreateTag();
-        return tag.contains("Range", 99) ? tag.getInt("Range") : 3;
+        return tag.contains("Range", 99) ? Integer.max(tag.getInt("Range"),128) : 3;
     }
 
     public @NotNull BlockMatchingRule getMatchingRule(ItemStack stack) {
