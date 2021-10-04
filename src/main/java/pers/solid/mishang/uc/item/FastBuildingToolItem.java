@@ -3,10 +3,7 @@ package pers.solid.mishang.uc.item;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
@@ -17,6 +14,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -89,7 +87,7 @@ public class FastBuildingToolItem extends Item {
 
     public int getRange(ItemStack stack) {
         final NbtCompound tag = stack.getOrCreateTag();
-        return tag.contains("Range", 99) ? Integer.max(tag.getInt("Range"),128) : 3;
+        return tag.contains("Range", 99) ? Integer.min(tag.getInt("Range"),128) : 8;
     }
 
     public @NotNull BlockMatchingRule getMatchingRule(ItemStack stack) {
@@ -101,7 +99,54 @@ public class FastBuildingToolItem extends Item {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
+        tooltip.add(new TranslatableText("item.mishanguc.fast_building_tool.tooltip"));
         tooltip.add(new TranslatableText("item.mishanguc.fast_building_tool.tooltip.range", this.getRange(stack)).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         tooltip.add(new TranslatableText("item.mishanguc.fast_building_tool.tooltip.matchingRule", this.getMatchingRule(stack).getName()).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+    }
+
+    @Override
+    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
+        if (this.isIn(group)) {
+            stacks.add(Util.make(new ItemStack(this),stack -> {
+                final NbtCompound tag = stack.getOrCreateTag();
+                tag.putInt("Range",8);
+                tag.putString("MatchingRule",BlockMatchingRule.SAME_STATE.asString());
+            }));
+            stacks.add(Util.make(new ItemStack(this),stack -> {
+                final NbtCompound tag = stack.getOrCreateTag();
+                tag.putInt("Range",32);
+                tag.putString("MatchingRule",BlockMatchingRule.SAME_STATE.asString());
+            }));
+            stacks.add(Util.make(new ItemStack(this),stack -> {
+                final NbtCompound tag = stack.getOrCreateTag();
+                tag.putInt("Range",8);
+                tag.putString("MatchingRule",BlockMatchingRule.SAME_BLOCK.asString());
+            }));
+            stacks.add(Util.make(new ItemStack(this),stack -> {
+                final NbtCompound tag = stack.getOrCreateTag();
+                tag.putInt("Range",32);
+                tag.putString("MatchingRule",BlockMatchingRule.SAME_BLOCK.asString());
+            }));
+            stacks.add(Util.make(new ItemStack(this),stack -> {
+                final NbtCompound tag = stack.getOrCreateTag();
+                tag.putInt("Range",8);
+                tag.putString("MatchingRule",BlockMatchingRule.SAME_MATERIAL.asString());
+            }));
+            stacks.add(Util.make(new ItemStack(this),stack -> {
+                final NbtCompound tag = stack.getOrCreateTag();
+                tag.putInt("Range",32);
+                tag.putString("MatchingRule",BlockMatchingRule.SAME_MATERIAL.asString());
+            }));
+            stacks.add(Util.make(new ItemStack(this),stack -> {
+                final NbtCompound tag = stack.getOrCreateTag();
+                tag.putInt("Range",8);
+                tag.putString("MatchingRule",BlockMatchingRule.ANY.asString());
+            }));
+            stacks.add(Util.make(new ItemStack(this),stack -> {
+                final NbtCompound tag = stack.getOrCreateTag();
+                tag.putInt("Range",32);
+                tag.putString("MatchingRule",BlockMatchingRule.ANY.asString());
+            }));
+        }
     }
 }

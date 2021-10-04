@@ -11,38 +11,48 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.ModProperties;
 
-public interface RoadWithSideRightAngleLine extends Road {
+/**
+ * 带有一条正中直线和偏移直线的道路。类似于 {@link RoadWithAngleLine}，不过其中一条半线是侧的。
+ */
+public interface RoadWithCentralAndOffsetAngleLine extends RoadWithAngleLine {
+    /**
+     * 正中线和侧线围成的角的朝向。
+     */
     EnumProperty<HorizontalCornerDirection> FACING = ModProperties.HORIZONTAL_CORNER_FACING;
+    /**
+     * 正中线所在轴。
+     */
     EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
 
+    /**
+     * @see RoadWithAngleLine#getConnectionStateOf
+     */
     @Override
     default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
-        return Road.super.getConnectionStateOf(state, direction);
+        return RoadWithAngleLine.super.getConnectionStateOf(state, direction);
     }
 
     @Override
     default void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
-        Road.super.appendRoadProperties(builder);
-        builder.add(FACING, AXIS);
+        RoadWithAngleLine.super.appendRoadProperties(builder);
+        builder.add(AXIS);
     }
 
     @Override
     default BlockState mirrorRoad(BlockState state, BlockMirror mirror) {
-        return Road.super.mirrorRoad(state, mirror).with(FACING, state.get(FACING).mirror(mirror));
+        return RoadWithAngleLine.super.mirrorRoad(state, mirror);
     }
 
     @Override
     default BlockState rotateRoad(BlockState state, BlockRotation rotation) {
         Direction.Axis axis = state.get(AXIS);
-        return Road.super.rotateRoad(state, rotation)
-                .with(FACING, state.get(FACING).rotate(rotation))
+        return RoadWithAngleLine.super.rotateRoad(state, rotation)
                 .with(AXIS, rotation == BlockRotation.CLOCKWISE_90 || rotation == BlockRotation.COUNTERCLOCKWISE_90 ? axis == Direction.Axis.X ? Direction.Axis.Z : axis == Direction.Axis.Z ? Direction.Axis.X : axis : axis);
     }
 
     @Override
     default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
-        return Road.super.withPlacementState(state, ctx)
-                .with(FACING,HorizontalCornerDirection.fromRotation(ctx.getPlayerYaw()))
+        return RoadWithAngleLine.super.withPlacementState(state, ctx)
                 .with(AXIS,ctx.getPlayerFacing().getAxis());
     }
 }

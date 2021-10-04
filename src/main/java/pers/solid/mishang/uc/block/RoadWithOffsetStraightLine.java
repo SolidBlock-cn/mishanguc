@@ -11,7 +11,13 @@ import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.Direction;
 
-public interface RoadWithSideLine extends Road {
+/**
+ * 类似于 {@link RoadWithStraightLine}，不过道路的直线是偏移的，而非正中的。
+ */
+public interface RoadWithOffsetStraightLine extends Road {
+    /**
+     * 道路偏移直线所偏移的反方向。例如道路有一条南北方向的向西偏移的直线，则该道路朝向东。
+     */
     DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     @Override
     default void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {

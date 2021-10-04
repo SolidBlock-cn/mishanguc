@@ -36,7 +36,17 @@
 
   "item.mishanguc.road_connection_state_debugging_tool": "Road Connection State Debugging Tool",
   "item.mishanguc.id_checker_tool": "Id Checker Tool",
+  "item.mishanguc.id_checker_tool.tooltip.1": "Get its id data when clicking block.",
+  "item.mishanguc.id_checker_tool.tooltip.2": "Get fluid data while sneaking.",
   "item.mishanguc.fast_building_tool": "Fast Building Tool",
+  "item.mishanguc.fast_building_tool.tooltip": "Can quickly place or destroy multiple blocks on a plain.",
+  "item.mishanguc.fast_building_tool.tooltip.range": "Range: %s",
+  "item.mishanguc.fast_building_tool.tooltip.matchingRule": "Matching rule: %s",
+
+  "blockMatchingRule.mishanguc.same_state": "Same Block State",
+  "blockMatchingRule.mishanguc.same_block": "Same Block",
+  "blockMatchingRule.mishanguc.same_material": "Same Material",
+  "blockMatchingRule.mishanguc.any": "Any",
 
   "direction.none": "None",
   "direction.north": "North",

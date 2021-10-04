@@ -1,8 +1,10 @@
 package pers.solid.mishang.uc;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import pers.solid.mishang.uc.block.MUBlocks;
 import pers.solid.mishang.uc.item.MUItems;
+import pers.solid.mishang.uc.render.BuildingToolOutlineRenderer;
 
 public class MishangUc implements ModInitializer {
 	@Override
@@ -14,5 +16,7 @@ public class MishangUc implements ModInitializer {
 		System.out.println("Hello Fabric world!");
 		new MUBlocks();
 		new MUItems();
+
+		WorldRenderEvents.BLOCK_OUTLINE.register(new BuildingToolOutlineRenderer());
 	}
 }

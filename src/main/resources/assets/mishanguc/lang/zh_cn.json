@@ -39,8 +39,9 @@
   "item.mishanguc.id_checker_tool.tooltip.1": "点击方块可获取其id数据。",
   "item.mishanguc.id_checker_tool.tooltip.2": "潜行时可用于获取流体数据。",
   "item.mishanguc.fast_building_tool": "快速建造工具",
-  "item.mishanguc.fast_building_tool.tooltip.range": "范围：%s",
-  "item.mishanguc.fast_building_tool.tooltip.matchingRule": "匹配规则：%s",
+  "item.mishanguc.fast_building_tool.tooltip": "可用于快速放置或破坏一个平面上的多个方块。",
+  "item.mishanguc.fast_building_tool.tooltip.range": "范围: %s",
+  "item.mishanguc.fast_building_tool.tooltip.matchingRule": "匹配规则: %s",
 
   "blockMatchingRule.mishanguc.same_state": "相同方块状态",
   "blockMatchingRule.mishanguc.same_block": "相同方块",
