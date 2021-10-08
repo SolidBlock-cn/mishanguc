@@ -7,6 +7,11 @@
   "block.mishanguc.asphalt_road_with_white_joint_line": "白色合并线柏油路",
   "block.mishanguc.asphalt_road_with_white_cross_line": "白色十字线柏油路",
   "block.mishanguc.asphalt_road_with_white_side_line": "白色侧线柏油路",
+  "block.mishanguc.asphalt_road_with_white_straight_double_line": "白色双直线柏油路",
+  "block.mishanguc.asphalt_road_with_white_straight_thick_line": "白色粗直线柏油路",
+  "block.mishanguc.asphalt_road_with_white_joint_line_with_double_side": "白色合并线双线柏油路",
+  "block.mishanguc.asphalt_road_with_white_joint_line_with_thick_side": "白色合并线粗线柏油路",
+
   "block.mishanguc.asphalt_road_filled_with_white": "填满白色的柏油路",
   "block.mishanguc.asphalt_road_with_white_auto_bevel_angle_line": "白色自动斜线柏油路",
   "block.mishanguc.asphalt_road_with_white_auto_right_angle_line": "白色自动直角线柏油路",
@@ -19,6 +24,11 @@
   "block.mishanguc.asphalt_road_slab_with_white_joint_line": "白色合并线柏油路台阶",
   "block.mishanguc.asphalt_road_slab_with_white_cross_line": "白色十字线柏油路台阶",
   "block.mishanguc.asphalt_road_slab_with_white_side_line": "白色侧线柏油路台阶",
+  "block.mishanguc.asphalt_road_slab_with_white_straight_double_line": "白色双直线柏油路台阶",
+  "block.mishanguc.asphalt_road_slab_with_white_straight_thick_line": "白色粗直线柏油路台阶",
+  "block.mishanguc.asphalt_road_slab_with_white_joint_line_with_double_side": "白色合并线双线柏油路台阶",
+  "block.mishanguc.asphalt_road_slab_with_white_joint_line_with_thick_side": "白色合并线粗线柏油路台阶",
+
   "block.mishanguc.asphalt_road_filled_with_white_slab": "填满白色的柏油路台阶",
   "block.mishanguc.asphalt_road_slab_with_white_auto_bevel_angle_line": "白色自动斜线柏油路台阶",
   "block.mishanguc.asphalt_road_slab_with_white_auto_right_angle_line": "白色自动直角线柏油路台阶",
@@ -42,6 +52,8 @@
   "item.mishanguc.fast_building_tool.tooltip": "可用于快速放置或破坏一个平面上的多个方块。",
   "item.mishanguc.fast_building_tool.tooltip.range": "范围: %s",
   "item.mishanguc.fast_building_tool.tooltip.matchingRule": "匹配规则: %s",
+  "item.mishanguc.rotating_tool": "旋转工具",
+  "item.mishanguc.mirroring_tool": "镜像工具",
 
   "blockMatchingRule.mishanguc.same_state": "相同方块状态",
   "blockMatchingRule.mishanguc.same_block": "相同方块",

@@ -28,6 +28,12 @@ public final class MUItems {
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld")
     public static final FastBuildingToolItem FAST_BUILDING_TOOL = new FastBuildingToolItem(new FabricItemSettings().group(ItemGroups.TOOLS));
+    @RegisterIdentifier
+    @SimpleModel(parent = "item/handheld",texture = "item/stick")
+    public static final RotatingToolItem ROTATING_TOOL = new RotatingToolItem(new FabricItemSettings().group(ItemGroups.TOOLS));
+    @RegisterIdentifier
+    @SimpleModel(parent = "item/handheld",texture = "item/stick")
+    public static final MirroringToolItem MIRRORING_TOOL = new MirroringToolItem(new FabricItemSettings().group(ItemGroups.TOOLS));
 
     static {
         // 注册方块物品。

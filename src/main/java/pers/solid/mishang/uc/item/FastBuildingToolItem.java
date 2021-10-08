@@ -99,7 +99,7 @@ public class FastBuildingToolItem extends Item {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(new TranslatableText("item.mishanguc.fast_building_tool.tooltip"));
+        tooltip.add(new TranslatableText("item.mishanguc.fast_building_tool.tooltip").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         tooltip.add(new TranslatableText("item.mishanguc.fast_building_tool.tooltip.range", this.getRange(stack)).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         tooltip.add(new TranslatableText("item.mishanguc.fast_building_tool.tooltip.matchingRule", this.getMatchingRule(stack).getName()).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
     }

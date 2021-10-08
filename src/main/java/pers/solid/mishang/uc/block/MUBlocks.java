@@ -24,7 +24,7 @@ public final class MUBlocks {
      */
     private static final FabricBlockSettings ASPHALT_ROAD_SETTINGS = FabricBlockSettings.of(Material.STONE, MapColor.GRAY).strength(0.5F).breakByHand(true);
 
-    // 普通路块部分。
+    //// 普通路块部分。
     @InGroup("roads")
     @RegisterIdentifier
     public static final RoadBlock ASPHALT_ROAD_BLOCK = new RoadBlock(ASPHALT_ROAD_SETTINGS);
@@ -61,8 +61,12 @@ public final class MUBlocks {
     @Cutout
     @RegisterIdentifier
     public static final RoadBlockWithJointLine ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_THICK_SIDE = new RoadBlockWithJointLine(ASPHALT_ROAD_SETTINGS,LineColor.WHITE);
+
+    // 填满的路块。
     @RegisterIdentifier
     public static final RoadBlock ASPHALT_ROAD_FILLED_WITH_WHITE =new RoadBlock(FabricBlockSettings.copyOf(ASPHALT_ROAD_SETTINGS).materialColor(MapColor.WHITE));
+
+    // 自动路块。
     @RegisterIdentifier
     @Cutout
     public static final RoadBlockWithAutoLine ASPHALT_ROAD_WITH_WHITE_AUTO_BEVEL_ANGLE_LINE = new RoadBlockWithAutoLine(ASPHALT_ROAD_SETTINGS, RoadWithAutoLine.RoadAutoLineType.BEVEL, RoadTexture.ASPHALT, LineColor.WHITE);
@@ -70,7 +74,7 @@ public final class MUBlocks {
     @Cutout
     public static final RoadBlockWithAutoLine ASPHALT_ROAD_WITH_WHITE_AUTO_RIGHT_ANGLE_LINE = new RoadBlockWithAutoLine(ASPHALT_ROAD_SETTINGS, RoadWithAutoLine.RoadAutoLineType.RIGHT_ANGLE, RoadTexture.ASPHALT, LineColor.WHITE);
 
-    // 台阶部分
+    //// 台阶部分。
     @RegisterIdentifier
     public static final RoadSlabBlock ASPHALT_ROAD_SLAB =new RoadSlabBlock(ASPHALT_ROAD_SETTINGS,LineColor.NONE);
     @Cutout
@@ -94,8 +98,22 @@ public final class MUBlocks {
     @Cutout
     @RegisterIdentifier
     public static final RoadSlabBlockWithOffsetStraightLine ASPHALT_ROAD_SLAB_WITH_WHITE_SIDE_LINE = new RoadSlabBlockWithOffsetStraightLine(ASPHALT_ROAD_SETTINGS,LineColor.WHITE);
+    @Cutout
+    @RegisterIdentifier
+    public static final RoadSlabBlockWithStraightLine ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_DOUBLE_LINE = new RoadSlabBlockWithStraightLine(ASPHALT_ROAD_SETTINGS,LineColor.WHITE);
+    @Cutout
+    @RegisterIdentifier
+    public static final RoadSlabBlockWithStraightLine ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_THICK_LINE = new RoadSlabBlockWithStraightLine(ASPHALT_ROAD_SETTINGS,LineColor.WHITE);
+    @Cutout
+    @RegisterIdentifier
+    public static final RoadSlabBlockWithJointLine ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE_WITH_DOUBLE_SIDE = new RoadSlabBlockWithJointLine(ASPHALT_ROAD_SETTINGS,LineColor.WHITE);
+    @Cutout
+    @RegisterIdentifier
+    public static final RoadSlabBlockWithJointLine ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE_WITH_THICK_SIDE = new RoadSlabBlockWithJointLine(ASPHALT_ROAD_SETTINGS,LineColor.WHITE);
+
     @RegisterIdentifier
     public static final RoadSlabBlock ASPHALT_ROAD_FILLED_WITH_WHITE_SLAB =new RoadSlabBlock(FabricBlockSettings.copyOf(ASPHALT_ROAD_FILLED_WITH_WHITE),LineColor.WHITE);
+
     @RegisterIdentifier
     @Cutout
     public static final RoadSlabBlockWithAutoLine ASPHALT_ROAD_SLAB_WITH_WHITE_AUTO_BEVEL_ANGLE_LINE = new RoadSlabBlockWithAutoLine(ASPHALT_ROAD_SETTINGS, RoadWithAutoLine.RoadAutoLineType.BEVEL, RoadTexture.ASPHALT, LineColor.WHITE);
