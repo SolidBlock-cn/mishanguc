@@ -34,6 +34,9 @@ public final class MUItems {
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld",texture = "item/stick")
     public static final MirroringToolItem MIRRORING_TOOL = new MirroringToolItem(new FabricItemSettings().group(ItemGroups.TOOLS));
+    @RegisterIdentifier
+    @SimpleModel(parent = "item/handheld",texture = "item/stick")
+    public static final SlabToolItem SLAB_TOOL = new SlabToolItem(new FabricItemSettings().group(ItemGroups.TOOLS));
 
     static {
         // 注册方块物品。

@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(WorldRenderer.class)
-public interface WorldRendererAccessor {
+public interface WorldRendererInvoker {
     /**
      * 在指定位置渲染指定外观。
      * @see WorldRenderer

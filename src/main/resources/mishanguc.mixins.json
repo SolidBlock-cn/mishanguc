@@ -4,9 +4,10 @@
   "package": "pers.solid.mishang.uc.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "ItemUsageContextInvoker"
   ],
   "client": [
-    "WorldRendererAccessor"
+    "WorldRendererInvoker"
   ],
   "injectors": {
     "defaultRequire": 1

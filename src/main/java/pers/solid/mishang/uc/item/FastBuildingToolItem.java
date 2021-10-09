@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.item;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,6 +14,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
@@ -21,10 +23,16 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 import pers.solid.mishang.uc.util.BlockMatchingRule;
 
 import java.util.List;
 
+/**
+ * 该物品可以快速建造或者删除一个平面上的多个方块。
+ * @see BlockMatchingRule
+ * @see pers.solid.mishang.uc.render.BuildingToolOutlineRenderer
+ */
 public class FastBuildingToolItem extends Item {
     public FastBuildingToolItem(Settings settings) {
         super(settings);
@@ -37,25 +45,46 @@ public class FastBuildingToolItem extends Item {
         final PlayerEntity player = context.getPlayer();
         final World world = context.getWorld();
         final BlockState centerState = world.getBlockState(centerBlockPos);
-        BlockSoundGroup blockSoundGroup = centerState.getSoundGroup();
-        world.playSound(context.getPlayer(), centerBlockPos.offset(side), centerState.getSoundGroup().getPlaceSound(), SoundCategory.BLOCKS, (blockSoundGroup.getVolume() + 1.0F) / 2.0F, blockSoundGroup.getPitch() * 0.8F);
-        if (!world.isClient() && player != null) {
+        if (player != null) {
             final ItemStack stack = context.getStack();
             final int range = this.getRange(stack);
             final BlockMatchingRule matchingRule = this.getMatchingRule(stack);
+            @Nullable Block handBlock = null;
+            @Nullable Hand hand = null;
+            for (Hand hand1 : Hand.values()) {
+                final ItemStack stackInHand = player.getStackInHand(hand1);
+                if (stackInHand.getItem() instanceof BlockItem) {
+                    handBlock = ((BlockItem) stackInHand.getItem()).getBlock();
+                    hand = hand1;
+                }
+            }
             for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, centerBlockPos, side, range)) {
                 BlockState state = world.getBlockState(pos);
                 if (matchingRule.match(centerState, state)) {
-                    final BlockPos offsetPos = pos.offset(side);
+                    final @NotNull ItemPlacementContext newContext = hand==null ? new ItemPlacementContext(player,context.getHand(),new ItemStack(state.getBlock().asItem()), ((ItemUsageContextInvoker) context).invokeGetHitResult().withBlockPos(pos)) : new ItemPlacementContext(player, hand, player.getStackInHand(hand), ((ItemUsageContextInvoker) context).invokeGetHitResult().withBlockPos(pos));
+                    final BlockPos offsetPos = newContext.getBlockPos();
                     final BlockState offsetPosState = world.getBlockState(offsetPos);
-                    if (offsetPosState.canReplace(new ItemPlacementContext(context))) {
-                        if (state.getProperties().contains(Properties.WATERLOGGED)) {
-                            state = state.with(Properties.WATERLOGGED, offsetPosState.getFluidState().isStill());
+                    BlockState newState = handBlock == null ? null : handBlock.getPlacementState(newContext);
+                    if (newState==null) newState = newContext.canReplaceExisting() ? state.getBlock().getPlacementState(newContext) : null;
+                    if (newState ==null) newState = state;
+                    if (newState.getProperties().contains(Properties.WATERLOGGED)) {
+                        newState = newState.with(Properties.WATERLOGGED, offsetPosState.getFluidState().isStill());
+                    }
+                    if (newState.canPlaceAt(world,offsetPos) && offsetPosState.canReplace(newContext)) {
+                        // 新放置的方块的方块状态。
+                        // 如果玩家手中拿着方块，且方块具有放置状态，则使用此状态。
+                        // 否则，使用原来的方块状态，即 state。
+                        if (world.isClient()) {
+                            // 播放声音。
+                            BlockSoundGroup blockSoundGroup = newState.getSoundGroup();
+                            world.playSound(context.getPlayer(), offsetPos, blockSoundGroup.getPlaceSound(), SoundCategory.BLOCKS, (blockSoundGroup.getVolume() + 1.0F) / 2.0F, blockSoundGroup.getPitch() * 0.8F);
+                            break; // 只播放一次声音就结束循环。。
+                        } else {
+                            world.setBlockState(offsetPos, newState, 11);
                         }
-                        world.setBlockState(offsetPos, state);
                     }
                 }
-            }
+            } // end for
         }
         return ActionResult.success(world.isClient);
     }

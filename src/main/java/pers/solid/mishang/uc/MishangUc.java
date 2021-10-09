@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import pers.solid.mishang.uc.block.MUBlocks;
 import pers.solid.mishang.uc.item.MUItems;
 import pers.solid.mishang.uc.render.BuildingToolOutlineRenderer;
+import pers.solid.mishang.uc.render.SlabToolOutlineRenderer;
 
 public class MishangUc implements ModInitializer {
 	@Override
@@ -18,5 +19,6 @@ public class MishangUc implements ModInitializer {
 		new MUItems();
 
 		WorldRenderEvents.BLOCK_OUTLINE.register(new BuildingToolOutlineRenderer());
+		WorldRenderEvents.BLOCK_OUTLINE.register(new SlabToolOutlineRenderer());
 	}
 }
