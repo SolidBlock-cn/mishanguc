@@ -40,7 +40,7 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
 
     @Override
     default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
-        return RoadWithStraightLine.super.withPlacementState(RoadWithAngleLine.super.withPlacementState(state, ctx),ctx);
+        return RoadWithStraightLine.super.withPlacementState(RoadWithAngleLine.super.withPlacementState(state, ctx), ctx);
     }
 
     @Override

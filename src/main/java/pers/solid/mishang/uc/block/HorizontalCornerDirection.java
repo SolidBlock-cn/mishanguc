@@ -28,6 +28,26 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
         this.dir2 = dir2;
     }
 
+    public static @Nullable HorizontalCornerDirection fromDirections(Direction dir1, Direction dir2) {
+        ImmutableSet<Direction> directions = ImmutableSet.of(dir1, dir2);
+        for (HorizontalCornerDirection direction : HorizontalCornerDirection.values()) {
+            if (directions.equals(ImmutableSet.of(direction.dir1, direction.dir2))) return direction;
+        }
+        return null;
+    }
+
+    public static HorizontalCornerDirection fromId(int id) {
+        id = id & 3;
+        for (HorizontalCornerDirection direction : HorizontalCornerDirection.values()) {
+            if (direction.id == id) return direction;
+        }
+        throw new IllegalStateException();
+    }
+
+    public static HorizontalCornerDirection fromRotation(float rotation) {
+        return fromId(Math.floorDiv((int) rotation, 90));
+    }
+
     @Override
     public String asString() {
         return this.name;
@@ -44,67 +64,58 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
                 axis.asString()));
     }
 
-    public static @Nullable HorizontalCornerDirection fromDirections(Direction dir1, Direction dir2) {
-        ImmutableSet<Direction> directions = ImmutableSet.of(dir1, dir2);
-        for (HorizontalCornerDirection direction : HorizontalCornerDirection.values()) {
-            if (directions.equals(ImmutableSet.of(direction.dir1, direction.dir2))) return direction;
-        }
-        return null;
-    }
-
     public float asRotation() {
         return (dir1.asRotation() + dir2.asRotation()) / 2;
     }
 
-    public static HorizontalCornerDirection fromId(int id) {
-        id = id & 3;
-        for (HorizontalCornerDirection direction : HorizontalCornerDirection.values()) {
-            if (direction.id == id) return direction;
-        }
-        throw new IllegalStateException();
-    }
-
-    public static HorizontalCornerDirection fromRotation(float rotation) {
-        return fromId(Math.floorDiv((int) rotation, 90));
-    }
-
     public boolean hasDirection(Direction direction) {
-        return direction==dir1 || direction==dir2;
+        return direction == dir1 || direction == dir2;
     }
 
     public HorizontalCornerDirection rotateYClockwise() {
-        return fromDirections(dir1.rotateYClockwise(),dir2.rotateYClockwise());
+        return fromDirections(dir1.rotateYClockwise(), dir2.rotateYClockwise());
     }
 
     public HorizontalCornerDirection rotateYCounterclockwise() {
-        return fromDirections(dir1.rotateYCounterclockwise(),dir2.rotateYCounterclockwise());
+        return fromDirections(dir1.rotateYCounterclockwise(), dir2.rotateYCounterclockwise());
     }
 
     public HorizontalCornerDirection mirror(BlockMirror mirror) {
-        return fromDirections(mirror.apply(dir1),mirror.apply(dir2));
+        return fromDirections(mirror.apply(dir1), mirror.apply(dir2));
     }
 
     public HorizontalCornerDirection mirror(Direction direction) {
         BlockMirror mirror;
         switch (direction.getAxis()) {
-            case X: mirror = BlockMirror.LEFT_RIGHT; break;
-            case Z: mirror = BlockMirror.FRONT_BACK; break;
-            default: mirror = BlockMirror.NONE; break;
+            case X:
+                mirror = BlockMirror.LEFT_RIGHT;
+                break;
+            case Z:
+                mirror = BlockMirror.FRONT_BACK;
+                break;
+            default:
+                mirror = BlockMirror.NONE;
+                break;
         }
         return mirror(mirror);
     }
 
     public HorizontalCornerDirection rotate(BlockRotation rotation) {
         switch (rotation) {
-            case NONE:return this;
-            case CLOCKWISE_90:return this.rotateYClockwise();
-            case COUNTERCLOCKWISE_90:return this.rotateYCounterclockwise();
-            case CLOCKWISE_180:return this.getOpposite();
-            default:throw new IllegalStateException();
+            case NONE:
+                return this;
+            case CLOCKWISE_90:
+                return this.rotateYClockwise();
+            case COUNTERCLOCKWISE_90:
+                return this.rotateYCounterclockwise();
+            case CLOCKWISE_180:
+                return this.getOpposite();
+            default:
+                throw new IllegalStateException();
         }
     }
 
     public HorizontalCornerDirection getOpposite() {
-        return fromDirections(dir1.getOpposite(),dir2.getOpposite());
+        return fromDirections(dir1.getOpposite(), dir2.getOpposite());
     }
 }

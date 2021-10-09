@@ -4,6 +4,6 @@ import pers.solid.mishang.uc.LineColor;
 
 public class RoadBlockWithOffsetStraightLine extends AbstractRoadBlock implements RoadWithOffsetStraightLine {
     public RoadBlockWithOffsetStraightLine(Settings settings, LineColor lineColor) {
-        super(settings,lineColor);
+        super(settings, lineColor);
     }
 }

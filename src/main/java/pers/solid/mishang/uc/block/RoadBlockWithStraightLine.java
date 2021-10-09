@@ -7,7 +7,7 @@ import pers.solid.mishang.uc.LineColor;
 
 public class RoadBlockWithStraightLine extends AbstractRoadBlock implements RoadWithStraightLine {
     public RoadBlockWithStraightLine(Settings settings, LineColor lineColor) {
-        super(settings,lineColor);
+        super(settings, lineColor);
     }
 
     @Override

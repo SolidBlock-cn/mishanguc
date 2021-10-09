@@ -28,11 +28,11 @@ public interface RoadWithAngleLine extends Road {
 
     @Override
     default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
-        return RoadConnectionState.of(state.get(FACING).hasDirection(direction),getLineColor(),isBevel() ? Either.right(state.get(FACING).mirror(direction)) : Either.left(direction));
+        return RoadConnectionState.of(state.get(FACING).hasDirection(direction), getLineColor(), isBevel() ? Either.right(state.get(FACING).mirror(direction)) : Either.left(direction));
     }
 
     default BlockState mirrorRoad(BlockState state, BlockMirror mirror) {
-        return state.with(FACING,state.get(FACING).mirror(mirror));
+        return state.with(FACING, state.get(FACING).mirror(mirror));
     }
 
     default BlockState rotateRoad(BlockState state, BlockRotation rotation) {
@@ -41,9 +41,9 @@ public interface RoadWithAngleLine extends Road {
     }
 
     default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
-        if (state==null) return null;
+        if (state == null) return null;
         final HorizontalCornerDirection rotation = HorizontalCornerDirection.fromRotation(ctx.getPlayerYaw());
-        return state.with(FACING, ctx.getPlayer()!=null && ctx.getPlayer().isSneaking() ? rotation.getOpposite() : rotation);
+        return state.with(FACING, ctx.getPlayer() != null && ctx.getPlayer().isSneaking() ? rotation.getOpposite() : rotation);
     }
 
     @Override

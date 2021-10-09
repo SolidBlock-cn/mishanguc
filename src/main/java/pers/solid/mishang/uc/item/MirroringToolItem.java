@@ -25,25 +25,38 @@ public class MirroringToolItem extends Item {
         final Direction.Axis axis = side.getAxis();
         final BlockMirror mirror;
         switch (axis) {
-            case X:mirror = BlockMirror.FRONT_BACK; break;
-            default:mirror = BlockMirror.NONE; break;
-            case Z:mirror = BlockMirror.LEFT_RIGHT; break;
+            case X:
+                mirror = BlockMirror.FRONT_BACK;
+                break;
+            default:
+                mirror = BlockMirror.NONE;
+                break;
+            case Z:
+                mirror = BlockMirror.LEFT_RIGHT;
+                break;
         }
-        world.setBlockState(blockPos,blockState.mirror(mirror));
+        world.setBlockState(blockPos, blockState.mirror(mirror));
         return ActionResult.SUCCESS;
     }
 
     @Override
     public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
         final BlockHitResult raycast = (BlockHitResult) miner.raycast(20, 0, false);
-        final Direction side = raycast.getSide();final Direction.Axis axis = side.getAxis();
+        final Direction side = raycast.getSide();
+        final Direction.Axis axis = side.getAxis();
         final BlockMirror mirror;
         switch (axis) {
-            case X:mirror = BlockMirror.FRONT_BACK; break;
-            default:mirror = BlockMirror.NONE; break;
-            case Z:mirror = BlockMirror.LEFT_RIGHT; break;
+            case X:
+                mirror = BlockMirror.FRONT_BACK;
+                break;
+            default:
+                mirror = BlockMirror.NONE;
+                break;
+            case Z:
+                mirror = BlockMirror.LEFT_RIGHT;
+                break;
         }
-        world.setBlockState(pos,state.mirror(mirror));
+        world.setBlockState(pos, state.mirror(mirror));
         return false;
     }
 }

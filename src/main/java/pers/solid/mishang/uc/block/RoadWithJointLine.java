@@ -30,7 +30,7 @@ public interface RoadWithJointLine extends Road {
 
     @Override
     default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
-        return RoadConnectionState.or(Road.super.getConnectionStateOf(state, direction), RoadConnectionState.of(!(state.get(FACING) == direction.getOpposite()),getLineColor(),Either.left(direction)));
+        return RoadConnectionState.or(Road.super.getConnectionStateOf(state, direction), RoadConnectionState.of(!(state.get(FACING) == direction.getOpposite()), getLineColor(), Either.left(direction)));
     }
 
     @Override
@@ -46,7 +46,7 @@ public interface RoadWithJointLine extends Road {
     @Override
     default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
         final Direction rotation = Direction.fromRotation(ctx.getPlayerYaw());
-        return Road.super.withPlacementState(state, ctx).with(FACING, ctx.getPlayer()!=null && ctx.getPlayer().isSneaking() ? rotation.getOpposite() : rotation);
+        return Road.super.withPlacementState(state, ctx).with(FACING, ctx.getPlayer() != null && ctx.getPlayer().isSneaking() ? rotation.getOpposite() : rotation);
     }
 
     @Override

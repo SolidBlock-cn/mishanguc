@@ -20,6 +20,7 @@ public class SlabToolItem extends Item {
 
     /**
      * 破坏台阶的一部分。
+     *
      * @see Item#canMine
      */
     @Override
@@ -28,17 +29,17 @@ public class SlabToolItem extends Item {
         try {
             if (state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
                 final BlockHitResult raycast = ((BlockHitResult) miner.raycast(20, 0, false));
-                boolean bl = raycast.getPos().y - (double)raycast.getBlockPos().getY() > 0.5D;
+                boolean bl = raycast.getPos().y - (double) raycast.getBlockPos().getY() > 0.5D;
                 if (bl) {
                     // 破坏上半砖的情况。
                     world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.BOTTOM));
-                    block.onBreak(world,pos,state.with(Properties.SLAB_TYPE,SlabType.TOP),miner);
-                    block.onBreak(world,pos,state.with(Properties.SLAB_TYPE,SlabType.TOP),miner);
+                    block.onBreak(world, pos, state.with(Properties.SLAB_TYPE, SlabType.TOP), miner);
+                    block.onBreak(world, pos, state.with(Properties.SLAB_TYPE, SlabType.TOP), miner);
                 } else {
                     // 破坏下半砖的情况
-                    world.setBlockState(pos, state.with(Properties.SLAB_TYPE,SlabType.TOP));
-                    block.onBreak(world,pos,state.with(Properties.SLAB_TYPE,SlabType.BOTTOM),miner);
-                    block.onBreak(world,pos,state.with(Properties.SLAB_TYPE,SlabType.BOTTOM),miner);
+                    world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.TOP));
+                    block.onBreak(world, pos, state.with(Properties.SLAB_TYPE, SlabType.BOTTOM), miner);
+                    block.onBreak(world, pos, state.with(Properties.SLAB_TYPE, SlabType.BOTTOM), miner);
                 }
                 // 此处还需要模拟 ClientPlayerInteractionManager 和 ServerPlayerInteractionManager 中的情形。
                 return false;

@@ -30,6 +30,7 @@ import java.util.List;
 
 /**
  * 该物品可以快速建造或者删除一个平面上的多个方块。
+ *
  * @see BlockMatchingRule
  * @see pers.solid.mishang.uc.render.BuildingToolOutlineRenderer
  */
@@ -61,16 +62,17 @@ public class FastBuildingToolItem extends Item {
             for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, centerBlockPos, side, range)) {
                 BlockState state = world.getBlockState(pos);
                 if (matchingRule.match(centerState, state)) {
-                    final @NotNull ItemPlacementContext newContext = hand==null ? new ItemPlacementContext(player,context.getHand(),new ItemStack(state.getBlock().asItem()), ((ItemUsageContextInvoker) context).invokeGetHitResult().withBlockPos(pos)) : new ItemPlacementContext(player, hand, player.getStackInHand(hand), ((ItemUsageContextInvoker) context).invokeGetHitResult().withBlockPos(pos));
+                    final @NotNull ItemPlacementContext newContext = hand == null ? new ItemPlacementContext(player, context.getHand(), new ItemStack(state.getBlock().asItem()), ((ItemUsageContextInvoker) context).invokeGetHitResult().withBlockPos(pos)) : new ItemPlacementContext(player, hand, player.getStackInHand(hand), ((ItemUsageContextInvoker) context).invokeGetHitResult().withBlockPos(pos));
                     final BlockPos offsetPos = newContext.getBlockPos();
                     final BlockState offsetPosState = world.getBlockState(offsetPos);
                     BlockState newState = handBlock == null ? null : handBlock.getPlacementState(newContext);
-                    if (newState==null) newState = newContext.canReplaceExisting() ? state.getBlock().getPlacementState(newContext) : null;
-                    if (newState ==null) newState = state;
+                    if (newState == null)
+                        newState = newContext.canReplaceExisting() ? state.getBlock().getPlacementState(newContext) : null;
+                    if (newState == null) newState = state;
                     if (newState.getProperties().contains(Properties.WATERLOGGED)) {
                         newState = newState.with(Properties.WATERLOGGED, offsetPosState.getFluidState().isStill());
                     }
-                    if (newState.canPlaceAt(world,offsetPos) && offsetPosState.canReplace(newContext)) {
+                    if (newState.canPlaceAt(world, offsetPos) && offsetPosState.canReplace(newContext)) {
                         // 新放置的方块的方块状态。
                         // 如果玩家手中拿着方块，且方块具有放置状态，则使用此状态。
                         // 否则，使用原来的方块状态，即 state。
@@ -116,7 +118,7 @@ public class FastBuildingToolItem extends Item {
 
     public int getRange(ItemStack stack) {
         final NbtCompound tag = stack.getOrCreateTag();
-        return tag.contains("Range", 99) ? Integer.min(tag.getInt("Range"),128) : 8;
+        return tag.contains("Range", 99) ? Integer.min(tag.getInt("Range"), 128) : 8;
     }
 
     public @NotNull BlockMatchingRule getMatchingRule(ItemStack stack) {
@@ -136,45 +138,45 @@ public class FastBuildingToolItem extends Item {
     @Override
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
         if (this.isIn(group)) {
-            stacks.add(Util.make(new ItemStack(this),stack -> {
+            stacks.add(Util.make(new ItemStack(this), stack -> {
                 final NbtCompound tag = stack.getOrCreateTag();
-                tag.putInt("Range",8);
-                tag.putString("MatchingRule",BlockMatchingRule.SAME_STATE.asString());
+                tag.putInt("Range", 8);
+                tag.putString("MatchingRule", BlockMatchingRule.SAME_STATE.asString());
             }));
-            stacks.add(Util.make(new ItemStack(this),stack -> {
+            stacks.add(Util.make(new ItemStack(this), stack -> {
                 final NbtCompound tag = stack.getOrCreateTag();
-                tag.putInt("Range",32);
-                tag.putString("MatchingRule",BlockMatchingRule.SAME_STATE.asString());
+                tag.putInt("Range", 32);
+                tag.putString("MatchingRule", BlockMatchingRule.SAME_STATE.asString());
             }));
-            stacks.add(Util.make(new ItemStack(this),stack -> {
+            stacks.add(Util.make(new ItemStack(this), stack -> {
                 final NbtCompound tag = stack.getOrCreateTag();
-                tag.putInt("Range",8);
-                tag.putString("MatchingRule",BlockMatchingRule.SAME_BLOCK.asString());
+                tag.putInt("Range", 8);
+                tag.putString("MatchingRule", BlockMatchingRule.SAME_BLOCK.asString());
             }));
-            stacks.add(Util.make(new ItemStack(this),stack -> {
+            stacks.add(Util.make(new ItemStack(this), stack -> {
                 final NbtCompound tag = stack.getOrCreateTag();
-                tag.putInt("Range",32);
-                tag.putString("MatchingRule",BlockMatchingRule.SAME_BLOCK.asString());
+                tag.putInt("Range", 32);
+                tag.putString("MatchingRule", BlockMatchingRule.SAME_BLOCK.asString());
             }));
-            stacks.add(Util.make(new ItemStack(this),stack -> {
+            stacks.add(Util.make(new ItemStack(this), stack -> {
                 final NbtCompound tag = stack.getOrCreateTag();
-                tag.putInt("Range",8);
-                tag.putString("MatchingRule",BlockMatchingRule.SAME_MATERIAL.asString());
+                tag.putInt("Range", 8);
+                tag.putString("MatchingRule", BlockMatchingRule.SAME_MATERIAL.asString());
             }));
-            stacks.add(Util.make(new ItemStack(this),stack -> {
+            stacks.add(Util.make(new ItemStack(this), stack -> {
                 final NbtCompound tag = stack.getOrCreateTag();
-                tag.putInt("Range",32);
-                tag.putString("MatchingRule",BlockMatchingRule.SAME_MATERIAL.asString());
+                tag.putInt("Range", 32);
+                tag.putString("MatchingRule", BlockMatchingRule.SAME_MATERIAL.asString());
             }));
-            stacks.add(Util.make(new ItemStack(this),stack -> {
+            stacks.add(Util.make(new ItemStack(this), stack -> {
                 final NbtCompound tag = stack.getOrCreateTag();
-                tag.putInt("Range",8);
-                tag.putString("MatchingRule",BlockMatchingRule.ANY.asString());
+                tag.putInt("Range", 8);
+                tag.putString("MatchingRule", BlockMatchingRule.ANY.asString());
             }));
-            stacks.add(Util.make(new ItemStack(this),stack -> {
+            stacks.add(Util.make(new ItemStack(this), stack -> {
                 final NbtCompound tag = stack.getOrCreateTag();
-                tag.putInt("Range",32);
-                tag.putString("MatchingRule",BlockMatchingRule.ANY.asString());
+                tag.putInt("Range", 32);
+                tag.putString("MatchingRule", BlockMatchingRule.ANY.asString());
             }));
         }
     }

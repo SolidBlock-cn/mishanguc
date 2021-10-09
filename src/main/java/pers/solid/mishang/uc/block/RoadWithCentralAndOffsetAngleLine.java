@@ -53,6 +53,6 @@ public interface RoadWithCentralAndOffsetAngleLine extends RoadWithAngleLine {
     @Override
     default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
         return RoadWithAngleLine.super.withPlacementState(state, ctx)
-                .with(AXIS,ctx.getPlayerFacing().getAxis());
+                .with(AXIS, ctx.getPlayerFacing().getAxis());
     }
 }

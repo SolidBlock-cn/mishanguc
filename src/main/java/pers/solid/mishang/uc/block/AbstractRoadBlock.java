@@ -38,23 +38,23 @@ public abstract class AbstractRoadBlock extends Block implements Road {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return withPlacementState(super.getPlacementState(ctx),ctx);
+        return withPlacementState(super.getPlacementState(ctx), ctx);
     }
 
     @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return mirrorRoad(super.mirror(state, mirror),mirror);
+        return mirrorRoad(super.mirror(state, mirror), mirror);
     }
 
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return rotateRoad(super.rotate(state, rotation),rotation);
+        return rotateRoad(super.rotate(state, rotation), rotation);
     }
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ActionResult result = super.onUse(state, world, pos, player, hand, hit);
-        if (result==ActionResult.FAIL) return result;
+        if (result == ActionResult.FAIL) return result;
         else return onUseRoad(state, world, pos, player, hand, hit);
     }
 

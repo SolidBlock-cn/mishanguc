@@ -7,7 +7,7 @@ import pers.solid.mishang.uc.LineColor;
  */
 public class RoadSlabBlockWithStraightAndAngleLine extends AbstractRoadSlabBlock implements RoadWithStraightAndAngleLine {
     public RoadSlabBlockWithStraightAndAngleLine(Settings settings, LineColor lineColor) {
-        super(settings,lineColor);
+        super(settings, lineColor);
     }
 
     @Override

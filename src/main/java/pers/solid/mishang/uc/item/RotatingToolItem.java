@@ -19,13 +19,13 @@ public class RotatingToolItem extends Item {
         final BlockPos blockPos = context.getBlockPos();
         final World world = context.getWorld();
         final BlockState blockState = world.getBlockState(blockPos);
-        world.setBlockState(blockPos,blockState.rotate(context.getPlayer()!=null && context.getPlayer().isSneaking() ? BlockRotation.COUNTERCLOCKWISE_90 : BlockRotation.CLOCKWISE_90));
+        world.setBlockState(blockPos, blockState.rotate(context.getPlayer() != null && context.getPlayer().isSneaking() ? BlockRotation.COUNTERCLOCKWISE_90 : BlockRotation.CLOCKWISE_90));
         return ActionResult.SUCCESS;
     }
 
     @Override
     public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-        world.setBlockState(pos,state.rotate(miner.isSneaking() ? BlockRotation.COUNTERCLOCKWISE_90 : BlockRotation.CLOCKWISE_90));
+        world.setBlockState(pos, state.rotate(miner.isSneaking() ? BlockRotation.COUNTERCLOCKWISE_90 : BlockRotation.CLOCKWISE_90));
         return false;
     }
 }

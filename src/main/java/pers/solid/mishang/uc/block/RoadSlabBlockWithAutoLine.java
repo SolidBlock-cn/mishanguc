@@ -11,17 +11,18 @@ import pers.solid.mishang.uc.RoadTexture;
 
 import java.util.Map;
 
-public class RoadSlabBlockWithAutoLine extends AbstractRoadSlabBlock implements RoadWithAutoLine{
+public class RoadSlabBlockWithAutoLine extends AbstractRoadSlabBlock implements RoadWithAutoLine {
     public final RoadAutoLineType type;
     private final RoadTexture texture;
+
     public RoadSlabBlockWithAutoLine(Settings settings, RoadAutoLineType type, RoadTexture texture, LineColor lineColor) {
-        super(settings,lineColor);
+        super(settings, lineColor);
         this.type = type;
         this.texture = texture;
     }
 
     @Override
-    public @NotNull BlockState makeState(Map<Direction,RoadConnectionState> connectionStateMap, BlockState defaultState) {
+    public @NotNull BlockState makeState(Map<Direction, RoadConnectionState> connectionStateMap, BlockState defaultState) {
         int connected = 0;
         for (Map.Entry<Direction, RoadConnectionState> e : connectionStateMap.entrySet()) {
             Direction key = e.getKey();
@@ -33,14 +34,14 @@ public class RoadSlabBlockWithAutoLine extends AbstractRoadSlabBlock implements 
                 case 0:
                     // 全都不连接的情况。
                     return MUBlocks.ASPHALT_ROAD_SLAB.getDefaultState()
-                            .with(Properties.SLAB_TYPE,defaultState.get(Properties.SLAB_TYPE))
-                            .with(WATERLOGGED,defaultState.get(WATERLOGGED));
+                            .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
+                            .with(WATERLOGGED, defaultState.get(WATERLOGGED));
                 case 4:
                     // 全都连接的情况。
                     if (lineColor == LineColor.WHITE)
                         return MUBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_CROSS_LINE.getDefaultState()
-                                .with(Properties.SLAB_TYPE,defaultState.get(Properties.SLAB_TYPE))
-                                .with(WATERLOGGED,defaultState.get(WATERLOGGED));
+                                .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
+                                .with(WATERLOGGED, defaultState.get(WATERLOGGED));
                     else
                         return defaultState;
                 case 2:
@@ -51,8 +52,8 @@ public class RoadSlabBlockWithAutoLine extends AbstractRoadSlabBlock implements 
                         if (connectionStateMap.get(direction.getOpposite()).mayConnect()) {
                             // 如果对面方向也有的情况。
                             return MUBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_LINE.getDefaultState()
-                                    .with(Properties.SLAB_TYPE,defaultState.get(Properties.SLAB_TYPE))
-                                    .with(WATERLOGGED,defaultState.get(WATERLOGGED))
+                                    .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
+                                    .with(WATERLOGGED, defaultState.get(WATERLOGGED))
                                     .with(Properties.HORIZONTAL_AXIS, direction.getAxis());
                         } else {
                             // 直角或斜角的情况。
@@ -73,8 +74,8 @@ public class RoadSlabBlockWithAutoLine extends AbstractRoadSlabBlock implements 
                             if (block == null) return defaultState;
                             // 现在已经确定好了block的类型，现在考虑方向。
                             BlockState state = block.getDefaultState()
-                                    .with(Properties.SLAB_TYPE,defaultState.get(Properties.SLAB_TYPE))
-                                    .with(WATERLOGGED,defaultState.get(WATERLOGGED));
+                                    .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
+                                    .with(WATERLOGGED, defaultState.get(WATERLOGGED));
                             if (state.contains(RoadWithAngleLine.FACING)) {
                                 return state.with(RoadWithAngleLine.FACING, HorizontalCornerDirection.fromDirections(direction, connectionStateMap.get(direction2).mayConnect() ? direction2 : direction.rotateYCounterclockwise()));
                             }
@@ -85,8 +86,8 @@ public class RoadSlabBlockWithAutoLine extends AbstractRoadSlabBlock implements 
                     for (Map.Entry<Direction, RoadConnectionState> entry : connectionStateMap.entrySet()) {
                         if (entry.getValue().mayConnect() && lineColor == LineColor.WHITE)
                             return MUBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_LINE.getDefaultState()
-                                    .with(Properties.SLAB_TYPE,defaultState.get(Properties.SLAB_TYPE))
-                                    .with(WATERLOGGED,defaultState.get(WATERLOGGED))
+                                    .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
+                                    .with(WATERLOGGED, defaultState.get(WATERLOGGED))
                                     .with(Properties.HORIZONTAL_AXIS, entry.getKey().getAxis());
                     }
                     return defaultState;
@@ -98,19 +99,19 @@ public class RoadSlabBlockWithAutoLine extends AbstractRoadSlabBlock implements 
                             // 朝向的方块
                             Direction direction = entry.getKey().getOpposite();
                             RoadConnectionState state = connectionStateMap.get(direction);
-                            if (state.direction==null || state.direction.left().isPresent() || type!=RoadAutoLineType.BEVEL)
+                            if (state.direction == null || state.direction.left().isPresent() || type != RoadAutoLineType.BEVEL)
                                 // 连接直线
                                 return MUBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE.getDefaultState()
-                                        .with(Properties.SLAB_TYPE,defaultState.get(Properties.SLAB_TYPE))
-                                        .with(WATERLOGGED,defaultState.get(WATERLOGGED))
+                                        .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
+                                        .with(WATERLOGGED, defaultState.get(WATERLOGGED))
                                         .with(Properties.HORIZONTAL_FACING, direction);
-                            else if (state.direction.right().isPresent()){
+                            else if (state.direction.right().isPresent()) {
                                 // 连接斜线
                                 return MUBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_AND_BEVEL_ANGLE_LINE.getDefaultState()
-                                        .with(Properties.SLAB_TYPE,defaultState.get(Properties.SLAB_TYPE))
-                                        .with(WATERLOGGED,defaultState.get(WATERLOGGED))
-                                        .with(Properties.HORIZONTAL_AXIS,direction.rotateYClockwise().getAxis())
-                                        .with(ModProperties.HORIZONTAL_CORNER_FACING,state.direction.right().get().getOpposite().mirror(direction));
+                                        .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
+                                        .with(WATERLOGGED, defaultState.get(WATERLOGGED))
+                                        .with(Properties.HORIZONTAL_AXIS, direction.rotateYClockwise().getAxis())
+                                        .with(ModProperties.HORIZONTAL_CORNER_FACING, state.direction.right().get().getOpposite().mirror(direction));
                             }
                         }
                     }

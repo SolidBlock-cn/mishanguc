@@ -25,11 +25,11 @@ import pers.solid.mishang.uc.item.FastBuildingToolItem;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.util.BlockMatchingRule;
 
-public class BuildingToolOutlineRenderer implements WorldRenderEvents.BlockOutline{
+public class BuildingToolOutlineRenderer implements WorldRenderEvents.BlockOutline {
     @Override
     public boolean onBlockOutline(WorldRenderContext worldRenderContext, WorldRenderContext.BlockOutlineContext blockOutlineContext) {
         final BlockPos blockPos = blockOutlineContext.blockPos();
-        DebugRenderer.drawBox(new Box(blockPos),0.2f,1,1,1);
+        DebugRenderer.drawBox(new Box(blockPos), 0.2f, 1, 1, 1);
         final VertexConsumer vertexConsumer = blockOutlineContext.vertexConsumer();
         Vec3d vec3d = worldRenderContext.camera().getPos();
         PlayerEntity player;
@@ -61,17 +61,19 @@ public class BuildingToolOutlineRenderer implements WorldRenderEvents.BlockOutli
             }
             for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, raycast.getBlockPos(), raycast.getSide(), range)) {
                 final BlockState state = world.getBlockState(pos);
-                final @NotNull ItemPlacementContext newContext = hand==null ? new ItemPlacementContext(player,hand,new ItemStack(state.getBlock().asItem()),raycast.withBlockPos(pos)) : new ItemPlacementContext(player, hand, player.getStackInHand(hand), raycast.withBlockPos(pos));
+                final @NotNull ItemPlacementContext newContext = hand == null ? new ItemPlacementContext(player, hand, new ItemStack(state.getBlock().asItem()), raycast.withBlockPos(pos)) : new ItemPlacementContext(player, hand, player.getStackInHand(hand), raycast.withBlockPos(pos));
                 final BlockPos offsetPos = newContext.getBlockPos();
                 final BlockState offsetPosState = world.getBlockState(offsetPos);
                 BlockState newState = handBlock == null ? null : handBlock.getPlacementState(newContext);
-                if (newState==null) newState = newContext.canReplaceExisting() ? state.getBlock().getPlacementState(newContext) : null;
-                if (newState==null) newState = state;
+                if (newState == null)
+                    newState = newContext.canReplaceExisting() ? state.getBlock().getPlacementState(newContext) : null;
+                if (newState == null) newState = state;
                 if (newState.getProperties().contains(Properties.WATERLOGGED)) {
                     newState = newState.with(Properties.WATERLOGGED, offsetPosState.getFluidState().isStill());
                 }
-                if (offsetPosState.canReplace(newContext) && newState.canPlaceAt(world,offsetPos)) WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer,newState.getOutlineShape(world, pos), offsetPos.getX()- vec3d.getX(), offsetPos.getY()- vec3d.getY(), offsetPos.getZ()- vec3d.getZ(), 0,1,1,0.8f);
-                WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer,state.getOutlineShape(world,pos), pos.getX()- vec3d.getX(), pos.getY()- vec3d.getY(), pos.getZ()- vec3d.getZ(), 1,0,0,0.8f);
+                if (offsetPosState.canReplace(newContext) && newState.canPlaceAt(world, offsetPos))
+                    WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, newState.getOutlineShape(world, pos), offsetPos.getX() - vec3d.getX(), offsetPos.getY() - vec3d.getY(), offsetPos.getZ() - vec3d.getZ(), 0, 1, 1, 0.8f);
+                WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, state.getOutlineShape(world, pos), pos.getX() - vec3d.getX(), pos.getY() - vec3d.getY(), pos.getZ() - vec3d.getZ(), 1, 0, 0, 0.8f);
             }
             return false;
         }

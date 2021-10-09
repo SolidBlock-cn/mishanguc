@@ -15,19 +15,19 @@ import net.minecraft.util.math.BlockPos;
 import pers.solid.mishang.uc.item.SlabToolItem;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 
-public class SlabToolOutlineRenderer implements WorldRenderEvents.BlockOutline{
+public class SlabToolOutlineRenderer implements WorldRenderEvents.BlockOutline {
     @Override
     public boolean onBlockOutline(WorldRenderContext worldRenderContext, WorldRenderContext.BlockOutlineContext blockOutlineContext) {
         final ClientWorld world = worldRenderContext.world();
         final BlockState state = blockOutlineContext.blockState();
-        if (blockOutlineContext.entity() instanceof PlayerEntity && ((PlayerEntity) blockOutlineContext.entity()).getMainHandStack().getItem() instanceof SlabToolItem && state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE)== SlabType.DOUBLE) {
+        if (blockOutlineContext.entity() instanceof PlayerEntity && ((PlayerEntity) blockOutlineContext.entity()).getMainHandStack().getItem() instanceof SlabToolItem && state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
             final HitResult crosshairTarget = MinecraftClient.getInstance().crosshairTarget;
             if (!(crosshairTarget instanceof BlockHitResult)) return true;
             boolean bl = crosshairTarget.getPos().y - (double) ((BlockHitResult) crosshairTarget).getBlockPos().getY() > 0.5D;
             // 渲染时需要使用的方块状态。
-            final BlockState halfState = state.with(Properties.SLAB_TYPE,bl ? SlabType.TOP : SlabType.BOTTOM);
+            final BlockState halfState = state.with(Properties.SLAB_TYPE, bl ? SlabType.TOP : SlabType.BOTTOM);
             final BlockPos blockPos = blockOutlineContext.blockPos();
-            WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), blockOutlineContext.vertexConsumer(), halfState.getOutlineShape(world, blockPos, ShapeContext.of(blockOutlineContext.entity())), (double)blockPos.getX() - blockOutlineContext.cameraX(), (double)blockPos.getY() - blockOutlineContext.cameraY(), (double)blockPos.getZ() - blockOutlineContext.cameraZ(), 0.0F, 0.0F, 0.0F, 0.4F);
+            WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), blockOutlineContext.vertexConsumer(), halfState.getOutlineShape(world, blockPos, ShapeContext.of(blockOutlineContext.entity())), (double) blockPos.getX() - blockOutlineContext.cameraX(), (double) blockPos.getY() - blockOutlineContext.cameraY(), (double) blockPos.getZ() - blockOutlineContext.cameraZ(), 0.0F, 0.0F, 0.0F, 0.4F);
             return false;
         }
         return true;

@@ -20,7 +20,7 @@ public class MishangUcClient implements ClientModInitializer {
                     BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout());
                 }
                 if (field.isAnnotationPresent(Translucent.class)) {
-                    BlockRenderLayerMap.INSTANCE.putBlock(value,RenderLayer.getTranslucent());
+                    BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getTranslucent());
                 }
             } catch (IllegalAccessException | ClassCastException e) {
                 e.printStackTrace();

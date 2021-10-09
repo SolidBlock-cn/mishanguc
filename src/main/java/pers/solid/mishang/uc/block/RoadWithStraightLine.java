@@ -30,7 +30,7 @@ public interface RoadWithStraightLine extends Road {
     @Override
     default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
         Direction.Axis axis = state.get(AXIS);
-        return RoadConnectionState.of(direction.getAxis() == axis,getLineColor(), Either.left(direction));
+        return RoadConnectionState.of(direction.getAxis() == axis, getLineColor(), Either.left(direction));
     }
 
     default BlockState rotateRoad(BlockState state, BlockRotation rotation) {
@@ -54,7 +54,7 @@ public interface RoadWithStraightLine extends Road {
     default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
         final PlayerEntity player = ctx.getPlayer();
         final Direction playerFacing = ctx.getPlayerFacing();
-        return state.with(AXIS, (player!=null && player.isSneaking() ? playerFacing.rotateYClockwise() : playerFacing).getAxis());
+        return state.with(AXIS, (player != null && player.isSneaking() ? playerFacing.rotateYClockwise() : playerFacing).getAxis());
     }
 
     @Override

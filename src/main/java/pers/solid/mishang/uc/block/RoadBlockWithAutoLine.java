@@ -17,14 +17,14 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
     private final LineColor lineColor;
 
     public RoadBlockWithAutoLine(Settings settings, RoadAutoLineType type, RoadTexture texture, LineColor lineColor) {
-        super(settings,lineColor);
+        super(settings, lineColor);
         this.type = type;
         this.texture = texture;
         this.lineColor = lineColor;
     }
 
     @Override
-    public @NotNull BlockState makeState(Map<Direction,RoadConnectionState> connectionStateMap, BlockState defaultState) {
+    public @NotNull BlockState makeState(Map<Direction, RoadConnectionState> connectionStateMap, BlockState defaultState) {
 //        boolean north = connectionStateMap.getBoolean(Direction.NORTH);
 //        boolean south = connectionStateMap.getBoolean(Direction.SOUTH);
 //        boolean east = connectionStateMap.getBoolean(Direction.EAST);
@@ -90,20 +90,20 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
                 case 3:
                     for (Map.Entry<Direction, RoadConnectionState> entry : connectionStateMap.entrySet()) {
                         if (!entry.getValue().mayConnect() && lineColor == LineColor.WHITE)
-                            // 检测需要连接正向的方块对应的连接是否为斜线。
+                        // 检测需要连接正向的方块对应的连接是否为斜线。
                         {
                             // 朝向的方块
                             Direction direction = entry.getKey().getOpposite();
                             RoadConnectionState state = connectionStateMap.get(direction);
-                            if (state.direction==null || state.direction.left().isPresent() || type!=RoadAutoLineType.BEVEL)
+                            if (state.direction == null || state.direction.left().isPresent() || type != RoadAutoLineType.BEVEL)
                                 // 连接直线
                                 return MUBlocks.ASPHALT_ROAD_WITH_WHITE_JOINT_LINE.getDefaultState()
-                                    .with(Properties.HORIZONTAL_FACING, direction);
-                            else if (state.direction.right().isPresent()){
+                                        .with(Properties.HORIZONTAL_FACING, direction);
+                            else if (state.direction.right().isPresent()) {
                                 // 连接斜线
                                 return MUBlocks.ASPHALT_ROAD_WITH_WHITE_STRAIGHT_AND_BEVEL_ANGLE_LINE.getDefaultState()
-                                        .with(Properties.HORIZONTAL_AXIS,direction.rotateYClockwise().getAxis())
-                                        .with(ModProperties.HORIZONTAL_CORNER_FACING,state.direction.right().get().getOpposite().mirror(direction));
+                                        .with(Properties.HORIZONTAL_AXIS, direction.rotateYClockwise().getAxis())
+                                        .with(ModProperties.HORIZONTAL_CORNER_FACING, state.direction.right().get().getOpposite().mirror(direction));
                             }
                         }
                     }

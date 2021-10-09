@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.Map;
 
 public interface RoadWithAutoLine extends Road {
-    BlockState makeState(Map<Direction,RoadConnectionState> connectionStateMap, BlockState defaultState);
+    BlockState makeState(Map<Direction, RoadConnectionState> connectionStateMap, BlockState defaultState);
 
     default Map<Direction, RoadConnectionState> getConnectionStateMap(WorldAccess world, BlockPos pos0) {
-        Map<Direction,RoadConnectionState> connectionStateMap = Maps.newHashMap();
+        Map<Direction, RoadConnectionState> connectionStateMap = Maps.newHashMap();
         for (Direction direction : Direction.Type.HORIZONTAL) {
             RoadConnectionState state = RoadConnectionState.empty();
             // 检查毗邻方块及其上下方。

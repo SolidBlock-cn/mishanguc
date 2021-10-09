@@ -32,17 +32,17 @@ public interface RoadWithOffsetJointStraightLine extends RoadWithJointLine, Road
 
     @Override
     default void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING,AXIS);
+        builder.add(FACING, AXIS);
     }
 
     @Override
     default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
-        return RoadConnectionState.of(state.get(FACING).hasDirection(direction) || state.get(AXIS).test(direction),getLineColor(), Either.left(direction.getOpposite()));
+        return RoadConnectionState.of(state.get(FACING).hasDirection(direction) || state.get(AXIS).test(direction), getLineColor(), Either.left(direction.getOpposite()));
     }
 
     @Override
     default BlockState mirrorRoad(BlockState state, BlockMirror mirror) {
-        return RoadWithOffsetStraightLine.super.mirrorRoad(RoadWithJointLine.super.mirrorRoad(state, mirror),mirror);
+        return RoadWithOffsetStraightLine.super.mirrorRoad(RoadWithJointLine.super.mirrorRoad(state, mirror), mirror);
     }
 
     @Override
