@@ -59,6 +59,10 @@
   "item.mishanguc.mirroring_tool.tooltip": "点击方块可将其翻转。",
   "item.mishanguc.slab_tool": "台阶工具",
   "item.mishanguc.slab_tool.tooltip": "可用于破坏台阶。",
+  "item.mishanguc.force_placing_tool": "强制放置工具",
+  "item.mishanguc.force_placing_tool.tooltip.1": "强制将方块放置在指定的位置且忽略方块更新。",
+  "item.mishanguc.force_placing_tool.tooltip.2": "亦可用于破坏方块，且忽略方块更新。",
+  "item.mishanguc.force_placing_tool.tooltip.3": "击杀生物可以一击必杀。",
 
   "blockMatchingRule.mishanguc.same_state": "相同方块状态",
   "blockMatchingRule.mishanguc.same_block": "相同方块",

@@ -59,6 +59,10 @@
   "item.mishanguc.mirroring_tool.tooltip": "Click block to flip.",
   "item.mishanguc.slab_tool": "Slab Tool",
   "item.mishanguc.slab_tool.tooltip": "Used to break slabs.",
+  "item.mishanguc.force_placing_tool": "Force Placing Tool",
+  "item.mishanguc.force_placing_tool.tooltip.1": "Force to place a block without triggering block update.",
+  "item.mishanguc.force_placing_tool.tooltip.2": "Also used to break a block without triggering block update.",
+  "item.mishanguc.force_placing_tool.tooltip.3": "Kills a living entity instantly.",
 
   "blockMatchingRule.mishanguc.same_state": "Same Block State",
   "blockMatchingRule.mishanguc.same_block": "Same Block",

@@ -2,11 +2,15 @@ package pers.solid.mishang.uc;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.block.Block;
 import net.minecraft.client.render.RenderLayer;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.MUBlocks;
+import pers.solid.mishang.uc.render.FastBuildingToolOutlineRenderer;
+import pers.solid.mishang.uc.render.ForcePlacingToolOutlineRenderer;
+import pers.solid.mishang.uc.render.SlabToolOutlineRenderer;
 
 import java.lang.reflect.Field;
 
@@ -26,5 +30,9 @@ public class MishangUcClient implements ClientModInitializer {
                 e.printStackTrace();
             }
         }
+
+        WorldRenderEvents.BLOCK_OUTLINE.register(new FastBuildingToolOutlineRenderer());
+        WorldRenderEvents.BLOCK_OUTLINE.register(new SlabToolOutlineRenderer());
+        WorldRenderEvents.BLOCK_OUTLINE.register(new ForcePlacingToolOutlineRenderer());
     }
 }

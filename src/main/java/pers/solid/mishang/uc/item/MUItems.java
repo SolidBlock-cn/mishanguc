@@ -8,7 +8,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.ItemGroups;
+import pers.solid.mishang.uc.ModItemGroups;
 import pers.solid.mishang.uc.annotations.InGroup;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.SimpleModel;
@@ -21,22 +21,25 @@ public final class MUItems {
 
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld")
-    public static final RoadConnectionStateDebuggingToolItem ROAD_CONNECTION_STATE_DEBUGGING_TOOL = new RoadConnectionStateDebuggingToolItem(new FabricItemSettings().group(ItemGroups.TOOLS));
+    public static final RoadConnectionStateDebuggingToolItem ROAD_CONNECTION_STATE_DEBUGGING_TOOL = new RoadConnectionStateDebuggingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS));
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld")
-    public static final IdCheckerToolItem ID_CHECKER_TOOL = new IdCheckerToolItem(new FabricItemSettings().group(ItemGroups.TOOLS));
+    public static final IdCheckerToolItem ID_CHECKER_TOOL = new IdCheckerToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS));
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld")
-    public static final FastBuildingToolItem FAST_BUILDING_TOOL = new FastBuildingToolItem(new FabricItemSettings().group(ItemGroups.TOOLS));
+    public static final FastBuildingToolItem FAST_BUILDING_TOOL = new FastBuildingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS));
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld")
-    public static final RotatingToolItem ROTATING_TOOL = new RotatingToolItem(new FabricItemSettings().group(ItemGroups.TOOLS));
+    public static final RotatingToolItem ROTATING_TOOL = new RotatingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS));
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld")
-    public static final MirroringToolItem MIRRORING_TOOL = new MirroringToolItem(new FabricItemSettings().group(ItemGroups.TOOLS));
+    public static final MirroringToolItem MIRRORING_TOOL = new MirroringToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS));
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld")
-    public static final SlabToolItem SLAB_TOOL = new SlabToolItem(new FabricItemSettings().group(ItemGroups.TOOLS));
+    public static final SlabToolItem SLAB_TOOL = new SlabToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS));
+    @RegisterIdentifier
+    @SimpleModel(parent = "item/handheld", texture = "item/stick")
+    public static final ForcePlacingToolItem FORCE_PLACING_TOOL = new ForcePlacingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS));
 
     static {
         // 注册方块物品。
@@ -47,10 +50,10 @@ public final class MUItems {
                 if (field.isAnnotationPresent(InGroup.class)) {
                     switch (field.getAnnotation(InGroup.class).value()) {
                         case "roads":
-                            group = ItemGroups.ROADS;
+                            group = ModItemGroups.ROADS;
                             break;
                         case "lights":
-                            group = ItemGroups.LIGHTS;
+                            group = ModItemGroups.LIGHTS;
                             break;
                         default:
                             group = null;

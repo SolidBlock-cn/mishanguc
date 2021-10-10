@@ -7,7 +7,7 @@ import net.minecraft.util.Identifier;
 import pers.solid.mishang.uc.block.MUBlocks;
 import pers.solid.mishang.uc.item.MUItems;
 
-public class ItemGroups {
+public class ModItemGroups {
     public static final ItemGroup ROADS =
             FabricItemGroupBuilder.create(new Identifier("mishanguc", "roads")).icon(() -> new ItemStack(MUBlocks.ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE)).build();
     public static final ItemGroup LIGHTS = FabricItemGroupBuilder.create(new Identifier("mishanguc", "lights")).icon(() -> new ItemStack(MUBlocks.WHITE_LAMP)).build();

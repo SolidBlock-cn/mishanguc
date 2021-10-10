@@ -67,6 +67,8 @@ public final class MUBlocks {
     // 填满的路块。
     @RegisterIdentifier
     public static final RoadBlock ASPHALT_ROAD_FILLED_WITH_WHITE = new RoadBlock(FabricBlockSettings.copyOf(ASPHALT_ROAD_SETTINGS).materialColor(MapColor.WHITE));
+    @RegisterIdentifier
+    public static final RoadSlabBlock ASPHALT_ROAD_SLAB_FILLED_WITH_WHITE = new RoadSlabBlock(FabricBlockSettings.copyOf(ASPHALT_ROAD_FILLED_WITH_WHITE), LineColor.WHITE);
     // 自动路块。
     @RegisterIdentifier
     @Cutout
@@ -110,8 +112,6 @@ public final class MUBlocks {
     @Cutout
     @RegisterIdentifier
     public static final RoadSlabBlockWithJointLine ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE_WITH_THICK_SIDE = new RoadSlabBlockWithJointLine(ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
-    @RegisterIdentifier
-    public static final RoadSlabBlock ASPHALT_ROAD_SLAB_FILLED_WITH_WHITE = new RoadSlabBlock(FabricBlockSettings.copyOf(ASPHALT_ROAD_FILLED_WITH_WHITE), LineColor.WHITE);
     @RegisterIdentifier
     @Cutout
     public static final RoadSlabBlockWithAutoLine ASPHALT_ROAD_SLAB_WITH_WHITE_AUTO_BEVEL_ANGLE_LINE = new RoadSlabBlockWithAutoLine(ASPHALT_ROAD_SETTINGS, RoadWithAutoLine.RoadAutoLineType.BEVEL, RoadTexture.ASPHALT, LineColor.WHITE);
