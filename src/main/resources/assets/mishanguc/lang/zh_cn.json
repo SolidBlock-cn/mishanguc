@@ -29,7 +29,7 @@
   "block.mishanguc.asphalt_road_slab_with_white_joint_line_with_double_side": "白色合并线双线柏油路台阶",
   "block.mishanguc.asphalt_road_slab_with_white_joint_line_with_thick_side": "白色合并线粗线柏油路台阶",
 
-  "block.mishanguc.asphalt_road_filled_with_white_slab": "填满白色的柏油路台阶",
+  "block.mishanguc.asphalt_road_slab_filled_with_white": "填满白色的柏油路台阶",
   "block.mishanguc.asphalt_road_slab_with_white_auto_bevel_angle_line": "白色自动斜线柏油路台阶",
   "block.mishanguc.asphalt_road_slab_with_white_auto_right_angle_line": "白色自动直角线柏油路台阶",
 
@@ -53,7 +53,12 @@
   "item.mishanguc.fast_building_tool.tooltip.range": "范围: %s",
   "item.mishanguc.fast_building_tool.tooltip.matchingRule": "匹配规则: %s",
   "item.mishanguc.rotating_tool": "旋转工具",
+  "item.mishanguc.rotating_tool.tooltip.1": "点击方块可顺时针旋转，",
+  "item.mishanguc.rotating_tool.tooltip.2": "潜行时可以逆时针旋转。",
   "item.mishanguc.mirroring_tool": "镜像工具",
+  "item.mishanguc.mirroring_tool.tooltip": "点击方块可将其翻转。",
+  "item.mishanguc.slab_tool": "台阶工具",
+  "item.mishanguc.slab_tool.tooltip": "可用于破坏台阶。",
 
   "blockMatchingRule.mishanguc.same_state": "相同方块状态",
   "blockMatchingRule.mishanguc.same_block": "相同方块",

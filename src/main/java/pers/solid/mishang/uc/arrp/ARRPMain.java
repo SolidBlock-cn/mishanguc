@@ -155,7 +155,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
      */
     private static void addCubeAllWithSlab(RuntimeResourcePack PACK, String path, String all) {
         addCubeAll(PACK, path, all);
-        addSlabAll(PACK, path + "_slab", all);
+        addSlabAll(PACK, plusSlab(path), all);
     }
 
     /**
@@ -173,8 +173,8 @@ public class ARRPMain implements RRPPreGenEntrypoint {
     }
 
     private static String plusSlab(String string) {
-        if (string.contains("_with_")) {
-            return string.replaceFirst("_with_", "_slab_with_");
+        if (string.contains("_road")) {
+            return string.replaceFirst("_road", "_road_slab");
         } else {
             return string + "_slab";
         }
