@@ -44,7 +44,7 @@ public class FastBuildingToolItem extends Item {
         final @NotNull PlayerEntity player = context.getPlayer();
         final World world = context.getWorld();
         final BlockState centerState = world.getBlockState(centerBlockPos);
-        final BlockPlacementContext blockPlacementContext = BlockPlacementContext.ofContext(context);
+        final BlockPlacementContext blockPlacementContext = BlockPlacementContext.ofContext(context, false);
         if (blockPlacementContext == null) return ActionResult.PASS;
         final ItemStack stack = context.getStack();
         final int range = this.getRange(stack);

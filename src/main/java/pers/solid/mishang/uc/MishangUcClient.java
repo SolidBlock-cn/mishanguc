@@ -8,6 +8,7 @@ import net.minecraft.client.render.RenderLayer;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.MUBlocks;
+import pers.solid.mishang.uc.render.BlockToolOutlineRenderer;
 import pers.solid.mishang.uc.render.FastBuildingToolOutlineRenderer;
 import pers.solid.mishang.uc.render.ForcePlacingToolOutlineRenderer;
 import pers.solid.mishang.uc.render.SlabToolOutlineRenderer;
@@ -33,6 +34,11 @@ public class MishangUcClient implements ClientModInitializer {
 
         WorldRenderEvents.BLOCK_OUTLINE.register(new FastBuildingToolOutlineRenderer());
         WorldRenderEvents.BLOCK_OUTLINE.register(new SlabToolOutlineRenderer());
-        WorldRenderEvents.BLOCK_OUTLINE.register(new ForcePlacingToolOutlineRenderer());
+        final ForcePlacingToolOutlineRenderer forcePlacingToolOutlineRenderer = new ForcePlacingToolOutlineRenderer();
+        WorldRenderEvents.BLOCK_OUTLINE.register(forcePlacingToolOutlineRenderer);
+        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(forcePlacingToolOutlineRenderer);
+        final BlockToolOutlineRenderer blockToolOutlineRenderer = new BlockToolOutlineRenderer();
+        WorldRenderEvents.BLOCK_OUTLINE.register(blockToolOutlineRenderer);
+        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(blockToolOutlineRenderer);
     }
 }

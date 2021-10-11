@@ -24,7 +24,10 @@ public final class MUItems {
     public static final RoadConnectionStateDebuggingToolItem ROAD_CONNECTION_STATE_DEBUGGING_TOOL = new RoadConnectionStateDebuggingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS));
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld")
-    public static final IdCheckerToolItem ID_CHECKER_TOOL = new IdCheckerToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS));
+    public static final IdCheckerToolItem ID_CHECKER_TOOL = new IdCheckerToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), null);
+    @RegisterIdentifier
+    @SimpleModel(parent = "item/handheld", texture = "mishanguc:item/id_checker_tool")
+    public static final IdCheckerToolItem FLUID_ID_CHECKER_TOOL = new IdCheckerToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), true);
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld")
     public static final FastBuildingToolItem FAST_BUILDING_TOOL = new FastBuildingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS));
@@ -39,7 +42,13 @@ public final class MUItems {
     public static final SlabToolItem SLAB_TOOL = new SlabToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS));
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld", texture = "item/stick")
-    public static final ForcePlacingToolItem FORCE_PLACING_TOOL = new ForcePlacingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS));
+    public static final ForcePlacingToolItem FORCE_PLACING_TOOL = new ForcePlacingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), null);
+    @RegisterIdentifier
+    @SimpleModel(parent = "item/handheld", texture = "item/stick")
+    public static final BlockStateToolItem BLOCK_STATE_TOOL = new BlockStateToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), null);
+    @RegisterIdentifier
+    @SimpleModel(parent = "item/handheld", texture = "item/stick")
+    public static final BlockStateToolItem FLUID_STATE_TOOL = new BlockStateToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), true);
 
     static {
         // 注册方块物品。

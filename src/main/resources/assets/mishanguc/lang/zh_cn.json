@@ -63,6 +63,11 @@
   "item.mishanguc.force_placing_tool.tooltip.1": "强制将方块放置在指定的位置且忽略方块更新。",
   "item.mishanguc.force_placing_tool.tooltip.2": "亦可用于破坏方块，且忽略方块更新。",
   "item.mishanguc.force_placing_tool.tooltip.3": "击杀生物可以一击必杀。",
+  "item.mishanguc.block_state_tool": "方块状态工具",
+  "item.mishanguc.fluid_state_tool": "流体状态工具",
+  "item.mishanguc.block_state_tool.tooltip": "点击方块可用于获取方块状态。",
+  "item.mishanguc.block_state_tool.tooltip.includesFluidWhileSneaking": "潜行时可用于获取流体状态。",
+  "item.mishanguc.block_state_tool.tooltip.includesFluid": "可获取流体状态。",
 
   "blockMatchingRule.mishanguc.same_state": "相同方块状态",
   "blockMatchingRule.mishanguc.same_block": "相同方块",
@@ -96,6 +101,10 @@
   "debug.mishanguc.entityId.name": "\u00a77名称: \u00a7r%s",
   "debug.mishanguc.entityId.id": "\u00a77id: \u00a7r%s",
   "debug.mishanguc.entityId.rawId": "\u00a77原始id: \u00a7r%s",
+
+  "debug.mishanguc.blockStates": "位于%s的%s拥有的属性: ",
+  "debug.mishanguc.blockStates.none": "位于%s的%s没有属性。",
+  "debug.mishanguc.blockStates.fluidLevel": "流体级别",
 
   "roadConnectionState.lineColor.white": "白色",
   "roadConnectionState.lineColor.yellow": "黄色",

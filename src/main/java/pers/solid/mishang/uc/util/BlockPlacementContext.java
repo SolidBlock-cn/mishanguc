@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -36,6 +37,7 @@ public class BlockPlacementContext {
      * The block at {@link #posToPlace} before placing. The block will be replaced with {@link #stateToPlace}.
      */
     public final @NotNull BlockState stateToReplace;
+    public final boolean includesFluid;
     public @NotNull ItemPlacementContext placementContext;
     /**
      * 如果需要放置方块，则方块放置在此位置。<br>
@@ -67,8 +69,8 @@ public class BlockPlacementContext {
      * 请留意这个 {@link #player} 如果是 <code>null</code> 将会抛出异常！因此构造时请一定留意！
      * Please pay attention when constructing because it throws exceptions when {@link #player} is <code>null</code>!
      */
-    public BlockPlacementContext(ItemUsageContext context) {
-        this(context.getWorld(), context.getBlockPos(), Objects.requireNonNull(context.getPlayer()), context.getStack(), ((ItemUsageContextInvoker) context).invokeGetHitResult());
+    public BlockPlacementContext(ItemUsageContext context, boolean includesFluid) {
+        this(context.getWorld(), context.getBlockPos(), Objects.requireNonNull(context.getPlayer()), context.getStack(), ((ItemUsageContextInvoker) context).invokeGetHitResult(), includesFluid);
     }
 
     /**
@@ -76,36 +78,37 @@ public class BlockPlacementContext {
      * Get a new {@link BlockPlacementContext} from an old context with an <code>offsetPos</code>.
      */
     public BlockPlacementContext(@NotNull BlockPlacementContext old, @NotNull BlockPos offsetPos) {
-        this(old.world, offsetPos, old.player, old.stack, old.hit.withBlockPos(offsetPos));
+        this(old.world, offsetPos, old.player, old.stack, old.hit.withBlockPos(offsetPos), old.includesFluid);
     }
 
-    public BlockPlacementContext(World world, @NotNull BlockPos blockPos, @NotNull PlayerEntity player, @NotNull ItemStack stack, BlockHitResult hit) {
+    public BlockPlacementContext(World world, @NotNull BlockPos blockPos, @NotNull PlayerEntity player, @NotNull ItemStack stack, BlockHitResult hit, boolean includesFluid) {
         this.world = world;
         this.blockPos = blockPos;
         this.player = player;
         this.stack = stack;
         this.hit = hit;
+        this.includesFluid = includesFluid;
         completeHandStacks();
         hitState = world.getBlockState(hit.getBlockPos());
         placementContext = new ItemPlacementContext(player, hand, hand == null ? new ItemStack(hitState.getBlock().asItem()) : player.getStackInHand(hand), hit);
-        posToPlace = placementContext.getBlockPos();
+        posToPlace = includesFluid ? blockPos.offset(hit.getSide()) : placementContext.getBlockPos();
         stateToReplace = world.getBlockState(posToPlace);
         @Nullable BlockState stateToPlace1;
         stateToPlace1 = handBlock == null ? null : handBlock.getPlacementState(placementContext);
         if (stateToPlace1 == null)
             stateToPlace1 = placementContext.canReplaceExisting() ? hitState.getBlock().getPlacementState(placementContext) : null;
         if (stateToPlace1 == null) stateToPlace1 = hitState;
-        if (stateToPlace1.getProperties().contains(Properties.WATERLOGGED)) {
-            stateToPlace1 = stateToPlace1.with(Properties.WATERLOGGED, stateToReplace.getFluidState().isStill());
+        if (includesFluid && stateToPlace1.getProperties().contains(Properties.WATERLOGGED)) {
+            stateToPlace1 = stateToPlace1.with(Properties.WATERLOGGED, stateToPlace1.getFluidState().getFluid() == Fluids.WATER);
         }
         this.stateToPlace = stateToPlace1;
     }
 
-    public static @Nullable BlockPlacementContext ofContext(ItemUsageContext context) {
+    public static @Nullable BlockPlacementContext ofContext(ItemUsageContext context, boolean includesFluid) {
         if (context.getPlayer() == null) {
             return null;
         } else {
-            return new BlockPlacementContext(context);
+            return new BlockPlacementContext(context, includesFluid);
         }
     }
 

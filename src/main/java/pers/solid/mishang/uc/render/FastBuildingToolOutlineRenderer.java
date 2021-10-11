@@ -41,7 +41,7 @@ public class FastBuildingToolOutlineRenderer implements WorldRenderEvents.BlockO
                 return true;
             }
             final ClientWorld world = worldRenderContext.world();
-            final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockOutlineContext.blockPos(), player, mainHandStack, raycast);
+            final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockOutlineContext.blockPos(), player, mainHandStack, raycast, false);
             for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, raycast.getBlockPos(), raycast.getSide(), range)) {
                 final BlockState state = world.getBlockState(pos);
                 final BlockPlacementContext offsetBlockPlacementContext = new BlockPlacementContext(blockPlacementContext, pos);
