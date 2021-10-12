@@ -35,7 +35,7 @@ public class ForcePlacingToolOutlineRenderer implements WorldRenderEvents.BlockO
         final ItemStack mainHandStack = player.getMainHandStack();
         final Item item = mainHandStack.getItem();
         if (!(item instanceof ForcePlacingToolItem)) return true;
-        if (((ForcePlacingToolItem) item).includesFluid(mainHandStack, player.isSneaking())) return false;
+//        if (((ForcePlacingToolItem) item).includesFluid(mainHandStack, player.isSneaking())) return false;
         final BlockHitResult raycast;
         try {
             raycast = (BlockHitResult) MinecraftClient.getInstance().crosshairTarget;
@@ -45,7 +45,9 @@ public class ForcePlacingToolOutlineRenderer implements WorldRenderEvents.BlockO
         }
         final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(worldRenderContext.world(), blockOutlineContext.blockPos(), player, mainHandStack, raycast, false);
         WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, blockPlacementContext.stateToPlace.getOutlineShape(blockPlacementContext.world, blockPlacementContext.posToPlace), blockPlacementContext.posToPlace.getX() - vec3d.getX(), blockPlacementContext.posToPlace.getY() - vec3d.getY(), blockPlacementContext.posToPlace.getZ() - vec3d.getZ(), 0, 1, 1, 0.8f);
+        WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, blockPlacementContext.stateToPlace.getFluidState().getShape(blockPlacementContext.world, blockPlacementContext.posToPlace), blockPlacementContext.posToPlace.getX() - vec3d.getX(), blockPlacementContext.posToPlace.getY() - vec3d.getY(), blockPlacementContext.posToPlace.getZ() - vec3d.getZ(), 0, 0.25f, 1, 0.8f);
         WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, blockPlacementContext.hitState.getOutlineShape(blockPlacementContext.world, blockPlacementContext.blockPos), blockPlacementContext.blockPos.getX() - vec3d.getX(), blockPlacementContext.blockPos.getY() - vec3d.getY(), blockPlacementContext.blockPos.getZ() - vec3d.getZ(), 1, 0, 0, 0.8f);
+        WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, blockPlacementContext.hitState.getFluidState().getShape(blockPlacementContext.world, blockPlacementContext.blockPos), blockPlacementContext.blockPos.getX() - vec3d.getX(), blockPlacementContext.blockPos.getY() - vec3d.getY(), blockPlacementContext.blockPos.getZ() - vec3d.getZ(), 1, 0.75f, 0, 0.8f);
         return false;
     }
 

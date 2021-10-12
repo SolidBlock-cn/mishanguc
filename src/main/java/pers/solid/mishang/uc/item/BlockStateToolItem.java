@@ -5,15 +5,16 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,16 +47,25 @@ public class BlockStateToolItem extends BlockToolItem {
     }
 
     @Override
-    public ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, @Nullable ItemUsageContext itemUsageContext, boolean fluidIncluded) {
-        return getBlockStateOf(player, world, blockHitResult.getBlockPos(), false);
+    public ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
+        if (!world.isClient) {
+            return getBlockStateOf(player, world, blockHitResult.getBlockPos(), false);
+        } else {
+            return ActionResult.SUCCESS;
+        }
     }
 
     @Override
-    public ActionResult mineBlock(PlayerEntity player, World world, BlockPos blockPos, BlockState blockState, boolean fluidIncluded) {
-        return getBlockStateOf(player, world, blockPos, true);
+    public ActionResult attackBlock(PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
+        return getBlockStateOf(player, world, pos, fluidIncluded);
     }
 
-//    @Override
+    @Override
+    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+        return super.canMine(state, world, pos, miner);
+    }
+
+    //    @Override
 //    public ActionResult useOnBlock(ItemUsageContext context) {
 //        final World world = context.getWorld();
 //        final PlayerEntity player = context.getPlayer();
@@ -93,16 +103,14 @@ public class BlockStateToolItem extends BlockToolItem {
 
     public ActionResult getBlockStateOf(PlayerEntity player, World world, BlockPos blockPos, boolean fluidIncluded) {
         BlockState blockState = world.getBlockState(blockPos);
-        if (!world.isClient()) {
-            broadcastProperties(blockPos, player, blockState);
-            if (fluidIncluded) {
-                final FluidState fluidState = world.getFluidState(blockPos);
-                final int fluidLevel = fluidState.getLevel();
-                if (fluidLevel != 0)
-                    player.sendSystemMessage(new LiteralText("  ").append(new TranslatableText("debug.mishanguc.blockStates.fluidLevel").styled(style -> style.withColor(TextColor.fromRgb(0xcccccc)))).append(" = ").append(String.valueOf(fluidLevel)), player.getUuid());
-            }
+        broadcastProperties(blockPos, player, blockState);
+        if (fluidIncluded) {
+            final FluidState fluidState = world.getFluidState(blockPos);
+            final int fluidLevel = fluidState.getLevel();
+            if (fluidLevel != 0)
+                player.sendSystemMessage(new LiteralText("  ").append(new TranslatableText("debug.mishanguc.blockStates.fluidLevel").styled(style -> style.withColor(TextColor.fromRgb(0xcccccc)))).append(" = ").append(String.valueOf(fluidLevel)), player.getUuid());
         }
-        return ActionResult.success(world.isClient);
+        return ActionResult.SUCCESS;
     }
 
     @Override

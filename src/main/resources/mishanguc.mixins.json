@@ -4,6 +4,7 @@
   "package": "pers.solid.mishang.uc.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "GameRendererMixin",
     "ItemUsageContextInvoker"
   ],
   "client": [

@@ -36,9 +36,9 @@ public class MishangUcClient implements ClientModInitializer {
         WorldRenderEvents.BLOCK_OUTLINE.register(new SlabToolOutlineRenderer());
         final ForcePlacingToolOutlineRenderer forcePlacingToolOutlineRenderer = new ForcePlacingToolOutlineRenderer();
         WorldRenderEvents.BLOCK_OUTLINE.register(forcePlacingToolOutlineRenderer);
-        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(forcePlacingToolOutlineRenderer);
+//        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(forcePlacingToolOutlineRenderer);
         final BlockToolOutlineRenderer blockToolOutlineRenderer = new BlockToolOutlineRenderer();
         WorldRenderEvents.BLOCK_OUTLINE.register(blockToolOutlineRenderer);
-        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(blockToolOutlineRenderer);
+//        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(blockToolOutlineRenderer);
     }
 }

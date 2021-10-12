@@ -29,12 +29,13 @@ public class BlockToolOutlineRenderer implements WorldRenderEvents.BlockOutline,
         }
         final ItemStack mainHandStack = player.getMainHandStack();
         if (!(mainHandStack.getItem() instanceof BlockToolItem)) return true;
-        if (((BlockToolItem) mainHandStack.getItem()).includesFluid(mainHandStack, player.isSneaking())) return false;
+//        if (((BlockToolItem) mainHandStack.getItem()).includesFluid(mainHandStack, player.isSneaking())) return false;
         final VertexConsumer vertexConsumer = blockOutlineContext.vertexConsumer();
         final ClientWorld world = worldRenderContext.world();
         final BlockPos blockPos = blockOutlineContext.blockPos();
         final BlockState state = blockOutlineContext.blockState();
         WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, state.getOutlineShape(world, blockPos), blockPos.getX() - blockOutlineContext.cameraX(), blockPos.getY() - blockOutlineContext.cameraY(), blockPos.getZ() - blockOutlineContext.cameraZ(), 0, 1, 0, 0.8f);
+        WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, state.getFluidState().getShape(world, blockPos), blockPos.getX() - blockOutlineContext.cameraX(), blockPos.getY() - blockOutlineContext.cameraY(), blockPos.getZ() - blockOutlineContext.cameraZ(), 0, 1, 0.75f, 0.6f);
         return false;
     }
 

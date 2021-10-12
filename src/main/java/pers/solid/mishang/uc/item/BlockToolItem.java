@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.item;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,12 +9,11 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 
 public abstract class BlockToolItem extends Item {
     /**
@@ -51,18 +49,15 @@ public abstract class BlockToolItem extends Item {
      */
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-        if (context.getPlayer() == null || includesFluid(context.getStack(), context.getPlayer().isSneaking()))
-            return ActionResult.PASS;
-        final ActionResult actionResult = useOnBlock(context, false);
-        if (actionResult == ActionResult.PASS) {
-            return super.useOnBlock(context);
-        } else {
-            return actionResult;
-        }
-    }
-
-    public final ActionResult useOnBlock(ItemUsageContext context, boolean fluidIncluded) {
-        return useOnBlock(context.getPlayer(), context.getWorld(), ((ItemUsageContextInvoker) context).invokeGetHitResult(), context, fluidIncluded);
+//        if (context.getPlayer() == null || includesFluid(context.getStack(), context.getPlayer().isSneaking()))
+//            return ActionResult.PASS;
+//        final ActionResult actionResult = useOnBlock(context, false);
+//        if (actionResult == ActionResult.PASS) {
+//            return super.useOnBlock(context);
+//        } else {
+//            return actionResult;
+//        }
+        return ActionResult.PASS;
     }
 
     /**
@@ -75,30 +70,27 @@ public abstract class BlockToolItem extends Item {
      */
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        final ItemStack stackInHand = user.getStackInHand(hand);
-        final boolean includesFluid = includesFluid(stackInHand, user.isSneaking());
-        if (!includesFluid) return TypedActionResult.pass(stackInHand);
-        BlockHitResult hitResult = raycast(world, user, RaycastContext.FluidHandling.ANY);
-        if (hitResult.getType() == HitResult.Type.MISS) return TypedActionResult.fail(stackInHand);
-        final ActionResult actionResult = this.useOnBlock(user, world, hitResult, new ItemUsageContext(user, hand, hitResult), includesFluid);
-        if (actionResult == ActionResult.PASS) {
-            return super.use(world, user, hand);
-        } else {
-            return new TypedActionResult<>(actionResult, stackInHand);
-        }
-    }
-
-    public final ActionResult mineBlock(PlayerEntity player, World world, BlockPos blockPos, boolean fluidIncluded) {
-        return mineBlock(player, world, blockPos, world.getBlockState(blockPos), fluidIncluded);
+//        final ItemStack stackInHand = user.getStackInHand(hand);
+//        final boolean includesFluid = includesFluid(stackInHand, user.isSneaking());
+//        if (!includesFluid) return TypedActionResult.pass(stackInHand);
+//        BlockHitResult hitResult = raycast(world, user, RaycastContext.FluidHandling.ANY);
+//        if (hitResult.getType() == HitResult.Type.MISS) return TypedActionResult.fail(stackInHand);
+//        final ActionResult actionResult = this.useOnBlock(user, world, hitResult, new ItemUsageContext(user, hand, hitResult), includesFluid);
+//        if (actionResult == ActionResult.PASS) {
+//            return super.use(world, user, hand);
+//        } else {
+//            return new TypedActionResult<>(actionResult, stackInHand);
+//        }
+        return super.use(world, user, hand);
     }
 
     /**
      * 使用此物品右键单击物品时的反应。
      * The reaction when right-clicking the block with the item.
      */
-    public abstract ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, @Nullable ItemUsageContext itemUsageContext, boolean fluidIncluded);
+    public abstract ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded);
 
-    public abstract ActionResult mineBlock(PlayerEntity player, World world, BlockPos blockPos, BlockState blockState, boolean fluidIncluded);
+    public abstract ActionResult attackBlock(PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded);
 
     public boolean includesFluid(ItemStack stack, boolean def) {
         final @Nullable Boolean includesFluid = this.includesFluid(stack);
@@ -114,25 +106,20 @@ public abstract class BlockToolItem extends Item {
      * @return Whether it can detect fluid. May be {@code null}able, which means it depends.
      */
     public @Nullable Boolean includesFluid(ItemStack stack) {
+//        return true;
         final NbtCompound tag = stack.getTag();
         if (tag == null || !tag.contains("IncludesFluid")) return this.includesFluid;
         else return tag.getBoolean("IncludesFluid");
     }
+//
+//    @Override
+//    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+//        final ActionResult actionResult = attackBlock(miner, world, pos, state, includesFluid(miner.getMainHandStack().isEmpty() ? miner.getOffHandStack() : miner.getMainHandStack(), miner.isSneaking()));
+//        if (actionResult == ActionResult.PASS) {
+//            return super.canMine(state, world, pos, miner);
+//        } else {
+//            return !resistsMining(state, world, pos, miner);
+//        }
+//    }
 
-    @Override
-    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-        final ActionResult actionResult = mineBlock(miner, world, pos, state, includesFluid(miner.getMainHandStack().isEmpty() ? miner.getOffHandStack() : miner.getMainHandStack(), miner.isSneaking()));
-        if (actionResult == ActionResult.PASS) {
-            return super.canMine(state, world, pos, miner);
-        } else {
-            return !resistsMining(state, world, pos, miner);
-        }
-    }
-
-    /**
-     * @return Whether it makes {@link #canMine} returns <code>false</code>.
-     */
-    public boolean resistsMining(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-        return true;
-    }
 }

@@ -45,9 +45,15 @@
   "block.mishanguc.white_lamp": "白色灯",
 
   "item.mishanguc.road_connection_state_debugging_tool": "道路连接状态调试工具",
+
   "item.mishanguc.id_checker_tool": "id检查工具",
   "item.mishanguc.id_checker_tool.tooltip.1": "点击方块可获取其id数据。",
   "item.mishanguc.id_checker_tool.tooltip.2": "潜行时可用于获取流体数据。",
+  "item.mishanguc.id_checker_tool.tooltip.3": "可获取流体数据。",
+
+  "item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking": "潜行时可用于流体",
+  "item.mishanguc.block_tool.tooltip.includesFluid": "可用于流体",
+
   "item.mishanguc.fast_building_tool": "快速建造工具",
   "item.mishanguc.fast_building_tool.tooltip": "可用于快速放置或破坏一个平面上的多个方块。",
   "item.mishanguc.fast_building_tool.tooltip.range": "范围: %s",
@@ -60,9 +66,12 @@
   "item.mishanguc.slab_tool": "台阶工具",
   "item.mishanguc.slab_tool.tooltip": "可用于破坏台阶。",
   "item.mishanguc.force_placing_tool": "强制放置工具",
+  "item.mishanguc.fluid_force_placing_tool": "流体强制放置工具",
   "item.mishanguc.force_placing_tool.tooltip.1": "强制将方块放置在指定的位置且忽略方块更新。",
   "item.mishanguc.force_placing_tool.tooltip.2": "亦可用于破坏方块，且忽略方块更新。",
+  "item.mishanguc.force_placing_tool.tooltip.fluids": "可用于强制放置和破坏流体。",
   "item.mishanguc.force_placing_tool.tooltip.3": "击杀生物可以一击必杀。",
+
   "item.mishanguc.block_state_tool": "方块状态工具",
   "item.mishanguc.fluid_state_tool": "流体状态工具",
   "item.mishanguc.block_state_tool.tooltip": "点击方块可用于获取方块状态。",

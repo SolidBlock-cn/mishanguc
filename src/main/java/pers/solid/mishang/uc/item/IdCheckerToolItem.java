@@ -7,14 +7,13 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -59,13 +58,13 @@ public class IdCheckerToolItem extends BlockToolItem {
     }
 
     @Override
-    public ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, @Nullable ItemUsageContext itemUsageContext, boolean fluidIncluded) {
+    public ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
         return getIdOf(player, world, blockHitResult.getBlockPos());
     }
 
     @Override
-    public ActionResult mineBlock(PlayerEntity player, World world, BlockPos blockPos, BlockState blockState, boolean fluidIncluded) {
-        return getIdOf(player, world, blockPos);
+    public ActionResult attackBlock(PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
+        return getIdOf(player, world, pos);
     }
 
 //    @Override
@@ -102,7 +101,17 @@ public class IdCheckerToolItem extends BlockToolItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(new TranslatableText("item.mishanguc.id_checker_tool.tooltip.1").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
-        tooltip.add(new TranslatableText("item.mishanguc.id_checker_tool.tooltip.2").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+        tooltip.add(new TranslatableText("item.mishanguc.id_checker_tool.tooltip.1").formatted(Formatting.GRAY));
+        final @Nullable Boolean includesFluid = includesFluid(stack);
+        if (includesFluid==null){
+            tooltip.add(new TranslatableText("item.mishanguc.id_checker_tool.tooltip.2").formatted(Formatting.GRAY));
+        } else if (includesFluid) {
+            tooltip.add(new TranslatableText("item.mishanguc.id_checker_tool.tooltip.3").formatted(Formatting.GRAY));
+        }
+    }
+
+    @Override
+    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+        return false;
     }
 }

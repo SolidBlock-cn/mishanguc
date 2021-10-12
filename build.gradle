@@ -21,6 +21,10 @@ repositories {
 		// for 0.4.2 and older
 		// url uri("https://raw.githubusercontent.com/Devan-Kerman/Devan-Repo/master/")
 	}
+	maven {
+		name = "dblsaiko"
+		url = "https://maven.dblsaiko.net/"
+	}
 }
 
 
@@ -38,6 +42,19 @@ dependencies {
 	modImplementation("net.devtech:arrp:0.4.4")
 	// I never break backwards compatibility, so just fetching the latest version should be fine
 	// modImplementation("net.devtech:arrp:0.+")
+
+
+	// optional dev env annotation support
+	compileOnly "org.apiguardian:apiguardian-api:1.0.0"
+	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+
+	modApi ("grondag:frex-${project.mc_tag}:${project.frex_version}.+") { transitive = false}
+	// remove next line if you want JMX to be an optional dependency
+	include "grondag:frex-${project.mc_tag}:${project.frex_version}.+"
+
+	modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false}
+	// remove next line if you want JMX to be an optional dependency
+	include "grondag:jmx-${project.mc_tag}:${project.jmx_version}.+"
 }
 
 processResources {

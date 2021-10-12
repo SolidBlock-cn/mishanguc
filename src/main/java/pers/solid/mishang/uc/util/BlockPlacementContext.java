@@ -96,7 +96,7 @@ public class BlockPlacementContext {
         @Nullable BlockState stateToPlace1;
         stateToPlace1 = handBlock == null ? null : handBlock.getPlacementState(placementContext);
         if (stateToPlace1 == null)
-            stateToPlace1 = placementContext.canReplaceExisting() ? hitState.getBlock().getPlacementState(placementContext) : null;
+            stateToPlace1 = placementContext.canReplaceExisting() && !includesFluid ? hitState.getBlock().getPlacementState(placementContext) : null;
         if (stateToPlace1 == null) stateToPlace1 = hitState;
         if (includesFluid && stateToPlace1.getProperties().contains(Properties.WATERLOGGED)) {
             stateToPlace1 = stateToPlace1.with(Properties.WATERLOGGED, stateToPlace1.getFluidState().getFluid() == Fluids.WATER);

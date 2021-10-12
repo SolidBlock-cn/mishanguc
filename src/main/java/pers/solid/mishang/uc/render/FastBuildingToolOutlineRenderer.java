@@ -31,6 +31,7 @@ public class FastBuildingToolOutlineRenderer implements WorldRenderEvents.BlockO
         final ItemStack mainHandStack = player.getMainHandStack();
         final Item item = mainHandStack.getItem();
         if (item instanceof FastBuildingToolItem) {
+            final boolean includesFluid = ((FastBuildingToolItem) item).includesFluid(mainHandStack, player.isSneaking());
             final BlockMatchingRule matchingRule = ((FastBuildingToolItem) item).getMatchingRule(mainHandStack);
             final int range = ((FastBuildingToolItem) item).getRange(mainHandStack);
             final BlockHitResult raycast;
@@ -45,9 +46,15 @@ public class FastBuildingToolOutlineRenderer implements WorldRenderEvents.BlockO
             for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, raycast.getBlockPos(), raycast.getSide(), range)) {
                 final BlockState state = world.getBlockState(pos);
                 final BlockPlacementContext offsetBlockPlacementContext = new BlockPlacementContext(blockPlacementContext, pos);
-                if (offsetBlockPlacementContext.canPlace() && offsetBlockPlacementContext.canReplace())
+                if (offsetBlockPlacementContext.canPlace() && offsetBlockPlacementContext.canReplace()) {
                     WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, offsetBlockPlacementContext.stateToPlace.getOutlineShape(world, pos), offsetBlockPlacementContext.posToPlace.getX() - vec3d.getX(), offsetBlockPlacementContext.posToPlace.getY() - vec3d.getY(), offsetBlockPlacementContext.posToPlace.getZ() - vec3d.getZ(), 0, 1, 1, 0.8f);
+                    if (includesFluid)
+                        WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, offsetBlockPlacementContext.stateToPlace.getFluidState().getShape(world, pos), offsetBlockPlacementContext.posToPlace.getX() - vec3d.getX(), offsetBlockPlacementContext.posToPlace.getY() - vec3d.getY(), offsetBlockPlacementContext.posToPlace.getZ() - vec3d.getZ(), 0, 0.25f, 1, 0.4f);
+                }
                 WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, state.getOutlineShape(world, pos), pos.getX() - vec3d.getX(), pos.getY() - vec3d.getY(), pos.getZ() - vec3d.getZ(), 1, 0, 0, 0.8f);
+                if (includesFluid) {
+                    WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, state.getFluidState().getShape(world, pos), pos.getX() - vec3d.getX(), pos.getY() - vec3d.getY(), pos.getZ() - vec3d.getZ(), 1, 0.75f, 0, 0.4f);
+                }
             }
             return false;
         }
