@@ -109,9 +109,4 @@ public class IdCheckerToolItem extends BlockToolItem {
             tooltip.add(new TranslatableText("item.mishanguc.id_checker_tool.tooltip.3").formatted(Formatting.GRAY));
         }
     }
-
-    @Override
-    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-        return false;
-    }
 }

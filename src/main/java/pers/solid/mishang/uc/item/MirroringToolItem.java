@@ -64,9 +64,4 @@ public class MirroringToolItem extends BlockToolItem {
             tooltip.add(new TranslatableText("item.mishanguc.block_tool.tooltip.includesFluid").formatted(Formatting.GRAY));
         }
     }
-
-    @Override
-    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-        return false;
-    }
 }
