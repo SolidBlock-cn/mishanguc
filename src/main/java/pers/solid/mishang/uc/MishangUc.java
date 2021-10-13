@@ -27,7 +27,7 @@ public class MishangUc implements ModInitializer {
             final Item item = stack.getItem();
             if (item instanceof BlockToolItem) {
                 final BlockHitResult hitResult = (BlockHitResult) player.raycast(5, 0, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
-                return ((BlockToolItem) item).attackBlock(player,world, hitResult.getBlockPos(),hitResult.getSide(), ((BlockToolItem) item).includesFluid(stack,player.isSneaking()))==ActionResult.PASS;
+                return ((BlockToolItem) item).attackBlock(player, world, hitResult.getBlockPos(), hitResult.getSide(), ((BlockToolItem) item).includesFluid(stack, player.isSneaking())) == ActionResult.PASS;
             } else {
                 return true;
             }
@@ -37,7 +37,7 @@ public class MishangUc implements ModInitializer {
             final ItemStack stackInHand = player.getStackInHand(hand);
             final Item item = stackInHand.getItem();
             if (item instanceof BlockToolItem) {
-                return ((BlockToolItem) item).useOnBlock(player,world, hitResult, hand, ((BlockToolItem) item).includesFluid(stackInHand,player.isSneaking()));
+                return ((BlockToolItem) item).useOnBlock(player, world, hitResult, hand, ((BlockToolItem) item).includesFluid(stackInHand, player.isSneaking()));
             } else {
                 return ActionResult.PASS;
             }

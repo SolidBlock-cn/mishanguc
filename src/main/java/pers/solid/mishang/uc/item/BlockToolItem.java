@@ -1,5 +1,9 @@
 package pers.solid.mishang.uc.item;
 
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -14,8 +18,10 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
+import pers.solid.mishang.uc.render.RendersBlockOutline;
 
-public abstract class BlockToolItem extends Item {
+public abstract class BlockToolItem extends Item implements RendersBlockOutline {
     /**
      * 该物品是否包括流体。<br>
      * 如果该值为 <code>null</code>，则一般表示“视情况”，通常情况下是仅潜行时包括流体。
@@ -111,15 +117,16 @@ public abstract class BlockToolItem extends Item {
         if (tag == null || !tag.contains("IncludesFluid")) return this.includesFluid;
         else return tag.getBoolean("IncludesFluid");
     }
-//
-//    @Override
-//    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-//        final ActionResult actionResult = attackBlock(miner, world, pos, state, includesFluid(miner.getMainHandStack().isEmpty() ? miner.getOffHandStack() : miner.getMainHandStack(), miner.isSneaking()));
-//        if (actionResult == ActionResult.PASS) {
-//            return super.canMine(state, world, pos, miner);
-//        } else {
-//            return !resistsMining(state, world, pos, miner);
-//        }
-//    }
 
+    @Override
+    public boolean rendersBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext worldRenderContext, WorldRenderContext.BlockOutlineContext blockOutlineContext) {
+        final VertexConsumer vertexConsumer = blockOutlineContext.vertexConsumer();
+        final ClientWorld world = worldRenderContext.world();
+        final BlockPos blockPos = blockOutlineContext.blockPos();
+        final BlockState state = blockOutlineContext.blockState();
+        WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, state.getOutlineShape(world, blockPos), blockPos.getX() - blockOutlineContext.cameraX(), blockPos.getY() - blockOutlineContext.cameraY(), blockPos.getZ() - blockOutlineContext.cameraZ(), 0, 1, 0, 0.8f);
+        if (includesFluid(itemStack, player.isSneaking()))
+            WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, state.getFluidState().getShape(world, blockPos), blockPos.getX() - blockOutlineContext.cameraX(), blockPos.getY() - blockOutlineContext.cameraY(), blockPos.getZ() - blockOutlineContext.cameraZ(), 0, 1, 0.5f, 0.5f);
+        return false;
+    }
 }

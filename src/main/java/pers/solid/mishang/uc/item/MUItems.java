@@ -30,7 +30,7 @@ public final class MUItems {
     public static final IdCheckerToolItem FLUID_ID_CHECKER_TOOL = new IdCheckerToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), true);
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld")
-    public static final FastBuildingToolItem FAST_BUILDING_TOOL = new FastBuildingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS),null);
+    public static final FastBuildingToolItem FAST_BUILDING_TOOL = new FastBuildingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), null);
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld")
     public static final RotatingToolItem ROTATING_TOOL = new RotatingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS));

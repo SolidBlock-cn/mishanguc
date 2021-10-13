@@ -1,9 +1,13 @@
 package pers.solid.mishang.uc.item;
 
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.enums.SlabType;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -13,16 +17,19 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
+import pers.solid.mishang.uc.render.RendersBlockOutline;
 
 import java.util.List;
 
 /**
  * 用于处理台阶的工具。
  */
-public class SlabToolItem extends Item {
+public class SlabToolItem extends Item implements RendersBlockOutline {
     public SlabToolItem(Settings settings) {
         super(settings);
     }
@@ -62,5 +69,23 @@ public class SlabToolItem extends Item {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
         tooltip.add(new TranslatableText("item.mishanguc.slab_tool.tooltip").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+    }
+
+    @Override
+    public boolean rendersBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext worldRenderContext, WorldRenderContext.BlockOutlineContext blockOutlineContext) {
+
+        final ClientWorld world = worldRenderContext.world();
+        final BlockState state = blockOutlineContext.blockState();
+        if (state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
+            final HitResult crosshairTarget = MinecraftClient.getInstance().crosshairTarget;
+            if (!(crosshairTarget instanceof BlockHitResult)) return true;
+            boolean bl = crosshairTarget.getPos().y - (double) ((BlockHitResult) crosshairTarget).getBlockPos().getY() > 0.5D;
+            // 渲染时需要使用的方块状态。
+            final BlockState halfState = state.with(Properties.SLAB_TYPE, bl ? SlabType.TOP : SlabType.BOTTOM);
+            final BlockPos blockPos = blockOutlineContext.blockPos();
+            WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), blockOutlineContext.vertexConsumer(), halfState.getOutlineShape(world, blockPos, ShapeContext.of(blockOutlineContext.entity())), (double) blockPos.getX() - blockOutlineContext.cameraX(), (double) blockPos.getY() - blockOutlineContext.cameraY(), (double) blockPos.getZ() - blockOutlineContext.cameraZ(), 0.0F, 0.0F, 0.0F, 0.4F);
+            return false;
+        }
+        return true;
     }
 }

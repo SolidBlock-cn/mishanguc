@@ -103,7 +103,7 @@ public class IdCheckerToolItem extends BlockToolItem {
         super.appendTooltip(stack, world, tooltip, context);
         tooltip.add(new TranslatableText("item.mishanguc.id_checker_tool.tooltip.1").formatted(Formatting.GRAY));
         final @Nullable Boolean includesFluid = includesFluid(stack);
-        if (includesFluid==null){
+        if (includesFluid == null) {
             tooltip.add(new TranslatableText("item.mishanguc.id_checker_tool.tooltip.2").formatted(Formatting.GRAY));
         } else if (includesFluid) {
             tooltip.add(new TranslatableText("item.mishanguc.id_checker_tool.tooltip.3").formatted(Formatting.GRAY));

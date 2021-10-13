@@ -20,7 +20,7 @@ import java.util.List;
 
 public class MirroringToolItem extends BlockToolItem {
     public MirroringToolItem(Settings settings, @Nullable Boolean includesFluid) {
-        super(settings,includesFluid);
+        super(settings, includesFluid);
     }
 
     public ActionResult mirror(World world, BlockPos blockPos, Direction side) {
@@ -44,12 +44,12 @@ public class MirroringToolItem extends BlockToolItem {
 
     @Override
     public ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
-        return mirror(world,blockHitResult.getBlockPos(),blockHitResult.getSide());
+        return mirror(world, blockHitResult.getBlockPos(), blockHitResult.getSide());
     }
 
     @Override
     public ActionResult attackBlock(PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
-        return mirror(world,pos,direction);
+        return mirror(world, pos, direction);
     }
 
 
@@ -58,7 +58,7 @@ public class MirroringToolItem extends BlockToolItem {
         super.appendTooltip(stack, world, tooltip, context);
         tooltip.add(new TranslatableText("item.mishanguc.mirroring_tool.tooltip").formatted(Formatting.GRAY));
         final Boolean includesFluid = includesFluid(stack);
-        if (includesFluid==null) {
+        if (includesFluid == null) {
             tooltip.add(new TranslatableText("item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking").formatted(Formatting.GRAY));
         } else if (includesFluid) {
             tooltip.add(new TranslatableText("item.mishanguc.block_tool.tooltip.includesFluid").formatted(Formatting.GRAY));

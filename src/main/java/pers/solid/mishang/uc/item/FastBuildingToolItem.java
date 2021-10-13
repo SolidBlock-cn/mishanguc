@@ -1,8 +1,12 @@
 package pers.solid.mishang.uc.item;
 
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -21,7 +25,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.render.FastBuildingToolOutlineRenderer;
+import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.util.BlockMatchingRule;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
 
@@ -31,7 +35,6 @@ import java.util.List;
  * 该物品可以快速建造或者删除一个平面上的多个方块。
  *
  * @see BlockMatchingRule
- * @see FastBuildingToolOutlineRenderer
  */
 public class FastBuildingToolItem extends BlockToolItem {
 
@@ -45,7 +48,7 @@ public class FastBuildingToolItem extends BlockToolItem {
         final BlockPos centerBlockPos = blockHitResult.getBlockPos();
         final BlockState centerState = world.getBlockState(centerBlockPos);
         final ItemStack stack = player.getStackInHand(hand);
-        final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world,centerBlockPos,player, stack,blockHitResult, fluidIncluded);
+        final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, centerBlockPos, player, stack, blockHitResult, fluidIncluded);
         final int range = this.getRange(stack);
         final BlockMatchingRule matchingRule = this.getMatchingRule(stack);
         for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, centerBlockPos, side, range)) {
@@ -140,5 +143,36 @@ public class FastBuildingToolItem extends BlockToolItem {
     @Override
     public Text getName(ItemStack stack) {
         return new LiteralText("").append(super.getName(stack)).append(" - ").append(getMatchingRule(stack).getName());
+    }
+
+    @Override
+    public boolean rendersBlockOutline(PlayerEntity player, ItemStack mainHandStack, WorldRenderContext worldRenderContext, WorldRenderContext.BlockOutlineContext blockOutlineContext) {
+        final VertexConsumer vertexConsumer = blockOutlineContext.vertexConsumer();
+        final boolean includesFluid = this.includesFluid(mainHandStack, player.isSneaking());
+        final BlockMatchingRule matchingRule = this.getMatchingRule(mainHandStack);
+        final int range = this.getRange(mainHandStack);
+        final BlockHitResult raycast;
+        try {
+            raycast = (BlockHitResult) MinecraftClient.getInstance().crosshairTarget;
+            if (raycast == null) return true;
+        } catch (ClassCastException e) {
+            return true;
+        }
+        final ClientWorld world = worldRenderContext.world();
+        final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockOutlineContext.blockPos(), player, mainHandStack, raycast, false);
+        for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, raycast.getBlockPos(), raycast.getSide(), range)) {
+            final BlockState state = world.getBlockState(pos);
+            final BlockPlacementContext offsetBlockPlacementContext = new BlockPlacementContext(blockPlacementContext, pos);
+            if (offsetBlockPlacementContext.canPlace() && offsetBlockPlacementContext.canReplace()) {
+                WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, offsetBlockPlacementContext.stateToPlace.getOutlineShape(world, pos), offsetBlockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(), offsetBlockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(), offsetBlockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(), 0, 1, 1, 0.8f);
+                if (includesFluid)
+                    WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, offsetBlockPlacementContext.stateToPlace.getFluidState().getShape(world, pos), offsetBlockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(), offsetBlockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(), offsetBlockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(), 0, 0.25f, 1, 0.4f);
+            }
+            WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, state.getOutlineShape(world, pos), pos.getX() - blockOutlineContext.cameraX(), pos.getY() - blockOutlineContext.cameraY(), pos.getZ() - blockOutlineContext.cameraZ(), 1, 0, 0, 0.8f);
+            if (includesFluid) {
+                WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, state.getFluidState().getShape(world, pos), pos.getX() - blockOutlineContext.cameraX(), pos.getY() - blockOutlineContext.cameraY(), pos.getZ() - blockOutlineContext.cameraZ(), 1, 0.75f, 0, 0.4f);
+            }
+        }
+        return false;
     }
 }
