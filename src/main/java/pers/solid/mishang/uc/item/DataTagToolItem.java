@@ -6,6 +6,7 @@ import net.minecraft.command.EntityDataObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -52,7 +53,7 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
     public ActionResult getEntityDataOf(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
         final EntityDataObject entityDataObject = new EntityDataObject(entity);
         final NbtCompound nbt = entityDataObject.getNbt();
-        player.sendSystemMessage(new TranslatableText("debug.mishanguc.dataTag.entity.entity", String.format("%s %s %s", ((int) entity.getX()), ((int) entity.getY()), ((int) entity.getZ())), entity.getName()).formatted(Formatting.YELLOW), Util.NIL_UUID);
+        player.sendSystemMessage(new TranslatableText("debug.mishanguc.dataTag.entity.entity", String.format("%s %s %s", ((int) entity.getX()), ((int) entity.getY()), ((int) entity.getZ())), new LiteralText("").append(entity.getName()).formatted(Formatting.BOLD)).formatted(Formatting.YELLOW), Util.NIL_UUID);
         player.sendSystemMessage(NbtPrettyPrinter.serialize(nbt), Util.NIL_UUID);
         return ActionResult.SUCCESS;
     }

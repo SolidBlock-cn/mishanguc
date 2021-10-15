@@ -72,6 +72,15 @@
   "item.mishanguc.force_placing_tool.tooltip.fluids": "Can be used to place and remove fluids.",
   "item.mishanguc.force_placing_tool.tooltip.3": "Kills a living entity instantly.",
 
+  "item.mishanguc.data_tag_tool": "Data Tag Tool",
+  "item.mishanguc.data_tag_tool.tooltip": "Can get the NBT data of blocks and entities.",
+
+  "item.mishanguc.block_state_tool": "Block State Tool",
+  "item.mishanguc.fluid_state_tool": "Fluid State Tool",
+  "item.mishanguc.block_state_tool.tooltip": "Click the block to get the block state.",
+  "item.mishanguc.block_state_tool.tooltip.includesFluidWhileSneaking": "Can get the fluid state while sneaking.",
+  "item.mishanguc.block_state_tool.tooltip.includesFluid": "Can get the fluid state.",
+
   "blockMatchingRule.mishanguc.same_state": "Same Block State",
   "blockMatchingRule.mishanguc.same_block": "Same Block",
   "blockMatchingRule.mishanguc.same_material": "Same Material",
@@ -104,6 +113,34 @@
   "debug.mishanguc.entityId.name": "\u00a77Name: \u00a7r%s",
   "debug.mishanguc.entityId.id": "\u00a77Id: \u00a7r%s",
   "debug.mishanguc.entityId.rawId": "\u00a77Raw Id: \u00a7r%s",
+
+  "debug.mishanguc.blockStates": "The properties of %2$s located at %1$s: ",
+  "debug.mishanguc.blockStates.none": "The %2$s located at %1$s has no properties.",
+  "debug.mishanguc.blockStates.fluidLevel": "Fluid state",
+
+  "debug.mishanguc.dataTag.block.null": "The %2$s located at %1$s has no data tags",
+  "debug.mishanguc.dataTag.block.header": "The %2$s located at %1$s has the following data tags: ",
+  "debug.mishanguc.dataTag.entity.entity": "The %2$s located at %1$s has the following data tags: ",
+
+  "debug.mishanguc.nbt.compound": "Compound tag",
+  "debug.mishanguc.nbt.compound_eclipse": "…… (%s tags left)",
+  "debug.mishanguc.nbt.compound_display_remains": "Click to display remaining tags",
+  "debug.mishanguc.nbt.compound_total": "%s tags in total",
+  "debug.mishanguc.nbt.compound_display_full": "Click to display the full tag",
+  "debug.mishanguc.nbt.compound_brief": "%s tags",
+  "debug.mishanguc.nbt.compound_empty": "Empty compound",
+  "debug.mishanguc.nbt.compound_expand": "<expand>",
+
+  "debug.mishanguc.nbt.list": "List",
+  "debug.mishanguc.nbt.list_eclipse": "…… (%s elements left)",
+  "debug.mishanguc.nbt.list_display_remains": "Click to display remaining elements",
+  "debug.mishanguc.nbt.list_total": "%s elements in total",
+  "debug.mishanguc.nbt.list_display_full": "Click to display the full list",
+  "debug.mishanguc.nbt.list_brief": "%s elements",
+  "debug.mishanguc.nbt.list_empty": "Empty list",
+  "debug.mishanguc.nbt.list_expand": "<expand>",
+
+  "debug.mishanguc.nbt.string.eclipse": "…… (%s characters in total)",
 
   "roadConnectionState.lineColor.white": "White",
   "roadConnectionState.lineColor.yellow": "Yellow",

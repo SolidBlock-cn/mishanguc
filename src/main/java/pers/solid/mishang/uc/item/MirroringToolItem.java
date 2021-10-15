@@ -52,7 +52,6 @@ public class MirroringToolItem extends BlockToolItem {
         return mirror(world, pos, direction);
     }
 
-
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);

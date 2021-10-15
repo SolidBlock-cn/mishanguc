@@ -30,9 +30,9 @@ public class BlockStateToolItem extends BlockToolItem {
     public static void broadcastProperties(BlockPos blockPos, PlayerEntity player, BlockState blockState) {
         final Collection<Property<?>> properties = blockState.getProperties();
         if (properties.isEmpty()) {
-            player.sendSystemMessage(new TranslatableText("debug.mishanguc.blockStates.none", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getBlock().getName()).formatted(Formatting.RED), player.getUuid());
+            player.sendSystemMessage(new TranslatableText("debug.mishanguc.blockStates.none", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getBlock().getName().formatted(Formatting.BOLD)).formatted(Formatting.RED), player.getUuid());
         } else {
-            player.sendSystemMessage(new TranslatableText("debug.mishanguc.blockStates", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getBlock().getName()).formatted(Formatting.YELLOW), player.getUuid());
+            player.sendSystemMessage(new TranslatableText("debug.mishanguc.blockStates", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getBlock().getName().formatted(Formatting.BOLD)).formatted(Formatting.YELLOW), player.getUuid());
         }
         for (Property<?> property : properties) {
             final Comparable<?> propertyValue = blockState.get(property);

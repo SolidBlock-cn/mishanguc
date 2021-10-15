@@ -21,7 +21,7 @@ public final class MUItems {
 
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld")
-    public static final RoadConnectionStateDebuggingToolItem ROAD_CONNECTION_STATE_DEBUGGING_TOOL = new RoadConnectionStateDebuggingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS));
+    public static final RoadConnectionStateDebuggingToolItem ROAD_CONNECTION_STATE_DEBUGGING_TOOL = new RoadConnectionStateDebuggingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), false);
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld")
     public static final IdCheckerToolItem ID_CHECKER_TOOL = new IdCheckerToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), null);
@@ -33,7 +33,7 @@ public final class MUItems {
     public static final FastBuildingToolItem FAST_BUILDING_TOOL = new FastBuildingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), null);
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld")
-    public static final RotatingToolItem ROTATING_TOOL = new RotatingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS));
+    public static final RotatingToolItem ROTATING_TOOL = new RotatingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), null);
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld")
     public static final MirroringToolItem MIRRORING_TOOL = new MirroringToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), null);
@@ -54,7 +54,7 @@ public final class MUItems {
     public static final BlockStateToolItem FLUID_STATE_TOOL = new BlockStateToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), true);
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld", texture = "item/stick")
-    public static final DataTagToolItem DATA_TAG_TOOL = new DataTagToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS),null);
+    public static final DataTagToolItem DATA_TAG_TOOL = new DataTagToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), null);
 
     static {
         // 注册方块物品。

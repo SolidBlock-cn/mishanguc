@@ -1,40 +1,62 @@
 package pers.solid.mishang.uc.item;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class RotatingToolItem extends Item {
-    public RotatingToolItem(Settings settings) {
-        super(settings);
+public class RotatingToolItem extends BlockToolItem {
+
+    public RotatingToolItem(Settings settings, @Nullable Boolean includesFluid) {
+        super(settings, includesFluid);
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        final BlockPos blockPos = context.getBlockPos();
-        final World world = context.getWorld();
-        final BlockState blockState = world.getBlockState(blockPos);
-        world.setBlockState(blockPos, blockState.rotate(context.getPlayer() != null && context.getPlayer().isSneaking() ? BlockRotation.COUNTERCLOCKWISE_90 : BlockRotation.CLOCKWISE_90));
+    public ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
+        final BlockPos blockPos = blockHitResult.getBlockPos();
+        return rotateBlock(player, world, blockPos);
+    }
+
+    @NotNull
+    private ActionResult rotateBlock(PlayerEntity player, World world, BlockPos blockPos) {
+        final BlockRotation rotation = player.isSneaking() ? BlockRotation.COUNTERCLOCKWISE_90 : BlockRotation.CLOCKWISE_90;
+        return rotateBlock(world, blockPos, rotation);
+    }
+
+    @NotNull
+    private ActionResult rotateBlock(World world, BlockPos blockPos, BlockRotation rotation) {
+        world.setBlockState(blockPos, world.getBlockState(blockPos).rotate(rotation));
+        final BlockEntity blockEntity = world.getBlockEntity(blockPos);
+        if (blockEntity!=null) {
+            blockEntity.applyRotation(rotation);
+        }
         return ActionResult.SUCCESS;
     }
 
     @Override
+    public ActionResult attackBlock(PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
+        return rotateBlock(player,world,pos);
+    }
+
+    @Override
     public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-        world.setBlockState(pos, state.rotate(miner.isSneaking() ? BlockRotation.COUNTERCLOCKWISE_90 : BlockRotation.CLOCKWISE_90));
+        rotateBlock(miner,world,pos);
         return false;
     }
 

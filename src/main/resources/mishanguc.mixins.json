@@ -7,7 +7,6 @@
     "GameRendererMixin",
     "ItemUsageContextInvoker",
     "NbtCompoundAccessor",
-    "NbtListAccessor",
     "ScreenMixin"
   ],
   "client": [

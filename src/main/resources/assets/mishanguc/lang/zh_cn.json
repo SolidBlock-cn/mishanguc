@@ -118,9 +118,9 @@
   "debug.mishanguc.blockStates.none": "位于%s的%s没有属性。",
   "debug.mishanguc.blockStates.fluidLevel": "流体级别",
 
-  "debug.mishanguc.dataTag.block.null": "位于%s的方块%s没有数据标签",
-  "debug.mishanguc.dataTag.block.header": "位于%s的方块%s的数据标签如下: ",
-  "debug.mishanguc.dataTag.entity.entity": "位于%s的实体%s的数据标签如下: ",
+  "debug.mishanguc.dataTag.block.null": "位于%s的%s没有数据标签",
+  "debug.mishanguc.dataTag.block.header": "位于%s的%s的数据标签如下: ",
+  "debug.mishanguc.dataTag.entity.entity": "位于%s的%s的数据标签如下: ",
 
   "debug.mishanguc.nbt.compound": "复合标签",
   "debug.mishanguc.nbt.compound_eclipse": "……（还有%s个标签）",
@@ -128,6 +128,8 @@
   "debug.mishanguc.nbt.compound_total": "共%s个标签",
   "debug.mishanguc.nbt.compound_display_full": "点击显示完整标签",
   "debug.mishanguc.nbt.compound_brief": "%s个标签",
+  "debug.mishanguc.nbt.compound_empty": "空白复合标签",
+  "debug.mishanguc.nbt.compound_expand": "展开",
 
   "debug.mishanguc.nbt.list": "列表",
   "debug.mishanguc.nbt.list_eclipse": "……（还有%s个元素）",
@@ -135,6 +137,8 @@
   "debug.mishanguc.nbt.list_total": "共%s个元素",
   "debug.mishanguc.nbt.list_display_full": "点击显示完整列表",
   "debug.mishanguc.nbt.list_brief": "%s个元素",
+  "debug.mishanguc.nbt.list_empty": "空白列表",
+  "debug.mishanguc.nbt.list_expand": "展开",
 
   "debug.mishanguc.nbt.string.eclipse": "……（共%s个字符）",
 
