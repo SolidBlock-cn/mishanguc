@@ -5,7 +5,10 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "GameRendererMixin",
-    "ItemUsageContextInvoker"
+    "ItemUsageContextInvoker",
+    "NbtCompoundAccessor",
+    "NbtListAccessor",
+    "ScreenMixin"
   ],
   "client": [
     "WorldRendererInvoker"

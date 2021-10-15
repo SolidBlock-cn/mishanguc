@@ -32,7 +32,7 @@ public interface RendersBlockOutline {
     };
 
     /**
-     * 玩家持有该物品的物品堆时，进行渲染。将会被 {@link #RENDERER} 中的 {@link WorldRenderEvents.BlockOutline#onBlockOutline} 调用。
+     * 玩家持有该物品的物品堆时，进行渲染。将会被 {@link #RENDERER} 中的 {@link WorldRenderEvents.BlockOutline#onBlockOutline} 调用。<br>
      * Render when a player holds an item stack of this item. Called in {@link WorldRenderEvents.BlockOutline#onBlockOutline} of {@link #RENDERER}.
      */
     @Environment(EnvType.CLIENT)

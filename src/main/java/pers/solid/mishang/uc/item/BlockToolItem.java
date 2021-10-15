@@ -55,14 +55,6 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
      */
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-//        if (context.getPlayer() == null || includesFluid(context.getStack(), context.getPlayer().isSneaking()))
-//            return ActionResult.PASS;
-//        final ActionResult actionResult = useOnBlock(context, false);
-//        if (actionResult == ActionResult.PASS) {
-//            return super.useOnBlock(context);
-//        } else {
-//            return actionResult;
-//        }
         return ActionResult.PASS;
     }
 
@@ -76,17 +68,6 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
      */
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-//        final ItemStack stackInHand = user.getStackInHand(hand);
-//        final boolean includesFluid = includesFluid(stackInHand, user.isSneaking());
-//        if (!includesFluid) return TypedActionResult.pass(stackInHand);
-//        BlockHitResult hitResult = raycast(world, user, RaycastContext.FluidHandling.ANY);
-//        if (hitResult.getType() == HitResult.Type.MISS) return TypedActionResult.fail(stackInHand);
-//        final ActionResult actionResult = this.useOnBlock(user, world, hitResult, new ItemUsageContext(user, hand, hitResult), includesFluid);
-//        if (actionResult == ActionResult.PASS) {
-//            return super.use(world, user, hand);
-//        } else {
-//            return new TypedActionResult<>(actionResult, stackInHand);
-//        }
         return super.use(world, user, hand);
     }
 

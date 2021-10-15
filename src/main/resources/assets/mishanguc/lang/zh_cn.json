@@ -51,8 +51,8 @@
   "item.mishanguc.id_checker_tool.tooltip.2": "潜行时可用于获取流体数据。",
   "item.mishanguc.id_checker_tool.tooltip.3": "可获取流体数据。",
 
-  "item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking": "潜行时可用于流体",
-  "item.mishanguc.block_tool.tooltip.includesFluid": "可用于流体",
+  "item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking": "潜行时可用于流体。",
+  "item.mishanguc.block_tool.tooltip.includesFluid": "可用于流体。",
 
   "item.mishanguc.fast_building_tool": "快速建造工具",
   "item.mishanguc.fast_building_tool.tooltip": "可用于快速放置或破坏一个平面上的多个方块。",
@@ -71,6 +71,9 @@
   "item.mishanguc.force_placing_tool.tooltip.2": "亦可用于破坏方块，且忽略方块更新。",
   "item.mishanguc.force_placing_tool.tooltip.fluids": "可用于强制放置和破坏流体。",
   "item.mishanguc.force_placing_tool.tooltip.3": "击杀生物可以一击必杀。",
+
+  "item.mishanguc.data_tag_tool": "数据标签工具",
+  "item.mishanguc.data_tag_tool.tooltip": "可用于获取方块或实体的NBT数据。",
 
   "item.mishanguc.block_state_tool": "方块状态工具",
   "item.mishanguc.fluid_state_tool": "流体状态工具",
@@ -114,6 +117,26 @@
   "debug.mishanguc.blockStates": "位于%s的%s拥有的属性: ",
   "debug.mishanguc.blockStates.none": "位于%s的%s没有属性。",
   "debug.mishanguc.blockStates.fluidLevel": "流体级别",
+
+  "debug.mishanguc.dataTag.block.null": "位于%s的方块%s没有数据标签",
+  "debug.mishanguc.dataTag.block.header": "位于%s的方块%s的数据标签如下: ",
+  "debug.mishanguc.dataTag.entity.entity": "位于%s的实体%s的数据标签如下: ",
+
+  "debug.mishanguc.nbt.compound": "复合标签",
+  "debug.mishanguc.nbt.compound_eclipse": "……（还有%s个标签）",
+  "debug.mishanguc.nbt.compound_display_remains": "点击显示剩余标签",
+  "debug.mishanguc.nbt.compound_total": "共%s个标签",
+  "debug.mishanguc.nbt.compound_display_full": "点击显示完整标签",
+  "debug.mishanguc.nbt.compound_brief": "%s个标签",
+
+  "debug.mishanguc.nbt.list": "列表",
+  "debug.mishanguc.nbt.list_eclipse": "……（还有%s个元素）",
+  "debug.mishanguc.nbt.list_display_remains": "点击显示剩余列表元素",
+  "debug.mishanguc.nbt.list_total": "共%s个元素",
+  "debug.mishanguc.nbt.list_display_full": "点击显示完整列表",
+  "debug.mishanguc.nbt.list_brief": "%s个元素",
+
+  "debug.mishanguc.nbt.string.eclipse": "……（共%s个字符）",
 
   "roadConnectionState.lineColor.white": "白色",
   "roadConnectionState.lineColor.yellow": "黄色",

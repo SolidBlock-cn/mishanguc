@@ -45,9 +45,15 @@
   "block.mishanguc.white_lamp": "White Lamp",
 
   "item.mishanguc.road_connection_state_debugging_tool": "Road Connection State Debugging Tool",
+
   "item.mishanguc.id_checker_tool": "Id Checker Tool",
   "item.mishanguc.id_checker_tool.tooltip.1": "Get its id data when clicking block.",
   "item.mishanguc.id_checker_tool.tooltip.2": "Get fluid data while sneaking.",
+  "item.mishanguc.id_checker_tool.tooltip.3": "Can get fluid data.",
+
+  "item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking": "Used for fluids when sneaking.",
+  "item.mishanguc.block_tool.tooltip.includesFluid": "Can be used for fluids.",
+
   "item.mishanguc.fast_building_tool": "Fast Building Tool",
   "item.mishanguc.fast_building_tool.tooltip": "Can quickly place or destroy multiple blocks on a plain.",
   "item.mishanguc.fast_building_tool.tooltip.range": "Range: %s",
@@ -60,8 +66,10 @@
   "item.mishanguc.slab_tool": "Slab Tool",
   "item.mishanguc.slab_tool.tooltip": "Used to break slabs.",
   "item.mishanguc.force_placing_tool": "Force Placing Tool",
+  "item.mishanguc.fluid_force_placing_tool": "Fluid Force Placing Tool",
   "item.mishanguc.force_placing_tool.tooltip.1": "Force to place a block without triggering block update.",
   "item.mishanguc.force_placing_tool.tooltip.2": "Also used to break a block without triggering block update.",
+  "item.mishanguc.force_placing_tool.tooltip.fluids": "Can be used to place and remove fluids.",
   "item.mishanguc.force_placing_tool.tooltip.3": "Kills a living entity instantly.",
 
   "blockMatchingRule.mishanguc.same_state": "Same Block State",

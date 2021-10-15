@@ -52,6 +52,9 @@ public final class MUItems {
     @RegisterIdentifier
     @SimpleModel(parent = "item/handheld")
     public static final BlockStateToolItem FLUID_STATE_TOOL = new BlockStateToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), true);
+    @RegisterIdentifier
+    @SimpleModel(parent = "item/handheld", texture = "item/stick")
+    public static final DataTagToolItem DATA_TAG_TOOL = new DataTagToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS),null);
 
     static {
         // 注册方块物品。
