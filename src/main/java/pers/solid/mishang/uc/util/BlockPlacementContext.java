@@ -2,12 +2,14 @@ package pers.solid.mishang.uc.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
@@ -33,11 +35,25 @@ public class BlockPlacementContext {
      */
     public final @NotNull BlockState hitState;
     /**
+     * {@link #hit} 中的方块实体。<br>
+     * The {@link BlockEntity} in the {@link #hit}.
+     */
+    public final @Nullable BlockEntity hitEntity;
+    /**
      * 放置之前，{@link #posToPlace} 位置处的方块。该方块将会被 {@link #stateToPlace} 替换掉。<br>
      * The block at {@link #posToPlace} before placing. The block will be replaced with {@link #stateToPlace}.
      */
     public final @NotNull BlockState stateToReplace;
+    /**
+     * 放置之前，{@link #posToPlace} 位置处的方块。该方块将会被 {@link #entityToPlace} 替换掉。
+     */
+    public final @Nullable BlockEntity entityToReplace;
     public final boolean includesFluid;
+    /**
+     * 需要放置的方块实体。<br>
+     * The {@link BlockEntity} to place in the {@link #posToPlace}.
+     */
+    public final @Nullable BlockEntity entityToPlace;
     public @NotNull ItemPlacementContext placementContext;
     /**
      * 如果需要放置方块，则方块放置在此位置。<br>
@@ -90,9 +106,11 @@ public class BlockPlacementContext {
         this.includesFluid = includesFluid;
         completeHandStacks();
         hitState = world.getBlockState(hit.getBlockPos());
+        hitEntity = world.getBlockEntity(hit.getBlockPos());
         placementContext = new ItemPlacementContext(player, hand, hand == null ? new ItemStack(hitState.getBlock().asItem()) : player.getStackInHand(hand), hit);
         posToPlace = includesFluid ? blockPos.offset(hit.getSide()) : placementContext.getBlockPos();
         stateToReplace = world.getBlockState(posToPlace);
+        entityToReplace = world.getBlockEntity(posToPlace);
         @Nullable BlockState stateToPlace1;
         stateToPlace1 = handBlock == null ? null : handBlock.getPlacementState(placementContext);
         if (stateToPlace1 == null)
@@ -102,6 +120,9 @@ public class BlockPlacementContext {
             stateToPlace1 = stateToPlace1.with(Properties.WATERLOGGED, stateToPlace1.getFluidState().getFluid() == Fluids.WATER);
         }
         this.stateToPlace = stateToPlace1;
+        if (hitEntity != null) {
+            this.entityToPlace = world.getBlockEntity(hit.getBlockPos());
+        } else this.entityToPlace = null;
     }
 
     public static @Nullable BlockPlacementContext ofContext(ItemUsageContext context, boolean includesFluid) {
@@ -133,6 +154,19 @@ public class BlockPlacementContext {
      */
     public boolean setBlockState(int flags) {
         return world.setBlockState(posToPlace, stateToPlace, flags);
+    }
+
+    /**
+     * 放置方块实体。
+     */
+    public boolean setBlockEntity() {
+        BlockEntity entityToPlace = world.getBlockEntity(posToPlace);
+        if (hitEntity != null && entityToPlace != null) {
+            entityToPlace.fromTag(stateToPlace, hitEntity.writeNbt(new NbtCompound()));
+            entityToPlace.setPos(posToPlace);
+//            entityToPlace.markDirty();
+        }
+        return true;
     }
 
     /**

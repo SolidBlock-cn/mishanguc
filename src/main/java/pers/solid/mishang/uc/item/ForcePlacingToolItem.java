@@ -36,8 +36,11 @@ public class ForcePlacingToolItem extends BlockToolItem {
         BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockHitResult.getBlockPos(), player, player.getStackInHand(hand), blockHitResult, fluidIncluded);
         if (blockPlacementContext.world.isClient()) {
             blockPlacementContext.playSound();
-        } else
+        } else {
+            // 放置方块。
             blockPlacementContext.setBlockState(24);
+            blockPlacementContext.setBlockEntity();
+        }
         return ActionResult.success(world.isClient);
     }
 

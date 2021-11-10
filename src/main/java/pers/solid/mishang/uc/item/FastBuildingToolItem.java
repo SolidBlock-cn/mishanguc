@@ -62,6 +62,7 @@ public class FastBuildingToolItem extends BlockToolItem {
                         break; // 只播放一次声音就结束循环。。
                     } else {
                         offsetBlockPlacementContext.setBlockState(11);
+                        offsetBlockPlacementContext.setBlockEntity();
                     }
                 }
             }
