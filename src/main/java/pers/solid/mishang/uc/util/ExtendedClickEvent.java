@@ -11,10 +11,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * @see pers.solid.mishang.uc.mixin.ScreenMixin#handleTextClickMixin(Style, CallbackInfoReturnable)
  */
 public class ExtendedClickEvent extends ClickEvent {
-    public Text text;
+  public Text text;
 
-    public ExtendedClickEvent(Text text) {
-        super(Action.RUN_COMMAND, "/tell @s INVALID_COMMAND_ACCESS");
-        this.text = text;
-    }
+  public ExtendedClickEvent(Text text) {
+    super(Action.RUN_COMMAND, "/tell @s INVALID_COMMAND_ACCESS");
+    this.text = text;
+  }
 }

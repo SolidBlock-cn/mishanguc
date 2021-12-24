@@ -9,13 +9,13 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(WorldRenderer.class)
 public interface WorldRendererInvoker {
-    /**
-     * 在指定位置渲染指定外观。
-     *
-     * @see WorldRenderer
-     */
-    @Invoker("drawShapeOutline")
-    static void drawShapeOutline(MatrixStack matrices, VertexConsumer vertexConsumer, VoxelShape voxelShape, double x, double y, double z, float red, float green, float blue, float alpha) {
-        throw new AssertionError();
-    }
+  /**
+   * 在指定位置渲染指定外观。
+   *
+   * @see WorldRenderer
+   */
+  @Invoker("drawShapeOutline")
+  static void drawShapeOutline(MatrixStack matrices, VertexConsumer vertexConsumer, VoxelShape voxelShape, double x, double y, double z, float red, float green, float blue, float alpha) {
+    throw new AssertionError();
+  }
 }

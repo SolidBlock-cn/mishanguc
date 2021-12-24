@@ -25,6 +25,7 @@ repositories {
 		name = "dblsaiko"
 		url = "https://maven.dblsaiko.net/"
 	}
+	mavenCentral()
 }
 
 
@@ -39,22 +40,22 @@ dependencies {
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
-	modImplementation("net.devtech:arrp:0.4.4")
+	modImplementation("net.devtech:arrp:0.5.4")
 	// I never break backwards compatibility, so just fetching the latest version should be fine
 	// modImplementation("net.devtech:arrp:0.+")
 
 
 	// optional dev env annotation support
-	compileOnly "org.apiguardian:apiguardian-api:1.0.0"
-	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+//	compileOnly 'org.apiguardian:apiguardian-api:1.1.2'
+//	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
-	modApi ("grondag:frex-${project.mc_tag}:${project.frex_version}.+") { transitive = false}
-	// remove next line if you want JMX to be an optional dependency
-	include "grondag:frex-${project.mc_tag}:${project.frex_version}.+"
-
-	modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false}
-	// remove next line if you want JMX to be an optional dependency
-	include "grondag:jmx-${project.mc_tag}:${project.jmx_version}.+"
+//	modApi ("grondag:frex-${project.mc_tag}:${project.frex_version}.+") { transitive = false}
+//	// remove next line if you want JMX to be an optional dependency
+//	include "grondag:frex-${project.mc_tag}:${project.frex_version}.+"
+//
+//	modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false}
+//	// remove next line if you want JMX to be an optional dependency
+//	include "grondag:jmx-${project.mc_tag}:${project.jmx_version}.+"
 }
 
 processResources {

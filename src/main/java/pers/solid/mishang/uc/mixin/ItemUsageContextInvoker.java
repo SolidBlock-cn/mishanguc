@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(ItemUsageContext.class)
 public interface ItemUsageContextInvoker {
-    @Invoker("getHitResult")
-    BlockHitResult invokeGetHitResult();
+  @Invoker("getHitResult")
+  BlockHitResult invokeGetHitResult();
 }

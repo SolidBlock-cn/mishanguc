@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface SimpleModel {
-    String parent() default "";
+  String parent() default "";
 
-    String texture() default "";
+  String texture() default "";
 }

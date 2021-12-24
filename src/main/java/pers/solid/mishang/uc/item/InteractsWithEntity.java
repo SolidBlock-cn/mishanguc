@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
  * Items implementing this interface will have callbacks which are registered in {@link pers.solid.mishang.uc.MishangUc}.
  */
 public interface InteractsWithEntity {
-    ActionResult attackEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult);
+  ActionResult attackEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult);
 
-    ActionResult useEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult);
+  ActionResult useEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult);
 }

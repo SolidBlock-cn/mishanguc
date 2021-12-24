@@ -14,20 +14,20 @@ import pers.solid.mishang.uc.util.ExtendedClickEvent;
 
 @Mixin(Screen.class)
 public class ScreenMixin {
-    @Shadow
-    @Nullable
-    protected MinecraftClient client;
+  @Shadow
+  @Nullable
+  protected MinecraftClient client;
 
-    /**
-     * This injection is used for an extended "clickEvent" of JSON string. It does not add to an enum element, but instead, uses {@link ExtendedClickEvent} that extends vanilla {@link ClickEvent}s.
-     */
-    @Inject(method = "handleTextClick", at = @At(target = "Lnet/minecraft/client/gui/screen/Screen;sendMessage(Ljava/lang/String;Z)V", shift = At.Shift.BEFORE, value = "INVOKE"), cancellable = true)
-    public void handleTextClickMixin(Style style, CallbackInfoReturnable<Boolean> cir) {
-        final ClickEvent clickEvent = style.getClickEvent();
-        if (clickEvent instanceof ExtendedClickEvent && client != null && client.player != null) {
-            this.client.player.sendSystemMessage(((ExtendedClickEvent) clickEvent).text, this.client.player.getUuid());
-            cir.setReturnValue(true);
-            cir.cancel();
-        }
+  /**
+   * This injection is used for an extended "clickEvent" of JSON string. It does not add to an enum element, but instead, uses {@link ExtendedClickEvent} that extends vanilla {@link ClickEvent}s.
+   */
+  @Inject(method = "handleTextClick", at = @At(target = "Lnet/minecraft/client/gui/screen/Screen;sendMessage(Ljava/lang/String;Z)V", shift = At.Shift.BEFORE, value = "INVOKE"), cancellable = true)
+  public void handleTextClickMixin(Style style, CallbackInfoReturnable<Boolean> cir) {
+    final ClickEvent clickEvent = style.getClickEvent();
+    if (clickEvent instanceof ExtendedClickEvent && client != null && client.player != null) {
+      this.client.player.sendSystemMessage(((ExtendedClickEvent) clickEvent).text, this.client.player.getUuid());
+      cir.setReturnValue(true);
+      cir.cancel();
     }
+  }
 }
