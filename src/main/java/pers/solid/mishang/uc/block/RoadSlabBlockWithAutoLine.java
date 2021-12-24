@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.LineColor;
 import pers.solid.mishang.uc.ModProperties;
 import pers.solid.mishang.uc.RoadTexture;
-import pers.solid.mishang.uc.blocks.MishangucRoadSlabBlocks;
 
 import java.util.Map;
 
@@ -40,14 +39,14 @@ public class RoadSlabBlockWithAutoLine extends AbstractRoadSlabBlock implements 
       switch (connected) {
         case 0:
           // 全都不连接的情况。
-          return MishangucRoadSlabBlocks.ASPHALT_ROAD_SLAB
+          return MishangucBlocks.ASPHALT_ROAD_SLAB
               .getDefaultState()
               .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
               .with(WATERLOGGED, defaultState.get(WATERLOGGED));
         case 4:
           // 全都连接的情况。
           if (lineColor == LineColor.WHITE) {
-            return MishangucRoadSlabBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_CROSS_LINE
+            return MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_CROSS_LINE
                 .getDefaultState()
                 .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
                 .with(WATERLOGGED, defaultState.get(WATERLOGGED));
@@ -63,7 +62,7 @@ public class RoadSlabBlockWithAutoLine extends AbstractRoadSlabBlock implements 
             Direction direction = entry.getKey();
             if (connectionStateMap.get(direction.getOpposite()).mayConnect()) {
               // 如果对面方向也有的情况。
-              return MishangucRoadSlabBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_LINE
+              return MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_LINE
                   .getDefaultState()
                   .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
                   .with(WATERLOGGED, defaultState.get(WATERLOGGED))
@@ -75,10 +74,10 @@ public class RoadSlabBlockWithAutoLine extends AbstractRoadSlabBlock implements 
               if (lineColor == LineColor.WHITE) {
                 switch (type) {
                   case BEVEL:
-                    block = MishangucRoadSlabBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_BEVEL_ANGLE_LINE;
+                    block = MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_BEVEL_ANGLE_LINE;
                     break;
                   case RIGHT_ANGLE:
-                    block = MishangucRoadSlabBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_RIGHT_ANGLE_LINE;
+                    block = MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_RIGHT_ANGLE_LINE;
                     break;
                   default:
                     throw new IllegalStateException("Unknown angle type: " + type);
@@ -110,7 +109,7 @@ public class RoadSlabBlockWithAutoLine extends AbstractRoadSlabBlock implements 
           // 只有一个方向连接的情况下，为直线。
           for (Map.Entry<Direction, RoadConnectionState> entry : connectionStateMap.entrySet()) {
             if (entry.getValue().mayConnect() && lineColor == LineColor.WHITE) {
-              return MishangucRoadSlabBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_LINE
+              return MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_LINE
                   .getDefaultState()
                   .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
                   .with(WATERLOGGED, defaultState.get(WATERLOGGED))
@@ -131,15 +130,14 @@ public class RoadSlabBlockWithAutoLine extends AbstractRoadSlabBlock implements 
                   || type != RoadAutoLineType.BEVEL)
               // 连接直线
               {
-                return MishangucRoadSlabBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE
+                return MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE
                     .getDefaultState()
                     .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
                     .with(WATERLOGGED, defaultState.get(WATERLOGGED))
                     .with(Properties.HORIZONTAL_FACING, direction);
               } else if (state.direction.right().isPresent()) {
                 // 连接斜线
-                return MishangucRoadSlabBlocks
-                    .ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_AND_BEVEL_ANGLE_LINE
+                return MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_AND_BEVEL_ANGLE_LINE
                     .getDefaultState()
                     .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
                     .with(WATERLOGGED, defaultState.get(WATERLOGGED))

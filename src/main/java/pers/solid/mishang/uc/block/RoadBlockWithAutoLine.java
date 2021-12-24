@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.LineColor;
 import pers.solid.mishang.uc.ModProperties;
 import pers.solid.mishang.uc.RoadTexture;
-import pers.solid.mishang.uc.blocks.MishangucRoadBlocks;
 
 import java.util.Map;
 
@@ -40,11 +39,11 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
       switch (connected) {
         case 0:
           // 全都不连接的情况。
-          return MishangucRoadBlocks.ASPHALT_ROAD_BLOCK.getDefaultState();
+          return MishangucBlocks.ASPHALT_ROAD_BLOCK.getDefaultState();
         case 4:
           // 全都连接的情况。
           if (lineColor == LineColor.WHITE) {
-            return MishangucRoadBlocks.ASPHALT_ROAD_WITH_WHITE_CROSS_LINE.getDefaultState();
+            return MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_CROSS_LINE.getDefaultState();
           } else {
             return defaultState;
           }
@@ -57,7 +56,7 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
             Direction direction = entry.getKey();
             if (connectionStateMap.get(direction.getOpposite()).mayConnect()) {
               // 如果对面方向也有的情况。
-              return MishangucRoadBlocks.ASPHALT_ROAD_WITH_WHITE_STRAIGHT_LINE
+              return MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_STRAIGHT_LINE
                   .getDefaultState()
                   .with(Properties.HORIZONTAL_AXIS, direction.getAxis());
             } else {
@@ -67,10 +66,10 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
               if (lineColor == LineColor.WHITE) {
                 switch (type) {
                   case BEVEL:
-                    block = MishangucRoadBlocks.ASPHALT_ROAD_WITH_WHITE_BEVEL_ANGLE_LINE;
+                    block = MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_BEVEL_ANGLE_LINE;
                     break;
                   case RIGHT_ANGLE:
-                    block = MishangucRoadBlocks.ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE;
+                    block = MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE;
                     break;
                   default:
                     throw new IllegalStateException("Unknown angle type: " + type);
@@ -98,7 +97,7 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
           // 只有一个方向连接的情况下，为直线。
           for (Map.Entry<Direction, RoadConnectionState> entry : connectionStateMap.entrySet()) {
             if (entry.getValue().mayConnect() && lineColor == LineColor.WHITE) {
-              return MishangucRoadBlocks.ASPHALT_ROAD_WITH_WHITE_STRAIGHT_LINE
+              return MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_STRAIGHT_LINE
                   .getDefaultState()
                   .with(Properties.HORIZONTAL_AXIS, entry.getKey().getAxis());
             }
@@ -117,12 +116,12 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
                   || type != RoadAutoLineType.BEVEL)
               // 连接直线
               {
-                return MishangucRoadBlocks.ASPHALT_ROAD_WITH_WHITE_JOINT_LINE
+                return MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_JOINT_LINE
                     .getDefaultState()
                     .with(Properties.HORIZONTAL_FACING, direction);
               } else if (state.direction.right().isPresent()) {
                 // 连接斜线
-                return MishangucRoadBlocks.ASPHALT_ROAD_WITH_WHITE_STRAIGHT_AND_BEVEL_ANGLE_LINE
+                return MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_STRAIGHT_AND_BEVEL_ANGLE_LINE
                     .getDefaultState()
                     .with(Properties.HORIZONTAL_AXIS, direction.rotateYClockwise().getAxis())
                     .with(

@@ -12,8 +12,8 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.SimpleModel;
-import pers.solid.mishang.uc.blocks.MishangucBlocks;
-import pers.solid.mishang.uc.items.MishangucItems;
+import pers.solid.mishang.uc.block.MishangucBlocks;
+import pers.solid.mishang.uc.item.MishangucItems;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -173,7 +173,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
   }
 
   /** 运行此方法需确保其楼梯名称证号为 path + "_slab"。 */
-  private static void addCubeAllWithSlab(RuntimeResourcePack PACK, String path, String all) {
+  private static void addCubeAllWithSlab(final RuntimeResourcePack PACK, String path, String all) {
     addCubeAll(PACK, path, all);
     addSlabAll(PACK, plusSlab(path), all);
   }

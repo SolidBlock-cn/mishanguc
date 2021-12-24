@@ -1,10 +1,16 @@
-package pers.solid.mishang.uc.items;
+package pers.solid.mishang.uc.item;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.item.Item;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import pers.solid.mishang.uc.MishangUc;
 import pers.solid.mishang.uc.ModItemGroups;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.SimpleModel;
-import pers.solid.mishang.uc.item.*;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 public final class MishangucItems {
   @RegisterIdentifier
@@ -68,7 +74,33 @@ public final class MishangucItems {
   public static final DataTagToolItem DATA_TAG_TOOL =
       new DataTagToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), null);
 
+  private static void registerAll() {
+    for (Field field : MishangucItems.class.getFields()) {
+      int modifier = field.getModifiers();
+      if (Modifier.isFinal(modifier)
+          && Modifier.isStatic(modifier)
+          && Item.class.isAssignableFrom(field.getType())) {
+        try {
+          // 注册物品。
+          Item value = (Item) field.get(null);
+          if (field.isAnnotationPresent(RegisterIdentifier.class)) {
+            final RegisterIdentifier annotation = field.getAnnotation(RegisterIdentifier.class);
+            String path = annotation.value();
+            if (path.isEmpty()) {
+              path = field.getName().toLowerCase();
+            }
+            Registry.register(Registry.ITEM, new Identifier("mishanguc", path), value);
+          }
+        } catch (IllegalAccessException e) {
+          MishangUc.MISHANG_LOGGER.error(e);
+        }
+      }
+    }
+  }
+
   private MishangucItems() {}
 
-  public static void init() {}
+  public static void init() {
+    registerAll();
+  }
 }

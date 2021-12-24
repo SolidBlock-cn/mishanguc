@@ -11,10 +11,10 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pers.solid.mishang.uc.blocks.MishangucBlocks;
+import pers.solid.mishang.uc.block.MishangucBlocks;
 import pers.solid.mishang.uc.item.BlockToolItem;
 import pers.solid.mishang.uc.item.InteractsWithEntity;
-import pers.solid.mishang.uc.items.MishangucItems;
+import pers.solid.mishang.uc.item.MishangucItems;
 
 public class MishangUc implements ModInitializer {
   public static final Logger MISHANG_LOGGER = LogManager.getLogger("Mishang Urban Construction");

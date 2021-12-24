@@ -7,7 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.render.RenderLayer;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.Translucent;
-import pers.solid.mishang.uc.blocks.MishangucBlocks;
+import pers.solid.mishang.uc.block.MishangucBlocks;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 
 import java.lang.reflect.Field;
