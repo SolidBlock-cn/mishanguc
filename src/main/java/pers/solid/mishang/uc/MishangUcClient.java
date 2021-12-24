@@ -7,7 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.render.RenderLayer;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.Translucent;
-import pers.solid.mishang.uc.block.MUBlocks;
+import pers.solid.mishang.uc.blocks.MishangucBlocks;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 
 import java.lang.reflect.Field;
@@ -15,7 +15,7 @@ import java.lang.reflect.Field;
 public class MishangUcClient implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
-    for (Field field : MUBlocks.class.getFields()) {
+    for (Field field : MishangucBlocks.class.getFields()) {
       try {
         Block value = (Block) field.get(null);
         if (field.isAnnotationPresent(Cutout.class)) {
@@ -30,11 +30,13 @@ public class MishangUcClient implements ClientModInitializer {
     }
 
     WorldRenderEvents.BLOCK_OUTLINE.register(RendersBlockOutline.RENDERER);
-//        WorldRenderEvents.BLOCK_OUTLINE.register(new FastBuildingToolOutlineRenderer());
-//        WorldRenderEvents.BLOCK_OUTLINE.register(new SlabToolOutlineRenderer());
-//        final ForcePlacingToolOutlineRenderer forcePlacingToolOutlineRenderer = new ForcePlacingToolOutlineRenderer();
-//        WorldRenderEvents.BLOCK_OUTLINE.register(forcePlacingToolOutlineRenderer);
-//        final BlockToolOutlineRenderer blockToolOutlineRenderer = new BlockToolOutlineRenderer();
-//        WorldRenderEvents.BLOCK_OUTLINE.register(blockToolOutlineRenderer);
+    //        WorldRenderEvents.BLOCK_OUTLINE.register(new FastBuildingToolOutlineRenderer());
+    //        WorldRenderEvents.BLOCK_OUTLINE.register(new SlabToolOutlineRenderer());
+    //        final ForcePlacingToolOutlineRenderer forcePlacingToolOutlineRenderer = new
+    // ForcePlacingToolOutlineRenderer();
+    //        WorldRenderEvents.BLOCK_OUTLINE.register(forcePlacingToolOutlineRenderer);
+    //        final BlockToolOutlineRenderer blockToolOutlineRenderer = new
+    // BlockToolOutlineRenderer();
+    //        WorldRenderEvents.BLOCK_OUTLINE.register(blockToolOutlineRenderer);
   }
 }
