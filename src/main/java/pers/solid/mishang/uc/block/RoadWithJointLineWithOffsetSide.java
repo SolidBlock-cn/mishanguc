@@ -22,9 +22,11 @@ import pers.solid.mishang.uc.ModProperties;
 import java.util.List;
 
 /** 类似于 {@link RoadWithJointLine}，不过较短的那一条线是被偏移的。 */
-public interface RoadWithOffsetJointStraightLine
-    extends RoadWithJointLine, RoadWithOffsetStraightLine {
-  /** 道路方块中，偏移半线与正中直线围成的面积范围较小的那个直角。 */
+public interface RoadWithJointLineWithOffsetSide extends Road {
+  /**
+   * 道路方块中，偏移半线与正中直线围成的面积范围较小的那个直角。<br>
+   * 不同于{@link RoadWithJointLine#FACING}，那个是正对的水平方向，而这个是斜角水平方向。
+   */
   EnumProperty<HorizontalCornerDirection> FACING = ModProperties.HORIZONTAL_CORNER_FACING;
   /** 道路方块中，正中直线所在的轴。 */
   Property<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
@@ -34,6 +36,7 @@ public interface RoadWithOffsetJointStraightLine
 
   @Override
   default void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
+    Road.super.appendRoadProperties(builder);
     builder.add(FACING, AXIS);
   }
 
@@ -47,23 +50,60 @@ public interface RoadWithOffsetJointStraightLine
 
   @Override
   default BlockState mirrorRoad(BlockState state, BlockMirror mirror) {
-    return RoadWithOffsetStraightLine.super.mirrorRoad(
-        RoadWithJointLine.super.mirrorRoad(state, mirror), mirror);
+    return state.with(FACING, state.get(FACING).mirror(mirror));
+  }
+
+  static Direction.Axis rotateAxis(BlockRotation rotation, Direction.Axis axis) {
+    switch (rotation) {
+      case COUNTERCLOCKWISE_90:
+      case CLOCKWISE_90:
+        switch (axis) {
+          case X:
+            return Direction.Axis.Z;
+          case Z:
+            return Direction.Axis.X;
+          default:
+            return axis;
+        }
+      default:
+        return axis;
+    }
   }
 
   @Override
   default BlockState rotateRoad(BlockState state, BlockRotation rotation) {
-    return RoadWithJointLine.super.rotateRoad(state, rotation);
+    final Direction.Axis axis = state.get(AXIS);
+    return state
+        .with(FACING, state.get(FACING).rotate(rotation))
+        .with(AXIS, rotateAxis(rotation, axis));
   }
 
   @Override
   default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
-    return RoadWithJointLine.super.withPlacementState(state, ctx);
+    final HorizontalCornerDirection facing =
+        HorizontalCornerDirection.fromRotation(ctx.getPlayerYaw());
+    return state
+        .with(
+            FACING,
+            ctx.getPlayer() != null && ctx.getPlayer().isSneaking() ? facing.getOpposite() : facing)
+        .with(AXIS, ctx.getPlayerFacing().getAxis());
   }
 
   @Override
   default void appendRoadTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
-    RoadWithJointLine.super.appendRoadTooltip(stack, world, tooltip, options);
+    Road.super.appendRoadTooltip(stack, world, tooltip, options);
+  }
+
+  class Impl extends AbstractRoadBlock implements RoadWithJointLineWithOffsetSide {
+    public Impl(Settings settings, LineColor lineColor) {
+      super(settings, lineColor);
+    }
+  }
+
+  class SlabImpl extends AbstractRoadSlabBlock implements RoadWithJointLineWithOffsetSide {
+    public SlabImpl(Settings settings, LineColor lineColor) {
+      super(settings, lineColor);
+    }
   }
 }

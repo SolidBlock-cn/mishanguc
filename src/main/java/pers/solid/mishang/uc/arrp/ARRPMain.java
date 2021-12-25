@@ -274,13 +274,19 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         composeStateForSlab(state2),
         new Identifier(
             "mishanguc", "asphalt_road_slab_with_white_right_angle_line_with_one_part_offset_in"));
+    final JState state3 =
+        stateForJointLineWithOffsetSide("asphalt_road_with_white_joint_line_with_offset_side");
+    PACK.addBlockState(
+        state3, new Identifier("mishanguc", "asphalt_road_with_white_joint_line_with_offset_side"));
+    PACK.addBlockState(
+        composeStateForSlab(state3),
+        new Identifier("mishanguc", "asphalt_road_slab_with_white_joint_line_with_offset_side"));
   }
 
   @NotNull
   private static JState stateForAngleLineWithOnePartOffset(@NotNull String moduleName) {
     JVariant variant = new JVariant();
     for (Direction direction : Direction.Type.HORIZONTAL) {
-      // 不需要逆反right_angle_line_with_one_part_offset纹理的情况。
       final Direction offsetDirection1 = direction.rotateYCounterclockwise();
       final Direction offsetDirection2 = direction.rotateYClockwise();
       variant.put(
@@ -300,6 +306,33 @@ public class ARRPMain implements RRPPreGenEntrypoint {
               direction.getAxis().asString()),
           JState.model("mishanguc:block/" + moduleName + "_mirrored")
               .y((int) (direction.asRotation()) + 90));
+    }
+    return JState.state(variant);
+  }
+
+  @NotNull
+  private static JState stateForJointLineWithOffsetSide(@NotNull String moduleName) {
+    JVariant variant = new JVariant();
+    // 一侧的短线所朝向的方向。
+    for (Direction direction : Direction.Type.HORIZONTAL) {
+      final @NotNull Direction offsetDirection1 = direction.rotateYCounterclockwise();
+      final @NotNull HorizontalCornerDirection facing1 =
+          Objects.requireNonNull(
+              HorizontalCornerDirection.fromDirections(direction, offsetDirection1));
+      final @NotNull Direction offsetDirection2 = direction.rotateYClockwise();
+      final @NotNull HorizontalCornerDirection facing2 =
+          Objects.requireNonNull(
+              HorizontalCornerDirection.fromDirections(direction, offsetDirection2));
+      variant
+          .put(
+              String.format(
+                  "facing=%s,axis=%s", facing1.asString(), offsetDirection1.getAxis().asString()),
+              JState.model(blockIdentifier(moduleName)).y((int) (direction.asRotation() - 180)))
+          .put(
+              String.format(
+                  "facing=%s,axis=%s", facing2.asString(), offsetDirection2.getAxis().asString()),
+              JState.model(blockIdentifier(moduleName + "_mirrored"))
+                  .y((int) (direction.asRotation() - 180)));
     }
     return JState.state(variant);
   }
@@ -465,6 +498,24 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_straight_line",
             "white_straight_thick_line",
             "white_joint_line_with_thick_side"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_white_joint_line_with_offset_side",
+        "road_with_joint_line",
+        textures2(
+            "asphalt",
+            "white_straight_line",
+            "white_offset_straight_line",
+            "white_joint_line_with_offset_side"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_white_joint_line_with_offset_side_mirrored",
+        "road_with_joint_line_mirrored",
+        textures2(
+            "asphalt",
+            "white_straight_line",
+            "white_offset_straight_line",
+            "white_joint_line_with_offset_side"));
 
     addRoadWithSlab(
         PACK,

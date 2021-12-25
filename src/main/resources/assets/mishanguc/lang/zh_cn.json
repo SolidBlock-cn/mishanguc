@@ -137,5 +137,7 @@
   "roadConnectionState.probability.may_connect_to": "可能连接",
   "roadConnectionState.probability.not_connected_to": "未连接",
   "roadConnectionState.probability.probably_connect_to": "应当连接",
-  "block.mishanguc.tooltip.road_with_offset_straight_line": "直线向左偏移，潜行时则会向右偏移。"
+  "block.mishanguc.tooltip.road_with_offset_straight_line": "直线向左偏移，潜行时则会向右偏移。",
+  "block.mishanguc.asphalt_road_with_white_joint_line_with_offset_side": "侧线偏移的白色合并线柏油路",
+  "block.mishanguc.asphalt_road_slab_with_white_joint_line_with_offset_side": "侧线偏移的白色合并线柏油路台阶"
 }

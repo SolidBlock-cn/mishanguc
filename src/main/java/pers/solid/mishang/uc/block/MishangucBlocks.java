@@ -22,15 +22,15 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 /** 迷上城建模组的所有方块。 */
-public class MishangucBlocks {
+public final class MishangucBlocks {
   /** 绝大多数柏油路方块共用的方块设置。 */
-  protected static final FabricBlockSettings ASPHALT_ROAD_SETTINGS =
+  private static final FabricBlockSettings ASPHALT_ROAD_SETTINGS =
       FabricBlockSettings.of(Material.STONE, MapColor.GRAY).strength(0.5F).breakByHand(true);
 
   /**
    *
    *
-   * <h1 style="color:black">道路方块部分</h1>
+   * <h1>道路方块部分</h1>
    *
    * 最基本的普通路块。
    */
@@ -122,6 +122,11 @@ public class MishangucBlocks {
   @Cutout @RegisterIdentifier
   public static final RoadWithJointLine.Impl ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_THICK_SIDE =
       new RoadWithJointLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
+  /** T字形，其中单侧部分有偏移。 */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithJointLineWithOffsetSide.Impl
+      ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_OFFSET_SIDE =
+          new RoadWithJointLineWithOffsetSide.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
 
   /**
    *
@@ -161,7 +166,7 @@ public class MishangucBlocks {
   /**
    *
    *
-   * <h1 style="color:black">道路台阶部分</h1>
+   * <h1>道路台阶部分</h1>
    *
    * 道路方块对应的台阶。
    *
@@ -269,20 +274,19 @@ public class MishangucBlocks {
   public static final RoadWithJointLine.SlabImpl
       ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE_WITH_THICK_SIDE =
           new RoadWithJointLine.SlabImpl(MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
+  /** @see #ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_OFFSET_SIDE */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithJointLineWithOffsetSide.SlabImpl
+      ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE_WITH_OFFSET_SIDE =
+          new RoadWithJointLineWithOffsetSide.SlabImpl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
 
   /**
    *
    *
-   * <h2>其他</h2>
+   * <h2>自动路台阶</h2>
    *
-   * @see #ASPHALT_ROAD_FILLED_WITH_WHITE
+   * @see #ASPHALT_ROAD_WITH_WHITE_AUTO_BEVEL_ANGLE_LINE
    */
-  @RegisterIdentifier
-  public static final RoadSlabBlock ASPHALT_ROAD_SLAB_FILLED_WITH_WHITE =
-      new RoadSlabBlock(
-          FabricBlockSettings.copyOf(MishangucBlocks.ASPHALT_ROAD_FILLED_WITH_WHITE),
-          LineColor.WHITE);
-  /** @see #ASPHALT_ROAD_WITH_WHITE_AUTO_BEVEL_ANGLE_LINE */
   @RegisterIdentifier @Cutout
   public static final RoadWithAutoLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_WHITE_AUTO_BEVEL_ANGLE_LINE =
       new RoadWithAutoLine.SlabImpl(
@@ -302,6 +306,18 @@ public class MishangucBlocks {
   /**
    *
    *
+   * <h2>其他</h2>
+   *
+   * @see #ASPHALT_ROAD_FILLED_WITH_WHITE
+   */
+  @RegisterIdentifier
+  public static final RoadSlabBlock ASPHALT_ROAD_SLAB_FILLED_WITH_WHITE =
+      new RoadSlabBlock(
+          FabricBlockSettings.copyOf(MishangucBlocks.ASPHALT_ROAD_FILLED_WITH_WHITE),
+          LineColor.WHITE);
+  /**
+   *
+   *
    * <h1>光源部分</h1>
    */
   @RegisterIdentifier
@@ -313,7 +329,7 @@ public class MishangucBlocks {
    *
    * @see RegisterIdentifier
    */
-  protected static void registerAll() {
+  private static void registerAll() {
     // 需要将方块物品放入对应的组。
     @Nullable ItemGroup group = null;
 
@@ -356,7 +372,7 @@ public class MishangucBlocks {
     }
   }
 
-  protected MishangucBlocks() {}
+  private MishangucBlocks() {}
 
   static {
     registerAll();

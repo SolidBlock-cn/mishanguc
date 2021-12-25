@@ -2,7 +2,8 @@
   "parent": "mishanguc:block/road_with_line",
   "textures": {
     "particle": "#base",
-    "line_bottom": "#line_top"
+    "line_bottom": "#line_top",
+    "line_side2": "#line_side"
   },
   "elements": [
     {
@@ -21,10 +22,11 @@
       "from": [0, 0, 0],
       "to": [16, 8, 16],
       "faces": {
-        "down": {"texture": "#line_bottom", "cullface": "down", "uv": [0, 16, 16, 8]},
-        "up": {"texture": "#line_top"},
-        "south": {"texture": "#line_side", "cullface": "south"},
-        "north": {"texture": "#line_side", "cullface": "north", "uv": [16, 0, 0, 8]}
+        "down": {"texture": "#line_bottom", "cullface": "down", "uv": [16, 16, 0, 0]},
+        "up": {"texture": "#line_top", "uv": [16, 0, 0, 16]},
+        "west": {"texture": "#line_side", "cullface": "west"},
+        "north": {"texture": "#line_side2", "cullface": "north", "uv": [0, 8, 16, 16]},
+        "east": {"texture": "#line_side", "cullface": "east"}
       }
     }
   ]
