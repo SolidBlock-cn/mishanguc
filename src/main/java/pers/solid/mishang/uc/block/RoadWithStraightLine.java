@@ -14,15 +14,18 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.LineColor;
 
 import java.util.List;
 
 public interface RoadWithStraightLine extends Road {
   EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
 
+  @Override
   default void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
     builder.add(AXIS);
   }
@@ -30,16 +33,21 @@ public interface RoadWithStraightLine extends Road {
   @Override
   default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
     Direction.Axis axis = state.get(AXIS);
-    return RoadConnectionState.of(direction.getAxis() == axis, getLineColor(), Either.left(direction));
+    return RoadConnectionState.of(
+        direction.getAxis() == axis, getLineColor(), Either.left(direction));
   }
 
+  @Override
   default BlockState rotateRoad(BlockState state, BlockRotation rotation) {
     Direction.Axis axis = state.get(AXIS);
     Direction.Axis rotatedAxis;
     switch (rotation) {
       case CLOCKWISE_90:
       case COUNTERCLOCKWISE_90:
-        rotatedAxis = axis == Direction.Axis.X ? Direction.Axis.Z : axis == Direction.Axis.Z ? Direction.Axis.X : axis;
+        rotatedAxis =
+            axis == Direction.Axis.X
+                ? Direction.Axis.Z
+                : axis == Direction.Axis.Z ? Direction.Axis.X : axis;
         break;
       default:
         rotatedAxis = axis;
@@ -47,20 +55,49 @@ public interface RoadWithStraightLine extends Road {
     return state.with(AXIS, rotatedAxis);
   }
 
+  @Override
   default BlockState mirrorRoad(BlockState state, BlockMirror mirror) {
     return state;
   }
 
+  @Override
   default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
     final PlayerEntity player = ctx.getPlayer();
     final Direction playerFacing = ctx.getPlayerFacing();
-    return state.with(AXIS, (player != null && player.isSneaking() ? playerFacing.rotateYClockwise() : playerFacing).getAxis());
+    return state.with(
+        AXIS,
+        (player != null && player.isSneaking() ? playerFacing.rotateYClockwise() : playerFacing)
+            .getAxis());
   }
 
   @Override
-  default void appendRoadTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+  default void appendRoadTooltip(
+      ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     Road.super.appendRoadTooltip(stack, world, tooltip, options);
-    tooltip.add(new TranslatableText("block.mishanguc.tooltip.road_with_straight_line.1").setStyle(GRAY_STYLE));
-    tooltip.add(new TranslatableText("block.mishanguc.tooltip.road_with_straight_line.2").setStyle(GRAY_STYLE));
+    tooltip.add(
+        new TranslatableText("block.mishanguc.tooltip.road_with_straight_line.1")
+            .formatted(Formatting.GRAY));
+    tooltip.add(
+        new TranslatableText("block.mishanguc.tooltip.road_with_straight_line.2")
+            .formatted(Formatting.GRAY));
+  }
+
+  /** @see Impl */
+  class SlabImpl extends AbstractRoadSlabBlock implements RoadWithStraightLine {
+    public SlabImpl(Settings settings, LineColor lineColor) {
+      super(settings, lineColor);
+    }
+  }
+
+  class Impl extends AbstractRoadBlock implements RoadWithStraightLine {
+    public Impl(Settings settings, LineColor lineColor) {
+      super(settings, lineColor);
+    }
+
+    @Override
+    public void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
+      super.appendRoadProperties(builder);
+      RoadWithStraightLine.super.appendRoadProperties(builder);
+    }
   }
 }

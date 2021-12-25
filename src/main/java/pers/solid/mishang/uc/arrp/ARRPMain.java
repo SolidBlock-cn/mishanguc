@@ -279,9 +279,9 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         textures("asphalt", "white_straight_line", "white_cross_line"));
     addRoadWithSlab(
         PACK,
-        "asphalt_road_with_white_side_line",
+        "asphalt_road_with_white_offset_straight_line",
         "road_with_straight_line",
-        textures("asphalt", "white_side_line", "white_side_line"));
+        textures("asphalt", "white_offset_straight_line", "white_offset_straight_line"));
     addRoadWithSlab(
         PACK,
         "asphalt_road_with_white_straight_double_line",

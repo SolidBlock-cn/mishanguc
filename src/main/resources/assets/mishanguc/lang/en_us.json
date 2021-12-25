@@ -6,16 +6,15 @@
   "block.mishanguc.asphalt_road_with_white_straight_and_bevel_angle_line": "Asphalt Road with White Straight and Bevel Angle Line",
   "block.mishanguc.asphalt_road_with_white_joint_line": "Asphalt Road with White Joint Line",
   "block.mishanguc.asphalt_road_with_white_cross_line": "Asphalt Road with White Cross Line",
-  "block.mishanguc.asphalt_road_with_white_side_line": "Asphalt Road with White Side Line",
+  "block.mishanguc.asphalt_road_with_white_offset_straight_line": "Asphalt Road with White Offset Straight Line",
   "block.mishanguc.asphalt_road_with_white_straight_double_line": "Asphalt Road with White Straight Double Line",
   "block.mishanguc.asphalt_road_with_white_straight_thick_line": "Asphalt Road with White Straight Thick Line",
+  "block.mishanguc.asphalt_road_with_right_angle_line_with_one_part_offset": "Asphalt Road with Right Angle Line with One Part Offset",
   "block.mishanguc.asphalt_road_with_white_joint_line_with_double_side": "Asphalt Road with White Joint Line with Double Side",
   "block.mishanguc.asphalt_road_with_white_joint_line_with_thick_side": "Asphalt Road with White Joint Line with Thick Side",
-
-  "block.mishanguc.asphalt_road_filled_with_white": "Asphalt Road Filled with White",
   "block.mishanguc.asphalt_road_with_white_auto_bevel_angle_line": "Asphalt Road with White Auto Bevel Angle Line",
   "block.mishanguc.asphalt_road_with_white_auto_right_angle_line": "Asphalt Road with White Auto Right Angle Line",
-
+  "block.mishanguc.asphalt_road_filled_with_white": "Asphalt Road Filled with White",
   "block.mishanguc.asphalt_road_slab": "Asphalt Road Slab",
   "block.mishanguc.asphalt_road_slab_with_white_straight_line": "Asphalt Road Slab with White Straight Line",
   "block.mishanguc.asphalt_road_slab_with_white_bevel_angle_line": "Asphalt Road Slab with White Bevel Angle Line",
@@ -23,16 +22,14 @@
   "block.mishanguc.asphalt_road_slab_with_white_straight_and_bevel_angle_line": "Asphalt Road Slab with White Straight and Bevel Angle Line",
   "block.mishanguc.asphalt_road_slab_with_white_joint_line": "Asphalt Road Slab with White Joint Line",
   "block.mishanguc.asphalt_road_slab_with_white_cross_line": "Asphalt Road Slab with White Cross Line",
-  "block.mishanguc.asphalt_road_slab_with_white_side_line": "Asphalt Road Slab with White Side Line",
+  "block.mishanguc.asphalt_road_slab_with_white_offset_straight_line": "Asphalt Road Slab with White Offset Straight Line",
   "block.mishanguc.asphalt_road_slab_with_white_straight_double_line": "Asphalt Road Slab with White Straight Double Line",
   "block.mishanguc.asphalt_road_slab_with_white_straight_thick_line": "Asphalt Road Slab with White Straight Thick Line",
   "block.mishanguc.asphalt_road_slab_with_white_joint_line_with_double_side": "Asphalt Road Slab with White Joint Line with Double Side",
   "block.mishanguc.asphalt_road_slab_with_white_joint_line_with_thick_side": "Asphalt Road Slab with White Joint Line with Thick Side",
-
   "block.mishanguc.asphalt_road_slab_filled_with_white": "Asphalt Road Slab Filled with White",
   "block.mishanguc.asphalt_road_slab_with_white_auto_bevel_angle_line": "Asphalt Road Slab with White Auto Bevel Angle Line",
   "block.mishanguc.asphalt_road_slab_with_white_auto_right_angle_line": "Asphalt Road Slab with White Auto Right Angle Line",
-
   "block.mishanguc.tooltip.road_with_straight_line.1": "The straight line is in the direction of player's forward direction.",
   "block.mishanguc.tooltip.road_with_straight_line.2": "Rotated 90 degree when sneaking.",
   "block.mishanguc.tooltip.road_with_angle_line.1": "The inner side of the right angle is towards the player's forward direction.",
@@ -41,19 +38,14 @@
   "block.mishanguc.tooltip.road_with_auto_line.2": "You can manually trigger it by clicking the top of it.",
   "block.mishanguc.tooltip.road_with_joint_line.1": "The half straight line of the road points to the direction of player's forward direction.",
   "block.mishanguc.tooltip.road_with_joint_line.2": "Opposite when sneaking.",
-
   "block.mishanguc.white_lamp": "White Lamp",
-
   "item.mishanguc.road_connection_state_debugging_tool": "Road Connection State Debugging Tool",
-
   "item.mishanguc.id_checker_tool": "Id Checker Tool",
   "item.mishanguc.id_checker_tool.tooltip.1": "Get its id data when clicking block.",
   "item.mishanguc.id_checker_tool.tooltip.2": "Get fluid data while sneaking.",
   "item.mishanguc.id_checker_tool.tooltip.3": "Can get fluid data.",
-
   "item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking": "Used for fluids when sneaking.",
   "item.mishanguc.block_tool.tooltip.includesFluid": "Can be used for fluids.",
-
   "item.mishanguc.fast_building_tool": "Fast Building Tool",
   "item.mishanguc.fast_building_tool.tooltip": "Can quickly place or destroy multiple blocks on a plain.",
   "item.mishanguc.fast_building_tool.tooltip.range": "Range: %s",
@@ -71,21 +63,17 @@
   "item.mishanguc.force_placing_tool.tooltip.2": "Also used to break a block without triggering block update.",
   "item.mishanguc.force_placing_tool.tooltip.fluids": "Can be used to place and remove fluids.",
   "item.mishanguc.force_placing_tool.tooltip.3": "Kills a living entity instantly.",
-
   "item.mishanguc.data_tag_tool": "Data Tag Tool",
   "item.mishanguc.data_tag_tool.tooltip": "Can get the NBT data of blocks and entities.",
-
   "item.mishanguc.block_state_tool": "Block State Tool",
   "item.mishanguc.fluid_state_tool": "Fluid State Tool",
   "item.mishanguc.block_state_tool.tooltip": "Click the block to get the block state.",
   "item.mishanguc.block_state_tool.tooltip.includesFluidWhileSneaking": "Can get the fluid state while sneaking.",
   "item.mishanguc.block_state_tool.tooltip.includesFluid": "Can get the fluid state.",
-
   "blockMatchingRule.mishanguc.same_state": "Same Block State",
   "blockMatchingRule.mishanguc.same_block": "Same Block",
   "blockMatchingRule.mishanguc.same_material": "Same Material",
   "blockMatchingRule.mishanguc.any": "Any",
-
   "direction.none": "None",
   "direction.north": "North",
   "direction.south": "South",
@@ -95,7 +83,6 @@
   "direction.north_east": "Northeast",
   "direction.south_west": "Southwest",
   "direction.south_east": "Southeast",
-
   "debug.mishanguc.notRoad": "This is not a road block",
   "debug.mishanguc.roadConnectionState": "The connection state of road at %s at %s side:",
   "debug.mishanguc.roadConnectionState.allDir": "The connection state of road at %s:",
@@ -103,25 +90,20 @@
   "debug.mishanguc.roadConnectionState.lineColor": "Color: %s",
   "debug.mishanguc.roadConnectionState.probability": "Connection probability: %s",
   "debug.mishanguc.roadConnectionState.brief": "[%s side] Direction: %s, Color: %s, Probability: %s",
-
   "debug.mishanguc.blockId": "Id information of block at %s:",
   "debug.mishanguc.blockId.name": "\u00a77Name: \u00a7r%s",
   "debug.mishanguc.blockId.id": "\u00a77Id: \u00a7r%s",
   "debug.mishanguc.blockId.rawId": "\u00a77Raw Id: \u00a7r%s",
-
   "debug.mishanguc.entityId": "Id information of entity at %s:",
   "debug.mishanguc.entityId.name": "\u00a77Name: \u00a7r%s",
   "debug.mishanguc.entityId.id": "\u00a77Id: \u00a7r%s",
   "debug.mishanguc.entityId.rawId": "\u00a77Raw Id: \u00a7r%s",
-
   "debug.mishanguc.blockStates": "The properties of %2$s located at %1$s: ",
   "debug.mishanguc.blockStates.none": "The %2$s located at %1$s has no properties.",
   "debug.mishanguc.blockStates.fluidLevel": "Fluid state",
-
   "debug.mishanguc.dataTag.block.null": "The %2$s located at %1$s has no data tags",
   "debug.mishanguc.dataTag.block.header": "The %2$s located at %1$s has the following data tags: ",
   "debug.mishanguc.dataTag.entity.entity": "The %2$s located at %1$s has the following data tags: ",
-
   "debug.mishanguc.nbt.compound": "Compound tag",
   "debug.mishanguc.nbt.compound_eclipse": "…… (%s tags left)",
   "debug.mishanguc.nbt.compound_display_remains": "Click to display remaining tags",
@@ -130,7 +112,6 @@
   "debug.mishanguc.nbt.compound_brief": "%s tags",
   "debug.mishanguc.nbt.compound_empty": "Empty compound",
   "debug.mishanguc.nbt.compound_expand": "<expand>",
-
   "debug.mishanguc.nbt.list": "List",
   "debug.mishanguc.nbt.list_eclipse": "…… (%s elements left)",
   "debug.mishanguc.nbt.list_display_remains": "Click to display remaining elements",
@@ -139,19 +120,15 @@
   "debug.mishanguc.nbt.list_brief": "%s elements",
   "debug.mishanguc.nbt.list_empty": "Empty list",
   "debug.mishanguc.nbt.list_expand": "<expand>",
-
   "debug.mishanguc.nbt.string.eclipse": "…… (%s characters in total)",
-
   "roadConnectionState.lineColor.white": "White",
   "roadConnectionState.lineColor.yellow": "Yellow",
   "roadConnectionState.lineColor.unknown": "Unknown",
   "roadConnectionState.lineColor.none": "None",
-
   "roadConnectionState.probability.not_connected_to": "Not connected to",
   "roadConnectionState.probability.may_connect_to": "May connect to",
   "roadConnectionState.probability.probably_connect_to": "Probably connected to",
   "roadConnectionState.probability.connected_to": "Connected to",
-
   "itemGroup.mishanguc.roads": "Mishang Urban Construction | Roads",
   "itemGroup.mishanguc.lights": "Mishang Urban Construction | Lights",
   "itemGroup.mishanguc.tools": "Mishang Urban Construction | Tools"

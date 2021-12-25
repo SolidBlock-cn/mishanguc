@@ -41,25 +41,38 @@ public abstract class AbstractRoadBlock extends Block implements Road {
     return withPlacementState(super.getPlacementState(ctx), ctx);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public BlockState mirror(BlockState state, BlockMirror mirror) {
     return mirrorRoad(super.mirror(state, mirror), mirror);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public BlockState rotate(BlockState state, BlockRotation rotation) {
     return rotateRoad(super.rotate(state, rotation), rotation);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
-  public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+  public ActionResult onUse(
+      BlockState state,
+      World world,
+      BlockPos pos,
+      PlayerEntity player,
+      Hand hand,
+      BlockHitResult hit) {
     ActionResult result = super.onUse(state, world, pos, player, hand, hit);
-    if (result == ActionResult.FAIL) return result;
-    else return onUseRoad(state, world, pos, player, hand, hit);
+    if (result == ActionResult.FAIL) {
+      return result;
+    }
+    return onUseRoad(state, world, pos, player, hand, hit);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
-  public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+  public void neighborUpdate(
+      BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
     super.neighborUpdate(state, world, pos, block, fromPos, notify);
     neighborRoadUpdate(state, world, pos, block, fromPos, notify);
   }
@@ -70,7 +83,8 @@ public abstract class AbstractRoadBlock extends Block implements Road {
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+  public void appendTooltip(
+      ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     super.appendTooltip(stack, world, tooltip, options);
     appendRoadTooltip(stack, world, tooltip, options);
   }

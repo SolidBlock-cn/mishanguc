@@ -13,9 +13,11 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.LineColor;
 
 import java.util.List;
 
@@ -30,7 +32,12 @@ public interface RoadWithJointLine extends Road {
 
   @Override
   default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
-    return RoadConnectionState.or(Road.super.getConnectionStateOf(state, direction), RoadConnectionState.of(!(state.get(FACING) == direction.getOpposite()), getLineColor(), Either.left(direction)));
+    return RoadConnectionState.or(
+        Road.super.getConnectionStateOf(state, direction),
+        RoadConnectionState.of(
+            !(state.get(FACING) == direction.getOpposite()),
+            getLineColor(),
+            Either.left(direction)));
   }
 
   @Override
@@ -46,13 +53,37 @@ public interface RoadWithJointLine extends Road {
   @Override
   default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
     final Direction rotation = Direction.fromRotation(ctx.getPlayerYaw());
-    return Road.super.withPlacementState(state, ctx).with(FACING, ctx.getPlayer() != null && ctx.getPlayer().isSneaking() ? rotation.getOpposite() : rotation);
+    return Road.super
+        .withPlacementState(state, ctx)
+        .with(
+            FACING,
+            ctx.getPlayer() != null && ctx.getPlayer().isSneaking()
+                ? rotation.getOpposite()
+                : rotation);
   }
 
   @Override
-  default void appendRoadTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+  default void appendRoadTooltip(
+      ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     Road.super.appendRoadTooltip(stack, world, tooltip, options);
-    tooltip.add(new TranslatableText("block.mishanguc.tooltip.road_with_joint_line.1").setStyle(GRAY_STYLE));
-    tooltip.add(new TranslatableText("block.mishanguc.tooltip.road_with_joint_line.2").setStyle(GRAY_STYLE));
+    tooltip.add(
+        new TranslatableText("block.mishanguc.tooltip.road_with_joint_line.1")
+            .formatted(Formatting.GRAY));
+    tooltip.add(
+        new TranslatableText("block.mishanguc.tooltip.road_with_joint_line.2")
+            .formatted(Formatting.GRAY));
+  }
+
+  /** @see Impl */
+  class SlabImpl extends AbstractRoadSlabBlock implements RoadWithJointLine {
+    public SlabImpl(Settings settings, LineColor lineColor) {
+      super(settings, lineColor);
+    }
+  }
+
+  class Impl extends AbstractRoadBlock implements RoadWithJointLine {
+    public Impl(Settings settings, LineColor lineColor) {
+      super(settings, lineColor);
+    }
   }
 }

@@ -10,14 +10,11 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.Direction;
+import pers.solid.mishang.uc.LineColor;
 
-/**
- * 类似于 {@link RoadWithStraightLine}，不过道路的直线是偏移的，而非正中的。
- */
+/** 类似于 {@link RoadWithStraightLine}，不过道路的直线是偏移的，而非正中的。 */
 public interface RoadWithOffsetStraightLine extends Road {
-  /**
-   * 道路偏移直线所偏移的反方向。例如道路有一条南北方向的向西偏移的直线，则该道路朝向东。
-   */
+  /** 道路偏移直线所偏移的反方向。例如道路有一条南北方向的向西偏移的直线，则该道路朝向东。 */
   DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
   @Override
@@ -28,7 +25,12 @@ public interface RoadWithOffsetStraightLine extends Road {
 
   @Override
   default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
-    return RoadConnectionState.or(Road.super.getConnectionStateOf(state, direction), RoadConnectionState.of(direction.getAxis() != state.get(FACING).getAxis(), getLineColor(), Either.left(direction)));
+    return RoadConnectionState.or(
+        Road.super.getConnectionStateOf(state, direction),
+        RoadConnectionState.of(
+            direction.getAxis() != state.get(FACING).getAxis(),
+            getLineColor(),
+            Either.left(direction)));
   }
 
   @Override
@@ -43,6 +45,20 @@ public interface RoadWithOffsetStraightLine extends Road {
 
   @Override
   default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
-    return Road.super.withPlacementState(state, ctx).with(FACING, ctx.getPlayerFacing().rotateYClockwise());
+    return Road.super
+        .withPlacementState(state, ctx)
+        .with(FACING, ctx.getPlayerFacing().rotateYClockwise());
+  }
+
+  class SlabImpl extends AbstractRoadSlabBlock implements RoadWithOffsetStraightLine {
+    public SlabImpl(Settings settings, LineColor lineColor) {
+      super(settings, lineColor);
+    }
+  }
+
+  class Impl extends AbstractRoadBlock implements RoadWithOffsetStraightLine {
+    public Impl(Settings settings, LineColor lineColor) {
+      super(settings, lineColor);
+    }
   }
 }
