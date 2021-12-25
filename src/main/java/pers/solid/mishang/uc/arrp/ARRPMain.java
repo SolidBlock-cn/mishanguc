@@ -1,15 +1,19 @@
 package pers.solid.mishang.uc.arrp;
 
 import com.google.common.collect.Lists;
+import com.google.gson.JsonObject;
 import net.devtech.arrp.api.RRPCallback;
 import net.devtech.arrp.api.RRPPreGenEntrypoint;
 import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.blockstate.JBlockModel;
 import net.devtech.arrp.json.blockstate.JState;
 import net.devtech.arrp.json.blockstate.JVariant;
+import net.devtech.arrp.json.loot.JCondition;
+import net.devtech.arrp.json.loot.JFunction;
 import net.devtech.arrp.json.loot.JLootTable;
 import net.devtech.arrp.json.models.*;
 import net.minecraft.block.Block;
+import net.minecraft.block.SlabBlock;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
@@ -99,7 +103,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
     ARRPMain.PACK.addModel(JModel.model(blockIdentifier(name)), itemIdentifier(name));
   }
 
-  private static void addBlockLootTable(RuntimeResourcePack PACK, String name) {
+  private static void addSimpleBlockLootTable(String name) {
     PACK.addLootTable(
         new Identifier("mishanguc", "blocks/" + name),
         JLootTable.loot("minecraft:block")
@@ -108,6 +112,32 @@ public class ARRPMain implements RRPPreGenEntrypoint {
                     .rolls(1)
                     .entry(JLootTable.entry().type("minecraft:item").name("mishanguc:" + name))
                     .condition(JLootTable.predicate("minecraft:survives_explosion"))));
+  }
+
+  private static void addSlabBlockLootTable(String name) {
+    PACK.addLootTable(
+        new Identifier("mishanguc", "blocks/" + name),
+        JLootTable.loot("minecraft:block")
+            .pool(
+                JLootTable.pool()
+                    .rolls(1)
+                    .entry(
+                        JLootTable.entry()
+                            .type("minecraft:item")
+                            .name("mishanguc:" + name)
+                            .function(
+                                new JFunction("set_count")
+                                    .condition(
+                                        new JCondition("block_state_property")
+                                            .parameter("block", "mishanguc:" + name)
+                                            .parameter(
+                                                "properties",
+                                                Util.make(
+                                                    new JsonObject(),
+                                                    jsonObject ->
+                                                        jsonObject.addProperty("type", "double"))))
+                                    .parameter("count", 2))
+                            .function(new JFunction("explosion_decay")))));
   }
 
   private static void addCubeAll(RuntimeResourcePack PACK, String path, String all) {
@@ -206,8 +236,33 @@ public class ARRPMain implements RRPPreGenEntrypoint {
     addBlockStates();
     addBlockModels();
     addBlockItemModels();
+    addBlockLootTables();
     addItemModels();
     RRPCallback.BEFORE_VANILLA.register(a -> a.add(PACK));
+  }
+
+  private static void addBlockLootTables() {
+    Arrays.stream(MishangucBlocks.class.getFields())
+        .filter(
+            field -> {
+              int modifier = field.getModifiers();
+              return Modifier.isPublic(modifier)
+                  && Modifier.isStatic(modifier)
+                  && Block.class.isAssignableFrom(field.getType())
+                  && field.isAnnotationPresent(RegisterIdentifier.class);
+            })
+        .forEach(
+            field -> {
+              String name = field.getAnnotation(RegisterIdentifier.class).value();
+              if (name.isEmpty()) {
+                name = field.getName().toLowerCase();
+              }
+              if (SlabBlock.class.isAssignableFrom(field.getType())) {
+                addSlabBlockLootTable(name);
+              } else {
+                addSimpleBlockLootTable(name);
+              }
+            });
   }
 
   private static JState composeStateForSlab(JState stateForFull) {
