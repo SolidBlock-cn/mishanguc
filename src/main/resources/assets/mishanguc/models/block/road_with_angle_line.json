@@ -2,29 +2,61 @@
   "parent": "mishanguc:block/road_with_line",
   "textures": {
     "particle": "#base",
-    "line_bottom": "#line_top"
+    "line_bottom": "#line_top",
+    "line_side2": "#line_side"
   },
   "elements": [
     {
-      "from": [0,0,0],
-      "to": [16,16,16],
+      "from": [0, 0, 0],
+      "to": [16, 16, 16],
       "faces": {
-        "down":  { "texture": "#base", "cullface": "down" },
-        "up":    { "texture": "#base", "cullface": "up" },
-        "north": { "texture": "#base", "cullface": "north" },
-        "south": { "texture": "#base", "cullface": "south" },
-        "west":  { "texture": "#base", "cullface": "west" },
-        "east":  { "texture": "#base", "cullface": "east" }
+        "down": {
+          "texture": "#base",
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#base",
+          "cullface": "up"
+        },
+        "north": {
+          "texture": "#base",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#base",
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#base",
+          "cullface": "west"
+        },
+        "east": {
+          "texture": "#base",
+          "cullface": "east"
+        }
       }
     },
     {
-      "from": [0,0,0],
-      "to": [16,16,16],
+      "from": [0, 0, 0],
+      "to": [16, 16, 16],
       "faces": {
-        "down":  { "texture": "#line_bottom", "cullface": "down", "uv": [0,16,16,0] },
-        "up":    { "texture": "#line_top", "cullface": "up" },
-        "east": { "texture": "#line_side", "cullface": "east" },
-        "north": { "texture": "#line_side", "cullface": "north" }
+        "down": {
+          "texture": "#line_bottom",
+          "cullface": "down",
+          "uv": [0, 16, 16, 0]
+        },
+        "up": {
+          "texture": "#line_top",
+          "cullface": "up"
+        },
+        "east": {
+          "texture": "#line_side",
+          "cullface": "east"
+        },
+        "north": {
+          "texture": "#line_side2",
+          "cullface": "north"
+        }
       }
     }
   ]

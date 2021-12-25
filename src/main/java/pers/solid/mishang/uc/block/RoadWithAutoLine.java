@@ -29,16 +29,31 @@ import pers.solid.mishang.uc.LineColor;
 import pers.solid.mishang.uc.ModProperties;
 import pers.solid.mishang.uc.RoadTexture;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 public interface RoadWithAutoLine extends Road {
+  /**
+   * 根据附近的连接状态自动产生一个新的方块状态。
+   *
+   * @param connectionStateMap 连接状态映射，各个方向的连接状态。
+   * @param defaultState 默认方块状态。
+   * @return 转换后的方块状态。
+   */
   BlockState makeState(
-      Map<Direction, RoadConnectionState> connectionStateMap, BlockState defaultState);
+      EnumMap<Direction, RoadConnectionState> connectionStateMap, BlockState defaultState);
 
-  default Map<Direction, RoadConnectionState> getConnectionStateMap(
+  /**
+   * 获取附近的连接状态映射。
+   *
+   * @param world 世界。
+   * @param pos0 坐标。
+   * @return 连接状态的映射。
+   */
+  default EnumMap<Direction, RoadConnectionState> getConnectionStateMap(
       WorldAccess world, BlockPos pos0) {
-    Map<Direction, RoadConnectionState> connectionStateMap = Maps.newHashMap();
+    EnumMap<Direction, RoadConnectionState> connectionStateMap = Maps.newEnumMap(Direction.class);
     for (Direction direction : Direction.Type.HORIZONTAL) {
       RoadConnectionState state = RoadConnectionState.empty();
       // 检查毗邻方块及其上下方。
@@ -118,7 +133,9 @@ public interface RoadWithAutoLine extends Road {
 
   /** 道路自动连接的类型，分为直角和斜线。 */
   enum RoadAutoLineType {
+    /** 直角 */
     RIGHT_ANGLE,
+    /** 45°的斜角 */
     BEVEL
   }
 
@@ -137,10 +154,9 @@ public interface RoadWithAutoLine extends Road {
 
     @Override
     public @NotNull BlockState makeState(
-        Map<Direction, RoadConnectionState> connectionStateMap, BlockState defaultState) {
+        EnumMap<Direction, RoadConnectionState> connectionStateMap, BlockState defaultState) {
       int connected = 0;
       for (Map.Entry<Direction, RoadConnectionState> e : connectionStateMap.entrySet()) {
-        Direction key = e.getKey();
         RoadConnectionState value = e.getValue();
         if (value.mayConnect()) {
           connected++;
@@ -285,10 +301,9 @@ public interface RoadWithAutoLine extends Road {
 
     @Override
     public @NotNull BlockState makeState(
-        Map<Direction, RoadConnectionState> connectionStateMap, BlockState defaultState) {
+        EnumMap<Direction, RoadConnectionState> connectionStateMap, BlockState defaultState) {
       int connected = 0;
       for (Map.Entry<Direction, RoadConnectionState> e : connectionStateMap.entrySet()) {
-        Direction key = e.getKey();
         RoadConnectionState value = e.getValue();
         if (value.mayConnect()) {
           connected++;

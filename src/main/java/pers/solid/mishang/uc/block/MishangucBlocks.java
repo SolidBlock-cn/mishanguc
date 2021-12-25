@@ -97,9 +97,15 @@ public class MishangucBlocks {
       new RoadWithStraightLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
   /** 一侧偏移的直角。 */
   @Cutout @RegisterIdentifier
-  public static final RoadWithAngleLineWithOneSideOffset.Impl
-      ASPHALT_ROAD_WITH_RIGHT_ANGLE_LINE_WITH_ONE_PART_OFFSET =
-          new RoadWithAngleLineWithOneSideOffset.Impl(
+  public static final RoadWithAngleLineWithOnePartOffset.Impl
+      ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE_WITH_ONE_PART_OFFSET_OUT =
+          new RoadWithAngleLineWithOnePartOffset.Impl(
+              ASPHALT_ROAD_SETTINGS, LineColor.WHITE, false);
+
+  @Cutout @RegisterIdentifier
+  public static final RoadWithAngleLineWithOnePartOffset.Impl
+      ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE_WITH_ONE_PART_OFFSET_IN =
+          new RoadWithAngleLineWithOnePartOffset.Impl(
               ASPHALT_ROAD_SETTINGS, LineColor.WHITE, false);
 
   /**
@@ -230,6 +236,22 @@ public class MishangucBlocks {
   public static final RoadWithStraightLine.SlabImpl
       ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_THICK_LINE =
           new RoadWithStraightLine.SlabImpl(MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
+  /**
+   * 一侧偏移的直角。
+   *
+   * @see #ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE_WITH_ONE_PART_OFFSET_OUT
+   */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithAngleLineWithOnePartOffset.SlabImpl
+      ASPHALT_ROAD_SLAB_WITH_WHITE_RIGHT_ANGLE_LINE_WITH_ONE_PART_OFFSET_OUT =
+          new RoadWithAngleLineWithOnePartOffset.SlabImpl(
+              ASPHALT_ROAD_SETTINGS, LineColor.WHITE, false);
+  /** @see #ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE_WITH_ONE_PART_OFFSET_IN */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithAngleLineWithOnePartOffset.SlabImpl
+      ASPHALT_ROAD_SLAB_WITH_WHITE_RIGHT_ANGLE_LINE_WITH_ONE_PART_OFFSET_IN =
+          new RoadWithAngleLineWithOnePartOffset.SlabImpl(
+              ASPHALT_ROAD_SETTINGS, LineColor.WHITE, false);
 
   /**
    *

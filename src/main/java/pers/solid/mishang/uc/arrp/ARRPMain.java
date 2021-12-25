@@ -1,25 +1,38 @@
 package pers.solid.mishang.uc.arrp;
 
+import com.google.common.collect.Lists;
 import net.devtech.arrp.api.RRPCallback;
 import net.devtech.arrp.api.RRPPreGenEntrypoint;
 import net.devtech.arrp.api.RuntimeResourcePack;
+import net.devtech.arrp.json.blockstate.JBlockModel;
+import net.devtech.arrp.json.blockstate.JState;
+import net.devtech.arrp.json.blockstate.JVariant;
 import net.devtech.arrp.json.loot.JLootTable;
 import net.devtech.arrp.json.models.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.SimpleModel;
+import pers.solid.mishang.uc.block.HorizontalCornerDirection;
 import pers.solid.mishang.uc.block.MishangucBlocks;
 import pers.solid.mishang.uc.item.MishangucItems;
+import pers.solid.mishang.uc.mixin.JBlockModelAccessor;
+import pers.solid.mishang.uc.mixin.JStateAccessor;
+import pers.solid.mishang.uc.mixin.JVariantAccessor;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ARRPMain implements RRPPreGenEntrypoint {
+  private static final RuntimeResourcePack PACK = RuntimeResourcePack.create("mishanguc");
 
   private static Identifier blockIdentifier(String path) {
     return new Identifier("mishanguc", "block/" + path);
@@ -82,58 +95,8 @@ public class ARRPMain implements RRPPreGenEntrypoint {
     return faces(all, all, all, all, all, all);
   }
 
-  @Deprecated
-  private static void addBlockModels(RuntimeResourcePack PACK) {
-    PACK.addModel(
-        JModel.model("block/cube_all").textures(new JTextures().var("all", blockString("asphalt"))),
-        blockIdentifier("asphalt_road_block"));
-
-    PACK.addModel(
-        JModel.model("block/cube")
-            .element(
-                fullElement(faces("base")),
-                fullElement(faces("line_bottom", "line_top", "line_side", null, null, "line_side")))
-            .textures(JModel.textures().particle("#base").var("line_bottom", "#line_top")),
-        blockIdentifier("road_with_corner_line"));
-
-    PACK.addModel(
-        JModel.model("block/cube")
-            .element(
-                fullElement(faces("base")),
-                fullElement(faces("line_bottom", "line_top", "line_side", null, "line_side", null)))
-            .textures(JModel.textures().particle("#base").var("line_bottom", "#line_top")),
-        blockIdentifier("road_with_straight_line"));
-
-    PACK.addModel(
-        JModel.model(blockIdentifier("road_with_corner_line"))
-            .textures(
-                JModel.textures()
-                    .var("line_top", blockString("white_corner_line"))
-                    .var("line_side", blockString("white_straight_line"))
-                    .var("base", blockIdentifier("asphalt").toString())),
-        blockIdentifier("asphalt_road_with_white_corner_line"));
-
-    PACK.addModel(
-        JModel.model(blockIdentifier("road_with_corner_line"))
-            .textures(
-                JModel.textures()
-                    .var("line_top", blockString("white_slope_line"))
-                    .var("line_side", blockString("white_straight_line"))
-                    .var("base", blockString("asphalt"))),
-        blockIdentifier("asphalt_road_with_white_slope_line"));
-
-    PACK.addModel(
-        JModel.model(blockIdentifier("road_with_straight_line"))
-            .textures(
-                JModel.textures()
-                    .var("line_top", blockString("white_straight_line"))
-                    .var("line_side", blockString("white_straight_line"))
-                    .var("base", blockString("asphalt"))),
-        blockIdentifier("asphalt_road_with_white_straight_line"));
-  }
-
-  private static void addBlockItemModel(RuntimeResourcePack PACK, String name) {
-    PACK.addModel(JModel.model(blockIdentifier(name)), itemIdentifier(name));
+  private static void addBlockItemModel(String name) {
+    ARRPMain.PACK.addModel(JModel.model(blockIdentifier(name)), itemIdentifier(name));
   }
 
   private static void addBlockLootTable(RuntimeResourcePack PACK, String name) {
@@ -172,10 +135,10 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         blockIdentifier(path + "_top"));
   }
 
-  /** 运行此方法需确保其楼梯名称证号为 path + "_slab"。 */
+  /** 运行此方法需确保其楼梯名称正好为 path + "_slab"。 */
   private static void addCubeAllWithSlab(final RuntimeResourcePack PACK, String path, String all) {
     addCubeAll(PACK, path, all);
-    addSlabAll(PACK, plusSlab(path), all);
+    addSlabAll(PACK, slabOf(path), all);
   }
 
   /**
@@ -190,19 +153,23 @@ public class ARRPMain implements RRPPreGenEntrypoint {
       RuntimeResourcePack PACK, String path, String parent, JTextures textures) {
     PACK.addModel(JModel.model(blockIdentifier(parent)).textures(textures), blockIdentifier(path));
     PACK.addModel(
-        JModel.model(blockIdentifier(parent) + "_slab").textures(textures),
-        blockIdentifier(plusSlab(path)));
+        JModel.model(slabOf(blockIdentifier(parent))).textures(textures),
+        blockIdentifier(slabOf(path)));
     PACK.addModel(
-        JModel.model(blockIdentifier(parent) + "_slab_top").textures(textures),
-        blockIdentifier(plusSlab(path) + "_top"));
+        JModel.model(slabOf(blockIdentifier(parent)) + "_top").textures(textures),
+        blockIdentifier(slabOf(path) + "_top"));
   }
 
-  private static String plusSlab(String string) {
+  private static String slabOf(String string) {
     if (string.contains("_road")) {
       return string.replaceFirst("_road", "_road_slab");
     } else {
       return string + "_slab";
     }
+  }
+
+  private static Identifier slabOf(Identifier identifier) {
+    return new Identifier(identifier.getNamespace(), slabOf(identifier.getPath()));
   }
 
   private static JTextures textures(String all) {
@@ -236,7 +203,159 @@ public class ARRPMain implements RRPPreGenEntrypoint {
 
   @Override
   public void pregen() {
-    final RuntimeResourcePack PACK = RuntimeResourcePack.create("mishanguc");
+    addBlockStates();
+    addBlockModels();
+    addBlockItemModels();
+    addItemModels();
+    RRPCallback.BEFORE_VANILLA.register(a -> a.add(PACK));
+  }
+
+  private static JState composeStateForSlab(JState stateForFull) {
+    final List<JVariant> variants = ((JStateAccessor) (Object) stateForFull).getVariants();
+    final List<JVariant> slabVariants = Lists.newArrayList();
+    for (JVariant variant : variants) {
+      final Map<String, JBlockModel> models = ((JVariantAccessor) (Object) variant).getModels();
+      final JVariant slabVariant = new JVariant();
+      for (Map.Entry<String, JBlockModel> entry : models.entrySet()) {
+        final String key = entry.getKey();
+        final JBlockModel value = entry.getValue();
+        final Identifier model = ((JBlockModelAccessor) value).getModel();
+        slabVariant
+            .put(
+                key.isEmpty() ? "type=bottom" : key + ",type=bottom",
+                Util.make(
+                    value.clone(),
+                    jBlockModel ->
+                        ((JBlockModelAccessor) jBlockModel)
+                            .setModel(
+                                new Identifier(model.getNamespace(), slabOf(model.getPath())))))
+            .put(
+                key.isEmpty() ? "type=bottom" : key + ",type=top",
+                Util.make(
+                    value.clone(),
+                    jBlockModel ->
+                        ((JBlockModelAccessor) jBlockModel)
+                            .setModel(
+                                new Identifier(
+                                    model.getNamespace(), slabOf(model.getPath()) + "_top"))))
+            .put(
+                key.isEmpty() ? "type=bottom" : key + ",type=double",
+                Util.make(
+                    value.clone(),
+                    jBlockModel ->
+                        ((JBlockModelAccessor) jBlockModel)
+                            .setModel(new Identifier(model.getNamespace(), (model.getPath())))));
+      }
+      slabVariants.add(slabVariant);
+    }
+    return JState.state(slabVariants.toArray(new JVariant[] {}));
+  }
+
+  private static void addBlockStates() {
+    final JState state1 =
+        stateForAngleLineWithOnePartOffset(
+            "asphalt_road_with_white_right_angle_line_with_one_part_offset_out");
+    PACK.addBlockState(
+        state1,
+        new Identifier(
+            "mishanguc", "asphalt_road_with_white_right_angle_line_with_one_part_offset_out"));
+    PACK.addBlockState(
+        composeStateForSlab(state1),
+        new Identifier(
+            "mishanguc", "asphalt_road_slab_with_white_right_angle_line_with_one_part_offset_out"));
+    final JState state2 =
+        stateForAngleLineWithOnePartOffset(
+            "asphalt_road_with_white_right_angle_line_with_one_part_offset_in");
+    PACK.addBlockState(
+        state2,
+        new Identifier(
+            "mishanguc", "asphalt_road_with_white_right_angle_line_with_one_part_offset_in"));
+    PACK.addBlockState(
+        composeStateForSlab(state2),
+        new Identifier(
+            "mishanguc", "asphalt_road_slab_with_white_right_angle_line_with_one_part_offset_in"));
+  }
+
+  @NotNull
+  private static JState stateForAngleLineWithOnePartOffset(@NotNull String moduleName) {
+    JVariant variant = new JVariant();
+    for (Direction direction : Direction.Type.HORIZONTAL) {
+      // 不需要逆反right_angle_line_with_one_part_offset纹理的情况。
+      final Direction offsetDirection1 = direction.rotateYCounterclockwise();
+      final Direction offsetDirection2 = direction.rotateYClockwise();
+      variant.put(
+          String.format(
+              "facing=%s,axis=%s",
+              Objects.requireNonNull(
+                      HorizontalCornerDirection.fromDirections(direction, offsetDirection1))
+                  .asString(),
+              direction.getAxis().asString()),
+          JState.model("mishanguc:block/" + moduleName).y((int) (direction.asRotation() + 90)));
+      variant.put(
+          String.format(
+              "facing=%s,axis=%s",
+              Objects.requireNonNull(
+                      HorizontalCornerDirection.fromDirections(direction, offsetDirection2))
+                  .asString(),
+              direction.getAxis().asString()),
+          JState.model("mishanguc:block/" + moduleName + "_mirrored")
+              .y((int) (direction.asRotation()) + 90));
+    }
+    return JState.state(variant);
+  }
+
+  private static void addItemModels() {
+    Arrays.stream(MishangucItems.class.getFields())
+        .filter(
+            field -> {
+              int modifier = field.getModifiers();
+              return Modifier.isPublic(modifier)
+                  && Modifier.isStatic(modifier)
+                  && Item.class.isAssignableFrom(field.getType())
+                  && field.isAnnotationPresent(RegisterIdentifier.class)
+                  && field.isAnnotationPresent(SimpleModel.class);
+            })
+        .forEach(
+            field -> {
+              String name = field.getAnnotation(RegisterIdentifier.class).value();
+              String parent = field.getAnnotation(SimpleModel.class).parent();
+              String texture = field.getAnnotation(SimpleModel.class).texture();
+              if (name.isEmpty()) {
+                name = field.getName().toLowerCase();
+              }
+              if (parent.isEmpty()) {
+                name = "item/generated";
+              }
+              PACK.addModel(
+                  JModel.model(parent)
+                      .textures(
+                          JModel.textures()
+                              .layer0(texture.isEmpty() ? "mishanguc:item/" + name : texture)),
+                  new Identifier("mishanguc", "item/" + name));
+            });
+  }
+
+  private static void addBlockItemModels() {
+    Arrays.stream(MishangucBlocks.class.getFields())
+        .filter(
+            field -> {
+              int modifier = field.getModifiers();
+              return Modifier.isPublic(modifier)
+                  && Modifier.isStatic(modifier)
+                  && Block.class.isAssignableFrom(field.getType())
+                  && field.isAnnotationPresent(RegisterIdentifier.class);
+            })
+        .forEach(
+            field -> {
+              String name = field.getAnnotation(RegisterIdentifier.class).value();
+              if (name.isEmpty()) {
+                name = field.getName().toLowerCase();
+              }
+              addBlockItemModel(name);
+            });
+  }
+
+  private static void addBlockModels() {
     addCubeAll(PACK, "asphalt_road_block", "asphalt");
     addSlabAll(PACK, "asphalt_road_slab", "asphalt");
     addCubeAllWithSlab(PACK, "asphalt_road_filled_with_white", "white_ink");
@@ -294,6 +413,42 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         textures("asphalt", "white_straight_thick_line", "white_straight_thick_line"));
     addRoadWithSlab(
         PACK,
+        "asphalt_road_with_white_right_angle_line_with_one_part_offset_out",
+        "road_with_angle_line",
+        textures2(
+            "asphalt",
+            "white_straight_line",
+            "white_offset_straight_line2",
+            "white_right_angle_line_with_one_part_offset_out"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_white_right_angle_line_with_one_part_offset_out_mirrored",
+        "road_with_angle_line_mirrored",
+        textures2(
+            "asphalt",
+            "white_straight_line",
+            "white_offset_straight_line2",
+            "white_right_angle_line_with_one_part_offset_out"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_white_right_angle_line_with_one_part_offset_in",
+        "road_with_angle_line",
+        textures2(
+            "asphalt",
+            "white_straight_line",
+            "white_offset_straight_line",
+            "white_right_angle_line_with_one_part_offset_in"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_white_right_angle_line_with_one_part_offset_in_mirrored",
+        "road_with_angle_line_mirrored",
+        textures2(
+            "asphalt",
+            "white_straight_line",
+            "white_offset_straight_line",
+            "white_right_angle_line_with_one_part_offset_in"));
+    addRoadWithSlab(
+        PACK,
         "asphalt_road_with_white_joint_line_with_double_side",
         "road_with_joint_line",
         textures2(
@@ -335,53 +490,5 @@ public class ARRPMain implements RRPPreGenEntrypoint {
                     .var("base", blockString("white_lamp"))
                     .var("emission", blockString("white_lamp_emission"))),
         blockIdentifier("white_lamp"));
-
-    // 利用反射，创建所有的方块物品。
-    Arrays.stream(MishangucBlocks.class.getFields())
-        .filter(
-            field -> {
-              int modifier = field.getModifiers();
-              return Modifier.isPublic(modifier)
-                  && Modifier.isStatic(modifier)
-                  && Block.class.isAssignableFrom(field.getType())
-                  && field.isAnnotationPresent(RegisterIdentifier.class);
-            })
-        .forEach(
-            field -> {
-              String name = field.getAnnotation(RegisterIdentifier.class).value();
-              if (name.isEmpty()) {
-                name = field.getName().toLowerCase();
-              }
-              addBlockItemModel(PACK, name);
-            });
-    Arrays.stream(MishangucItems.class.getFields())
-        .filter(
-            field -> {
-              int modifier = field.getModifiers();
-              return Modifier.isPublic(modifier)
-                  && Modifier.isStatic(modifier)
-                  && Item.class.isAssignableFrom(field.getType())
-                  && field.isAnnotationPresent(RegisterIdentifier.class)
-                  && field.isAnnotationPresent(SimpleModel.class);
-            })
-        .forEach(
-            field -> {
-              String name = field.getAnnotation(RegisterIdentifier.class).value();
-              String parent = field.getAnnotation(SimpleModel.class).parent();
-              String texture = field.getAnnotation(SimpleModel.class).texture();
-              if (name.isEmpty()) {
-                name = field.getName().toLowerCase();
-              }
-              if (parent.isEmpty()) {
-                name = "item/generated";
-              }
-              PACK.addModel(
-                  JModel.model(parent)
-                      .textures(
-                          JModel.textures()
-                              .layer0(texture.isEmpty() ? "mishanguc:item/" + name : texture)),
-                  new Identifier("mishanguc", "item/" + name));
-            });
-    RRPCallback.BEFORE_VANILLA.register(a -> a.add(PACK));
   }
 }

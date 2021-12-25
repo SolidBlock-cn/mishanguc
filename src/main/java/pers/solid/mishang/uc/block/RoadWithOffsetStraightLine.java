@@ -3,14 +3,23 @@ package pers.solid.mishang.uc.block;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.LineColor;
+
+import java.util.List;
 
 /** 类似于 {@link RoadWithStraightLine}，不过道路的直线是偏移的，而非正中的。 */
 public interface RoadWithOffsetStraightLine extends Road {
@@ -47,7 +56,20 @@ public interface RoadWithOffsetStraightLine extends Road {
   default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
     return Road.super
         .withPlacementState(state, ctx)
-        .with(FACING, ctx.getPlayerFacing().rotateYClockwise());
+        .with(
+            FACING,
+            ctx.getPlayer() != null && ctx.getPlayer().isSneaking()
+                ? ctx.getPlayerFacing().rotateYCounterclockwise()
+                : ctx.getPlayerFacing().rotateYClockwise());
+  }
+
+  @Override
+  default void appendRoadTooltip(
+      ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+    Road.super.appendRoadTooltip(stack, world, tooltip, options);
+    tooltip.add(
+        new TranslatableText("block.mishanguc.tooltip.road_with_offset_straight_line")
+            .formatted(Formatting.GRAY));
   }
 
   class SlabImpl extends AbstractRoadSlabBlock implements RoadWithOffsetStraightLine {

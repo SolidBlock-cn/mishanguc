@@ -8,6 +8,7 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
 public enum HorizontalCornerDirection implements StringIdentifiable {
+  /** 西南 */
   SOUTH_WEST(0, "south_west", Direction.SOUTH, Direction.WEST),
   NORTH_WEST(1, "north_west", Direction.NORTH, Direction.WEST),
   NORTH_EAST(2, "north_east", Direction.NORTH, Direction.EAST),
@@ -18,10 +19,10 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
   private final int id;
 
   HorizontalCornerDirection(int id, String name, Direction dir1, Direction dir2) {
-    if (dir1 == dir2 || dir1.getOpposite() == dir2) throw new IllegalArgumentException("The two directions of a " +
-            "corner direction " +
-            "cannot be " +
-            "same or opposite!");
+    if (dir1 == dir2 || dir1.getOpposite() == dir2) {
+      throw new IllegalArgumentException(
+          "The two directions of a " + "corner direction " + "cannot be " + "same or opposite!");
+    }
     this.id = id;
     this.name = name;
     this.dir1 = dir1;
@@ -31,7 +32,9 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
   public static @Nullable HorizontalCornerDirection fromDirections(Direction dir1, Direction dir2) {
     ImmutableSet<Direction> directions = ImmutableSet.of(dir1, dir2);
     for (HorizontalCornerDirection direction : HorizontalCornerDirection.values()) {
-      if (directions.equals(ImmutableSet.of(direction.dir1, direction.dir2))) return direction;
+      if (directions.equals(ImmutableSet.of(direction.dir1, direction.dir2))) {
+        return direction;
+      }
     }
     return null;
   }
@@ -39,7 +42,9 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
   public static HorizontalCornerDirection fromId(int id) {
     id = id & 3;
     for (HorizontalCornerDirection direction : HorizontalCornerDirection.values()) {
-      if (direction.id == id) return direction;
+      if (direction.id == id) {
+        return direction;
+      }
     }
     throw new IllegalStateException();
   }
@@ -58,10 +63,15 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
    * @return 指定坐标轴上的方向。
    */
   public Direction getDirectionInAxis(Direction.Axis axis) {
-    if (dir1.getAxis() == axis) return dir1;
-    if (dir2.getAxis() == axis) return dir2;
-    throw new IllegalStateException(String.format("Direction %s has no direction in axis %s!", this.asString(),
-            axis.asString()));
+    if (dir1.getAxis() == axis) {
+      return dir1;
+    }
+    if (dir2.getAxis() == axis) {
+      return dir2;
+    }
+    throw new IllegalStateException(
+        String.format(
+            "Direction %s has no direction in axis %s!", this.asString(), axis.asString()));
   }
 
   public float asRotation() {
