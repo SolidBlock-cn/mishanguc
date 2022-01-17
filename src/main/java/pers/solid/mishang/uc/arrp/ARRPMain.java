@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@SuppressWarnings("SameParameterValue")
 public class ARRPMain implements RRPPreGenEntrypoint {
   private static final RuntimeResourcePack PACK = RuntimeResourcePack.create("mishanguc");
 
@@ -449,19 +450,39 @@ public class ARRPMain implements RRPPreGenEntrypoint {
     addCubeAllWithSlab(PACK, "asphalt_road_filled_with_white", "white_ink");
     addRoadWithSlab(
         PACK,
-        "asphalt_road_with_white_bevel_angle_line",
-        "road_with_angle_line",
-        textures("asphalt", "white_straight_line", "white_bevel_angle_line"));
-    addRoadWithSlab(
-        PACK,
-        "asphalt_road_with_white_joint_line",
-        "road_with_joint_line",
-        textures("asphalt", "white_straight_line", "white_joint_line"));
+        "asphalt_road_with_white_straight_line",
+        "road_with_straight_line",
+        textures("asphalt", "white_straight_line", "white_straight_line"));
     addRoadWithSlab(
         PACK,
         "asphalt_road_with_white_right_angle_line",
         "road_with_angle_line",
         textures("asphalt", "white_straight_line", "white_right_angle_line"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_white_bevel_angle_line",
+        "road_with_angle_line",
+        textures("asphalt", "white_straight_line", "white_bevel_angle_line"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_yellow_straight_line",
+        "road_with_straight_line",
+        textures("asphalt", "yellow_straight_line", "yellow_straight_line"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_yellow_right_angle_line",
+        "road_with_angle_line",
+        textures("asphalt", "yellow_straight_line", "yellow_right_angle_line"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_yellow_bevel_angle_line",
+        "road_with_angle_line",
+        textures("asphalt", "yellow_straight_line", "yellow_bevel_angle_line"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_white_joint_line",
+        "road_with_joint_line",
+        textures("asphalt", "white_straight_line", "white_joint_line"));
     addRoadWithSlab(
         PACK,
         "asphalt_road_with_white_straight_and_bevel_angle_line",
@@ -474,11 +495,6 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         "road_with_straight_and_angle_line_mirrored",
         textures(
             "asphalt", "white_straight_line", "white_straight_line", "white_bevel_angle_line"));
-    addRoadWithSlab(
-        PACK,
-        "asphalt_road_with_white_straight_line",
-        "road_with_straight_line",
-        textures("asphalt", "white_straight_line", "white_straight_line"));
     addRoadWithSlab(
         PACK,
         "asphalt_road_with_white_cross_line",
@@ -590,11 +606,70 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             .var("particle", blockString("asphalt")));
 
     PACK.addModel(
-        JModel.model(blockIdentifier("lamp"))
+        JModel.model(blockIdentifier("light"))
             .textures(
                 new JTextures()
-                    .var("base", blockString("white_lamp"))
-                    .var("emission", blockString("white_lamp_emission"))),
-        blockIdentifier("white_lamp"));
+                    .var("base", blockString("white_light"))
+                    .var("emission", blockString("white_light_emission"))),
+        blockIdentifier("white_light"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("small_wall_light_tube"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_small_wall_light_tube"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("large_wall_light_tube"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_large_wall_light_tube"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("thin_strip_wall_light_tube"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_thin_strip_wall_light_tube"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("thin_strip_wall_light_tube_vertical"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_thin_strip_wall_light_tube_vertical"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("thick_strip_wall_light_tube"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_thick_strip_wall_light_tube"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("thick_strip_wall_light_tube_vertical"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_thick_strip_wall_light_tube_vertical"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("double_strip_wall_light_tube"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_double_strip_wall_light_tube"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("double_strip_wall_light_tube_vertical"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_double_strip_wall_light_tube_vertical"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("thin_strip_corner_light_tube"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_thin_strip_corner_light_tube"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("thick_strip_corner_light_tube"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_thick_strip_corner_light_tube"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("double_strip_corner_light_tube"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_double_strip_corner_light_tube"));
+
+    PACK.addModel(
+        JModel.model(blockIdentifier("small_wall_light"))
+            .textures(
+                new JTextures()
+                    .var("background", "block/obsidian")
+                    .var("light", blockString("white_light"))),
+        blockIdentifier("white_small_wall_light"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("large_wall_light"))
+            .textures(
+                new JTextures()
+                    .var("background", "block/obsidian")
+                    .var("light", blockString("white_light"))),
+        blockIdentifier("white_large_wall_light"));
   }
 }

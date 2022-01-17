@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "mishanguc",
-  "version": "${version}",
+  "version": "1.0",
 
   "name": "Mishang Urban Construction",
   "description": "An amount of blocks that make a beautiful city!",

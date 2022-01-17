@@ -1,0 +1,30 @@
+{
+  "parent": "mishanguc:block/strip_corner_light_tube",
+  "elements": [
+    {
+      "from": [5, 0, 0],
+      "to": [11, 1, 16],
+      "faces": {
+        "north": {"texture": "#light"},
+        "east": {"texture": "#light"},
+        "south": {"texture": "#light"},
+        "west": {"texture": "#light"},
+        "up": {"texture": "#light"},
+        "down": {"texture": "#light", "cullface": "down"}
+      },
+      "shade": false
+    }, {
+      "from": [5, 0, 0],
+      "to": [11, 16, 1],
+      "faces": {
+        "north": {"texture": "#light", "cullface": "north"},
+        "east": {"texture": "#light"},
+        "south": {"texture": "#light"},
+        "west": {"texture": "#light"},
+        "up": {"texture": "#light"},
+        "down": {"texture": "#light"}
+      },
+      "shade": false
+    }
+  ]
+}

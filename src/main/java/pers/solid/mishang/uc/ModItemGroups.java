@@ -14,7 +14,7 @@ public class ModItemGroups {
           .build();
   public static final ItemGroup LIGHTS =
       FabricItemGroupBuilder.create(new Identifier("mishanguc", "lights"))
-          .icon(() -> new ItemStack(MishangucBlocks.WHITE_LAMP))
+          .icon(() -> new ItemStack(MishangucBlocks.WHITE_LIGHT))
           .build();
   public static final ItemGroup TOOLS =
       FabricItemGroupBuilder.create(new Identifier("mishanguc", "tools"))
