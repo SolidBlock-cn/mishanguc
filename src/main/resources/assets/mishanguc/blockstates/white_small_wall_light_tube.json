@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "mishanguc:block/white_small_wall_light_tube",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "mishanguc:block/white_small_wall_light_tube",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "mishanguc:block/white_small_wall_light_tube",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "mishanguc:block/white_small_wall_light_tube",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "mishanguc:block/white_small_wall_light_tube"
+    },
+    "facing=west": {
+      "model": "mishanguc:block/white_small_wall_light_tube",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

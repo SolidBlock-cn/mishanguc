@@ -5,6 +5,10 @@
   "block.mishanguc.asphalt_road_with_white_bevel_angle_line": "Asphalt Road with White Bevel Angle Line",
   "block.mishanguc.asphalt_road_with_white_right_angle_line": "Asphalt Road with White Right Angle Line",
 
+  "block.mishanguc.asphalt_road_with_yellow_straight_line": "Asphalt Road with Yellow Straight Line",
+  "block.mishanguc.asphalt_road_with_yellow_bevel_angle_line": "Asphalt Road with Yellow Bevel Angle Line",
+  "block.mishanguc.asphalt_road_with_yellow_right_angle_line": "Asphalt Road with Yellow Right Angle Line",
+
   "block.mishanguc.asphalt_road_with_white_straight_and_bevel_angle_line": "Asphalt Road with White Straight and Bevel Angle Line",
   "block.mishanguc.asphalt_road_with_white_joint_line": "Asphalt Road with White Joint Line",
   "block.mishanguc.asphalt_road_with_white_cross_line": "Asphalt Road with White Cross Line",
@@ -59,7 +63,17 @@
   "block.mishanguc.tooltip.road_with_joint_line.2": "Opposite when sneaking.",
   "block.mishanguc.tooltip.road_with_offset_straight_line": "The line is offset to the left, or when sneaking, to the right.",
 
-  "block.mishanguc.white_lamp": "White Lamp",
+  "block.mishanguc.white_light": "White Light",
+  "block.mishanguc.white_small_wall_light_tube": "White Small Wall Light Tube",
+  "block.mishanguc.white_large_wall_light_tube": "White Large Wall Light Tube",
+  "block.mishanguc.white_thin_strip_wall_light_tube": "White Thin Strip Wall Light Tube",
+  "block.mishanguc.white_thick_strip_wall_light_tube": "White Thick Strip Wall Light Tube",
+  "block.mishanguc.white_double_strip_wall_light_tube": "White Double Strip Wall Light Tube",
+  "block.mishanguc.white_thin_strip_corner_light_tube": "White Thin Strip Corner Light Tube",
+  "block.mishanguc.white_thick_strip_corner_light_tube": "White Thick Strip Corner Light Tube",
+  "block.mishanguc.white_double_strip_corner_light_tube": "White Double Strip Corner Light Tube",
+  "block.mishanguc.white_small_wall_light": "White Small Wall Light",
+  "block.mishanguc.white_large_wall_light": "White Large Wall Light",
 
   "item.mishanguc.road_connection_state_debugging_tool": "Road Connection State Debugging Tool",
   "item.mishanguc.id_checker_tool": "Id Checker Tool",

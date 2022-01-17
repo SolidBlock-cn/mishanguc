@@ -1,0 +1,21 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "#light"
+  },
+  "elements": [
+    {
+      "from": [6, 0, 6],
+      "to": [10, 1, 10],
+      "faces": {
+        "north": {"texture": "#light"},
+        "east": {"texture": "#light"},
+        "south": {"texture": "#light"},
+        "west": {"texture": "#light"},
+        "up": {"texture": "#light"},
+        "down": {"texture": "#light", "cullface": "down"}
+      },
+      "shade": false
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "#light"
+  },
+  "elements": [
+    {
+      "from": [2, 0, 2],
+      "to": [14, 1, 14],
+      "faces": {
+        "north": {"texture": "#background"},
+        "east": {"texture": "#background"},
+        "south": {"texture": "#background"},
+        "west": {"texture": "#background"},
+        "up": {"texture": "#background"},
+        "down": {"texture": "#background", "cullface": "down"}
+      }
+    },
+    {
+      "from": [3, 1, 3],
+      "to": [13, 2, 13],
+      "faces": {
+        "north": {"texture": "#light"},
+        "east": {"texture": "#light"},
+        "south": {"texture": "#light"},
+        "west": {"texture": "#light"},
+        "up": {"texture": "#light"}
+      },
+      "shade": false
+    }
+  ]
+}
