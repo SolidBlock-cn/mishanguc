@@ -439,6 +439,11 @@ public final class MishangucBlocks {
               createDirectionToShape(2, 0, 2, 14, 1, 14),
               createDirectionToShape(3, 1, 3, 13, 2, 13)));
 
+  @RegisterIdentifier
+  public static final AutoConnectWallLightBlock WHITE_WALL_LIGHT_DECORATION =
+      new AutoConnectWallLightBlock(
+          WHITE_WALL_LIGHT_SETTINGS, createDirectionToShape(0, 0, 0, 16, 1, 16));
+
   /**
    * 自动注册一个类中的所有静态常量字段的方块，同时创建并注册对应的物品。
    *

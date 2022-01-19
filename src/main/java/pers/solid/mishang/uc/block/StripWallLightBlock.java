@@ -17,7 +17,27 @@ import net.minecraft.world.BlockView;
 import java.util.Map;
 
 /** 类似于墙上的灯方块，但是是条状的，因此具有多一个属性。 */
-public class StripWallLightBlock extends WallLightBlock {
+public class StripWallLightBlock extends WallLightBlock implements LightConnectable {
+  @Override
+  public boolean isConnectedIn(BlockState blockState, Direction facing, Direction direction) {
+    final StripType stripType = blockState.get(STRIP_TYPE);
+    if (facing != blockState.get(FACING) || direction.getAxis() == facing.getAxis()) {
+      return false;
+    }
+    switch (stripType) {
+      case VERTICAL:
+        return facing.getAxis() == Direction.Axis.Y
+            ? direction.getAxis() == Direction.Axis.Z
+            : direction.getAxis() == Direction.Axis.Y;
+      case HORIZONTAL:
+        return facing.getAxis() == Direction.Axis.Y
+            ? direction.getAxis() == Direction.Axis.X
+            : direction.getAxis() != Direction.Axis.Y;
+      default:
+        throw new IllegalStateException("Unexpected value: " + stripType);
+    }
+  }
+
   public enum StripType implements StringIdentifiable {
     /** 水平的，对于天花板上或地上的表示为东西方向。 */
     HORIZONTAL,

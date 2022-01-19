@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "pers.solid.mishang.uc.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": ["GameRendererMixin", "ItemUsageContextInvoker", "JBlockModelAccessor", "JStateAccessor", "JVariantAccessor", "NbtCompoundAccessor", "ScreenMixin"],
+  "mixins": ["GameRendererMixin", "ItemUsageContextInvoker", "JBlockModelAccessor", "JStateAccessor", "JVariantAccessor", "JWhenAccessor", "NbtCompoundAccessor", "RuntimeResourcePackImplMixin", "ScreenMixin"],
   "client": [
     "WorldRendererInvoker"
   ],

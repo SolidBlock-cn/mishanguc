@@ -20,7 +20,8 @@ import java.util.Map;
 
 import static net.minecraft.fluid.Fluids.WATER;
 
-public class CornerLightBlock extends HorizontalFacingBlock implements Waterloggable {
+public class CornerLightBlock extends HorizontalFacingBlock
+    implements Waterloggable, LightConnectable {
   private static final EnumProperty<BlockHalf> BLOCK_HALF = Properties.BLOCK_HALF;
   private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   private final Map<Direction, VoxelShape> directionToShapeWhenBottom;
@@ -110,6 +111,21 @@ public class CornerLightBlock extends HorizontalFacingBlock implements Waterlogg
         return directionToShapeWhenTop.get(state.get(FACING));
       default:
         throw new IllegalStateException("Unexpected value: " + state.get(BLOCK_HALF));
+    }
+  }
+
+  @Override
+  public boolean isConnectedIn(BlockState blockState, Direction facing, Direction direction) {
+    final Direction facingProperty = blockState.get(FACING);
+    final BlockHalf blockHalf = blockState.get(BLOCK_HALF);
+
+    switch (facing) {
+      case UP:
+        return blockHalf == BlockHalf.BOTTOM && direction.getAxis() == facingProperty.getAxis();
+      case DOWN:
+        return blockHalf == BlockHalf.TOP && direction.getAxis() == facingProperty.getAxis();
+      default:
+        return facing == facingProperty && direction.getAxis() == Direction.Axis.Y;
     }
   }
 }

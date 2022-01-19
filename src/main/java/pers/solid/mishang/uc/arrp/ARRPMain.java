@@ -5,9 +5,7 @@ import com.google.gson.JsonObject;
 import net.devtech.arrp.api.RRPCallback;
 import net.devtech.arrp.api.RRPPreGenEntrypoint;
 import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JState;
-import net.devtech.arrp.json.blockstate.JVariant;
+import net.devtech.arrp.json.blockstate.*;
 import net.devtech.arrp.json.loot.JCondition;
 import net.devtech.arrp.json.loot.JFunction;
 import net.devtech.arrp.json.loot.JLootTable;
@@ -20,6 +18,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUc;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.SimpleModel;
 import pers.solid.mishang.uc.block.HorizontalCornerDirection;
@@ -30,10 +29,7 @@ import pers.solid.mishang.uc.mixin.JStateAccessor;
 import pers.solid.mishang.uc.mixin.JVariantAccessor;
 
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @SuppressWarnings("SameParameterValue")
 public class ARRPMain implements RRPPreGenEntrypoint {
@@ -337,6 +333,86 @@ public class ARRPMain implements RRPPreGenEntrypoint {
     PACK.addBlockState(
         composeStateForSlab(state3),
         new Identifier("mishanguc", "asphalt_road_slab_with_white_joint_line_with_offset_side"));
+
+    PACK.addBlockState(
+        /* state: */ Util.make(
+            () -> {
+              List<JMultipart> parts = new ArrayList<>();
+              for (Direction facing : Direction.values()) {
+                // 中心装饰物
+                parts.add(
+                    new JMultipart()
+                        .addModel(
+                            new JBlockModel(blockIdentifier("white_wall_light_decoration_center"))
+                                .y(
+                                    facing.getAxis() == Direction.Axis.Y
+                                        ? 0
+                                        : ((int) (facing.asRotation() + 180)))
+                                .x(
+                                    facing == Direction.DOWN
+                                        ? 180
+                                        : facing == Direction.UP ? 0 : 90))
+                        .when(new JWhen().add("facing", facing.asString())));
+
+                // 连接物
+                // 共有两种连接物模型：一种是位于底部或顶部的朝南连接，可以通过x和y的旋转得到位于底部朝向任意方向的连接，以及位于侧面朝向垂直方向的连接。
+                // 第二种是位于侧面的朝东连接，可以通过x和y的旋转得到任意水平方向上的，以及底部或顶部任意连接。
+                for (Direction direction : Direction.values()) {
+                  final Direction.Axis axis = direction.getAxis();
+                  final int x, y;
+                  final String modelName;
+                  if (axis == facing.getAxis()) {
+                    continue;
+                  }
+                  if (facing == Direction.UP) {
+                    modelName = "wall_light_decoration_connection";
+                    x = 0;
+                    y = (int) direction.asRotation();
+                  } else if (facing == Direction.DOWN) {
+                    modelName = "wall_light_decoration_connection";
+                    x = 180;
+                    y = (int) direction.asRotation() + 180;
+                  } else if (direction == Direction.UP) {
+                    modelName = "wall_light_decoration_connection";
+                    x = 90;
+                    y = (int) facing.asRotation() + 180;
+                  } else if (direction == Direction.DOWN) {
+                    modelName = "wall_light_decoration_connection";
+                    x = -90;
+                    y = (int) facing.asRotation();
+                  } else if (direction == facing.rotateYCounterclockwise()) {
+                    modelName = "wall_light_decoration_connection2";
+                    x = 0;
+                    y = (int) facing.asRotation();
+                  } else if (direction == facing.rotateYClockwise()) {
+                    modelName = "wall_light_decoration_connection2";
+                    x = 180;
+                    y = (int) facing.asRotation() + 180;
+                  } else {
+                    MishangUc.MISHANG_LOGGER.error(
+                        String.format(
+                            "Unknown state to generate models: facing=%s,direction=%s",
+                            facing.asString(), direction.asString()));
+                    continue;
+                  }
+                  parts.add(
+                      new JMultipart()
+                          .addModel(
+                              new JBlockModel(blockIdentifier("white_" + modelName))
+                                  .x(x)
+                                  .y(y)
+                                  .uvlock())
+                          .when(
+                              new FixedWhen()
+                                  .add("facing", facing.asString())
+                                  .add(direction.asString(), "true")));
+                }
+              }
+              //
+              // MishangUc.MISHANG_LOGGER.info(RuntimeResourcePackImpl.GSON.toJson(state));
+              return JState.state(parts.toArray(new JMultipart[] {}));
+            }),
+        /* path: */ new Identifier("mishanguc", "white_wall_light_decoration"));
   }
 
   @NotNull
@@ -671,5 +747,22 @@ public class ARRPMain implements RRPPreGenEntrypoint {
                     .var("background", "block/obsidian")
                     .var("light", blockString("white_light"))),
         blockIdentifier("white_large_wall_light"));
+
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_decoration"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_decoration"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_decoration_center"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_decoration_center"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_decoration_connection"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_decoration_connection"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_decoration_connection2"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_decoration_connection2"));
   }
 }

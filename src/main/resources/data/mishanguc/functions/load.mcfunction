@@ -1,0 +1,1 @@
+tellraw @a {"translate":"notice.mishanguc.load","color":"yellow"}

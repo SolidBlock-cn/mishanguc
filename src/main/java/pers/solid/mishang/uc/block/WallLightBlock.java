@@ -1,13 +1,17 @@
 package pers.solid.mishang.uc.block;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.EnumHashBiMap;
 import net.minecraft.block.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -18,6 +22,23 @@ import net.minecraft.world.WorldView;
 import java.util.Map;
 
 public class WallLightBlock extends FacingBlock implements Waterloggable {
+  protected static final BooleanProperty WEST = Properties.WEST;
+  protected static final BooleanProperty EAST = Properties.EAST;
+  protected static final BooleanProperty SOUTH = Properties.SOUTH;
+  protected static final BooleanProperty NORTH = Properties.NORTH;
+  protected static final BooleanProperty UP = Properties.UP;
+  protected static final BooleanProperty DOWN = Properties.DOWN;
+  protected static final BiMap<Direction, BooleanProperty> DIRECTION_TO_PROPERTY =
+      Util.make(
+          EnumHashBiMap.create(Direction.class),
+          map -> {
+            map.put(Direction.WEST, WEST);
+            map.put(Direction.EAST, EAST);
+            map.put(Direction.SOUTH, SOUTH);
+            map.put(Direction.NORTH, NORTH);
+            map.put(Direction.UP, UP);
+            map.put(Direction.DOWN, DOWN);
+          });
   private final Map<Direction, VoxelShape> shapePerDirection;
 
   public WallLightBlock(Settings settings, Map<Direction, VoxelShape> shapePerDirection) {
@@ -103,5 +124,35 @@ public class WallLightBlock extends FacingBlock implements Waterloggable {
   public VoxelShape getOutlineShape(
       BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     return shapePerDirection.get(state.get(FACING));
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public void prepare(
+      BlockState state, WorldAccess world, BlockPos pos, int flags, int maxUpdateDepth) {
+    super.prepare(state, world, pos, flags, maxUpdateDepth);
+    final Direction facing = state.get(FACING);
+    if (state.getBlock() instanceof LightConnectable) {
+      for (Direction direction : Direction.values()) {
+        if (((LightConnectable) state.getBlock()).isConnectedIn(state, facing, direction)) {
+          final BlockPos neighborPos2 = pos.offset(direction).offset(facing.getOpposite());
+          final BlockState neighborState2 = world.getBlockState(neighborPos2);
+          if (neighborState2.getBlock() instanceof AutoConnectWallLightBlock) {
+            Block.replace(
+                neighborState2,
+                neighborState2.getStateForNeighborUpdate(
+                    facing,
+                    world.getBlockState(neighborPos2.offset(facing)),
+                    world,
+                    neighborPos2,
+                    pos),
+                world,
+                neighborPos2,
+                flags,
+                maxUpdateDepth);
+          }
+        }
+      }
+    }
   }
 }

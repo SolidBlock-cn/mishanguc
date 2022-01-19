@@ -152,5 +152,6 @@
   "block.mishanguc.white_thick_strip_corner_light_tube": "角落的白色粗条形灯管",
   "block.mishanguc.white_double_strip_corner_light_tube": "角落的白色双条形灯管",
   "block.mishanguc.white_small_wall_light": "墙上的白色小型灯",
-  "block.mishanguc.white_large_wall_light": "墙上的白色大型灯"
+  "block.mishanguc.white_large_wall_light": "墙上的白色大型灯",
+  "notice.mishanguc.load": "请留意：本模组目前处于测试阶段，各功能不稳定，请谨慎使用，仅供尝鲜体验。请不要将本模组内容用于您的正式作品中，因为这些内容可能会在未来版本被更名或移除，致使其不再与当前版本兼容。"
 }
