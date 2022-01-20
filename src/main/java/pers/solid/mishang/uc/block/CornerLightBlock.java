@@ -15,6 +15,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 
 import java.util.Map;
 
@@ -24,16 +25,17 @@ public class CornerLightBlock extends HorizontalFacingBlock
     implements Waterloggable, LightConnectable {
   private static final EnumProperty<BlockHalf> BLOCK_HALF = Properties.BLOCK_HALF;
   private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-  private final Map<Direction, VoxelShape> directionToShapeWhenBottom;
-  private final Map<Direction, VoxelShape> directionToShapeWhenTop;
+  private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION_WHEN_BOTTOM =
+      MishangUtils.createDirectionToUnionShape(
+          MishangUtils.createHorizontalDirectionToShape(4, 0, 0, 12, 1, 16),
+          MishangUtils.createHorizontalDirectionToShape(4, 0, 0, 12, 16, 1));
+  private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION_WHEN_TOP =
+      MishangUtils.createDirectionToUnionShape(
+          MishangUtils.createHorizontalDirectionToShape(4, 15, 0, 12, 16, 16),
+          MishangUtils.createHorizontalDirectionToShape(4, 0, 0, 12, 16, 1));
 
-  protected CornerLightBlock(
-      Settings settings,
-      Map<Direction, VoxelShape> directionToShapeWhenBottom,
-      Map<Direction, VoxelShape> directionToShapeWhenTop) {
+  protected CornerLightBlock(Settings settings) {
     super(settings);
-    this.directionToShapeWhenBottom = directionToShapeWhenBottom;
-    this.directionToShapeWhenTop = directionToShapeWhenTop;
     this.setDefaultState(
         this.stateManager
             .getDefaultState()
@@ -106,9 +108,9 @@ public class CornerLightBlock extends HorizontalFacingBlock
       BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     switch (state.get(BLOCK_HALF)) {
       case BOTTOM:
-        return directionToShapeWhenBottom.get(state.get(FACING));
+        return SHAPE_PER_DIRECTION_WHEN_BOTTOM.get(state.get(FACING));
       case TOP:
-        return directionToShapeWhenTop.get(state.get(FACING));
+        return SHAPE_PER_DIRECTION_WHEN_TOP.get(state.get(FACING));
       default:
         throw new IllegalStateException("Unexpected value: " + state.get(BLOCK_HALF));
     }
@@ -127,5 +129,17 @@ public class CornerLightBlock extends HorizontalFacingBlock
       default:
         return facing == facingProperty && direction.getAxis() == Direction.Axis.Y;
     }
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public void prepare(
+      BlockState state, WorldAccess world, BlockPos pos, int flags, int maxUpdateDepth) {
+    super.prepare(state, world, pos, flags, maxUpdateDepth);
+    final Direction facing = state.get(FACING);
+    final Direction facingVertical =
+        state.get(BLOCK_HALF) == BlockHalf.TOP ? Direction.DOWN : Direction.UP;
+    prepareConnection(state, world, pos, flags, maxUpdateDepth, facing);
+    prepareConnection(state, world, pos, flags, maxUpdateDepth, facingVertical);
   }
 }

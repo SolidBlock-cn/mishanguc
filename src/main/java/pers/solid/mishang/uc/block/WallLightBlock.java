@@ -18,6 +18,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import pers.solid.mishang.uc.MishangUtils;
 
 import java.util.Map;
 
@@ -39,11 +40,11 @@ public class WallLightBlock extends FacingBlock implements Waterloggable {
             map.put(Direction.UP, UP);
             map.put(Direction.DOWN, DOWN);
           });
-  private final Map<Direction, VoxelShape> shapePerDirection;
+  private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION =
+      MishangUtils.createDirectionToShape(4, 0, 4, 12, 1, 12);
 
-  public WallLightBlock(Settings settings, Map<Direction, VoxelShape> shapePerDirection) {
+  public WallLightBlock(Settings settings) {
     super(settings);
-    this.shapePerDirection = shapePerDirection;
     this.setDefaultState(
         this.stateManager
             .getDefaultState()
@@ -123,7 +124,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable {
   @SuppressWarnings({"deprecation"})
   public VoxelShape getOutlineShape(
       BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-    return shapePerDirection.get(state.get(FACING));
+    return SHAPE_PER_DIRECTION.get(state.get(FACING));
   }
 
   @SuppressWarnings("deprecation")
@@ -132,27 +133,8 @@ public class WallLightBlock extends FacingBlock implements Waterloggable {
       BlockState state, WorldAccess world, BlockPos pos, int flags, int maxUpdateDepth) {
     super.prepare(state, world, pos, flags, maxUpdateDepth);
     final Direction facing = state.get(FACING);
-    if (state.getBlock() instanceof LightConnectable) {
-      for (Direction direction : Direction.values()) {
-        if (((LightConnectable) state.getBlock()).isConnectedIn(state, facing, direction)) {
-          final BlockPos neighborPos2 = pos.offset(direction).offset(facing.getOpposite());
-          final BlockState neighborState2 = world.getBlockState(neighborPos2);
-          if (neighborState2.getBlock() instanceof AutoConnectWallLightBlock) {
-            Block.replace(
-                neighborState2,
-                neighborState2.getStateForNeighborUpdate(
-                    facing,
-                    world.getBlockState(neighborPos2.offset(facing)),
-                    world,
-                    neighborPos2,
-                    pos),
-                world,
-                neighborPos2,
-                flags,
-                maxUpdateDepth);
-          }
-        }
-      }
+    if (this instanceof LightConnectable) {
+      ((LightConnectable) this).prepareConnection(state, world, pos, flags, maxUpdateDepth, facing);
     }
   }
 }

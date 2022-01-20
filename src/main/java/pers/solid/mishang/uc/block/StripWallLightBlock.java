@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
+import pers.solid.mishang.uc.MishangUtils;
 
 import java.util.Map;
 
@@ -68,17 +69,16 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
     }
   }
 
-  private final Map<Direction, VoxelShape> shapePerDirectionWhenVertical;
+  private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION_WHEN_HORIZONTAL =
+      MishangUtils.createDirectionToShape(0, 0, 4, 16, 1, 12);
+  private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION_WHEN_VERTICAL =
+      MishangUtils.createDirectionToShape(4, 0, 0, 12, 1, 16);
 
   protected static final EnumProperty<StripType> STRIP_TYPE =
       EnumProperty.of("strip_type", StripType.class);
 
-  public StripWallLightBlock(
-      Settings settings,
-      Map<Direction, VoxelShape> shapePerDirection,
-      Map<Direction, VoxelShape> shapePerDirectionWhenVertical) {
-    super(settings, shapePerDirection);
-    this.shapePerDirectionWhenVertical = shapePerDirectionWhenVertical;
+  public StripWallLightBlock(Settings settings) {
+    super(settings);
   }
 
   @Override
@@ -115,8 +115,9 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
   @Override
   public VoxelShape getOutlineShape(
       BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-    return state.get(STRIP_TYPE) == StripType.VERTICAL
-        ? shapePerDirectionWhenVertical.get(state.get(FACING))
-        : super.getOutlineShape(state, world, pos, context);
+    return (state.get(STRIP_TYPE) == StripType.VERTICAL
+            ? SHAPE_PER_DIRECTION_WHEN_VERTICAL
+            : SHAPE_PER_DIRECTION_WHEN_HORIZONTAL)
+        .get(state.get(FACING));
   }
 }

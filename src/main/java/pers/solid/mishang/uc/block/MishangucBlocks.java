@@ -8,11 +8,7 @@ import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.LineColor;
 import pers.solid.mishang.uc.MishangUc;
@@ -24,10 +20,6 @@ import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Objects;
 
 /** 迷上城建模组的所有方块。 */
 public final class MishangucBlocks {
@@ -355,94 +347,47 @@ public final class MishangucBlocks {
 
   @RegisterIdentifier
   public static final WallLightBlock WHITE_SMALL_WALL_LIGHT_TUBE =
-      new WallLightBlock(WHITE_WALL_LIGHT_SETTINGS, createDirectionToShape(3, 0, 3, 13, 1, 13));
+      new WallLightBlock(WHITE_WALL_LIGHT_SETTINGS);
 
   @RegisterIdentifier
   public static final WallLightBlock WHITE_LARGE_WALL_LIGHT_TUBE =
-      new WallLightBlock(WHITE_WALL_LIGHT_SETTINGS, createDirectionToShape(6, 0, 6, 10, 1, 10));
+      new WallLightBlock(WHITE_WALL_LIGHT_SETTINGS);
 
   @RegisterIdentifier
   public static final StripWallLightBlock WHITE_THIN_STRIP_WALL_LIGHT_TUBE =
-      new StripWallLightBlock(
-          WHITE_WALL_LIGHT_SETTINGS,
-          createDirectionToShape(0, 0, 7, 16, 1, 9),
-          createDirectionToShape(7, 0, 0, 9, 1, 16));
+      new StripWallLightBlock(WHITE_WALL_LIGHT_SETTINGS);
 
   @RegisterIdentifier
   public static final StripWallLightBlock WHITE_THICK_STRIP_WALL_LIGHT_TUBE =
-      new StripWallLightBlock(
-          WHITE_WALL_LIGHT_SETTINGS,
-          createDirectionToShape(0, 0, 5, 16, 1, 11),
-          createDirectionToShape(5, 0, 0, 11, 1, 16));
+      new StripWallLightBlock(WHITE_WALL_LIGHT_SETTINGS);
 
   @RegisterIdentifier
   public static final StripWallLightBlock WHITE_DOUBLE_STRIP_WALL_LIGHT_TUBE =
-      new StripWallLightBlock(
-          WHITE_WALL_LIGHT_SETTINGS,
-          createDirectionToUnionShape(
-              createDirectionToShape(0, 0, 5, 16, 1, 7),
-              createDirectionToShape(0, 0, 9, 16, 1, 11)),
-          createDirectionToUnionShape(
-              createDirectionToShape(5, 0, 0, 7, 1, 16),
-              createDirectionToShape(9, 0, 0, 11, 1, 16)));
+      new StripWallLightBlock(WHITE_WALL_LIGHT_SETTINGS);
 
   @RegisterIdentifier
   public static final CornerLightBlock WHITE_THIN_STRIP_CORNER_LIGHT_TUBE =
-      new CornerLightBlock(
-          WHITE_WALL_LIGHT_SETTINGS,
-          createDirectionToUnionShape(
-              createHorizontalDirectionToShape(7, 0, 0, 9, 1, 16),
-              createHorizontalDirectionToShape(7, 0, 0, 9, 16, 1)),
-          createDirectionToUnionShape(
-              createHorizontalDirectionToShape(7, 15, 0, 9, 16, 16),
-              createHorizontalDirectionToShape(7, 0, 0, 9, 16, 1)));
+      new CornerLightBlock(WHITE_WALL_LIGHT_SETTINGS);
 
   @RegisterIdentifier
   public static final CornerLightBlock WHITE_THICK_STRIP_CORNER_LIGHT_TUBE =
-      new CornerLightBlock(
-          WHITE_WALL_LIGHT_SETTINGS,
-          createDirectionToUnionShape(
-              createHorizontalDirectionToShape(5, 0, 0, 11, 1, 16),
-              createHorizontalDirectionToShape(5, 0, 0, 11, 16, 1)),
-          createDirectionToUnionShape(
-              createHorizontalDirectionToShape(5, 15, 0, 11, 16, 16),
-              createHorizontalDirectionToShape(5, 0, 0, 11, 16, 1)));
+      new CornerLightBlock(WHITE_WALL_LIGHT_SETTINGS);
 
   @RegisterIdentifier
   public static final CornerLightBlock WHITE_DOUBLE_STRIP_CORNER_LIGHT_TUBE =
-      new CornerLightBlock(
-          WHITE_WALL_LIGHT_SETTINGS,
-          createDirectionToUnionShape(
-              createHorizontalDirectionToShape(5, 0, 0, 7, 1, 16),
-              createHorizontalDirectionToShape(5, 0, 0, 7, 16, 1),
-              createHorizontalDirectionToShape(9, 0, 0, 11, 1, 16),
-              createHorizontalDirectionToShape(9, 0, 0, 11, 16, 1)),
-          createDirectionToUnionShape(
-              createHorizontalDirectionToShape(5, 15, 0, 7, 16, 16),
-              createHorizontalDirectionToShape(5, 0, 0, 7, 16, 1),
-              createHorizontalDirectionToShape(9, 15, 0, 11, 16, 16),
-              createHorizontalDirectionToShape(9, 0, 0, 11, 16, 1)));
+      new CornerLightBlock(WHITE_WALL_LIGHT_SETTINGS);
 
   @RegisterIdentifier
   public static final WallLightBlock WHITE_SMALL_WALL_LIGHT =
-      new WallLightBlock(
-          WHITE_WALL_LIGHT_SETTINGS,
-          createDirectionToUnionShape(
-              createDirectionToShape(5, 0, 5, 11, 1, 11),
-              createDirectionToShape(6, 1, 6, 10, 2, 10)));
+      new WallLightBlock(WHITE_WALL_LIGHT_SETTINGS);
 
   @RegisterIdentifier
   public static final WallLightBlock WHITE_LARGE_WALL_LIGHT =
-      new WallLightBlock(
-          WHITE_WALL_LIGHT_SETTINGS,
-          createDirectionToUnionShape(
-              createDirectionToShape(2, 0, 2, 14, 1, 14),
-              createDirectionToShape(3, 1, 3, 13, 2, 13)));
+      new WallLightBlock(WHITE_WALL_LIGHT_SETTINGS);
 
   @RegisterIdentifier
   public static final AutoConnectWallLightBlock WHITE_WALL_LIGHT_DECORATION =
-      new AutoConnectWallLightBlock(
-          WHITE_WALL_LIGHT_SETTINGS, createDirectionToShape(0, 0, 0, 16, 1, 16));
+      new AutoConnectWallLightBlock(WHITE_WALL_LIGHT_SETTINGS);
 
   /**
    * 自动注册一个类中的所有静态常量字段的方块，同时创建并注册对应的物品。
@@ -499,56 +444,4 @@ public final class MishangucBlocks {
   }
 
   public static void init() {}
-
-  @SuppressWarnings("SuspiciousNameCombination")
-  public static EnumMap<Direction, @NotNull VoxelShape> createDirectionToShape(
-      double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
-    final EnumMap<Direction, VoxelShape> map = new EnumMap<>(Direction.class);
-    map.put(Direction.UP, Block.createCuboidShape(minX, minY, minZ, maxX, maxY, maxZ));
-    map.put(
-        Direction.DOWN,
-        Block.createCuboidShape(16 - minX, 16 - minY, 16 - minZ, 16 - maxX, 16 - maxY, 16 - maxZ));
-    map.put(Direction.EAST, Block.createCuboidShape(minY, minZ, minX, maxY, maxZ, maxX));
-    map.put(
-        Direction.WEST,
-        Block.createCuboidShape(16 - minY, 16 - minZ, 16 - minX, 16 - maxY, 16 - maxZ, 16 - maxX));
-    map.put(Direction.SOUTH, Block.createCuboidShape(minX, minZ, minY, maxX, maxZ, maxY));
-    map.put(
-        Direction.NORTH,
-        Block.createCuboidShape(16 - minX, 16 - minZ, 16 - minY, 16 - maxX, 16 - maxZ, 16 - maxY));
-    return map;
-  }
-
-  public static Map<Direction, @Nullable VoxelShape> createHorizontalDirectionToShape(
-      double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
-    final Map<Direction, VoxelShape> map = new EnumMap<>(Direction.class);
-    map.put(Direction.SOUTH, Block.createCuboidShape(minX, minY, minZ, maxX, maxY, maxZ));
-    map.put(Direction.WEST, Block.createCuboidShape(16 - minZ, minY, minX, 16 - maxZ, maxY, maxX));
-    map.put(
-        Direction.NORTH,
-        Block.createCuboidShape(16 - minX, minY, 16 - minZ, 16 - maxX, maxY, 16 - maxZ));
-    map.put(Direction.EAST, Block.createCuboidShape(minZ, minY, 16 - minX, maxZ, maxY, 16 - maxX));
-    return map;
-  }
-
-  @SafeVarargs
-  public static Map<Direction, VoxelShape> createDirectionToUnionShape(
-      Map<Direction, VoxelShape> firstDirectionToShape,
-      Map<Direction, VoxelShape>... directionToShapes) {
-    final Map<Direction, VoxelShape> map = new EnumMap<>(Direction.class);
-    for (Direction direction : Direction.values()) {
-      final VoxelShape first = firstDirectionToShape.get(direction);
-      if (first != null) {
-        map.put(
-            direction,
-            VoxelShapes.union(
-                first,
-                Arrays.stream(directionToShapes)
-                    .filter(Objects::nonNull)
-                    .map(directionToShape -> directionToShape.get(direction))
-                    .toArray(VoxelShape[]::new)));
-      }
-    }
-    return map;
-  }
 }
