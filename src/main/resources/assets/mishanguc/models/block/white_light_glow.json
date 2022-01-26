@@ -1,5 +1,5 @@
 {
-  "parent": "block/block",
+  "parent": "mishanguc:block/wall_light",
   "textures": {
     "particle": "#base",
     "base": "mishanguc:block/white_lamp",
@@ -7,16 +7,16 @@
   },
   "elements": [
     {
-      "from": [-0.5,-0.5,-0.5],
-      "to": [16.5,16.5,16.5],
+      "from": [-0.5, -0.5, -0.5],
+      "to": [16.5, 16.5, 16.5],
       "shade": false,
       "faces": {
-        "down":  { "texture": "#glow", "uv": [0,0,16,16], "cullface": "down" },
-        "up":    { "texture": "#glow", "uv": [0,0,16,16], "cullface": "up" },
-        "north": { "texture": "#glow", "uv": [0,0,16,16], "cullface": "north" },
-        "south": { "texture": "#glow", "uv": [0,0,16,16], "cullface": "south" },
-        "west":  { "texture": "#glow", "uv": [0,0,16,16], "cullface": "west" },
-        "east":  { "texture": "#glow", "uv": [0,0,16,16], "cullface": "east" }
+        "down": {"texture": "#glow", "uv": [0, 0, 16, 16], "cullface": "down"},
+        "up": {"texture": "#glow", "uv": [0, 0, 16, 16], "cullface": "up"},
+        "north": {"texture": "#glow", "uv": [0, 0, 16, 16], "cullface": "north"},
+        "south": {"texture": "#glow", "uv": [0, 0, 16, 16], "cullface": "south"},
+        "west": {"texture": "#glow", "uv": [0, 0, 16, 16], "cullface": "west"},
+        "east": {"texture": "#glow", "uv": [0, 0, 16, 16], "cullface": "east"}
       }
     }
   ]

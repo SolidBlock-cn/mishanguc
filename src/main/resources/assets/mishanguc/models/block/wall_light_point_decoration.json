@@ -1,0 +1,70 @@
+{
+  "parent": "mishanguc:block/wall_light",
+  "elements": [
+    {
+      "from": [7, 0, 7],
+      "to": [9, 1, 9],
+      "faces": {
+        "north": {"texture": "#light"},
+        "east": {"texture": "#light"},
+        "south": {"texture": "#light"},
+        "west": {"texture": "#light"},
+        "up": {"texture": "#light"},
+        "down": {"texture": "#light", "cullface": "down"}
+      },
+      "shade": false
+    },
+    {
+      "from": [7, 0, 11],
+      "to": [9, 1, 16],
+      "faces": {
+        "north": {"texture": "#light"},
+        "east": {"texture": "#light"},
+        "south": {"texture": "#light", "cullface": "south"},
+        "west": {"texture": "#light"},
+        "up": {"texture": "#light"},
+        "down": {"texture": "#light", "cullface": "down"}
+      },
+      "shade": false
+    },
+    {
+      "from": [7, 0, 0],
+      "to": [9, 1, 5],
+      "faces": {
+        "north": {"texture": "#light", "cullface": "north"},
+        "east": {"texture": "#light"},
+        "south": {"texture": "#light"},
+        "west": {"texture": "#light"},
+        "up": {"texture": "#light"},
+        "down": {"texture": "#light", "cullface": "down"}
+      },
+      "shade": false
+    },
+    {
+      "from": [0, 0, 7],
+      "to": [5, 1, 9],
+      "faces": {
+        "north": {"texture": "#light"},
+        "east": {"texture": "#light"},
+        "south": {"texture": "#light"},
+        "west": {"texture": "#light", "cullface": "west"},
+        "up": {"texture": "#light"},
+        "down": {"texture": "#light", "cullface": "down"}
+      },
+      "shade": false
+    },
+    {
+      "from": [11, 0, 7],
+      "to": [16, 1, 9],
+      "faces": {
+        "north": {"texture": "#light"},
+        "east": {"texture": "#light", "cullface": "east"},
+        "south": {"texture": "#light"},
+        "west": {"texture": "#light"},
+        "up": {"texture": "#light"},
+        "down": {"texture": "#light", "cullface": "down"}
+      },
+      "shade": false
+    }
+  ]
+}

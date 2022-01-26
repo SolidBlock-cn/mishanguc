@@ -21,15 +21,15 @@ public class MishangUtils {
     map.put(Direction.UP, Block.createCuboidShape(minX, minY, minZ, maxX, maxY, maxZ));
     map.put(
         Direction.DOWN,
-        Block.createCuboidShape(16 - minX, 16 - minY, 16 - minZ, 16 - maxX, 16 - maxY, 16 - maxZ));
+        Block.createCuboidShape(16 - maxX, 16 - maxY, 16 - maxZ, 16 - minX, 16 - minY, 16 - minZ));
     map.put(Direction.EAST, Block.createCuboidShape(minY, minZ, minX, maxY, maxZ, maxX));
     map.put(
         Direction.WEST,
-        Block.createCuboidShape(16 - minY, 16 - minZ, 16 - minX, 16 - maxY, 16 - maxZ, 16 - maxX));
+        Block.createCuboidShape(16 - maxY, 16 - maxZ, 16 - maxX, 16 - minY, 16 - minZ, 16 - minX));
     map.put(Direction.SOUTH, Block.createCuboidShape(minX, minZ, minY, maxX, maxZ, maxY));
     map.put(
         Direction.NORTH,
-        Block.createCuboidShape(16 - minX, 16 - minZ, 16 - minY, 16 - maxX, 16 - maxZ, 16 - maxY));
+        Block.createCuboidShape(16 - maxX, 16 - maxZ, 16 - maxY, 16 - minX, 16 - minZ, 16 - minY));
     return map;
   }
 

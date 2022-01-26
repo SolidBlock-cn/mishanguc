@@ -1,12 +1,9 @@
 {
-  "parent": "block/block",
-  "textures": {
-    "particle": "#light"
-  },
+  "parent": "mishanguc:block/wall_light",
   "elements": [
     {
-      "from": [5, 0, 5],
-      "to": [11, 1, 11],
+      "from": [7, 0, 5],
+      "to": [9, 1, 7],
       "faces": {
         "north": {"texture": "#light"},
         "east": {"texture": "#light"},
@@ -18,10 +15,10 @@
       "shade": false
     },
     {
-      "from": [7, 0, 11],
-      "to": [9, 1, 16],
+      "from": [7, 0, 9],
+      "to": [9, 1, 11],
       "faces": {
-        "north": {"texture": "#light", "cullface": "north"},
+        "north": {"texture": "#light"},
         "east": {"texture": "#light"},
         "south": {"texture": "#light"},
         "west": {"texture": "#light"},
@@ -31,10 +28,10 @@
       "shade": false
     },
     {
-      "from": [7, 0, 0],
-      "to": [9, 1, 5],
+      "from": [5, 0, 7],
+      "to": [7, 1, 9],
       "faces": {
-        "north": {"texture": "#light", "cullface": "north"},
+        "north": {"texture": "#light"},
         "east": {"texture": "#light"},
         "south": {"texture": "#light"},
         "west": {"texture": "#light"},
@@ -44,23 +41,10 @@
       "shade": false
     },
     {
-      "from": [11, 0, 7],
-      "to": [16, 1, 9],
+      "from": [9, 0, 7],
+      "to": [11, 1, 9],
       "faces": {
-        "north": {"texture": "#light", "cullface": "north"},
-        "east": {"texture": "#light"},
-        "south": {"texture": "#light"},
-        "west": {"texture": "#light"},
-        "up": {"texture": "#light"},
-        "down": {"texture": "#light", "cullface": "down"}
-      },
-      "shade": false
-    },
-    {
-      "from": [0, 0, 7],
-      "to": [5, 1, 9],
-      "faces": {
-        "north": {"texture": "#light", "cullface": "north"},
+        "north": {"texture": "#light"},
         "east": {"texture": "#light"},
         "south": {"texture": "#light"},
         "west": {"texture": "#light"},

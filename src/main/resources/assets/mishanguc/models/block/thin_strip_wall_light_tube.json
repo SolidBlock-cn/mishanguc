@@ -1,8 +1,5 @@
 {
-  "parent": "block/block",
-  "textures": {
-    "particle": "#light"
-  },
+  "parent": "mishanguc:block/wall_light",
   "elements": [
     {
       "from": [0, 0, 7],

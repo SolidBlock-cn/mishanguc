@@ -10,6 +10,7 @@ import net.devtech.arrp.json.loot.JCondition;
 import net.devtech.arrp.json.loot.JFunction;
 import net.devtech.arrp.json.loot.JLootTable;
 import net.devtech.arrp.json.models.*;
+import net.devtech.arrp.json.tags.JTag;
 import net.minecraft.block.Block;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.item.Item;
@@ -21,8 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUc;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.SimpleModel;
-import pers.solid.mishang.uc.block.HorizontalCornerDirection;
-import pers.solid.mishang.uc.block.MishangucBlocks;
+import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.mixin.JBlockModelAccessor;
 import pers.solid.mishang.uc.mixin.JStateAccessor;
@@ -230,12 +230,72 @@ public class ARRPMain implements RRPPreGenEntrypoint {
 
   @Override
   public void pregen() {
+    // 客户端部分
     addBlockStates();
     addBlockModels();
-    addBlockItemModels();
-    addBlockLootTables();
     addItemModels();
+    addBlockItemModels();
+
+    // 服务端部分
+    addTags();
+    addBlockLootTables();
     RRPCallback.BEFORE_VANILLA.register(a -> a.add(PACK));
+  }
+
+  private static void addTags() {
+    final JTag asphaltRoadBlocks = new JTag();
+    final JTag asphaltRoadSlabs = new JTag();
+    final JTag whiteStripWallLights = new JTag();
+    final JTag whiteWallLights = new JTag();
+    final JTag whiteCornerLights = new JTag();
+    final JTag whiteLightDecorations = new JTag();
+    Arrays.stream(MishangucBlocks.class.getFields())
+        .filter(
+            field -> {
+              int modifier = field.getModifiers();
+              return Modifier.isPublic(modifier)
+                  && Modifier.isStatic(modifier)
+                  && Block.class.isAssignableFrom(field.getType())
+                  && field.isAnnotationPresent(RegisterIdentifier.class);
+            })
+        .forEach(
+            field -> {
+              final Class<?> type = field.getType();
+              final String name = field.getName().toLowerCase();
+              if (AbstractRoadBlock.class.isAssignableFrom(type) && name.startsWith("asphalt_")) {
+                asphaltRoadBlocks.add(new Identifier("mishanguc", name));
+              } else if (AbstractRoadSlabBlock.class.isAssignableFrom(type)
+                  && name.startsWith("asphalt_")) {
+                asphaltRoadSlabs.add(new Identifier("mishanguc", name));
+              } else if (StripWallLightBlock.class.isAssignableFrom(type)
+                  && name.startsWith("white_")) {
+                whiteStripWallLights.add(new Identifier("mishanguc", name));
+              } else if (WallLightBlock.class.isAssignableFrom(type) && name.startsWith("white_")) {
+                whiteWallLights.add(new Identifier("mishanguc", name));
+              } else if (CornerLightBlock.class.isAssignableFrom(type)
+                  && name.startsWith("white_")) {
+                whiteCornerLights.add(new Identifier("mishanguc", name));
+              } else if (AutoConnectWallLightBlock.class.isAssignableFrom(type)
+                  && name.startsWith("white_")) {
+                whiteLightDecorations.add(new Identifier("mishanguc", name));
+              }
+            });
+    whiteWallLights.tag(new Identifier("mishanguc", "white_strip_wall_lights"));
+    PACK.addTag(new Identifier("mishanguc", "blocks/asphalt_road_blocks"), asphaltRoadBlocks);
+    PACK.addTag(new Identifier("mishanguc", "items/asphalt_road_blocks"), asphaltRoadBlocks);
+    PACK.addTag(new Identifier("mishanguc", "blocks/asphalt_road_slabs"), asphaltRoadSlabs);
+    PACK.addTag(new Identifier("mishanguc", "items/asphalt_road_slabs"), asphaltRoadSlabs);
+    PACK.addTag(
+        new Identifier("mishanguc", "blocks/white_strip_wall_lights"), whiteStripWallLights);
+    PACK.addTag(new Identifier("mishanguc", "items/white_strip_wall_lights"), whiteStripWallLights);
+    PACK.addTag(new Identifier("mishanguc", "blocks/white_wall_lights"), whiteWallLights);
+    PACK.addTag(new Identifier("mishanguc", "items/white_wall_lights"), whiteWallLights);
+    PACK.addTag(new Identifier("mishanguc", "blocks/white_corner_lights"), whiteCornerLights);
+    PACK.addTag(new Identifier("mishanguc", "items/white_corner_lights"), whiteCornerLights);
+    PACK.addTag(
+        new Identifier("mishanguc", "blocks/white_light_decorations"), whiteLightDecorations);
+    PACK.addTag(
+        new Identifier("mishanguc", "items/white_light_decorations"), whiteLightDecorations);
   }
 
   private static void addBlockLootTables() {
@@ -335,84 +395,88 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         new Identifier("mishanguc", "asphalt_road_slab_with_white_joint_line_with_offset_side"));
 
     PACK.addBlockState(
-        /* state: */ Util.make(
-            () -> {
-              List<JMultipart> parts = new ArrayList<>();
-              for (Direction facing : Direction.values()) {
-                // 中心装饰物
-                parts.add(
-                    new JMultipart()
-                        .addModel(
-                            new JBlockModel(blockIdentifier("white_wall_light_decoration_center"))
-                                .y(
-                                    facing.getAxis() == Direction.Axis.Y
-                                        ? 0
-                                        : ((int) (facing.asRotation() + 180)))
-                                .x(
-                                    facing == Direction.DOWN
-                                        ? 180
-                                        : facing == Direction.UP ? 0 : 90))
-                        .when(new JWhen().add("facing", facing.asString())));
+        composeStateForAutoConnectBlock("white_wall_light_simple_decoration"),
+        new Identifier("mishanguc", "white_wall_light_simple_decoration"));
+    PACK.addBlockState(
+        composeStateForAutoConnectBlock("white_wall_light_point_decoration"),
+        new Identifier("mishanguc", "white_wall_light_point_decoration"));
+    PACK.addBlockState(
+        composeStateForAutoConnectBlock("white_wall_light_rhombus_decoration"),
+        new Identifier("mishanguc", "white_wall_light_rhombus_decoration"));
+    PACK.addBlockState(
+        composeStateForAutoConnectBlock("white_wall_light_hash_decoration"),
+        new Identifier("mishanguc", "white_wall_light_hash_decoration"));
+    PACK.addBlockState(
+        composeStateForAutoConnectBlock("white_wall_light_round_decoration"),
+        new Identifier("mishanguc", "white_wall_light_round_decoration"));
+  }
 
-                // 连接物
-                // 共有两种连接物模型：一种是位于底部或顶部的朝南连接，可以通过x和y的旋转得到位于底部朝向任意方向的连接，以及位于侧面朝向垂直方向的连接。
-                // 第二种是位于侧面的朝东连接，可以通过x和y的旋转得到任意水平方向上的，以及底部或顶部任意连接。
-                for (Direction direction : Direction.values()) {
-                  final Direction.Axis axis = direction.getAxis();
-                  final int x, y;
-                  final String modelName;
-                  if (axis == facing.getAxis()) {
-                    continue;
-                  }
-                  if (facing == Direction.UP) {
-                    modelName = "wall_light_decoration_connection";
-                    x = 0;
-                    y = (int) direction.asRotation();
-                  } else if (facing == Direction.DOWN) {
-                    modelName = "wall_light_decoration_connection";
-                    x = 180;
-                    y = (int) direction.asRotation() + 180;
-                  } else if (direction == Direction.UP) {
-                    modelName = "wall_light_decoration_connection";
-                    x = 90;
-                    y = (int) facing.asRotation() + 180;
-                  } else if (direction == Direction.DOWN) {
-                    modelName = "wall_light_decoration_connection";
-                    x = -90;
-                    y = (int) facing.asRotation();
-                  } else if (direction == facing.rotateYCounterclockwise()) {
-                    modelName = "wall_light_decoration_connection2";
-                    x = 0;
-                    y = (int) facing.asRotation();
-                  } else if (direction == facing.rotateYClockwise()) {
-                    modelName = "wall_light_decoration_connection2";
-                    x = 180;
-                    y = (int) facing.asRotation() + 180;
-                  } else {
-                    MishangUc.MISHANG_LOGGER.error(
-                        String.format(
-                            "Unknown state to generate models: facing=%s,direction=%s",
-                            facing.asString(), direction.asString()));
-                    continue;
-                  }
-                  parts.add(
-                      new JMultipart()
-                          .addModel(
-                              new JBlockModel(blockIdentifier("white_" + modelName))
-                                  .x(x)
-                                  .y(y)
-                                  .uvlock())
-                          .when(
-                              new FixedWhen()
-                                  .add("facing", facing.asString())
-                                  .add(direction.asString(), "true")));
-                }
-              }
-              //
-              // MishangUc.MISHANG_LOGGER.info(RuntimeResourcePackImpl.GSON.toJson(state));
-              return JState.state(parts.toArray(new JMultipart[] {}));
-            }),
-        /* path: */ new Identifier("mishanguc", "white_wall_light_decoration"));
+  private static JState composeStateForAutoConnectBlock(String name) {
+    List<JMultipart> parts = new ArrayList<>();
+    for (Direction facing : Direction.values()) {
+      // 中心装饰物
+      parts.add(
+          new JMultipart()
+              .addModel(
+                  new JBlockModel(blockIdentifier(name + "_center"))
+                      .y(
+                          facing.getAxis() == Direction.Axis.Y
+                              ? 0
+                              : ((int) (facing.asRotation() + 180)))
+                      .x(facing == Direction.DOWN ? 180 : facing == Direction.UP ? 0 : 90))
+              .when(new JWhen().add("facing", facing.asString())));
+
+      // 连接物
+      // 共有两种连接物模型：一种是位于底部或顶部的朝南连接，可以通过x和y的旋转得到位于底部朝向任意方向的连接，以及位于侧面朝向垂直方向的连接。
+      // 第二种是位于侧面的朝东连接，可以通过x和y的旋转得到任意水平方向上的，以及底部或顶部任意连接。
+      for (Direction direction : Direction.values()) {
+        final Direction.Axis axis = direction.getAxis();
+        final int x, y;
+        final String modelName;
+        if (axis == facing.getAxis()) {
+          continue;
+        }
+        if (facing == Direction.UP) {
+          modelName = name + "_connection";
+          x = 0;
+          y = (int) direction.asRotation();
+        } else if (facing == Direction.DOWN) {
+          modelName = name + "_connection";
+          x = 180;
+          y = (int) direction.asRotation() + 180;
+        } else if (direction == Direction.UP) {
+          modelName = name + "_connection";
+          x = 90;
+          y = (int) facing.asRotation() + 180;
+        } else if (direction == Direction.DOWN) {
+          modelName = name + "_connection";
+          x = -90;
+          y = (int) facing.asRotation();
+        } else if (direction == facing.rotateYCounterclockwise()) {
+          modelName = name + "_connection2";
+          x = 0;
+          y = (int) facing.asRotation();
+        } else if (direction == facing.rotateYClockwise()) {
+          modelName = name + "_connection2";
+          x = 180;
+          y = (int) facing.asRotation() + 180;
+        } else {
+          MishangUc.MISHANG_LOGGER.error(
+              String.format(
+                  "Unknown state to generate models: facing=%s,direction=%s",
+                  facing.asString(), direction.asString()));
+          continue;
+        }
+        parts.add(
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(modelName)).x(x).y(y).uvlock())
+                .when(
+                    new FixedWhen()
+                        .add("facing", facing.asString())
+                        .add(direction.asString(), "true")));
+      }
+    }
+    return JState.state(parts.toArray(new JMultipart[] {}));
   }
 
   @NotNull
@@ -749,20 +813,88 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         blockIdentifier("white_large_wall_light"));
 
     PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_decoration"))
+        JModel.model(blockIdentifier("wall_light_simple_decoration"))
             .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_decoration"));
+        blockIdentifier("white_wall_light_simple_decoration"));
     PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_decoration_center"))
+        JModel.model(blockIdentifier("wall_light_simple_decoration_center"))
             .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_decoration_center"));
+        blockIdentifier("white_wall_light_simple_decoration_center"));
     PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_decoration_connection"))
+        JModel.model(blockIdentifier("wall_light_simple_decoration_connection"))
             .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_decoration_connection"));
+        blockIdentifier("white_wall_light_simple_decoration_connection"));
     PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_decoration_connection2"))
+        JModel.model(blockIdentifier("wall_light_simple_decoration_connection2"))
             .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_decoration_connection2"));
+        blockIdentifier("white_wall_light_simple_decoration_connection2"));
+
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_point_decoration"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_point_decoration"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_point_decoration_center"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_point_decoration_center"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_point_decoration_connection"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_point_decoration_connection"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_point_decoration_connection2"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_point_decoration_connection2"));
+
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_rhombus_decoration"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_rhombus_decoration"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_rhombus_decoration_center"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_rhombus_decoration_center"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_rhombus_decoration_connection"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_rhombus_decoration_connection"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_rhombus_decoration_connection2"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_rhombus_decoration_connection2"));
+
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_hash_decoration"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_hash_decoration"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_hash_decoration_center"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_hash_decoration_center"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_hash_decoration_connection"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_hash_decoration_connection"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_hash_decoration_connection2"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_hash_decoration_connection2"));
+
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_round_decoration"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_round_decoration"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_round_decoration_center"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_round_decoration_center"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_round_decoration_connection"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_round_decoration_connection"));
+    PACK.addModel(
+        JModel.model(blockIdentifier("wall_light_round_decoration_connection2"))
+            .textures(new JTextures().var("light", blockString("white_light"))),
+        blockIdentifier("white_wall_light_round_decoration_connection2"));
   }
 }

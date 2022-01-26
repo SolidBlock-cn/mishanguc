@@ -2,12 +2,12 @@
   "parent": "mishanguc:block/wall_light",
   "elements": [
     {
-      "from": [7, 0, 0],
-      "to": [9, 1, 16],
+      "from": [5, 0, 13],
+      "to": [11, 1, 16],
       "faces": {
         "north": {"texture": "#light"},
         "east": {"texture": "#light"},
-        "south": {"texture": "#light"},
+        "south": {"texture": "#light", "cullface": "south"},
         "west": {"texture": "#light"},
         "up": {"texture": "#light"},
         "down": {"texture": "#light", "cullface": "down"}

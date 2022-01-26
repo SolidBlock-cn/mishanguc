@@ -75,6 +75,12 @@
   "block.mishanguc.white_small_wall_light": "White Small Wall Light",
   "block.mishanguc.white_large_wall_light": "White Large Wall Light",
 
+  "block.mishanguc.white_wall_light_simple_decoration": "White Wall Light Simple Decoration",
+  "block.mishanguc.white_wall_light_point_decoration": "White Wall Light Point Decoration",
+  "block.mishanguc.white_wall_light_rhombus_decoration": "White Wall Light Rhombus Decoration",
+  "block.mishanguc.white_wall_light_hash_decoration": "White Wall Light Hash Decoration",
+  "block.mishanguc.white_wall_light_round_decoration": "White Wall Light Round Decoration",
+
   "item.mishanguc.road_connection_state_debugging_tool": "Road Connection State Debugging Tool",
   "item.mishanguc.id_checker_tool": "Id Checker Tool",
   "item.mishanguc.id_checker_tool.tooltip.1": "Get its id data when clicking block.",

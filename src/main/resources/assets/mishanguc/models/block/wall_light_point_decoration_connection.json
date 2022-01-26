@@ -1,14 +1,11 @@
 {
-  "parent": "block/block",
-  "textures": {
-    "particle": "#light"
-  },
+  "parent": "mishanguc:block/wall_light",
   "elements": [
     {
-      "from": [5, 0, 5],
-      "to": [11, 1, 11],
+      "from": [7, 0, 11],
+      "to": [9, 1, 16],
       "faces": {
-        "north": {"texture": "#light"},
+        "north": {"texture": "#light", "cullface": "north"},
         "east": {"texture": "#light"},
         "south": {"texture": "#light"},
         "west": {"texture": "#light"},

@@ -2,24 +2,24 @@ package pers.solid.mishang.uc.block;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.MapColor;
-import net.minecraft.block.Material;
+import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.LineColor;
-import pers.solid.mishang.uc.MishangUc;
-import pers.solid.mishang.uc.ModItemGroups;
-import pers.solid.mishang.uc.RoadTexture;
+import pers.solid.mishang.uc.*;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.InGroup;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Map;
 
 /** 迷上城建模组的所有方块。 */
 public final class MishangucBlocks {
@@ -386,8 +386,33 @@ public final class MishangucBlocks {
       new WallLightBlock(WHITE_WALL_LIGHT_SETTINGS);
 
   @RegisterIdentifier
-  public static final AutoConnectWallLightBlock WHITE_WALL_LIGHT_DECORATION =
+  public static final AutoConnectWallLightBlock WHITE_WALL_LIGHT_SIMPLE_DECORATION =
       new AutoConnectWallLightBlock(WHITE_WALL_LIGHT_SETTINGS);
+
+  @RegisterIdentifier
+  public static final AutoConnectWallLightBlock WHITE_WALL_LIGHT_POINT_DECORATION =
+      new AutoConnectWallLightBlock(WHITE_WALL_LIGHT_SETTINGS);
+
+  @RegisterIdentifier
+  public static final AutoConnectWallLightBlock WHITE_WALL_LIGHT_RHOMBUS_DECORATION =
+      new AutoConnectWallLightBlock(WHITE_WALL_LIGHT_SETTINGS);
+
+  @RegisterIdentifier
+  public static final AutoConnectWallLightBlock WHITE_WALL_LIGHT_HASH_DECORATION =
+      new AutoConnectWallLightBlock(WHITE_WALL_LIGHT_SETTINGS);
+
+  @RegisterIdentifier
+  public static final AutoConnectWallLightBlock WHITE_WALL_LIGHT_ROUND_DECORATION =
+      new AutoConnectWallLightBlock(WHITE_WALL_LIGHT_SETTINGS) {
+        final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION =
+            MishangUtils.createDirectionToShape(0, 0, 0, 16, 1, 16);
+
+        @Override
+        public VoxelShape getOutlineShape(
+            BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+          return SHAPE_PER_DIRECTION.get(state.get(FACING));
+        }
+      };
 
   /**
    * 自动注册一个类中的所有静态常量字段的方块，同时创建并注册对应的物品。
