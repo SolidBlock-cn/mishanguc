@@ -1,10 +1,13 @@
 package pers.solid.mishang.uc.block;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableBiMap;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -19,13 +22,14 @@ import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Map;
 
 /** 迷上城建模组的所有方块。 */
 public final class MishangucBlocks {
   /** 绝大多数柏油路方块共用的方块设置。 */
   private static final FabricBlockSettings ASPHALT_ROAD_SETTINGS =
-      FabricBlockSettings.of(Material.STONE, MapColor.GRAY).strength(0.5F).breakByHand(true);
+      FabricBlockSettings.of(Material.STONE, MapColor.GRAY).strength(0.5F);
 
   /**
    *
@@ -413,6 +417,109 @@ public final class MishangucBlocks {
           return SHAPE_PER_DIRECTION.get(state.get(FACING));
         }
       };
+
+  /**
+   *
+   *
+   * <h1>告示牌类方块</h1>
+   *
+   * 具有多种不同颜色。
+   */
+  public static final BiMap<DyeColor, TextPadBlock> TEXT_PAD_BLOCKS =
+      Arrays.stream(DyeColor.values())
+          .collect(
+              ImmutableBiMap.toImmutableBiMap(
+                  color -> color,
+                  color ->
+                      new TextPadBlock(
+                          Registry.BLOCK.get(new Identifier("minecraft", color + "_concrete")),
+                          color)));
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_WHITE_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.WHITE);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_ORANGE_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.ORANGE);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_MAGENTA_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.MAGENTA);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_LIGHT_BLUE_TEXT_PAD =
+      TEXT_PAD_BLOCKS.get(DyeColor.LIGHT_BLUE);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_YELLOW_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.YELLOW);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_LIME_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.LIME);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_PINK_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.PINK);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_GRAY_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.GRAY);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_LIGHT_GRAY_TEXT_PAD =
+      TEXT_PAD_BLOCKS.get(DyeColor.LIGHT_GRAY);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_CYAN_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.CYAN);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_PURPLE_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.PURPLE);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_BLUE_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.BLUE);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_BROWN_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.BROWN);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_GREEN_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.GREEN);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_RED_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.RED);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_BLACK_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.BLACK);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_BLACK_CONCRETE_GLOWING_SIGN =
+      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.BLACK_CONCRETE).luminance(15));
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_GRAY_CONCRETE_GLOWING_SIGN =
+      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.GRAY_CONCRETE).luminance(15));
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_BLACK_TERRACOTTA_GLOWING_SIGN =
+      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.BLACK_TERRACOTTA).luminance(15));
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_GRAY_TERRACOTTA_GLOWING_SIGN =
+      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.GRAY_TERRACOTTA).luminance(15));
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_CYAN_TERRACOTTA_GLOWING_SIGN =
+      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.CYAN_TERRACOTTA).luminance(15));
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_NETHERRACK_GLOWING_SIGN =
+      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.NETHERRACK).luminance(15));
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_NETHER_BRICK_GLOWING_SIGN =
+      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.NETHER_BRICKS).luminance(15));
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_BLACKSTONE_GLOWING_SIGN =
+      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.BLACKSTONE).luminance(15));
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_POLISHED_BLACKSTONE_GLOWING_SIGN =
+      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.POLISHED_BLACKSTONE).luminance(15));
 
   /**
    * 自动注册一个类中的所有静态常量字段的方块，同时创建并注册对应的物品。

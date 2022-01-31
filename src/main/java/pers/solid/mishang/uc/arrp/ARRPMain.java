@@ -14,6 +14,7 @@ import net.devtech.arrp.json.tags.JTag;
 import net.minecraft.block.Block;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.item.Item;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
@@ -409,6 +410,79 @@ public class ARRPMain implements RRPPreGenEntrypoint {
     PACK.addBlockState(
         composeStateForAutoConnectBlock("white_wall_light_round_decoration"),
         new Identifier("mishanguc", "white_wall_light_round_decoration"));
+
+    for (DyeColor dyeColor : DyeColor.values()) {
+      PACK.addBlockState(
+          Util.make(
+              new JState(),
+              state -> {
+                final JVariant jVariant = new JVariant();
+                for (Direction direction : Direction.Type.HORIZONTAL) {
+                  jVariant.put(
+                      "facing",
+                      direction,
+                      new JBlockModel(
+                              blockIdentifier(String.format("simple_%s_text_pad", dyeColor)))
+                          .uvlock()
+                          .y(((int) direction.asRotation()) + 180));
+                }
+                state.add(jVariant);
+              }),
+          new Identifier("mishanguc", String.format("simple_%s_text_pad", dyeColor)));
+    }
+
+    addStateForHungGlowingSign(PACK, "black_concrete");
+    addStateForHungGlowingSign(PACK, "gray_concrete");
+    addStateForHungGlowingSign(PACK, "black_terracotta");
+    addStateForHungGlowingSign(PACK, "gray_terracotta");
+    addStateForHungGlowingSign(PACK, "cyan_terracotta");
+    addStateForHungGlowingSign(PACK, "netherrack");
+    addStateForHungGlowingSign(PACK, "nether_brick");
+    addStateForHungGlowingSign(PACK, "blackstone");
+    addStateForHungGlowingSign(PACK, "polished_blackstone");
+  }
+
+  /**
+   * 为发光告示牌创建方块状态文件。
+   *
+   * @see #addModelForHungGlowingSign
+   * @param name 发光告示牌的非完整名称。
+   */
+  private static void addStateForHungGlowingSign(@NotNull RuntimeResourcePack PACK, String name) {
+    final String path = "hung_" + name + "_glowing_sign";
+    PACK.addBlockState(
+        JState.state(
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path)).uvlock())
+                .when(new JWhen().add("axis", "z")),
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path)).uvlock().y(90))
+                .when(new JWhen().add("axis", "x")),
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path + "_bar")).uvlock())
+                .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "true")),
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path + "_bar")).uvlock().y(180))
+                .when(new FixedWhen().add("axis", "z").add("left", "true").add("right", "false")),
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path + "_bar")).uvlock().y(-90))
+                .when(new FixedWhen().add("axis", "x").add("left", "false").add("right", "true")),
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path + "_bar")).uvlock().y(90))
+                .when(new FixedWhen().add("axis", "x").add("left", "true").add("right", "false")),
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path + "_bar_edge")).uvlock())
+                .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "false")),
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path + "_bar_edge")).uvlock().y(90))
+                .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "false")),
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path + "_bar_edge")).uvlock().y(90))
+                .when(new FixedWhen().add("axis", "x").add("left", "false").add("right", "false")),
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path + "_bar_edge")).uvlock().y(270))
+                .when(new FixedWhen().add("axis", "x").add("left", "false").add("right", "false"))),
+        new Identifier("mishanguc", path));
   }
 
   private static JState composeStateForAutoConnectBlock(String name) {
@@ -812,89 +886,81 @@ public class ARRPMain implements RRPPreGenEntrypoint {
                     .var("light", blockString("white_light"))),
         blockIdentifier("white_large_wall_light"));
 
-    PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_simple_decoration"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_simple_decoration"));
-    PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_simple_decoration_center"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_simple_decoration_center"));
-    PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_simple_decoration_connection"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_simple_decoration_connection"));
-    PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_simple_decoration_connection2"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_simple_decoration_connection2"));
+    addWallLightDecoration(PACK, "white", "simple");
+    addWallLightDecoration(PACK, "white", "point");
+    addWallLightDecoration(PACK, "white", "rhombus");
+    addWallLightDecoration(PACK, "white", "hash");
+    addWallLightDecoration(PACK, "white", "round");
 
-    PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_point_decoration"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_point_decoration"));
-    PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_point_decoration_center"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_point_decoration_center"));
-    PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_point_decoration_connection"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_point_decoration_connection"));
-    PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_point_decoration_connection2"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_point_decoration_connection2"));
+    // 写字板方块
+    for (DyeColor dyeColor : DyeColor.values()) {
+      PACK.addModel(
+          JModel.model(blockIdentifier("simple_text_pad"))
+              .textures(new JTextures().var("all", String.format("block/%s_concrete", dyeColor))),
+          blockIdentifier(String.format("simple_%s_text_pad", dyeColor)));
+    }
+    addModelForHungGlowingSign(
+        PACK, "black_concrete", "block/black_concrete", blockString("white_light"));
+    addModelForHungGlowingSign(
+        PACK, "gray_concrete", "block/black_concrete", blockString("white_light"));
+    addModelForHungGlowingSign(
+        PACK, "black_terracotta", "block/black_terracotta", blockString("white_light"));
+    addModelForHungGlowingSign(
+        PACK, "gray_terracotta", "block/gray_terracotta", blockString("white_light"));
+    addModelForHungGlowingSign(
+        PACK, "cyan_terracotta", "block/cyan_terracotta", blockString("white_light"));
+    addModelForHungGlowingSign(PACK, "netherrack", "block/netherrack", "block/glowstone");
+    addModelForHungGlowingSign(PACK, "nether_brick", "block/nether_bricks", "block/glowstone");
+    addModelForHungGlowingSign(PACK, "blackstone", "block/blackstone", "block/glowstone");
+    addModelForHungGlowingSign(
+        PACK, "polished_blackstone", "block/polished_blackstone", "block/glowstone");
+  }
 
+  /**
+   * 为发光告示牌创建并注册方块模型文件。
+   *
+   * @see #addStateForHungGlowingSign
+   * @param hungSignName 发光告示牌的非完整名称，如 black_concrete。需确保存在名为 <tt>mishanguc:hung_</tt><code>
+   *     hungSignName</code><tt>_glowing_sign</tt> 的方块。
+   * @param texture 发给告示牌方块的主体纹理。为纹理的命名空间id，如 {@code minecraft:block/black_concrete}。
+   * @param glowTexture 发光告示牌方块的发光部分纹理。为纹理的命名空间id，如 {@code minecraft:block/glowstone}。
+   */
+  private static void addModelForHungGlowingSign(
+      @NotNull RuntimeResourcePack PACK,
+      @NotNull String hungSignName,
+      @NotNull String texture,
+      @NotNull String glowTexture) {
     PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_rhombus_decoration"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_rhombus_decoration"));
+        JModel.model(blockIdentifier("hung_glowing_sign"))
+            .textures(new JTextures().var("texture", texture).var("glow", glowTexture)),
+        blockIdentifier(String.format("hung_%s_glowing_sign", hungSignName)));
     PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_rhombus_decoration_center"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_rhombus_decoration_center"));
+        JModel.model(blockIdentifier("hung_glowing_sign_bar"))
+            .textures(new JTextures().var("texture", texture).var("glow", glowTexture)),
+        blockIdentifier(String.format("hung_%s_glowing_sign_bar", hungSignName)));
     PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_rhombus_decoration_connection"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_rhombus_decoration_connection"));
-    PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_rhombus_decoration_connection2"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_rhombus_decoration_connection2"));
+        JModel.model(blockIdentifier("hung_glowing_sign_bar_edge"))
+            .textures(new JTextures().var("texture", texture).var("glow", glowTexture)),
+        blockIdentifier(String.format("hung_%s_glowing_sign_bar_edge", hungSignName)));
+  }
 
+  private static void addWallLightDecoration(
+      @NotNull RuntimeResourcePack PACK, @NotNull String color, @NotNull String shape) {
     PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_hash_decoration"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_hash_decoration"));
+        JModel.model(blockIdentifier(String.format("wall_light_%s_decoration", shape)))
+            .textures(new JTextures().var("light", blockString(color + "_light"))),
+        blockIdentifier(String.format("%s_wall_light_%s_decoration", color, shape)));
     PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_hash_decoration_center"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_hash_decoration_center"));
+        JModel.model(blockIdentifier(String.format("wall_light_%s_decoration_center", shape)))
+            .textures(new JTextures().var("light", blockString(color + "_light"))),
+        blockIdentifier(String.format("%s_wall_light_%s_decoration_center", color, shape)));
     PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_hash_decoration_connection"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_hash_decoration_connection"));
+        JModel.model(blockIdentifier(String.format("wall_light_%s_decoration_connection", shape)))
+            .textures(new JTextures().var("light", blockString(color + "_light"))),
+        blockIdentifier(String.format("%s_wall_light_%s_decoration_connection", color, shape)));
     PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_hash_decoration_connection2"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_hash_decoration_connection2"));
-
-    PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_round_decoration"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_round_decoration"));
-    PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_round_decoration_center"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_round_decoration_center"));
-    PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_round_decoration_connection"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_round_decoration_connection"));
-    PACK.addModel(
-        JModel.model(blockIdentifier("wall_light_round_decoration_connection2"))
-            .textures(new JTextures().var("light", blockString("white_light"))),
-        blockIdentifier("white_wall_light_round_decoration_connection2"));
+        JModel.model(blockIdentifier(String.format("wall_light_%s_decoration_connection2", shape)))
+            .textures(new JTextures().var("light", blockString(color + "_light"))),
+        blockIdentifier(String.format("%s_wall_light_%s_decoration_connection2", color, shape)));
   }
 }

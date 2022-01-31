@@ -37,11 +37,11 @@ public class MishangUtils {
       double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
     final Map<Direction, VoxelShape> map = new EnumMap<>(Direction.class);
     map.put(Direction.SOUTH, Block.createCuboidShape(minX, minY, minZ, maxX, maxY, maxZ));
-    map.put(Direction.WEST, Block.createCuboidShape(16 - minZ, minY, minX, 16 - maxZ, maxY, maxX));
+    map.put(Direction.WEST, Block.createCuboidShape(16 - maxZ, minY, minX, 16 - minZ, maxY, maxX));
     map.put(
         Direction.NORTH,
-        Block.createCuboidShape(16 - minX, minY, 16 - minZ, 16 - maxX, maxY, 16 - maxZ));
-    map.put(Direction.EAST, Block.createCuboidShape(minZ, minY, 16 - minX, maxZ, maxY, 16 - maxX));
+        Block.createCuboidShape(16 - maxX, minY, 16 - maxZ, 16 - minX, maxY, 16 - minZ));
+    map.put(Direction.EAST, Block.createCuboidShape(minZ, minY, 16 - maxX, maxZ, maxY, 16 - minX));
     return map;
   }
 

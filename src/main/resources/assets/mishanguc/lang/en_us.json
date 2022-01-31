@@ -112,10 +112,12 @@
   "item.mishanguc.block_state_tool.tooltip": "Click the block to get the block state.",
   "item.mishanguc.block_state_tool.tooltip.includesFluidWhileSneaking": "Can get the fluid state while sneaking.",
   "item.mishanguc.block_state_tool.tooltip.includesFluid": "Can get the fluid state.",
+
   "blockMatchingRule.mishanguc.same_state": "Same Block State",
   "blockMatchingRule.mishanguc.same_block": "Same Block",
   "blockMatchingRule.mishanguc.same_material": "Same Material",
   "blockMatchingRule.mishanguc.any": "Any",
+
   "direction.none": "None",
   "direction.north": "North",
   "direction.south": "South",
@@ -125,6 +127,7 @@
   "direction.north_east": "Northeast",
   "direction.south_west": "Southwest",
   "direction.south_east": "Southeast",
+
   "debug.mishanguc.notRoad": "This is not a road block",
   "debug.mishanguc.roadConnectionState": "The connection state of road at %s at %s side:",
   "debug.mishanguc.roadConnectionState.allDir": "The connection state of road at %s:",
@@ -163,6 +166,7 @@
   "debug.mishanguc.nbt.list_empty": "Empty list",
   "debug.mishanguc.nbt.list_expand": "<expand>",
   "debug.mishanguc.nbt.string.eclipse": "…… (%s characters in total)",
+
   "roadConnectionState.lineColor.white": "White",
   "roadConnectionState.lineColor.yellow": "Yellow",
   "roadConnectionState.lineColor.unknown": "Unknown",
@@ -171,7 +175,23 @@
   "roadConnectionState.probability.may_connect_to": "May connect to",
   "roadConnectionState.probability.probably_connect_to": "Probably connected to",
   "roadConnectionState.probability.connected_to": "Connected to",
+
   "itemGroup.mishanguc.roads": "Mishang Urban Construction | Roads",
   "itemGroup.mishanguc.lights": "Mishang Urban Construction | Lights",
-  "itemGroup.mishanguc.tools": "Mishang Urban Construction | Tools"
+  "itemGroup.mishanguc.tools": "Mishang Urban Construction | Tools",
+
+  "notice.mishanguc.load": "Please notice: This mod is under text, and functions are not stable. Please use with caution for experiencing new features. Please do not use features of this mod in your formal work, as the features may be renamed or removed in future versions, and perhaps not compatible with current version any more.",
+  "message.mishanguc.sign_edit": "Edit Sign",
+  "message.mishanguc.add_text": "Add text",
+  "message.mishanguc.remove_text": "Remove text",
+  "message.mishanguc.shade": "Shade",
+  "message.mishanguc.size": "Size: %s",
+  "message.mishanguc.offsetX": "X Offset: %s",
+  "message.mishanguc.offsetY": "Y Offset: %s",
+  "message.mishanguc.offsetZ": "Z Offset: %s",
+  "message.mishanguc.scaleX": "X Scale:%s",
+  "message.mishanguc.scaleY": "Y Scale:%s",
+  "message.mishanguc.scaleZ": "Z Scale:%s",
+  "message.mishanguc.text_field": "Text Field",
+  "message.mishanguc.text_field.tooltip": "Click mouse to add, hold Shift to decrease, or adjust with mouse scroll."
 }

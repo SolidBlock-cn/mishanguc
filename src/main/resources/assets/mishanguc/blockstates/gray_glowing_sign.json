@@ -1,0 +1,44 @@
+{
+  "multipart": [
+    {
+      "apply": {"model": "mishanguc:block/gray_glowing_sign", "uvlock": true},
+      "when": {"axis": "z"}
+    },
+    {
+      "apply": {"model": "mishanguc:block/gray_glowing_sign", "uvlock": true, "y": 90},
+      "when": {"axis": "x"}
+    },
+    {
+      "apply": {"model": "mishanguc:block/gray_glowing_sign_bar", "uvlock": true},
+      "when": {"axis": "z", "left": false, "right": true}
+    },
+    {
+      "apply": {"model": "mishanguc:block/gray_glowing_sign_bar", "uvlock": true, "y": 180},
+      "when": {"axis": "z", "right": false, "left": true}
+    },
+    {
+      "apply": {"model": "mishanguc:block/gray_glowing_sign_bar", "uvlock": true, "y": -90},
+      "when": {"axis": "x", "left": false, "right": true}
+    },
+    {
+      "apply": {"model": "mishanguc:block/gray_glowing_sign_bar", "uvlock": true, "y": 90},
+      "when": {"axis": "x", "right": false, "left": true}
+    },
+    {
+      "apply": {"model": "mishanguc:block/gray_glowing_sign_bar_edge", "uvlock": true, "y": 0},
+      "when": {"axis": "z", "right": false, "left": false}
+    },
+    {
+      "apply": {"model": "mishanguc:block/gray_glowing_sign_bar_edge", "uvlock": true, "y": 180},
+      "when": {"axis": "z", "right": false, "left": false}
+    },
+    {
+      "apply": {"model": "mishanguc:block/gray_glowing_sign_bar_edge", "uvlock": true, "y": 90},
+      "when": {"axis": "x", "right": false, "left": false}
+    },
+    {
+      "apply": {"model": "mishanguc:block/gray_glowing_sign_bar_edge", "uvlock": true, "y": -90},
+      "when": {"axis": "x", "right": false, "left": false}
+    }
+  ]
+}
