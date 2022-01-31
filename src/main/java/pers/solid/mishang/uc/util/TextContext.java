@@ -24,9 +24,9 @@ public class TextContext implements Cloneable {
   /** 文本内容。 */
   public @Nullable MutableText text;
   /** 水平对齐方式。若为 null 则取默认值。 */
-  public @Nullable HorizontalAlign horizontalAlign;
+  public HorizontalAlign horizontalAlign = HorizontalAlign.CENTER;
   /** 垂直对齐方式。若为 null 则取默认值。 */
-  public @Nullable VerticalAlign verticalAlign;
+  public VerticalAlign verticalAlign = VerticalAlign.MIDDLE;
   /** 文本颜色。 */
   public int color = 0xffffff;
   /** 是否渲染阴影。 */
@@ -52,6 +52,8 @@ public class TextContext implements Cloneable {
   public boolean strikethrough = false;
   /** @see net.minecraft.util.Formatting#OBFUSCATED */
   public boolean obfuscated = false;
+  /** 是否为绝对定位。如果为 <code>false</code>，会按照从上到下的顺序渲染。 */
+  public boolean absolute = false;
 
   /** 文本大小 */
   public float size = 8;
@@ -86,7 +88,13 @@ public class TextContext implements Cloneable {
       text = null;
     }
     horizontalAlign = HorizontalAlign.byName(nbt.getString("horizontalAlign"));
+    if (horizontalAlign == null) {
+      horizontalAlign = HorizontalAlign.CENTER;
+    }
     verticalAlign = VerticalAlign.byName(nbt.getString("verticalAlign"));
+    if (verticalAlign == null) {
+      verticalAlign = VerticalAlign.MIDDLE;
+    }
     final NbtElement nbtColor = nbt.get("color");
     if (nbtColor instanceof AbstractNbtNumber) {
       color = ((AbstractNbtNumber) nbtColor).intValue();
@@ -115,6 +123,7 @@ public class TextContext implements Cloneable {
     underline = nbt.getBoolean("underline");
     strikethrough = nbt.getBoolean("strikethrough");
     obfuscated = nbt.getBoolean("obfuscated");
+    absolute = nbt.getBoolean("absolute");
   }
 
   /**
@@ -243,12 +252,12 @@ public class TextContext implements Cloneable {
     } else {
       nbt.remove("text");
     }
-    if (horizontalAlign != null) {
+    if (horizontalAlign != HorizontalAlign.CENTER) {
       nbt.putString("horizontalAlign", horizontalAlign.asString());
     } else {
       nbt.remove("horizontalAlign");
     }
-    if (verticalAlign != null) {
+    if (verticalAlign != VerticalAlign.MIDDLE) {
       nbt.putString("verticalAlign", verticalAlign.asString());
     } else {
       nbt.remove("verticalAlign");
@@ -286,6 +295,7 @@ public class TextContext implements Cloneable {
     putBooleanParam(nbt, "underline", underline);
     putBooleanParam(nbt, "strikethrough", strikethrough);
     putBooleanParam(nbt, "obfuscated", obfuscated);
+    putBooleanParam(nbt, "absolute", absolute);
     return nbt;
   }
 
