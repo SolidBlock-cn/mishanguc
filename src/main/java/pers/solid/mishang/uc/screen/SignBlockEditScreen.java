@@ -4,9 +4,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import it.unimi.dsi.fastutil.floats.Float2ObjectFunction;
-import it.unimi.dsi.fastutil.floats.FloatConsumer;
-import it.unimi.dsi.fastutil.objects.Object2FloatFunction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -22,7 +19,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -42,9 +38,9 @@ import java.util.List;
  * 编辑告示牌时的屏幕。<br>
  * 放置后如需打开此屏幕，使用
  *
- * <pre>
- *   this.client.openScreen(new TextPadEditScreen(entity)
- * </pre>
+ * <pre>{@code
+ * this.client.openScreen(new TextPadEditScreen(entity)
+ * }</pre>
  *
  * @see net.minecraft.client.gui.screen.ingame.SignEditScreen
  * @see net.minecraft.client.network.ClientPlayerEntity#openEditSignScreen
@@ -80,11 +76,14 @@ public class SignBlockEditScreen extends Screen {
   }
 
   /** 初始化，对屏幕进行配置。 */
+  @SuppressWarnings({"AlibabaLowerCamelCaseVariableNaming", "AlibabaMethodTooLong"})
   @Override
   protected void init() {
     super.init();
     entity.editedSide = direction;
     textFieldListScreen = new TextFieldListScreen(client, width, height, 30, height - 50, 18);
+    placeHolder.setWidth(width);
+    this.addButton(placeHolder);
     this.addChild(textFieldListScreen);
     // 添加文本
     final ButtonWidget addTextButton =
@@ -332,15 +331,14 @@ public class SignBlockEditScreen extends Screen {
             width - 4,
             15,
             new TranslatableText("message.mishanguc.text_field"));
+    textFieldWidget.setMaxLength(Integer.MAX_VALUE);
     if (textContext.text != null) {
       textFieldWidget.setText(textContext.text.asString());
     }
-    //    textFields.add(index, textFieldWidget);
-    textFieldListScreen.children().add(textFieldListScreen.new Entry(textFieldWidget));
+    final TextFieldListScreen.Entry newEntry = textFieldListScreen.new Entry(textFieldWidget);
+    textFieldListScreen.children().add(newEntry);
     contextToWidgetBiMap.put(textContext, textFieldWidget);
-    //    this.children;
-    //    this.buttons.add(textFieldWidget);
-    focusOn(textFieldWidget);
+    textFieldListScreen.setFocused(newEntry);
     textFieldWidget.setChangedListener(
         s -> {
           final TextContext textContext1 = contextToWidgetBiMap.inverse().get(textFieldWidget);
@@ -349,7 +347,16 @@ public class SignBlockEditScreen extends Screen {
           }
           changed = true;
         });
+    placeHolder.visible = false;
     changed = true;
+  }
+
+  /** 点击按钮后，还是应该聚焦在文本区域，而不是聚焦在按钮处，故做此修复。 */
+  @Override
+  public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    final boolean b = super.mouseClicked(mouseX, mouseY, button);
+    setFocused(textFieldListScreen);
+    return b;
   }
 
   /**
@@ -372,6 +379,7 @@ public class SignBlockEditScreen extends Screen {
     }
     textContextsEditing.remove(removedTextContext);
     contextToWidgetBiMap.remove(removedTextContext);
+    placeHolder.visible = textFieldListScreen.children().size() == 0;
     changed = true;
   }
 
@@ -411,112 +419,30 @@ public class SignBlockEditScreen extends Screen {
       finishEditing();
     }
   }
-  /** 用于处理浮点数的按钮。按下鼠标时增大，但是按住 shift 则会减小。滚动鼠标滚轮也会减小。 */
-  @Environment(EnvType.CLIENT)
-  public static class FloatButtonWidget extends ButtonWidget {
-    private final Object2FloatFunction<FloatButtonWidget> valueGetter;
-    private final FloatConsumer valueSetter;
-    public Float2ObjectFunction<Text> messageSupplier;
-    /** 按钮的步长，默认为1。 */
-    public float step = 1;
-    /** 按钮当前的最小值。若低于最小值，则从最大值开始循环，但是如果没有最大值时除外。 */
-    public float min = Float.NEGATIVE_INFINITY;
-    /** 按钮当前的最大值。若高于最大值，则从最小值开始循环，但是如果没有最小值时除外。 */
-    public float max = Float.POSITIVE_INFINITY;
-    /** 按钮的默认值。可以按鼠标中键或者按住 Alt + Shift 点击以恢复。 */
-    public float defaultValue = 0;
 
-    public FloatButtonWidget(
-        int x,
-        int y,
-        int width,
-        int height,
-        Float2ObjectFunction<Text> messageSupplier,
-        Object2FloatFunction<FloatButtonWidget> valueGetter,
-        FloatConsumer valueSetter,
-        PressAction onPress) {
-      super(
-          x,
-          y,
-          width,
-          height,
-          messageSupplier.get(0),
-          onPress,
-          (a, b, c, d) -> new TranslatableText("message.mishanguc.text_field.tooltip"));
-      this.messageSupplier = messageSupplier;
-      this.valueGetter = valueGetter;
-      this.valueSetter = valueSetter;
-    }
-
-    public float getValue() {
-      return valueGetter.getFloat(this);
-    }
-
-    /** 设置该按钮的值。会受到最小值和最大值的限制。 */
-    public void setValue(float value) {
-      if (value < min) {
-        if (Float.isFinite(max)) {
-          value = value + (max - min); // 从最大值开始向下循环。
-        } else {
-          value = min; // 封底为最小值。
-        }
-      } else if (value > max) {
-        if (Float.isFinite(min)) {
-          value = value - (max - min); // 从最小值开始向上循环。
-        } else {
-          value = max; // 封顶为最大值。
-        }
-      }
-      valueSetter.accept(value);
-      setMessage(messageSupplier.get(value));
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-      final boolean b = super.mouseClicked(mouseX, mouseY, button);
-      if (this.active && this.visible && clicked(mouseX, mouseY)) {
-        switch (button) {
-          case 0: // 这种情况下直接采用了 onPress，所以直接略。
-          case 1:
-            if (hasAltDown() && hasShiftDown()) {
-              setValue(defaultValue);
-            } else {
-              setValue(
-                  getValue()
-                      + (hasShiftDown() || button == 1 ? -1 : 1)
-                          * step
-                          * (hasAltDown() ? 0.125f : 1));
-            }
-            return true;
-          case 2:
-            setValue(defaultValue);
-            return true;
-          default:
-        }
-      }
-      return b;
-    }
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-      setValue((float) (getValue() + amount * step));
-      super.mouseScrolled(mouseX, mouseY, amount);
-      return true;
-    }
-
-    @Override
-    public Text getMessage() {
-      return messageSupplier.get(getValue());
-    }
+  @Override
+  public void setFocused(@Nullable Element focused) {
+    super.setFocused(focused);
   }
 
+  /** 文本框列表的屏幕。每个列表项都是一个文本框（实际上就是把 {@link TextFieldWidget} 包装成了 {@link Entry}。 */
   public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Entry> {
     public TextFieldListScreen(
         MinecraftClient client, int width, int height, int top, int bottom, int itemHeight) {
       super(client, width, height, top, bottom, itemHeight);
       this.method_31322(false);
       this.setRenderHeader(false, 0);
-      //      this.method_31323(false);
+    }
+
+    /**
+     * 如果该对象没有被选中，则里面一定没有文本框被选中。
+     *
+     * @see Entry#isFocused()
+     */
+    @Nullable
+    @Override
+    public Entry getFocused() {
+      return SignBlockEditScreen.this.getFocused() == this ? super.getFocused() : null;
     }
 
     @Override
@@ -533,9 +459,17 @@ public class SignBlockEditScreen extends Screen {
       if (focused instanceof Entry) {
         SignBlockEditScreen.this.focusedTextField = ((Entry) focused).textFieldWidget;
         focusedTextContext = contextToWidgetBiMap.inverse().get(((Entry) focused).textFieldWidget);
+      } else if (focused == null) {
+        focusedTextField = null;
+        focusedTextContext = null;
       }
     }
 
+    /**
+     * {@link TextFieldListScreen} 中的项。由于 {@link TextFieldWidget} 不是 {@link EntryListWidget.Entry}
+     * 的子类，所以对该类进行了包装。<br>
+     * 请看清楚，本类是内部类的内部类，且不是静态内部类。
+     */
     public class Entry extends EntryListWidget.Entry<Entry> {
       public final TextFieldWidget textFieldWidget;
 
@@ -545,10 +479,12 @@ public class SignBlockEditScreen extends Screen {
 
       @Override
       public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (!(o instanceof Entry)) return false;
-
+        if (this == o) {
+          return true;
+        }
+        if (!(o instanceof Entry)) {
+          return false;
+        }
         Entry entry = (Entry) o;
 
         return new EqualsBuilder().append(textFieldWidget, entry.textFieldWidget).isEquals();
@@ -634,4 +570,21 @@ public class SignBlockEditScreen extends Screen {
       }
     }
   }
+  /** 没有添加文本时，显示的一条“点击此处添加文本”的消息。文本添加后，该按钮将消失。 */
+  public final ButtonWidget placeHolder =
+      new ButtonWidget(
+          0,
+          30,
+          width,
+          15,
+          new TranslatableText("message.mishanguc.add_first_text"),
+          button -> {
+            addTextField(0, null);
+            setFocused(textFieldListScreen);
+            textFieldListScreen.setFocused(textFieldListScreen.children().get(0));
+          }) {
+        @Override
+        public void drawTexture(
+            MatrixStack matrices, int x, int y, int u, int v, int width, int height) {}
+      };
 }

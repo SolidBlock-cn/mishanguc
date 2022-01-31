@@ -56,6 +56,16 @@ public class TextContext implements Cloneable {
   /** 文本大小 */
   public float size = 8;
 
+  @Override
+  public boolean equals(Object o) {
+    return super.equals(o);
+  }
+
+  @Override
+  public int hashCode() {
+    return super.hashCode();
+  }
+
   /**
    * 从一个 NBT 复合标签中读取数据，写入当前的 textContext 中。
    *

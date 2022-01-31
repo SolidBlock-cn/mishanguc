@@ -193,5 +193,6 @@
   "message.mishanguc.scaleY": "Y Scale:%s",
   "message.mishanguc.scaleZ": "Z Scale:%s",
   "message.mishanguc.text_field": "Text Field",
-  "message.mishanguc.text_field.tooltip": "Click mouse to add, hold Shift to decrease, or adjust with mouse scroll."
+  "message.mishanguc.text_field.tooltip": "Click mouse to add, hold Shift to decrease, or adjust with mouse scroll.",
+  "message.mishanguc.add_first_text": "Click here to add first text!"
 }
