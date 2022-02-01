@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc;
 
 import net.minecraft.block.Block;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -64,5 +65,20 @@ public class MishangUtils {
       }
     }
     return map;
+  }
+
+  /**
+   * 根据 signColor 返回颜色值。
+   *
+   * @param signColor 对应的告示牌颜色（整数）。
+   * @return 颜色枚举对象，可能为 null。
+   */
+  public static @Nullable DyeColor colorBySignColor(int signColor) {
+    for (DyeColor color : DyeColor.values()) {
+      if (color.getSignColor() == signColor) {
+        return color;
+      }
+    }
+    return null;
   }
 }

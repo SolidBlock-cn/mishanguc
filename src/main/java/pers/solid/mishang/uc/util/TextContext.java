@@ -117,7 +117,7 @@ public class TextContext implements Cloneable {
     if (scaleY == 0) {
       scaleY = 1;
     }
-    size = nbt.contains("size", 99) ? nbt.getInt("size") : size;
+    size = nbt.contains("size", 99) ? nbt.getFloat("size") : size;
     bold = nbt.getBoolean("bold");
     italic = nbt.getBoolean("italic");
     underline = nbt.getBoolean("underline");
@@ -265,6 +265,7 @@ public class TextContext implements Cloneable {
     nbt.putInt("color", color);
     putBooleanParam(nbt, "shadow", shadow);
     putBooleanParam(nbt, "seeThrough", seeThrough);
+    nbt.putFloat("size", size);
     if (offsetX != 0) {
       nbt.putFloat("offsetX", offsetX);
     } else {
@@ -280,12 +281,12 @@ public class TextContext implements Cloneable {
     } else {
       nbt.remove("offsetZ");
     }
-    if (scaleX != 0) {
+    if (scaleX != 1) {
       nbt.putFloat("scaleX", scaleX);
     } else {
       nbt.remove("scaleX");
     }
-    if (scaleY != 0) {
+    if (scaleY != 1) {
       nbt.putFloat("scaleY", scaleY);
     } else {
       nbt.remove("scaleY");

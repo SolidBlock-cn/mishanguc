@@ -10,29 +10,19 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
-/**
- * 用于处理浮点数的按钮。按下鼠标时增大，但是按住 shift 则会减小。滚动鼠标滚轮也会减小。
- */
+/** 用于处理浮点数的按钮。按下鼠标时增大，但是按住 shift 则会减小。滚动鼠标滚轮也会减小。 */
 @Environment(EnvType.CLIENT)
 public class FloatButtonWidget extends ButtonWidget {
   private final Object2FloatFunction<FloatButtonWidget> valueGetter;
   private final FloatConsumer valueSetter;
   public Float2ObjectFunction<Text> messageSupplier;
-  /**
-   * 按钮的步长，默认为1。
-   */
+  /** 按钮的步长，默认为1。 */
   public float step = 1;
-  /**
-   * 按钮当前的最小值。若低于最小值，则从最大值开始循环，但是如果没有最大值时除外。
-   */
+  /** 按钮当前的最小值。若低于最小值，则从最大值开始循环，但是如果没有最大值时除外。 */
   public float min = Float.NEGATIVE_INFINITY;
-  /**
-   * 按钮当前的最大值。若高于最大值，则从最小值开始循环，但是如果没有最小值时除外。
-   */
+  /** 按钮当前的最大值。若高于最大值，则从最小值开始循环，但是如果没有最小值时除外。 */
   public float max = Float.POSITIVE_INFINITY;
-  /**
-   * 按钮的默认值。可以按鼠标中键或者按住 Alt + Shift 点击以恢复。
-   */
+  /** 按钮的默认值。可以按鼠标中键或者按住 Alt + Shift 点击以恢复。 */
   public float defaultValue = 0;
 
   public FloatButtonWidget(
@@ -61,9 +51,7 @@ public class FloatButtonWidget extends ButtonWidget {
     return valueGetter.getFloat(this);
   }
 
-  /**
-   * 设置该按钮的值。会受到最小值和最大值的限制。
-   */
+  /** 设置该按钮的值。会受到最小值和最大值的限制。 */
   public void setValue(float value) {
     if (value < min) {
       if (Float.isFinite(max)) {
@@ -95,8 +83,8 @@ public class FloatButtonWidget extends ButtonWidget {
             setValue(
                 getValue()
                     + (Screen.hasShiftDown() || button == 1 ? -1 : 1)
-                    * step
-                    * (Screen.hasAltDown() ? 0.125f : 1));
+                        * step
+                        * (Screen.hasAltDown() ? 0.125f : 1));
           }
           return true;
         case 2:
@@ -113,7 +101,10 @@ public class FloatButtonWidget extends ButtonWidget {
     setValue(
         (float)
             (getValue()
-                + amount * (Screen.hasShiftDown() ? -1 : 1) * step * (Screen.hasAltDown() ? 0.125f : 1)));
+                + amount
+                    * (Screen.hasShiftDown() ? 1 : -1)
+                    * step
+                    * (Screen.hasAltDown() ? 0.125f : 1)));
     super.mouseScrolled(mouseX, mouseY, amount);
     return true;
   }

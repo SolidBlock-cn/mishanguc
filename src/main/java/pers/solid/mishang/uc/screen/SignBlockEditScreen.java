@@ -22,6 +22,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -30,6 +31,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.util.TextContext;
 import pers.solid.mishang.uc.util.VerticalAlign;
@@ -52,7 +54,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class SignBlockEditScreen extends Screen {
   public final Direction direction;
-  public List<TextContext> textContextsEditing = new ArrayList<>();
+  public List<TextContext> textContextsEditing;
   @Deprecated public final List<TextFieldWidget> textFields = new ArrayList<>();
   public final BlockPos blockPos;
   public TextFieldListScreen textFieldListScreen;
@@ -186,7 +188,7 @@ public class SignBlockEditScreen extends Screen {
       new FloatButtonWidget(
           this.width / 2 - 10,
           this.height - 50,
-          50,
+          60,
           20,
           x -> new TranslatableText("message.mishanguc.offsetX", x),
           button -> focusedTextContext != null ? focusedTextContext.offsetX : 0,
@@ -201,7 +203,7 @@ public class SignBlockEditScreen extends Screen {
       new FloatButtonWidget(
           this.width / 2 + 40,
           this.height - 50,
-          50,
+          60,
           20,
           x -> new TranslatableText("message.mishanguc.offsetY", x),
           button -> focusedTextContext != null ? focusedTextContext.offsetY : 0,
@@ -233,7 +235,7 @@ public class SignBlockEditScreen extends Screen {
       new FloatButtonWidget(
           this.width / 2 + 90,
           this.height - 50,
-          50,
+          60,
           20,
           x -> new TranslatableText("message.mishanguc.scaleX", x),
           button -> focusedTextContext != null ? focusedTextContext.scaleX : 1,
@@ -248,7 +250,7 @@ public class SignBlockEditScreen extends Screen {
       new FloatButtonWidget(
           this.width / 2 + 140,
           this.height - 50,
-          50,
+          60,
           20,
           x -> new TranslatableText("message.mishanguc.scaleY", x),
           button -> focusedTextContext != null ? focusedTextContext.scaleY : 1,
@@ -259,13 +261,58 @@ public class SignBlockEditScreen extends Screen {
           },
           (button) -> {});
 
+  public final FloatButtonWidget colorButton =
+      new FloatButtonWidget(
+          0,
+          0,
+          60,
+          20,
+          colorId -> {
+            if (colorId == -1) {
+              return new TranslatableText("message.mishanguc.color");
+            } else if (colorId == -2 && focusedTextContext != null) {
+              return new TranslatableText(
+                  "message.mishanguc.color.param", String.format("#%h", focusedTextContext.color));
+            }
+            final DyeColor dyeColor = DyeColor.byId((int) colorId);
+            return new TranslatableText(
+                "message.mishanguc.color.param",
+                new TranslatableText("color.minecraft." + dyeColor.asString()));
+          },
+          button -> {
+            if (focusedTextContext == null) {
+              ((FloatButtonWidget) button).active = false;
+              return -1;
+            }
+            final DyeColor dyeColor = MishangUtils.colorBySignColor(focusedTextContext.color);
+            if (dyeColor == null) {
+              ((FloatButtonWidget) button).active = false;
+              return -2;
+            } else {
+              ((FloatButtonWidget) button).active = true;
+              return dyeColor.getId();
+            }
+          },
+          colorId -> {
+            if (focusedTextContext != null) {
+              focusedTextContext.color = DyeColor.byId((int) colorId).getSignColor();
+            }
+          },
+          (button) -> {});
+
+  {
+    colorButton.min = -0.5f;
+    colorButton.max = DyeColor.values().length - 0.5f;
+  }
+
+  /** 重排按钮 */
   public final ButtonWidget rearrangeButton =
       new ButtonWidget(
           this.width / 2 + 190,
           this.height - 50,
-          100,
+          50,
           20,
-          new TranslatableText("Rearrange"),
+          new TranslatableText("message.mishanguc.rearrange"),
           button -> {
             Object2FloatMap<VerticalAlign> stackHeights =
                 new Object2FloatOpenHashMap<>(VerticalAlign.values().length);
@@ -273,9 +320,9 @@ public class SignBlockEditScreen extends Screen {
               if (!textContext.absolute) {
                 final float currentStackSize =
                     stackHeights.getOrDefault(textContext.verticalAlign, 0f);
-                textContext.offsetY = currentStackSize;
+                textContext.offsetY = currentStackSize + textContext.size * 9 / 8 / 4;
                 stackHeights.put(
-                    textContext.verticalAlign, currentStackSize + textContext.size / 2);
+                    textContext.verticalAlign, currentStackSize + textContext.size * 9 / 8 / 2);
               }
             }
             for (TextContext textContext : textContextsEditing) {
@@ -292,7 +339,9 @@ public class SignBlockEditScreen extends Screen {
                 }
               }
             }
-          });
+          },
+          (a, b, c, d) -> new TranslatableText("message.mishanguc.rearrange.tooltip"));
+
   /** 是否发生了改变。如果改变了，则提交时发送完整内容，否则发送空字符串表示未做更改。 */
   public boolean changed = false;
 
@@ -308,11 +357,11 @@ public class SignBlockEditScreen extends Screen {
 
     // 调整按钮配置
     sizeButton.min = 0;
-    sizeButton.step = 0.5f;
+    sizeButton.step = -0.5f;
     offsetXButton.step = 0.5f;
     offsetYButton.step = 0.5f;
-    scaleXButton.step = 0.125f;
-    scaleYButton.step = 0.125f;
+    scaleXButton.step = -0.125f;
+    scaleYButton.step = -0.125f;
   }
 
   /** 初始化，对屏幕进行配置。 */
@@ -342,6 +391,8 @@ public class SignBlockEditScreen extends Screen {
 
     this.addButton(scaleXButton);
     this.addButton(scaleYButton);
+
+    this.addButton(colorButton);
     this.addButton(rearrangeButton);
     this.addButton(finishButton);
     // 添加文本框
@@ -363,6 +414,7 @@ public class SignBlockEditScreen extends Screen {
       sizeButton,
       offsetXButton,
       offsetYButton,
+      colorButton,
       rearrangeButton
     };
     int belowToolboxWidth = 0;
@@ -376,7 +428,7 @@ public class SignBlockEditScreen extends Screen {
       widget.y = height - 50;
     }
     addTextButton.x = width / 2 - 220;
-    removeTextButton.x = width / 2 - 80;
+    removeTextButton.x = width / 2 + 20;
     finishButton.x = width / 2 - 100;
     finishButton.y = height - 30;
   }
