@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
+import pers.solid.mishang.uc.util.HorizontalAlign;
 import pers.solid.mishang.uc.util.TextContext;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
@@ -213,6 +214,21 @@ public class SignBlockEditScreen extends Screen {
             }
           },
           (button) -> {});
+  /** Z偏移 */
+  public final FloatButtonWidget offsetZButton =
+      new FloatButtonWidget(
+          this.width / 2 + 40,
+          this.height - 50,
+          60,
+          20,
+          x -> new TranslatableText("message.mishanguc.offsetZ", x),
+          button -> focusedTextContext != null ? focusedTextContext.offsetZ : 0,
+          value -> {
+            if (focusedTextContext != null) {
+              focusedTextContext.offsetZ = value;
+            }
+          },
+          (button) -> {});
   /** 移除文本按钮 */
   public final ButtonWidget removeTextButton =
       new ButtonWidget(
@@ -261,6 +277,7 @@ public class SignBlockEditScreen extends Screen {
           },
           (button) -> {});
 
+  /** 颜色按钮 */
   public final FloatButtonWidget colorButton =
       new FloatButtonWidget(
           0,
@@ -342,6 +359,93 @@ public class SignBlockEditScreen extends Screen {
           },
           (a, b, c, d) -> new TranslatableText("message.mishanguc.rearrange.tooltip"));
 
+  /** 水平对齐方式 */
+  public final FloatButtonWidget horizontalAlignButton =
+      new FloatButtonWidget(
+          0,
+          0,
+          60,
+          20,
+          f ->
+              f != -1
+                  ? new TranslatableText(
+                      "message.mishanguc.horizontal_align_param",
+                      HorizontalAlign.values()[(int) f].getName())
+                  : new TranslatableText("message.mishanguc.horizontal_align"),
+          b -> focusedTextContext != null ? focusedTextContext.horizontalAlign.ordinal() : -1,
+          f -> {
+            if (focusedTextContext != null) {
+              focusedTextContext.horizontalAlign = HorizontalAlign.values()[(int) f];
+            }
+          },
+          (b) -> {});
+
+  {
+    horizontalAlignButton.min = -0.5f;
+    horizontalAlignButton.max = 2.5f;
+  }
+
+  /** 垂直对齐方式 */
+  public final FloatButtonWidget verticalAlignButton =
+      new FloatButtonWidget(
+          0,
+          0,
+          60,
+          20,
+          f ->
+              f != -1
+                  ? new TranslatableText(
+                      "message.mishanguc.vertical_align_param",
+                      VerticalAlign.values()[(int) f].getName())
+                  : new TranslatableText("message.mishanguc.vertical_align"),
+          b -> focusedTextContext != null ? focusedTextContext.verticalAlign.ordinal() : -1,
+          f -> {
+            if (focusedTextContext != null) {
+              focusedTextContext.verticalAlign = VerticalAlign.values()[(int) f];
+            }
+          },
+          (b) -> {});
+
+  {
+    verticalAlignButton.min = -0.5f;
+    verticalAlignButton.max = 2.5f;
+  }
+  /** 切换高级模式为开或关。 */
+  public final ButtonWidget switchAdvanceButton =
+      new ButtonWidget(
+          0, 0, 30, 20, new TranslatableText("message.mishanguc.advanced"), b -> switchAdvance());
+
+  private void switchAdvance() {
+    advance = !advance;
+    init();
+  }
+
+  private final ButtonWidget[] toolbox1 =
+      new ButtonWidget[] {
+        boldButton,
+        italicButton,
+        underlineButton,
+        strikethroughButton,
+        obfuscatedButton,
+        shadeButton,
+        sizeButton,
+        offsetXButton,
+        offsetYButton,
+        colorButton,
+        rearrangeButton,
+        switchAdvanceButton
+      };
+
+  private final ButtonWidget[] toolbox2 =
+      new ButtonWidget[] {
+        offsetZButton,
+        scaleXButton,
+        scaleYButton,
+        horizontalAlignButton,
+        verticalAlignButton,
+        switchAdvanceButton
+      };
+
   /** 是否发生了改变。如果改变了，则提交时发送完整内容，否则发送空字符串表示未做更改。 */
   public boolean changed = false;
 
@@ -363,6 +467,14 @@ public class SignBlockEditScreen extends Screen {
     scaleXButton.step = -0.125f;
     scaleYButton.step = -0.125f;
   }
+
+  /**
+   * 是否为高级模式。若为高级模式，则显示高级模式的按钮，不显示非高级模式的按钮。
+   *
+   * @see #switchAdvanceButton
+   * @see #switchAdvance
+   */
+  private boolean advance = false;
 
   /** 初始化，对屏幕进行配置。 */
   @SuppressWarnings({"AlibabaLowerCamelCaseVariableNaming", "AlibabaMethodTooLong"})
@@ -391,7 +503,10 @@ public class SignBlockEditScreen extends Screen {
 
     this.addButton(scaleXButton);
     this.addButton(scaleYButton);
-
+    this.addButton(offsetZButton);
+    this.addButton(horizontalAlignButton);
+    this.addButton(verticalAlignButton);
+    this.addButton(switchAdvanceButton);
     this.addButton(colorButton);
     this.addButton(rearrangeButton);
     this.addButton(finishButton);
@@ -403,27 +518,18 @@ public class SignBlockEditScreen extends Screen {
       addTextField(i, textContext);
     }
 
+    for (ButtonWidget widget : advance ? toolbox1 : toolbox2) {
+      widget.visible = false;
+    }
     // 调整按钮位置
-    ButtonWidget[] belowToolbox = {
-      boldButton,
-      italicButton,
-      underlineButton,
-      strikethroughButton,
-      obfuscatedButton,
-      shadeButton,
-      sizeButton,
-      offsetXButton,
-      offsetYButton,
-      colorButton,
-      rearrangeButton
-    };
     int belowToolboxWidth = 0;
-    for (ButtonWidget widget : belowToolbox) {
+    for (ButtonWidget widget : advance ? toolbox2 : toolbox1) {
       final int width = widget.getWidth();
       widget.x = belowToolboxWidth;
       belowToolboxWidth += width;
     }
-    for (ButtonWidget widget : belowToolbox) {
+    for (ButtonWidget widget : advance ? toolbox2 : toolbox1) {
+      widget.visible = true;
       widget.x += width / 2 - belowToolboxWidth / 2;
       widget.y = height - 50;
     }

@@ -176,5 +176,16 @@
   "message.mishanguc.rearrange": "重排",
   "message.mishanguc.rearrange.tooltip": "自动调整内容的偏移。",
   "message.mishanguc.color": "颜色",
-  "message.mishanguc.color.param": "颜色：%s"
+  "message.mishanguc.color.param": "颜色：%s",
+  "message.mishanguc.horizontal_align": "水平对齐",
+  "message.mishanguc.horizontal_align_param": "水平对齐：%s",
+  "horizontal_align.mishanguc.left": "左",
+  "horizontal_align.mishanguc.center": "中",
+  "horizontal_align.mishanguc.right": "右",
+  "message.mishanguc.vertical_align": "垂直对齐",
+  "message.mishanguc.vertical_align_param": "垂直对齐：%s",
+  "vertical_align.mishanguc.top": "顶",
+  "vertical_align.mishanguc.middle": "中",
+  "vertical_align.mishanguc.bottom": "底",
+  "message.mishanguc.advanced": "高级"
 }

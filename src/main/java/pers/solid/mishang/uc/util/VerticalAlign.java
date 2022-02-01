@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.util;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.StringIdentifiable;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,7 +12,7 @@ public enum VerticalAlign implements StringIdentifiable {
   MIDDLE,
   BOTTOM;
   private static final BiMap<VerticalAlign, String> M =
-          ImmutableBiMap.of(TOP, "top", MIDDLE, "middle", BOTTOM, "bottom");
+      ImmutableBiMap.of(TOP, "top", MIDDLE, "middle", BOTTOM, "bottom");
 
   @Override
   public String asString() {
@@ -20,5 +21,9 @@ public enum VerticalAlign implements StringIdentifiable {
 
   public static @Nullable VerticalAlign byName(String name) {
     return M.inverse().get(name);
+  }
+
+  public TranslatableText getName() {
+    return new TranslatableText("vertical_align.mishanguc." + asString());
   }
 }

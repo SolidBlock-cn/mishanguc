@@ -198,5 +198,16 @@
   "message.mishanguc.rearrange.tooltip": "Automatically adjust offsets of contents.",
   "message.mishanguc.add_first_text": "Click here to add first text!",
   "message.mishanguc.color": "Color",
-  "message.mishanguc.color.param": "Color: %s"
+  "message.mishanguc.color.param": "Color: %s",
+  "message.mishanguc.horizontal_align": "H-align",
+  "message.mishanguc.horizontal_align_param": "H-align: %s",
+  "horizontal_align.mishanguc.left": "Left",
+  "horizontal_align.mishanguc.center": "Center",
+  "horizontal_align.mishanguc.right": "Right",
+  "message.mishanguc.vertical_align": "V-align",
+  "message.mishanguc.vertical_align_param": "V-align: %s",
+  "vertical_align.mishanguc.top": "Top",
+  "vertical_align.mishanguc.middle": "Middle",
+  "vertical_align.mishanguc.bottom": "Bottom",
+  "message.mishanguc.advanced": "Advanced"
 }
