@@ -93,14 +93,11 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   public VoxelShape getOutlineShape(
       BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     final Direction.Axis axis = state.get(AXIS);
-    switch (axis) {
-      case X:
-        return SHAPE_X;
-      case Z:
-        return SHAPE_Z;
-      default:
-        return VoxelShapes.empty();
-    }
+    return switch (axis) {
+      case X -> SHAPE_X;
+      case Z -> SHAPE_Z;
+      default -> VoxelShapes.empty();
+    };
   }
 
   @SuppressWarnings("deprecation")
@@ -125,17 +122,11 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     }
     final @Nullable BooleanProperty property;
     final Direction.Axis axis = state.get(AXIS);
-    switch (axis) {
-      case X:
-        property =
-            direction == Direction.SOUTH ? LEFT : direction == Direction.NORTH ? RIGHT : null;
-        break;
-      case Z:
-        property = direction == Direction.WEST ? LEFT : direction == Direction.EAST ? RIGHT : null;
-        break;
-      default:
-        property = null;
-    }
+    property = switch (axis) {
+      case X -> direction == Direction.SOUTH ? LEFT : direction == Direction.NORTH ? RIGHT : null;
+      case Z -> direction == Direction.WEST ? LEFT : direction == Direction.EAST ? RIGHT : null;
+      default -> null;
+    };
     if (property != null) {
       state =
           state.with(
@@ -189,10 +180,9 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       // 在服务端触发打开告示牌编辑界面
       final BlockEntity blockEntity = world.getBlockEntity(pos);
       // 若方块实体不对应，或者编辑的这一侧不可编辑，则略过。
-      if (!(blockEntity instanceof HungSignBlockEntity) || !state.get(AXIS).test(hit.getSide())) {
+      if (!(blockEntity instanceof final HungSignBlockEntity hungSignBlockEntity) || !state.get(AXIS).test(hit.getSide())) {
         return ActionResult.PASS;
       }
-      final HungSignBlockEntity hungSignBlockEntity = (HungSignBlockEntity) blockEntity;
       if (hungSignBlockEntity.editor != null
           && hungSignBlockEntity.editor.isSpectator()
           && !hungSignBlockEntity.editor.isLiving()

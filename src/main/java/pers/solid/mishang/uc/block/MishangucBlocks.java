@@ -98,7 +98,7 @@ public final class MishangucBlocks {
   public static final TextPadBlock SIMPLE_BLACK_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.BLACK);
 
   public static final Map<DyeColor, HungSignBlock> HUNG_CONCRETE_GLOWING_SIGNS =
-      new EnumMap<DyeColor, HungSignBlock>(DyeColor.class) {
+      new EnumMap<>(DyeColor.class) {
         {
           for (DyeColor color : DyeColor.values()) {
             final Block block =
@@ -108,7 +108,7 @@ public final class MishangucBlocks {
         }
       };
   public static final Map<DyeColor, HungSignBlock> HUNG_TERRACOTTA_GLOWING_SIGNS =
-      new EnumMap<DyeColor, HungSignBlock>(DyeColor.class) {
+      new EnumMap<>(DyeColor.class) {
         {
           for (DyeColor color : DyeColor.values()) {
             final Block block =
@@ -673,19 +673,12 @@ public final class MishangucBlocks {
             Registry.register(Registry.BLOCK, new Identifier("mishanguc", path), value);
             // 如果找到InGroup注解，则将其放入该组，后面的所有方块也一并放到该组，直到再次发现该注解为止。
             if (field.isAnnotationPresent(InGroup.class)) {
-              switch (field.getAnnotation(InGroup.class).value()) {
-                case "roads":
-                  group = ModItemGroups.ROADS;
-                  break;
-                case "lights":
-                  group = ModItemGroups.LIGHTS;
-                  break;
-                case "signs":
-                  group = ModItemGroups.SIGNS;
-                  break;
-                default:
-                  group = null;
-              }
+              group = switch (field.getAnnotation(InGroup.class).value()) {
+                case "roads" -> ModItemGroups.ROADS;
+                case "lights" -> ModItemGroups.LIGHTS;
+                case "signs" -> ModItemGroups.SIGNS;
+                default -> null;
+              };
             }
             BlockItem item = new NamedBlockItem(value, new FabricItemSettings().group(group));
             Registry.register(Registry.ITEM, new Identifier("mishanguc", path), item);

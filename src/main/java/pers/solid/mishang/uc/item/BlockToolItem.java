@@ -20,6 +20,8 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 
+import java.util.Objects;
+
 public abstract class BlockToolItem extends Item implements RendersBlockOutline {
   /**
    * 该物品是否包括流体。<br>
@@ -77,11 +79,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
 
   public boolean includesFluid(ItemStack stack, boolean def) {
     final @Nullable Boolean includesFluid = this.includesFluid(stack);
-    if (includesFluid == null) {
-      return def;
-    } else {
-      return includesFluid;
-    }
+    return Objects.requireNonNullElse(includesFluid, def);
   }
 
   /**

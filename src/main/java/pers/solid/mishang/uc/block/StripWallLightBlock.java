@@ -25,18 +25,15 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
     if (facing != blockState.get(FACING) || direction.getAxis() == facing.getAxis()) {
       return false;
     }
-    switch (stripType) {
-      case VERTICAL:
-        return facing.getAxis() == Direction.Axis.Y
-            ? direction.getAxis() == Direction.Axis.Z
-            : direction.getAxis() == Direction.Axis.Y;
-      case HORIZONTAL:
-        return facing.getAxis() == Direction.Axis.Y
-            ? direction.getAxis() == Direction.Axis.X
-            : direction.getAxis() != Direction.Axis.Y;
-      default:
-        throw new IllegalStateException("Unexpected value: " + stripType);
-    }
+    return switch (stripType) {
+      case VERTICAL -> facing.getAxis() == Direction.Axis.Y
+          ? direction.getAxis() == Direction.Axis.Z
+          : direction.getAxis() == Direction.Axis.Y;
+      case HORIZONTAL -> facing.getAxis() == Direction.Axis.Y
+          ? direction.getAxis() == Direction.Axis.X
+          : direction.getAxis() != Direction.Axis.Y;
+      default -> throw new IllegalStateException("Unexpected value: " + stripType);
+    };
   }
 
   public enum StripType implements StringIdentifiable {
@@ -47,25 +44,19 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
 
     @Override
     public String asString() {
-      switch (this) {
-        case HORIZONTAL:
-          return "horizontal";
-        case VERTICAL:
-          return "vertical";
-        default:
-          return null;
-      }
+      return switch (this) {
+        case HORIZONTAL -> "horizontal";
+        case VERTICAL -> "vertical";
+        default -> null;
+      };
     }
 
     public StripType another() {
-      switch (this) {
-        case HORIZONTAL:
-          return VERTICAL;
-        case VERTICAL:
-          return HORIZONTAL;
-        default:
-          return this;
-      }
+      return switch (this) {
+        case HORIZONTAL -> VERTICAL;
+        case VERTICAL -> HORIZONTAL;
+        default -> this;
+      };
     }
   }
 

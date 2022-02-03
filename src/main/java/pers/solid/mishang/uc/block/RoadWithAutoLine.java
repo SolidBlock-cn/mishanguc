@@ -200,16 +200,11 @@ public interface RoadWithAutoLine extends Road {
                 Direction direction2 = direction.rotateYClockwise();
                 Block block;
                 if (lineColor == LineColor.WHITE) {
-                  switch (type) {
-                    case BEVEL:
-                      block = MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_BEVEL_ANGLE_LINE;
-                      break;
-                    case RIGHT_ANGLE:
-                      block = MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_RIGHT_ANGLE_LINE;
-                      break;
-                    default:
-                      throw new IllegalStateException("Unknown angle type: " + type);
-                  }
+                  block = switch (type) {
+                    case BEVEL -> MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_BEVEL_ANGLE_LINE;
+                    case RIGHT_ANGLE -> MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_RIGHT_ANGLE_LINE;
+                    default -> throw new IllegalStateException("Unknown angle type: " + type);
+                  };
                 } else {
                   block = null;
                 }
@@ -340,16 +335,11 @@ public interface RoadWithAutoLine extends Road {
                 Direction direction2 = direction.rotateYClockwise();
                 Block block;
                 if (lineColor == LineColor.WHITE) {
-                  switch (type) {
-                    case BEVEL:
-                      block = MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_BEVEL_ANGLE_LINE;
-                      break;
-                    case RIGHT_ANGLE:
-                      block = MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE;
-                      break;
-                    default:
-                      throw new IllegalStateException("Unknown angle type: " + type);
-                  }
+                  block = switch (type) {
+                    case BEVEL -> MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_BEVEL_ANGLE_LINE;
+                    case RIGHT_ANGLE -> MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE;
+                    default -> throw new IllegalStateException("Unknown angle type: " + type);
+                  };
                 } else {
                   block = null;
                 }

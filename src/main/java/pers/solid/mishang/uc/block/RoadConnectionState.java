@@ -67,28 +67,18 @@ public class RoadConnectionState {
   }
 
   public static MutableText text(Probability probability) {
-    return new TranslatableText("roadConnectionState.probability." + probability.asString()).setStyle(Style.EMPTY.withColor(Util.make(() -> {
-      switch (probability) {
-        case NOT_CONNECTED_TO:
-          return Formatting.RED;
-        case CONNECTED_TO:
-          return Formatting.GREEN;
-        default:
-          return null;
-      }
+    return new TranslatableText("roadConnectionState.probability." + probability.asString()).setStyle(Style.EMPTY.withColor(Util.make(() -> switch (probability) {
+      case NOT_CONNECTED_TO -> Formatting.RED;
+      case CONNECTED_TO -> Formatting.GREEN;
+      default -> null;
     })));
   }
 
   public static MutableText text(LineColor lineColor) {
-    return new TranslatableText("roadConnectionState.lineColor." + lineColor.asString()).setStyle(Style.EMPTY.withColor(Util.make(() -> {
-      switch (lineColor) {
-        case WHITE:
-          return Formatting.WHITE;
-        case YELLOW:
-          return Formatting.YELLOW;
-        default:
-          return Formatting.GRAY;
-      }
+    return new TranslatableText("roadConnectionState.lineColor." + lineColor.asString()).setStyle(Style.EMPTY.withColor(Util.make(() -> switch (lineColor) {
+      case WHITE -> Formatting.WHITE;
+      case YELLOW -> Formatting.YELLOW;
+      default -> Formatting.GRAY;
     })));
   }
 

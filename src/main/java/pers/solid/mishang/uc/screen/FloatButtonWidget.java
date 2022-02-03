@@ -78,24 +78,26 @@ public class FloatButtonWidget extends ButtonWidget {
   public boolean mouseClicked(double mouseX, double mouseY, int button) {
     final boolean b = super.mouseClicked(mouseX, mouseY, button);
     if (this.active && this.visible && clicked(mouseX, mouseY)) {
-      switch (button) {
-        case 0: // 这种情况下直接采用了 onPress，所以直接略。
-        case 1:
+      switch (button) { // 这种情况下直接采用了 onPress，所以直接略。
+        case 0, 1 -> {
           if (Screen.hasAltDown() && Screen.hasShiftDown()) {
             setValue(defaultValue);
           } else {
             setValue(
                 getValue()
                     + (Screen.hasShiftDown() || button == 1 ? -1 : 1)
-                        * step
-                        * (Screen.hasControlDown() ? 8 : 1)
-                        * (Screen.hasAltDown() ? 0.125f : 1));
+                    * step
+                    * (Screen.hasControlDown() ? 8 : 1)
+                    * (Screen.hasAltDown() ? 0.125f : 1));
           }
           return true;
-        case 2:
+        }
+        case 2 -> {
           setValue(defaultValue);
           return true;
-        default:
+        }
+        default -> {
+        }
       }
     }
     return b;

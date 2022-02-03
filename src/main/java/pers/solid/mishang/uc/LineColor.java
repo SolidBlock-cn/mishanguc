@@ -13,15 +13,11 @@ public enum LineColor implements StringIdentifiable {
 
   @Override
   public String asString() {
-    switch (this) {
-      case WHITE:
-        return "white";
-      case YELLOW:
-        return "yellow";
-      case UNKNOWN:
-        return "unknown";
-      default:
-        return "none";
-    }
+    return switch (this) {
+      case WHITE -> "white";
+      case YELLOW -> "yellow";
+      case UNKNOWN -> "unknown";
+      default -> "none";
+    };
   }
 }

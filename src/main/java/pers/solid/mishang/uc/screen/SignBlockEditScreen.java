@@ -346,16 +346,11 @@ public class SignBlockEditScreen extends Screen {
             for (TextContext textContext : textContextsEditing) {
               if (!textContext.absolute) {
                 switch (textContext.verticalAlign) {
-                  case MIDDLE:
-                    textContext.offsetY -=
-                        stackHeights.getOrDefault(textContext.verticalAlign, 0) / 2;
-                    break;
-                  case BOTTOM:
-                    textContext.offsetY -=
-                        textContextsEditing.get(textContextsEditing.size() - 1).size / 4 * 9 / 8;
-                    break;
-                  default:
-                    textContext.offsetY -= textContextsEditing.get(0).size / 4 * 9 / 8;
+                  case MIDDLE -> textContext.offsetY -=
+                      stackHeights.getOrDefault(textContext.verticalAlign, 0) / 2;
+                  case BOTTOM -> textContext.offsetY -=
+                      textContextsEditing.get(textContextsEditing.size() - 1).size / 4 * 9 / 8;
+                  default -> textContext.offsetY -= textContextsEditing.get(0).size / 4 * 9 / 8;
                 }
               }
             }
@@ -723,10 +718,9 @@ public class SignBlockEditScreen extends Screen {
         if (this == o) {
           return true;
         }
-        if (!(o instanceof Entry)) {
+        if (!(o instanceof Entry entry)) {
           return false;
         }
-        Entry entry = (Entry) o;
 
         return new EqualsBuilder().append(textFieldWidget, entry.textFieldWidget).isEquals();
       }

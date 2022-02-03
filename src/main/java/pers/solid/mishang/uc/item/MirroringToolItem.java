@@ -26,18 +26,11 @@ public class MirroringToolItem extends BlockToolItem {
   public ActionResult mirror(World world, BlockPos blockPos, Direction side) {
     final BlockState blockState = world.getBlockState(blockPos);
     final Direction.Axis axis = side.getAxis();
-    final BlockMirror mirror;
-    switch (axis) {
-      case X:
-        mirror = BlockMirror.FRONT_BACK;
-        break;
-      default:
-        mirror = BlockMirror.NONE;
-        break;
-      case Z:
-        mirror = BlockMirror.LEFT_RIGHT;
-        break;
-    }
+    final BlockMirror mirror = switch (axis) {
+      case X -> BlockMirror.FRONT_BACK;
+      default -> BlockMirror.NONE;
+      case Z -> BlockMirror.LEFT_RIGHT;
+    };
     world.setBlockState(blockPos, blockState.mirror(mirror));
     return ActionResult.SUCCESS;
   }

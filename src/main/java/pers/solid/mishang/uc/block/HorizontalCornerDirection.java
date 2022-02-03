@@ -95,34 +95,21 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
   }
 
   public HorizontalCornerDirection mirror(Direction direction) {
-    BlockMirror mirror;
-    switch (direction.getAxis()) {
-      case X:
-        mirror = BlockMirror.LEFT_RIGHT;
-        break;
-      case Z:
-        mirror = BlockMirror.FRONT_BACK;
-        break;
-      default:
-        mirror = BlockMirror.NONE;
-        break;
-    }
+    BlockMirror mirror = switch (direction.getAxis()) {
+      case X -> BlockMirror.LEFT_RIGHT;
+      case Z -> BlockMirror.FRONT_BACK;
+      default -> BlockMirror.NONE;
+    };
     return mirror(mirror);
   }
 
   public HorizontalCornerDirection rotate(BlockRotation rotation) {
-    switch (rotation) {
-      case NONE:
-        return this;
-      case CLOCKWISE_90:
-        return this.rotateYClockwise();
-      case COUNTERCLOCKWISE_90:
-        return this.rotateYCounterclockwise();
-      case CLOCKWISE_180:
-        return this.getOpposite();
-      default:
-        throw new IllegalStateException();
-    }
+    return switch (rotation) {
+      case NONE -> this;
+      case CLOCKWISE_90 -> this.rotateYClockwise();
+      case COUNTERCLOCKWISE_90 -> this.rotateYCounterclockwise();
+      case CLOCKWISE_180 -> this.getOpposite();
+    };
   }
 
   public HorizontalCornerDirection getOpposite() {

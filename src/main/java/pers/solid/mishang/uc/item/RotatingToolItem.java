@@ -49,9 +49,6 @@ public class RotatingToolItem extends BlockToolItem {
   private ActionResult rotateBlock(World world, BlockPos blockPos, BlockRotation rotation) {
     world.setBlockState(blockPos, world.getBlockState(blockPos).rotate(rotation));
     final BlockEntity blockEntity = world.getBlockEntity(blockPos);
-    //    if (blockEntity != null) {
-    //      blockEntity.rotate(rotation);
-    //    }
     return ActionResult.SUCCESS;
   }
 

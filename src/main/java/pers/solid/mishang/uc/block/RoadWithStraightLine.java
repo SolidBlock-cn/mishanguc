@@ -40,18 +40,12 @@ public interface RoadWithStraightLine extends Road {
   @Override
   default BlockState rotateRoad(BlockState state, BlockRotation rotation) {
     Direction.Axis axis = state.get(AXIS);
-    Direction.Axis rotatedAxis;
-    switch (rotation) {
-      case CLOCKWISE_90:
-      case COUNTERCLOCKWISE_90:
-        rotatedAxis =
-            axis == Direction.Axis.X
-                ? Direction.Axis.Z
-                : axis == Direction.Axis.Z ? Direction.Axis.X : axis;
-        break;
-      default:
-        rotatedAxis = axis;
-    }
+    Direction.Axis rotatedAxis = switch (rotation) {
+      case CLOCKWISE_90, COUNTERCLOCKWISE_90 -> axis == Direction.Axis.X
+          ? Direction.Axis.Z
+          : axis == Direction.Axis.Z ? Direction.Axis.X : axis;
+      default -> axis;
+    };
     return state.with(AXIS, rotatedAxis);
   }
 

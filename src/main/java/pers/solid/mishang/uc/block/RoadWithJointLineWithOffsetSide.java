@@ -54,20 +54,14 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
   }
 
   static Direction.Axis rotateAxis(BlockRotation rotation, Direction.Axis axis) {
-    switch (rotation) {
-      case COUNTERCLOCKWISE_90:
-      case CLOCKWISE_90:
-        switch (axis) {
-          case X:
-            return Direction.Axis.Z;
-          case Z:
-            return Direction.Axis.X;
-          default:
-            return axis;
-        }
-      default:
-        return axis;
-    }
+    return switch (rotation) {
+      case COUNTERCLOCKWISE_90, CLOCKWISE_90 -> switch (axis) {
+        case X -> Direction.Axis.Z;
+        case Z -> Direction.Axis.X;
+        default -> axis;
+      };
+      default -> axis;
+    };
   }
 
   @Override

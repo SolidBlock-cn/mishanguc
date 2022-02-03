@@ -170,33 +170,23 @@ public class TextContext implements Cloneable {
     matrixStack.translate(offsetX, offsetY, offsetZ);
     float x = 0;
     switch (horizontalAlign == null ? HorizontalAlign.CENTER : horizontalAlign) {
-      case LEFT:
-        matrixStack.translate(-width / 2, 0, 0);
-        break;
-      case CENTER:
-        x = -textRenderer.getWidth(text) / 2f;
-        break;
-      case RIGHT:
+      case LEFT -> matrixStack.translate(-width / 2, 0, 0);
+      case CENTER -> x = -textRenderer.getWidth(text) / 2f;
+      case RIGHT -> {
         matrixStack.translate(width / 2, 0, 0);
         x = -textRenderer.getWidth(text);
-        break;
-      default:
-        throw new IllegalStateException("Unexpected value: " + horizontalAlign);
+      }
+      default -> throw new IllegalStateException("Unexpected value: " + horizontalAlign);
     }
     float y = 0;
     switch (verticalAlign == null ? VerticalAlign.MIDDLE : verticalAlign) {
-      case TOP:
-        matrixStack.translate(0, -height / 2, 0);
-        break;
-      case MIDDLE:
-        y = -4;
-        break;
-      case BOTTOM:
+      case TOP -> matrixStack.translate(0, -height / 2, 0);
+      case MIDDLE -> y = -4;
+      case BOTTOM -> {
         matrixStack.translate(0, height / 2, 0);
         y = -8;
-        break;
-      default:
-        throw new IllegalStateException("Unexpected value: " + verticalAlign);
+      }
+      default -> throw new IllegalStateException("Unexpected value: " + verticalAlign);
     }
 
     // 处理文本的 scale

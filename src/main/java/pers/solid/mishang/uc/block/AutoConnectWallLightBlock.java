@@ -142,23 +142,19 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
     final VoxelShape baseShape = BASE_SHAPE_PER_FACING.get(facing);
     final VoxelShape[] extraShapes;
     switch (facing) {
-      case UP:
-        extraShapes =
-            Arrays.stream(Direction.values())
-                .filter(direction -> state.get(DIRECTION_TO_PROPERTY.get(direction)))
-                .map(SHAPE_PER_DIRECTION_WHEN_FACING_UP::get)
-                .filter(Objects::nonNull)
-                .toArray(VoxelShape[]::new);
-        break;
-      case DOWN:
-        extraShapes =
-            Arrays.stream(Direction.values())
-                .filter(direction -> state.get(DIRECTION_TO_PROPERTY.get(direction)))
-                .map(SHAPE_PER_DIRECTION_WHEN_FACING_DOWN::get)
-                .filter(Objects::nonNull)
-                .toArray(VoxelShape[]::new);
-        break;
-      default:
+      case UP -> extraShapes =
+          Arrays.stream(Direction.values())
+              .filter(direction -> state.get(DIRECTION_TO_PROPERTY.get(direction)))
+              .map(SHAPE_PER_DIRECTION_WHEN_FACING_UP::get)
+              .filter(Objects::nonNull)
+              .toArray(VoxelShape[]::new);
+      case DOWN -> extraShapes =
+          Arrays.stream(Direction.values())
+              .filter(direction -> state.get(DIRECTION_TO_PROPERTY.get(direction)))
+              .map(SHAPE_PER_DIRECTION_WHEN_FACING_DOWN::get)
+              .filter(Objects::nonNull)
+              .toArray(VoxelShape[]::new);
+      default -> {
         final List<VoxelShape> voxelShapeList = new ArrayList<>();
         if (state.get(UP)) {
           voxelShapeList.add(
@@ -176,8 +172,8 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
           voxelShapeList.add(
               SHAPE_PER_DIRECTION_PER_FACING_WHEN_FACING_HORIZONTALLY.get(3).get(facing));
         }
-        extraShapes = voxelShapeList.toArray(new VoxelShape[] {});
-        break;
+        extraShapes = voxelShapeList.toArray(new VoxelShape[]{});
+      }
     }
     return VoxelShapes.union(baseShape, extraShapes);
   }

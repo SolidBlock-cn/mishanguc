@@ -106,14 +106,11 @@ public class CornerLightBlock extends HorizontalFacingBlock
   @Override
   public VoxelShape getOutlineShape(
       BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-    switch (state.get(BLOCK_HALF)) {
-      case BOTTOM:
-        return SHAPE_PER_DIRECTION_WHEN_BOTTOM.get(state.get(FACING));
-      case TOP:
-        return SHAPE_PER_DIRECTION_WHEN_TOP.get(state.get(FACING));
-      default:
-        throw new IllegalStateException("Unexpected value: " + state.get(BLOCK_HALF));
-    }
+    return switch (state.get(BLOCK_HALF)) {
+      case BOTTOM -> SHAPE_PER_DIRECTION_WHEN_BOTTOM.get(state.get(FACING));
+      case TOP -> SHAPE_PER_DIRECTION_WHEN_TOP.get(state.get(FACING));
+      default -> throw new IllegalStateException("Unexpected value: " + state.get(BLOCK_HALF));
+    };
   }
 
   @Override
@@ -121,14 +118,11 @@ public class CornerLightBlock extends HorizontalFacingBlock
     final Direction facingProperty = blockState.get(FACING);
     final BlockHalf blockHalf = blockState.get(BLOCK_HALF);
 
-    switch (facing) {
-      case UP:
-        return blockHalf == BlockHalf.BOTTOM && direction.getAxis() == facingProperty.getAxis();
-      case DOWN:
-        return blockHalf == BlockHalf.TOP && direction.getAxis() == facingProperty.getAxis();
-      default:
-        return facing == facingProperty && direction.getAxis() == Direction.Axis.Y;
-    }
+    return switch (facing) {
+      case UP -> blockHalf == BlockHalf.BOTTOM && direction.getAxis() == facingProperty.getAxis();
+      case DOWN -> blockHalf == BlockHalf.TOP && direction.getAxis() == facingProperty.getAxis();
+      default -> facing == facingProperty && direction.getAxis() == Direction.Axis.Y;
+    };
   }
 
   @SuppressWarnings("deprecation")
