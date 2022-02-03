@@ -15,6 +15,8 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
@@ -42,9 +44,15 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
 
   private static final VoxelShape SHAPE_X = createCuboidShape(7.5, 6, 0, 8.5, 12, 16);
   private static final VoxelShape SHAPE_Z = createCuboidShape(0, 6, 7.5, 16, 12, 8.5);
+  public final @Nullable Block baseBlock;
 
   public HungSignBlock(Settings settings) {
+    this(null, settings);
+  }
+
+  public HungSignBlock(@Nullable Block baseBlock, Settings settings) {
     super(settings);
+    this.baseBlock = baseBlock;
     this.setDefaultState(
         this.stateManager
             .getDefaultState()
@@ -208,5 +216,13 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
           PacketByteBufs.create().writeBlockPos(pos).writeEnumConstant(hit.getSide()));
     }
     return ActionResult.SUCCESS;
+  }
+
+  @Override
+  public MutableText getName() {
+    if (baseBlock != null) {
+      return new TranslatableText("block.mishanguc.hung_glowing_sign", baseBlock.getName());
+    }
+    return super.getName();
   }
 }

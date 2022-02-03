@@ -429,13 +429,10 @@ public class ARRPMain implements RRPPreGenEntrypoint {
                 state.add(jVariant);
               }),
           new Identifier("mishanguc", String.format("simple_%s_text_pad", dyeColor)));
+      addStateForHungGlowingSign(PACK, dyeColor.asString() + "_concrete");
+      addStateForHungGlowingSign(PACK, dyeColor.asString() + "_terracotta");
     }
 
-    addStateForHungGlowingSign(PACK, "black_concrete");
-    addStateForHungGlowingSign(PACK, "gray_concrete");
-    addStateForHungGlowingSign(PACK, "black_terracotta");
-    addStateForHungGlowingSign(PACK, "gray_terracotta");
-    addStateForHungGlowingSign(PACK, "cyan_terracotta");
     addStateForHungGlowingSign(PACK, "netherrack");
     addStateForHungGlowingSign(PACK, "nether_brick");
     addStateForHungGlowingSign(PACK, "blackstone");
@@ -898,17 +895,17 @@ public class ARRPMain implements RRPPreGenEntrypoint {
           JModel.model(blockIdentifier("simple_text_pad"))
               .textures(new JTextures().var("all", String.format("block/%s_concrete", dyeColor))),
           blockIdentifier(String.format("simple_%s_text_pad", dyeColor)));
+      addModelForHungGlowingSign(
+          PACK,
+          String.format("%s_concrete", dyeColor.asString()),
+          String.format("block/%s_concrete", dyeColor.asString()),
+          blockString("white_light"));
+      addModelForHungGlowingSign(
+          PACK,
+          String.format("%s_terracotta", dyeColor.asString()),
+          String.format("block/%s_terracotta", dyeColor.asString()),
+          blockString("white_light"));
     }
-    addModelForHungGlowingSign(
-        PACK, "black_concrete", "block/black_concrete", blockString("white_light"));
-    addModelForHungGlowingSign(
-        PACK, "gray_concrete", "block/black_concrete", blockString("white_light"));
-    addModelForHungGlowingSign(
-        PACK, "black_terracotta", "block/black_terracotta", blockString("white_light"));
-    addModelForHungGlowingSign(
-        PACK, "gray_terracotta", "block/gray_terracotta", blockString("white_light"));
-    addModelForHungGlowingSign(
-        PACK, "cyan_terracotta", "block/cyan_terracotta", blockString("white_light"));
     addModelForHungGlowingSign(PACK, "netherrack", "block/netherrack", "block/glowstone");
     addModelForHungGlowingSign(PACK, "nether_brick", "block/nether_bricks", "block/glowstone");
     addModelForHungGlowingSign(PACK, "blackstone", "block/blackstone", "block/glowstone");

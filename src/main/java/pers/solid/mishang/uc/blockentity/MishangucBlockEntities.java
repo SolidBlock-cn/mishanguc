@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.blockentity;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
@@ -21,14 +22,15 @@ public class MishangucBlockEntities {
           new Identifier("mishanguc", "hung_block_entity"),
           BlockEntityType.Builder.create(
                   HungSignBlockEntity::new,
-                  MishangucBlocks.HUNG_BLACK_CONCRETE_GLOWING_SIGN,
-                  MishangucBlocks.HUNG_GRAY_CONCRETE_GLOWING_SIGN,
-                  MishangucBlocks.HUNG_BLACK_TERRACOTTA_GLOWING_SIGN,
-                  MishangucBlocks.HUNG_GRAY_TERRACOTTA_GLOWING_SIGN,
-                  MishangucBlocks.HUNG_CYAN_TERRACOTTA_GLOWING_SIGN,
-                  MishangucBlocks.HUNG_NETHERRACK_GLOWING_SIGN,
-                  MishangucBlocks.HUNG_NETHER_BRICK_GLOWING_SIGN,
-                  MishangucBlocks.HUNG_BLACKSTONE_GLOWING_SIGN,
-                  MishangucBlocks.HUNG_POLISHED_BLACKSTONE_GLOWING_SIGN)
+                  new ImmutableList.Builder<Block>()
+                      .addAll(MishangucBlocks.HUNG_CONCRETE_GLOWING_SIGNS.values())
+                      .addAll(MishangucBlocks.HUNG_TERRACOTTA_GLOWING_SIGNS.values())
+                      .add(
+                          MishangucBlocks.HUNG_NETHERRACK_GLOWING_SIGN,
+                          MishangucBlocks.HUNG_NETHER_BRICK_GLOWING_SIGN,
+                          MishangucBlocks.HUNG_BLACKSTONE_GLOWING_SIGN,
+                          MishangucBlocks.HUNG_POLISHED_BLACKSTONE_GLOWING_SIGN)
+                      .build()
+                      .toArray(new Block[] {}))
               .build(null));
 }

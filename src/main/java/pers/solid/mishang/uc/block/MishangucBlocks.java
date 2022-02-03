@@ -19,18 +19,256 @@ import pers.solid.mishang.uc.*;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.InGroup;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
+import pers.solid.mishang.uc.item.NamedBlockItem;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.Map;
 
 /** 迷上城建模组的所有方块。 */
 public final class MishangucBlocks {
+  /**
+   *
+   *
+   * <h1>告示牌类方块</h1>
+   *
+   * 具有多种不同颜色。
+   */
+  public static final BiMap<DyeColor, TextPadBlock> TEXT_PAD_BLOCKS =
+      Arrays.stream(DyeColor.values())
+          .collect(
+              ImmutableBiMap.toImmutableBiMap(
+                  color -> color,
+                  color ->
+                      new TextPadBlock(
+                          Registry.BLOCK.get(new Identifier("minecraft", color + "_concrete")),
+                          color)));
+
+  @InGroup("signs")
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_WHITE_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.WHITE);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_ORANGE_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.ORANGE);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_MAGENTA_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.MAGENTA);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_LIGHT_BLUE_TEXT_PAD =
+      TEXT_PAD_BLOCKS.get(DyeColor.LIGHT_BLUE);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_YELLOW_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.YELLOW);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_LIME_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.LIME);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_PINK_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.PINK);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_GRAY_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.GRAY);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_LIGHT_GRAY_TEXT_PAD =
+      TEXT_PAD_BLOCKS.get(DyeColor.LIGHT_GRAY);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_CYAN_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.CYAN);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_PURPLE_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.PURPLE);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_BLUE_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.BLUE);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_BROWN_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.BROWN);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_GREEN_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.GREEN);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_RED_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.RED);
+
+  @RegisterIdentifier
+  public static final TextPadBlock SIMPLE_BLACK_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.BLACK);
+
+  public static final Map<DyeColor, HungSignBlock> HUNG_CONCRETE_GLOWING_SIGNS =
+      new EnumMap<DyeColor, HungSignBlock>(DyeColor.class) {
+        {
+          for (DyeColor color : DyeColor.values()) {
+            final Block block =
+                Registry.BLOCK.get(new Identifier("minecraft", color.asString() + "_concrete"));
+            put(color, new HungSignBlock(block, FabricBlockSettings.copyOf(block).luminance(15)));
+          }
+        }
+      };
+  public static final Map<DyeColor, HungSignBlock> HUNG_TERRACOTTA_GLOWING_SIGNS =
+      new EnumMap<DyeColor, HungSignBlock>(DyeColor.class) {
+        {
+          for (DyeColor color : DyeColor.values()) {
+            final Block block =
+                Registry.BLOCK.get(new Identifier("minecraft", color.asString() + "_terracotta"));
+            put(color, new HungSignBlock(block, FabricBlockSettings.copyOf(block).luminance(15)));
+          }
+        }
+      };
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_WHITE_CONCRETE_GLOWING_SIGN =
+      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.WHITE);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_ORANGE_CONCRETE_GLOWING_SIGN =
+      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.ORANGE);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_MAGENTA_CONCRETE_GLOWING_SIGN =
+      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.MAGENTA);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_LIGHT_BLUE_CONCRETE_GLOWING_SIGN =
+      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.LIGHT_BLUE);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_YELLOW_CONCRETE_GLOWING_SIGN =
+      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.YELLOW);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_LIME_CONCRETE_GLOWING_SIGN =
+      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.LIME);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_PINK_CONCRETE_GLOWING_SIGN =
+      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.PINK);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_GRAY_CONCRETE_GLOWING_SIGN =
+      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.GRAY);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_LIGHT_GRAY_CONCRETE_GLOWING_SIGN =
+      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.LIGHT_GRAY);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_CYAN_CONCRETE_GLOWING_SIGN =
+      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.CYAN);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_PURPLE_CONCRETE_GLOWING_SIGN =
+      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.PURPLE);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_BLUE_CONCRETE_GLOWING_SIGN =
+      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.BLUE);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_BROWN_CONCRETE_GLOWING_SIGN =
+      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.BROWN);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_GREEN_CONCRETE_GLOWING_SIGN =
+      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.GREEN);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_RED_CONCRETE_GLOWING_SIGN =
+      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.RED);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_BLACK_CONCRETE_GLOWING_SIGN =
+      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.BLACK);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_WHITE_TERRACOTTA_GLOWING_SIGN =
+      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.WHITE);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_ORANGE_TERRACOTTA_GLOWING_SIGN =
+      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.ORANGE);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_MAGENTA_TERRACOTTA_GLOWING_SIGN =
+      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.MAGENTA);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_LIGHT_BLUE_TERRACOTTA_GLOWING_SIGN =
+      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.LIGHT_BLUE);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_YELLOW_TERRACOTTA_GLOWING_SIGN =
+      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.YELLOW);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_LIME_TERRACOTTA_GLOWING_SIGN =
+      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.LIME);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_PINK_TERRACOTTA_GLOWING_SIGN =
+      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.PINK);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_GRAY_TERRACOTTA_GLOWING_SIGN =
+      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.GRAY);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_LIGHT_GRAY_TERRACOTTA_GLOWING_SIGN =
+      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.LIGHT_GRAY);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_CYAN_TERRACOTTA_GLOWING_SIGN =
+      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.CYAN);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_PURPLE_TERRACOTTA_GLOWING_SIGN =
+      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.PURPLE);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_BLUE_TERRACOTTA_GLOWING_SIGN =
+      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.BLUE);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_BROWN_TERRACOTTA_GLOWING_SIGN =
+      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.BROWN);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_GREEN_TERRACOTTA_GLOWING_SIGN =
+      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.GREEN);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_RED_TERRACOTTA_GLOWING_SIGN =
+      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.RED);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_BLACK_TERRACOTTA_GLOWING_SIGN =
+      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.BLACK);
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_NETHERRACK_GLOWING_SIGN =
+      new HungSignBlock(
+          Blocks.NETHERRACK, FabricBlockSettings.copyOf(Blocks.NETHERRACK).luminance(15));
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_NETHER_BRICK_GLOWING_SIGN =
+      new HungSignBlock(
+          Blocks.NETHER_BRICKS, FabricBlockSettings.copyOf(Blocks.NETHER_BRICKS).luminance(15));
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_BLACKSTONE_GLOWING_SIGN =
+      new HungSignBlock(
+          Blocks.BLACKSTONE, FabricBlockSettings.copyOf(Blocks.BLACKSTONE).luminance(15));
+
+  @RegisterIdentifier
+  public static final HungSignBlock HUNG_POLISHED_BLACKSTONE_GLOWING_SIGN =
+      new HungSignBlock(
+          Blocks.POLISHED_BLACKSTONE,
+          FabricBlockSettings.copyOf(Blocks.POLISHED_BLACKSTONE).luminance(15));
   /** 绝大多数柏油路方块共用的方块设置。 */
   private static final FabricBlockSettings ASPHALT_ROAD_SETTINGS =
       FabricBlockSettings.of(Material.STONE, MapColor.GRAY).strength(0.5F);
-
   /**
    *
    *
@@ -41,7 +279,6 @@ public final class MishangucBlocks {
   @InGroup("roads")
   @RegisterIdentifier
   public static final RoadBlock ASPHALT_ROAD_BLOCK = new RoadBlock(ASPHALT_ROAD_SETTINGS);
-
   /**
    *
    *
@@ -72,7 +309,6 @@ public final class MishangucBlocks {
   @Cutout @RegisterIdentifier
   public static final RoadWithAngleLine.Impl ASPHALT_ROAD_WITH_YELLOW_BEVEL_ANGLE_LINE =
       new RoadWithAngleLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.YELLOW, true);
-
   /**
    *
    *
@@ -92,7 +328,6 @@ public final class MishangucBlocks {
   @Cutout @RegisterIdentifier
   public static final RoadWithCrossLine.Impl ASPHALT_ROAD_WITH_WHITE_CROSS_LINE =
       new RoadWithCrossLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
-
   /**
    *
    *
@@ -123,7 +358,6 @@ public final class MishangucBlocks {
       ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE_WITH_ONE_PART_OFFSET_IN =
           new RoadWithAngleLineWithOnePartOffset.Impl(
               ASPHALT_ROAD_SETTINGS, LineColor.WHITE, false);
-
   /**
    *
    *
@@ -143,7 +377,6 @@ public final class MishangucBlocks {
   public static final RoadWithJointLineWithOffsetSide.Impl
       ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_OFFSET_SIDE =
           new RoadWithJointLineWithOffsetSide.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
-
   /**
    *
    *
@@ -166,7 +399,6 @@ public final class MishangucBlocks {
           RoadWithAutoLine.RoadAutoLineType.RIGHT_ANGLE,
           RoadTexture.ASPHALT,
           LineColor.WHITE);
-
   /**
    *
    *
@@ -178,7 +410,18 @@ public final class MishangucBlocks {
   public static final RoadBlock ASPHALT_ROAD_FILLED_WITH_WHITE =
       new RoadBlock(
           FabricBlockSettings.copyOf(ASPHALT_ROAD_SETTINGS).materialColor(MapColor.WHITE));
-
+  /**
+   *
+   *
+   * <h2>其他</h2>
+   *
+   * @see #ASPHALT_ROAD_FILLED_WITH_WHITE
+   */
+  @RegisterIdentifier
+  public static final RoadSlabBlock ASPHALT_ROAD_SLAB_FILLED_WITH_WHITE =
+      new RoadSlabBlock(
+          FabricBlockSettings.copyOf(MishangucBlocks.ASPHALT_ROAD_FILLED_WITH_WHITE),
+          LineColor.WHITE);
   /**
    *
    *
@@ -211,7 +454,6 @@ public final class MishangucBlocks {
   @Cutout @RegisterIdentifier
   public static final RoadWithAngleLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_WHITE_BEVEL_ANGLE_LINE =
       new RoadWithAngleLine.SlabImpl(MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineColor.WHITE, true);
-
   /**
    *
    *
@@ -228,12 +470,10 @@ public final class MishangucBlocks {
   @Cutout @RegisterIdentifier
   public static final RoadWithJointLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE =
       new RoadWithJointLine.SlabImpl(MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
-
   /** @see #ASPHALT_ROAD_WITH_WHITE_CROSS_LINE */
   @Cutout @RegisterIdentifier
   public static final RoadWithCrossLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_WHITE_CROSS_LINE =
       new RoadWithCrossLine.SlabImpl(MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
-
   /**
    *
    *
@@ -251,7 +491,6 @@ public final class MishangucBlocks {
   public static final RoadWithStraightLine.SlabImpl
       ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_DOUBLE_LINE =
           new RoadWithStraightLine.SlabImpl(MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
-
   /** @see #ASPHALT_ROAD_WITH_WHITE_STRAIGHT_THICK_LINE */
   @Cutout @RegisterIdentifier
   public static final RoadWithStraightLine.SlabImpl
@@ -273,7 +512,6 @@ public final class MishangucBlocks {
       ASPHALT_ROAD_SLAB_WITH_WHITE_RIGHT_ANGLE_LINE_WITH_ONE_PART_OFFSET_IN =
           new RoadWithAngleLineWithOnePartOffset.SlabImpl(
               ASPHALT_ROAD_SETTINGS, LineColor.WHITE, false);
-
   /**
    *
    *
@@ -295,7 +533,6 @@ public final class MishangucBlocks {
   public static final RoadWithJointLineWithOffsetSide.SlabImpl
       ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE_WITH_OFFSET_SIDE =
           new RoadWithJointLineWithOffsetSide.SlabImpl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
-
   /**
    *
    *
@@ -318,19 +555,6 @@ public final class MishangucBlocks {
           RoadWithAutoLine.RoadAutoLineType.RIGHT_ANGLE,
           RoadTexture.ASPHALT,
           LineColor.WHITE);
-
-  /**
-   *
-   *
-   * <h2>其他</h2>
-   *
-   * @see #ASPHALT_ROAD_FILLED_WITH_WHITE
-   */
-  @RegisterIdentifier
-  public static final RoadSlabBlock ASPHALT_ROAD_SLAB_FILLED_WITH_WHITE =
-      new RoadSlabBlock(
-          FabricBlockSettings.copyOf(MishangucBlocks.ASPHALT_ROAD_FILLED_WITH_WHITE),
-          LineColor.WHITE);
   /**
    *
    *
@@ -341,13 +565,12 @@ public final class MishangucBlocks {
   private static final FabricBlockSettings WHITE_LIGHT_SETTINGS =
       FabricBlockSettings.of(Material.REDSTONE_LAMP).luminance(15);
 
-  /** 墙上的灯等方块等用到的方块设置。与{@link #WHITE_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。 */
-  private static final FabricBlockSettings WHITE_WALL_LIGHT_SETTINGS =
-      FabricBlockSettings.copyOf(WHITE_LIGHT_SETTINGS).noCollision();
-
   @RegisterIdentifier
   @InGroup("lights")
   public static final Block WHITE_LIGHT = new Block(WHITE_LIGHT_SETTINGS);
+  /** 墙上的灯等方块等用到的方块设置。与{@link #WHITE_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。 */
+  private static final FabricBlockSettings WHITE_WALL_LIGHT_SETTINGS =
+      FabricBlockSettings.copyOf(WHITE_LIGHT_SETTINGS).noCollision();
 
   @RegisterIdentifier
   public static final WallLightBlock WHITE_SMALL_WALL_LIGHT_TUBE =
@@ -418,108 +641,11 @@ public final class MishangucBlocks {
         }
       };
 
-  /**
-   *
-   *
-   * <h1>告示牌类方块</h1>
-   *
-   * 具有多种不同颜色。
-   */
-  public static final BiMap<DyeColor, TextPadBlock> TEXT_PAD_BLOCKS =
-      Arrays.stream(DyeColor.values())
-          .collect(
-              ImmutableBiMap.toImmutableBiMap(
-                  color -> color,
-                  color ->
-                      new TextPadBlock(
-                          Registry.BLOCK.get(new Identifier("minecraft", color + "_concrete")),
-                          color)));
+  static {
+    registerAll();
+  }
 
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_WHITE_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.WHITE);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_ORANGE_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.ORANGE);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_MAGENTA_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.MAGENTA);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_LIGHT_BLUE_TEXT_PAD =
-      TEXT_PAD_BLOCKS.get(DyeColor.LIGHT_BLUE);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_YELLOW_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.YELLOW);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_LIME_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.LIME);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_PINK_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.PINK);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_GRAY_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.GRAY);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_LIGHT_GRAY_TEXT_PAD =
-      TEXT_PAD_BLOCKS.get(DyeColor.LIGHT_GRAY);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_CYAN_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.CYAN);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_PURPLE_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.PURPLE);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_BLUE_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.BLUE);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_BROWN_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.BROWN);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_GREEN_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.GREEN);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_RED_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.RED);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_BLACK_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.BLACK);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_BLACK_CONCRETE_GLOWING_SIGN =
-      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.BLACK_CONCRETE).luminance(15));
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_GRAY_CONCRETE_GLOWING_SIGN =
-      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.GRAY_CONCRETE).luminance(15));
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_BLACK_TERRACOTTA_GLOWING_SIGN =
-      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.BLACK_TERRACOTTA).luminance(15));
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_GRAY_TERRACOTTA_GLOWING_SIGN =
-      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.GRAY_TERRACOTTA).luminance(15));
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_CYAN_TERRACOTTA_GLOWING_SIGN =
-      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.CYAN_TERRACOTTA).luminance(15));
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_NETHERRACK_GLOWING_SIGN =
-      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.NETHERRACK).luminance(15));
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_NETHER_BRICK_GLOWING_SIGN =
-      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.NETHER_BRICKS).luminance(15));
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_BLACKSTONE_GLOWING_SIGN =
-      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.BLACKSTONE).luminance(15));
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_POLISHED_BLACKSTONE_GLOWING_SIGN =
-      new HungSignBlock(FabricBlockSettings.copyOf(Blocks.POLISHED_BLACKSTONE).luminance(15));
+  private MishangucBlocks() {}
 
   /**
    * 自动注册一个类中的所有静态常量字段的方块，同时创建并注册对应的物品。
@@ -555,11 +681,14 @@ public final class MishangucBlocks {
                 case "lights":
                   group = ModItemGroups.LIGHTS;
                   break;
+                case "signs":
+                  group = ModItemGroups.SIGNS;
+                  break;
                 default:
                   group = null;
               }
             }
-            BlockItem item = new BlockItem(value, new FabricItemSettings().group(group));
+            BlockItem item = new NamedBlockItem(value, new FabricItemSettings().group(group));
             Registry.register(Registry.ITEM, new Identifier("mishanguc", path), item);
           }
         } catch (IllegalAccessException e) {
@@ -567,12 +696,6 @@ public final class MishangucBlocks {
         }
       }
     }
-  }
-
-  private MishangucBlocks() {}
-
-  static {
-    registerAll();
   }
 
   public static void init() {}

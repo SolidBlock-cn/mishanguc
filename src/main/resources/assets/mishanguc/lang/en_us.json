@@ -81,6 +81,8 @@
   "block.mishanguc.white_wall_light_hash_decoration": "White Wall Light Hash Decoration",
   "block.mishanguc.white_wall_light_round_decoration": "White Wall Light Round Decoration",
 
+  "block.mishanguc.hung_glowing_sign": "Hung %s Glowing Sign",
+
   "item.mishanguc.road_connection_state_debugging_tool": "Road Connection State Debugging Tool",
   "item.mishanguc.id_checker_tool": "Id Checker Tool",
   "item.mishanguc.id_checker_tool.tooltip.1": "Get its id data when clicking block.",
@@ -178,6 +180,7 @@
 
   "itemGroup.mishanguc.roads": "Mishang Urban Construction | Roads",
   "itemGroup.mishanguc.lights": "Mishang Urban Construction | Lights",
+  "itemGroup.mishanguc.signs": "Mishang Urban Construction | Signs",
   "itemGroup.mishanguc.tools": "Mishang Urban Construction | Tools",
 
   "notice.mishanguc.load": "Please notice: This mod is under text, and functions are not stable. Please use with caution for experiencing new features. Please do not use features of this mod in your formal work, as the features may be renamed or removed in future versions, and perhaps not compatible with current version any more.",

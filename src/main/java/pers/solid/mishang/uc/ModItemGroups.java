@@ -9,13 +9,16 @@ import pers.solid.mishang.uc.item.MishangucItems;
 
 public class ModItemGroups {
   public static final ItemGroup ROADS =
-      FabricItemGroupBuilder.create(new Identifier("mishanguc", "roads"))
-          .icon(() -> new ItemStack(MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE))
-          .build();
+      FabricItemGroupBuilder.build(
+          new Identifier("mishanguc", "roads"),
+          () -> new ItemStack(MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE));
   public static final ItemGroup LIGHTS =
-      FabricItemGroupBuilder.create(new Identifier("mishanguc", "lights"))
-          .icon(() -> new ItemStack(MishangucBlocks.WHITE_LIGHT))
-          .build();
+      FabricItemGroupBuilder.build(
+          new Identifier("mishanguc", "lights"), () -> new ItemStack(MishangucBlocks.WHITE_LIGHT));
+  public static final ItemGroup SIGNS =
+      FabricItemGroupBuilder.build(
+          new Identifier("mishanguc", "signs"),
+          () -> new ItemStack(MishangucBlocks.HUNG_BLACK_CONCRETE_GLOWING_SIGN));
   public static final ItemGroup TOOLS =
       FabricItemGroupBuilder.create(new Identifier("mishanguc", "tools"))
           .icon(() -> new ItemStack(MishangucItems.ROAD_CONNECTION_STATE_DEBUGGING_TOOL))
