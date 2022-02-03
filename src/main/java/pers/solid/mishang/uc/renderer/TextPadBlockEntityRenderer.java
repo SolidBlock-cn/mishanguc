@@ -5,8 +5,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3f;
 import pers.solid.mishang.uc.block.TextPadBlock;
@@ -20,9 +20,11 @@ import pers.solid.mishang.uc.util.TextContext;
  * @see TextPadBlockEntity
  */
 @Environment(EnvType.CLIENT)
-public class TextPadBlockEntityRenderer extends BlockEntityRenderer<TextPadBlockEntity> {
-  public TextPadBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
-    super(dispatcher);
+public class TextPadBlockEntityRenderer implements BlockEntityRenderer<TextPadBlockEntity> {
+  private final BlockEntityRendererFactory.Context ctx;
+
+  public TextPadBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+    this.ctx = ctx;
   }
 
   /**
@@ -38,7 +40,7 @@ public class TextPadBlockEntityRenderer extends BlockEntityRenderer<TextPadBlock
       VertexConsumerProvider vertexConsumers,
       int light,
       int overlay) {
-    final TextRenderer textRenderer = dispatcher.getTextRenderer();
+    final TextRenderer textRenderer = ctx.getTextRenderer();
     matrices.translate(0.5, 0.5, 0.5);
     matrices.multiply(
         Vec3f.POSITIVE_Y.getDegreesQuaternion(

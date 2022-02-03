@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.blockentity;
 
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
@@ -10,14 +11,16 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class BlockEntityWithText extends BlockEntity
     implements BlockEntityClientSerializable {
-  public BlockEntityWithText(BlockEntityType<?> type) {
-    super(type);
+
+  public BlockEntityWithText(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    super(type, pos, state);
   }
 
   /** @see net.minecraft.block.entity.SignBlockEntity#getCommandSource(ServerPlayerEntity) */
@@ -38,7 +41,7 @@ public abstract class BlockEntityWithText extends BlockEntity
 
   @Override
   public void fromClientTag(NbtCompound tag) {
-    fromTag(null, tag);
+    readNbt(tag);
   }
 
   @Override

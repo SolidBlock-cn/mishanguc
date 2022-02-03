@@ -92,7 +92,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
    * @return Whether it can detect fluid. May be {@code null}able, which means it depends.
    */
   public @Nullable Boolean includesFluid(ItemStack stack) {
-    final NbtCompound tag = stack.getTag();
+    final NbtCompound tag = stack.getNbt();
     if (tag == null || !tag.contains("IncludesFluid")) {
       return this.includesFluid;
     } else {

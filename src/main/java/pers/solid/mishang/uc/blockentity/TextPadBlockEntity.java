@@ -10,6 +10,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Texts;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.util.TextContext;
 
@@ -24,8 +25,8 @@ public class TextPadBlockEntity extends BlockEntityWithText {
   public @NotNull TextContext textContext = new TextContext();
   public @NotNull List<@NotNull TextContext> otherTextContexts = ImmutableList.of();
 
-  public TextPadBlockEntity() {
-    super(MishangucBlockEntities.TEXT_PAD_BLOCK_ENTITY);
+  public TextPadBlockEntity(BlockPos pos, BlockState state) {
+    super(MishangucBlockEntities.TEXT_PAD_BLOCK_ENTITY, pos, state);
   }
 
   @Override
@@ -45,10 +46,10 @@ public class TextPadBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  public void fromTag(BlockState state, NbtCompound tag) {
-    super.fromTag(state, tag);
-    textContext = TextContext.fromNbt(tag);
-    final NbtElement nbtTexts = tag.get("texts");
+  public void readNbt(NbtCompound nbt) {
+    super.readNbt(nbt);
+    textContext = TextContext.fromNbt(nbt);
+    final NbtElement nbtTexts = nbt.get("texts");
     otherTextContexts =
         nbtTexts instanceof NbtList
             ? ((NbtList) nbtTexts).stream().map(TextContext::fromNbt).collect(Collectors.toList())

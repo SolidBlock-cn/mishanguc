@@ -101,19 +101,19 @@ public class FastBuildingToolItem extends BlockToolItem {
     return Util.make(
         super.getDefaultStack(),
         stack -> {
-          final NbtCompound tag = stack.getOrCreateTag();
+          final NbtCompound tag = stack.getOrCreateNbt();
           tag.putInt("Range", 5);
           tag.putString("MatchingRule", "mishanguc:same_block");
         });
   }
 
   public int getRange(ItemStack stack) {
-    final NbtCompound tag = stack.getOrCreateTag();
+    final NbtCompound tag = stack.getOrCreateNbt();
     return tag.contains("Range", 99) ? Integer.min(tag.getInt("Range"), 128) : 8;
   }
 
   public @NotNull BlockMatchingRule getMatchingRule(ItemStack stack) {
-    final NbtCompound tag = stack.getOrCreateTag();
+    final NbtCompound tag = stack.getOrCreateNbt();
     final BlockMatchingRule matchingRule =
         BlockMatchingRule.fromString(tag.getString("MatchingRule"));
     return matchingRule == null ? BlockMatchingRule.SAME_BLOCK : matchingRule;
@@ -144,7 +144,7 @@ public class FastBuildingToolItem extends BlockToolItem {
           Util.make(
               new ItemStack(this),
               stack -> {
-                final NbtCompound tag = stack.getOrCreateTag();
+                final NbtCompound tag = stack.getOrCreateNbt();
                 tag.putInt("Range", 16);
                 tag.putString("MatchingRule", BlockMatchingRule.SAME_STATE.asString());
               }));
@@ -152,7 +152,7 @@ public class FastBuildingToolItem extends BlockToolItem {
           Util.make(
               new ItemStack(this),
               stack -> {
-                final NbtCompound tag = stack.getOrCreateTag();
+                final NbtCompound tag = stack.getOrCreateNbt();
                 tag.putInt("Range", 16);
                 tag.putString("MatchingRule", BlockMatchingRule.SAME_BLOCK.asString());
               }));
@@ -160,7 +160,7 @@ public class FastBuildingToolItem extends BlockToolItem {
           Util.make(
               new ItemStack(this),
               stack -> {
-                final NbtCompound tag = stack.getOrCreateTag();
+                final NbtCompound tag = stack.getOrCreateNbt();
                 tag.putInt("Range", 16);
                 tag.putString("MatchingRule", BlockMatchingRule.SAME_MATERIAL.asString());
               }));
@@ -168,7 +168,7 @@ public class FastBuildingToolItem extends BlockToolItem {
           Util.make(
               new ItemStack(this),
               stack -> {
-                final NbtCompound tag = stack.getOrCreateTag();
+                final NbtCompound tag = stack.getOrCreateNbt();
                 tag.putInt("Range", 16);
                 tag.putString("MatchingRule", BlockMatchingRule.ANY.asString());
               }));

@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.blockentity;
 
 import com.google.common.collect.ImmutableList;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
@@ -12,7 +13,7 @@ public class MishangucBlockEntities {
       Registry.register(
           Registry.BLOCK_ENTITY_TYPE,
           new Identifier("mishanguc", "text_pad_block"),
-          BlockEntityType.Builder.create(
+          FabricBlockEntityTypeBuilder.create(
                   TextPadBlockEntity::new,
                   MishangucBlocks.TEXT_PAD_BLOCKS.values().toArray(new Block[] {}))
               .build(null));
@@ -20,7 +21,7 @@ public class MishangucBlockEntities {
       Registry.register(
           Registry.BLOCK_ENTITY_TYPE,
           new Identifier("mishanguc", "hung_block_entity"),
-          BlockEntityType.Builder.create(
+          FabricBlockEntityTypeBuilder.create(
                   HungSignBlockEntity::new,
                   new ImmutableList.Builder<Block>()
                       .addAll(MishangucBlocks.HUNG_CONCRETE_GLOWING_SIGNS.values())

@@ -19,9 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "pers.solid.mishang.uc.MishangUc"
-    ],
-    "rrp:pregen": [
+      "pers.solid.mishang.uc.MishangUc",
       "pers.solid.mishang.uc.arrp.ARRPMain"
     ],
     "client": [

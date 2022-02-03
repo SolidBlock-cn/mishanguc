@@ -11,6 +11,24 @@ public interface JBlockModelAccessor {
   @Accessor
   Identifier getModel();
 
-  @Accessor
+  @Accessor("model")
   void setModel(Identifier model);
+
+  @Accessor("x")
+  Integer getX();
+
+  @Accessor("x")
+  void setX(Integer x);
+
+  @Accessor("y")
+  Integer getY();
+
+  @Accessor("y")
+  void setY(Integer y);
+
+  @Accessor
+  Boolean getUvlock();
+
+  @Accessor
+  void setUvlock(Boolean uvlock);
 }

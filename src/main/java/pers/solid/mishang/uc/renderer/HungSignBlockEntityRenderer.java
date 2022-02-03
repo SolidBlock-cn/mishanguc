@@ -3,8 +3,8 @@ package pers.solid.mishang.uc.renderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
@@ -21,9 +21,12 @@ import java.util.Map;
  * @see HungSignBlockEntity
  */
 @Environment(EnvType.CLIENT)
-public class HungSignBlockEntityRenderer extends BlockEntityRenderer<HungSignBlockEntity> {
-  public HungSignBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
-    super(dispatcher);
+public class HungSignBlockEntityRenderer implements BlockEntityRenderer<HungSignBlockEntity> {
+
+  private final BlockEntityRendererFactory.Context ctx;
+
+  public HungSignBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+    this.ctx = ctx;
   }
 
   @Override
@@ -48,7 +51,7 @@ public class HungSignBlockEntityRenderer extends BlockEntityRenderer<HungSignBlo
       matrices.translate(0, 0, 1 / 32f + 0.001);
       matrices.scale(1 / 16f, -1 / 16f, 1 / 16f);
       for (TextContext textContext : textContexts) {
-        textContext.draw(dispatcher.getTextRenderer(), matrices, vertexConsumers, light, 16, 6);
+        textContext.draw(ctx.getTextRenderer(), matrices, vertexConsumers, light, 16, 6);
       }
       matrices.pop();
     }

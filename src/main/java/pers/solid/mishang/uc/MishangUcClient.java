@@ -3,7 +3,7 @@ package pers.solid.mishang.uc;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.block.Block;
 import net.minecraft.client.render.RenderLayer;
@@ -47,9 +47,9 @@ public class MishangUcClient implements ClientModInitializer {
     WorldRenderEvents.BLOCK_OUTLINE.register(RendersBlockOutline.RENDERER);
 
     // 注册方块实体渲染器
-    BlockEntityRendererRegistry.INSTANCE.register(
+    BlockEntityRendererRegistry.register(
         MishangucBlockEntities.TEXT_PAD_BLOCK_ENTITY, TextPadBlockEntityRenderer::new);
-    BlockEntityRendererRegistry.INSTANCE.register(
+    BlockEntityRendererRegistry.register(
         MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY, HungSignBlockEntityRenderer::new);
 
     // 网络通信
@@ -62,7 +62,7 @@ public class MishangUcClient implements ClientModInitializer {
             client.execute(
                 () -> {
                   assert client.world != null;
-                  client.openScreen(
+                  client.setScreen(
                       new SignBlockEditScreen(
                           (HungSignBlockEntity) client.world.getBlockEntity(blockPos),
                           direction,

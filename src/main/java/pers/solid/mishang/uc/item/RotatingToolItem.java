@@ -28,14 +28,20 @@ public class RotatingToolItem extends BlockToolItem {
   }
 
   @Override
-  public ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
+  public ActionResult useOnBlock(
+      PlayerEntity player,
+      World world,
+      BlockHitResult blockHitResult,
+      Hand hand,
+      boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
     return rotateBlock(player, world, blockPos);
   }
 
   @NotNull
   private ActionResult rotateBlock(PlayerEntity player, World world, BlockPos blockPos) {
-    final BlockRotation rotation = player.isSneaking() ? BlockRotation.COUNTERCLOCKWISE_90 : BlockRotation.CLOCKWISE_90;
+    final BlockRotation rotation =
+        player.isSneaking() ? BlockRotation.COUNTERCLOCKWISE_90 : BlockRotation.CLOCKWISE_90;
     return rotateBlock(world, blockPos, rotation);
   }
 
@@ -43,14 +49,15 @@ public class RotatingToolItem extends BlockToolItem {
   private ActionResult rotateBlock(World world, BlockPos blockPos, BlockRotation rotation) {
     world.setBlockState(blockPos, world.getBlockState(blockPos).rotate(rotation));
     final BlockEntity blockEntity = world.getBlockEntity(blockPos);
-    if (blockEntity != null) {
-      blockEntity.applyRotation(rotation);
-    }
+    //    if (blockEntity != null) {
+    //      blockEntity.rotate(rotation);
+    //    }
     return ActionResult.SUCCESS;
   }
 
   @Override
-  public ActionResult attackBlock(PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
+  public ActionResult attackBlock(
+      PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
     return rotateBlock(player, world, pos);
   }
 
@@ -61,9 +68,14 @@ public class RotatingToolItem extends BlockToolItem {
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+  public void appendTooltip(
+      ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(new TranslatableText("item.mishanguc.rotating_tool.tooltip.1").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
-    tooltip.add(new TranslatableText("item.mishanguc.rotating_tool.tooltip.2").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+    tooltip.add(
+        new TranslatableText("item.mishanguc.rotating_tool.tooltip.1")
+            .setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+    tooltip.add(
+        new TranslatableText("item.mishanguc.rotating_tool.tooltip.2")
+            .setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
   }
 }

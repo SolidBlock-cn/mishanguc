@@ -1,10 +1,7 @@
 package pers.solid.mishang.uc.util;
 
 import com.google.common.base.Strings;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
+import net.minecraft.nbt.*;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import pers.solid.mishang.uc.mixin.NbtCompoundAccessor;
@@ -20,9 +17,9 @@ public final class NbtPrettyPrinter {
   }
 
   /**
-   * These methods prettifies an {@link NbtElement} to a {@link Text} in a way that is better than
-   * {@link NbtElement#toText(String, int)}. It dispatches to other methods by detecting and casting
-   * the type of <code>element</code> arg.
+   * These methods prettify an {@link NbtElement} to a {@link Text} in a way that is better than
+   * {@link NbtHelper#toPrettyPrintedText(NbtElement)}. It dispatches to other methods by detecting
+   * and casting the type of <code>element</code> arg.
    *
    * @param element The NBT element.
    * @param layer Usually 0. If it's shown in another compound or list, the layer is 1. The greater
@@ -30,7 +27,7 @@ public final class NbtPrettyPrinter {
    * @param indent Indention to prettify the NBT tag. Usually it's two spaces.
    * @param depth Usually 0. To indent as a sub=indention of a compound or list.
    * @return The prettified serialized text.
-   * @see NbtElement#toText(String, int)
+   * @see NbtHelper#toPrettyPrintedText(NbtElement)
    */
   public static Text serialize(NbtElement element, int layer, String indent, int depth) {
     if (element instanceof NbtCompound) {
@@ -38,12 +35,12 @@ public final class NbtPrettyPrinter {
     } else if (element instanceof NbtList) {
       return serialize(((NbtList) element), layer, indent, depth);
     } else if (element instanceof NbtString) {
-      return serialize(((NbtString) element), layer, indent, depth);
+      return serialize(((NbtString) element), layer);
     }
-    return element.toText(indent, depth);
+    return NbtHelper.toPrettyPrintedText(element);
   }
 
-  /** @see NbtCompound#toText(String, int) */
+  /** @see NbtHelper#toPrettyPrintedText */
   public static Text serialize(NbtCompound compound, int layer, String indent, int depth) {
     final Map<String, NbtElement> entries = ((NbtCompoundAccessor) compound).getEntries();
     switch (layer) {
@@ -179,7 +176,7 @@ public final class NbtPrettyPrinter {
     }
   }
 
-  /** @see NbtList#toText(String, int) */
+  /** @see NbtHelper#toPrettyPrintedText */
   public static Text serialize(NbtList nbtList, int layer, String indent, int depth) {
     switch (layer) {
       case 0:
@@ -298,7 +295,7 @@ public final class NbtPrettyPrinter {
     }
   }
 
-  public static Text serialize(NbtString nbtString, int layer, String indent, int depth) {
+  public static Text serialize(NbtString nbtString, int layer) {
     final String string = nbtString.asString();
     final UnaryOperator<Style> strStyle = style -> style.withColor(TextColor.fromRgb(0xcccccc));
     if (layer == 0) {

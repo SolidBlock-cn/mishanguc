@@ -9,6 +9,7 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,8 +34,8 @@ public class HungSignBlockEntity extends BlockEntityWithText {
   /** 编辑该方块的玩家。若为 <code>true</code>，则其他玩家不可编辑。 */
   public @Nullable PlayerEntity editor;
 
-  public HungSignBlockEntity() {
-    super(MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY);
+  public HungSignBlockEntity(BlockPos pos, BlockState state) {
+    super(MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY, pos, state);
   }
 
   public static final TextContext DEFAULT_TEXT_CONTEXT =
@@ -42,11 +43,11 @@ public class HungSignBlockEntity extends BlockEntityWithText {
   public Map<@NotNull Direction, @NotNull List<@NotNull TextContext>> texts = ImmutableMap.of();
 
   @Override
-  public void fromTag(BlockState state, NbtCompound tag) {
-    super.fromTag(state, tag);
+  public void readNbt(NbtCompound nbt) {
+    super.readNbt(nbt);
     ImmutableMap.Builder<Direction, List<TextContext>> builder = new ImmutableMap.Builder<>();
     for (Direction direction : Direction.Type.HORIZONTAL) {
-      final NbtElement element = tag.get(direction.asString());
+      final NbtElement element = nbt.get(direction.asString());
       if (element instanceof NbtString || element instanceof NbtCompound) {
         builder.put(
             direction, ImmutableList.of(TextContext.fromNbt(element, DEFAULT_TEXT_CONTEXT)));

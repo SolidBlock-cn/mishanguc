@@ -198,8 +198,7 @@ public class BlockPlacementContext {
   public boolean setBlockEntity() {
     BlockEntity entityToPlace = world.getBlockEntity(posToPlace);
     if (hitEntity != null && entityToPlace != null) {
-      entityToPlace.fromTag(stateToPlace, hitEntity.writeNbt(new NbtCompound()));
-      entityToPlace.setPos(posToPlace);
+      entityToPlace.readNbt(hitEntity.writeNbt(new NbtCompound()));
     }
     return true;
   }

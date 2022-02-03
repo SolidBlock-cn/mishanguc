@@ -14,6 +14,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -490,30 +491,30 @@ public class SignBlockEditScreen extends Screen {
     entity.editedSide = direction;
     placeHolder.setWidth(width);
     // 添加按钮
-    this.addButton(placeHolder);
-    this.addChild(textFieldListScreen);
-    this.addButton(addTextButton);
-    this.addButton(removeTextButton);
-    this.addButton(boldButton);
-    this.addButton(italicButton);
-    this.addButton(underlineButton);
+    this.addDrawableChild(placeHolder);
+    this.addDrawableChild(textFieldListScreen);
+    this.addDrawableChild(addTextButton);
+    this.addDrawableChild(removeTextButton);
+    this.addDrawableChild(boldButton);
+    this.addDrawableChild(italicButton);
+    this.addDrawableChild(underlineButton);
 
-    this.addButton(strikethroughButton);
-    this.addButton(obfuscatedButton);
-    this.addButton(shadeButton);
-    this.addButton(sizeButton);
-    this.addButton(offsetXButton);
-    this.addButton(offsetYButton);
+    this.addDrawableChild(strikethroughButton);
+    this.addDrawableChild(obfuscatedButton);
+    this.addDrawableChild(shadeButton);
+    this.addDrawableChild(sizeButton);
+    this.addDrawableChild(offsetXButton);
+    this.addDrawableChild(offsetYButton);
 
-    this.addButton(scaleXButton);
-    this.addButton(scaleYButton);
-    this.addButton(offsetZButton);
-    this.addButton(horizontalAlignButton);
-    this.addButton(verticalAlignButton);
-    this.addButton(switchAdvanceButton);
-    this.addButton(colorButton);
-    this.addButton(rearrangeButton);
-    this.addButton(finishButton);
+    this.addDrawableChild(scaleXButton);
+    this.addDrawableChild(scaleYButton);
+    this.addDrawableChild(offsetZButton);
+    this.addDrawableChild(horizontalAlignButton);
+    this.addDrawableChild(verticalAlignButton);
+    this.addDrawableChild(switchAdvanceButton);
+    this.addDrawableChild(colorButton);
+    this.addDrawableChild(rearrangeButton);
+    this.addDrawableChild(finishButton);
     // 添加文本框
     for (int i = 0, textContextsEditingSize = textContextsEditing.size();
         i < textContextsEditingSize;
@@ -609,8 +610,8 @@ public class SignBlockEditScreen extends Screen {
     final TextFieldWidget removedWidget =
         textFieldListScreen.children().remove(index).textFieldWidget;
     final TextContext removedTextContext = contextToWidgetBiMap.inverse().get(removedWidget);
-    if (textFieldListScreen.getSelected() != null
-        && removedWidget == textFieldListScreen.getSelected().textFieldWidget) {
+    if (textFieldListScreen.getFocused() != null
+        && removedWidget == textFieldListScreen.getFocused().textFieldWidget) {
       textFieldListScreen.setSelected(null);
     }
     if (textFieldListScreen.children().size() > index) {
@@ -647,14 +648,14 @@ public class SignBlockEditScreen extends Screen {
   private void finishEditing() {
     this.entity.markDirty();
     if (this.client != null) {
-      this.client.openScreen(null);
+      this.client.setScreen(null);
     }
   }
 
   @Override
   public void tick() {
     super.tick();
-    if (!entity.getType().supports(entity.getCachedState().getBlock())) {
+    if (!entity.getType().supports(entity.getCachedState())) {
       finishEditing();
     }
   }
@@ -669,7 +670,7 @@ public class SignBlockEditScreen extends Screen {
     public TextFieldListScreen(
         MinecraftClient client, int width, int height, int top, int bottom, int itemHeight) {
       super(client, width, height, top, bottom, itemHeight);
-      this.method_31322(false);
+      this.setRenderBackground(false);
       this.setRenderHeader(false, 0);
     }
 
@@ -698,6 +699,11 @@ public class SignBlockEditScreen extends Screen {
     @Override
     protected int getScrollbarPositionX() {
       return width - 6;
+    }
+
+    @Override
+    public void appendNarrations(NarrationMessageBuilder builder) {
+      // TODO: 2022/2/3, 003
     }
 
     /**

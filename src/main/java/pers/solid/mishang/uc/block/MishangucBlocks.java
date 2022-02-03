@@ -408,8 +408,7 @@ public final class MishangucBlocks {
    */
   @RegisterIdentifier
   public static final RoadBlock ASPHALT_ROAD_FILLED_WITH_WHITE =
-      new RoadBlock(
-          FabricBlockSettings.copyOf(ASPHALT_ROAD_SETTINGS).materialColor(MapColor.WHITE));
+      new RoadBlock(FabricBlockSettings.copyOf(ASPHALT_ROAD_SETTINGS).mapColor(MapColor.WHITE));
   /**
    *
    *

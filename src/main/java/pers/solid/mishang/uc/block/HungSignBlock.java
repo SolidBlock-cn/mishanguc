@@ -84,8 +84,8 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
 
   @Nullable
   @Override
-  public BlockEntity createBlockEntity(BlockView world) {
-    return new HungSignBlockEntity();
+  public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    return new HungSignBlockEntity(pos, state);
   }
 
   @SuppressWarnings("deprecation")

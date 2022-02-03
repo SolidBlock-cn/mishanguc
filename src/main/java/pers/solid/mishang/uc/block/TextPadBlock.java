@@ -64,8 +64,8 @@ public class TextPadBlock extends HorizontalFacingBlock
 
   @Nullable
   @Override
-  public BlockEntity createBlockEntity(BlockView world) {
-    return new TextPadBlockEntity();
+  public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    return new TextPadBlockEntity(pos, state);
   }
 
   @SuppressWarnings("deprecation")

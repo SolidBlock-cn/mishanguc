@@ -11,6 +11,7 @@ import net.devtech.arrp.json.loot.JFunction;
 import net.devtech.arrp.json.loot.JLootTable;
 import net.devtech.arrp.json.models.*;
 import net.devtech.arrp.json.tags.JTag;
+import net.fabricmc.api.ModInitializer;
 import net.minecraft.block.Block;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.item.Item;
@@ -33,7 +34,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 @SuppressWarnings({"SameParameterValue", "AlibabaClassNamingShouldBeCamel"})
-public class ARRPMain implements RRPPreGenEntrypoint {
+public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   private static final RuntimeResourcePack PACK = RuntimeResourcePack.create("mishanguc");
 
   private static Identifier blockIdentifier(String path) {
@@ -337,27 +338,25 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             .put(
                 key.isEmpty() ? "type=bottom" : key + ",type=bottom",
                 Util.make(
-                    value.clone(),
-                    jBlockModel ->
-                        ((JBlockModelAccessor) jBlockModel)
-                            .setModel(
-                                new Identifier(model.getNamespace(), slabOf(model.getPath())))))
+                    new JBlockModel(new Identifier(model.getNamespace(), slabOf(model.getPath()))),
+                    jBlockModel -> {
+                      final JBlockModelAccessor accessor = (JBlockModelAccessor) jBlockModel;
+                      accessor.setX(accessor.getX());
+                      accessor.setY(accessor.getY());
+                      accessor.setUvlock(accessor.getUvlock());
+                    }))
             .put(
                 key.isEmpty() ? "type=bottom" : key + ",type=top",
                 Util.make(
-                    value.clone(),
-                    jBlockModel ->
-                        ((JBlockModelAccessor) jBlockModel)
-                            .setModel(
-                                new Identifier(
-                                    model.getNamespace(), slabOf(model.getPath()) + "_top"))))
-            .put(
-                key.isEmpty() ? "type=bottom" : key + ",type=double",
-                Util.make(
-                    value.clone(),
-                    jBlockModel ->
-                        ((JBlockModelAccessor) jBlockModel)
-                            .setModel(new Identifier(model.getNamespace(), (model.getPath())))));
+                    new JBlockModel(
+                        new Identifier(model.getNamespace(), slabOf(model.getPath()) + "_top")),
+                    jBlockModel -> {
+                      final JBlockModelAccessor accessor = (JBlockModelAccessor) jBlockModel;
+                      accessor.setX(accessor.getX());
+                      accessor.setY(accessor.getY());
+                      accessor.setUvlock(accessor.getUvlock());
+                    }))
+            .put(key.isEmpty() ? "type=bottom" : key + ",type=double", value);
       }
       slabVariants.add(slabVariant);
     }
@@ -960,5 +959,10 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         JModel.model(blockIdentifier(String.format("wall_light_%s_decoration_connection2", shape)))
             .textures(new JTextures().var("light", blockString(color + "_light"))),
         blockIdentifier(String.format("%s_wall_light_%s_decoration_connection2", color, shape)));
+  }
+
+  @Override
+  public void onInitialize() {
+    pregen();
   }
 }
