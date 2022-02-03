@@ -455,6 +455,7 @@ public class SignBlockEditScreen extends Screen {
         scaleYButton,
         horizontalAlignButton,
         verticalAlignButton,
+        rearrangeButton,
         switchAdvanceButton
       };
 
