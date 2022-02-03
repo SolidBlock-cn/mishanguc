@@ -22,7 +22,7 @@ import pers.solid.mishang.uc.LineColor;
 import java.util.List;
 
 public abstract class AbstractRoadBlock extends Block implements Road {
-  protected LineColor lineColor;
+  protected final LineColor lineColor;
 
   public AbstractRoadBlock(Settings settings, LineColor lineColor) {
     super(settings);

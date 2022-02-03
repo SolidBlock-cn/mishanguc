@@ -15,19 +15,31 @@ import pers.solid.mishang.uc.item.BlockToolItem;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
-  @Shadow
-  @Final
-  private MinecraftClient client;
+  @Shadow @Final private MinecraftClient client;
 
-  @ModifyArg(method = "Lnet/minecraft/client/render/GameRenderer;updateTargetedEntity(F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;raycast(DFZ)Lnet/minecraft/util/hit/HitResult;"), index = 2)
+  @ModifyArg(
+      method = "updateTargetedEntity(F)V",
+      at =
+          @At(
+              value = "INVOKE",
+              target =
+                  "Lnet/minecraft/entity/Entity;raycast(DFZ)Lnet/minecraft/util/hit/HitResult;"),
+      index = 2)
   private boolean modifyRaycastCall(boolean includeFluids) {
-//        return true;
+    //        return true;
     final ClientPlayerEntity player = this.client.player;
-    if (player == null) return includeFluids;
-    final ItemStack itemStack = player.getStackInHand(Hand.MAIN_HAND).isEmpty() ? player.getStackInHand(Hand.OFF_HAND) : player.getStackInHand(Hand.MAIN_HAND);
+    if (player == null) {
+      return includeFluids;
+    }
+    final ItemStack itemStack =
+        player.getStackInHand(Hand.MAIN_HAND).isEmpty()
+            ? player.getStackInHand(Hand.OFF_HAND)
+            : player.getStackInHand(Hand.MAIN_HAND);
     final Item item = itemStack.getItem();
     if (item instanceof BlockToolItem) {
       return ((BlockToolItem) item).includesFluid(itemStack, player.isSneaking());
-    } else return includeFluids;
+    } else {
+      return includeFluids;
+    }
   }
 }

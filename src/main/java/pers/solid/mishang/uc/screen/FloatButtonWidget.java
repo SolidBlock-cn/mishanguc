@@ -15,7 +15,7 @@ import net.minecraft.text.TranslatableText;
 public class FloatButtonWidget extends ButtonWidget {
   private final Object2FloatFunction<FloatButtonWidget> valueGetter;
   private final FloatConsumer valueSetter;
-  public Float2ObjectFunction<Text> messageSupplier;
+  public final Float2ObjectFunction<Text> messageSupplier;
   /** 按钮的步长，默认为1。 */
   public float step = 1;
   /** 按钮当前的最小值。若低于最小值，则从最大值开始循环，但是如果没有最大值时除外。 */
@@ -23,7 +23,7 @@ public class FloatButtonWidget extends ButtonWidget {
   /** 按钮当前的最大值。若高于最大值，则从最小值开始循环，但是如果没有最小值时除外。 */
   public float max = Float.POSITIVE_INFINITY;
   /** 按钮的默认值。可以按鼠标中键或者按住 Alt + Shift 点击以恢复。 */
-  public float defaultValue = 0;
+  public final float defaultValue = 0;
 
   public FloatButtonWidget(
       int x,
@@ -55,15 +55,19 @@ public class FloatButtonWidget extends ButtonWidget {
   public void setValue(float value) {
     if (value < min) {
       if (Float.isFinite(max)) {
-        value = value + (max - min); // 从最大值开始向下循环。
+        // 从最大值开始向下循环。
+        value = value + (max - min);
       } else {
-        value = min; // 封底为最小值。
+        // 封底为最小值。
+        value = min;
       }
     } else if (value > max) {
       if (Float.isFinite(min)) {
-        value = value - (max - min); // 从最小值开始向上循环。
+        // 从最小值开始向上循环。
+        value = value - (max - min);
       } else {
-        value = max; // 封顶为最大值。
+        // 封顶为最大值。
+        value = max;
       }
     }
     valueSetter.accept(value);
