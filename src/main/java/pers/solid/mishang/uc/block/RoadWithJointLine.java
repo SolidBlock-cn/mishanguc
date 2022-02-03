@@ -35,9 +35,7 @@ public interface RoadWithJointLine extends Road {
     return RoadConnectionState.or(
         Road.super.getConnectionStateOf(state, direction),
         RoadConnectionState.of(
-            !(state.get(FACING) == direction.getOpposite()),
-            getLineColor(),
-            Either.left(direction)));
+            state.get(FACING) != direction.getOpposite(), getLineColor(), Either.left(direction)));
   }
 
   @Override

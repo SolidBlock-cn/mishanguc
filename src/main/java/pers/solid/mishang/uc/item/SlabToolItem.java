@@ -26,9 +26,7 @@ import pers.solid.mishang.uc.render.RendersBlockOutline;
 
 import java.util.List;
 
-/**
- * 用于处理台阶的工具。
- */
+/** 用于处理台阶的工具。 */
 public class SlabToolItem extends Item implements RendersBlockOutline {
   public SlabToolItem(Settings settings) {
     super(settings);
@@ -43,7 +41,8 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
   public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
     Block block = state.getBlock();
     try {
-      if (state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
+      if (state.contains(Properties.SLAB_TYPE)
+          && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
         final BlockHitResult raycast = ((BlockHitResult) miner.raycast(20, 0, false));
         boolean bl = raycast.getPos().y - (double) raycast.getBlockPos().getY() > 0.5D;
         if (bl) {
@@ -66,24 +65,48 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+  public void appendTooltip(
+      ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(new TranslatableText("item.mishanguc.slab_tool.tooltip").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+    tooltip.add(
+        new TranslatableText("item.mishanguc.slab_tool.tooltip")
+            .setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
   }
 
   @Override
-  public boolean rendersBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext worldRenderContext, WorldRenderContext.BlockOutlineContext blockOutlineContext) {
+  public boolean rendersBlockOutline(
+      PlayerEntity player,
+      ItemStack itemStack,
+      WorldRenderContext worldRenderContext,
+      WorldRenderContext.BlockOutlineContext blockOutlineContext) {
 
     final ClientWorld world = worldRenderContext.world();
     final BlockState state = blockOutlineContext.blockState();
-    if (state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
+    if (state.contains(Properties.SLAB_TYPE)
+        && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
       final HitResult crosshairTarget = MinecraftClient.getInstance().crosshairTarget;
-      if (!(crosshairTarget instanceof BlockHitResult)) return true;
-      boolean bl = crosshairTarget.getPos().y - (double) ((BlockHitResult) crosshairTarget).getBlockPos().getY() > 0.5D;
+      if (!(crosshairTarget instanceof BlockHitResult)) {
+        return true;
+      }
+      boolean bl =
+          crosshairTarget.getPos().y
+                  - (double) ((BlockHitResult) crosshairTarget).getBlockPos().getY()
+              > 0.5D;
       // 渲染时需要使用的方块状态。
-      final BlockState halfState = state.with(Properties.SLAB_TYPE, bl ? SlabType.TOP : SlabType.BOTTOM);
+      final BlockState halfState =
+          state.with(Properties.SLAB_TYPE, bl ? SlabType.TOP : SlabType.BOTTOM);
       final BlockPos blockPos = blockOutlineContext.blockPos();
-      WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), blockOutlineContext.vertexConsumer(), halfState.getOutlineShape(world, blockPos, ShapeContext.of(blockOutlineContext.entity())), (double) blockPos.getX() - blockOutlineContext.cameraX(), (double) blockPos.getY() - blockOutlineContext.cameraY(), (double) blockPos.getZ() - blockOutlineContext.cameraZ(), 0.0F, 0.0F, 0.0F, 0.4F);
+      WorldRendererInvoker.drawShapeOutline(
+          worldRenderContext.matrixStack(),
+          blockOutlineContext.vertexConsumer(),
+          halfState.getOutlineShape(world, blockPos, ShapeContext.of(blockOutlineContext.entity())),
+          (double) blockPos.getX() - blockOutlineContext.cameraX(),
+          (double) blockPos.getY() - blockOutlineContext.cameraY(),
+          (double) blockPos.getZ() - blockOutlineContext.cameraZ(),
+          0.0F,
+          0.0F,
+          0.0F,
+          0.4F);
       return false;
     }
     return true;

@@ -89,6 +89,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
             .formatted(Formatting.GRAY));
   }
 
+  @SuppressWarnings("AlibabaMethodTooLong")
   @Override
   public boolean rendersBlockOutline(
       PlayerEntity player,

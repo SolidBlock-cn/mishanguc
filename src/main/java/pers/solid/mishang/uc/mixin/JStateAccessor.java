@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.List;
 
+@SuppressWarnings("AlibabaClassNamingShouldBeCamel")
 @Mixin(JState.class)
 public interface JStateAccessor {
   @Accessor("variants")

@@ -43,18 +43,26 @@ public class FastBuildingToolItem extends BlockToolItem {
   }
 
   @Override
-  public ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
+  public ActionResult useOnBlock(
+      PlayerEntity player,
+      World world,
+      BlockHitResult blockHitResult,
+      Hand hand,
+      boolean fluidIncluded) {
     final Direction side = blockHitResult.getSide();
     final BlockPos centerBlockPos = blockHitResult.getBlockPos();
     final BlockState centerState = world.getBlockState(centerBlockPos);
     final ItemStack stack = player.getStackInHand(hand);
-    final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, centerBlockPos, player, stack, blockHitResult, fluidIncluded);
+    final BlockPlacementContext blockPlacementContext =
+        new BlockPlacementContext(
+            world, centerBlockPos, player, stack, blockHitResult, fluidIncluded);
     final int range = this.getRange(stack);
     final BlockMatchingRule matchingRule = this.getMatchingRule(stack);
     for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, centerBlockPos, side, range)) {
       BlockState state = world.getBlockState(pos);
       if (matchingRule.match(centerState, state)) {
-        final BlockPlacementContext offsetBlockPlacementContext = new BlockPlacementContext(blockPlacementContext, pos);
+        final BlockPlacementContext offsetBlockPlacementContext =
+            new BlockPlacementContext(blockPlacementContext, pos);
         if (offsetBlockPlacementContext.canPlace() && offsetBlockPlacementContext.canReplace()) {
           if (world.isClient()) {
             // 播放声音。
@@ -71,7 +79,8 @@ public class FastBuildingToolItem extends BlockToolItem {
   }
 
   @Override
-  public ActionResult attackBlock(PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
+  public ActionResult attackBlock(
+      PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!world.isClient()) {
       final ItemStack stack = player.getMainHandStack();
       final int range = this.getRange(stack);
@@ -89,11 +98,13 @@ public class FastBuildingToolItem extends BlockToolItem {
 
   @Override
   public ItemStack getDefaultStack() {
-    return Util.make(super.getDefaultStack(), stack -> {
-      final NbtCompound tag = stack.getOrCreateTag();
-      tag.putInt("Range", 5);
-      tag.putString("MatchingRule", "mishanguc:same_block");
-    });
+    return Util.make(
+        super.getDefaultStack(),
+        stack -> {
+          final NbtCompound tag = stack.getOrCreateTag();
+          tag.putInt("Range", 5);
+          tag.putString("MatchingRule", "mishanguc:same_block");
+        });
   }
 
   public int getRange(ItemStack stack) {
@@ -103,51 +114,81 @@ public class FastBuildingToolItem extends BlockToolItem {
 
   public @NotNull BlockMatchingRule getMatchingRule(ItemStack stack) {
     final NbtCompound tag = stack.getOrCreateTag();
-    final BlockMatchingRule matchingRule = BlockMatchingRule.fromString(tag.getString("MatchingRule"));
+    final BlockMatchingRule matchingRule =
+        BlockMatchingRule.fromString(tag.getString("MatchingRule"));
     return matchingRule == null ? BlockMatchingRule.SAME_BLOCK : matchingRule;
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+  public void appendTooltip(
+      ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(new TranslatableText("item.mishanguc.fast_building_tool.tooltip").formatted(Formatting.GRAY));
-    tooltip.add(new TranslatableText("item.mishanguc.fast_building_tool.tooltip.range", this.getRange(stack)).formatted(Formatting.GRAY));
-    tooltip.add(new TranslatableText("item.mishanguc.fast_building_tool.tooltip.matchingRule", this.getMatchingRule(stack).getName()).formatted(Formatting.GRAY));
+    tooltip.add(
+        new TranslatableText("item.mishanguc.fast_building_tool.tooltip")
+            .formatted(Formatting.GRAY));
+    tooltip.add(
+        new TranslatableText(
+                "item.mishanguc.fast_building_tool.tooltip.range", this.getRange(stack))
+            .formatted(Formatting.GRAY));
+    tooltip.add(
+        new TranslatableText(
+                "item.mishanguc.fast_building_tool.tooltip.matchingRule",
+                this.getMatchingRule(stack).getName())
+            .formatted(Formatting.GRAY));
   }
 
   @Override
   public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
     if (this.isIn(group)) {
-      stacks.add(Util.make(new ItemStack(this), stack -> {
-        final NbtCompound tag = stack.getOrCreateTag();
-        tag.putInt("Range", 16);
-        tag.putString("MatchingRule", BlockMatchingRule.SAME_STATE.asString());
-      }));
-      stacks.add(Util.make(new ItemStack(this), stack -> {
-        final NbtCompound tag = stack.getOrCreateTag();
-        tag.putInt("Range", 16);
-        tag.putString("MatchingRule", BlockMatchingRule.SAME_BLOCK.asString());
-      }));
-      stacks.add(Util.make(new ItemStack(this), stack -> {
-        final NbtCompound tag = stack.getOrCreateTag();
-        tag.putInt("Range", 16);
-        tag.putString("MatchingRule", BlockMatchingRule.SAME_MATERIAL.asString());
-      }));
-      stacks.add(Util.make(new ItemStack(this), stack -> {
-        final NbtCompound tag = stack.getOrCreateTag();
-        tag.putInt("Range", 16);
-        tag.putString("MatchingRule", BlockMatchingRule.ANY.asString());
-      }));
+      stacks.add(
+          Util.make(
+              new ItemStack(this),
+              stack -> {
+                final NbtCompound tag = stack.getOrCreateTag();
+                tag.putInt("Range", 16);
+                tag.putString("MatchingRule", BlockMatchingRule.SAME_STATE.asString());
+              }));
+      stacks.add(
+          Util.make(
+              new ItemStack(this),
+              stack -> {
+                final NbtCompound tag = stack.getOrCreateTag();
+                tag.putInt("Range", 16);
+                tag.putString("MatchingRule", BlockMatchingRule.SAME_BLOCK.asString());
+              }));
+      stacks.add(
+          Util.make(
+              new ItemStack(this),
+              stack -> {
+                final NbtCompound tag = stack.getOrCreateTag();
+                tag.putInt("Range", 16);
+                tag.putString("MatchingRule", BlockMatchingRule.SAME_MATERIAL.asString());
+              }));
+      stacks.add(
+          Util.make(
+              new ItemStack(this),
+              stack -> {
+                final NbtCompound tag = stack.getOrCreateTag();
+                tag.putInt("Range", 16);
+                tag.putString("MatchingRule", BlockMatchingRule.ANY.asString());
+              }));
     }
   }
 
   @Override
   public Text getName(ItemStack stack) {
-    return new LiteralText("").append(super.getName(stack)).append(" - ").append(getMatchingRule(stack).getName());
+    return new LiteralText("")
+        .append(super.getName(stack))
+        .append(" - ")
+        .append(getMatchingRule(stack).getName());
   }
 
   @Override
-  public boolean rendersBlockOutline(PlayerEntity player, ItemStack mainHandStack, WorldRenderContext worldRenderContext, WorldRenderContext.BlockOutlineContext blockOutlineContext) {
+  public boolean rendersBlockOutline(
+      PlayerEntity player,
+      ItemStack mainHandStack,
+      WorldRenderContext worldRenderContext,
+      WorldRenderContext.BlockOutlineContext blockOutlineContext) {
     final VertexConsumer vertexConsumer = blockOutlineContext.vertexConsumer();
     final boolean includesFluid = this.includesFluid(mainHandStack, player.isSneaking());
     final BlockMatchingRule matchingRule = this.getMatchingRule(mainHandStack);
@@ -155,23 +196,71 @@ public class FastBuildingToolItem extends BlockToolItem {
     final BlockHitResult raycast;
     try {
       raycast = (BlockHitResult) MinecraftClient.getInstance().crosshairTarget;
-      if (raycast == null) return true;
+      if (raycast == null) {
+        return true;
+      }
     } catch (ClassCastException e) {
       return true;
     }
     final ClientWorld world = worldRenderContext.world();
-    final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockOutlineContext.blockPos(), player, mainHandStack, raycast, false);
-    for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, raycast.getBlockPos(), raycast.getSide(), range)) {
+    final BlockPlacementContext blockPlacementContext =
+        new BlockPlacementContext(
+            world, blockOutlineContext.blockPos(), player, mainHandStack, raycast, false);
+    for (BlockPos pos :
+        matchingRule.getPlainValidBlockPoss(
+            world, raycast.getBlockPos(), raycast.getSide(), range)) {
       final BlockState state = world.getBlockState(pos);
-      final BlockPlacementContext offsetBlockPlacementContext = new BlockPlacementContext(blockPlacementContext, pos);
+      final BlockPlacementContext offsetBlockPlacementContext =
+          new BlockPlacementContext(blockPlacementContext, pos);
       if (offsetBlockPlacementContext.canPlace() && offsetBlockPlacementContext.canReplace()) {
-        WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, offsetBlockPlacementContext.stateToPlace.getOutlineShape(world, pos), offsetBlockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(), offsetBlockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(), offsetBlockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(), 0, 1, 1, 0.8f);
-        if (includesFluid)
-          WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, offsetBlockPlacementContext.stateToPlace.getFluidState().getShape(world, pos), offsetBlockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(), offsetBlockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(), offsetBlockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(), 0, 0.25f, 1, 0.4f);
+        WorldRendererInvoker.drawShapeOutline(
+            worldRenderContext.matrixStack(),
+            vertexConsumer,
+            offsetBlockPlacementContext.stateToPlace.getOutlineShape(world, pos),
+            offsetBlockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(),
+            offsetBlockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(),
+            offsetBlockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(),
+            0,
+            1,
+            1,
+            0.8f);
+        if (includesFluid) {
+          WorldRendererInvoker.drawShapeOutline(
+              worldRenderContext.matrixStack(),
+              vertexConsumer,
+              offsetBlockPlacementContext.stateToPlace.getFluidState().getShape(world, pos),
+              offsetBlockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(),
+              offsetBlockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(),
+              offsetBlockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(),
+              0,
+              0.25f,
+              1,
+              0.4f);
+        }
       }
-      WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, state.getOutlineShape(world, pos), pos.getX() - blockOutlineContext.cameraX(), pos.getY() - blockOutlineContext.cameraY(), pos.getZ() - blockOutlineContext.cameraZ(), 1, 0, 0, 0.8f);
+      WorldRendererInvoker.drawShapeOutline(
+          worldRenderContext.matrixStack(),
+          vertexConsumer,
+          state.getOutlineShape(world, pos),
+          pos.getX() - blockOutlineContext.cameraX(),
+          pos.getY() - blockOutlineContext.cameraY(),
+          pos.getZ() - blockOutlineContext.cameraZ(),
+          1,
+          0,
+          0,
+          0.8f);
       if (includesFluid) {
-        WorldRendererInvoker.drawShapeOutline(worldRenderContext.matrixStack(), vertexConsumer, state.getFluidState().getShape(world, pos), pos.getX() - blockOutlineContext.cameraX(), pos.getY() - blockOutlineContext.cameraY(), pos.getZ() - blockOutlineContext.cameraZ(), 1, 0.75f, 0, 0.4f);
+        WorldRendererInvoker.drawShapeOutline(
+            worldRenderContext.matrixStack(),
+            vertexConsumer,
+            state.getFluidState().getShape(world, pos),
+            pos.getX() - blockOutlineContext.cameraX(),
+            pos.getY() - blockOutlineContext.cameraY(),
+            pos.getZ() - blockOutlineContext.cameraZ(),
+            1,
+            0.75f,
+            0,
+            0.4f);
       }
     }
     return false;

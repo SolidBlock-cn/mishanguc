@@ -152,6 +152,7 @@ public interface RoadWithAutoLine extends Road {
       this.lineColor = lineColor;
     }
 
+    @SuppressWarnings("AlibabaMethodTooLong")
     @Override
     public @NotNull BlockState makeState(
         EnumMap<Direction, RoadConnectionState> connectionStateMap, BlockState defaultState) {
@@ -299,6 +300,7 @@ public interface RoadWithAutoLine extends Road {
       this.lineColor = lineColor;
     }
 
+    @SuppressWarnings("AlibabaMethodTooLong")
     @Override
     public @NotNull BlockState makeState(
         EnumMap<Direction, RoadConnectionState> connectionStateMap, BlockState defaultState) {

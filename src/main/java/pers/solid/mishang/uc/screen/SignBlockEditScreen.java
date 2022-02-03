@@ -482,7 +482,6 @@ public class SignBlockEditScreen extends Screen {
   }
 
   /** 初始化，对屏幕进行配置。 */
-  @SuppressWarnings({"AlibabaLowerCamelCaseVariableNaming", "AlibabaMethodTooLong"})
   @Override
   protected void init() {
     super.init();

@@ -5,6 +5,7 @@ import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
+@SuppressWarnings("AlibabaClassNamingShouldBeCamel")
 @Mixin(JBlockModel.class)
 public interface JBlockModelAccessor {
   @Accessor

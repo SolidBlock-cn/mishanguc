@@ -27,12 +27,25 @@ public class BlockStateToolItem extends BlockToolItem {
     super(settings, includesFluid);
   }
 
-  public static void broadcastProperties(BlockPos blockPos, PlayerEntity player, BlockState blockState) {
+  public static void broadcastProperties(
+      BlockPos blockPos, PlayerEntity player, BlockState blockState) {
     final Collection<Property<?>> properties = blockState.getProperties();
     if (properties.isEmpty()) {
-      player.sendSystemMessage(new TranslatableText("debug.mishanguc.blockStates.none", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getBlock().getName().formatted(Formatting.BOLD)).formatted(Formatting.RED), player.getUuid());
+      player.sendSystemMessage(
+          new TranslatableText(
+                  "debug.mishanguc.blockStates.none",
+                  String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()),
+                  blockState.getBlock().getName().formatted(Formatting.BOLD))
+              .formatted(Formatting.RED),
+          player.getUuid());
     } else {
-      player.sendSystemMessage(new TranslatableText("debug.mishanguc.blockStates", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getBlock().getName().formatted(Formatting.BOLD)).formatted(Formatting.YELLOW), player.getUuid());
+      player.sendSystemMessage(
+          new TranslatableText(
+                  "debug.mishanguc.blockStates",
+                  String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()),
+                  blockState.getBlock().getName().formatted(Formatting.BOLD))
+              .formatted(Formatting.YELLOW),
+          player.getUuid());
     }
     for (Property<?> property : properties) {
       final Comparable<?> propertyValue = blockState.get(property);
@@ -42,12 +55,24 @@ public class BlockStateToolItem extends BlockToolItem {
       } else if (property instanceof IntProperty) {
         value.styled(style -> style.withColor(TextColor.fromRgb(0x00eedd)));
       }
-      player.sendSystemMessage(new LiteralText("  ").append(new LiteralText(property.getName()).styled(style -> style.withColor(TextColor.fromRgb(0xcccccc)))).append(" = ").append(value), player.getUuid());
+      player.sendSystemMessage(
+          new LiteralText("  ")
+              .append(
+                  new LiteralText(property.getName())
+                      .styled(style -> style.withColor(TextColor.fromRgb(0xcccccc))))
+              .append(" = ")
+              .append(value),
+          player.getUuid());
     }
   }
 
   @Override
-  public ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
+  public ActionResult useOnBlock(
+      PlayerEntity player,
+      World world,
+      BlockHitResult blockHitResult,
+      Hand hand,
+      boolean fluidIncluded) {
     if (!world.isClient) {
       return getBlockStateOf(player, world, blockHitResult.getBlockPos(), false);
     } else {
@@ -56,7 +81,8 @@ public class BlockStateToolItem extends BlockToolItem {
   }
 
   @Override
-  public ActionResult attackBlock(PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
+  public ActionResult attackBlock(
+      PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
     return getBlockStateOf(player, world, pos, fluidIncluded);
   }
 
@@ -65,63 +91,42 @@ public class BlockStateToolItem extends BlockToolItem {
     return super.canMine(state, world, pos, miner);
   }
 
-  //    @Override
-//    public ActionResult useOnBlock(ItemUsageContext context) {
-//        final World world = context.getWorld();
-//        final PlayerEntity player = context.getPlayer();
-//        if (world.isClient || player == null) return ActionResult.PASS;
-//        if (!includesFluid(context.getStack(), player.isSneaking())) {
-//            final BlockPos blockPos = context.getBlockPos();
-//            broadcastProperties(blockPos, context.getPlayer(), world.getBlockState(blockPos));
-//        }
-//        return ActionResult.success(world.isClient);
-//    }
-
-//    @Override
-//    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-//        if (!world.isClient)
-//            broadcastProperties(pos, miner, state);
-//        return false;
-//    }
-
-//    @Override
-//    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-//        final ItemStack stackInHand = user.getStackInHand(hand);
-//        if (world.isClient) return TypedActionResult.consume(stackInHand);
-//        final boolean includesFluid = includesFluid(stackInHand, user.isSneaking());
-//        if (!includesFluid) return TypedActionResult.pass(stackInHand);
-//        BlockHitResult hitResult = raycast(world, user, RaycastContext.FluidHandling.ANY);
-//        if (hitResult.getType() == HitResult.Type.MISS) return TypedActionResult.fail(stackInHand);
-//        final BlockPos blockPos = hitResult.getBlockPos();
-//        broadcastProperties(hitResult.getBlockPos(), user, world.getBlockState(blockPos));
-//        final FluidState fluidState = world.getFluidState(blockPos);
-//        final int fluidLevel = fluidState.getLevel();
-//        if (fluidLevel != 0)
-//            user.sendSystemMessage(new LiteralText("  ").append(new TranslatableText("debug.mishanguc.blockStates.fluidLevel").styled(style -> style.withColor(TextColor.fromRgb(0xcccccc)))).append(" = ").append(String.valueOf(fluidLevel)), user.getUuid());
-//        return TypedActionResult.success(stackInHand);
-//    }
-
-  public ActionResult getBlockStateOf(PlayerEntity player, World world, BlockPos blockPos, boolean fluidIncluded) {
+  public ActionResult getBlockStateOf(
+      PlayerEntity player, World world, BlockPos blockPos, boolean fluidIncluded) {
     BlockState blockState = world.getBlockState(blockPos);
     broadcastProperties(blockPos, player, blockState);
     if (fluidIncluded) {
       final FluidState fluidState = world.getFluidState(blockPos);
       final int fluidLevel = fluidState.getLevel();
-      if (fluidLevel != 0)
-        player.sendSystemMessage(new LiteralText("  ").append(new TranslatableText("debug.mishanguc.blockStates.fluidLevel").styled(style -> style.withColor(TextColor.fromRgb(0xcccccc)))).append(" = ").append(String.valueOf(fluidLevel)), player.getUuid());
+      if (fluidLevel != 0) {
+        player.sendSystemMessage(
+            new LiteralText("  ")
+                .append(
+                    new TranslatableText("debug.mishanguc.blockStates.fluidLevel")
+                        .styled(style -> style.withColor(TextColor.fromRgb(0xcccccc))))
+                .append(" = ")
+                .append(String.valueOf(fluidLevel)),
+            player.getUuid());
+      }
     }
     return ActionResult.SUCCESS;
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+  public void appendTooltip(
+      ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(new TranslatableText("item.mishanguc.block_state_tool.tooltip").formatted(Formatting.GRAY));
+    tooltip.add(
+        new TranslatableText("item.mishanguc.block_state_tool.tooltip").formatted(Formatting.GRAY));
     final Boolean includesFluid = includesFluid(stack);
     if (includesFluid == null) {
-      tooltip.add(new TranslatableText("item.mishanguc.block_state_tool.tooltip.includesFluidWhileSneaking").formatted(Formatting.GRAY));
+      tooltip.add(
+          new TranslatableText("item.mishanguc.block_state_tool.tooltip.includesFluidWhileSneaking")
+              .formatted(Formatting.GRAY));
     } else if (includesFluid) {
-      tooltip.add(new TranslatableText("item.mishanguc.block_state_tool.tooltip.includesFluid").formatted(Formatting.GRAY));
+      tooltip.add(
+          new TranslatableText("item.mishanguc.block_state_tool.tooltip.includesFluid")
+              .formatted(Formatting.GRAY));
     }
   }
 }

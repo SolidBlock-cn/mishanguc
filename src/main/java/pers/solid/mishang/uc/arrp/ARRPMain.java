@@ -32,7 +32,7 @@ import pers.solid.mishang.uc.mixin.JVariantAccessor;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
-@SuppressWarnings("SameParameterValue")
+@SuppressWarnings({"SameParameterValue", "AlibabaClassNamingShouldBeCamel"})
 public class ARRPMain implements RRPPreGenEntrypoint {
   private static final RuntimeResourcePack PACK = RuntimeResourcePack.create("mishanguc");
 
@@ -655,6 +655,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             });
   }
 
+  @SuppressWarnings("AlibabaMethodTooLong")
   private static void addBlockModels() {
     addCubeAll(PACK, "asphalt_road_block", "asphalt");
     addSlabAll(PACK, "asphalt_road_slab", "asphalt");

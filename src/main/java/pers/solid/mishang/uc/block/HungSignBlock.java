@@ -158,6 +158,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
                         || rotation == BlockRotation.COUNTERCLOCKWISE_90
                     ? (oldAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X)
                     : oldAxis);
+    //noinspection AlibabaAvoidComplexCondition
     if (rotation == BlockRotation.CLOCKWISE_180
         || (oldAxis == Direction.Axis.X && rotation == BlockRotation.COUNTERCLOCKWISE_90)
         || (oldAxis == Direction.Axis.Z && rotation == BlockRotation.CLOCKWISE_90)) {
