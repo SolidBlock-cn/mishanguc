@@ -474,7 +474,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
                 .addModel(new JBlockModel(blockIdentifier(path + "_bar_edge")).uvlock())
                 .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "false")),
             new JMultipart()
-                .addModel(new JBlockModel(blockIdentifier(path + "_bar_edge")).uvlock().y(90))
+                .addModel(new JBlockModel(blockIdentifier(path + "_bar_edge")).uvlock().y(180))
                 .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "false")),
             new JMultipart()
                 .addModel(new JBlockModel(blockIdentifier(path + "_bar_edge")).uvlock().y(90))

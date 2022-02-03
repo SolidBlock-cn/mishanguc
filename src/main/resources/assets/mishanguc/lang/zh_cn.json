@@ -173,7 +173,7 @@
   "block.mishanguc.white_wall_light_hash_decoration": "墙上的白色灯井字形装饰",
   "block.mishanguc.white_wall_light_round_decoration": "墙上的白色灯圆形装饰",
   "message.mishanguc.add_first_text": "点击此处添加第一条文本！",
-  "message.mishanguc.rearrange": "重排",
+  "message.mishanguc.rearrange": "全部重排",
   "message.mishanguc.rearrange.tooltip": "自动调整内容的偏移。",
   "message.mishanguc.color": "颜色",
   "message.mishanguc.color.param": "颜色：%s",

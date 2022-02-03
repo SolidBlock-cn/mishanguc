@@ -194,7 +194,7 @@
   "message.mishanguc.scaleZ": "Z Scale:%s",
   "message.mishanguc.text_field": "Text Field",
   "message.mishanguc.text_field.tooltip": "Click mouse to add, hold Shift to decrease, or adjust with mouse scroll.",
-  "message.mishanguc.rearrange": "Rearrange",
+  "message.mishanguc.rearrange": "Rearrange all",
   "message.mishanguc.rearrange.tooltip": "Automatically adjust offsets of contents.",
   "message.mishanguc.add_first_text": "Click here to add first text!",
   "message.mishanguc.color": "Color",

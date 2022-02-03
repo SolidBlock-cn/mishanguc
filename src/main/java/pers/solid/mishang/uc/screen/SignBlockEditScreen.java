@@ -350,9 +350,11 @@ public class SignBlockEditScreen extends Screen {
                         stackHeights.getOrDefault(textContext.verticalAlign, 0) / 2;
                     break;
                   case BOTTOM:
-                    textContext.offsetY -= stackHeights.getOrDefault(textContext.verticalAlign, 0);
+                    textContext.offsetY -=
+                        textContextsEditing.get(textContextsEditing.size() - 1).size / 4 * 9 / 8;
                     break;
                   default:
+                    textContext.offsetY -= textContextsEditing.get(0).size / 4 * 9 / 8;
                 }
               }
             }
@@ -410,15 +412,25 @@ public class SignBlockEditScreen extends Screen {
     verticalAlignButton.min = -0.5f;
     verticalAlignButton.max = 2.5f;
   }
+
+  /**
+   * 是否为高级模式。若为高级模式，则显示高级模式的按钮，不显示非高级模式的按钮。
+   *
+   * @see #switchAdvanceButton
+   */
+  private boolean advance = false;
   /** 切换高级模式为开或关。 */
   public final ButtonWidget switchAdvanceButton =
       new ButtonWidget(
-          0, 0, 30, 20, new TranslatableText("message.mishanguc.advanced"), b -> switchAdvance());
-
-  private void switchAdvance() {
-    advance = !advance;
-    init();
-  }
+          0,
+          0,
+          30,
+          20,
+          new TranslatableText("message.mishanguc.advanced"),
+          b -> {
+            advance = !advance;
+            switchToolboxButtons();
+          });
 
   private final ButtonWidget[] toolbox1 =
       new ButtonWidget[] {
@@ -468,14 +480,6 @@ public class SignBlockEditScreen extends Screen {
     scaleYButton.step = -0.125f;
   }
 
-  /**
-   * 是否为高级模式。若为高级模式，则显示高级模式的按钮，不显示非高级模式的按钮。
-   *
-   * @see #switchAdvanceButton
-   * @see #switchAdvance
-   */
-  private boolean advance = false;
-
   /** 初始化，对屏幕进行配置。 */
   @SuppressWarnings({"AlibabaLowerCamelCaseVariableNaming", "AlibabaMethodTooLong"})
   @Override
@@ -518,6 +522,15 @@ public class SignBlockEditScreen extends Screen {
       addTextField(i, textContext);
     }
 
+    switchToolboxButtons();
+    addTextButton.x = width / 2 - 220;
+    removeTextButton.x = width / 2 + 20;
+    finishButton.x = width / 2 - 100;
+    finishButton.y = height - 30;
+  }
+
+  /** 切换底部按钮的显示。显示高级按钮，或者取消高级按钮的显示。 */
+  private void switchToolboxButtons() {
     for (ButtonWidget widget : advance ? toolbox1 : toolbox2) {
       widget.visible = false;
     }
@@ -533,10 +546,6 @@ public class SignBlockEditScreen extends Screen {
       widget.x += width / 2 - belowToolboxWidth / 2;
       widget.y = height - 50;
     }
-    addTextButton.x = width / 2 - 220;
-    removeTextButton.x = width / 2 + 20;
-    finishButton.x = width / 2 - 100;
-    finishButton.y = height - 30;
   }
 
   /**

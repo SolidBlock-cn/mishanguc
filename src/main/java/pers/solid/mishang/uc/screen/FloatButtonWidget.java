@@ -84,6 +84,7 @@ public class FloatButtonWidget extends ButtonWidget {
                 getValue()
                     + (Screen.hasShiftDown() || button == 1 ? -1 : 1)
                         * step
+                        * (Screen.hasControlDown() ? 8 : 1)
                         * (Screen.hasAltDown() ? 0.125f : 1));
           }
           return true;
@@ -103,6 +104,7 @@ public class FloatButtonWidget extends ButtonWidget {
             (getValue()
                 + amount
                     * (Screen.hasShiftDown() ? 1 : -1)
+                    * (Screen.hasControlDown() ? 8 : 1)
                     * step
                     * (Screen.hasAltDown() ? 0.125f : 1)));
     super.mouseScrolled(mouseX, mouseY, amount);
