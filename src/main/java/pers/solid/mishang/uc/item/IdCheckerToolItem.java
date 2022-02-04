@@ -81,7 +81,8 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
   @Override
   public ActionResult attackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    return getIdOf(player, world, pos);
+    if (world.isClient) return getIdOf(player, world, pos);
+    else return ActionResult.SUCCESS;
   }
 
   @Override

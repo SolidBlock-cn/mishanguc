@@ -42,7 +42,8 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
   @Override
   public ActionResult attackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    return getBlockDataOf(player, world, pos);
+    if (!world.isClient) return getBlockDataOf(player, world, pos);
+    else return ActionResult.SUCCESS;
   }
 
   public ActionResult getBlockDataOf(PlayerEntity player, World world, BlockPos blockPos) {

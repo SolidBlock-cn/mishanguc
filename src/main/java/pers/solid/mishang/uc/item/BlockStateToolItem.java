@@ -83,7 +83,8 @@ public class BlockStateToolItem extends BlockToolItem {
   @Override
   public ActionResult attackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    return getBlockStateOf(player, world, pos, fluidIncluded);
+    if (!world.isClient) return getBlockStateOf(player, world, pos, fluidIncluded);
+    else return ActionResult.SUCCESS;
   }
 
   @Override
