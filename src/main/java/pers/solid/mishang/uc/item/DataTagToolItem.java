@@ -98,7 +98,8 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
       Hand hand,
       Entity entity,
       @Nullable EntityHitResult hitResult) {
-    return getEntityDataOf(player, world, hand, entity, hitResult);
+    if (!world.isClient) return getEntityDataOf(player, world, hand, entity, hitResult);
+    else return ActionResult.SUCCESS;
   }
 
   @Override
@@ -108,6 +109,7 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
       Hand hand,
       Entity entity,
       @Nullable EntityHitResult hitResult) {
-    return getEntityDataOf(player, world, hand, entity, hitResult);
+    if (!world.isClient) return getEntityDataOf(player, world, hand, entity, hitResult);
+    else return ActionResult.SUCCESS;
   }
 }

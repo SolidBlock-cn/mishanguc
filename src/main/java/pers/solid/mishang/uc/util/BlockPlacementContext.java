@@ -200,6 +200,7 @@ public class BlockPlacementContext {
     if (hitEntity != null && entityToPlace != null) {
       entityToPlace.fromTag(stateToPlace, hitEntity.writeNbt(new NbtCompound()));
       entityToPlace.setPos(posToPlace);
+      entityToPlace.markDirty();
     }
     return true;
   }
