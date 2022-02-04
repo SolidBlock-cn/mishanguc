@@ -117,31 +117,6 @@ public class MishangUc implements ModInitializer {
     MishangucItems.init();
 
     // 注册事件
-    //    PlayerBlockBreakEvents.BEFORE.register(
-    //        (world, player, pos, state, blockEntity) -> {
-    //          if (player.isSpectator()) {
-    //            return true;
-    //          }
-    //          final ItemStack stack = player.getMainHandStack();
-    //          final Item item = stack.getItem();
-    //          if (item instanceof BlockToolItem) {
-    //            final BlockHitResult hitResult =
-    //                (BlockHitResult)
-    //                    player.raycast(
-    //                        5, 0, ((BlockToolItem) item).includesFluid(stack,
-    // player.isSneaking()));
-    //            return ((BlockToolItem) item)
-    //                    .attackBlock(
-    //                        player,
-    //                        world,
-    //                        hitResult.getBlockPos(),
-    //                        hitResult.getSide(),
-    //                        ((BlockToolItem) item).includesFluid(stack, player.isSneaking()))
-    //                == ActionResult.PASS;
-    //          } else {
-    //            return true;
-    //          }
-    //        });
     AttackBlockCallback.EVENT.register(
         (player, world, hand, pos, direction) -> {
           if (player.isSpectator()) {

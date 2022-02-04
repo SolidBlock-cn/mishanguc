@@ -3,8 +3,8 @@ package pers.solid.mishang.uc.item;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
@@ -12,6 +12,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
@@ -20,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class IdCheckerToolItem extends BlockToolItem {
+public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEntity {
 
   public IdCheckerToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
@@ -28,7 +29,7 @@ public class IdCheckerToolItem extends BlockToolItem {
 
   public ActionResult getIdOf(PlayerEntity player, World world, BlockPos blockPos) {
     BlockState blockState = world.getBlockState(blockPos);
-    if (!world.isClient() && player != null) {
+    if (player != null) {
       final Block block = blockState.getBlock();
       final Identifier identifier = Registry.BLOCK.getId(block);
       final int rawId = Registry.BLOCK.getRawId(block);
@@ -36,29 +37,34 @@ public class IdCheckerToolItem extends BlockToolItem {
           new LiteralText("")
               .append(
                   new TranslatableText(
-                          "debug.mishanguc.blockId",
+                          "debug.mishanguc.blockId.header",
                           String.format(
                               "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
                       .formatted(Formatting.YELLOW)),
           Util.NIL_UUID);
-      player.sendSystemMessage(
-          new LiteralText("  ")
-              .append(new TranslatableText("debug.mishanguc.blockId.name", block.getName())),
-          Util.NIL_UUID);
-      player.sendSystemMessage(
-          new LiteralText("  ")
-              .append(
-                  new TranslatableText(
-                      "debug.mishanguc.blockId.id", new LiteralText(identifier.toString()))),
-          Util.NIL_UUID);
-      player.sendSystemMessage(
-          new LiteralText("  ")
-              .append(
-                  new TranslatableText(
-                      "debug.mishanguc.blockId.rawId", new LiteralText(Integer.toString(rawId)))),
-          Util.NIL_UUID);
+      broadcastId(player, block.getName(), identifier, rawId);
+      return ActionResult.SUCCESS;
     }
     return ActionResult.success(world.isClient);
+  }
+
+  /** 发送一个方块、实体或其他事物的id。 */
+  private void broadcastId(PlayerEntity player, Text name, Identifier identifier, int rawId) {
+    player.sendSystemMessage(
+        new LiteralText("  ").append(new TranslatableText("debug.mishanguc.id.name", name)),
+        Util.NIL_UUID);
+    player.sendSystemMessage(
+        new LiteralText("  ")
+            .append(
+                new TranslatableText(
+                    "debug.mishanguc.id.id", new LiteralText(identifier.toString()))),
+        Util.NIL_UUID);
+    player.sendSystemMessage(
+        new LiteralText("  ")
+            .append(
+                new TranslatableText(
+                    "debug.mishanguc.id.rawId", new LiteralText(Integer.toString(rawId)))),
+        Util.NIL_UUID);
   }
 
   @Override
@@ -68,38 +74,14 @@ public class IdCheckerToolItem extends BlockToolItem {
       BlockHitResult blockHitResult,
       Hand hand,
       boolean fluidIncluded) {
-    return getIdOf(player, world, blockHitResult.getBlockPos());
+    if (world.isClient) return getIdOf(player, world, blockHitResult.getBlockPos());
+    else return ActionResult.SUCCESS;
   }
 
   @Override
   public ActionResult attackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
     return getIdOf(player, world, pos);
-  }
-
-  @Override
-  public ActionResult useOnEntity(
-      ItemStack stack, PlayerEntity player, LivingEntity entity, Hand hand) {
-    final EntityType<?> entityType = entity.getType();
-    final Identifier identifier = Registry.ENTITY_TYPE.getId(entityType);
-    final int rawId = Registry.ENTITY_TYPE.getRawId(entityType);
-    final BlockPos blockPos = entity.getBlockPos();
-    player.sendMessage(
-        new TranslatableText(
-                "debug.mishanguc.entityId",
-                String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-            .formatted(Formatting.YELLOW),
-        false);
-    player.sendMessage(
-        new TranslatableText("debug.mishanguc.entityId.name", entity.getName()), false);
-    player.sendMessage(
-        new TranslatableText("debug.mishanguc.entityId.id", new LiteralText(identifier.toString())),
-        false);
-    player.sendMessage(
-        new TranslatableText(
-            "debug.mishanguc.entityId.rawId", new LiteralText(Integer.toString(rawId))),
-        false);
-    return ActionResult.SUCCESS;
   }
 
   @Override
@@ -119,5 +101,42 @@ public class IdCheckerToolItem extends BlockToolItem {
           new TranslatableText("item.mishanguc.id_checker_tool.tooltip.3")
               .formatted(Formatting.GRAY));
     }
+  }
+
+  @Override
+  public ActionResult attackEntityCallback(
+      PlayerEntity player,
+      World world,
+      Hand hand,
+      Entity entity,
+      @Nullable EntityHitResult hitResult) {
+    return useEntityCallback(player, world, hand, entity, hitResult);
+  }
+
+  @Override
+  public ActionResult useEntityCallback(
+      PlayerEntity player,
+      World world,
+      Hand hand,
+      Entity entity,
+      @Nullable EntityHitResult hitResult) {
+    if (world.isClient) return ActionResult.SUCCESS;
+    final BlockPos blockPos = entity.getBlockPos();
+    player.sendSystemMessage(
+        new LiteralText("")
+            .append(
+                new TranslatableText(
+                        "debug.mishanguc.entityId.header",
+                        String.format(
+                            "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
+                    .formatted(Formatting.YELLOW)),
+        Util.NIL_UUID);
+    final EntityType<?> type = entity.getType();
+    broadcastId(
+        player,
+        entity.getName(),
+        Registry.ENTITY_TYPE.getId(type),
+        Registry.ENTITY_TYPE.getRawId(type));
+    return ActionResult.SUCCESS;
   }
 }
