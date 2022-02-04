@@ -5,8 +5,8 @@ import com.google.common.collect.Maps;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
-import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -117,10 +117,10 @@ public class MishangUc implements ModInitializer {
     MishangucItems.init();
 
     // 注册事件
-    PlayerBlockBreakEvents.BEFORE.register(
-        (world, player, pos, state, blockEntity) -> {
+    AttackBlockCallback.EVENT.register(
+        (player, world, hand, pos, direction) -> {
           if (player.isSpectator()) {
-            return true;
+            return ActionResult.PASS;
           }
           final ItemStack stack = player.getMainHandStack();
           final Item item = stack.getItem();
@@ -130,15 +130,14 @@ public class MishangUc implements ModInitializer {
                     player.raycast(
                         5, 0, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
             return ((BlockToolItem) item)
-                    .attackBlock(
-                        player,
-                        world,
-                        hitResult.getBlockPos(),
-                        hitResult.getSide(),
-                        ((BlockToolItem) item).includesFluid(stack, player.isSneaking()))
-                == ActionResult.PASS;
+                .attackBlock(
+                    player,
+                    world,
+                    hitResult.getBlockPos(),
+                    hitResult.getSide(),
+                    ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
           } else {
-            return true;
+            return ActionResult.PASS;
           }
         });
     UseBlockCallback.EVENT.register(

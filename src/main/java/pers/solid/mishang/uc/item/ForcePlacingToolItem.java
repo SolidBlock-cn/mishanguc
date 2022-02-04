@@ -53,7 +53,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       blockPlacementContext.playSound();
     } else {
       // 放置方块。
-      blockPlacementContext.setBlockState(24);
+      blockPlacementContext.setBlockState(0b11010);
       blockPlacementContext.setBlockEntity();
     }
     return ActionResult.success(world.isClient);

@@ -59,12 +59,6 @@ public class RotatingToolItem extends BlockToolItem {
   }
 
   @Override
-  public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-    rotateBlock(miner, world, pos);
-    return false;
-  }
-
-  @Override
   public void appendTooltip(
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);

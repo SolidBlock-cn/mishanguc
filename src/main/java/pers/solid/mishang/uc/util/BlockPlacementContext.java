@@ -199,6 +199,7 @@ public class BlockPlacementContext {
     BlockEntity entityToPlace = world.getBlockEntity(posToPlace);
     if (hitEntity != null && entityToPlace != null) {
       entityToPlace.readNbt(hitEntity.writeNbt(new NbtCompound()));
+      entityToPlace.markDirty();
     }
     return true;
   }
