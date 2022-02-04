@@ -102,6 +102,7 @@ public class MishangUc implements ModInitializer {
                     .map(e -> TextContext.fromNbt(e, HungSignBlockEntity.DEFAULT_TEXT_CONTEXT))
                     .collect(Collectors.toList()));
             entity.texts = ImmutableMap.copyOf(builder);
+            entity.markDirty();
           } catch (CommandSyntaxException | ClassCastException e) {
             MISHANG_LOGGER.error("Error when trying to parse NBT received: ", e);
             MISHANG_LOGGER.error("The NBT string received is as follows:\n" + nbtAsString);
