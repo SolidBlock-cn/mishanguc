@@ -60,8 +60,6 @@ public class MishangUc implements ModInitializer {
           final BlockEntityWithText entity =
               (BlockEntityWithText) player.world.getBlockEntity(blockPos);
           // 该参数仅限对应实体为 HungSignBlockEntity 时存在，也仅在此情况下，buf 中会存在此值。。
-          final Direction direction =
-              entity instanceof HungSignBlockEntity ? buf.readEnumConstant(Direction.class) : null;
           final String nbtAsString = buf.readString();
           buf.release(); // 数据已经读完，不再需要保留，可以释放。
           try {
@@ -75,20 +73,6 @@ public class MishangUc implements ModInitializer {
             }
             final PlayerEntity editorAllowed = entity.getEditor();
             entity.setEditor(null);
-            if (entity instanceof HungSignBlockEntity) {
-              final Direction editedSide0 = ((HungSignBlockEntity) entity).editedSide;
-              ((HungSignBlockEntity) entity).editedSide = null;
-              if (editedSide0 != direction) {
-                MISHANG_LOGGER.warn(
-                    "The direction received ({}) does not match the editable field ({}) at the block entity {} {} {}.",
-                    direction,
-                    ((HungSignBlockEntity) entity).editedSide,
-                    blockPos.getX(),
-                    blockPos.getY(),
-                    blockPos.getZ());
-                return;
-              }
-            }
             if (nbtAsString.isEmpty()) {
               // 收到空字符串，过。
               return;
@@ -113,7 +97,9 @@ public class MishangUc implements ModInitializer {
             if (entity instanceof HungSignBlockEntity) {
               final HashMap<@NotNull Direction, @NotNull List<@NotNull TextContext>> builder =
                   Maps.newHashMap(((HungSignBlockEntity) entity).texts);
-              builder.put(direction, textContexts);
+              final Direction editedSide = ((HungSignBlockEntity) entity).editedSide;
+              if (editedSide != null) builder.put(editedSide, textContexts);
+              ((HungSignBlockEntity) entity).editedSide = null;
               ((HungSignBlockEntity) entity).texts = ImmutableMap.copyOf(builder);
             } else if (entity instanceof WallSignBlockEntity) {
               ((WallSignBlockEntity) entity).textContexts = textContexts;

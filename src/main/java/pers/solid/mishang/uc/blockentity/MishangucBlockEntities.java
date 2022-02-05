@@ -8,14 +8,6 @@ import net.minecraft.util.registry.Registry;
 import pers.solid.mishang.uc.block.MishangucBlocks;
 
 public class MishangucBlockEntities {
-  public static final BlockEntityType<TextPadBlockEntity> TEXT_PAD_BLOCK_ENTITY =
-      Registry.register(
-          Registry.BLOCK_ENTITY_TYPE,
-          new Identifier("mishanguc", "text_pad_block"),
-          BlockEntityType.Builder.create(
-                  TextPadBlockEntity::new,
-                  MishangucBlocks.TEXT_PAD_BLOCKS.values().toArray(new Block[] {}))
-              .build(null));
   public static final BlockEntityType<HungSignBlockEntity> HUNG_SIGN_BLOCK_ENTITY =
       Registry.register(
           Registry.BLOCK_ENTITY_TYPE,

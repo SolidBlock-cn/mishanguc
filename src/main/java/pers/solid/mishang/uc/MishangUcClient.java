@@ -21,7 +21,6 @@ import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 import pers.solid.mishang.uc.renderer.HungSignBlockEntityRenderer;
-import pers.solid.mishang.uc.renderer.TextPadBlockEntityRenderer;
 import pers.solid.mishang.uc.renderer.WallSignBlockEntityRenderer;
 import pers.solid.mishang.uc.screen.HungSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
@@ -54,8 +53,6 @@ public class MishangUcClient implements ClientModInitializer {
     WorldRenderEvents.BLOCK_OUTLINE.register(RendersBlockOutline.RENDERER);
 
     // 注册方块实体渲染器
-    BlockEntityRendererRegistry.INSTANCE.register(
-        MishangucBlockEntities.TEXT_PAD_BLOCK_ENTITY, TextPadBlockEntityRenderer::new);
     BlockEntityRendererRegistry.INSTANCE.register(
         MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY, HungSignBlockEntityRenderer::new);
     BlockEntityRendererRegistry.INSTANCE.register(

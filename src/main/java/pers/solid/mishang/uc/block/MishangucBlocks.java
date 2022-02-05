@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.ImmutableBiMap;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
@@ -24,7 +22,6 @@ import pers.solid.mishang.uc.item.NamedBlockItem;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -37,67 +34,6 @@ public final class MishangucBlocks {
    *
    * 具有多种不同颜色。
    */
-  public static final BiMap<DyeColor, TextPadBlock> TEXT_PAD_BLOCKS =
-      Arrays.stream(DyeColor.values())
-          .collect(
-              ImmutableBiMap.toImmutableBiMap(
-                  color -> color,
-                  color ->
-                      new TextPadBlock(
-                          Registry.BLOCK.get(new Identifier("minecraft", color + "_concrete")),
-                          color)));
-
-  @InGroup("signs")
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_WHITE_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.WHITE);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_ORANGE_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.ORANGE);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_MAGENTA_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.MAGENTA);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_LIGHT_BLUE_TEXT_PAD =
-      TEXT_PAD_BLOCKS.get(DyeColor.LIGHT_BLUE);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_YELLOW_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.YELLOW);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_LIME_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.LIME);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_PINK_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.PINK);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_GRAY_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.GRAY);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_LIGHT_GRAY_TEXT_PAD =
-      TEXT_PAD_BLOCKS.get(DyeColor.LIGHT_GRAY);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_CYAN_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.CYAN);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_PURPLE_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.PURPLE);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_BLUE_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.BLUE);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_BROWN_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.BROWN);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_GREEN_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.GREEN);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_RED_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.RED);
-
-  @RegisterIdentifier
-  public static final TextPadBlock SIMPLE_BLACK_TEXT_PAD = TEXT_PAD_BLOCKS.get(DyeColor.BLACK);
-
   public static final Map<DyeColor, HungSignBlock> HUNG_CONCRETE_GLOWING_SIGNS =
       Util.make(
           new EnumMap<>(DyeColor.class),
@@ -109,6 +45,7 @@ public final class MishangucBlocks {
                   color, new HungSignBlock(block, FabricBlockSettings.copyOf(block).luminance(15)));
             }
           });
+
   public static final Map<DyeColor, HungSignBlock> HUNG_TERRACOTTA_GLOWING_SIGNS =
       Util.make(
           new EnumMap<>(DyeColor.class),
@@ -121,6 +58,7 @@ public final class MishangucBlocks {
             }
           });
 
+  @InGroup("signs")
   @RegisterIdentifier
   public static final HungSignBlock HUNG_WHITE_CONCRETE_GLOWING_SIGN =
       HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.WHITE);

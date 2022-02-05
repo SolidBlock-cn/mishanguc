@@ -443,23 +443,6 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         new Identifier("mishanguc", "white_wall_light_round_decoration"));
 
     for (DyeColor dyeColor : DyeColor.values()) {
-      PACK.addBlockState(
-          Util.make(
-              new JState(),
-              state -> {
-                final JVariant jVariant = new JVariant();
-                for (Direction direction : Direction.Type.HORIZONTAL) {
-                  jVariant.put(
-                      "facing",
-                      direction,
-                      new JBlockModel(
-                              blockIdentifier(String.format("simple_%s_text_pad", dyeColor)))
-                          .uvlock()
-                          .y(((int) direction.asRotation()) + 180));
-                }
-                state.add(jVariant);
-              }),
-          new Identifier("mishanguc", String.format("simple_%s_text_pad", dyeColor)));
       addStateForHungGlowingSign(PACK, dyeColor.asString() + "_concrete");
       addStateForHungGlowingSign(PACK, dyeColor.asString() + "_terracotta");
     }
@@ -965,10 +948,6 @@ public class ARRPMain implements RRPPreGenEntrypoint {
 
     // 写字板方块
     for (DyeColor color : DyeColor.values()) {
-      PACK.addModel(
-          JModel.model(blockIdentifier("simple_text_pad"))
-              .textures(new JTextures().var("all", String.format("block/%s_concrete", color))),
-          blockIdentifier(String.format("simple_%s_text_pad", color)));
       addModelForHungGlowingSign(
           PACK,
           String.format("%s_concrete", color.asString()),

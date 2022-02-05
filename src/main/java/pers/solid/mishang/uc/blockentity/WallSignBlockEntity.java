@@ -14,6 +14,10 @@ import pers.solid.mishang.uc.util.TextContext;
 
 import java.util.List;
 
+/**
+ * @see pers.solid.mishang.uc.block.WallSignBlock
+ * @see pers.solid.mishang.uc.renderer.WallSignBlockEntityRenderer
+ */
 public class WallSignBlockEntity extends BlockEntityWithText {
   public static final TextContext DEFAULT_TEXT_CONTEXT = new TextContext();
   /** 正在编辑该告示牌的玩家。若为 <code>null</code>，则表示该告示牌为空闲模式。 */
