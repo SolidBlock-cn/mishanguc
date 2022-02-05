@@ -60,7 +60,7 @@ public class WallSignBlockEntity extends BlockEntityWithText {
       for (TextContext textContext : textContexts) {
         nbtList.add(textContext.writeNbt(new NbtCompound()));
       }
-      nbt.put("texts", nbtList);
+      nbt.put("text", nbtList);
     }
     return nbtCompound;
   }
