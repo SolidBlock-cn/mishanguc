@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.blockentity;
 import com.google.common.collect.ImmutableList;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
@@ -11,6 +12,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Texts;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.TextContext;
 
 import java.util.List;
@@ -71,4 +73,22 @@ public class TextPadBlockEntity extends BlockEntityWithText {
       }
     }
   }
+
+  @Override
+  public float getHeight() {
+    return 16;
+  }
+
+  @Override
+  public TextContext getDefaultTextContext() {
+    return new TextContext();
+  }
+
+  @Override
+  public @Nullable PlayerEntity getEditor() {
+    return null;
+  }
+
+  @Override
+  public void setEditor(@Nullable PlayerEntity editor) {}
 }

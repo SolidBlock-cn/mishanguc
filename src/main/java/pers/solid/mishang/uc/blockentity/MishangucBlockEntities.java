@@ -33,4 +33,18 @@ public class MishangucBlockEntities {
                       .build()
                       .toArray(new Block[] {}))
               .build(null));
+  public static final BlockEntityType<WallSignBlockEntity> WALL_SIGN_BLOCK_ENTITY =
+      Registry.register(
+          Registry.BLOCK_ENTITY_TYPE,
+          new Identifier("mishanguc", "wall_sign_block_entity"),
+          BlockEntityType.Builder.create(
+                  WallSignBlockEntity::new,
+                  new ImmutableList.Builder<Block>()
+                      .addAll(MishangucBlocks.CONCRETE_WALL_SIGNS.values())
+                      .addAll(MishangucBlocks.TERRACOTTA_WALL_SIGNS.values())
+                      .addAll(MishangucBlocks.GLOWING_CONCRETE_WALL_SIGNS.values())
+                      .addAll(MishangucBlocks.GLOWING_TERRACOTTA_WALL_SIGNS.values())
+                      .build()
+                      .toArray(new Block[] {}))
+              .build(null));
 }

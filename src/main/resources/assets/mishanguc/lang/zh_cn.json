@@ -187,5 +187,7 @@
   "vertical_align.mishanguc.bottom": "底",
   "vertical_align.mishanguc.middle": "中",
   "vertical_align.mishanguc.top": "顶",
-  "item.mishanguc.fluid_id_checker_tool": "流体id检查工具"
+  "item.mishanguc.fluid_id_checker_tool": "流体id检查工具",
+  "block.mishanguc.wall_sign": "墙上的%s告示牌",
+  "block.mishanguc.glowing_wall_sign": "墙上的%s发光告示牌"
 }

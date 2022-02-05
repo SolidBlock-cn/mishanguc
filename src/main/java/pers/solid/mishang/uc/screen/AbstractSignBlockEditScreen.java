@@ -2,8 +2,6 @@ package pers.solid.mishang.uc.screen;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.objects.Object2FloatMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import net.fabricmc.api.EnvType;
@@ -26,12 +24,12 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.util.HorizontalAlign;
 import pers.solid.mishang.uc.util.TextContext;
@@ -53,16 +51,15 @@ import java.util.List;
  * @see net.minecraft.server.network.ServerPlayerEntity#openEditSignScreen
  */
 @Environment(EnvType.CLIENT)
-public class SignBlockEditScreen extends Screen {
-  public final Direction direction;
-  public List<TextContext> textContextsEditing;
+public abstract class AbstractSignBlockEditScreen extends Screen {
+  private final List<TextContext> textContextsEditing;
   @Deprecated public final List<TextFieldWidget> textFields = new ArrayList<>();
   public final BlockPos blockPos;
   public TextFieldListScreen textFieldListScreen;
 
   protected final BiMap<@NotNull TextContext, @NotNull TextFieldWidget> contextToWidgetBiMap =
       HashBiMap.create();
-  private final HungSignBlockEntity entity;
+  public final BlockEntityWithText entity;
   /** 完成编辑按钮 */
   final ButtonWidget finishButton =
       new ButtonWidget(
@@ -71,7 +68,7 @@ public class SignBlockEditScreen extends Screen {
           200,
           20,
           ScreenTexts.DONE,
-          buttonWidget -> SignBlockEditScreen.this.finishEditing());
+          buttonWidget -> AbstractSignBlockEditScreen.this.finishEditing());
   /** 正在被选中的 TextWidget。会在 {@link #setFocused(Element)} 时更改。可能为 null。 */
   public @Nullable TextFieldWidget focusedTextField = null;
   /** 正在被选中的 TextContent。会在 {@link #setFocused(Element)} 时更改。可能为 null。不是副本。 */
@@ -333,7 +330,7 @@ public class SignBlockEditScreen extends Screen {
           button -> {
             Object2FloatMap<VerticalAlign> stackHeights =
                 new Object2FloatOpenHashMap<>(VerticalAlign.values().length);
-            for (TextContext textContext : textContextsEditing) {
+            for (TextContext textContext : getTextContextsEditing()) {
               if (!textContext.absolute) {
                 final float currentStackSize =
                     stackHeights.getOrDefault(textContext.verticalAlign, 0f);
@@ -342,7 +339,7 @@ public class SignBlockEditScreen extends Screen {
                     textContext.verticalAlign, currentStackSize + textContext.size * 9 / 8 / 2);
               }
             }
-            for (TextContext textContext : textContextsEditing) {
+            for (TextContext textContext : getTextContextsEditing()) {
               if (!textContext.absolute) {
                 switch (textContext.verticalAlign) {
                   case MIDDLE:
@@ -351,10 +348,13 @@ public class SignBlockEditScreen extends Screen {
                     break;
                   case BOTTOM:
                     textContext.offsetY -=
-                        textContextsEditing.get(textContextsEditing.size() - 1).size / 4 * 9 / 8;
+                        getTextContextsEditing().get(getTextContextsEditing().size() - 1).size
+                            / 4
+                            * 9
+                            / 8;
                     break;
                   default:
-                    textContext.offsetY -= textContextsEditing.get(0).size / 4 * 9 / 8;
+                    textContext.offsetY -= getTextContextsEditing().get(0).size / 4 * 9 / 8;
                 }
               }
             }
@@ -462,15 +462,12 @@ public class SignBlockEditScreen extends Screen {
   /** 是否发生了改变。如果改变了，则提交时发送完整内容，否则发送空字符串表示未做更改。 */
   public boolean changed = false;
 
-  public SignBlockEditScreen(HungSignBlockEntity entity, Direction direction, BlockPos blockPos) {
+  public AbstractSignBlockEditScreen(
+      BlockEntityWithText entity, BlockPos blockPos, List<TextContext> textContextsEditing) {
     super(new TranslatableText("message.mishanguc.sign_edit"));
     this.entity = entity;
     this.blockPos = blockPos;
-    this.direction = direction;
-    final List<@NotNull TextContext> get = entity.texts.get(direction);
-    textContextsEditing = get == null ? Lists.newArrayList() : Lists.newArrayList(get);
-    entity.texts = Maps.newHashMap(entity.texts);
-    entity.texts.put(direction, textContextsEditing);
+    this.textContextsEditing = textContextsEditing;
 
     // 调整按钮配置
     sizeButton.min = 0;
@@ -487,7 +484,6 @@ public class SignBlockEditScreen extends Screen {
     super.init();
 
     textFieldListScreen = new TextFieldListScreen(client, width, height, 30, height - 50, 18);
-    entity.editedSide = direction;
     placeHolder.setWidth(width);
     // 添加按钮
     this.addButton(placeHolder);
@@ -515,10 +511,10 @@ public class SignBlockEditScreen extends Screen {
     this.addButton(rearrangeButton);
     this.addButton(finishButton);
     // 添加文本框
-    for (int i = 0, textContextsEditingSize = textContextsEditing.size();
+    for (int i = 0, textContextsEditingSize = getTextContextsEditing().size();
         i < textContextsEditingSize;
         i++) {
-      TextContext textContext = textContextsEditing.get(i);
+      TextContext textContext = getTextContextsEditing().get(i);
       addTextField(i, textContext);
     }
 
@@ -560,7 +556,7 @@ public class SignBlockEditScreen extends Screen {
     if (textContext == null) {
       textContext = HungSignBlockEntity.DEFAULT_TEXT_CONTEXT.clone();
       textContext.text = new LiteralText("");
-      textContextsEditing.add(index, textContext);
+      getTextContextsEditing().add(index, textContext);
     }
     final TextFieldWidget textFieldWidget =
         new TextFieldWidget(
@@ -616,7 +612,7 @@ public class SignBlockEditScreen extends Screen {
     if (textFieldListScreen.children().size() > index) {
       textFieldListScreen.setFocused(textFieldListScreen.children().get(index));
     }
-    textContextsEditing.remove(removedTextContext);
+    getTextContextsEditing().remove(removedTextContext);
     contextToWidgetBiMap.remove(removedTextContext);
     placeHolder.visible = textFieldListScreen.children().size() == 0;
     changed = true;
@@ -632,16 +628,14 @@ public class SignBlockEditScreen extends Screen {
   public void removed() {
     super.removed();
     final NbtList list = new NbtList();
-    for (TextContext textContext : textContextsEditing) {
+    for (TextContext textContext : getTextContextsEditing()) {
       list.add(textContext.writeNbt(new NbtCompound()));
     }
     ClientPlayNetworking.send(
         new Identifier("mishanguc", "edit_sign_finish"),
         PacketByteBufs.create()
             .writeBlockPos(blockPos)
-            .writeEnumConstant(direction)
             .writeString(changed ? list.asString() : ""));
-    entity.editedSide = null;
   }
 
   private void finishEditing() {
@@ -664,6 +658,10 @@ public class SignBlockEditScreen extends Screen {
     super.setFocused(focused);
   }
 
+  public List<TextContext> getTextContextsEditing() {
+    return textContextsEditing;
+  }
+
   /** 文本框列表的屏幕。每个列表项都是一个文本框（实际上就是把 {@link TextFieldWidget} 包装成了 {@link Entry}。 */
   public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Entry> {
     public TextFieldListScreen(
@@ -677,7 +675,7 @@ public class SignBlockEditScreen extends Screen {
     @Nullable
     @Override
     public Entry getFocused() {
-      return SignBlockEditScreen.this.getFocused() == this ? super.getFocused() : null;
+      return AbstractSignBlockEditScreen.this.getFocused() == this ? super.getFocused() : null;
     }
 
     @Override
@@ -687,7 +685,7 @@ public class SignBlockEditScreen extends Screen {
         child.textFieldWidget.setTextFieldFocused(child == focused);
       }
       if (focused instanceof Entry) {
-        SignBlockEditScreen.this.focusedTextField = ((Entry) focused).textFieldWidget;
+        AbstractSignBlockEditScreen.this.focusedTextField = ((Entry) focused).textFieldWidget;
         focusedTextContext = contextToWidgetBiMap.inverse().get(((Entry) focused).textFieldWidget);
       } else if (focused == null) {
         focusedTextField = null;

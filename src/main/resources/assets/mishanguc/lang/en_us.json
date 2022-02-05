@@ -82,6 +82,8 @@
   "block.mishanguc.white_wall_light_round_decoration": "White Wall Light Round Decoration",
 
   "block.mishanguc.hung_glowing_sign": "Hung %s Glowing Sign",
+  "block.mishanguc.wall_sign": "%s Wall Sign",
+  "block.mishanguc.glowing_wall_sign": "Glowing %s Wall Sign",
 
   "item.mishanguc.road_connection_state_debugging_tool": "Road Connection State Debugging Tool",
   "item.mishanguc.id_checker_tool": "Id Checker Tool",

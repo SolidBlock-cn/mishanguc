@@ -1,0 +1,31 @@
+{
+  "parent": "mishanguc:block/wall_sign",
+  "textures": {
+    "particle": "#texture"
+  },
+  "elements": [
+    {
+      "from": [0, 4, 0],
+      "to": [16, 12, 0.5],
+      "faces": {
+        "north": {"texture": "#glow", "cullface": "north"},
+        "west": {"texture": "#glow", "cullface": "west"},
+        "east": {"texture": "#glow", "cullface": "east"},
+        "up": {"texture": "#glow"},
+        "down": {"texture": "#glow"}
+      },
+      "shade": false
+    },
+    {
+      "from": [0, 4, 0.5],
+      "to": [16, 12, 1],
+      "faces": {
+        "south": {"texture": "#texture"},
+        "west": {"texture": "#texture", "cullface": "west"},
+        "east": {"texture": "#texture", "cullface": "east"},
+        "up": {"texture": "#texture"},
+        "down": {"texture": "#texture"}
+      }
+    }
+  ]
+}
