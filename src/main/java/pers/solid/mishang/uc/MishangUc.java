@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.mojang.brigadier.StringReader;
@@ -28,8 +29,11 @@ import net.minecraft.util.math.Direction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.block.MishangucBlocks;
+import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
+import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.item.BlockToolItem;
 import pers.solid.mishang.uc.item.InteractsWithEntity;
 import pers.solid.mishang.uc.item.MishangucItems;
@@ -37,7 +41,6 @@ import pers.solid.mishang.uc.util.TextContext;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MishangUc implements ModInitializer {
   public static final Logger MISHANG_LOGGER = LogManager.getLogger("Mishang Urban Construction");
@@ -51,13 +54,15 @@ public class MishangUc implements ModInitializer {
       PacketSender responseSender) {
     MISHANG_LOGGER.info("Server side sign_edit_finish packet received!");
     final BlockPos blockPos = buf.readBlockPos();
-    final Direction direction = buf.readEnumConstant(Direction.class);
-    final String nbtAsString = buf.readString();
+    buf.retain(); // 保留这些数据，以便在下面的客户端线程中再读取这些数据。
     server.execute(
         () -> {
+          final BlockEntityWithText entity =
+              (BlockEntityWithText) player.world.getBlockEntity(blockPos);
+          // 该参数仅限对应实体为 HungSignBlockEntity 时存在，也仅在此情况下，buf 中会存在此值。。
+          final String nbtAsString = buf.readString();
+          buf.release(); // 数据已经读完，不再需要保留，可以释放。
           try {
-            final HungSignBlockEntity entity =
-                (HungSignBlockEntity) player.world.getBlockEntity(blockPos);
             if (entity == null) {
               MISHANG_LOGGER.warn(
                   "The entity is null! Cannot write the block entity data at {} {} {}.",
@@ -66,27 +71,22 @@ public class MishangUc implements ModInitializer {
                   blockPos.getZ());
               return;
             }
-            final PlayerEntity editor0 = entity.editor;
-            final Direction editedSide0 = entity.editedSide;
-            entity.editor = null;
-            entity.editedSide = null;
+            final PlayerEntity editorAllowed = entity.getEditor();
+            entity.setEditor(null);
             if (nbtAsString.isEmpty()) {
               // 收到空字符串，过。
               return;
             }
             final NbtList nbt =
                 (NbtList) new StringNbtReader(new StringReader(nbtAsString)).parseElement();
-            if (editedSide0 != direction) {
-              MISHANG_LOGGER.warn(
-                  "The direction received ({}) does not match the editable field ({}) at the block entity {} {} {}.",
-                  direction,
-                  entity.editedSide,
-                  blockPos.getX(),
-                  blockPos.getY(),
-                  blockPos.getZ());
-              return;
-            }
-            if (editor0 != player) {
+            final @Unmodifiable List<TextContext> textContexts =
+                new ImmutableList.Builder<TextContext>()
+                    .addAll(
+                        nbt.stream()
+                            .map(e -> TextContext.fromNbt(e, entity.getDefaultTextContext()))
+                            .iterator())
+                    .build();
+            if (editorAllowed != player) {
               MISHANG_LOGGER.warn(
                   "The player editing the block entity {} {} {} is not the player allowed to edit.",
                   blockPos.getX(),
@@ -94,15 +94,16 @@ public class MishangUc implements ModInitializer {
                   blockPos.getZ());
               return;
             }
-            final HashMap<@NotNull Direction, @NotNull List<@NotNull TextContext>> builder =
-                Maps.newHashMap(entity.texts);
-            builder.put(
-                direction,
-                nbt.stream()
-                    .map(e -> TextContext.fromNbt(e, HungSignBlockEntity.DEFAULT_TEXT_CONTEXT))
-                    .collect(Collectors.toList()));
-            entity.texts = ImmutableMap.copyOf(builder);
-            entity.markDirty();
+            if (entity instanceof HungSignBlockEntity) {
+              final HashMap<@NotNull Direction, @NotNull List<@NotNull TextContext>> builder =
+                  Maps.newHashMap(((HungSignBlockEntity) entity).texts);
+              final Direction editedSide = ((HungSignBlockEntity) entity).editedSide;
+              if (editedSide != null) builder.put(editedSide, textContexts);
+              ((HungSignBlockEntity) entity).editedSide = null;
+              ((HungSignBlockEntity) entity).texts = ImmutableMap.copyOf(builder);
+            } else if (entity instanceof WallSignBlockEntity) {
+              ((WallSignBlockEntity) entity).textContexts = textContexts;
+            }
           } catch (CommandSyntaxException | ClassCastException e) {
             MISHANG_LOGGER.error("Error when trying to parse NBT received: ", e);
             MISHANG_LOGGER.error("The NBT string received is as follows:\n" + nbtAsString);
@@ -182,5 +183,7 @@ public class MishangUc implements ModInitializer {
     // 注册服务器接收
     ServerPlayNetworking.registerGlobalReceiver(
         new Identifier("mishanguc", "edit_sign_finish"), this::handleEditSignFinish);
+
+    // 注册可燃方块
   }
 }

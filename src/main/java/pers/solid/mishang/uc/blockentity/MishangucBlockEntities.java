@@ -9,14 +9,6 @@ import net.minecraft.util.registry.Registry;
 import pers.solid.mishang.uc.block.MishangucBlocks;
 
 public class MishangucBlockEntities {
-  public static final BlockEntityType<TextPadBlockEntity> TEXT_PAD_BLOCK_ENTITY =
-      Registry.register(
-          Registry.BLOCK_ENTITY_TYPE,
-          new Identifier("mishanguc", "text_pad_block"),
-          FabricBlockEntityTypeBuilder.create(
-                  TextPadBlockEntity::new,
-                  MishangucBlocks.TEXT_PAD_BLOCKS.values().toArray(new Block[] {}))
-              .build(null));
   public static final BlockEntityType<HungSignBlockEntity> HUNG_SIGN_BLOCK_ENTITY =
       Registry.register(
           Registry.BLOCK_ENTITY_TYPE,
@@ -31,6 +23,23 @@ public class MishangucBlockEntities {
                           MishangucBlocks.HUNG_NETHER_BRICK_GLOWING_SIGN,
                           MishangucBlocks.HUNG_BLACKSTONE_GLOWING_SIGN,
                           MishangucBlocks.HUNG_POLISHED_BLACKSTONE_GLOWING_SIGN)
+                      .build()
+                      .toArray(new Block[] {}))
+              .build(null));
+  public static final BlockEntityType<WallSignBlockEntity> WALL_SIGN_BLOCK_ENTITY =
+      Registry.register(
+          Registry.BLOCK_ENTITY_TYPE,
+          new Identifier("mishanguc", "wall_sign_block_entity"),
+          FabricBlockEntityTypeBuilder.create(
+                  WallSignBlockEntity::new,
+                  new ImmutableList.Builder<Block>()
+                      .addAll(MishangucBlocks.CONCRETE_WALL_SIGNS.values())
+                      .addAll(MishangucBlocks.TERRACOTTA_WALL_SIGNS.values())
+                      .addAll(MishangucBlocks.GLOWING_CONCRETE_WALL_SIGNS.values())
+                      .addAll(MishangucBlocks.GLOWING_TERRACOTTA_WALL_SIGNS.values())
+                      .addAll(MishangucBlocks.FULL_CONCRETE_WALL_SIGNS.values())
+                      .addAll(MishangucBlocks.FULL_TERRACOTTA_WALL_SIGNS.values())
+                      .add(MishangucBlocks.INVISIBLE_WALL_SIGN)
                       .build()
                       .toArray(new Block[] {}))
               .build(null));

@@ -2,8 +2,6 @@ package pers.solid.mishang.uc.screen;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.objects.Object2FloatMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import net.fabricmc.api.EnvType;
@@ -16,6 +14,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -26,13 +25,14 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.util.HorizontalAlign;
 import pers.solid.mishang.uc.util.TextContext;
@@ -54,16 +54,15 @@ import java.util.List;
  * @see net.minecraft.server.network.ServerPlayerEntity#openEditSignScreen
  */
 @Environment(EnvType.CLIENT)
-public class SignBlockEditScreen extends Screen {
-  public final Direction direction;
-  public List<TextContext> textContextsEditing;
+public abstract class AbstractSignBlockEditScreen extends Screen {
+  private final List<TextContext> textContextsEditing;
   @Deprecated public final List<TextFieldWidget> textFields = new ArrayList<>();
   public final BlockPos blockPos;
   public TextFieldListScreen textFieldListScreen;
 
   protected final BiMap<@NotNull TextContext, @NotNull TextFieldWidget> contextToWidgetBiMap =
       HashBiMap.create();
-  private final HungSignBlockEntity entity;
+  public final BlockEntityWithText entity;
   /** 完成编辑按钮 */
   final ButtonWidget finishButton =
       new ButtonWidget(
@@ -72,104 +71,109 @@ public class SignBlockEditScreen extends Screen {
           200,
           20,
           ScreenTexts.DONE,
-          buttonWidget -> SignBlockEditScreen.this.finishEditing());
+          buttonWidget -> AbstractSignBlockEditScreen.this.finishEditing());
   /** 正在被选中的 TextWidget。会在 {@link #setFocused(Element)} 时更改。可能为 null。 */
   public @Nullable TextFieldWidget focusedTextField = null;
   /** 正在被选中的 TextContent。会在 {@link #setFocused(Element)} 时更改。可能为 null。不是副本。 */
   public @Nullable TextContext focusedTextContext = null;
   /** 加粗按钮 */
-  public final ButtonWidget boldButton =
-      new ButtonWidget(
+  public final BooleanButtonWidget boldButton =
+      new BooleanButtonWidget(
           this.width / 2 - 200,
           this.height - 50,
           20,
           20,
-          new LiteralText("B").formatted(Formatting.BOLD),
-          button -> {
-            if (focusedTextContext != null) {
-              focusedTextContext.bold = !focusedTextContext.bold;
-            }
-          });
+          button -> focusedTextContext == null ? null : focusedTextContext.bold,
+          b -> {
+            if (focusedTextContext != null) focusedTextContext.bold = b;
+          },
+          b ->
+              b != null && b
+                  ? new LiteralText("B").formatted(Formatting.BOLD)
+                  : new LiteralText("B"),
+          button -> {});
   /** 斜体按钮 */
-  public final ButtonWidget italicButton =
-      new ButtonWidget(
+  public final BooleanButtonWidget italicButton =
+      new BooleanButtonWidget(
           this.width / 2 - 180,
           this.height - 50,
           20,
           20,
-          new TranslatableText("I").formatted(Formatting.ITALIC),
-          button -> {
-            if (focusedTextContext != null) {
-              focusedTextContext.italic = !focusedTextContext.italic;
-            }
-          });
+          button -> focusedTextContext == null ? null : focusedTextContext.italic,
+          b -> {
+            if (focusedTextContext != null) focusedTextContext.italic = b;
+          },
+          b ->
+              b != null && b
+                  ? new LiteralText("I").formatted(Formatting.ITALIC)
+                  : new LiteralText("I"),
+          button -> {});
   /** 下划线按钮 */
-  public final ButtonWidget underlineButton =
-      new ButtonWidget(
+  public final BooleanButtonWidget underlineButton =
+      new BooleanButtonWidget(
           this.width / 2 - 160,
           this.height - 50,
           20,
           20,
-          new TranslatableText("U").formatted(Formatting.UNDERLINE),
-          button -> {
-            if (focusedTextContext != null) {
-              focusedTextContext.underline = !focusedTextContext.underline;
-            }
-          });
+          button -> focusedTextContext == null ? null : focusedTextContext.underline,
+          b -> {
+            if (focusedTextContext != null) focusedTextContext.underline = b;
+          },
+          b ->
+              b != null && b
+                  ? new LiteralText("U").formatted(Formatting.UNDERLINE)
+                  : new LiteralText("U"),
+          button -> {});
   /** 删除线按钮 */
-  public final ButtonWidget strikethroughButton =
-      new ButtonWidget(
+  public final BooleanButtonWidget strikethroughButton =
+      new BooleanButtonWidget(
           this.width / 2 - 140,
           this.height - 50,
           20,
           20,
-          new TranslatableText("S").formatted(Formatting.STRIKETHROUGH),
-          button -> {
-            if (focusedTextContext != null) {
-              focusedTextContext.strikethrough = !focusedTextContext.strikethrough;
-            }
-          });
+          button -> focusedTextContext == null ? null : focusedTextContext.strikethrough,
+          b -> {
+            if (focusedTextContext != null) focusedTextContext.strikethrough = b;
+          },
+          b ->
+              b != null && b
+                  ? new LiteralText("S").formatted(Formatting.STRIKETHROUGH)
+                  : new LiteralText("S"),
+          button -> {});
   /** 随机文字按钮 */
-  public final ButtonWidget obfuscatedButton =
-      new ButtonWidget(
+  public final BooleanButtonWidget obfuscatedButton =
+      new BooleanButtonWidget(
           this.width / 2 - 120,
           this.height - 50,
           20,
           20,
-          new TranslatableText("O").formatted(Formatting.OBFUSCATED),
-          button -> {
-            if (focusedTextContext != null) {
-              focusedTextContext.obfuscated = !focusedTextContext.obfuscated;
-            }
-          });
-  /** 添加文本按钮 */
-  public final ButtonWidget addTextButton =
-      new ButtonWidget(
-          width / 2 - 120 - 100,
-          10,
-          200,
-          20,
-          new TranslatableText("message.mishanguc.add_text"),
-          button1 -> {
-            int index =
-                textFieldListScreen
-                    .children()
-                    .indexOf(textFieldListScreen.new Entry(focusedTextField));
-            addTextField(index == -1 ? textFieldListScreen.children().size() : index + 1, null);
-          });
+          button -> focusedTextContext == null ? null : focusedTextContext.obfuscated,
+          b -> {
+            if (focusedTextContext != null) focusedTextContext.obfuscated = b;
+          },
+          b ->
+              b != null && b
+                  ? new LiteralText("O").formatted(Formatting.OBFUSCATED)
+                  : new LiteralText("O"),
+          button -> {});
   /** 阴影按钮 */
-  public final ButtonWidget shadeButton =
-      new ButtonWidget(
+  public final BooleanButtonWidget shadeButton =
+      new BooleanButtonWidget(
           this.width / 2 - 100,
           this.height - 50,
           40,
           20,
-          new TranslatableText("message.mishanguc.shade"),
-          button -> {
-            if (focusedTextContext != null) {
-              focusedTextContext.shadow = !focusedTextContext.shadow;
-            }
-          });
+          button -> focusedTextContext == null ? null : focusedTextContext.shadow,
+          b -> {
+            if (focusedTextContext != null) focusedTextContext.shadow = b;
+          },
+          b ->
+              b == null
+                  ? new TranslatableText("message.mishanguc.shade")
+                  : new TranslatableText(
+                      "message.mishanguc.shade.param",
+                      new TranslatableText(b ? "options.on" : "options.off")),
+          button -> {});
   /** 大小 */
   public final FloatButtonWidget sizeButton =
       new FloatButtonWidget(
@@ -230,6 +234,21 @@ public class SignBlockEditScreen extends Screen {
             }
           },
           (button) -> {});
+  /** 添加文本按钮 */
+  public final ButtonWidget addTextButton =
+      new ButtonWidget(
+          width / 2 - 120 - 100,
+          10,
+          200,
+          20,
+          new TranslatableText("message.mishanguc.add_text"),
+          button1 -> {
+            int index =
+                textFieldListScreen
+                    .children()
+                    .indexOf(textFieldListScreen.new Entry(focusedTextField));
+            addTextField(index == -1 ? textFieldListScreen.children().size() : index + 1, null);
+          });
   /** 移除文本按钮 */
   public final ButtonWidget removeTextButton =
       new ButtonWidget(
@@ -283,14 +302,13 @@ public class SignBlockEditScreen extends Screen {
       new FloatButtonWidget(
           0,
           0,
-          60,
+          50,
           20,
           colorId -> {
             if (colorId == -1) {
               return new TranslatableText("message.mishanguc.color");
             } else if (colorId == -2 && focusedTextContext != null) {
-              return new TranslatableText(
-                  "message.mishanguc.color.param", String.format("#%h", focusedTextContext.color));
+              return new LiteralText(String.format("#%06x", focusedTextContext.color));
             }
             final DyeColor dyeColor = DyeColor.byId((int) colorId);
             return new TranslatableText(
@@ -314,6 +332,7 @@ public class SignBlockEditScreen extends Screen {
           colorId -> {
             if (focusedTextContext != null) {
               focusedTextContext.color = DyeColor.byId((int) colorId).getSignColor();
+              this.customColorTextField.setText(String.format("#%06x", focusedTextContext.color));
             }
           },
           (button) -> {});
@@ -334,7 +353,7 @@ public class SignBlockEditScreen extends Screen {
           button -> {
             Object2FloatMap<VerticalAlign> stackHeights =
                 new Object2FloatOpenHashMap<>(VerticalAlign.values().length);
-            for (TextContext textContext : textContextsEditing) {
+            for (TextContext textContext : getTextContextsEditing()) {
               if (!textContext.absolute) {
                 final float currentStackSize =
                     stackHeights.getOrDefault(textContext.verticalAlign, 0f);
@@ -343,14 +362,17 @@ public class SignBlockEditScreen extends Screen {
                     textContext.verticalAlign, currentStackSize + textContext.size * 9 / 8 / 2);
               }
             }
-            for (TextContext textContext : textContextsEditing) {
+            for (TextContext textContext : getTextContextsEditing()) {
               if (!textContext.absolute) {
                 switch (textContext.verticalAlign) {
                   case MIDDLE -> textContext.offsetY -=
                       stackHeights.getOrDefault(textContext.verticalAlign, 0) / 2;
                   case BOTTOM -> textContext.offsetY -=
-                      textContextsEditing.get(textContextsEditing.size() - 1).size / 4 * 9 / 8;
-                  default -> textContext.offsetY -= textContextsEditing.get(0).size / 4 * 9 / 8;
+                      getTextContextsEditing().get(getTextContextsEditing().size() - 1).size
+                          / 4
+                          * 9
+                          / 8;
+                  default -> textContext.offsetY -= getTextContextsEditing().get(0).size / 4 * 9 / 8;
                 }
               }
             }
@@ -409,6 +431,65 @@ public class SignBlockEditScreen extends Screen {
     verticalAlignButton.max = 2.5f;
   }
 
+  /** 切换文字是否可以看穿。 */
+  public final BooleanButtonWidget seeThroughButton =
+      new BooleanButtonWidget(
+          0,
+          0,
+          60,
+          20,
+          button -> focusedTextContext == null ? null : focusedTextContext.seeThrough,
+          b -> {
+            if (focusedTextContext != null) focusedTextContext.seeThrough = b;
+          },
+          b ->
+              b == null
+                  ? new TranslatableText("message.mishanguc.see_through")
+                  : new TranslatableText(
+                      "message.mishanguc.see_through.param",
+                      new TranslatableText(b ? "options.on" : "options.off")),
+          button -> {});
+
+  /**
+   * 设置颜色<br>
+   * 因为 {@link #textRenderer} 暂时还是 {@code null} 得在 {@link #init(MinecraftClient, int, int)}
+   * 中赋值，所以这里直接使用 {@code MinecraftClient.getInstance().textRenderer}。 <br>
+   * （其实我觉得应该在 {@code init} 里面通过 mixin 修改该字段的 textRender，不过意义其实不大吧。qwq
+   */
+  public TextFieldWidget customColorTextField =
+      Util.make(
+          new TextFieldWidget(
+              MinecraftClient.getInstance().textRenderer,
+              0,
+              0,
+              50,
+              20,
+              new TranslatableText("message.mishanguc.custom_color")),
+          widget ->
+              widget.setChangedListener(
+                  s -> {
+                    if (focusedTextContext != null) {
+                      // 如果 s 为数值，那么直接使用该值。
+                      try {
+                        focusedTextContext.color = Integer.parseInt(s);
+                        return;
+                      } catch (NumberFormatException ignored) {
+                      }
+                      // 如果 s 为井号开头的数值，那么解析为16进制。
+                      if (s.startsWith("#"))
+                        try {
+                          focusedTextContext.color = Integer.parseInt(s.substring(1), 16);
+                          return;
+                        } catch (NumberFormatException ignored) {
+                        }
+                      // 如果 s 为颜色名称。
+                      final DyeColor color = DyeColor.byName(s, DyeColor.WHITE);
+                      if (color != null) {
+                        focusedTextContext.color = color.getSignColor();
+                      }
+                    }
+                  }));
+
   /**
    * 是否为高级模式。若为高级模式，则显示高级模式的按钮，不显示非高级模式的按钮。
    *
@@ -428,8 +509,8 @@ public class SignBlockEditScreen extends Screen {
             switchToolboxButtons();
           });
 
-  private final ButtonWidget[] toolbox1 =
-      new ButtonWidget[] {
+  private final ClickableWidget[] toolbox1 =
+      new ClickableWidget[] {
         boldButton,
         italicButton,
         underlineButton,
@@ -440,33 +521,29 @@ public class SignBlockEditScreen extends Screen {
         offsetXButton,
         offsetYButton,
         colorButton,
-        rearrangeButton,
+        customColorTextField,
         switchAdvanceButton
       };
-
-  private final ButtonWidget[] toolbox2 =
-      new ButtonWidget[] {
+  private final ClickableWidget[] toolbox2 =
+      new ClickableWidget[] {
         offsetZButton,
         scaleXButton,
         scaleYButton,
         horizontalAlignButton,
         verticalAlignButton,
-        rearrangeButton,
+        seeThroughButton,
         switchAdvanceButton
       };
 
   /** 是否发生了改变。如果改变了，则提交时发送完整内容，否则发送空字符串表示未做更改。 */
   public boolean changed = false;
 
-  public SignBlockEditScreen(HungSignBlockEntity entity, Direction direction, BlockPos blockPos) {
+  public AbstractSignBlockEditScreen(
+      BlockEntityWithText entity, BlockPos blockPos, List<TextContext> textContextsEditing) {
     super(new TranslatableText("message.mishanguc.sign_edit"));
     this.entity = entity;
     this.blockPos = blockPos;
-    this.direction = direction;
-    final List<@NotNull TextContext> get = entity.texts.get(direction);
-    textContextsEditing = get == null ? Lists.newArrayList() : Lists.newArrayList(get);
-    entity.texts = Maps.newHashMap(entity.texts);
-    entity.texts.put(direction, textContextsEditing);
+    this.textContextsEditing = textContextsEditing;
 
     // 调整按钮配置
     sizeButton.min = 0;
@@ -481,9 +558,9 @@ public class SignBlockEditScreen extends Screen {
   @Override
   protected void init() {
     super.init();
-
+    // customColorTextField.textRenderer = textRenderer;
     textFieldListScreen = new TextFieldListScreen(client, width, height, 30, height - 50, 18);
-    entity.editedSide = direction;
+    setFocused(textFieldListScreen);
     placeHolder.setWidth(width);
     // 添加按钮
     this.addDrawableChild(placeHolder);
@@ -508,36 +585,40 @@ public class SignBlockEditScreen extends Screen {
     this.addDrawableChild(verticalAlignButton);
     this.addDrawableChild(switchAdvanceButton);
     this.addDrawableChild(colorButton);
+    this.addDrawableChild(seeThroughButton);
+    this.addDrawableChild(customColorTextField);
     this.addDrawableChild(rearrangeButton);
     this.addDrawableChild(finishButton);
     // 添加文本框
-    for (int i = 0, textContextsEditingSize = textContextsEditing.size();
+    for (int i = 0, textContextsEditingSize = getTextContextsEditing().size();
         i < textContextsEditingSize;
         i++) {
-      TextContext textContext = textContextsEditing.get(i);
+      TextContext textContext = getTextContextsEditing().get(i);
       addTextField(i, textContext);
     }
 
     switchToolboxButtons();
     addTextButton.x = width / 2 - 220;
     removeTextButton.x = width / 2 + 20;
-    finishButton.x = width / 2 - 100;
+    rearrangeButton.x = width / 2 - 150;
+    rearrangeButton.y = height - 30;
+    finishButton.x = width / 2 + 10;
     finishButton.y = height - 30;
   }
 
   /** 切换底部按钮的显示。显示高级按钮，或者取消高级按钮的显示。 */
   private void switchToolboxButtons() {
-    for (ButtonWidget widget : advance ? toolbox1 : toolbox2) {
+    for (ClickableWidget widget : advance ? toolbox1 : toolbox2) {
       widget.visible = false;
     }
     // 调整按钮位置
     int belowToolboxWidth = 0;
-    for (ButtonWidget widget : advance ? toolbox2 : toolbox1) {
+    for (ClickableWidget widget : advance ? toolbox2 : toolbox1) {
       final int width = widget.getWidth();
       widget.x = belowToolboxWidth;
       belowToolboxWidth += width;
     }
-    for (ButtonWidget widget : advance ? toolbox2 : toolbox1) {
+    for (ClickableWidget widget : advance ? toolbox2 : toolbox1) {
       widget.visible = true;
       widget.x += width / 2 - belowToolboxWidth / 2;
       widget.y = height - 50;
@@ -556,7 +637,7 @@ public class SignBlockEditScreen extends Screen {
     if (textContext == null) {
       textContext = HungSignBlockEntity.DEFAULT_TEXT_CONTEXT.clone();
       textContext.text = new LiteralText("");
-      textContextsEditing.add(index, textContext);
+      getTextContextsEditing().add(index, textContext);
     }
     final TextFieldWidget textFieldWidget =
         new TextFieldWidget(
@@ -586,14 +667,6 @@ public class SignBlockEditScreen extends Screen {
     changed = true;
   }
 
-  /** 点击按钮后，还是应该聚焦在文本区域，而不是聚焦在按钮处，故做此修复。 */
-  @Override
-  public boolean mouseClicked(double mouseX, double mouseY, int button) {
-    final boolean b = super.mouseClicked(mouseX, mouseY, button);
-    setFocused(textFieldListScreen);
-    return b;
-  }
-
   /**
    * 移除一个文本框。将从 {@link #textFields}、{@link #contextToWidgetBiMap} 和 {@link #textContextsEditing}
    * 中移除对应的元素。
@@ -611,8 +684,10 @@ public class SignBlockEditScreen extends Screen {
     }
     if (textFieldListScreen.children().size() > index) {
       textFieldListScreen.setFocused(textFieldListScreen.children().get(index));
+    } else if (textFieldListScreen.children().size() > index - 1) {
+      textFieldListScreen.setFocused(textFieldListScreen.children().get(index - 1));
     }
-    textContextsEditing.remove(removedTextContext);
+    getTextContextsEditing().remove(removedTextContext);
     contextToWidgetBiMap.remove(removedTextContext);
     placeHolder.visible = textFieldListScreen.children().size() == 0;
     changed = true;
@@ -628,16 +703,14 @@ public class SignBlockEditScreen extends Screen {
   public void removed() {
     super.removed();
     final NbtList list = new NbtList();
-    for (TextContext textContext : textContextsEditing) {
+    for (TextContext textContext : getTextContextsEditing()) {
       list.add(textContext.writeNbt(new NbtCompound()));
     }
     ClientPlayNetworking.send(
         new Identifier("mishanguc", "edit_sign_finish"),
         PacketByteBufs.create()
             .writeBlockPos(blockPos)
-            .writeEnumConstant(direction)
             .writeString(changed ? list.asString() : ""));
-    entity.editedSide = null;
   }
 
   private void finishEditing() {
@@ -657,7 +730,13 @@ public class SignBlockEditScreen extends Screen {
 
   @Override
   public void setFocused(@Nullable Element focused) {
-    super.setFocused(focused);
+    if (focused == null || focused instanceof ButtonWidget) {
+      super.setFocused(textFieldListScreen);
+    } else super.setFocused(focused);
+  }
+
+  public List<TextContext> getTextContextsEditing() {
+    return textContextsEditing;
   }
 
   /** 文本框列表的屏幕。每个列表项都是一个文本框（实际上就是把 {@link TextFieldWidget} 包装成了 {@link Entry}。 */
@@ -673,7 +752,7 @@ public class SignBlockEditScreen extends Screen {
     @Nullable
     @Override
     public Entry getFocused() {
-      return SignBlockEditScreen.this.getFocused() == this ? super.getFocused() : null;
+      return AbstractSignBlockEditScreen.this.getFocused() == this ? super.getFocused() : null;
     }
 
     @Override
@@ -683,8 +762,11 @@ public class SignBlockEditScreen extends Screen {
         child.textFieldWidget.setTextFieldFocused(child == focused);
       }
       if (focused instanceof Entry) {
-        SignBlockEditScreen.this.focusedTextField = ((Entry) focused).textFieldWidget;
+        focusedTextField = ((Entry) focused).textFieldWidget;
         focusedTextContext = contextToWidgetBiMap.inverse().get(((Entry) focused).textFieldWidget);
+
+        // 设置焦点后，重新设置 customColorTextField 的内容
+        customColorTextField.setText(String.format("#%06x", focusedTextContext.color));
       } else if (focused == null) {
         focusedTextField = null;
         focusedTextContext = null;

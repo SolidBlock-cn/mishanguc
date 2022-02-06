@@ -27,28 +27,37 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUc;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 
+/**
+ * @see HungSignBlockEntity
+ * @see pers.solid.mishang.uc.renderer.HungSignBlockEntityRenderer
+ */
 public class HungSignBlock extends Block implements Waterloggable, BlockEntityProvider {
 
   public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-  /** 告示牌是否对左侧连接。若 AXIS=X，则 left 表示南方；若 AXIS=Z，则 left 表示西方。 */
+  /**
+   * 告示牌是否对左侧连接。若 axis=x，则 left 表示南方；若 axis=z，则 left 表示西方。<br>
+   * Whether the sign is connected to the left. The "left" represents "south" if "axis=x", or "west"
+   * if "axis=z".
+   */
   public static final BooleanProperty LEFT = BooleanProperty.of("left");
-  /** 告示牌是否对左侧连接。若 AXIS=X，则 left 表示北方；若 AXIS=Z，则 left 表示东方。 */
+  /**
+   * 告示牌是否对右侧连接。若 axis=x，则 right 表示北方；若 axis=z，则 right 表示东方。<br>
+   * Whether the sign is connected to the right. The "right" represents "north" if "axis=x", or
+   * "east" if "axis=z".
+   */
   public static final BooleanProperty RIGHT = BooleanProperty.of("right");
 
   private static final VoxelShape SHAPE_X = createCuboidShape(7.5, 6, 0, 8.5, 12, 16);
   private static final VoxelShape SHAPE_Z = createCuboidShape(0, 6, 7.5, 16, 12, 8.5);
   public final @Nullable Block baseBlock;
-
-  public HungSignBlock(Settings settings) {
-    this(null, settings);
-  }
 
   public HungSignBlock(@Nullable Block baseBlock, Settings settings) {
     super(settings);
@@ -177,30 +186,30 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       BlockHitResult hit) {
     final ActionResult actionResult = super.onUse(state, world, pos, player, hand, hit);
     if (actionResult == ActionResult.PASS && !world.isClient) {
-      // 在服务端触发打开告示牌编辑界面
+      if (((ServerPlayerEntity) player).interactionManager.getGameMode() == GameMode.ADVENTURE) {
+        // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
+        return ActionResult.FAIL;
+      }
+      // 在服务端触发打开告示牌编辑界面。Open the edit interface, triggered in the server side.
       final BlockEntity blockEntity = world.getBlockEntity(pos);
       // 若方块实体不对应，或者编辑的这一侧不可编辑，则略过。
-      if (!(blockEntity instanceof final HungSignBlockEntity hungSignBlockEntity) || !state.get(AXIS).test(hit.getSide())) {
+      // Skip if the block entity does not correspond, or the side is not editable.
+      if (!(blockEntity instanceof final HungSignBlockEntity entity) || !state.get(AXIS).test(hit.getSide())) {
         return ActionResult.PASS;
       }
-      if (hungSignBlockEntity.editor != null
-          && hungSignBlockEntity.editor.isSpectator()
-          && !hungSignBlockEntity.editor.isLiving()
-          && hungSignBlockEntity.editor.world != world) {
-        // 这种情况下，占用该告示牌的玩家为无效玩家，取消该无效玩家的编辑权限。
-        hungSignBlockEntity.editedSide = null;
-        hungSignBlockEntity.editor = null;
-      }
-      if (hungSignBlockEntity.editedSide != null || hungSignBlockEntity.editor != null) {
-        // 这种情况下，告示牌被占用，玩家无权编辑。
+      entity.checkEditorValidity();
+      final PlayerEntity editor = entity.getEditor();
+      if (entity.editedSide != null || editor != null) {
+        // 这种情况下，告示牌被占用，玩家无权编辑。In this case, the sign is occupied, and the players has not editing
+        // permission.
         MishangUc.MISHANG_LOGGER.warn(
             "Refused to edit because the edited side is {} and the editor is {}.",
-            hungSignBlockEntity.editedSide,
-            hungSignBlockEntity.editor);
+            entity.editedSide,
+            editor);
         return ActionResult.SUCCESS;
       }
-      hungSignBlockEntity.editedSide = hit.getSide();
-      hungSignBlockEntity.editor = player;
+      entity.editedSide = hit.getSide();
+      entity.setEditor(player);
       ServerPlayNetworking.send(
           ((ServerPlayerEntity) player),
           new Identifier("mishanguc", "edit_sign"),

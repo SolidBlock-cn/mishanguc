@@ -14,6 +14,7 @@ import net.devtech.arrp.json.tags.JTag;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.block.Block;
 import net.minecraft.block.SlabBlock;
+import net.minecraft.block.enums.WallMountLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
@@ -251,6 +252,13 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     final JTag whiteWallLights = new JTag();
     final JTag whiteCornerLights = new JTag();
     final JTag whiteLightDecorations = new JTag();
+    final JTag woodenWallSigns = new JTag();
+    final JTag concreteWallSigns = new JTag();
+    final JTag terracottaWallSigns = new JTag();
+    final JTag wallSigns = new JTag();
+    final JTag glowingConcreteWallSigns = new JTag();
+    final JTag glowingTerracottaWallSigns = new JTag();
+    final JTag glowingWallSigns = new JTag();
     Arrays.stream(MishangucBlocks.class.getFields())
         .filter(
             field -> {
@@ -264,25 +272,48 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
             field -> {
               final Class<?> type = field.getType();
               final String name = field.getName().toLowerCase();
+              final Identifier identifier = new Identifier("mishanguc", name);
               if (AbstractRoadBlock.class.isAssignableFrom(type) && name.startsWith("asphalt_")) {
-                asphaltRoadBlocks.add(new Identifier("mishanguc", name));
+                asphaltRoadBlocks.add(identifier);
               } else if (AbstractRoadSlabBlock.class.isAssignableFrom(type)
                   && name.startsWith("asphalt_")) {
-                asphaltRoadSlabs.add(new Identifier("mishanguc", name));
+                asphaltRoadSlabs.add(identifier);
               } else if (StripWallLightBlock.class.isAssignableFrom(type)
                   && name.startsWith("white_")) {
-                whiteStripWallLights.add(new Identifier("mishanguc", name));
+                whiteStripWallLights.add(identifier);
               } else if (WallLightBlock.class.isAssignableFrom(type) && name.startsWith("white_")) {
-                whiteWallLights.add(new Identifier("mishanguc", name));
+                whiteWallLights.add(identifier);
               } else if (CornerLightBlock.class.isAssignableFrom(type)
                   && name.startsWith("white_")) {
-                whiteCornerLights.add(new Identifier("mishanguc", name));
+                whiteCornerLights.add(identifier);
               } else if (AutoConnectWallLightBlock.class.isAssignableFrom(type)
                   && name.startsWith("white_")) {
-                whiteLightDecorations.add(new Identifier("mishanguc", name));
+                whiteLightDecorations.add(identifier);
+              } else if (GlowingWallSignBlock.class.isAssignableFrom(type)) {
+                if (name.contains("concrete")) glowingConcreteWallSigns.add(identifier);
+                else if (name.contains("terracotta")) glowingTerracottaWallSigns.add(identifier);
+                else glowingWallSigns.add(identifier);
+              } else if (WallSignBlock.class.isAssignableFrom(type)) {
+                if (name.contains("concrete")) concreteWallSigns.add(identifier);
+                else if (name.contains("terracotta")) terracottaWallSigns.add(identifier);
+                else if (name.contains("oak_")
+                    || name.contains("birch_")
+                    || name.contains("spruce_")
+                    || name.contains("jungle")
+                    || name.contains("acacia_")
+                    || name.contains("warped_")
+                    || name.contains("crimson")) woodenWallSigns.tag(identifier);
+                else wallSigns.add(identifier);
               }
             });
     whiteWallLights.tag(new Identifier("mishanguc", "white_strip_wall_lights"));
+    wallSigns
+        .tag(new Identifier("mishanguc", "wooden_wall_signs"))
+        .tag(new Identifier("mishanguc", "concrete_wall_signs"))
+        .tag(new Identifier("mishanguc", "terracotta_wall_signs"));
+    glowingWallSigns
+        .tag(new Identifier("mishanguc", "glowing_concrete_wall_signs"))
+        .tag(new Identifier("mishanguc", "glowing_terracotta_wall_signs"));
     PACK.addTag(new Identifier("mishanguc", "blocks/asphalt_road_blocks"), asphaltRoadBlocks);
     PACK.addTag(new Identifier("mishanguc", "items/asphalt_road_blocks"), asphaltRoadBlocks);
     PACK.addTag(new Identifier("mishanguc", "blocks/asphalt_road_slabs"), asphaltRoadSlabs);
@@ -411,23 +442,6 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         new Identifier("mishanguc", "white_wall_light_round_decoration"));
 
     for (DyeColor dyeColor : DyeColor.values()) {
-      PACK.addBlockState(
-          Util.make(
-              new JState(),
-              state -> {
-                final JVariant jVariant = new JVariant();
-                for (Direction direction : Direction.Type.HORIZONTAL) {
-                  jVariant.put(
-                      "facing",
-                      direction,
-                      new JBlockModel(
-                              blockIdentifier(String.format("simple_%s_text_pad", dyeColor)))
-                          .uvlock()
-                          .y(((int) direction.asRotation()) + 180));
-                }
-                state.add(jVariant);
-              }),
-          new Identifier("mishanguc", String.format("simple_%s_text_pad", dyeColor)));
       addStateForHungGlowingSign(PACK, dyeColor.asString() + "_concrete");
       addStateForHungGlowingSign(PACK, dyeColor.asString() + "_terracotta");
     }
@@ -436,6 +450,25 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     addStateForHungGlowingSign(PACK, "nether_brick");
     addStateForHungGlowingSign(PACK, "blackstone");
     addStateForHungGlowingSign(PACK, "polished_blackstone");
+
+    // 对于墙上的告示牌
+    addStateForWallSign(PACK, "oak_wall_sign");
+    addStateForWallSign(PACK, "spruce_wall_sign");
+    addStateForWallSign(PACK, "birch_wall_sign");
+    addStateForWallSign(PACK, "jungle_wall_sign");
+    addStateForWallSign(PACK, "acacia_wall_sign");
+    addStateForWallSign(PACK, "dark_oak_wall_sign");
+    addStateForWallSign(PACK, "crimson_wall_sign");
+    addStateForWallSign(PACK, "warped_wall_sign");
+    for (DyeColor color : DyeColor.values()) {
+      addStateForWallSign(PACK, color.asString() + "_concrete_wall_sign");
+      addStateForWallSign(PACK, color.asString() + "_terracotta_wall_sign");
+      addStateForWallSign(PACK, "glowing_" + color.asString() + "_concrete_wall_sign");
+      addStateForWallSign(PACK, "glowing_" + color.asString() + "_terracotta_wall_sign");
+      addStateForWallSign(PACK, "full_" + color.asString() + "_concrete_wall_sign");
+      addStateForWallSign(PACK, "full_" + color.asString() + "_terracotta_wall_sign");
+    }
+    addStateForWallSign(PACK, "invisible_wall_sign");
   }
 
   /**
@@ -479,6 +512,25 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
                 .addModel(new JBlockModel(blockIdentifier(path + "_bar_edge")).uvlock().y(270))
                 .when(new FixedWhen().add("axis", "x").add("left", "false").add("right", "false"))),
         new Identifier("mishanguc", path));
+  }
+
+  private static void addStateForWallSign(@NotNull RuntimeResourcePack PACK, String name) {
+    final JVariant jVariant = new JVariant();
+    final JState state = JState.state(jVariant);
+    for (WallMountLocation wallMountLocation : WallMountLocation.values()) {
+      final int x = switch (wallMountLocation) {
+        case WALL -> 0;
+        case FLOOR -> 90;
+        default -> -90;
+      };
+      for (Direction direction : Direction.Type.HORIZONTAL) {
+        float y = direction.asRotation();
+        jVariant.put(
+            String.format("face=%s,facing=%s", wallMountLocation.asString(), direction.asString()),
+            new JBlockModel(blockIdentifier(name)).x(x).y((int) y).uvlock());
+      }
+    }
+    PACK.addBlockState(state, new Identifier("mishanguc", name));
   }
 
   private static JState composeStateForAutoConnectBlock(String name) {
@@ -890,27 +942,72 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     addWallLightDecoration(PACK, "white", "round");
 
     // 写字板方块
-    for (DyeColor dyeColor : DyeColor.values()) {
+    for (DyeColor color : DyeColor.values()) {
+      addModelForHungGlowingSign(
+          PACK,
+          String.format("%s_concrete", color.asString()),
+          String.format("block/%s_concrete", color.asString()),
+          blockString("white_light"));
+      addModelForHungGlowingSign(
+          PACK,
+          String.format("%s_terracotta", color.asString()),
+          String.format("block/%s_terracotta", color.asString()),
+          blockString("white_light"));
       PACK.addModel(
-          JModel.model(blockIdentifier("simple_text_pad"))
-              .textures(new JTextures().var("all", String.format("block/%s_concrete", dyeColor))),
-          blockIdentifier(String.format("simple_%s_text_pad", dyeColor)));
-      addModelForHungGlowingSign(
-          PACK,
-          String.format("%s_concrete", dyeColor.asString()),
-          String.format("block/%s_concrete", dyeColor.asString()),
-          blockString("white_light"));
-      addModelForHungGlowingSign(
-          PACK,
-          String.format("%s_terracotta", dyeColor.asString()),
-          String.format("block/%s_terracotta", dyeColor.asString()),
-          blockString("white_light"));
+          JModel.model("mishanguc:block/wall_sign")
+              .textures(
+                  new JTextures()
+                      .var("texture", String.format("block/%s_concrete", color.asString()))),
+          blockIdentifier(color.asString() + "_concrete_wall_sign"));
+      PACK.addModel(
+          JModel.model("mishanguc:block/wall_sign")
+              .textures(
+                  new JTextures()
+                      .var("texture", String.format("block/%s_terracotta", color.asString()))),
+          blockIdentifier(color.asString() + "_terracotta_wall_sign"));
+      PACK.addModel(
+          JModel.model("mishanguc:block/glowing_wall_sign")
+              .textures(
+                  new JTextures()
+                      .var("glow", "mishanguc:block/white_light")
+                      .var("texture", String.format("block/%s_concrete", color.asString()))),
+          blockIdentifier("glowing_" + color.asString() + "_concrete_wall_sign"));
+      PACK.addModel(
+          JModel.model("mishanguc:block/glowing_wall_sign")
+              .textures(
+                  new JTextures()
+                      .var("glow", "mishanguc:block/white_light")
+                      .var("texture", String.format("block/%s_terracotta", color.asString()))),
+          blockIdentifier("glowing_" + color.asString() + "_terracotta_wall_sign"));
+      PACK.addModel(
+          JModel.model("mishanguc:block/full_wall_sign")
+              .textures(
+                  new JTextures()
+                      .var("glow", "mishanguc:block/white_light")
+                      .var("texture", String.format("block/%s_concrete", color.asString()))),
+          blockIdentifier("full_" + color.asString() + "_concrete_wall_sign"));
+      PACK.addModel(
+          JModel.model("mishanguc:block/full_wall_sign")
+              .textures(
+                  new JTextures()
+                      .var("glow", "mishanguc:block/white_light")
+                      .var("texture", String.format("block/%s_terracotta", color.asString()))),
+          blockIdentifier("full_" + color.asString() + "_terracotta_wall_sign"));
     }
     addModelForHungGlowingSign(PACK, "netherrack", "block/netherrack", "block/glowstone");
     addModelForHungGlowingSign(PACK, "nether_brick", "block/nether_bricks", "block/glowstone");
     addModelForHungGlowingSign(PACK, "blackstone", "block/blackstone", "block/glowstone");
     addModelForHungGlowingSign(
         PACK, "polished_blackstone", "block/polished_blackstone", "block/glowstone");
+    for (String woodName :
+        new String[] {
+          "oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "crimson", "warped",
+        }) {
+      PACK.addModel(
+          JModel.model("mishanguc:block/wall_sign")
+              .textures(new JTextures().var("texture", String.format("block/%s_planks", woodName))),
+          blockIdentifier(woodName + "_wall_sign"));
+    }
   }
 
   /**
