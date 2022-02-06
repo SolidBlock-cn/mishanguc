@@ -155,21 +155,6 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
                   ? new LiteralText("O").formatted(Formatting.OBFUSCATED)
                   : new LiteralText("O"),
           button -> {});
-  /** 添加文本按钮 */
-  public final ButtonWidget addTextButton =
-      new ButtonWidget(
-          width / 2 - 120 - 100,
-          10,
-          200,
-          20,
-          new TranslatableText("message.mishanguc.add_text"),
-          button1 -> {
-            int index =
-                textFieldListScreen
-                    .children()
-                    .indexOf(textFieldListScreen.new Entry(focusedTextField));
-            addTextField(index == -1 ? textFieldListScreen.children().size() : index + 1, null);
-          });
   /** 阴影按钮 */
   public final BooleanButtonWidget shadeButton =
       new BooleanButtonWidget(
@@ -248,6 +233,21 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
             }
           },
           (button) -> {});
+  /** 添加文本按钮 */
+  public final ButtonWidget addTextButton =
+      new ButtonWidget(
+          width / 2 - 120 - 100,
+          10,
+          200,
+          20,
+          new TranslatableText("message.mishanguc.add_text"),
+          button1 -> {
+            int index =
+                textFieldListScreen
+                    .children()
+                    .indexOf(textFieldListScreen.new Entry(focusedTextField));
+            addTextField(index == -1 ? textFieldListScreen.children().size() : index + 1, null);
+          });
   /** 移除文本按钮 */
   public final ButtonWidget removeTextButton =
       new ButtonWidget(
@@ -301,15 +301,13 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
       new FloatButtonWidget(
           0,
           0,
-          60,
+          50,
           20,
           colorId -> {
             if (colorId == -1) {
               return new TranslatableText("message.mishanguc.color");
             } else if (colorId == -2 && focusedTextContext != null) {
-              return new TranslatableText(
-                  "message.mishanguc.color.param",
-                  String.format("#%06x", focusedTextContext.color));
+              return new LiteralText(String.format("#%06x", focusedTextContext.color));
             }
             final DyeColor dyeColor = DyeColor.byId((int) colorId);
             return new TranslatableText(
@@ -528,7 +526,6 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
         offsetYButton,
         colorButton,
         customColorTextField,
-        rearrangeButton,
         switchAdvanceButton
       };
   private final ClickableWidget[] toolbox2 =
@@ -539,7 +536,6 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
         horizontalAlignButton,
         verticalAlignButton,
         seeThroughButton,
-        rearrangeButton,
         switchAdvanceButton
       };
 
@@ -568,6 +564,7 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
     super.init();
     // customColorTextField.textRenderer = textRenderer;
     textFieldListScreen = new TextFieldListScreen(client, width, height, 30, height - 50, 18);
+    setFocused(textFieldListScreen);
     placeHolder.setWidth(width);
     // 添加按钮
     this.addButton(placeHolder);
@@ -607,7 +604,9 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
     switchToolboxButtons();
     addTextButton.x = width / 2 - 220;
     removeTextButton.x = width / 2 + 20;
-    finishButton.x = width / 2 - 100;
+    rearrangeButton.x = width / 2 - 150;
+    rearrangeButton.y = height - 30;
+    finishButton.x = width / 2 + 10;
     finishButton.y = height - 30;
   }
 
@@ -672,13 +671,6 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
     changed = true;
   }
 
-  /** 点击按钮后，还是应该聚焦在文本区域，而不是聚焦在按钮处，故做此修复。 */
-  @Override
-  public boolean mouseClicked(double mouseX, double mouseY, int button) {
-    final boolean b = super.mouseClicked(mouseX, mouseY, button);
-    return b;
-  }
-
   /**
    * 移除一个文本框。将从 {@link #textFields}、{@link #contextToWidgetBiMap} 和 {@link #textContextsEditing}
    * 中移除对应的元素。
@@ -696,6 +688,8 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
     }
     if (textFieldListScreen.children().size() > index) {
       textFieldListScreen.setFocused(textFieldListScreen.children().get(index));
+    } else if (textFieldListScreen.children().size() > index - 1) {
+      textFieldListScreen.setFocused(textFieldListScreen.children().get(index - 1));
     }
     getTextContextsEditing().remove(removedTextContext);
     contextToWidgetBiMap.remove(removedTextContext);
