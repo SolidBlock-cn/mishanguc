@@ -84,6 +84,8 @@
   "block.mishanguc.hung_glowing_sign": "Hung %s Glowing Sign",
   "block.mishanguc.wall_sign": "%s Wall Sign",
   "block.mishanguc.glowing_wall_sign": "Glowing %s Wall Sign",
+  "block.mishanguc.full_wall_sign": "Full %s Wall Sign",
+  "block.mishanguc.invisible_wall_sign": "Invisible Wall Sign",
 
   "item.mishanguc.road_connection_state_debugging_tool": "Road Connection State Debugging Tool",
   "item.mishanguc.id_checker_tool": "Id Checker Tool",
@@ -188,6 +190,7 @@
   "message.mishanguc.add_text": "Add text",
   "message.mishanguc.remove_text": "Remove text",
   "message.mishanguc.shade": "Shade",
+  "message.mishanguc.shade.param": "Shade: %s",
   "message.mishanguc.size": "Size: %s",
   "message.mishanguc.offsetX": "X Offset: %s",
   "message.mishanguc.offsetY": "Y Offset: %s",
@@ -212,5 +215,8 @@
   "vertical_align.mishanguc.top": "Top",
   "vertical_align.mishanguc.middle": "Middle",
   "vertical_align.mishanguc.bottom": "Bottom",
+  "message.mishanguc.see_through": "See-through",
+  "message.mishanguc.see_through.param": "See-through: %s",
+  "message.mishanguc.custom_color": "Custom Color",
   "message.mishanguc.advanced": "Advanced"
 }

@@ -23,7 +23,7 @@ public class FullWallSignBlock extends WallSignBlock {
   public static final Map<Direction, VoxelShape> SHAPES_WHEN_WALL =
       MishangUtils.createHorizontalDirectionToShape(0, 0, 0, 16, 16, 1);
   public static final Map<Direction, VoxelShape> SHAPES_WHEN_FLOOR =
-      MishangUtils.createHorizontalDirectionToShape(0, 0, 0, 16, 1, 11);
+      MishangUtils.createHorizontalDirectionToShape(0, 0, 0, 16, 1, 16);
   public static final Map<Direction, VoxelShape> SHAPES_WHEN_CEILING =
       MishangUtils.createHorizontalDirectionToShape(0, 15, 0, 16, 16, 16);
 

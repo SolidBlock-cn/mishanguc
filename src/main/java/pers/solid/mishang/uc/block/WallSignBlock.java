@@ -128,7 +128,9 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
 
   @Override
   public MutableText getName() {
-    return new TranslatableText("block.mishanguc.wall_sign", baseBlock.getName());
+    return baseBlock == null
+        ? super.getName()
+        : new TranslatableText("block.mishanguc.wall_sign", baseBlock.getName());
   }
 
   /** 玩家点击该告示牌时，编辑告示牌。 */

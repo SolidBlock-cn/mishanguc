@@ -36,6 +36,9 @@ public class MishangucBlockEntities {
                       .addAll(MishangucBlocks.TERRACOTTA_WALL_SIGNS.values())
                       .addAll(MishangucBlocks.GLOWING_CONCRETE_WALL_SIGNS.values())
                       .addAll(MishangucBlocks.GLOWING_TERRACOTTA_WALL_SIGNS.values())
+                      .addAll(MishangucBlocks.FULL_CONCRETE_WALL_SIGNS.values())
+                      .addAll(MishangucBlocks.FULL_TERRACOTTA_WALL_SIGNS.values())
+                      .add(MishangucBlocks.INVISIBLE_WALL_SIGN)
                       .build()
                       .toArray(new Block[] {}))
               .build(null));

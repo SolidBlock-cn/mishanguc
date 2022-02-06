@@ -642,6 +642,209 @@ public final class MishangucBlocks {
             map.put(DyeColor.BLACK, GLOWING_BLACK_TERRACOTTA_WALL_SIGN);
           });
 
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_WHITE_CONCRETE_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.WHITE_CONCRETE, FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_ORANGE_CONCRETE_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.ORANGE_CONCRETE, FabricBlockSettings.copyOf(Blocks.ORANGE_CONCRETE));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_MAGENTA_CONCRETE_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.MAGENTA_CONCRETE, FabricBlockSettings.copyOf(Blocks.MAGENTA_CONCRETE));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_LIGHT_BLUE_CONCRETE_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.LIGHT_BLUE_CONCRETE, FabricBlockSettings.copyOf(Blocks.LIGHT_BLUE_CONCRETE));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_YELLOW_CONCRETE_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.YELLOW_CONCRETE, FabricBlockSettings.copyOf(Blocks.YELLOW_CONCRETE));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_LIME_CONCRETE_WALL_SIGN =
+      new FullWallSignBlock(Blocks.LIME_CONCRETE, FabricBlockSettings.copyOf(Blocks.LIME_CONCRETE));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_PINK_CONCRETE_WALL_SIGN =
+      new FullWallSignBlock(Blocks.PINK_CONCRETE, FabricBlockSettings.copyOf(Blocks.PINK_CONCRETE));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_GRAY_CONCRETE_WALL_SIGN =
+      new FullWallSignBlock(Blocks.GRAY_CONCRETE, FabricBlockSettings.copyOf(Blocks.GRAY_CONCRETE));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_LIGHT_GRAY_CONCRETE_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.LIGHT_GRAY_CONCRETE, FabricBlockSettings.copyOf(Blocks.LIGHT_GRAY_CONCRETE));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_CYAN_CONCRETE_WALL_SIGN =
+      new FullWallSignBlock(Blocks.CYAN_CONCRETE, FabricBlockSettings.copyOf(Blocks.CYAN_CONCRETE));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_PURPLE_CONCRETE_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.PURPLE_CONCRETE, FabricBlockSettings.copyOf(Blocks.PURPLE_CONCRETE));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_BLUE_CONCRETE_WALL_SIGN =
+      new FullWallSignBlock(Blocks.BLUE_CONCRETE, FabricBlockSettings.copyOf(Blocks.BLUE_CONCRETE));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_BROWN_CONCRETE_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.BROWN_CONCRETE, FabricBlockSettings.copyOf(Blocks.BROWN_CONCRETE));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_GREEN_CONCRETE_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.GREEN_CONCRETE, FabricBlockSettings.copyOf(Blocks.GREEN_CONCRETE));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_RED_CONCRETE_WALL_SIGN =
+      new FullWallSignBlock(Blocks.RED_CONCRETE, FabricBlockSettings.copyOf(Blocks.RED_CONCRETE));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_BLACK_CONCRETE_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.BLACK_CONCRETE, FabricBlockSettings.copyOf(Blocks.BLACK_CONCRETE));
+
+  public static final Map<DyeColor, FullWallSignBlock> FULL_CONCRETE_WALL_SIGNS =
+      Util.make(
+          new EnumMap<>(DyeColor.class),
+          map -> {
+            map.put(DyeColor.WHITE, FULL_WHITE_CONCRETE_WALL_SIGN);
+            map.put(DyeColor.ORANGE, FULL_ORANGE_CONCRETE_WALL_SIGN);
+            map.put(DyeColor.MAGENTA, FULL_MAGENTA_CONCRETE_WALL_SIGN);
+            map.put(DyeColor.LIGHT_BLUE, FULL_LIGHT_BLUE_CONCRETE_WALL_SIGN);
+            map.put(DyeColor.YELLOW, FULL_YELLOW_CONCRETE_WALL_SIGN);
+            map.put(DyeColor.LIME, FULL_LIME_CONCRETE_WALL_SIGN);
+            map.put(DyeColor.PINK, FULL_PINK_CONCRETE_WALL_SIGN);
+            map.put(DyeColor.GRAY, FULL_GRAY_CONCRETE_WALL_SIGN);
+            map.put(DyeColor.LIGHT_GRAY, FULL_LIGHT_GRAY_CONCRETE_WALL_SIGN);
+            map.put(DyeColor.CYAN, FULL_CYAN_CONCRETE_WALL_SIGN);
+            map.put(DyeColor.PURPLE, FULL_PURPLE_CONCRETE_WALL_SIGN);
+            map.put(DyeColor.BLUE, FULL_BLUE_CONCRETE_WALL_SIGN);
+            map.put(DyeColor.BROWN, FULL_BROWN_CONCRETE_WALL_SIGN);
+            map.put(DyeColor.GREEN, FULL_GREEN_CONCRETE_WALL_SIGN);
+            map.put(DyeColor.RED, FULL_RED_CONCRETE_WALL_SIGN);
+            map.put(DyeColor.BLACK, FULL_BLACK_CONCRETE_WALL_SIGN);
+          });
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_WHITE_TERRACOTTA_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.WHITE_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.WHITE_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_ORANGE_TERRACOTTA_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.ORANGE_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.ORANGE_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_MAGENTA_TERRACOTTA_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.MAGENTA_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.MAGENTA_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_LIGHT_BLUE_TERRACOTTA_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.LIGHT_BLUE_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.LIGHT_BLUE_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_YELLOW_TERRACOTTA_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.YELLOW_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.YELLOW_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_LIME_TERRACOTTA_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.LIME_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.LIME_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_PINK_TERRACOTTA_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.PINK_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.PINK_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_GRAY_TERRACOTTA_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.GRAY_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.GRAY_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_LIGHT_GRAY_TERRACOTTA_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.LIGHT_GRAY_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.LIGHT_GRAY_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_CYAN_TERRACOTTA_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.CYAN_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.CYAN_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_PURPLE_TERRACOTTA_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.PURPLE_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.PURPLE_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_BLUE_TERRACOTTA_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.BLUE_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.BLUE_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_BROWN_TERRACOTTA_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.BROWN_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.BROWN_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_GREEN_TERRACOTTA_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.GREEN_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.GREEN_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_RED_TERRACOTTA_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.RED_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.RED_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final FullWallSignBlock FULL_BLACK_TERRACOTTA_WALL_SIGN =
+      new FullWallSignBlock(
+          Blocks.BLACK_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.BLACK_TERRACOTTA));
+
+  public static final Map<DyeColor, FullWallSignBlock> FULL_TERRACOTTA_WALL_SIGNS =
+      Util.make(
+          new EnumMap<>(DyeColor.class),
+          map -> {
+            map.put(DyeColor.WHITE, FULL_WHITE_TERRACOTTA_WALL_SIGN);
+            map.put(DyeColor.ORANGE, FULL_ORANGE_TERRACOTTA_WALL_SIGN);
+            map.put(DyeColor.MAGENTA, FULL_MAGENTA_TERRACOTTA_WALL_SIGN);
+            map.put(DyeColor.LIGHT_BLUE, FULL_LIGHT_BLUE_TERRACOTTA_WALL_SIGN);
+            map.put(DyeColor.YELLOW, FULL_YELLOW_TERRACOTTA_WALL_SIGN);
+            map.put(DyeColor.LIME, FULL_LIME_TERRACOTTA_WALL_SIGN);
+            map.put(DyeColor.PINK, FULL_PINK_TERRACOTTA_WALL_SIGN);
+            map.put(DyeColor.GRAY, FULL_GRAY_TERRACOTTA_WALL_SIGN);
+            map.put(DyeColor.LIGHT_GRAY, FULL_LIGHT_GRAY_TERRACOTTA_WALL_SIGN);
+            map.put(DyeColor.CYAN, FULL_CYAN_TERRACOTTA_WALL_SIGN);
+            map.put(DyeColor.PURPLE, FULL_PURPLE_TERRACOTTA_WALL_SIGN);
+            map.put(DyeColor.BLUE, FULL_BLUE_TERRACOTTA_WALL_SIGN);
+            map.put(DyeColor.BROWN, FULL_BROWN_TERRACOTTA_WALL_SIGN);
+            map.put(DyeColor.GREEN, FULL_GREEN_TERRACOTTA_WALL_SIGN);
+            map.put(DyeColor.RED, FULL_RED_TERRACOTTA_WALL_SIGN);
+            map.put(DyeColor.BLACK, FULL_BLACK_TERRACOTTA_WALL_SIGN);
+          });
+
+  /** 隐形的告示牌。 */
+  @RegisterIdentifier
+  public static final FullWallSignBlock INVISIBLE_WALL_SIGN =
+      new FullWallSignBlock(null, FabricBlockSettings.copyOf(Blocks.BARRIER).noCollision());
+
   /** 绝大多数柏油路方块共用的方块设置。 */
   private static final FabricBlockSettings ASPHALT_ROAD_SETTINGS =
       FabricBlockSettings.of(Material.STONE, MapColor.GRAY).strength(0.5F);

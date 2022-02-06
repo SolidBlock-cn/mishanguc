@@ -466,7 +466,10 @@ public class ARRPMain implements RRPPreGenEntrypoint {
       addStateForWallSign(PACK, color.asString() + "_terracotta_wall_sign");
       addStateForWallSign(PACK, "glowing_" + color.asString() + "_concrete_wall_sign");
       addStateForWallSign(PACK, "glowing_" + color.asString() + "_terracotta_wall_sign");
+      addStateForWallSign(PACK, "full_" + color.asString() + "_concrete_wall_sign");
+      addStateForWallSign(PACK, "full_" + color.asString() + "_terracotta_wall_sign");
     }
+    addStateForWallSign(PACK, "invisible_wall_sign");
   }
 
   /**
@@ -984,6 +987,20 @@ public class ARRPMain implements RRPPreGenEntrypoint {
                       .var("glow", "mishanguc:block/white_light")
                       .var("texture", String.format("block/%s_terracotta", color.asString()))),
           blockIdentifier("glowing_" + color.asString() + "_terracotta_wall_sign"));
+      PACK.addModel(
+          JModel.model("mishanguc:block/full_wall_sign")
+              .textures(
+                  new JTextures()
+                      .var("glow", "mishanguc:block/white_light")
+                      .var("texture", String.format("block/%s_concrete", color.asString()))),
+          blockIdentifier("full_" + color.asString() + "_concrete_wall_sign"));
+      PACK.addModel(
+          JModel.model("mishanguc:block/full_wall_sign")
+              .textures(
+                  new JTextures()
+                      .var("glow", "mishanguc:block/white_light")
+                      .var("texture", String.format("block/%s_terracotta", color.asString()))),
+          blockIdentifier("full_" + color.asString() + "_terracotta_wall_sign"));
     }
     addModelForHungGlowingSign(PACK, "netherrack", "block/netherrack", "block/glowstone");
     addModelForHungGlowingSign(PACK, "nether_brick", "block/nether_bricks", "block/glowstone");
