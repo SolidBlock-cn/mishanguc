@@ -109,7 +109,6 @@ public class CornerLightBlock extends HorizontalFacingBlock
     return switch (state.get(BLOCK_HALF)) {
       case BOTTOM -> SHAPE_PER_DIRECTION_WHEN_BOTTOM.get(state.get(FACING));
       case TOP -> SHAPE_PER_DIRECTION_WHEN_TOP.get(state.get(FACING));
-      default -> throw new IllegalStateException("Unexpected value: " + state.get(BLOCK_HALF));
     };
   }
 

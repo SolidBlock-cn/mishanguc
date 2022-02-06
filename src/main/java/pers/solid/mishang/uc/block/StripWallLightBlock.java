@@ -32,7 +32,6 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
       case HORIZONTAL -> facing.getAxis() == Direction.Axis.Y
           ? direction.getAxis() == Direction.Axis.X
           : direction.getAxis() != Direction.Axis.Y;
-      default -> throw new IllegalStateException("Unexpected value: " + stripType);
     };
   }
 
@@ -47,7 +46,6 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
       return switch (this) {
         case HORIZONTAL -> "horizontal";
         case VERTICAL -> "vertical";
-        default -> null;
       };
     }
 
@@ -55,7 +53,6 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
       return switch (this) {
         case HORIZONTAL -> VERTICAL;
         case VERTICAL -> HORIZONTAL;
-        default -> this;
       };
     }
   }
