@@ -218,7 +218,7 @@ public class TextContext implements Cloneable {
         y,
         color,
         shadow,
-        matrixStack.peek().getModel(),
+        matrixStack.peek().getPositionMatrix(),
         vertexConsumers,
         seeThrough,
         0,

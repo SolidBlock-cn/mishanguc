@@ -7,6 +7,7 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -98,7 +99,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
       final BlockPos blockPos = blockOutlineContext.blockPos();
       WorldRendererInvoker.drawShapeOutline(
           worldRenderContext.matrixStack(),
-          blockOutlineContext.vertexConsumer(),
+          worldRenderContext.consumers().getBuffer(RenderLayer.LINES),
           halfState.getOutlineShape(world, blockPos, ShapeContext.of(blockOutlineContext.entity())),
           (double) blockPos.getX() - blockOutlineContext.cameraX(),
           (double) blockPos.getY() - blockOutlineContext.cameraY(),

@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
@@ -189,7 +190,8 @@ public class FastBuildingToolItem extends BlockToolItem {
       ItemStack mainHandStack,
       WorldRenderContext worldRenderContext,
       WorldRenderContext.BlockOutlineContext blockOutlineContext) {
-    final VertexConsumer vertexConsumer = blockOutlineContext.vertexConsumer();
+    final VertexConsumer vertexConsumer =
+        worldRenderContext.consumers().getBuffer(RenderLayer.LINES);
     final boolean includesFluid = this.includesFluid(mainHandStack, player.isSneaking());
     final BlockMatchingRule matchingRule = this.getMatchingRule(mainHandStack);
     final int range = this.getRange(mainHandStack);

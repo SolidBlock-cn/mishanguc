@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.item;
 
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
@@ -104,7 +105,8 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
       ItemStack itemStack,
       WorldRenderContext worldRenderContext,
       WorldRenderContext.BlockOutlineContext blockOutlineContext) {
-    final VertexConsumer vertexConsumer = blockOutlineContext.vertexConsumer();
+    final VertexConsumer vertexConsumer =
+        worldRenderContext.consumers().getBuffer(RenderLayer.LINES);
     final ClientWorld world = worldRenderContext.world();
     final BlockPos blockPos = blockOutlineContext.blockPos();
     final BlockState state = blockOutlineContext.blockState();
