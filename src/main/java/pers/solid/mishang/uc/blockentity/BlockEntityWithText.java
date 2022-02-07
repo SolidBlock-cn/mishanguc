@@ -8,6 +8,9 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.command.CommandOutput;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -43,12 +46,15 @@ public abstract class BlockEntityWithText extends BlockEntity {
         player);
   }
 
-  public void fromClientTag(NbtCompound tag) {
-    readNbt(tag);
+  @Nullable
+  @Override
+  public Packet<ClientPlayPacketListener> toUpdatePacket() {
+    return BlockEntityUpdateS2CPacket.create(this);
   }
 
-  public void toClientTag(NbtCompound tag) {
-    writeNbt(tag);
+  @Override
+  public NbtCompound toInitialChunkDataNbt() {
+    return createNbt();
   }
 
   /**

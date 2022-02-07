@@ -710,7 +710,7 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
         new Identifier("mishanguc", "edit_sign_finish"),
         PacketByteBufs.create()
             .writeBlockPos(blockPos)
-            .writeString(changed ? list.asString() : ""));
+            .writeNbt(Util.make(new NbtCompound(),compound -> compound.put("texts",list))));
   }
 
   private void finishEditing() {
