@@ -27,6 +27,7 @@ import java.util.Map;
 
 /** 迷上城建模组的所有方块。 */
 public final class MishangucBlocks {
+
   /**
    *
    *
@@ -34,177 +35,414 @@ public final class MishangucBlocks {
    *
    * 具有多种不同颜色。
    */
-  public static final Map<DyeColor, HungSignBlock> HUNG_CONCRETE_GLOWING_SIGNS =
-      Util.make(
-          new EnumMap<>(DyeColor.class),
-          map -> {
-            for (DyeColor color : DyeColor.values()) {
-              final Block block =
-                  Registry.BLOCK.get(new Identifier("minecraft", color.asString() + "_concrete"));
-              map.put(
-                  color, new HungSignBlock(block, FabricBlockSettings.copyOf(block).luminance(15)));
-            }
-          });
-
-  public static final Map<DyeColor, HungSignBlock> HUNG_TERRACOTTA_GLOWING_SIGNS =
-      Util.make(
-          new EnumMap<>(DyeColor.class),
-          map -> {
-            for (DyeColor color : DyeColor.values()) {
-              final Block block =
-                  Registry.BLOCK.get(new Identifier("minecraft", color.asString() + "_terracotta"));
-              map.put(
-                  color, new HungSignBlock(block, FabricBlockSettings.copyOf(block).luminance(15)));
-            }
-          });
-
   @InGroup("signs")
   @RegisterIdentifier
-  public static final HungSignBlock HUNG_WHITE_CONCRETE_GLOWING_SIGN =
-      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.WHITE);
+  public static final HungSignBlock WHITE_CONCRETE_HUNG_SIGN =
+      new HungSignBlock(Blocks.WHITE_CONCRETE, FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE));
 
   @RegisterIdentifier
-  public static final HungSignBlock HUNG_ORANGE_CONCRETE_GLOWING_SIGN =
-      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.ORANGE);
+  public static final HungSignBlock ORANGE_CONCRETE_HUNG_SIGN =
+      new HungSignBlock(Blocks.ORANGE_CONCRETE, FabricBlockSettings.copyOf(Blocks.ORANGE_CONCRETE));
 
   @RegisterIdentifier
-  public static final HungSignBlock HUNG_MAGENTA_CONCRETE_GLOWING_SIGN =
-      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.MAGENTA);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_LIGHT_BLUE_CONCRETE_GLOWING_SIGN =
-      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.LIGHT_BLUE);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_YELLOW_CONCRETE_GLOWING_SIGN =
-      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.YELLOW);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_LIME_CONCRETE_GLOWING_SIGN =
-      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.LIME);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_PINK_CONCRETE_GLOWING_SIGN =
-      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.PINK);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_GRAY_CONCRETE_GLOWING_SIGN =
-      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.GRAY);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_LIGHT_GRAY_CONCRETE_GLOWING_SIGN =
-      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.LIGHT_GRAY);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_CYAN_CONCRETE_GLOWING_SIGN =
-      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.CYAN);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_PURPLE_CONCRETE_GLOWING_SIGN =
-      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.PURPLE);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_BLUE_CONCRETE_GLOWING_SIGN =
-      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.BLUE);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_BROWN_CONCRETE_GLOWING_SIGN =
-      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.BROWN);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_GREEN_CONCRETE_GLOWING_SIGN =
-      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.GREEN);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_RED_CONCRETE_GLOWING_SIGN =
-      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.RED);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_BLACK_CONCRETE_GLOWING_SIGN =
-      HUNG_CONCRETE_GLOWING_SIGNS.get(DyeColor.BLACK);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_WHITE_TERRACOTTA_GLOWING_SIGN =
-      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.WHITE);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_ORANGE_TERRACOTTA_GLOWING_SIGN =
-      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.ORANGE);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_MAGENTA_TERRACOTTA_GLOWING_SIGN =
-      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.MAGENTA);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_LIGHT_BLUE_TERRACOTTA_GLOWING_SIGN =
-      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.LIGHT_BLUE);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_YELLOW_TERRACOTTA_GLOWING_SIGN =
-      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.YELLOW);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_LIME_TERRACOTTA_GLOWING_SIGN =
-      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.LIME);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_PINK_TERRACOTTA_GLOWING_SIGN =
-      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.PINK);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_GRAY_TERRACOTTA_GLOWING_SIGN =
-      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.GRAY);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_LIGHT_GRAY_TERRACOTTA_GLOWING_SIGN =
-      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.LIGHT_GRAY);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_CYAN_TERRACOTTA_GLOWING_SIGN =
-      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.CYAN);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_PURPLE_TERRACOTTA_GLOWING_SIGN =
-      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.PURPLE);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_BLUE_TERRACOTTA_GLOWING_SIGN =
-      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.BLUE);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_BROWN_TERRACOTTA_GLOWING_SIGN =
-      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.BROWN);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_GREEN_TERRACOTTA_GLOWING_SIGN =
-      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.GREEN);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_RED_TERRACOTTA_GLOWING_SIGN =
-      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.RED);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_BLACK_TERRACOTTA_GLOWING_SIGN =
-      HUNG_TERRACOTTA_GLOWING_SIGNS.get(DyeColor.BLACK);
-
-  @RegisterIdentifier
-  public static final HungSignBlock HUNG_NETHERRACK_GLOWING_SIGN =
+  public static final HungSignBlock MAGENTA_CONCRETE_HUNG_SIGN =
       new HungSignBlock(
+          Blocks.MAGENTA_CONCRETE, FabricBlockSettings.copyOf(Blocks.MAGENTA_CONCRETE));
+
+  @RegisterIdentifier
+  public static final HungSignBlock LIGHT_BLUE_CONCRETE_HUNG_SIGN =
+      new HungSignBlock(
+          Blocks.LIGHT_BLUE_CONCRETE, FabricBlockSettings.copyOf(Blocks.LIGHT_BLUE_CONCRETE));
+
+  @RegisterIdentifier
+  public static final HungSignBlock YELLOW_CONCRETE_HUNG_SIGN =
+      new HungSignBlock(Blocks.YELLOW_CONCRETE, FabricBlockSettings.copyOf(Blocks.YELLOW_CONCRETE));
+
+  @RegisterIdentifier
+  public static final HungSignBlock LIME_CONCRETE_HUNG_SIGN =
+      new HungSignBlock(Blocks.LIME_CONCRETE, FabricBlockSettings.copyOf(Blocks.LIME_CONCRETE));
+
+  @RegisterIdentifier
+  public static final HungSignBlock PINK_CONCRETE_HUNG_SIGN =
+      new HungSignBlock(Blocks.PINK_CONCRETE, FabricBlockSettings.copyOf(Blocks.PINK_CONCRETE));
+
+  @RegisterIdentifier
+  public static final HungSignBlock GRAY_CONCRETE_HUNG_SIGN =
+      new HungSignBlock(Blocks.GRAY_CONCRETE, FabricBlockSettings.copyOf(Blocks.GRAY_CONCRETE));
+
+  @RegisterIdentifier
+  public static final HungSignBlock LIGHT_GRAY_CONCRETE_HUNG_SIGN =
+      new HungSignBlock(
+          Blocks.LIGHT_GRAY_CONCRETE, FabricBlockSettings.copyOf(Blocks.LIGHT_GRAY_CONCRETE));
+
+  @RegisterIdentifier
+  public static final HungSignBlock CYAN_CONCRETE_HUNG_SIGN =
+      new HungSignBlock(Blocks.CYAN_CONCRETE, FabricBlockSettings.copyOf(Blocks.CYAN_CONCRETE));
+
+  @RegisterIdentifier
+  public static final HungSignBlock PURPLE_CONCRETE_HUNG_SIGN =
+      new HungSignBlock(Blocks.PURPLE_CONCRETE, FabricBlockSettings.copyOf(Blocks.PURPLE_CONCRETE));
+
+  @RegisterIdentifier
+  public static final HungSignBlock BLUE_CONCRETE_HUNG_SIGN =
+      new HungSignBlock(Blocks.BLUE_CONCRETE, FabricBlockSettings.copyOf(Blocks.BLUE_CONCRETE));
+
+  @RegisterIdentifier
+  public static final HungSignBlock BROWN_CONCRETE_HUNG_SIGN =
+      new HungSignBlock(Blocks.BROWN_CONCRETE, FabricBlockSettings.copyOf(Blocks.BROWN_CONCRETE));
+
+  @RegisterIdentifier
+  public static final HungSignBlock GREEN_CONCRETE_HUNG_SIGN =
+      new HungSignBlock(Blocks.GREEN_CONCRETE, FabricBlockSettings.copyOf(Blocks.GREEN_CONCRETE));
+
+  @RegisterIdentifier
+  public static final HungSignBlock RED_CONCRETE_HUNG_SIGN =
+      new HungSignBlock(Blocks.RED_CONCRETE, FabricBlockSettings.copyOf(Blocks.RED_CONCRETE));
+
+  @RegisterIdentifier
+  public static final HungSignBlock BLACK_CONCRETE_HUNG_SIGN =
+      new HungSignBlock(Blocks.BLACK_CONCRETE, FabricBlockSettings.copyOf(Blocks.BLACK_CONCRETE));
+
+  public static final Map<DyeColor, HungSignBlock> CONCRETE_HUNG_SIGNS =
+      Util.make(
+          new EnumMap<>(DyeColor.class),
+          map -> {
+            map.put(DyeColor.WHITE, WHITE_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.ORANGE, ORANGE_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.MAGENTA, MAGENTA_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.LIGHT_BLUE, LIGHT_BLUE_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.YELLOW, YELLOW_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.LIME, LIME_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.PINK, PINK_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.GRAY, GRAY_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.LIGHT_GRAY, LIGHT_GRAY_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.CYAN, CYAN_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.PURPLE, PURPLE_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.BLUE, BLUE_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.BROWN, BROWN_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.GREEN, GREEN_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.RED, RED_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.BLACK, BLACK_CONCRETE_HUNG_SIGN);
+          });
+
+  @RegisterIdentifier
+  public static final HungSignBlock WHITE_TERRACOTTA_HUNG_SIGN =
+      new HungSignBlock(
+          Blocks.WHITE_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.WHITE_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final HungSignBlock ORANGE_TERRACOTTA_HUNG_SIGN =
+      new HungSignBlock(
+          Blocks.ORANGE_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.ORANGE_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final HungSignBlock MAGENTA_TERRACOTTA_HUNG_SIGN =
+      new HungSignBlock(
+          Blocks.MAGENTA_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.MAGENTA_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final HungSignBlock LIGHT_BLUE_TERRACOTTA_HUNG_SIGN =
+      new HungSignBlock(
+          Blocks.LIGHT_BLUE_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.LIGHT_BLUE_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final HungSignBlock YELLOW_TERRACOTTA_HUNG_SIGN =
+      new HungSignBlock(
+          Blocks.YELLOW_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.YELLOW_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final HungSignBlock LIME_TERRACOTTA_HUNG_SIGN =
+      new HungSignBlock(Blocks.LIME_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.LIME_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final HungSignBlock PINK_TERRACOTTA_HUNG_SIGN =
+      new HungSignBlock(Blocks.PINK_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.PINK_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final HungSignBlock GRAY_TERRACOTTA_HUNG_SIGN =
+      new HungSignBlock(Blocks.GRAY_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.GRAY_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final HungSignBlock LIGHT_GRAY_TERRACOTTA_HUNG_SIGN =
+      new HungSignBlock(
+          Blocks.LIGHT_GRAY_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.LIGHT_GRAY_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final HungSignBlock CYAN_TERRACOTTA_HUNG_SIGN =
+      new HungSignBlock(Blocks.CYAN_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.CYAN_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final HungSignBlock PURPLE_TERRACOTTA_HUNG_SIGN =
+      new HungSignBlock(
+          Blocks.PURPLE_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.PURPLE_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final HungSignBlock BLUE_TERRACOTTA_HUNG_SIGN =
+      new HungSignBlock(Blocks.BLUE_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.BLUE_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final HungSignBlock BROWN_TERRACOTTA_HUNG_SIGN =
+      new HungSignBlock(
+          Blocks.BROWN_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.BROWN_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final HungSignBlock GREEN_TERRACOTTA_HUNG_SIGN =
+      new HungSignBlock(
+          Blocks.GREEN_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.GREEN_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final HungSignBlock RED_TERRACOTTA_HUNG_SIGN =
+      new HungSignBlock(Blocks.RED_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.RED_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final HungSignBlock BLACK_TERRACOTTA_HUNG_SIGN =
+      new HungSignBlock(
+          Blocks.BLACK_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.BLACK_TERRACOTTA));
+
+  public static final Map<DyeColor, HungSignBlock> TERRACOTTA_HUNG_SIGNS =
+      Util.make(
+          new EnumMap<>(DyeColor.class),
+          map -> {
+            map.put(DyeColor.WHITE, WHITE_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.ORANGE, ORANGE_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.MAGENTA, MAGENTA_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.LIGHT_BLUE, LIGHT_BLUE_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.YELLOW, YELLOW_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.LIME, LIME_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.PINK, PINK_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.GRAY, GRAY_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.LIGHT_GRAY, LIGHT_GRAY_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.CYAN, CYAN_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.PURPLE, PURPLE_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.BLUE, BLUE_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.BROWN, BROWN_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.GREEN, GREEN_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.RED, RED_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.BLACK, BLACK_TERRACOTTA_HUNG_SIGN);
+          });
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_WHITE_CONCRETE_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.WHITE_CONCRETE, FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_ORANGE_CONCRETE_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.ORANGE_CONCRETE, FabricBlockSettings.copyOf(Blocks.ORANGE_CONCRETE));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_MAGENTA_CONCRETE_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.MAGENTA_CONCRETE, FabricBlockSettings.copyOf(Blocks.MAGENTA_CONCRETE));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_LIGHT_BLUE_CONCRETE_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.LIGHT_BLUE_CONCRETE, FabricBlockSettings.copyOf(Blocks.LIGHT_BLUE_CONCRETE));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_YELLOW_CONCRETE_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.YELLOW_CONCRETE, FabricBlockSettings.copyOf(Blocks.YELLOW_CONCRETE));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_LIME_CONCRETE_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.LIME_CONCRETE, FabricBlockSettings.copyOf(Blocks.LIME_CONCRETE));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_PINK_CONCRETE_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.PINK_CONCRETE, FabricBlockSettings.copyOf(Blocks.PINK_CONCRETE));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_GRAY_CONCRETE_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.GRAY_CONCRETE, FabricBlockSettings.copyOf(Blocks.GRAY_CONCRETE));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_LIGHT_GRAY_CONCRETE_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.LIGHT_GRAY_CONCRETE, FabricBlockSettings.copyOf(Blocks.LIGHT_GRAY_CONCRETE));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_CYAN_CONCRETE_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.CYAN_CONCRETE, FabricBlockSettings.copyOf(Blocks.CYAN_CONCRETE));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_PURPLE_CONCRETE_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.PURPLE_CONCRETE, FabricBlockSettings.copyOf(Blocks.PURPLE_CONCRETE));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_BLUE_CONCRETE_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.BLUE_CONCRETE, FabricBlockSettings.copyOf(Blocks.BLUE_CONCRETE));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_BROWN_CONCRETE_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.BROWN_CONCRETE, FabricBlockSettings.copyOf(Blocks.BROWN_CONCRETE));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_GREEN_CONCRETE_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.GREEN_CONCRETE, FabricBlockSettings.copyOf(Blocks.GREEN_CONCRETE));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_RED_CONCRETE_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.RED_CONCRETE, FabricBlockSettings.copyOf(Blocks.RED_CONCRETE));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_BLACK_CONCRETE_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.BLACK_CONCRETE, FabricBlockSettings.copyOf(Blocks.BLACK_CONCRETE));
+
+  public static final Map<DyeColor, GlowingHungSignBlock> GLOWING_CONCRETE_HUNG_SIGNS =
+      Util.make(
+          new EnumMap<>(DyeColor.class),
+          map -> {
+            map.put(DyeColor.WHITE, GLOWING_WHITE_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.ORANGE, GLOWING_ORANGE_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.MAGENTA, GLOWING_MAGENTA_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.LIGHT_BLUE, GLOWING_LIGHT_BLUE_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.YELLOW, GLOWING_YELLOW_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.LIME, GLOWING_LIME_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.PINK, GLOWING_PINK_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.GRAY, GLOWING_GRAY_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.LIGHT_GRAY, GLOWING_LIGHT_GRAY_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.CYAN, GLOWING_CYAN_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.PURPLE, GLOWING_PURPLE_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.BLUE, GLOWING_BLUE_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.BROWN, GLOWING_BROWN_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.GREEN, GLOWING_GREEN_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.RED, GLOWING_RED_CONCRETE_HUNG_SIGN);
+            map.put(DyeColor.BLACK, GLOWING_BLACK_CONCRETE_HUNG_SIGN);
+          });
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_WHITE_TERRACOTTA_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.WHITE_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.WHITE_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_ORANGE_TERRACOTTA_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.ORANGE_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.ORANGE_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_MAGENTA_TERRACOTTA_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.MAGENTA_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.MAGENTA_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_LIGHT_BLUE_TERRACOTTA_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.LIGHT_BLUE_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.LIGHT_BLUE_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_YELLOW_TERRACOTTA_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.YELLOW_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.YELLOW_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_LIME_TERRACOTTA_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.LIME_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.LIME_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_PINK_TERRACOTTA_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.PINK_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.PINK_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_GRAY_TERRACOTTA_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.GRAY_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.GRAY_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_LIGHT_GRAY_TERRACOTTA_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.LIGHT_GRAY_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.LIGHT_GRAY_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_CYAN_TERRACOTTA_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.CYAN_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.CYAN_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_PURPLE_TERRACOTTA_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.PURPLE_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.PURPLE_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_BLUE_TERRACOTTA_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.BLUE_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.BLUE_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_BROWN_TERRACOTTA_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.BROWN_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.BROWN_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_GREEN_TERRACOTTA_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.GREEN_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.GREEN_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_RED_TERRACOTTA_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.RED_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.RED_TERRACOTTA));
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_BLACK_TERRACOTTA_HUNG_SIGN =
+      new GlowingHungSignBlock(
+          Blocks.BLACK_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.BLACK_TERRACOTTA));
+
+  public static final Map<DyeColor, GlowingHungSignBlock> GLOWING_TERRACOTTA_HUNG_SIGNS =
+      Util.make(
+          new EnumMap<>(DyeColor.class),
+          map -> {
+            map.put(DyeColor.WHITE, GLOWING_WHITE_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.ORANGE, GLOWING_ORANGE_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.MAGENTA, GLOWING_MAGENTA_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.LIGHT_BLUE, GLOWING_LIGHT_BLUE_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.YELLOW, GLOWING_YELLOW_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.LIME, GLOWING_LIME_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.PINK, GLOWING_PINK_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.GRAY, GLOWING_GRAY_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.LIGHT_GRAY, GLOWING_LIGHT_GRAY_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.CYAN, GLOWING_CYAN_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.PURPLE, GLOWING_PURPLE_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.BLUE, GLOWING_BLUE_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.BROWN, GLOWING_BROWN_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.GREEN, GLOWING_GREEN_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.RED, GLOWING_RED_TERRACOTTA_HUNG_SIGN);
+            map.put(DyeColor.BLACK, GLOWING_BLACK_TERRACOTTA_HUNG_SIGN);
+          });
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_NETHERRACK_HUNG_SIGN =
+      new GlowingHungSignBlock(
           Blocks.NETHERRACK, FabricBlockSettings.copyOf(Blocks.NETHERRACK).luminance(15));
 
   @RegisterIdentifier
-  public static final HungSignBlock HUNG_NETHER_BRICK_GLOWING_SIGN =
-      new HungSignBlock(
+  public static final GlowingHungSignBlock GLOWING_NETHER_BRICK_HUNG_SIGN =
+      new GlowingHungSignBlock(
           Blocks.NETHER_BRICKS, FabricBlockSettings.copyOf(Blocks.NETHER_BRICKS).luminance(15));
 
   @RegisterIdentifier
-  public static final HungSignBlock HUNG_BLACKSTONE_GLOWING_SIGN =
-      new HungSignBlock(
+  public static final GlowingHungSignBlock GLOWING_BLACKSTONE_HUNG_SIGN =
+      new GlowingHungSignBlock(
           Blocks.BLACKSTONE, FabricBlockSettings.copyOf(Blocks.BLACKSTONE).luminance(15));
 
   @RegisterIdentifier
-  public static final HungSignBlock HUNG_POLISHED_BLACKSTONE_GLOWING_SIGN =
-      new HungSignBlock(
+  public static final GlowingHungSignBlock GLOWING_POLISHED_BLACKSTONE_HUNG_SIGN =
+      new GlowingHungSignBlock(
           Blocks.POLISHED_BLACKSTONE,
           FabricBlockSettings.copyOf(Blocks.POLISHED_BLACKSTONE).luminance(15));
 

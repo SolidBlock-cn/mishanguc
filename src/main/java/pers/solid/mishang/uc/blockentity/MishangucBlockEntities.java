@@ -15,13 +15,15 @@ public class MishangucBlockEntities {
           BlockEntityType.Builder.create(
                   HungSignBlockEntity::new,
                   new ImmutableList.Builder<Block>()
-                      .addAll(MishangucBlocks.HUNG_CONCRETE_GLOWING_SIGNS.values())
-                      .addAll(MishangucBlocks.HUNG_TERRACOTTA_GLOWING_SIGNS.values())
+                      .addAll(MishangucBlocks.CONCRETE_HUNG_SIGNS.values())
+                      .addAll(MishangucBlocks.TERRACOTTA_HUNG_SIGNS.values())
+                      .addAll(MishangucBlocks.GLOWING_CONCRETE_HUNG_SIGNS.values())
+                      .addAll(MishangucBlocks.GLOWING_TERRACOTTA_HUNG_SIGNS.values())
                       .add(
-                          MishangucBlocks.HUNG_NETHERRACK_GLOWING_SIGN,
-                          MishangucBlocks.HUNG_NETHER_BRICK_GLOWING_SIGN,
-                          MishangucBlocks.HUNG_BLACKSTONE_GLOWING_SIGN,
-                          MishangucBlocks.HUNG_POLISHED_BLACKSTONE_GLOWING_SIGN)
+                          MishangucBlocks.GLOWING_NETHERRACK_HUNG_SIGN,
+                          MishangucBlocks.GLOWING_NETHER_BRICK_HUNG_SIGN,
+                          MishangucBlocks.GLOWING_BLACKSTONE_HUNG_SIGN,
+                          MishangucBlocks.GLOWING_POLISHED_BLACKSTONE_HUNG_SIGN)
                       .build()
                       .toArray(new Block[] {}))
               .build(null));

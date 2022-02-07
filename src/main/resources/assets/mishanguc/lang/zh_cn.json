@@ -38,7 +38,6 @@
   "block.mishanguc.asphalt_road_with_yellow_bevel_angle_line": "黄色斜线柏油路",
   "block.mishanguc.asphalt_road_with_yellow_right_angle_line": "黄色直角线柏油路",
   "block.mishanguc.asphalt_road_with_yellow_straight_line": "黄色直线柏油路",
-  "block.mishanguc.hung_glowing_sign": "悬挂的%s发光告示牌",
   "block.mishanguc.tooltip.road_with_angle_line.1": "直角将会围住玩家视角前方的方向。",
   "block.mishanguc.tooltip.road_with_angle_line.2": "潜行时相反。",
   "block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.1": "直角中与玩家视线方向更加平行的那一边",
@@ -195,5 +194,7 @@
   "message.mishanguc.shade.param": "阴影：%s",
   "message.mishanguc.see_through": "穿墙：",
   "message.mishanguc.see_through.param": "穿墙：%s",
-  "message.mishanguc.custom_color": "自定义颜色"
+  "message.mishanguc.custom_color": "自定义颜色",
+  "block.mishanguc.hung_sign": "悬挂的%s告示牌",
+  "block.mishanguc.glowing_hung_sign": "悬挂的%s发光告示牌"
 }
