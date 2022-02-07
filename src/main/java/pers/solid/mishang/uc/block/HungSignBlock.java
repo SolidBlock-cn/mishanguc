@@ -127,7 +127,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     state =
         super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     if (state.get(WATERLOGGED)) {
-      world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+      world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
     final @Nullable BooleanProperty property;
     final Direction.Axis axis = state.get(AXIS);

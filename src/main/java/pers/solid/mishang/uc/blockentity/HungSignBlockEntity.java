@@ -72,7 +72,7 @@ public class HungSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  public NbtCompound writeNbt(NbtCompound nbt) {
+  public void writeNbt(NbtCompound nbt) {
     super.writeNbt(nbt);
     for (Direction direction : Direction.Type.HORIZONTAL) {
       final List<@NotNull TextContext> textContexts = texts.get(direction);
@@ -85,7 +85,6 @@ public class HungSignBlockEntity extends BlockEntityWithText {
       }
       nbt.put(direction.asString(), nbtList);
     }
-    return nbt;
   }
 
   // todo: 1.17 是不能对方块实体进行旋转和镜像了吗？

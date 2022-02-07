@@ -77,7 +77,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable {
       BlockPos pos,
       BlockPos neighborPos) {
     if (state.get(Properties.WATERLOGGED)) {
-      world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+      world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
 
     return super.getStateForNeighborUpdate(

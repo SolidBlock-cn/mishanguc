@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.blockentity;
 
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -22,8 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import pers.solid.mishang.uc.util.TextContext;
 
-public abstract class BlockEntityWithText extends BlockEntity
-    implements BlockEntityClientSerializable {
+public abstract class BlockEntityWithText extends BlockEntity {
 
   public BlockEntityWithText(BlockEntityType<?> type, BlockPos pos, BlockState state) {
     super(type, pos, state);
@@ -45,14 +43,12 @@ public abstract class BlockEntityWithText extends BlockEntity
         player);
   }
 
-  @Override
   public void fromClientTag(NbtCompound tag) {
     readNbt(tag);
   }
 
-  @Override
-  public NbtCompound toClientTag(NbtCompound tag) {
-    return writeNbt(tag);
+  public void toClientTag(NbtCompound tag) {
+    writeNbt(tag);
   }
 
   /**

@@ -115,7 +115,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
       BlockPos neighborPos) {
     super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     if (state.get(WATERLOGGED)) {
-      world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+      world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
     return state;
   }
