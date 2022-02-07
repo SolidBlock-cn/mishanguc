@@ -70,11 +70,10 @@ public class MishangUcClient implements ClientModInitializer {
             if (blockEntity instanceof HungSignBlockEntity) {
               final Direction direction = buf.readEnumConstant(Direction.class);
               client.execute(
-                  () -> {
-                    client.openScreen(
-                        new HungSignBlockEditScreen(
-                            (HungSignBlockEntity) blockEntity, direction, blockPos));
-                  });
+                  () ->
+                      client.openScreen(
+                          new HungSignBlockEditScreen(
+                              (HungSignBlockEntity) blockEntity, direction, blockPos)));
             } else if (blockEntity instanceof WallSignBlockEntity) {
               client.execute(
                   () ->

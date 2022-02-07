@@ -46,12 +46,12 @@ public class RotatingToolItem extends BlockToolItem {
 
   @NotNull
   private ActionResult rotateBlock(World world, BlockPos blockPos, BlockRotation rotation) {
-    world.setBlockState(blockPos, world.getBlockState(blockPos).rotate(rotation));
+    final boolean b = world.setBlockState(blockPos, world.getBlockState(blockPos).rotate(rotation));
     final BlockEntity blockEntity = world.getBlockEntity(blockPos);
     if (blockEntity != null) {
       blockEntity.applyRotation(rotation);
     }
-    return ActionResult.SUCCESS;
+    return ActionResult.success(b);
   }
 
   @Override
