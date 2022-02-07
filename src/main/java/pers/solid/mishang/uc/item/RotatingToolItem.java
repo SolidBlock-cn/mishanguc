@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.item;
 
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -46,9 +45,8 @@ public class RotatingToolItem extends BlockToolItem {
 
   @NotNull
   private ActionResult rotateBlock(World world, BlockPos blockPos, BlockRotation rotation) {
-    world.setBlockState(blockPos, world.getBlockState(blockPos).rotate(rotation));
-    final BlockEntity blockEntity = world.getBlockEntity(blockPos);
-    return ActionResult.SUCCESS;
+    final boolean b = world.setBlockState(blockPos, world.getBlockState(blockPos).rotate(rotation));
+    return ActionResult.success(b);
   }
 
   @Override

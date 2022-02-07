@@ -63,11 +63,6 @@ public class TextContext implements Cloneable {
     return super.equals(o);
   }
 
-  @Override
-  public int hashCode() {
-    return super.hashCode();
-  }
-
   /**
    * 从一个 NBT 复合标签中读取数据，写入当前的 textContext 中。
    *

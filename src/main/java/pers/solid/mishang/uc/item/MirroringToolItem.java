@@ -31,29 +31,40 @@ public class MirroringToolItem extends BlockToolItem {
       default -> BlockMirror.NONE;
       case Z -> BlockMirror.LEFT_RIGHT;
     };
-    world.setBlockState(blockPos, blockState.mirror(mirror));
-    return ActionResult.SUCCESS;
+    return ActionResult.success(world.setBlockState(blockPos, blockState.mirror(mirror)));
   }
 
   @Override
-  public ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
+  public ActionResult useOnBlock(
+      PlayerEntity player,
+      World world,
+      BlockHitResult blockHitResult,
+      Hand hand,
+      boolean fluidIncluded) {
     return mirror(world, blockHitResult.getBlockPos(), blockHitResult.getSide());
   }
 
   @Override
-  public ActionResult attackBlock(PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
+  public ActionResult attackBlock(
+      PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
     return mirror(world, pos, direction);
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+  public void appendTooltip(
+      ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(new TranslatableText("item.mishanguc.mirroring_tool.tooltip").formatted(Formatting.GRAY));
+    tooltip.add(
+        new TranslatableText("item.mishanguc.mirroring_tool.tooltip").formatted(Formatting.GRAY));
     final Boolean includesFluid = includesFluid(stack);
     if (includesFluid == null) {
-      tooltip.add(new TranslatableText("item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking").formatted(Formatting.GRAY));
+      tooltip.add(
+          new TranslatableText("item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking")
+              .formatted(Formatting.GRAY));
     } else if (includesFluid) {
-      tooltip.add(new TranslatableText("item.mishanguc.block_tool.tooltip.includesFluid").formatted(Formatting.GRAY));
+      tooltip.add(
+          new TranslatableText("item.mishanguc.block_tool.tooltip.includesFluid")
+              .formatted(Formatting.GRAY));
     }
   }
 }
