@@ -221,7 +221,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   @Override
   public MutableText getName() {
     if (baseBlock != null) {
-      return new TranslatableText("block.mishanguc.hung_glowing_sign", baseBlock.getName());
+      return new TranslatableText("block.mishanguc.hung_sign", baseBlock.getName());
     }
     return super.getName();
   }

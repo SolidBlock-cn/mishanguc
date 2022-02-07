@@ -81,7 +81,8 @@
   "block.mishanguc.white_wall_light_hash_decoration": "White Wall Light Hash Decoration",
   "block.mishanguc.white_wall_light_round_decoration": "White Wall Light Round Decoration",
 
-  "block.mishanguc.hung_glowing_sign": "Hung %s Glowing Sign",
+  "block.mishanguc.hung_sign": "%s Hung Sign",
+  "block.mishanguc.glowing_hung_sign": "Glowing %s Hung Sign",
   "block.mishanguc.wall_sign": "%s Wall Sign",
   "block.mishanguc.glowing_wall_sign": "Glowing %s Wall Sign",
   "block.mishanguc.full_wall_sign": "Full %s Wall Sign",

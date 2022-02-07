@@ -18,7 +18,7 @@ public class ModItemGroups {
   public static final ItemGroup SIGNS =
       FabricItemGroupBuilder.build(
           new Identifier("mishanguc", "signs"),
-          () -> new ItemStack(MishangucBlocks.HUNG_BLACK_CONCRETE_GLOWING_SIGN));
+          () -> new ItemStack(MishangucBlocks.GLOWING_BLACK_CONCRETE_HUNG_SIGN));
   public static final ItemGroup TOOLS =
       FabricItemGroupBuilder.create(new Identifier("mishanguc", "tools"))
           .icon(() -> new ItemStack(MishangucItems.ROAD_CONNECTION_STATE_DEBUGGING_TOOL))

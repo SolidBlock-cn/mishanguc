@@ -1,8 +1,5 @@
 {
-  "parent": "block/block",
-  "textures": {
-    "particle": "#texture"
-  },
+  "parent": "mishanguc:block/template_hung_sign",
   "elements": [
     {
       "from": [0, 6, 7.5],
