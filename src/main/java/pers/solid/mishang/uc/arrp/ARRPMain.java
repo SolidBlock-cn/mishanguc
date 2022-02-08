@@ -444,6 +444,8 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     for (DyeColor color : DyeColor.values()) {
       addStateForHungSign(PACK, color.asString() + "_concrete");
       addStateForHungSign(PACK, color.asString() + "_terracotta");
+      addStateForHungSignBar(PACK, color.asString() + "_concrete");
+      addStateForHungSignBar(PACK, color.asString() + "_terracotta");
       addStateForHungSign(PACK, "glowing_" + color.asString() + "_concrete");
       addStateForHungSign(PACK, "glowing_" + color.asString() + "_terracotta");
     }
@@ -452,6 +454,10 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     addStateForHungSign(PACK, "glowing_nether_brick");
     addStateForHungSign(PACK, "glowing_blackstone");
     addStateForHungSign(PACK, "glowing_polished_blackstone");
+    addStateForHungSignBar(PACK, "netherrack");
+    addStateForHungSignBar(PACK, "nether_brick");
+    addStateForHungSignBar(PACK, "blackstone");
+    addStateForHungSignBar(PACK, "polished_blackstone");
 
     // 对于墙上的告示牌
     addStateForWallSign(PACK, "oak_wall_sign");
@@ -491,6 +497,40 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
                 .addModel(new JBlockModel(blockIdentifier(path + "_body")).uvlock().y(90))
                 .when(new JWhen().add("axis", "x")),
             new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path + "_top_bar")).uvlock())
+                .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "true")),
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path + "_top_bar")).uvlock().y(180))
+                .when(new FixedWhen().add("axis", "z").add("left", "true").add("right", "false")),
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path + "_top_bar")).uvlock().y(-90))
+                .when(new FixedWhen().add("axis", "x").add("left", "false").add("right", "true")),
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path + "_top_bar")).uvlock().y(90))
+                .when(new FixedWhen().add("axis", "x").add("left", "true").add("right", "false")),
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path + "_top_bar_edge")).uvlock())
+                .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "false")),
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path + "_top_bar_edge")).uvlock().y(180))
+                .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "false")),
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path + "_top_bar_edge")).uvlock().y(90))
+                .when(new FixedWhen().add("axis", "x").add("left", "false").add("right", "false")),
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path + "_top_bar_edge")).uvlock().y(270))
+                .when(new FixedWhen().add("axis", "x").add("left", "false").add("right", "false"))),
+        new Identifier("mishanguc", path));
+  }
+
+  private static void addStateForHungSignBar(@NotNull RuntimeResourcePack PACK, String name) {
+    final String path = name + "_hung_sign";
+    PACK.addBlockState(
+        JState.state(
+            new JMultipart()
+                .addModel(new JBlockModel(blockIdentifier(path + "_bar_central")).uvlock())
+                .when(new FixedWhen().add("left", "true").add("right", "true")),
+            new JMultipart()
                 .addModel(new JBlockModel(blockIdentifier(path + "_bar")).uvlock())
                 .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "true")),
             new JMultipart()
@@ -514,7 +554,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
             new JMultipart()
                 .addModel(new JBlockModel(blockIdentifier(path + "_bar_edge")).uvlock().y(270))
                 .when(new FixedWhen().add("axis", "x").add("left", "false").add("right", "false"))),
-        new Identifier("mishanguc", path));
+        new Identifier("mishanguc", path + "_bar"));
   }
 
   private static void addStateForWallSign(@NotNull RuntimeResourcePack PACK, String name) {
@@ -944,18 +984,23 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     addWallLightDecoration(PACK, "white", "hash");
     addWallLightDecoration(PACK, "white", "round");
 
-    // 写字板方块
     for (DyeColor color : DyeColor.values()) {
       addModelsForHungSign(
           PACK,
           String.format("%s_concrete", color.asString()),
-          String.format("block/%s_concrete", color.asString()),
-          blockString("white_light"));
+          String.format("block/%s_concrete", color.asString()));
       addModelsForHungSign(
           PACK,
           String.format("%s_terracotta", color.asString()),
-          String.format("block/%s_terracotta", color.asString()),
-          blockString("white_light"));
+          String.format("block/%s_terracotta", color.asString()));
+      addModelsForHungSignBar(
+          PACK,
+          String.format("%s_concrete", color.asString()),
+          String.format("block/%s_concrete", color.asString()));
+      addModelsForHungSignBar(
+          PACK,
+          String.format("%s_terracotta", color.asString()),
+          String.format("block/%s_terracotta", color.asString()));
       addModelsForGlowingHungSign(
           PACK,
           String.format("%s_concrete", color.asString()),
@@ -1007,11 +1052,20 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
                       .var("texture", String.format("block/%s_terracotta", color.asString()))),
           blockIdentifier("full_" + color.asString() + "_terracotta_wall_sign"));
     }
+
+    // 杂项的悬挂告示牌方块。
     addModelsForGlowingHungSign(PACK, "netherrack", "block/netherrack", "block/glowstone");
     addModelsForGlowingHungSign(PACK, "nether_brick", "block/nether_bricks", "block/glowstone");
     addModelsForGlowingHungSign(PACK, "blackstone", "block/blackstone", "block/glowstone");
     addModelsForGlowingHungSign(
         PACK, "polished_blackstone", "block/polished_blackstone", "block/glowstone");
+
+    addModelsForHungSignBar(PACK, "netherrack", "block/netherrack");
+    addModelsForHungSignBar(PACK, "nether_brick", "block/nether_bricks");
+    addModelsForHungSignBar(PACK, "blackstone", "block/blackstone");
+    addModelsForHungSignBar(PACK, "polished_blackstone", "block/polished_blackstone");
+
+    // 木质告示牌
     for (String woodName :
         new String[] {
           "oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "crimson", "warped",
@@ -1023,26 +1077,43 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     }
   }
 
+  /**
+   * @see #addModelsForGlowingHungSign
+   * @see #addStateForHungSign
+   */
   private static void addModelsForHungSign(
-      @NotNull RuntimeResourcePack PACK,
-      @NotNull String hungSignName,
-      @NotNull String texture,
-      @NotNull String glowTexture) {
+      @NotNull RuntimeResourcePack PACK, @NotNull String hungSignName, @NotNull String texture) {
     PACK.addModel(
         JModel.model(blockIdentifier("hung_sign"))
-            .textures(new JTextures().var("texture", texture).var("glow", glowTexture)),
+            .textures(new JTextures().var("texture", texture)),
         blockIdentifier(String.format("%s_hung_sign", hungSignName)));
     PACK.addModel(
         JModel.model(blockIdentifier("hung_sign_body"))
-            .textures(new JTextures().var("texture", texture).var("glow", glowTexture)),
+            .textures(new JTextures().var("texture", texture)),
         blockIdentifier(String.format("%s_hung_sign_body", hungSignName)));
     PACK.addModel(
+        JModel.model(blockIdentifier("hung_sign_top_bar"))
+            .textures(new JTextures().var("texture", texture)),
+        blockIdentifier(String.format("%s_hung_sign_top_bar", hungSignName)));
+    PACK.addModel(
+        JModel.model(blockIdentifier("hung_sign_top_bar_edge"))
+            .textures(new JTextures().var("texture", texture)),
+        blockIdentifier(String.format("%s_hung_sign_top_bar_edge", hungSignName)));
+  }
+
+  private static void addModelsForHungSignBar(
+      @NotNull RuntimeResourcePack PACK, @NotNull String hungSignName, @NotNull String texture) {
+    PACK.addModel(
+        JModel.model(blockIdentifier("hung_sign_bar_central"))
+            .textures(new JTextures().var("texture", texture)),
+        blockIdentifier(String.format("%s_hung_sign_bar_central", hungSignName)));
+    PACK.addModel(
         JModel.model(blockIdentifier("hung_sign_bar"))
-            .textures(new JTextures().var("texture", texture).var("glow", glowTexture)),
+            .textures(new JTextures().var("texture", texture)),
         blockIdentifier(String.format("%s_hung_sign_bar", hungSignName)));
     PACK.addModel(
         JModel.model(blockIdentifier("hung_sign_bar_edge"))
-            .textures(new JTextures().var("texture", texture).var("glow", glowTexture)),
+            .textures(new JTextures().var("texture", texture)),
         blockIdentifier(String.format("%s_hung_sign_bar_edge", hungSignName)));
   }
 
@@ -1050,6 +1121,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
    * 为发光告示牌创建并注册方块模型文件。
    *
    * @see #addStateForHungSign
+   * @see #addModelsForHungSign
    * @param hungSignName 发光告示牌的非完整名称，如 black_concrete。需确保存在名为 <tt>mishanguc:hung_</tt><code>
    *     hungSignName</code><tt>_glowing_sign</tt> 的方块。
    * @param texture 发给告示牌方块的主体纹理。为纹理的命名空间id，如 {@code minecraft:block/black_concrete}。
@@ -1069,13 +1141,13 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
             .textures(new JTextures().var("texture", texture).var("glow", glowTexture)),
         blockIdentifier(String.format("glowing_%s_hung_sign_body", hungSignName)));
     PACK.addModel(
-        JModel.model(blockIdentifier("hung_sign_bar"))
+        JModel.model(blockIdentifier("hung_sign_top_bar"))
             .textures(new JTextures().var("texture", texture).var("glow", glowTexture)),
-        blockIdentifier(String.format("glowing_%s_hung_sign_bar", hungSignName)));
+        blockIdentifier(String.format("glowing_%s_hung_sign_top_bar", hungSignName)));
     PACK.addModel(
-        JModel.model(blockIdentifier("hung_sign_bar_edge"))
+        JModel.model(blockIdentifier("hung_sign_top_bar_edge"))
             .textures(new JTextures().var("texture", texture).var("glow", glowTexture)),
-        blockIdentifier(String.format("glowing_%s_hung_sign_bar_edge", hungSignName)));
+        blockIdentifier(String.format("glowing_%s_hung_sign_top_bar_edge", hungSignName)));
   }
 
   private static void addWallLightDecoration(

@@ -18,7 +18,9 @@ import pers.solid.mishang.uc.*;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.InGroup;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
+import pers.solid.mishang.uc.item.HungSignBlockItem;
 import pers.solid.mishang.uc.item.NamedBlockItem;
+import pers.solid.mishang.uc.item.WallSignBlockItem;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -126,6 +128,70 @@ public final class MishangucBlocks {
           });
 
   @RegisterIdentifier
+  public static final HungSignBarBlock WHITE_CONCRETE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(WHITE_CONCRETE_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock ORANGE_CONCRETE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(ORANGE_CONCRETE_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock MAGENTA_CONCRETE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(MAGENTA_CONCRETE_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock LIGHT_BLUE_CONCRETE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(LIGHT_BLUE_CONCRETE_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock YELLOW_CONCRETE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(YELLOW_CONCRETE_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock LIME_CONCRETE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(LIME_CONCRETE_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock PINK_CONCRETE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(PINK_CONCRETE_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock GRAY_CONCRETE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(GRAY_CONCRETE_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock LIGHT_GRAY_CONCRETE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(LIGHT_GRAY_CONCRETE_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock CYAN_CONCRETE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(CYAN_CONCRETE_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock PURPLE_CONCRETE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(PURPLE_CONCRETE_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock BLUE_CONCRETE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(BLUE_CONCRETE_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock BROWN_CONCRETE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(BROWN_CONCRETE_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock GREEN_CONCRETE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(GREEN_CONCRETE_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock RED_CONCRETE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(RED_CONCRETE_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock BLACK_CONCRETE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(BLACK_CONCRETE_HUNG_SIGN);
+
+  @RegisterIdentifier
   public static final HungSignBlock WHITE_TERRACOTTA_HUNG_SIGN =
       new HungSignBlock(
           Blocks.WHITE_TERRACOTTA, FabricBlockSettings.copyOf(Blocks.WHITE_TERRACOTTA));
@@ -220,6 +286,70 @@ public final class MishangucBlocks {
             map.put(DyeColor.RED, RED_TERRACOTTA_HUNG_SIGN);
             map.put(DyeColor.BLACK, BLACK_TERRACOTTA_HUNG_SIGN);
           });
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock WHITE_TERRACOTTA_HUNG_SIGN_BAR =
+      new HungSignBarBlock(WHITE_TERRACOTTA_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock ORANGE_TERRACOTTA_HUNG_SIGN_BAR =
+      new HungSignBarBlock(ORANGE_TERRACOTTA_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock MAGENTA_TERRACOTTA_HUNG_SIGN_BAR =
+      new HungSignBarBlock(MAGENTA_TERRACOTTA_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock LIGHT_BLUE_TERRACOTTA_HUNG_SIGN_BAR =
+      new HungSignBarBlock(LIGHT_BLUE_TERRACOTTA_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock YELLOW_TERRACOTTA_HUNG_SIGN_BAR =
+      new HungSignBarBlock(YELLOW_TERRACOTTA_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock LIME_TERRACOTTA_HUNG_SIGN_BAR =
+      new HungSignBarBlock(LIME_TERRACOTTA_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock PINK_TERRACOTTA_HUNG_SIGN_BAR =
+      new HungSignBarBlock(PINK_TERRACOTTA_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock GRAY_TERRACOTTA_HUNG_SIGN_BAR =
+      new HungSignBarBlock(GRAY_TERRACOTTA_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock LIGHT_GRAY_TERRACOTTA_HUNG_SIGN_BAR =
+      new HungSignBarBlock(LIGHT_GRAY_TERRACOTTA_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock CYAN_TERRACOTTA_HUNG_SIGN_BAR =
+      new HungSignBarBlock(CYAN_TERRACOTTA_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock PURPLE_TERRACOTTA_HUNG_SIGN_BAR =
+      new HungSignBarBlock(PURPLE_TERRACOTTA_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock BLUE_TERRACOTTA_HUNG_SIGN_BAR =
+      new HungSignBarBlock(BLUE_TERRACOTTA_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock BROWN_TERRACOTTA_HUNG_SIGN_BAR =
+      new HungSignBarBlock(BROWN_TERRACOTTA_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock GREEN_TERRACOTTA_HUNG_SIGN_BAR =
+      new HungSignBarBlock(GREEN_TERRACOTTA_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock RED_TERRACOTTA_HUNG_SIGN_BAR =
+      new HungSignBarBlock(RED_TERRACOTTA_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock BLACK_TERRACOTTA_HUNG_SIGN_BAR =
+      new HungSignBarBlock(BLACK_TERRACOTTA_HUNG_SIGN);
 
   @RegisterIdentifier
   public static final GlowingHungSignBlock GLOWING_WHITE_CONCRETE_HUNG_SIGN =
@@ -425,6 +555,7 @@ public final class MishangucBlocks {
             map.put(DyeColor.BLACK, GLOWING_BLACK_TERRACOTTA_HUNG_SIGN);
           });
 
+  // 以下是比较杂项的一些发光悬挂告示牌方块。
   @RegisterIdentifier
   public static final GlowingHungSignBlock GLOWING_NETHERRACK_HUNG_SIGN =
       new GlowingHungSignBlock(
@@ -445,6 +576,22 @@ public final class MishangucBlocks {
       new GlowingHungSignBlock(
           Blocks.POLISHED_BLACKSTONE,
           FabricBlockSettings.copyOf(Blocks.POLISHED_BLACKSTONE).luminance(15));
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock NETHERRACK_HUNG_SIGN_BAR =
+      new HungSignBarBlock(GLOWING_NETHERRACK_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock NETHER_BRICK_HUNG_SIGN_BAR =
+      new HungSignBarBlock(GLOWING_NETHER_BRICK_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock BLACKSTONE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(GLOWING_BLACKSTONE_HUNG_SIGN);
+
+  @RegisterIdentifier
+  public static final HungSignBarBlock POLISHED_BLACKSTONE_HUNG_SIGN_BAR =
+      new HungSignBarBlock(GLOWING_POLISHED_BLACKSTONE_HUNG_SIGN);
 
   @RegisterIdentifier
   public static final WallSignBlock OAK_WALL_SIGN =
@@ -1475,9 +1622,10 @@ public final class MishangucBlocks {
 
     for (Field field : MishangucBlocks.class.getFields()) {
       int modifier = field.getModifiers();
+      final Class<?> fieldType = field.getType();
       if (Modifier.isFinal(modifier)
           && Modifier.isStatic(modifier)
-          && Block.class.isAssignableFrom(field.getType())) {
+          && Block.class.isAssignableFrom(fieldType)) {
         try {
 
           // 注册方块。
@@ -1498,7 +1646,13 @@ public final class MishangucBlocks {
                 default -> null;
               };
             }
-            BlockItem item = new NamedBlockItem(value, new FabricItemSettings().group(group));
+            final FabricItemSettings settings = new FabricItemSettings().group(group);
+            final BlockItem item =
+                HungSignBlock.class.isAssignableFrom(fieldType)
+                    ? new HungSignBlockItem(value, settings)
+                    : WallSignBlock.class.isAssignableFrom(fieldType)
+                        ? new WallSignBlockItem(value, settings)
+                        : new NamedBlockItem(value, settings);
             Registry.register(Registry.ITEM, new Identifier("mishanguc", path), item);
           }
         } catch (IllegalAccessException e) {

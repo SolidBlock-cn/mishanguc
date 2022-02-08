@@ -196,5 +196,8 @@
   "message.mishanguc.see_through.param": "穿墙：%s",
   "message.mishanguc.custom_color": "自定义颜色",
   "block.mishanguc.hung_sign": "悬挂的%s告示牌",
-  "block.mishanguc.glowing_hung_sign": "悬挂的%s发光告示牌"
+  "block.mishanguc.glowing_hung_sign": "悬挂的%s发光告示牌",
+  "block.mishanguc.hung_sign_bar": "悬挂的%s告示牌杆",
+  "block.mishanguc.tooltip.hung_sign_block": "%s侧的文本:",
+  "block.mishanguc.tooltip.wall_sign_block": "文本:"
 }
