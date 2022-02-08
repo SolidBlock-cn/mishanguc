@@ -32,7 +32,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUc;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
+
+import java.util.Map;
 
 /**
  * @see HungSignBlockEntity
@@ -55,8 +58,16 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
    */
   public static final BooleanProperty RIGHT = BooleanProperty.of("right");
 
-  private static final VoxelShape SHAPE_X = createCuboidShape(7.5, 6, 0, 8.5, 12, 16);
-  private static final VoxelShape SHAPE_Z = createCuboidShape(0, 6, 7.5, 16, 12, 8.5);
+  private static final VoxelShape SHAPE_X =
+      VoxelShapes.union(
+          createCuboidShape(7.5, 6, 0, 8.5, 12, 16), createCuboidShape(7.25, 12, 0, 8.75, 13, 16));
+  private static final VoxelShape SHAPE_Z =
+      VoxelShapes.union(
+          createCuboidShape(0, 6, 7.5, 16, 12, 8.5), createCuboidShape(0, 12, 7.25, 16, 13, 8.75));
+  private static final Map<Direction, @Nullable VoxelShape> BAR_SHAPES =
+      MishangUtils.createHorizontalDirectionToShape(7.5, 13, 11, 8.5, 16, 12);
+  private static final Map<Direction, @Nullable VoxelShape> BAR_SHAPES_EDGE =
+      MishangUtils.createHorizontalDirectionToShape(7.5, 13, 13, 8.5, 16, 14);
   public final @Nullable Block baseBlock;
 
   public HungSignBlock(@Nullable Block baseBlock, Settings settings) {
@@ -84,11 +95,13 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     if (placementState == null) {
       return null;
     }
+    final World world = ctx.getWorld();
+    final BlockPos blockPos = ctx.getBlockPos();
     return placementState
         .with(AXIS, ctx.getPlayerFacing().getAxis())
-        .with(
-            WATERLOGGED,
-            ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+        .with(WATERLOGGED, world.getFluidState(blockPos).getFluid() == Fluids.WATER)
+        .getStateForNeighborUpdate(
+            Direction.UP, world.getBlockState(blockPos.up()), world, blockPos, blockPos.up());
   }
 
   @Nullable
@@ -102,11 +115,27 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   public VoxelShape getOutlineShape(
       BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     final Direction.Axis axis = state.get(AXIS);
+    final Boolean left = state.get(LEFT);
+    final Boolean right = state.get(RIGHT);
     switch (axis) {
       case X:
-        return SHAPE_X;
+        if (!left && !right)
+          return VoxelShapes.union(
+              SHAPE_X, BAR_SHAPES_EDGE.get(Direction.SOUTH), BAR_SHAPES_EDGE.get(Direction.NORTH));
+        else
+          return VoxelShapes.union(
+              SHAPE_X,
+              !left ? BAR_SHAPES.get(Direction.SOUTH) : VoxelShapes.empty(),
+              !right ? BAR_SHAPES.get(Direction.NORTH) : VoxelShapes.empty());
       case Z:
-        return SHAPE_Z;
+        if (!left && !right)
+          return VoxelShapes.union(
+              SHAPE_Z, BAR_SHAPES_EDGE.get(Direction.WEST), BAR_SHAPES_EDGE.get(Direction.EAST));
+        else
+          return VoxelShapes.union(
+              SHAPE_Z,
+              !left ? BAR_SHAPES.get(Direction.WEST) : VoxelShapes.empty(),
+              !right ? BAR_SHAPES.get(Direction.EAST) : VoxelShapes.empty());
       default:
         return VoxelShapes.empty();
     }
@@ -118,6 +147,10 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
   }
 
+  /**
+   * 当这个指定的方向连接有同类方块时，这个方块（left 和 right）就会为 true，此时上方将不会显示栏杆。<br>
+   * 如果连接有非同类方块，且上方没有连接带有碰撞箱的方块，则这个方向也会为 true。
+   */
   @SuppressWarnings("deprecation")
   @Override
   public BlockState getStateForNeighborUpdate(
@@ -149,7 +182,19 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       state =
           state.with(
               property,
-              neighborState.getBlock() instanceof HungSignBlock && neighborState.get(AXIS) == axis);
+              neighborState.getBlock() instanceof HungSignBlock && neighborState.get(AXIS) == axis
+                  || world
+                          .getBlockState(pos.up())
+                          .getCollisionShape(world, pos.up())
+                          .getMin(Direction.Axis.Y)
+                      != 0);
+    } else if (direction == Direction.UP) {
+      for (Direction horizontalDirection : Direction.Type.HORIZONTAL) {
+        final BlockPos offset = pos.offset(horizontalDirection);
+        state =
+            getStateForNeighborUpdate(
+                state, horizontalDirection, world.getBlockState(offset), world, pos, offset);
+      }
     }
 
     return state;

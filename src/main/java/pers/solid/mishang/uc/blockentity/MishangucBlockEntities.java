@@ -34,6 +34,15 @@ public class MishangucBlockEntities {
           BlockEntityType.Builder.create(
                   WallSignBlockEntity::new,
                   new ImmutableList.Builder<Block>()
+                      .add(
+                          MishangucBlocks.OAK_WALL_SIGN,
+                          MishangucBlocks.SPRUCE_WALL_SIGN,
+                          MishangucBlocks.BIRCH_WALL_SIGN,
+                          MishangucBlocks.JUNGLE_WALL_SIGN,
+                          MishangucBlocks.ACACIA_WALL_SIGN,
+                          MishangucBlocks.DARK_OAK_WALL_SIGN,
+                          MishangucBlocks.CRIMSON_WALL_SIGN,
+                          MishangucBlocks.WARPED_WALL_SIGN)
                       .addAll(MishangucBlocks.CONCRETE_WALL_SIGNS.values())
                       .addAll(MishangucBlocks.TERRACOTTA_WALL_SIGNS.values())
                       .addAll(MishangucBlocks.GLOWING_CONCRETE_WALL_SIGNS.values())

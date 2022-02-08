@@ -2,7 +2,7 @@
   "parent": "mishanguc:block/template_hung_sign",
   "elements": [
     {
-      "from": [2, 0, 7.5],
+      "from": [2, 13, 7.5],
       "to": [3, 16, 8.5],
       "faces": {
         "north": {"texture": "#bar"},

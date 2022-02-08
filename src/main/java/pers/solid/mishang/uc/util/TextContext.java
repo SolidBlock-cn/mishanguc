@@ -10,10 +10,7 @@ import net.minecraft.nbt.AbstractNbtNumber;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
@@ -310,5 +307,17 @@ public class TextContext implements Cloneable {
     } catch (CloneNotSupportedException e) {
       throw new AssertionError();
     }
+  }
+
+  public @Nullable MutableText asStyledText() {
+    if (text == null) return null;
+    final MutableText copy = text.shallowCopy();
+    if (bold) text.formatted(Formatting.BOLD);
+    if (italic) text.formatted(Formatting.ITALIC);
+    if (underline) text.formatted(Formatting.UNDERLINE);
+    if (strikethrough) text.formatted(Formatting.STRIKETHROUGH);
+    if (obfuscated) text.formatted(Formatting.OBFUSCATED);
+    text.styled(style -> style.withColor(TextColor.fromRgb(color)));
+    return text;
   }
 }

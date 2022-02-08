@@ -63,6 +63,9 @@
   "block.mishanguc.tooltip.road_with_joint_line.2": "Opposite when sneaking.",
   "block.mishanguc.tooltip.road_with_offset_straight_line": "The line is offset to the left, or when sneaking, to the right.",
 
+  "block.mishanguc.tooltip.hung_sign_block": "Text on the %s side:",
+  "block.mishanguc.tooltip.wall_sign_block": "Texts:",
+
   "block.mishanguc.white_light": "White Light",
   "block.mishanguc.white_small_wall_light_tube": "White Small Wall Light Tube",
   "block.mishanguc.white_large_wall_light_tube": "White Large Wall Light Tube",
@@ -83,6 +86,7 @@
 
   "block.mishanguc.hung_sign": "%s Hung Sign",
   "block.mishanguc.glowing_hung_sign": "Glowing %s Hung Sign",
+  "block.mishanguc.hung_sign_bar": "%s Hung Sign Bar",
   "block.mishanguc.wall_sign": "%s Wall Sign",
   "block.mishanguc.glowing_wall_sign": "Glowing %s Wall Sign",
   "block.mishanguc.full_wall_sign": "Full %s Wall Sign",
