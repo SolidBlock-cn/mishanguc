@@ -14,8 +14,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -53,13 +51,12 @@ public class MishangUc implements ModInitializer {
       PacketSender responseSender) {
     MISHANG_LOGGER.info("Server side sign_edit_finish packet received!");
     final BlockPos blockPos = buf.readBlockPos();
-    final NbtCompound nbtCompound = buf.readNbt();
-    if (nbtCompound == null) return;
-    final NbtList nbt = nbtCompound.getList("texts", 10);
+    final NbtCompound nbt = buf.readNbt();
     server.execute(
         () -> {
           final BlockEntityWithText entity =
               (BlockEntityWithText) player.world.getBlockEntity(blockPos);
+          // 该参数仅限对应实体为 HungSignBlockEntity 时存在，也仅在此情况下，buf 中会存在此值。。
           try {
             if (entity == null) {
               MISHANG_LOGGER.warn(
@@ -69,12 +66,13 @@ public class MishangUc implements ModInitializer {
                   blockPos.getZ());
               return;
             }
+            if (nbt == null) return;
             final PlayerEntity editorAllowed = entity.getEditor();
             entity.setEditor(null);
             final @Unmodifiable List<TextContext> textContexts =
                 new ImmutableList.Builder<TextContext>()
                     .addAll(
-                        nbt.stream()
+                        nbt.getList("texts", 10).stream()
                             .map(e -> TextContext.fromNbt(e, entity.getDefaultTextContext()))
                             .iterator())
                     .build();
@@ -96,10 +94,9 @@ public class MishangUc implements ModInitializer {
             } else if (entity instanceof WallSignBlockEntity) {
               ((WallSignBlockEntity) entity).textContexts = textContexts;
             }
+            entity.markDirty();
           } catch (ClassCastException e) {
             MISHANG_LOGGER.error("Error when trying to parse NBT received: ", e);
-            MISHANG_LOGGER.error(
-                "The NBT string received is as follows:\n" + NbtHelper.toPrettyPrintedText(nbt));
           }
           // 编辑成功。
         });

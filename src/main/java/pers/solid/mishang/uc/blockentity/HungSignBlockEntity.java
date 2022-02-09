@@ -46,7 +46,7 @@ public class HungSignBlockEntity extends BlockEntityWithText {
   }
 
   public static final TextContext DEFAULT_TEXT_CONTEXT =
-      Util.make(new TextContext(), textContext1 -> textContext1.size = 6);
+      Util.make(new TextContext(), textContext1 -> textContext1.size = 5);
   public @Unmodifiable Map<@NotNull Direction, @Unmodifiable @NotNull List<@NotNull TextContext>>
       texts = ImmutableMap.of();
 
