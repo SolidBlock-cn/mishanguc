@@ -479,18 +479,18 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
   public boolean changed = false;
 
   {
-    colorButton.min = -0.5f;
-    colorButton.max = DyeColor.values().length - 0.5f;
+    colorButton.min = 0;
+    colorButton.max = DyeColor.values().length - 1;
   }
 
   {
-    horizontalAlignButton.min = -0.5f;
-    horizontalAlignButton.max = 2.5f;
+    horizontalAlignButton.min = 0;
+    horizontalAlignButton.max = HorizontalAlign.values().length-1;
   }
 
   {
     verticalAlignButton.min = -0.5f;
-    verticalAlignButton.max = 2.5f;
+    verticalAlignButton.max = VerticalAlign.values().length-1;
   }
 
   public AbstractSignBlockEditScreen(
