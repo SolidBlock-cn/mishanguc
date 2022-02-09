@@ -461,14 +461,26 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
             }
           },
           (button) -> {});
+  /** 绝对模式 */
+  public BooleanButtonWidget absoluteButton =
+      new BooleanButtonWidget(
+          0,
+          0,
+          50,
+          20,
+          button -> focusedTextContext != null ? focusedTextContext.absolute : null,
+          b -> {
+            if (focusedTextContext != null) focusedTextContext.absolute = b;
+          },
+          b ->
+              b == null
+                  ? new TranslatableText("message.mishanguc.absolute")
+                  : new TranslatableText(
+                      "message.mishanguc.absolute.param",
+                      new TranslatableText(b ? "options.on" : "options.off")),
+          button -> {});
   /** 是否发生了改变。如果改变了，则提交时发送完整内容，否则发送空字符串表示未做更改。 */
   public boolean changed = false;
-  /**
-   * 是否为高级模式。若为高级模式，则显示高级模式的按钮，不显示非高级模式的按钮。
-   *
-   * @see #switchAdvanceButton
-   */
-  private boolean advance = false;
 
   {
     colorButton.min = -0.5f;
@@ -506,7 +518,7 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
   protected void init() {
     super.init();
     // customColorTextField.textRenderer = textRenderer;
-    textFieldListScreen = new TextFieldListScreen(client, width, height, 30, height - 50, 18);
+    textFieldListScreen = new TextFieldListScreen(client, width, height, 30, height - 70, 18);
     setFocused(textFieldListScreen);
     placeHolder.setWidth(width);
     // 添加按钮
@@ -532,7 +544,7 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
     this.addButton(colorButton);
     this.addButton(seeThroughButton);
     this.addButton(customColorTextField);
-    this.addButton(switchAdvanceButton);
+    this.addButton(absoluteButton);
     this.addButton(rearrangeButton);
     this.addButton(finishButton);
     // 添加文本框
@@ -551,32 +563,28 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
     finishButton.x = width / 2 + 10;
     finishButton.y = height - 30;
   }
-  /** 切换高级模式为开或关。 */
-  public final ButtonWidget switchAdvanceButton =
-      new ButtonWidget(
-          0,
-          0,
-          30,
-          20,
-          new TranslatableText("message.mishanguc.advanced"),
-          b -> {
-            advance = !advance;
-            switchToolboxButtons();
-          });
 
   /** 切换底部按钮的显示。显示高级按钮，或者取消高级按钮的显示。 */
   private void switchToolboxButtons() {
-    for (ClickableWidget widget : advance ? toolbox1 : toolbox2) {
-      widget.visible = false;
-    }
     // 调整按钮位置
     int belowToolboxWidth = 0;
-    for (ClickableWidget widget : advance ? toolbox2 : toolbox1) {
+    for (ClickableWidget widget : toolbox1) {
       final int width = widget.getWidth();
       widget.x = belowToolboxWidth;
       belowToolboxWidth += width;
     }
-    for (ClickableWidget widget : advance ? toolbox2 : toolbox1) {
+    for (ClickableWidget widget : toolbox1) {
+      widget.visible = true;
+      widget.x += width / 2 - belowToolboxWidth / 2;
+      widget.y = height - 70;
+    }
+    belowToolboxWidth = 0;
+    for (ClickableWidget widget : toolbox2) {
+      final int width = widget.getWidth();
+      widget.x = belowToolboxWidth;
+      belowToolboxWidth += width;
+    }
+    for (ClickableWidget widget : toolbox2) {
       widget.visible = true;
       widget.x += width / 2 - belowToolboxWidth / 2;
       widget.y = height - 50;
@@ -596,7 +604,6 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
         offsetYButton,
         colorButton,
         customColorTextField,
-        switchAdvanceButton
       };
 
   /**
@@ -649,7 +656,7 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
         horizontalAlignButton,
         verticalAlignButton,
         seeThroughButton,
-        switchAdvanceButton
+        absoluteButton
       };
 
   /**
@@ -694,7 +701,7 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
         new Identifier("mishanguc", "edit_sign_finish"),
         PacketByteBufs.create()
             .writeBlockPos(blockPos)
-            .writeString(changed ? list.asString() : ""));
+            .writeNbt(Util.make(new NbtCompound(), nbt -> nbt.put("texts", list))));
   }
 
   private void finishEditing() {
