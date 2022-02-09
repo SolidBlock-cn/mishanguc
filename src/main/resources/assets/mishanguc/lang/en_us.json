@@ -223,5 +223,6 @@
   "message.mishanguc.see_through": "See-through",
   "message.mishanguc.see_through.param": "See-through: %s",
   "message.mishanguc.custom_color": "Custom Color",
-  "message.mishanguc.advanced": "Advanced"
+  "message.mishanguc.absolute": "Absolute",
+  "message.mishanguc.absolute.param": "Absolute: %s"
 }
