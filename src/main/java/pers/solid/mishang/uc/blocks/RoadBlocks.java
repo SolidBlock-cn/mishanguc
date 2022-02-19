@@ -2,20 +2,21 @@ package pers.solid.mishang.uc.blocks;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.MapColor;
-import pers.solid.mishang.uc.LineColor;
 import pers.solid.mishang.uc.RoadTexture;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.block.*;
+import pers.solid.mishang.uc.util.LineColor;
+import pers.solid.mishang.uc.util.LineType;
 
+/**
+ *
+ *
+ * <h1>道路方块部分</h1>
+ *
+ * 最基本的普通路块。
+ */
 public final class RoadBlocks extends MishangucBlocks {
-  /**
-   *
-   *
-   * <h1>道路方块部分</h1>
-   *
-   * 最基本的普通路块。
-   */
   @RegisterIdentifier
   public static final RoadBlock ASPHALT_ROAD_BLOCK = new RoadBlock(ASPHALT_ROAD_SETTINGS);
   /**
@@ -27,7 +28,7 @@ public final class RoadBlocks extends MishangucBlocks {
    */
   @Cutout @RegisterIdentifier
   public static final RoadWithStraightLine.Impl ASPHALT_ROAD_WITH_WHITE_STRAIGHT_LINE =
-      new RoadWithStraightLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
+      new RoadWithStraightLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL);
   /** 白色直角。 */
   @Cutout @RegisterIdentifier
   public static final RoadWithAngleLine.Impl ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE =
@@ -36,15 +37,15 @@ public final class RoadBlocks extends MishangucBlocks {
   @Cutout @RegisterIdentifier
   public static final RoadWithAngleLine.Impl ASPHALT_ROAD_WITH_WHITE_BEVEL_ANGLE_LINE =
       new RoadWithAngleLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE, true);
-  /** 上面三种白色对应的黄色 */
+  /** 黄色直线 */
   @Cutout @RegisterIdentifier
   public static final RoadWithStraightLine.Impl ASPHALT_ROAD_WITH_YELLOW_STRAIGHT_LINE =
-      new RoadWithStraightLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.YELLOW);
-
+      new RoadWithStraightLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL);
+  /** 黄色直角 */
   @Cutout @RegisterIdentifier
   public static final RoadWithAngleLine.Impl ASPHALT_ROAD_WITH_YELLOW_RIGHT_ANGLE_LINE =
       new RoadWithAngleLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.YELLOW, false);
-
+  /** 黄色斜角 */
   @Cutout @RegisterIdentifier
   public static final RoadWithAngleLine.Impl ASPHALT_ROAD_WITH_YELLOW_BEVEL_ANGLE_LINE =
       new RoadWithAngleLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.YELLOW, true);
@@ -62,7 +63,12 @@ public final class RoadBlocks extends MishangucBlocks {
   /** 白色T字形线。 */
   @Cutout @RegisterIdentifier
   public static final RoadWithJointLine.Impl ASPHALT_ROAD_WITH_WHITE_JOINT_LINE =
-      new RoadWithJointLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
+      new RoadWithJointLine.Impl(
+          ASPHALT_ROAD_SETTINGS,
+          LineColor.WHITE,
+          LineColor.WHITE,
+          LineType.NORMAL,
+          LineType.NORMAL);
   /** 白色十字交叉线。 */
   @Cutout @RegisterIdentifier
   public static final RoadWithCrossLine.Impl ASPHALT_ROAD_WITH_WHITE_CROSS_LINE =
@@ -80,11 +86,24 @@ public final class RoadBlocks extends MishangucBlocks {
   /** 双线。 */
   @Cutout @RegisterIdentifier
   public static final RoadWithStraightLine.Impl ASPHALT_ROAD_WITH_WHITE_STRAIGHT_DOUBLE_LINE =
-      new RoadWithStraightLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
+      new RoadWithStraightLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE, LineType.DOUBLE);
   /** 粗线。 */
   @Cutout @RegisterIdentifier
   public static final RoadWithStraightLine.Impl ASPHALT_ROAD_WITH_WHITE_STRAIGHT_THICK_LINE =
-      new RoadWithStraightLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
+      new RoadWithStraightLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE, LineType.THICK);
+  /** 偏移的黄线 */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithOffsetStraightLine.Impl
+      ASPHALT_ROAD_WITH_YELLOW_OFFSET_STRAIGHT_LINE =
+          new RoadWithOffsetStraightLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.YELLOW);
+  /** 双黄线 */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithStraightLine.Impl ASPHALT_ROAD_WITH_YELLOW_STRAIGHT_DOUBLE_LINE =
+      new RoadWithStraightLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.YELLOW, LineType.DOUBLE);
+  /** 粗黄线 */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithStraightLine.Impl ASPHALT_ROAD_WITH_YELLOW_STRAIGHT_THICK_LINE =
+      new RoadWithStraightLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.YELLOW, LineType.THICK);
   /** 一侧偏移的直角。 */
   @Cutout @RegisterIdentifier
   public static final RoadWithAngleLineWithOnePartOffset.Impl
@@ -106,16 +125,37 @@ public final class RoadBlocks extends MishangucBlocks {
    */
   @Cutout @RegisterIdentifier
   public static final RoadWithJointLine.Impl ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_DOUBLE_SIDE =
-      new RoadWithJointLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
+      new RoadWithJointLine.Impl(
+          ASPHALT_ROAD_SETTINGS,
+          LineColor.WHITE,
+          LineColor.WHITE,
+          LineType.NORMAL,
+          LineType.DOUBLE);
   /** T字形，其中单侧部分为粗线。 */
   @Cutout @RegisterIdentifier
   public static final RoadWithJointLine.Impl ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_THICK_SIDE =
-      new RoadWithJointLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
+      new RoadWithJointLine.Impl(
+          ASPHALT_ROAD_SETTINGS, LineColor.WHITE, LineColor.WHITE, LineType.NORMAL, LineType.THICK);
   /** T字形，其中单侧部分有偏移。 */
   @Cutout @RegisterIdentifier
   public static final RoadWithJointLineWithOffsetSide.Impl
       ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_OFFSET_SIDE =
           new RoadWithJointLineWithOffsetSide.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
+  /** 直线部分为双线。 */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithJointLine.Impl ASPHALT_ROAD_WITH_WHITE_DOUBLE_JOINT_LINE =
+      new RoadWithJointLine.Impl(
+          ASPHALT_ROAD_SETTINGS,
+          LineColor.WHITE,
+          LineColor.WHITE,
+          LineType.DOUBLE,
+          LineType.NORMAL);
+  /** 直线部分为粗线。 */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithJointLine.Impl ASPHALT_ROAD_WITH_WHITE_THICK_JOINT_LINE =
+      new RoadWithJointLine.Impl(
+          ASPHALT_ROAD_SETTINGS, LineColor.WHITE, LineColor.WHITE, LineType.THICK, LineType.NORMAL);
+
   /**
    *
    *

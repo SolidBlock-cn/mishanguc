@@ -19,7 +19,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.LineColor;
+import pers.solid.mishang.uc.util.LineColor;
+import pers.solid.mishang.uc.util.LineType;
+import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.List;
 
@@ -34,7 +36,8 @@ public interface Road {
    * @return 连接状态。
    */
   default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
-    return RoadConnectionState.notConnectedTo(getLineColor(), Either.left(direction));
+    return RoadConnectionState.notConnectedTo(
+        getLineColor(state, direction), Either.left(direction), LineType.NORMAL);
   }
 
   /**
@@ -136,5 +139,7 @@ public interface Road {
    *
    * @return 该道路的标线颜色。
    */
-  LineColor getLineColor();
+  LineColor getLineColor(BlockState blockState, Direction direction);
+
+  LineType getLineType(BlockState blockState, Direction direction);
 }

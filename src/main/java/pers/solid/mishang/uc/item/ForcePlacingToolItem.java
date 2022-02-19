@@ -1,6 +1,9 @@
 package pers.solid.mishang.uc.item;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -12,6 +15,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -49,9 +53,8 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
             player.getStackInHand(hand),
             blockHitResult,
             fluidIncluded);
-    if (blockPlacementContext.world.isClient()) {
-      blockPlacementContext.playSound();
-    } else {
+    blockPlacementContext.playSound();
+    if (!world.isClient()) {
       // 放置方块。
       blockPlacementContext.setBlockState(0b11010);
       blockPlacementContext.setBlockEntity();
@@ -60,13 +63,17 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   }
 
   @Override
-  public ActionResult attackBlock(
+  public ActionResult beginAttackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
     final BlockState blockState = world.getBlockState(pos);
+    BlockSoundGroup blockSoundGroup = blockState.getSoundGroup();
+    world.syncWorldEvent(player, 2001, pos, Block.getRawIdFromState(world.getBlockState(pos)));
     FluidState fluidState = blockState.getFluidState();
-    world.setBlockState(
-        pos, fluidIncluded ? Blocks.AIR.getDefaultState() : fluidState.getBlockState(), 24);
-    return ActionResult.SUCCESS;
+    if (!world.isClient) {
+      world.setBlockState(
+          pos, fluidIncluded ? Blocks.AIR.getDefaultState() : fluidState.getBlockState(), 24);
+    }
+    return ActionResult.success(world.isClient);
   }
 
   @Override
@@ -90,6 +97,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   }
 
   @SuppressWarnings("AlibabaMethodTooLong")
+  @Environment(EnvType.CLIENT)
   @Override
   public boolean rendersBlockOutline(
       PlayerEntity player,

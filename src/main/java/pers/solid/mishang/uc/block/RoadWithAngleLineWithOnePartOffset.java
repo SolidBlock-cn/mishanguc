@@ -17,7 +17,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.LineColor;
+import pers.solid.mishang.uc.util.LineColor;
 
 import java.util.List;
 
