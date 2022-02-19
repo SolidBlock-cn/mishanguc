@@ -33,6 +33,9 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import static pers.solid.mishang.uc.blocks.RoadBlocks.*;
+import static pers.solid.mishang.uc.blocks.RoadSlabBlocks.*;
+
 public interface RoadWithAutoLine extends Road {
   /**
    * 根据附近的连接状态自动产生一个新的方块状态。
@@ -167,14 +170,14 @@ public interface RoadWithAutoLine extends Road {
         switch (connected) {
           case 0:
             // 全都不连接的情况。
-            return MishangucBlocks.ASPHALT_ROAD_SLAB
+            return ASPHALT_ROAD_SLAB
                 .getDefaultState()
                 .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
                 .with(WATERLOGGED, defaultState.get(WATERLOGGED));
           case 4:
             // 全都连接的情况。
             if (lineColor == LineColor.WHITE) {
-              return MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_CROSS_LINE
+              return ASPHALT_ROAD_SLAB_WITH_WHITE_CROSS_LINE
                   .getDefaultState()
                   .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
                   .with(WATERLOGGED, defaultState.get(WATERLOGGED));
@@ -190,7 +193,7 @@ public interface RoadWithAutoLine extends Road {
               Direction direction = entry.getKey();
               if (connectionStateMap.get(direction.getOpposite()).mayConnect()) {
                 // 如果对面方向也有的情况。
-                return MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_LINE
+                return ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_LINE
                     .getDefaultState()
                     .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
                     .with(WATERLOGGED, defaultState.get(WATERLOGGED))
@@ -201,8 +204,8 @@ public interface RoadWithAutoLine extends Road {
                 Block block;
                 if (lineColor == LineColor.WHITE) {
                   block = switch (type) {
-                    case BEVEL -> MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_BEVEL_ANGLE_LINE;
-                    case RIGHT_ANGLE -> MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_RIGHT_ANGLE_LINE;
+                    case BEVEL -> ASPHALT_ROAD_SLAB_WITH_WHITE_BEVEL_ANGLE_LINE;
+                    case RIGHT_ANGLE -> ASPHALT_ROAD_SLAB_WITH_WHITE_RIGHT_ANGLE_LINE;
                   };
                 } else {
                   block = null;
@@ -231,7 +234,7 @@ public interface RoadWithAutoLine extends Road {
             // 只有一个方向连接的情况下，为直线。
             for (Map.Entry<Direction, RoadConnectionState> entry : connectionStateMap.entrySet()) {
               if (entry.getValue().mayConnect() && lineColor == LineColor.WHITE) {
-                return MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_LINE
+                return ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_LINE
                     .getDefaultState()
                     .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
                     .with(WATERLOGGED, defaultState.get(WATERLOGGED))
@@ -252,14 +255,14 @@ public interface RoadWithAutoLine extends Road {
                     || type != RoadAutoLineType.BEVEL)
                 // 连接直线
                 {
-                  return MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE
+                  return ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE
                       .getDefaultState()
                       .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
                       .with(WATERLOGGED, defaultState.get(WATERLOGGED))
                       .with(Properties.HORIZONTAL_FACING, direction);
                 } else if (state.direction.right().isPresent()) {
                   // 连接斜线
-                  return MishangucBlocks.ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_AND_BEVEL_ANGLE_LINE
+                  return ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_AND_BEVEL_ANGLE_LINE
                       .getDefaultState()
                       .with(Properties.SLAB_TYPE, defaultState.get(Properties.SLAB_TYPE))
                       .with(WATERLOGGED, defaultState.get(WATERLOGGED))
@@ -309,11 +312,11 @@ public interface RoadWithAutoLine extends Road {
         switch (connected) {
           case 0:
             // 全都不连接的情况。
-            return MishangucBlocks.ASPHALT_ROAD_BLOCK.getDefaultState();
+            return ASPHALT_ROAD_BLOCK.getDefaultState();
           case 4:
             // 全都连接的情况。
             if (lineColor == LineColor.WHITE) {
-              return MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_CROSS_LINE.getDefaultState();
+              return ASPHALT_ROAD_WITH_WHITE_CROSS_LINE.getDefaultState();
             } else {
               return defaultState;
             }
@@ -326,7 +329,7 @@ public interface RoadWithAutoLine extends Road {
               Direction direction = entry.getKey();
               if (connectionStateMap.get(direction.getOpposite()).mayConnect()) {
                 // 如果对面方向也有的情况。
-                return MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_STRAIGHT_LINE
+                return ASPHALT_ROAD_WITH_WHITE_STRAIGHT_LINE
                     .getDefaultState()
                     .with(Properties.HORIZONTAL_AXIS, direction.getAxis());
               } else {
@@ -335,8 +338,8 @@ public interface RoadWithAutoLine extends Road {
                 Block block;
                 if (lineColor == LineColor.WHITE) {
                   block = switch (type) {
-                    case BEVEL -> MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_BEVEL_ANGLE_LINE;
-                    case RIGHT_ANGLE -> MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE;
+                    case BEVEL -> ASPHALT_ROAD_WITH_WHITE_BEVEL_ANGLE_LINE;
+                    case RIGHT_ANGLE -> ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE;
                   };
                 } else {
                   block = null;
@@ -361,7 +364,7 @@ public interface RoadWithAutoLine extends Road {
             // 只有一个方向连接的情况下，为直线。
             for (Map.Entry<Direction, RoadConnectionState> entry : connectionStateMap.entrySet()) {
               if (entry.getValue().mayConnect() && lineColor == LineColor.WHITE) {
-                return MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_STRAIGHT_LINE
+                return ASPHALT_ROAD_WITH_WHITE_STRAIGHT_LINE
                     .getDefaultState()
                     .with(Properties.HORIZONTAL_AXIS, entry.getKey().getAxis());
               }
@@ -380,12 +383,12 @@ public interface RoadWithAutoLine extends Road {
                     || type != RoadAutoLineType.BEVEL)
                 // 连接直线
                 {
-                  return MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_JOINT_LINE
+                  return ASPHALT_ROAD_WITH_WHITE_JOINT_LINE
                       .getDefaultState()
                       .with(Properties.HORIZONTAL_FACING, direction);
                 } else if (state.direction.right().isPresent()) {
                   // 连接斜线
-                  return MishangucBlocks.ASPHALT_ROAD_WITH_WHITE_STRAIGHT_AND_BEVEL_ANGLE_LINE
+                  return ASPHALT_ROAD_WITH_WHITE_STRAIGHT_AND_BEVEL_ANGLE_LINE
                       .getDefaultState()
                       .with(Properties.HORIZONTAL_AXIS, direction.rotateYClockwise().getAxis())
                       .with(

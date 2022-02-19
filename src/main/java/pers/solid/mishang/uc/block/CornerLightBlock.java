@@ -34,7 +34,7 @@ public class CornerLightBlock extends HorizontalFacingBlock
           MishangUtils.createHorizontalDirectionToShape(4, 15, 0, 12, 16, 16),
           MishangUtils.createHorizontalDirectionToShape(4, 0, 0, 12, 16, 1));
 
-  protected CornerLightBlock(Settings settings) {
+  public CornerLightBlock(Settings settings) {
     super(settings);
     this.setDefaultState(
         this.stateManager

@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import pers.solid.mishang.uc.MishangUc;
-import pers.solid.mishang.uc.ModItemGroups;
+import pers.solid.mishang.uc.MishangucItemGroups;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.SimpleModel;
 
@@ -17,62 +17,62 @@ public final class MishangucItems {
   @SimpleModel(parent = "item/handheld")
   public static final RoadConnectionStateDebuggingToolItem ROAD_CONNECTION_STATE_DEBUGGING_TOOL =
       new RoadConnectionStateDebuggingToolItem(
-          new FabricItemSettings().group(ModItemGroups.TOOLS), false);
+          new FabricItemSettings().group(MishangucItemGroups.TOOLS), false);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final IdCheckerToolItem ID_CHECKER_TOOL =
-      new IdCheckerToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), null);
+      new IdCheckerToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final IdCheckerToolItem FLUID_ID_CHECKER_TOOL =
-      new IdCheckerToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), true);
+      new IdCheckerToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), true);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final FastBuildingToolItem FAST_BUILDING_TOOL =
-      new FastBuildingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), null);
+      new FastBuildingToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final RotatingToolItem ROTATING_TOOL =
-      new RotatingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), null);
+      new RotatingToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final MirroringToolItem MIRRORING_TOOL =
-      new MirroringToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), null);
+      new MirroringToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final SlabToolItem SLAB_TOOL =
-      new SlabToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS));
+      new SlabToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS));
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final ForcePlacingToolItem FORCE_PLACING_TOOL =
-      new ForcePlacingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), null);
+      new ForcePlacingToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final ForcePlacingToolItem FLUID_FORCE_PLACING_TOOL =
-      new ForcePlacingToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), true);
+      new ForcePlacingToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), true);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final BlockStateToolItem BLOCK_STATE_TOOL =
-      new BlockStateToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), null);
+      new BlockStateToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final BlockStateToolItem FLUID_STATE_TOOL =
-      new BlockStateToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), true);
+      new BlockStateToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), true);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final DataTagToolItem DATA_TAG_TOOL =
-      new DataTagToolItem(new FabricItemSettings().group(ModItemGroups.TOOLS), null);
+      new DataTagToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
 
   private static void registerAll() {
     for (Field field : MishangucItems.class.getFields()) {

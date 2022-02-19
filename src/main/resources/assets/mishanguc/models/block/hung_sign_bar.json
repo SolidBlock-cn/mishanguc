@@ -9,7 +9,8 @@
         "south": {"texture": "#bar"},
         "east": {"texture": "#bar"},
         "west": {"texture": "#bar"},
-        "up": {"texture": "#bar", "cullface": "top"}
+        "up": {"texture": "#bar", "cullface": "top"},
+        "down": {"texture": "#bar", "cullface": "down"}
       }
     }
   ]
