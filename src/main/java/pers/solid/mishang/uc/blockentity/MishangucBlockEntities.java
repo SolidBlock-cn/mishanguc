@@ -5,7 +5,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import pers.solid.mishang.uc.block.MishangucBlocks;
+import pers.solid.mishang.uc.blocks.HungSignBlocks;
+import pers.solid.mishang.uc.blocks.WallSignBlocks;
 
 public class MishangucBlockEntities {
   public static final BlockEntityType<HungSignBlockEntity> HUNG_SIGN_BLOCK_ENTITY =
@@ -15,15 +16,15 @@ public class MishangucBlockEntities {
           BlockEntityType.Builder.create(
                   HungSignBlockEntity::new,
                   new ImmutableList.Builder<Block>()
-                      .addAll(MishangucBlocks.CONCRETE_HUNG_SIGNS.values())
-                      .addAll(MishangucBlocks.TERRACOTTA_HUNG_SIGNS.values())
-                      .addAll(MishangucBlocks.GLOWING_CONCRETE_HUNG_SIGNS.values())
-                      .addAll(MishangucBlocks.GLOWING_TERRACOTTA_HUNG_SIGNS.values())
+                      .addAll(HungSignBlocks.CONCRETE_HUNG_SIGNS.values())
+                      .addAll(HungSignBlocks.TERRACOTTA_HUNG_SIGNS.values())
+                      .addAll(HungSignBlocks.GLOWING_CONCRETE_HUNG_SIGNS.values())
+                      .addAll(HungSignBlocks.GLOWING_TERRACOTTA_HUNG_SIGNS.values())
                       .add(
-                          MishangucBlocks.GLOWING_NETHERRACK_HUNG_SIGN,
-                          MishangucBlocks.GLOWING_NETHER_BRICK_HUNG_SIGN,
-                          MishangucBlocks.GLOWING_BLACKSTONE_HUNG_SIGN,
-                          MishangucBlocks.GLOWING_POLISHED_BLACKSTONE_HUNG_SIGN)
+                          HungSignBlocks.GLOWING_NETHERRACK_HUNG_SIGN,
+                          HungSignBlocks.GLOWING_NETHER_BRICK_HUNG_SIGN,
+                          HungSignBlocks.GLOWING_BLACKSTONE_HUNG_SIGN,
+                          HungSignBlocks.GLOWING_POLISHED_BLACKSTONE_HUNG_SIGN)
                       .build()
                       .toArray(new Block[] {}))
               .build(null));
@@ -35,21 +36,21 @@ public class MishangucBlockEntities {
                   WallSignBlockEntity::new,
                   new ImmutableList.Builder<Block>()
                       .add(
-                          MishangucBlocks.OAK_WALL_SIGN,
-                          MishangucBlocks.SPRUCE_WALL_SIGN,
-                          MishangucBlocks.BIRCH_WALL_SIGN,
-                          MishangucBlocks.JUNGLE_WALL_SIGN,
-                          MishangucBlocks.ACACIA_WALL_SIGN,
-                          MishangucBlocks.DARK_OAK_WALL_SIGN,
-                          MishangucBlocks.CRIMSON_WALL_SIGN,
-                          MishangucBlocks.WARPED_WALL_SIGN)
-                      .addAll(MishangucBlocks.CONCRETE_WALL_SIGNS.values())
-                      .addAll(MishangucBlocks.TERRACOTTA_WALL_SIGNS.values())
-                      .addAll(MishangucBlocks.GLOWING_CONCRETE_WALL_SIGNS.values())
-                      .addAll(MishangucBlocks.GLOWING_TERRACOTTA_WALL_SIGNS.values())
-                      .addAll(MishangucBlocks.FULL_CONCRETE_WALL_SIGNS.values())
-                      .addAll(MishangucBlocks.FULL_TERRACOTTA_WALL_SIGNS.values())
-                      .add(MishangucBlocks.INVISIBLE_WALL_SIGN)
+                          WallSignBlocks.OAK_WALL_SIGN,
+                          WallSignBlocks.SPRUCE_WALL_SIGN,
+                          WallSignBlocks.BIRCH_WALL_SIGN,
+                          WallSignBlocks.JUNGLE_WALL_SIGN,
+                          WallSignBlocks.ACACIA_WALL_SIGN,
+                          WallSignBlocks.DARK_OAK_WALL_SIGN,
+                          WallSignBlocks.CRIMSON_WALL_SIGN,
+                          WallSignBlocks.WARPED_WALL_SIGN)
+                      .addAll(WallSignBlocks.CONCRETE_WALL_SIGNS.values())
+                      .addAll(WallSignBlocks.TERRACOTTA_WALL_SIGNS.values())
+                      .addAll(WallSignBlocks.GLOWING_CONCRETE_WALL_SIGNS.values())
+                      .addAll(WallSignBlocks.GLOWING_TERRACOTTA_WALL_SIGNS.values())
+                      .addAll(WallSignBlocks.FULL_CONCRETE_WALL_SIGNS.values())
+                      .addAll(WallSignBlocks.FULL_TERRACOTTA_WALL_SIGNS.values())
+                      .add(WallSignBlocks.INVISIBLE_WALL_SIGN)
                       .build()
                       .toArray(new Block[] {}))
               .build(null));

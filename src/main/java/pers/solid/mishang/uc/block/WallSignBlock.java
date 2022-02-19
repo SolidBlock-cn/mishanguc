@@ -23,10 +23,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.GameMode;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUc;
@@ -90,6 +87,11 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
         ? placementState.with(
             WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER)
         : null;
+  }
+
+  @Override
+  public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+    return true;
   }
 
   @SuppressWarnings("deprecation")
