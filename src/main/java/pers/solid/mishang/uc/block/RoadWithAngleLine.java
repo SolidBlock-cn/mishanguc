@@ -38,7 +38,7 @@ public interface RoadWithAngleLine extends Road {
         state.get(FACING).hasDirection(direction),
         getLineColor(state, direction),
         isBevel() ? Either.right(state.get(FACING).mirror(direction)) : Either.left(direction),
-        LineType.NORMAL);
+        getLineType(state, direction));
   }
 
   @Override
@@ -84,8 +84,8 @@ public interface RoadWithAngleLine extends Road {
   class SlabImpl extends AbstractRoadSlabBlock implements RoadWithAngleLine {
     private final boolean isBevel;
 
-    public SlabImpl(Settings settings, LineColor lineColor, boolean isBevel) {
-      super(settings, lineColor, LineType.NORMAL);
+    public SlabImpl(LineColor lineColor, Settings settings, LineType lineType, boolean isBevel) {
+      super(settings, lineColor, lineType);
       this.isBevel = isBevel;
     }
 
@@ -98,8 +98,8 @@ public interface RoadWithAngleLine extends Road {
   class Impl extends AbstractRoadBlock implements RoadWithAngleLine {
     private final boolean isBevel;
 
-    public Impl(Settings settings, LineColor lineColor, boolean isBevel) {
-      super(settings, lineColor, LineType.NORMAL);
+    public Impl(Settings settings, LineColor lineColor, LineType lineType, boolean isBevel) {
+      super(settings, lineColor, lineType);
       this.isBevel = isBevel;
     }
 

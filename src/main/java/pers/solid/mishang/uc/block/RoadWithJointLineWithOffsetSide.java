@@ -16,6 +16,7 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.ModProperties;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 import pers.solid.mishang.uc.util.LineColor;
@@ -57,29 +58,12 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
     return state.with(FACING, state.get(FACING).mirror(mirror));
   }
 
-  static Direction.Axis rotateAxis(BlockRotation rotation, Direction.Axis axis) {
-    switch (rotation) {
-      case COUNTERCLOCKWISE_90:
-      case CLOCKWISE_90:
-        switch (axis) {
-          case X:
-            return Direction.Axis.Z;
-          case Z:
-            return Direction.Axis.X;
-          default:
-            return axis;
-        }
-      default:
-        return axis;
-    }
-  }
-
   @Override
   default BlockState rotateRoad(BlockState state, BlockRotation rotation) {
     final Direction.Axis axis = state.get(AXIS);
     return state
         .with(FACING, state.get(FACING).rotate(rotation))
-        .with(AXIS, rotateAxis(rotation, axis));
+        .with(AXIS, MishangUtils.rotateAxis(rotation, axis));
   }
 
   @Override

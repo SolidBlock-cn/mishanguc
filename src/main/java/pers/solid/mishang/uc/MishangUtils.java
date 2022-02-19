@@ -2,6 +2,7 @@ package pers.solid.mishang.uc;
 
 import com.google.common.collect.Streams;
 import net.minecraft.block.Block;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -107,5 +108,23 @@ public class MishangUtils {
                   && Block.class.isAssignableFrom(field.getType())
                   && field.isAnnotationPresent(RegisterIdentifier.class);
             });
+  }
+
+  /** 对一个坐标轴进行旋转。 */
+  public static Direction.Axis rotateAxis(BlockRotation rotation, Direction.Axis axis) {
+    switch (rotation) {
+      case COUNTERCLOCKWISE_90:
+      case CLOCKWISE_90:
+        switch (axis) {
+          case X:
+            return Direction.Axis.Z;
+          case Z:
+            return Direction.Axis.X;
+          default:
+            return axis;
+        }
+      default:
+        return axis;
+    }
   }
 }

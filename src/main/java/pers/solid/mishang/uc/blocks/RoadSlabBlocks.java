@@ -35,11 +35,13 @@ public final class RoadSlabBlocks extends MishangucBlocks {
   /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE */
   @Cutout @RegisterIdentifier
   public static final RoadWithAngleLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_WHITE_RIGHT_ANGLE_LINE =
-      new RoadWithAngleLine.SlabImpl(MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineColor.WHITE, false);
+      new RoadWithAngleLine.SlabImpl(
+          LineColor.WHITE, MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineType.NORMAL, false);
   /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_BEVEL_ANGLE_LINE */
   @Cutout @RegisterIdentifier
   public static final RoadWithAngleLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_WHITE_BEVEL_ANGLE_LINE =
-      new RoadWithAngleLine.SlabImpl(MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineColor.WHITE, true);
+      new RoadWithAngleLine.SlabImpl(
+          LineColor.WHITE, MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineType.NORMAL, true);
   /**
    * 上面三种白色对应的黄色
    *
@@ -51,11 +53,47 @@ public final class RoadSlabBlocks extends MishangucBlocks {
   /** @see RoadBlocks#ASPHALT_ROAD_WITH_YELLOW_RIGHT_ANGLE_LINE */
   @Cutout @RegisterIdentifier
   public static final RoadWithAngleLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_YELLOW_RIGHT_ANGLE_LINE =
-      new RoadWithAngleLine.SlabImpl(ASPHALT_ROAD_SETTINGS, LineColor.YELLOW, false);
+      new RoadWithAngleLine.SlabImpl(
+          LineColor.YELLOW, ASPHALT_ROAD_SETTINGS, LineType.NORMAL, false);
   /** @see RoadBlocks#ASPHALT_ROAD_WITH_YELLOW_BEVEL_ANGLE_LINE */
   @Cutout @RegisterIdentifier
   public static final RoadWithAngleLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_YELLOW_BEVEL_ANGLE_LINE =
-      new RoadWithAngleLine.SlabImpl(ASPHALT_ROAD_SETTINGS, LineColor.YELLOW, true);
+      new RoadWithAngleLine.SlabImpl(
+          LineColor.YELLOW, ASPHALT_ROAD_SETTINGS, LineType.NORMAL, true);
+
+  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_AND_YELLOW_RIGHT_ANGLE_LINE */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithDiffAngleLine.SlabImpl
+      ASPHALT_ROAD_SLAB_WITH_WHITE_AND_YELLOW_RIGHT_ANGLE_LINE =
+          new RoadWithDiffAngleLine.SlabImpl(
+              ASPHALT_ROAD_SETTINGS,
+              LineColor.WHITE,
+              LineColor.YELLOW,
+              LineType.NORMAL,
+              LineType.NORMAL,
+              false);
+  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_AND_YELLOW_DOUBLE_RIGHT_ANGLE_LINE */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithDiffAngleLine.SlabImpl
+      ASPHALT_ROAD_SLAB_WITH_WHITE_AND_YELLOW_DOUBLE_RIGHT_ANGLE_LINE =
+          new RoadWithDiffAngleLine.SlabImpl(
+              ASPHALT_ROAD_SETTINGS,
+              LineColor.WHITE,
+              LineColor.YELLOW,
+              LineType.NORMAL,
+              LineType.DOUBLE,
+              false);
+  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_THICK_AND_YELLOW_DOUBLE_RIGHT_ANGLE_LINE */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithDiffAngleLine.SlabImpl
+      ASPHALT_ROAD_SLAB_WITH_WHITE_THICK_AND_YELLOW_DOUBLE_RIGHT_ANGLE_LINE =
+          new RoadWithDiffAngleLine.SlabImpl(
+              ASPHALT_ROAD_SETTINGS,
+              LineColor.WHITE,
+              LineColor.YELLOW,
+              LineType.THICK,
+              LineType.DOUBLE,
+              false);
   /**
    *
    *
@@ -183,6 +221,55 @@ public final class RoadSlabBlocks extends MishangucBlocks {
   public static final RoadWithJointLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_WHITE_THICK_JOINT_LINE =
       new RoadWithJointLine.SlabImpl(
           ASPHALT_ROAD_SETTINGS, LineColor.WHITE, LineColor.WHITE, LineType.THICK, LineType.NORMAL);
+  /** @see RoadBlocks#ASPHALT_ROAD_WITH_YELLOW_JOINT_LINE */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithJointLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_YELLOW_JOINT_LINE =
+      new RoadWithJointLine.SlabImpl(
+          ASPHALT_ROAD_SETTINGS,
+          LineColor.YELLOW,
+          LineColor.YELLOW,
+          LineType.NORMAL,
+          LineType.NORMAL);
+  /** @see RoadBlocks#ASPHALT_ROAD_WITH_YELLOW_JOINT_LINE_WITH_WHITE_SIDE */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithJointLine.SlabImpl
+      ASPHALT_ROAD_SLAB_WITH_YELLOW_JOINT_LINE_WITH_WHITE_SIDE =
+          new RoadWithJointLine.SlabImpl(
+              ASPHALT_ROAD_SETTINGS,
+              LineColor.YELLOW,
+              LineColor.WHITE,
+              LineType.NORMAL,
+              LineType.NORMAL);
+  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_YELLOW_SIDE */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithJointLine.SlabImpl
+      ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE_WITH_YELLOW_SIDE =
+          new RoadWithJointLine.SlabImpl(
+              ASPHALT_ROAD_SETTINGS,
+              LineColor.WHITE,
+              LineColor.YELLOW,
+              LineType.NORMAL,
+              LineType.NORMAL);
+  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_YELLOW_DOUBLE_SIDE */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithJointLine.SlabImpl
+      ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE_WITH_YELLOW_DOUBLE_SIDE =
+          new RoadWithJointLine.SlabImpl(
+              ASPHALT_ROAD_SETTINGS,
+              LineColor.WHITE,
+              LineColor.YELLOW,
+              LineType.NORMAL,
+              LineType.DOUBLE);
+  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_THICK_JOINT_LINE_WITH_YELLOW_DOUBLE_SIDE */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithJointLine.SlabImpl
+      ASPHALT_ROAD_SLAB_WITH_WHITE_THICK_JOINT_LINE_WITH_YELLOW_DOUBLE_SIDE =
+          new RoadWithJointLine.SlabImpl(
+              ASPHALT_ROAD_SETTINGS,
+              LineColor.WHITE,
+              LineColor.YELLOW,
+              LineType.THICK,
+              LineType.DOUBLE);
   /**
    *
    *

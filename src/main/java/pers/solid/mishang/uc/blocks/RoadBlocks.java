@@ -32,11 +32,11 @@ public final class RoadBlocks extends MishangucBlocks {
   /** 白色直角。 */
   @Cutout @RegisterIdentifier
   public static final RoadWithAngleLine.Impl ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE =
-      new RoadWithAngleLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE, false);
+      new RoadWithAngleLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL, false);
   /** 白色斜角。 */
   @Cutout @RegisterIdentifier
   public static final RoadWithAngleLine.Impl ASPHALT_ROAD_WITH_WHITE_BEVEL_ANGLE_LINE =
-      new RoadWithAngleLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE, true);
+      new RoadWithAngleLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL, true);
   /** 黄色直线 */
   @Cutout @RegisterIdentifier
   public static final RoadWithStraightLine.Impl ASPHALT_ROAD_WITH_YELLOW_STRAIGHT_LINE =
@@ -44,11 +44,44 @@ public final class RoadBlocks extends MishangucBlocks {
   /** 黄色直角 */
   @Cutout @RegisterIdentifier
   public static final RoadWithAngleLine.Impl ASPHALT_ROAD_WITH_YELLOW_RIGHT_ANGLE_LINE =
-      new RoadWithAngleLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.YELLOW, false);
+      new RoadWithAngleLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL, false);
   /** 黄色斜角 */
   @Cutout @RegisterIdentifier
   public static final RoadWithAngleLine.Impl ASPHALT_ROAD_WITH_YELLOW_BEVEL_ANGLE_LINE =
-      new RoadWithAngleLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.YELLOW, true);
+      new RoadWithAngleLine.Impl(ASPHALT_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL, true);
+  /** 白色加黄色直角 */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithDiffAngleLine.Impl
+      ASPHALT_ROAD_WITH_WHITE_AND_YELLOW_RIGHT_ANGLE_LINE =
+          new RoadWithDiffAngleLine.Impl(
+              ASPHALT_ROAD_SETTINGS,
+              LineColor.WHITE,
+              LineColor.YELLOW,
+              LineType.NORMAL,
+              LineType.NORMAL,
+              false);
+  /** 白色加黄色双线直角 */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithDiffAngleLine.Impl
+      ASPHALT_ROAD_WITH_WHITE_AND_YELLOW_DOUBLE_RIGHT_ANGLE_LINE =
+          new RoadWithDiffAngleLine.Impl(
+              ASPHALT_ROAD_SETTINGS,
+              LineColor.WHITE,
+              LineColor.YELLOW,
+              LineType.NORMAL,
+              LineType.DOUBLE,
+              false);
+  /** 白色粗线加黄色双线直角 */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithDiffAngleLine.Impl
+      ASPHALT_ROAD_WITH_WHITE_THICK_AND_YELLOW_DOUBLE_RIGHT_ANGLE_LINE =
+          new RoadWithDiffAngleLine.Impl(
+              ASPHALT_ROAD_SETTINGS,
+              LineColor.WHITE,
+              LineColor.YELLOW,
+              LineType.THICK,
+              LineType.DOUBLE,
+              false);
   /**
    *
    *
@@ -155,6 +188,53 @@ public final class RoadBlocks extends MishangucBlocks {
   public static final RoadWithJointLine.Impl ASPHALT_ROAD_WITH_WHITE_THICK_JOINT_LINE =
       new RoadWithJointLine.Impl(
           ASPHALT_ROAD_SETTINGS, LineColor.WHITE, LineColor.WHITE, LineType.THICK, LineType.NORMAL);
+  /** 黄色T字形 */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithJointLine.Impl ASPHALT_ROAD_WITH_YELLOW_JOINT_LINE =
+      new RoadWithJointLine.Impl(
+          ASPHALT_ROAD_SETTINGS,
+          LineColor.YELLOW,
+          LineColor.YELLOW,
+          LineType.NORMAL,
+          LineType.NORMAL);
+  /** 黄色加白色 */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithJointLine.Impl ASPHALT_ROAD_WITH_YELLOW_JOINT_LINE_WITH_WHITE_SIDE =
+      new RoadWithJointLine.Impl(
+          ASPHALT_ROAD_SETTINGS,
+          LineColor.YELLOW,
+          LineColor.WHITE,
+          LineType.NORMAL,
+          LineType.NORMAL);
+  /** 白色加黄色 */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithJointLine.Impl ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_YELLOW_SIDE =
+      new RoadWithJointLine.Impl(
+          ASPHALT_ROAD_SETTINGS,
+          LineColor.WHITE,
+          LineColor.YELLOW,
+          LineType.NORMAL,
+          LineType.NORMAL);
+  /** 白色加黄色双 */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithJointLine.Impl
+      ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_YELLOW_DOUBLE_SIDE =
+          new RoadWithJointLine.Impl(
+              ASPHALT_ROAD_SETTINGS,
+              LineColor.WHITE,
+              LineColor.YELLOW,
+              LineType.NORMAL,
+              LineType.DOUBLE);
+  /** 白色粗加黄色双 */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithJointLine.Impl
+      ASPHALT_ROAD_WITH_WHITE_THICK_JOINT_LINE_WITH_YELLOW_DOUBLE_SIDE =
+          new RoadWithJointLine.Impl(
+              ASPHALT_ROAD_SETTINGS,
+              LineColor.WHITE,
+              LineColor.YELLOW,
+              LineType.THICK,
+              LineType.DOUBLE);
 
   /**
    *
