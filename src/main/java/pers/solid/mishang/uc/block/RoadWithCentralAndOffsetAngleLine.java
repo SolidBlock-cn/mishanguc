@@ -9,8 +9,11 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.Direction;
-import pers.solid.mishang.uc.LineColor;
 import pers.solid.mishang.uc.ModProperties;
+import pers.solid.mishang.uc.util.HorizontalCornerDirection;
+import pers.solid.mishang.uc.util.LineColor;
+import pers.solid.mishang.uc.util.LineType;
+import pers.solid.mishang.uc.util.RoadConnectionState;
 
 /** 带有一条正中直线和偏移直线的道路。类似于 {@link RoadWithAngleLine}，不过其中一条半线是侧的。 */
 public interface RoadWithCentralAndOffsetAngleLine extends RoadWithAngleLine {
@@ -63,7 +66,7 @@ public interface RoadWithCentralAndOffsetAngleLine extends RoadWithAngleLine {
 
     public RoadBlockWithCentralAndOffsettedAngleLine(
         Settings settings, LineColor lineColor, boolean isBevel) {
-      super(settings, lineColor);
+      super(settings, lineColor, LineType.NORMAL);
       this.isBevel = isBevel;
     }
 

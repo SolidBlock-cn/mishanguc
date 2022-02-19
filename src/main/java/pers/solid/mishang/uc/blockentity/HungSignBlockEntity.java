@@ -26,6 +26,8 @@ import java.util.Map;
  * @see pers.solid.mishang.uc.renderer.HungSignBlockEntityRenderer
  */
 public class HungSignBlockEntity extends BlockEntityWithText {
+  public static final TextContext DEFAULT_TEXT_CONTEXT =
+      Util.make(new TextContext(), textContext1 -> textContext1.size = 5);
   /**
    * 该方块正在被编辑的方向。同时存在于客户端与服务器。<br>
    * 若未被编辑则为 {@code null}。<br>
@@ -34,6 +36,8 @@ public class HungSignBlockEntity extends BlockEntityWithText {
    */
   public @Nullable Direction editedSide;
 
+  public @Unmodifiable Map<@NotNull Direction, @Unmodifiable @NotNull List<@NotNull TextContext>>
+      texts = ImmutableMap.of();
   /**
    * 编辑该方块的玩家。若为 <code>true</code>，则其他玩家不可编辑。<br>
    * The player editing the block. <code>true</code> means other players cannot edit.
@@ -43,11 +47,6 @@ public class HungSignBlockEntity extends BlockEntityWithText {
   public HungSignBlockEntity() {
     super(MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY);
   }
-
-  public static final TextContext DEFAULT_TEXT_CONTEXT =
-      Util.make(new TextContext(), textContext1 -> textContext1.size = 5);
-  public @Unmodifiable Map<@NotNull Direction, @Unmodifiable @NotNull List<@NotNull TextContext>>
-      texts = ImmutableMap.of();
 
   @Override
   public void fromTag(BlockState state, NbtCompound nbt) {

@@ -55,6 +55,41 @@ public class TextContext implements Cloneable {
   /** 文本大小 */
   public float size = 8;
 
+  /**
+   * 从一个 NBT 元素创建一个新的 TextContext 对象，并使用默认值。
+   *
+   * @param nbt NBT 复合标签或者字符串。
+   * @return 新的 TextContext 对象。
+   */
+  public static @NotNull TextContext fromNbt(NbtElement nbt) {
+    return fromNbt(nbt, new TextContext());
+  }
+
+  /**
+   * 从一个 NBT 元素创建一个新的 TextContext 对象，并使用指定的默认值。该默认值用于，在没有标签时如何处理。
+   *
+   * @param nbt NBT 复合标签或者字符串。
+   * @param defaults 一个默认的 TextContext 对象。在内部会被复制一次。该对象内的属性会被使用。
+   * @return 新的 TextContext 对象。
+   */
+  public static @NotNull TextContext fromNbt(NbtElement nbt, TextContext defaults) {
+    final TextContext textContext = defaults.clone();
+    if (nbt instanceof NbtString) {
+      textContext.text = new LiteralText(nbt.asString());
+    } else if (nbt instanceof NbtCompound) {
+      textContext.readNbt((NbtCompound) nbt);
+    }
+    return textContext;
+  }
+
+  private static void putBooleanParam(NbtCompound nbt, String name, boolean value) {
+    if (value) {
+      nbt.putBoolean(name, true);
+    } else {
+      nbt.remove(name);
+    }
+  }
+
   @Override
   public boolean equals(Object o) {
     return super.equals(o);
@@ -116,33 +151,6 @@ public class TextContext implements Cloneable {
     strikethrough = nbt.getBoolean("strikethrough");
     obfuscated = nbt.getBoolean("obfuscated");
     absolute = nbt.getBoolean("absolute");
-  }
-
-  /**
-   * 从一个 NBT 元素创建一个新的 TextContext 对象，并使用默认值。
-   *
-   * @param nbt NBT 复合标签或者字符串。
-   * @return 新的 TextContext 对象。
-   */
-  public static @NotNull TextContext fromNbt(NbtElement nbt) {
-    return fromNbt(nbt, new TextContext());
-  }
-
-  /**
-   * 从一个 NBT 元素创建一个新的 TextContext 对象，并使用指定的默认值。该默认值用于，在没有标签时如何处理。
-   *
-   * @param nbt NBT 复合标签或者字符串。
-   * @param defaults 一个默认的 TextContext 对象。在内部会被复制一次。该对象内的属性会被使用。
-   * @return 新的 TextContext 对象。
-   */
-  public static @NotNull TextContext fromNbt(NbtElement nbt, TextContext defaults) {
-    final TextContext textContext = defaults.clone();
-    if (nbt instanceof NbtString) {
-      textContext.text = new LiteralText(nbt.asString());
-    } else if (nbt instanceof NbtCompound) {
-      textContext.readNbt((NbtCompound) nbt);
-    }
-    return textContext;
   }
 
   @Environment(EnvType.CLIENT)
@@ -290,14 +298,6 @@ public class TextContext implements Cloneable {
     putBooleanParam(nbt, "obfuscated", obfuscated);
     putBooleanParam(nbt, "absolute", absolute);
     return nbt;
-  }
-
-  private static void putBooleanParam(NbtCompound nbt, String name, boolean value) {
-    if (value) {
-      nbt.putBoolean(name, true);
-    } else {
-      nbt.remove(name);
-    }
   }
 
   @Override

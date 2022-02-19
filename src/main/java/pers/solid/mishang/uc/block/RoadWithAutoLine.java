@@ -25,9 +25,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.LineColor;
 import pers.solid.mishang.uc.ModProperties;
 import pers.solid.mishang.uc.RoadTexture;
+import pers.solid.mishang.uc.util.HorizontalCornerDirection;
+import pers.solid.mishang.uc.util.LineColor;
+import pers.solid.mishang.uc.util.LineType;
+import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -81,7 +84,9 @@ public interface RoadWithAutoLine extends Road {
   default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
     return Road.super
         .getConnectionStateOf(state, direction)
-        .or(RoadConnectionState.mayConnectTo(getLineColor(), Either.left(direction)));
+        .or(
+            RoadConnectionState.mayConnectTo(
+                getLineColor(state, direction), Either.left(direction), LineType.NORMAL));
   }
 
   @Override
@@ -149,7 +154,7 @@ public interface RoadWithAutoLine extends Road {
 
     public SlabImpl(
         Settings settings, RoadAutoLineType type, RoadTexture texture, LineColor lineColor) {
-      super(settings, lineColor);
+      super(settings, lineColor, LineType.NORMAL);
       this.type = type;
       this.texture = texture;
       this.lineColor = lineColor;
@@ -297,7 +302,7 @@ public interface RoadWithAutoLine extends Road {
 
     public Impl(
         Settings settings, RoadAutoLineType type, RoadTexture texture, LineColor lineColor) {
-      super(settings, lineColor);
+      super(settings, lineColor, LineType.NORMAL);
       this.type = type;
       this.texture = texture;
       this.lineColor = lineColor;

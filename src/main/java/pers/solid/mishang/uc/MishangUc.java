@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -102,6 +104,36 @@ public class MishangUc implements ModInitializer {
         });
   }
 
+  /** 比 {@link AttackBlockCallback#EVENT} 更好！ */
+  public static final Event<AttackBlockCallback> BEGIN_ATTACK_BLOCK_EVENT =
+      EventFactory.createArrayBacked(
+          AttackBlockCallback.class,
+          (listeners) ->
+              (player, world, hand, pos, direction) -> {
+                for (AttackBlockCallback event : listeners) {
+                  ActionResult result = event.interact(player, world, hand, pos, direction);
+
+                  if (result != ActionResult.PASS) {
+                    return result;
+                  }
+                }
+                return ActionResult.PASS;
+              });
+
+  public static final Event<AttackBlockCallback> PROGRESS_ATTACK_BLOCK_EVENT =
+      EventFactory.createArrayBacked(
+          AttackBlockCallback.class,
+          (listeners) ->
+              (player, world, hand, pos, direction) -> {
+                for (AttackBlockCallback event : listeners) {
+                  ActionResult result = event.interact(player, world, hand, pos, direction);
+                  if (result != ActionResult.PASS) {
+                    return result;
+                  }
+                }
+                return ActionResult.PASS;
+              });
+
   @Override
   public void onInitialize() {
     // 初始化静态字段
@@ -109,9 +141,10 @@ public class MishangUc implements ModInitializer {
     MishangucItems.init();
 
     // 注册事件
-    AttackBlockCallback.EVENT.register(
+    BEGIN_ATTACK_BLOCK_EVENT.register(
+        // 仅限客户端执行
         (player, world, hand, pos, direction) -> {
-          if (player.isSpectator()) {
+          if (!world.isClient || player.isSpectator()) {
             return ActionResult.PASS;
           }
           final ItemStack stack = player.getMainHandStack();
@@ -122,7 +155,56 @@ public class MishangUc implements ModInitializer {
                     player.raycast(
                         5, 0, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
             return ((BlockToolItem) item)
-                .attackBlock(
+                .beginAttackBlock(
+                    player,
+                    world,
+                    hitResult.getBlockPos(),
+                    hitResult.getSide(),
+                    ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
+          } else {
+            return ActionResult.PASS;
+          }
+        });
+
+    PROGRESS_ATTACK_BLOCK_EVENT.register(
+        // 仅限客户端执行
+        (player, world, hand, pos, direction) -> {
+          if (!world.isClient || player.isSpectator()) {
+            return ActionResult.PASS;
+          }
+          final ItemStack stack = player.getMainHandStack();
+          final Item item = stack.getItem();
+          if (item instanceof BlockToolItem) {
+            final BlockHitResult hitResult =
+                (BlockHitResult)
+                    player.raycast(
+                        5, 0, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
+            return ((BlockToolItem) item)
+                .progressAttackBlock(
+                    player,
+                    world,
+                    hitResult.getBlockPos(),
+                    hitResult.getSide(),
+                    ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
+          } else {
+            return ActionResult.PASS;
+          }
+        });
+    AttackBlockCallback.EVENT.register(
+        // 仅限服务器执行
+        (player, world, hand, pos, direction) -> {
+          if (world.isClient || player.isSpectator()) {
+            return ActionResult.PASS;
+          }
+          final ItemStack stack = player.getMainHandStack();
+          final Item item = stack.getItem();
+          if (item instanceof BlockToolItem) {
+            final BlockHitResult hitResult =
+                (BlockHitResult)
+                    player.raycast(
+                        5, 0, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
+            return ((BlockToolItem) item)
+                .beginAttackBlock(
                     player,
                     world,
                     hitResult.getBlockPos(),

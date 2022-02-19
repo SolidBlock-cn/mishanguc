@@ -17,7 +17,9 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.LineColor;
+import pers.solid.mishang.uc.util.LineColor;
+import pers.solid.mishang.uc.util.LineType;
+import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.List;
 
@@ -35,7 +37,10 @@ public interface RoadWithJointLine extends Road {
     return RoadConnectionState.or(
         Road.super.getConnectionStateOf(state, direction),
         RoadConnectionState.of(
-            state.get(FACING) != direction.getOpposite(), getLineColor(), Either.left(direction)));
+            state.get(FACING) != direction.getOpposite(),
+            getLineColor(state, direction),
+            Either.left(direction),
+            LineType.NORMAL));
   }
 
   @Override
@@ -74,14 +79,70 @@ public interface RoadWithJointLine extends Road {
 
   /** @see Impl */
   class SlabImpl extends AbstractRoadSlabBlock implements RoadWithJointLine {
-    public SlabImpl(Settings settings, LineColor lineColor) {
-      super(settings, lineColor);
+    public final LineColor lineColorSide;
+    public final LineType lineTypeSide;
+
+    public SlabImpl(
+        Settings settings,
+        LineColor lineColor,
+        LineColor lineColorSide,
+        LineType lineType,
+        LineType lineTypeSide) {
+      super(settings, lineColor, lineType);
+      this.lineColorSide = lineColorSide;
+      this.lineTypeSide = lineTypeSide;
+    }
+
+    @Override
+    public LineColor getLineColor(BlockState blockState, Direction direction) {
+      if (blockState.get(FACING) == direction) {
+        return lineColorSide;
+      } else {
+        return lineColor;
+      }
+    }
+
+    @Override
+    public LineType getLineType(BlockState blockState, Direction direction) {
+      if (blockState.get(FACING) == direction) {
+        return lineTypeSide;
+      } else {
+        return lineType;
+      }
     }
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithJointLine {
-    public Impl(Settings settings, LineColor lineColor) {
-      super(settings, lineColor);
+    public final LineColor lineColorSide;
+    public final LineType lineTypeSide;
+
+    public Impl(
+        Settings settings,
+        LineColor lineColor,
+        LineColor lineColorSide,
+        LineType lineType,
+        LineType lineTypeSide) {
+      super(settings, lineColor, lineType);
+      this.lineColorSide = lineColorSide;
+      this.lineTypeSide = lineTypeSide;
+    }
+
+    @Override
+    public LineColor getLineColor(BlockState blockState, Direction direction) {
+      if (blockState.get(FACING) == direction) {
+        return lineColorSide;
+      } else {
+        return lineColor;
+      }
+    }
+
+    @Override
+    public LineType getLineType(BlockState blockState, Direction direction) {
+      if (blockState.get(FACING) == direction) {
+        return lineTypeSide;
+      } else {
+        return lineType;
+      }
     }
   }
 }

@@ -20,7 +20,7 @@ public final class NbtPrettyPrinter {
   }
 
   /**
-   * These methods prettifies an {@link NbtElement} to a {@link Text} in a way that is better than
+   * These methods prettify an {@link NbtElement} to a {@link Text} in a way that is better than
    * {@link NbtElement#toText(String, int)}. It dispatches to other methods by detecting and casting
    * the type of <code>element</code> arg.
    *

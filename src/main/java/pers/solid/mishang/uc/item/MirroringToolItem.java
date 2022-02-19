@@ -52,7 +52,7 @@ public class MirroringToolItem extends BlockToolItem {
   }
 
   @Override
-  public ActionResult attackBlock(
+  public ActionResult beginAttackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
     return mirror(world, pos, direction);
   }

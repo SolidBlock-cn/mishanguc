@@ -277,21 +277,6 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
             }
           },
           (button) -> {});
-  /** 添加文本按钮 */
-  public final ButtonWidget addTextButton =
-      new ButtonWidget(
-          width / 2 - 120 - 100,
-          10,
-          200,
-          20,
-          new TranslatableText("message.mishanguc.add_text"),
-          button1 -> {
-            int index =
-                textFieldListScreen
-                    .children()
-                    .indexOf(textFieldListScreen.new Entry(focusedTextField));
-            addTextField(index == -1 ? textFieldListScreen.children().size() : index + 1, null);
-          });
   /** X缩放 */
   public final FloatButtonWidget scaleXButton =
       new FloatButtonWidget(
@@ -307,22 +292,20 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
             }
           },
           (button) -> {});
-  /** 移除文本按钮 */
-  public final ButtonWidget removeTextButton =
+  /** 添加文本按钮 */
+  public final ButtonWidget addTextButton =
       new ButtonWidget(
-          width / 2 + 120 - 100,
+          width / 2 - 120 - 100,
           10,
           200,
           20,
-          new TranslatableText("message.mishanguc.remove_text"),
-          button -> {
+          new TranslatableText("message.mishanguc.add_text"),
+          button1 -> {
             int index =
                 textFieldListScreen
                     .children()
                     .indexOf(textFieldListScreen.new Entry(focusedTextField));
-            if (index != -1) {
-              removeTextField(index);
-            }
+            addTextField(index == -1 ? textFieldListScreen.children().size() : index + 1, null);
           });
   /** Y缩放 */
   public final FloatButtonWidget scaleYButton =
@@ -359,6 +342,23 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
             }
           },
           (b) -> {});
+  /** 移除文本按钮 */
+  public final ButtonWidget removeTextButton =
+      new ButtonWidget(
+          width / 2 + 120 - 100,
+          10,
+          200,
+          20,
+          new TranslatableText("message.mishanguc.remove_text"),
+          button -> {
+            int index =
+                textFieldListScreen
+                    .children()
+                    .indexOf(textFieldListScreen.new Entry(focusedTextField));
+            if (index != -1) {
+              removeTextField(index);
+            }
+          });
   /** 垂直对齐方式 */
   public final FloatButtonWidget verticalAlignButton =
       new FloatButtonWidget(
@@ -461,8 +461,23 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
             }
           },
           (button) -> {});
+
+  private final ClickableWidget[] toolbox1 =
+      new ClickableWidget[] {
+        boldButton,
+        italicButton,
+        underlineButton,
+        strikethroughButton,
+        obfuscatedButton,
+        shadeButton,
+        sizeButton,
+        offsetXButton,
+        offsetYButton,
+        colorButton,
+        customColorTextField,
+      };
   /** 绝对模式 */
-  public BooleanButtonWidget absoluteButton =
+  public final BooleanButtonWidget absoluteButton =
       new BooleanButtonWidget(
           0,
           0,
@@ -479,6 +494,17 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
                       "message.mishanguc.absolute.param",
                       new TranslatableText(b ? "options.on" : "options.off")),
           button -> {});
+
+  private final ClickableWidget[] toolbox2 =
+      new ClickableWidget[] {
+        offsetZButton,
+        scaleXButton,
+        scaleYButton,
+        horizontalAlignButton,
+        verticalAlignButton,
+        seeThroughButton,
+        absoluteButton
+      };
   /** 是否发生了改变。如果改变了，则提交时发送完整内容，否则发送空字符串表示未做更改。 */
   public boolean changed = false;
 
@@ -591,21 +617,6 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
     }
   }
 
-  private final ClickableWidget[] toolbox1 =
-      new ClickableWidget[] {
-        boldButton,
-        italicButton,
-        underlineButton,
-        strikethroughButton,
-        obfuscatedButton,
-        shadeButton,
-        sizeButton,
-        offsetXButton,
-        offsetYButton,
-        colorButton,
-        customColorTextField,
-      };
-
   /**
    * 添加一个文本框，并将其添加到 {@link #contextToWidgetBiMap} 中。
    *
@@ -647,17 +658,6 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
     placeHolder.visible = false;
     changed = true;
   }
-
-  private final ClickableWidget[] toolbox2 =
-      new ClickableWidget[] {
-        offsetZButton,
-        scaleXButton,
-        scaleYButton,
-        horizontalAlignButton,
-        verticalAlignButton,
-        seeThroughButton,
-        absoluteButton
-      };
 
   /**
    * 移除一个文本框。将从 {@link #contextToWidgetBiMap} 和 {@link #textContextsEditing} 中移除对应的元素。
@@ -741,6 +741,45 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
 
   public List<TextContext> getTextContextsEditing() {
     return textContextsEditing;
+  }
+
+  /** 这样是为了避免在调用 {@link #setFocused(Element)} 时，强制将 focused 设为了那个 {@link #textFieldListScreen}。 */
+  @Override
+  public boolean changeFocus(boolean lookForwards) {
+    Element focused = this.getFocused();
+    boolean bl = focused != null;
+    if (bl && focused.changeFocus(lookForwards)) {
+      return true;
+    } else {
+      List<? extends Element> list = this.children();
+      int i = list.indexOf(focused);
+      int l;
+      if (bl && i >= 0) {
+        l = i + (lookForwards ? 1 : 0);
+      } else if (lookForwards) {
+        l = 0;
+      } else {
+        l = list.size();
+      }
+
+      ListIterator<? extends Element> listIterator = list.listIterator(l);
+      BooleanSupplier booleanSupplier =
+          lookForwards ? listIterator::hasNext : listIterator::hasPrevious;
+      Supplier<Element> supplier = lookForwards ? listIterator::next : listIterator::previous;
+
+      Element element2;
+      do {
+        if (!booleanSupplier.getAsBoolean()) {
+          this.setFocused(null);
+          return false;
+        }
+
+        element2 = supplier.get();
+      } while (!element2.changeFocus(lookForwards));
+      // 这里和 super 方法不同，这里直接调用的 super.setFocused 而非 this.setFocused
+      super.setFocused(element2);
+      return true;
+    }
   }
 
   /** 文本框列表的屏幕。每个列表项都是一个文本框（实际上就是把 {@link TextFieldWidget} 包装成了 {@link Entry}。 */
@@ -948,43 +987,4 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
         public void drawTexture(
             MatrixStack matrices, int x, int y, int u, int v, int width, int height) {}
       };
-
-  /** 这样是为了避免在调用 {@link #setFocused(Element)} 时，强制将 focused 设为了那个 {@link #textFieldListScreen}。 */
-  @Override
-  public boolean changeFocus(boolean lookForwards) {
-    Element focused = this.getFocused();
-    boolean bl = focused != null;
-    if (bl && focused.changeFocus(lookForwards)) {
-      return true;
-    } else {
-      List<? extends Element> list = this.children();
-      int i = list.indexOf(focused);
-      int l;
-      if (bl && i >= 0) {
-        l = i + (lookForwards ? 1 : 0);
-      } else if (lookForwards) {
-        l = 0;
-      } else {
-        l = list.size();
-      }
-
-      ListIterator<? extends Element> listIterator = list.listIterator(l);
-      BooleanSupplier booleanSupplier =
-          lookForwards ? listIterator::hasNext : listIterator::hasPrevious;
-      Supplier<Element> supplier = lookForwards ? listIterator::next : listIterator::previous;
-
-      Element element2;
-      do {
-        if (!booleanSupplier.getAsBoolean()) {
-          this.setFocused(null);
-          return false;
-        }
-
-        element2 = supplier.get();
-      } while (!element2.changeFocus(lookForwards));
-      // 这里和 super 方法不同，这里直接调用的 super.setFocused 而非 this.setFocused
-      super.setFocused(element2);
-      return true;
-    }
-  }
 }

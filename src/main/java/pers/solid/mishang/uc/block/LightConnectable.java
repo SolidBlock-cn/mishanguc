@@ -24,7 +24,7 @@ public interface LightConnectable {
    * @see WallLightBlock#prepare(BlockState, WorldAccess, BlockPos, int, int)
    * @see CornerLightBlock#prepare(BlockState, WorldAccess, BlockPos, int, int)
    */
-  @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
+  @SuppressWarnings({"AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc", "deprecation"})
   default void prepareConnection(
       BlockState state,
       WorldAccess world,

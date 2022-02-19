@@ -14,19 +14,28 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.LineColor;
+import pers.solid.mishang.uc.util.LineColor;
+import pers.solid.mishang.uc.util.LineType;
 
 import java.util.List;
 
 public abstract class AbstractRoadBlock extends Block implements Road {
   protected final LineColor lineColor;
+  protected final LineType lineType;
 
-  public AbstractRoadBlock(Settings settings, LineColor lineColor) {
+  public AbstractRoadBlock(Settings settings, LineColor lineColor, LineType lineType) {
     super(settings);
     this.lineColor = lineColor;
+    this.lineType = lineType;
+  }
+
+  @Override
+  public LineType getLineType(BlockState state, Direction direction) {
+    return lineType;
   }
 
   @Override
@@ -78,7 +87,7 @@ public abstract class AbstractRoadBlock extends Block implements Road {
   }
 
   @Override
-  public LineColor getLineColor() {
+  public LineColor getLineColor(BlockState state, Direction direction) {
     return lineColor;
   }
 

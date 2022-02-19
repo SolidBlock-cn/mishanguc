@@ -16,10 +16,6 @@ import pers.solid.mishang.uc.MishangUtils;
 import java.util.Map;
 
 public class FullWallSignBlock extends WallSignBlock {
-  public FullWallSignBlock(@Nullable Block baseBlock, Settings settings) {
-    super(baseBlock, settings);
-  }
-
   public static final Map<Direction, VoxelShape> SHAPES_WHEN_WALL =
       MishangUtils.createHorizontalDirectionToShape(0, 0, 0, 16, 16, 1);
   public static final Map<Direction, VoxelShape> SHAPES_WHEN_FLOOR =
@@ -37,6 +33,10 @@ public class FullWallSignBlock extends WallSignBlock {
               SHAPES_WHEN_FLOOR,
               WallMountLocation.WALL,
               SHAPES_WHEN_WALL);
+
+  public FullWallSignBlock(@Nullable Block baseBlock, Settings settings) {
+    super(baseBlock, settings);
+  }
 
   @Override
   public VoxelShape getOutlineShape(

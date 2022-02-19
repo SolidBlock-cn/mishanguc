@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.arrp;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Streams;
 import com.google.gson.JsonObject;
 import net.devtech.arrp.api.RRPCallback;
 import net.devtech.arrp.api.RRPPreGenEntrypoint;
@@ -12,7 +11,6 @@ import net.devtech.arrp.json.loot.JFunction;
 import net.devtech.arrp.json.loot.JLootTable;
 import net.devtech.arrp.json.models.*;
 import net.devtech.arrp.json.tags.JTag;
-import net.minecraft.block.Block;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.enums.WallMountLocation;
 import net.minecraft.item.Item;
@@ -23,14 +21,15 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUc;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.SimpleModel;
 import pers.solid.mishang.uc.block.*;
-import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.mixin.JBlockModelAccessor;
 import pers.solid.mishang.uc.mixin.JStateAccessor;
 import pers.solid.mishang.uc.mixin.JVariantAccessor;
+import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -39,20 +38,7 @@ import java.util.*;
 @SuppressWarnings({"SameParameterValue", "AlibabaClassNamingShouldBeCamel"})
 public class ARRPMain implements RRPPreGenEntrypoint {
   private static final RuntimeResourcePack PACK = RuntimeResourcePack.create("mishanguc");
-  private static final Field[] FIELDS = Streams.concat(
-      Arrays.stream(RoadBlocks.class.getFields()),
-      Arrays.stream(RoadSlabBlocks.class.getFields()),
-      Arrays.stream(LightBlocks.class.getFields()),
-      Arrays.stream(HungSignBlocks.class.getFields()),
-      Arrays.stream(WallSignBlocks.class.getFields())
-  ).filter(
-      field -> {
-        int modifier = field.getModifiers();
-        return Modifier.isPublic(modifier)
-            && Modifier.isStatic(modifier)
-            && Block.class.isAssignableFrom(field.getType())
-            && field.isAnnotationPresent(RegisterIdentifier.class);
-      }).toArray(Field[]::new);
+  private static final Field[] FIELDS = MishangUtils.blockStream().toArray(Field[]::new);
 
   private static Identifier blockIdentifier(String path) {
     return new Identifier("mishanguc", "block/" + path);
@@ -247,20 +233,6 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         .var("line_top_angle", blockString(line_top_angle));
   }
 
-  @Override
-  public void pregen() {
-    // 客户端部分
-    addBlockStates();
-    addBlockModels();
-    addItemModels();
-    addBlockItemModels();
-
-    // 服务端部分
-    addTags();
-    addBlockLootTables();
-    RRPCallback.BEFORE_VANILLA.register(a -> a.add(PACK));
-  }
-
   private static void addTags() {
     final JTag asphaltRoadBlocks = new JTag();
     final JTag asphaltRoadSlabs = new JTag();
@@ -284,13 +256,11 @@ public class ARRPMain implements RRPPreGenEntrypoint {
       } else if (AbstractRoadSlabBlock.class.isAssignableFrom(type)
           && name.startsWith("asphalt_")) {
         asphaltRoadSlabs.add(identifier);
-      } else if (StripWallLightBlock.class.isAssignableFrom(type)
-          && name.startsWith("white_")) {
+      } else if (StripWallLightBlock.class.isAssignableFrom(type) && name.startsWith("white_")) {
         whiteStripWallLights.add(identifier);
       } else if (WallLightBlock.class.isAssignableFrom(type) && name.startsWith("white_")) {
         whiteWallLights.add(identifier);
-      } else if (CornerLightBlock.class.isAssignableFrom(type)
-          && name.startsWith("white_")) {
+      } else if (CornerLightBlock.class.isAssignableFrom(type) && name.startsWith("white_")) {
         whiteCornerLights.add(identifier);
       } else if (AutoConnectWallLightBlock.class.isAssignableFrom(type)
           && name.startsWith("white_")) {
@@ -818,6 +788,21 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         textures("asphalt", "white_straight_thick_line", "white_straight_thick_line"));
     addRoadWithSlab(
         PACK,
+        "asphalt_road_with_yellow_offset_straight_line",
+        "road_with_straight_line",
+        textures("asphalt", "yellow_offset_straight_line", "yellow_offset_straight_line"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_yellow_straight_double_line",
+        "road_with_straight_line",
+        textures("asphalt", "yellow_straight_double_line", "yellow_straight_double_line"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_yellow_straight_thick_line",
+        "road_with_straight_line",
+        textures("asphalt", "yellow_straight_thick_line", "yellow_straight_thick_line"));
+    addRoadWithSlab(
+        PACK,
         "asphalt_road_with_white_right_angle_line_with_one_part_offset_out",
         "road_with_angle_line",
         textures2(
@@ -888,6 +873,24 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_straight_line",
             "white_offset_straight_line",
             "white_joint_line_with_offset_side"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_white_thick_joint_line",
+        "road_with_joint_line",
+        textures2(
+            "asphalt",
+            "white_straight_thick_line",
+            "white_straight_line",
+            "white_thick_joint_line"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_white_double_joint_line",
+        "road_with_joint_line",
+        textures2(
+            "asphalt",
+            "white_straight_double_line",
+            "white_straight_line",
+            "white_double_joint_line"));
 
     addRoadWithSlab(
         PACK,
@@ -1163,5 +1166,19 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         JModel.model(blockIdentifier(String.format("wall_light_%s_decoration_connection2", shape)))
             .textures(new JTextures().var("light", blockString(color + "_light"))),
         blockIdentifier(String.format("%s_wall_light_%s_decoration_connection2", color, shape)));
+  }
+
+  @Override
+  public void pregen() {
+    // 客户端部分
+    addBlockStates();
+    addBlockModels();
+    addItemModels();
+    addBlockItemModels();
+
+    // 服务端部分
+    addTags();
+    addBlockLootTables();
+    RRPCallback.BEFORE_VANILLA.register(a -> a.add(PACK));
   }
 }

@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc;
 
+import com.google.common.collect.Streams;
 import net.minecraft.block.Block;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Direction;
@@ -7,11 +8,16 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.annotations.RegisterIdentifier;
+import pers.solid.mishang.uc.blocks.*;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 /** 本类存放一些实用方法。 */
 public class MishangUtils {
@@ -80,5 +86,26 @@ public class MishangUtils {
       }
     }
     return null;
+  }
+
+  /**
+   * @return 所有方块字段的流。使用反射。<br>
+   *     该方法可以在 {@link MishangucBlocks} 被加载之前执行，并不会尝试访问字段内容。
+   */
+  public static Stream<Field> blockStream() {
+    return Streams.concat(
+            Arrays.stream(RoadBlocks.class.getFields()),
+            Arrays.stream(RoadSlabBlocks.class.getFields()),
+            Arrays.stream(LightBlocks.class.getFields()),
+            Arrays.stream(HungSignBlocks.class.getFields()),
+            Arrays.stream(WallSignBlocks.class.getFields()))
+        .filter(
+            field -> {
+              int modifier = field.getModifiers();
+              return Modifier.isPublic(modifier)
+                  && Modifier.isStatic(modifier)
+                  && Block.class.isAssignableFrom(field.getType())
+                  && field.isAnnotationPresent(RegisterIdentifier.class);
+            });
   }
 }

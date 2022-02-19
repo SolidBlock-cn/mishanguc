@@ -1,4 +1,4 @@
-package pers.solid.mishang.uc.block;
+package pers.solid.mishang.uc.util;
 
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.util.BlockMirror;
