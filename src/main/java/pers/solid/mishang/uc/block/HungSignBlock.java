@@ -8,6 +8,8 @@ import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -34,6 +36,8 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUc;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
+import pers.solid.mishang.uc.mixin.EntityShapeContextAccessor;
+import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 
 import java.util.Map;
 
@@ -68,6 +72,8 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       MishangUtils.createHorizontalDirectionToShape(7.5, 13, 11, 8.5, 16, 12);
   private static final Map<Direction, @Nullable VoxelShape> BAR_SHAPES_EDGE =
       MishangUtils.createHorizontalDirectionToShape(7.5, 13, 13, 8.5, 16, 14);
+  private static final VoxelShape SHAPE_WIDENED_X = createCuboidShape(5.5,6,0,10.5,16,16);
+  private static final VoxelShape SHAPE_WIDENED_Z = createCuboidShape(0,6,5.5,16,16,10.5);
   public final @Nullable Block baseBlock;
 
   public HungSignBlock(@Nullable Block baseBlock, Settings settings) {
@@ -97,8 +103,9 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     }
     final World world = ctx.getWorld();
     final BlockPos blockPos = ctx.getBlockPos();
+    final BlockState blockState = world.getBlockState(((ItemUsageContextInvoker)ctx).invokeGetHitResult().getBlockPos());
     return placementState
-        .with(AXIS, ctx.getPlayerFacing().getAxis())
+        .with(AXIS, blockState.getBlock() instanceof HungSignBlock && blockState.contains(AXIS) ? blockState.get(AXIS): ctx.getPlayerFacing().getAxis())
         .with(WATERLOGGED, world.getFluidState(blockPos).getFluid() == Fluids.WATER)
         .getStateForNeighborUpdate(
             Direction.UP, world.getBlockState(blockPos.up()), world, blockPos, blockPos.up());
@@ -117,17 +124,29 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     final Direction.Axis axis = state.get(AXIS);
     final boolean left = state.get(LEFT);
     final boolean right = state.get(RIGHT);
+    final boolean isHoldingHungSigns;
+    if (context instanceof EntityShapeContext) {
+      final Item heldItem = ((EntityShapeContextAccessor) context).getHeldItem().getItem();
+      if (heldItem instanceof BlockItem) {
+        final Block block = ((BlockItem) heldItem).getBlock();
+        isHoldingHungSigns = block instanceof HungSignBlock || block instanceof HungSignBarBlock;
+      } else isHoldingHungSigns = false;
+    } else isHoldingHungSigns = false;
     switch (axis) {
       case X:
-        if (!left && !right)
-          return VoxelShapes.union(
-              SHAPE_X, BAR_SHAPES_EDGE.get(Direction.SOUTH), BAR_SHAPES_EDGE.get(Direction.NORTH));
+        if (isHoldingHungSigns)
+          return SHAPE_WIDENED_X;
+        else
+          if (!left && !right)
+          return VoxelShapes.union(SHAPE_X, BAR_SHAPES_EDGE.get(Direction.SOUTH), BAR_SHAPES_EDGE.get(Direction.NORTH));
         else
           return VoxelShapes.union(
               SHAPE_X,
               !left ? BAR_SHAPES.get(Direction.SOUTH) : VoxelShapes.empty(),
               !right ? BAR_SHAPES.get(Direction.NORTH) : VoxelShapes.empty());
       case Z:
+        if (isHoldingHungSigns)
+          return SHAPE_WIDENED_Z;else
         if (!left && !right)
           return VoxelShapes.union(
               SHAPE_Z, BAR_SHAPES_EDGE.get(Direction.WEST), BAR_SHAPES_EDGE.get(Direction.EAST));
@@ -206,7 +225,6 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
                         || rotation == BlockRotation.COUNTERCLOCKWISE_90
                     ? (oldAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X)
                     : oldAxis);
-    //noinspection AlibabaAvoidComplexCondition
     if (rotation == BlockRotation.CLOCKWISE_180
         || (oldAxis == Direction.Axis.X && rotation == BlockRotation.COUNTERCLOCKWISE_90)
         || (oldAxis == Direction.Axis.Z && rotation == BlockRotation.CLOCKWISE_90)) {

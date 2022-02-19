@@ -19,9 +19,9 @@ import net.minecraft.item.Item;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
 import org.jetbrains.annotations.Unmodifiable;
-import pers.solid.mishang.uc.block.MishangucBlocks;
 import pers.solid.mishang.uc.block.WallSignBlock;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
+import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.util.TextContext;
 
@@ -32,7 +32,7 @@ public class WallSignBlockEntityRenderer implements BlockEntityRenderer<WallSign
 
   /** 这个集合中的方块，在渲染时是视为没有厚度的，直接渲染在靠墙的位置，而不是离墙 1 格的位置。 */
   private static final @Unmodifiable Collection<Block> INVISIBLE_BLOCKS =
-      ImmutableSet.of(MishangucBlocks.INVISIBLE_WALL_SIGN);
+      ImmutableSet.of(WallSignBlocks.INVISIBLE_WALL_SIGN);
 
   private final BlockEntityRendererFactory.Context ctx;
 

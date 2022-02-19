@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.arrp;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Streams;
 import com.google.gson.JsonObject;
 import net.devtech.arrp.api.RRPCallback;
 import net.devtech.arrp.api.RRPPreGenEntrypoint;
@@ -26,17 +27,33 @@ import pers.solid.mishang.uc.MishangUc;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.SimpleModel;
 import pers.solid.mishang.uc.block.*;
+import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.mixin.JBlockModelAccessor;
 import pers.solid.mishang.uc.mixin.JStateAccessor;
 import pers.solid.mishang.uc.mixin.JVariantAccessor;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
 @SuppressWarnings({"SameParameterValue", "AlibabaClassNamingShouldBeCamel"})
 public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   private static final RuntimeResourcePack PACK = RuntimeResourcePack.create("mishanguc");
+  private static final Field[] FIELDS = Streams.concat(
+      Arrays.stream(RoadBlocks.class.getFields()),
+      Arrays.stream(RoadSlabBlocks.class.getFields()),
+      Arrays.stream(LightBlocks.class.getFields()),
+      Arrays.stream(HungSignBlocks.class.getFields()),
+      Arrays.stream(WallSignBlocks.class.getFields())
+  ).filter(
+      field -> {
+        int modifier = field.getModifiers();
+        return Modifier.isPublic(modifier)
+            && Modifier.isStatic(modifier)
+            && Block.class.isAssignableFrom(field.getType())
+            && field.isAnnotationPresent(RegisterIdentifier.class);
+      }).toArray(Field[]::new);
 
   private static Identifier blockIdentifier(String path) {
     return new Identifier("mishanguc", "block/" + path);
@@ -259,53 +276,43 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     final JTag glowingConcreteWallSigns = new JTag();
     final JTag glowingTerracottaWallSigns = new JTag();
     final JTag glowingWallSigns = new JTag();
-    Arrays.stream(MishangucBlocks.class.getFields())
-        .filter(
-            field -> {
-              int modifier = field.getModifiers();
-              return Modifier.isPublic(modifier)
-                  && Modifier.isStatic(modifier)
-                  && Block.class.isAssignableFrom(field.getType())
-                  && field.isAnnotationPresent(RegisterIdentifier.class);
-            })
-        .forEach(
-            field -> {
-              final Class<?> type = field.getType();
-              final String name = field.getName().toLowerCase();
-              final Identifier identifier = new Identifier("mishanguc", name);
-              if (AbstractRoadBlock.class.isAssignableFrom(type) && name.startsWith("asphalt_")) {
-                asphaltRoadBlocks.add(identifier);
-              } else if (AbstractRoadSlabBlock.class.isAssignableFrom(type)
-                  && name.startsWith("asphalt_")) {
-                asphaltRoadSlabs.add(identifier);
-              } else if (StripWallLightBlock.class.isAssignableFrom(type)
-                  && name.startsWith("white_")) {
-                whiteStripWallLights.add(identifier);
-              } else if (WallLightBlock.class.isAssignableFrom(type) && name.startsWith("white_")) {
-                whiteWallLights.add(identifier);
-              } else if (CornerLightBlock.class.isAssignableFrom(type)
-                  && name.startsWith("white_")) {
-                whiteCornerLights.add(identifier);
-              } else if (AutoConnectWallLightBlock.class.isAssignableFrom(type)
-                  && name.startsWith("white_")) {
-                whiteLightDecorations.add(identifier);
-              } else if (GlowingWallSignBlock.class.isAssignableFrom(type)) {
-                if (name.contains("concrete")) glowingConcreteWallSigns.add(identifier);
-                else if (name.contains("terracotta")) glowingTerracottaWallSigns.add(identifier);
-                else glowingWallSigns.add(identifier);
-              } else if (WallSignBlock.class.isAssignableFrom(type)) {
-                if (name.contains("concrete")) concreteWallSigns.add(identifier);
-                else if (name.contains("terracotta")) terracottaWallSigns.add(identifier);
-                else if (name.contains("oak_")
-                    || name.contains("birch_")
-                    || name.contains("spruce_")
-                    || name.contains("jungle")
-                    || name.contains("acacia_")
-                    || name.contains("warped_")
-                    || name.contains("crimson")) woodenWallSigns.tag(identifier);
-                else wallSigns.add(identifier);
-              }
-            });
+    for (Field field : FIELDS) {
+      final Class<?> type = field.getType();
+      final String name = field.getName().toLowerCase();
+      final Identifier identifier = new Identifier("mishanguc", name);
+      if (AbstractRoadBlock.class.isAssignableFrom(type) && name.startsWith("asphalt_")) {
+        asphaltRoadBlocks.add(identifier);
+      } else if (AbstractRoadSlabBlock.class.isAssignableFrom(type)
+          && name.startsWith("asphalt_")) {
+        asphaltRoadSlabs.add(identifier);
+      } else if (StripWallLightBlock.class.isAssignableFrom(type)
+          && name.startsWith("white_")) {
+        whiteStripWallLights.add(identifier);
+      } else if (WallLightBlock.class.isAssignableFrom(type) && name.startsWith("white_")) {
+        whiteWallLights.add(identifier);
+      } else if (CornerLightBlock.class.isAssignableFrom(type)
+          && name.startsWith("white_")) {
+        whiteCornerLights.add(identifier);
+      } else if (AutoConnectWallLightBlock.class.isAssignableFrom(type)
+          && name.startsWith("white_")) {
+        whiteLightDecorations.add(identifier);
+      } else if (GlowingWallSignBlock.class.isAssignableFrom(type)) {
+        if (name.contains("concrete")) glowingConcreteWallSigns.add(identifier);
+        else if (name.contains("terracotta")) glowingTerracottaWallSigns.add(identifier);
+        else glowingWallSigns.add(identifier);
+      } else if (WallSignBlock.class.isAssignableFrom(type)) {
+        if (name.contains("concrete")) concreteWallSigns.add(identifier);
+        else if (name.contains("terracotta")) terracottaWallSigns.add(identifier);
+        else if (name.contains("oak_")
+            || name.contains("birch_")
+            || name.contains("spruce_")
+            || name.contains("jungle")
+            || name.contains("acacia_")
+            || name.contains("warped_")
+            || name.contains("crimson")) woodenWallSigns.tag(identifier);
+        else wallSigns.add(identifier);
+      }
+    }
     whiteWallLights.tag(new Identifier("mishanguc", "white_strip_wall_lights"));
     wallSigns
         .tag(new Identifier("mishanguc", "wooden_wall_signs"))
@@ -332,27 +339,17 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   }
 
   private static void addBlockLootTables() {
-    Arrays.stream(MishangucBlocks.class.getFields())
-        .filter(
-            field -> {
-              int modifier = field.getModifiers();
-              return Modifier.isPublic(modifier)
-                  && Modifier.isStatic(modifier)
-                  && Block.class.isAssignableFrom(field.getType())
-                  && field.isAnnotationPresent(RegisterIdentifier.class);
-            })
-        .forEach(
-            field -> {
-              String name = field.getAnnotation(RegisterIdentifier.class).value();
-              if (name.isEmpty()) {
-                name = field.getName().toLowerCase();
-              }
-              if (SlabBlock.class.isAssignableFrom(field.getType())) {
-                addSlabBlockLootTable(name);
-              } else {
-                addSimpleBlockLootTable(name);
-              }
-            });
+    for (Field field : FIELDS) {
+      String name = field.getAnnotation(RegisterIdentifier.class).value();
+      if (name.isEmpty()) {
+        name = field.getName().toLowerCase();
+      }
+      if (SlabBlock.class.isAssignableFrom(field.getType())) {
+        addSlabBlockLootTable(name);
+      } else {
+        addSimpleBlockLootTable(name);
+      }
+    }
   }
 
   private static JState composeStateForSlab(JState stateForFull) {
@@ -730,23 +727,13 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   }
 
   private static void addBlockItemModels() {
-    Arrays.stream(MishangucBlocks.class.getFields())
-        .filter(
-            field -> {
-              int modifier = field.getModifiers();
-              return Modifier.isPublic(modifier)
-                  && Modifier.isStatic(modifier)
-                  && Block.class.isAssignableFrom(field.getType())
-                  && field.isAnnotationPresent(RegisterIdentifier.class);
-            })
-        .forEach(
-            field -> {
-              String name = field.getAnnotation(RegisterIdentifier.class).value();
-              if (name.isEmpty()) {
-                name = field.getName().toLowerCase();
-              }
-              addBlockItemModel(name);
-            });
+    for (Field field : FIELDS) {
+      String name = field.getAnnotation(RegisterIdentifier.class).value();
+      if (name.isEmpty()) {
+        name = field.getName().toLowerCase();
+      }
+      addBlockItemModel(name);
+    }
   }
 
   @SuppressWarnings("AlibabaMethodTooLong")
