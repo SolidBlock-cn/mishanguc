@@ -1,17 +1,22 @@
 package pers.solid.mishang.uc.item;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -59,29 +64,29 @@ public class FastBuildingToolItem extends BlockToolItem {
             world, centerBlockPos, player, stack, blockHitResult, fluidIncluded);
     final int range = this.getRange(stack);
     final BlockMatchingRule matchingRule = this.getMatchingRule(stack);
+    boolean soundPlayed = false;
     for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, centerBlockPos, side, range)) {
       BlockState state = world.getBlockState(pos);
       if (matchingRule.match(centerState, state)) {
         final BlockPlacementContext offsetBlockPlacementContext =
             new BlockPlacementContext(blockPlacementContext, pos);
         if (offsetBlockPlacementContext.canPlace() && offsetBlockPlacementContext.canReplace()) {
-          if (world.isClient()) {
-            // 播放声音。
-            offsetBlockPlacementContext.playSound();
-            break; // 只播放一次声音就结束循环。。
-          } else {
+          if (!world.isClient) {
             offsetBlockPlacementContext.setBlockState(0b1011);
             offsetBlockPlacementContext.setBlockEntity();
           }
+          if (!soundPlayed) offsetBlockPlacementContext.playSound();
+          soundPlayed = true;
         }
       }
     } // end for
-    return ActionResult.success(world.isClient);
+    return ActionResult.SUCCESS;
   }
 
   @Override
-  public ActionResult attackBlock(
+  public ActionResult beginAttackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    final BlockSoundGroup blockSoundGroup = world.getBlockState(pos).getSoundGroup();
     if (!world.isClient()) {
       final ItemStack stack = player.getMainHandStack();
       final int range = this.getRange(stack);
@@ -94,7 +99,8 @@ public class FastBuildingToolItem extends BlockToolItem {
         }
       }
     }
-    return ActionResult.success(world.isClient);
+    world.syncWorldEvent(player, 2001, pos, Block.getRawIdFromState(world.getBlockState(pos)));
+    return ActionResult.SUCCESS;
   }
 
   @Override
@@ -184,14 +190,16 @@ public class FastBuildingToolItem extends BlockToolItem {
         .append(getMatchingRule(stack).getName());
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public boolean rendersBlockOutline(
       PlayerEntity player,
       ItemStack mainHandStack,
       WorldRenderContext worldRenderContext,
       WorldRenderContext.BlockOutlineContext blockOutlineContext) {
-    final VertexConsumer vertexConsumer =
-        worldRenderContext.consumers().getBuffer(RenderLayer.LINES);
+    final VertexConsumerProvider consumers = worldRenderContext.consumers();
+    if (consumers == null) return true;
+    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.LINES);
     final boolean includesFluid = this.includesFluid(mainHandStack, player.isSneaking());
     final BlockMatchingRule matchingRule = this.getMatchingRule(mainHandStack);
     final int range = this.getRange(mainHandStack);

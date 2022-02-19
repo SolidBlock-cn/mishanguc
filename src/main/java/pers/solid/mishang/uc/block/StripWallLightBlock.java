@@ -19,6 +19,17 @@ import java.util.Map;
 
 /** 类似于墙上的灯方块，但是是条状的，因此具有多一个属性。 */
 public class StripWallLightBlock extends WallLightBlock implements LightConnectable {
+  protected static final EnumProperty<StripType> STRIP_TYPE =
+      EnumProperty.of("strip_type", StripType.class);
+  private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION_WHEN_HORIZONTAL =
+      MishangUtils.createDirectionToShape(0, 0, 4, 16, 1, 12);
+  private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION_WHEN_VERTICAL =
+      MishangUtils.createDirectionToShape(4, 0, 0, 12, 1, 16);
+
+  public StripWallLightBlock(Settings settings) {
+    super(settings);
+  }
+
   @Override
   public boolean isConnectedIn(BlockState blockState, Direction facing, Direction direction) {
     final StripType stripType = blockState.get(STRIP_TYPE);
@@ -55,18 +66,6 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
         case VERTICAL -> HORIZONTAL;
       };
     }
-  }
-
-  private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION_WHEN_HORIZONTAL =
-      MishangUtils.createDirectionToShape(0, 0, 4, 16, 1, 12);
-  private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION_WHEN_VERTICAL =
-      MishangUtils.createDirectionToShape(4, 0, 0, 12, 1, 16);
-
-  protected static final EnumProperty<StripType> STRIP_TYPE =
-      EnumProperty.of("strip_type", StripType.class);
-
-  public StripWallLightBlock(Settings settings) {
-    super(settings);
   }
 
   @Override

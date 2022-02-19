@@ -16,8 +16,11 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.LineColor;
 import pers.solid.mishang.uc.ModProperties;
+import pers.solid.mishang.uc.util.HorizontalCornerDirection;
+import pers.solid.mishang.uc.util.LineColor;
+import pers.solid.mishang.uc.util.LineType;
+import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.List;
 
@@ -33,8 +36,9 @@ public interface RoadWithAngleLine extends Road {
   default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
     return RoadConnectionState.of(
         state.get(FACING).hasDirection(direction),
-        getLineColor(),
-        isBevel() ? Either.right(state.get(FACING).mirror(direction)) : Either.left(direction));
+        getLineColor(state, direction),
+        isBevel() ? Either.right(state.get(FACING).mirror(direction)) : Either.left(direction),
+        getLineType(state, direction));
   }
 
   @Override
@@ -80,8 +84,8 @@ public interface RoadWithAngleLine extends Road {
   class SlabImpl extends AbstractRoadSlabBlock implements RoadWithAngleLine {
     private final boolean isBevel;
 
-    public SlabImpl(Settings settings, LineColor lineColor, boolean isBevel) {
-      super(settings, lineColor);
+    public SlabImpl(LineColor lineColor, Settings settings, LineType lineType, boolean isBevel) {
+      super(settings, lineColor, lineType);
       this.isBevel = isBevel;
     }
 
@@ -94,8 +98,8 @@ public interface RoadWithAngleLine extends Road {
   class Impl extends AbstractRoadBlock implements RoadWithAngleLine {
     private final boolean isBevel;
 
-    public Impl(Settings settings, LineColor lineColor, boolean isBevel) {
-      super(settings, lineColor);
+    public Impl(Settings settings, LineColor lineColor, LineType lineType, boolean isBevel) {
+      super(settings, lineColor, lineType);
       this.isBevel = isBevel;
     }
 

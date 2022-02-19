@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "mishanguc:block/asphalt_road_filled_with_yellow"
+      },
+      {
+        "model": "mishanguc:block/asphalt_road_filled_with_yellow",
+        "y": 90
+      },
+      {
+        "model": "mishanguc:block/asphalt_road_filled_with_yellow",
+        "y": 180
+      },
+      {
+        "model": "mishanguc:block/asphalt_road_filled_with_yellow",
+        "y": 270
+      }
+    ]
+  }
+}

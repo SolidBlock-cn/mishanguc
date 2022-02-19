@@ -14,13 +14,13 @@ public enum HorizontalAlign implements StringIdentifiable {
   private static final BiMap<HorizontalAlign, String> M =
       ImmutableBiMap.of(LEFT, "left", CENTER, "center", RIGHT, "right");
 
+  public static @Nullable HorizontalAlign byName(String name) {
+    return M.inverse().get(name);
+  }
+
   @Override
   public String asString() {
     return M.get(this);
-  }
-
-  public static @Nullable HorizontalAlign byName(String name) {
-    return M.inverse().get(name);
   }
 
   public TranslatableText getName() {

@@ -84,7 +84,7 @@ public class WallSignBlockEntityRenderer implements BlockEntityRenderer<WallSign
       matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180));
     }
     matrices.scale(1 / 16f, -1 / 16f, 1 / 16f);
-    matrices.translate(0, 0, (INVISIBLE_BLOCKS.contains(block) ? -8 : -7) + .001);
+    matrices.translate(0, 0, (INVISIBLE_BLOCKS.contains(block) ? -8 : -7) + .0125);
     for (TextContext textContext : entity.textContexts) {
       textContext.draw(
           ctx.getTextRenderer(), matrices, vertexConsumers, light, 16, entity.getHeight());

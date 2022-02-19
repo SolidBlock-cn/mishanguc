@@ -9,12 +9,12 @@ import java.util.function.Function;
 
 /** 用于处理布尔值的按钮。按下鼠标时切换。 */
 public class BooleanButtonWidget extends ButtonWidget {
+  public final Function<@Nullable Boolean, Text> messageSupplier;
   /** 通常在没有选中对象时返回 null。 */
   private final Function<BooleanButtonWidget, @Nullable Boolean> valueGetter;
 
   private final BooleanConsumer valueSetter;
-  public final Function<@Nullable Boolean, Text> messageSupplier;
-  public boolean defaultValue = false;
+  public final boolean defaultValue = false;
 
   public BooleanButtonWidget(
       int x,

@@ -74,6 +74,8 @@ public final class MishangucItems {
   public static final DataTagToolItem DATA_TAG_TOOL =
       new DataTagToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
 
+  private MishangucItems() {}
+
   private static void registerAll() {
     for (Field field : MishangucItems.class.getFields()) {
       int modifier = field.getModifiers();
@@ -97,8 +99,6 @@ public final class MishangucItems {
       }
     }
   }
-
-  private MishangucItems() {}
 
   public static void init() {
     registerAll();

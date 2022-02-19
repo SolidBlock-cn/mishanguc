@@ -1,9 +1,12 @@
 package pers.solid.mishang.uc.item;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -75,8 +78,23 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
       Hand hand,
       boolean fluidIncluded);
 
-  public abstract ActionResult attackBlock(
+  /**
+   * 使用此物品开始破坏方块时的反应。
+   *
+   * @see pers.solid.mishang.uc.MishangUc#BEGIN_ATTACK_BLOCK_EVENT
+   */
+  public abstract ActionResult beginAttackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded);
+
+  /**
+   * 使用此物品中途破坏方块时的翻译。
+   *
+   * @see pers.solid.mishang.uc.MishangUc#PROGRESS_ATTACK_BLOCK_EVENT
+   */
+  public ActionResult progressAttackBlock(
+      PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    return ActionResult.FAIL;
+  }
 
   public boolean includesFluid(ItemStack stack, boolean def) {
     final @Nullable Boolean includesFluid = this.includesFluid(stack);
@@ -99,14 +117,16 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
     }
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public boolean rendersBlockOutline(
       PlayerEntity player,
       ItemStack itemStack,
       WorldRenderContext worldRenderContext,
       WorldRenderContext.BlockOutlineContext blockOutlineContext) {
-    final VertexConsumer vertexConsumer =
-        worldRenderContext.consumers().getBuffer(RenderLayer.LINES);
+    final VertexConsumerProvider consumers = worldRenderContext.consumers();
+    if (consumers == null) return true;
+    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.LINES);
     final ClientWorld world = worldRenderContext.world();
     final BlockPos blockPos = blockOutlineContext.blockPos();
     final BlockState state = blockOutlineContext.blockState();

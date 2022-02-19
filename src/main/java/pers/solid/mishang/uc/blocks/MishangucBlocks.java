@@ -32,14 +32,6 @@ public class MishangucBlocks {
   protected static final FabricBlockSettings WHITE_LIGHT_SETTINGS =
       FabricBlockSettings.of(Material.REDSTONE_LAMP).luminance(15);
 
-  static {
-    registerAll(RoadBlocks.class, MishangucItemGroups.ROADS);
-    registerAll(RoadSlabBlocks.class, MishangucItemGroups.ROADS);
-    registerAll(LightBlocks.class, MishangucItemGroups.LIGHTS);
-    registerAll(HungSignBlocks.class, MishangucItemGroups.SIGNS);
-    registerAll(WallSignBlocks.class, MishangucItemGroups.SIGNS);
-  }
-
   MishangucBlocks() {}
 
   /**
@@ -82,5 +74,11 @@ public class MishangucBlocks {
     }
   }
 
-  public static void init() {}
+  public static void init() {
+    registerAll(RoadBlocks.class, MishangucItemGroups.ROADS);
+    registerAll(RoadSlabBlocks.class, MishangucItemGroups.ROADS);
+    registerAll(LightBlocks.class, MishangucItemGroups.LIGHTS);
+    registerAll(HungSignBlocks.class, MishangucItemGroups.SIGNS);
+    registerAll(WallSignBlocks.class, MishangucItemGroups.SIGNS);
+  }
 }

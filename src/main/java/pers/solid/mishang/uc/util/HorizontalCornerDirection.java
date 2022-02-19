@@ -1,4 +1,4 @@
-package pers.solid.mishang.uc.block;
+package pers.solid.mishang.uc.util;
 
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.util.BlockMirror;
@@ -9,16 +9,18 @@ import org.jetbrains.annotations.Nullable;
 
 public enum HorizontalCornerDirection implements StringIdentifiable {
   /** 西南 */
-  SOUTH_WEST(0, "south_west", Direction.SOUTH, Direction.WEST),
-  NORTH_WEST(1, "north_west", Direction.NORTH, Direction.WEST),
-  NORTH_EAST(2, "north_east", Direction.NORTH, Direction.EAST),
-  SOUTH_EAST(3, "south_east", Direction.SOUTH, Direction.EAST);
+  SOUTH_WEST(0, 45, "south_west", Direction.SOUTH, Direction.WEST),
+  NORTH_WEST(1, 135, "north_west", Direction.NORTH, Direction.WEST),
+  NORTH_EAST(2, 225, "north_east", Direction.NORTH, Direction.EAST),
+  SOUTH_EAST(3, -45, "south_east", Direction.SOUTH, Direction.EAST);
 
   private final String name;
   private final Direction dir1, dir2;
   private final int id;
+  private final int rotation;
 
-  HorizontalCornerDirection(int id, String name, Direction dir1, Direction dir2) {
+  HorizontalCornerDirection(int id, int rotation, String name, Direction dir1, Direction dir2) {
+    this.rotation = rotation;
     if (dir1 == dir2 || dir1.getOpposite() == dir2) {
       throw new IllegalArgumentException(
           "The two directions of a " + "corner direction " + "cannot be " + "same or opposite!");
@@ -74,8 +76,8 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
             "Direction %s has no direction in axis %s!", this.asString(), axis.asString()));
   }
 
-  public float asRotation() {
-    return (dir1.asRotation() + dir2.asRotation()) / 2;
+  public int asRotation() {
+    return rotation;
   }
 
   public boolean hasDirection(Direction direction) {

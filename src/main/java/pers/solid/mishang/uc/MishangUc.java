@@ -4,6 +4,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.EventFactory;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -18,8 +22,11 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -102,6 +109,36 @@ public class MishangUc implements ModInitializer {
         });
   }
 
+  /** 比 {@link AttackBlockCallback#EVENT} 更好！ */
+  public static final Event<AttackBlockCallback> BEGIN_ATTACK_BLOCK_EVENT =
+      EventFactory.createArrayBacked(
+          AttackBlockCallback.class,
+          (listeners) ->
+              (player, world, hand, pos, direction) -> {
+                for (AttackBlockCallback event : listeners) {
+                  ActionResult result = event.interact(player, world, hand, pos, direction);
+
+                  if (result != ActionResult.PASS) {
+                    return result;
+                  }
+                }
+                return ActionResult.PASS;
+              });
+
+  public static final Event<AttackBlockCallback> PROGRESS_ATTACK_BLOCK_EVENT =
+      EventFactory.createArrayBacked(
+          AttackBlockCallback.class,
+          (listeners) ->
+              (player, world, hand, pos, direction) -> {
+                for (AttackBlockCallback event : listeners) {
+                  ActionResult result = event.interact(player, world, hand, pos, direction);
+                  if (result != ActionResult.PASS) {
+                    return result;
+                  }
+                }
+                return ActionResult.PASS;
+              });
+
   @Override
   public void onInitialize() {
     // 初始化静态字段
@@ -109,9 +146,10 @@ public class MishangUc implements ModInitializer {
     MishangucItems.init();
 
     // 注册事件
-    AttackBlockCallback.EVENT.register(
+    BEGIN_ATTACK_BLOCK_EVENT.register(
+        // 仅限客户端执行
         (player, world, hand, pos, direction) -> {
-          if (player.isSpectator()) {
+          if (!world.isClient || player.isSpectator()) {
             return ActionResult.PASS;
           }
           final ItemStack stack = player.getMainHandStack();
@@ -122,7 +160,56 @@ public class MishangUc implements ModInitializer {
                     player.raycast(
                         5, 0, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
             return ((BlockToolItem) item)
-                .attackBlock(
+                .beginAttackBlock(
+                    player,
+                    world,
+                    hitResult.getBlockPos(),
+                    hitResult.getSide(),
+                    ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
+          } else {
+            return ActionResult.PASS;
+          }
+        });
+
+    PROGRESS_ATTACK_BLOCK_EVENT.register(
+        // 仅限客户端执行
+        (player, world, hand, pos, direction) -> {
+          if (!world.isClient || player.isSpectator()) {
+            return ActionResult.PASS;
+          }
+          final ItemStack stack = player.getMainHandStack();
+          final Item item = stack.getItem();
+          if (item instanceof BlockToolItem) {
+            final BlockHitResult hitResult =
+                (BlockHitResult)
+                    player.raycast(
+                        5, 0, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
+            return ((BlockToolItem) item)
+                .progressAttackBlock(
+                    player,
+                    world,
+                    hitResult.getBlockPos(),
+                    hitResult.getSide(),
+                    ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
+          } else {
+            return ActionResult.PASS;
+          }
+        });
+    AttackBlockCallback.EVENT.register(
+        // 仅限服务器执行
+        (player, world, hand, pos, direction) -> {
+          if (world.isClient || player.isSpectator()) {
+            return ActionResult.PASS;
+          }
+          final ItemStack stack = player.getMainHandStack();
+          final Item item = stack.getItem();
+          if (item instanceof BlockToolItem) {
+            final BlockHitResult hitResult =
+                (BlockHitResult)
+                    player.raycast(
+                        5, 0, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
+            return ((BlockToolItem) item)
+                .beginAttackBlock(
                     player,
                     world,
                     hitResult.getBlockPos(),
@@ -174,6 +261,16 @@ public class MishangUc implements ModInitializer {
     ServerPlayNetworking.registerGlobalReceiver(
         new Identifier("mishanguc", "edit_sign_finish"), this::handleEditSignFinish);
 
-    // 注册可燃方块
+    // 注册服务器运行事件
+    ServerLifecycleEvents.SERVER_STARTED.register(
+        new Identifier("mishanguc", "notice"),
+        server ->
+            server.sendSystemMessage(new TranslatableText("notice.mishanguc.load"), Util.NIL_UUID));
+    ServerEntityEvents.ENTITY_LOAD.register(
+        new Identifier("mishanguc", "notice"),
+        (entity, world) ->
+            entity.sendSystemMessage(
+                new TranslatableText("notice.mishanguc.load").formatted(Formatting.YELLOW),
+                Util.NIL_UUID));
   }
 }

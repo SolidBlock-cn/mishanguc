@@ -14,13 +14,13 @@ public enum VerticalAlign implements StringIdentifiable {
   private static final BiMap<VerticalAlign, String> M =
       ImmutableBiMap.of(TOP, "top", MIDDLE, "middle", BOTTOM, "bottom");
 
+  public static @Nullable VerticalAlign byName(String name) {
+    return M.inverse().get(name);
+  }
+
   @Override
   public String asString() {
     return M.get(this);
-  }
-
-  public static @Nullable VerticalAlign byName(String name) {
-    return M.inverse().get(name);
   }
 
   public TranslatableText getName() {

@@ -18,36 +18,32 @@ import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
-import pers.solid.mishang.uc.blocks.MishangucBlocks;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 import pers.solid.mishang.uc.renderer.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.renderer.WallSignBlockEntityRenderer;
 import pers.solid.mishang.uc.screen.HungSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
 
-import java.lang.reflect.Field;
-
 @Environment(EnvType.CLIENT)
 public class MishangUcClient implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
     // 设置相应的 BlockLayer
-    for (Field field : MishangucBlocks.class.getFields()) {
-      try {
-        if (!Block.class.isAssignableFrom(field.getType())) {
-          continue;
-        }
-        Block value = (Block) field.get(null);
-        if (field.isAnnotationPresent(Cutout.class)) {
-          BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout());
-        }
-        if (field.isAnnotationPresent(Translucent.class)) {
-          BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getTranslucent());
-        }
-      } catch (IllegalAccessException | ClassCastException e) {
-        MishangUc.MISHANG_LOGGER.warn("Error when setting BlockLayers:", e);
-      }
-    }
+    MishangUtils.blockStream()
+        .forEach(
+            field -> {
+              try {
+                Block value = (Block) field.get(null);
+                if (field.isAnnotationPresent(Cutout.class)) {
+                  BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout());
+                }
+                if (field.isAnnotationPresent(Translucent.class)) {
+                  BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getTranslucent());
+                }
+              } catch (IllegalAccessException | ClassCastException e) {
+                MishangUc.MISHANG_LOGGER.warn("Error when setting BlockLayers:", e);
+              }
+            });
 
     // 注册方块外观描绘
     WorldRenderEvents.BLOCK_OUTLINE.register(RendersBlockOutline.RENDERER);

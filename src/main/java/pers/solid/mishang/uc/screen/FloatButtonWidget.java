@@ -17,6 +17,7 @@ public class FloatButtonWidget extends ButtonWidget {
   public final Float2ObjectFunction<Text> messageSupplier;
   /** 按钮的默认值。可以按鼠标中键或者按住 Alt + Shift 点击以恢复。 */
   public final float defaultValue = 0;
+
   private final Object2FloatFunction<FloatButtonWidget> valueGetter;
   private final FloatConsumer valueSetter;
   /** 按钮的步长，默认为1。 */

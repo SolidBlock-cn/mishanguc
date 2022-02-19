@@ -12,7 +12,9 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.LineColor;
+import pers.solid.mishang.uc.util.LineColor;
+import pers.solid.mishang.uc.util.LineType;
+import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.List;
 
@@ -58,7 +60,7 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
   /** @see RoadWithStraightAndAngleLine.Impl */
   class SlabImpl extends AbstractRoadSlabBlock implements RoadWithStraightAndAngleLine {
     public SlabImpl(Settings settings, LineColor lineColor) {
-      super(settings, lineColor);
+      super(settings, lineColor, LineType.NORMAL);
     }
 
     @Override
@@ -69,7 +71,7 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
 
   class Impl extends AbstractRoadBlock implements RoadWithStraightAndAngleLine {
     public Impl(Settings settings, LineColor lineColor) {
-      super(settings, lineColor);
+      super(settings, lineColor, LineType.NORMAL);
     }
 
     @Override

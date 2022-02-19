@@ -72,8 +72,8 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       MishangUtils.createHorizontalDirectionToShape(7.5, 13, 11, 8.5, 16, 12);
   private static final Map<Direction, @Nullable VoxelShape> BAR_SHAPES_EDGE =
       MishangUtils.createHorizontalDirectionToShape(7.5, 13, 13, 8.5, 16, 14);
-  private static final VoxelShape SHAPE_WIDENED_X = createCuboidShape(5.5,6,0,10.5,16,16);
-  private static final VoxelShape SHAPE_WIDENED_Z = createCuboidShape(0,6,5.5,16,16,10.5);
+  private static final VoxelShape SHAPE_WIDENED_X = createCuboidShape(5.5, 6, 0, 10.5, 16, 16);
+  private static final VoxelShape SHAPE_WIDENED_Z = createCuboidShape(0, 6, 5.5, 16, 16, 10.5);
   public final @Nullable Block baseBlock;
 
   public HungSignBlock(@Nullable Block baseBlock, Settings settings) {
@@ -103,9 +103,14 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     }
     final World world = ctx.getWorld();
     final BlockPos blockPos = ctx.getBlockPos();
-    final BlockState blockState = world.getBlockState(((ItemUsageContextInvoker)ctx).invokeGetHitResult().getBlockPos());
+    final BlockState blockState =
+        world.getBlockState(((ItemUsageContextInvoker) ctx).invokeGetHitResult().getBlockPos());
     return placementState
-        .with(AXIS, blockState.getBlock() instanceof HungSignBlock && blockState.contains(AXIS) ? blockState.get(AXIS): ctx.getPlayerFacing().getAxis())
+        .with(
+            AXIS,
+            blockState.getBlock() instanceof HungSignBlock && blockState.contains(AXIS)
+                ? blockState.get(AXIS)
+                : ctx.getPlayerFacing().getAxis())
         .with(WATERLOGGED, world.getFluidState(blockPos).getFluid() == Fluids.WATER)
         .getStateForNeighborUpdate(
             Direction.UP, world.getBlockState(blockPos.up()), world, blockPos, blockPos.up());
@@ -134,20 +139,18 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     } else isHoldingHungSigns = false;
     switch (axis) {
       case X:
-        if (isHoldingHungSigns)
-          return SHAPE_WIDENED_X;
-        else
-          if (!left && !right)
-          return VoxelShapes.union(SHAPE_X, BAR_SHAPES_EDGE.get(Direction.SOUTH), BAR_SHAPES_EDGE.get(Direction.NORTH));
+        if (isHoldingHungSigns) return SHAPE_WIDENED_X;
+        else if (!left && !right)
+          return VoxelShapes.union(
+              SHAPE_X, BAR_SHAPES_EDGE.get(Direction.SOUTH), BAR_SHAPES_EDGE.get(Direction.NORTH));
         else
           return VoxelShapes.union(
               SHAPE_X,
               !left ? BAR_SHAPES.get(Direction.SOUTH) : VoxelShapes.empty(),
               !right ? BAR_SHAPES.get(Direction.NORTH) : VoxelShapes.empty());
       case Z:
-        if (isHoldingHungSigns)
-          return SHAPE_WIDENED_Z;else
-        if (!left && !right)
+        if (isHoldingHungSigns) return SHAPE_WIDENED_Z;
+        else if (!left && !right)
           return VoxelShapes.union(
               SHAPE_Z, BAR_SHAPES_EDGE.get(Direction.WEST), BAR_SHAPES_EDGE.get(Direction.EAST));
         else
