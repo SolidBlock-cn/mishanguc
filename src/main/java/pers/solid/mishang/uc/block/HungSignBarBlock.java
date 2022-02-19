@@ -33,8 +33,6 @@ public class HungSignBarBlock extends Block implements Waterloggable {
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   public static final BooleanProperty LEFT = HungSignBlock.LEFT;
   public static final BooleanProperty RIGHT = HungSignBlock.RIGHT;
-  public final @Nullable Block baseBlock;
-
   private static final Map<Direction, @Nullable VoxelShape> BAR_SHAPES =
       MishangUtils.createHorizontalDirectionToShape(7.5, 0, 11, 8.5, 16, 12);
   private static final Map<Direction, @Nullable VoxelShape> BAR_SHAPES_EDGE =
@@ -47,6 +45,7 @@ public class HungSignBarBlock extends Block implements Waterloggable {
   private static final VoxelShape BAR_SHAPE_CENTRAL = createCuboidShape(7.5, 0, 7.5, 8.5, 16, 8.5);
 
   private static final VoxelShape BAR_SHAPE_CENTRAL_WIDE = createCuboidShape(5, 0, 5, 11, 16, 11);
+  public final @Nullable Block baseBlock;
 
   public HungSignBarBlock(@Nullable Block baseBlock, Settings settings) {
     super(settings);

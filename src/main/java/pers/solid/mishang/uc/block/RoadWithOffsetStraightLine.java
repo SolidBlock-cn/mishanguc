@@ -17,7 +17,9 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.LineColor;
+import pers.solid.mishang.uc.util.LineColor;
+import pers.solid.mishang.uc.util.LineType;
+import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.List;
 
@@ -38,8 +40,9 @@ public interface RoadWithOffsetStraightLine extends Road {
         Road.super.getConnectionStateOf(state, direction),
         RoadConnectionState.of(
             direction.getAxis() != state.get(FACING).getAxis(),
-            getLineColor(),
-            Either.left(direction)));
+            getLineColor(state, direction),
+            Either.left(direction),
+            LineType.NORMAL));
   }
 
   @Override
@@ -74,13 +77,13 @@ public interface RoadWithOffsetStraightLine extends Road {
 
   class SlabImpl extends AbstractRoadSlabBlock implements RoadWithOffsetStraightLine {
     public SlabImpl(Settings settings, LineColor lineColor) {
-      super(settings, lineColor);
+      super(settings, lineColor, LineType.NORMAL);
     }
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithOffsetStraightLine {
     public Impl(Settings settings, LineColor lineColor) {
-      super(settings, lineColor);
+      super(settings, lineColor, LineType.NORMAL);
     }
   }
 }

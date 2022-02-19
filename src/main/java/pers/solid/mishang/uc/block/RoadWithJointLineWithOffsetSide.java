@@ -16,8 +16,12 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.LineColor;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.ModProperties;
+import pers.solid.mishang.uc.util.HorizontalCornerDirection;
+import pers.solid.mishang.uc.util.LineColor;
+import pers.solid.mishang.uc.util.LineType;
+import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.List;
 
@@ -32,7 +36,7 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
   Property<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
 
   @Override
-  LineColor getLineColor();
+  LineColor getLineColor(BlockState blockState, Direction direction);
 
   @Override
   default void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
@@ -44,8 +48,9 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
   default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
     return RoadConnectionState.of(
         state.get(FACING).hasDirection(direction) || state.get(AXIS).test(direction),
-        getLineColor(),
-        Either.left(direction.getOpposite()));
+        getLineColor(state, direction),
+        Either.left(direction.getOpposite()),
+        LineType.NORMAL);
   }
 
   @Override
@@ -69,7 +74,7 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
     final Direction.Axis axis = state.get(AXIS);
     return state
         .with(FACING, state.get(FACING).rotate(rotation))
-        .with(AXIS, rotateAxis(rotation, axis));
+        .with(AXIS, MishangUtils.rotateAxis(rotation, axis));
   }
 
   @Override
@@ -91,13 +96,13 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
 
   class Impl extends AbstractRoadBlock implements RoadWithJointLineWithOffsetSide {
     public Impl(Settings settings, LineColor lineColor) {
-      super(settings, lineColor);
+      super(settings, lineColor, LineType.NORMAL);
     }
   }
 
   class SlabImpl extends AbstractRoadSlabBlock implements RoadWithJointLineWithOffsetSide {
     public SlabImpl(Settings settings, LineColor lineColor) {
-      super(settings, lineColor);
+      super(settings, lineColor, LineType.NORMAL);
     }
   }
 }

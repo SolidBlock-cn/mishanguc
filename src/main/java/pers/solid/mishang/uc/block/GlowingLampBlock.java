@@ -11,6 +11,7 @@ public class GlowingLampBlock extends TransparentBlock {
 
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    return stateFrom.getBlock() instanceof GlowingLampBlock || super.isSideInvisible(state, stateFrom, direction);
+    return stateFrom.getBlock() instanceof GlowingLampBlock
+        || super.isSideInvisible(state, stateFrom, direction);
   }
 }

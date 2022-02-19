@@ -946,7 +946,9 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
   public boolean changeFocus(boolean lookForwards) {
     Element focused = this.getFocused();
     boolean bl = focused != null;
-    if (!bl || !focused.changeFocus(lookForwards)) {
+    if (bl && focused.changeFocus(lookForwards)) {
+      return true;
+    } else {
       List<? extends Element> list = this.children();
       int i = list.indexOf(focused);
       int l;
@@ -974,7 +976,7 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
       } while (!element2.changeFocus(lookForwards));
       // 这里和 super 方法不同，这里直接调用的 super.setFocused 而非 this.setFocused
       super.setFocused(element2);
+      return true;
     }
-    return true;
   }
 }

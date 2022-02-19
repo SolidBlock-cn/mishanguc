@@ -17,7 +17,8 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.LineColor;
+import pers.solid.mishang.uc.util.LineColor;
+import pers.solid.mishang.uc.util.LineType;
 
 import java.util.List;
 
@@ -77,13 +78,13 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
 
   class Impl extends RoadWithAngleLine.Impl implements RoadWithAngleLineWithOnePartOffset {
     public Impl(Settings settings, LineColor lineColor, boolean isBevel) {
-      super(settings, lineColor, isBevel);
+      super(settings, lineColor, LineType.NORMAL, isBevel);
     }
   }
 
   class SlabImpl extends RoadWithAngleLine.SlabImpl implements RoadWithAngleLineWithOnePartOffset {
     public SlabImpl(Settings settings, LineColor lineColor, boolean isBevel) {
-      super(settings, lineColor, isBevel);
+      super(lineColor, settings, LineType.NORMAL, isBevel);
     }
   }
 }

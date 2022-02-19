@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.item;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -7,6 +9,8 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -73,13 +77,15 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
             .setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public boolean rendersBlockOutline(
       PlayerEntity player,
       ItemStack itemStack,
       WorldRenderContext worldRenderContext,
       WorldRenderContext.BlockOutlineContext blockOutlineContext) {
-
+    final VertexConsumerProvider consumers = worldRenderContext.consumers();
+    if (consumers == null) return true;
     final ClientWorld world = worldRenderContext.world();
     final BlockState state = blockOutlineContext.blockState();
     if (state.contains(Properties.SLAB_TYPE)
@@ -98,7 +104,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
       final BlockPos blockPos = blockOutlineContext.blockPos();
       WorldRendererInvoker.drawShapeOutline(
           worldRenderContext.matrixStack(),
-          blockOutlineContext.vertexConsumer(),
+          consumers.getBuffer(RenderLayer.LINES),
           halfState.getOutlineShape(world, blockPos, ShapeContext.of(blockOutlineContext.entity())),
           (double) blockPos.getX() - blockOutlineContext.cameraX(),
           (double) blockPos.getY() - blockOutlineContext.cameraY(),

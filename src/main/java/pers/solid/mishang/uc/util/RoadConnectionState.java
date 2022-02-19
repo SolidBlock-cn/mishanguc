@@ -1,4 +1,4 @@
-package pers.solid.mishang.uc.block;
+package pers.solid.mishang.uc.util;
 
 import com.mojang.datafixers.util.Either;
 import net.minecraft.text.MutableText;
@@ -9,37 +9,60 @@ import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.LineColor;
 
 public class RoadConnectionState {
   public final @Nullable Either<Direction, HorizontalCornerDirection> direction;
   public final Probability probability;
   public final LineColor lineColor;
+  public final LineType lineType;
 
-  public RoadConnectionState(Probability probability, LineColor lineColor, @Nullable Either<Direction, HorizontalCornerDirection> direction) {
+  public RoadConnectionState(
+      Probability probability,
+      LineColor lineColor,
+      @Nullable Either<Direction, HorizontalCornerDirection> direction,
+      LineType lineType) {
     this.probability = probability;
     this.lineColor = lineColor;
     this.direction = direction;
+    this.lineType = lineType;
   }
 
   public static RoadConnectionState empty() {
-    return new RoadConnectionState(Probability.NOT_CONNECTED_TO, LineColor.NONE, null);
+    return new RoadConnectionState(
+        Probability.NOT_CONNECTED_TO, LineColor.NONE, null, LineType.NORMAL);
   }
 
-  public static RoadConnectionState notConnectedTo(LineColor lineColor, Either<Direction, HorizontalCornerDirection> direction) {
-    return new RoadConnectionState(Probability.NOT_CONNECTED_TO, lineColor, direction);
+  public static RoadConnectionState notConnectedTo(
+      LineColor lineColor,
+      Either<Direction, HorizontalCornerDirection> direction,
+      LineType lineType) {
+    return new RoadConnectionState(Probability.NOT_CONNECTED_TO, lineColor, direction, lineType);
   }
 
-  public static RoadConnectionState connectedTo(LineColor lineColor, Either<Direction, HorizontalCornerDirection> direction) {
-    return new RoadConnectionState(Probability.CONNECTED_TO, lineColor, direction);
+  public static RoadConnectionState connectedTo(
+      LineColor lineColor,
+      Either<Direction, HorizontalCornerDirection> direction,
+      LineType lineType) {
+    return new RoadConnectionState(Probability.CONNECTED_TO, lineColor, direction, lineType);
   }
 
-  public static RoadConnectionState mayConnectTo(LineColor lineColor, Either<Direction, HorizontalCornerDirection> direction) {
-    return new RoadConnectionState(Probability.MAY_CONNECT_TO, lineColor, direction);
+  public static RoadConnectionState mayConnectTo(
+      LineColor lineColor,
+      Either<Direction, HorizontalCornerDirection> direction,
+      LineType lineType) {
+    return new RoadConnectionState(Probability.MAY_CONNECT_TO, lineColor, direction, lineType);
   }
 
-  public static RoadConnectionState of(boolean bool, LineColor lineColor, Either<Direction, HorizontalCornerDirection> direction) {
-    return new RoadConnectionState(bool ? Probability.CONNECTED_TO : Probability.NOT_CONNECTED_TO, lineColor, direction);
+  public static RoadConnectionState of(
+      boolean bool,
+      LineColor lineColor,
+      Either<Direction, HorizontalCornerDirection> direction,
+      LineType lineType) {
+    return new RoadConnectionState(
+        bool ? Probability.CONNECTED_TO : Probability.NOT_CONNECTED_TO,
+        lineColor,
+        direction,
+        lineType);
   }
 
   public static RoadConnectionState or(RoadConnectionState state1, RoadConnectionState state2) {
@@ -71,7 +94,7 @@ public class RoadConnectionState {
       case NOT_CONNECTED_TO -> Formatting.RED;
       case CONNECTED_TO -> Formatting.GREEN;
       default -> null;
-    })));
+                    })));
   }
 
   public static MutableText text(LineColor lineColor) {
@@ -79,15 +102,7 @@ public class RoadConnectionState {
       case WHITE -> Formatting.WHITE;
       case YELLOW -> Formatting.YELLOW;
       default -> Formatting.GRAY;
-    })));
-  }
-
-  public boolean compareTo(Probability probability) {
-    return this.probability.compareTo(probability) > 0;
-  }
-
-  public boolean compareTo(RoadConnectionState state) {
-    return this.compareTo(state.probability);
+                    })));
   }
 
   public boolean mayConnect() {

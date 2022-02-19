@@ -13,17 +13,18 @@ import net.minecraft.text.TranslatableText;
 /** 用于处理浮点数的按钮。按下鼠标时增大，但是按住 shift 则会减小。滚动鼠标滚轮也会减小。 */
 @Environment(EnvType.CLIENT)
 public class FloatButtonWidget extends ButtonWidget {
+  public final Float2ObjectFunction<Text> messageSupplier;
+  /** 按钮的默认值。可以按鼠标中键或者按住 Alt + Shift 点击以恢复。 */
+  public final float defaultValue = 0;
+
   private final Object2FloatFunction<FloatButtonWidget> valueGetter;
   private final FloatConsumer valueSetter;
-  public final Float2ObjectFunction<Text> messageSupplier;
   /** 按钮的步长，默认为1。 */
   public float step = 1;
   /** 按钮当前的最小值。若低于最小值，则从最大值开始循环，但是如果没有最大值时除外。 */
   public float min = Float.NEGATIVE_INFINITY;
   /** 按钮当前的最大值。若高于最大值，则从最小值开始循环，但是如果没有最小值时除外。 */
   public float max = Float.POSITIVE_INFINITY;
-  /** 按钮的默认值。可以按鼠标中键或者按住 Alt + Shift 点击以恢复。 */
-  public final float defaultValue = 0;
 
   public FloatButtonWidget(
       int x,
