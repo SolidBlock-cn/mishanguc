@@ -72,6 +72,28 @@ public final class RoadSlabBlocks extends MishangucBlocks {
               LineType.NORMAL,
               LineType.NORMAL,
               false);
+  /** 白色粗线加白色直角 */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithDiffAngleLine.SlabImpl
+      ASPHALT_ROAD_SLAB_WITH_WHITE_THICK_AND_NORMAL_RIGHT_ANGLE_LINE =
+          new RoadWithDiffAngleLine.SlabImpl(
+              ASPHALT_ROAD_SETTINGS,
+              LineColor.WHITE,
+              LineColor.WHITE,
+              LineType.THICK,
+              LineType.NORMAL,
+              false);
+  /** 白色粗线加黄色直角 */
+  @Cutout @RegisterIdentifier
+  public static final RoadWithDiffAngleLine.SlabImpl
+      ASPHALT_ROAD_SLAB_WITH_WHITE_THICK_AND_YELLOW_RIGHT_ANGLE_LINE =
+          new RoadWithDiffAngleLine.SlabImpl(
+              ASPHALT_ROAD_SETTINGS,
+              LineColor.WHITE,
+              LineColor.YELLOW,
+              LineType.THICK,
+              LineType.NORMAL,
+              false);
   /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_AND_YELLOW_DOUBLE_RIGHT_ANGLE_LINE */
   @Cutout @RegisterIdentifier
   public static final RoadWithDiffAngleLine.SlabImpl

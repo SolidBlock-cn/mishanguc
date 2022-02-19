@@ -429,7 +429,9 @@ public class ARRPMain implements RRPPreGenEntrypoint {
           "asphalt_road_with_white_right_angle_line",
           "asphalt_road_with_white_bevel_angle_line",
           "asphalt_road_with_yellow_right_angle_line",
-          "asphalt_road_with_yellow_bevel_angle_line"
+          "asphalt_road_with_yellow_bevel_angle_line",
+          "asphalt_road_with_white_thick_and_normal_right_angle_line",
+          "asphalt_road_with_white_thick_and_yellow_right_angle_line"
         }) {
       final JState state = stateForHorizontalCornerFacingBlock(modelName);
       PACK.addBlockState(state, new Identifier("mishanguc", modelName));
@@ -866,6 +868,42 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "yellow_straight_line",
             "white_straight_line",
             "white_and_yellow_right_angle_line"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_white_thick_and_normal_right_angle_line",
+        "road_with_angle_line",
+        textures2(
+            "asphalt",
+            "white_straight_line",
+            "white_straight_thick_line",
+            "white_thick_and_normal_right_angle_line"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_white_thick_and_normal_right_angle_line_mirrored",
+        "road_with_angle_line_mirrored",
+        textures2(
+            "asphalt",
+            "white_straight_line",
+            "white_straight_thick_line",
+            "white_thick_and_normal_right_angle_line"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_white_thick_and_yellow_right_angle_line",
+        "road_with_angle_line",
+        textures2(
+            "asphalt",
+            "yellow_straight_line",
+            "white_straight_thick_line",
+            "white_thick_and_yellow_right_angle_line"));
+    addRoadWithSlab(
+        PACK,
+        "asphalt_road_with_white_thick_and_yellow_right_angle_line_mirrored",
+        "road_with_angle_line_mirrored",
+        textures2(
+            "asphalt",
+            "yellow_straight_line",
+            "white_straight_thick_line",
+            "white_thick_and_yellow_right_angle_line"));
     addRoadWithSlab(
         PACK,
         "asphalt_road_with_white_and_yellow_double_right_angle_line",
