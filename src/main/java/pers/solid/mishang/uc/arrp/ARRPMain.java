@@ -820,6 +820,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
     addCubeAll(PACK, "asphalt_road_block", "asphalt");
     addSlabAll(PACK, "asphalt_road_slab", "asphalt");
     addCubeAllWithSlab(PACK, "asphalt_road_filled_with_white", "white_ink");
+    addCubeAllWithSlab(PACK, "asphalt_road_filled_with_yellow", "yellow_ink");
     addRoadWithSlab(
         PACK,
         "asphalt_road_with_white_straight_line",

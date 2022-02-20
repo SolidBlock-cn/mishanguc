@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.item;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -75,6 +77,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
             .setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public boolean rendersBlockOutline(
       PlayerEntity player,

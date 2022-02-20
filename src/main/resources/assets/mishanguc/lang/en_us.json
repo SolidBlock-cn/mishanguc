@@ -42,6 +42,7 @@
   "block.mishanguc.asphalt_road_with_white_auto_right_angle_line": "Asphalt Road with White Auto Right Angle Line",
 
   "block.mishanguc.asphalt_road_filled_with_white": "Asphalt Road Filled with White",
+  "block.mishanguc.asphalt_road_filled_with_yellow": "Asphalt Road Filled with Yellow",
 
   "block.mishanguc.asphalt_road_slab": "Asphalt Road Slab",
 
@@ -86,6 +87,7 @@
   "block.mishanguc.asphalt_road_slab_with_white_auto_right_angle_line": "Asphalt Road Slab with White Auto Right Angle Line",
 
   "block.mishanguc.asphalt_road_slab_filled_with_white": "Asphalt Road Slab Filled with White",
+  "block.mishanguc.asphalt_road_slab_filled_with_yellow": "Asphalt Road Slab Filled with Yellow",
 
   "block.mishanguc.tooltip.road_with_straight_line.1": "The straight line is in the direction of player's forward direction.",
   "block.mishanguc.tooltip.road_with_straight_line.2": "Rotated 90 degree when sneaking.",
@@ -226,7 +228,8 @@
   "itemGroup.mishanguc.signs": "Mishang Urban Construction | Signs",
   "itemGroup.mishanguc.tools": "Mishang Urban Construction | Tools",
 
-  "notice.mishanguc.load": "Please notice: This mod is under text, and functions are not stable. Please use with caution for experiencing new features. Please do not use features of this mod in your formal work, as the features may be renamed or removed in future versions, and perhaps not compatible with current version any more.",
+  "notice.mishanguc.load": "Thank you for installing Mishang Urban Construction mod. This mod is under test, and features are not yet stable. Please use with caution for experiencing new features, instead of directly using the features of this mod in your formal works, as the features may be renamed or removed in future versions. If you find any issues on this mod, feel free to submit the issue on GitHub.",
+
   "message.mishanguc.sign_edit": "Edit Sign",
   "message.mishanguc.add_text": "Add text",
   "message.mishanguc.remove_text": "Remove text",

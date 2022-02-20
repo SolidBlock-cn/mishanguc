@@ -266,16 +266,16 @@ public final class RoadBlocks extends MishangucBlocks {
    * 斜角自动路块。放置后遇到方块更新会自动确定线路走向。
    */
   @RegisterIdentifier @Cutout
-  public static final RoadWithAutoLine.Impl ASPHALT_ROAD_WITH_WHITE_AUTO_BEVEL_ANGLE_LINE =
-      new RoadWithAutoLine.Impl(
+  public static final RoadBlockWithAutoLine ASPHALT_ROAD_WITH_WHITE_AUTO_BEVEL_ANGLE_LINE =
+      new RoadBlockWithAutoLine(
           ASPHALT_ROAD_SETTINGS,
           RoadWithAutoLine.RoadAutoLineType.BEVEL,
           RoadTexture.ASPHALT,
           LineColor.WHITE);
   /** 直角自动路块。 */
   @RegisterIdentifier @Cutout
-  public static final RoadWithAutoLine.Impl ASPHALT_ROAD_WITH_WHITE_AUTO_RIGHT_ANGLE_LINE =
-      new RoadWithAutoLine.Impl(
+  public static final RoadBlockWithAutoLine ASPHALT_ROAD_WITH_WHITE_AUTO_RIGHT_ANGLE_LINE =
+      new RoadBlockWithAutoLine(
           ASPHALT_ROAD_SETTINGS,
           RoadWithAutoLine.RoadAutoLineType.RIGHT_ANGLE,
           RoadTexture.ASPHALT,
@@ -291,4 +291,8 @@ public final class RoadBlocks extends MishangucBlocks {
   public static final RoadBlock ASPHALT_ROAD_FILLED_WITH_WHITE =
       new RoadBlock(
           FabricBlockSettings.copyOf(ASPHALT_ROAD_SETTINGS).materialColor(MapColor.WHITE));
+
+  @RegisterIdentifier
+  public static final RoadBlock ASPHALT_ROAD_FILLED_WITH_YELLOW =
+      new RoadBlock(FabricBlockSettings.copyOf(ASPHALT_ROAD_BLOCK).materialColor(MapColor.YELLOW));
 }

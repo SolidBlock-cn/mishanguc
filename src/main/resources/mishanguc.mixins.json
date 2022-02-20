@@ -3,9 +3,9 @@
   "minVersion": "0.8",
   "package": "pers.solid.mishang.uc.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": ["EntityShapeContextAccessor", "GameRendererMixin", "ItemUsageContextInvoker", "JBlockModelAccessor", "JStateAccessor", "JVariantAccessor", "JWhenAccessor", "NbtCompoundAccessor", "RuntimeResourcePackImplMixin", "ScreenMixin"],
+  "mixins": ["EntityShapeContextAccessor", "ItemUsageContextInvoker", "JBlockModelAccessor", "JStateAccessor", "JVariantAccessor", "JWhenAccessor", "NbtCompoundAccessor", "RuntimeResourcePackImplMixin"],
   "client": [
-    "BetterClientPlayerInteractionManagerMixin",
+    "BetterClientPlayerInteractionManagerMixin", "GameRendererMixin", "ScreenMixin",
     "WorldRendererInvoker"
   ],
   "injectors": {

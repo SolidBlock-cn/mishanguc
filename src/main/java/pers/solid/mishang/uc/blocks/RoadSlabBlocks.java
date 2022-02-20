@@ -1,13 +1,15 @@
 package pers.solid.mishang.uc.blocks;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.MapColor;
-import pers.solid.mishang.uc.RoadTexture;
+import net.minecraft.block.Block;
+import net.minecraft.block.SlabBlock;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.block.*;
-import pers.solid.mishang.uc.util.LineColor;
-import pers.solid.mishang.uc.util.LineType;
+
+import static pers.solid.mishang.uc.blocks.RoadBlocks.*;
 
 /**
  *
@@ -18,312 +20,213 @@ import pers.solid.mishang.uc.util.LineType;
  */
 public final class RoadSlabBlocks extends MishangucBlocks {
 
+  /** 方块到台阶方块的双向映射表。 */
+  public static final BiMap<Block, SlabBlock> BLOCK_TO_SLABS = HashBiMap.create();
+
   @RegisterIdentifier
-  public static final RoadSlabBlock ASPHALT_ROAD_SLAB =
-      new RoadSlabBlock(MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineColor.NONE);
+  public static final SmartRoadSlabBlock<RoadBlock> ASPHALT_ROAD_SLAB = of(ASPHALT_ROAD_BLOCK);
   /**
    *
    *
    * <h2>单直线道路台阶</h2>
    *
-   * @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_STRAIGHT_LINE
+   * 白色直线。
    */
   @Cutout @RegisterIdentifier
-  public static final RoadWithStraightLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_LINE =
-      new RoadWithStraightLine.SlabImpl(
-          MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE */
+  public static final SmartRoadSlabBlock<RoadWithStraightLine.Impl>
+      ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_LINE = of(ASPHALT_ROAD_WITH_WHITE_STRAIGHT_LINE);
+  /** 白色直角 */
   @Cutout @RegisterIdentifier
-  public static final RoadWithAngleLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_WHITE_RIGHT_ANGLE_LINE =
-      new RoadWithAngleLine.SlabImpl(
-          LineColor.WHITE, MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineType.NORMAL, false);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_BEVEL_ANGLE_LINE */
+  public static final SmartRoadSlabBlock<RoadWithAngleLine.Impl>
+      ASPHALT_ROAD_SLAB_WITH_WHITE_RIGHT_ANGLE_LINE = of(ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE);
+  /** 白色斜角 */
   @Cutout @RegisterIdentifier
-  public static final RoadWithAngleLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_WHITE_BEVEL_ANGLE_LINE =
-      new RoadWithAngleLine.SlabImpl(
-          LineColor.WHITE, MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineType.NORMAL, true);
-  /**
-   * 上面三种白色对应的黄色
-   *
-   * @see RoadBlocks#ASPHALT_ROAD_WITH_YELLOW_STRAIGHT_LINE
-   */
-  @Cutout @RegisterIdentifier
-  public static final RoadWithStraightLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_YELLOW_STRAIGHT_LINE =
-      new RoadWithStraightLine.SlabImpl(ASPHALT_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_YELLOW_RIGHT_ANGLE_LINE */
-  @Cutout @RegisterIdentifier
-  public static final RoadWithAngleLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_YELLOW_RIGHT_ANGLE_LINE =
-      new RoadWithAngleLine.SlabImpl(
-          LineColor.YELLOW, ASPHALT_ROAD_SETTINGS, LineType.NORMAL, false);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_YELLOW_BEVEL_ANGLE_LINE */
-  @Cutout @RegisterIdentifier
-  public static final RoadWithAngleLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_YELLOW_BEVEL_ANGLE_LINE =
-      new RoadWithAngleLine.SlabImpl(
-          LineColor.YELLOW, ASPHALT_ROAD_SETTINGS, LineType.NORMAL, true);
+  public static final SmartRoadSlabBlock<RoadWithAngleLine.Impl>
+      ASPHALT_ROAD_SLAB_WITH_WHITE_BEVEL_ANGLE_LINE = of(ASPHALT_ROAD_WITH_WHITE_BEVEL_ANGLE_LINE);
 
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_AND_YELLOW_RIGHT_ANGLE_LINE */
   @Cutout @RegisterIdentifier
-  public static final RoadWithDiffAngleLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithStraightLine.Impl>
+      ASPHALT_ROAD_SLAB_WITH_YELLOW_STRAIGHT_LINE = of(ASPHALT_ROAD_WITH_YELLOW_STRAIGHT_LINE);
+
+  @Cutout @RegisterIdentifier
+  public static final SmartRoadSlabBlock<RoadWithAngleLine.Impl>
+      ASPHALT_ROAD_SLAB_WITH_YELLOW_RIGHT_ANGLE_LINE =
+          of(ASPHALT_ROAD_WITH_YELLOW_RIGHT_ANGLE_LINE);
+
+  @Cutout @RegisterIdentifier
+  public static final SmartRoadSlabBlock<RoadWithAngleLine.Impl>
+      ASPHALT_ROAD_SLAB_WITH_YELLOW_BEVEL_ANGLE_LINE =
+          of(ASPHALT_ROAD_WITH_YELLOW_BEVEL_ANGLE_LINE);
+
+  @Cutout @RegisterIdentifier
+  public static final SmartRoadSlabBlock<RoadWithDiffAngleLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_WHITE_AND_YELLOW_RIGHT_ANGLE_LINE =
-          new RoadWithDiffAngleLine.SlabImpl(
-              ASPHALT_ROAD_SETTINGS,
-              LineColor.WHITE,
-              LineColor.YELLOW,
-              LineType.NORMAL,
-              LineType.NORMAL,
-              false);
-  /** 白色粗线加白色直角 */
+          of(ASPHALT_ROAD_WITH_WHITE_AND_YELLOW_RIGHT_ANGLE_LINE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithDiffAngleLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithDiffAngleLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_WHITE_THICK_AND_NORMAL_RIGHT_ANGLE_LINE =
-          new RoadWithDiffAngleLine.SlabImpl(
-              ASPHALT_ROAD_SETTINGS,
-              LineColor.WHITE,
-              LineColor.WHITE,
-              LineType.THICK,
-              LineType.NORMAL,
-              false);
-  /** 白色粗线加黄色直角 */
+          of(ASPHALT_ROAD_WITH_WHITE_THICK_AND_NORMAL_RIGHT_ANGLE_LINE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithDiffAngleLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithDiffAngleLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_WHITE_THICK_AND_YELLOW_RIGHT_ANGLE_LINE =
-          new RoadWithDiffAngleLine.SlabImpl(
-              ASPHALT_ROAD_SETTINGS,
-              LineColor.WHITE,
-              LineColor.YELLOW,
-              LineType.THICK,
-              LineType.NORMAL,
-              false);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_AND_YELLOW_DOUBLE_RIGHT_ANGLE_LINE */
+          of(ASPHALT_ROAD_WITH_WHITE_THICK_AND_YELLOW_RIGHT_ANGLE_LINE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithDiffAngleLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithDiffAngleLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_WHITE_AND_YELLOW_DOUBLE_RIGHT_ANGLE_LINE =
-          new RoadWithDiffAngleLine.SlabImpl(
-              ASPHALT_ROAD_SETTINGS,
-              LineColor.WHITE,
-              LineColor.YELLOW,
-              LineType.NORMAL,
-              LineType.DOUBLE,
-              false);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_THICK_AND_YELLOW_DOUBLE_RIGHT_ANGLE_LINE */
+          of(ASPHALT_ROAD_WITH_WHITE_AND_YELLOW_DOUBLE_RIGHT_ANGLE_LINE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithDiffAngleLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithDiffAngleLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_WHITE_THICK_AND_YELLOW_DOUBLE_RIGHT_ANGLE_LINE =
-          new RoadWithDiffAngleLine.SlabImpl(
-              ASPHALT_ROAD_SETTINGS,
-              LineColor.WHITE,
-              LineColor.YELLOW,
-              LineType.THICK,
-              LineType.DOUBLE,
-              false);
-  /**
-   *
-   *
-   * <h2>由两条线组成的道路台阶</h2>
-   *
-   * @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_STRAIGHT_AND_BEVEL_ANGLE_LINE
-   */
+          of(ASPHALT_ROAD_WITH_WHITE_THICK_AND_YELLOW_DOUBLE_RIGHT_ANGLE_LINE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithStraightAndAngleLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithStraightAndAngleLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_AND_BEVEL_ANGLE_LINE =
-          new RoadWithStraightAndAngleLine.SlabImpl(
-              MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_JOINT_LINE */
+          of(ASPHALT_ROAD_WITH_WHITE_STRAIGHT_AND_BEVEL_ANGLE_LINE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithJointLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE =
-      new RoadWithJointLine.SlabImpl(
-          MishangucBlocks.ASPHALT_ROAD_SETTINGS,
-          LineColor.WHITE,
-          LineColor.WHITE,
-          LineType.NORMAL,
-          LineType.NORMAL);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_CROSS_LINE */
+  public static final SmartRoadSlabBlock<RoadWithJointLine.Impl>
+      ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE = of(ASPHALT_ROAD_WITH_WHITE_JOINT_LINE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithCrossLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_WHITE_CROSS_LINE =
-      new RoadWithCrossLine.SlabImpl(MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
-  /**
-   *
-   *
-   * <h2>带有特殊线的单线道路台阶。</h2>
-   *
-   * @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_OFFSET_STRAIGHT_LINE
-   */
+  public static final SmartRoadSlabBlock<RoadWithCrossLine.Impl>
+      ASPHALT_ROAD_SLAB_WITH_WHITE_CROSS_LINE = of(ASPHALT_ROAD_WITH_WHITE_CROSS_LINE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithOffsetStraightLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithOffsetStraightLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_WHITE_OFFSET_STRAIGHT_LINE =
-          new RoadWithOffsetStraightLine.SlabImpl(
-              MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_STRAIGHT_DOUBLE_LINE */
+          of(ASPHALT_ROAD_WITH_WHITE_OFFSET_STRAIGHT_LINE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithStraightLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithStraightLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_DOUBLE_LINE =
-          new RoadWithStraightLine.SlabImpl(
-              MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineColor.WHITE, LineType.DOUBLE);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_STRAIGHT_THICK_LINE */
+          of(ASPHALT_ROAD_WITH_WHITE_STRAIGHT_DOUBLE_LINE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithStraightLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithStraightLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_WHITE_STRAIGHT_THICK_LINE =
-          new RoadWithStraightLine.SlabImpl(
-              MishangucBlocks.ASPHALT_ROAD_SETTINGS, LineColor.WHITE, LineType.THICK);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_YELLOW_OFFSET_STRAIGHT_LINE */
+          of(ASPHALT_ROAD_WITH_WHITE_STRAIGHT_THICK_LINE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithOffsetStraightLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithOffsetStraightLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_YELLOW_OFFSET_STRAIGHT_LINE =
-          new RoadWithOffsetStraightLine.SlabImpl(ASPHALT_ROAD_SETTINGS, LineColor.YELLOW);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_YELLOW_STRAIGHT_DOUBLE_LINE */
+          of(ASPHALT_ROAD_WITH_YELLOW_OFFSET_STRAIGHT_LINE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithStraightLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithStraightLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_YELLOW_STRAIGHT_DOUBLE_LINE =
-          new RoadWithStraightLine.SlabImpl(
-              ASPHALT_ROAD_SETTINGS, LineColor.YELLOW, LineType.DOUBLE);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_YELLOW_STRAIGHT_THICK_LINE */
+          of(ASPHALT_ROAD_WITH_YELLOW_STRAIGHT_DOUBLE_LINE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithStraightLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithStraightLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_YELLOW_STRAIGHT_THICK_LINE =
-          new RoadWithStraightLine.SlabImpl(
-              ASPHALT_ROAD_SETTINGS, LineColor.YELLOW, LineType.THICK);
-  /**
-   * 一侧偏移的直角。
-   *
-   * @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE_WITH_ONE_PART_OFFSET_OUT
-   */
+          of(ASPHALT_ROAD_WITH_YELLOW_STRAIGHT_THICK_LINE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithAngleLineWithOnePartOffset.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithAngleLineWithOnePartOffset.Impl>
       ASPHALT_ROAD_SLAB_WITH_WHITE_RIGHT_ANGLE_LINE_WITH_ONE_PART_OFFSET_OUT =
-          new RoadWithAngleLineWithOnePartOffset.SlabImpl(
-              ASPHALT_ROAD_SETTINGS, LineColor.WHITE, false);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE_WITH_ONE_PART_OFFSET_IN */
+          of(ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE_WITH_ONE_PART_OFFSET_OUT);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithAngleLineWithOnePartOffset.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithAngleLineWithOnePartOffset.Impl>
       ASPHALT_ROAD_SLAB_WITH_WHITE_RIGHT_ANGLE_LINE_WITH_ONE_PART_OFFSET_IN =
-          new RoadWithAngleLineWithOnePartOffset.SlabImpl(
-              ASPHALT_ROAD_SETTINGS, LineColor.WHITE, false);
-  /**
-   *
-   *
-   * <h2>带有特殊线的双线道路台阶</h2>
-   *
-   * @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_DOUBLE_SIDE
-   */
+          of(ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE_WITH_ONE_PART_OFFSET_IN);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithJointLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithJointLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE_WITH_DOUBLE_SIDE =
-          new RoadWithJointLine.SlabImpl(
-              MishangucBlocks.ASPHALT_ROAD_SETTINGS,
-              LineColor.WHITE,
-              LineColor.WHITE,
-              LineType.NORMAL,
-              LineType.DOUBLE);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_THICK_SIDE */
+          of(ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_DOUBLE_SIDE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithJointLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithJointLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE_WITH_THICK_SIDE =
-          new RoadWithJointLine.SlabImpl(
-              MishangucBlocks.ASPHALT_ROAD_SETTINGS,
-              LineColor.WHITE,
-              LineColor.WHITE,
-              LineType.NORMAL,
-              LineType.THICK);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_OFFSET_SIDE */
+          of(ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_THICK_SIDE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithJointLineWithOffsetSide.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithJointLineWithOffsetSide.Impl>
       ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE_WITH_OFFSET_SIDE =
-          new RoadWithJointLineWithOffsetSide.SlabImpl(ASPHALT_ROAD_SETTINGS, LineColor.WHITE);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_DOUBLE_JOINT_LINE */
+          of(ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_OFFSET_SIDE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithJointLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_WHITE_DOUBLE_JOINT_LINE =
-      new RoadWithJointLine.SlabImpl(
-          ASPHALT_ROAD_SETTINGS,
-          LineColor.WHITE,
-          LineColor.WHITE,
-          LineType.DOUBLE,
-          LineType.NORMAL);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_THICK_JOINT_LINE */
+  public static final SmartRoadSlabBlock<RoadWithJointLine.Impl>
+      ASPHALT_ROAD_SLAB_WITH_WHITE_DOUBLE_JOINT_LINE =
+          of(ASPHALT_ROAD_WITH_WHITE_DOUBLE_JOINT_LINE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithJointLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_WHITE_THICK_JOINT_LINE =
-      new RoadWithJointLine.SlabImpl(
-          ASPHALT_ROAD_SETTINGS, LineColor.WHITE, LineColor.WHITE, LineType.THICK, LineType.NORMAL);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_YELLOW_JOINT_LINE */
+  public static final SmartRoadSlabBlock<RoadWithJointLine.Impl>
+      ASPHALT_ROAD_SLAB_WITH_WHITE_THICK_JOINT_LINE = of(ASPHALT_ROAD_WITH_WHITE_THICK_JOINT_LINE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithJointLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_YELLOW_JOINT_LINE =
-      new RoadWithJointLine.SlabImpl(
-          ASPHALT_ROAD_SETTINGS,
-          LineColor.YELLOW,
-          LineColor.YELLOW,
-          LineType.NORMAL,
-          LineType.NORMAL);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_YELLOW_JOINT_LINE_WITH_WHITE_SIDE */
+  public static final SmartRoadSlabBlock<RoadWithJointLine.Impl>
+      ASPHALT_ROAD_SLAB_WITH_YELLOW_JOINT_LINE = of(ASPHALT_ROAD_WITH_YELLOW_JOINT_LINE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithJointLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithJointLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_YELLOW_JOINT_LINE_WITH_WHITE_SIDE =
-          new RoadWithJointLine.SlabImpl(
-              ASPHALT_ROAD_SETTINGS,
-              LineColor.YELLOW,
-              LineColor.WHITE,
-              LineType.NORMAL,
-              LineType.NORMAL);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_YELLOW_SIDE */
+          of(ASPHALT_ROAD_WITH_YELLOW_JOINT_LINE_WITH_WHITE_SIDE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithJointLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithJointLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE_WITH_YELLOW_SIDE =
-          new RoadWithJointLine.SlabImpl(
-              ASPHALT_ROAD_SETTINGS,
-              LineColor.WHITE,
-              LineColor.YELLOW,
-              LineType.NORMAL,
-              LineType.NORMAL);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_YELLOW_DOUBLE_SIDE */
+          of(ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_YELLOW_SIDE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithJointLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithJointLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_WHITE_JOINT_LINE_WITH_YELLOW_DOUBLE_SIDE =
-          new RoadWithJointLine.SlabImpl(
-              ASPHALT_ROAD_SETTINGS,
-              LineColor.WHITE,
-              LineColor.YELLOW,
-              LineType.NORMAL,
-              LineType.DOUBLE);
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_THICK_JOINT_LINE_WITH_YELLOW_DOUBLE_SIDE */
+          of(ASPHALT_ROAD_WITH_WHITE_JOINT_LINE_WITH_YELLOW_DOUBLE_SIDE);
+
   @Cutout @RegisterIdentifier
-  public static final RoadWithJointLine.SlabImpl
+  public static final SmartRoadSlabBlock<RoadWithJointLine.Impl>
       ASPHALT_ROAD_SLAB_WITH_WHITE_THICK_JOINT_LINE_WITH_YELLOW_DOUBLE_SIDE =
-          new RoadWithJointLine.SlabImpl(
-              ASPHALT_ROAD_SETTINGS,
-              LineColor.WHITE,
-              LineColor.YELLOW,
-              LineType.THICK,
-              LineType.DOUBLE);
+          of(ASPHALT_ROAD_WITH_WHITE_THICK_JOINT_LINE_WITH_YELLOW_DOUBLE_SIDE);
   /**
    *
    *
    * <h2>自动路台阶</h2>
-   *
-   * @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_AUTO_BEVEL_ANGLE_LINE
    */
   @RegisterIdentifier @Cutout
-  public static final RoadWithAutoLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_WHITE_AUTO_BEVEL_ANGLE_LINE =
-      new RoadWithAutoLine.SlabImpl(
-          MishangucBlocks.ASPHALT_ROAD_SETTINGS,
-          RoadWithAutoLine.RoadAutoLineType.BEVEL,
-          RoadTexture.ASPHALT,
-          LineColor.WHITE);
+  public static final SmartRoadSlabBlock<RoadBlockWithAutoLine>
+      ASPHALT_ROAD_SLAB_WITH_WHITE_AUTO_BEVEL_ANGLE_LINE =
+          of(
+              ASPHALT_ROAD_WITH_WHITE_AUTO_BEVEL_ANGLE_LINE,
+              new RoadSlabBlockWithAutoLine(ASPHALT_ROAD_WITH_WHITE_AUTO_BEVEL_ANGLE_LINE));
   /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_AUTO_RIGHT_ANGLE_LINE */
   @RegisterIdentifier @Cutout
-  public static final RoadWithAutoLine.SlabImpl ASPHALT_ROAD_SLAB_WITH_WHITE_AUTO_RIGHT_ANGLE_LINE =
-      new RoadWithAutoLine.SlabImpl(
-          ASPHALT_ROAD_SETTINGS,
-          RoadWithAutoLine.RoadAutoLineType.RIGHT_ANGLE,
-          RoadTexture.ASPHALT,
-          LineColor.WHITE);
+  public static final SmartRoadSlabBlock<RoadBlockWithAutoLine>
+      ASPHALT_ROAD_SLAB_WITH_WHITE_AUTO_RIGHT_ANGLE_LINE =
+          of(
+              ASPHALT_ROAD_WITH_WHITE_AUTO_RIGHT_ANGLE_LINE,
+              new RoadSlabBlockWithAutoLine(ASPHALT_ROAD_WITH_WHITE_AUTO_RIGHT_ANGLE_LINE));
   /**
    *
    *
    * <h2>其他</h2>
-   *
-   * @see RoadBlocks#ASPHALT_ROAD_FILLED_WITH_WHITE
    */
   @RegisterIdentifier
-  public static final RoadSlabBlock ASPHALT_ROAD_SLAB_FILLED_WITH_WHITE =
-      new RoadSlabBlock(
-          FabricBlockSettings.copyOf(ASPHALT_ROAD_SETTINGS).materialColor(MapColor.WHITE),
-          LineColor.WHITE);
+  public static final SmartRoadSlabBlock<RoadBlock> ASPHALT_ROAD_SLAB_FILLED_WITH_WHITE =
+      of(ASPHALT_ROAD_FILLED_WITH_WHITE);
+
+  @RegisterIdentifier
+  public static final SmartRoadSlabBlock<RoadBlock> ASPHALT_ROAD_SLAB_FILLED_WITH_YELLOW =
+      of(ASPHALT_ROAD_FILLED_WITH_YELLOW);
+
+  private static <T extends Block & Road> SmartRoadSlabBlock<T> of(T baseBlock) {
+    return of(baseBlock, new SmartRoadSlabBlock<>(baseBlock));
+  }
+
+  private static <T extends Block & Road> SmartRoadSlabBlock<T> of(
+      T baseBlock, SmartRoadSlabBlock<T> slab) {
+    BLOCK_TO_SLABS.put(baseBlock, slab);
+    return slab;
+  }
+
+  private static SlabBlock ofSimple(Block baseBlock) {
+    final SlabBlock slab = new SlabBlock(FabricBlockSettings.copyOf(baseBlock));
+    BLOCK_TO_SLABS.put(baseBlock, slab);
+    return slab;
+  }
 }
