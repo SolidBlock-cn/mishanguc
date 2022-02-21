@@ -397,7 +397,8 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         new String[] {
           "asphalt_road_with_white_and_yellow_right_angle_line",
           "asphalt_road_with_white_and_yellow_double_right_angle_line",
-          "asphalt_road_with_white_thick_and_yellow_double_right_angle_line"
+          "asphalt_road_with_white_thick_and_yellow_double_right_angle_line",
+          "asphalt_road_with_white_thick_and_normal_right_angle_line", "asphalt_road_with_white_thick_and_yellow_right_angle_line"
         }) {
       final JState state = stateForDiffAngleLine(modelName);
       PACK.addBlockState(state, new Identifier("mishanguc", modelName));
@@ -429,9 +430,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
           "asphalt_road_with_white_right_angle_line",
           "asphalt_road_with_white_bevel_angle_line",
           "asphalt_road_with_yellow_right_angle_line",
-          "asphalt_road_with_yellow_bevel_angle_line",
-          "asphalt_road_with_white_thick_and_normal_right_angle_line",
-          "asphalt_road_with_white_thick_and_yellow_right_angle_line"
+          "asphalt_road_with_yellow_bevel_angle_line"
         }) {
       final JState state = stateForHorizontalCornerFacingBlock(modelName);
       PACK.addBlockState(state, new Identifier("mishanguc", modelName));
