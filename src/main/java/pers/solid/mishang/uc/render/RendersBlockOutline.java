@@ -10,11 +10,18 @@ import net.minecraft.item.ItemStack;
 import pers.solid.mishang.uc.MishangUcClient;
 
 /**
+ * 物品实现此接口后，玩家拿着物品时就会调用 {@link #rendersBlockOutline}。{@link #RENDERER} 是个匿名的 {@link
+ * WorldRenderEvents.BlockOutline} 实例，并且会在 {@link MishangUcClient} 中注册。<br>
  * Item implements this interface, and when a player holds this item, {@link #rendersBlockOutline}
  * will be called. The {@link #RENDERER} is in an anonymous {@link WorldRenderEvents.BlockOutline}
  * instance, and was registered in {@link MishangUcClient}.<br>
- * In the SERVER environment, this class <b>exists</b> but is <b>empty</b>.
+ * 物品实现此接口时，需要注解为：<br>
+ * Items implementing this interface must be annotated as:<br>
+ *
+ * <pre>
+ * {@code @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBlockOutline.class)}</pre>
  */
+@Environment(EnvType.CLIENT)
 public interface RendersBlockOutline {
   @Environment(EnvType.CLIENT)
   WorldRenderEvents.BlockOutline RENDERER =
