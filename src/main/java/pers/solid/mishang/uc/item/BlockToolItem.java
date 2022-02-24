@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.item;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
@@ -26,6 +27,7 @@ import pers.solid.mishang.uc.render.RendersBlockOutline;
 
 import java.util.Objects;
 
+@EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBlockOutline.class)
 public abstract class BlockToolItem extends Item implements RendersBlockOutline {
   /**
    * 该物品是否包括流体。<br>
