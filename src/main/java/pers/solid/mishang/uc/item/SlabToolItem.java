@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.item;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableBiMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
@@ -12,19 +14,25 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.data.family.BlockFamilies;
+import net.minecraft.data.family.BlockFamily;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Util;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 
@@ -36,6 +44,51 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
     super(settings);
   }
 
+  /** 从原版的 {@link BlockFamilies} 提取的方块至台阶方块的映射。 */
+  @ApiStatus.AvailableSince("0.1.3")
+  protected static final BiMap<Block, Block> BLOCK_TO_SLAB =
+      Util.make(
+          () -> {
+            final ImmutableBiMap.Builder<Block, Block> builder = new ImmutableBiMap.Builder<>();
+            BlockFamilies.getFamilies()
+                .filter(blockFamily -> blockFamily.getVariant(BlockFamily.Variant.SLAB) != null)
+                .forEach(
+                    blockFamily ->
+                        builder.put(
+                            blockFamily.getBaseBlock(),
+                            blockFamily.getVariant(BlockFamily.Variant.SLAB)));
+            builder.putAll(RoadSlabBlocks.BLOCK_TO_SLABS);
+            return builder.build();
+          });
+
+  /**
+   * 将基础方块的方块状态转化为台阶方块，并尝试移植相应的方块状态属性。
+   *
+   * @param baseBlockState 基础方块的方块状态。
+   * @param slabBlock 台阶方块，不是具体的方块状态。
+   * @return 台阶方块的方块状态。
+   */
+  @SuppressWarnings("unchecked")
+  protected static BlockState toSlab(BlockState baseBlockState, Block slabBlock) {
+    BlockState slabState = slabBlock.getDefaultState();
+    for (@SuppressWarnings("rawtypes") Property property : baseBlockState.getProperties()) {
+      try {
+        slabState = slabState.with(property, baseBlockState.get(property));
+      } catch (IllegalArgumentException ignored) {
+      }
+    }
+    return slabState.with(Properties.SLAB_TYPE, SlabType.DOUBLE);
+  }
+
+  @Override
+  public void appendTooltip(
+      ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    super.appendTooltip(stack, world, tooltip, context);
+    tooltip.add(
+        new TranslatableText("item.mishanguc.slab_tool.tooltip")
+            .setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+  }
+
   /**
    * 破坏台阶的一部分。
    *
@@ -45,6 +98,9 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
   public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
     Block block = state.getBlock();
     try {
+      if (BLOCK_TO_SLAB.containsKey(state.getBlock())) {
+        state = toSlab(state, BLOCK_TO_SLAB.get(state.getBlock()));
+      }
       if (state.contains(Properties.SLAB_TYPE)
           && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
         final BlockHitResult raycast = ((BlockHitResult) miner.raycast(20, 0, false));
@@ -68,15 +124,6 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
     return super.canMine(state, world, pos, miner);
   }
 
-  @Override
-  public void appendTooltip(
-      ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-    super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(
-        new TranslatableText("item.mishanguc.slab_tool.tooltip")
-            .setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
-  }
-
   @Environment(EnvType.CLIENT)
   @Override
   public boolean rendersBlockOutline(
@@ -87,20 +134,23 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
     final VertexConsumerProvider consumers = worldRenderContext.consumers();
     if (consumers == null) return true;
     final ClientWorld world = worldRenderContext.world();
-    final BlockState state = blockOutlineContext.blockState();
+    BlockState state = blockOutlineContext.blockState();
+    final HitResult crosshairTarget = MinecraftClient.getInstance().crosshairTarget;
+    if (!(crosshairTarget instanceof BlockHitResult)) {
+      return true;
+    }
+    boolean isTop =
+        crosshairTarget.getPos().y
+                - (double) ((BlockHitResult) crosshairTarget).getBlockPos().getY()
+            > 0.5D;
+    if (BLOCK_TO_SLAB.containsKey(state.getBlock())) {
+      state = toSlab(state, BLOCK_TO_SLAB.get(state.getBlock()));
+    }
     if (state.contains(Properties.SLAB_TYPE)
         && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
-      final HitResult crosshairTarget = MinecraftClient.getInstance().crosshairTarget;
-      if (!(crosshairTarget instanceof BlockHitResult)) {
-        return true;
-      }
-      boolean bl =
-          crosshairTarget.getPos().y
-                  - (double) ((BlockHitResult) crosshairTarget).getBlockPos().getY()
-              > 0.5D;
       // 渲染时需要使用的方块状态。
       final BlockState halfState =
-          state.with(Properties.SLAB_TYPE, bl ? SlabType.TOP : SlabType.BOTTOM);
+          state.with(Properties.SLAB_TYPE, isTop ? SlabType.TOP : SlabType.BOTTOM);
       final BlockPos blockPos = blockOutlineContext.blockPos();
       WorldRendererInvoker.drawShapeOutline(
           worldRenderContext.matrixStack(),
