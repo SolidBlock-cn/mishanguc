@@ -4,13 +4,17 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.text.TextColor;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.annotations.Cutout;
@@ -53,6 +57,15 @@ public class MishangUcClient implements ClientModInitializer {
         MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY, HungSignBlockEntityRenderer::new);
     BlockEntityRendererRegistry.register(
         MishangucBlockEntities.WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
+
+    // 注册客户端实体事件
+    ClientEntityEvents.ENTITY_LOAD.register(
+        new Identifier("mishanguc", "notice"),
+        (entity, world) ->
+            entity.sendSystemMessage(
+                new TranslatableText("notice.mishanguc.load")
+                    .styled(style -> style.withColor(TextColor.fromRgb(0xd2e877))),
+                Util.NIL_UUID));
 
     // 网络通信
     // 客户端收到服务器发来的编辑告示牌的数据包时，打开编辑界面，允许用户编辑。

@@ -6,7 +6,6 @@ import com.google.common.collect.Maps;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
@@ -24,7 +23,6 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.hit.BlockHitResult;
@@ -266,11 +264,5 @@ public class MishangUc implements ModInitializer {
         new Identifier("mishanguc", "notice"),
         server ->
             server.sendSystemMessage(new TranslatableText("notice.mishanguc.load"), Util.NIL_UUID));
-    ServerEntityEvents.ENTITY_LOAD.register(
-        new Identifier("mishanguc", "notice"),
-        (entity, world) ->
-            entity.sendSystemMessage(
-                new TranslatableText("notice.mishanguc.load").formatted(Formatting.YELLOW),
-                Util.NIL_UUID));
   }
 }
