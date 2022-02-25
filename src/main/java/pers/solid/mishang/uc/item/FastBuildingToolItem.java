@@ -160,7 +160,23 @@ public class FastBuildingToolItem extends BlockToolItem {
               new ItemStack(this),
               stack -> {
                 final NbtCompound tag = stack.getOrCreateTag();
+                tag.putInt("Range", 64);
+                tag.putString("MatchingRule", BlockMatchingRule.SAME_STATE.asString());
+              }));
+      stacks.add(
+          Util.make(
+              new ItemStack(this),
+              stack -> {
+                final NbtCompound tag = stack.getOrCreateTag();
                 tag.putInt("Range", 16);
+                tag.putString("MatchingRule", BlockMatchingRule.SAME_BLOCK.asString());
+              }));
+      stacks.add(
+          Util.make(
+              new ItemStack(this),
+              stack -> {
+                final NbtCompound tag = stack.getOrCreateTag();
+                tag.putInt("Range", 64);
                 tag.putString("MatchingRule", BlockMatchingRule.SAME_BLOCK.asString());
               }));
       stacks.add(
@@ -176,7 +192,23 @@ public class FastBuildingToolItem extends BlockToolItem {
               new ItemStack(this),
               stack -> {
                 final NbtCompound tag = stack.getOrCreateTag();
+                tag.putInt("Range", 64);
+                tag.putString("MatchingRule", BlockMatchingRule.SAME_MATERIAL.asString());
+              }));
+      stacks.add(
+          Util.make(
+              new ItemStack(this),
+              stack -> {
+                final NbtCompound tag = stack.getOrCreateTag();
                 tag.putInt("Range", 16);
+                tag.putString("MatchingRule", BlockMatchingRule.ANY.asString());
+              }));
+      stacks.add(
+          Util.make(
+              new ItemStack(this),
+              stack -> {
+                final NbtCompound tag = stack.getOrCreateTag();
+                tag.putInt("Range", 64);
                 tag.putString("MatchingRule", BlockMatchingRule.ANY.asString());
               }));
     }
