@@ -225,6 +225,7 @@
   "message.mishanguc.vertical_align": "垂直对齐",
   "message.mishanguc.vertical_align_param": "垂直对齐：%s",
   "notice.mishanguc.load": "感谢您安装迷上城建模组。本模组目前处于测试阶段，各功能不稳定，请谨慎使用，仅供尝鲜体验。请不要将本模组内容用于您的正式作品中，因为这些内容可能会在未来版本被更名或移除。如果您发现本模组存在问题，欢迎前往 GitHub 提交问题。",
+  "modmenu.descriptionTranslation.mishanguc": "一系列用于构筑城市的方块和物品！当前不稳定，请勿用于您的正式物品！",
   "roadConnectionState.lineColor.none": "无",
   "roadConnectionState.lineColor.unknown": "未知",
   "roadConnectionState.lineColor.white": "白色",

@@ -229,6 +229,7 @@
   "itemGroup.mishanguc.tools": "Mishang Urban Construction | Tools",
 
   "notice.mishanguc.load": "Thank you for installing Mishang Urban Construction mod. This mod is under test, and features are not yet stable. Please use with caution for experiencing new features, instead of directly using the features of this mod in your formal works, as the features may be renamed or removed in future versions. If you find any issues on this mod, feel free to submit the issue on GitHub.",
+  "modmenu.descriptionTranslation.mishanguc": "An amount of blocks and items that make a beautiful city! Currently not stable. Please do not use in your formal work!",
 
   "message.mishanguc.sign_edit": "Edit Sign",
   "message.mishanguc.add_text": "Add text",
