@@ -101,18 +101,16 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
       BlockHitResult blockHitResult,
       Hand hand,
       boolean fluidIncluded) {
-    return sendMessageOfState(
-        player, world.getBlockState(blockHitResult.getBlockPos()), blockHitResult.getBlockPos());
+    if (!world.isClient)
+      return sendMessageOfState(
+          player, world.getBlockState(blockHitResult.getBlockPos()), blockHitResult.getBlockPos());
+    return ActionResult.SUCCESS;
   }
 
   @Override
   public ActionResult beginAttackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    return sendMessageOfState(player, world.getBlockState(pos), pos);
-  }
-
-  @Override
-  public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-    return sendMessageOfState(miner, world.getBlockState(pos), pos) != ActionResult.SUCCESS;
+    if (!world.isClient) return sendMessageOfState(player, world.getBlockState(pos), pos);
+    return ActionResult.SUCCESS;
   }
 }

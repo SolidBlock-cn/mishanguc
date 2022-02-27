@@ -18,8 +18,8 @@ public final class NbtPrettyPrinter {
 
   /**
    * These methods prettify an {@link NbtElement} to a {@link Text} in a way that is better than
-   * {@link NbtHelper#toPrettyPrintedText(NbtElement)}. It dispatches to other methods by detecting
-   * and casting the type of <code>element</code> arg.
+   * {@link NbtHelper#toPrettyPrintedText(NbtElement)}. It dispatches to other methods by detecting and casting
+   * the type of <code>element</code> arg.
    *
    * @param element The NBT element.
    * @param layer Usually 0. If it's shown in another compound or list, the layer is 1. The greater
@@ -83,7 +83,7 @@ public final class NbtPrettyPrinter {
                     .styled(
                         style ->
                             style
-                                .withClickEvent(new ExtendedClickEvent(serialize(remains)))
+                                .withClickEvent(new NbtClickEvent(remains))
                                 .withHoverEvent(
                                     new HoverEvent(
                                         HoverEvent.Action.SHOW_TEXT,
@@ -129,7 +129,7 @@ public final class NbtPrettyPrinter {
                                         HoverEvent.Action.SHOW_TEXT,
                                         new TranslatableText(
                                             "debug.mishanguc.nbt.compound_display_full")))
-                                .withClickEvent(new ExtendedClickEvent(serialize(compound)))));
+                                .withClickEvent(new NbtClickEvent(compound))));
             break;
           }
         }
@@ -147,7 +147,7 @@ public final class NbtPrettyPrinter {
                                       HoverEvent.Action.SHOW_TEXT,
                                       new TranslatableText(
                                           "debug.mishanguc.nbt.compound_display_full")))
-                              .withClickEvent(new ExtendedClickEvent(serialize(compound)))));
+                              .withClickEvent(new NbtClickEvent(compound))));
         }
         return text.append("}");
       }
@@ -165,7 +165,7 @@ public final class NbtPrettyPrinter {
                                       HoverEvent.Action.SHOW_TEXT,
                                       new TranslatableText(
                                           "debug.mishanguc.nbt.compound_display_full")))
-                              .withClickEvent(new ExtendedClickEvent(serialize(compound)))));
+                              .withClickEvent(new NbtClickEvent(compound))));
         }
         text.append("}");
         return text;
@@ -213,7 +213,7 @@ public final class NbtPrettyPrinter {
                                         HoverEvent.Action.SHOW_TEXT,
                                         new TranslatableText(
                                             "debug.mishanguc.nbt.list_display_remains")))
-                                .withClickEvent(new ExtendedClickEvent(serialize(remains)))));
+                                .withClickEvent(new NbtClickEvent(remains))));
             return text;
           }
           n++;
@@ -245,7 +245,7 @@ public final class NbtPrettyPrinter {
                                         HoverEvent.Action.SHOW_TEXT,
                                         new TranslatableText(
                                             "debug.mishanguc.nbt.list_display_full")))
-                                .withClickEvent(new ExtendedClickEvent(serialize(nbtList)))));
+                                .withClickEvent(new NbtClickEvent(nbtList))));
             break;
           }
         }
@@ -262,7 +262,7 @@ public final class NbtPrettyPrinter {
                                       HoverEvent.Action.SHOW_TEXT,
                                       new TranslatableText(
                                           "debug.mishanguc.nbt.list_display_full")))
-                              .withClickEvent(new ExtendedClickEvent(serialize(nbtList)))));
+                              .withClickEvent(new NbtClickEvent(nbtList))));
         }
         text.append("]");
         return text;
@@ -281,7 +281,7 @@ public final class NbtPrettyPrinter {
                                       HoverEvent.Action.SHOW_TEXT,
                                       new TranslatableText(
                                           "debug.mishanguc.nbt.list_display_full")))
-                              .withClickEvent(new ExtendedClickEvent(serialize(nbtList)))));
+                              .withClickEvent(new NbtClickEvent(nbtList))));
         }
         text.append("]");
         return text;
