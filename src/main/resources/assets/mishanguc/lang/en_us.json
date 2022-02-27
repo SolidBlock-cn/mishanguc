@@ -187,6 +187,7 @@
   "debug.mishanguc.roadConnectionState.brief": "[%s side] Direction: %s, Color: %s, Probability: %s",
   "debug.mishanguc.blockId.header": "Id information of block at %s:",
   "debug.mishanguc.entityId.header": "Id information of entity at %s:",
+  "debug.mishanguc.biomeId.header": "Id information of biome at %s:",
   "debug.mishanguc.id.name": "\u00a77Name: \u00a7r%s",
   "debug.mishanguc.id.id": "\u00a77Id: \u00a7r%s",
   "debug.mishanguc.id.rawId": "\u00a77Raw Id: \u00a7r%s",
