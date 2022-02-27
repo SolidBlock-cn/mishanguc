@@ -31,3 +31,6 @@ bin/
 # fabric
 
 run/
+/icon.xcf
+/icon-large.png
+/icon-wide.png

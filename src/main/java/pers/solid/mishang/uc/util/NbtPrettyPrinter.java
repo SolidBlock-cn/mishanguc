@@ -34,16 +34,18 @@ public final class NbtPrettyPrinter {
    */
   public static Text serialize(NbtElement element, int layer, String indent, int depth) {
     if (element instanceof NbtCompound) {
-      return serialize(((NbtCompound) element), layer, indent, depth);
+      return serialize((NbtCompound) element, layer, indent, depth);
     } else if (element instanceof NbtList) {
-      return serialize(((NbtList) element), layer, indent, depth);
+      return serialize((NbtList) element, layer, indent, depth);
     } else if (element instanceof NbtString) {
-      return serialize(((NbtString) element), layer, indent, depth);
+      return serialize((NbtString) element, layer, indent, depth);
     }
     return element.toText(indent, depth);
   }
 
-  /** @see NbtCompound#toText(String, int) */
+  /**
+   * @see NbtCompound#toText(String, int)
+   */
   public static Text serialize(NbtCompound compound, int layer, String indent, int depth) {
     final Map<String, NbtElement> entries = ((NbtCompoundAccessor) compound).getEntries();
     switch (layer) {
@@ -87,7 +89,7 @@ public final class NbtPrettyPrinter {
                       .styled(
                           style ->
                               style
-                                  .withClickEvent(new ExtendedClickEvent(serialize(remains)))
+                                  .withClickEvent(new NbtClickEvent(remains))
                                   .withHoverEvent(
                                       new HoverEvent(
                                           HoverEvent.Action.SHOW_TEXT,
@@ -134,7 +136,7 @@ public final class NbtPrettyPrinter {
                                           HoverEvent.Action.SHOW_TEXT,
                                           new TranslatableText(
                                               "debug.mishanguc.nbt.compound_display_full")))
-                                  .withClickEvent(new ExtendedClickEvent(serialize(compound)))));
+                                  .withClickEvent(new NbtClickEvent(compound))));
               break;
             }
           }
@@ -152,7 +154,7 @@ public final class NbtPrettyPrinter {
                                         HoverEvent.Action.SHOW_TEXT,
                                         new TranslatableText(
                                             "debug.mishanguc.nbt.compound_display_full")))
-                                .withClickEvent(new ExtendedClickEvent(serialize(compound)))));
+                                .withClickEvent(new NbtClickEvent(compound))));
           }
           return text.append("}");
         }
@@ -171,7 +173,7 @@ public final class NbtPrettyPrinter {
                                         HoverEvent.Action.SHOW_TEXT,
                                         new TranslatableText(
                                             "debug.mishanguc.nbt.compound_display_full")))
-                                .withClickEvent(new ExtendedClickEvent(serialize(compound)))));
+                                .withClickEvent(new NbtClickEvent(compound))));
           }
           text.append("}");
           return text;
@@ -179,7 +181,9 @@ public final class NbtPrettyPrinter {
     }
   }
 
-  /** @see NbtList#toText(String, int) */
+  /**
+   * @see NbtList#toText(String, int)
+   */
   public static Text serialize(NbtList nbtList, int layer, String indent, int depth) {
     switch (layer) {
       case 0:
@@ -220,7 +224,7 @@ public final class NbtPrettyPrinter {
                                           HoverEvent.Action.SHOW_TEXT,
                                           new TranslatableText(
                                               "debug.mishanguc.nbt.list_display_remains")))
-                                  .withClickEvent(new ExtendedClickEvent(serialize(remains)))));
+                                  .withClickEvent(new NbtClickEvent(remains))));
               return text;
             }
             n++;
@@ -253,7 +257,7 @@ public final class NbtPrettyPrinter {
                                           HoverEvent.Action.SHOW_TEXT,
                                           new TranslatableText(
                                               "debug.mishanguc.nbt.list_display_full")))
-                                  .withClickEvent(new ExtendedClickEvent(serialize(nbtList)))));
+                                  .withClickEvent(new NbtClickEvent(nbtList))));
               break;
             }
           }
@@ -270,7 +274,7 @@ public final class NbtPrettyPrinter {
                                         HoverEvent.Action.SHOW_TEXT,
                                         new TranslatableText(
                                             "debug.mishanguc.nbt.list_display_full")))
-                                .withClickEvent(new ExtendedClickEvent(serialize(nbtList)))));
+                                .withClickEvent(new NbtClickEvent(nbtList))));
           }
           text.append("]");
           return text;
@@ -290,7 +294,7 @@ public final class NbtPrettyPrinter {
                                         HoverEvent.Action.SHOW_TEXT,
                                         new TranslatableText(
                                             "debug.mishanguc.nbt.list_display_full")))
-                                .withClickEvent(new ExtendedClickEvent(serialize(nbtList)))));
+                                .withClickEvent(new NbtClickEvent(nbtList))));
           }
           text.append("]");
           return text;

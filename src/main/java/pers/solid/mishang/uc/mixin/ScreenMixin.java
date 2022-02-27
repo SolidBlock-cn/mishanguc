@@ -10,7 +10,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import pers.solid.mishang.uc.util.ExtendedClickEvent;
+import pers.solid.mishang.uc.util.NbtClickEvent;
+import pers.solid.mishang.uc.util.NbtPrettyPrinter;
+import pers.solid.mishang.uc.util.TextClickEvent;
 
 @Mixin(Screen.class)
 public class ScreenMixin {
@@ -18,7 +20,7 @@ public class ScreenMixin {
 
   /**
    * This injection is used for an extended "clickEvent" of JSON string. It does not add to an enum
-   * element, but instead, uses {@link ExtendedClickEvent} that extends vanilla {@link ClickEvent}s.
+   * element, but instead, uses {@link TextClickEvent} that extends vanilla {@link ClickEvent}s.
    */
   @Inject(
       method = "handleTextClick",
@@ -30,9 +32,15 @@ public class ScreenMixin {
       cancellable = true)
   public void handleTextClickMixin(Style style, CallbackInfoReturnable<Boolean> cir) {
     final ClickEvent clickEvent = style.getClickEvent();
-    if (clickEvent instanceof ExtendedClickEvent && client != null && client.player != null) {
+    if (clickEvent instanceof TextClickEvent && client != null && client.player != null) {
       this.client.player.sendSystemMessage(
-          ((ExtendedClickEvent) clickEvent).text, this.client.player.getUuid());
+          ((TextClickEvent) clickEvent).text, this.client.player.getUuid());
+      cir.setReturnValue(true);
+      cir.cancel();
+    } else if (clickEvent instanceof NbtClickEvent && client != null && client.player != null) {
+      this.client.player.sendSystemMessage(
+          NbtPrettyPrinter.serialize(((NbtClickEvent) clickEvent).nbt),
+          this.client.player.getUuid());
       cir.setReturnValue(true);
       cir.cancel();
     }
