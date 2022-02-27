@@ -31,5 +31,6 @@ bin/
 # fabric
 
 run/
-/src/main/resources/assets/mishanguc/icon-large.png
-/src/main/resources/assets/mishanguc/icon.xcf
+/icon.xcf
+/icon-large.png
+/icon-wide.png

@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -17,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -49,7 +51,8 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
   }
 
   /** 发送一个方块、实体或其他事物的id。 */
-  private void broadcastId(PlayerEntity player, Text name, Identifier identifier, int rawId) {
+  private void broadcastId(
+      PlayerEntity player, Text name, @Nullable Identifier identifier, int rawId) {
     player.sendSystemMessage(
         new LiteralText("  ").append(new TranslatableText("debug.mishanguc.id.name", name)),
         Util.NIL_UUID);
@@ -57,7 +60,10 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
         new LiteralText("  ")
             .append(
                 new TranslatableText(
-                    "debug.mishanguc.id.id", new LiteralText(identifier.toString()))),
+                    "debug.mishanguc.id.id",
+                    identifier == null
+                        ? new TranslatableText("gui.none")
+                        : new LiteralText(identifier.toString()))),
         Util.NIL_UUID);
     player.sendSystemMessage(
         new LiteralText("  ")
@@ -74,15 +80,42 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
       BlockHitResult blockHitResult,
       Hand hand,
       boolean fluidIncluded) {
-    if (world.isClient) return getIdOf(player, world, blockHitResult.getBlockPos());
+    if (!world.isClient) return getIdOf(player, world, blockHitResult.getBlockPos());
     else return ActionResult.SUCCESS;
   }
 
   @Override
   public ActionResult beginAttackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    if (world.isClient) return getIdOf(player, world, pos);
+    if (!world.isClient) return getIdOf(player, world, pos);
     else return ActionResult.SUCCESS;
+  }
+
+  @Override
+  public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+    if (!world.isClient) {
+      final BlockPos blockPos = user.getBlockPos();
+      final Biome biome = user.getEntityWorld().getBiome(blockPos);
+      final Registry<Biome> biomes =
+          ((ServerWorld) world).getServer().getRegistryManager().get(Registry.BIOME_KEY);
+      final Identifier identifier = biomes.getId(biome);
+      final int rawId = biomes.getRawId(biome);
+      user.sendSystemMessage(
+          new LiteralText("")
+              .append(
+                  new TranslatableText(
+                          "debug.mishanguc.biomeId.header",
+                          String.format(
+                              "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
+                      .formatted(Formatting.YELLOW)),
+          Util.NIL_UUID);
+      broadcastId(
+          user,
+          new TranslatableText(Util.createTranslationKey("biome", identifier)),
+          identifier,
+          rawId);
+    }
+    return super.use(world, user, hand);
   }
 
   @Override
