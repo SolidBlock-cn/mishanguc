@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.util;
 
 import com.google.gson.JsonParseException;
+import it.unimi.dsi.fastutil.chars.Char2CharArrayMap;
+import it.unimi.dsi.fastutil.chars.Char2CharMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
@@ -13,11 +15,25 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.text.*;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Util;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /** 对 {@link net.minecraft.text.Text} 的简单包装与扩展，允许设置对齐属性、尺寸等参数，以便渲染时使用。同时还提供对象与 NBT、JSON 之间的转换。 */
 public class TextContext implements Cloneable {
+  /** 用于 {@link #flip()} 方法中，左右替换字符串。 */
+  private static final Char2CharMap flipStringReplacement =
+      Util.make(
+          new Char2CharArrayMap(),
+          map -> {
+            map.put('←', '→');
+            map.put('→', '←');
+            map.put('↖', '↗');
+            map.put('↗', '↖');
+            map.put('↘', '↙');
+            map.put('↙', '↘');
+          });
   /** 文本内容。 */
   public @Nullable MutableText text;
   /** 水平对齐方式。若为 null 则取默认值。 */
@@ -39,15 +55,25 @@ public class TextContext implements Cloneable {
 
   public float scaleX = 1;
   public float scaleY = 1;
-  /** @see net.minecraft.util.Formatting#BOLD */
+  /**
+   * @see net.minecraft.util.Formatting#BOLD
+   */
   public boolean bold = false;
-  /** @see net.minecraft.util.Formatting#ITALIC */
+  /**
+   * @see net.minecraft.util.Formatting#ITALIC
+   */
   public boolean italic = false;
-  /** @see net.minecraft.util.Formatting#UNDERLINE */
+  /**
+   * @see net.minecraft.util.Formatting#UNDERLINE
+   */
   public boolean underline = false;
-  /** @see net.minecraft.util.Formatting#STRIKETHROUGH */
+  /**
+   * @see net.minecraft.util.Formatting#STRIKETHROUGH
+   */
   public boolean strikethrough = false;
-  /** @see net.minecraft.util.Formatting#OBFUSCATED */
+  /**
+   * @see net.minecraft.util.Formatting#OBFUSCATED
+   */
   public boolean obfuscated = false;
   /** 是否为绝对定位。如果为 <code>false</code>，会按照从上到下的顺序渲染。 */
   public boolean absolute = false;
@@ -301,7 +327,6 @@ public class TextContext implements Cloneable {
 
   public @Nullable MutableText asStyledText() {
     if (text == null) return null;
-    final MutableText copy = text.shallowCopy();
     if (bold) text.formatted(Formatting.BOLD);
     if (italic) text.formatted(Formatting.ITALIC);
     if (underline) text.formatted(Formatting.UNDERLINE);
@@ -309,5 +334,39 @@ public class TextContext implements Cloneable {
     if (obfuscated) text.formatted(Formatting.OBFUSCATED);
     text.styled(style -> style.withColor(TextColor.fromRgb(color)));
     return text;
+  }
+
+  @Contract(mutates = "this")
+  public TextContext flip() {
+    offsetX = -offsetX;
+    switch (horizontalAlign) {
+      case LEFT:
+        {
+          horizontalAlign = HorizontalAlign.RIGHT;
+          break;
+        }
+      case RIGHT:
+        {
+          horizontalAlign = HorizontalAlign.LEFT;
+          break;
+        }
+    }
+    if (text instanceof LiteralText) {
+      final String rawString = ((LiteralText) text).getRawString();
+      text =
+          new LiteralText(
+              Util.make(
+                      new StringBuffer(rawString),
+                      stringBuffer -> {
+                        for (int i = 0; i < stringBuffer.length(); i++) {
+                          final char c = stringBuffer.charAt(i);
+                          if (flipStringReplacement.containsKey(c)) {
+                            stringBuffer.setCharAt(i, flipStringReplacement.get(c));
+                          }
+                        }
+                      })
+                  .toString());
+    }
+    return this;
   }
 }

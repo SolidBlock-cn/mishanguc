@@ -10,6 +10,6 @@ import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 public class WallSignBlockEditScreen extends AbstractSignBlockEditScreen {
   public WallSignBlockEditScreen(WallSignBlockEntity entity, BlockPos blockPos) {
     super(entity, blockPos, Lists.newArrayList(entity.textContexts));
-    entity.textContexts = getTextContextsEditing();
+    entity.textContexts = textContextsEditing;
   }
 }
