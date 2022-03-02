@@ -237,5 +237,9 @@
   "roadConnectionState.probability.probably_connect_to": "应当连接",
   "vertical_align.mishanguc.bottom": "底",
   "vertical_align.mishanguc.middle": "中",
-  "vertical_align.mishanguc.top": "顶"
+  "vertical_align.mishanguc.top": "顶",
+  "message.mishanguc.apply_double_line_template": "应用双行文本模板",
+  "message.mishanguc.apply_left_arrow_template": "应用左箭头模板",
+  "message.mishanguc.apply_right_arrow_template": "应用右箭头模板",
+  "message.mishanguc.copy_from_back": "从背面复制"
 }

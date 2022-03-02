@@ -36,15 +36,15 @@ public class WallSignBlockEntity extends BlockEntityWithText {
     if (nbtText instanceof NbtString) {
       // 如果 text 是个字符串，则读取整个 nbt 作为 TextContext。
       // 例如，整个 nbt 可以是 {text: "abc", color: "red", size: 5}、
-      textContexts = ImmutableList.of(TextContext.fromNbt(nbt, DEFAULT_TEXT_CONTEXT));
+      textContexts = ImmutableList.of(TextContext.fromNbt(nbt, getDefaultTextContext()));
     } else if (nbtText instanceof NbtCompound) {
       // 如果 text 是个复合标签，则读取这个复合标签。
       // 例如，整个 nbt 可以是 {text: {text: "abc", color: "red", size: 5}}。
-      textContexts = ImmutableList.of(TextContext.fromNbt(nbtText, DEFAULT_TEXT_CONTEXT));
+      textContexts = ImmutableList.of(TextContext.fromNbt(nbtText, getDefaultTextContext()));
     } else if (nbtText instanceof NbtList) {
       ImmutableList.Builder<TextContext> builder = new ImmutableList.Builder<>();
       for (NbtElement nbtElement : ((NbtList) nbtText)) {
-        builder.add(TextContext.fromNbt(nbtElement, DEFAULT_TEXT_CONTEXT));
+        builder.add(TextContext.fromNbt(nbtElement, getDefaultTextContext()));
       }
       textContexts = builder.build();
     }
@@ -72,7 +72,7 @@ public class WallSignBlockEntity extends BlockEntityWithText {
 
   @Override
   public TextContext getDefaultTextContext() {
-    return DEFAULT_TEXT_CONTEXT;
+    return new TextContext();
   }
 
   @Override

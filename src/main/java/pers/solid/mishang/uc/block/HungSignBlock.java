@@ -260,17 +260,16 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       Hand hand,
       BlockHitResult hit) {
     final ActionResult actionResult = super.onUse(state, world, pos, player, hand, hit);
+    final BlockEntity blockEntity = world.getBlockEntity(pos);
+    // 若方块实体不对应，或者编辑的这一侧不可编辑，则在客户端和服务器均略过。
+    // Skip if the block entity does not correspond, or the side is not editable.
+    if (!(blockEntity instanceof HungSignBlockEntity) || !state.get(AXIS).test(hit.getSide())) {
+      return ActionResult.PASS;
+    }
     if (actionResult == ActionResult.PASS && !world.isClient) {
       if (((ServerPlayerEntity) player).interactionManager.getGameMode() == GameMode.ADVENTURE) {
         // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
         return ActionResult.FAIL;
-      }
-      // 在服务端触发打开告示牌编辑界面。Open the edit interface, triggered in the server side.
-      final BlockEntity blockEntity = world.getBlockEntity(pos);
-      // 若方块实体不对应，或者编辑的这一侧不可编辑，则略过。
-      // Skip if the block entity does not correspond, or the side is not editable.
-      if (!(blockEntity instanceof HungSignBlockEntity) || !state.get(AXIS).test(hit.getSide())) {
-        return ActionResult.PASS;
       }
       final HungSignBlockEntity entity = (HungSignBlockEntity) blockEntity;
       entity.checkEditorValidity();
