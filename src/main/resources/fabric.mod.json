@@ -37,5 +37,8 @@
     "fabric": "*",
     "minecraft": ">=1.18",
     "advanced_runtime_resource_pack": "*"
+  },
+  "breaks": {
+    "minecraft": ">=1.18.2"
   }
 }
