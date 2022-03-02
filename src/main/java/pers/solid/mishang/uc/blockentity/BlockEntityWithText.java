@@ -20,6 +20,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import pers.solid.mishang.uc.util.TextContext;
@@ -30,7 +31,9 @@ public abstract class BlockEntityWithText extends BlockEntity {
     super(type, pos, state);
   }
 
-  /** @see net.minecraft.block.entity.SignBlockEntity#getCommandSource(ServerPlayerEntity) */
+  /**
+   * @see net.minecraft.block.entity.SignBlockEntity#getCommandSource(ServerPlayerEntity)
+   */
   public ServerCommandSource getCommandSource(@Nullable ServerPlayerEntity player) {
     String string = player == null ? "TextPad" : player.getName().getString();
     Text text = player == null ? new LiteralText("TextPad") : player.getDisplayName();
@@ -71,9 +74,12 @@ public abstract class BlockEntityWithText extends BlockEntity {
    *
    * @return 该方块实体的默认 <tt>TextContext</tt>。
    */
+  @Contract("->new")
   public abstract TextContext getDefaultTextContext();
 
-  /** @return 正在编辑该告示牌的玩家。如果没有玩家正在编辑，则返回 {@code null}。 */
+  /**
+   * @return 正在编辑该告示牌的玩家。如果没有玩家正在编辑，则返回 {@code null}。
+   */
   public abstract @Nullable PlayerEntity getEditor();
 
   /**
