@@ -265,5 +265,10 @@
   "message.mishanguc.see_through.param": "See-through: %s",
   "message.mishanguc.custom_color": "Custom Color",
   "message.mishanguc.absolute": "Absolute",
-  "message.mishanguc.absolute.param": "Absolute: %s"
+  "message.mishanguc.absolute.param": "Absolute: %s",
+
+  "message.mishanguc.apply_double_line_template": "Double-line template",
+  "message.mishanguc.apply_left_arrow_template": "Left-arrow template",
+  "message.mishanguc.apply_right_arrow_template": "Right-arrow template",
+  "message.mishanguc.copy_from_back": "Copy from back"
 }
