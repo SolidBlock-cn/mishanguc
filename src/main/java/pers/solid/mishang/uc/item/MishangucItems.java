@@ -94,7 +94,7 @@ public final class MishangucItems {
             Registry.register(Registry.ITEM, new Identifier("mishanguc", path), value);
           }
         } catch (IllegalAccessException e) {
-          MishangUc.MISHANG_LOGGER.error(e);
+          MishangUc.MISHANG_LOGGER.error("Error in registering items", e);
         }
       }
     }

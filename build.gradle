@@ -21,6 +21,12 @@ repositories {
         // for 0.4.2 and older
         // url uri("https://raw.githubusercontent.com/Devan-Kerman/Devan-Repo/master/")
     }
+
+    // SpoornPacks
+//    maven {
+//        url "https://jitpack.io"
+//        content { includeGroup "com.github.spoorn" }
+//    }
 }
 
 
@@ -39,8 +45,8 @@ dependencies {
     // I never break backwards compatibility, so just fetching the latest version should be fine
     // modImplementation("net.devtech:arrp:0.+")
 
-
-    // optional dev env annotation support
+    // SpoornPacks，用于生成资源包和数据包
+//    modImplementation 'com.github.spoorn:SpoornPacks:4.0-1.18.2'
 }
 
 processResources {

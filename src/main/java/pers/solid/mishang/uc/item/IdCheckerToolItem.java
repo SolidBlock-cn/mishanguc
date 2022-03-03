@@ -95,7 +95,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
   public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
     if (!world.isClient) {
       final BlockPos blockPos = user.getBlockPos();
-      final Biome biome = user.getEntityWorld().getBiome(blockPos);
+      final Biome biome = user.getEntityWorld().getBiome(blockPos).value();
       final Registry<Biome> biomes =
           ((ServerWorld) world).getServer().getRegistryManager().get(Registry.BIOME_KEY);
       final Identifier identifier = biomes.getId(biome);
@@ -104,7 +104,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
           new LiteralText("")
               .append(
                   new TranslatableText(
-                          "debug.mishanguc.biomeId.header",
+                          "debug.mishanguc.6biomeId.header",
                           String.format(
                               "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
                       .formatted(Formatting.YELLOW)),

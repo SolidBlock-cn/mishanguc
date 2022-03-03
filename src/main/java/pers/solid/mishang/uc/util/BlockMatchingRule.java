@@ -27,7 +27,7 @@ public abstract class BlockMatchingRule implements StringIdentifiable {
   protected static final RegistryKey<Registry<BlockMatchingRule>> REGISTRY_KEY =
       RegistryKey.ofRegistry(new Identifier("mishanguc", "block_matching_rule"));
   public static final SimpleRegistry<BlockMatchingRule> REGISTRY =
-      new SimpleRegistry<>(REGISTRY_KEY, Lifecycle.stable());
+      new SimpleRegistry<>(REGISTRY_KEY, Lifecycle.stable(), null);
   public static final BlockMatchingRule SAME_STATE =
       new BlockMatchingRule() {
         @Override
