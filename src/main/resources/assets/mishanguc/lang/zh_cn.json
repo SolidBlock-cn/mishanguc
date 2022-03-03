@@ -199,7 +199,7 @@
   "itemGroup.mishanguc.tools": "迷上城建 | 工具",
   "message.mishanguc.absolute": "绝对模式",
   "message.mishanguc.absolute.description": "在绝对模式下，重排文本会忽略这一行。",
-  "message.mishanguc.absolute.param": "绝对：%s",
+  "message.mishanguc.absolute.param": "绝对：%s（若开启，重排文本时会忽略这一行）",
   "message.mishanguc.add_first_text": "点击此处添加第一条文本！",
   "message.mishanguc.add_text": "添加文本",
   "message.mishanguc.apply_double_line_template": "应用双行文本模板",
@@ -269,5 +269,11 @@
   "message.mishanguc.moveUp": "上移",
   "message.mishanguc.moveUp.description": "将当前文本域上移。不影响显示效果，除非重排所有文本。",
   "message.mishanguc.moveDown": "下移",
-  "message.mishanguc.moveDown.description": "将当前文本域下移。不影响显示效果，除非重排所有文本。"
+  "message.mishanguc.moveDown.description": "将当前文本域下移。不影响显示效果，除非重排所有文本。",
+  "message.mishanguc.finish.description": "应用更改。",
+  "message.mishanguc.cancel.description": "丢弃并取消更改。",
+  "message.mishanguc.clear": "清除",
+  "message.mishanguc.clear.description": "清除所有文本，不可撤销！",
+  "message.mishanguc.clear.confirm": "确定？？",
+  "message.mishanguc.clear.confirm.description": "再点击一次以清除所有文本，不可撤销！"
 }
