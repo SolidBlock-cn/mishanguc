@@ -72,7 +72,9 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
     return super.use(world, user, hand);
   }
 
-  /** 使用此物品右键单击物品时的反应。 The reaction when right-clicking the block with the item. */
+  /**
+   * 使用此物品右键单击物品时的反应。 The reaction when right-clicking the block with the item.
+   */
   public abstract ActionResult useOnBlock(
       PlayerEntity player,
       World world,

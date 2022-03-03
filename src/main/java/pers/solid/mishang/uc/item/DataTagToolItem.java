@@ -51,9 +51,9 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
     if (blockEntity == null) {
       player.sendSystemMessage(
           new TranslatableText(
-                  "debug.mishanguc.dataTag.block.null",
-                  String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()),
-                  world.getBlockState(blockPos).getBlock().getName().formatted(Formatting.BOLD))
+              "debug.mishanguc.dataTag.block.null",
+              String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()),
+              world.getBlockState(blockPos).getBlock().getName().formatted(Formatting.BOLD))
               .formatted(Formatting.RED),
           Util.NIL_UUID);
     } else {
@@ -61,9 +61,9 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
           new BlockDataObject(world.getBlockEntity(blockPos), blockPos);
       player.sendSystemMessage(
           new TranslatableText(
-                  "debug.mishanguc.dataTag.block.header",
-                  String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()),
-                  world.getBlockState(blockPos).getBlock().getName().formatted(Formatting.BOLD))
+              "debug.mishanguc.dataTag.block.header",
+              String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()),
+              world.getBlockState(blockPos).getBlock().getName().formatted(Formatting.BOLD))
               .formatted(Formatting.YELLOW),
           Util.NIL_UUID);
       player.sendSystemMessage(NbtPrettyPrinter.serialize(blockDataObject.getNbt()), Util.NIL_UUID);
@@ -81,11 +81,11 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
     final NbtCompound nbt = entityDataObject.getNbt();
     player.sendSystemMessage(
         new TranslatableText(
-                "debug.mishanguc.dataTag.entity.entity",
-                String.format(
-                    "%s %s %s",
-                    ((int) entity.getX()), ((int) entity.getY()), ((int) entity.getZ())),
-                new LiteralText("").append(entity.getName()).formatted(Formatting.BOLD))
+            "debug.mishanguc.dataTag.entity.entity",
+            String.format(
+                "%s %s %s",
+                ((int) entity.getX()), ((int) entity.getY()), ((int) entity.getZ())),
+            new LiteralText("").append(entity.getName()).formatted(Formatting.BOLD))
             .formatted(Formatting.YELLOW),
         Util.NIL_UUID);
     player.sendSystemMessage(NbtPrettyPrinter.serialize(nbt), Util.NIL_UUID);

@@ -21,14 +21,20 @@ import pers.solid.mishang.uc.item.WallSignBlockItem;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-/** 迷上城建模组的所有方块。 */
+/**
+ * 迷上城建模组的所有方块。
+ */
 public class MishangucBlocks {
 
-  /** 绝大多数柏油路方块共用的方块设置。 */
+  /**
+   * 绝大多数柏油路方块共用的方块设置。
+   */
   protected static final FabricBlockSettings ASPHALT_ROAD_SETTINGS =
       FabricBlockSettings.of(Material.STONE, MapColor.GRAY).strength(0.5F);
 
-  /** 绝大多数光源方块共用的方块设置。 */
+  /**
+   * 绝大多数光源方块共用的方块设置。
+   */
   protected static final FabricBlockSettings WHITE_LIGHT_SETTINGS =
       FabricBlockSettings.of(Material.REDSTONE_LAMP).luminance(15);
 
@@ -61,8 +67,8 @@ public class MishangucBlocks {
                 HungSignBlock.class.isAssignableFrom(fieldType)
                     ? new HungSignBlockItem(value, settings)
                     : WallSignBlock.class.isAssignableFrom(fieldType)
-                        ? new WallSignBlockItem(value, settings)
-                        : new NamedBlockItem(value, settings);
+                    ? new WallSignBlockItem(value, settings)
+                    : new NamedBlockItem(value, settings);
             Registry.register(Registry.ITEM, new Identifier("mishanguc", path), item);
           }
         } catch (IllegalAccessException e) {

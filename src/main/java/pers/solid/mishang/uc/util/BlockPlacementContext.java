@@ -45,7 +45,9 @@ public class BlockPlacementContext {
    * #stateToPlace}.
    */
   public final @NotNull BlockState stateToReplace;
-  /** 放置之前，{@link #posToPlace} 位置处的方块。该方块将会被 {@link #entityToPlace} 替换掉。 */
+  /**
+   * 放置之前，{@link #posToPlace} 位置处的方块。该方块将会被 {@link #entityToPlace} 替换掉。
+   */
   public final @Nullable BlockEntity entityToReplace;
 
   public final boolean includesFluid;
@@ -172,7 +174,9 @@ public class BlockPlacementContext {
     }
   }
 
-  /** 若玩家手中拿着方块物品，则获取此方块物品以及对应的手。 */
+  /**
+   * 若玩家手中拿着方块物品，则获取此方块物品以及对应的手。
+   */
   private void completeHandStacks() {
     for (@NotNull Hand hand1 : Hand.values()) {
       stackInHand = player.getStackInHand(hand1);
@@ -193,7 +197,9 @@ public class BlockPlacementContext {
     return world.setBlockState(posToPlace, stateToPlace, flags);
   }
 
-  /** 放置方块实体。 */
+  /**
+   * 放置方块实体。
+   */
   @SuppressWarnings("UnusedReturnValue")
   public boolean setBlockEntity() {
     BlockEntity entityToPlace = world.getBlockEntity(posToPlace);

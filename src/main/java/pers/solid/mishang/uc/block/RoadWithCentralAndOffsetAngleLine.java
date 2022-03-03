@@ -15,11 +15,17 @@ import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
 
-/** 带有一条正中直线和偏移直线的道路。类似于 {@link RoadWithAngleLine}，不过其中一条半线是侧的。 */
+/**
+ * 带有一条正中直线和偏移直线的道路。类似于 {@link RoadWithAngleLine}，不过其中一条半线是侧的。
+ */
 public interface RoadWithCentralAndOffsetAngleLine extends RoadWithAngleLine {
-  /** 正中线和侧线围成的角的朝向。 */
+  /**
+   * 正中线和侧线围成的角的朝向。
+   */
   EnumProperty<HorizontalCornerDirection> FACING = ModProperties.HORIZONTAL_CORNER_FACING;
-  /** 正中线所在轴。 */
+  /**
+   * 正中线所在轴。
+   */
   EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
 
   /**
@@ -50,8 +56,8 @@ public interface RoadWithCentralAndOffsetAngleLine extends RoadWithAngleLine {
             AXIS,
             rotation == BlockRotation.CLOCKWISE_90 || rotation == BlockRotation.COUNTERCLOCKWISE_90
                 ? axis == Direction.Axis.X
-                    ? Direction.Axis.Z
-                    : axis == Direction.Axis.Z ? Direction.Axis.X : axis
+                ? Direction.Axis.Z
+                : axis == Direction.Axis.Z ? Direction.Axis.X : axis
                 : axis);
   }
 

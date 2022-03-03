@@ -22,7 +22,9 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
     super(settings, includesFluid);
   }
 
-  /** 向聊天框广播各个方向的道路连接状态。 */
+  /**
+   * 向聊天框广播各个方向的道路连接状态。
+   */
   public static ActionResult sendMessageOfState(
       PlayerEntity playerEntity, BlockState blockState, BlockPos blockPos) {
     Block block = blockState.getBlock();
@@ -32,8 +34,8 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
     }
     playerEntity.sendMessage(
         new TranslatableText(
-                "debug.mishanguc.roadConnectionState.allDir",
-                String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
+            "debug.mishanguc.roadConnectionState.allDir",
+            String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
             .setStyle(Style.EMPTY.withBold(true).withColor(Formatting.YELLOW)),
         false);
     Direction.Type.HORIZONTAL.forEach(

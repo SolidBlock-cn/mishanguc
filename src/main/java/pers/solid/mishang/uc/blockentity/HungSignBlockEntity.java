@@ -43,7 +43,8 @@ public class HungSignBlockEntity extends BlockEntityWithText {
    * 编辑该方块的玩家。若为 <code>true</code>，则其他玩家不可编辑。<br>
    * The player editing the block. <code>true</code> means other players cannot edit.
    */
-  @Nullable private PlayerEntity editor;
+  @Nullable
+  private PlayerEntity editor;
 
   public HungSignBlockEntity(BlockPos pos, BlockState state) {
     super(MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY, pos, state);

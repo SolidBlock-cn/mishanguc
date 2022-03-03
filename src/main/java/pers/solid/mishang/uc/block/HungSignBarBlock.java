@@ -26,7 +26,9 @@ import pers.solid.mishang.uc.mixin.EntityShapeContextAccessor;
 
 import java.util.Map;
 
-/** 悬挂的告示牌上面的专用的悬挂物方块。其方块状态会与其下方的悬挂告示牌方块同步。 */
+/**
+ * 悬挂的告示牌上面的专用的悬挂物方块。其方块状态会与其下方的悬挂告示牌方块同步。
+ */
 public class HungSignBarBlock extends Block implements Waterloggable {
 
   public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
@@ -41,7 +43,9 @@ public class HungSignBarBlock extends Block implements Waterloggable {
       MishangUtils.createHorizontalDirectionToShape(5.5, 0, 9, 10.5, 16, 14);
   private static final Map<Direction, @Nullable VoxelShape> BAR_SHAPES_EDGE_WIDE =
       MishangUtils.createHorizontalDirectionToShape(5.5, 0, 11, 10.5, 16, 16);
-  /** 当 left 和 right 均为 false 时，显示在正中央，采用此轮廓。 */
+  /**
+   * 当 left 和 right 均为 false 时，显示在正中央，采用此轮廓。
+   */
   private static final VoxelShape BAR_SHAPE_CENTRAL = createCuboidShape(7.5, 0, 7.5, 8.5, 16, 8.5);
 
   private static final VoxelShape BAR_SHAPE_CENTRAL_WIDE = createCuboidShape(5, 0, 5, 11, 16, 11);
@@ -59,7 +63,9 @@ public class HungSignBarBlock extends Block implements Waterloggable {
             .with(RIGHT, true));
   }
 
-  /** 通过已有的 {@link HungSignBlock} 创建 {@link HungSignBarBlock}。 */
+  /**
+   * 通过已有的 {@link HungSignBlock} 创建 {@link HungSignBarBlock}。
+   */
   public HungSignBarBlock(HungSignBlock block) {
     this(block.baseBlock, FabricBlockSettings.copyOf(block));
   }
@@ -164,7 +170,9 @@ public class HungSignBarBlock extends Block implements Waterloggable {
     return state;
   }
 
-  /** 和 {@link HungSignBlock#rotate} 一致。 */
+  /**
+   * 和 {@link HungSignBlock#rotate} 一致。
+   */
   @SuppressWarnings("deprecation")
   @Override
   public BlockState rotate(BlockState state, BlockRotation rotation) {
@@ -174,7 +182,7 @@ public class HungSignBarBlock extends Block implements Waterloggable {
             .with(
                 AXIS,
                 rotation == BlockRotation.CLOCKWISE_90
-                        || rotation == BlockRotation.COUNTERCLOCKWISE_90
+                    || rotation == BlockRotation.COUNTERCLOCKWISE_90
                     ? (oldAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X)
                     : oldAxis);
     //noinspection AlibabaAvoidComplexCondition
