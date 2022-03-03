@@ -8,18 +8,22 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import pers.solid.mishang.uc.MishangUc;
+import org.jetbrains.annotations.ApiStatus;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 /** 用于处理浮点数的按钮。按下鼠标时增大，但是按住 shift 则会减小。滚动鼠标滚轮也会减小。 */
 @Environment(EnvType.CLIENT)
 public class FloatButtonWidget extends ButtonWidget {
-  public final Float2ObjectFunction<Text> messageSupplier;
+  public final Float2ObjectFunction<Text> tooltipSupplier;
   /** 按钮的默认值。可以按鼠标中键或者按住 Alt + Shift 点击以恢复。 */
   public final float defaultValue = 0;
 
   private final Object2FloatFunction<FloatButtonWidget> valueGetter;
   private final FloatConsumer valueSetter;
+
+  @ApiStatus.AvailableSince("0.1.5")
+  private final AtomicReference<Text> textAtom;
   /** 按钮的步长，默认为1。 */
   public float step = 1;
   /** 按钮当前的最小值。若低于最小值，则从最大值开始循环，但是如果没有最大值时除外。 */
@@ -32,21 +36,25 @@ public class FloatButtonWidget extends ButtonWidget {
       int y,
       int width,
       int height,
-      Float2ObjectFunction<Text> messageSupplier,
+      Text message,
+      Float2ObjectFunction<Text> tooltipSupplier,
       Object2FloatFunction<FloatButtonWidget> valueGetter,
       FloatConsumer valueSetter,
-      PressAction onPress) {
+      PressAction onPress,
+      AtomicReference<Text> textAtom) {
     super(
         x,
         y,
         width,
         height,
-        messageSupplier.get(0),
+        message,
         onPress,
-        (a, b, c, d) -> new TranslatableText("message.mishanguc.text_field.tooltip"));
-    this.messageSupplier = messageSupplier;
+        (button, matrices, mouseX, mouseY) ->
+            textAtom.set(tooltipSupplier.get(((FloatButtonWidget) button).getValue())));
+    this.tooltipSupplier = tooltipSupplier;
     this.valueGetter = valueGetter;
     this.valueSetter = valueSetter;
+    this.textAtom = textAtom;
   }
 
   public float getValue() {
@@ -58,7 +66,7 @@ public class FloatButtonWidget extends ButtonWidget {
     if (value < min) {
       if (Float.isFinite(max)) {
         // 从最大值开始向下循环。
-        value = max;
+        value = value + (max - min);
       } else {
         // 封底为最小值。
         value = min;
@@ -66,17 +74,14 @@ public class FloatButtonWidget extends ButtonWidget {
     } else if (value > max) {
       if (Float.isFinite(min)) {
         // 从最小值开始向上循环。
-        value = min;
+        value = value - (max - min);
       } else {
         // 封顶为最大值。
         value = max;
       }
     }
-    if (value<min||value>max) {
-      MishangUc.MISHANG_LOGGER.error("The value adjusted does not meet requirements: value={}, min={}, max={}", value,min,max);
-    }
     valueSetter.accept(value);
-    setMessage(messageSupplier.get(value));
+    textAtom.set(tooltipSupplier.get(getValue()));
   }
 
   @Override
@@ -120,10 +125,5 @@ public class FloatButtonWidget extends ButtonWidget {
                     * (Screen.hasAltDown() ? 0.125f : 1)));
     super.mouseScrolled(mouseX, mouseY, amount);
     return true;
-  }
-
-  @Override
-  public Text getMessage() {
-    return messageSupplier.get(getValue());
   }
 }
