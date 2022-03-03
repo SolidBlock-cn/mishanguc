@@ -182,6 +182,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           x -> new TranslatableText("message.mishanguc.scaleX.description", x),
           button -> focusedTextContext != null ? focusedTextContext.scaleX : 1,
           value -> {
+            changed = true;
             if (focusedTextContext != null) {
               focusedTextContext.scaleX = value;
             }
@@ -202,6 +203,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           x -> new TranslatableText("message.mishanguc.scaleY.description", x),
           button -> focusedTextContext != null ? focusedTextContext.scaleY : 1,
           value -> {
+            changed = true;
             if (focusedTextContext != null) {
               focusedTextContext.scaleY = value;
             }
@@ -221,6 +223,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           new LiteralText("B").formatted(Formatting.BOLD),
           button -> focusedTextContext == null ? null : focusedTextContext.bold,
           b -> {
+            changed = true;
             if (focusedTextContext != null) focusedTextContext.bold = b;
           },
           b ->
@@ -244,6 +247,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           new LiteralText("I").formatted(Formatting.ITALIC),
           button -> focusedTextContext == null ? null : focusedTextContext.italic,
           b -> {
+            changed = true;
             if (focusedTextContext != null) focusedTextContext.italic = b;
           },
           b ->
@@ -267,6 +271,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           new LiteralText("U").formatted(Formatting.UNDERLINE),
           button -> focusedTextContext == null ? null : focusedTextContext.underline,
           b -> {
+            changed = true;
             if (focusedTextContext != null) focusedTextContext.underline = b;
           },
           b ->
@@ -290,6 +295,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           new LiteralText("S").formatted(Formatting.STRIKETHROUGH),
           button -> focusedTextContext == null ? null : focusedTextContext.strikethrough,
           b -> {
+            changed = true;
             if (focusedTextContext != null) focusedTextContext.strikethrough = b;
           },
           b ->
@@ -313,6 +319,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           new LiteralText("O").formatted(Formatting.OBFUSCATED),
           button -> focusedTextContext == null ? null : focusedTextContext.obfuscated,
           b -> {
+            changed = true;
             if (focusedTextContext != null) focusedTextContext.obfuscated = b;
           },
           b ->
@@ -336,6 +343,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           new TranslatableText("message.mishanguc.shade"),
           button -> focusedTextContext == null ? null : focusedTextContext.shadow,
           b -> {
+            changed = true;
             if (focusedTextContext != null) focusedTextContext.shadow = b;
           },
           b ->
@@ -381,6 +389,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           x -> new TranslatableText("message.mishanguc.size.description", x),
           (buttons) -> focusedTextContext != null ? focusedTextContext.size : 0,
           value -> {
+            changed = true;
             if (focusedTextContext != null) {
               focusedTextContext.size = value;
             }
@@ -401,6 +410,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           x -> new TranslatableText("message.mishanguc.offsetX.description", x),
           button -> focusedTextContext != null ? focusedTextContext.offsetX : 0,
           value -> {
+            changed = true;
             if (focusedTextContext != null) {
               focusedTextContext.offsetX = value;
             }
@@ -421,6 +431,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           x -> new TranslatableText("message.mishanguc.offsetY.description", x),
           button -> focusedTextContext != null ? focusedTextContext.offsetY : 0,
           value -> {
+            changed = true;
             if (focusedTextContext != null) {
               focusedTextContext.offsetY = value;
             }
@@ -441,6 +452,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           x -> new TranslatableText("message.mishanguc.offsetZ.description", x),
           button -> focusedTextContext != null ? focusedTextContext.offsetZ : 0,
           value -> {
+            changed = true;
             if (focusedTextContext != null) {
               focusedTextContext.offsetZ = value;
             }
@@ -484,6 +496,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           x -> new TranslatableText("message.mishanguc.rotationX.description", x),
           button -> focusedTextContext != null ? focusedTextContext.rotationX : 0,
           value -> {
+            changed = true;
             if (focusedTextContext != null) focusedTextContext.rotationX = value;
           },
           button -> {
@@ -503,6 +516,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           x -> new TranslatableText("message.mishanguc.rotationY.description", x),
           button -> focusedTextContext != null ? focusedTextContext.rotationY : 0,
           value -> {
+            changed = true;
             if (focusedTextContext != null) focusedTextContext.rotationY = value;
           },
           button -> {
@@ -522,6 +536,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           x -> new TranslatableText("message.mishanguc.rotationZ.description", x),
           button -> focusedTextContext != null ? focusedTextContext.rotationZ : 0,
           value -> {
+            changed = true;
             if (focusedTextContext != null) focusedTextContext.rotationZ = value;
           },
           button -> {
@@ -589,6 +604,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           new TranslatableText("message.mishanguc.see_through"),
           button -> focusedTextContext == null ? null : focusedTextContext.seeThrough,
           b -> {
+            changed = true;
             if (focusedTextContext != null) focusedTextContext.seeThrough = b;
           },
           b ->
@@ -618,6 +634,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           widget ->
               widget.setChangedListener(
                   s -> {
+                    changed = true;
                     if (focusedTextContext != null) {
                       final TextColor parsedColor = TextColor.parse(widget.getText());
                       if (parsedColor != null) focusedTextContext.color = parsedColor.getRgb();
@@ -647,6 +664,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
                     .styled(style -> style.withColor(TextColor.fromRgb(dyeColor.getSignColor()))));
           },
           button -> {
+            changed = true;
             if (focusedTextContext == null) {
               ((FloatButtonWidget) button).active = false;
               return -1;
@@ -696,6 +714,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           new TranslatableText("message.mishanguc.absolute"),
           button -> focusedTextContext != null ? focusedTextContext.absolute : null,
           b -> {
+            changed = true;
             if (focusedTextContext != null) focusedTextContext.absolute = b;
           },
           b ->
@@ -721,12 +740,12 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       };
 
   {
-    colorButton.min = -0.5f;
-    colorButton.max = DyeColor.values().length - 0.5f;
-    horizontalAlignButton.min = -0.5f;
-    horizontalAlignButton.max = 2.5f;
-    verticalAlignButton.min = -0.5f;
-    verticalAlignButton.max = 2.5f;
+    colorButton.min = 0;
+    colorButton.max = DyeColor.values().length - 1;
+    horizontalAlignButton.min = 0;
+    horizontalAlignButton.max = 2;
+    verticalAlignButton.min = 0;
+    verticalAlignButton.max = 2;
     rotationXButton.step = 15;
     rotationYButton.step = 15;
     rotationZButton.step = 15;
