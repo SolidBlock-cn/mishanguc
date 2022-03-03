@@ -28,10 +28,10 @@ import net.minecraft.util.Util;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
@@ -45,7 +45,36 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MishangUc implements ModInitializer {
-  public static final Logger MISHANG_LOGGER = LoggerFactory.getLogger("Mishang Urban Construction");
+  public static final Logger MISHANG_LOGGER = LogManager.getLogger("Mishang Urban Construction");
+  /** 比 {@link AttackBlockCallback#EVENT} 更好！ */
+  public static final Event<AttackBlockCallback> BEGIN_ATTACK_BLOCK_EVENT =
+      EventFactory.createArrayBacked(
+          AttackBlockCallback.class,
+          (listeners) ->
+              (player, world, hand, pos, direction) -> {
+                for (AttackBlockCallback event : listeners) {
+                  ActionResult result = event.interact(player, world, hand, pos, direction);
+
+                  if (result != ActionResult.PASS) {
+                    return result;
+                  }
+                }
+                return ActionResult.PASS;
+              });
+
+  public static final Event<AttackBlockCallback> PROGRESS_ATTACK_BLOCK_EVENT =
+      EventFactory.createArrayBacked(
+          AttackBlockCallback.class,
+          (listeners) ->
+              (player, world, hand, pos, direction) -> {
+                for (AttackBlockCallback event : listeners) {
+                  ActionResult result = event.interact(player, world, hand, pos, direction);
+                  if (result != ActionResult.PASS) {
+                    return result;
+                  }
+                }
+                return ActionResult.PASS;
+              });
 
   /** 用于接受玩家在客户端完成告示牌方块编辑时发送过来的 packet。 */
   private void handleEditSignFinish(
@@ -106,36 +135,6 @@ public class MishangUc implements ModInitializer {
           // 编辑成功。
         });
   }
-
-  /** 比 {@link AttackBlockCallback#EVENT} 更好！ */
-  public static final Event<AttackBlockCallback> BEGIN_ATTACK_BLOCK_EVENT =
-      EventFactory.createArrayBacked(
-          AttackBlockCallback.class,
-          (listeners) ->
-              (player, world, hand, pos, direction) -> {
-                for (AttackBlockCallback event : listeners) {
-                  ActionResult result = event.interact(player, world, hand, pos, direction);
-
-                  if (result != ActionResult.PASS) {
-                    return result;
-                  }
-                }
-                return ActionResult.PASS;
-              });
-
-  public static final Event<AttackBlockCallback> PROGRESS_ATTACK_BLOCK_EVENT =
-      EventFactory.createArrayBacked(
-          AttackBlockCallback.class,
-          (listeners) ->
-              (player, world, hand, pos, direction) -> {
-                for (AttackBlockCallback event : listeners) {
-                  ActionResult result = event.interact(player, world, hand, pos, direction);
-                  if (result != ActionResult.PASS) {
-                    return result;
-                  }
-                }
-                return ActionResult.PASS;
-              });
 
   @Override
   public void onInitialize() {

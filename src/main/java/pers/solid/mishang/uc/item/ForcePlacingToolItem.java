@@ -15,7 +15,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -66,7 +65,6 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   public ActionResult beginAttackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
     final BlockState blockState = world.getBlockState(pos);
-    BlockSoundGroup blockSoundGroup = blockState.getSoundGroup();
     world.syncWorldEvent(player, 2001, pos, Block.getRawIdFromState(world.getBlockState(pos)));
     FluidState fluidState = blockState.getFluidState();
     if (!world.isClient) {

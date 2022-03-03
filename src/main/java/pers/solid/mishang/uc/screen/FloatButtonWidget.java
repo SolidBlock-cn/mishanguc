@@ -18,14 +18,13 @@ import java.util.concurrent.atomic.AtomicReference;
 @Environment(EnvType.CLIENT)
 public class FloatButtonWidget extends ButtonWidget {
   public final Float2ObjectFunction<Text> tooltipSupplier;
-  /** 按钮的默认值。可以按鼠标中键或者按住 Alt + Shift 点击以恢复。 */
-  public float defaultValue = 0;
-
   private final Object2FloatFunction<FloatButtonWidget> valueGetter;
   private final FloatConsumer valueSetter;
 
   @ApiStatus.AvailableSince("0.1.5")
   private final AtomicReference<Text> textAtom;
+  /** 按钮的默认值。可以按鼠标中键或者按住 Alt + Shift 点击以恢复。 */
+  public float defaultValue = 0;
   /** 按钮的步长，默认为1。 */
   public float step = 1;
   /** 按钮当前的最小值。若低于最小值，则从最大值开始循环，但是如果没有最大值时除外。 */

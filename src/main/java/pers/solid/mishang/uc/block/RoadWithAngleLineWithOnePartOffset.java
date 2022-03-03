@@ -81,10 +81,4 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
       super(settings, lineColor, LineType.NORMAL, isBevel);
     }
   }
-
-  class SlabImpl extends RoadWithAngleLine.SlabImpl implements RoadWithAngleLineWithOnePartOffset {
-    public SlabImpl(Settings settings, LineColor lineColor, boolean isBevel) {
-      super(lineColor, settings, LineType.NORMAL, isBevel);
-    }
-  }
 }

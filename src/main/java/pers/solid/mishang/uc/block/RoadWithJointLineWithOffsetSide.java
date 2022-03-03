@@ -99,10 +99,4 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
       super(settings, lineColor, LineType.NORMAL);
     }
   }
-
-  class SlabImpl extends AbstractRoadSlabBlock implements RoadWithJointLineWithOffsetSide {
-    public SlabImpl(Settings settings, LineColor lineColor) {
-      super(settings, lineColor, LineType.NORMAL);
-    }
-  }
 }

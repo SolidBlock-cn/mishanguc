@@ -75,12 +75,6 @@ public interface RoadWithOffsetStraightLine extends Road {
             .formatted(Formatting.GRAY));
   }
 
-  class SlabImpl extends AbstractRoadSlabBlock implements RoadWithOffsetStraightLine {
-    public SlabImpl(Settings settings, LineColor lineColor) {
-      super(settings, lineColor, LineType.NORMAL);
-    }
-  }
-
   class Impl extends AbstractRoadBlock implements RoadWithOffsetStraightLine {
     public Impl(Settings settings, LineColor lineColor) {
       super(settings, lineColor, LineType.NORMAL);

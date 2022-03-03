@@ -3,7 +3,6 @@ package pers.solid.mishang.uc.item;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -21,47 +20,6 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
 
   public RoadConnectionStateDebuggingToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
-  }
-
-  /**
-   * 向聊天框广播特定方向的连接状态。
-   *
-   * @param direction 获取此方向上的连接状态。
-   */
-  public static void sendMessageOfState(
-      PlayerEntity playerEntity, BlockState blockState, BlockPos blockPos, Direction direction) {
-    Block block = blockState.getBlock();
-    if (!(block instanceof Road)) {
-      playerEntity.sendMessage(new TranslatableText("debug.mishanguc.notRoad"), false);
-      return;
-    }
-    final RoadConnectionState connectionState =
-        ((Road) block).getConnectionStateOf(blockState, direction);
-    playerEntity.sendMessage(
-        new LiteralText("")
-            .append(
-                new TranslatableText(
-                        "debug.mishanguc.roadConnectionState",
-                        String.format(
-                            "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()),
-                        RoadConnectionState.text(direction))
-                    .setStyle(Style.EMPTY.withBold(true).withColor(Formatting.YELLOW)))
-            .append("\n")
-            .append(
-                new TranslatableText(
-                    "debug.mishanguc.roadConnectionState.direction",
-                    RoadConnectionState.text(connectionState.direction)))
-            .append("\n")
-            .append(
-                new TranslatableText(
-                    "debug.mishanguc.roadConnectionState.lineColor",
-                    RoadConnectionState.text(connectionState.lineColor)))
-            .append("\n")
-            .append(
-                new TranslatableText(
-                    "debug.mishanguc.roadConnectionState.probability",
-                    RoadConnectionState.text(connectionState.probability))),
-        false);
   }
 
   /** 向聊天框广播各个方向的道路连接状态。 */
