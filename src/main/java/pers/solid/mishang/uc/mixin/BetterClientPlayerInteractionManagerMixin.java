@@ -26,12 +26,11 @@ import pers.solid.mishang.uc.MishangUc;
 public abstract class BetterClientPlayerInteractionManagerMixin {
 
   @Shadow @Final private MinecraftClient client;
+  @Shadow private GameMode gameMode;
 
   @Shadow
   protected abstract void sendPlayerAction(
       PlayerActionC2SPacket.Action action, BlockPos pos, Direction direction);
-
-  @Shadow private GameMode gameMode;
 
   @Inject(
       at =

@@ -87,13 +87,6 @@ public interface RoadWithStraightLine extends Road {
             .formatted(Formatting.GRAY));
   }
 
-  /** @see Impl */
-  class SlabImpl extends AbstractRoadSlabBlock implements RoadWithStraightLine {
-    public SlabImpl(Settings settings, LineColor lineColor, LineType lineType) {
-      super(settings, lineColor, lineType);
-    }
-  }
-
   class Impl extends AbstractRoadBlock implements RoadWithStraightLine {
     public Impl(Settings settings, LineColor lineColor, LineType lineType) {
       super(settings, lineColor, lineType);

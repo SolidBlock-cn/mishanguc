@@ -80,21 +80,6 @@ public interface RoadWithAngleLine extends Road {
 
   boolean isBevel();
 
-  /** @see Impl */
-  class SlabImpl extends AbstractRoadSlabBlock implements RoadWithAngleLine {
-    private final boolean isBevel;
-
-    public SlabImpl(LineColor lineColor, Settings settings, LineType lineType, boolean isBevel) {
-      super(settings, lineColor, lineType);
-      this.isBevel = isBevel;
-    }
-
-    @Override
-    public boolean isBevel() {
-      return isBevel;
-    }
-  }
-
   class Impl extends AbstractRoadBlock implements RoadWithAngleLine {
     private final boolean isBevel;
 

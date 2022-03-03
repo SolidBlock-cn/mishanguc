@@ -2,8 +2,6 @@ package pers.solid.mishang.uc.screen;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import it.unimi.dsi.fastutil.objects.Object2FloatMap;
-import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -115,6 +113,16 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /** 是否发生了改变。如果改变了，则提交时发送完整内容，否则发送空 NBT 表示未做更改。 */
   public boolean changed = false;
 
+  public final ButtonWidget cancelButton =
+      new ButtonWidget(
+          this.width / 2,
+          height - 30,
+          40,
+          20,
+          ScreenTexts.CANCEL,
+          button -> this.cancelEditing(),
+          (button, matrices, mouseX, mouseY) ->
+              descriptionAtom.set(new TranslatableText("message.mishanguc.cancel.description")));
   public final ButtonWidget clearButton =
       new ButtonWidget(
           this.width / 2,
@@ -143,16 +151,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
               descriptionAtom.set(BUTTON_CLEAR_CONFIRM_DESCRIPTION_MESSAGE);
             else descriptionAtom.set(BUTTON_CLEAR_DESCRIPTION_MESSAGE);
           });
-  public final ButtonWidget cancelButton =
-      new ButtonWidget(
-          this.width / 2,
-          height - 30,
-          40,
-          20,
-          ScreenTexts.CANCEL,
-          button -> this.cancelEditing(),
-          (button, matrices, mouseX, mouseY) ->
-              descriptionAtom.set(new TranslatableText("message.mishanguc.cancel.description")));
   public TextFieldListScreen textFieldListScreen;
   /** 正在被选中的 TextWidget。会在 {@link #setFocused(Element)} 时更改。可能为 null。 */
   public @Nullable TextFieldWidget focusedTextField = null;
@@ -232,26 +230,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
                       new TranslatableText(b ? "options.on" : "options.off")),
           button -> {},
           descriptionAtom);
-  /** 上移按钮。 */
-  public final ButtonWidget moveUpButton =
-      new ButtonWidget(
-          this.width - 20,
-          this.height - 50,
-          40,
-          20,
-          new TranslatableText("message.mishanguc.moveUp"),
-          button -> {
-            if (focusedTextField == null) return;
-            int i = textFieldListScreen.children().indexOf(textFieldListScreen.getFocused());
-            final TextContext textContext =
-                AbstractSignBlockEditScreen.this.textContextsEditing.get(i);
-            removeTextField(i);
-            if (i > 0) i--;
-            addTextField(i, textContext);
-            AbstractSignBlockEditScreen.this.textContextsEditing.add(i, textContext);
-          },
-          (button, matrices, mouseX, mouseY) ->
-              descriptionAtom.set(new TranslatableText("message.mishanguc.moveUp.description")));
   /** 下划线按钮 */
   public final BooleanButtonWidget underlineButton =
       new BooleanButtonWidget(
@@ -292,26 +270,26 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
                       new TranslatableText(b ? "options.on" : "options.off")),
           button -> {},
           descriptionAtom);
-  /** 下移按钮。 */
-  public final ButtonWidget moveDownButton =
+  /** 上移按钮。 */
+  public final ButtonWidget moveUpButton =
       new ButtonWidget(
           this.width - 20,
           this.height - 50,
           40,
           20,
-          new TranslatableText("message.mishanguc.moveDown"),
+          new TranslatableText("message.mishanguc.moveUp"),
           button -> {
             if (focusedTextField == null) return;
             int i = textFieldListScreen.children().indexOf(textFieldListScreen.getFocused());
             final TextContext textContext =
                 AbstractSignBlockEditScreen.this.textContextsEditing.get(i);
             removeTextField(i);
-            if (i < textFieldListScreen.children().size()) i++;
+            if (i > 0) i--;
             addTextField(i, textContext);
             AbstractSignBlockEditScreen.this.textContextsEditing.add(i, textContext);
           },
           (button, matrices, mouseX, mouseY) ->
-              descriptionAtom.set(new TranslatableText("message.mishanguc.moveDown.description")));
+              descriptionAtom.set(new TranslatableText("message.mishanguc.moveUp.description")));
   /** 随机文字按钮 */
   public final BooleanButtonWidget obfuscatedButton =
       new BooleanButtonWidget(
@@ -369,6 +347,26 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           },
           (button) -> {},
           descriptionAtom);
+  /** 下移按钮。 */
+  public final ButtonWidget moveDownButton =
+      new ButtonWidget(
+          this.width - 20,
+          this.height - 50,
+          40,
+          20,
+          new TranslatableText("message.mishanguc.moveDown"),
+          button -> {
+            if (focusedTextField == null) return;
+            int i = textFieldListScreen.children().indexOf(textFieldListScreen.getFocused());
+            final TextContext textContext =
+                AbstractSignBlockEditScreen.this.textContextsEditing.get(i);
+            removeTextField(i);
+            if (i < textFieldListScreen.children().size()) i++;
+            addTextField(i, textContext);
+            AbstractSignBlockEditScreen.this.textContextsEditing.add(i, textContext);
+          },
+          (button, matrices, mouseX, mouseY) ->
+              descriptionAtom.set(new TranslatableText("message.mishanguc.moveDown.description")));
   /** X偏移 */
   public final FloatButtonWidget offsetXButton =
       new FloatButtonWidget(
@@ -687,8 +685,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * @see #rearrangeButton
    */
   public void rearrange() {
-    Object2FloatMap<VerticalAlign> stackedSizes =
-        new Object2FloatOpenHashMap<>(VerticalAlign.values().length);
     final List<TextContext> textContextsEditing =
         AbstractSignBlockEditScreen.this.textContextsEditing;
     final EnumMap<VerticalAlign, List<TextContext>> directionToContexts =
@@ -700,7 +696,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       }
     }
     final float lineMargin = 1 / 8f;
-    final float lineHeight = 1 + 2 * lineMargin;
     directionToContexts.forEach(
         ((verticalAlign, textContexts) -> {
           float stackedHeight = 0;
@@ -729,22 +724,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       this.client.openScreen(null);
     }
   }
-  /** 添加文本按钮 */
-
-  public final ButtonWidget addTextButton =
-      new ButtonWidget(
-          width / 2 - 120 - 100,
-          10,
-          200,
-          20,
-          new TranslatableText("message.mishanguc.add_text"),
-          button1 -> {
-            int index =
-                textFieldListScreen
-                    .children()
-                    .indexOf(textFieldListScreen.new Entry(focusedTextField));
-            addTextField(index == -1 ? textFieldListScreen.children().size() : index + 1, null);
-          });
 
   /** 初始化，对屏幕进行配置。 */
   @Override
@@ -913,6 +892,22 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       widget.y = height - 45;
     }
   }
+  /** 添加文本按钮 */
+
+  public final ButtonWidget addTextButton =
+      new ButtonWidget(
+          width / 2 - 120 - 100,
+          10,
+          200,
+          20,
+          new TranslatableText("message.mishanguc.add_text"),
+          button1 -> {
+            int index =
+                textFieldListScreen
+                    .children()
+                    .indexOf(textFieldListScreen.new Entry(focusedTextField));
+            addTextField(index == -1 ? textFieldListScreen.children().size() : index + 1, null);
+          });
 
   /**
    * 移除一个文本框。将从 {@link #contextToWidgetBiMap} 和 {@link #textContextsEditing} 中移除对应的元素。
@@ -956,24 +951,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
             .writeNbt(
                 changed ? Util.make(new NbtCompound(), nbt -> nbt.put("texts", list)) : null));
   }
-  /** 移除文本按钮 */
-
-  public final ButtonWidget removeTextButton =
-      new ButtonWidget(
-          width / 2 + 120 - 100,
-          10,
-          200,
-          20,
-          new TranslatableText("message.mishanguc.remove_text"),
-          button -> {
-            int index =
-                textFieldListScreen
-                    .children()
-                    .indexOf(textFieldListScreen.new Entry(focusedTextField));
-            if (index != -1) {
-              removeTextField(index);
-            }
-          });
 
   @Override
   public boolean charTyped(char chr, int modifiers) {
@@ -1041,6 +1018,24 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
     return super.keyPressed(keyCode, scanCode, modifiers);
   }
+  /** 移除文本按钮 */
+
+  public final ButtonWidget removeTextButton =
+      new ButtonWidget(
+          width / 2 + 120 - 100,
+          10,
+          200,
+          20,
+          new TranslatableText("message.mishanguc.remove_text"),
+          button -> {
+            int index =
+                textFieldListScreen
+                    .children()
+                    .indexOf(textFieldListScreen.new Entry(focusedTextField));
+            if (index != -1) {
+              removeTextField(index);
+            }
+          });
 
   @Override
   public void setFocused(@Nullable Element focused) {
@@ -1074,8 +1069,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         child.textFieldWidget.setTextFieldFocused(child == focused);
       }
       if (focused instanceof AbstractSignBlockEditScreen.TextFieldListScreen.Entry) {
-        focusedTextField = ((Entry) focused).textFieldWidget;
-        focusedTextContext = contextToWidgetBiMap.inverse().get(((Entry) focused).textFieldWidget);
+        focusedTextField =
+            ((AbstractSignBlockEditScreen.TextFieldListScreen.Entry) focused).textFieldWidget;
+        focusedTextContext =
+            contextToWidgetBiMap
+                .inverse()
+                .get(
+                    ((AbstractSignBlockEditScreen.TextFieldListScreen.Entry) focused)
+                        .textFieldWidget);
 
         // 设置焦点后，重新设置 customColorTextField 的内容
         if (focusedTextContext != null)
@@ -1111,7 +1112,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         if (!(o instanceof AbstractSignBlockEditScreen.TextFieldListScreen.Entry)) {
           return false;
         }
-        Entry entry = (Entry) o;
+        Entry entry = (AbstractSignBlockEditScreen.TextFieldListScreen.Entry) o;
 
         return new EqualsBuilder().append(textFieldWidget, entry.textFieldWidget).isEquals();
       }

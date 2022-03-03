@@ -17,12 +17,6 @@ public interface RoadWithCrossLine extends Road {
                 getLineColor(state, direction), Either.left(direction), LineType.NORMAL));
   }
 
-  class SlabImpl extends RoadSlabBlock implements RoadWithCrossLine {
-    public SlabImpl(Settings settings, LineColor lineColor) {
-      super(settings, lineColor);
-    }
-  }
-
   class Impl extends AbstractRoadBlock implements RoadWithCrossLine {
     public Impl(Settings settings, LineColor lineColor) {
       super(settings, lineColor, LineType.NORMAL);

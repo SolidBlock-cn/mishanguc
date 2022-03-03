@@ -57,18 +57,6 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
     RoadWithStraightLine.super.appendRoadTooltip(stack, world, tooltip, options);
   }
 
-  /** @see RoadWithStraightAndAngleLine.Impl */
-  class SlabImpl extends AbstractRoadSlabBlock implements RoadWithStraightAndAngleLine {
-    public SlabImpl(Settings settings, LineColor lineColor) {
-      super(settings, lineColor, LineType.NORMAL);
-    }
-
-    @Override
-    public boolean isBevel() {
-      return true;
-    }
-  }
-
   class Impl extends AbstractRoadBlock implements RoadWithStraightAndAngleLine {
     public Impl(Settings settings, LineColor lineColor) {
       super(settings, lineColor, LineType.NORMAL);

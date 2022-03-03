@@ -22,7 +22,9 @@ public interface RoadWithCentralAndOffsetAngleLine extends RoadWithAngleLine {
   /** 正中线所在轴。 */
   EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
 
-  /** @see RoadWithAngleLine#getConnectionStateOf */
+  /**
+   * @see RoadWithAngleLine#getConnectionStateOf
+   */
   @Override
   default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
     return RoadWithAngleLine.super.getConnectionStateOf(state, direction);

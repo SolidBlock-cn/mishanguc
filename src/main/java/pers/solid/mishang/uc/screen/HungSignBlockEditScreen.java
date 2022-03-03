@@ -56,7 +56,24 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
     entity.editedSide = direction;
     copyFromBackButton.x = width / 2 - 100;
   }
+
+  @Override
+  public void removed() {
+    super.removed();
+    entity.editedSide = null;
+    if (changed) {
+      // 固化 texts 字段
+      entity.texts =
+          ImmutableMap.copyOf(
+              Util.make(
+                  entity.texts,
+                  map -> map.put(direction, ImmutableList.copyOf(textContextsEditing))));
+    } else {
+      entity.texts = backedUpTexts;
+    }
+  }
   /** 从背面复制文本的按钮。复制过程中会进行镜像。 */
+
   public final ButtonWidget copyFromBackButton =
       new ButtonWidget(
           this.width / 2 - 100,
@@ -80,22 +97,6 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
                   textContextsEditing.add(flip);
                 });
           });
-
-  @Override
-  public void removed() {
-    super.removed();
-    entity.editedSide = null;
-    if (changed) {
-      // 固化 texts 字段
-      entity.texts =
-          ImmutableMap.copyOf(
-              Util.make(
-                  entity.texts,
-                  map -> map.put(direction, ImmutableList.copyOf(textContextsEditing))));
-    } else {
-      entity.texts = backedUpTexts;
-    }
-  }
 
   @Override
   public void addTextField(int index, @Nullable TextContext textContext) {
