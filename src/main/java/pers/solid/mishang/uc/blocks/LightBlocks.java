@@ -19,8 +19,11 @@ import java.util.Map;
 
 public final class LightBlocks extends MishangucBlocks {
 
-  @RegisterIdentifier public static final Block WHITE_LIGHT = new Block(WHITE_LIGHT_SETTINGS);
-  /** 墙上的灯等方块等用到的方块设置。与{@link #WHITE_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。 */
+  @RegisterIdentifier
+  public static final Block WHITE_LIGHT = new Block(WHITE_LIGHT_SETTINGS);
+  /**
+   * 墙上的灯等方块等用到的方块设置。与{@link #WHITE_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。
+   */
   private static final FabricBlockSettings WHITE_WALL_LIGHT_SETTINGS =
       FabricBlockSettings.copyOf(WHITE_LIGHT_SETTINGS).noCollision();
 

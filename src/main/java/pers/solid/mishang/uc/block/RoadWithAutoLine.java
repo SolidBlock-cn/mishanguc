@@ -34,7 +34,7 @@ public interface RoadWithAutoLine extends Road {
    * 根据附近的连接状态自动产生一个新的方块状态。
    *
    * @param connectionStateMap 连接状态映射，各个方向的连接状态。
-   * @param defaultState 默认方块状态。
+   * @param defaultState       默认方块状态。
    * @return 转换后的方块状态。
    */
   BlockState makeState(
@@ -44,7 +44,7 @@ public interface RoadWithAutoLine extends Road {
    * 获取附近的连接状态映射。
    *
    * @param world 世界。
-   * @param pos0 坐标。
+   * @param pos0  坐标。
    * @return 连接状态的映射。
    */
   default EnumMap<Direction, RoadConnectionState> getConnectionStateMap(
@@ -53,7 +53,7 @@ public interface RoadWithAutoLine extends Road {
     for (Direction direction : Direction.Type.HORIZONTAL) {
       RoadConnectionState state = RoadConnectionState.empty();
       // 检查毗邻方块及其上下方。
-      for (BlockPos pos : new BlockPos[] {pos0, pos0.up(), pos0.down()}) {
+      for (BlockPos pos : new BlockPos[]{pos0, pos0.up(), pos0.down()}) {
         BlockState nextState = world.getBlockState(pos.offset(direction, 1));
         Block nextBlock = nextState.getBlock();
         if (nextBlock instanceof Road) {
@@ -129,11 +129,17 @@ public interface RoadWithAutoLine extends Road {
             .formatted(Formatting.GRAY));
   }
 
-  /** 道路自动连接的类型，分为直角和斜线。 */
+  /**
+   * 道路自动连接的类型，分为直角和斜线。
+   */
   enum RoadAutoLineType {
-    /** 直角 */
+    /**
+     * 直角
+     */
     RIGHT_ANGLE,
-    /** 45°的斜角 */
+    /**
+     * 45°的斜角
+     */
     BEVEL
   }
 }

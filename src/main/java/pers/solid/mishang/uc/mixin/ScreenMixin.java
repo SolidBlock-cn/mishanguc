@@ -16,7 +16,9 @@ import pers.solid.mishang.uc.util.TextClickEvent;
 
 @Mixin(Screen.class)
 public class ScreenMixin {
-  @Shadow @Nullable protected MinecraftClient client;
+  @Shadow
+  @Nullable
+  protected MinecraftClient client;
 
   /**
    * This injection is used for an extended "clickEvent" of JSON string. It does not add to an enum
@@ -25,10 +27,10 @@ public class ScreenMixin {
   @Inject(
       method = "handleTextClick",
       at =
-          @At(
-              target = "Lnet/minecraft/client/gui/screen/Screen;sendMessage(Ljava/lang/String;Z)V",
-              shift = At.Shift.BEFORE,
-              value = "INVOKE"),
+      @At(
+          target = "Lnet/minecraft/client/gui/screen/Screen;sendMessage(Ljava/lang/String;Z)V",
+          shift = At.Shift.BEFORE,
+          value = "INVOKE"),
       cancellable = true)
   public void handleTextClickMixin(Style style, CallbackInfoReturnable<Boolean> cir) {
     final ClickEvent clickEvent = style.getClickEvent();

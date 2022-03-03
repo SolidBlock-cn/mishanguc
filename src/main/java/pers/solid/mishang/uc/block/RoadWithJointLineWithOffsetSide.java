@@ -25,15 +25,30 @@ import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.List;
 
-/** 类似于 {@link RoadWithJointLine}，不过较短的那一条线是被偏移的。 */
+/**
+ * 类似于 {@link RoadWithJointLine}，不过较短的那一条线是被偏移的。
+ */
 public interface RoadWithJointLineWithOffsetSide extends Road {
   /**
    * 道路方块中，偏移半线与正中直线围成的面积范围较小的那个直角。<br>
    * 不同于{@link RoadWithJointLine#FACING}，那个是正对的水平方向，而这个是斜角水平方向。
    */
   EnumProperty<HorizontalCornerDirection> FACING = ModProperties.HORIZONTAL_CORNER_FACING;
-  /** 道路方块中，正中直线所在的轴。 */
+  /**
+   * 道路方块中，正中直线所在的轴。
+   */
   Property<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
+
+  static Direction.Axis rotateAxis(BlockRotation rotation, Direction.Axis axis) {
+    return switch (rotation) {
+      case COUNTERCLOCKWISE_90, CLOCKWISE_90 -> switch (axis) {
+        case X -> Direction.Axis.Z;
+        case Z -> Direction.Axis.X;
+        default -> axis;
+      };
+      default -> axis;
+    };
+  }
 
   @Override
   LineColor getLineColor(BlockState blockState, Direction direction);
@@ -56,17 +71,6 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
   @Override
   default BlockState mirrorRoad(BlockState state, BlockMirror mirror) {
     return state.with(FACING, state.get(FACING).mirror(mirror));
-  }
-
-  static Direction.Axis rotateAxis(BlockRotation rotation, Direction.Axis axis) {
-    return switch (rotation) {
-      case COUNTERCLOCKWISE_90, CLOCKWISE_90 -> switch (axis) {
-        case X -> Direction.Axis.Z;
-        case Z -> Direction.Axis.X;
-        default -> axis;
-      };
-      default -> axis;
-    };
   }
 
   @Override

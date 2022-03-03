@@ -13,7 +13,9 @@ import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public class WallSignBlockEditScreen extends AbstractSignBlockEditScreen<WallSignBlockEntity> {
-  /** 修改之前的文本内容。当编辑时取消编辑了，则使用修改之前的文本内容。 */
+  /**
+   * 修改之前的文本内容。当编辑时取消编辑了，则使用修改之前的文本内容。
+   */
   private final @Unmodifiable List<TextContext> backedUpTextContexts;
 
   public WallSignBlockEditScreen(WallSignBlockEntity entity, BlockPos blockPos) {

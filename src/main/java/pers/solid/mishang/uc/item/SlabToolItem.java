@@ -38,13 +38,13 @@ import pers.solid.mishang.uc.render.RendersBlockOutline;
 
 import java.util.List;
 
-/** 用于处理台阶的工具。 */
+/**
+ * 用于处理台阶的工具。
+ */
 public class SlabToolItem extends Item implements RendersBlockOutline {
-  public SlabToolItem(Settings settings) {
-    super(settings);
-  }
-
-  /** 从原版的 {@link BlockFamilies} 提取的方块至台阶方块的映射。 */
+  /**
+   * 从原版的 {@link BlockFamilies} 提取的方块至台阶方块的映射。
+   */
   @ApiStatus.AvailableSince("0.1.3")
   protected static final BiMap<Block, Block> BLOCK_TO_SLAB =
       Util.make(
@@ -61,11 +61,15 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
             return builder.build();
           });
 
+  public SlabToolItem(Settings settings) {
+    super(settings);
+  }
+
   /**
    * 将基础方块的方块状态转化为台阶方块，并尝试移植相应的方块状态属性。
    *
    * @param baseBlockState 基础方块的方块状态。
-   * @param slabBlock 台阶方块，不是具体的方块状态。
+   * @param slabBlock      台阶方块，不是具体的方块状态。
    * @return 台阶方块的方块状态。
    */
   @SuppressWarnings("unchecked")
@@ -141,7 +145,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
     }
     boolean isTop =
         crosshairTarget.getPos().y
-                - (double) ((BlockHitResult) crosshairTarget).getBlockPos().getY()
+            - (double) ((BlockHitResult) crosshairTarget).getBlockPos().getY()
             > 0.5D;
     if (BLOCK_TO_SLAB.containsKey(state.getBlock())) {
       state = toSlab(state, BLOCK_TO_SLAB.get(state.getBlock()));

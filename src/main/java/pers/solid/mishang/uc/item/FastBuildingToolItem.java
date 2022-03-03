@@ -133,12 +133,12 @@ public class FastBuildingToolItem extends BlockToolItem {
             .formatted(Formatting.GRAY));
     tooltip.add(
         new TranslatableText(
-                "item.mishanguc.fast_building_tool.tooltip.range", this.getRange(stack))
+            "item.mishanguc.fast_building_tool.tooltip.range", this.getRange(stack))
             .formatted(Formatting.GRAY));
     tooltip.add(
         new TranslatableText(
-                "item.mishanguc.fast_building_tool.tooltip.matchingRule",
-                this.getMatchingRule(stack).getName())
+            "item.mishanguc.fast_building_tool.tooltip.matchingRule",
+            this.getMatchingRule(stack).getName())
             .formatted(Formatting.GRAY));
   }
 

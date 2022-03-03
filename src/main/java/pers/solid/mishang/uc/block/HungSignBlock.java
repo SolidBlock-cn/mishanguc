@@ -200,10 +200,10 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
               property,
               neighborState.getBlock() instanceof HungSignBlock && neighborState.get(AXIS) == axis
                   || world
-                          .getBlockState(pos.up())
-                          .getCollisionShape(world, pos.up())
-                          .getMin(Direction.Axis.Y)
-                      != 0);
+                  .getBlockState(pos.up())
+                  .getCollisionShape(world, pos.up())
+                  .getMin(Direction.Axis.Y)
+                  != 0);
     } else if (direction == Direction.UP) {
       for (Direction horizontalDirection : Direction.Type.HORIZONTAL) {
         final BlockPos offset = pos.offset(horizontalDirection);
@@ -225,7 +225,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
             .with(
                 AXIS,
                 rotation == BlockRotation.CLOCKWISE_90
-                        || rotation == BlockRotation.COUNTERCLOCKWISE_90
+                    || rotation == BlockRotation.COUNTERCLOCKWISE_90
                     ? (oldAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X)
                     : oldAxis);
     if (rotation == BlockRotation.CLOCKWISE_180
@@ -257,7 +257,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     // 若方块实体不对应，或者编辑的这一侧不可编辑，则在客户端和服务器均略过。
     // Skip if the block entity does not correspond, or the side is not editable.
-      if (!(blockEntity instanceof HungSignBlockEntity) || !state.get(AXIS).test(hit.getSide())) {
+    if (!(blockEntity instanceof HungSignBlockEntity) || !state.get(AXIS).test(hit.getSide())) {
       return ActionResult.PASS;
     }
     if (actionResult == ActionResult.PASS && !world.isClient) {

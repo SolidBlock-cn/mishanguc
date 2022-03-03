@@ -646,7 +646,9 @@ public final class WallSignBlocks extends MishangucBlocks {
             map.put(DyeColor.BLACK, FULL_BLACK_TERRACOTTA_WALL_SIGN);
           });
 
-  /** 隐形的告示牌。 */
+  /**
+   * 隐形的告示牌。
+   */
   @RegisterIdentifier
   public static final FullWallSignBlock INVISIBLE_WALL_SIGN =
       new FullWallSignBlock(null, FabricBlockSettings.copyOf(Blocks.BARRIER).noCollision());

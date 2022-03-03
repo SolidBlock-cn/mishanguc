@@ -22,10 +22,10 @@ public final class NbtPrettyPrinter {
    * the type of <code>element</code> arg.
    *
    * @param element The NBT element.
-   * @param layer Usually 0. If it's shown in another compound or list, the layer is 1. The greater
-   *     the layer, the shorter the prettified serialized result represents.
-   * @param indent Indention to prettify the NBT tag. Usually it's two spaces.
-   * @param depth Usually 0. To indent as a sub=indention of a compound or list.
+   * @param layer   Usually 0. If it's shown in another compound or list, the layer is 1. The greater
+   *                the layer, the shorter the prettified serialized result represents.
+   * @param indent  Indention to prettify the NBT tag. Usually it's two spaces.
+   * @param depth   Usually 0. To indent as a sub=indention of a compound or list.
    * @return The prettified serialized text.
    * @see NbtHelper#toPrettyPrintedText(NbtElement)
    */
@@ -40,7 +40,9 @@ public final class NbtPrettyPrinter {
     return NbtHelper.toPrettyPrintedText(element);
   }
 
-  /** @see NbtHelper#toPrettyPrintedText */
+  /**
+   * @see NbtHelper#toPrettyPrintedText
+   */
   public static Text serialize(NbtCompound compound, int layer, String indent, int depth) {
     final Map<String, NbtElement> entries = ((NbtCompoundAccessor) compound).getEntries();
     switch (layer) {
@@ -173,7 +175,9 @@ public final class NbtPrettyPrinter {
     }
   }
 
-  /** @see NbtHelper#toPrettyPrintedText */
+  /**
+   * @see NbtHelper#toPrettyPrintedText
+   */
   public static Text serialize(NbtList nbtList, int layer, String indent, int depth) {
     switch (layer) {
       case 0 -> {
@@ -297,8 +301,8 @@ public final class NbtPrettyPrinter {
     } else if (layer == 1) {
       return string.length() > 160
           ? new LiteralText(string.substring(0, 155))
-              .styled(strStyle)
-              .append(new TranslatableText("debug.mishanguc.nbt.string.eclipse", string.length()))
+          .styled(strStyle)
+          .append(new TranslatableText("debug.mishanguc.nbt.string.eclipse", string.length()))
           : new LiteralText(string).styled(strStyle);
     } else {
       return string.length() > 40

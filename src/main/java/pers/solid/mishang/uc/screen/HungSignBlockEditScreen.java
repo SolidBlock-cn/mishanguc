@@ -11,7 +11,6 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.util.TextContext;
@@ -23,9 +22,13 @@ import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSignBlockEntity> {
-  /** 告示牌正在被编辑的方向。 */
+  /**
+   * 告示牌正在被编辑的方向。
+   */
   public final Direction direction;
-  /** 备份的文本。如果取消编辑，则还是使用此处的文本。 */
+  /**
+   * 备份的文本。如果取消编辑，则还是使用此处的文本。
+   */
   protected final @Unmodifiable Map<Direction, List<TextContext>> backedUpTexts;
 
   public HungSignBlockEditScreen(
@@ -72,8 +75,16 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
       entity.texts = backedUpTexts;
     }
   }
-  /** 从背面复制文本的按钮。复制过程中会进行镜像。 */
 
+  @Override
+  public void addTextField(int index, @NotNull TextContext textContext, boolean isExisting) {
+    super.addTextField(index, textContext, isExisting);
+    copyFromBackButton.visible = false;
+  }
+
+  /**
+   * 从背面复制文本的按钮。复制过程中会进行镜像。
+   */
   public final ButtonWidget copyFromBackButton =
       new ButtonWidget(
           this.width / 2 - 100,
@@ -93,20 +104,15 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
                 textContext -> {
                   final TextContext flip = textContext.clone().flip();
                   // 留意添加到的位置是列表末尾。
-                  addTextField(textContextsEditing.size(), flip);
-                  textContextsEditing.add(flip);
+                  addTextField(textContextsEditing.size(), flip, false);
                 });
           });
-
-  @Override
-  public void addTextField(int index, @Nullable TextContext textContext) {
-    super.addTextField(index, textContext);
-    copyFromBackButton.visible = false;
-  }
 
   @Override
   public void removeTextField(int index) {
     super.removeTextField(index);
     copyFromBackButton.visible = placeHolder.visible;
   }
+
+
 }

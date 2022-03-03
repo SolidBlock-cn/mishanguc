@@ -15,9 +15,9 @@ public class RuntimeResourcePackImplMixin {
   @Redirect(
       method = "<clinit>",
       at =
-          @At(
-              value = "INVOKE",
-              target = "Lcom/google/gson/GsonBuilder;create()Lcom/google/gson/Gson;"))
+      @At(
+          value = "INVOKE",
+          target = "Lcom/google/gson/GsonBuilder;create()Lcom/google/gson/Gson;"))
   private static Gson addRegister(GsonBuilder instance) {
     return instance.registerTypeAdapter(FixedWhen.class, new FixedWhen.Serializer()).create();
   }

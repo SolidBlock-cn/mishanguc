@@ -22,7 +22,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-/** 一个方块匹配规则，根据该规则来匹配两个方块是否匹配。 */
+/**
+ * 一个方块匹配规则，根据该规则来匹配两个方块是否匹配。
+ */
 public abstract class BlockMatchingRule implements StringIdentifiable {
   protected static final RegistryKey<Registry<BlockMatchingRule>> REGISTRY_KEY =
       RegistryKey.ofRegistry(new Identifier("mishanguc", "block_matching_rule"));
@@ -78,13 +80,17 @@ public abstract class BlockMatchingRule implements StringIdentifiable {
     return id == null ? null : id.toString();
   }
 
-  /** 类似于{@link #asString()}，但是未注册的会返回空字符串而不是null。 */
+  /**
+   * 类似于{@link #asString()}，但是未注册的会返回空字符串而不是null。
+   */
   public @NotNull String asStringOrEmpty() {
     final String s = asString();
     return s == null ? "" : s;
   }
 
-  /** 将其注册到注册表，并使用本模组的命名空间。 */
+  /**
+   * 将其注册到注册表，并使用本模组的命名空间。
+   */
   protected BlockMatchingRule register(String string) {
     return register(new Identifier("mishanguc", string));
   }
@@ -98,10 +104,10 @@ public abstract class BlockMatchingRule implements StringIdentifiable {
   /**
    * 获得指定大小平面内，所有有效的方块位置。有效的方块位置是指未被遮挡住的。
    *
-   * @param world 世界。可以是客户端的，也可以是服务端的。
+   * @param world     世界。可以是客户端的，也可以是服务端的。
    * @param centerPos 中心方块坐标，一般就是工具指向的方块的坐标。
-   * @param side 工具所指向的方块所在的面。
-   * @param range 范围，一般不建议超过32。将会生成一个在face所在轴为法线的平面内、以centerPos为中心的正方形、边长为2*range+1的平面。
+   * @param side      工具所指向的方块所在的面。
+   * @param range     范围，一般不建议超过32。将会生成一个在face所在轴为法线的平面内、以centerPos为中心的正方形、边长为2*range+1的平面。
    * @return 包含这些坐标的链式集合。
    */
   public Set<BlockPos> getPlainValidBlockPoss(
