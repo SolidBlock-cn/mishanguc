@@ -17,9 +17,11 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Quaternion;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 
 /**
  * 对 {@link net.minecraft.text.Text} 的简单包装与扩展，允许设置对齐属性、尺寸等参数，以便渲染时使用。同时还提供对象与 NBT、JSON 之间的转换。
@@ -119,6 +121,13 @@ public class TextContext implements Cloneable {
    * 文本大小
    */
   public float size = 8;
+  /**
+   * 文本的外边框的颜色。<br>
+   * 若为 -1，则表示自动渲染。<br>
+   * 若为 -2，则表示不渲染。
+   */
+  @ApiStatus.AvailableSince("0.1.6-mc1.17")
+  public int outlineColor = -2;
 
   /**
    * 从一个 NBT 元素创建一个新的 TextContext 对象，并使用默认值。
@@ -194,6 +203,15 @@ public class TextContext implements Cloneable {
       final @Nullable DyeColor dyeColor = DyeColor.byName(nbtColor.asString(), null);
       if (dyeColor != null) {
         color = dyeColor.getSignColor();
+      }
+    }
+    final NbtElement nbtOutlineColor = nbt.get("outlineColor");
+    if (nbtOutlineColor instanceof AbstractNbtNumber) {
+      outlineColor = ((AbstractNbtNumber) nbtOutlineColor).intValue();
+    } else if (nbtOutlineColor instanceof NbtString) {
+      final @Nullable DyeColor dyeColor = DyeColor.byName(nbtOutlineColor.asString(), null);
+      if (dyeColor != null) {
+        outlineColor = MishangUtils.COLOR_TO_OUTLINE_COLOR.get(dyeColor);
       }
     }
     shadow = nbt.getBoolean("shadow");
@@ -283,17 +301,21 @@ public class TextContext implements Cloneable {
     }
 
     // 执行渲染
-    textRenderer.draw(
-        text,
-        x,
-        y,
-        color,
-        shadow,
-        matrixStack.peek().getModel(),
-        vertexConsumers,
-        seeThrough,
-        0,
-        light);
+    if (outlineColor == -2) {
+      textRenderer.draw(
+          text,
+          x,
+          y,
+          color,
+          shadow,
+          matrixStack.peek().getModel(),
+          vertexConsumers,
+          seeThrough,
+          0,
+          light);
+    } else {
+      textRenderer.drawWithOutline(text.asOrderedText(), x, y, color, outlineColor == -1 ? MishangUtils.toSignOutlineColor(color) : outlineColor, matrixStack.peek().getModel(), vertexConsumers, light);
+    }
     matrixStack.pop();
   }
 
@@ -302,8 +324,8 @@ public class TextContext implements Cloneable {
    *
    * @param nbt 一个待写入的 NBT 复合标签，可以是空的 NBT 复合标签：
    *            <pre>{@code
-   *                                             new NbtCompound()
-   *                                             }</pre>
+   *                                                                              new NbtCompound()
+   *                                                                              }</pre>
    * @return 修改后的 <tt>nbt</tt>。
    */
   public NbtCompound writeNbt(NbtCompound nbt) {
@@ -323,6 +345,11 @@ public class TextContext implements Cloneable {
       nbt.remove("verticalAlign");
     }
     nbt.putInt("color", color);
+    if (outlineColor != -2) {
+      nbt.putInt("outlineColor", outlineColor);
+    } else {
+      nbt.remove("outlineColor");
+    }
     putBooleanParam(nbt, "shadow", shadow);
     putBooleanParam(nbt, "seeThrough", seeThrough);
     nbt.putFloat("size", size);
