@@ -15,6 +15,7 @@ import java.util.function.Function;
 /** 用于处理布尔值的按钮。按下鼠标时切换。 */
 public class BooleanButtonWidget extends ButtonWidget {
   public final Function<@Nullable Boolean, Text> tooltipSupplier;
+  public final boolean defaultValue = false;
 
   @ApiStatus.AvailableSince("0.1.5")
   private final AtomicReference<Text> textAtom;
@@ -22,7 +23,6 @@ public class BooleanButtonWidget extends ButtonWidget {
   private final Function<BooleanButtonWidget, @Nullable Boolean> valueGetter;
 
   private final BooleanConsumer valueSetter;
-  public final boolean defaultValue = false;
 
   /**
    * 用于布尔值的按钮。

@@ -63,31 +63,4 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
       return state.get(AXIS) == direction.getAxis() ? lineType2 : lineType;
     }
   }
-
-  class SlabImpl extends RoadWithAngleLine.SlabImpl implements RoadWithDiffAngleLine {
-    public final LineColor lineColor2;
-    public final LineType lineType2;
-
-    public SlabImpl(
-        Settings settings,
-        LineColor lineColor,
-        LineColor lineColor2,
-        LineType lineType,
-        LineType lineType2,
-        boolean isBevel) {
-      super(lineColor, settings, lineType, isBevel);
-      this.lineColor2 = lineColor2;
-      this.lineType2 = lineType2;
-    }
-
-    @Override
-    public LineColor getLineColor(BlockState state, Direction direction) {
-      return state.get(AXIS) == direction.getAxis() ? lineColor2 : lineColor;
-    }
-
-    @Override
-    public LineType getLineType(BlockState state, Direction direction) {
-      return state.get(AXIS) == direction.getAxis() ? lineType2 : lineType;
-    }
-  }
 }

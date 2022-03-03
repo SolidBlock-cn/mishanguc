@@ -194,7 +194,9 @@ public final class RoadSlabBlocks extends MishangucBlocks {
           of(
               ASPHALT_ROAD_WITH_WHITE_AUTO_BEVEL_ANGLE_LINE,
               new RoadSlabBlockWithAutoLine(ASPHALT_ROAD_WITH_WHITE_AUTO_BEVEL_ANGLE_LINE));
-  /** @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_AUTO_RIGHT_ANGLE_LINE */
+  /**
+   * @see RoadBlocks#ASPHALT_ROAD_WITH_WHITE_AUTO_RIGHT_ANGLE_LINE
+   */
   @RegisterIdentifier @Cutout
   public static final SmartRoadSlabBlock<RoadBlockWithAutoLine>
       ASPHALT_ROAD_SLAB_WITH_WHITE_AUTO_RIGHT_ANGLE_LINE =

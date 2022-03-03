@@ -73,6 +73,7 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
     }
   }
   /** 从背面复制文本的按钮。复制过程中会进行镜像。 */
+
   public final ButtonWidget copyFromBackButton =
       new ButtonWidget(
           this.width / 2 - 100,

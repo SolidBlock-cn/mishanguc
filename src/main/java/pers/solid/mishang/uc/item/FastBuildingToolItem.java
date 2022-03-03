@@ -16,7 +16,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -86,7 +85,6 @@ public class FastBuildingToolItem extends BlockToolItem {
   @Override
   public ActionResult beginAttackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    final BlockSoundGroup blockSoundGroup = world.getBlockState(pos).getSoundGroup();
     if (!world.isClient()) {
       final ItemStack stack = player.getMainHandStack();
       final int range = this.getRange(stack);
