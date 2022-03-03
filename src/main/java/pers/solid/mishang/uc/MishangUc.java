@@ -46,6 +46,35 @@ import java.util.List;
 
 public class MishangUc implements ModInitializer {
   public static final Logger MISHANG_LOGGER = LogManager.getLogger("Mishang Urban Construction");
+  /** 比 {@link AttackBlockCallback#EVENT} 更好！ */
+  public static final Event<AttackBlockCallback> BEGIN_ATTACK_BLOCK_EVENT =
+      EventFactory.createArrayBacked(
+          AttackBlockCallback.class,
+          (listeners) ->
+              (player, world, hand, pos, direction) -> {
+                for (AttackBlockCallback event : listeners) {
+                  ActionResult result = event.interact(player, world, hand, pos, direction);
+
+                  if (result != ActionResult.PASS) {
+                    return result;
+                  }
+                }
+                return ActionResult.PASS;
+              });
+
+  public static final Event<AttackBlockCallback> PROGRESS_ATTACK_BLOCK_EVENT =
+      EventFactory.createArrayBacked(
+          AttackBlockCallback.class,
+          (listeners) ->
+              (player, world, hand, pos, direction) -> {
+                for (AttackBlockCallback event : listeners) {
+                  ActionResult result = event.interact(player, world, hand, pos, direction);
+                  if (result != ActionResult.PASS) {
+                    return result;
+                  }
+                }
+                return ActionResult.PASS;
+              });
 
   /** 用于接受玩家在客户端完成告示牌方块编辑时发送过来的 packet。 */
   private void handleEditSignFinish(
@@ -106,36 +135,6 @@ public class MishangUc implements ModInitializer {
           // 编辑成功。
         });
   }
-
-  /** 比 {@link AttackBlockCallback#EVENT} 更好！ */
-  public static final Event<AttackBlockCallback> BEGIN_ATTACK_BLOCK_EVENT =
-      EventFactory.createArrayBacked(
-          AttackBlockCallback.class,
-          (listeners) ->
-              (player, world, hand, pos, direction) -> {
-                for (AttackBlockCallback event : listeners) {
-                  ActionResult result = event.interact(player, world, hand, pos, direction);
-
-                  if (result != ActionResult.PASS) {
-                    return result;
-                  }
-                }
-                return ActionResult.PASS;
-              });
-
-  public static final Event<AttackBlockCallback> PROGRESS_ATTACK_BLOCK_EVENT =
-      EventFactory.createArrayBacked(
-          AttackBlockCallback.class,
-          (listeners) ->
-              (player, world, hand, pos, direction) -> {
-                for (AttackBlockCallback event : listeners) {
-                  ActionResult result = event.interact(player, world, hand, pos, direction);
-                  if (result != ActionResult.PASS) {
-                    return result;
-                  }
-                }
-                return ActionResult.PASS;
-              });
 
   @Override
   public void onInitialize() {

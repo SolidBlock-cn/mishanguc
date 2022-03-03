@@ -77,41 +77,6 @@ public interface RoadWithJointLine extends Road {
             .formatted(Formatting.GRAY));
   }
 
-  /** @see Impl */
-  class SlabImpl extends AbstractRoadSlabBlock implements RoadWithJointLine {
-    public final LineColor lineColorSide;
-    public final LineType lineTypeSide;
-
-    public SlabImpl(
-        Settings settings,
-        LineColor lineColor,
-        LineColor lineColorSide,
-        LineType lineType,
-        LineType lineTypeSide) {
-      super(settings, lineColor, lineType);
-      this.lineColorSide = lineColorSide;
-      this.lineTypeSide = lineTypeSide;
-    }
-
-    @Override
-    public LineColor getLineColor(BlockState blockState, Direction direction) {
-      if (blockState.get(FACING) == direction) {
-        return lineColorSide;
-      } else {
-        return lineColor;
-      }
-    }
-
-    @Override
-    public LineType getLineType(BlockState blockState, Direction direction) {
-      if (blockState.get(FACING) == direction) {
-        return lineTypeSide;
-      } else {
-        return lineType;
-      }
-    }
-  }
-
   class Impl extends AbstractRoadBlock implements RoadWithJointLine {
     public final LineColor lineColorSide;
     public final LineType lineTypeSide;

@@ -32,8 +32,6 @@ public class MishangucBlocks {
   protected static final FabricBlockSettings WHITE_LIGHT_SETTINGS =
       FabricBlockSettings.of(Material.REDSTONE_LAMP).luminance(15);
 
-  MishangucBlocks() {}
-
   /**
    * 自动注册一个类中的所有静态常量字段的方块，同时创建并注册对应的物品。
    *
