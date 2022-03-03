@@ -2,7 +2,9 @@ package pers.solid.mishang.uc.util;
 
 import net.minecraft.util.StringIdentifiable;
 
-/** 道路标线颜色，目前分为白色和黄色。 */
+/**
+ * 道路标线颜色，目前分为白色和黄色。
+ */
 public enum LineColor implements StringIdentifiable {
   WHITE,
   YELLOW,

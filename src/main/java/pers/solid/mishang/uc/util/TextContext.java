@@ -21,9 +21,13 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/** 对 {@link net.minecraft.text.Text} 的简单包装与扩展，允许设置对齐属性、尺寸等参数，以便渲染时使用。同时还提供对象与 NBT、JSON 之间的转换。 */
+/**
+ * 对 {@link net.minecraft.text.Text} 的简单包装与扩展，允许设置对齐属性、尺寸等参数，以便渲染时使用。同时还提供对象与 NBT、JSON 之间的转换。
+ */
 public class TextContext implements Cloneable {
-  /** 用于 {@link #flip()} 方法中，左右替换字符串。 */
+  /**
+   * 用于 {@link #flip()} 方法中，左右替换字符串。
+   */
   private static final Char2CharMap flipStringReplacement =
       Util.make(
           new Char2CharArrayMap(),
@@ -35,29 +39,53 @@ public class TextContext implements Cloneable {
             map.put('↘', '↙');
             map.put('↙', '↘');
           });
-  /** 文本内容。 */
+  /**
+   * 文本内容。
+   */
   public @Nullable MutableText text;
-  /** 水平对齐方式。若为 null 则取默认值。 */
+  /**
+   * 水平对齐方式。若为 null 则取默认值。
+   */
   public HorizontalAlign horizontalAlign = HorizontalAlign.CENTER;
-  /** 垂直对齐方式。若为 null 则取默认值。 */
+  /**
+   * 垂直对齐方式。若为 null 则取默认值。
+   */
   public VerticalAlign verticalAlign = VerticalAlign.MIDDLE;
-  /** 文本颜色。 */
+  /**
+   * 文本颜色。
+   */
   public int color = 0xffffff;
-  /** 是否渲染阴影。 */
+  /**
+   * 是否渲染阴影。
+   */
   public boolean shadow = false;
-  /** 是否穿透性渲染。 */
+  /**
+   * 是否穿透性渲染。
+   */
   public boolean seeThrough = false;
-  /** X方向的偏移。 */
+  /**
+   * X方向的偏移。
+   */
   public float offsetX = 0;
-  /** Y方向的偏移。 */
+  /**
+   * Y方向的偏移。
+   */
   public float offsetY = 0;
-  /** Z方向的偏移。 */
+  /**
+   * Z方向的偏移。
+   */
   public float offsetZ = 0;
-  /** X方向的旋转。 */
+  /**
+   * X方向的旋转。
+   */
   public float rotationX = 0;
-  /** Y方向的旋转。 */
+  /**
+   * Y方向的旋转。
+   */
   public float rotationY = 0;
-  /** Z方向的旋转。 */
+  /**
+   * Z方向的旋转。
+   */
   public float rotationZ = 0;
 
   public float scaleX = 1;
@@ -82,10 +110,14 @@ public class TextContext implements Cloneable {
    * @see net.minecraft.util.Formatting#OBFUSCATED
    */
   public boolean obfuscated = false;
-  /** 是否为绝对定位。如果为 <code>false</code>，会按照从上到下的顺序渲染。 */
+  /**
+   * 是否为绝对定位。如果为 <code>false</code>，会按照从上到下的顺序渲染。
+   */
   public boolean absolute = false;
 
-  /** 文本大小 */
+  /**
+   * 文本大小
+   */
   public float size = 8;
 
   /**
@@ -101,7 +133,7 @@ public class TextContext implements Cloneable {
   /**
    * 从一个 NBT 元素创建一个新的 TextContext 对象，并使用指定的默认值。该默认值用于，在没有标签时如何处理。
    *
-   * @param nbt NBT 复合标签或者字符串。
+   * @param nbt      NBT 复合标签或者字符串。
    * @param defaults 一个默认的 TextContext 对象。在内部会被复制一次。该对象内的属性会被使用。
    * @return 新的 TextContext 对象。
    */
@@ -269,10 +301,9 @@ public class TextContext implements Cloneable {
    * 将文本的数据写入 NBT 中。
    *
    * @param nbt 一个待写入的 NBT 复合标签，可以是空的 NBT 复合标签：
-   *     <pre>{@code
-   * new NbtCompound()
-   * }</pre>
-   *
+   *            <pre>{@code
+   *                                             new NbtCompound()
+   *                                             }</pre>
    * @return 修改后的 <tt>nbt</tt>。
    */
   public NbtCompound writeNbt(NbtCompound nbt) {
@@ -359,16 +390,8 @@ public class TextContext implements Cloneable {
   public TextContext flip() {
     offsetX = -offsetX;
     switch (horizontalAlign) {
-      case LEFT:
-        {
-          horizontalAlign = HorizontalAlign.RIGHT;
-          break;
-        }
-      case RIGHT:
-        {
-          horizontalAlign = HorizontalAlign.LEFT;
-          break;
-        }
+      case LEFT -> horizontalAlign = HorizontalAlign.RIGHT;
+      case RIGHT -> horizontalAlign = HorizontalAlign.LEFT;
     }
     if (text instanceof LiteralText) {
       final String rawString = ((LiteralText) text).getRawString();

@@ -7,7 +7,9 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
-/** 类似于 {@link BlockItem}，但是名称会调用 {@link Block#getName()}，而不是直接调用 {@link #getTranslationKey}。 */
+/**
+ * 类似于 {@link BlockItem}，但是名称会调用 {@link Block#getName()}，而不是直接调用 {@link #getTranslationKey}。
+ */
 public class NamedBlockItem extends BlockItem {
   public NamedBlockItem(Block block, Settings settings) {
     super(block, settings);

@@ -15,10 +15,8 @@ import java.util.Map;
 public final class HungSignBlocks extends MishangucBlocks {
 
   /**
-   *
-   *
    * <h1>告示牌类方块</h1>
-   *
+   * <p>
    * 具有多种不同颜色。
    */
   @RegisterIdentifier

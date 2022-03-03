@@ -167,7 +167,9 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         blockIdentifier(path + "_top"));
   }
 
-  /** 运行此方法需确保其楼梯名称正好为 path + "_slab"。 */
+  /**
+   * 运行此方法需确保其楼梯名称正好为 path + "_slab"。
+   */
   private static void addCubeAllWithSlab(final RuntimeResourcePack PACK, String path, String all) {
     addCubeAll(PACK, path, all);
     addSlabAll(PACK, slabOf(path), all);
@@ -176,9 +178,9 @@ public class ARRPMain implements RRPPreGenEntrypoint {
   /**
    * 添加一个方块以及其台阶方块的资源包。仅用于此模组。
    *
-   * @param PACK 运行时资源包。
-   * @param path 方块路径。省略命名空间和“block/”前缀，且确保 path+"_slab" 的方块要存在。
-   * @param parent 资源包的 parent。应当保证 parent、parent+"_slab" 和 parent+"_slab_top"都要存在。
+   * @param PACK     运行时资源包。
+   * @param path     方块路径。省略命名空间和“block/”前缀，且确保 path+"_slab" 的方块要存在。
+   * @param parent   资源包的 parent。应当保证 parent、parent+"_slab" 和 parent+"_slab_top"都要存在。
    * @param textures 材质变量。三个 parent 都应该使用相同的材质。
    */
   private static void addRoadWithSlab(
@@ -340,9 +342,9 @@ public class ARRPMain implements RRPPreGenEntrypoint {
                     new JBlockModel(new Identifier(model.getNamespace(), slabOf(model.getPath()))),
                     jBlockModel -> {
                       final JBlockModelAccessor accessor = (JBlockModelAccessor) jBlockModel;
-                      accessor.setX(((JBlockModelAccessor)value).getX());
-                      accessor.setY(((JBlockModelAccessor)value).getY());
-                      accessor.setUvlock(((JBlockModelAccessor)value).getUvlock());
+                      accessor.setX(((JBlockModelAccessor) value).getX());
+                      accessor.setY(((JBlockModelAccessor) value).getY());
+                      accessor.setUvlock(((JBlockModelAccessor) value).getUvlock());
                     }))
             .put(
                 key.isEmpty() ? "type=bottom" : key + ",type=top",
@@ -351,15 +353,15 @@ public class ARRPMain implements RRPPreGenEntrypoint {
                         new Identifier(model.getNamespace(), slabOf(model.getPath()) + "_top")),
                     jBlockModel -> {
                       final JBlockModelAccessor accessor = (JBlockModelAccessor) jBlockModel;
-                      accessor.setX(((JBlockModelAccessor)value).getX());
-                      accessor.setY(((JBlockModelAccessor)value).getY());
-                      accessor.setUvlock(((JBlockModelAccessor)value).getUvlock());
+                      accessor.setX(((JBlockModelAccessor) value).getX());
+                      accessor.setY(((JBlockModelAccessor) value).getY());
+                      accessor.setUvlock(((JBlockModelAccessor) value).getUvlock());
                     }))
             .put(key.isEmpty() ? "type=bottom" : key + ",type=double", value);
       }
       slabVariants.add(slabVariant);
     }
-    return JState.state(slabVariants.toArray(new JVariant[] {}));
+    return JState.state(slabVariants.toArray(new JVariant[]{}));
   }
 
   private static void addBlockStates() {
@@ -394,12 +396,12 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         new Identifier("mishanguc", "asphalt_road_slab_with_white_joint_line_with_offset_side"));
 
     for (String modelName :
-        new String[] {
-          "asphalt_road_with_white_and_yellow_right_angle_line",
-          "asphalt_road_with_white_and_yellow_double_right_angle_line",
-          "asphalt_road_with_white_thick_and_yellow_double_right_angle_line",
-          "asphalt_road_with_white_thick_and_normal_right_angle_line",
-          "asphalt_road_with_white_thick_and_yellow_right_angle_line"
+        new String[]{
+            "asphalt_road_with_white_and_yellow_right_angle_line",
+            "asphalt_road_with_white_and_yellow_double_right_angle_line",
+            "asphalt_road_with_white_thick_and_yellow_double_right_angle_line",
+            "asphalt_road_with_white_thick_and_normal_right_angle_line",
+            "asphalt_road_with_white_thick_and_yellow_right_angle_line"
         }) {
       final JState state = stateForDiffAngleLine(modelName);
       PACK.addBlockState(state, new Identifier("mishanguc", modelName));
@@ -408,17 +410,17 @@ public class ARRPMain implements RRPPreGenEntrypoint {
     }
 
     for (String modelName :
-        new String[] {
-          "asphalt_road_with_white_joint_line",
-          "asphalt_road_with_white_joint_line_with_double_side",
-          "asphalt_road_with_white_joint_line_with_thick_side",
-          "asphalt_road_with_white_double_joint_line",
-          "asphalt_road_with_white_thick_joint_line",
-          "asphalt_road_with_yellow_joint_line",
-          "asphalt_road_with_yellow_joint_line_with_white_side",
-          "asphalt_road_with_white_joint_line_with_yellow_side",
-          "asphalt_road_with_white_joint_line_with_yellow_double_side",
-          "asphalt_road_with_white_thick_joint_line_with_yellow_double_side"
+        new String[]{
+            "asphalt_road_with_white_joint_line",
+            "asphalt_road_with_white_joint_line_with_double_side",
+            "asphalt_road_with_white_joint_line_with_thick_side",
+            "asphalt_road_with_white_double_joint_line",
+            "asphalt_road_with_white_thick_joint_line",
+            "asphalt_road_with_yellow_joint_line",
+            "asphalt_road_with_yellow_joint_line_with_white_side",
+            "asphalt_road_with_white_joint_line_with_yellow_side",
+            "asphalt_road_with_white_joint_line_with_yellow_double_side",
+            "asphalt_road_with_white_thick_joint_line_with_yellow_double_side"
         }) {
       final JState state = stateForHorizontalFacingBlock(modelName);
       PACK.addBlockState(state, new Identifier("mishanguc", modelName));
@@ -427,11 +429,11 @@ public class ARRPMain implements RRPPreGenEntrypoint {
     }
 
     for (String modelName :
-        new String[] {
-          "asphalt_road_with_white_right_angle_line",
-          "asphalt_road_with_white_bevel_angle_line",
-          "asphalt_road_with_yellow_right_angle_line",
-          "asphalt_road_with_yellow_bevel_angle_line"
+        new String[]{
+            "asphalt_road_with_white_right_angle_line",
+            "asphalt_road_with_white_bevel_angle_line",
+            "asphalt_road_with_yellow_right_angle_line",
+            "asphalt_road_with_yellow_bevel_angle_line"
         }) {
       final JState state = stateForHorizontalCornerFacingBlock(modelName);
       PACK.addBlockState(state, new Identifier("mishanguc", modelName));
@@ -524,9 +526,9 @@ public class ARRPMain implements RRPPreGenEntrypoint {
   /**
    * 为告示牌创建方块状态文件。
    *
+   * @param name 告示牌的非完整名称。
    * @see #addModelsForHungSign
    * @see #addModelsForGlowingHungSign
-   * @param name 告示牌的非完整名称。
    */
   private static void addStateForHungSign(@NotNull RuntimeResourcePack PACK, String name) {
     final String path = name + "_hung_sign";
@@ -683,7 +685,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
                         .add(direction.asString(), "true")));
       }
     }
-    return JState.state(parts.toArray(new JMultipart[] {}));
+    return JState.state(parts.toArray(new JMultipart[]{}));
   }
 
   @NotNull
@@ -1291,8 +1293,8 @@ public class ARRPMain implements RRPPreGenEntrypoint {
 
     // 木质告示牌
     for (String woodName :
-        new String[] {
-          "oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "crimson", "warped",
+        new String[]{
+            "oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "crimson", "warped",
         }) {
       PACK.addModel(
           JModel.model("mishanguc:block/wall_sign")
@@ -1344,12 +1346,12 @@ public class ARRPMain implements RRPPreGenEntrypoint {
   /**
    * 为发光告示牌创建并注册方块模型文件。
    *
+   * @param hungSignName 发光告示牌的非完整名称，如 black_concrete。需确保存在名为 <tt>mishanguc:hung_</tt><code>
+   *                     hungSignName</code><tt>_glowing_sign</tt> 的方块。
+   * @param texture      发给告示牌方块的主体纹理。为纹理的命名空间id，如 {@code minecraft:block/black_concrete}。
+   * @param glowTexture  发光告示牌方块的发光部分纹理。为纹理的命名空间id，如 {@code minecraft:block/glowstone}。
    * @see #addStateForHungSign
    * @see #addModelsForHungSign
-   * @param hungSignName 发光告示牌的非完整名称，如 black_concrete。需确保存在名为 <tt>mishanguc:hung_</tt><code>
-   *     hungSignName</code><tt>_glowing_sign</tt> 的方块。
-   * @param texture 发给告示牌方块的主体纹理。为纹理的命名空间id，如 {@code minecraft:block/black_concrete}。
-   * @param glowTexture 发光告示牌方块的发光部分纹理。为纹理的命名空间id，如 {@code minecraft:block/glowstone}。
    */
   private static void addModelsForGlowingHungSign(
       @NotNull RuntimeResourcePack PACK,

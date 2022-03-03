@@ -94,7 +94,7 @@ public class RoadConnectionState {
       case NOT_CONNECTED_TO -> Formatting.RED;
       case CONNECTED_TO -> Formatting.GREEN;
       default -> null;
-                    })));
+    })));
   }
 
   public static MutableText text(LineColor lineColor) {
@@ -102,7 +102,7 @@ public class RoadConnectionState {
       case WHITE -> Formatting.WHITE;
       case YELLOW -> Formatting.YELLOW;
       default -> Formatting.GRAY;
-                    })));
+    })));
   }
 
   public boolean mayConnect() {

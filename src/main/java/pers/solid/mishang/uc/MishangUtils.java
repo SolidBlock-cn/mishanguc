@@ -20,7 +20,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-/** 本类存放一些实用方法。 */
+/**
+ * 本类存放一些实用方法。
+ */
 public class MishangUtils {
   @SuppressWarnings("SuspiciousNameCombination")
   public static EnumMap<Direction, @NotNull VoxelShape> createDirectionToShape(
@@ -91,7 +93,7 @@ public class MishangUtils {
 
   /**
    * @return 所有方块字段的流。使用反射。<br>
-   *     该方法可以在 {@link MishangucBlocks} 被加载之前执行，并不会尝试访问字段内容。
+   * 该方法可以在 {@link MishangucBlocks} 被加载之前执行，并不会尝试访问字段内容。
    */
   public static Stream<Field> blockStream() {
     return Streams.concat(
@@ -110,7 +112,9 @@ public class MishangUtils {
             });
   }
 
-  /** 对一个坐标轴进行旋转。 */
+  /**
+   * 对一个坐标轴进行旋转。
+   */
   public static Direction.Axis rotateAxis(BlockRotation rotation, Direction.Axis axis) {
     switch (rotation) {
       case COUNTERCLOCKWISE_90:

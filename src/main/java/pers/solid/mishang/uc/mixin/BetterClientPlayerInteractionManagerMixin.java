@@ -25,8 +25,11 @@ import pers.solid.mishang.uc.MishangUc;
 @Mixin(ClientPlayerInteractionManager.class)
 public abstract class BetterClientPlayerInteractionManagerMixin {
 
-  @Shadow @Final private MinecraftClient client;
-  @Shadow private GameMode gameMode;
+  @Shadow
+  @Final
+  private MinecraftClient client;
+  @Shadow
+  private GameMode gameMode;
 
   @Shadow
   protected abstract void sendPlayerAction(
@@ -34,10 +37,10 @@ public abstract class BetterClientPlayerInteractionManagerMixin {
 
   @Inject(
       at =
-          @At(
-              value = "INVOKE",
-              target = "Lnet/minecraft/world/GameMode;isCreative()Z",
-              ordinal = 0),
+      @At(
+          value = "INVOKE",
+          target = "Lnet/minecraft/world/GameMode;isCreative()Z",
+          ordinal = 0),
       method = "attackBlock",
       cancellable = true)
   public void attackBlock(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> info) {
@@ -55,10 +58,10 @@ public abstract class BetterClientPlayerInteractionManagerMixin {
 
   @Inject(
       at =
-          @At(
-              value = "INVOKE",
-              target = "Lnet/minecraft/world/GameMode;isCreative()Z",
-              ordinal = 0),
+      @At(
+          value = "INVOKE",
+          target = "Lnet/minecraft/world/GameMode;isCreative()Z",
+          ordinal = 0),
       method = "updateBlockBreakingProgress",
       cancellable = true)
   public void method_2902(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> info) {
