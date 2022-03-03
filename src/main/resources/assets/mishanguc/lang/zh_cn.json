@@ -224,7 +224,8 @@
   "message.mishanguc.offsetZ": "Z偏移",
   "message.mishanguc.offsetZ.description": "Z偏移：%s",
   "message.mishanguc.rearrange": "全部重排",
-  "message.mishanguc.rearrange.tooltip": "自动调整内容的偏移。",
+  "message.mishanguc.rearrange.tooltip": "调整所有文本纵轴方向的偏移。",
+  "message.mishanguc.rearrange.success": "成功重新整理所有文本！",
   "message.mishanguc.remove_text": "移除文本",
   "message.mishanguc.rotationX": "X旋转",
   "message.mishanguc.rotationX.description": "X旋转：%s",
@@ -264,5 +265,9 @@
   "roadConnectionState.probability.probably_connect_to": "应当连接",
   "vertical_align.mishanguc.bottom": "底",
   "vertical_align.mishanguc.middle": "中",
-  "vertical_align.mishanguc.top": "顶"
+  "vertical_align.mishanguc.top": "顶",
+  "message.mishanguc.moveUp": "上移",
+  "message.mishanguc.moveUp.description": "将当前文本域上移。不影响显示效果，除非重排所有文本。",
+  "message.mishanguc.moveDown": "下移",
+  "message.mishanguc.moveDown.description": "将当前文本域下移。不影响显示效果，除非重排所有文本。"
 }
