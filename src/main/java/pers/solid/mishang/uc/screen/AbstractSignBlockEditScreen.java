@@ -20,6 +20,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DyeColor;
@@ -32,6 +33,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.util.HorizontalAlign;
@@ -40,6 +42,7 @@ import pers.solid.mishang.uc.util.VerticalAlign;
 
 import java.util.List;
 import java.util.ListIterator;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
@@ -100,200 +103,11 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
             }
           },
           (a, b, c, d) -> new TranslatableText("message.mishanguc.rearrange.tooltip"));
-  /** X缩放 */
-  public final FloatButtonWidget scaleXButton =
-      new FloatButtonWidget(
-          this.width / 2 + 90,
-          this.height - 50,
-          60,
-          20,
-          x -> new TranslatableText("message.mishanguc.scaleX", x),
-          button -> focusedTextContext != null ? focusedTextContext.scaleX : 1,
-          value -> {
-            if (focusedTextContext != null) {
-              focusedTextContext.scaleX = value;
-            }
-          },
-          (button) -> {});
-  /** Y缩放 */
-  public final FloatButtonWidget scaleYButton =
-      new FloatButtonWidget(
-          this.width / 2 + 140,
-          this.height - 50,
-          60,
-          20,
-          x -> new TranslatableText("message.mishanguc.scaleY", x),
-          button -> focusedTextContext != null ? focusedTextContext.scaleY : 1,
-          value -> {
-            if (focusedTextContext != null) {
-              focusedTextContext.scaleY = value;
-            }
-          },
-          (button) -> {});
 
-  public TextFieldListScreen textFieldListScreen;
-  /** 正在被选中的 TextWidget。会在 {@link #setFocused(Element)} 时更改。可能为 null。 */
-  public @Nullable TextFieldWidget focusedTextField = null;
-  /** 正在被选中的 TextContent。会在 {@link #setFocused(Element)} 时更改。可能为 null。不是副本。 */
-  public @Nullable TextContext focusedTextContext = null;
-  /** 加粗按钮 */
-  public final BooleanButtonWidget boldButton =
-      new BooleanButtonWidget(
-          this.width / 2 - 200,
-          this.height - 50,
-          20,
-          20,
-          button -> focusedTextContext == null ? null : focusedTextContext.bold,
-          b -> {
-            if (focusedTextContext != null) focusedTextContext.bold = b;
-          },
-          b ->
-              b != null && b
-                  ? new LiteralText("B").formatted(Formatting.BOLD)
-                  : new LiteralText("B"),
-          button -> {});
-  /** 斜体按钮 */
-  public final BooleanButtonWidget italicButton =
-      new BooleanButtonWidget(
-          this.width / 2 - 180,
-          this.height - 50,
-          20,
-          20,
-          button -> focusedTextContext == null ? null : focusedTextContext.italic,
-          b -> {
-            if (focusedTextContext != null) focusedTextContext.italic = b;
-          },
-          b ->
-              b != null && b
-                  ? new LiteralText("I").formatted(Formatting.ITALIC)
-                  : new LiteralText("I"),
-          button -> {});
-  /** 下划线按钮 */
-  public final BooleanButtonWidget underlineButton =
-      new BooleanButtonWidget(
-          this.width / 2 - 160,
-          this.height - 50,
-          20,
-          20,
-          button -> focusedTextContext == null ? null : focusedTextContext.underline,
-          b -> {
-            if (focusedTextContext != null) focusedTextContext.underline = b;
-          },
-          b ->
-              b != null && b
-                  ? new LiteralText("U").formatted(Formatting.UNDERLINE)
-                  : new LiteralText("U"),
-          button -> {});
-  /** 删除线按钮 */
-  public final BooleanButtonWidget strikethroughButton =
-      new BooleanButtonWidget(
-          this.width / 2 - 140,
-          this.height - 50,
-          20,
-          20,
-          button -> focusedTextContext == null ? null : focusedTextContext.strikethrough,
-          b -> {
-            if (focusedTextContext != null) focusedTextContext.strikethrough = b;
-          },
-          b ->
-              b != null && b
-                  ? new LiteralText("S").formatted(Formatting.STRIKETHROUGH)
-                  : new LiteralText("S"),
-          button -> {});
-  /** 随机文字按钮 */
-  public final BooleanButtonWidget obfuscatedButton =
-      new BooleanButtonWidget(
-          this.width / 2 - 120,
-          this.height - 50,
-          20,
-          20,
-          button -> focusedTextContext == null ? null : focusedTextContext.obfuscated,
-          b -> {
-            if (focusedTextContext != null) focusedTextContext.obfuscated = b;
-          },
-          b ->
-              b != null && b
-                  ? new LiteralText("O").formatted(Formatting.OBFUSCATED)
-                  : new LiteralText("O"),
-          button -> {});
-  /** 阴影按钮 */
-  public final BooleanButtonWidget shadeButton =
-      new BooleanButtonWidget(
-          this.width / 2 - 100,
-          this.height - 50,
-          40,
-          20,
-          button -> focusedTextContext == null ? null : focusedTextContext.shadow,
-          b -> {
-            if (focusedTextContext != null) focusedTextContext.shadow = b;
-          },
-          b ->
-              b == null
-                  ? new TranslatableText("message.mishanguc.shade")
-                  : new TranslatableText(
-                      "message.mishanguc.shade.param",
-                      new TranslatableText(b ? "options.on" : "options.off")),
-          button -> {});
-  /** 大小 */
-  public final FloatButtonWidget sizeButton =
-      new FloatButtonWidget(
-          this.width / 2 - 60,
-          this.height - 50,
-          50,
-          20,
-          x -> new TranslatableText("message.mishanguc.size", x),
-          (buttons) -> focusedTextContext != null ? focusedTextContext.size : 0,
-          value -> {
-            if (focusedTextContext != null) {
-              focusedTextContext.size = value;
-            }
-          },
-          (button) -> {});
-  /** X偏移 */
-  public final FloatButtonWidget offsetXButton =
-      new FloatButtonWidget(
-          this.width / 2 - 10,
-          this.height - 50,
-          60,
-          20,
-          x -> new TranslatableText("message.mishanguc.offsetX", x),
-          button -> focusedTextContext != null ? focusedTextContext.offsetX : 0,
-          value -> {
-            if (focusedTextContext != null) {
-              focusedTextContext.offsetX = value;
-            }
-          },
-          (button) -> {});
-  /** Y偏移 */
-  public final FloatButtonWidget offsetYButton =
-      new FloatButtonWidget(
-          this.width / 2 + 40,
-          this.height - 50,
-          60,
-          20,
-          x -> new TranslatableText("message.mishanguc.offsetY", x),
-          button -> focusedTextContext != null ? focusedTextContext.offsetY : 0,
-          value -> {
-            if (focusedTextContext != null) {
-              focusedTextContext.offsetY = value;
-            }
-          },
-          (button) -> {});
-  /** Z偏移 */
-  public final FloatButtonWidget offsetZButton =
-      new FloatButtonWidget(
-          this.width / 2 + 40,
-          this.height - 50,
-          60,
-          20,
-          x -> new TranslatableText("message.mishanguc.offsetZ", x),
-          button -> focusedTextContext != null ? focusedTextContext.offsetZ : 0,
-          value -> {
-            if (focusedTextContext != null) {
-              focusedTextContext.offsetZ = value;
-            }
-          },
-          (button) -> {});
+  /** 描述文本。悬浮在按钮时就会显示。 */
+  @ApiStatus.AvailableSince("0.1.5")
+  public final AtomicReference<@Unmodifiable Text> descriptionAtom =
+      new AtomicReference<>(LiteralText.EMPTY);
 
   protected final BiMap<@NotNull TextContext, @NotNull TextFieldWidget> contextToWidgetBiMap =
       HashBiMap.create();
@@ -306,6 +120,305 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
           20,
           ScreenTexts.DONE,
           buttonWidget -> AbstractSignBlockEditScreen.this.finishEditing());
+
+  public TextFieldListScreen textFieldListScreen;
+  /** 正在被选中的 TextWidget。会在 {@link #setFocused(Element)} 时更改。可能为 null。 */
+  public @Nullable TextFieldWidget focusedTextField = null;
+  /** 正在被选中的 TextContent。会在 {@link #setFocused(Element)} 时更改。可能为 null。不是副本。 */
+  public @Nullable TextContext focusedTextContext = null;
+  /** X缩放 */
+  public final FloatButtonWidget scaleXButton =
+      new FloatButtonWidget(
+          this.width / 2 + 90,
+          this.height - 50,
+          40,
+          20,
+          new TranslatableText("message.mishanguc.scaleX"),
+          x -> new TranslatableText("message.mishanguc.scaleX.description", x),
+          button -> focusedTextContext != null ? focusedTextContext.scaleX : 1,
+          value -> {
+            if (focusedTextContext != null) {
+              focusedTextContext.scaleX = value;
+            }
+          },
+          (button) -> {},
+          descriptionAtom);
+  /** Y缩放 */
+  public final FloatButtonWidget scaleYButton =
+      new FloatButtonWidget(
+          this.width / 2 + 140,
+          this.height - 50,
+          40,
+          20,
+          new TranslatableText("message.mishanguc.scaleY"),
+          x -> new TranslatableText("message.mishanguc.scaleY.description", x),
+          button -> focusedTextContext != null ? focusedTextContext.scaleY : 1,
+          value -> {
+            if (focusedTextContext != null) {
+              focusedTextContext.scaleY = value;
+            }
+          },
+          (button) -> {},
+          descriptionAtom);
+  /** 加粗按钮 */
+  public final BooleanButtonWidget boldButton =
+      new BooleanButtonWidget(
+          this.width / 2 - 200,
+          this.height - 50,
+          20,
+          20,
+          new LiteralText("B").formatted(Formatting.BOLD),
+          button -> focusedTextContext == null ? null : focusedTextContext.bold,
+          b -> {
+            if (focusedTextContext != null) focusedTextContext.bold = b;
+          },
+          b ->
+              b == null
+                  ? new TranslatableText("message.mishanguc.bold")
+                  : new TranslatableText(
+                      "message.mishanguc.bold.description",
+                      new TranslatableText(b ? "options.on" : "options.off")),
+          button -> {},
+          descriptionAtom);
+  /** 斜体按钮 */
+  public final BooleanButtonWidget italicButton =
+      new BooleanButtonWidget(
+          this.width / 2 - 180,
+          this.height - 50,
+          20,
+          20,
+          new LiteralText("I").formatted(Formatting.ITALIC),
+          button -> focusedTextContext == null ? null : focusedTextContext.italic,
+          b -> {
+            if (focusedTextContext != null) focusedTextContext.italic = b;
+          },
+          b ->
+              b == null
+                  ? new TranslatableText("message.mishanguc.italic")
+                  : new TranslatableText(
+                      "message.mishanguc.italic.description",
+                      new TranslatableText(b ? "options.on" : "options.off")),
+          button -> {},
+          descriptionAtom);
+  /** 下划线按钮 */
+  public final BooleanButtonWidget underlineButton =
+      new BooleanButtonWidget(
+          this.width / 2 - 160,
+          this.height - 50,
+          20,
+          20,
+          new LiteralText("U").formatted(Formatting.UNDERLINE),
+          button -> focusedTextContext == null ? null : focusedTextContext.underline,
+          b -> {
+            if (focusedTextContext != null) focusedTextContext.underline = b;
+          },
+          b ->
+              b == null
+                  ? new TranslatableText("message.mishanguc.underline")
+                  : new TranslatableText(
+                      "message.mishanguc.underline.description",
+                      new TranslatableText(b ? "options.on" : "options.off")),
+          button -> {},
+          descriptionAtom);
+  /** 删除线按钮 */
+  public final BooleanButtonWidget strikethroughButton =
+      new BooleanButtonWidget(
+          this.width / 2 - 140,
+          this.height - 50,
+          20,
+          20,
+          new LiteralText("S").formatted(Formatting.STRIKETHROUGH),
+          button -> focusedTextContext == null ? null : focusedTextContext.strikethrough,
+          b -> {
+            if (focusedTextContext != null) focusedTextContext.strikethrough = b;
+          },
+          b ->
+              b == null
+                  ? new TranslatableText("message.mishanguc.strikethrough")
+                  : new TranslatableText(
+                      "message.mishanguc.strikethrough.description",
+                      new TranslatableText(b ? "options.on" : "options.off")),
+          button -> {},
+          descriptionAtom);
+  /** 随机文字按钮 */
+  public final BooleanButtonWidget obfuscatedButton =
+      new BooleanButtonWidget(
+          this.width / 2 - 120,
+          this.height - 50,
+          20,
+          20,
+          new LiteralText("O").formatted(Formatting.OBFUSCATED),
+          button -> focusedTextContext == null ? null : focusedTextContext.obfuscated,
+          b -> {
+            if (focusedTextContext != null) focusedTextContext.obfuscated = b;
+          },
+          b ->
+              b == null
+                  ? new TranslatableText("message.mishanguc.obfuscated")
+                  : new TranslatableText(
+                      "message.mishanguc.obfuscated.description",
+                      new TranslatableText(b ? "options.on" : "options.off")),
+          button -> {},
+          descriptionAtom);
+  /** 阴影按钮 */
+  public final BooleanButtonWidget shadeButton =
+      new BooleanButtonWidget(
+          this.width / 2 - 100,
+          this.height - 50,
+          40,
+          20,
+          new TranslatableText("message.mishanguc.shade"),
+          button -> focusedTextContext == null ? null : focusedTextContext.shadow,
+          b -> {
+            if (focusedTextContext != null) focusedTextContext.shadow = b;
+          },
+          b ->
+              b == null
+                  ? new TranslatableText("message.mishanguc.shade.description")
+                  : new TranslatableText(
+                      "message.mishanguc.shade.param",
+                      new TranslatableText(b ? "options.on" : "options.off")),
+          button -> {},
+          descriptionAtom);
+  /** 大小 */
+  public final FloatButtonWidget sizeButton =
+      new FloatButtonWidget(
+          this.width / 2 - 60,
+          this.height - 50,
+          40,
+          20,
+          new TranslatableText("message.mishanguc.size"),
+          x -> new TranslatableText("message.mishanguc.size.description", x),
+          (buttons) -> focusedTextContext != null ? focusedTextContext.size : 0,
+          value -> {
+            if (focusedTextContext != null) {
+              focusedTextContext.size = value;
+            }
+          },
+          (button) -> {},
+          descriptionAtom);
+  /** X偏移 */
+  public final FloatButtonWidget offsetXButton =
+      new FloatButtonWidget(
+          this.width / 2 - 10,
+          this.height - 50,
+          40,
+          20,
+          new TranslatableText("message.mishanguc.offsetX"),
+          x -> new TranslatableText("message.mishanguc.offsetX.description", x),
+          button -> focusedTextContext != null ? focusedTextContext.offsetX : 0,
+          value -> {
+            if (focusedTextContext != null) {
+              focusedTextContext.offsetX = value;
+            }
+          },
+          (button) -> {},
+          descriptionAtom);
+  /** Y偏移 */
+  public final FloatButtonWidget offsetYButton =
+      new FloatButtonWidget(
+          this.width / 2 + 40,
+          this.height - 50,
+          40,
+          20,
+          new TranslatableText("message.mishanguc.offsetY"),
+          x -> new TranslatableText("message.mishanguc.offsetY.description", x),
+          button -> focusedTextContext != null ? focusedTextContext.offsetY : 0,
+          value -> {
+            if (focusedTextContext != null) {
+              focusedTextContext.offsetY = value;
+            }
+          },
+          (button) -> {},
+          descriptionAtom);
+  /** Z偏移 */
+  public final FloatButtonWidget offsetZButton =
+      new FloatButtonWidget(
+          this.width / 2 + 40,
+          this.height - 50,
+          40,
+          20,
+          new TranslatableText("message.mishanguc.offsetZ"),
+          x -> new TranslatableText("message.mishanguc.offsetZ.description", x),
+          button -> focusedTextContext != null ? focusedTextContext.offsetZ : 0,
+          value -> {
+            if (focusedTextContext != null) {
+              focusedTextContext.offsetZ = value;
+            }
+          },
+          (button) -> {},
+          descriptionAtom);
+
+  /** X旋转 */
+  @ApiStatus.AvailableSince("0.1.5")
+  public final FloatButtonWidget rotationXButton =
+      new FloatButtonWidget(
+          this.width / 2 + 40,
+          this.height - 50,
+          40,
+          20,
+          new TranslatableText("message.mishanguc.rotationX"),
+          x -> new TranslatableText("message.mishanguc.rotationX.description", x),
+          button -> focusedTextContext != null ? focusedTextContext.rotationX : 0,
+          value -> {
+            if (focusedTextContext != null) focusedTextContext.rotationX = value;
+          },
+          button -> {},
+          descriptionAtom);
+  /** Y旋转 */
+  @ApiStatus.AvailableSince("0.1.5")
+  public final FloatButtonWidget rotationYButton =
+      new FloatButtonWidget(
+          this.width / 2 + 40,
+          this.height - 50,
+          40,
+          20,
+          new TranslatableText("message.mishanguc.rotationY"),
+          x -> new TranslatableText("message.mishanguc.rotationY.description", x),
+          button -> focusedTextContext != null ? focusedTextContext.rotationY : 0,
+          value -> {
+            if (focusedTextContext != null) focusedTextContext.rotationY = value;
+          },
+          button -> {},
+          descriptionAtom);
+  /** Z旋转 */
+  @ApiStatus.AvailableSince("0.1.5")
+  public final FloatButtonWidget rotationZButton =
+      new FloatButtonWidget(
+          this.width / 2 + 40,
+          this.height - 50,
+          40,
+          20,
+          new TranslatableText("message.mishanguc.rotationZ"),
+          x -> new TranslatableText("message.mishanguc.rotationZ.description", x),
+          button -> focusedTextContext != null ? focusedTextContext.rotationZ : 0,
+          value -> {
+            if (focusedTextContext != null) focusedTextContext.rotationZ = value;
+          },
+          button -> {},
+          descriptionAtom);
+  /** 水平对齐方式 */
+  public final FloatButtonWidget horizontalAlignButton =
+      new FloatButtonWidget(
+          0,
+          0,
+          50,
+          20,
+          new TranslatableText("message.mishanguc.horizontal_align"),
+          f ->
+              f != -1
+                  ? new TranslatableText(
+                      "message.mishanguc.horizontal_align_param",
+                      HorizontalAlign.values()[(int) f].getName())
+                  : new TranslatableText("message.mishanguc.horizontal_align"),
+          b -> focusedTextContext != null ? focusedTextContext.horizontalAlign.ordinal() : -1,
+          f -> {
+            if (focusedTextContext != null) {
+              focusedTextContext.horizontalAlign = HorizontalAlign.values()[(int) f];
+            }
+          },
+          (b) -> {},
+          descriptionAtom);
   /** 添加文本按钮 */
   public final ButtonWidget addTextButton =
       new ButtonWidget(
@@ -321,33 +434,14 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
                     .indexOf(textFieldListScreen.new Entry(focusedTextField));
             addTextField(index == -1 ? textFieldListScreen.children().size() : index + 1, null);
           });
-  /** 水平对齐方式 */
-  public final FloatButtonWidget horizontalAlignButton =
-      new FloatButtonWidget(
-          0,
-          0,
-          60,
-          20,
-          f ->
-              f != -1
-                  ? new TranslatableText(
-                      "message.mishanguc.horizontal_align_param",
-                      HorizontalAlign.values()[(int) f].getName())
-                  : new TranslatableText("message.mishanguc.horizontal_align"),
-          b -> focusedTextContext != null ? focusedTextContext.horizontalAlign.ordinal() : -1,
-          f -> {
-            if (focusedTextContext != null) {
-              focusedTextContext.horizontalAlign = HorizontalAlign.values()[(int) f];
-            }
-          },
-          (b) -> {});
   /** 垂直对齐方式 */
   public final FloatButtonWidget verticalAlignButton =
       new FloatButtonWidget(
           0,
           0,
-          60,
+          50,
           20,
+          new TranslatableText("message.mishanguc.vertical_align"),
           f ->
               f != -1
                   ? new TranslatableText(
@@ -360,14 +454,16 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
               focusedTextContext.verticalAlign = VerticalAlign.values()[(int) f];
             }
           },
-          (b) -> {});
+          (b) -> {},
+          descriptionAtom);
   /** 切换文字是否可以看穿。 */
   public final BooleanButtonWidget seeThroughButton =
       new BooleanButtonWidget(
           0,
           0,
-          60,
+          40,
           20,
+          new TranslatableText("message.mishanguc.see_through"),
           button -> focusedTextContext == null ? null : focusedTextContext.seeThrough,
           b -> {
             if (focusedTextContext != null) focusedTextContext.seeThrough = b;
@@ -378,81 +474,8 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
                   : new TranslatableText(
                       "message.mishanguc.see_through.param",
                       new TranslatableText(b ? "options.on" : "options.off")),
-          button -> {});
-
-  /** 初始化，对屏幕进行配置。 */
-  @Override
-  protected void init() {
-    super.init();
-    // customColorTextField.textRenderer = textRenderer;
-    textFieldListScreen = new TextFieldListScreen(client, width, height, 30, height - 70, 18);
-    setFocused(textFieldListScreen);
-    placeHolder.setWidth(width);
-    applyDoubleLineTemplateButton.x = width / 2 - 50;
-    applyLeftArrowTemplateButton.x = width / 2 - 150;
-    applyRightArrowTemplateButton.x = width / 2 + 50;
-    // 添加按钮
-    this.addButton(addTextButton);
-    this.addButton(removeTextButton);
-    this.addButton(placeHolder);
-    this.addButton(applyDoubleLineTemplateButton);
-    this.addButton(applyLeftArrowTemplateButton);
-    this.addButton(applyRightArrowTemplateButton);
-    this.addChild(textFieldListScreen);
-    this.addButton(boldButton);
-    this.addButton(italicButton);
-    this.addButton(underlineButton);
-    this.addButton(strikethroughButton);
-    this.addButton(obfuscatedButton);
-    this.addButton(shadeButton);
-    this.addButton(sizeButton);
-    this.addButton(offsetXButton);
-    this.addButton(offsetYButton);
-
-    this.addButton(scaleXButton);
-    this.addButton(scaleYButton);
-    this.addButton(offsetZButton);
-    this.addButton(horizontalAlignButton);
-    this.addButton(verticalAlignButton);
-    this.addButton(colorButton);
-    this.addButton(seeThroughButton);
-    this.addButton(customColorTextField);
-    this.addButton(absoluteButton);
-    this.addButton(rearrangeButton);
-    this.addButton(finishButton);
-    // 添加文本框
-    for (int i = 0, textContextsEditingSize = textContextsEditing.size();
-        i < textContextsEditingSize;
-        i++) {
-      TextContext textContext = textContextsEditing.get(i);
-      addTextField(i, textContext);
-    }
-
-    switchToolboxButtons();
-    addTextButton.x = width / 2 - 220;
-    removeTextButton.x = width / 2 + 20;
-    rearrangeButton.x = width / 2 - 150;
-    rearrangeButton.y = height - 30;
-    finishButton.x = width / 2 + 10;
-    finishButton.y = height - 30;
-  }
-  /** 移除文本按钮 */
-  public final ButtonWidget removeTextButton =
-      new ButtonWidget(
-          width / 2 + 120 - 100,
-          10,
-          200,
-          20,
-          new TranslatableText("message.mishanguc.remove_text"),
-          button -> {
-            int index =
-                textFieldListScreen
-                    .children()
-                    .indexOf(textFieldListScreen.new Entry(focusedTextField));
-            if (index != -1) {
-              removeTextField(index);
-            }
-          });
+          button -> {},
+          descriptionAtom);
   /**
    * 设置颜色<br>
    * 因为 {@link #textRenderer} 暂时还是 {@code null} 得在 {@link #init(MinecraftClient, int, int)}
@@ -481,8 +504,9 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
       new FloatButtonWidget(
           0,
           0,
-          50,
+          40,
           20,
+          new TranslatableText("message.mishanguc.color"),
           colorId -> {
             if (colorId == -1) {
               return new TranslatableText("message.mishanguc.color");
@@ -516,7 +540,8 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
               this.customColorTextField.setText(String.format("#%06x", focusedTextContext.color));
             }
           },
-          (button) -> {});
+          (button) -> {},
+          descriptionAtom);
 
   private final ClickableWidget[] toolbox1 =
       new ClickableWidget[] {
@@ -529,9 +554,27 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
         sizeButton,
         offsetXButton,
         offsetYButton,
+        offsetZButton,
         colorButton,
         customColorTextField,
       };
+  /** 移除文本按钮 */
+  public final ButtonWidget removeTextButton =
+      new ButtonWidget(
+          width / 2 + 120 - 100,
+          10,
+          200,
+          20,
+          new TranslatableText("message.mishanguc.remove_text"),
+          button -> {
+            int index =
+                textFieldListScreen
+                    .children()
+                    .indexOf(textFieldListScreen.new Entry(focusedTextField));
+            if (index != -1) {
+              removeTextField(index);
+            }
+          });
   /** 绝对模式 */
   public final BooleanButtonWidget absoluteButton =
       new BooleanButtonWidget(
@@ -539,21 +582,25 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
           0,
           50,
           20,
+          new TranslatableText("message.mishanguc.absolute"),
           button -> focusedTextContext != null ? focusedTextContext.absolute : null,
           b -> {
             if (focusedTextContext != null) focusedTextContext.absolute = b;
           },
           b ->
               b == null
-                  ? new TranslatableText("message.mishanguc.absolute")
+                  ? new TranslatableText("message.mishanguc.description")
                   : new TranslatableText(
                       "message.mishanguc.absolute.param",
                       new TranslatableText(b ? "options.on" : "options.off")),
-          button -> {});
+          button -> {},
+          descriptionAtom);
 
   private final ClickableWidget[] toolbox2 =
       new ClickableWidget[] {
-        offsetZButton,
+        rotationXButton,
+        rotationYButton,
+        rotationZButton,
         scaleXButton,
         scaleYButton,
         horizontalAlignButton,
@@ -577,6 +624,9 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
   {
     verticalAlignButton.min = -0.5f;
     verticalAlignButton.max = 2.5f;
+    rotationXButton.step = 15;
+    rotationYButton.step = 15;
+    rotationZButton.step = 15;
   }
 
   public AbstractSignBlockEditScreen(
@@ -593,6 +643,66 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
     offsetYButton.step = 0.5f;
     scaleXButton.step = -0.125f;
     scaleYButton.step = -0.125f;
+  }
+
+  /** 初始化，对屏幕进行配置。 */
+  @Override
+  protected void init() {
+    super.init();
+    // customColorTextField.textRenderer = textRenderer;
+    textFieldListScreen = new TextFieldListScreen(client, width, height, 30, height - 80, 18);
+    setFocused(textFieldListScreen);
+    placeHolder.setWidth(width);
+    applyDoubleLineTemplateButton.x = width / 2 - 50;
+    applyLeftArrowTemplateButton.x = width / 2 - 150;
+    applyRightArrowTemplateButton.x = width / 2 + 50;
+    // 添加按钮
+    this.addButton(addTextButton);
+    this.addButton(removeTextButton);
+    this.addButton(placeHolder);
+    this.addButton(applyDoubleLineTemplateButton);
+    this.addButton(applyLeftArrowTemplateButton);
+    this.addButton(applyRightArrowTemplateButton);
+    this.addChild(textFieldListScreen);
+    this.addButton(boldButton);
+    this.addButton(italicButton);
+    this.addButton(underlineButton);
+    this.addButton(strikethroughButton);
+    this.addButton(obfuscatedButton);
+    this.addButton(shadeButton);
+    this.addButton(sizeButton);
+    this.addButton(offsetXButton);
+    this.addButton(offsetYButton);
+    this.addButton(offsetZButton);
+    this.addButton(rotationXButton);
+    this.addButton(rotationYButton);
+    this.addButton(rotationZButton);
+
+    this.addButton(scaleXButton);
+    this.addButton(scaleYButton);
+    this.addButton(horizontalAlignButton);
+    this.addButton(verticalAlignButton);
+    this.addButton(colorButton);
+    this.addButton(seeThroughButton);
+    this.addButton(customColorTextField);
+    this.addButton(absoluteButton);
+    this.addButton(rearrangeButton);
+    this.addButton(finishButton);
+    // 添加文本框
+    for (int i = 0, textContextsEditingSize = textContextsEditing.size();
+        i < textContextsEditingSize;
+        i++) {
+      TextContext textContext = textContextsEditing.get(i);
+      addTextField(i, textContext);
+    }
+
+    switchToolboxButtons();
+    addTextButton.x = width / 2 - 220;
+    removeTextButton.x = width / 2 + 20;
+    rearrangeButton.x = width / 2 - 150;
+    rearrangeButton.y = height - 25;
+    finishButton.x = width / 2 + 10;
+    finishButton.y = height - 25;
   }
 
   /**
@@ -652,7 +762,7 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
     for (ClickableWidget widget : toolbox1) {
       widget.visible = true;
       widget.x += width / 2 - belowToolboxWidth / 2;
-      widget.y = height - 70;
+      widget.y = height - 65;
     }
     belowToolboxWidth = 0;
     for (ClickableWidget widget : toolbox2) {
@@ -663,7 +773,7 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
     for (ClickableWidget widget : toolbox2) {
       widget.visible = true;
       widget.x += width / 2 - belowToolboxWidth / 2;
-      widget.y = height - 50;
+      widget.y = height - 45;
     }
   }
 
@@ -699,7 +809,13 @@ public abstract class AbstractSignBlockEditScreen extends Screen {
   public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
     textFieldListScreen.render(matrices, mouseX, mouseY, delta);
     super.render(matrices, mouseX, mouseY, delta);
-
+    final Text description = descriptionAtom.get();
+    textRenderer.draw(
+        matrices,
+        description,
+        width / 2f - textRenderer.getWidth(description) / 2f,
+        height - 75,
+        0xeeeeee);
     if (placeHolder.visible) {
       final LiteralText literalText0 = new LiteralText("或者……");
       textRenderer.draw(
