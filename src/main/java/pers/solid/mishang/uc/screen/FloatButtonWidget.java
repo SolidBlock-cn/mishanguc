@@ -7,7 +7,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -17,7 +19,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class FloatButtonWidget extends ButtonWidget {
   public final Float2ObjectFunction<Text> tooltipSupplier;
   /** 按钮的默认值。可以按鼠标中键或者按住 Alt + Shift 点击以恢复。 */
-  public final float defaultValue = 0;
+  public float defaultValue = 0;
 
   private final Object2FloatFunction<FloatButtonWidget> valueGetter;
   private final FloatConsumer valueSetter;
@@ -123,5 +125,11 @@ public class FloatButtonWidget extends ButtonWidget {
                     * (Screen.hasAltDown() ? 0.125f : 1)));
     super.mouseScrolled(mouseX, mouseY, amount);
     return true;
+  }
+
+  @Override
+  public Text getMessage() {
+    if (getValue() == defaultValue) return super.getMessage();
+    else return new LiteralText("").append(super.getMessage()).formatted(Formatting.ITALIC);
   }
 }
