@@ -79,7 +79,7 @@ public class FloatButtonWidget extends ButtonWidget {
     if (value < min) {
       if (Float.isFinite(max)) {
         // 从最大值开始向下循环。
-        value = value + (max - min);
+        value = max;
       } else {
         // 封底为最小值。
         value = min;
@@ -87,7 +87,7 @@ public class FloatButtonWidget extends ButtonWidget {
     } else if (value > max) {
       if (Float.isFinite(min)) {
         // 从最小值开始向上循环。
-        value = value - (max - min);
+        value = min;
       } else {
         // 封顶为最大值。
         value = max;
