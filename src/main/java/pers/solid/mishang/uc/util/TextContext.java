@@ -16,6 +16,7 @@ import net.minecraft.text.*;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.Quaternion;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,6 +53,12 @@ public class TextContext implements Cloneable {
   public float offsetY = 0;
   /** Z方向的偏移。 */
   public float offsetZ = 0;
+  /** X方向的旋转。 */
+  public float rotationX = 0;
+  /** Y方向的旋转。 */
+  public float rotationY = 0;
+  /** Z方向的旋转。 */
+  public float rotationZ = 0;
 
   public float scaleX = 1;
   public float scaleY = 1;
@@ -162,6 +169,9 @@ public class TextContext implements Cloneable {
     offsetX = nbt.getFloat("offsetX");
     offsetY = nbt.getFloat("offsetY");
     offsetZ = nbt.getFloat("offsetZ");
+    rotationX = nbt.getFloat("rotationX");
+    rotationY = nbt.getFloat("rotationY");
+    rotationZ = nbt.getFloat("rotationZ");
     scaleX = nbt.getFloat("scaleX");
     if (scaleX == 0) {
       scaleX = 1;
@@ -194,6 +204,9 @@ public class TextContext implements Cloneable {
 
     // 处理文本的 offset
     matrixStack.translate(offsetX, offsetY, offsetZ);
+    // 处理文本的旋转
+    if (rotationX != 0 || rotationY != 0 || rotationZ != 0)
+      matrixStack.multiply(new Quaternion(rotationX, rotationY, rotationZ, true));
     float x = 0;
     switch (horizontalAlign == null ? HorizontalAlign.CENTER : horizontalAlign) {
       case LEFT -> matrixStack.translate(-width / 2, 0, 0);
@@ -297,6 +310,12 @@ public class TextContext implements Cloneable {
     } else {
       nbt.remove("offsetZ");
     }
+    if (rotationX != 0) nbt.putFloat("rotationX", rotationX);
+    else nbt.remove("rotationX");
+    if (rotationY != 0) nbt.putFloat("rotationY", rotationY);
+    else nbt.remove("rotationX");
+    if (rotationZ != 0) nbt.putFloat("rotationZ", rotationZ);
+    else nbt.remove("rotationX");
     if (scaleX != 1) {
       nbt.putFloat("scaleX", scaleX);
     } else {
