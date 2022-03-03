@@ -17,7 +17,7 @@ public class BooleanButtonWidget extends ButtonWidget {
   public final Function<@Nullable Boolean, Text> tooltipSupplier;
   public final boolean defaultValue = false;
 
-  @ApiStatus.AvailableSince("0.1.5")
+  @ApiStatus.AvailableSince("0.1.6")
   private final AtomicReference<Text> textAtom;
   /** 通常在没有选中对象时返回 null。 */
   private final Function<BooleanButtonWidget, @Nullable Boolean> valueGetter;

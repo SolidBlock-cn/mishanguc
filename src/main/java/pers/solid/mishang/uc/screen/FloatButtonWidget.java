@@ -21,7 +21,7 @@ public class FloatButtonWidget extends ButtonWidget {
   private final Object2FloatFunction<FloatButtonWidget> valueGetter;
   private final FloatConsumer valueSetter;
 
-  @ApiStatus.AvailableSince("0.1.5")
+  @ApiStatus.AvailableSince("0.1.6")
   private final AtomicReference<Text> textAtom;
   /** 按钮的默认值。可以按鼠标中键或者按住 Alt + Shift 点击以恢复。 */
   public float defaultValue = 0;

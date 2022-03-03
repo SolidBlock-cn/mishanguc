@@ -2,7 +2,6 @@ package pers.solid.mishang.uc;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
@@ -100,16 +99,17 @@ public class MishangUc implements ModInitializer {
                   blockPos.getZ());
               return;
             }
-            if (nbt == null) return;
             final PlayerEntity editorAllowed = entity.getEditor();
             entity.setEditor(null);
             final @Unmodifiable List<TextContext> textContexts =
-                new ImmutableList.Builder<TextContext>()
-                    .addAll(
-                        nbt.getList("texts", 10).stream()
-                            .map(e -> TextContext.fromNbt(e, entity.getDefaultTextContext()))
-                            .iterator())
-                    .build();
+                nbt != null
+                    ? new ImmutableList.Builder<TextContext>()
+                        .addAll(
+                            nbt.getList("texts", 10).stream()
+                                .map(e -> TextContext.fromNbt(e, entity.getDefaultTextContext()))
+                                .iterator())
+                        .build()
+                    : null;
             if (editorAllowed != player) {
               MISHANG_LOGGER.warn(
                   "The player editing the block entity {} {} {} is not the player allowed to edit.",
@@ -119,13 +119,15 @@ public class MishangUc implements ModInitializer {
               return;
             }
             if (entity instanceof HungSignBlockEntity) {
-              final HashMap<@NotNull Direction, @NotNull List<@NotNull TextContext>> builder =
-                  Maps.newHashMap(((HungSignBlockEntity) entity).texts);
               final Direction editedSide = ((HungSignBlockEntity) entity).editedSide;
-              if (editedSide != null) builder.put(editedSide, textContexts);
               ((HungSignBlockEntity) entity).editedSide = null;
+              if (nbt == null) return;
+              final HashMap<@NotNull Direction, @NotNull List<@NotNull TextContext>> builder =
+                  new HashMap<>(((HungSignBlockEntity) entity).texts);
+              if (editedSide != null) builder.put(editedSide, textContexts);
               ((HungSignBlockEntity) entity).texts = ImmutableMap.copyOf(builder);
             } else if (entity instanceof WallSignBlockEntity) {
+              if (nbt == null) return;
               ((WallSignBlockEntity) entity).textContexts = textContexts;
             }
             entity.markDirty();

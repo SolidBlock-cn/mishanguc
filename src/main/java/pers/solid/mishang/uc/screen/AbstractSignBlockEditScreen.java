@@ -75,7 +75,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public final BlockPos blockPos;
   public final List<TextContext> textContextsEditing;
   /** 描述文本。悬浮在按钮时就会显示。 */
-  @ApiStatus.AvailableSince("0.1.5")
+  @ApiStatus.AvailableSince("0.1.6")
   public final AtomicReference<@Unmodifiable Text> descriptionAtom =
       new AtomicReference<>(LiteralText.EMPTY);
 
@@ -285,8 +285,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
                 AbstractSignBlockEditScreen.this.textContextsEditing.get(i);
             removeTextField(i);
             if (i > 0) i--;
-            addTextField(i, textContext);
-            AbstractSignBlockEditScreen.this.textContextsEditing.add(i, textContext);
+            addTextField(i, textContext, false);
           },
           (button, matrices, mouseX, mouseY) ->
               descriptionAtom.set(new TranslatableText("message.mishanguc.moveUp.description")));
@@ -362,7 +361,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
                 AbstractSignBlockEditScreen.this.textContextsEditing.get(i);
             removeTextField(i);
             if (i < textFieldListScreen.children().size()) i++;
-            addTextField(i, textContext);
+            addTextField(i, textContext, false);
             AbstractSignBlockEditScreen.this.textContextsEditing.add(i, textContext);
           },
           (button, matrices, mouseX, mouseY) ->
@@ -419,7 +418,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           (button) -> {},
           descriptionAtom);
   /** X旋转 */
-  @ApiStatus.AvailableSince("0.1.5")
+  @ApiStatus.AvailableSince("0.1.6")
   public final FloatButtonWidget rotationXButton =
       new FloatButtonWidget(
           this.width / 2 + 40,
@@ -435,7 +434,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           button -> {},
           descriptionAtom);
   /** Y旋转 */
-  @ApiStatus.AvailableSince("0.1.5")
+  @ApiStatus.AvailableSince("0.1.6")
   public final FloatButtonWidget rotationYButton =
       new FloatButtonWidget(
           this.width / 2 + 40,
@@ -451,7 +450,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           button -> {},
           descriptionAtom);
   /** Z旋转 */
-  @ApiStatus.AvailableSince("0.1.5")
+  @ApiStatus.AvailableSince("0.1.6")
   public final FloatButtonWidget rotationZButton =
       new FloatButtonWidget(
           this.width / 2 + 40,
@@ -626,7 +625,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           },
           b ->
               b == null
-                  ? new TranslatableText("message.mishanguc.description")
+                  ? new TranslatableText("message.mishanguc.absolute.description")
                   : new TranslatableText(
                       "message.mishanguc.absolute.param",
                       new TranslatableText(b ? "options.on" : "options.off")),
@@ -672,6 +671,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     this.entity = entity;
     this.blockPos = blockPos;
     this.textContextsEditing = textContextsEditing;
+    entity.setEditor(this.client != null ? this.client.player : null);
 
     // 调整按钮配置
     sizeButton.min = 0;
@@ -778,7 +778,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         i < textContextsEditingSize;
         i++) {
       TextContext textContext = textContextsEditing.get(i);
-      addTextField(i, textContext);
+      addTextField(i, textContext, true);
     }
 
     switchToolboxButtons();
@@ -822,18 +822,26 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   }
 
   /**
+   * 添加一个新的文本框，并将其添加到 {@link #contextToWidgetBiMap} 中。
+   *
+   * @param index 添加到的位置，对应在数组或列表中的次序。
+   */
+  public void addTextField(int index) {
+    addTextField(index, entity.getDefaultTextContext(), false);
+  }
+
+  /**
    * 添加一个文本框，并将其添加到 {@link #contextToWidgetBiMap} 中。
    *
    * @param index 添加到的位置，对应在数组或列表中的次序。
-   * @param textContext 需要添加的 {@link TextContext}。若为 {@code null}，则会复制一遍默认的。该
-   *     textContext（或者复制的默认的）将会添加到 {@link #textContextsEditing} 中，且 {@code text} 字段将会与对应的 {@link
-   *     TextFieldWidget} 中的同步。
+   * @param textContext 需要添加的 {@link TextContext}。
+   * @param isExisting 是否为现有的，如果是，则不会将这个 textContext 添加到 {@link #textContextsEditing} 中，也不会将 {@link
+   *     #changed} 设为 <code>true</code>。
    */
-  public void addTextField(int index, @Nullable TextContext textContext) {
-    if (textContext == null) {
-      textContext = entity.getDefaultTextContext();
-      textContext.text = new LiteralText("");
+  public void addTextField(int index, @NotNull TextContext textContext, boolean isExisting) {
+    if (!isExisting) {
       textContextsEditing.add(index, textContext);
+      changed = true;
     }
     final TextFieldWidget textFieldWidget =
         new TextFieldWidget(
@@ -863,7 +871,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     applyDoubleLineTemplateButton.visible = false;
     applyLeftArrowTemplateButton.visible = false;
     applyRightArrowTemplateButton.visible = false;
-    changed = true;
   }
 
   /** 切换底部按钮的显示。显示高级按钮，或者取消高级按钮的显示。 */
@@ -893,7 +900,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
   }
   /** 添加文本按钮 */
-
   public final ButtonWidget addTextButton =
       new ButtonWidget(
           width / 2 - 120 - 100,
@@ -906,14 +912,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
                 textFieldListScreen
                     .children()
                     .indexOf(textFieldListScreen.new Entry(focusedTextField));
-            addTextField(index == -1 ? textFieldListScreen.children().size() : index + 1, null);
+            addTextField(index == -1 ? textFieldListScreen.children().size() : index + 1);
           });
 
   /**
    * 移除一个文本框。将从 {@link #contextToWidgetBiMap} 和 {@link #textContextsEditing} 中移除对应的元素。
    *
    * @param index 移除的文本框的位置。
-   * @see #addTextField(int, TextContext)
+   * @see #addTextField(int, TextContext, boolean)
    */
   public void removeTextField(int index) {
     final TextFieldWidget removedWidget =
@@ -940,6 +946,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   @Override
   public void removed() {
     super.removed();
+    entity.setEditor(null);
     final NbtList list = new NbtList();
     for (TextContext textContext : textContextsEditing) {
       list.add(textContext.writeNbt(new NbtCompound()));
@@ -1019,7 +1026,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     return super.keyPressed(keyCode, scanCode, modifiers);
   }
   /** 移除文本按钮 */
-
   public final ButtonWidget removeTextButton =
       new ButtonWidget(
           width / 2 + 120 - 100,
@@ -1159,7 +1165,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
               final int index = children.indexOf(getFocused());
               if (index + 1 < children.size())
                 textFieldListScreen.setFocused(children.get(index + 1));
-              else if (children.size() > 0) addTextField(index + 1, null);
+              else if (children.size() > 0) addTextField(index + 1);
             }
             break;
           case 264:
@@ -1248,7 +1254,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           15,
           new TranslatableText("message.mishanguc.add_first_text"),
           button -> {
-            addTextField(0, null);
+            addTextField(0);
             setFocused(textFieldListScreen);
             textFieldListScreen.setFocused(textFieldListScreen.children().get(0));
           }) {
@@ -1257,7 +1263,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
             MatrixStack matrices, int x, int y, int u, int v, int width, int height) {}
       };
 
-  @ApiStatus.AvailableSince("0.1.5")
+  @ApiStatus.AvailableSince("0.1.6")
   public final ButtonWidget applyDoubleLineTemplateButton =
       new ButtonWidget(
           width / 2 - 50,
@@ -1266,15 +1272,18 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           20,
           new TranslatableText("message.mishanguc.apply_double_line_template"),
           button -> {
-            addTextField(0, null);
-            AbstractSignBlockEditScreen.this.textContextsEditing.get(0).size = 5;
-            addTextField(1, null);
-            AbstractSignBlockEditScreen.this.textContextsEditing.get(1).size = 2.5f;
+            addTextField(0, AbstractSignBlockEditScreen.this.entity.getDefaultTextContext(), false);
+            addTextField(
+                1,
+                Util.make(
+                    AbstractSignBlockEditScreen.this.entity.getDefaultTextContext(),
+                    textContext -> textContext.size /= 2),
+                false);
             textFieldListScreen.setFocused(textFieldListScreen.children().get(0));
             rearrange();
           });
 
-  @ApiStatus.AvailableSince("0.1.5")
+  @ApiStatus.AvailableSince("0.1.6")
   public final ButtonWidget applyLeftArrowTemplateButton =
       new ButtonWidget(
           width / 2 - 150,
@@ -1284,31 +1293,26 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           new TranslatableText("message.mishanguc.apply_left_arrow_template"),
           (ButtonWidget button) -> {
             BlockEntityWithText entity = AbstractSignBlockEditScreen.this.entity;
-            final List<TextContext> textContextsEditing =
-                AbstractSignBlockEditScreen.this.textContextsEditing;
             final TextContext textContext0 = entity.getDefaultTextContext();
             textContext0.text = new LiteralText("←");
             textContext0.size = 8;
             textContext0.offsetX = -4;
             textContext0.absolute = true;
-            textContextsEditing.add(textContext0);
-            AbstractSignBlockEditScreen.this.addTextField(0, textContext0);
+            AbstractSignBlockEditScreen.this.addTextField(0, textContext0, false);
             final TextContext textContext1 = entity.getDefaultTextContext();
             textContext1.offsetX = 8;
             textContext1.horizontalAlign = HorizontalAlign.LEFT;
-            textContextsEditing.add(textContext1);
-            AbstractSignBlockEditScreen.this.addTextField(1, textContext1);
+            AbstractSignBlockEditScreen.this.addTextField(1, textContext1, false);
             final TextContext textContext2 = entity.getDefaultTextContext();
             textContext2.offsetX = 8;
             textContext2.horizontalAlign = HorizontalAlign.LEFT;
             textContext2.size /= 2;
-            textContextsEditing.add(textContext2);
-            AbstractSignBlockEditScreen.this.addTextField(2, textContext2);
+            AbstractSignBlockEditScreen.this.addTextField(2, textContext2, false);
             textFieldListScreen.setFocused(textFieldListScreen.children().get(1));
             rearrange();
           });
 
-  @ApiStatus.AvailableSince("0.1.5")
+  @ApiStatus.AvailableSince("0.1.6")
   public final ButtonWidget applyRightArrowTemplateButton =
       new ButtonWidget(
           width / 2 - 50,
@@ -1318,26 +1322,21 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           new TranslatableText("message.mishanguc.apply_right_arrow_template"),
           (ButtonWidget button) -> {
             BlockEntityWithText entity = AbstractSignBlockEditScreen.this.entity;
-            final List<TextContext> textContextsEditing =
-                AbstractSignBlockEditScreen.this.textContextsEditing;
             final TextContext textContext0 = entity.getDefaultTextContext();
             textContext0.text = new LiteralText("→");
             textContext0.size = 8;
             textContext0.offsetX = 4;
             textContext0.absolute = true;
-            textContextsEditing.add(textContext0);
-            AbstractSignBlockEditScreen.this.addTextField(0, textContext0);
+            AbstractSignBlockEditScreen.this.addTextField(0, textContext0, false);
             final TextContext textContext1 = entity.getDefaultTextContext();
             textContext1.offsetX = -8;
             textContext1.horizontalAlign = HorizontalAlign.RIGHT;
-            textContextsEditing.add(textContext1);
-            AbstractSignBlockEditScreen.this.addTextField(1, textContext1);
+            AbstractSignBlockEditScreen.this.addTextField(1, textContext1, false);
             final TextContext textContext2 = entity.getDefaultTextContext();
             textContext2.offsetX = -8;
             textContext2.horizontalAlign = HorizontalAlign.RIGHT;
             textContext2.size /= 2;
-            textContextsEditing.add(textContext2);
-            AbstractSignBlockEditScreen.this.addTextField(2, textContext2);
+            AbstractSignBlockEditScreen.this.addTextField(2, textContext2, false);
             textFieldListScreen.setFocused(textFieldListScreen.children().get(1));
             rearrange();
           });
