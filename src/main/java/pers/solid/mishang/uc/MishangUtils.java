@@ -1,9 +1,13 @@
 package pers.solid.mishang.uc;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.EnumHashBiMap;
 import com.google.common.collect.Streams;
 import net.minecraft.block.Block;
+import net.minecraft.client.texture.NativeImage;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -90,6 +94,38 @@ public class MishangUtils {
     }
     return null;
   }
+
+  /**
+   * 将颜色转化为告示牌发光的颜色。
+   *
+   * @param color 颜色。
+   * @return 发光后颜色的整数值。
+   */
+  private static int toSignOutlineColor(DyeColor color) {
+    return toSignOutlineColor(color.getSignColor());
+  }
+
+  /**
+   * 将颜色转化为告示牌发光的颜色。若为黑色，则返回白色。
+   *
+   * @param color 颜色的整数值。
+   * @return 发光后颜色的整数值。
+   */
+  public static int toSignOutlineColor(int color) {
+    int j = (int) ((double) NativeImage.getRed(color) * 0.4);
+    int k = (int) ((double) NativeImage.getGreen(color) * 0.4);
+    int l = (int) ((double) NativeImage.getBlue(color) * 0.4);
+    if (color == 0) {
+      return 0xfff0ebcc;
+    }
+    return NativeImage.packColor(0, l, k, j);
+  }
+
+  public static final BiMap<DyeColor, Integer> COLOR_TO_OUTLINE_COLOR = Util.make(EnumHashBiMap.create(DyeColor.class), map -> {
+    for (DyeColor color : DyeColor.values()) {
+      map.put(color, toSignOutlineColor(color));
+    }
+  });
 
   /**
    * @return 所有方块字段的流。使用反射。<br>
