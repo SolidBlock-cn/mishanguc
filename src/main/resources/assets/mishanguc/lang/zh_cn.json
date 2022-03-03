@@ -275,5 +275,11 @@
   "message.mishanguc.clear": "清除",
   "message.mishanguc.clear.description": "清除所有文本，不可撤销！",
   "message.mishanguc.clear.confirm": "确定？？",
-  "message.mishanguc.clear.confirm.description": "再点击一次以清除所有文本，不可撤销！"
+  "message.mishanguc.clear.confirm.description": "再点击一次以清除所有文本，不可撤销！",
+  "message.mishanguc.outline_color": "描边颜色",
+  "message.mishanguc.outline_color.auto": "根据文本颜色自动决定描边",
+  "message.mishanguc.outline_color.none": "不绘制",
+  "message.mishanguc.outline_color.param": "描边颜色：%s",
+  "message.mishanguc.outline_color.relate": "%2$s对应的%1$s",
+  "message.mishanguc.outline_color.relate.$1": "描边颜色"
 }
