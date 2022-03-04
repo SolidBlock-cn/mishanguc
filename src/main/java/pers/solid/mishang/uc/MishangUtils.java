@@ -11,13 +11,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.blocks.*;
+import pers.solid.mishang.uc.util.TextContext;
+import pers.solid.mishang.uc.util.VerticalAlign;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -110,6 +109,41 @@ public class MishangUtils {
                   && Block.class.isAssignableFrom(field.getType())
                   && field.isAnnotationPresent(RegisterIdentifier.class);
             });
+  }
+
+  /**
+   * 重新整理 textContexts。
+   *
+   * @param textContexts 由 textContexts 组成的集合。
+   */
+  public static void rearrange(Collection<TextContext> textContexts) {
+    final EnumMap<VerticalAlign, List<TextContext>> directionToContexts = new EnumMap<>(VerticalAlign.class);
+    for (TextContext textContext : textContexts) {
+      if (!textContext.absolute) {
+        directionToContexts.putIfAbsent(textContext.verticalAlign, new ArrayList<>());
+        directionToContexts.get(textContext.verticalAlign).add(textContext);
+      }
+    }
+    final float lineMargin = 1 / 8f;
+    directionToContexts.forEach(
+        ((verticalAlign, list) -> {
+          float stackedHeight = 0;
+          for (TextContext textContext : list) {
+            stackedHeight += textContext.size * lineMargin / 2;
+            textContext.offsetY = stackedHeight;
+            stackedHeight += textContext.size * (1 + lineMargin) / 2;
+          }
+          for (TextContext textContext : list) {
+            switch (verticalAlign) {
+              case MIDDLE:
+                textContext.offsetY -= (stackedHeight - textContext.size / 2f) / 2f;
+                break;
+              case BOTTOM:
+                textContext.offsetY -= stackedHeight - textContext.size / 2f;
+                break;
+            }
+          }
+        }));
   }
 
   /**

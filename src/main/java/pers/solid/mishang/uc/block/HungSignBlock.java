@@ -8,10 +8,7 @@ import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -261,17 +258,25 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       BlockHitResult hit) {
     final ActionResult actionResult = super.onUse(state, world, pos, player, hand, hit);
     final BlockEntity blockEntity = world.getBlockEntity(pos);
+    if (!(blockEntity instanceof HungSignBlockEntity)) {
+      return ActionResult.PASS;
+    }
+    final HungSignBlockEntity entity = (HungSignBlockEntity) blockEntity;
     // 若方块实体不对应，或者编辑的这一侧不可编辑，则在客户端和服务器均略过。
     // Skip if the block entity does not correspond, or the side is not editable.
-    if (!(blockEntity instanceof HungSignBlockEntity) || !state.get(AXIS).test(hit.getSide())) {
+    if (!state.get(AXIS).test(hit.getSide())) {
       return ActionResult.PASS;
+    }
+    if (player.getMainHandStack().getItem() == Items.MAGMA_CREAM) {
+      // 玩家手持岩浆膏时，可快速进行重整。
+      MishangUtils.rearrange(entity.texts.get(hit.getSide()));
+      return ActionResult.SUCCESS;
     }
     if (actionResult == ActionResult.PASS && !world.isClient) {
       if (((ServerPlayerEntity) player).interactionManager.getGameMode() == GameMode.ADVENTURE) {
         // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
         return ActionResult.FAIL;
       }
-      final HungSignBlockEntity entity = (HungSignBlockEntity) blockEntity;
       entity.checkEditorValidity();
       final PlayerEntity editor = entity.getEditor();
       if (entity.editedSide != null || editor != null) {
