@@ -24,10 +24,12 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.*;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
-import pers.solid.mishang.uc.MishangUc;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 
@@ -142,29 +144,29 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
       Hand hand,
       BlockHitResult hit) {
     if (super.onUse(state, world, pos, player, hand, hit) == ActionResult.PASS) {
-      // 在服务端触发打开告示牌编辑界面。Open the edit interface, triggered in the server side.
       final BlockEntity blockEntity = world.getBlockEntity(pos);
       if (!(blockEntity instanceof final WallSignBlockEntity entity)) {
         return ActionResult.PASS;
       }
 
-      if (player.getMainHandStack().getItem() == Items.MAGMA_CREAM) {
+      if (!player.getAbilities().allowModifyWorld) {
+        // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
+        return ActionResult.PASS;
+      }
+      if (player.getMainHandStack().getItem() == Items.MAGMA_CREAM && entity.textContexts != null) {
         MishangUtils.rearrange(entity.textContexts);
         return ActionResult.SUCCESS;
       } else if (world.isClient) {
         return ActionResult.SUCCESS;
       }
-      if (((ServerPlayerEntity) player).interactionManager.getGameMode() == GameMode.ADVENTURE) {
-        // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
-        return ActionResult.FAIL;
-      }
 
       entity.checkEditorValidity();
       PlayerEntity editor = entity.getEditor();
+      // 在服务端触发打开告示牌编辑界面。Open the edit interface, triggered in the server side.
       if (editor != null && editor != player) {
-        // 这种情况下，告示牌被占用，玩家无权编辑。In this case, the sign is occupied, and the players has not editing
-        // permission.
-        MishangUc.MISHANG_LOGGER.warn("Refused to edit because the editor is {}.", editor);
+        // 这种情况下，告示牌被占用，玩家无权编辑。
+        // In this case, the sign is occupied, and the player has no editing permission.
+        player.sendMessage(new TranslatableText("message.mishanguc.no_editing_permission.occupied", editor.getName()), false);
         return ActionResult.FAIL;
       }
       // 此时告示牌已被编辑。

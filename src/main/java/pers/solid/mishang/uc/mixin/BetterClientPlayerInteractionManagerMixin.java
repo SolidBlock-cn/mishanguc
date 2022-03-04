@@ -79,4 +79,20 @@ public abstract class BetterClientPlayerInteractionManagerMixin {
       info.cancel();
     }
   }
+
+  /**
+   * 在原版MC中，处理破坏过程中，仍有可能执行 attackBlock。当玩家持有此类物品时，不再击打方块。这种情况通常在生存模式出现。
+   */
+  @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;attackBlock(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z", shift = At.Shift.BEFORE), method = "updateBlockBreakingProgress", cancellable = true)
+  public void doNotAttack(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
+    ActionResult result =
+        MishangUc.PROGRESS_ATTACK_BLOCK_EVENT
+            .invoker()
+            .interact(client.player, client.world, Hand.MAIN_HAND, pos, direction);
+
+    if (result != ActionResult.PASS) {
+      cir.setReturnValue(result == ActionResult.SUCCESS);
+      cir.cancel();
+    }
+  }
 }
