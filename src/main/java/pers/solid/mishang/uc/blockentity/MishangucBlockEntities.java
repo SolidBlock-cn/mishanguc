@@ -51,7 +51,7 @@ public class MishangucBlockEntities {
                       .addAll(WallSignBlocks.GLOWING_TERRACOTTA_WALL_SIGNS.values())
                       .addAll(WallSignBlocks.FULL_CONCRETE_WALL_SIGNS.values())
                       .addAll(WallSignBlocks.FULL_TERRACOTTA_WALL_SIGNS.values())
-                      .add(WallSignBlocks.INVISIBLE_WALL_SIGN)
+                      .add(WallSignBlocks.INVISIBLE_WALL_SIGN, WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
                       .build()
                       .toArray(new Block[]{}))
               .build(null));

@@ -47,7 +47,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
       broadcastId(player, block.getName(), identifier, rawId);
       return ActionResult.SUCCESS;
     }
-    return ActionResult.success(world.isClient);
+    return ActionResult.SUCCESS;
   }
 
   /**
