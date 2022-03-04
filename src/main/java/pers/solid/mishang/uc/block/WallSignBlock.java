@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -28,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUc;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 
 import java.util.Map;
@@ -141,16 +141,24 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
       PlayerEntity player,
       Hand hand,
       BlockHitResult hit) {
-    if (super.onUse(state, world, pos, player, hand, hit) == ActionResult.PASS && !world.isClient) {
+    if (super.onUse(state, world, pos, player, hand, hit) == ActionResult.PASS) {
+      // 在服务端触发打开告示牌编辑界面。Open the edit interface, triggered in the server side.
+      final BlockEntity blockEntity = world.getBlockEntity(pos);
+      if (!(blockEntity instanceof final WallSignBlockEntity entity)) {
+        return ActionResult.PASS;
+      }
+
+      if (player.getMainHandStack().getItem() == Items.MAGMA_CREAM) {
+        MishangUtils.rearrange(entity.textContexts);
+        return ActionResult.SUCCESS;
+      } else if (world.isClient) {
+        return ActionResult.SUCCESS;
+      }
       if (((ServerPlayerEntity) player).interactionManager.getGameMode() == GameMode.ADVENTURE) {
         // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
         return ActionResult.FAIL;
       }
-      // 在服务端触发打开告示牌编辑界面。Open the edit interface, triggered in the server side.
-      final BlockEntity blockEntity = world.getBlockEntity(pos);
-      if (!(blockEntity instanceof final BlockEntityWithText entity)) {
-        return ActionResult.PASS;
-      }
+
       entity.checkEditorValidity();
       PlayerEntity editor = entity.getEditor();
       if (editor != null && editor != player) {
