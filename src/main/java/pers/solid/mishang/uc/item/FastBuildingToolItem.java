@@ -54,6 +54,10 @@ public class FastBuildingToolItem extends BlockToolItem {
       BlockHitResult blockHitResult,
       Hand hand,
       boolean fluidIncluded) {
+    if (!player.abilities.creativeMode) {
+      // 仅限创造模式玩家使用。
+      return ActionResult.PASS;
+    }
     final Direction side = blockHitResult.getSide();
     final BlockPos centerBlockPos = blockHitResult.getBlockPos();
     final BlockState centerState = world.getBlockState(centerBlockPos);
@@ -85,6 +89,10 @@ public class FastBuildingToolItem extends BlockToolItem {
   @Override
   public ActionResult beginAttackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    if (!player.abilities.creativeMode) {
+      // 仅限创造模式玩家使用。
+      return ActionResult.PASS;
+    }
     if (!world.isClient()) {
       final ItemStack stack = player.getMainHandStack();
       final int range = this.getRange(stack);
@@ -227,6 +235,11 @@ public class FastBuildingToolItem extends BlockToolItem {
       ItemStack mainHandStack,
       WorldRenderContext worldRenderContext,
       WorldRenderContext.BlockOutlineContext blockOutlineContext) {
+    final MinecraftClient client = MinecraftClient.getInstance();
+    if (!player.abilities.creativeMode) {
+      // 只有在创造模式下，才会绘制边框。
+      return true;
+    }
     final VertexConsumerProvider consumers = worldRenderContext.consumers();
     if (consumers == null) return true;
     final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.LINES);
@@ -235,7 +248,7 @@ public class FastBuildingToolItem extends BlockToolItem {
     final int range = this.getRange(mainHandStack);
     final BlockHitResult raycast;
     try {
-      raycast = (BlockHitResult) MinecraftClient.getInstance().crosshairTarget;
+      raycast = (BlockHitResult) client.crosshairTarget;
       if (raycast == null) {
         return true;
       }

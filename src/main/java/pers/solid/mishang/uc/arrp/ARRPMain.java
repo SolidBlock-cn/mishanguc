@@ -493,6 +493,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
       addStateForWallSign(PACK, "full_" + color.asString() + "_terracotta_wall_sign");
     }
     addStateForWallSign(PACK, "invisible_wall_sign");
+    addStateForWallSign(PACK, "invisible_glowing_wall_sign");
   }
 
   private static JState stateForJointLineWithOffsetSide(String modelName) {

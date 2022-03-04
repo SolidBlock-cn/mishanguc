@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.item;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -48,12 +49,19 @@ public class MirroringToolItem extends BlockToolItem {
       BlockHitResult blockHitResult,
       Hand hand,
       boolean fluidIncluded) {
-    return mirror(world, blockHitResult.getBlockPos(), blockHitResult.getSide());
+    final BlockPos blockPos = blockHitResult.getBlockPos();
+    if (!player.abilities.allowModifyWorld && !player.getStackInHand(hand).canPlaceOn(world.getTagManager(), new CachedBlockPosition(world, blockPos, false))) {
+      return ActionResult.PASS;
+    }
+    return mirror(world, blockPos, blockHitResult.getSide());
   }
 
   @Override
   public ActionResult beginAttackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    if (!player.abilities.allowModifyWorld && !player.getMainHandStack().canDestroy(world.getTagManager(), new CachedBlockPosition(world, pos, false))) {
+      return ActionResult.PASS;
+    }
     return mirror(world, pos, direction);
   }
 

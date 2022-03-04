@@ -116,7 +116,7 @@ public class MishangUtils {
    *
    * @param textContexts 由 textContexts 组成的集合。
    */
-  public static void rearrange(Collection<TextContext> textContexts) {
+  public static void rearrange(@NotNull Collection<TextContext> textContexts) {
     final EnumMap<VerticalAlign, List<TextContext>> directionToContexts = new EnumMap<>(VerticalAlign.class);
     for (TextContext textContext : textContexts) {
       if (!textContext.absolute) {

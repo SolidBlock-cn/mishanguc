@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -226,6 +227,9 @@ public class MishangUc implements ModInitializer {
         (player, world, hand, hitResult) -> {
           final ItemStack stackInHand = player.getStackInHand(hand);
           final Item item = stackInHand.getItem();
+          if (!player.abilities.allowModifyWorld && !stackInHand.canPlaceOn(world.getTagManager(), new CachedBlockPosition(world, hitResult.getBlockPos(), false))) {
+            return ActionResult.PASS;
+          }
           if (item instanceof BlockToolItem) {
             return ((BlockToolItem) item)
                 .useOnBlock(

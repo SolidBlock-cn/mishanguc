@@ -129,6 +129,7 @@
   "block.mishanguc.glowing_wall_sign": "Glowing %s Wall Sign",
   "block.mishanguc.full_wall_sign": "Full %s Wall Sign",
   "block.mishanguc.invisible_wall_sign": "Invisible Wall Sign",
+  "block.mishanguc.invisible_glowing_wall_sign": "Invisible Glowing Wall Sign",
 
   "item.mishanguc.road_connection_state_debugging_tool": "Road Connection State Debugging Tool",
   "item.mishanguc.id_checker_tool": "Id Checker Tool",
@@ -235,6 +236,9 @@
   "message.mishanguc.sign_edit": "Edit Sign",
   "message.mishanguc.add_text": "Add text",
   "message.mishanguc.remove_text": "Remove text",
+
+  "message.mishanguc.no_editing_permission": "You cannot edit this sign.",
+  "message.mishanguc.no_editing_permission.occupied": "You cannot edit this sign as %s is editing it now.",
 
   "message.mishanguc.bold": "Bold",
   "message.mishanguc.bold.description": "Bold: %s",

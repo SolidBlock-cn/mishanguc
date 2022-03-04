@@ -304,8 +304,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (colorId == -1) {
       return new TranslatableText("message.mishanguc.color");
     } else if (colorId == -2 && focusedTextContext != null) {
-      return new TranslatableText("message.mishanguc.color.param", String.format("#%06x", focusedTextContext.color))
-          .styled(style -> style.withColor(TextColor.fromRgb(focusedTextContext.color)));
+      return new TranslatableText("message.mishanguc.color.param", new LiteralText(String.format("#%06x", focusedTextContext.color)).styled(style -> style.withColor(TextColor.fromRgb(focusedTextContext.color))))
+          ;
     }
     final DyeColor dyeColor = DyeColor.byId((int) colorId);
     return new TranslatableText(

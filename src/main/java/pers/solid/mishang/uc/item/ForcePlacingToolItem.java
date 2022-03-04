@@ -44,6 +44,10 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       BlockHitResult blockHitResult,
       Hand hand,
       boolean fluidIncluded) {
+    if (!player.abilities.creativeMode) {
+      // 仅限创造模式玩家使用。
+      return ActionResult.PASS;
+    }
     BlockPlacementContext blockPlacementContext =
         new BlockPlacementContext(
             world,
@@ -64,6 +68,10 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   @Override
   public ActionResult beginAttackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    if (!player.abilities.creativeMode) {
+      // 仅限创造模式玩家使用。
+      return ActionResult.PASS;
+    }
     final BlockState blockState = world.getBlockState(pos);
     world.syncWorldEvent(player, 2001, pos, Block.getRawIdFromState(world.getBlockState(pos)));
     FluidState fluidState = blockState.getFluidState();
@@ -102,6 +110,11 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       ItemStack mainHandStack,
       WorldRenderContext worldRenderContext,
       WorldRenderContext.BlockOutlineContext blockOutlineContext) {
+    final MinecraftClient client = MinecraftClient.getInstance();
+    if (!player.abilities.creativeMode) {
+      // 只有在创造模式下，才会绘制边框。
+      return true;
+    }
     final VertexConsumerProvider consumers = worldRenderContext.consumers();
     if (consumers == null) {
       return true;
@@ -109,7 +122,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.LINES);
     final BlockHitResult raycast;
     try {
-      raycast = (BlockHitResult) MinecraftClient.getInstance().crosshairTarget;
+      raycast = (BlockHitResult) client.crosshairTarget;
       if (raycast == null) {
         return true;
       }

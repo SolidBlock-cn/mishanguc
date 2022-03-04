@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.item;
 
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -34,6 +35,9 @@ public class RotatingToolItem extends BlockToolItem {
       Hand hand,
       boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
+    if (!player.abilities.allowModifyWorld && !player.getStackInHand(hand).canPlaceOn(world.getTagManager(), new CachedBlockPosition(world, blockPos, false))) {
+      return ActionResult.PASS;
+    }
     return rotateBlock(player, world, blockPos);
   }
 
@@ -57,6 +61,9 @@ public class RotatingToolItem extends BlockToolItem {
   @Override
   public ActionResult beginAttackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    if (!player.abilities.allowModifyWorld && !player.getMainHandStack().canDestroy(world.getTagManager(), new CachedBlockPosition(world, pos, false))) {
+      return ActionResult.PASS;
+    }
     return rotateBlock(player, world, pos);
   }
 

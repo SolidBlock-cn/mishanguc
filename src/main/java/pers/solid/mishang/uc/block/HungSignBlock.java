@@ -26,16 +26,17 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.MishangUc;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.mixin.EntityShapeContextAccessor;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
+import pers.solid.mishang.uc.util.TextContext;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -267,26 +268,23 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     if (!state.get(AXIS).test(hit.getSide())) {
       return ActionResult.PASS;
     }
+    if (!player.abilities.allowModifyWorld) {
+      return ActionResult.PASS;
+    }
     if (player.getMainHandStack().getItem() == Items.MAGMA_CREAM) {
       // 玩家手持岩浆膏时，可快速进行重整。
-      MishangUtils.rearrange(entity.texts.get(hit.getSide()));
+      final List<@NotNull TextContext> textContexts = entity.texts.get(hit.getSide());
+      if (textContexts != null) MishangUtils.rearrange(textContexts);
       return ActionResult.SUCCESS;
     }
     if (actionResult == ActionResult.PASS && !world.isClient) {
-      if (((ServerPlayerEntity) player).interactionManager.getGameMode() == GameMode.ADVENTURE) {
-        // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
-        return ActionResult.FAIL;
-      }
       entity.checkEditorValidity();
       final PlayerEntity editor = entity.getEditor();
-      if (entity.editedSide != null || editor != null) {
-        // 这种情况下，告示牌被占用，玩家无权编辑。In this case, the sign is occupied, and the players has not editing
-        // permission.
-        MishangUc.MISHANG_LOGGER.warn(
-            "Refused to edit because the edited side is {} and the editor is {}.",
-            entity.editedSide,
-            editor);
-        return ActionResult.SUCCESS;
+      if (editor != null && editor != player) {
+        // 这种情况下，告示牌被占用，玩家无权编辑。
+        // In this case, the sign is occupied, and the player has no editing permission.
+        player.sendMessage(new TranslatableText("message.mishanguc.no_editing_permission.occupied", editor.getName()), false);
+        return ActionResult.FAIL;
       }
       entity.editedSide = hit.getSide();
       entity.setEditor(player);
