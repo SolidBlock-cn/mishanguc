@@ -324,8 +324,8 @@ public class TextContext implements Cloneable {
    *
    * @param nbt 一个待写入的 NBT 复合标签，可以是空的 NBT 复合标签：
    *            <pre>{@code
-   *                                                                              new NbtCompound()
-   *                                                                              }</pre>
+   *                                                                                                    new NbtCompound()
+   *                                                                                                    }</pre>
    * @return 修改后的 <tt>nbt</tt>。
    */
   public NbtCompound writeNbt(NbtCompound nbt) {
