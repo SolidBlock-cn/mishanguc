@@ -39,7 +39,9 @@ import pers.solid.mishang.uc.util.HorizontalAlign;
 import pers.solid.mishang.uc.util.TextContext;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -633,32 +635,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * @see #rearrangeButton
    */
   public void rearrange() {
-    final List<TextContext> textContextsEditing =
-        AbstractSignBlockEditScreen.this.textContextsEditing;
-    final EnumMap<VerticalAlign, List<TextContext>> directionToContexts =
-        new EnumMap<>(VerticalAlign.class);
-    for (TextContext textContext : textContextsEditing) {
-      if (!textContext.absolute) {
-        directionToContexts.putIfAbsent(textContext.verticalAlign, new ArrayList<>());
-        directionToContexts.get(textContext.verticalAlign).add(textContext);
-      }
-    }
-    final float lineMargin = 1 / 8f;
-    directionToContexts.forEach(
-        ((verticalAlign, textContexts) -> {
-          float stackedHeight = 0;
-          for (TextContext textContext : textContexts) {
-            stackedHeight += textContext.size * lineMargin / 2;
-            textContext.offsetY = stackedHeight;
-            stackedHeight += textContext.size * (1 + lineMargin) / 2;
-          }
-          for (TextContext textContext : textContexts) {
-            switch (verticalAlign) {
-              case MIDDLE -> textContext.offsetY -= (stackedHeight - textContext.size / 2f) / 2f;
-              case BOTTOM -> textContext.offsetY -= stackedHeight - textContext.size / 2f;
-            }
-          }
-        }));
+    final List<TextContext> textContextsEditing = AbstractSignBlockEditScreen.this.textContextsEditing;
+    MishangUtils.rearrange(textContextsEditing);
   }
 
   /**
