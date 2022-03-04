@@ -8,7 +8,9 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
 public enum HorizontalCornerDirection implements StringIdentifiable {
-  /** 西南 */
+  /**
+   * 西南
+   */
   SOUTH_WEST(0, 45, "south_west", Direction.SOUTH, Direction.WEST),
   NORTH_WEST(1, 135, "north_west", Direction.NORTH, Direction.WEST),
   NORTH_EAST(2, 225, "north_east", Direction.NORTH, Direction.EAST),

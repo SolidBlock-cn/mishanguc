@@ -12,9 +12,13 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 
-/** 类似于 {@link RoadWithAngleLine}，但是直角两边可能不同。 */
+/**
+ * 类似于 {@link RoadWithAngleLine}，但是直角两边可能不同。
+ */
 public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
-  /** 直角上该坐标轴上的边视为第二个边，另一方向的边则视为第一个边。 */
+  /**
+   * 直角上该坐标轴上的边视为第二个边，另一方向的边则视为第一个边。
+   */
   EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
 
   @Override

@@ -36,9 +36,11 @@ public class HungSignBlockItem extends NamedBlockItem {
     super(block, settings);
   }
 
-  /** 根据 nbt 数据返回对应的 {@code Map<}{@code Direction, List<}{@code TextContext>>}。 */
+  /**
+   * 根据 nbt 数据返回对应的 {@code Map<}{@code Direction, List<}{@code TextContext>>}。
+   */
   protected static @Unmodifiable Map<Direction, @Unmodifiable List<TextContext>>
-      getTextContextMapFromNbt(@NotNull NbtCompound nbt) {
+  getTextContextMapFromNbt(@NotNull NbtCompound nbt) {
     ImmutableMap.Builder<Direction, List<TextContext>> builder = new ImmutableMap.Builder<>();
     for (Direction direction : Direction.Type.HORIZONTAL) {
       final NbtElement element = nbt.get(direction.asString());
@@ -71,8 +73,8 @@ public class HungSignBlockItem extends NamedBlockItem {
         (direction, textContexts) -> {
           tooltip.add(
               new TranslatableText(
-                      "block.mishanguc.tooltip.hung_sign_block",
-                      new TranslatableText("direction." + direction.asString()))
+                  "block.mishanguc.tooltip.hung_sign_block",
+                  new TranslatableText("direction." + direction.asString()))
                   .formatted(Formatting.GRAY));
           textContexts.forEach(
               textContext -> {

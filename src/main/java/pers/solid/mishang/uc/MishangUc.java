@@ -45,7 +45,9 @@ import java.util.List;
 
 public class MishangUc implements ModInitializer {
   public static final Logger MISHANG_LOGGER = LogManager.getLogger("Mishang Urban Construction");
-  /** 比 {@link AttackBlockCallback#EVENT} 更好！ */
+  /**
+   * 比 {@link AttackBlockCallback#EVENT} 更好！
+   */
   public static final Event<AttackBlockCallback> BEGIN_ATTACK_BLOCK_EVENT =
       EventFactory.createArrayBacked(
           AttackBlockCallback.class,
@@ -75,7 +77,9 @@ public class MishangUc implements ModInitializer {
                 return ActionResult.PASS;
               });
 
-  /** 用于接受玩家在客户端完成告示牌方块编辑时发送过来的 packet。 */
+  /**
+   * 用于接受玩家在客户端完成告示牌方块编辑时发送过来的 packet。
+   */
   private void handleEditSignFinish(
       MinecraftServer server,
       ServerPlayerEntity player,
@@ -104,11 +108,11 @@ public class MishangUc implements ModInitializer {
             final @Unmodifiable List<TextContext> textContexts =
                 nbt != null
                     ? new ImmutableList.Builder<TextContext>()
-                        .addAll(
-                            nbt.getList("texts", 10).stream()
-                                .map(e -> TextContext.fromNbt(e, entity.getDefaultTextContext()))
-                                .iterator())
-                        .build()
+                    .addAll(
+                        nbt.getList("texts", 10).stream()
+                            .map(e -> TextContext.fromNbt(e, entity.getDefaultTextContext()))
+                            .iterator())
+                    .build()
                     : null;
             if (editorAllowed != player) {
               MISHANG_LOGGER.warn(

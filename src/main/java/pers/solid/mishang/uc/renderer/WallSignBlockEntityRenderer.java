@@ -29,7 +29,9 @@ import java.util.Collection;
 
 @Environment(EnvType.CLIENT)
 public class WallSignBlockEntityRenderer extends BlockEntityRenderer<WallSignBlockEntity> {
-  /** 这个集合中的方块，在渲染时是视为没有厚度的，直接渲染在靠墙的位置，而不是离墙 1 格的位置。 */
+  /**
+   * 这个集合中的方块，在渲染时是视为没有厚度的，直接渲染在靠墙的位置，而不是离墙 1 格的位置。
+   */
   private static final @Unmodifiable Collection<Block> INVISIBLE_BLOCKS =
       ImmutableSet.of(WallSignBlocks.INVISIBLE_WALL_SIGN);
 

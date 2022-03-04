@@ -40,9 +40,9 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
           new LiteralText("")
               .append(
                   new TranslatableText(
-                          "debug.mishanguc.blockId.header",
-                          String.format(
-                              "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
+                      "debug.mishanguc.blockId.header",
+                      String.format(
+                          "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
                       .formatted(Formatting.YELLOW)),
           Util.NIL_UUID);
       broadcastId(player, block.getName(), identifier, rawId);
@@ -51,7 +51,9 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
     return ActionResult.success(world.isClient);
   }
 
-  /** 发送一个方块、实体或其他事物的id。 */
+  /**
+   * 发送一个方块、实体或其他事物的id。
+   */
   private void broadcastId(
       PlayerEntity player, Text name, @Nullable Identifier identifier, int rawId) {
     player.sendSystemMessage(
@@ -105,9 +107,9 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
           new LiteralText("")
               .append(
                   new TranslatableText(
-                          "debug.mishanguc.biomeId.header",
-                          String.format(
-                              "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
+                      "debug.mishanguc.biomeId.header",
+                      String.format(
+                          "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
                       .formatted(Formatting.YELLOW)),
           Util.NIL_UUID);
       broadcastId(
@@ -161,9 +163,9 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
         new LiteralText("")
             .append(
                 new TranslatableText(
-                        "debug.mishanguc.entityId.header",
-                        String.format(
-                            "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
+                    "debug.mishanguc.entityId.header",
+                    String.format(
+                        "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
                     .formatted(Formatting.YELLOW)),
         Util.NIL_UUID);
     final EntityType<?> type = entity.getType();

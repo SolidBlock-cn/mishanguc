@@ -30,7 +30,9 @@ import pers.solid.mishang.uc.render.RendersBlockOutline;
 
 import java.util.List;
 
-/** 用于处理台阶的工具。 */
+/**
+ * 用于处理台阶的工具。
+ */
 public class SlabToolItem extends Item implements RendersBlockOutline {
   public SlabToolItem(Settings settings) {
     super(settings);
@@ -96,7 +98,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
       }
       boolean bl =
           crosshairTarget.getPos().y
-                  - (double) ((BlockHitResult) crosshairTarget).getBlockPos().getY()
+              - (double) ((BlockHitResult) crosshairTarget).getBlockPos().getY()
               > 0.5D;
       // 渲染时需要使用的方块状态。
       final BlockState halfState =

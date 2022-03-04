@@ -8,9 +8,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import java.util.List;
 
 @SuppressWarnings({
-  "AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc",
-  "AlibabaClassNamingShouldBeCamel",
-  "AlibabaLowerCamelCaseVariableNaming"
+    "AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc",
+    "AlibabaClassNamingShouldBeCamel",
+    "AlibabaLowerCamelCaseVariableNaming"
 })
 @Mixin(JWhen.class)
 public interface JWhenAccessor {

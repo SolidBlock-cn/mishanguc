@@ -21,13 +21,19 @@ import java.util.*;
 
 public class AutoConnectWallLightBlock extends WallLightBlock implements LightConnectable {
 
-  /** 每个朝向中，中心基础碰撞箱。任何自动连接的灯都会有此碰撞箱，且不进行任何连接的灯仅使用此碰撞箱。键为灯的 {@link #FACING} 属性。 */
+  /**
+   * 每个朝向中，中心基础碰撞箱。任何自动连接的灯都会有此碰撞箱，且不进行任何连接的灯仅使用此碰撞箱。键为灯的 {@link #FACING} 属性。
+   */
   private static final Map<Direction, VoxelShape> BASE_SHAPE_PER_FACING =
       MishangUtils.createDirectionToShape(4, 0, 4, 12, 1, 12);
-  /** 当 {@link #FACING} 为 {@link Direction#UP} 时，方块的各个连接物的碰撞箱。键为水平方向。 */
+  /**
+   * 当 {@link #FACING} 为 {@link Direction#UP} 时，方块的各个连接物的碰撞箱。键为水平方向。
+   */
   private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION_WHEN_FACING_UP =
       MishangUtils.createHorizontalDirectionToShape(4, 0, 12, 12, 1, 16);
-  /** 当 {@link #FACING} 为 {@link Direction#DOWN} 时，方块的各个连接物的碰撞箱。键为水平方向。 */
+  /**
+   * 当 {@link #FACING} 为 {@link Direction#DOWN} 时，方块的各个连接物的碰撞箱。键为水平方向。
+   */
   private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION_WHEN_FACING_DOWN =
       MishangUtils.createHorizontalDirectionToShape(4, 15, 4, 12, 16, 12);
 
@@ -38,15 +44,15 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
    */
   private static final List<Map<Direction, VoxelShape>>
       SHAPE_PER_DIRECTION_PER_FACING_WHEN_FACING_HORIZONTALLY =
-          ImmutableList.of(
-              // 第一个元素为“上”。
-              MishangUtils.createHorizontalDirectionToShape(4, 12, 0, 12, 16, 1),
-              // 第二个元素为“下”。
-              MishangUtils.createHorizontalDirectionToShape(4, 0, 0, 12, 4, 1),
-              // 第三个元素为“右”，即 facing 逆时针旋转90度。
-              MishangUtils.createHorizontalDirectionToShape(12, 4, 0, 16, 12, 1),
-              // 第四个元素为“左”，即 facing 顺时针旋转90度。
-              MishangUtils.createHorizontalDirectionToShape(0, 4, 0, 4, 12, 1));
+      ImmutableList.of(
+          // 第一个元素为“上”。
+          MishangUtils.createHorizontalDirectionToShape(4, 12, 0, 12, 16, 1),
+          // 第二个元素为“下”。
+          MishangUtils.createHorizontalDirectionToShape(4, 0, 0, 12, 4, 1),
+          // 第三个元素为“右”，即 facing 逆时针旋转90度。
+          MishangUtils.createHorizontalDirectionToShape(12, 4, 0, 16, 12, 1),
+          // 第四个元素为“左”，即 facing 顺时针旋转90度。
+          MishangUtils.createHorizontalDirectionToShape(0, 4, 0, 4, 12, 1));
 
   public AutoConnectWallLightBlock(Settings settings) {
     super(settings);
@@ -99,7 +105,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
       connect =
           connect
               || ((LightConnectable) neighborBlock2)
-                  .isConnectedIn(neighborState2, direction, facing);
+              .isConnectedIn(neighborState2, direction, facing);
     }
     return newState.with(DIRECTION_TO_PROPERTY.get(direction), connect);
   }
@@ -176,7 +182,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
           voxelShapeList.add(
               SHAPE_PER_DIRECTION_PER_FACING_WHEN_FACING_HORIZONTALLY.get(3).get(facing));
         }
-        extraShapes = voxelShapeList.toArray(new VoxelShape[] {});
+        extraShapes = voxelShapeList.toArray(new VoxelShape[]{});
         break;
     }
     return VoxelShapes.union(baseShape, extraShapes);

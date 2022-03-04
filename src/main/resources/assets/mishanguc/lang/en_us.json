@@ -283,6 +283,7 @@
   "message.mishanguc.clear.confirm": "Sure???",
   "message.mishanguc.clear.confirm.description": "Click again to clear all text. Cannot be undone!",
   "message.mishanguc.add_first_text": "Click here to add first text!",
+  "message.mishanguc.or": "or...",
   "message.mishanguc.color": "Color",
   "message.mishanguc.color.param": "Color: %s",
   "message.mishanguc.horizontal_align": "H-align",

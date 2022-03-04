@@ -26,7 +26,7 @@ public class MishangucBlockEntities {
                           HungSignBlocks.GLOWING_BLACKSTONE_HUNG_SIGN,
                           HungSignBlocks.GLOWING_POLISHED_BLACKSTONE_HUNG_SIGN)
                       .build()
-                      .toArray(new Block[] {}))
+                      .toArray(new Block[]{}))
               .build(null));
   public static final BlockEntityType<WallSignBlockEntity> WALL_SIGN_BLOCK_ENTITY =
       Registry.register(
@@ -52,6 +52,6 @@ public class MishangucBlockEntities {
                       .addAll(WallSignBlocks.FULL_TERRACOTTA_WALL_SIGNS.values())
                       .add(WallSignBlocks.INVISIBLE_WALL_SIGN)
                       .build()
-                      .toArray(new Block[] {}))
+                      .toArray(new Block[]{}))
               .build(null));
 }

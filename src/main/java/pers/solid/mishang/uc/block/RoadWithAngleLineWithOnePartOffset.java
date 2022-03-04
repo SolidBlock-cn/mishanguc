@@ -23,7 +23,9 @@ import pers.solid.mishang.uc.util.LineType;
 import java.util.List;
 
 public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
-  /** 该道路方块的直角两边中，哪个轴上的保持中心（另一个轴的将会偏移）。 */
+  /**
+   * 该道路方块的直角两边中，哪个轴上的保持中心（另一个轴的将会偏移）。
+   */
   EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
 
   @Override

@@ -15,15 +15,17 @@ import pers.solid.mishang.uc.item.BlockToolItem;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
-  @Shadow @Final private MinecraftClient client;
+  @Shadow
+  @Final
+  private MinecraftClient client;
 
   @ModifyArg(
       method = "updateTargetedEntity(F)V",
       at =
-          @At(
-              value = "INVOKE",
-              target =
-                  "Lnet/minecraft/entity/Entity;raycast(DFZ)Lnet/minecraft/util/hit/HitResult;"),
+      @At(
+          value = "INVOKE",
+          target =
+              "Lnet/minecraft/entity/Entity;raycast(DFZ)Lnet/minecraft/util/hit/HitResult;"),
       index = 2)
   private boolean modifyRaycastCall(boolean includeFluids) {
     //        return true;

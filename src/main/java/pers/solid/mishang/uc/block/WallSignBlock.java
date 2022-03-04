@@ -52,13 +52,13 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   @Unmodifiable
   public static final Map<WallMountLocation, Map<Direction, VoxelShape>>
       SHAPE_PER_WALL_MOUNT_LOCATION =
-          ImmutableMap.of(
-              WallMountLocation.CEILING,
-              SHAPES_WHEN_CEILING,
-              WallMountLocation.FLOOR,
-              SHAPES_WHEN_FLOOR,
-              WallMountLocation.WALL,
-              SHAPES_WHEN_WALL);
+      ImmutableMap.of(
+          WallMountLocation.CEILING,
+          SHAPES_WHEN_CEILING,
+          WallMountLocation.FLOOR,
+          SHAPES_WHEN_FLOOR,
+          WallMountLocation.WALL,
+          SHAPES_WHEN_WALL);
 
   public final Block baseBlock;
 
@@ -85,7 +85,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     final BlockState placementState = super.getPlacementState(ctx);
     return placementState != null
         ? placementState.with(
-            WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER)
+        WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER)
         : null;
   }
 
@@ -135,7 +135,9 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
         : new TranslatableText("block.mishanguc.wall_sign", baseBlock.getName());
   }
 
-  /** 玩家点击该告示牌时，编辑告示牌。 */
+  /**
+   * 玩家点击该告示牌时，编辑告示牌。
+   */
   @SuppressWarnings("deprecation")
   @Override
   public ActionResult onUse(

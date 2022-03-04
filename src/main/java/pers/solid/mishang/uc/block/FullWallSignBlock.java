@@ -26,13 +26,13 @@ public class FullWallSignBlock extends WallSignBlock {
   @Unmodifiable
   public static final Map<WallMountLocation, Map<Direction, VoxelShape>>
       SHAPE_PER_WALL_MOUNT_LOCATION =
-          ImmutableMap.of(
-              WallMountLocation.CEILING,
-              SHAPES_WHEN_CEILING,
-              WallMountLocation.FLOOR,
-              SHAPES_WHEN_FLOOR,
-              WallMountLocation.WALL,
-              SHAPES_WHEN_WALL);
+      ImmutableMap.of(
+          WallMountLocation.CEILING,
+          SHAPES_WHEN_CEILING,
+          WallMountLocation.FLOOR,
+          SHAPES_WHEN_FLOOR,
+          WallMountLocation.WALL,
+          SHAPES_WHEN_WALL);
 
   public FullWallSignBlock(@Nullable Block baseBlock, Settings settings) {
     super(baseBlock, settings);

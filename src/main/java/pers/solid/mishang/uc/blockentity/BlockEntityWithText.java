@@ -84,7 +84,9 @@ public abstract class BlockEntityWithText extends BlockEntity
    */
   public abstract void setEditor(@Nullable PlayerEntity editor);
 
-  /** 检查编辑告示牌的玩家是否有效。如果玩家正好是旁观模式，或者已经死亡，或者不在该世界内，则取消该玩家编辑权限。 */
+  /**
+   * 检查编辑告示牌的玩家是否有效。如果玩家正好是旁观模式，或者已经死亡，或者不在该世界内，则取消该玩家编辑权限。
+   */
   public void checkEditorValidity() {
     final PlayerEntity editor = getEditor();
     if (editor != null && editor.isSpectator() && !editor.isLiving() && editor.world != world) {

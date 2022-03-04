@@ -17,7 +17,9 @@ import pers.solid.mishang.uc.MishangUtils;
 
 import java.util.Map;
 
-/** 类似于墙上的灯方块，但是是条状的，因此具有多一个属性。 */
+/**
+ * 类似于墙上的灯方块，但是是条状的，因此具有多一个属性。
+ */
 public class StripWallLightBlock extends WallLightBlock implements LightConnectable {
   protected static final EnumProperty<StripType> STRIP_TYPE =
       EnumProperty.of("strip_type", StripType.class);
@@ -76,8 +78,8 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
         STRIP_TYPE,
         ctx.getSide().getAxis() == Direction.Axis.Y
             ? (ctx.getPlayerFacing().getAxis() == Direction.Axis.X
-                ? StripType.HORIZONTAL
-                : StripType.VERTICAL)
+            ? StripType.HORIZONTAL
+            : StripType.VERTICAL)
             : (player != null && player.isSneaking() ? StripType.VERTICAL : StripType.HORIZONTAL));
   }
 
@@ -85,15 +87,19 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
   public VoxelShape getOutlineShape(
       BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     return (state.get(STRIP_TYPE) == StripType.VERTICAL
-            ? SHAPE_PER_DIRECTION_WHEN_VERTICAL
-            : SHAPE_PER_DIRECTION_WHEN_HORIZONTAL)
+        ? SHAPE_PER_DIRECTION_WHEN_VERTICAL
+        : SHAPE_PER_DIRECTION_WHEN_HORIZONTAL)
         .get(state.get(FACING));
   }
 
   public enum StripType implements StringIdentifiable {
-    /** 水平的，对于天花板上或地上的表示为东西方向。 */
+    /**
+     * 水平的，对于天花板上或地上的表示为东西方向。
+     */
     HORIZONTAL,
-    /** 垂直的，对于天花板上或地上的表示为南北方向。 */
+    /**
+     * 垂直的，对于天花板上或地上的表示为南北方向。
+     */
     VERTICAL;
 
     @Override

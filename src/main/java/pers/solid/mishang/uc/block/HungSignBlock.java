@@ -206,10 +206,10 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
               property,
               neighborState.getBlock() instanceof HungSignBlock && neighborState.get(AXIS) == axis
                   || world
-                          .getBlockState(pos.up())
-                          .getCollisionShape(world, pos.up())
-                          .getMin(Direction.Axis.Y)
-                      != 0);
+                  .getBlockState(pos.up())
+                  .getCollisionShape(world, pos.up())
+                  .getMin(Direction.Axis.Y)
+                  != 0);
     } else if (direction == Direction.UP) {
       for (Direction horizontalDirection : Direction.Type.HORIZONTAL) {
         final BlockPos offset = pos.offset(horizontalDirection);
@@ -231,7 +231,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
             .with(
                 AXIS,
                 rotation == BlockRotation.CLOCKWISE_90
-                        || rotation == BlockRotation.COUNTERCLOCKWISE_90
+                    || rotation == BlockRotation.COUNTERCLOCKWISE_90
                     ? (oldAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X)
                     : oldAxis);
     if (rotation == BlockRotation.CLOCKWISE_180

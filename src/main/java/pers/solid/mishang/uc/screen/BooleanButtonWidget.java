@@ -12,14 +12,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-/** 用于处理布尔值的按钮。按下鼠标时切换。 */
+/**
+ * 用于处理布尔值的按钮。按下鼠标时切换。
+ */
 public class BooleanButtonWidget extends ButtonWidget {
   public final Function<@Nullable Boolean, Text> tooltipSupplier;
   public final boolean defaultValue = false;
 
   @ApiStatus.AvailableSince("0.1.6")
   private final AtomicReference<Text> textAtom;
-  /** 通常在没有选中对象时返回 null。 */
+  /**
+   * 通常在没有选中对象时返回 null。
+   */
   private final Function<BooleanButtonWidget, @Nullable Boolean> valueGetter;
 
   private final BooleanConsumer valueSetter;
@@ -27,17 +31,17 @@ public class BooleanButtonWidget extends ButtonWidget {
   /**
    * 用于布尔值的按钮。
    *
-   * @param x 坐标的X值。
-   * @param y 坐标的Y值。
-   * @param width 按钮的宽度。
-   * @param height 按钮的高度。
-   * @param message 按钮上显示的文本。是固定的。
-   * @param valueGetter 如何获取布尔值？
-   * @param valueSetter 如何设置布尔值？
+   * @param x               坐标的X值。
+   * @param y               坐标的Y值。
+   * @param width           按钮的宽度。
+   * @param height          按钮的高度。
+   * @param message         按钮上显示的文本。是固定的。
+   * @param valueGetter     如何获取布尔值？
+   * @param valueSetter     如何设置布尔值？
    * @param tooltipSupplier 根据布尔值返回其文本内容。该文本将会用于设置 {@code atom}。
-   * @param onPress 按钮按下去的反应。通常为空。
-   * @param textAtom 一个可设置文本内容的原子。设置值时，会更新该原子的值。参见 {@link
-   *     AbstractSignBlockEditScreen#descriptionAtom}，每次渲染时，都会获取该原子的值。
+   * @param onPress         按钮按下去的反应。通常为空。
+   * @param textAtom        一个可设置文本内容的原子。设置值时，会更新该原子的值。参见 {@link
+   *                        AbstractSignBlockEditScreen#descriptionAtom}，每次渲染时，都会获取该原子的值。
    */
   public BooleanButtonWidget(
       int x,
@@ -110,7 +114,7 @@ public class BooleanButtonWidget extends ButtonWidget {
     return value == null
         ? message
         : new LiteralText("")
-            .append(message)
-            .fillStyle(Style.EMPTY.withColor(TextColor.fromRgb(value ? 0xb2ff96 : 0xffac96)));
+        .append(message)
+        .fillStyle(Style.EMPTY.withColor(TextColor.fromRgb(value ? 0xb2ff96 : 0xffac96)));
   }
 }
