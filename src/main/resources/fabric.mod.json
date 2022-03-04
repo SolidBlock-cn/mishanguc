@@ -36,6 +36,6 @@
     "fabricloader": ">=0.13.0",
     "fabric": "*",
     "minecraft": ">=1.18",
-    "advanced_runtime_resource_pack": "*"
+    "advanced_runtime_resource_pack": ">=0.5.5"
   }
 }

@@ -41,7 +41,7 @@ dependencies {
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
-    modImplementation("net.devtech:arrp:0.5.4")
+    modImplementation("net.devtech:arrp:0.5.5")
     // I never break backwards compatibility, so just fetching the latest version should be fine
     // modImplementation("net.devtech:arrp:0.+")
 

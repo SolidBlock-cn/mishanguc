@@ -28,6 +28,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -227,7 +228,7 @@ public class MishangUc implements ModInitializer {
         (player, world, hand, hitResult) -> {
           final ItemStack stackInHand = player.getStackInHand(hand);
           final Item item = stackInHand.getItem();
-          if (!player.getAbilities().allowModifyWorld && !stackInHand.canPlaceOn(world.getTagManager(), new CachedBlockPosition(world, hitResult.getBlockPos(), false))) {
+          if (!player.getAbilities().allowModifyWorld && !stackInHand.canPlaceOn(Registry.BLOCK, new CachedBlockPosition(world, hitResult.getBlockPos(), false))) {
             return ActionResult.PASS;
           }
           if (item instanceof BlockToolItem) {
