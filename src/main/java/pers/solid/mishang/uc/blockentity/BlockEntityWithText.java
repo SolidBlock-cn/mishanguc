@@ -1,5 +1,9 @@
 package pers.solid.mishang.uc.blockentity;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -9,21 +13,28 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandOutput;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Range;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.*;
 import pers.solid.mishang.uc.util.TextContext;
+
+import java.util.HashMap;
+import java.util.List;
 
 public abstract class BlockEntityWithText extends BlockEntity {
 
@@ -96,6 +107,70 @@ public abstract class BlockEntityWithText extends BlockEntity {
     final PlayerEntity editor = getEditor();
     if (editor != null && editor.isSpectator() && !editor.isLiving() && editor.world != world) {
       setEditor(null);
+    }
+  }
+
+  public static final PacketHandler PACKET_HANDLER = new PacketHandler();
+
+  private static class PacketHandler implements ServerPlayNetworking.PlayChannelHandler {
+    protected static Logger LOGGER = LogManager.getLogger(PacketHandler.class);
+
+    @Override
+    public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+      LOGGER.info("Server side sign_edit_finish packet received!");
+      final BlockPos blockPos = buf.readBlockPos();
+      final NbtCompound nbt = buf.readNbt();
+      server.execute(
+          () -> {
+            final BlockEntityWithText entity =
+                (BlockEntityWithText) player.world.getBlockEntity(blockPos);
+            // 该参数仅限对应实体为 HungSignBlockEntity 时存在，也仅在此情况下，buf 中会存在此值。。
+            try {
+              if (entity == null) {
+                LOGGER.warn(
+                    "The entity is null! Cannot write the block entity data at {} {} {}.",
+                    blockPos.getX(),
+                    blockPos.getY(),
+                    blockPos.getZ());
+                return;
+              }
+              final PlayerEntity editorAllowed = entity.getEditor();
+              entity.setEditor(null);
+              final @Unmodifiable List<TextContext> textContexts =
+                  nbt != null
+                      ? new ImmutableList.Builder<TextContext>()
+                      .addAll(
+                          nbt.getList("texts", 10).stream()
+                              .map(e -> TextContext.fromNbt(e, entity.getDefaultTextContext()))
+                              .iterator())
+                      .build()
+                      : null;
+              if (editorAllowed != player) {
+                LOGGER.warn(
+                    "The player editing the block entity {} {} {} is not the player allowed to edit.",
+                    blockPos.getX(),
+                    blockPos.getY(),
+                    blockPos.getZ());
+                return;
+              }
+              if (entity instanceof HungSignBlockEntity) {
+                final Direction editedSide = ((HungSignBlockEntity) entity).editedSide;
+                ((HungSignBlockEntity) entity).editedSide = null;
+                if (nbt == null) return;
+                final HashMap<@NotNull Direction, @NotNull List<@NotNull TextContext>> builder =
+                    new HashMap<>(((HungSignBlockEntity) entity).texts);
+                if (editedSide != null) builder.put(editedSide, textContexts);
+                ((HungSignBlockEntity) entity).texts = ImmutableMap.copyOf(builder);
+              } else if (entity instanceof WallSignBlockEntity) {
+                if (nbt == null) return;
+                ((WallSignBlockEntity) entity).textContexts = textContexts;
+              }
+              entity.markDirty();
+            } catch (ClassCastException e) {
+              LOGGER.error("Error when trying to parse NBT received: ", e);
+            }
+            // 编辑成功。
+          });
     }
   }
 }

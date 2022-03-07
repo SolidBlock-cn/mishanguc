@@ -12,13 +12,10 @@ public enum LineType implements StringIdentifiable {
 
   @Override
   public String asString() {
-    switch (this) {
-      case DOUBLE:
-        return "double";
-      case THICK:
-        return "thick";
-      default:
-        return "normal";
-    }
+    return switch (this) {
+      case DOUBLE -> "double";
+      case THICK -> "thick";
+      default -> "normal";
+    };
   }
 }

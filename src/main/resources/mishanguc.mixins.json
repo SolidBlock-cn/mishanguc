@@ -4,10 +4,7 @@
   "package": "pers.solid.mishang.uc.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": ["EntityShapeContextAccessor", "ItemUsageContextInvoker", "JBlockModelAccessor", "JStateAccessor", "JVariantAccessor", "JWhenAccessor", "NbtCompoundAccessor", "RuntimeResourcePackImplMixin"],
-  "client": [
-    "BetterClientPlayerInteractionManagerMixin", "GameRendererMixin", "ScreenMixin",
-    "WorldRendererInvoker"
-  ],
+  "client": ["BetterClientPlayerInteractionManagerMixin", "GameRendererMixin", "PlayerInventoryMixin", "ScreenMixin", "WorldRendererInvoker"],
   "injectors": {
     "defaultRequire": 1
   }
