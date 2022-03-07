@@ -33,8 +33,8 @@ public class WallSignBlockEntity extends BlockEntityWithText {
     super(MishangucBlockEntities.WALL_SIGN_BLOCK_ENTITY, pos, state);
   }
 
-  protected WallSignBlockEntity(BlockEntityType<?> type,BlockPos pos, BlockState state) {
-    super(type,pos,state);
+  protected WallSignBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    super(type, pos, state);
   }
 
   @Override
