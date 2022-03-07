@@ -280,5 +280,11 @@
   "roadConnectionState.probability.probably_connect_to": "應當連接",
   "vertical_align.mishanguc.bottom": "底",
   "vertical_align.mishanguc.middle": "中",
-  "vertical_align.mishanguc.top": "頂"
+  "vertical_align.mishanguc.top": "頂",
+  "message.mishanguc.outline_color": "描邊顏色",
+  "message.mishanguc.outline_color.auto": "根據文本顏色自動決定描邊",
+  "message.mishanguc.outline_color.none": "不繪製",
+  "message.mishanguc.outline_color.param": "描邊顏色：%s",
+  "message.mishanguc.outline_color.relate": "%2$s對應的%1$s",
+  "message.mishanguc.outline_color.relate.$1": "描邊顏色"
 }
