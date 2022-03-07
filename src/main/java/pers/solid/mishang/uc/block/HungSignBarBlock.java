@@ -84,11 +84,12 @@ public class HungSignBarBlock extends Block implements Waterloggable {
       return null;
     }
     return placementState.getStateForNeighborUpdate(
-        Direction.DOWN,
-        ctx.getWorld().getBlockState(ctx.getBlockPos().down()),
-        ctx.getWorld(),
-        ctx.getBlockPos(),
-        ctx.getBlockPos().down());
+            Direction.DOWN,
+            ctx.getWorld().getBlockState(ctx.getBlockPos().down()),
+            ctx.getWorld(),
+            ctx.getBlockPos(),
+            ctx.getBlockPos().down())
+        .with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
   }
 
   @SuppressWarnings("deprecation")

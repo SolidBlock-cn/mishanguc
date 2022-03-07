@@ -145,16 +145,17 @@ public class FastBuildingToolItem extends BlockToolItem {
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        new TranslatableText("item.mishanguc.fast_building_tool.tooltip")
+        new TranslatableText("item.mishanguc.fast_building_tool.tooltip.1")
             .formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.fast_building_tool.tooltip.2").formatted(Formatting.GRAY));
     tooltip.add(
         new TranslatableText(
-            "item.mishanguc.fast_building_tool.tooltip.range", this.getRange(stack))
+            "item.mishanguc.fast_building_tool.tooltip.range", new LiteralText(Integer.toString(this.getRange(stack))).formatted(Formatting.GREEN))
             .formatted(Formatting.GRAY));
     tooltip.add(
         new TranslatableText(
             "item.mishanguc.fast_building_tool.tooltip.matchingRule",
-            this.getMatchingRule(stack).getName())
+            this.getMatchingRule(stack).getName().formatted(Formatting.GREEN))
             .formatted(Formatting.GRAY));
   }
 
