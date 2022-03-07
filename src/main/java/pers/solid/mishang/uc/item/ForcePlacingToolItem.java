@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.RenderLayer;
@@ -14,6 +15,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -76,6 +78,14 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     world.syncWorldEvent(player, 2001, pos, Block.getRawIdFromState(world.getBlockState(pos)));
     FluidState fluidState = blockState.getFluidState();
     if (!world.isClient) {
+      // 在破坏时，直接先将其内容清除。
+      final BlockEntity blockEntity;
+      if ((blockEntity = world.getBlockEntity(pos)) instanceof Inventory) {
+        final Inventory inventory = (Inventory) blockEntity;
+        for (int i = 0; i < inventory.size(); i++) {
+          inventory.setStack(i, ItemStack.EMPTY);
+        }
+      }
       world.setBlockState(
           pos, fluidIncluded ? Blocks.AIR.getDefaultState() : fluidState.getBlockState(), 24);
     }

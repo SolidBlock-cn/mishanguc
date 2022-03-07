@@ -5,7 +5,7 @@ import com.mojang.serialization.Lifecycle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
-import net.minecraft.text.Text;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
@@ -63,11 +63,6 @@ public abstract class BlockMatchingRule implements StringIdentifiable {
     return REGISTRY.get(new Identifier(name));
   }
 
-  public static @NotNull BlockMatchingRule fromString(String name, BlockMatchingRule defaultValue) {
-    final BlockMatchingRule value = fromString(name);
-    return value == null ? defaultValue : value;
-  }
-
   public abstract boolean match(@NotNull BlockState state1, @NotNull BlockState state2);
 
   public BlockMatchingRule register(Identifier identifier) {
@@ -81,22 +76,21 @@ public abstract class BlockMatchingRule implements StringIdentifiable {
   }
 
   /**
-   * 类似于{@link #asString()}，但是未注册的会返回空字符串而不是null。
-   */
-  public @NotNull String asStringOrEmpty() {
-    final String s = asString();
-    return s == null ? "" : s;
-  }
-
-  /**
    * 将其注册到注册表，并使用本模组的命名空间。
    */
   protected BlockMatchingRule register(String string) {
     return register(new Identifier("mishanguc", string));
   }
 
+  /**
+   * 获取该方块匹配规则注册表中的 id。
+   */
+  public Identifier getId() {
+    return REGISTRY.getId(this);
+  }
+
   @Environment(EnvType.CLIENT)
-  public Text getName() {
+  public MutableText getName() {
     return new TranslatableText(
         Util.createTranslationKey("blockMatchingRule", REGISTRY.getId(this)));
   }

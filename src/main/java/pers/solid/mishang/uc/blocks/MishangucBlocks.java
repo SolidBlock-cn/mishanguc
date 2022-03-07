@@ -72,7 +72,7 @@ public class MishangucBlocks {
             Registry.register(Registry.ITEM, new Identifier("mishanguc", path), item);
           }
         } catch (IllegalAccessException e) {
-          MishangUc.MISHANG_LOGGER.error(e);
+          MishangUc.MISHANG_LOGGER.error("Error when registering blocks:", e);
         }
       }
     }
