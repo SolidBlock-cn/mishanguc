@@ -572,7 +572,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     removeTextField(i);
     if (i < textFieldListScreen.children().size()) i++;
     addTextField(i, textContext, false);
-    AbstractSignBlockEditScreen.this.textContextsEditing.add(i, textContext);
   }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(new TranslatableText("message.mishanguc.moveDown.description")));
 
   /**

@@ -39,17 +39,6 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
    */
   Property<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
 
-  static Direction.Axis rotateAxis(BlockRotation rotation, Direction.Axis axis) {
-    return switch (rotation) {
-      case COUNTERCLOCKWISE_90, CLOCKWISE_90 -> switch (axis) {
-        case X -> Direction.Axis.Z;
-        case Z -> Direction.Axis.X;
-        default -> axis;
-      };
-      default -> axis;
-    };
-  }
-
   @Override
   LineColor getLineColor(BlockState blockState, Direction direction);
 

@@ -28,7 +28,7 @@ import pers.solid.mishang.uc.util.TextContext;
 import java.util.Collection;
 
 @Environment(EnvType.CLIENT)
-public class WallSignBlockEntityRenderer implements BlockEntityRenderer<WallSignBlockEntity> {
+public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implements BlockEntityRenderer<T> {
 
   /**
    * 这个集合中的方块，在渲染时是视为没有厚度的，直接渲染在靠墙的位置，而不是离墙 1 格的位置。
@@ -44,7 +44,7 @@ public class WallSignBlockEntityRenderer implements BlockEntityRenderer<WallSign
 
   @Override
   public void render(
-      WallSignBlockEntity entity,
+      T entity,
       float tickDelta,
       MatrixStack matrices,
       VertexConsumerProvider vertexConsumers,

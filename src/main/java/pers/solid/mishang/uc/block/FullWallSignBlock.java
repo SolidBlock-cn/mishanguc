@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.WallMountLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -12,6 +13,7 @@ import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.blockentity.FullWallSignBlockEntity;
 
 import java.util.Map;
 
@@ -42,5 +44,10 @@ public class FullWallSignBlock extends WallSignBlock {
   public VoxelShape getOutlineShape(
       BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     return SHAPE_PER_WALL_MOUNT_LOCATION.get(state.get(FACE)).get(state.get(FACING));
+  }
+
+  @Override
+  public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    return new FullWallSignBlockEntity(pos, state);
   }
 }
