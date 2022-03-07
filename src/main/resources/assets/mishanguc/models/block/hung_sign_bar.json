@@ -6,12 +6,31 @@
       "to": [5, 16, 8.5],
       "faces": {
         "north": {"texture": "#bar"},
-        "south": {"texture": "#bar"},
         "east": {"texture": "#bar"},
+        "south": {"texture": "#bar"},
         "west": {"texture": "#bar"},
         "up": {"texture": "#bar", "cullface": "top"},
         "down": {"texture": "#bar", "cullface": "down"}
       }
     }
-  ]
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "translation": [3, 0, 0]
+    },
+    "thirdperson_lefthand": {
+      "translation": [-3, 0, 0]
+    },
+    "firstperson_righthand": {
+      "translation": [5, 0, 0]
+    },
+    "firstperson_lefthand": {
+      "translation": [5, 0, 0]
+    },
+    "gui": {
+      "rotation": [10, 55, 0],
+      "translation": [2, 0.5, 0],
+      "scale": [0.75, 0.75, 0.75]
+    }
+  }
 }
