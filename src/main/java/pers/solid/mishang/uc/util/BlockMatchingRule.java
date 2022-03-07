@@ -5,7 +5,7 @@ import com.mojang.serialization.Lifecycle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
-import net.minecraft.text.Text;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
@@ -95,8 +95,15 @@ public abstract class BlockMatchingRule implements StringIdentifiable {
     return register(new Identifier("mishanguc", string));
   }
 
+  /**
+   * 获取该方块匹配规则注册表中的 id。
+   */
+  public Identifier getId() {
+    return REGISTRY.getId(this);
+  }
+
   @Environment(EnvType.CLIENT)
-  public Text getName() {
+  public MutableText getName() {
     return new TranslatableText(
         Util.createTranslationKey("blockMatchingRule", REGISTRY.getId(this)));
   }

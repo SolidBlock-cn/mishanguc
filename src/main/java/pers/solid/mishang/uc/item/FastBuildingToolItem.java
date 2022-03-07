@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.item;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -16,7 +18,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtString;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -24,6 +32,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.collection.Int2ObjectBiMap;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -34,6 +43,7 @@ import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.util.BlockMatchingRule;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -111,13 +121,11 @@ public class FastBuildingToolItem extends BlockToolItem {
 
   @Override
   public ItemStack getDefaultStack() {
-    return Util.make(
-        super.getDefaultStack(),
-        stack -> {
-          final NbtCompound tag = stack.getOrCreateTag();
-          tag.putInt("Range", 5);
-          tag.putString("MatchingRule", "mishanguc:same_block");
-        });
+    final ItemStack stack = super.getDefaultStack();
+    final NbtCompound tag = stack.getOrCreateTag();
+    tag.putInt("Range", 5);
+    tag.putString("MatchingRule", "mishanguc:same_block");
+    return stack;
   }
 
   public int getRange(ItemStack stack) {
@@ -317,5 +325,46 @@ public class FastBuildingToolItem extends BlockToolItem {
       }
     }
     return false;
+  }
+
+  public static final ToolCycleHandler TOOL_CYCLE_HANDLER = new ToolCycleHandler();
+
+  private static class ToolCycleHandler implements ServerPlayNetworking.PlayChannelHandler {
+
+    private static final Int2ObjectBiMap<BlockMatchingRule> RULES_TO_CYCLE = Util.make(new Int2ObjectBiMap<>(4), map -> {
+      map.add(BlockMatchingRule.SAME_STATE);
+      map.add(BlockMatchingRule.SAME_BLOCK);
+      map.add(BlockMatchingRule.SAME_MATERIAL);
+      map.add(BlockMatchingRule.ANY);
+    });
+
+    @Override
+    public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+      final int selectedSlot = buf.readInt();
+      final int scrollAmount = buf.readInt();
+      server.execute(() -> {
+        final ItemStack stack = player.inventory.getStack(selectedSlot);
+        if (!(stack.getItem() instanceof FastBuildingToolItem)) return;
+        final FastBuildingToolItem item = (FastBuildingToolItem) stack.getItem();
+        final BlockMatchingRule currentRule = item.getMatchingRule(stack);
+        final int i = RULES_TO_CYCLE.getRawId(currentRule);
+        if (i == -1) return;
+        final int j = Math.floorMod(i - scrollAmount, RULES_TO_CYCLE.size());
+        final BlockMatchingRule newRule = RULES_TO_CYCLE.get(j);
+        if (newRule != null) {
+          stack.putSubTag("MatchingRule", NbtString.of(newRule.getId().toString()));
+          final LiteralText text = new LiteralText("[ ");
+          for (Iterator<BlockMatchingRule> iterator = RULES_TO_CYCLE.iterator(); iterator.hasNext(); ) {
+            BlockMatchingRule rule = iterator.next();
+            final MutableText name = rule.getName();
+            if (rule == newRule) name.formatted(Formatting.YELLOW, Formatting.UNDERLINE);
+            text.append(name);
+            if (iterator.hasNext()) text.append(" | ");
+          }
+          text.append(" ]");
+          player.sendMessage(text, true);
+        }
+      });
+    }
   }
 }

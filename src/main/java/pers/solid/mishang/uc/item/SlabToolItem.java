@@ -15,6 +15,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -53,18 +54,26 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
         boolean bl = raycast.getPos().y - (double) raycast.getBlockPos().getY() > 0.5D;
         if (bl) {
           // 破坏上半砖的情况。
-          world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.BOTTOM));
+          final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.BOTTOM));
           final BlockState brokenState = state.with(Properties.SLAB_TYPE, SlabType.TOP);
           block.onBreak(world, pos, brokenState, miner);
-          block.onBroken(world, pos, brokenState);
-          block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
+          if (bl1) {
+            block.onBroken(world, pos, brokenState);
+            if (miner instanceof ServerPlayerEntity && !((ServerPlayerEntity) miner).interactionManager.isCreative()) {
+              block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
+            }
+          }
         } else {
           // 破坏下半砖的情况
-          world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.TOP));
+          final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.TOP));
           final BlockState brokenState = state.with(Properties.SLAB_TYPE, SlabType.BOTTOM);
           block.onBreak(world, pos, brokenState, miner);
-          block.onBroken(world, pos, brokenState);
-          block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
+          if (bl1) {
+            block.onBroken(world, pos, brokenState);
+            if (miner instanceof ServerPlayerEntity && !((ServerPlayerEntity) miner).interactionManager.isCreative()) {
+              block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
+            }
+          }
         }
         // 此处还需要模拟 ClientPlayerInteractionManager 和 ServerPlayerInteractionManager 中的情形。
         return false;

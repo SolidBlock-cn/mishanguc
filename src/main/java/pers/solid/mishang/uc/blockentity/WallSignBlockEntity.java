@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.blockentity;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -31,10 +32,15 @@ public class WallSignBlockEntity extends BlockEntityWithText {
     super(MishangucBlockEntities.WALL_SIGN_BLOCK_ENTITY);
   }
 
+  protected WallSignBlockEntity(BlockEntityType<?> type) {
+    super(type);
+  }
+
   @Override
   public void fromTag(BlockState state, NbtCompound nbt) {
     super.fromTag(state, nbt);
-    final NbtElement nbtText = nbt.get("text");
+    if (!nbt.contains("text")) return;
+    final @Nullable NbtElement nbtText = nbt.get("text");
     if (nbtText instanceof NbtString) {
       // 如果 text 是个字符串，则读取整个 nbt 作为 TextContext。
       // 例如，整个 nbt 可以是 {text: "abc", color: "red", size: 5}、
@@ -75,11 +81,7 @@ public class WallSignBlockEntity extends BlockEntityWithText {
   @Override
   public TextContext getDefaultTextContext() {
     final TextContext textContext = new TextContext();
-    if (getCachedState().getBlock() instanceof FullWallSignBlock) {
-      textContext.size = 8;
-    } else {
-      textContext.size = 6;
-    }
+    textContext.size = 6;
     return textContext;
   }
 

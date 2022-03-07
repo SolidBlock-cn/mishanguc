@@ -57,6 +57,7 @@ public class MishangUcClient implements ClientModInitializer {
         MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY, HungSignBlockEntityRenderer::new);
     BlockEntityRendererRegistry.INSTANCE.register(
         MishangucBlockEntities.WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
+    BlockEntityRendererRegistry.INSTANCE.register(MishangucBlockEntities.FULL_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
 
     // 注册客户端实体事件
     ClientEntityEvents.ENTITY_LOAD.register(

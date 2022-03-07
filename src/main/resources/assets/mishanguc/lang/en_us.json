@@ -140,7 +140,7 @@
   "item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking": "Used for fluids when sneaking.",
   "item.mishanguc.block_tool.tooltip.includesFluid": "Can be used for fluids.",
   "item.mishanguc.fast_building_tool": "Fast Building Tool",
-  "item.mishanguc.fast_building_tool.tooltip": "Can quickly place or destroy multiple blocks on a plain.",
+  "item.mishanguc.fast_building_tool.tooltip": "Can quickly place or destroy multiple blocks on a plane.",
   "item.mishanguc.fast_building_tool.tooltip.range": "Range: %s",
   "item.mishanguc.fast_building_tool.tooltip.matchingRule": "Matching rule: %s",
   "item.mishanguc.rotating_tool": "Rotating Tool",
