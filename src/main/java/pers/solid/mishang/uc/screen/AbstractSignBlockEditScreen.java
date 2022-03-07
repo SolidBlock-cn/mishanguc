@@ -141,7 +141,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   });
 
   @ApiStatus.AvailableSince("0.1.6")
-  public final ButtonWidget applyDoubleLineTemplateButton = new ButtonWidget(width / 2 - 50, 70, 100, 20, new TranslatableText("message.mishanguc.apply_double_line_template"), button -> {
+  public final ButtonWidget applyDoubleLineTemplateButton = new ButtonWidget(width / 2 - 50, 70, 120, 20, new TranslatableText("message.mishanguc.apply_double_line_template"), button -> {
     addTextField(0, AbstractSignBlockEditScreen.this.entity.getDefaultTextContext(), false);
     addTextField(1, Util.make(AbstractSignBlockEditScreen.this.entity.getDefaultTextContext(), textContext -> textContext.size /= 2), false);
     textFieldListScreen.setFocused(textFieldListScreen.children().get(0));
@@ -149,7 +149,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   });
 
   @ApiStatus.AvailableSince("0.1.6")
-  public final ButtonWidget applyLeftArrowTemplateButton = new ButtonWidget(width / 2 - 150, 70, 100, 20, new TranslatableText("message.mishanguc.apply_left_arrow_template"), (ButtonWidget button) -> {
+  public final ButtonWidget applyLeftArrowTemplateButton = new ButtonWidget(width / 2 - 150, 70, 120, 20, new TranslatableText("message.mishanguc.apply_left_arrow_template"), (ButtonWidget button) -> {
     BlockEntityWithText entity = AbstractSignBlockEditScreen.this.entity;
     final TextContext textContext0 = entity.getDefaultTextContext();
     textContext0.text = new LiteralText("←");
@@ -171,7 +171,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   });
 
   @ApiStatus.AvailableSince("0.1.6")
-  public final ButtonWidget applyRightArrowTemplateButton = new ButtonWidget(width / 2 - 50, 70, 100, 20, new TranslatableText("message.mishanguc.apply_right_arrow_template"), (ButtonWidget button) -> {
+  public final ButtonWidget applyRightArrowTemplateButton = new ButtonWidget(width / 2 - 50, 70, 120, 20, new TranslatableText("message.mishanguc.apply_right_arrow_template"), (ButtonWidget button) -> {
     BlockEntityWithText entity = AbstractSignBlockEditScreen.this.entity;
     final TextContext textContext0 = entity.getDefaultTextContext();
     textContext0.text = new LiteralText("→");
@@ -500,7 +500,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第二行：切换文字是否可以看穿。
    */
-  public final BooleanButtonWidget seeThroughButton = new BooleanButtonWidget(0, 0, 40, 20, new TranslatableText("message.mishanguc.see_through"), button -> focusedTextContext == null ? null : focusedTextContext.seeThrough, b -> {
+  public final BooleanButtonWidget seeThroughButton = new BooleanButtonWidget(0, 0, 60, 20, new TranslatableText("message.mishanguc.see_through"), button -> focusedTextContext == null ? null : focusedTextContext.seeThrough, b -> {
     changed = true;
     if (focusedTextContext != null) focusedTextContext.seeThrough = b;
   }, b -> b == null ? new TranslatableText("message.mishanguc.see_through") : new TranslatableText("message.mishanguc.see_through.param", new TranslatableText(b ? "options.on" : "options.off")), button -> {
@@ -553,7 +553,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第三行：上移按钮。
    */
-  public final ButtonWidget moveUpButton = new ButtonWidget(this.width - 20, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.moveUp"), button -> {
+  public final ButtonWidget moveUpButton = new ButtonWidget(this.width - 20, this.height - 50, 30, 20, new TranslatableText("message.mishanguc.moveUp"), button -> {
     if (focusedTextField == null) return;
     int i = textFieldListScreen.children().indexOf(textFieldListScreen.getFocused());
     final TextContext textContext = AbstractSignBlockEditScreen.this.textContextsEditing.get(i);
@@ -565,7 +565,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第三行：下移按钮。
    */
-  public final ButtonWidget moveDownButton = new ButtonWidget(this.width - 20, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.moveDown"), button -> {
+  public final ButtonWidget moveDownButton = new ButtonWidget(this.width - 20, this.height - 50, 30, 20, new TranslatableText("message.mishanguc.moveDown"), button -> {
     if (focusedTextField == null) return;
     int i = textFieldListScreen.children().indexOf(textFieldListScreen.getFocused());
     final TextContext textContext = AbstractSignBlockEditScreen.this.textContextsEditing.get(i);
@@ -577,7 +577,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第三行：重排按钮。
    */
-  public final ButtonWidget rearrangeButton = new ButtonWidget(this.width / 2 + 190, this.height - 50, 50, 20, new TranslatableText("message.mishanguc.rearrange"), button -> {
+  public final ButtonWidget rearrangeButton = new ButtonWidget(this.width / 2 + 190, this.height - 50, 70, 20, new TranslatableText("message.mishanguc.rearrange"), button -> {
     rearrange();
     descriptionAtom.set(REARRANGE_SUCCESS_NOTICE);
   }, (a, b, c, d) -> {
@@ -600,7 +600,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第三行：清除所有文本的按钮。
    */
-  public final ButtonWidget clearButton = new ButtonWidget(this.width / 2, this.height - 50, 40, 20, BUTTON_CLEAR_MESSAGE, button -> {
+  public final ButtonWidget clearButton = new ButtonWidget(this.width / 2, this.height - 50, 50, 20, BUTTON_CLEAR_MESSAGE, button -> {
     if (button.getMessage() == BUTTON_CLEAR_CONFIRM_MESSAGE) {
       for (int i = AbstractSignBlockEditScreen.this.textFieldListScreen.children().size() - 1; i >= 0; i--) {
         removeTextField(i);
@@ -694,9 +694,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     removeTextButton.x = width / 2 + 20;
     moveUpButton.x = width / 2 - 190;
     moveUpButton.y = height - 25;
-    rearrangeButton.x = width / 2 - 150;
+    rearrangeButton.x = width / 2 - 160;
     rearrangeButton.y = height - 25;
-    moveDownButton.x = width / 2 - 100;
+    moveDownButton.x = width / 2 - 90;
     moveDownButton.y = height - 25;
     finishButton.x = width / 2 - 60;
     finishButton.y = height - 25;
@@ -705,9 +705,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     clearButton.x = width / 2 + 100;
     clearButton.y = height - 25;
     placeHolder.x = width / 2 - 100;
-    applyDoubleLineTemplateButton.x = width / 2 - 50;
-    applyLeftArrowTemplateButton.x = width / 2 - 150;
-    applyRightArrowTemplateButton.x = width / 2 + 50;
+    applyDoubleLineTemplateButton.x = width / 2 - 60;
+    applyLeftArrowTemplateButton.x = width / 2 - 180;
+    applyRightArrowTemplateButton.x = width / 2 + 60;
   }
 
   @Override
