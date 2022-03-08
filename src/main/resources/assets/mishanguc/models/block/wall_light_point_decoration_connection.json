@@ -5,9 +5,9 @@
       "from": [7, 0, 11],
       "to": [9, 1, 16],
       "faces": {
-        "north": {"texture": "#light", "cullface": "north"},
+        "north": {"texture": "#light"},
         "east": {"texture": "#light"},
-        "south": {"texture": "#light"},
+        "south": {"texture": "#light", "cullface": "south"},
         "west": {"texture": "#light"},
         "up": {"texture": "#light"},
         "down": {"texture": "#light", "cullface": "down"}
