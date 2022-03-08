@@ -1,6 +1,6 @@
 ## Update Log
 
-### 0.1.6 (NOT RELEASED YET)
+### 0.1.6
 
 Updated following content:
 
