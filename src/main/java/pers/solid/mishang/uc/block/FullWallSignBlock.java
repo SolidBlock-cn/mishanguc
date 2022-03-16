@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.ImmutableMap;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -10,6 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUtils;
@@ -38,6 +41,11 @@ public class FullWallSignBlock extends WallSignBlock {
 
   public FullWallSignBlock(@Nullable Block baseBlock, Settings settings) {
     super(baseBlock, settings);
+  }
+
+  @ApiStatus.AvailableSince("0.1.7")
+  public FullWallSignBlock(@NotNull Block baseBlock) {
+    this(baseBlock, FabricBlockSettings.copyOf(baseBlock));
   }
 
   @Override

@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.block;
 import com.google.common.collect.ImmutableMap;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.WallMountLocation;
@@ -28,6 +29,8 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUtils;
@@ -73,6 +76,11 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
             .with(FACING, Direction.SOUTH)
             .with(FACE, WallMountLocation.WALL)
             .with(WATERLOGGED, false));
+  }
+
+  @ApiStatus.AvailableSince("0.1.7")
+  public WallSignBlock(@NotNull Block baseBlock) {
+    this(baseBlock, FabricBlockSettings.copyOf(baseBlock));
   }
 
   @Override

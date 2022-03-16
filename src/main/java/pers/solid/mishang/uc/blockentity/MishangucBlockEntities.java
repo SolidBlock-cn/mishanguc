@@ -1,11 +1,12 @@
 package pers.solid.mishang.uc.blockentity;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blocks.HungSignBlocks;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 
@@ -14,19 +15,11 @@ public class MishangucBlockEntities {
       Registry.register(
           Registry.BLOCK_ENTITY_TYPE,
           new Identifier("mishanguc", "hung_block_entity"),
-          FabricBlockEntityTypeBuilder.create(HungSignBlockEntity::new,
-              new ImmutableList.Builder<Block>()
-                  .addAll(HungSignBlocks.CONCRETE_HUNG_SIGNS.values())
-                  .addAll(HungSignBlocks.TERRACOTTA_HUNG_SIGNS.values())
-                  .addAll(HungSignBlocks.GLOWING_CONCRETE_HUNG_SIGNS.values())
-                  .addAll(HungSignBlocks.GLOWING_TERRACOTTA_HUNG_SIGNS.values())
-                  .add(
-                      HungSignBlocks.GLOWING_NETHERRACK_HUNG_SIGN,
-                      HungSignBlocks.GLOWING_NETHER_BRICK_HUNG_SIGN,
-                      HungSignBlocks.GLOWING_BLACKSTONE_HUNG_SIGN,
-                      HungSignBlocks.GLOWING_POLISHED_BLACKSTONE_HUNG_SIGN)
-                  .build().toArray(Block[]::new)
-          ).build());
+          new BlockEntityType<>(
+              HungSignBlockEntity::new,
+              MishangUtils.<Block>getInstances(HungSignBlocks.class).collect(ImmutableSet.toImmutableSet())
+              , null));
+
   public static final BlockEntityType<WallSignBlockEntity> WALL_SIGN_BLOCK_ENTITY =
       Registry.register(
           Registry.BLOCK_ENTITY_TYPE,
@@ -47,11 +40,12 @@ public class MishangucBlockEntities {
                   .addAll(WallSignBlocks.TERRACOTTA_WALL_SIGNS.values())
                   .addAll(WallSignBlocks.GLOWING_CONCRETE_WALL_SIGNS.values())
                   .addAll(WallSignBlocks.GLOWING_TERRACOTTA_WALL_SIGNS.values())
-                  .build().toArray(new Block[]{})
-          ).build());
-  public static final BlockEntityType<FullWallSignBlockEntity> FULL_WALL_SIGN_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("mishanguc", "full_wall_sign_block_entity"), FabricBlockEntityTypeBuilder.create(FullWallSignBlockEntity::new, new ImmutableList.Builder<Block>()
+                  .build()
+              , null));
+
+  public static final BlockEntityType<FullWallSignBlockEntity> FULL_WALL_SIGN_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("mishanguc", "full_wall_sign_block_entity"), new BlockEntityType<>(FullWallSignBlockEntity::new, new ImmutableSet.Builder<Block>()
       .addAll(WallSignBlocks.FULL_CONCRETE_WALL_SIGNS.values())
       .addAll(WallSignBlocks.FULL_TERRACOTTA_WALL_SIGNS.values())
       .add(WallSignBlocks.INVISIBLE_WALL_SIGN, WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
-      .build().toArray(Block[]::new)).build());
+      .build(), null));
 }
