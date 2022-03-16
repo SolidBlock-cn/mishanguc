@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.block;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
@@ -28,6 +29,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
@@ -84,6 +86,11 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
             .with(AXIS, Direction.Axis.X)
             .with(LEFT, false)
             .with(RIGHT, false));
+  }
+
+  @ApiStatus.AvailableSince("0.1.7")
+  public HungSignBlock(@NotNull Block baseBlock) {
+    this(baseBlock, FabricBlockSettings.copyOf(baseBlock));
   }
 
   @Override
