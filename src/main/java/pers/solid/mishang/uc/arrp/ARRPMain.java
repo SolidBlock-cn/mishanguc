@@ -9,22 +9,26 @@ import net.devtech.arrp.json.blockstate.*;
 import net.devtech.arrp.json.loot.JCondition;
 import net.devtech.arrp.json.loot.JFunction;
 import net.devtech.arrp.json.loot.JLootTable;
-import net.devtech.arrp.json.models.*;
+import net.devtech.arrp.json.models.JModel;
+import net.devtech.arrp.json.models.JTextures;
 import net.devtech.arrp.json.tags.JTag;
+import net.fabricmc.api.ModInitializer;
+import net.minecraft.block.Block;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.enums.WallMountLocation;
 import net.minecraft.item.Item;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUc;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.SimpleModel;
 import pers.solid.mishang.uc.block.*;
+import pers.solid.mishang.uc.blocks.HungSignBlocks;
+import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.mixin.JBlockModelAccessor;
 import pers.solid.mishang.uc.mixin.JStateAccessor;
@@ -35,8 +39,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
-@SuppressWarnings({"SameParameterValue", "AlibabaClassNamingShouldBeCamel"})
-public class ARRPMain implements RRPPreGenEntrypoint {
+/**
+ * @since 0.1.7 本类应当在 onInitialize 的入口点中执行，而非 pregen 中。
+ */
+@SuppressWarnings({"SameParameterValue"})
+public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   private static final RuntimeResourcePack PACK = RuntimeResourcePack.create("mishanguc");
   private static final Field[] FIELDS = MishangUtils.blockStream().toArray(Field[]::new);
 
@@ -52,57 +59,8 @@ public class ARRPMain implements RRPPreGenEntrypoint {
     return blockIdentifier(path).toString();
   }
 
-  private static JElement fullElement(JFaces faces) {
-    JElement element = new JElement();
-    element.from(0, 0, 0).to(16, 16, 16).faces(faces);
-    return element;
-  }
-
-  private static @Nullable JFace face(@Nullable String texture, @Nullable Direction direction) {
-    if (texture == null) {
-      return null;
-    }
-    JFace face = new JFace(texture);
-    if (direction != null) {
-      face.cullface(direction);
-    }
-    return face;
-  }
-
-  private static JFaces faces(
-      @Nullable String down,
-      @Nullable String up,
-      @Nullable String north,
-      @Nullable String south,
-      @Nullable String west,
-      @Nullable String east) {
-    JFaces faces = new JFaces();
-    faces
-        .down(face(down, Direction.DOWN))
-        .up(face(up, Direction.UP))
-        .north(face(north, Direction.NORTH))
-        .south(face(south, Direction.SOUTH))
-        .west(face(west, Direction.WEST))
-        .east(face(east, Direction.EAST));
-    return faces;
-  }
-
-  private static JFaces faces(Map<Direction, @Nullable String> map) {
-    return faces(
-        map.get(Direction.DOWN),
-        map.get(Direction.UP),
-        map.get(Direction.NORTH),
-        map.get(Direction.SOUTH),
-        map.get(Direction.WEST),
-        map.get(Direction.EAST));
-  }
-
-  private static JFaces faces(@Nullable String all) {
-    return faces(all, all, all, all, all, all);
-  }
-
-  private static void addBlockItemModel(String name) {
-    ARRPMain.PACK.addModel(JModel.model(blockIdentifier(name)), itemIdentifier(name));
+  private static void addBlockItemModel(RuntimeResourcePack pack, String name) {
+    pack.addModel(JModel.model(blockIdentifier(name)), itemIdentifier(name));
   }
 
   private static void addSimpleBlockLootTable(String name) {
@@ -204,10 +162,6 @@ public class ARRPMain implements RRPPreGenEntrypoint {
 
   private static Identifier slabOf(Identifier identifier) {
     return new Identifier(identifier.getNamespace(), slabOf(identifier.getPath()));
-  }
-
-  private static JTextures textures(String all) {
-    return new JTextures().var("all", blockString(all));
   }
 
   private static JTextures textures(String base, String line_side, String line_top) {
@@ -364,34 +318,34 @@ public class ARRPMain implements RRPPreGenEntrypoint {
     return JState.state(slabVariants.toArray(new JVariant[]{}));
   }
 
-  private static void addBlockStates() {
+  private static void addBlockStates(RuntimeResourcePack pack) {
     final JState state1 =
         stateForAngleLineWithOnePartOffset(
             "asphalt_road_with_white_right_angle_line_with_one_part_offset_out");
-    PACK.addBlockState(
+    pack.addBlockState(
         state1,
         new Identifier(
             "mishanguc", "asphalt_road_with_white_right_angle_line_with_one_part_offset_out"));
-    PACK.addBlockState(
+    pack.addBlockState(
         composeStateForSlab(state1),
         new Identifier(
             "mishanguc", "asphalt_road_slab_with_white_right_angle_line_with_one_part_offset_out"));
     final JState state2 =
         stateForAngleLineWithOnePartOffset(
             "asphalt_road_with_white_right_angle_line_with_one_part_offset_in");
-    PACK.addBlockState(
+    pack.addBlockState(
         state2,
         new Identifier(
             "mishanguc", "asphalt_road_with_white_right_angle_line_with_one_part_offset_in"));
-    PACK.addBlockState(
+    pack.addBlockState(
         composeStateForSlab(state2),
         new Identifier(
             "mishanguc", "asphalt_road_slab_with_white_right_angle_line_with_one_part_offset_in"));
     final JState state3 =
         stateForJointLineWithOffsetSide("asphalt_road_with_white_joint_line_with_offset_side");
-    PACK.addBlockState(
+    pack.addBlockState(
         state3, new Identifier("mishanguc", "asphalt_road_with_white_joint_line_with_offset_side"));
-    PACK.addBlockState(
+    pack.addBlockState(
         composeStateForSlab(state3),
         new Identifier("mishanguc", "asphalt_road_slab_with_white_joint_line_with_offset_side"));
 
@@ -404,8 +358,8 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "asphalt_road_with_white_thick_and_yellow_right_angle_line"
         }) {
       final JState state = stateForDiffAngleLine(modelName);
-      PACK.addBlockState(state, new Identifier("mishanguc", modelName));
-      PACK.addBlockState(
+      pack.addBlockState(state, new Identifier("mishanguc", modelName));
+      pack.addBlockState(
           composeStateForSlab(state), new Identifier("mishanguc", slabOf(modelName)));
     }
 
@@ -423,8 +377,8 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "asphalt_road_with_white_thick_joint_line_with_yellow_double_side"
         }) {
       final JState state = stateForHorizontalFacingBlock(modelName);
-      PACK.addBlockState(state, new Identifier("mishanguc", modelName));
-      PACK.addBlockState(
+      pack.addBlockState(state, new Identifier("mishanguc", modelName));
+      pack.addBlockState(
           composeStateForSlab(state), new Identifier("mishanguc", slabOf(modelName)));
     }
 
@@ -436,64 +390,40 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "asphalt_road_with_yellow_bevel_angle_line"
         }) {
       final JState state = stateForHorizontalCornerFacingBlock(modelName);
-      PACK.addBlockState(state, new Identifier("mishanguc", modelName));
-      PACK.addBlockState(
+      pack.addBlockState(state, new Identifier("mishanguc", modelName));
+      pack.addBlockState(
           composeStateForSlab(state), new Identifier("mishanguc", slabOf(modelName)));
     }
 
-    PACK.addBlockState(
+    pack.addBlockState(
         composeStateForAutoConnectBlock("white_wall_light_simple_decoration"),
         new Identifier("mishanguc", "white_wall_light_simple_decoration"));
-    PACK.addBlockState(
+    pack.addBlockState(
         composeStateForAutoConnectBlock("white_wall_light_point_decoration"),
         new Identifier("mishanguc", "white_wall_light_point_decoration"));
-    PACK.addBlockState(
+    pack.addBlockState(
         composeStateForAutoConnectBlock("white_wall_light_rhombus_decoration"),
         new Identifier("mishanguc", "white_wall_light_rhombus_decoration"));
-    PACK.addBlockState(
+    pack.addBlockState(
         composeStateForAutoConnectBlock("white_wall_light_hash_decoration"),
         new Identifier("mishanguc", "white_wall_light_hash_decoration"));
-    PACK.addBlockState(
+    pack.addBlockState(
         composeStateForAutoConnectBlock("white_wall_light_round_decoration"),
         new Identifier("mishanguc", "white_wall_light_round_decoration"));
 
-    for (DyeColor color : DyeColor.values()) {
-      addStateForHungSign(PACK, color.asString() + "_concrete");
-      addStateForHungSign(PACK, color.asString() + "_terracotta");
-      addStateForHungSignBar(PACK, color.asString() + "_concrete");
-      addStateForHungSignBar(PACK, color.asString() + "_terracotta");
-      addStateForHungSign(PACK, "glowing_" + color.asString() + "_concrete");
-      addStateForHungSign(PACK, "glowing_" + color.asString() + "_terracotta");
-    }
+    MishangUtils.blockStream(HungSignBlocks.class).forEach(field -> {
+      final String name = field.getName().toLowerCase();
+      if (HungSignBarBlock.class.isAssignableFrom(field.getType())) {
+        addStateForHungSignBar(pack, name);
+      } else if (HungSignBlock.class.isAssignableFrom(field.getType())) {
+        addStateForHungSign(pack, name);
+      }
+    });
 
-    addStateForHungSign(PACK, "glowing_netherrack");
-    addStateForHungSign(PACK, "glowing_nether_brick");
-    addStateForHungSign(PACK, "glowing_blackstone");
-    addStateForHungSign(PACK, "glowing_polished_blackstone");
-    addStateForHungSignBar(PACK, "netherrack");
-    addStateForHungSignBar(PACK, "nether_brick");
-    addStateForHungSignBar(PACK, "blackstone");
-    addStateForHungSignBar(PACK, "polished_blackstone");
-
-    // 对于墙上的告示牌
-    addStateForWallSign(PACK, "oak_wall_sign");
-    addStateForWallSign(PACK, "spruce_wall_sign");
-    addStateForWallSign(PACK, "birch_wall_sign");
-    addStateForWallSign(PACK, "jungle_wall_sign");
-    addStateForWallSign(PACK, "acacia_wall_sign");
-    addStateForWallSign(PACK, "dark_oak_wall_sign");
-    addStateForWallSign(PACK, "crimson_wall_sign");
-    addStateForWallSign(PACK, "warped_wall_sign");
-    for (DyeColor color : DyeColor.values()) {
-      addStateForWallSign(PACK, color.asString() + "_concrete_wall_sign");
-      addStateForWallSign(PACK, color.asString() + "_terracotta_wall_sign");
-      addStateForWallSign(PACK, "glowing_" + color.asString() + "_concrete_wall_sign");
-      addStateForWallSign(PACK, "glowing_" + color.asString() + "_terracotta_wall_sign");
-      addStateForWallSign(PACK, "full_" + color.asString() + "_concrete_wall_sign");
-      addStateForWallSign(PACK, "full_" + color.asString() + "_terracotta_wall_sign");
-    }
-    addStateForWallSign(PACK, "invisible_wall_sign");
-    addStateForWallSign(PACK, "invisible_glowing_wall_sign");
+    MishangUtils.blockStream(WallSignBlocks.class).forEach(field -> {
+      final String name = field.getName().toLowerCase();
+      addStateForWallSign(pack, name);
+    });
   }
 
   private static JState stateForJointLineWithOffsetSide(String modelName) {
@@ -527,12 +457,11 @@ public class ARRPMain implements RRPPreGenEntrypoint {
   /**
    * 为告示牌创建方块状态文件。
    *
-   * @param name 告示牌的非完整名称。
+   * @param path 告示牌的名称。
    * @see #addModelsForHungSign
    * @see #addModelsForGlowingHungSign
    */
-  private static void addStateForHungSign(@NotNull RuntimeResourcePack PACK, String name) {
-    final String path = name + "_hung_sign";
+  private static void addStateForHungSign(@NotNull RuntimeResourcePack PACK, String path) {
     PACK.addBlockState(
         JState.state(
             new JMultipart()
@@ -568,38 +497,37 @@ public class ARRPMain implements RRPPreGenEntrypoint {
         new Identifier("mishanguc", path));
   }
 
-  private static void addStateForHungSignBar(@NotNull RuntimeResourcePack PACK, String name) {
-    final String path = name + "_hung_sign";
+  private static void addStateForHungSignBar(@NotNull RuntimeResourcePack PACK, String path) {
     PACK.addBlockState(
         JState.state(
             new JMultipart()
-                .addModel(new JBlockModel(blockIdentifier(path + "_bar_central")).uvlock())
+                .addModel(new JBlockModel(blockIdentifier(path + "_central")).uvlock())
                 .when(new FixedWhen().add("left", "true").add("right", "true")),
             new JMultipart()
-                .addModel(new JBlockModel(blockIdentifier(path + "_bar")).uvlock())
+                .addModel(new JBlockModel(blockIdentifier(path + "")).uvlock())
                 .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "true")),
             new JMultipart()
-                .addModel(new JBlockModel(blockIdentifier(path + "_bar")).uvlock().y(180))
+                .addModel(new JBlockModel(blockIdentifier(path + "")).uvlock().y(180))
                 .when(new FixedWhen().add("axis", "z").add("left", "true").add("right", "false")),
             new JMultipart()
-                .addModel(new JBlockModel(blockIdentifier(path + "_bar")).uvlock().y(-90))
+                .addModel(new JBlockModel(blockIdentifier(path + "")).uvlock().y(-90))
                 .when(new FixedWhen().add("axis", "x").add("left", "false").add("right", "true")),
             new JMultipart()
-                .addModel(new JBlockModel(blockIdentifier(path + "_bar")).uvlock().y(90))
+                .addModel(new JBlockModel(blockIdentifier(path + "")).uvlock().y(90))
                 .when(new FixedWhen().add("axis", "x").add("left", "true").add("right", "false")),
             new JMultipart()
-                .addModel(new JBlockModel(blockIdentifier(path + "_bar_edge")).uvlock())
+                .addModel(new JBlockModel(blockIdentifier(path + "_edge")).uvlock())
                 .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "false")),
             new JMultipart()
-                .addModel(new JBlockModel(blockIdentifier(path + "_bar_edge")).uvlock().y(180))
+                .addModel(new JBlockModel(blockIdentifier(path + "_edge")).uvlock().y(180))
                 .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "false")),
             new JMultipart()
-                .addModel(new JBlockModel(blockIdentifier(path + "_bar_edge")).uvlock().y(90))
+                .addModel(new JBlockModel(blockIdentifier(path + "_edge")).uvlock().y(90))
                 .when(new FixedWhen().add("axis", "x").add("left", "false").add("right", "false")),
             new JMultipart()
-                .addModel(new JBlockModel(blockIdentifier(path + "_bar_edge")).uvlock().y(270))
+                .addModel(new JBlockModel(blockIdentifier(path + "_edge")).uvlock().y(270))
                 .when(new FixedWhen().add("axis", "x").add("left", "false").add("right", "false"))),
-        new Identifier("mishanguc", path + "_bar"));
+        new Identifier("mishanguc", path));
   }
 
   private static void addStateForWallSign(@NotNull RuntimeResourcePack PACK, String name) {
@@ -777,7 +705,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
     return JState.state(variant);
   }
 
-  private static void addItemModels() {
+  private static void addItemModels(RuntimeResourcePack pack) {
     Arrays.stream(MishangucItems.class.getFields())
         .filter(
             field -> {
@@ -799,7 +727,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
               if (parent.isEmpty()) {
                 name = "item/generated";
               }
-              PACK.addModel(
+              pack.addModel(
                   JModel.model(parent)
                       .textures(
                           JModel.textures()
@@ -808,54 +736,55 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             });
   }
 
-  private static void addBlockItemModels() {
+  private static void addBlockItemModels(RuntimeResourcePack pack) {
     for (Field field : FIELDS) {
       String name = field.getAnnotation(RegisterIdentifier.class).value();
       if (name.isEmpty()) {
         name = field.getName().toLowerCase();
       }
-      addBlockItemModel(name);
+      addBlockItemModel(pack, name);
     }
   }
 
   @SuppressWarnings("AlibabaMethodTooLong")
-  private static void addBlockModels() {
-    addCubeAll(PACK, "asphalt_road_block", "asphalt");
-    addSlabAll(PACK, "asphalt_road_slab", "asphalt");
-    addCubeAllWithSlab(PACK, "asphalt_road_filled_with_white", "white_ink");
-    addCubeAllWithSlab(PACK, "asphalt_road_filled_with_yellow", "yellow_ink");
+  private static void addBlockModels(RuntimeResourcePack pack) {
+    // 道路部分
+    addCubeAll(pack, "asphalt_road_block", "asphalt");
+    addSlabAll(pack, "asphalt_road_slab", "asphalt");
+    addCubeAllWithSlab(pack, "asphalt_road_filled_with_white", "white_ink");
+    addCubeAllWithSlab(pack, "asphalt_road_filled_with_yellow", "yellow_ink");
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_straight_line",
         "road_with_straight_line",
         textures("asphalt", "white_straight_line", "white_straight_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_right_angle_line",
         "road_with_angle_line",
         textures("asphalt", "white_straight_line", "white_right_angle_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_bevel_angle_line",
         "road_with_angle_line",
         textures("asphalt", "white_straight_line", "white_bevel_angle_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_yellow_straight_line",
         "road_with_straight_line",
         textures("asphalt", "yellow_straight_line", "yellow_straight_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_yellow_right_angle_line",
         "road_with_angle_line",
         textures("asphalt", "yellow_straight_line", "yellow_right_angle_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_yellow_bevel_angle_line",
         "road_with_angle_line",
         textures("asphalt", "yellow_straight_line", "yellow_bevel_angle_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_and_yellow_right_angle_line",
         "road_with_angle_line",
         textures2(
@@ -864,7 +793,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_straight_line",
             "white_and_yellow_right_angle_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_and_yellow_right_angle_line_mirrored",
         "road_with_angle_line_mirrored",
         textures2(
@@ -873,7 +802,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_straight_line",
             "white_and_yellow_right_angle_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_thick_and_normal_right_angle_line",
         "road_with_angle_line",
         textures2(
@@ -882,7 +811,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_straight_thick_line",
             "white_thick_and_normal_right_angle_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_thick_and_normal_right_angle_line_mirrored",
         "road_with_angle_line_mirrored",
         textures2(
@@ -891,7 +820,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_straight_thick_line",
             "white_thick_and_normal_right_angle_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_thick_and_yellow_right_angle_line",
         "road_with_angle_line",
         textures2(
@@ -900,7 +829,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_straight_thick_line",
             "white_thick_and_yellow_right_angle_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_thick_and_yellow_right_angle_line_mirrored",
         "road_with_angle_line_mirrored",
         textures2(
@@ -909,7 +838,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_straight_thick_line",
             "white_thick_and_yellow_right_angle_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_and_yellow_double_right_angle_line",
         "road_with_angle_line",
         textures2(
@@ -918,7 +847,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_straight_line",
             "white_and_yellow_double_right_angle_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_and_yellow_double_right_angle_line_mirrored",
         "road_with_angle_line_mirrored",
         textures2(
@@ -927,7 +856,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_straight_line",
             "white_and_yellow_double_right_angle_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_thick_and_yellow_double_right_angle_line",
         "road_with_angle_line",
         textures2(
@@ -936,7 +865,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_straight_thick_line",
             "white_thick_and_yellow_double_right_angle_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_thick_and_yellow_double_right_angle_line_mirrored",
         "road_with_angle_line_mirrored",
         textures2(
@@ -945,59 +874,59 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_straight_thick_line",
             "white_thick_and_yellow_double_right_angle_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_joint_line",
         "road_with_joint_line",
         textures("asphalt", "white_straight_line", "white_joint_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_straight_and_bevel_angle_line",
         "road_with_straight_and_angle_line",
         textures(
             "asphalt", "white_straight_line", "white_straight_line", "white_bevel_angle_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_straight_and_bevel_angle_line_mirrored",
         "road_with_straight_and_angle_line_mirrored",
         textures(
             "asphalt", "white_straight_line", "white_straight_line", "white_bevel_angle_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_cross_line",
         "road_with_cross_line",
         textures("asphalt", "white_straight_line", "white_cross_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_offset_straight_line",
         "road_with_straight_line",
         textures("asphalt", "white_offset_straight_line", "white_offset_straight_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_straight_double_line",
         "road_with_straight_line",
         textures("asphalt", "white_straight_double_line", "white_straight_double_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_straight_thick_line",
         "road_with_straight_line",
         textures("asphalt", "white_straight_thick_line", "white_straight_thick_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_yellow_offset_straight_line",
         "road_with_straight_line",
         textures("asphalt", "yellow_offset_straight_line", "yellow_offset_straight_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_yellow_straight_double_line",
         "road_with_straight_line",
         textures("asphalt", "yellow_straight_double_line", "yellow_straight_double_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_yellow_straight_thick_line",
         "road_with_straight_line",
         textures("asphalt", "yellow_straight_thick_line", "yellow_straight_thick_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_right_angle_line_with_one_part_offset_out",
         "road_with_angle_line",
         textures2(
@@ -1006,7 +935,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_offset_straight_line",
             "white_right_angle_line_with_one_part_offset_out"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_right_angle_line_with_one_part_offset_out_mirrored",
         "road_with_angle_line_mirrored",
         textures2(
@@ -1015,7 +944,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_offset_straight_line",
             "white_right_angle_line_with_one_part_offset_out"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_right_angle_line_with_one_part_offset_in",
         "road_with_angle_line",
         textures2(
@@ -1024,7 +953,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_offset_straight_line2",
             "white_right_angle_line_with_one_part_offset_in"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_right_angle_line_with_one_part_offset_in_mirrored",
         "road_with_angle_line_mirrored",
         textures2(
@@ -1033,7 +962,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_offset_straight_line2",
             "white_right_angle_line_with_one_part_offset_in"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_joint_line_with_double_side",
         "road_with_joint_line",
         textures2(
@@ -1042,7 +971,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_straight_double_line",
             "white_joint_line_with_double_side"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_joint_line_with_thick_side",
         "road_with_joint_line",
         textures2(
@@ -1051,7 +980,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_straight_thick_line",
             "white_joint_line_with_thick_side"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_joint_line_with_offset_side",
         "road_with_joint_line",
         textures2(
@@ -1060,7 +989,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_offset_straight_line",
             "white_joint_line_with_offset_side"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_joint_line_with_offset_side_mirrored",
         "road_with_joint_line_mirrored",
         textures2(
@@ -1069,7 +998,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_offset_straight_line",
             "white_joint_line_with_offset_side"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_thick_joint_line",
         "road_with_joint_line",
         textures2(
@@ -1078,7 +1007,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_straight_line",
             "white_thick_joint_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_double_joint_line",
         "road_with_joint_line",
         textures2(
@@ -1087,12 +1016,12 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_straight_line",
             "white_double_joint_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_yellow_joint_line",
         "road_with_joint_line",
         textures("asphalt", "yellow_straight_line", "yellow_joint_line"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_yellow_joint_line_with_white_side",
         "road_with_joint_line",
         textures2(
@@ -1101,7 +1030,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_straight_line",
             "yellow_joint_line_with_white_side"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_joint_line_with_yellow_side",
         "road_with_joint_line",
         textures2(
@@ -1110,7 +1039,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "yellow_straight_line",
             "white_joint_line_with_yellow_side"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_joint_line_with_yellow_double_side",
         "road_with_joint_line",
         textures2(
@@ -1119,7 +1048,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "yellow_straight_double_line",
             "white_joint_line_with_yellow_double_side"));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_thick_joint_line_with_yellow_double_side",
         "road_with_joint_line",
         textures2(
@@ -1129,7 +1058,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             "white_thick_joint_line_with_yellow_double_side"));
 
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_auto_bevel_angle_line",
         "road_with_auto_line",
         new JTextures()
@@ -1137,7 +1066,7 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             .var("line", blockString("white_auto_bevel_angle_line"))
             .var("particle", blockString("asphalt")));
     addRoadWithSlab(
-        PACK,
+        pack,
         "asphalt_road_with_white_auto_right_angle_line",
         "road_with_auto_line",
         new JTextures()
@@ -1145,66 +1074,68 @@ public class ARRPMain implements RRPPreGenEntrypoint {
             .var("line", blockString("white_auto_right_angle_line"))
             .var("particle", blockString("asphalt")));
 
-    PACK.addModel(
+    // 光源部分
+
+    pack.addModel(
         JModel.model(blockIdentifier("light"))
             .textures(
                 new JTextures()
                     .var("base", blockString("white_light"))
                     .var("emission", blockString("white_light_emission"))),
         blockIdentifier("white_light"));
-    PACK.addModel(
+    pack.addModel(
         JModel.model(blockIdentifier("small_wall_light_tube"))
             .textures(new JTextures().var("light", blockString("white_light"))),
         blockIdentifier("white_small_wall_light_tube"));
-    PACK.addModel(
+    pack.addModel(
         JModel.model(blockIdentifier("large_wall_light_tube"))
             .textures(new JTextures().var("light", blockString("white_light"))),
         blockIdentifier("white_large_wall_light_tube"));
-    PACK.addModel(
+    pack.addModel(
         JModel.model(blockIdentifier("thin_strip_wall_light_tube"))
             .textures(new JTextures().var("light", blockString("white_light"))),
         blockIdentifier("white_thin_strip_wall_light_tube"));
-    PACK.addModel(
+    pack.addModel(
         JModel.model(blockIdentifier("thin_strip_wall_light_tube_vertical"))
             .textures(new JTextures().var("light", blockString("white_light"))),
         blockIdentifier("white_thin_strip_wall_light_tube_vertical"));
-    PACK.addModel(
+    pack.addModel(
         JModel.model(blockIdentifier("thick_strip_wall_light_tube"))
             .textures(new JTextures().var("light", blockString("white_light"))),
         blockIdentifier("white_thick_strip_wall_light_tube"));
-    PACK.addModel(
+    pack.addModel(
         JModel.model(blockIdentifier("thick_strip_wall_light_tube_vertical"))
             .textures(new JTextures().var("light", blockString("white_light"))),
         blockIdentifier("white_thick_strip_wall_light_tube_vertical"));
-    PACK.addModel(
+    pack.addModel(
         JModel.model(blockIdentifier("double_strip_wall_light_tube"))
             .textures(new JTextures().var("light", blockString("white_light"))),
         blockIdentifier("white_double_strip_wall_light_tube"));
-    PACK.addModel(
+    pack.addModel(
         JModel.model(blockIdentifier("double_strip_wall_light_tube_vertical"))
             .textures(new JTextures().var("light", blockString("white_light"))),
         blockIdentifier("white_double_strip_wall_light_tube_vertical"));
-    PACK.addModel(
+    pack.addModel(
         JModel.model(blockIdentifier("thin_strip_corner_light_tube"))
             .textures(new JTextures().var("light", blockString("white_light"))),
         blockIdentifier("white_thin_strip_corner_light_tube"));
-    PACK.addModel(
+    pack.addModel(
         JModel.model(blockIdentifier("thick_strip_corner_light_tube"))
             .textures(new JTextures().var("light", blockString("white_light"))),
         blockIdentifier("white_thick_strip_corner_light_tube"));
-    PACK.addModel(
+    pack.addModel(
         JModel.model(blockIdentifier("double_strip_corner_light_tube"))
             .textures(new JTextures().var("light", blockString("white_light"))),
         blockIdentifier("white_double_strip_corner_light_tube"));
 
-    PACK.addModel(
+    pack.addModel(
         JModel.model(blockIdentifier("small_wall_light"))
             .textures(
                 new JTextures()
                     .var("background", "block/obsidian")
                     .var("light", blockString("white_light"))),
         blockIdentifier("white_small_wall_light"));
-    PACK.addModel(
+    pack.addModel(
         JModel.model(blockIdentifier("large_wall_light"))
             .textures(
                 new JTextures()
@@ -1212,103 +1143,78 @@ public class ARRPMain implements RRPPreGenEntrypoint {
                     .var("light", blockString("white_light"))),
         blockIdentifier("white_large_wall_light"));
 
-    addWallLightDecoration(PACK, "white", "simple");
-    addWallLightDecoration(PACK, "white", "point");
-    addWallLightDecoration(PACK, "white", "rhombus");
-    addWallLightDecoration(PACK, "white", "hash");
-    addWallLightDecoration(PACK, "white", "round");
+    addWallLightDecoration(pack, "white", "simple");
+    addWallLightDecoration(pack, "white", "point");
+    addWallLightDecoration(pack, "white", "rhombus");
+    addWallLightDecoration(pack, "white", "hash");
+    addWallLightDecoration(pack, "white", "round");
 
-    for (DyeColor color : DyeColor.values()) {
-      addModelsForHungSign(
-          PACK,
-          String.format("%s_concrete", color.asString()),
-          String.format("block/%s_concrete", color.asString()));
-      addModelsForHungSign(
-          PACK,
-          String.format("%s_terracotta", color.asString()),
-          String.format("block/%s_terracotta", color.asString()));
-      addModelsForHungSignBar(
-          PACK,
-          String.format("%s_concrete", color.asString()),
-          String.format("block/%s_concrete", color.asString()));
-      addModelsForHungSignBar(
-          PACK,
-          String.format("%s_terracotta", color.asString()),
-          String.format("block/%s_terracotta", color.asString()));
-      addModelsForGlowingHungSign(
-          PACK,
-          String.format("%s_concrete", color.asString()),
-          String.format("block/%s_concrete", color.asString()),
-          blockString("white_light"));
-      addModelsForGlowingHungSign(
-          PACK,
-          String.format("%s_terracotta", color.asString()),
-          String.format("block/%s_terracotta", color.asString()),
-          blockString("white_light"));
-      PACK.addModel(
-          JModel.model("mishanguc:block/wall_sign")
-              .textures(
-                  new JTextures()
-                      .var("texture", String.format("block/%s_concrete", color.asString()))),
-          blockIdentifier(color.asString() + "_concrete_wall_sign"));
-      PACK.addModel(
-          JModel.model("mishanguc:block/wall_sign")
-              .textures(
-                  new JTextures()
-                      .var("texture", String.format("block/%s_terracotta", color.asString()))),
-          blockIdentifier(color.asString() + "_terracotta_wall_sign"));
-      PACK.addModel(
-          JModel.model("mishanguc:block/glowing_wall_sign")
-              .textures(
-                  new JTextures()
-                      .var("glow", "mishanguc:block/white_light")
-                      .var("texture", String.format("block/%s_concrete", color.asString()))),
-          blockIdentifier("glowing_" + color.asString() + "_concrete_wall_sign"));
-      PACK.addModel(
-          JModel.model("mishanguc:block/glowing_wall_sign")
-              .textures(
-                  new JTextures()
-                      .var("glow", "mishanguc:block/white_light")
-                      .var("texture", String.format("block/%s_terracotta", color.asString()))),
-          blockIdentifier("glowing_" + color.asString() + "_terracotta_wall_sign"));
-      PACK.addModel(
-          JModel.model("mishanguc:block/full_wall_sign")
-              .textures(
-                  new JTextures()
-                      .var("glow", "mishanguc:block/white_light")
-                      .var("texture", String.format("block/%s_concrete", color.asString()))),
-          blockIdentifier("full_" + color.asString() + "_concrete_wall_sign"));
-      PACK.addModel(
-          JModel.model("mishanguc:block/full_wall_sign")
-              .textures(
-                  new JTextures()
-                      .var("glow", "mishanguc:block/white_light")
-                      .var("texture", String.format("block/%s_terracotta", color.asString()))),
-          blockIdentifier("full_" + color.asString() + "_terracotta_wall_sign"));
-    }
+    // 悬挂的告示牌方块
 
-    // 杂项的悬挂告示牌方块。
-    addModelsForGlowingHungSign(PACK, "netherrack", "block/netherrack", "block/glowstone");
-    addModelsForGlowingHungSign(PACK, "nether_brick", "block/nether_bricks", "block/glowstone");
-    addModelsForGlowingHungSign(PACK, "blackstone", "block/blackstone", "block/glowstone");
-    addModelsForGlowingHungSign(
-        PACK, "polished_blackstone", "block/polished_blackstone", "block/glowstone");
+    MishangUtils.blockStream(HungSignBlocks.class).forEach(field -> {
+      final Block block;
+      try {
+        block = (Block) field.get(null);
+      } catch (IllegalAccessException | ClassCastException e) {
+        return;
+      }
+      final String name = field.getName().toLowerCase();
+      String texture = "";
+      String glowTexture = "";
+      if (field.isAnnotationPresent(Texture.class)) {
+        final Texture annotation = field.getAnnotation(Texture.class);
+        texture = annotation.texture();
+        glowTexture = annotation.glowTexture();
+      }
+      if (block instanceof HungSignBarBlock) {
+        if (texture.isEmpty()) {
+          final Identifier baseId = Registry.BLOCK.getId(((HungSignBarBlock) block).baseBlock);
+          texture = new Identifier(baseId.getNamespace(), "block/" + baseId.getPath()).toString();
+        }
+        addModelsForHungSignBar(pack, name, texture);
+      } else if (block instanceof HungSignBlock) {
+        if (texture.isEmpty()) {
+          final Identifier baseId = Registry.BLOCK.getId(((HungSignBlock) block).baseBlock);
+          texture = new Identifier(baseId.getNamespace(), "block/" + baseId.getPath()).toString();
+          if (block instanceof GlowingHungSignBlock) {
+            addModelsForGlowingHungSign(pack, name, texture, glowTexture.isEmpty() ? "mishanguc:block/white_light" : glowTexture);
+          } else {
+            addModelsForHungSign(pack, name, texture);
+          }
+        }
+      }
+    });
 
-    addModelsForHungSignBar(PACK, "netherrack", "block/netherrack");
-    addModelsForHungSignBar(PACK, "nether_brick", "block/nether_bricks");
-    addModelsForHungSignBar(PACK, "blackstone", "block/blackstone");
-    addModelsForHungSignBar(PACK, "polished_blackstone", "block/polished_blackstone");
+    // 墙上的告示牌方块
 
-    // 木质告示牌
-    for (String woodName :
-        new String[]{
-            "oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "crimson", "warped",
-        }) {
-      PACK.addModel(
-          JModel.model("mishanguc:block/wall_sign")
-              .textures(new JTextures().var("texture", String.format("block/%s_planks", woodName))),
-          blockIdentifier(woodName + "_wall_sign"));
-    }
+    MishangUtils.blockStream(WallSignBlocks.class).forEach(field -> {
+      final WallSignBlock block;
+      try {
+        block = (WallSignBlock) field.get(null);
+      } catch (IllegalAccessException | ClassCastException e) {
+        return;
+      }
+      final String name = field.getName().toLowerCase();
+      String texture = "";
+      String glowTexture = "";
+      if (field.isAnnotationPresent(Texture.class)) {
+        final Texture annotation = field.getAnnotation(Texture.class);
+        texture = annotation.texture();
+        glowTexture = annotation.glowTexture();
+      }
+      if (texture.isEmpty()) {
+        final Identifier baseId = Registry.BLOCK.getId(block.baseBlock);
+        texture = new Identifier(baseId.getNamespace(), "block/" + baseId.getPath()).toString();
+      }
+      if (block instanceof GlowingWallSignBlock) {
+        glowTexture = glowTexture.isEmpty() ? "mishanguc:block/white_light" : glowTexture;
+        pack.addModel(JModel.model("mishanguc:block/glowing_wall_sign").textures(new JTextures().var("texture", texture).var("glow", glowTexture)), blockIdentifier(name));
+      } else if (block instanceof FullWallSignBlock) {
+        pack.addModel(JModel.model("mishanguc:block/full_wall_sign").textures(new JTextures().var("texture", texture)), blockIdentifier(name));
+      } else {
+        pack.addModel(JModel.model("mishanguc:block/full_wall_sign").textures(new JTextures().var("texture", texture)), blockIdentifier(name));
+      }
+    });
   }
 
   /**
@@ -1316,72 +1222,71 @@ public class ARRPMain implements RRPPreGenEntrypoint {
    * @see #addStateForHungSign
    */
   private static void addModelsForHungSign(
-      @NotNull RuntimeResourcePack PACK, @NotNull String hungSignName, @NotNull String texture) {
-    PACK.addModel(
+      @NotNull RuntimeResourcePack pack, @NotNull String path, @NotNull String texture) {
+    pack.addModel(
         JModel.model(blockIdentifier("hung_sign"))
             .textures(new JTextures().var("texture", texture)),
-        blockIdentifier(String.format("%s_hung_sign", hungSignName)));
-    PACK.addModel(
+        blockIdentifier(String.format("%s", path)));
+    pack.addModel(
         JModel.model(blockIdentifier("hung_sign_body"))
             .textures(new JTextures().var("texture", texture)),
-        blockIdentifier(String.format("%s_hung_sign_body", hungSignName)));
-    PACK.addModel(
+        blockIdentifier(String.format("%s_body", path)));
+    pack.addModel(
         JModel.model(blockIdentifier("hung_sign_top_bar"))
             .textures(new JTextures().var("texture", texture)),
-        blockIdentifier(String.format("%s_hung_sign_top_bar", hungSignName)));
-    PACK.addModel(
+        blockIdentifier(String.format("%s_top_bar", path)));
+    pack.addModel(
         JModel.model(blockIdentifier("hung_sign_top_bar_edge"))
             .textures(new JTextures().var("texture", texture)),
-        blockIdentifier(String.format("%s_hung_sign_top_bar_edge", hungSignName)));
+        blockIdentifier(String.format("%s_top_bar_edge", path)));
   }
 
   private static void addModelsForHungSignBar(
-      @NotNull RuntimeResourcePack PACK, @NotNull String hungSignName, @NotNull String texture) {
-    PACK.addModel(
+      @NotNull RuntimeResourcePack pack, @NotNull String path, @NotNull String texture) {
+    pack.addModel(
         JModel.model(blockIdentifier("hung_sign_bar_central"))
             .textures(new JTextures().var("texture", texture)),
-        blockIdentifier(String.format("%s_hung_sign_bar_central", hungSignName)));
-    PACK.addModel(
+        blockIdentifier(String.format("%s_central", path)));
+    pack.addModel(
         JModel.model(blockIdentifier("hung_sign_bar"))
             .textures(new JTextures().var("texture", texture)),
-        blockIdentifier(String.format("%s_hung_sign_bar", hungSignName)));
-    PACK.addModel(
+        blockIdentifier(String.format("%s", path)));
+    pack.addModel(
         JModel.model(blockIdentifier("hung_sign_bar_edge"))
             .textures(new JTextures().var("texture", texture)),
-        blockIdentifier(String.format("%s_hung_sign_bar_edge", hungSignName)));
+        blockIdentifier(String.format("%s_edge", path)));
   }
 
   /**
    * 为发光告示牌创建并注册方块模型文件。
    *
-   * @param hungSignName 发光告示牌的非完整名称，如 black_concrete。需确保存在名为 <tt>mishanguc:hung_</tt><code>
-   *                     hungSignName</code><tt>_glowing_sign</tt> 的方块。
-   * @param texture      发给告示牌方块的主体纹理。为纹理的命名空间id，如 {@code minecraft:block/black_concrete}。
-   * @param glowTexture  发光告示牌方块的发光部分纹理。为纹理的命名空间id，如 {@code minecraft:block/glowstone}。
+   * @param path        发光告示牌的非完整名称，如 black_concrete。需确保存在名为 <tt>mishanguc:hung_</tt><code>path</code><tt>_glowing_sign</tt> 的方块。
+   * @param texture     发给告示牌方块的主体纹理。为纹理的命名空间id，如 {@code minecraft:block/black_concrete}。
+   * @param glowTexture 发光告示牌方块的发光部分纹理。为纹理的命名空间id，如 {@code minecraft:block/glowstone}。
    * @see #addStateForHungSign
    * @see #addModelsForHungSign
    */
   private static void addModelsForGlowingHungSign(
-      @NotNull RuntimeResourcePack PACK,
-      @NotNull String hungSignName,
+      @NotNull RuntimeResourcePack pack,
+      @NotNull String path,
       @NotNull String texture,
       @NotNull String glowTexture) {
-    PACK.addModel(
+    pack.addModel(
         JModel.model(blockIdentifier("glowing_hung_sign"))
             .textures(new JTextures().var("texture", texture).var("glow", glowTexture)),
-        blockIdentifier(String.format("glowing_%s_hung_sign", hungSignName)));
-    PACK.addModel(
+        blockIdentifier(String.format("%s", path)));
+    pack.addModel(
         JModel.model(blockIdentifier("glowing_hung_sign_body"))
             .textures(new JTextures().var("texture", texture).var("glow", glowTexture)),
-        blockIdentifier(String.format("glowing_%s_hung_sign_body", hungSignName)));
-    PACK.addModel(
+        blockIdentifier(String.format("%s_body", path)));
+    pack.addModel(
         JModel.model(blockIdentifier("hung_sign_top_bar"))
             .textures(new JTextures().var("texture", texture).var("glow", glowTexture)),
-        blockIdentifier(String.format("glowing_%s_hung_sign_top_bar", hungSignName)));
-    PACK.addModel(
+        blockIdentifier(String.format("%s_top_bar", path)));
+    pack.addModel(
         JModel.model(blockIdentifier("hung_sign_top_bar_edge"))
             .textures(new JTextures().var("texture", texture).var("glow", glowTexture)),
-        blockIdentifier(String.format("glowing_%s_hung_sign_top_bar_edge", hungSignName)));
+        blockIdentifier(String.format("%s_top_bar_edge", path)));
   }
 
   private static void addWallLightDecoration(
@@ -1407,14 +1312,19 @@ public class ARRPMain implements RRPPreGenEntrypoint {
   @Override
   public void pregen() {
     // 客户端部分
-    addBlockStates();
-    addBlockModels();
-    addItemModels();
-    addBlockItemModels();
+    addBlockStates(PACK);
+    addBlockModels(PACK);
+    addItemModels(PACK);
+    addBlockItemModels(PACK);
 
     // 服务端部分
     addTags();
     addBlockLootTables();
     RRPCallback.BEFORE_VANILLA.register(a -> a.add(PACK));
+  }
+
+  @Override
+  public void onInitialize() {
+    pregen();
   }
 }

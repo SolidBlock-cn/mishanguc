@@ -20,6 +20,8 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.mixin.EntityShapeContextAccessor;
@@ -63,11 +65,9 @@ public class HungSignBarBlock extends Block implements Waterloggable {
             .with(RIGHT, true));
   }
 
-  /**
-   * 通过已有的 {@link HungSignBlock} 创建 {@link HungSignBarBlock}。
-   */
-  public HungSignBarBlock(HungSignBlock block) {
-    this(block.baseBlock, FabricBlockSettings.copyOf(block));
+  @ApiStatus.AvailableSince("0.1.7")
+  public HungSignBarBlock(@NotNull Block baseBlock) {
+    this(baseBlock, FabricBlockSettings.copyOf(baseBlock));
   }
 
   @Override
