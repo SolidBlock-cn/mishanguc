@@ -43,19 +43,6 @@ dependencies {
     modImplementation("net.devtech:arrp:0.5.4")
     // I never break backwards compatibility, so just fetching the latest version should be fine
     // modImplementation("net.devtech:arrp:0.+")
-
-
-    // optional dev env annotation support
-//	compileOnly 'org.apiguardian:apiguardian-api:1.1.2'
-//	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
-
-//	modApi ("grondag:frex-${project.mc_tag}:${project.frex_version}.+") { transitive = false}
-//	// remove next line if you want JMX to be an optional dependency
-//	include "grondag:frex-${project.mc_tag}:${project.frex_version}.+"
-//
-//	modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false}
-//	// remove next line if you want JMX to be an optional dependency
-//	include "grondag:jmx-${project.mc_tag}:${project.jmx_version}.+"
 }
 
 processResources {

@@ -7,6 +7,9 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
@@ -23,6 +26,8 @@ import java.util.stream.Stream;
  * 本类存放一些实用方法。
  */
 public class MishangUtils {
+  private static final Logger LOGGER = LogManager.getLogger(MishangUtils.class);
+
   @SuppressWarnings("SuspiciousNameCombination")
   public static EnumMap<Direction, @NotNull VoxelShape> createDirectionToShape(
       double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
@@ -109,6 +114,46 @@ public class MishangUtils {
                   && Block.class.isAssignableFrom(field.getType())
                   && field.isAnnotationPresent(RegisterIdentifier.class);
             });
+  }
+
+  /**
+   * @return 当前方块字段的流。使用反射。
+   */
+  @ApiStatus.AvailableSince("0.1.7")
+  public static <T> Stream<Field> blockStream(Class<T> cls) {
+    return Arrays.stream(cls.getFields())
+        .filter(
+            field -> {
+              int modifier = field.getModifiers();
+              return Modifier.isPublic(modifier)
+                  && Modifier.isStatic(modifier)
+                  && Block.class.isAssignableFrom(field.getType())
+                  && field.isAnnotationPresent(RegisterIdentifier.class);
+            });
+  }
+
+  /**
+   * 返回类中所有的 public static final 字段的值。例如：
+   * <pre>{@code
+   *  Collection<Block> hungSignBarBlocks =
+   *    <Block>getInstances(HungSignBlocks.class).collect(ImmutableSet.toImmutableSet())
+   * }</pre>
+   *
+   * @param cls 类。
+   * @param <T> 字段类型。不在此类型的会被忽略，但是应当留意。
+   * @return 类的所有 public static final 字段的值。
+   */
+  @ApiStatus.AvailableSince("0.1.7")
+  public static <T> Stream<T> getInstances(Class<?> cls) {
+    return blockStream(cls).map(field -> {
+      try {
+        //noinspection unchecked
+        return (T) field.get(null);
+      } catch (ClassCastException | IllegalAccessException e) {
+        LOGGER.error("Error: ", e);
+        return null;
+      }
+    }).filter(Objects::nonNull);
   }
 
   /**

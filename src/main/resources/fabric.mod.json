@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "mishanguc",
-  "version": "0.1.6",
+  "version": "0.1.7",
 
   "name": "Mishang Urban Construction",
   "description": "An amount of blocks and items that make a beautiful city!",
@@ -19,9 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "pers.solid.mishang.uc.MishangUc"
-    ],
-    "rrp:pregen": [
+      "pers.solid.mishang.uc.MishangUc",
       "pers.solid.mishang.uc.arrp.ARRPMain"
     ],
     "client": [
