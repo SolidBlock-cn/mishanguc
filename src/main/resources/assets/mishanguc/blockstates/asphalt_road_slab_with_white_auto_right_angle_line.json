@@ -1,7 +1,0 @@
-{
-  "variants": {
-    "type=bottom": {"model": "mishanguc:block/asphalt_road_slab_with_white_auto_right_angle_line"},
-    "type=top": {"model": "mishanguc:block/asphalt_road_slab_with_white_auto_right_angle_line_top"},
-    "type=double": {"model": "mishanguc:block/asphalt_road_with_white_auto_right_angle_line"}
-  }
-}

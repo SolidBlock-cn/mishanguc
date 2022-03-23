@@ -1,5 +1,11 @@
 package pers.solid.mishang.uc.block;
 
+import net.devtech.arrp.json.blockstate.JBlockModel;
+import net.devtech.arrp.json.blockstate.JState;
+import net.devtech.arrp.json.blockstate.JVariant;
+import net.devtech.arrp.json.models.JModel;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.fluid.FluidState;
@@ -8,21 +14,25 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.arrp.ARRPGenerator;
+import pers.solid.mishang.uc.arrp.FasterJTextures;
 
 import java.util.Map;
 
 import static net.minecraft.fluid.Fluids.WATER;
 
 public class CornerLightBlock extends HorizontalFacingBlock
-    implements Waterloggable, LightConnectable {
+    implements Waterloggable, LightConnectable, ARRPGenerator {
   private static final EnumProperty<BlockHalf> BLOCK_HALF = Properties.BLOCK_HALF;
   private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION_WHEN_BOTTOM =
@@ -33,9 +43,11 @@ public class CornerLightBlock extends HorizontalFacingBlock
       MishangUtils.createDirectionToUnionShape(
           MishangUtils.createHorizontalDirectionToShape(4, 15, 0, 12, 16, 16),
           MishangUtils.createHorizontalDirectionToShape(4, 0, 0, 12, 16, 1));
+  public final String lightColor;
 
-  public CornerLightBlock(Settings settings) {
+  public CornerLightBlock(String lightColor, Settings settings) {
     super(settings);
+    this.lightColor = lightColor;
     this.setDefaultState(
         this.stateManager
             .getDefaultState()
@@ -134,5 +146,39 @@ public class CornerLightBlock extends HorizontalFacingBlock
         state.get(BLOCK_HALF) == BlockHalf.TOP ? Direction.DOWN : Direction.UP;
     prepareConnection(state, world, pos, flags, maxUpdateDepth, facing);
     prepareConnection(state, world, pos, flags, maxUpdateDepth, facingVertical);
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public @Nullable JState getBlockStates() {
+    final JVariant variant = new JVariant();
+    final Identifier identifier = getBlockModelIdentifier();
+    for (Direction direction : Direction.Type.HORIZONTAL) {
+      variant.put("half=bottom,facing", direction, new JBlockModel(identifier).y((int) direction.asRotation()));
+      variant.put("half=top,facing", direction, new JBlockModel(identifier).y((int) direction.asRotation() - 180).x(180));
+    }
+    return JState.state(variant);
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public @Nullable JModel getBlockModel() {
+    return JModel.model(getModelParent())
+        .textures(new FasterJTextures().varP("light", lightColor + "_light"));
+  }
+
+
+  @ApiStatus.AvailableSince("0.1.7")
+  public Identifier getModelParent() {
+    final Identifier identifier = getIdentifier();
+    String path = identifier.getPath();
+    final int i = lightColor.length();
+    try {
+      if (path.startsWith(lightColor) && path.charAt(i) == '_') {
+        path = path.substring(i + 1);
+      }
+    } catch (IndexOutOfBoundsException ignored) {
+    }
+    return MishangUtils.identifierPrefix(new Identifier(identifier.getNamespace(), path), "block/");
   }
 }

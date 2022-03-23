@@ -24,6 +24,77 @@ import java.util.Map;
  */
 public final class HungSignBlocks extends MishangucBlocks {
 
+  // 木告示牌部分。仅有不发光的告示牌。
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBlock OAK_HUNG_SIGN = new HungSignBlock(Blocks.OAK_PLANKS);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBlock SPRUCE_HUNG_SIGN = new HungSignBlock(Blocks.SPRUCE_PLANKS);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBlock BIRCH_HUNG_SIGN = new HungSignBlock(Blocks.BIRCH_PLANKS);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBlock JUNGLE_HUNG_SIGN = new HungSignBlock(Blocks.JUNGLE_PLANKS);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBlock ACACIA_HUNG_SIGN = new HungSignBlock(Blocks.ACACIA_PLANKS);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBlock DARK_OAK_HUNG_SIGN = new HungSignBlock(Blocks.DARK_OAK_PLANKS);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBlock CRIMSON_HUNG_SIGN = new HungSignBlock(Blocks.CRIMSON_PLANKS);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBlock WARPED_HUNG_SIGN = new HungSignBlock(Blocks.WARPED_PLANKS);
+
+  // 木告示牌杆部分。
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBarBlock OAK_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.OAK_WOOD);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBarBlock SPRUCE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.SPRUCE_WOOD);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBarBlock BIRCH_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.BIRCH_WOOD);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBarBlock JUNGLE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.JUNGLE_WOOD);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBarBlock ACACIA_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.ACACIA_WOOD);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBarBlock DARK_OAK_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.DARK_OAK_WOOD);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBarBlock CRIMSON_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.CRIMSON_HYPHAE);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBarBlock WARPED_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.WARPED_HYPHAE);
+
+  static {
+    OAK_HUNG_SIGN.barTexture = "block/oak_log";
+    SPRUCE_HUNG_SIGN.barTexture = "block/spruce_log";
+    BIRCH_HUNG_SIGN.barTexture = "block/birch_log";
+    JUNGLE_HUNG_SIGN.barTexture = "block/jungle_log";
+    ACACIA_HUNG_SIGN.barTexture = "block/acacia_log";
+    DARK_OAK_HUNG_SIGN.barTexture = "block/dark_oak_log";
+    CRIMSON_HUNG_SIGN.barTexture = "block/crimson_stem";
+    WARPED_HUNG_SIGN.barTexture = "block/warped_stem";
+    OAK_HUNG_SIGN_BAR.texture = "block/oak_log";
+    SPRUCE_HUNG_SIGN_BAR.texture = "block/spruce_log";
+    BIRCH_HUNG_SIGN_BAR.texture = "block/birch_log";
+    JUNGLE_HUNG_SIGN_BAR.texture = "block/jungle_log";
+    ACACIA_HUNG_SIGN_BAR.texture = "block/acacia_log";
+    DARK_OAK_HUNG_SIGN_BAR.texture = "block/dark_oak_log";
+    CRIMSON_HUNG_SIGN_BAR.texture = "block/crimson_stem";
+    WARPED_HUNG_SIGN_BAR.texture = "block/warped_stem";
+  }
+
   // 混凝土告示牌部分
 
   @RegisterIdentifier
@@ -536,6 +607,20 @@ public final class HungSignBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBarBlock STONE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STONE);
 
+  // 石砖
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBlock STONE_BRICK_HUNG_SIGN = new HungSignBlock(Blocks.STONE_BRICKS);
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final GlowingHungSignBlock GLOWING_STONE_BRICK_HUNG_SIGN = new GlowingHungSignBlock(Blocks.STONE_BRICKS);
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBarBlock STONE_BRICK_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STONE_BRICKS);
+
   // 铁块
 
   @RegisterIdentifier
@@ -578,7 +663,7 @@ public final class HungSignBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBarBlock DIAMOND_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.DIAMOND_BLOCK);
 
-  // 绿宝石
+  // 绿宝石块
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
@@ -592,7 +677,7 @@ public final class HungSignBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBarBlock EMERALD_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.EMERALD_BLOCK);
 
-  // 青金石
+  // 青金石块
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
@@ -661,4 +746,60 @@ public final class HungSignBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final HungSignBarBlock POLISHED_BLACKSTONE_HUNG_SIGN_BAR =
       new HungSignBarBlock(Blocks.POLISHED_BLACKSTONE);
+
+  static {
+    GLOWING_NETHERRACK_HUNG_SIGN.glowTexture = "block/lava_still";
+    GLOWING_NETHER_BRICK_HUNG_SIGN.glowTexture = "block/lava_still";
+    GLOWING_BLACKSTONE_HUNG_SIGN.glowTexture = "block/glowstone";
+    GLOWING_POLISHED_BLACKSTONE_HUNG_SIGN.glowTexture = "block/glowstone";
+  }
+
+  // 雪块
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBlock SNOW_HUNG_SIGN = new HungSignBlock(Blocks.SNOW_BLOCK);
+
+  @RegisterIdentifier
+  public static final GlowingHungSignBlock GLOWING_SNOW_HUNG_SIGN = new GlowingHungSignBlock(Blocks.SNOW_BLOCK);
+
+//  @RegisterIdentifier
+//  public static final HungSignBarBlock SNOW_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.SNOW_BLOCK);
+
+  static {
+    SNOW_HUNG_SIGN.baseTexture = "block/snow";
+    SNOW_HUNG_SIGN.barTexture = "block/packed_ice";
+    SNOW_HUNG_SIGN.textureTop = "block/packed_ice";
+    GLOWING_SNOW_HUNG_SIGN.baseTexture = "block/snow";
+    GLOWING_SNOW_HUNG_SIGN.barTexture = "block/packed_ice";
+    GLOWING_SNOW_HUNG_SIGN.textureTop = "block/packed_ice";
+  }
+
+  // 浮冰
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBlock PACKED_ICE_HUNG_SIGN = new HungSignBlock(Blocks.PACKED_ICE);
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final GlowingHungSignBlock GLOWING_PACKED_ICE_HUNG_SIGN = new GlowingHungSignBlock(Blocks.PACKED_ICE);
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBarBlock PACKED_ICE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.PACKED_ICE);
+
+  // 蓝冰
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBlock BLUE_ICE_HUNG_SIGN = new HungSignBlock(Blocks.BLUE_ICE);
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final GlowingHungSignBlock GLOWING_BLUE_ICE_HUNG_SIGN = new GlowingHungSignBlock(Blocks.BLUE_ICE);
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBarBlock BLUE_ICE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.BLUE_ICE);
 }

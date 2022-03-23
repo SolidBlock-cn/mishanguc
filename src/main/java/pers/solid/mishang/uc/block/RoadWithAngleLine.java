@@ -1,6 +1,11 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.datafixers.util.Either;
+import net.devtech.arrp.json.blockstate.JBlockModel;
+import net.devtech.arrp.json.blockstate.JState;
+import net.devtech.arrp.json.blockstate.JVariant;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -13,6 +18,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
@@ -91,6 +97,18 @@ public interface RoadWithAngleLine extends Road {
     @Override
     public boolean isBevel() {
       return isBevel;
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public @Nullable JState getBlockStates() {
+      final Identifier id = getBlockModelIdentifier();
+      JVariant variant = new JVariant();
+      for (HorizontalCornerDirection direction : HorizontalCornerDirection.values()) {
+        variant.put("facing", direction,
+            new JBlockModel(id).y(direction.asRotation() - 45));
+      }
+      return JState.state(variant);
     }
   }
 }

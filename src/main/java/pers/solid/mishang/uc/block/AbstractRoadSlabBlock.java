@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.block;
 
+import net.devtech.arrp.json.loot.JLootTable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
@@ -15,23 +16,17 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.util.LineColor;
-import pers.solid.mishang.uc.util.LineType;
+import pers.solid.mishang.uc.arrp.ARRPGenerator;
 
 import java.util.List;
 
 public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
-  public final LineColor lineColor;
-  public final LineType lineType;
 
-  public AbstractRoadSlabBlock(Settings settings, LineColor lineColor, LineType lineType) {
+  public AbstractRoadSlabBlock(Settings settings) {
     super(settings);
-    this.lineColor = lineColor;
-    this.lineType = lineType;
   }
 
   @Override
@@ -42,7 +37,7 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
 
   @Nullable
   @Override
-  public final BlockState getPlacementState(ItemPlacementContext ctx) {
+  public BlockState getPlacementState(ItemPlacementContext ctx) {
     BlockPos blockPos = ctx.getBlockPos();
     BlockState blockState = ctx.getWorld().getBlockState(blockPos);
     if (blockState.isOf(this)) {
@@ -90,19 +85,14 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
   }
 
   @Override
-  public LineColor getLineColor(BlockState blockState, Direction direction) {
-    return this.lineColor;
-  }
-
-  @Override
-  public LineType getLineType(BlockState blockState, Direction direction) {
-    return lineType;
-  }
-
-  @Override
   public void appendTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     super.appendTooltip(stack, world, tooltip, options);
     appendRoadTooltip(stack, world, tooltip, options);
+  }
+
+  @Override
+  public @Nullable JLootTable getLootTable() {
+    return ARRPGenerator.simpleSlabLootTable(getIdentifier().toString());
   }
 }
