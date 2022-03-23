@@ -44,21 +44,21 @@ dependencies {
     // You may need to force-disable transitiveness on them.
 //    modImplementation("net.devtech:arrp:0.5.5")
     // I never break backwards compatibility, so just fetching the latest version should be fine
-    // modImplementation("net.devtech:arrp:0.+")
+    modImplementation("net.devtech:arrp:0.+")
 
     // SpoornPacks，用于生成资源包和数据包
 //    modImplementation 'com.github.spoorn:SpoornPacks:4.0-1.18.2'
 
-    modImplementation project(path: ":brrp", configuration: 'namedElements')
-    project(':arrp') {
-        apply plugin: 'fabric-loom'
-        dependencies {
-            // To change the versions see the gradle.properties file
-            minecraft "com.mojang:minecraft:${project.minecraft_version}"
-            mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-            modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-        }
-    }
+//    modImplementation project(path: ":brrp", configuration: 'namedElements')
+//    project(':arrp') {
+//        apply plugin: 'fabric-loom'
+//        dependencies {
+//            // To change the versions see the gradle.properties file
+//            minecraft "com.mojang:minecraft:${project.minecraft_version}"
+//            mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+//            modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+//        }
+//    }
 
 }
 

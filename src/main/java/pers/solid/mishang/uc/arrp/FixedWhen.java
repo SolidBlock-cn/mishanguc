@@ -27,7 +27,7 @@ public class FixedWhen extends JWhen {
     public JsonElement serialize(FixedWhen src, Type typeOfSrc, JsonSerializationContext context) {
       final List<Pair<String, String[]>> OR = ((JWhenAccessor) src).getOR();
       if (OR.size() == 1) {
-        return src.serialize(typeOfSrc, context);
+        return new JWhen.Serializer().serialize(src, typeOfSrc, context);
       } else {
         JsonObject json = new JsonObject();
         for (Pair<String, String[]> val : OR) {
