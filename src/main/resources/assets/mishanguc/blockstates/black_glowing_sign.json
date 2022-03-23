@@ -1,6 +1,0 @@
-{
-  "variants": {
-    "axis=z": {"model": "mishanguc:block/black_glowing_sign", "uvlock": true},
-    "axis=x": {"model": "mishanguc:block/black_glowing_sign", "uvlock": true, "y": 90}
-  }
-}

@@ -2,6 +2,12 @@ package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
+import net.devtech.arrp.json.blockstate.JBlockModel;
+import net.devtech.arrp.json.blockstate.JState;
+import net.devtech.arrp.json.blockstate.JVariant;
+import net.devtech.arrp.json.models.JModel;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -11,6 +17,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -18,11 +25,15 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.arrp.ARRPGenerator;
+import pers.solid.mishang.uc.arrp.FasterJTextures;
 
 import java.util.Map;
 
-public class WallLightBlock extends FacingBlock implements Waterloggable {
+public class WallLightBlock extends FacingBlock implements Waterloggable, ARRPGenerator {
   protected static final BooleanProperty WEST = Properties.WEST;
   protected static final BooleanProperty EAST = Properties.EAST;
   protected static final BooleanProperty SOUTH = Properties.SOUTH;
@@ -42,9 +53,11 @@ public class WallLightBlock extends FacingBlock implements Waterloggable {
           });
   private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION =
       MishangUtils.createDirectionToShape(4, 0, 4, 12, 1, 12);
+  public final String lightColor;
 
-  public WallLightBlock(Settings settings) {
+  public WallLightBlock(String lightColor, Settings settings) {
     super(settings);
+    this.lightColor = lightColor;
     this.setDefaultState(
         this.stateManager
             .getDefaultState()
@@ -136,5 +149,39 @@ public class WallLightBlock extends FacingBlock implements Waterloggable {
     if (this instanceof LightConnectable) {
       ((LightConnectable) this).prepareConnection(state, world, pos, flags, maxUpdateDepth, facing);
     }
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public @Nullable JState getBlockStates() {
+    final JVariant variant = new JVariant();
+    final Identifier id = getBlockModelIdentifier();
+    variant.put("facing", "up", new JBlockModel(id));
+    variant.put("facing", "down", new JBlockModel(id).x(180));
+    for (Direction direction : Direction.Type.HORIZONTAL) {
+      variant.put("facing", direction, new JBlockModel(id).x(90).y((int) direction.asRotation()));
+    }
+    return JState.state(variant);
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public @Nullable JModel getBlockModel() {
+    return JModel.model(getModelParent())
+        .textures(new FasterJTextures().varP("light", lightColor + "_light").var("background", "block/obsidian"));
+  }
+
+  @Environment(EnvType.CLIENT)
+  @ApiStatus.AvailableSince("0.1.7")
+  public Identifier getModelParent() {
+    final Identifier identifier = getIdentifier();
+    String path = identifier.getPath();
+    final int i = lightColor.length();
+    if (path.startsWith(lightColor) && path.charAt(i) == '_') {
+      path = path.substring(i + 1);
+    } else {
+      throw new AssertionError();
+    }
+    return MishangUtils.identifierPrefix(new Identifier(identifier.getNamespace(), path), "block/");
   }
 }

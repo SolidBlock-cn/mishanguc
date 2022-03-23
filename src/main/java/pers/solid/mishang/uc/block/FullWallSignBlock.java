@@ -1,6 +1,10 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.ImmutableMap;
+import net.devtech.arrp.json.models.JModel;
+import net.devtech.arrp.json.models.JTextures;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -57,5 +61,11 @@ public class FullWallSignBlock extends WallSignBlock {
   @Override
   public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
     return new FullWallSignBlockEntity(pos, state);
+  }
+
+  @Override
+  @Environment(EnvType.CLIENT)
+  public @Nullable JModel getBlockModel() {
+    return JModel.model("mishanguc:block/full_wall_sign").textures(new JTextures().var("texture", getBaseTexture()));
   }
 }

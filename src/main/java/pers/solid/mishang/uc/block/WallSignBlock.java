@@ -1,6 +1,13 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.ImmutableMap;
+import net.devtech.arrp.json.blockstate.JBlockModel;
+import net.devtech.arrp.json.blockstate.JState;
+import net.devtech.arrp.json.blockstate.JVariant;
+import net.devtech.arrp.json.models.JModel;
+import net.devtech.arrp.json.models.JTextures;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -24,6 +31,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -34,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.arrp.ARRPGenerator;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 
 import java.util.Map;
@@ -45,7 +54,7 @@ import java.util.Map;
  * @see WallSignBlockEntity
  * @see pers.solid.mishang.uc.renderer.WallSignBlockEntityRenderer
  */
-public class WallSignBlock extends WallMountedBlock implements Waterloggable, BlockEntityProvider {
+public class WallSignBlock extends WallMountedBlock implements Waterloggable, BlockEntityProvider, ARRPGenerator {
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   public static final Map<Direction, VoxelShape> SHAPES_WHEN_WALL =
       MishangUtils.createHorizontalDirectionToShape(0, 4, 0, 16, 12, 1);
@@ -53,6 +62,11 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
       MishangUtils.createHorizontalDirectionToShape(0, 0, 4, 16, 1, 12);
   public static final Map<Direction, VoxelShape> SHAPES_WHEN_CEILING =
       MishangUtils.createHorizontalDirectionToShape(0, 15, 4, 16, 16, 12);
+  /**
+   * 告示牌自身的纹理。默认为 {@code null}，可在后期修改。若为 {@code null}，则直接根据其基础方块 {@link #baseBlock} 推断纹理。
+   */
+  @ApiStatus.AvailableSince("0.1.7")
+  public @Nullable String texture;
 
   @Unmodifiable
   public static final Map<WallMountLocation, Map<Direction, VoxelShape>>
@@ -191,5 +205,46 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   @Override
   public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
     return new WallSignBlockEntity(pos, state);
+  }
+
+  @Override
+  @Environment(EnvType.CLIENT)
+  public @Nullable JState getBlockStates() {
+    final JVariant jVariant = new JVariant();
+    final JState state = JState.state(jVariant);
+    for (WallMountLocation wallMountLocation : WallMountLocation.values()) {
+      final int x;
+      switch (wallMountLocation) {
+        case WALL:
+          x = 0;
+          break;
+        case FLOOR:
+          x = 90;
+          break;
+        default:
+          x = -90;
+          break;
+      }
+      for (Direction direction : Direction.Type.HORIZONTAL) {
+        float y = direction.asRotation();
+        jVariant.put(
+            String.format("face=%s,facing=%s", wallMountLocation.asString(), direction.asString()),
+            new JBlockModel(getBlockModelIdentifier()).x(x).y((int) y).uvlock());
+      }
+    }
+    return state;
+  }
+
+  @Override
+  @Environment(EnvType.CLIENT)
+  public @Nullable JModel getBlockModel() {
+    return JModel.model("mishanguc:block/wall_sign").textures(new JTextures().var("texture", getBaseTexture()));
+  }
+
+  @Environment(EnvType.CLIENT)
+  public String getBaseTexture() {
+    if (texture != null) return texture;
+    final Identifier id = Registry.BLOCK.getId(baseBlock);
+    return String.format("%s:block/%s", id.getNamespace(), id.getPath());
   }
 }

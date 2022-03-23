@@ -1,0 +1,23 @@
+{
+  "_blocksOnly": true,
+  "values": [
+    "mishanguc:oak_hung_sign",
+    "mishanguc:spruce_hung_sign",
+    "mishanguc:birch_hung_sign",
+    "mishanguc:jungle_hung_sign",
+    "mishanguc:acacia_hung_sign",
+    "mishanguc:dark_oak_hung_sign",
+    "mishanguc:oak_hung_sign_bar",
+    "mishanguc:spruce_hung_sign_bar",
+    "mishanguc:birch_hung_sign_bar",
+    "mishanguc:jungle_hung_sign_bar",
+    "mishanguc:acacia_hung_sign_bar",
+    "mishanguc:dark_oak_hung_sign_bar",
+    "mishanguc:oak_wall_sign",
+    "mishanguc:spruce_wall_sign",
+    "mishanguc:birch_wall_sign",
+    "mishanguc:jungle_wall_sign",
+    "mishanguc:acacia_wall_sign",
+    "mishanguc:dark_oak_wall_sign"
+  ]
+}

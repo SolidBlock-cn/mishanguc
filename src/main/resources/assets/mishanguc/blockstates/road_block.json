@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "mishanguc:block/road_block"
+      },{
+        "model": "mishanguc:block/road_block","y": 90
+      },{
+        "model": "mishanguc:block/road_block","y": 180
+      },{
+        "model": "mishanguc:block/road_block","y": 270
+      }
+    ]
+  }
+}
