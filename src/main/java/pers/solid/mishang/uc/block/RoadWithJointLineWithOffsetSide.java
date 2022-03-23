@@ -1,6 +1,10 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.datafixers.util.Either;
+import net.devtech.arrp.json.blockstate.JState;
+import net.devtech.arrp.json.blockstate.JVariant;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -13,8 +17,10 @@ import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.ModProperties;
@@ -24,6 +30,7 @@ import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 类似于 {@link RoadWithJointLine}，不过较短的那一条线是被偏移的。
@@ -90,6 +97,37 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
   class Impl extends AbstractRoadBlock implements RoadWithJointLineWithOffsetSide {
     public Impl(Settings settings, LineColor lineColor) {
       super(settings, lineColor, LineType.NORMAL);
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public @NotNull JState getBlockStates() {
+      final Identifier id = getBlockModelIdentifier();
+      JVariant variant = new JVariant();
+      // 一侧的短线所朝向的方向。
+      for (Direction direction : Direction.Type.HORIZONTAL) {
+        final @NotNull Direction offsetDirection1 = direction.rotateYClockwise();
+        // direction 的右偏方向
+        final @NotNull HorizontalCornerDirection facing1 =
+            Objects.requireNonNull(
+                HorizontalCornerDirection.fromDirections(direction, offsetDirection1));
+        final @NotNull Direction offsetDirection2 = direction.rotateYCounterclockwise();
+        // direction 的左偏方向
+        final @NotNull HorizontalCornerDirection facing2 =
+            Objects.requireNonNull(
+                HorizontalCornerDirection.fromDirections(direction, offsetDirection2));
+        variant
+            .put(
+                String.format(
+                    "facing=%s,axis=%s", facing1.asString(), offsetDirection1.getAxis().asString()),
+                JState.model(id).y((int) (direction.asRotation())))
+            .put(
+                String.format(
+                    "facing=%s,axis=%s", facing2.asString(), offsetDirection2.getAxis().asString()),
+                JState.model(MishangUtils.identifierSuffix(id, "_mirrored"))
+                    .y((int) (direction.asRotation())));
+      }
+      return JState.state(variant);
     }
   }
 }

@@ -1,12 +1,17 @@
 package pers.solid.mishang.uc.block;
 
+import net.devtech.arrp.json.blockstate.JState;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.ModProperties;
 import pers.solid.mishang.uc.RoadTexture;
+import pers.solid.mishang.uc.arrp.ARRPGenerator;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
@@ -45,11 +50,11 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
       switch (connected) {
         case 0:
           // 全都不连接的情况。
-          return ASPHALT_ROAD_BLOCK.getDefaultState();
+          return ROAD_BLOCK.getDefaultState();
         case 4:
           // 全都连接的情况。
           if (lineColor == LineColor.WHITE) {
-            return ASPHALT_ROAD_WITH_WHITE_CROSS_LINE.getDefaultState();
+            return ROAD_WITH_WHITE_CROSS_LINE.getDefaultState();
           } else {
             return defaultState;
           }
@@ -62,7 +67,7 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
             Direction direction = entry.getKey();
             if (connectionStateMap.get(direction.getOpposite()).mayConnect()) {
               // 如果对面方向也有的情况。
-              return ASPHALT_ROAD_WITH_WHITE_STRAIGHT_LINE
+              return ROAD_WITH_WHITE_LINE
                   .getDefaultState()
                   .with(Properties.HORIZONTAL_AXIS, direction.getAxis());
             } else {
@@ -72,10 +77,10 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
               if (lineColor == LineColor.WHITE) {
                 switch (type) {
                   case BEVEL:
-                    block = ASPHALT_ROAD_WITH_WHITE_BEVEL_ANGLE_LINE;
+                    block = ROAD_WITH_WHITE_BA_LINE;
                     break;
                   case RIGHT_ANGLE:
-                    block = ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE;
+                    block = ROAD_WITH_WHITE_RA_LINE;
                     break;
                   default:
                     throw new IllegalStateException("Unknown angle type: " + type);
@@ -103,7 +108,7 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
           // 只有一个方向连接的情况下，为直线。
           for (Map.Entry<Direction, RoadConnectionState> entry : connectionStateMap.entrySet()) {
             if (entry.getValue().mayConnect() && lineColor == LineColor.WHITE) {
-              return ASPHALT_ROAD_WITH_WHITE_STRAIGHT_LINE
+              return ROAD_WITH_WHITE_LINE
                   .getDefaultState()
                   .with(Properties.HORIZONTAL_AXIS, entry.getKey().getAxis());
             }
@@ -122,12 +127,12 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
                   || type != RoadAutoLineType.BEVEL)
               // 连接直线
               {
-                return ASPHALT_ROAD_WITH_WHITE_JOINT_LINE
+                return ROAD_WITH_WHITE_TS_LINE
                     .getDefaultState()
                     .with(Properties.HORIZONTAL_FACING, direction);
               } else if (state.direction.right().isPresent()) {
                 // 连接斜线
-                return ASPHALT_ROAD_WITH_WHITE_STRAIGHT_AND_BEVEL_ANGLE_LINE
+                return ROAD_WITH_WHITE_S_BA_LINE
                     .getDefaultState()
                     .with(Properties.HORIZONTAL_AXIS, direction.rotateYClockwise().getAxis())
                     .with(
@@ -144,5 +149,11 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
       throw new UnsupportedOperationException(
           "Road auto placement of non-asphalt road is not supported yet! qwq");
     }
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public @Nullable JState getBlockStates() {
+    return ARRPGenerator.simpleState(getBlockModelIdentifier());
   }
 }

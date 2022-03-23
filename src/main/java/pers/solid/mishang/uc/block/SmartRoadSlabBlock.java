@@ -1,9 +1,11 @@
 package pers.solid.mishang.uc.block;
 
+import net.devtech.arrp.json.blockstate.JState;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.SlabBlock;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -17,6 +19,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.arrp.ARRPGenerator;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
@@ -28,7 +31,7 @@ import java.util.List;
  *
  * @param <T> 基础方块类型。
  */
-public class SmartRoadSlabBlock<T extends Block & Road> extends SlabBlock implements Road {
+public class SmartRoadSlabBlock<T extends Block & Road> extends AbstractRoadSlabBlock {
   private static Block cachedBaseBlock;
   public final T baseBlock;
 
@@ -43,7 +46,7 @@ public class SmartRoadSlabBlock<T extends Block & Road> extends SlabBlock implem
   }
 
   @Override
-  protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+  public void appendProperties(StateManager.Builder<Block, BlockState> builder) {
     super.appendProperties(builder);
     // 由于该方法是在构造方法中执行的，所以可能存在 null 的情况。
     (baseBlock == null ? cachedBaseBlock : baseBlock)
@@ -74,21 +77,18 @@ public class SmartRoadSlabBlock<T extends Block & Road> extends SlabBlock implem
     }
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   @Deprecated
   public BlockState rotate(BlockState state, BlockRotation rotation) {
     return baseBlock.rotate(state, rotation);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   @Deprecated
   public BlockState mirror(BlockState state, BlockMirror mirror) {
     return baseBlock.mirror(state, mirror);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   @Deprecated
   public ActionResult onUse(
@@ -106,7 +106,6 @@ public class SmartRoadSlabBlock<T extends Block & Road> extends SlabBlock implem
     }
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   @Deprecated
   public void neighborUpdate(
@@ -123,5 +122,12 @@ public class SmartRoadSlabBlock<T extends Block & Road> extends SlabBlock implem
   @Override
   public RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
     return baseBlock.getConnectionStateOf(state, direction);
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public @Nullable JState getBlockStates() {
+    final JState baseStates = baseBlock.getBlockStates();
+    return baseStates == null ? null : ARRPGenerator.composeStateForSlab(baseStates);
   }
 }

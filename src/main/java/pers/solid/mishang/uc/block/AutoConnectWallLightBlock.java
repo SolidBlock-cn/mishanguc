@@ -1,6 +1,14 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.ImmutableList;
+import net.devtech.arrp.api.RuntimeResourcePack;
+import net.devtech.arrp.json.blockstate.JBlockModel;
+import net.devtech.arrp.json.blockstate.JMultipart;
+import net.devtech.arrp.json.blockstate.JState;
+import net.devtech.arrp.json.blockstate.JWhen;
+import net.devtech.arrp.json.models.JModel;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -8,6 +16,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -15,7 +24,11 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUc;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.arrp.FasterJTextures;
+import pers.solid.mishang.uc.arrp.FixedWhen;
 
 import java.util.*;
 
@@ -53,9 +66,14 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
           MishangUtils.createHorizontalDirectionToShape(12, 4, 0, 16, 12, 1),
           // 第四个元素为“左”，即 facing 顺时针旋转90度。
           MishangUtils.createHorizontalDirectionToShape(0, 4, 0, 4, 12, 1));
+  /**
+   * 该灯光装饰方块对应的形状。
+   */
+  public final String shape;
 
-  public AutoConnectWallLightBlock(Settings settings) {
-    super(settings);
+  public AutoConnectWallLightBlock(String lightColor, String shape, Settings settings) {
+    super(lightColor, settings);
+    this.shape = shape;
     this.setDefaultState(
         this.stateManager
             .getDefaultState()
@@ -186,5 +204,93 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
         break;
     }
     return VoxelShapes.union(baseShape, extraShapes);
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public @Nullable JState getBlockStates() {
+    List<JMultipart> parts = new ArrayList<>();
+    final Identifier id = getBlockModelIdentifier();
+    for (Direction facing : Direction.values()) {
+      // 中心装饰物
+      parts.add(new JMultipart()
+          .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "_center"))
+              .y(facing.getAxis() == Direction.Axis.Y ? 0 : (int) (facing.asRotation() + 180))
+              .x(facing == Direction.DOWN ? 180 : facing == Direction.UP ? 0 : 90))
+          .when(new JWhen().add("facing", facing.asString())));
+
+      // 连接物
+      // 共有两种连接物模型：一种是位于底部或顶部的朝南连接，可以通过x和y的旋转得到位于底部朝向任意方向的连接，以及位于侧面朝向垂直方向的连接。
+      // 第二种是位于侧面的朝东连接，可以通过x和y的旋转得到任意水平方向上的，以及底部或顶部任意连接。
+      for (Direction direction : Direction.values()) {
+        final Direction.Axis axis = direction.getAxis();
+        final int x, y;
+        final Identifier modelName;
+        if (axis == facing.getAxis()) {
+          continue;
+        }
+        if (facing == Direction.UP) {
+          modelName = MishangUtils.identifierSuffix(id, "_connection");
+          x = 0;
+          y = (int) direction.asRotation();
+        } else if (facing == Direction.DOWN) {
+          modelName = MishangUtils.identifierSuffix(id, "_connection");
+          x = 180;
+          y = (int) direction.asRotation() + 180;
+        } else if (direction == Direction.UP) {
+          modelName = MishangUtils.identifierSuffix(id, "_connection");
+          x = 90;
+          y = (int) facing.asRotation() + 180;
+        } else if (direction == Direction.DOWN) {
+          modelName = MishangUtils.identifierSuffix(id, "_connection");
+          x = -90;
+          y = (int) facing.asRotation();
+        } else if (direction == facing.rotateYCounterclockwise()) {
+          modelName = MishangUtils.identifierSuffix(id, "_connection2");
+          x = 0;
+          y = (int) facing.asRotation();
+        } else if (direction == facing.rotateYClockwise()) {
+          modelName = MishangUtils.identifierSuffix(id, "_connection2");
+          x = 180;
+          y = (int) facing.asRotation() + 180;
+        } else {
+          MishangUc.MISHANG_LOGGER.error(
+              String.format(
+                  "Unknown state to generate models: facing=%s,direction=%s",
+                  facing.asString(), direction.asString()));
+          continue;
+        }
+        parts.add(
+            new JMultipart()
+                .addModel(new JBlockModel(modelName).x(x).y(y).uvlock())
+                .when(
+                    new FixedWhen()
+                        .add("facing", facing.asString())
+                        .add(direction.asString(), "true")));
+      }
+    }
+    return JState.state(parts.toArray(new JMultipart[0]));
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public void writeBlockModel(RuntimeResourcePack pack) {
+    final Identifier id = getBlockModelIdentifier();
+    pack.addModel(
+        JModel.model(String.format("mishanguc:block/wall_light_%s_decoration", shape))
+            .textures(new FasterJTextures().varP("light", lightColor + "_light")),
+        id);
+    pack.addModel(
+        JModel.model(String.format("mishanguc:block/wall_light_%s_decoration_center", shape))
+            .textures(new FasterJTextures().varP("light", lightColor + "_light")),
+        MishangUtils.identifierSuffix(id, "_center"));
+    pack.addModel(
+        JModel.model(String.format("mishanguc:block/wall_light_%s_decoration_connection", shape))
+            .textures(new FasterJTextures().varP("light", lightColor + "_light")),
+        MishangUtils.identifierSuffix(id, "_connection"));
+    pack.addModel(
+        JModel.model(String.format("mishanguc:block/wall_light_%s_decoration_connection2", shape))
+            .textures(new FasterJTextures().varP("light", lightColor + "_light")),
+        MishangUtils.identifierSuffix(id, "_connection2"));
   }
 }
