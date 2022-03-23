@@ -29,14 +29,37 @@ public class MishangucBlocks {
   /**
    * 绝大多数柏油路方块共用的方块设置。
    */
-  protected static final FabricBlockSettings ASPHALT_ROAD_SETTINGS =
+  protected static final FabricBlockSettings ROAD_SETTINGS =
       FabricBlockSettings.of(Material.STONE, MapColor.GRAY).strength(0.5F);
 
   /**
-   * 绝大多数光源方块共用的方块设置。
+   * 绝大多数白色光方块共用的方块设置。
    */
   protected static final FabricBlockSettings WHITE_LIGHT_SETTINGS =
-      FabricBlockSettings.of(Material.REDSTONE_LAMP).luminance(15);
+      FabricBlockSettings.of(Material.REDSTONE_LAMP, MapColor.WHITE).luminance(15).strength(0.2f);
+  /**
+   * 墙上的白色灯等方块等用到的方块设置。与{@link #WHITE_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。
+   */
+  protected static final FabricBlockSettings WHITE_WALL_LIGHT_SETTINGS =
+      FabricBlockSettings.copyOf(WHITE_LIGHT_SETTINGS).noCollision();
+  /**
+   * 绝大多数黄色光方块共用的方块设置。
+   */
+  protected static final FabricBlockSettings YELLOW_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, MapColor.YELLOW).luminance(14).strength(0.2f);
+  /**
+   * 墙上的黄色灯等方块等用到的方块设置。与{@link #YELLOW_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。
+   */
+  protected static final FabricBlockSettings YELLOW_WALL_LIGHT_SETTINGS =
+      FabricBlockSettings.copyOf(YELLOW_LIGHT_SETTINGS).noCollision();
+  /**
+   * 绝大多数青色光方块共用的方块设置。
+   */
+  protected static final FabricBlockSettings CYAN_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, MapColor.CYAN).luminance(13).strength(0.2f);
+  /**
+   * 墙上的青色灯等方块等用到的方块设置。与{@link #YELLOW_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。
+   */
+  protected static final FabricBlockSettings CYAN_WALL_LIGHT_SETTINGS =
+      FabricBlockSettings.copyOf(CYAN_LIGHT_SETTINGS).noCollision();
 
   /**
    * 自动注册一个类中的所有静态常量字段的方块，同时创建并注册对应的物品。

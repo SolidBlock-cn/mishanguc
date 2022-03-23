@@ -1,9 +1,14 @@
 package pers.solid.mishang.uc.item;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -15,6 +20,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.util.RoadConnectionState;
+
+import java.util.List;
 
 public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
 
@@ -72,5 +79,13 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!world.isClient) return sendMessageOfState(player, world.getBlockState(pos), pos);
     return ActionResult.SUCCESS;
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    super.appendTooltip(stack, world, tooltip, context);
+    tooltip.add(new TranslatableText("item.mishanguc.road_connection_state_debugging_tool.tooltip.1").formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.road_connection_state_debugging_tool.tooltip.2").formatted(Formatting.GRAY));
   }
 }

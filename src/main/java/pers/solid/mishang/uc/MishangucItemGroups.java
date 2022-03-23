@@ -13,7 +13,7 @@ public class MishangucItemGroups {
   public static final ItemGroup ROADS =
       FabricItemGroupBuilder.build(
           new Identifier("mishanguc", "roads"),
-          () -> new ItemStack(RoadBlocks.ASPHALT_ROAD_WITH_WHITE_RIGHT_ANGLE_LINE));
+          () -> new ItemStack(RoadBlocks.ROAD_WITH_WHITE_RA_LINE));
   public static final ItemGroup LIGHTS =
       FabricItemGroupBuilder.build(
           new Identifier("mishanguc", "lights"), () -> new ItemStack(LightBlocks.WHITE_LIGHT));

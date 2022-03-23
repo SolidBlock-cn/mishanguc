@@ -19,6 +19,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.arrp.ARRPGenerator;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
@@ -28,7 +29,7 @@ import java.util.List;
 /**
  * 所有道路方块的接口。接口可以多重继承，并直接实现与已有类上，因此使用接口。
  */
-public interface Road {
+public interface Road extends ARRPGenerator {
 
   /**
    * 获取该方块状态中，某个特定方向上的连接状态。连接状态可用于自动路块。
@@ -139,11 +140,6 @@ public interface Road {
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
   }
 
-  /**
-   * 该道路的标线颜色。
-   *
-   * @return 该道路的标线颜色。
-   */
   LineColor getLineColor(BlockState blockState, Direction direction);
 
   LineType getLineType(BlockState blockState, Direction direction);

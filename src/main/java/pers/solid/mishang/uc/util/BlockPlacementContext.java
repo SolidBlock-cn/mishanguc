@@ -109,7 +109,10 @@ public class BlockPlacementContext {
         offsetPos,
         old.player,
         old.stack,
-        old.hit.withBlockPos(offsetPos),
+        new BlockHitResult(old.hit.getPos().add(
+            offsetPos.getX() - old.hit.getBlockPos().getX(),
+            offsetPos.getY() - old.hit.getBlockPos().getY(),
+            offsetPos.getZ() - old.hit.getBlockPos().getZ()), old.hit.getSide(), offsetPos, old.hit.isInsideBlock()),
         old.includesFluid);
   }
 

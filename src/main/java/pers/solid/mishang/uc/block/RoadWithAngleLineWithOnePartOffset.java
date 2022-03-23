@@ -1,5 +1,9 @@
 package pers.solid.mishang.uc.block;
 
+import net.devtech.arrp.json.blockstate.JState;
+import net.devtech.arrp.json.blockstate.JVariant;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -10,17 +14,18 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Util;
+import net.minecraft.util.*;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 
 import java.util.List;
+import java.util.Objects;
 
 public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
   /**
@@ -81,6 +86,37 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
   class Impl extends RoadWithAngleLine.Impl implements RoadWithAngleLineWithOnePartOffset {
     public Impl(Settings settings, LineColor lineColor, boolean isBevel) {
       super(settings, lineColor, LineType.NORMAL, isBevel);
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    @NotNull
+    public JState getBlockStates() {
+      final Identifier id = getBlockModelIdentifier();
+      JVariant variant = new JVariant();
+      for (Direction direction : Direction.Type.HORIZONTAL) {
+        // direction：正中线所朝的方向
+        final Direction offsetDirection1 = direction.rotateYClockwise();
+        final Direction offsetDirection2 = direction.rotateYCounterclockwise();
+        variant.put(
+            String.format(
+                "facing=%s,axis=%s",
+                Objects.requireNonNull(
+                        HorizontalCornerDirection.fromDirections(direction, offsetDirection1))
+                    .asString(),
+                direction.getAxis().asString()),
+            JState.model(id).y((int) (direction.asRotation())));
+        variant.put(
+            String.format(
+                "facing=%s,axis=%s",
+                Objects.requireNonNull(
+                        HorizontalCornerDirection.fromDirections(direction, offsetDirection2))
+                    .asString(),
+                direction.getAxis().asString()),
+            JState.model(MishangUtils.identifierSuffix(id, "_mirrored"))
+                .y((int) (direction.asRotation())));
+      }
+      return JState.state(variant);
     }
   }
 }

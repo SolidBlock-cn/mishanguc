@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "axis=x,type=bottom": [
+      {
+        "model": "mishanguc:block/road_slab_with_yellow_double_line",
+        "y": 90
+      },
+      {
+        "model": "mishanguc:block/road_slab_with_yellow_double_line",
+        "y": 270
+      }
+    ],
+    "axis=z,type=bottom": [
+      {
+        "model": "mishanguc:block/road_slab_with_yellow_double_line",
+        "y": 0
+      },
+      {
+        "model": "mishanguc:block/road_slab_with_yellow_double_line",
+        "y": 180
+      }
+    ],
+    "axis=x,type=top": [
+      {
+        "model": "mishanguc:block/road_slab_with_yellow_double_line_top",
+        "y": 90
+      },
+      {
+        "model": "mishanguc:block/road_slab_with_yellow_double_line_top",
+        "y": 270
+      }
+    ],
+    "axis=z,type=top": [
+      {
+        "model": "mishanguc:block/road_slab_with_yellow_double_line_top",
+        "y": 0
+      },
+      {
+        "model": "mishanguc:block/road_slab_with_yellow_double_line_top",
+        "y": 180
+      }
+    ],
+    "axis=x,type=double": [
+      {
+        "model": "mishanguc:block/road_with_yellow_double_line",
+        "y": 90
+      },
+      {
+        "model": "mishanguc:block/road_with_yellow_double_line",
+        "y": 270
+      }
+    ],
+    "axis=z,type=double": [
+      {
+        "model": "mishanguc:block/road_with_yellow_double_line",
+        "y": 0
+      },
+      {
+        "model": "mishanguc:block/road_with_yellow_double_line",
+        "y": 180
+      }
+    ]
+  }
+}
