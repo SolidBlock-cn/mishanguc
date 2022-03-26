@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.item;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -34,6 +35,7 @@ import java.util.List;
 /**
  * 用于处理台阶的工具。
  */
+@EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBlockOutline.class)
 public class SlabToolItem extends Item implements RendersBlockOutline {
   public SlabToolItem(Settings settings) {
     super(settings);
