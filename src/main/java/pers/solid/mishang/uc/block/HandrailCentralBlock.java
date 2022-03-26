@@ -131,6 +131,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     }
     final World world = ctx.getWorld();
     final BlockPos blockPos = ctx.getBlockPos();
+    final boolean waterlogged = world.getFluidState(blockPos).getFluid() == Fluids.WATER;
     placementState = updateSideStates(placementState, world, blockPos);
     for (final Direction direction : new Direction[]{Direction.NORTH, Direction.EAST}) {
       for (Map.Entry<Direction, BooleanProperty> entry : FACING_PROPERTIES.entrySet()) {
@@ -146,14 +147,14 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
         if (isStairsInCW != isStairsInCCW) {
           final BlockState stairState = baseHandrail.stair().getDefaultState();
           return stairState
-              .with(WATERLOGGED, placementState.get(WATERLOGGED))
+              .with(WATERLOGGED, waterlogged)
               .with(HandrailStairBlock.FACING, isStairsInCW ? facing.rotateYClockwise() : facing.rotateYCounterclockwise())
               .with(HandrailStairBlock.SHAPE, HandrailStairBlock.Shape.BOTTOM)
               .with(HandrailStairBlock.POSITION, HandrailStairBlock.Position.CENTER);
         }
       }
     }
-    return placementState.with(WATERLOGGED, world.getFluidState(blockPos).getFluid() == Fluids.WATER);
+    return placementState.with(WATERLOGGED, waterlogged);
   }
 
   public static BlockState updateSideStates(BlockState state, WorldAccess world, BlockPos blockPos) {
