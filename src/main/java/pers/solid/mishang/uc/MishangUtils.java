@@ -229,17 +229,14 @@ public class MishangUtils {
    * 对一个坐标轴进行旋转。
    */
   public static Direction.Axis rotateAxis(BlockRotation rotation, Direction.Axis axis) {
-    switch (rotation) {
-      case COUNTERCLOCKWISE_90:
-      case CLOCKWISE_90:
-        return switch (axis) {
-          case X -> Direction.Axis.Z;
-          case Z -> Direction.Axis.X;
-          default -> axis;
-        };
-      default:
-        return axis;
-    }
+    return switch (rotation) {
+      case COUNTERCLOCKWISE_90, CLOCKWISE_90 -> switch (axis) {
+        case X -> Direction.Axis.Z;
+        case Z -> Direction.Axis.X;
+        default -> axis;
+      };
+      default -> axis;
+    };
   }
 
   /**
