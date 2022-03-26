@@ -4,6 +4,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -42,6 +43,7 @@ import java.util.List;
 /**
  * 用于处理台阶的工具。
  */
+@EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBlockOutline.class)
 public class SlabToolItem extends Item implements RendersBlockOutline {
   /**
    * 从原版的 {@link BlockFamilies} 提取的方块至台阶方块的映射。

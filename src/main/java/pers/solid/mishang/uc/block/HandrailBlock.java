@@ -222,7 +222,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
     ARRPGenerator.super.writeLootTable(pack);
     central().writeLootTable(pack);
     corner().writeLootTable(pack);
-    stair().writeBlockModel(pack);
+    stair().writeLootTable(pack);
   }
 
   /**
