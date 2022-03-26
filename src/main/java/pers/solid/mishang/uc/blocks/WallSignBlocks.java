@@ -6,6 +6,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
+import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.FullWallSignBlock;
 import pers.solid.mishang.uc.block.GlowingWallSignBlock;
 import pers.solid.mishang.uc.block.WallSignBlock;
@@ -509,6 +510,11 @@ public final class WallSignBlocks extends MishangucBlocks {
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
   public static final GlowingWallSignBlock GLOWING_SNOW_WALL_SIGN = new GlowingWallSignBlock(Blocks.SNOW_BLOCK);
+  // 冰
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  @Translucent
+  public static final WallSignBlock ICE_WALL_SIGN = new WallSignBlock(Blocks.ICE);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
   public static final WallSignBlock PACKED_ICE_WALL_SIGN = new WallSignBlock(Blocks.PACKED_ICE);

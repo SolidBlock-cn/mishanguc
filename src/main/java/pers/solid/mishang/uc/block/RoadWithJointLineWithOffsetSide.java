@@ -23,7 +23,7 @@ import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.ModProperties;
+import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
@@ -40,7 +40,7 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
    * 道路方块中，偏移半线与正中直线围成的面积范围较小的那个直角。<br>
    * 不同于{@link RoadWithJointLine#FACING}，那个是正对的水平方向，而这个是斜角水平方向。
    */
-  EnumProperty<HorizontalCornerDirection> FACING = ModProperties.HORIZONTAL_CORNER_FACING;
+  EnumProperty<HorizontalCornerDirection> FACING = MishangucProperties.HORIZONTAL_CORNER_FACING;
   /**
    * 道路方块中，正中直线所在的轴。
    */

@@ -25,8 +25,8 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.MishangUc;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
 import pers.solid.mishang.uc.arrp.FixedWhen;
 
@@ -250,7 +250,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
           x = 180;
           y = (int) facing.asRotation() + 180;
         } else {
-          MishangUc.MISHANG_LOGGER.error(
+          Mishanguc.MISHANG_LOGGER.error(
               String.format(
                   "Unknown state to generate models: facing=%s,direction=%s",
                   facing.asString(), direction.asString()));

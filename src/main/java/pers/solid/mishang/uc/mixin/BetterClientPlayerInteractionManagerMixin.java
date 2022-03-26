@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import pers.solid.mishang.uc.MishangUc;
+import pers.solid.mishang.uc.Mishanguc;
 
 /**
  * 本 mixin 参考了 {@link
@@ -45,7 +45,7 @@ public abstract class BetterClientPlayerInteractionManagerMixin {
       cancellable = true)
   public void attackBlock(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> info) {
     ActionResult result =
-        MishangUc.BEGIN_ATTACK_BLOCK_EVENT
+        Mishanguc.BEGIN_ATTACK_BLOCK_EVENT
             .invoker()
             .interact(client.player, client.world, Hand.MAIN_HAND, pos, direction);
 
@@ -70,7 +70,7 @@ public abstract class BetterClientPlayerInteractionManagerMixin {
     }
 
     ActionResult result =
-        MishangUc.PROGRESS_ATTACK_BLOCK_EVENT
+        Mishanguc.PROGRESS_ATTACK_BLOCK_EVENT
             .invoker()
             .interact(client.player, client.world, Hand.MAIN_HAND, pos, direction);
 
@@ -86,7 +86,7 @@ public abstract class BetterClientPlayerInteractionManagerMixin {
   @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;attackBlock(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z", shift = At.Shift.BEFORE), method = "updateBlockBreakingProgress", cancellable = true)
   public void doNotAttack(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
     ActionResult result =
-        MishangUc.PROGRESS_ATTACK_BLOCK_EVENT
+        Mishanguc.PROGRESS_ATTACK_BLOCK_EVENT
             .invoker()
             .interact(client.player, client.world, Hand.MAIN_HAND, pos, direction);
 

@@ -19,11 +19,11 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "pers.solid.mishang.uc.MishangUc",
+      "pers.solid.mishang.uc.Mishanguc",
       "pers.solid.mishang.uc.arrp.ARRPMain"
     ],
     "client": [
-      "pers.solid.mishang.uc.MishangUcClient"
+      "pers.solid.mishang.uc.MishangucClient"
     ]
   },
   "mixins": [
