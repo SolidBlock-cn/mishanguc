@@ -9,7 +9,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.Direction;
-import pers.solid.mishang.uc.ModProperties;
+import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
@@ -22,7 +22,7 @@ public interface RoadWithCentralAndOffsetAngleLine extends RoadWithAngleLine {
   /**
    * 正中线和侧线围成的角的朝向。
    */
-  EnumProperty<HorizontalCornerDirection> FACING = ModProperties.HORIZONTAL_CORNER_FACING;
+  EnumProperty<HorizontalCornerDirection> FACING = MishangucProperties.HORIZONTAL_CORNER_FACING;
   /**
    * 正中线所在轴。
    */

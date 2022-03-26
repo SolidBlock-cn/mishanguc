@@ -63,11 +63,6 @@ public abstract class BlockMatchingRule implements StringIdentifiable {
     return REGISTRY.get(new Identifier(name));
   }
 
-  public static @NotNull BlockMatchingRule fromString(String name, BlockMatchingRule defaultValue) {
-    final BlockMatchingRule value = fromString(name);
-    return value == null ? defaultValue : value;
-  }
-
   public abstract boolean match(@NotNull BlockState state1, @NotNull BlockState state2);
 
   public BlockMatchingRule register(Identifier identifier) {
@@ -78,14 +73,6 @@ public abstract class BlockMatchingRule implements StringIdentifiable {
   public @Nullable String asString() {
     final @Nullable Identifier id = REGISTRY.getId(this);
     return id == null ? null : id.toString();
-  }
-
-  /**
-   * 类似于{@link #asString()}，但是未注册的会返回空字符串而不是null。
-   */
-  public @NotNull String asStringOrEmpty() {
-    final String s = asString();
-    return s == null ? "" : s;
   }
 
   /**

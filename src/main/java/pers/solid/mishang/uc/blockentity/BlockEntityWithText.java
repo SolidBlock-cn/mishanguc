@@ -109,7 +109,7 @@ public abstract class BlockEntityWithText extends BlockEntity
   public static final PacketHandler PACKET_HANDLER = new PacketHandler();
 
   private static class PacketHandler implements ServerPlayNetworking.PlayChannelHandler {
-    protected static Logger LOGGER = LogManager.getLogger(PacketHandler.class);
+    protected static final Logger LOGGER = LogManager.getLogger(PacketHandler.class);
 
     @Override
     public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {

@@ -5,12 +5,10 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,13 +21,6 @@ import pers.solid.mishang.uc.item.FastBuildingToolItem;
 public abstract class PlayerInventoryMixin {
   @Shadow
   public abstract ItemStack getMainHandStack();
-
-  @Shadow
-  @Final
-  public PlayerEntity player;
-
-  @Shadow
-  public abstract void setStack(int slot, ItemStack stack);
 
   @Shadow
   public int selectedSlot;

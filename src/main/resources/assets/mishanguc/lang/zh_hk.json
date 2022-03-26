@@ -312,5 +312,7 @@
   "roadConnectionState.probability.probably_connect_to": "應當連接",
   "vertical_align.mishanguc.bottom": "底",
   "vertical_align.mishanguc.middle": "中",
-  "vertical_align.mishanguc.top": "頂"
+  "vertical_align.mishanguc.top": "頂",
+  "block.mishanguc.simple_handrail": "簡單嘅%s欄杆",
+  "itemGroup.mishanguc.decorations": "迷上城建 | 裝飾"
 }

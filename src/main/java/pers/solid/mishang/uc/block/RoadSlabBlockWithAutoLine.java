@@ -23,7 +23,7 @@ public class RoadSlabBlockWithAutoLine extends SmartRoadSlabBlock<RoadBlockWithA
   public @NotNull BlockState makeState(
       EnumMap<Direction, RoadConnectionState> connectionStateMap, BlockState defaultState) {
     final BlockState baseState = baseBlock.makeState(connectionStateMap, defaultState);
-    BlockState state = RoadSlabBlocks.BLOCK_TO_SLABS.get(baseState.getBlock()).getDefaultState();
+    BlockState state = RoadSlabBlocks.BLOCK_TO_SLABS.get((AbstractRoadBlock) baseState.getBlock()).getDefaultState();
     for (Property<?> property : baseState.getProperties()) {
       if (state.contains(property)) {
         state = sendProperty(baseState, state, property);

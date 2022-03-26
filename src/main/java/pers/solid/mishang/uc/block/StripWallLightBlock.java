@@ -148,8 +148,8 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
     variant.put("facing=down,strip_type=horizontal", new JBlockModel(id).x(180));
     variant.put("facing=down,strip_type=vertical", new JBlockModel(idVertical).x(180));
     for (Direction direction : Direction.Type.HORIZONTAL) {
-      variant.put("strip_type=horizontal,facing", direction, new JBlockModel(id).x(90).y(((int) direction.asRotation())));
-      variant.put("strip_type=vertical,facing", direction, new JBlockModel(idVertical).x(90).y(((int) direction.asRotation())));
+      variant.put("strip_type=horizontal,facing", direction, new JBlockModel(id).x(-90).y(((int) direction.asRotation())));
+      variant.put("strip_type=vertical,facing", direction, new JBlockModel(idVertical).x(-90).y(((int) direction.asRotation())));
     }
     return JState.state(variant);
   }

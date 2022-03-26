@@ -48,7 +48,7 @@ public class HungSignBlockEntityRenderer extends BlockEntityRenderer<HungSignBlo
       matrices.translate(0, 0, 1.0125 / 32f);
       matrices.scale(1 / 16f, -1 / 16f, 1 / 16f);
       for (TextContext textContext : textContexts) {
-        textContext.draw(dispatcher.getTextRenderer(), matrices, vertexConsumers, light, 16, 6);
+        textContext.draw(dispatcher.getTextRenderer(), matrices, vertexConsumers, light, 16, entity.getHeight());
       }
       matrices.pop();
     }

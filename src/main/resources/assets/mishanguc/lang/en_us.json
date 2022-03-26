@@ -165,6 +165,15 @@
   "block.mishanguc.invisible_wall_sign": "Invisible Wall Sign",
   "block.mishanguc.invisible_glowing_wall_sign": "Invisible Glowing Wall Sign",
 
+  "block.mishanguc.handrail": "%s Handrail",
+  "block.mishanguc.handrail_central": "%s Handrail (Central)",
+  "block.mishanguc.handrail_corner": "%s Handrail (Corner)",
+  "block.mishanguc.handrail_stair": "%s Handrail (Stair)",
+  "block.mishanguc.simple_handrail": "Simple %s Handrail",
+  "block.mishanguc.simple_handrail_central": "Simple %s Handrail (Central)",
+  "block.mishanguc.simple_handrail_corner": "Simple %s Handrail (Corner)",
+  "block.mishanguc.simple_handrail_stair": "Simple %s Handrail (Stair)",
+
   "item.mishanguc.road_connection_state_debugging_tool": "Road Connection State Debugging Tool",
   "item.mishanguc.road_connection_state_debugging_tool.tooltip.1": "Click on the road to get line information",
   "item.mishanguc.road_connection_state_debugging_tool.tooltip.2": "on each direction.",
@@ -266,6 +275,7 @@
   "itemGroup.mishanguc.lights": "Mishang Urban Construction | Lights",
   "itemGroup.mishanguc.signs": "Mishang Urban Construction | Signs",
   "itemGroup.mishanguc.tools": "Mishang Urban Construction | Tools",
+  "itemGroup.mishanguc.decorations": "Mishang Urban Construction | Decorations",
 
   "notice.mishanguc.load": "Thank you for installing Mishang Urban Construction mod. This mod is under test, and features are not yet stable. Please use with caution for experiencing new features, instead of directly using the features of this mod in your formal works, as the features may be renamed or removed in future versions. If you find any issues on this mod, feel free to submit the issue on GitHub.",
   "modmenu.descriptionTranslation.mishanguc": "An amount of blocks and items that make a beautiful city! Currently not stable. Please do not use in your formal work!",

@@ -2,7 +2,6 @@ package pers.solid.mishang.uc.blocks;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.MapColor;
-import pers.solid.mishang.uc.RoadTexture;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.block.*;
@@ -346,7 +345,6 @@ public final class RoadBlocks extends MishangucBlocks {
       new RoadBlockWithAutoLine(
           ROAD_SETTINGS,
           RoadWithAutoLine.RoadAutoLineType.BEVEL,
-          RoadTexture.ASPHALT,
           LineColor.WHITE);
   /**
    * 直角自动路块。
@@ -357,7 +355,6 @@ public final class RoadBlocks extends MishangucBlocks {
       new RoadBlockWithAutoLine(
           ROAD_SETTINGS,
           RoadWithAutoLine.RoadAutoLineType.RIGHT_ANGLE,
-          RoadTexture.ASPHALT,
           LineColor.WHITE);
   /**
    * <h2>其他</h2>
