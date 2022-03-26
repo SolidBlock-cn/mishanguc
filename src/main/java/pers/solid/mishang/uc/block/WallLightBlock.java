@@ -146,8 +146,8 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, ARRPGe
       BlockState state, WorldAccess world, BlockPos pos, int flags, int maxUpdateDepth) {
     super.prepare(state, world, pos, flags, maxUpdateDepth);
     final Direction facing = state.get(FACING);
-    if (this instanceof LightConnectable) {
-      ((LightConnectable) this).prepareConnection(state, world, pos, flags, maxUpdateDepth, facing);
+    if (this instanceof final LightConnectable lightConnectable) {
+      lightConnectable.prepareConnection(state, world, pos, flags, maxUpdateDepth, facing);
     }
   }
 

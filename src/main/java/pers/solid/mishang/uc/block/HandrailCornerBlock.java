@@ -118,9 +118,9 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
   public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
     super.onBreak(world, pos, state, player);
     final HitResult raycast = player.raycast(20f, 0, false);
-    if (!(raycast instanceof BlockHitResult)) return;
-    if (world.isClient()) clientCachedHitSide = ((BlockHitResult) raycast).getSide();
-    else serverCachedHitSide = ((BlockHitResult) raycast).getSide();
+    if (!(raycast instanceof BlockHitResult blockHitResult)) return;
+    if (world.isClient()) clientCachedHitSide = blockHitResult.getSide();
+    else serverCachedHitSide = blockHitResult.getSide();
   }
 
   @Override
@@ -139,12 +139,8 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
     final Direction dir2 = facing.getDirectionInAxis(Direction.Axis.Z);
     final HandrailCornerBlock<? extends HandrailBlock> block = (HandrailCornerBlock<? extends HandrailBlock>) state.getBlock();
     switch (hitSide.getAxis()) {
-      case X:
-        world.setBlockState(pos, block.baseHandrail.getDefaultState().with(WATERLOGGED, state.get(WATERLOGGED)).with(HandrailBlock.FACING, dir2), 0);
-        break;
-      case Z:
-        world.setBlockState(pos, block.baseHandrail.getDefaultState().with(WATERLOGGED, state.get(WATERLOGGED)).with(HandrailBlock.FACING, dir1), 0);
-        break;
+      case X -> world.setBlockState(pos, block.baseHandrail.getDefaultState().with(WATERLOGGED, state.get(WATERLOGGED)).with(HandrailBlock.FACING, dir2), 0);
+      case Z -> world.setBlockState(pos, block.baseHandrail.getDefaultState().with(WATERLOGGED, state.get(WATERLOGGED)).with(HandrailBlock.FACING, dir1), 0);
     }
   }
 
@@ -152,8 +148,7 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (stateFrom.getBlock() instanceof Handrails) {
-      final Handrails block = (Handrails) stateFrom.getBlock();
+    if (stateFrom.getBlock() instanceof final Handrails block) {
       return block.baseBlock() == this.baseBlock()
           && block.connectsIn(stateFrom, direction.getOpposite(), state.get(FACING).getDirectionInAxis(direction.rotateYClockwise().getAxis()));
     }

@@ -56,9 +56,9 @@ public interface RoadWithAutoLine extends Road {
       for (BlockPos pos : new BlockPos[]{pos0, pos0.up(), pos0.down()}) {
         BlockState nextState = world.getBlockState(pos.offset(direction, 1));
         Block nextBlock = nextState.getBlock();
-        if (nextBlock instanceof Road) {
+        if (nextBlock instanceof final Road road) {
           RoadConnectionState connectionState =
-              ((Road) nextBlock).getConnectionStateOf(nextState, direction.getOpposite());
+              road.getConnectionStateOf(nextState, direction.getOpposite());
           if (connectionState.mayConnect()) {
             state = connectionState;
             break;
@@ -94,8 +94,8 @@ public interface RoadWithAutoLine extends Road {
       BlockHitResult hit) {
     Road.super.onUseRoad(state, world, pos, player, hand, hit);
     final Item item = player.getStackInHand(hand).getItem();
-    if (item instanceof BlockItem
-        && ((BlockItem) item).getBlock() instanceof RoadWithAutoLine
+    if (item instanceof final BlockItem blockItem
+        && blockItem.getBlock() instanceof RoadWithAutoLine
         && !Direction.Type.VERTICAL.test(hit.getSide())) {
       return ActionResult.PASS;
     }

@@ -109,9 +109,9 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
     boolean connect = false;
 
     // 检查该方向上与之直接毗邻的 LightConnectable 方块，如果符合，则修改自身。
-    if (neighborBlock instanceof LightConnectable) {
+    if (neighborBlock instanceof final LightConnectable lightConnectable) {
       connect =
-          ((LightConnectable) neighborBlock)
+          lightConnectable
               .isConnectedIn(neighborState, facing, direction.getOpposite());
     }
 
@@ -119,10 +119,10 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
     final BlockPos neighborPos2 = pos.offset(direction).offset(facing.getOpposite());
     final BlockState neighborState2 = world.getBlockState(neighborPos2);
     final Block neighborBlock2 = neighborState2.getBlock();
-    if (neighborBlock2 instanceof LightConnectable) {
+    if (neighborBlock2 instanceof final LightConnectable lightConnectable) {
       connect =
           connect
-              || ((LightConnectable) neighborBlock2)
+              || lightConnectable
               .isConnectedIn(neighborState2, direction, facing);
     }
     return newState.with(DIRECTION_TO_PROPERTY.get(direction), connect);

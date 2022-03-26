@@ -71,16 +71,11 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
             Direction direction2 = direction.rotateYClockwise();
             Block block;
             if (lineColor == LineColor.WHITE) {
-              switch (type) {
-                case BEVEL:
-                  block = ROAD_WITH_WHITE_BA_LINE;
-                  break;
-                case RIGHT_ANGLE:
-                  block = ROAD_WITH_WHITE_RA_LINE;
-                  break;
-                default:
-                  throw new IllegalStateException("Unknown angle type: " + type);
-              }
+              block = switch (type) {
+                case BEVEL -> ROAD_WITH_WHITE_BA_LINE;
+                case RIGHT_ANGLE -> ROAD_WITH_WHITE_RA_LINE;
+                default -> throw new IllegalStateException("Unknown angle type: " + type);
+              };
             } else {
               block = null;
             }

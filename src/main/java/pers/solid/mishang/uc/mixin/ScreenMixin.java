@@ -34,14 +34,14 @@ public class ScreenMixin {
       cancellable = true)
   public void handleTextClickMixin(Style style, CallbackInfoReturnable<Boolean> cir) {
     final ClickEvent clickEvent = style.getClickEvent();
-    if (clickEvent instanceof TextClickEvent && client != null && client.player != null) {
+    if (clickEvent instanceof final TextClickEvent textClickEvent && client != null && client.player != null) {
       this.client.player.sendSystemMessage(
-          ((TextClickEvent) clickEvent).text, this.client.player.getUuid());
+          textClickEvent.text, this.client.player.getUuid());
       cir.setReturnValue(true);
       cir.cancel();
-    } else if (clickEvent instanceof NbtClickEvent && client != null && client.player != null) {
+    } else if (clickEvent instanceof final NbtClickEvent nbtClickEvent && client != null && client.player != null) {
       this.client.player.sendSystemMessage(
-          NbtPrettyPrinter.serialize(((NbtClickEvent) clickEvent).nbt),
+          NbtPrettyPrinter.serialize(nbtClickEvent.nbt),
           this.client.player.getUuid());
       cir.setReturnValue(true);
       cir.cancel();

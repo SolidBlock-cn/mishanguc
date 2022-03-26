@@ -119,7 +119,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
           block.onBreak(world, pos, brokenState, miner);
           if (bl1) {
             block.onBroken(world, pos, brokenState);
-            if (miner instanceof ServerPlayerEntity && !((ServerPlayerEntity) miner).interactionManager.isCreative()) {
+            if (miner instanceof final ServerPlayerEntity serverPlayerEntity && !serverPlayerEntity.interactionManager.isCreative()) {
               block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
             }
           }
@@ -130,7 +130,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
           block.onBreak(world, pos, brokenState, miner);
           if (bl1) {
             block.onBroken(world, pos, brokenState);
-            if (miner instanceof ServerPlayerEntity && !((ServerPlayerEntity) miner).interactionManager.isCreative()) {
+            if (miner instanceof final ServerPlayerEntity serverPlayerEntity && !(serverPlayerEntity.interactionManager.isCreative())) {
               block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
             }
           }
@@ -155,12 +155,12 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
     final ClientWorld world = worldRenderContext.world();
     BlockState state = blockOutlineContext.blockState();
     final HitResult crosshairTarget = MinecraftClient.getInstance().crosshairTarget;
-    if (!(crosshairTarget instanceof BlockHitResult)) {
+    if (!(crosshairTarget instanceof final BlockHitResult blockHitResult)) {
       return true;
     }
     boolean isTop =
         crosshairTarget.getPos().y
-            - (double) ((BlockHitResult) crosshairTarget).getBlockPos().getY()
+            - (double) blockHitResult.getBlockPos().getY()
             > 0.5D;
     if (BLOCK_TO_SLAB.containsKey(state.getBlock())) {
       state = toSlab(state, BLOCK_TO_SLAB.get(state.getBlock()));

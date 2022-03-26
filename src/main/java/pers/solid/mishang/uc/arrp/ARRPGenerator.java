@@ -271,10 +271,9 @@ public interface ARRPGenerator {
    * @return 方块的 id。
    */
   default Identifier getIdentifier() {
-    if (!(this instanceof Block)) {
+    if (!(this instanceof final Block block)) {
       throw new RuntimeException("The 'getIdentifier' method can only be used for block!");
     }
-    final Block block = (Block) this;
     return Registry.BLOCK.getId(block);
   }
 
