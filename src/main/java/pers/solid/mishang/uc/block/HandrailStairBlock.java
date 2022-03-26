@@ -188,9 +188,9 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
     List<VoxelShape> shapes = new ArrayList<>();
 
     // 沿着楼梯前进上升的方向的单位向量。
-    final Vec3d vector = new Vec3d(facing.getUnitVector());
+    final Vec3d vector = Vec3d.of(facing.getVector());
     // 沿着楼梯前进方向看，向右的单位向量。
-    final Vec3d vector2 = new Vec3d(facing.rotateYClockwise().getUnitVector());
+    final Vec3d vector2 = Vec3d.of(facing.rotateYClockwise().getVector());
     Vec3d basePoint = new Vec3d(0.5d, 0, 0.5d).add(vector.multiply(0.5));
     switch (position) {
       case LEFT:
