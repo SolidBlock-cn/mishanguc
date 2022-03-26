@@ -10,6 +10,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
@@ -29,6 +30,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -253,6 +255,21 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
           && block.connectsIn(stateFrom, direction.getOpposite(), equivalentFacing(state));
     }
     return super.isSideInvisible(state, stateFrom, direction);
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public FluidState getFluidState(BlockState state) {
+    return (state.get(WATERLOGGED)) ? Fluids.WATER.getStill(false) : Fluids.EMPTY.getDefaultState();
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    if (state.get(WATERLOGGED)) {
+      world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+    }
+    return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
   }
 
   @Environment(EnvType.CLIENT)
