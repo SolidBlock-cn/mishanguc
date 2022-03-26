@@ -5,6 +5,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
+import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.GlowingHungSignBlock;
 import pers.solid.mishang.uc.block.HungSignBarBlock;
 import pers.solid.mishang.uc.block.HungSignBlock;
@@ -85,6 +86,14 @@ public final class HungSignBlocks extends MishangucBlocks {
     DARK_OAK_HUNG_SIGN.barTexture = "block/dark_oak_log";
     CRIMSON_HUNG_SIGN.barTexture = "block/crimson_stem";
     WARPED_HUNG_SIGN.barTexture = "block/warped_stem";
+    OAK_HUNG_SIGN.textureTop = "block/oak_log";
+    SPRUCE_HUNG_SIGN.textureTop = "block/spruce_log";
+    BIRCH_HUNG_SIGN.textureTop = "block/birch_log";
+    JUNGLE_HUNG_SIGN.textureTop = "block/jungle_log";
+    ACACIA_HUNG_SIGN.textureTop = "block/acacia_log";
+    DARK_OAK_HUNG_SIGN.textureTop = "block/dark_oak_log";
+    CRIMSON_HUNG_SIGN.textureTop = "block/crimson_stem";
+    WARPED_HUNG_SIGN.textureTop = "block/warped_stem";
     OAK_HUNG_SIGN_BAR.texture = "block/oak_log";
     SPRUCE_HUNG_SIGN_BAR.texture = "block/spruce_log";
     BIRCH_HUNG_SIGN_BAR.texture = "block/birch_log";
@@ -252,6 +261,32 @@ public final class HungSignBlocks extends MishangucBlocks {
   public static final HungSignBarBlock BLACK_CONCRETE_HUNG_SIGN_BAR =
       new HungSignBarBlock(Blocks.BLACK_CONCRETE);
 
+  /**
+   * 由所有混凝土告示牌杆组成的映射。
+   */
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final Map<DyeColor, HungSignBarBlock> CONCRETE_HUNG_SIGN_BARS =
+      Util.make(
+          new EnumMap<>(DyeColor.class),
+          map -> {
+            map.put(DyeColor.WHITE, WHITE_CONCRETE_HUNG_SIGN_BAR);
+            map.put(DyeColor.ORANGE, ORANGE_CONCRETE_HUNG_SIGN_BAR);
+            map.put(DyeColor.MAGENTA, MAGENTA_CONCRETE_HUNG_SIGN_BAR);
+            map.put(DyeColor.LIGHT_BLUE, LIGHT_BLUE_CONCRETE_HUNG_SIGN_BAR);
+            map.put(DyeColor.YELLOW, YELLOW_CONCRETE_HUNG_SIGN_BAR);
+            map.put(DyeColor.LIME, LIME_CONCRETE_HUNG_SIGN_BAR);
+            map.put(DyeColor.PINK, PINK_CONCRETE_HUNG_SIGN_BAR);
+            map.put(DyeColor.GRAY, GRAY_CONCRETE_HUNG_SIGN_BAR);
+            map.put(DyeColor.LIGHT_GRAY, LIGHT_GRAY_CONCRETE_HUNG_SIGN_BAR);
+            map.put(DyeColor.CYAN, CYAN_CONCRETE_HUNG_SIGN_BAR);
+            map.put(DyeColor.PURPLE, PURPLE_CONCRETE_HUNG_SIGN_BAR);
+            map.put(DyeColor.BLUE, BLUE_CONCRETE_HUNG_SIGN_BAR);
+            map.put(DyeColor.BROWN, BROWN_CONCRETE_HUNG_SIGN_BAR);
+            map.put(DyeColor.GREEN, GREEN_CONCRETE_HUNG_SIGN_BAR);
+            map.put(DyeColor.RED, RED_CONCRETE_HUNG_SIGN_BAR);
+            map.put(DyeColor.BLACK, BLACK_CONCRETE_HUNG_SIGN_BAR);
+          });
+
   // 陶瓦告示牌部分
 
   @RegisterIdentifier
@@ -408,6 +443,32 @@ public final class HungSignBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final HungSignBarBlock BLACK_TERRACOTTA_HUNG_SIGN_BAR =
       new HungSignBarBlock(Blocks.BLACK_TERRACOTTA);
+
+  /**
+   * 由所有陶瓦告示牌杆组成的映射。
+   */
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final Map<DyeColor, HungSignBarBlock> TERRACOTTA_HUNG_SIGN_BARS =
+      Util.make(
+          new EnumMap<>(DyeColor.class),
+          map -> {
+            map.put(DyeColor.WHITE, WHITE_TERRACOTTA_HUNG_SIGN_BAR);
+            map.put(DyeColor.ORANGE, ORANGE_TERRACOTTA_HUNG_SIGN_BAR);
+            map.put(DyeColor.MAGENTA, MAGENTA_TERRACOTTA_HUNG_SIGN_BAR);
+            map.put(DyeColor.LIGHT_BLUE, LIGHT_BLUE_TERRACOTTA_HUNG_SIGN_BAR);
+            map.put(DyeColor.YELLOW, YELLOW_TERRACOTTA_HUNG_SIGN_BAR);
+            map.put(DyeColor.LIME, LIME_TERRACOTTA_HUNG_SIGN_BAR);
+            map.put(DyeColor.PINK, PINK_TERRACOTTA_HUNG_SIGN_BAR);
+            map.put(DyeColor.GRAY, GRAY_TERRACOTTA_HUNG_SIGN_BAR);
+            map.put(DyeColor.LIGHT_GRAY, LIGHT_GRAY_TERRACOTTA_HUNG_SIGN_BAR);
+            map.put(DyeColor.CYAN, CYAN_TERRACOTTA_HUNG_SIGN_BAR);
+            map.put(DyeColor.PURPLE, PURPLE_TERRACOTTA_HUNG_SIGN_BAR);
+            map.put(DyeColor.BLUE, BLUE_TERRACOTTA_HUNG_SIGN_BAR);
+            map.put(DyeColor.BROWN, BROWN_TERRACOTTA_HUNG_SIGN_BAR);
+            map.put(DyeColor.GREEN, GREEN_TERRACOTTA_HUNG_SIGN_BAR);
+            map.put(DyeColor.RED, RED_TERRACOTTA_HUNG_SIGN_BAR);
+            map.put(DyeColor.BLACK, BLACK_TERRACOTTA_HUNG_SIGN_BAR);
+          });
 
   // 发光的混凝土告示牌
 
@@ -763,8 +824,12 @@ public final class HungSignBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final GlowingHungSignBlock GLOWING_SNOW_HUNG_SIGN = new GlowingHungSignBlock(Blocks.SNOW_BLOCK);
 
-//  @RegisterIdentifier
-//  public static final HungSignBarBlock SNOW_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.SNOW_BLOCK);
+  // 冰
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.1.7")
+  @Translucent
+  public static final HungSignBlock ICE_HUNG_SIGN = new HungSignBlock(Blocks.ICE);
 
   static {
     SNOW_HUNG_SIGN.baseTexture = "block/snow";
@@ -773,6 +838,7 @@ public final class HungSignBlocks extends MishangucBlocks {
     GLOWING_SNOW_HUNG_SIGN.baseTexture = "block/snow";
     GLOWING_SNOW_HUNG_SIGN.barTexture = "block/packed_ice";
     GLOWING_SNOW_HUNG_SIGN.textureTop = "block/packed_ice";
+    ICE_HUNG_SIGN.textureTop = "block/blue_ice";
   }
 
   // 浮冰

@@ -10,10 +10,10 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tag.TagKey;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
@@ -29,7 +29,7 @@ import pers.solid.mishang.uc.item.FastBuildingToolItem;
 import pers.solid.mishang.uc.item.InteractsWithEntity;
 import pers.solid.mishang.uc.item.MishangucItems;
 
-public class MishangUc implements ModInitializer {
+public class Mishanguc implements ModInitializer {
   public static final Logger MISHANG_LOGGER = LoggerFactory.getLogger("Mishang Urban Construction");
   /**
    * 比 {@link AttackBlockCallback#EVENT} 更好！
@@ -196,6 +196,6 @@ public class MishangUc implements ModInitializer {
             server.sendSystemMessage(new TranslatableText("notice.mishanguc.load"), Util.NIL_UUID));
 
     // 注册可燃方块
-    FlammableBlockRegistry.getDefaultInstance().add(TagRegistry.block(new Identifier("mishanguc", "burnable")), 5, 20);
+    FlammableBlockRegistry.getDefaultInstance().add(TagKey.of(Registry.BLOCK_KEY,new Identifier("mishanguc", "burnable")), 5, 20);
   }
 }

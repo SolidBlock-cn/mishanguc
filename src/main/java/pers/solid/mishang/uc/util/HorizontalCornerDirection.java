@@ -5,6 +5,7 @@ import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public enum HorizontalCornerDirection implements StringIdentifiable {
@@ -33,7 +34,7 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
     this.dir2 = dir2;
   }
 
-  public static @Nullable HorizontalCornerDirection fromDirections(Direction dir1, Direction dir2) {
+  public static @Nullable HorizontalCornerDirection fromDirections(@NotNull Direction dir1, @NotNull Direction dir2) {
     ImmutableSet<Direction> directions = ImmutableSet.of(dir1, dir2);
     for (HorizontalCornerDirection direction : HorizontalCornerDirection.values()) {
       if (directions.equals(ImmutableSet.of(direction.dir1, direction.dir2))) {

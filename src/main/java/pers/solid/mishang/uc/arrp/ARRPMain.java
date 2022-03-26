@@ -9,17 +9,16 @@ import net.devtech.arrp.json.tags.JTag;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.SimpleModel;
 import pers.solid.mishang.uc.block.*;
-import pers.solid.mishang.uc.blocks.RoadBlocks;
-import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
+import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.MishangucItems;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 
@@ -29,7 +28,6 @@ import java.util.Arrays;
 @SuppressWarnings({"SameParameterValue"})
 public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   private static final RuntimeResourcePack PACK = RuntimeResourcePack.create("mishanguc");
-  private static final Field[] FIELDS = MishangUtils.blockStream().toArray(Field[]::new);
 
   private static Identifier blockIdentifier(String path) {
     return new Identifier("mishanguc", "block/" + path);
@@ -113,88 +111,190 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   }
 
   private static void addTags() {
-    final JTag asphaltRoadBlocks = new JTag();
-    final JTag asphaltRoadSlabs = new JTag();
-    final JTag whiteStripWallLights = new JTag();
-    final JTag whiteWallLights = new JTag();
-    final JTag whiteCornerLights = new JTag();
-    final JTag whiteLightDecorations = new JTag();
-    final JTag yellowStripWallLights = new JTag();
-    final JTag yellowWallLights = new JTag();
-    final JTag yellowCornerLights = new JTag();
-    final JTag yellowLightDecorations = new JTag();
-    final JTag cyanStripWallLights = new JTag();
-    final JTag cyanWallLights = new JTag();
-    final JTag cyanCornerLights = new JTag();
-    final JTag cyanLightDecorations = new JTag();
-    final JTag woodenWallSigns = new JTag();
-    final JTag concreteWallSigns = new JTag();
-    final JTag terracottaWallSigns = new JTag();
-    final JTag wallSigns = new JTag();
-    final JTag glowingConcreteWallSigns = new JTag();
-    final JTag glowingTerracottaWallSigns = new JTag();
-    final JTag glowingWallSigns = new JTag();
-    for (Field field : FIELDS) {
-      final Class<?> type = field.getType();
-      final String name = field.getName().toLowerCase();
-      final Identifier identifier = new Identifier("mishanguc", name);
-      if (AbstractRoadBlock.class.isAssignableFrom(type) && name.startsWith("asphalt_")) {
-        asphaltRoadBlocks.add(identifier);
-      } else if (AbstractRoadSlabBlock.class.isAssignableFrom(type)
-          && name.startsWith("asphalt_")) {
-        asphaltRoadSlabs.add(identifier);
-      } else if (StripWallLightBlock.class.isAssignableFrom(type) && name.startsWith("white_")) {
-        whiteStripWallLights.add(identifier);
-      } else if (WallLightBlock.class.isAssignableFrom(type) && name.startsWith("white_")) {
-        whiteWallLights.add(identifier);
-      } else if (CornerLightBlock.class.isAssignableFrom(type) && name.startsWith("white_")) {
-        whiteCornerLights.add(identifier);
-      } else if (StripWallLightBlock.class.isAssignableFrom(type) && name.startsWith("yellow_")) {
-        yellowStripWallLights.add(identifier);
-      } else if (WallLightBlock.class.isAssignableFrom(type) && name.startsWith("yellow_")) {
-        yellowWallLights.add(identifier);
-      } else if (CornerLightBlock.class.isAssignableFrom(type) && name.startsWith("yellow_")) {
-        yellowCornerLights.add(identifier);
-      } else if (StripWallLightBlock.class.isAssignableFrom(type) && name.startsWith("cyan_")) {
-        cyanStripWallLights.add(identifier);
-      } else if (WallLightBlock.class.isAssignableFrom(type) && name.startsWith("cyan_")) {
-        cyanWallLights.add(identifier);
-      } else if (CornerLightBlock.class.isAssignableFrom(type) && name.startsWith("cyan_")) {
-        cyanCornerLights.add(identifier);
-      } else if (AutoConnectWallLightBlock.class.isAssignableFrom(type)
-          && name.startsWith("white_")) {
-        whiteLightDecorations.add(identifier);
-      } else if (GlowingWallSignBlock.class.isAssignableFrom(type)) {
-        if (name.contains("concrete")) glowingConcreteWallSigns.add(identifier);
-        else if (name.contains("terracotta")) glowingTerracottaWallSigns.add(identifier);
-        else glowingWallSigns.add(identifier);
-      } else if (WallSignBlock.class.isAssignableFrom(type)) {
-        if (name.contains("concrete")) concreteWallSigns.add(identifier);
-        else if (name.contains("terracotta")) terracottaWallSigns.add(identifier);
-        else if (name.contains("oak_")
-            || name.contains("birch_")
-            || name.contains("spruce_")
-            || name.contains("jungle")
-            || name.contains("acacia_")
-            || name.contains("warped_")
-            || name.contains("crimson")) woodenWallSigns.tag(identifier);
-        else wallSigns.add(identifier);
+    // 道路部分
+    final JImprovedTag roadBlocks = new JImprovedTag();
+    final JImprovedTag roadSlabs = new JImprovedTag();
+
+    // 灯光部分
+    final JImprovedTag whiteStripWallLights = new JImprovedTag();
+    final JImprovedTag whiteWallLights = new JImprovedTag();
+    final JImprovedTag whiteCornerLights = new JImprovedTag();
+    final JImprovedTag whiteLightDecorations = new JImprovedTag();
+    final JImprovedTag yellowStripWallLights = new JImprovedTag();
+    final JImprovedTag yellowWallLights = new JImprovedTag();
+    final JImprovedTag yellowCornerLights = new JImprovedTag();
+    final JImprovedTag yellowLightDecorations = new JImprovedTag();
+    final JImprovedTag cyanStripWallLights = new JImprovedTag();
+    final JImprovedTag cyanWallLights = new JImprovedTag();
+    final JImprovedTag cyanCornerLights = new JImprovedTag();
+    final JImprovedTag cyanLightDecorations = new JImprovedTag();
+
+    // 墙上的告示牌部分
+    final JImprovedTag woodenWallSigns = new JImprovedTag();
+    final JImprovedTag concreteWallSigns = new JImprovedTag();
+    final JImprovedTag terracottaWallSigns = new JImprovedTag();
+    final JImprovedTag wallSigns = new JImprovedTag();
+    final JImprovedTag glowingConcreteWallSigns = new JImprovedTag();
+    final JImprovedTag glowingTerracottaWallSigns = new JImprovedTag();
+    final JImprovedTag glowingWallSigns = new JImprovedTag();
+    final JImprovedTag fullConcreteWallSigns = new JImprovedTag();
+    final JImprovedTag fullTerracottaWallSigns = new JImprovedTag();
+    final JImprovedTag fullWallSigns = new JImprovedTag();
+
+    // 悬挂的告示牌部分
+    final JImprovedTag concreteHungSigns = new JImprovedTag();
+    final JImprovedTag terracottaHungSigns = new JImprovedTag();
+    final JImprovedTag hungSigns = new JImprovedTag();
+    final JImprovedTag glowingConcreteHungSigns = new JImprovedTag();
+    final JImprovedTag glowingTerracottaHungSigns = new JImprovedTag();
+    final JImprovedTag glowingHungSigns = new JImprovedTag();
+    // 悬挂的告示牌杆部分
+    final JImprovedTag concreteHungSignBars = new JImprovedTag();
+    final JImprovedTag terracottaHungSignBars = new JImprovedTag();
+    final JImprovedTag hungSignBars = new JImprovedTag();
+
+
+    // 扶手部分，预留
+
+    // 道路部分
+    MishangUtils.<Block>blockInstanceStream(RoadBlocks.class).forEach(
+        block -> {
+          if (block instanceof AbstractRoadBlock) {
+            roadBlocks.addBlock(block);
+          }
+        }
+    );
+    MishangUtils.<Block>blockInstanceStream(RoadSlabBlocks.class).forEach(
+        block -> {
+          if (block instanceof AbstractRoadSlabBlock) {
+            roadSlabs.addBlock(block);
+          }
+        }
+    );
+
+    // 灯光部分
+    MishangUtils.<Block>blockInstanceStream(LightBlocks.class).forEach(
+        block -> {
+          if (block instanceof StripWallLightBlock) {
+            switch (((StripWallLightBlock) block).lightColor) {
+              case "white":
+                whiteStripWallLights.addBlock(block);
+                break;
+              case "yellow":
+                yellowStripWallLights.addBlock(block);
+                break;
+              case "cyan":
+                cyanStripWallLights.addBlock(block);
+                break;
+            }
+          } else if (block instanceof AutoConnectWallLightBlock) {
+            switch (((AutoConnectWallLightBlock) block).lightColor) {
+              case "white":
+                whiteLightDecorations.addBlock(block);
+                break;
+              case "yellow":
+                yellowLightDecorations.addBlock(block);
+                break;
+              case "cyan":
+                cyanLightDecorations.addBlock(block);
+                break;
+            }
+          } else if (block instanceof WallLightBlock) {
+            switch (((WallLightBlock) block).lightColor) {
+              case "white":
+                whiteWallLights.addBlock(block);
+                break;
+              case "yellow":
+                yellowWallLights.addBlock(block);
+                break;
+              case "cyan":
+                cyanWallLights.addBlock(block);
+                break;
+            }
+          } else if (block instanceof CornerLightBlock) {
+            switch (((CornerLightBlock) block).lightColor) {
+              case "white":
+                whiteCornerLights.addBlock(block);
+                break;
+              case "yellow":
+                yellowCornerLights.addBlock(block);
+                break;
+              case "cyan":
+                cyanCornerLights.addBlock(block);
+            }
+          }
+        }
+    );
+
+    // 悬挂的告示牌部分
+    MishangUtils.<Block>blockInstanceStream(HungSignBlocks.class).forEach(block -> {
+      if (block instanceof GlowingHungSignBlock) {
+        if (HungSignBlocks.GLOWING_CONCRETE_HUNG_SIGNS.containsValue(block)) {
+          glowingConcreteHungSigns.addBlock(block);
+        } else if (HungSignBlocks.GLOWING_TERRACOTTA_HUNG_SIGNS.containsValue(block)) {
+          glowingTerracottaHungSigns.addBlock(block);
+        } else {
+          glowingHungSigns.addBlock(block);
+        }
+      } else if (block instanceof HungSignBlock) {
+        if (HungSignBlocks.CONCRETE_HUNG_SIGNS.containsValue(block)) {
+          concreteHungSigns.addBlock(block);
+        } else if (HungSignBlocks.TERRACOTTA_HUNG_SIGNS.containsValue(block)) {
+          terracottaHungSigns.addBlock(block);
+        } else {
+          hungSigns.addBlock(block);
+        }
+      } else if (block instanceof HungSignBarBlock) {
+        if (HungSignBlocks.CONCRETE_HUNG_SIGN_BARS.containsValue(block)) {
+          concreteHungSignBars.addBlock(block);
+        } else if (HungSignBlocks.TERRACOTTA_HUNG_SIGN_BARS.containsValue(block)) {
+          terracottaHungSignBars.addBlock(block);
+        } else {
+          hungSignBars.addBlock(block);
+        }
       }
-    }
+    });
+
+    // 墙上的告示牌部分
+    MishangUtils.<Block>blockInstanceStream(WallSignBlocks.class).forEach(block -> {
+      if (block instanceof GlowingWallSignBlock) {
+        if (WallSignBlocks.GLOWING_CONCRETE_WALL_SIGNS.containsValue(block)) {
+          glowingConcreteWallSigns.addBlock(block);
+        } else if (WallSignBlocks.GLOWING_TERRACOTTA_WALL_SIGNS.containsValue(block)) {
+          glowingTerracottaWallSigns.addBlock(block);
+        } else {
+          glowingWallSigns.addBlock(block);
+        }
+      } else if (block instanceof FullWallSignBlock) {
+        if (WallSignBlocks.FULL_CONCRETE_WALL_SIGNS.containsValue(block)) {
+          fullConcreteWallSigns.addBlock(block);
+        } else if (WallSignBlocks.FULL_TERRACOTTA_WALL_SIGNS.containsValue(block)) {
+          fullTerracottaWallSigns.addBlock(block);
+        } else {
+          fullWallSigns.addBlock(block);
+        }
+      } else if (block instanceof WallSignBlock) {
+        if (WallSignBlocks.CONCRETE_WALL_SIGNS.containsValue(block)) {
+          concreteWallSigns.addBlock(block);
+        } else if (WallSignBlocks.TERRACOTTA_WALL_SIGNS.containsValue(block)) {
+          terracottaWallSigns.addBlock(block);
+        } else {
+          wallSigns.addBlock(block);
+        }
+      }
+    });
+
+    // 道路部分
+    PACK.addTag(new Identifier("mishanguc", "blocks/road_blocks"), roadBlocks);
+    PACK.addTag(new Identifier("mishanguc", "items/road_blocks"), roadBlocks);
+    PACK.addTag(new Identifier("mishanguc", "blocks/road_slabs"), roadSlabs);
+    PACK.addTag(new Identifier("mishanguc", "items/road_slabs"), roadSlabs);
+
+    // 灯光部分
     whiteWallLights.tag(new Identifier("mishanguc", "white_strip_wall_lights"));
     yellowWallLights.tag(new Identifier("mishanguc", "yellow_strip_wall_lights"));
     cyanWallLights.tag(new Identifier("mishanguc", "cyan_strip_wall_lights"));
-    wallSigns
-        .tag(new Identifier("mishanguc", "wooden_wall_signs"))
-        .tag(new Identifier("mishanguc", "concrete_wall_signs"))
-        .tag(new Identifier("mishanguc", "terracotta_wall_signs"));
-    glowingWallSigns
-        .tag(new Identifier("mishanguc", "glowing_concrete_wall_signs"))
-        .tag(new Identifier("mishanguc", "glowing_terracotta_wall_signs"));
-    PACK.addTag(new Identifier("mishanguc", "blocks/road_blocks"), asphaltRoadBlocks);
-    PACK.addTag(new Identifier("mishanguc", "items/road_blocks"), asphaltRoadBlocks);
-    PACK.addTag(new Identifier("mishanguc", "blocks/road_slabs"), asphaltRoadSlabs);
-    PACK.addTag(new Identifier("mishanguc", "items/road_slabs"), asphaltRoadSlabs);
+
     PACK.addTag(new Identifier("mishanguc", "blocks/white_strip_wall_lights"), whiteStripWallLights);
     PACK.addTag(new Identifier("mishanguc", "items/white_strip_wall_lights"), whiteStripWallLights);
     PACK.addTag(new Identifier("mishanguc", "blocks/white_wall_lights"), whiteWallLights);
@@ -219,6 +319,53 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     PACK.addTag(new Identifier("mishanguc", "items/cyan_corner_lights"), cyanCornerLights);
     PACK.addTag(new Identifier("mishanguc", "blocks/cyan_light_decorations"), cyanLightDecorations);
     PACK.addTag(new Identifier("mishanguc", "items/cyan_light_decorations"), cyanLightDecorations);
+
+    // 墙上的告示牌部分
+    wallSigns
+        .tag(new Identifier("mishanguc", "wooden_wall_signs"))
+        .tag(new Identifier("mishanguc", "concrete_wall_signs"))
+        .tag(new Identifier("mishanguc", "terracotta_wall_signs"));
+    glowingWallSigns
+        .tag(new Identifier("mishanguc", "glowing_concrete_wall_signs"))
+        .tag(new Identifier("mishanguc", "glowing_terracotta_wall_signs"));
+    fullWallSigns
+        .tag(new Identifier("mishanguc", "full_concrete_wall_signs"))
+        .tag(new Identifier("mishanguc", "full_terracotta_wall_signs"));
+    registerTag(woodenWallSigns, "wooden_wall_signs");
+    registerTag(concreteWallSigns, "concrete_wall_signs");
+    registerTag(terracottaWallSigns, "terracotta_wall_signs");
+    registerTag(wallSigns, "wall_signs");
+    registerTag(glowingConcreteWallSigns, "glowing_concrete_wall_signs");
+    registerTag(glowingTerracottaWallSigns, "glowing_terracotta_wall_signs");
+    registerTag(glowingWallSigns, "glowing_wall_signs");
+    registerTag(fullConcreteWallSigns, "full_concrete_wall_signs");
+    registerTag(fullTerracottaWallSigns, "full_terracotta_wall_signs");
+    registerTag(fullWallSigns, "full_wall_signs");
+
+    // 悬挂的告示牌部分
+    hungSigns
+        .tag(new Identifier("mishanguc", "concrete_hung_signs"))
+        .tag(new Identifier("mishanguc", "terracotta_hung_signs"));
+    glowingHungSigns
+        .tag(new Identifier("mishanguc", "glowing_concrete_hung_signs"))
+        .tag(new Identifier("mishanguc", "glowing_terracotta_hung_signs"));
+    hungSignBars
+        .tag(new Identifier("mishanguc", "concrete_hung_sign_bars"))
+        .tag(new Identifier("mishanguc", "terracotta_hung_sign_bars"));
+    registerTag(concreteHungSigns, "concrete_hung_signs");
+    registerTag(terracottaHungSigns, "terracotta_hung_signs");
+    registerTag(hungSigns, "hung_signs");
+    registerTag(glowingConcreteHungSigns, "glowing_concrete_hung_signs");
+    registerTag(glowingTerracottaHungSigns, "glowing_terracotta_hung_signs");
+    registerTag(glowingHungSigns, "glowing_hung_signs");
+    registerTag(concreteHungSignBars, "concrete_hung_sign_bars");
+    registerTag(terracottaHungSignBars, "terracotta_hung_sign_bars");
+    registerTag(hungSignBars, "hung_sign_bars");
+  }
+
+  private static void registerTag(JTag tag, String name) {
+    PACK.addTag(new Identifier("mishanguc", "blocks/" + name), tag);
+    PACK.addTag(new Identifier("mishanguc", "items/" + name), tag);
   }
 
   private static void addItemModels(RuntimeResourcePack pack) {

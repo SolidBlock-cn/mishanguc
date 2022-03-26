@@ -20,6 +20,7 @@ import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.blockentity.FullWallSignBlockEntity;
+import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
@@ -30,7 +31,7 @@ import pers.solid.mishang.uc.screen.HungSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
 
 @Environment(EnvType.CLIENT)
-public class MishangUcClient implements ClientModInitializer {
+public class MishangucClient implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
     // 设置相应的 BlockLayer
@@ -41,12 +42,18 @@ public class MishangUcClient implements ClientModInitializer {
                 Block value = (Block) field.get(null);
                 if (field.isAnnotationPresent(Cutout.class)) {
                   BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout());
+                  if (value instanceof HandrailBlock) {
+                    BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ((HandrailBlock) value).central(), ((HandrailBlock) value).corner(), ((HandrailBlock) value).stair());
+                  }
                 }
                 if (field.isAnnotationPresent(Translucent.class)) {
                   BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getTranslucent());
+                  if (value instanceof HandrailBlock) {
+                    BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), ((HandrailBlock) value).central(), ((HandrailBlock) value).corner(), ((HandrailBlock) value).stair());
+                  }
                 }
               } catch (IllegalAccessException | ClassCastException e) {
-                MishangUc.MISHANG_LOGGER.warn("Error when setting BlockLayers:", e);
+                Mishanguc.MISHANG_LOGGER.warn("Error when setting BlockLayers:", e);
               }
             });
 
@@ -93,7 +100,7 @@ public class MishangUcClient implements ClientModInitializer {
                               (WallSignBlockEntity) blockEntity, blockPos)));
             }
           } catch (NullPointerException | ClassCastException exception) {
-            MishangUc.MISHANG_LOGGER.error("Error when creating sign edit screen:", exception);
+            Mishanguc.MISHANG_LOGGER.error("Error when creating sign edit screen:", exception);
           }
         });
   }

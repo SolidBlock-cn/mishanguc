@@ -3,8 +3,6 @@ package pers.solid.mishang.uc;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
 import com.google.common.collect.Streams;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.util.BlockRotation;
@@ -21,8 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.blocks.*;
-import pers.solid.mishang.uc.util.LineColor;
-import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.TextContext;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
@@ -146,7 +142,8 @@ public class MishangUtils {
             Arrays.stream(RoadSlabBlocks.class.getFields()),
             Arrays.stream(LightBlocks.class.getFields()),
             Arrays.stream(HungSignBlocks.class.getFields()),
-            Arrays.stream(WallSignBlocks.class.getFields()))
+            Arrays.stream(WallSignBlocks.class.getFields()),
+            Arrays.stream(HandrailBlocks.class.getFields()))
         .filter(
             field -> {
               int modifier = field.getModifiers();
@@ -185,7 +182,7 @@ public class MishangUtils {
    * @return 类的所有 public static final 字段的值。
    */
   @ApiStatus.AvailableSince("0.1.7")
-  public static <T> Stream<T> getInstances(Class<?> cls) {
+  public static <T> Stream<T> blockInstanceStream(Class<?> cls) {
     return blockStream(cls).map(field -> {
       try {
         //noinspection unchecked
@@ -249,50 +246,6 @@ public class MishangUtils {
         }
       default:
         return axis;
-    }
-  }
-
-  /**
-   * 根据线路颜色和类型，返回其对应的线路材质名称。主要用于生成材质。例如：
-   * <pre>
-   *   straight(WHITE, NORMAL) = "white_straight_line";
-   *   straight(YELLOW, NORMAL) = "yellow_straight_line";
-   *   straight(WHITE, DOUBLE) = "white_straight_double_line";
-   * </pre>
-   *
-   * @param lineColor 线路颜色。
-   * @param lineType  线路类型。
-   * @return 对应的材质id的路径部分（不含“{@code mishanguc:block/}”前缀）。
-   */
-  @ApiStatus.AvailableSince("0.1.7")
-  @Environment(EnvType.CLIENT)
-  public static String straight(LineColor lineColor, LineType lineType) {
-    if (lineType == LineType.NORMAL) {
-      return lineColor.asString() + "_straight_line";
-    } else {
-      return lineColor.asString() + "_straight_" + lineType.asString() + "_line";
-    }
-  }
-
-  /**
-   * 根据线路颜色和类型，返回其对应的线路材质名称。主要用于生成材质。例如：
-   * <pre>
-   *   straight(WHITE, "bevel_angle" NORMAL) = "white_bevel_angle_line";
-   *   straight(YELLOW, "bevel_angle" NORMAL) = "yellow_bevel_angle_line";
-   *   straight(WHITE, "bevel_angle" DOUBLE) = "white_bevel_angle_double_line";
-   * </pre>
-   *
-   * @param lineColor 线路颜色。
-   * @param lineType  线路类型。
-   * @return 对应的材质id的路径部分（不含“{@code mishanguc:block/}”前缀）。
-   */
-  @ApiStatus.AvailableSince("0.1.7")
-  @Environment(EnvType.CLIENT)
-  public static String line(LineColor lineColor, String lineShape, LineType lineType) {
-    if (lineType == LineType.NORMAL) {
-      return lineColor.asString() + "_" + lineShape + "_line";
-    } else {
-      return lineColor.asString() + "_" + lineShape + "_" + lineType.asString() + "_line";
     }
   }
 

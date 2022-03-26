@@ -38,8 +38,8 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
-import pers.solid.mishang.uc.MishangUc;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.arrp.ARRPGenerator;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 
@@ -186,7 +186,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
       if (editor != null && editor != player) {
         // 这种情况下，告示牌被占用，玩家无权编辑。In this case, the sign is occupied, and the players has not editing
         // permission.
-        MishangUc.MISHANG_LOGGER.warn("Refused to edit because the editor is {}.", editor);
+        Mishanguc.MISHANG_LOGGER.warn("Refused to edit because the editor is {}.", editor);
         return ActionResult.FAIL;
       }
       // 此时告示牌已被编辑。
@@ -211,18 +211,11 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     final JVariant jVariant = new JVariant();
     final JState state = JState.state(jVariant);
     for (WallMountLocation wallMountLocation : WallMountLocation.values()) {
-      final int x;
-      switch (wallMountLocation) {
-        case WALL:
-          x = 0;
-          break;
-        case FLOOR:
-          x = 90;
-          break;
-        default:
-          x = -90;
-          break;
-      }
+      final int x = switch (wallMountLocation) {
+        case WALL -> 0;
+        case FLOOR -> 90;
+        default -> -90;
+      };
       for (Direction direction : Direction.Type.HORIZONTAL) {
         float y = direction.asRotation();
         jVariant.put(
@@ -244,5 +237,13 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     if (texture != null) return texture;
     final Identifier id = Registry.BLOCK.getId(baseBlock);
     return String.format("%s:block/%s", id.getNamespace(), id.getPath());
+  }
+
+  @SuppressWarnings("deprecation")
+  @Environment(EnvType.CLIENT)
+  @Deprecated
+  @Override
+  public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
+    return direction.getAxis().isHorizontal() && state.getBlock() instanceof WallSignBlock && stateFrom.getBlock() instanceof WallSignBlock && state.get(FACING) == stateFrom.get(FACING) && direction.getAxis() != state.get(FACING).getAxis();
   }
 }

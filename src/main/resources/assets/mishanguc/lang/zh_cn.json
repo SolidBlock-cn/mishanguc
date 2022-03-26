@@ -319,4 +319,7 @@
   "message.mishanguc.outline_color.param": "描边颜色：%s",
   "message.mishanguc.outline_color.relate": "%2$s对应的%1$s",
   "message.mishanguc.outline_color.relate.$1": "描边颜色"
+  "vertical_align.mishanguc.top": "顶",
+  "block.mishanguc.simple_handrail": "简单的%s栏杆",
+  "itemGroup.mishanguc.decorations": "迷上城建 | 装饰"
 }

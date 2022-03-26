@@ -22,7 +22,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.ModProperties;
+import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
@@ -31,7 +31,7 @@ import pers.solid.mishang.uc.util.RoadConnectionState;
 import java.util.List;
 
 public interface RoadWithAngleLine extends Road {
-  EnumProperty<HorizontalCornerDirection> FACING = ModProperties.HORIZONTAL_CORNER_FACING;
+  EnumProperty<HorizontalCornerDirection> FACING = MishangucProperties.HORIZONTAL_CORNER_FACING;
 
   @Override
   default void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {

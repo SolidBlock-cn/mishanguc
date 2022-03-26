@@ -22,6 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 
@@ -85,7 +86,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
   /**
    * 使用此物品开始破坏方块时的反应。
    *
-   * @see pers.solid.mishang.uc.MishangUc#BEGIN_ATTACK_BLOCK_EVENT
+   * @see Mishanguc#BEGIN_ATTACK_BLOCK_EVENT
    */
   public abstract ActionResult beginAttackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded);
@@ -93,7 +94,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
   /**
    * 使用此物品中途破坏方块时的翻译。
    *
-   * @see pers.solid.mishang.uc.MishangUc#PROGRESS_ATTACK_BLOCK_EVENT
+   * @see Mishanguc#PROGRESS_ATTACK_BLOCK_EVENT
    */
   public ActionResult progressAttackBlock(
       PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
