@@ -59,7 +59,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   @Override
   public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
     if (state.get(WATERLOGGED)) {
-      world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+      world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
     BlockState stateForNeighborUpdate = super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     stateForNeighborUpdate = updateSideStates(stateForNeighborUpdate, world, pos);
@@ -67,7 +67,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   }
 
   public static boolean connectsTo(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-    if (cannotConnect(neighborState.getBlock())) {
+    if (cannotConnect(neighborState)) {
       return false;
     } else if (neighborState.isSideSolidFullSquare(world, neighborPos, direction.getOpposite())) {
       return true;

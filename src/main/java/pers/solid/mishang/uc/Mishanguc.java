@@ -10,7 +10,7 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -195,6 +195,6 @@ public class Mishanguc implements ModInitializer {
             server.sendSystemMessage(new TranslatableText("notice.mishanguc.load"), Util.NIL_UUID));
 
     // 注册可燃方块
-    FlammableBlockRegistry.getDefaultInstance().add(TagRegistry.block(new Identifier("mishanguc", "burnable")), 5, 20);
+    FlammableBlockRegistry.getDefaultInstance().add(TagFactory.BLOCK.create(new Identifier("mishanguc", "burnable")), 5, 20);
   }
 }
