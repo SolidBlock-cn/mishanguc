@@ -177,50 +177,27 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         block -> {
           if (block instanceof StripWallLightBlock) {
             switch (((StripWallLightBlock) block).lightColor) {
-              case "white":
-                whiteStripWallLights.addBlock(block);
-                break;
-              case "yellow":
-                yellowStripWallLights.addBlock(block);
-                break;
-              case "cyan":
-                cyanStripWallLights.addBlock(block);
-                break;
+              case "white" -> whiteStripWallLights.addBlock(block);
+              case "yellow" -> yellowStripWallLights.addBlock(block);
+              case "cyan" -> cyanStripWallLights.addBlock(block);
             }
           } else if (block instanceof AutoConnectWallLightBlock) {
             switch (((AutoConnectWallLightBlock) block).lightColor) {
-              case "white":
-                whiteLightDecorations.addBlock(block);
-                break;
-              case "yellow":
-                yellowLightDecorations.addBlock(block);
-                break;
-              case "cyan":
-                cyanLightDecorations.addBlock(block);
-                break;
+              case "white" -> whiteLightDecorations.addBlock(block);
+              case "yellow" -> yellowLightDecorations.addBlock(block);
+              case "cyan" -> cyanLightDecorations.addBlock(block);
             }
           } else if (block instanceof WallLightBlock) {
             switch (((WallLightBlock) block).lightColor) {
-              case "white":
-                whiteWallLights.addBlock(block);
-                break;
-              case "yellow":
-                yellowWallLights.addBlock(block);
-                break;
-              case "cyan":
-                cyanWallLights.addBlock(block);
-                break;
+              case "white" -> whiteWallLights.addBlock(block);
+              case "yellow" -> yellowWallLights.addBlock(block);
+              case "cyan" -> cyanWallLights.addBlock(block);
             }
           } else if (block instanceof CornerLightBlock) {
             switch (((CornerLightBlock) block).lightColor) {
-              case "white":
-                whiteCornerLights.addBlock(block);
-                break;
-              case "yellow":
-                yellowCornerLights.addBlock(block);
-                break;
-              case "cyan":
-                cyanCornerLights.addBlock(block);
+              case "white" -> whiteCornerLights.addBlock(block);
+              case "yellow" -> yellowCornerLights.addBlock(block);
+              case "cyan" -> cyanCornerLights.addBlock(block);
             }
           }
         }
@@ -616,8 +593,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
       } catch (IllegalAccessException e) {
         return;
       }
-      if (o instanceof ARRPGenerator) {
-        final ARRPGenerator arrp = (ARRPGenerator) o;
+      if (o instanceof final ARRPGenerator arrp) {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
           arrp.writeBlockModel(PACK);
           arrp.writeBlockStates(PACK);

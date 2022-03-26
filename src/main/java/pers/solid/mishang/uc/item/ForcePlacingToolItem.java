@@ -80,8 +80,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     if (!world.isClient) {
       // 在破坏时，直接先将其内容清除。
       final BlockEntity blockEntity;
-      if ((blockEntity = world.getBlockEntity(pos)) instanceof Inventory) {
-        final Inventory inventory = (Inventory) blockEntity;
+      if ((blockEntity = world.getBlockEntity(pos)) instanceof final Inventory inventory) {
         for (int i = 0; i < inventory.size(); i++) {
           inventory.setStack(i, ItemStack.EMPTY);
         }

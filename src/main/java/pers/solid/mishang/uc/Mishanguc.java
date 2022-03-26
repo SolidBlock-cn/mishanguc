@@ -77,12 +77,12 @@ public class Mishanguc implements ModInitializer {
           }
           final ItemStack stack = player.getMainHandStack();
           final Item item = stack.getItem();
-          if (item instanceof BlockToolItem) {
+          if (item instanceof final BlockToolItem blockToolItem) {
             final BlockHitResult hitResult =
                 (BlockHitResult)
                     player.raycast(
                         5, 0, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
-            return ((BlockToolItem) item)
+            return blockToolItem
                 .beginAttackBlock(
                     player,
                     world,
@@ -102,12 +102,12 @@ public class Mishanguc implements ModInitializer {
           }
           final ItemStack stack = player.getMainHandStack();
           final Item item = stack.getItem();
-          if (item instanceof BlockToolItem) {
+          if (item instanceof final BlockToolItem blockToolItem) {
             final BlockHitResult hitResult =
                 (BlockHitResult)
                     player.raycast(
                         5, 0, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
-            return ((BlockToolItem) item)
+            return blockToolItem
                 .progressAttackBlock(
                     player,
                     world,
@@ -126,12 +126,12 @@ public class Mishanguc implements ModInitializer {
           }
           final ItemStack stack = player.getMainHandStack();
           final Item item = stack.getItem();
-          if (item instanceof BlockToolItem) {
+          if (item instanceof final BlockToolItem blockToolItem) {
             final BlockHitResult hitResult =
                 (BlockHitResult)
                     player.raycast(
                         5, 0, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
-            return ((BlockToolItem) item)
+            return blockToolItem
                 .beginAttackBlock(
                     player,
                     world,
@@ -149,8 +149,8 @@ public class Mishanguc implements ModInitializer {
           if (!player.getAbilities().allowModifyWorld && !stackInHand.canPlaceOn(world.getTagManager(), new CachedBlockPosition(world, hitResult.getBlockPos(), false))) {
             return ActionResult.PASS;
           }
-          if (item instanceof BlockToolItem) {
-            return ((BlockToolItem) item)
+          if (item instanceof final BlockToolItem blockToolItem) {
+            return blockToolItem
                 .useOnBlock(
                     player,
                     world,
@@ -165,8 +165,8 @@ public class Mishanguc implements ModInitializer {
         (player, world, hand, entity, hitResult) -> {
           final ItemStack stackInHand = player.getStackInHand(hand);
           final Item item = stackInHand.getItem();
-          if (item instanceof InteractsWithEntity) {
-            return ((InteractsWithEntity) item)
+          if (item instanceof final InteractsWithEntity interactsWithEntity) {
+            return interactsWithEntity
                 .attackEntityCallback(player, world, hand, entity, hitResult);
           } else {
             return ActionResult.PASS;
@@ -176,8 +176,8 @@ public class Mishanguc implements ModInitializer {
         (player, world, hand, entity, hitResult) -> {
           final ItemStack stackInHand = player.getStackInHand(hand);
           final Item item = stackInHand.getItem();
-          if (item instanceof InteractsWithEntity) {
-            return ((InteractsWithEntity) item)
+          if (item instanceof final InteractsWithEntity interactsWithEntity) {
+            return interactsWithEntity
                 .useEntityCallback(player, world, hand, entity, hitResult);
           } else {
             return ActionResult.PASS;

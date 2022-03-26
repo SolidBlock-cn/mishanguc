@@ -213,18 +213,11 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     final JVariant jVariant = new JVariant();
     final JState state = JState.state(jVariant);
     for (WallMountLocation wallMountLocation : WallMountLocation.values()) {
-      final int x;
-      switch (wallMountLocation) {
-        case WALL:
-          x = 0;
-          break;
-        case FLOOR:
-          x = 90;
-          break;
-        default:
-          x = -90;
-          break;
-      }
+      final int x = switch (wallMountLocation) {
+        case WALL -> 0;
+        case FLOOR -> 90;
+        default -> -90;
+      };
       for (Direction direction : Direction.Type.HORIZONTAL) {
         float y = direction.asRotation();
         jVariant.put(

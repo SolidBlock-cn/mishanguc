@@ -35,7 +35,7 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
   public static ActionResult sendMessageOfState(
       PlayerEntity playerEntity, BlockState blockState, BlockPos blockPos) {
     Block block = blockState.getBlock();
-    if (!(block instanceof Road)) {
+    if (!(block instanceof final Road road)) {
       playerEntity.sendMessage(new TranslatableText("debug.mishanguc.notRoad"), false);
       return ActionResult.FAIL;
     }
@@ -48,7 +48,7 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
     Direction.Type.HORIZONTAL.forEach(
         direction -> {
           final RoadConnectionState connectionState =
-              ((Road) block).getConnectionStateOf(blockState, direction);
+              road.getConnectionStateOf(blockState, direction);
           playerEntity.sendMessage(
               new TranslatableText(
                   "debug.mishanguc.roadConnectionState.brief",

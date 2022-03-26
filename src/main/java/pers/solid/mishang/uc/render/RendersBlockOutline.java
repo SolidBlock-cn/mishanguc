@@ -26,16 +26,13 @@ public interface RendersBlockOutline {
   @Environment(EnvType.CLIENT)
   WorldRenderEvents.BlockOutline RENDERER =
       (worldRenderContext, blockOutlineContext) -> {
-        final PlayerEntity player;
-        if (blockOutlineContext.entity() instanceof PlayerEntity) {
-          player = (PlayerEntity) blockOutlineContext.entity();
-        } else {
+        if (!(blockOutlineContext.entity() instanceof final PlayerEntity player)) {
           return true;
         }
         final ItemStack mainHandStack = player.getMainHandStack();
         final Item item = mainHandStack.getItem();
-        if (item instanceof RendersBlockOutline) {
-          return ((RendersBlockOutline) item)
+        if (item instanceof final RendersBlockOutline rendersBlockOutline) {
+          return rendersBlockOutline
               .rendersBlockOutline(player, mainHandStack, worldRenderContext, blockOutlineContext);
         } else {
           return true;

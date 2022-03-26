@@ -38,8 +38,8 @@ public class GameRendererMixin {
             ? player.getStackInHand(Hand.OFF_HAND)
             : player.getStackInHand(Hand.MAIN_HAND);
     final Item item = itemStack.getItem();
-    if (item instanceof BlockToolItem) {
-      return ((BlockToolItem) item).includesFluid(itemStack, player.isSneaking());
+    if (item instanceof final BlockToolItem blockToolItem) {
+      return blockToolItem.includesFluid(itemStack, player.isSneaking());
     } else {
       return includeFluids;
     }

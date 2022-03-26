@@ -19,8 +19,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.Translucent;
-import pers.solid.mishang.uc.blockentity.FullWallSignBlockEntity;
 import pers.solid.mishang.uc.block.HandrailBlock;
+import pers.solid.mishang.uc.blockentity.FullWallSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
@@ -42,14 +42,14 @@ public class MishangucClient implements ClientModInitializer {
                 Block value = (Block) field.get(null);
                 if (field.isAnnotationPresent(Cutout.class)) {
                   BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout());
-                  if (value instanceof HandrailBlock) {
-                    BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ((HandrailBlock) value).central(), ((HandrailBlock) value).corner(), ((HandrailBlock) value).stair());
+                  if (value instanceof final HandrailBlock handrailBlock) {
+                    BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair());
                   }
                 }
                 if (field.isAnnotationPresent(Translucent.class)) {
                   BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getTranslucent());
-                  if (value instanceof HandrailBlock) {
-                    BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), ((HandrailBlock) value).central(), ((HandrailBlock) value).corner(), ((HandrailBlock) value).stair());
+                  if (value instanceof final HandrailBlock handrailBlock) {
+                    BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair());
                   }
                 }
               } catch (IllegalAccessException | ClassCastException e) {
@@ -85,19 +85,19 @@ public class MishangucClient implements ClientModInitializer {
             final BlockPos blockPos = buf.readBlockPos();
             final BlockEntity blockEntity =
                 client.world != null ? client.world.getBlockEntity(blockPos) : null;
-            if (blockEntity instanceof HungSignBlockEntity) {
+            if (blockEntity instanceof final HungSignBlockEntity hungSignBlockEntity) {
               final Direction direction = buf.readEnumConstant(Direction.class);
               client.execute(
                   () ->
                       client.setScreen(
                           new HungSignBlockEditScreen(
-                              (HungSignBlockEntity) blockEntity, direction, blockPos)));
-            } else if (blockEntity instanceof WallSignBlockEntity) {
+                              hungSignBlockEntity, direction, blockPos)));
+            } else if (blockEntity instanceof final WallSignBlockEntity wallSignBlockEntity) {
               client.execute(
                   () ->
                       client.setScreen(
                           new WallSignBlockEditScreen(
-                              (WallSignBlockEntity) blockEntity, blockPos)));
+                              wallSignBlockEntity, blockPos)));
             }
           } catch (NullPointerException | ClassCastException exception) {
             Mishanguc.MISHANG_LOGGER.error("Error when creating sign edit screen:", exception);

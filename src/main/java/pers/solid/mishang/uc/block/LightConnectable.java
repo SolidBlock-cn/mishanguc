@@ -34,9 +34,9 @@ public interface LightConnectable {
       int flags,
       int maxUpdateDepth,
       Direction facing) {
-    if (state.getBlock() instanceof LightConnectable) {
+    if (state.getBlock() instanceof final LightConnectable lightConnectable) {
       for (Direction direction : Direction.values()) {
-        if (((LightConnectable) state.getBlock()).isConnectedIn(state, facing, direction)) {
+        if (lightConnectable.isConnectedIn(state, facing, direction)) {
           final BlockPos neighborPos2 = pos.offset(direction).offset(facing.getOpposite());
           final BlockState neighborState2 = world.getBlockState(neighborPos2);
           if (neighborState2.getBlock() instanceof AutoConnectWallLightBlock) {

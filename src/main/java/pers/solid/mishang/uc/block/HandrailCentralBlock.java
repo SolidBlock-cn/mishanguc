@@ -87,8 +87,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (stateFrom.getBlock() instanceof Handrails) {
-      final Handrails block = (Handrails) stateFrom.getBlock();
+    if (stateFrom.getBlock() instanceof final Handrails block) {
       return block.baseBlock() == this.baseBlock()
           && block.connectsIn(stateFrom, direction.getOpposite(), null);
     }
