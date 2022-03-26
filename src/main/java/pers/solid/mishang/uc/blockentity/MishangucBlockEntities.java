@@ -1,6 +1,6 @@
 package pers.solid.mishang.uc.blockentity;
 
-import com.google.common.collect.ImmutableSet;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
@@ -15,19 +15,19 @@ public class MishangucBlockEntities {
       Registry.register(
           Registry.BLOCK_ENTITY_TYPE,
           new Identifier("mishanguc", "hung_block_entity"),
-          new BlockEntityType<>(
+          FabricBlockEntityTypeBuilder.create(
               HungSignBlockEntity::new,
-              MishangUtils.<Block>getInstances(HungSignBlocks.class).collect(ImmutableSet.toImmutableSet())
-              , null));
+              MishangUtils.<Block>blockInstanceStream(HungSignBlocks.class).toArray(Block[]::new)
+          ).build());
 
   public static final BlockEntityType<WallSignBlockEntity> WALL_SIGN_BLOCK_ENTITY =
       Registry.register(
           Registry.BLOCK_ENTITY_TYPE,
           new Identifier("mishanguc", "wall_sign_block_entity"),
-          new BlockEntityType<>(
+          FabricBlockEntityTypeBuilder.create(
               WallSignBlockEntity::new,
-              MishangUtils.<Block>getInstances(WallSignBlocks.class).filter(block -> !(block instanceof FullWallSignBlock)).collect(ImmutableSet.toImmutableSet())
-              , null));
+              MishangUtils.<Block>blockInstanceStream(WallSignBlocks.class).filter(block -> !(block instanceof FullWallSignBlock)).toArray(Block[]::new)
+          ).build());
 
-  public static final BlockEntityType<FullWallSignBlockEntity> FULL_WALL_SIGN_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("mishanguc", "full_wall_sign_block_entity"), new BlockEntityType<>(FullWallSignBlockEntity::new, MishangUtils.<Block>getInstances(WallSignBlocks.class).filter(block -> block instanceof FullWallSignBlock).collect(ImmutableSet.toImmutableSet()), null));
+  public static final BlockEntityType<FullWallSignBlockEntity> FULL_WALL_SIGN_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("mishanguc", "full_wall_sign_block_entity"), FabricBlockEntityTypeBuilder.create(FullWallSignBlockEntity::new, MishangUtils.<Block>blockInstanceStream(WallSignBlocks.class).filter(block -> block instanceof FullWallSignBlock).toArray(Block[]::new)).build());
 }

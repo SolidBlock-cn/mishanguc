@@ -7,10 +7,11 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.Mishanguc;
 
 /**
  * Items implementing this interface will have callbacks which are registered in {@link
- * pers.solid.mishang.uc.MishangUc}.
+ * Mishanguc}.
  */
 public interface InteractsWithEntity {
   ActionResult attackEntityCallback(

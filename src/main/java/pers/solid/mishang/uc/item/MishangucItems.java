@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import pers.solid.mishang.uc.MishangUc;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.MishangucItemGroups;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.SimpleModel;
@@ -95,7 +95,7 @@ public final class MishangucItems {
             Registry.register(Registry.ITEM, new Identifier("mishanguc", path), value);
           }
         } catch (IllegalAccessException e) {
-          MishangUc.MISHANG_LOGGER.error("Error when registering items:", e);
+          Mishanguc.MISHANG_LOGGER.error("Error when registering items:", e);
         }
       }
     }

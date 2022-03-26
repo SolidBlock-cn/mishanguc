@@ -28,7 +28,7 @@ import pers.solid.mishang.uc.item.FastBuildingToolItem;
 import pers.solid.mishang.uc.item.InteractsWithEntity;
 import pers.solid.mishang.uc.item.MishangucItems;
 
-public class MishangUc implements ModInitializer {
+public class Mishanguc implements ModInitializer {
   public static final Logger MISHANG_LOGGER = LogManager.getLogger("Mishang Urban Construction");
   /**
    * 比 {@link AttackBlockCallback#EVENT} 更好！

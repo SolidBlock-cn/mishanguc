@@ -7,14 +7,14 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import pers.solid.mishang.uc.MishangUcClient;
+import pers.solid.mishang.uc.MishangucClient;
 
 /**
  * 物品实现此接口后，玩家拿着物品时就会调用 {@link #rendersBlockOutline}。{@link #RENDERER} 是个匿名的 {@link
- * WorldRenderEvents.BlockOutline} 实例，并且会在 {@link MishangUcClient} 中注册。<br>
+ * WorldRenderEvents.BlockOutline} 实例，并且会在 {@link MishangucClient} 中注册。<br>
  * Item implements this interface, and when a player holds this item, {@link #rendersBlockOutline}
  * will be called. The {@link #RENDERER} is in an anonymous {@link WorldRenderEvents.BlockOutline}
- * instance, and was registered in {@link MishangUcClient}.<br>
+ * instance, and was registered in {@link MishangucClient}.<br>
  * 物品实现此接口时，需要注解为：<br>
  * Items implementing this interface must be annotated as:<br>
  *

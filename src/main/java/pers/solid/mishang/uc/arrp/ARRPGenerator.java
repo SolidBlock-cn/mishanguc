@@ -13,6 +13,7 @@ import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
@@ -184,7 +185,11 @@ public interface ARRPGenerator {
    */
   @Nullable
   default JLootTable getLootTable() {
-    return simpleLootTable(getIdentifier().toString());
+    return simpleLootTable(getItemIdentifier().toString());
+  }
+
+  default Identifier getItemIdentifier() {
+    return Registry.ITEM.getId(((ItemConvertible) this).asItem());
   }
 
   /**
@@ -260,6 +265,11 @@ public interface ARRPGenerator {
     if (lootTable != null) pack.addLootTable(((Block) this).getLootTableId(), lootTable);
   }
 
+  /**
+   * 获取方块的 id。如需获取对应物品 id，应使用 {@link #getItemIdentifier()}。
+   *
+   * @return 方块的 id。
+   */
   default Identifier getIdentifier() {
     if (!(this instanceof Block)) {
       throw new RuntimeException("The 'getIdentifier' method can only be used for block!");
