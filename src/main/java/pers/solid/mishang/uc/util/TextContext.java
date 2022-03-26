@@ -150,8 +150,8 @@ public class TextContext implements Cloneable {
     final TextContext textContext = defaults.clone();
     if (nbt instanceof NbtString) {
       textContext.text = new LiteralText(nbt.asString());
-    } else if (nbt instanceof NbtCompound) {
-      textContext.readNbt((NbtCompound) nbt);
+    } else if (nbt instanceof NbtCompound nbtCompound) {
+      textContext.readNbt(nbtCompound);
     }
     return textContext;
   }
@@ -197,8 +197,8 @@ public class TextContext implements Cloneable {
       verticalAlign = VerticalAlign.MIDDLE;
     }
     final NbtElement nbtColor = nbt.get("color");
-    if (nbtColor instanceof AbstractNbtNumber) {
-      color = ((AbstractNbtNumber) nbtColor).intValue();
+    if (nbtColor instanceof final AbstractNbtNumber abstractNbtNumber) {
+      color = abstractNbtNumber.intValue();
     } else if (nbtColor instanceof NbtString) {
       final @Nullable DyeColor dyeColor = DyeColor.byName(nbtColor.asString(), null);
       if (dyeColor != null) {
@@ -206,8 +206,8 @@ public class TextContext implements Cloneable {
       }
     }
     final NbtElement nbtOutlineColor = nbt.get("outlineColor");
-    if (nbtOutlineColor instanceof AbstractNbtNumber) {
-      outlineColor = ((AbstractNbtNumber) nbtOutlineColor).intValue();
+    if (nbtOutlineColor instanceof final AbstractNbtNumber abstractNbtNumber) {
+      outlineColor = abstractNbtNumber.intValue();
     } else if (nbtOutlineColor instanceof NbtString) {
       final @Nullable DyeColor dyeColor = DyeColor.byName(nbtOutlineColor.asString(), null);
       if (dyeColor != null) {
@@ -324,8 +324,8 @@ public class TextContext implements Cloneable {
    *
    * @param nbt 一个待写入的 NBT 复合标签，可以是空的 NBT 复合标签：
    *            <pre>{@code
-   *                                                                                                    new NbtCompound()
-   *                                                                                                    }</pre>
+   *                                                                                                               new NbtCompound()
+   *                                                                                                               }</pre>
    * @return 修改后的 <tt>nbt</tt>。
    */
   public NbtCompound writeNbt(NbtCompound nbt) {
@@ -420,8 +420,8 @@ public class TextContext implements Cloneable {
       case LEFT -> horizontalAlign = HorizontalAlign.RIGHT;
       case RIGHT -> horizontalAlign = HorizontalAlign.LEFT;
     }
-    if (text instanceof LiteralText) {
-      final String rawString = ((LiteralText) text).getRawString();
+    if (text instanceof final LiteralText literalText) {
+      final String rawString = literalText.getRawString();
       text =
           new LiteralText(
               Util.make(

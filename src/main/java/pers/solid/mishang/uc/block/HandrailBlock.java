@@ -103,23 +103,13 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
               stairFacing)
           .with(HandrailStairBlock.SHAPE, HandrailStairBlock.Shape.BOTTOM)
           .with(HandrailStairBlock.POSITION, Util.make(() -> {
-            final double diff;
-            switch (stairFacing) {
-              case SOUTH:
-                diff = hitPos.x - blockPos.getX();
-                break;
-              case NORTH:
-                diff = blockPos.getX() + 1 - hitPos.x;
-                break;
-              case EAST:
-                diff = blockPos.getZ() + 1 - hitPos.z;
-                break;
-              case WEST:
-                diff = hitPos.z - blockPos.getZ();
-                break;
-              default:
-                diff = 0.5;
-            }
+            final double diff = switch (stairFacing) {
+              case SOUTH -> hitPos.x - blockPos.getX();
+              case NORTH -> blockPos.getX() + 1 - hitPos.x;
+              case EAST -> blockPos.getZ() + 1 - hitPos.z;
+              case WEST -> hitPos.z - blockPos.getZ();
+              default -> 0.5;
+            };
             return diff < 0.3 ? HandrailStairBlock.Position.RIGHT : diff < 0.7 ? HandrailStairBlock.Position.CENTER : HandrailStairBlock.Position.LEFT;
           }))
           .with(WATERLOGGED, waterlogged);
@@ -169,8 +159,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (stateFrom.getBlock() instanceof Handrails) {
-      final Handrails block = (Handrails) stateFrom.getBlock();
+    if (stateFrom.getBlock() instanceof final Handrails block) {
       return block.baseBlock() == this.baseBlock()
           && block.connectsIn(stateFrom, direction.getOpposite(), state.get(FACING));
     }

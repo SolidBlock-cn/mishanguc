@@ -86,12 +86,12 @@ public class MishangucBlocks {
               path = field.getName().toLowerCase();
             }
             Registry.register(Registry.BLOCK, new Identifier("mishanguc", path), value);
-            if (value instanceof HandrailBlock) {
+            if (value instanceof HandrailBlock handrailBlock) {
               // 如果该方块为 HandrailBlock，则一并注册其 central 方块，应为该方块并没有作为字段存在。
               // 此类方块也没有对应的方块物品，其物品为对应的基础方块的物品。
-              Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_central"), ((HandrailBlock) value).central());
-              Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_corner"), ((HandrailBlock) value).corner());
-              Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_stair"), ((HandrailBlock) value).stair());
+              Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_central"), handrailBlock.central());
+              Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_corner"), handrailBlock.corner());
+              Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_stair"), handrailBlock.stair());
             }
             final FabricItemSettings settings = new FabricItemSettings().group(group);
             final BlockItem item =

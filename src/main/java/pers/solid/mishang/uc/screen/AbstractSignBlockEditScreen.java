@@ -962,16 +962,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       for (Entry child : children()) {
         child.textFieldWidget.setTextFieldFocused(child == focused);
       }
-      if (focused instanceof AbstractSignBlockEditScreen.TextFieldListScreen.Entry) {
-        //noinspection rawtypes
+      if (focused instanceof AbstractSignBlockEditScreen.TextFieldListScreen.Entry entry) {
         focusedTextField =
-            ((AbstractSignBlockEditScreen.TextFieldListScreen.Entry) focused).textFieldWidget;
-        //noinspection rawtypes
+            entry.textFieldWidget;
         focusedTextContext =
             contextToWidgetBiMap
                 .inverse()
                 .get(
-                    ((AbstractSignBlockEditScreen.TextFieldListScreen.Entry) focused)
+                    entry
                         .textFieldWidget);
 
         // 设置焦点后，重新设置 customColorTextField 的内容
@@ -1012,10 +1010,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         if (this == o) {
           return true;
         }
-        if (!(o instanceof AbstractSignBlockEditScreen.TextFieldListScreen.Entry)) {
+        if (!(o instanceof final AbstractSignBlockEditScreen.TextFieldListScreen.Entry entry)) {
           return false;
         }
-        @SuppressWarnings({"unchecked", "rawtypes"}) Entry entry = (AbstractSignBlockEditScreen.TextFieldListScreen.Entry) o;
 
         return new EqualsBuilder().append(textFieldWidget, entry.textFieldWidget).isEquals();
       }

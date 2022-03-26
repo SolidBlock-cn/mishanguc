@@ -30,12 +30,12 @@ public final class NbtPrettyPrinter {
    * @see NbtHelper#toPrettyPrintedText(NbtElement)
    */
   public static Text serialize(NbtElement element, int layer, String indent, int depth) {
-    if (element instanceof NbtCompound) {
-      return serialize(((NbtCompound) element), layer, indent, depth);
-    } else if (element instanceof NbtList) {
-      return serialize(((NbtList) element), layer, indent, depth);
-    } else if (element instanceof NbtString) {
-      return serialize(((NbtString) element), layer);
+    if (element instanceof final NbtCompound nbtCompound) {
+      return serialize(nbtCompound, layer, indent, depth);
+    } else if (element instanceof final NbtList nbtList) {
+      return serialize(nbtList, layer, indent, depth);
+    } else if (element instanceof final NbtString nbtString) {
+      return serialize(nbtString, layer);
     }
     return NbtHelper.toPrettyPrintedText(element);
   }

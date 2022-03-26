@@ -67,7 +67,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   }
 
   public static boolean connectsTo(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-    if (cannotConnect(neighborState.getBlock())) {
+    if (cannotConnect(neighborState)) {
       return false;
     } else if (neighborState.isSideSolidFullSquare(world, neighborPos, direction.getOpposite())) {
       return true;
@@ -87,8 +87,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (stateFrom.getBlock() instanceof Handrails) {
-      final Handrails block = (Handrails) stateFrom.getBlock();
+    if (stateFrom.getBlock() instanceof final Handrails block) {
       return block.baseBlock() == this.baseBlock()
           && block.connectsIn(stateFrom, direction.getOpposite(), null);
     }

@@ -126,8 +126,8 @@ public class HungSignBarBlock extends Block implements Waterloggable, ARRPGenera
     final boolean isHoldingSignBars;
     if (context instanceof EntityShapeContext) {
       final Item heldItem = ((EntityShapeContextAccessor) context).getHeldItem().getItem();
-      if (heldItem instanceof BlockItem) {
-        final Block block = ((BlockItem) heldItem).getBlock();
+      if (heldItem instanceof final BlockItem blockItem) {
+        final Block block = blockItem.getBlock();
         isHoldingSignBars = block instanceof HungSignBlock || block instanceof HungSignBarBlock;
       } else isHoldingSignBars = false;
     } else isHoldingSignBars = false;

@@ -178,8 +178,8 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     final boolean isHoldingHungSigns;
     if (context instanceof EntityShapeContext) {
       final Item heldItem = ((EntityShapeContextAccessor) context).getHeldItem().getItem();
-      if (heldItem instanceof BlockItem) {
-        final Block block = ((BlockItem) heldItem).getBlock();
+      if (heldItem instanceof final BlockItem blockItem) {
+        final Block block = blockItem.getBlock();
         isHoldingHungSigns = block instanceof HungSignBlock || block instanceof HungSignBarBlock;
       } else isHoldingHungSigns = false;
     } else isHoldingHungSigns = false;

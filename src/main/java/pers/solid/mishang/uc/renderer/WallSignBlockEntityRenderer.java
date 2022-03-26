@@ -55,8 +55,8 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
     final ClientPlayerEntity player = MinecraftClient.getInstance().player;
     if (INVISIBLE_BLOCKS.contains(block) && player != null) {
       final Item mainHandStackItem = player.getMainHandStack().getItem();
-      if (mainHandStackItem instanceof BlockItem
-          && INVISIBLE_BLOCKS.contains(((BlockItem) mainHandStackItem).getBlock())) {
+      if (mainHandStackItem instanceof final BlockItem blockItem
+          && INVISIBLE_BLOCKS.contains(blockItem.getBlock())) {
         WorldRendererInvoker.drawShapeOutline(
             matrices,
             vertexConsumers.getBuffer(RenderLayer.LINES),

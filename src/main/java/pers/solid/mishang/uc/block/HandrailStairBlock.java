@@ -123,23 +123,13 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
       shape = Shape.BOTTOM;
     }
     final Vec3d hitPos = ctx.getHitPos();
-    final double diff;
-    switch (facing) {
-      case SOUTH:
-        diff = hitPos.x - blockPos.getX();
-        break;
-      case NORTH:
-        diff = blockPos.getX() + 1 - hitPos.x;
-        break;
-      case EAST:
-        diff = blockPos.getZ() + 1 - hitPos.z;
-        break;
-      case WEST:
-        diff = hitPos.z - blockPos.getZ();
-        break;
-      default:
-        diff = 0.5;
-    }
+    final double diff = switch (facing) {
+      case SOUTH -> hitPos.x - blockPos.getX();
+      case NORTH -> blockPos.getX() + 1 - hitPos.x;
+      case EAST -> blockPos.getZ() + 1 - hitPos.z;
+      case WEST -> hitPos.z - blockPos.getZ();
+      default -> 0.5;
+    };
     return placementState.with(WATERLOGGED, world.getFluidState(blockPos).getFluid() == Fluids.WATER).with(FACING, facing).with(POSITION, diff < 0.3 ? Position.RIGHT : diff < 0.7 ? Position.CENTER : Position.LEFT).with(SHAPE, shape);
   }
 
@@ -152,15 +142,11 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
    */
   @Nullable
   protected static Direction equivalentFacing(Direction facing, Position position) {
-    switch (position) {
-      case LEFT:
-        return facing.rotateYClockwise();
-      case RIGHT:
-        return facing.rotateYCounterclockwise();
-      case CENTER:
-      default:
-        return null;
-    }
+    return switch (position) {
+      case LEFT -> facing.rotateYClockwise();
+      case RIGHT -> facing.rotateYCounterclockwise();
+      case CENTER -> null;
+    };
   }
 
   /**
@@ -191,18 +177,13 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
     final Vec3d vector = Vec3d.of(facing.getVector());
     // 沿着楼梯前进方向看，向右的单位向量。
     final Vec3d vector2 = Vec3d.of(facing.rotateYClockwise().getVector());
+    new Vec3d(0.5d, 0, 0.5d).add(vector.multiply(0.5));
     Vec3d basePoint = new Vec3d(0.5d, 0, 0.5d).add(vector.multiply(0.5));
-    switch (position) {
-      case LEFT:
-        basePoint = basePoint.add(vector2.multiply(-7d / 16));
-        break;
-      case CENTER:
-        basePoint = basePoint.add(vector2.multiply(-1 / 32d));
-        break;
-      case RIGHT:
-        basePoint = basePoint.add(vector2.multiply(6d / 16));
-        break;
-    }
+    basePoint = switch (position) {
+      case LEFT -> basePoint.add(vector2.multiply(-7d / 16));
+      case CENTER -> basePoint.add(vector2.multiply(-1 / 32d));
+      case RIGHT -> basePoint.add(vector2.multiply(6d / 16));
+    };
 
     // 上半部分的栏杆
     if (shape == Shape.TOP) {
@@ -247,16 +228,18 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (stateFrom.getBlock() instanceof Handrails) {
-      final Handrails block = (Handrails) stateFrom.getBlock();
+    if (stateFrom.getBlock() instanceof final Handrails block) {
       return block.baseBlock() == this.baseBlock()
           && block.connectsIn(stateFrom, direction.getOpposite(), equivalentFacing(state));
     }
     return super.isSideInvisible(state, stateFrom, direction);
   }
 
+  getflui
+
   @Environment(EnvType.CLIENT)
   @Override
+
   public MutableText getName() {
     final Block block = baseBlock();
     return block == null ? super.getName() : new TranslatableText("block.mishanguc.handrail_stair", block.getName());

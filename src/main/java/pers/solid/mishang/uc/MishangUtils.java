@@ -218,12 +218,8 @@ public class MishangUtils {
           }
           for (TextContext textContext : list) {
             switch (verticalAlign) {
-              case MIDDLE:
-                textContext.offsetY -= (stackedHeight - textContext.size / 2f) / 2f;
-                break;
-              case BOTTOM:
-                textContext.offsetY -= stackedHeight - textContext.size / 2f;
-                break;
+              case MIDDLE -> textContext.offsetY -= (stackedHeight - textContext.size / 2f) / 2f;
+              case BOTTOM -> textContext.offsetY -= stackedHeight - textContext.size / 2f;
             }
           }
         }));
@@ -236,14 +232,11 @@ public class MishangUtils {
     switch (rotation) {
       case COUNTERCLOCKWISE_90:
       case CLOCKWISE_90:
-        switch (axis) {
-          case X:
-            return Direction.Axis.Z;
-          case Z:
-            return Direction.Axis.X;
-          default:
-            return axis;
-        }
+        return switch (axis) {
+          case X -> Direction.Axis.Z;
+          case Z -> Direction.Axis.X;
+          default -> axis;
+        };
       default:
         return axis;
     }

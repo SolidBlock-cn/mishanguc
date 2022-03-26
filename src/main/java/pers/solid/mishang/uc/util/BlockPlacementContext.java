@@ -183,8 +183,8 @@ public class BlockPlacementContext {
   private void completeHandStacks() {
     for (@NotNull Hand hand1 : Hand.values()) {
       stackInHand = player.getStackInHand(hand1);
-      if (stackInHand.getItem() instanceof BlockItem) {
-        handBlock = ((BlockItem) stackInHand.getItem()).getBlock();
+      if (stackInHand.getItem() instanceof final BlockItem blockItem) {
+        handBlock = blockItem.getBlock();
         hand = hand1;
         break;
       }
