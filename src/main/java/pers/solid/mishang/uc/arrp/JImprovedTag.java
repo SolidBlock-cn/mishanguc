@@ -6,12 +6,14 @@ import net.minecraft.item.Item;
 import net.minecraft.util.registry.Registry;
 
 public class JImprovedTag extends JTag {
-  
+
+  @SuppressWarnings("UnusedReturnValue")
   public JImprovedTag addBlock(Block block) {
     add(Registry.BLOCK.getId(block));
     return this;
   }
 
+  @SuppressWarnings("UnusedReturnValue")
   public JImprovedTag addItem(Item item) {
     add(Registry.ITEM.getId(item));
     return this;
