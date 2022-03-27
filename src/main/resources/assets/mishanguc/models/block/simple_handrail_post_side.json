@@ -10,16 +10,14 @@
       "from": [7.5, 12, 7.5],
       "to": [8.5, 13, 8.5],
       "faces": {
-        "up": {"texture": "#top"},
-        "down": {"texture": "#top"}
+        "south": {"texture": "#top"}
       }
     },
     {
       "from": [7.5, 0, 7.5],
       "to": [8.5, 1, 8.5],
       "faces": {
-        "up": {"texture": "#bottom"},
-        "down": {"texture": "#bottom", "cullface": "down"}
+        "south": {"texture": "#bottom"}
       }
     }
   ]

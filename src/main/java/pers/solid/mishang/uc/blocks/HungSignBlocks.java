@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * <h1>告示牌类方块</h1>
- * 具有多种不同颜色和材质。每一种告示牌都有对应的告示牌杆，且部分的告示牌都有对应的发光告示牌方块。<br>
+ * 具有多种不同颜色和纹理。每一种告示牌都有对应的告示牌杆，且部分的告示牌都有对应的发光告示牌方块。<br>
  * 每个告示牌都要在 {@link pers.solid.mishang.uc.blockentity.MishangucBlockEntities#HUNG_SIGN_BLOCK_ENTITY} 中能够识别，因此添加新的告示牌需要在该字段的相关参数中添加。<br>
  * 同时，还需要注意在 {@link pers.solid.mishang.uc.arrp.ARRPMain} 中添加此方块。
  *
