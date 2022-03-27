@@ -87,7 +87,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (stateFrom.getBlock() instanceof Handrails) {
+    if (direction.getAxis().isHorizontal() && stateFrom.getBlock() instanceof Handrails) {
       final Handrails block = (Handrails) stateFrom.getBlock();
       return block.baseBlock() == this.baseBlock()
           && block.connectsIn(stateFrom, direction.getOpposite(), null);
@@ -194,11 +194,17 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     final List<JMultipart> parts = new ArrayList<>(5);
     final Identifier modelId = getBlockModelIdentifier();
     final Identifier postId = MishangUtils.identifierSuffix(modelId, "_post");
+    final Identifier postSideId = MishangUtils.identifierSuffix(modelId, "_post_side");
     final Identifier sideId = MishangUtils.identifierSuffix(modelId, "_side");
     parts.add(new JMultipart().addModel(new JBlockModel(postId)));
-    FACING_PROPERTIES.forEach((facing, property) -> parts.add(new JMultipart()
-        .addModel(new JBlockModel(sideId).y(((int) facing.asRotation())))
-        .when(new JWhen().add(property.getName(), "true"))));
+    FACING_PROPERTIES.forEach((facing, property) -> {
+      parts.add(new JMultipart()
+          .addModel(new JBlockModel(sideId).y(((int) facing.asRotation())))
+          .when(new JWhen().add(property.getName(), "true")));
+      parts.add(new JMultipart()
+          .addModel(new JBlockModel(postSideId).y((int) facing.asRotation()))
+          .when(new JWhen().add(property.getName(), "false")));
+    });
     return JState.state(parts.toArray(new JMultipart[5]));
   }
 

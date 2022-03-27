@@ -20,6 +20,8 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Util;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -77,14 +79,12 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
   }
 
   @SuppressWarnings("deprecation")
-  @Deprecated
   @Override
   public FluidState getFluidState(BlockState state) {
     return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
   }
 
   @SuppressWarnings("deprecation")
-  @Deprecated
   @Override
   public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
     if (state.get(WATERLOGGED)) {
@@ -105,7 +105,6 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
   }
 
   @SuppressWarnings("deprecation")
-  @Deprecated
   @Override
   public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     return SHAPES.get(state.get(FACING));
@@ -148,11 +147,25 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
     }
   }
 
+  @SuppressWarnings("deprecation")
+  @Override
+  public BlockState rotate(BlockState state, BlockRotation rotation) {
+    return super.rotate(state, rotation)
+        .with(FACING, state.get(FACING).rotate(rotation));
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public BlockState mirror(BlockState state, BlockMirror mirror) {
+    return super.mirror(state, mirror)
+        .with(FACING, state.get(FACING).mirror(mirror));
+  }
+
   @Environment(EnvType.CLIENT)
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (stateFrom.getBlock() instanceof Handrails) {
+    if (direction.getAxis().isHorizontal() && stateFrom.getBlock() instanceof Handrails) {
       final Handrails block = (Handrails) stateFrom.getBlock();
       return block.baseBlock() == this.baseBlock()
           && block.connectsIn(stateFrom, direction.getOpposite(), state.get(FACING).getDirectionInAxis(direction.rotateYClockwise().getAxis()));

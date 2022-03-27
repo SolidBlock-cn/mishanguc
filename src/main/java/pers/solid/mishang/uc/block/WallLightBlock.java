@@ -52,7 +52,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, ARRPGe
             map.put(Direction.DOWN, DOWN);
           });
   private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION =
-      MishangUtils.createDirectionToShape(4, 0, 4, 12, 1, 12);
+      MishangUtils.createDirectionToShape(4, 0, 4, 12, 2, 12);
   public final String lightColor;
 
   public WallLightBlock(String lightColor, Settings settings) {
@@ -72,7 +72,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, ARRPGe
     BlockPos blockPos = pos.offset(direction);
     return world
         .getBlockState(blockPos)
-        .isSideSolidFullSquare(world, blockPos, direction.getOpposite());
+        .isSideSolid(world, blockPos, direction.getOpposite(), SideShapeType.CENTER);
   }
 
   @Override
@@ -159,7 +159,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, ARRPGe
     variant.put("facing", "up", new JBlockModel(id));
     variant.put("facing", "down", new JBlockModel(id).x(180));
     for (Direction direction : Direction.Type.HORIZONTAL) {
-      variant.put("facing", direction, new JBlockModel(id).x(90).y((int) direction.asRotation()));
+      variant.put("facing", direction, new JBlockModel(id).x(-90).y((int) direction.asRotation()));
     }
     return JState.state(variant);
   }
@@ -168,7 +168,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, ARRPGe
   @Override
   public @Nullable JModel getBlockModel() {
     return JModel.model(getModelParent())
-        .textures(new FasterJTextures().varP("light", lightColor + "_light").var("background", "block/obsidian"));
+        .textures(new FasterJTextures().varP("light", lightColor + "_light"));
   }
 
   @Environment(EnvType.CLIENT)

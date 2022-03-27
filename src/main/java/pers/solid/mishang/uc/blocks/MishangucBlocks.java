@@ -92,6 +92,7 @@ public class MishangucBlocks {
               Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_central"), ((HandrailBlock) value).central());
               Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_corner"), ((HandrailBlock) value).corner());
               Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_stair"), ((HandrailBlock) value).stair());
+              Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_outer"), ((HandrailBlock) value).outer());
             }
             final FabricItemSettings settings = new FabricItemSettings().group(group);
             final BlockItem item =

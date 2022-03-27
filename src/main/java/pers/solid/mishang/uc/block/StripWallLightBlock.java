@@ -35,9 +35,9 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
   protected static final EnumProperty<StripType> STRIP_TYPE =
       EnumProperty.of("strip_type", StripType.class);
   private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION_WHEN_HORIZONTAL =
-      MishangUtils.createDirectionToShape(0, 0, 4, 16, 1, 12);
+      MishangUtils.createDirectionToShape(0, 0, 4, 16, 2, 12);
   private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION_WHEN_VERTICAL =
-      MishangUtils.createDirectionToShape(4, 0, 0, 12, 1, 16);
+      MishangUtils.createDirectionToShape(4, 0, 0, 12, 2, 16);
 
   public StripWallLightBlock(String lightColor, Settings settings) {
     super(lightColor, settings);
@@ -66,7 +66,7 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
   @Override
   public BlockState rotate(BlockState state, BlockRotation rotation) {
     final BlockState rotate = super.rotate(state, rotation);
-    if (rotation == BlockRotation.CLOCKWISE_90 || rotation == BlockRotation.COUNTERCLOCKWISE_90) {
+    if (rotate.get(FACING).getAxis().isVertical() && (rotation == BlockRotation.CLOCKWISE_90 || rotation == BlockRotation.COUNTERCLOCKWISE_90)) {
       return rotate.with(STRIP_TYPE, rotate.get(STRIP_TYPE).another());
     }
     return rotate;

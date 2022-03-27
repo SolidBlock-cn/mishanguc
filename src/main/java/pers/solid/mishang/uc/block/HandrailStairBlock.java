@@ -20,6 +20,7 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.BlockMirror;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
@@ -272,6 +273,15 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
     return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
   }
 
+  @Override
+  public BlockState mirror(BlockState state, BlockMirror mirror) {
+    final Direction facing = state.get(FACING);
+    final Direction mirrored = mirror.apply(facing);
+    return super.mirror(state, mirror)
+        .with(FACING, mirrored)
+        .with(POSITION, state.get(POSITION).swap());
+  }
+
   @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
@@ -291,6 +301,17 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
     @Override
     public String asString() {
       return this.name;
+    }
+
+    public Position swap() {
+      switch (this) {
+        case LEFT:
+          return RIGHT;
+        case RIGHT:
+          return LEFT;
+        default:
+          return this;
+      }
     }
   }
 
