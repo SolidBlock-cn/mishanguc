@@ -18,6 +18,12 @@
     "mishanguc:birch_wall_sign",
     "mishanguc:jungle_wall_sign",
     "mishanguc:acacia_wall_sign",
-    "mishanguc:dark_oak_wall_sign"
+    "mishanguc:dark_oak_wall_sign",
+    "mishanguc:simple_oak_handrail",
+    "mishanguc:simple_spruce_handrail",
+    "mishanguc:simple_birch_handrail",
+    "mishanguc:simple_jungle_handrail",
+    "mishanguc:simple_acacia_handrail",
+    "mishanguc:simple_dark_oak_handrail"
   ]
 }
