@@ -43,13 +43,13 @@ public class MishangucClient implements ClientModInitializer {
                 if (field.isAnnotationPresent(Cutout.class)) {
                   BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout());
                   if (value instanceof final HandrailBlock handrailBlock) {
-                    BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair());
+                    BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer());
                   }
                 }
                 if (field.isAnnotationPresent(Translucent.class)) {
                   BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getTranslucent());
                   if (value instanceof final HandrailBlock handrailBlock) {
-                    BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair());
+                    BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer());
                   }
                 }
               } catch (IllegalAccessException | ClassCastException e) {
