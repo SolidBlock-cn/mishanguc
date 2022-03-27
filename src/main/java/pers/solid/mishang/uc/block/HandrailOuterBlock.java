@@ -117,7 +117,7 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
   @Override
   public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
     if (state.get(WATERLOGGED)) {
-      world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+      world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
     return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
   }
@@ -126,8 +126,7 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (direction.getAxis().isHorizontal() && stateFrom.getBlock() instanceof Handrails) {
-      final Handrails block = (Handrails) stateFrom.getBlock();
+    if (direction.getAxis().isHorizontal() && stateFrom.getBlock() instanceof final Handrails block) {
       return block.baseBlock() == this.baseBlock()
           && block.connectsIn(stateFrom, direction.getOpposite(), state.get(FACING).getDirectionInAxis(direction.rotateYClockwise().getAxis()).getOpposite());
     }

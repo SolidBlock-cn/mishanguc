@@ -99,14 +99,13 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
 
     // 检测放置时是否可以称为外部角落的版本。
     final BlockState stateInOpposite = world.getBlockState(blockPos.offset(facing, -1));
-    final boolean isConnectableInOpposite = stateInOpposite.getBlock() instanceof Handrails;
-    final boolean isConnectedInCW = stateInCW.getBlock() instanceof Handrails && ((Handrails) stateInCW.getBlock()).connectsIn(stateInCW, facing.rotateYCounterclockwise(), facing);
-    final boolean isConnectedInCCW = stateInCCW.getBlock() instanceof Handrails && ((Handrails) stateInCCW.getBlock()).connectsIn(stateInCCW, facing.rotateYClockwise(), facing);
+    final boolean isConnectedInCW = stateInCW.getBlock() instanceof final Handrails handrails && handrails.connectsIn(stateInCW, facing.rotateYCounterclockwise(), facing);
+    final boolean isConnectedInCCW = stateInCCW.getBlock() instanceof final Handrails handrails && handrails.connectsIn(stateInCCW, facing.rotateYClockwise(), facing);
 
     // 若该方块贴近的方块可连接，且两侧只有一个可以与之连接，则生成一个外部方块。
-    if (isConnectableInOpposite) {
-      final boolean canConnectOuterInCW = isConnectedInCW && ((Handrails) stateInOpposite.getBlock()).connectsIn(stateInOpposite, facing, facing.rotateYCounterclockwise());
-      final boolean canConnectOuterInCCW = isConnectedInCCW && ((Handrails) stateInOpposite.getBlock()).connectsIn(stateInOpposite, facing, facing.rotateYClockwise());
+    if (stateInOpposite.getBlock() instanceof Handrails handrails) {
+      final boolean canConnectOuterInCW = isConnectedInCW && handrails.connectsIn(stateInOpposite, facing, facing.rotateYCounterclockwise());
+      final boolean canConnectOuterInCCW = isConnectedInCCW && handrails.connectsIn(stateInOpposite, facing, facing.rotateYClockwise());
       if (canConnectOuterInCW != canConnectOuterInCCW) {
         final BlockState outerState = outer().getDefaultState();
         return outerState
