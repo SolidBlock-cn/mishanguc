@@ -26,6 +26,10 @@ public final class LightBlocks extends MishangucBlocks {
       new WallLightBlock("white", WHITE_WALL_LIGHT_SETTINGS);
 
   @RegisterIdentifier
+  public static final StripWallLightBlock WHITE_THIN_STRIP_WALL_LIGHT =
+      new StripWallLightBlock("white", WHITE_WALL_LIGHT_SETTINGS);
+
+  @RegisterIdentifier
   public static final StripWallLightBlock WHITE_THIN_STRIP_WALL_LIGHT_TUBE =
       new StripWallLightBlock("white", WHITE_WALL_LIGHT_SETTINGS);
 
@@ -97,6 +101,10 @@ public final class LightBlocks extends MishangucBlocks {
       new WallLightBlock("yellow", YELLOW_WALL_LIGHT_SETTINGS);
 
   @RegisterIdentifier
+  public static final StripWallLightBlock YELLOW_THIN_STRIP_WALL_LIGHT =
+      new StripWallLightBlock("yellow", YELLOW_WALL_LIGHT_SETTINGS);
+
+  @RegisterIdentifier
   public static final StripWallLightBlock YELLOW_THIN_STRIP_WALL_LIGHT_TUBE =
       new StripWallLightBlock("yellow", YELLOW_WALL_LIGHT_SETTINGS);
 
@@ -143,7 +151,7 @@ public final class LightBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final AutoConnectWallLightBlock YELLOW_WALL_LIGHT_HASH_DECORATION =
       new AutoConnectWallLightBlock("yellow", "hash", YELLOW_WALL_LIGHT_SETTINGS);
-  
+
   @RegisterIdentifier
   public static final CubeAllBlock CYAN_LIGHT = new CubeAllBlock(CYAN_LIGHT_SETTINGS);
 
@@ -154,6 +162,10 @@ public final class LightBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final WallLightBlock CYAN_LARGE_WALL_LIGHT_TUBE =
       new WallLightBlock("cyan", CYAN_WALL_LIGHT_SETTINGS);
+
+  @RegisterIdentifier
+  public static final StripWallLightBlock CYAN_THIN_STRIP_WALL_LIGHT =
+      new StripWallLightBlock("cyan", CYAN_WALL_LIGHT_SETTINGS);
 
   @RegisterIdentifier
   public static final StripWallLightBlock CYAN_THIN_STRIP_WALL_LIGHT_TUBE =

@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.block;
 import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.blockstate.JState;
 import net.devtech.arrp.json.models.JModel;
+import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -89,11 +90,32 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
       facing = diff < 0.5 ? Direction.EAST : Direction.WEST;
     }
 
-    // 检测毗邻位置会不会有楼梯方块。若旁边两个方向都是楼梯，则什么也不做。
+
+    // 检测毗邻位置会不会有楼梯方块。
     final BlockState stateInCW = world.getBlockState(blockPos.offset(facing.rotateYClockwise()));
     final boolean isStairsInCW = stateInCW.getBlock() instanceof StairsBlock && stateInCW.contains(StairsBlock.FACING) && stateInCW.get(StairsBlock.FACING) == facing.rotateYClockwise();
     final BlockState stateInCCW = world.getBlockState(blockPos.offset(facing.rotateYCounterclockwise()));
     final boolean isStairsInCCW = stateInCCW.getBlock() instanceof StairsBlock && stateInCCW.contains(StairsBlock.FACING) && stateInCCW.get(StairsBlock.FACING) == facing.rotateYCounterclockwise();
+
+    // 检测放置时是否可以称为外部角落的版本。
+    final BlockState stateInOpposite = world.getBlockState(blockPos.offset(facing, -1));
+    final boolean isConnectableInOpposite = stateInOpposite.getBlock() instanceof Handrails;
+    final boolean isConnectedInCW = stateInCW.getBlock() instanceof Handrails && ((Handrails) stateInCW.getBlock()).connectsIn(stateInCW, facing.rotateYCounterclockwise(), facing);
+    final boolean isConnectedInCCW = stateInCCW.getBlock() instanceof Handrails && ((Handrails) stateInCCW.getBlock()).connectsIn(stateInCCW, facing.rotateYClockwise(), facing);
+
+    // 若该方块贴近的方块可连接，且两侧只有一个可以与之连接，则生成一个外部方块。
+    if (isConnectableInOpposite) {
+      final boolean canConnectOuterInCW = isConnectedInCW && ((Handrails) stateInOpposite.getBlock()).connectsIn(stateInOpposite, facing, facing.rotateYCounterclockwise());
+      final boolean canConnectOuterInCCW = isConnectedInCCW && ((Handrails) stateInOpposite.getBlock()).connectsIn(stateInOpposite, facing, facing.rotateYClockwise());
+      if (canConnectOuterInCW != canConnectOuterInCCW) {
+        final BlockState outerState = outer().getDefaultState();
+        return outerState
+            .with(HandrailOuterBlock.FACING, HorizontalCornerDirection.fromDirections(facing.getOpposite(), canConnectOuterInCW ? facing.rotateYClockwise() : facing.rotateYCounterclockwise()))
+            .with(WATERLOGGED, waterlogged);
+      }
+    }
+
+    // 若该方块两侧只有一个连接了楼梯，则生成一个楼梯方块。
     if (isStairsInCW != isStairsInCCW) {
       final BlockState placementState = stair().getDefaultState();
       if (placementState == null) return null;
@@ -159,7 +181,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (stateFrom.getBlock() instanceof final Handrails block) {
+    if (direction.getAxis().isHorizontal() && stateFrom.getBlock() instanceof final Handrails block) {
       return block.baseBlock() == this.baseBlock()
           && block.connectsIn(stateFrom, direction.getOpposite(), state.get(FACING));
     }
@@ -195,6 +217,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
     central().writeBlockStates(pack);
     corner().writeBlockStates(pack);
     stair().writeBlockStates(pack);
+    outer().writeBlockStates(pack);
   }
 
   @Environment(EnvType.CLIENT)
@@ -204,6 +227,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
     central().writeBlockModel(pack);
     corner().writeBlockModel(pack);
     stair().writeBlockModel(pack);
+    outer().writeBlockModel(pack);
   }
 
   @Override
@@ -212,7 +236,16 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
     central().writeLootTable(pack);
     corner().writeLootTable(pack);
     stair().writeLootTable(pack);
+    outer().writeLootTable(pack);
   }
+
+  /**
+   * 该方块的纹理变量，即模型中的 {@code "textures"} 字段。重写此方法时，务必注解为 {@code @Environment(EnvType.CLIENT)}。通常来说，其衍生的几个方块（如楼梯、角落等）均会使用此系列的纹理。
+   *
+   * @return 该方块的纹理变量组合。
+   */
+  @Environment(EnvType.CLIENT)
+  public abstract @NotNull JTextures getTextures();
 
   /**
    * 该方块对应的中心版本。
@@ -234,6 +267,13 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
    * @return 该方块对应的位于楼梯扶手位置的方块。应该是直接返回一个常量实例的字段。
    */
   public abstract HandrailStairBlock<? extends HandrailBlock> stair();
+
+  /**
+   * 该方块对应的外角落版本。
+   *
+   * @return 该方块对应的位于角落外部位置的方块。应该是直接返回一个常量实例的字段。
+   */
+  public abstract HandrailOuterBlock<? extends HandrailBlock> outer();
 
   @Override
   public abstract @Nullable Block baseBlock();
