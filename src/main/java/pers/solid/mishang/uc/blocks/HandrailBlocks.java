@@ -147,6 +147,35 @@ public final class HandrailBlocks extends MishangucBlocks {
     SIMPLE_SNOW_HANDRAIL.texture = "block/snow";
   }
 
+  // 木头
+  @RegisterIdentifier
+  public static final SimpleHandrailBlock SIMPLE_OAK_HANDRAIL = new SimpleHandrailBlock(Blocks.OAK_WOOD);
+  @RegisterIdentifier
+  public static final SimpleHandrailBlock SIMPLE_SPRUCE_HANDRAIL = new SimpleHandrailBlock(Blocks.SPRUCE_WOOD);
+  @RegisterIdentifier
+  public static final SimpleHandrailBlock SIMPLE_BIRCH_HANDRAIL = new SimpleHandrailBlock(Blocks.BIRCH_WOOD);
+  @RegisterIdentifier
+  public static final SimpleHandrailBlock SIMPLE_JUNGLE_HANDRAIL = new SimpleHandrailBlock(Blocks.JUNGLE_WOOD);
+  @RegisterIdentifier
+  public static final SimpleHandrailBlock SIMPLE_ACACIA_HANDRAIL = new SimpleHandrailBlock(Blocks.ACACIA_WOOD);
+  @RegisterIdentifier
+  public static final SimpleHandrailBlock SIMPLE_DARK_OAK_HANDRAIL = new SimpleHandrailBlock(Blocks.DARK_OAK_WOOD);
+  @RegisterIdentifier
+  public static final SimpleHandrailBlock SIMPLE_CRIMSON_HANDRAIL = new SimpleHandrailBlock(Blocks.CRIMSON_STEM);
+  @RegisterIdentifier
+  public static final SimpleHandrailBlock SIMPLE_WARPED_HANDRAIL = new SimpleHandrailBlock(Blocks.CRIMSON_STEM);
+
+  static {
+    SIMPLE_OAK_HANDRAIL.texture = "block/oak_log";
+    SIMPLE_SPRUCE_HANDRAIL.texture = "block/spruce_log";
+    SIMPLE_BIRCH_HANDRAIL.texture = "block/birch_log";
+    SIMPLE_JUNGLE_HANDRAIL.texture = "block/jungle_log";
+    SIMPLE_ACACIA_HANDRAIL.texture = "block/acacia_log";
+    SIMPLE_DARK_OAK_HANDRAIL.texture = "block/dark_oak_log";
+    SIMPLE_CRIMSON_HANDRAIL.texture = "block/crimson_stem";
+    SIMPLE_WARPED_HANDRAIL.texture = "block/warped_stem";
+  }
+
   // 染色玻璃。
 
   @RegisterIdentifier
