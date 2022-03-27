@@ -10,7 +10,6 @@
       "from": [7.5, 12, 8.5],
       "to": [8.5, 13, 16],
       "faces": {
-        "north": {"texture": "#top"},
         "east": {"texture": "#top"},
         "south": {"texture": "#top", "cullface": "south"},
         "west": {"texture": "#top"},
@@ -22,7 +21,6 @@
       "from": [7.5, 0, 8.5],
       "to": [8.5, 1, 16],
       "faces": {
-        "north": {"texture": "#bottom"},
         "east": {"texture": "#bottom"},
         "south": {"texture": "#bottom", "cullface": "south"},
         "west": {"texture": "#bottom"},
