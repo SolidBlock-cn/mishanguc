@@ -69,7 +69,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
 
   @Override
   public ActionResult beginAttackBlock(
-      PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
+      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!player.abilities.creativeMode) {
       // 仅限创造模式玩家使用。
       return ActionResult.PASS;
@@ -214,6 +214,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       Hand hand,
       Entity entity,
       @Nullable EntityHitResult hitResult) {
+    if (!player.abilities.creativeMode) return ActionResult.PASS;
     entity.setInvisible(true);
     entity.setPos(entity.getX(), -114514, entity.getZ());
     entity.kill();

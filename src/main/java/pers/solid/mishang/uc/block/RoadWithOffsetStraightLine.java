@@ -74,6 +74,7 @@ public interface RoadWithOffsetStraightLine extends Road {
                 : ctx.getPlayerFacing().rotateYClockwise());
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   default void appendRoadTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {

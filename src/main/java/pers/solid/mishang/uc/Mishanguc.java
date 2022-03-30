@@ -86,7 +86,7 @@ public class Mishanguc implements ModInitializer {
                 .beginAttackBlock(
                     player,
                     world,
-                    hitResult.getBlockPos(),
+                    hand, hitResult.getBlockPos(),
                     hitResult.getSide(),
                     ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
           } else {
@@ -100,7 +100,7 @@ public class Mishanguc implements ModInitializer {
           if (!world.isClient || player.isSpectator()) {
             return ActionResult.PASS;
           }
-          final ItemStack stack = player.getMainHandStack();
+          final ItemStack stack = player.getStackInHand(hand);
           final Item item = stack.getItem();
           if (item instanceof BlockToolItem) {
             final BlockHitResult hitResult =
@@ -111,7 +111,7 @@ public class Mishanguc implements ModInitializer {
                 .progressAttackBlock(
                     player,
                     world,
-                    hitResult.getBlockPos(),
+                    hand, hitResult.getBlockPos(),
                     hitResult.getSide(),
                     ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
           } else {
@@ -124,7 +124,7 @@ public class Mishanguc implements ModInitializer {
           if (world.isClient || player.isSpectator()) {
             return ActionResult.PASS;
           }
-          final ItemStack stack = player.getMainHandStack();
+          final ItemStack stack = player.getStackInHand(hand);
           final Item item = stack.getItem();
           if (item instanceof BlockToolItem) {
             final BlockHitResult hitResult =
@@ -135,7 +135,7 @@ public class Mishanguc implements ModInitializer {
                 .beginAttackBlock(
                     player,
                     world,
-                    hitResult.getBlockPos(),
+                    hand, hitResult.getBlockPos(),
                     hitResult.getSide(),
                     ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
           } else {

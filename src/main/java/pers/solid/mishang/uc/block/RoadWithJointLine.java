@@ -71,6 +71,7 @@ public interface RoadWithJointLine extends Road {
                 : rotation);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   default void appendRoadTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {

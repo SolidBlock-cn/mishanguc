@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.blockentity;
 
 import com.google.common.collect.ImmutableList;
+import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,9 +40,8 @@ public class WallSignBlockEntity extends BlockEntityWithText {
   @Override
   public void fromTag(BlockState state, NbtCompound nbt) {
     super.fromTag(state, nbt);
-    if (!nbt.contains("text")) return;
     final @Nullable NbtElement nbtText = nbt.get("text");
-    if (nbtText instanceof NbtString) {
+    if (nbtText instanceof NbtString || nbt.contains("textJson", NbtType.STRING)) {
       // 如果 text 是个字符串，则读取整个 nbt 作为 TextContext。
       // 例如，整个 nbt 可以是 {text: "abc", color: "red", size: 5}、
       textContexts = ImmutableList.of(TextContext.fromNbt(nbt, getDefaultTextContext()));

@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Either;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -117,6 +119,7 @@ public interface RoadWithAutoLine extends Road {
     Road.super.neighborRoadUpdate(state, world, pos, block, fromPos, notify);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   default void appendRoadTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {

@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.item;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -83,20 +85,20 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
       BlockHitResult blockHitResult,
       Hand hand,
       boolean fluidIncluded) {
-    if (!world.isClient) return getIdOf(player, world, blockHitResult.getBlockPos());
+    if (world.isClient) return getIdOf(player, world, blockHitResult.getBlockPos());
     else return ActionResult.SUCCESS;
   }
 
   @Override
   public ActionResult beginAttackBlock(
-      PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    if (!world.isClient) return getIdOf(player, world, pos);
+      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    if (world.isClient) return getIdOf(player, world, pos);
     else return ActionResult.SUCCESS;
   }
 
   @Override
   public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-    if (!world.isClient) {
+    if (world.isClient) {
       final BlockPos blockPos = user.getBlockPos();
       final Biome biome = user.getEntityWorld().getBiome(blockPos);
       final MutableRegistry<Biome> biomes =
@@ -121,6 +123,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
     return super.use(world, user, hand);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
@@ -157,7 +160,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
       Hand hand,
       Entity entity,
       @Nullable EntityHitResult hitResult) {
-    if (world.isClient) return ActionResult.SUCCESS;
+    if (!world.isClient) return ActionResult.SUCCESS;
     final BlockPos blockPos = entity.getBlockPos();
     player.sendSystemMessage(
         new LiteralText("")

@@ -40,7 +40,11 @@ public class TextContext implements Cloneable {
             map.put('↙', '↘');
           });
   /**
-   * 文本内容。
+   * 文本内容。该字段对应 NBT 中的两种情况：<br>
+   * <ul>
+   *   <li>若 NBT 中存在字段 “textJson”，则将其作为原始 JSON 文本进行解析。</li>
+   *   <li>否则，直接使用 NBT 字段 “text”，并直接将其作为原始文本（{@link LiteralText}）使用。</li>
+   * </ul>
    */
   public @Nullable MutableText text;
   /**
@@ -168,14 +172,14 @@ public class TextContext implements Cloneable {
   public void readNbt(@NotNull NbtCompound nbt) {
     final @Nullable NbtElement nbtText = nbt.get("text");
     final String textJson = nbt.getString("textJson");
-    if (nbtText instanceof NbtString) {
-      text = new LiteralText(nbtText.asString());
-    } else if (!textJson.isEmpty()) {
+    if (!textJson.isEmpty()) {
       try {
         text = Text.Serializer.fromLenientJson(textJson);
       } catch (JsonParseException e) {
         text = new TranslatableText("message.mishanguc.invalid_json", e.getMessage());
       }
+    } else if (nbtText instanceof NbtString) {
+      text = new LiteralText(nbtText.asString());
     } else {
       text = null;
     }
@@ -274,7 +278,6 @@ public class TextContext implements Cloneable {
     matrixStack.scale(size / 16f, size / 16f, size / 16f);
     matrixStack.scale(scaleX, scaleY, 1);
 
-    text = text.copy();
     // 处理文本格式，如加粗、斜线等。文本颜色在 <tt>draw</tt> 的参数中。
     if (bold) {
       text.formatted(Formatting.BOLD);
@@ -294,7 +297,7 @@ public class TextContext implements Cloneable {
 
     // 执行渲染
     textRenderer.draw(
-        text,
+        text.asOrderedText(),
         x,
         y,
         color,
@@ -312,13 +315,17 @@ public class TextContext implements Cloneable {
    *
    * @param nbt 一个待写入的 NBT 复合标签，可以是空的 NBT 复合标签：
    *            <pre>{@code
-   *                       new NbtCompound()
-   *                       }</pre>
+   *                                                                                                    new NbtCompound()
+   *                                                                                                    }</pre>
    * @return 修改后的 <tt>nbt</tt>。
    */
   public NbtCompound writeNbt(NbtCompound nbt) {
     if (text != null) {
-      nbt.putString("text", text.asString());
+      if (text instanceof LiteralText && text.getSiblings().isEmpty() && text.getStyle().isEmpty()) {
+        nbt.putString("text", text.asString());
+      } else {
+        nbt.putString("textJson", Text.Serializer.toJson(text));
+      }
     } else {
       nbt.remove("text");
     }
@@ -387,6 +394,7 @@ public class TextContext implements Cloneable {
 
   public @Nullable MutableText asStyledText() {
     if (text == null) return null;
+    final MutableText text = this.text.copy();
     if (bold) text.formatted(Formatting.BOLD);
     if (italic) text.formatted(Formatting.ITALIC);
     if (underline) text.formatted(Formatting.UNDERLINE);

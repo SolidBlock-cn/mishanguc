@@ -18,7 +18,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -85,13 +84,14 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
     return super.canMine(state, world, pos, miner);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
         new TranslatableText("item.mishanguc.slab_tool.tooltip")
-            .setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+            .formatted(Formatting.GRAY));
   }
 
   @Environment(EnvType.CLIENT)

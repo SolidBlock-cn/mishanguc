@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.item;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,6 +31,7 @@ public class BlockStateToolItem extends BlockToolItem {
 
   public static void broadcastProperties(
       BlockPos blockPos, PlayerEntity player, BlockState blockState) {
+    // 吐槽：为什么 Block#getName 要注解为 @Environment(EnvType.CLIENT)，导致这些东西都只能在客户端使用。
     final Collection<Property<?>> properties = blockState.getProperties();
     if (properties.isEmpty()) {
       player.sendSystemMessage(
@@ -73,7 +76,7 @@ public class BlockStateToolItem extends BlockToolItem {
       BlockHitResult blockHitResult,
       Hand hand,
       boolean fluidIncluded) {
-    if (!world.isClient) {
+    if (world.isClient) {
       return getBlockStateOf(player, world, blockHitResult.getBlockPos(), false);
     } else {
       return ActionResult.SUCCESS;
@@ -82,8 +85,8 @@ public class BlockStateToolItem extends BlockToolItem {
 
   @Override
   public ActionResult beginAttackBlock(
-      PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    if (world.isClient()) return ActionResult.SUCCESS;
+      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    if (!world.isClient()) return ActionResult.SUCCESS;
     return getBlockStateOf(player, world, pos, fluidIncluded);
   }
 
@@ -113,6 +116,7 @@ public class BlockStateToolItem extends BlockToolItem {
     return ActionResult.SUCCESS;
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {

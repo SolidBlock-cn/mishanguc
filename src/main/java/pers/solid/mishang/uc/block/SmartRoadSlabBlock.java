@@ -113,6 +113,7 @@ public class SmartRoadSlabBlock<T extends Block & Road> extends AbstractRoadSlab
     baseBlock.neighborUpdate(state, world, pos, block, fromPos, notify);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendRoadTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {

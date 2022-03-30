@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.item;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -23,6 +24,11 @@ public class NamedBlockItem extends BlockItem {
 
   @Override
   public Text getName(ItemStack stack) {
-    return getBlock().getName();
+    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+      // 由于 Block#getName 仅限客户端，因此这里也仅限客户端执行。
+      return getBlock().getName();
+    } else {
+      return super.getName(stack);
+    }
   }
 }

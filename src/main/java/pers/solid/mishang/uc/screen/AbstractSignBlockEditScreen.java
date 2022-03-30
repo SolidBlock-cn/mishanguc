@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.screen;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.google.gson.JsonParseException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -44,6 +45,8 @@ import java.util.ListIterator;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 编辑告示牌时的屏幕。<br>
@@ -693,7 +696,16 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
             new TranslatableText("message.mishanguc.text_field"));
     textFieldWidget.setMaxLength(Integer.MAX_VALUE);
     if (textContext.text != null) {
-      textFieldWidget.setText(textContext.text.asString());
+      if (textContext.text instanceof LiteralText && textContext.text.getSiblings().isEmpty() && textContext.text.getStyle().isEmpty()) {
+        final String text = textContext.text.asString();
+        if (Pattern.compile("^-(\\w+?) (.+)$").matcher(text).matches()) {
+          textFieldWidget.setText("-literal " + text);
+        } else {
+          textFieldWidget.setText(text);
+        }
+      } else {
+        textFieldWidget.setText("-json " + Text.Serializer.toJson(textContext.text));
+      }
     }
     final TextFieldListScreen.Entry newEntry = textFieldListScreen.new Entry(textFieldWidget);
     textFieldListScreen.children().add(index, newEntry);
@@ -703,7 +715,28 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         s -> {
           final TextContext textContext1 = contextToWidgetBiMap.inverse().get(textFieldWidget);
           if (textContext1 != null) {
-            textContext1.text = new LiteralText(s);
+            final Matcher matcher = Pattern.compile("^-(\\w+?) (.+)$").matcher(s);
+            if (matcher.matches()) {
+              final String name = matcher.group(1);
+              final String value = matcher.group(2);
+              switch (name) {
+                case "literal":
+                  textContext1.text = new LiteralText(value);
+                  break;
+                case "json":
+                  try {
+                    textContext1.text = Text.Serializer.fromLenientJson(value);
+                  } catch (JsonParseException e) {
+                    // 如果文本有问题，则不执行操作。
+                  }
+                  break;
+                default:
+                  // 未识别的名称，直接忽略。
+                  textContext1.text = new LiteralText(s);
+              }
+            } else {
+              textContext1.text = new LiteralText(s);
+            }
           }
           changed = true;
         });
