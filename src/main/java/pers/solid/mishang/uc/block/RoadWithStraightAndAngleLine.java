@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.block;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -50,6 +52,7 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
         RoadWithAngleLine.super.withPlacementState(state, ctx), ctx);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   default void appendRoadTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {

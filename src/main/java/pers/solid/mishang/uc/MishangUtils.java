@@ -4,7 +4,9 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
 import com.google.common.collect.Streams;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.texture.NativeImage;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
@@ -264,4 +266,11 @@ public class MishangUtils {
   public static Identifier identifierPrefix(Identifier identifier, String prefix) {
     return new Identifier(identifier.getNamespace(), prefix + identifier.getPath());
   }
+
+  public static <T extends Comparable<T>> BlockState with(BlockState state, Property<T> property, String name) {
+    return property.parse(name).map((value) -> {
+      return state.with(property, value);
+    }).orElse(state);
+  }
+
 }

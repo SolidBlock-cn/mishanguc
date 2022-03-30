@@ -7,6 +7,7 @@ import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
+import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -93,9 +94,9 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
 
     // 检测毗邻位置会不会有楼梯方块。
     final BlockState stateInCW = world.getBlockState(blockPos.offset(facing.rotateYClockwise()));
-    final boolean isStairsInCW = stateInCW.getBlock() instanceof StairsBlock && stateInCW.contains(StairsBlock.FACING) && stateInCW.get(StairsBlock.FACING) == facing.rotateYClockwise();
+    final boolean isStairsInCW = stateInCW.getBlock() instanceof StairsBlock && stateInCW.contains(StairsBlock.FACING) && stateInCW.get(StairsBlock.FACING) == facing.rotateYClockwise() && stateInCW.get(StairsBlock.HALF) == BlockHalf.BOTTOM;
     final BlockState stateInCCW = world.getBlockState(blockPos.offset(facing.rotateYCounterclockwise()));
-    final boolean isStairsInCCW = stateInCCW.getBlock() instanceof StairsBlock && stateInCCW.contains(StairsBlock.FACING) && stateInCCW.get(StairsBlock.FACING) == facing.rotateYCounterclockwise();
+    final boolean isStairsInCCW = stateInCCW.getBlock() instanceof StairsBlock && stateInCCW.contains(StairsBlock.FACING) && stateInCCW.get(StairsBlock.FACING) == facing.rotateYCounterclockwise() && stateInCCW.get(StairsBlock.HALF) == BlockHalf.BOTTOM;
 
     // 检测放置时是否可以称为外部角落的版本。
     final BlockState stateInOpposite = world.getBlockState(blockPos.offset(facing, -1));

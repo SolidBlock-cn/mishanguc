@@ -88,6 +88,7 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
         .with(AXIS, ctx.getPlayerFacing().getAxis());
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   default void appendRoadTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {

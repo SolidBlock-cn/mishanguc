@@ -98,7 +98,7 @@ public class FastBuildingToolItem extends BlockToolItem {
 
   @Override
   public ActionResult beginAttackBlock(
-      PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
+      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!player.getAbilities().creativeMode) {
       // 仅限创造模式玩家使用。
       return ActionResult.PASS;
@@ -140,6 +140,7 @@ public class FastBuildingToolItem extends BlockToolItem {
     return matchingRule == null ? BlockMatchingRule.SAME_BLOCK : matchingRule;
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
