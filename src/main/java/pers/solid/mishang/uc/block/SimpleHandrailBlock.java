@@ -75,6 +75,12 @@ public class SimpleHandrailBlock extends HandrailBlock {
 
   @Environment(EnvType.CLIENT)
   @Override
+  public @Nullable JModel getItemModel() {
+    return new JModel().parent("mishanguc:block/simple_handrail_inventory").textures(getTextures());
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
   public @NotNull JTextures getTextures() {
     return new JTextures().var("texture", getTexture()).var("top", top).var("bottom", bottom);
   }
@@ -196,6 +202,13 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
       pack.addModel(JModel.model("mishanguc:block/simple_handrail_outer").textures(baseRail.getTextures()), getBlockModelIdentifier());
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public MutableText getName() {
+      final Block block = baseBlock();
+      return block == null ? super.getName() : new TranslatableText("block.mishanguc.simple_handrail_outer", block.getName());
     }
   }
 }

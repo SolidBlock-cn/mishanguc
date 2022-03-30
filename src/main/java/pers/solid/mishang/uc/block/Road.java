@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.datafixers.util.Either;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -126,7 +128,8 @@ public interface Road extends ARRPGenerator {
   }
 
   /**
-   * 在物品栏中为该道路添加提示信息。
+   * 在物品栏中为该道路添加提示信息。<br>
+   * 子类覆盖此方法时，必须注解为 {@code @Environment(EnvType.CLIENT)}。
    *
    * @param stack   物品堆。
    * @param world   世界。
@@ -136,6 +139,7 @@ public interface Road extends ARRPGenerator {
    * @see AbstractRoadSlabBlock#appendTooltip
    * @see Block#appendTooltip
    */
+  @Environment(EnvType.CLIENT)
   default void appendRoadTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
   }

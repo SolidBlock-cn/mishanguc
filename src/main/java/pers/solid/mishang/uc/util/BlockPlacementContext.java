@@ -9,15 +9,19 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 
 import java.util.Objects;
@@ -73,11 +77,11 @@ public class BlockPlacementContext {
    */
   @Nullable Hand hand;
   /**
-   * 手中的物品堆。该物品堆的物品必须是方块物品。<br>
+   * 手中的物品堆。该物品堆的物品必须是方块物品。如果手中的物品堆是空的，或者不是方块，则该值为 {@code null}。<br>
    * The {@link ItemStack} in the {@code hand}. The item in the <code>ItemStack</code> must be a
-   * {@link BlockItem}.
+   * {@link BlockItem}. If the item stack in hand is not block item, or is nill, then the value is {@code null}.
    */
-  @Nullable ItemStack stackInHand;
+  final @Nullable ItemStack stackInHand;
   /**
    * 手中物品堆中的方块物品对应的方块。<br>
    * The block of the blockItem in the {@link #stackInHand}.
@@ -129,7 +133,8 @@ public class BlockPlacementContext {
     this.stack = stack;
     this.hit = hit;
     this.includesFluid = includesFluid;
-    completeHandStacks();
+
+    // 需要被替换的方块
     hitState = world.getBlockState(hit.getBlockPos());
     hitEntity = world.getBlockEntity(hit.getBlockPos());
     placementContext =
@@ -143,9 +148,38 @@ public class BlockPlacementContext {
     posToPlace = includesFluid ? blockPos.offset(hit.getSide()) : placementContext.getBlockPos();
     stateToReplace = world.getBlockState(posToPlace);
     entityToReplace = world.getBlockEntity(posToPlace);
-    @Nullable BlockState stateToPlace1;
-    stateToPlace1 = handBlock == null ? null : handBlock.getPlacementState(placementContext);
+
+    // 需要放置的方块
+    @Nullable BlockState stateToPlace1 = null;
+    @Nullable ItemStack stackInHand1 = null;
+    for (@NotNull Hand hand1 : Hand.values()) {
+      ItemStack stackInHand0 = this.player.getStackInHand(hand1);
+      if (stackInHand0.getItem() instanceof final BlockItem blockItem) {
+        // 若手中持有方块物品，则 stateToPlace、entityToReplace 为该物品
+        handBlock = blockItem.getBlock();
+        stateToPlace1 = handBlock.getPlacementState(placementContext);
+        if (stateToPlace1 == null) continue;
+
+        // 尝试 placeFromTag
+        final NbtCompound blockStateTag = stackInHand0.getSubNbt("BlockStateTag");
+        if (blockStateTag != null) {
+          final StateManager<Block, BlockState> stateManager = handBlock.getStateManager();
+          for (String key : blockStateTag.getKeys()) {
+            final Property<?> property = stateManager.getProperty(key);
+            if (property != null) {
+              stateToPlace1 = MishangUtils.with(stateToPlace1, property, blockStateTag.getString(key));
+            }
+          }
+        }
+        stackInHand1 = stackInHand0;
+        hand = hand1;
+        break;
+      }
+    }
+
+    stackInHand = stackInHand1;
     if (stateToPlace1 == null) {
+      // 手中没有有效的方块物品，则使用 hitState。
       stateToPlace1 =
           placementContext.canReplaceExisting() && !includesFluid
               ? hitState.getBlock().getPlacementState(placementContext)
@@ -154,11 +188,15 @@ public class BlockPlacementContext {
     if (stateToPlace1 == null) {
       stateToPlace1 = hitState;
     }
-    if (includesFluid && stateToPlace1.getProperties().contains(Properties.WATERLOGGED)) {
+
+    // 尝试放置含水
+    if (!includesFluid && stateToPlace1.getProperties().contains(Properties.WATERLOGGED)) {
       stateToPlace1 =
           stateToPlace1.with(
-              Properties.WATERLOGGED, stateToPlace1.getFluidState().getFluid() == Fluids.WATER);
+              Properties.WATERLOGGED, stateToReplace.getFluidState().getFluid() == Fluids.WATER);
     }
+
+    // 此时终于确定好了 stateToPlace
     this.stateToPlace = stateToPlace1;
     if (hitEntity != null) {
       this.entityToPlace = world.getBlockEntity(hit.getBlockPos());
@@ -177,20 +215,6 @@ public class BlockPlacementContext {
   }
 
   /**
-   * 若玩家手中拿着方块物品，则获取此方块物品以及对应的手。
-   */
-  private void completeHandStacks() {
-    for (@NotNull Hand hand1 : Hand.values()) {
-      stackInHand = player.getStackInHand(hand1);
-      if (stackInHand.getItem() instanceof final BlockItem blockItem) {
-        handBlock = blockItem.getBlock();
-        hand = hand1;
-        break;
-      }
-    }
-  }
-
-  /**
    * 放置方块。<br>
    * Place the block. Calls {@link World#setBlockState}.
    */
@@ -205,8 +229,11 @@ public class BlockPlacementContext {
   @SuppressWarnings("UnusedReturnValue")
   public boolean setBlockEntity() {
     BlockEntity entityToPlace = world.getBlockEntity(posToPlace);
-    if (hitEntity != null && entityToPlace != null) {
+    if (stackInHand != null) {
+      BlockItem.writeTagToBlockEntity(world, player, posToPlace, stackInHand);
+    } else if (hitEntity != null && entityToPlace != null) {
       entityToPlace.readNbt(hitEntity.createNbt());
+      entityToPlace.markDirty();
     }
     return true;
   }

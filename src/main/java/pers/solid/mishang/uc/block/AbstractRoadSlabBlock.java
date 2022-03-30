@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.block;
 
 import net.devtech.arrp.json.loot.JLootTable;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
@@ -84,6 +86,7 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
     neighborRoadUpdate(state, world, pos, block, fromPos, notify);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {

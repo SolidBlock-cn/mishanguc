@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.item;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.item.TooltipContext;
@@ -52,13 +54,14 @@ public class MirroringToolItem extends BlockToolItem {
 
   @Override
   public ActionResult beginAttackBlock(
-      PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
+      PlayerEntity player, World world, Hand hand,BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!player.getAbilities().allowModifyWorld && !player.getMainHandStack().canDestroy(Registry.BLOCK, new CachedBlockPosition(world, pos, false))) {
       return ActionResult.PASS;
     }
     return mirror(world, pos, direction);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {

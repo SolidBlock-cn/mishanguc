@@ -74,6 +74,10 @@ public final class MishangucItems {
   public static final DataTagToolItem DATA_TAG_TOOL =
       new DataTagToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
 
+  @RegisterIdentifier
+  @SimpleModel(parent = "item/handheld", texture = "item/stick")
+  public static final TextCopyToolItem TEXT_COPY_TOOL = new TextCopyToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
+
   private MishangucItems() {
   }
 

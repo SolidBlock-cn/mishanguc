@@ -1,12 +1,17 @@
 package pers.solid.mishang.uc.item;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.command.BlockDataObject;
 import net.minecraft.command.EntityDataObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -20,9 +25,18 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.NbtPrettyPrinter;
 
+import java.util.List;
+
 public class DataTagToolItem extends BlockToolItem implements InteractsWithEntity {
   public DataTagToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    super.appendTooltip(stack, world, tooltip, context);
+    tooltip.add(new TranslatableText("item.mishanguc.data_tag_tool.tooltip"));
   }
 
   @Override
@@ -32,7 +46,7 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
       BlockHitResult blockHitResult,
       Hand hand,
       boolean fluidIncluded) {
-    if (!world.isClient) {
+    if (world.isClient) {
       return getBlockDataOf(player, world, blockHitResult.getBlockPos());
     } else {
       return ActionResult.SUCCESS;
@@ -41,12 +55,13 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
 
   @Override
   public ActionResult beginAttackBlock(
-      PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    if (!world.isClient) return getBlockDataOf(player, world, pos);
+      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    if (world.isClient) return getBlockDataOf(player, world, pos);
     else return ActionResult.SUCCESS;
   }
 
   public ActionResult getBlockDataOf(PlayerEntity player, World world, BlockPos blockPos) {
+    // todo 应该在发送服务器数据然后发送至客户端……
     final @Nullable BlockEntity blockEntity = world.getBlockEntity(blockPos);
     if (blockEntity == null) {
       player.sendSystemMessage(
@@ -62,8 +77,8 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
       player.sendSystemMessage(
           new TranslatableText(
               "debug.mishanguc.dataTag.block.header",
-              String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()),
-              world.getBlockState(blockPos).getBlock().getName().formatted(Formatting.BOLD))
+              String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ())/*,
+              world.getBlockState(blockPos).getBlock().getName().formatted(Formatting.BOLD)*/)
               .formatted(Formatting.YELLOW),
           Util.NIL_UUID);
       player.sendSystemMessage(NbtPrettyPrinter.serialize(blockDataObject.getNbt()), Util.NIL_UUID);
