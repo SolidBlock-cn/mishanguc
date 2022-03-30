@@ -337,6 +337,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     return ActionResult.SUCCESS;
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
     if (baseBlock != null) {

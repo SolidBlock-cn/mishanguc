@@ -10,6 +10,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
+import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -112,7 +113,7 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
     final Shape shape;
     final BlockState stateBelow = world.getBlockState(blockPos.down());
     final Direction facing;
-    if (stateBelow.getBlock() instanceof StairsBlock && stateBelow.contains(StairsBlock.FACING)) {
+    if (stateBelow.getBlock() instanceof StairsBlock && stateBelow.contains(StairsBlock.FACING) && stateBelow.get(StairsBlock.HALF) == BlockHalf.BOTTOM) {
       facing = stateBelow.get(StairsBlock.FACING);
       final BlockPos forwardPos = blockPos.offset(facing);
       final BlockState forwardState = world.getBlockState(forwardPos);

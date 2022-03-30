@@ -89,7 +89,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
    * @see Mishanguc#BEGIN_ATTACK_BLOCK_EVENT
    */
   public abstract ActionResult beginAttackBlock(
-      PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded);
+      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded);
 
   /**
    * 使用此物品中途破坏方块时的翻译。
@@ -97,7 +97,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
    * @see Mishanguc#PROGRESS_ATTACK_BLOCK_EVENT
    */
   public ActionResult progressAttackBlock(
-      PlayerEntity player, World world, BlockPos pos, Direction direction, boolean fluidIncluded) {
+      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     return ActionResult.FAIL;
   }
 
