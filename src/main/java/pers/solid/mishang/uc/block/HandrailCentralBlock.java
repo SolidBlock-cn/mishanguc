@@ -76,7 +76,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     } else return neighborState.getBlock() instanceof HandrailCentralBlock;
   }
 
-  @Environment(EnvType.CLIENT)
+  // 不要注解为 @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
     final Block block = baseBlock();

@@ -29,7 +29,7 @@ public class GlowingWallSignBlock extends WallSignBlock {
     this(baseBlock, FabricBlockSettings.copyOf(baseBlock).luminance(15));
   }
 
-  @Environment(EnvType.CLIENT)
+  // 不要注解为 @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
     return new TranslatableText("block.mishanguc.glowing_wall_sign", baseBlock.getName());

@@ -152,7 +152,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     return new WallSignBlockEntity();
   }
 
-  @Environment(EnvType.CLIENT)
+  // 不要注解为 @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
     return baseBlock == null

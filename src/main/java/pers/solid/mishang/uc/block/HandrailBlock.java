@@ -181,7 +181,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
     return possibleNewFacing != null && facing.getAxis() != possibleNewFacing.getAxis();
   }
 
-  @Environment(EnvType.CLIENT)
+  // 不要注解为 @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
     final Block block = baseBlock();

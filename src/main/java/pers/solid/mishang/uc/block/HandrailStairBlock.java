@@ -283,7 +283,7 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
         .with(POSITION, state.get(POSITION).swap());
   }
 
-  @Environment(EnvType.CLIENT)
+  // 不要注解为 @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
     final Block block = baseBlock();
