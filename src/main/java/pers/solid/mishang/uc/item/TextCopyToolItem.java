@@ -120,7 +120,7 @@ public class TextCopyToolItem extends BlockToolItem {
         }
         blockEntity.markDirty();
         world.updateListeners(blockPos, blockState, blockState, 3);
-        player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.paste", Math.max(texts.size(), 4)), false);
+        player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.paste", Math.min(texts.size(), 4)), false);
         return ActionResult.SUCCESS;
       } else if (blockEntity instanceof WallSignBlockEntity) {
         WallSignBlockEntity wallSignBlockEntity = (WallSignBlockEntity) blockEntity;
@@ -130,16 +130,20 @@ public class TextCopyToolItem extends BlockToolItem {
         }
         blockEntity.markDirty();
         world.updateListeners(blockPos, blockState, blockState, 3);
-        player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.paste", Math.max(wallSignBlockEntity.textContexts.size(), 4)), false);
+        player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.paste", wallSignBlockEntity.textContexts.size()), false);
         return ActionResult.SUCCESS;
       } else if (blockEntity instanceof HungSignBlockEntity) {
         HungSignBlockEntity hungSignBlockEntity = (HungSignBlockEntity) blockEntity;
         final HashMap<@NotNull Direction, @Unmodifiable @NotNull List<@NotNull TextContext>> newTexts = new HashMap<>(hungSignBlockEntity.texts);
-        newTexts.put(blockHitResult.getSide(), ImmutableList.copyOf(texts.stream().map(nbtElement -> TextContext.fromNbt(nbtElement, hungSignBlockEntity.getDefaultTextContext())).iterator()));
+        final ImmutableList<@NotNull TextContext> newTextsThisSide = ImmutableList.copyOf(texts.stream().map(nbtElement -> TextContext.fromNbt(nbtElement, hungSignBlockEntity.getDefaultTextContext())).iterator());
+        if (stack.getOrCreateTag().getBoolean("fromVanillaSign")) {
+          MishangUtils.rearrange(newTextsThisSide);
+        }
+        newTexts.put(blockHitResult.getSide(), newTextsThisSide);
         hungSignBlockEntity.texts = ImmutableMap.copyOf(newTexts);
         blockEntity.markDirty();
         world.updateListeners(blockPos, blockState, blockState, 3);
-        player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.paste", Math.max(hungSignBlockEntity.texts.size(), 4)), false);
+        player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.paste", newTexts.size()), false);
         return ActionResult.SUCCESS;
       }
     } catch (Throwable throwable) {

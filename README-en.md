@@ -4,7 +4,9 @@ This mod is not yet stable. Please do not use this mod in your formal developmen
 
 **This mod relies on ARRP. Make sure you have installed ARRP when installing this mod!**
 
-**This mod is published under the GPLv3 license, which you must follow when propagating this mod. According to GPLv3 license, any programs based on this mod are supposed to be under this license as well. When propagating the source code, the license file is supposed to be kept. When propagating compiled mod files, source code or links should be properly provided. Violation of GPLv3 results to termination of the license, until the mod author agrees or the GPLv3 license allows reinstating. You may refer to the GPLv3 license file for details.**=
+**This mod is published under the GPLv3 license, which you must follow when propagating this mod. According to GPLv3 license, any programs based on this mod are supposed to be under this license as well. When propagating the source code, the license file is supposed to be kept. When propagating compiled mod files, source code or links should be properly provided. Violation of GPLv3 results to termination of the license, until the mod author agrees or the GPLv3 license allows reinstating. You may refer to the GPLv3 license file for details.**
+
+**Road blocks are renamed since 0.1.7, and previous road blocks will be removed. Please make a backup of your world in advance.**
 
 中文版的介绍在[此处](README.md)。
 
@@ -28,9 +30,11 @@ The mod has auto-line roads, which when nearby block updates, can determine what
 
 The mod adds light blocks, including full light blocks and decoration blocks. These blocks are waterloggable.
 
-Strip wall light blocks can be placed on walls, floors or ceilings. When placed on wall, it's by default horizontal, and you can make it vertical placed by sneaking.
+Strip wall light blocks and strip wall light tubes can be placed on walls, floors or ceilings. When placed on wall, it's by default horizontal, and you can make it vertical placed by sneaking.
 
 Light decoration blocks are attached to block sides and can automatically connect to various directions.
+
+Currently there are three colors of lights: white, yellow and cyan.
 
 ### Sign blocks
 
@@ -57,21 +61,40 @@ When adding multiple lines of text, texts are not automatically rearranged, and 
 
 [SINCE 0.1.6] If you haven't added texts yet, you can decide to apply double-line text templates, which is a large line plus a small line. (This style is usually used in subway stations, which is a line of local language plus a line of English.) For hung signs, if texts exist on the back side, you can copy from them. When copying texts from back side, X-axis offset and horizontal alignment of all lines will become opposite, and arrow characters (like '`→`') will also be opposite, which makes much convenience when making bi-direction text signs.
 
+[SINCE 0.1.7] If you want to customize ths JSON text, you can input `-json <raw JSON>` in the text box, e.g. `-json {text:"Some text", color:red, bold:true}`. The JSON recognized in this mod is "lenient", so you can leave out quotation marks for keys and values.
+
 Buttons are enhanced on the sign edit screen: Click the button to adjust value; right-click the button or click with Shift down to adjust in opposite direction; click with the mouse wheel or click with Shift+Alt to return default value. Mouse wheel can also be scrolled to adjust values. Besides, hold Ctrl to adjust 8 times speed, or hold Alt to adjust 1/8 times speed.
+
+### Handrails
+
+Since mod 0.1.7, handrail blocks are added. They are waterloggable.
+
+Handrail blocks take in 5 forms:
+
+- NORMAL. The handrail appears at the edge of a hold block. When placing, its shape direction is perpendicular to your horizontal looking direction. In other word, when you place a handrail block, it is "horizontal". Which edge will be placed on, is decided by where your crossbar hits.
+- CENTER. Located at the central position of the block. In this case, the block has auto connection, which is similar to fence and glass pane. But, different from fence and glass pane, the handrail is connected to at least to direction. If there is no block nearby when placed, the handrail block will display perpendicular to your horizontal looking direction when placed. If nearby block changes, this handrail block will change as well.
+- CORNER. Two NORMAL handrail blocks overlap. In the same space of a NORMAL handrail block, place a block perpendicular to it to make a corner handrail block. When you break one part of this block, the other part will be kept.
+- OUTER. Similar to CORNER, but displays in an outer area from the handrail. In this case, the nearby perpendicular two handrails should be placed in advanced, and then place the handrail block in an appropriate position. Note that in this case, its shape will not change even if nearby handrails change.
+- STAIR. Placed near the edge or above the stairs block (expected upside-down stairs), the block will automatically match the shape of stairs.
 
 ### Tools
 
-The mod adds a series of tools to build, most of which can be used to handle fluids (water or lava) when holding Shift. Most tools use server data, instead of client data.
+The mod adds a series of tools to build, most of which can be used to handle fluids (water or lava) when holding Shift.
 
 - **Road connection state debug tool**: Click the road block to see what the lines are recognized within the game in different directions. These road connection states are used for auto-connecting road blocks.
 - **ID checking tool**: Click a block or entity to see the ID of the block or entity. Click in midair to see the ID of biome.
-- **Fast building tool**: Used to quickly place or remove multiple blocks. What blocks to affect depends on the "matching rule" and "range" or the item. For example, when you hold a fast-building tool with "matching rule = same material, range = 16", and click an oak planks block, other wooden blocks on the plane that connect to the oak planks within 16 blocks will be affected. When placing block, blocks on the clicked plane will be duplicated, but when some block is held in offhand, it will be used instead. You can place fluids when holding Shift. And scrolling mouse wheel while holding Shift or Alt can quickly switch matching mode.
+- **Fast building tool**: Used to quickly place or remove multiple blocks. What blocks to affect depends on the "matching rule" and "range" or the item. For example, when you hold a fast-building tool with "matching rule = same material, range = 16", and click an oak planks block, other wooden blocks on the plane that connect to the oak planks within 16 blocks will be affected. When placing block, blocks on the clicked plane will be duplicated, but when some block is held in offhand, it will be used instead. You can place fluids when holding Shift. And [SINCE 0.1.6] scrolling mouse wheel while holding Shift or Alt can quickly switch matching mode.
 - **Rotating tool**: Click a block to rotate. Hold Shift to rotate in opposite direction.
 - **Mirroring tool**: Click the block to mirror it. For example, there's a stairs block facing east; click the east or west side to make it west-facing, or click the south or north side has no effect.
 - **Slab tool**: Can be used to break the half of a double slab block. Since Minecraft 1.17, it can convert blocks that have slabs (only vanilla blocks and blocks in this mod, not including blocks in other mods) to a corresponding slab. For example, breaking an oak planks block can turn it into an oak slab. This future is not supported in Minecraft 1.16.5.
 - **Force placing tool**: Can be used to force placing or break a block without causing block updates. If block already exists where the block will be placed, the already-existing block will be replaced. This tool can make hovering attaching blocks that should not have been successful usually. When a block is held in offhand, it will be placed, otherwise the clicked block will be placed.
 - **Block state tool**: Click a block to see its block state properties.
-- **Data tag tool**: Click a block or entity to see all of its NBT data tags.
+- **Data tag tool**: Click a block or entity to see all of its NBT data tags. This tool queries server data.
+- **Text copy tool**: Copy and paste texts between blocks. Click "attack" (by default left mouse button) to copy all lines of text (for hung sign block, copy all text on one side). Click "use" (by default right mouse button) to paste the texts you have copies, overriding existing texts if there are. Applicable for vanilla signs and mod signs, with some limitations:
+    - Vanilla signs support only 4 lines, so if you paste more than 4 lines, only the first 4 lines will be pasted.
+    - When cloning vanilla sign texts to a mod sign, the "color" property of the line uses the color of vanilla sign itself.
+    - As only one color is supported for vanilla signs, and this color can only be one of the 16 MC internal colors, some colors will be lost when cloning mod sign texts to vanilla signs. But colors defined in JSON texts will be kept.
+    - When cloning vanilla signs to mod signs, the color of vanilla signs will be applied to each line, and empty lines of vanilla signs will be ignored.
 
 More contents to be added are coming soon.
 
