@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.util;
 
-import com.google.common.collect.ImmutableSet;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.StringIdentifiable;
@@ -13,8 +12,17 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
    * 西南
    */
   SOUTH_WEST(0, 45, "south_west", Direction.SOUTH, Direction.WEST),
+  /**
+   * 西北
+   */
   NORTH_WEST(1, 135, "north_west", Direction.NORTH, Direction.WEST),
+  /**
+   * 东北
+   */
   NORTH_EAST(2, 225, "north_east", Direction.NORTH, Direction.EAST),
+  /**
+   * 东南
+   */
   SOUTH_EAST(3, -45, "south_east", Direction.SOUTH, Direction.EAST);
 
   private final String name;
@@ -35,9 +43,8 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
   }
 
   public static @Nullable HorizontalCornerDirection fromDirections(@NotNull Direction dir1, @NotNull Direction dir2) {
-    ImmutableSet<Direction> directions = ImmutableSet.of(dir1, dir2);
     for (HorizontalCornerDirection direction : HorizontalCornerDirection.values()) {
-      if (directions.equals(ImmutableSet.of(direction.dir1, direction.dir2))) {
+      if ((direction.dir1 == dir1 && direction.dir2 == dir2) || (direction.dir1 == dir2 && direction.dir2 == dir1)) {
         return direction;
       }
     }

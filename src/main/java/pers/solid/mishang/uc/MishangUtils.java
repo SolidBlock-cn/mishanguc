@@ -265,9 +265,7 @@ public class MishangUtils {
   }
 
   public static <T extends Comparable<T>> BlockState with(BlockState state, Property<T> property, String name) {
-    return property.parse(name).map((value) -> {
-      return state.with(property, value);
-    }).orElse(state);
+    return property.parse(name).map((value) -> state.with(property, value)).orElse(state);
   }
 
 }
