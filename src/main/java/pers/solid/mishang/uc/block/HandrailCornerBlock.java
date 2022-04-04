@@ -168,7 +168,7 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
     return super.isSideInvisible(state, stateFrom, direction);
   }
 
-  @Environment(EnvType.CLIENT)
+  // 不要注解为 @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
     final Block block = baseBlock();
