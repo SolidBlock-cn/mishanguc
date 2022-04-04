@@ -257,8 +257,8 @@
   "debug.mishanguc.blockStates": "The properties of block located at %1$s: ",
   "debug.mishanguc.blockStates.none": "The block located at %1$s has no properties.",
   "debug.mishanguc.blockStates.fluidLevel": "Fluid state",
-  "debug.mishanguc.dataTag.block.null": "The block located at %1$s has no data tags",
-  "debug.mishanguc.dataTag.block.header": "The block located at %1$s has the following data tags: ",
+  "debug.mishanguc.dataTag.block.null": "The %2$s located at %1$s has no data tags",
+  "debug.mishanguc.dataTag.block.header": "The %2$s located at %1$s has the following data tags: ",
   "debug.mishanguc.dataTag.entity.entity": "The %2$s located at %1$s has the following data tags: ",
   "debug.mishanguc.nbt.compound": "Compound tag",
   "debug.mishanguc.nbt.compound_eclipse": "…… (%s tags left)",
@@ -293,7 +293,7 @@
   "itemGroup.mishanguc.tools": "Mishang Urban Construction | Tools",
   "itemGroup.mishanguc.decorations": "Mishang Urban Construction | Decorations",
 
-  "notice.mishanguc.load": "Thank you for installing Mishang Urban Construction mod. This mod is under test, and features are not yet stable. Please use with caution for experiencing new features, instead of directly using the features of this mod in your formal works, as the features may be renamed or removed in future versions. If you find any issues on this mod, feel free to submit the issue on GitHub.",
+  "notice.mishanguc.load": "Thank you for installing Mishang Urban Construction mod. This mod is under test, and currently used for experiencing new features. Before this mod is formally released, DO NOT use the features of this mod in your formal works, as the features may be renamed or removed in future versions.",
   "modmenu.descriptionTranslation.mishanguc": "An amount of blocks and items that make a beautiful city! Currently not stable. Please do not use in your formal work!",
 
   "message.mishanguc.sign_edit": "Edit Sign",
