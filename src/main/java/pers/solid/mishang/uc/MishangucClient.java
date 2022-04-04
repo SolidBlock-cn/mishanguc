@@ -24,6 +24,7 @@ import pers.solid.mishang.uc.blockentity.FullWallSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
+import pers.solid.mishang.uc.item.DataTagToolItem;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 import pers.solid.mishang.uc.renderer.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.renderer.WallSignBlockEntityRenderer;
@@ -103,5 +104,7 @@ public class MishangucClient implements ClientModInitializer {
             Mishanguc.MISHANG_LOGGER.error("Error when creating sign edit screen:", exception);
           }
         });
+    ClientPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "get_block_data"), new DataTagToolItem.BlockDataReceiver());
+    ClientPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "get_entity_data"), new DataTagToolItem.EntityDataReceiver());
   }
 }

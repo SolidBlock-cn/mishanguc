@@ -2,14 +2,14 @@ package pers.solid.mishang.uc.item;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
 /**
- * 类似于 {@link BlockItem}，但是名称会调用 {@link Block#getName()}，而不是直接调用 {@link #getTranslationKey}。
+ * <p>类似于 {@link BlockItem}，但是名称会调用 {@link Block#getName()}。</p>
+ * <p>必须注意：由于 {@link Block#getName()} 仅限客户端，因此本类的方块必须确保覆盖该方法时，没有注解为 {@code @}{@link Environment}{@code (EnvType.CLIENT)}！！</p>
  */
 public class NamedBlockItem extends BlockItem {
   public NamedBlockItem(Block block, Settings settings) {
@@ -24,11 +24,11 @@ public class NamedBlockItem extends BlockItem {
 
   @Override
   public Text getName(ItemStack stack) {
-    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-      // 由于 Block#getName 仅限客户端，因此这里也仅限客户端执行。
-      return getBlock().getName();
-    } else {
-      return super.getName(stack);
+    final Block block = getBlock();
+    try {
+      return block.getName();
+    } catch (NoSuchMethodError error) {
+      throw new NoSuchMethodError(String.format("Please ensure the 'getName' method of block '%s' is not annotated with '@Environment(EnvType.CLIENT)'!!!", block));
     }
   }
 }
