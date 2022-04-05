@@ -155,6 +155,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
 
     // 栏杆部分
     final JImprovedTag handrails = new JImprovedTag();
+    final JImprovedTag handrailItems = new JImprovedTag();
     final JImprovedTag normalHandrails = new JImprovedTag();
     final JImprovedTag centralHandrails = new JImprovedTag();
     final JImprovedTag cornerHandrails = new JImprovedTag();
@@ -316,8 +317,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
 
     // 栏杆部分
     MishangUtils.<Block>blockInstanceStream(HandrailBlocks.class).forEach(block -> {
-      if (block instanceof SimpleHandrailBlock) {
-        final SimpleHandrailBlock simpleHandrailBlock = (SimpleHandrailBlock) block;
+      if (block instanceof final SimpleHandrailBlock simpleHandrailBlock) {
         if (HandrailBlocks.SIMPLE_STAINED_GLASS_HANDRAILS.containsValue(block)) {
           simpleStainedGlassNormalHandrails.addBlock(simpleHandrailBlock);
           simpleStainedGlassCentralHandrails.addBlock(simpleHandrailBlock.central);
@@ -337,6 +337,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
           simpleTerracottaOuterHandrails.addBlock(simpleHandrailBlock.outer);
           simpleTerracottaStairHandrails.addBlock(simpleHandrailBlock.stair);
         } else {
+          handrailItems.addBlock(simpleHandrailBlock);
           normalHandrails.addBlock(simpleHandrailBlock);
           centralHandrails.addBlock(simpleHandrailBlock.central);
           cornerHandrails.addBlock(simpleHandrailBlock.corner);
@@ -367,6 +368,10 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         .tag(new Identifier("mishanguc", "simple_stained_glass_normal_handrails"))
         .tag(new Identifier("mishanguc", "simple_terracotta_normal_handrails"))
         .tag(new Identifier("mishanguc", "simple_concrete_normal_handrails"));
+    handrailItems
+        .tag(new Identifier("mishanguc", "simple_stained_glass_handrails"))
+        .tag(new Identifier("mishanguc", "simple_terracotta_handrails"))
+        .tag(new Identifier("mishanguc", "simple_concrete_handrails"));
     centralHandrails
         .tag(new Identifier("mishanguc", "simple_stained_glass_central_handrails"))
         .tag(new Identifier("mishanguc", "simple_terracotta_central_handrails"))
@@ -448,30 +453,34 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     registerTag(fullTerracottaWallSigns, "full_terracotta_wall_signs");
     registerTag(fullWallSigns, "full_wall_signs");
 
-    registerTag(handrails, "handrails");
-    registerTag(normalHandrails, "normal_handrails");
-    registerTag(centralHandrails, "central_handrails");
-    registerTag(cornerHandrails, "corner_handrails");
-    registerTag(outerHandrails, "outer_handrails");
-    registerTag(stairHandrails, "stair_handrails");
-    registerTag(simpleConcreteHandrails, "simple_concrete_handrails");
-    registerTag(simpleConcreteNormalHandrails, "simple_concrete_normal_handrails");
-    registerTag(simpleConcreteCentralHandrails, "simple_concrete_central_handrails");
-    registerTag(simpleConcreteCornerHandrails, "simple_concrete_corner_handrails");
-    registerTag(simpleConcreteOuterHandrails, "simple_concrete_outer_handrails");
-    registerTag(simpleConcreteStairHandrails, "simple_concrete_stair_handrails");
-    registerTag(simpleTerracottaHandrails, "simple_terracotta_handrails");
-    registerTag(simpleTerracottaNormalHandrails, "simple_terracotta_normal_handrails");
-    registerTag(simpleTerracottaCentralHandrails, "simple_terracotta_central_handrails");
-    registerTag(simpleTerracottaCornerHandrails, "simple_terracotta_corner_handrails");
-    registerTag(simpleTerracottaOuterHandrails, "simple_terracotta_outer_handrails");
-    registerTag(simpleTerracottaStairHandrails, "simple_terracotta_stair_handrails");
-    registerTag(simpleStainedGlassHandrails, "simple_stained_glass_handrails");
-    registerTag(simpleStainedGlassNormalHandrails, "simple_stained_glass_normal_handrails");
-    registerTag(simpleStainedGlassCentralHandrails, "simple_stained_glass_central_handrails");
-    registerTag(simpleStainedGlassCornerHandrails, "simple_stained_glass_corner_handrails");
-    registerTag(simpleStainedGlassOuterHandrails, "simple_stained_glass_outer_handrails");
-    registerTag(simpleStainedGlassStairHandrails, "simple_stained_glass_stair_handrails");
+    registerTagBlockOnly(handrails, "handrails");
+    registerTagBlockOnly(normalHandrails, "normal_handrails");
+    registerTagItemOnly(handrailItems, "handrails");
+    registerTagBlockOnly(centralHandrails, "central_handrails");
+    registerTagBlockOnly(cornerHandrails, "corner_handrails");
+    registerTagBlockOnly(outerHandrails, "outer_handrails");
+    registerTagBlockOnly(stairHandrails, "stair_handrails");
+    registerTagBlockOnly(simpleConcreteHandrails, "simple_concrete_handrails");
+    registerTagBlockOnly(simpleConcreteNormalHandrails, "simple_concrete_normal_handrails");
+    registerTagItemOnly(simpleConcreteNormalHandrails, "simple_concrete_handrails");
+    registerTagBlockOnly(simpleConcreteCentralHandrails, "simple_concrete_central_handrails");
+    registerTagBlockOnly(simpleConcreteCornerHandrails, "simple_concrete_corner_handrails");
+    registerTagBlockOnly(simpleConcreteOuterHandrails, "simple_concrete_outer_handrails");
+    registerTagBlockOnly(simpleConcreteStairHandrails, "simple_concrete_stair_handrails");
+    registerTagBlockOnly(simpleTerracottaHandrails, "simple_terracotta_handrails");
+    registerTagBlockOnly(simpleTerracottaNormalHandrails, "simple_terracotta_normal_handrails");
+    registerTagItemOnly(simpleTerracottaNormalHandrails, "simple_terracotta_handrails");
+    registerTagBlockOnly(simpleTerracottaCentralHandrails, "simple_terracotta_central_handrails");
+    registerTagBlockOnly(simpleTerracottaCornerHandrails, "simple_terracotta_corner_handrails");
+    registerTagBlockOnly(simpleTerracottaOuterHandrails, "simple_terracotta_outer_handrails");
+    registerTagBlockOnly(simpleTerracottaStairHandrails, "simple_terracotta_stair_handrails");
+    registerTagBlockOnly(simpleStainedGlassHandrails, "simple_stained_glass_handrails");
+    registerTagBlockOnly(simpleStainedGlassNormalHandrails, "simple_stained_glass_normal_handrails");
+    registerTagItemOnly(simpleStainedGlassNormalHandrails, "simple_stained_glass_handrails");
+    registerTagBlockOnly(simpleStainedGlassCentralHandrails, "simple_stained_glass_central_handrails");
+    registerTagBlockOnly(simpleStainedGlassCornerHandrails, "simple_stained_glass_corner_handrails");
+    registerTagBlockOnly(simpleStainedGlassOuterHandrails, "simple_stained_glass_outer_handrails");
+    registerTagBlockOnly(simpleStainedGlassStairHandrails, "simple_stained_glass_stair_handrails");
 
     // 悬挂的告示牌部分
     hungSigns
@@ -496,6 +505,14 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
 
   private static void registerTag(JTag tag, String name) {
     PACK.addTag(new Identifier("mishanguc", "blocks/" + name), tag);
+    PACK.addTag(new Identifier("mishanguc", "items/" + name), tag);
+  }
+
+  private static void registerTagBlockOnly(JTag tag, String name) {
+    PACK.addTag(new Identifier("mishanguc", "blocks/" + name), tag);
+  }
+
+  private static void registerTagItemOnly(JTag tag, String name) {
     PACK.addTag(new Identifier("mishanguc", "items/" + name), tag);
   }
 
