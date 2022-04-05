@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.item;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -116,7 +114,6 @@ public class BlockStateToolItem extends BlockToolItem {
     return ActionResult.SUCCESS;
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {

@@ -44,7 +44,6 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
     super(settings, includesFluid);
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);

@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.item;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -111,7 +109,6 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
     return super.use(world, user, hand);
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {

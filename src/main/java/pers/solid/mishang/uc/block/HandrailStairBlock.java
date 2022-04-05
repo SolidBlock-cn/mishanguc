@@ -228,7 +228,6 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
         || blockState.get(FACING) == direction.getOpposite() && blockState.get(SHAPE) == Shape.BOTTOM);
   }
 
-  @Environment(EnvType.CLIENT)
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
@@ -263,7 +262,6 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
         .with(POSITION, state.get(POSITION).swap());
   }
 
-  // 不要注解为 @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
     final Block block = baseBlock();
