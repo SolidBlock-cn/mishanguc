@@ -74,7 +74,6 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
               block = switch (type) {
                 case BEVEL -> ROAD_WITH_WHITE_BA_LINE;
                 case RIGHT_ANGLE -> ROAD_WITH_WHITE_RA_LINE;
-                default -> throw new IllegalStateException("Unknown angle type: " + type);
               };
             } else {
               block = null;

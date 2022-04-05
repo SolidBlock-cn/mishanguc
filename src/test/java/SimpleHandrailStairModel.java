@@ -39,18 +39,11 @@ public class SimpleHandrailStairModel {
     final JsonArray elements = new JsonArray();
     model.add("elements", elements);
 
-    final double x1;
-    switch (type) {
-      case LEFT:
-        x1 = 1;
-        break;
-      case CENTER:
-        x1 = 7.5;
-        break;
-      default:
-        x1 = 14;
-        break;
-    }
+    final double x1 = switch (type) {
+      case LEFT -> 1;
+      case CENTER -> 7.5;
+      default -> 14;
+    };
 
     // 扶手部分
     for (int i = shape == HandrailStairBlock.Shape.BOTTOM ? 8 : 0; i < (shape == HandrailStairBlock.Shape.TOP ? 7 : 16); i++) {
