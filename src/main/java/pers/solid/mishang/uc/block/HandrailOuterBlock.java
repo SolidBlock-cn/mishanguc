@@ -106,7 +106,6 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
     return placementState.with(FACING, HorizontalCornerDirection.fromRotation(ctx.getPlayerYaw())).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
   }
 
-  // 不要注解为 @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
     final Block block = baseBlock();
@@ -122,7 +121,6 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
     return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
   }
 
-  @Environment(EnvType.CLIENT)
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {

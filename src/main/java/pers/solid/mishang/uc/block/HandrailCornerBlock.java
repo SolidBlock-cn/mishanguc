@@ -157,7 +157,6 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
         .with(FACING, state.get(FACING).mirror(mirror));
   }
 
-  @Environment(EnvType.CLIENT)
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
@@ -168,7 +167,6 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
     return super.isSideInvisible(state, stateFrom, direction);
   }
 
-  // 不要注解为 @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
     final Block block = baseBlock();

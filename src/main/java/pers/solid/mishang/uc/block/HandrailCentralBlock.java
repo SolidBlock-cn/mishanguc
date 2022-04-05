@@ -76,18 +76,16 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     } else return neighborState.getBlock() instanceof HandrailCentralBlock;
   }
 
-  // 不要注解为 @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
     final Block block = baseBlock();
     return block == null ? super.getName() : new TranslatableText("block.mishanguc.handrail_central", block.getName());
   }
 
-  @Environment(EnvType.CLIENT)
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (direction.getAxis().isHorizontal() &&stateFrom.getBlock() instanceof final Handrails block) {
+    if (direction.getAxis().isHorizontal() && stateFrom.getBlock() instanceof final Handrails block) {
       return block.baseBlock() == this.baseBlock()
           && block.connectsIn(stateFrom, direction.getOpposite(), null);
     }

@@ -144,7 +144,6 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     return state;
   }
 
-  // 不要注解为 @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
     return baseBlock == null
@@ -241,7 +240,6 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   }
 
   @SuppressWarnings("deprecation")
-  @Environment(EnvType.CLIENT)
   @Deprecated
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {

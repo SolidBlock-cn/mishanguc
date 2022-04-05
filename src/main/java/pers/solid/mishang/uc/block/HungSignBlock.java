@@ -334,7 +334,6 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     return ActionResult.SUCCESS;
   }
 
-  // 不要注解为 @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
     if (baseBlock != null) {
@@ -405,7 +404,6 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
 
 
   @SuppressWarnings("deprecation")
-  @Environment(EnvType.CLIENT)
   @Deprecated
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {

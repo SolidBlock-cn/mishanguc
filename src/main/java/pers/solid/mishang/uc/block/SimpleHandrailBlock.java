@@ -118,7 +118,6 @@ public class SimpleHandrailBlock extends HandrailBlock {
     return texture == null ? MishangUtils.identifierPrefix(Registry.BLOCK.getId(baseBlock), "block/").toString() : texture;
   }
 
-  // 不要注解为 @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
     if (baseBlock != null) {
@@ -141,7 +140,6 @@ public class SimpleHandrailBlock extends HandrailBlock {
       pack.addModel(JModel.model(new Identifier("mishanguc", "block/simple_handrail_side")).textures(textures), MishangUtils.identifierSuffix(modelId, "_side"));
     }
 
-    // 不要注解为 @Environment(EnvType.CLIENT)
     @Override
     public MutableText getName() {
       final Block block = baseBlock();
@@ -160,7 +158,6 @@ public class SimpleHandrailBlock extends HandrailBlock {
       return baseHandrail.getBlockModel().parent("mishanguc:block/simple_handrail_corner");
     }
 
-    // 不要注解为 @Environment(EnvType.CLIENT)
     @Override
     public MutableText getName() {
       final Block block = baseBlock();
@@ -186,7 +183,6 @@ public class SimpleHandrailBlock extends HandrailBlock {
       }
     }
 
-    // 不要注解为 @Environment(EnvType.CLIENT)
     @Override
     public MutableText getName() {
       final Block block = baseBlock();
@@ -204,7 +200,6 @@ public class SimpleHandrailBlock extends HandrailBlock {
       pack.addModel(JModel.model("mishanguc:block/simple_handrail_outer").textures(baseRail.getTextures()), getBlockModelIdentifier());
     }
 
-    // 不要注解为 @Environment(EnvType.CLIENT)
     @Override
     public MutableText getName() {
       final Block block = baseBlock();
