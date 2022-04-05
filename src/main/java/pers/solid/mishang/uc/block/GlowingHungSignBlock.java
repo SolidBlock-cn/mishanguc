@@ -42,7 +42,6 @@ public class GlowingHungSignBlock extends HungSignBlock {
     BASE_TO_GLOWING_HUNG_SIGN.put(baseBlock, this);
   }
 
-  // 不要注解为 @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
     if (baseBlock != null) {

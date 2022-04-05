@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.item;
 
-import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
@@ -17,7 +16,6 @@ public class NamedBlockItem extends BlockItem {
   }
 
   @Override
-  @Environment(EnvType.CLIENT)
   public Text getName() {
     return getBlock().getName();
   }

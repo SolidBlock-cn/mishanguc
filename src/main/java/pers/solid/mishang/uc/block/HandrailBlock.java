@@ -170,14 +170,12 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
     return possibleNewFacing != null && facing.getAxis() != possibleNewFacing.getAxis();
   }
 
-  // 不要注解为 @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
     final Block block = baseBlock();
     return block == null ? super.getName() : new TranslatableText("block.mishanguc.handrail", block.getName());
   }
 
-  @Environment(EnvType.CLIENT)
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {

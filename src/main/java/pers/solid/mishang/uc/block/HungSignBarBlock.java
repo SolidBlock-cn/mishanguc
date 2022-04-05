@@ -211,7 +211,6 @@ public class HungSignBarBlock extends Block implements Waterloggable, ARRPGenera
     return state;
   }
 
-  // 不要注解为 @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
     if (baseBlock != null) {

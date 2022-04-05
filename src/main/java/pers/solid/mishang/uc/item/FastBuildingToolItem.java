@@ -140,7 +140,6 @@ public class FastBuildingToolItem extends BlockToolItem {
     return matchingRule == null ? BlockMatchingRule.SAME_BLOCK : matchingRule;
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {

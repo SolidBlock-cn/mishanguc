@@ -1,8 +1,6 @@
 package pers.solid.mishang.uc.item;
 
 import com.google.common.collect.ImmutableList;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
@@ -59,7 +57,6 @@ public class WallSignBlockItem extends NamedBlockItem {
     return ImmutableList.of();
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
