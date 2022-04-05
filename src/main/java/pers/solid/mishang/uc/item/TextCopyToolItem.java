@@ -14,10 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtByte;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
@@ -55,8 +52,8 @@ public class TextCopyToolItem extends BlockToolItem {
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(new TranslatableText("item.mishanguc.text_copy_tool.tooltip.1").formatted(Formatting.GRAY));
-    tooltip.add(new TranslatableText("item.mishanguc.text_copy_tool.tooltip.2").formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.text_copy_tool.tooltip.1", new KeybindText("key.attack").fillStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xdddddd)))).formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.text_copy_tool.tooltip.2", new KeybindText("key.use").fillStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xdddddd)))).formatted(Formatting.GRAY));
     final NbtCompound tag = stack.getTag();
     if (tag != null && tag.contains("texts", NbtType.LIST)) {
       final NbtList texts = tag.getList("texts", NbtType.COMPOUND);
@@ -82,7 +79,10 @@ public class TextCopyToolItem extends BlockToolItem {
     final BlockEntity blockEntity = world.getBlockEntity(blockPos);
     final NbtList texts;
     final NbtCompound tag = stack.getTag();
-    if (tag != null && tag.contains("texts", NbtType.LIST)) {
+    if (tag == null) {
+      player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.null_tag", new KeybindText("key.attack").fillStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xdeb305)))).formatted(Formatting.RED), false);
+      return ActionResult.FAIL;
+    } else if (tag.contains("texts", NbtType.LIST)) {
       texts = tag.getList("texts", NbtType.COMPOUND);
     } else {
       player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.tag").formatted(Formatting.RED), false);
@@ -143,8 +143,11 @@ public class TextCopyToolItem extends BlockToolItem {
         hungSignBlockEntity.texts = ImmutableMap.copyOf(newTexts);
         blockEntity.markDirty();
         world.updateListeners(blockPos, blockState, blockState, 3);
-        player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.paste", newTexts.size()), false);
+        player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.paste", newTextsThisSide.size()), false);
         return ActionResult.SUCCESS;
+      } else {
+        // 点击的方块不是可以识别的告示牌方块。
+        player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.not_sign").formatted(Formatting.RED), false);
       }
     } catch (Throwable throwable) {
       player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.unexpected").formatted(Formatting.RED), false);
@@ -201,6 +204,9 @@ public class TextCopyToolItem extends BlockToolItem {
       stack.putSubTag("fromVanillaSign", NbtByte.of(false));
       player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.copy", texts.size()), false);
       return ActionResult.SUCCESS;
+    } else {
+      // 点击的方块不是可以识别的告示牌方块。
+      player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.not_sign").formatted(Formatting.RED), false);
     }
     return ActionResult.FAIL;
   }
