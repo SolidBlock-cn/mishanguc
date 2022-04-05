@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.screen;
 
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
@@ -15,6 +17,7 @@ import java.util.function.Function;
 /**
  * 用于处理布尔值的按钮。按下鼠标时切换。
  */
+@Environment(EnvType.CLIENT)
 public class BooleanButtonWidget extends ButtonWidget {
   public final Function<@Nullable Boolean, Text> tooltipSupplier;
   public final boolean defaultValue = false;
