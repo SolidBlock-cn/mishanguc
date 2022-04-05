@@ -230,7 +230,7 @@ public class BlockPlacementContext {
   public boolean setBlockEntity() {
     BlockEntity entityToPlace = world.getBlockEntity(posToPlace);
     if (stackInHand != null) {
-      BlockItem.writeTagToBlockEntity(world, player, posToPlace, stackInHand);
+      BlockItem.writeNbtToBlockEntity(world, player, posToPlace, stackInHand);
     } else if (hitEntity != null && entityToPlace != null) {
       entityToPlace.readNbt(hitEntity.createNbt());
       entityToPlace.markDirty();

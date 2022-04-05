@@ -5,7 +5,6 @@ import com.google.common.collect.EnumHashBiMap;
 import com.google.common.collect.Streams;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.texture.NativeImage;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.DyeColor;
@@ -119,13 +118,13 @@ public class MishangUtils {
    * @return 发光后颜色的整数值。
    */
   public static int toSignOutlineColor(int color) {
-    int j = (int) ((double) NativeImage.getRed(color) * 0.4);
-    int k = (int) ((double) NativeImage.getGreen(color) * 0.4);
-    int l = (int) ((double) NativeImage.getBlue(color) * 0.4);
+    int j = (int) ((double) (color & 0xFF) * 0.4);
+    int k = (int) ((double) (color >> 8 & 0xFF) * 0.4);
+    int l = (int) ((double) (color >> 16 & 0xFF) * 0.4);
     if (color == 0) {
       return 0xfff0ebcc;
     }
-    return NativeImage.packColor(0, l, k, j);
+    return (0) << 24 | (l & 0xFF) << 16 | (k & 0xFF) << 8 | (j & 0xFF);
   }
 
   public static final BiMap<DyeColor, Integer> COLOR_TO_OUTLINE_COLOR = Util.make(EnumHashBiMap.create(DyeColor.class), map -> {
