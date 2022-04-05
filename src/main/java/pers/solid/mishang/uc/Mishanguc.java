@@ -10,7 +10,7 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.fabricmc.fabric.api.tag.TagFactory;
+import net.minecraft.block.Block;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,8 +21,12 @@ import net.minecraft.util.Util;
 import net.minecraft.util.hit.BlockHitResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
+import pers.solid.mishang.uc.blocks.HandrailBlocks;
+import pers.solid.mishang.uc.blocks.HungSignBlocks;
 import pers.solid.mishang.uc.blocks.MishangucBlocks;
+import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.item.BlockToolItem;
 import pers.solid.mishang.uc.item.FastBuildingToolItem;
 import pers.solid.mishang.uc.item.InteractsWithEntity;
@@ -195,6 +199,45 @@ public class Mishanguc implements ModInitializer {
             server.sendSystemMessage(new TranslatableText("notice.mishanguc.load"), Util.NIL_UUID));
 
     // 注册可燃方块
-    FlammableBlockRegistry.getDefaultInstance().add(TagFactory.BLOCK.create(new Identifier("mishanguc", "burnable")), 5, 20);
+    final FlammableBlockRegistry flammableBlockRegistry = FlammableBlockRegistry.getDefaultInstance();
+
+    final Block[] woodenBlocks = {
+        HungSignBlocks.OAK_HUNG_SIGN,
+        HungSignBlocks.SPRUCE_HUNG_SIGN,
+        HungSignBlocks.BIRCH_HUNG_SIGN,
+        HungSignBlocks.JUNGLE_HUNG_SIGN,
+        HungSignBlocks.ACACIA_HUNG_SIGN,
+        HungSignBlocks.DARK_OAK_HUNG_SIGN,
+        HungSignBlocks.OAK_HUNG_SIGN_BAR,
+        HungSignBlocks.SPRUCE_HUNG_SIGN_BAR,
+        HungSignBlocks.BIRCH_HUNG_SIGN_BAR,
+        HungSignBlocks.JUNGLE_HUNG_SIGN_BAR,
+        HungSignBlocks.ACACIA_HUNG_SIGN_BAR,
+        HungSignBlocks.DARK_OAK_HUNG_SIGN_BAR,
+        WallSignBlocks.OAK_WALL_SIGN,
+        WallSignBlocks.SPRUCE_WALL_SIGN,
+        WallSignBlocks.BIRCH_WALL_SIGN,
+        WallSignBlocks.JUNGLE_WALL_SIGN,
+        WallSignBlocks.ACACIA_WALL_SIGN,
+        WallSignBlocks.DARK_OAK_WALL_SIGN
+    };
+    for (Block block : woodenBlocks) {
+      flammableBlockRegistry.add(block, 5, 20);
+    }
+    final HandrailBlock[] woodenHandrails = {
+        HandrailBlocks.SIMPLE_OAK_HANDRAIL,
+        HandrailBlocks.SIMPLE_SPRUCE_HANDRAIL,
+        HandrailBlocks.SIMPLE_BIRCH_HANDRAIL,
+        HandrailBlocks.SIMPLE_JUNGLE_HANDRAIL,
+        HandrailBlocks.SIMPLE_ACACIA_HANDRAIL,
+        HandrailBlocks.SIMPLE_DARK_OAK_HANDRAIL
+    };
+    for (HandrailBlock handrail : woodenHandrails) {
+      flammableBlockRegistry.add(handrail, 5, 20);
+      flammableBlockRegistry.add(handrail.central(), 5, 20);
+      flammableBlockRegistry.add(handrail.corner(), 5, 20);
+      flammableBlockRegistry.add(handrail.outer(), 5, 20);
+      flammableBlockRegistry.add(handrail.stair(), 5, 20);
+    }
   }
 }
