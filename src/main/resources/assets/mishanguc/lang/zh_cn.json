@@ -159,9 +159,9 @@
   "blockMatchingRule.mishanguc.same_state": "相同方块状态",
   "debug.mishanguc.biomeId.header": "位于%s的生物群系信息:",
   "debug.mishanguc.blockId.header": "位于%s的方块id信息: ",
-  "debug.mishanguc.blockStates": "位于%s的方块拥有的属性: ",
+  "debug.mishanguc.blockStates": "位于%s的%s拥有的属性: ",
   "debug.mishanguc.blockStates.fluidLevel": "流体级别",
-  "debug.mishanguc.blockStates.none": "位于%s的方块没有属性。",
+  "debug.mishanguc.blockStates.none": "位于%s的%s没有属性。",
   "debug.mishanguc.dataTag.block.header": "位于%s的%s的数据标签如下: ",
   "debug.mishanguc.dataTag.block.null": "位于%s的%s没有数据标签",
   "debug.mishanguc.dataTag.entity.entity": "位于%s的%s的数据标签如下: ",
@@ -334,8 +334,8 @@
   "vertical_align.mishanguc.middle": "中",
   "vertical_align.mishanguc.top": "顶",
   "item.mishanguc.text_copy_tool": "文本复制工具",
-  "item.mishanguc.text_copy_tool.tooltip.1": "对方块按“攻击”键以复制文本，",
-  "item.mishanguc.text_copy_tool.tooltip.2": "对方块按“使用”键以粘贴文本。",
+  "item.mishanguc.text_copy_tool.tooltip.1": "对方块按“%s”键以复制文本，",
+  "item.mishanguc.text_copy_tool.tooltip.2": "对方块按“%s”键以粘贴文本。",
   "item.mishanguc.text_copy_tool.message.success.copy": "成功复制方块的%1$s行文本。",
   "item.mishanguc.text_copy_tool.message.fail.tag": "无法粘贴文本，因为物品的NBT有问题！",
   "item.mishanguc.text_copy_tool.message.warn.outOfBound": "一些行没有被粘贴上去，因为原版告示牌仅支持4行。",
@@ -343,5 +343,7 @@
   "item.mishanguc.text_copy_tool.message.warn.colorConsistencyLimit": "忽略了一些颜色，因为一个告示牌仅支持一种颜色。",
   "item.mishanguc.text_copy_tool.message.warn.colorSelectionLimit": "忽略了一些颜色，因为告示牌仅支持几种特定的颜色。",
   "item.mishanguc.text_copy_tool.message.fail.unexpected": "粘贴文本时出现未知错误。",
-  "item.mishanguc.text_copy_tool.tooltip.3": "已复制的文本："
+  "item.mishanguc.text_copy_tool.tooltip.3": "已复制的文本：",
+  "item.mishanguc.text_copy_tool.message.fail.null_tag": "无法粘贴文本，因为没有复制文本。请持有此物品并对方块按%s以复制文本。",
+  "item.mishanguc.text_copy_tool.message.fail.not_sign": "您点击的方块不受支持。受支持的方块包括原版的告示牌，以及模组中的悬挂的告示牌和墙上的告示牌。"
 }
