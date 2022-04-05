@@ -57,7 +57,7 @@ public class TextCopyToolItem extends BlockToolItem {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(new TranslatableText("item.mishanguc.text_copy_tool.tooltip.1").formatted(Formatting.GRAY));
     tooltip.add(new TranslatableText("item.mishanguc.text_copy_tool.tooltip.2").formatted(Formatting.GRAY));
-    final NbtCompound tag = stack.getTag();
+    final NbtCompound tag = stack.getNbt();
     if (tag != null && tag.contains("texts", NbtType.LIST)) {
       final NbtList texts = tag.getList("texts", NbtType.COMPOUND);
       if (!texts.isEmpty()) {
@@ -81,7 +81,7 @@ public class TextCopyToolItem extends BlockToolItem {
     final BlockState blockState = world.getBlockState(blockPos);
     final BlockEntity blockEntity = world.getBlockEntity(blockPos);
     final NbtList texts;
-    final NbtCompound tag = stack.getTag();
+    final NbtCompound tag = stack.getNbt();
     if (tag != null && tag.contains("texts", NbtType.LIST)) {
       texts = tag.getList("texts", NbtType.COMPOUND);
     } else {
@@ -89,8 +89,7 @@ public class TextCopyToolItem extends BlockToolItem {
       return ActionResult.FAIL;
     }
     try {
-      if (blockEntity instanceof SignBlockEntity) {
-        SignBlockEntity signBlockEntity = (SignBlockEntity) blockEntity;
+      if (blockEntity instanceof SignBlockEntity signBlockEntity) {
         @Nullable DyeColor color = null;
         for (int i = 0; i < texts.size(); i++) {
           if (i < 4) {
@@ -122,21 +121,19 @@ public class TextCopyToolItem extends BlockToolItem {
         world.updateListeners(blockPos, blockState, blockState, 3);
         player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.paste", Math.min(texts.size(), 4)), false);
         return ActionResult.SUCCESS;
-      } else if (blockEntity instanceof WallSignBlockEntity) {
-        WallSignBlockEntity wallSignBlockEntity = (WallSignBlockEntity) blockEntity;
+      } else if (blockEntity instanceof WallSignBlockEntity wallSignBlockEntity) {
         wallSignBlockEntity.textContexts = ImmutableList.copyOf(texts.stream().map(nbtElement -> TextContext.fromNbt(nbtElement, wallSignBlockEntity.getDefaultTextContext())).iterator());
-        if (stack.getOrCreateTag().getBoolean("fromVanillaSign")) {
+        if (stack.getOrCreateNbt().getBoolean("fromVanillaSign")) {
           MishangUtils.rearrange(wallSignBlockEntity.textContexts);
         }
         blockEntity.markDirty();
         world.updateListeners(blockPos, blockState, blockState, 3);
         player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.paste", wallSignBlockEntity.textContexts.size()), false);
         return ActionResult.SUCCESS;
-      } else if (blockEntity instanceof HungSignBlockEntity) {
-        HungSignBlockEntity hungSignBlockEntity = (HungSignBlockEntity) blockEntity;
+      } else if (blockEntity instanceof HungSignBlockEntity hungSignBlockEntity) {
         final HashMap<@NotNull Direction, @Unmodifiable @NotNull List<@NotNull TextContext>> newTexts = new HashMap<>(hungSignBlockEntity.texts);
         final ImmutableList<@NotNull TextContext> newTextsThisSide = ImmutableList.copyOf(texts.stream().map(nbtElement -> TextContext.fromNbt(nbtElement, hungSignBlockEntity.getDefaultTextContext())).iterator());
-        if (stack.getOrCreateTag().getBoolean("fromVanillaSign")) {
+        if (stack.getOrCreateNbt().getBoolean("fromVanillaSign")) {
           MishangUtils.rearrange(newTextsThisSide);
         }
         newTexts.put(blockHitResult.getSide(), newTextsThisSide);
@@ -162,43 +159,40 @@ public class TextCopyToolItem extends BlockToolItem {
     // 本方法仅限在服务器上使用。
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     final ItemStack stack = player.getStackInHand(hand);
-    if (blockEntity instanceof SignBlockEntity) {
+    if (blockEntity instanceof SignBlockEntity signBlockEntity) {
       // 原版的告示牌
-      SignBlockEntity signBlockEntity = (SignBlockEntity) blockEntity;
       final NbtList texts = new NbtList();
       for (int i = 0; i < 4; i++) {
         final TextContext textContext = new TextContext();
-        textContext.text = signBlockEntity.getTextOnRow(i).shallowCopy();
+        textContext.text = signBlockEntity.getTextOnRow(i, false).shallowCopy();
         if (textContext.text.equals(LiteralText.EMPTY)) continue;
         textContext.color = signBlockEntity.getTextColor().getSignColor();
         final NbtCompound nbt0 = textContext.writeNbt(new NbtCompound());
         nbt0.remove("size"); // 原版告示牌的文本没有 size
         texts.add(nbt0);
       }
-      stack.putSubTag("fromVanillaSign", NbtByte.of(true));
-      stack.putSubTag("texts", texts);
+      stack.setSubNbt("fromVanillaSign", NbtByte.of(true));
+      stack.setSubNbt("texts", texts);
       player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.copy", texts.size()), false);
       return ActionResult.SUCCESS;
-    } else if (blockEntity instanceof WallSignBlockEntity) {
+    } else if (blockEntity instanceof WallSignBlockEntity wallSignBlockEntity) {
       // 迷上城建模组的墙上告示牌方块
-      WallSignBlockEntity wallSignBlockEntity = (WallSignBlockEntity) blockEntity;
       final NbtList texts = new NbtList();
       for (TextContext textContext : wallSignBlockEntity.textContexts) {
         texts.add(textContext.writeNbt(new NbtCompound()));
       }
-      stack.putSubTag("texts", texts);
-      stack.putSubTag("fromVanillaSign", NbtByte.of(false));
+      stack.setSubNbt("texts", texts);
+      stack.setSubNbt("fromVanillaSign", NbtByte.of(false));
       player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.copy", texts.size()), false);
       return ActionResult.SUCCESS;
-    } else if (blockEntity instanceof HungSignBlockEntity) {
-      HungSignBlockEntity hungSignBlockEntity = (HungSignBlockEntity) blockEntity;
+    } else if (blockEntity instanceof HungSignBlockEntity hungSignBlockEntity) {
       final List<@NotNull TextContext> textContexts = hungSignBlockEntity.texts.get(direction);
       final NbtList texts = new NbtList();
       for (TextContext textContext : textContexts) {
         texts.add(textContext.writeNbt(new NbtCompound()));
       }
-      stack.putSubTag("texts", texts);
-      stack.putSubTag("fromVanillaSign", NbtByte.of(false));
+      stack.setSubNbt("texts", texts);
+      stack.setSubNbt("fromVanillaSign", NbtByte.of(false));
       player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.copy", texts.size()), false);
       return ActionResult.SUCCESS;
     }
