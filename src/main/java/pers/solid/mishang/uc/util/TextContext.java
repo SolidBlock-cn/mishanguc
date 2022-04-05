@@ -254,6 +254,25 @@ public class TextContext implements Cloneable {
     if (text == null) {
       return;
     }
+    // 为文本创建本地的格式化的副本。此后，本方法中的所有 text 均为此局部变量，而非 this.text。这是为了在渲染时，修改了 text 本身的内容。
+    MutableText text = this.text.shallowCopy();
+    // 处理文本格式，如加粗、斜线等。文本颜色在 <tt>draw</tt> 的参数中。
+    if (bold) {
+      text.formatted(Formatting.BOLD);
+    }
+    if (italic) {
+      text.formatted(Formatting.ITALIC);
+    }
+    if (underline) {
+      text.formatted(Formatting.UNDERLINE);
+    }
+    if (strikethrough) {
+      text.formatted(Formatting.STRIKETHROUGH);
+    }
+    if (obfuscated) {
+      text.formatted(Formatting.OBFUSCATED);
+    }
+
     matrixStack.push();
 
     // 处理文本的 offset
@@ -286,23 +305,6 @@ public class TextContext implements Cloneable {
     matrixStack.scale(size / 16f, size / 16f, size / 16f);
     matrixStack.scale(scaleX, scaleY, 1);
 
-    // 处理文本格式，如加粗、斜线等。文本颜色在 <tt>draw</tt> 的参数中。
-    if (bold) {
-      text.formatted(Formatting.BOLD);
-    }
-    if (italic) {
-      text.formatted(Formatting.ITALIC);
-    }
-    if (underline) {
-      text.formatted(Formatting.UNDERLINE);
-    }
-    if (strikethrough) {
-      text.formatted(Formatting.STRIKETHROUGH);
-    }
-    if (obfuscated) {
-      text.formatted(Formatting.OBFUSCATED);
-    }
-
     // 执行渲染
     if (outlineColor == -2) {
       textRenderer.draw(
@@ -327,8 +329,8 @@ public class TextContext implements Cloneable {
    *
    * @param nbt 一个待写入的 NBT 复合标签，可以是空的 NBT 复合标签：
    *            <pre>{@code
-   *                                                                                                               new NbtCompound()
-   *                                                                                                               }</pre>
+   *                                                                                                                          new NbtCompound()
+   *                                                                                                                          }</pre>
    * @return 修改后的 <tt>nbt</tt>。
    */
   public NbtCompound writeNbt(NbtCompound nbt) {

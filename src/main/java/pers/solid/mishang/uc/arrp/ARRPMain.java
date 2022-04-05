@@ -294,7 +294,8 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
 
     // 栏杆部分
     MishangUtils.<Block>blockInstanceStream(HandrailBlocks.class).forEach(block -> {
-      if (block instanceof final SimpleHandrailBlock simpleHandrailBlock) {
+      if (block instanceof SimpleHandrailBlock) {
+        SimpleHandrailBlock simpleHandrailBlock = (SimpleHandrailBlock) block;
         if (HandrailBlocks.SIMPLE_STAINED_GLASS_HANDRAILS.containsValue(block)) {
           simpleStainedGlassNormalHandrails.addBlock(simpleHandrailBlock);
           simpleStainedGlassCentralHandrails.addBlock(simpleHandrailBlock.central);
