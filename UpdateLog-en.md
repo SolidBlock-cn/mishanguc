@@ -14,14 +14,19 @@ Updated following content:
 - Optimized the process of runtime data generation (including resource pack and data pack). Now more data is generated on runtime. Some block states, due to limitations of ARRP mod, still stores json files in mod file.
 - Added more block tags.
 - Fixed the issue that data tag tool has no tooltip.
-- As the heavenly Mojang annotates Block.getName as `@Environment(EnvType.CLIENT)`, some tools were switched to client-side usage.
+- As the heavenly Mojang annotates Block.getName as `@Environment(EnvType.CLIENT)` (only versions before 1.16.5), some tools were switched to client-side usage.
+    - Data tag tool still uses server data, but server sends the NBT now, instead of the prettified text.
 - Now sign blocks support json texts. You can type `-json <a json>` in a text box, e.g., `-json {color:red,text:Hi}`.
 - Added text copy tool, which can be used to copy and paste texts, and allows copy and paste between vanilla signs and mod signs.
+- Added the button to flip texts in a sign edit screen, which can be used to flip one line or all lines of text.
+- Improved some translations according to word-usage and format of vanilla language files.
 
 Fixed following issues:
 
 - Force placing tool and fast building tool may not correctly handle waterlogging, and may not see item tags on the offhand item.
 - Force placing tool can remove entity even if you are not in Creative Mode.
+- When setting formats for sign text lines, formats may be applied to text itself when rendering.
+- In multiplayer mode, some NBT prettified text may lose clicking actions when transmitted to client side, as these clicking action is defined by the mod and cannot be serialized.
 
 ### 0.1.6
 
