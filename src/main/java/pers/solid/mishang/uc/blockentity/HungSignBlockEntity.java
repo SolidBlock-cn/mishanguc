@@ -89,7 +89,6 @@ public class HungSignBlockEntity extends BlockEntityWithText {
       // 表示该 nbt 是空的，但游戏不会认为是空。因为如果 nbt 真的是空的，生成 packet 的时候会直接将其忽略，因此即使告示牌没有文本，也不能让其 nbt 真的为空。
       nbt.putBoolean("empty", true);
     }
-    return nbt;
   }
 
   // todo: 1.17 是不能对方块实体进行旋转和镜像了吗？
