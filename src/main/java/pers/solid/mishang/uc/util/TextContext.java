@@ -12,7 +12,10 @@ import net.minecraft.nbt.AbstractNbtNumber;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.text.*;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
@@ -308,12 +311,12 @@ public class TextContext implements Cloneable {
     // 执行渲染
     if (outlineColor == -2) {
       textRenderer.draw(
-        text.asOrderedText(),
+          text.asOrderedText(),
           x,
           y,
           color,
           shadow,
-        matrixStack.peek().getPositionMatrix(),
+          matrixStack.peek().getPositionMatrix(),
           vertexConsumers,
           seeThrough,
           0,
@@ -329,8 +332,8 @@ public class TextContext implements Cloneable {
    *
    * @param nbt 一个待写入的 NBT 复合标签，可以是空的 NBT 复合标签：
    *            <pre>{@code
-   *                                                                                                                          new NbtCompound()
-   *                                                                                                                          }</pre>
+   *                                                                                                                                     new NbtCompound()
+   *                                                                                                                                     }</pre>
    * @return 修改后的 <tt>nbt</tt>。
    */
   public NbtCompound writeNbt(NbtCompound nbt) {
@@ -419,7 +422,7 @@ public class TextContext implements Cloneable {
     if (underline) text.formatted(Formatting.UNDERLINE);
     if (strikethrough) text.formatted(Formatting.STRIKETHROUGH);
     if (obfuscated) text.formatted(Formatting.OBFUSCATED);
-    text.styled(style -> style.withColor(TextColor.fromRgb(color)));
+    text.styled(style -> style.withColor(color));
     return text;
   }
 
