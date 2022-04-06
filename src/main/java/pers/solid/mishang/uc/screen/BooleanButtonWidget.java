@@ -7,6 +7,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -117,6 +118,6 @@ public class BooleanButtonWidget extends ButtonWidget {
         ? message
         : new LiteralText("")
         .append(message)
-        .fillStyle(Style.EMPTY.withColor(value ? 0xb2ff96 : 0xffac96));
+        .fillStyle(Style.EMPTY.withColor(TextColor.fromRgb(value ? 0xb2ff96 : 0xffac96)));
   }
 }
