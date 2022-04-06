@@ -157,7 +157,13 @@ public abstract class BlockEntityWithText extends BlockEntity
                 if (nbt == null) return;
                 final HashMap<@NotNull Direction, @NotNull List<@NotNull TextContext>> builder =
                     new HashMap<>(hungSignBlockEntity.texts);
-                if (editedSide != null) builder.put(editedSide, textContexts);
+                if (editedSide != null) {
+                  if (!textContexts.isEmpty()) {
+                    builder.put(editedSide, textContexts);
+                  } else {
+                    builder.remove(editedSide);
+                  }
+                }
                 hungSignBlockEntity.texts = ImmutableMap.copyOf(builder);
               } else if (entity instanceof final WallSignBlockEntity wallSignBlockEntity) {
                 if (nbt == null) return;

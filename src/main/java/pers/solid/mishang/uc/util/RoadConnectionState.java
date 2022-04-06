@@ -12,16 +12,16 @@ import org.jetbrains.annotations.Nullable;
 
 public class RoadConnectionState {
   public final @Nullable Either<Direction, HorizontalCornerDirection> direction;
-  public final Probability probability;
+  public final WhetherConnected whetherConnected;
   public final LineColor lineColor;
   public final LineType lineType;
 
   public RoadConnectionState(
-      Probability probability,
+      WhetherConnected whetherConnected,
       LineColor lineColor,
       @Nullable Either<Direction, HorizontalCornerDirection> direction,
       LineType lineType) {
-    this.probability = probability;
+    this.whetherConnected = whetherConnected;
     this.lineColor = lineColor;
     this.direction = direction;
     this.lineType = lineType;
@@ -29,28 +29,28 @@ public class RoadConnectionState {
 
   public static RoadConnectionState empty() {
     return new RoadConnectionState(
-        Probability.NOT_CONNECTED_TO, LineColor.NONE, null, LineType.NORMAL);
+        WhetherConnected.NOT_CONNECTED_TO, LineColor.NONE, null, LineType.NORMAL);
   }
 
   public static RoadConnectionState notConnectedTo(
       LineColor lineColor,
       Either<Direction, HorizontalCornerDirection> direction,
       LineType lineType) {
-    return new RoadConnectionState(Probability.NOT_CONNECTED_TO, lineColor, direction, lineType);
+    return new RoadConnectionState(WhetherConnected.NOT_CONNECTED_TO, lineColor, direction, lineType);
   }
 
   public static RoadConnectionState connectedTo(
       LineColor lineColor,
       Either<Direction, HorizontalCornerDirection> direction,
       LineType lineType) {
-    return new RoadConnectionState(Probability.CONNECTED_TO, lineColor, direction, lineType);
+    return new RoadConnectionState(WhetherConnected.CONNECTED_TO, lineColor, direction, lineType);
   }
 
   public static RoadConnectionState mayConnectTo(
       LineColor lineColor,
       Either<Direction, HorizontalCornerDirection> direction,
       LineType lineType) {
-    return new RoadConnectionState(Probability.MAY_CONNECT_TO, lineColor, direction, lineType);
+    return new RoadConnectionState(WhetherConnected.MAY_CONNECT_TO, lineColor, direction, lineType);
   }
 
   public static RoadConnectionState of(
@@ -59,14 +59,14 @@ public class RoadConnectionState {
       Either<Direction, HorizontalCornerDirection> direction,
       LineType lineType) {
     return new RoadConnectionState(
-        bool ? Probability.CONNECTED_TO : Probability.NOT_CONNECTED_TO,
+        bool ? WhetherConnected.CONNECTED_TO : WhetherConnected.NOT_CONNECTED_TO,
         lineColor,
         direction,
         lineType);
   }
 
   public static RoadConnectionState or(RoadConnectionState state1, RoadConnectionState state2) {
-    return state1.probability.compareTo(state2.probability) > 0 ? state1 : state2;
+    return state1.whetherConnected.compareTo(state2.whetherConnected) > 0 ? state1 : state2;
   }
 
   public static MutableText text(Direction direction) {
@@ -89,12 +89,12 @@ public class RoadConnectionState {
     }
   }
 
-  public static MutableText text(Probability probability) {
-    return new TranslatableText("roadConnectionState.probability." + probability.asString()).setStyle(Style.EMPTY.withColor(Util.make(() -> switch (probability) {
+  public static MutableText text(WhetherConnected whetherConnected) {
+    return new TranslatableText("roadConnectionState.whether." + whetherConnected.asString()).formatted(switch (whetherConnected) {
       case NOT_CONNECTED_TO -> Formatting.RED;
       case CONNECTED_TO -> Formatting.GREEN;
-      default -> null;
-    })));
+      default -> Formatting.YELLOW;
+    });
   }
 
   public static MutableText text(LineColor lineColor) {
@@ -105,15 +105,19 @@ public class RoadConnectionState {
     })));
   }
 
+  public static MutableText text(LineType lineType) {
+    return new TranslatableText("roadConnectionState.lineType." + lineType.asString());
+  }
+
   public boolean mayConnect() {
-    return this.probability.compareTo(Probability.MAY_CONNECT_TO) >= 0;
+    return this.whetherConnected.compareTo(WhetherConnected.MAY_CONNECT_TO) >= 0;
   }
 
   public RoadConnectionState or(RoadConnectionState state) {
     return or(this, state);
   }
 
-  public enum Probability implements StringIdentifiable {
+  public enum WhetherConnected implements StringIdentifiable {
     NOT_CONNECTED_TO("not_connected_to"),
     MAY_CONNECT_TO("may_connect_to"),
     PROBABLY_CONNECT_TO("probably_connected_to"),
@@ -121,7 +125,7 @@ public class RoadConnectionState {
 
     private final String id;
 
-    Probability(String id) {
+    WhetherConnected(String id) {
       this.id = id;
     }
 

@@ -1,6 +1,8 @@
 ## Update Log
 
-### 0.1.7 (not released yet)
+Note: Not all versions in the update log are definitely published. Please refer to relevant pages in CurseForge and Mortinth, or the "releases" section in the GitHub.
+
+### 0.1.7
 
 Updated following content:
 
@@ -19,6 +21,7 @@ Updated following content:
 - Now sign blocks support json texts. You can type `-json <a json>` in a text box, e.g., `-json {color:red,text:Hi}`.
 - Added text copy tool, which can be used to copy and paste texts, and allows copy and paste between vanilla signs and mod signs.
 - Added the button to flip texts in a sign edit screen, which can be used to flip one line or all lines of text.
+- Improved the logic of road connection state debugging tool. Now can view line types.
 - Improved some translations according to word-usage and format of vanilla language files.
 
 Fixed following issues:
@@ -27,6 +30,7 @@ Fixed following issues:
 - Force placing tool can remove entity even if you are not in Creative Mode.
 - When setting formats for sign text lines, formats may be applied to text itself when rendering.
 - In multiplayer mode, some NBT prettified text may lose clicking actions when transmitted to client side, as these clicking action is defined by the mod and cannot be serialized.
+- Some data of signs may be stored even if there is no text.
 
 ### 0.1.6
 

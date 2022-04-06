@@ -258,12 +258,12 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第一行：文本大小按钮。
    */
-  public final FloatButtonWidget sizeButton = new FloatButtonWidget(this.width / 2 - 60, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.size"), x -> new TranslatableText("message.mishanguc.size.description", x), (buttons) -> focusedTextContext != null ? focusedTextContext.size : 0, value -> {
+  public final FloatButtonWidget sizeButton = new FloatButtonWidget(this.width / 2 - 60, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.size"), x -> new TranslatableText("message.mishanguc.size.description", x), buttons -> focusedTextContext != null ? focusedTextContext.size : 0, value -> {
     changed = true;
     if (focusedTextContext != null) {
       focusedTextContext.size = value;
     }
-  }, (button) -> {
+  }, button -> {
   }, descriptionAtom);
 
   /**
@@ -274,7 +274,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (focusedTextContext != null) {
       focusedTextContext.offsetX = value;
     }
-  }, (button) -> {
+  }, button -> {
   }, descriptionAtom);
 
   /**
@@ -285,7 +285,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (focusedTextContext != null) {
       focusedTextContext.offsetY = value;
     }
-  }, (button) -> {
+  }, button -> {
   }, descriptionAtom);
 
   /**
@@ -296,7 +296,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (focusedTextContext != null) {
       focusedTextContext.offsetZ = value;
     }
-  }, (button) -> {
+  }, button -> {
   }, descriptionAtom);
 
   /**
@@ -308,14 +308,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (colorId == -1) {
       return new TranslatableText("message.mishanguc.color");
     } else if (colorId == -2 && focusedTextContext != null) {
-      return new TranslatableText("message.mishanguc.color.param", new LiteralText(String.format("#%06x", focusedTextContext.color)).styled(style -> style.withColor(TextColor.fromRgb(focusedTextContext.color))))
+      return new TranslatableText("message.mishanguc.color.param", new LiteralText(String.format("#%06x", focusedTextContext.color)).styled(style -> style.withColor(focusedTextContext.color)))
           ;
     }
     final DyeColor dyeColor = DyeColor.byId((int) colorId);
     return new TranslatableText(
         "message.mishanguc.color.param",
         new TranslatableText("color.minecraft." + dyeColor.asString())
-            .styled(style -> style.withColor(TextColor.fromRgb(dyeColor.getSignColor()))));
+            .styled(style -> style.withColor(dyeColor.getSignColor())));
   }, button -> {
     changed = true;
     if (focusedTextContext == null) {
@@ -335,7 +335,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       focusedTextContext.color = DyeColor.byId((int) colorId).getSignColor();
       this.customColorTextField.setText(String.format("#%06x", focusedTextContext.color));
     }
-  }, (button) -> {
+  }, button -> {
   }, descriptionAtom);
 
   /**
@@ -368,13 +368,13 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     // colorId=0-15：标准颜色。
     // colorId=16-31：描边颜色
     if (colorId == -1) {
-      return (new TranslatableText("message.mishanguc.outline_color.auto"));
+      return new TranslatableText("message.mishanguc.outline_color.auto");
     } else if (colorId == -2) {
-      return (new TranslatableText("message.mishanguc.outline_color.none"));
+      return new TranslatableText("message.mishanguc.outline_color.none");
     } else if (colorId == -3 && focusedTextContext != null) {
-      return (new TranslatableText("message.mishanguc.outline_color.param", String.format("#%06x", focusedTextContext.outlineColor)).styled(style -> style.withColor(TextColor.fromRgb(focusedTextContext.color))));
+      return new TranslatableText("message.mishanguc.outline_color.param", String.format("#%06x", focusedTextContext.outlineColor)).styled(style -> style.withColor(focusedTextContext.color));
     } else if (colorId == -4) {
-      return (new TranslatableText("message.mishanguc.outline_color"));
+      return new TranslatableText("message.mishanguc.outline_color");
     } else if (colorId > 15) {
       final DyeColor color = DyeColor.byId((int) colorId - 16);
       return new TranslatableText("message.mishanguc.outline_color.param", new TranslatableText("message.mishanguc.outline_color.relate", new TranslatableText("message.mishanguc.outline_color.relate.$1")
@@ -466,7 +466,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (focusedTextContext != null) {
       focusedTextContext.scaleX = value;
     }
-  }, (button) -> {
+  }, button -> {
   }, descriptionAtom);
 
   /**
@@ -477,7 +477,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (focusedTextContext != null) {
       focusedTextContext.scaleY = value;
     }
-  }, (button) -> {
+  }, button -> {
   }, descriptionAtom);
 
   /**
@@ -487,7 +487,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (focusedTextContext != null) {
       focusedTextContext.horizontalAlign = HorizontalAlign.values()[(int) f];
     }
-  }, (b) -> {
+  }, b -> {
   }, descriptionAtom);
 
   /**
@@ -497,7 +497,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (focusedTextContext != null) {
       focusedTextContext.verticalAlign = VerticalAlign.values()[(int) f];
     }
-  }, (b) -> {
+  }, b -> {
   }, descriptionAtom);
 
   /**

@@ -108,7 +108,7 @@ public final class NbtPrettyPrinter {
              iterator.hasNext(); ) {
           Map.Entry<String, NbtElement> entry = iterator.next();
           text.append(new LiteralText(entry.getKey())
-                  .styled(style -> style.withColor(TextColor.fromRgb(0x99ffff))))
+                  .styled(style -> style.withColor(0x99ffff)))
               .append(": ");
           // 如果该元素为唯一元素，则layer不+1。
           text.append(
@@ -247,7 +247,7 @@ public final class NbtPrettyPrinter {
 
   public static Text serialize(NbtString nbtString, int layer) {
     final String string = nbtString.asString();
-    final UnaryOperator<Style> strStyle = style -> style.withColor(TextColor.fromRgb(0xcccccc));
+    final UnaryOperator<Style> strStyle = style -> style.withColor(0xcccccc);
     if (layer == 0) {
       return new LiteralText(string).styled(strStyle);
     } else if (layer == 1) {
