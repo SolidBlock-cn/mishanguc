@@ -87,7 +87,7 @@ public interface RoadWithOffsetStraightLine extends Road {
   @Environment(EnvType.CLIENT)
   @Override
   default @Nullable JState getBlockStates() {
-    return ARRPGenerator.stateForHorizontalFacingBlock(getBlockModelIdentifier());
+    return ARRPGenerator.stateForHorizontalFacingBlock(getBlockModelIdentifier(), false);
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithOffsetStraightLine {

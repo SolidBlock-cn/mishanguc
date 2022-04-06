@@ -148,7 +148,7 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
   @Environment(EnvType.CLIENT)
   @Override
   public @NotNull JState getBlockStates() {
-    return ARRPGenerator.stateForHorizontalCornerFacingBlock(getBlockModelIdentifier());
+    return ARRPGenerator.stateForHorizontalCornerFacingBlock(getBlockModelIdentifier(), true);
   }
 
   @Override

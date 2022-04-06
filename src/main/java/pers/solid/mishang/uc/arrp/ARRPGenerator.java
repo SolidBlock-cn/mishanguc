@@ -52,17 +52,17 @@ public interface ARRPGenerator {
    * 返回一个垂直方向的方块的方块状态。
    *
    * @param modelIdentifier 模型 id。
+   * @param uvlock          是否锁定纹理。
    * @return 方块状态。
    */
   @Environment(EnvType.CLIENT)
   @NotNull
-  static JState stateForHorizontalFacingBlock(@NotNull Identifier modelIdentifier) {
+  static JState stateForHorizontalFacingBlock(@NotNull Identifier modelIdentifier, boolean uvlock) {
     JVariant variant = new JVariant();
     for (Direction direction : Direction.Type.HORIZONTAL) {
-      variant.put(
-          "facing",
-          direction,
-          new JBlockModel(modelIdentifier).y((int) direction.asRotation()));
+      final JBlockModel model = new JBlockModel(modelIdentifier).y((int) direction.asRotation());
+      if (uvlock) model.uvlock();
+      variant.put("facing", direction, model);
     }
     return JState.state(variant);
   }
@@ -71,17 +71,17 @@ public interface ARRPGenerator {
    * 返回水平角落方向方块的方块状态。
    *
    * @param modelIdentifier 模型 id。
+   * @param uvlock          是否锁定纹理。
    * @return 方块状态。
    */
   @Environment(EnvType.CLIENT)
   @NotNull
-  static JState stateForHorizontalCornerFacingBlock(@NotNull Identifier modelIdentifier) {
+  static JState stateForHorizontalCornerFacingBlock(@NotNull Identifier modelIdentifier, boolean uvlock) {
     JVariant variant = new JVariant();
     for (HorizontalCornerDirection direction : HorizontalCornerDirection.values()) {
-      variant.put(
-          "facing",
-          direction,
-          new JBlockModel(modelIdentifier).y(direction.asRotation() - 45));
+      final JBlockModel model = new JBlockModel(modelIdentifier).y(direction.asRotation() - 45);
+      if (uvlock) model.uvlock();
+      variant.put("facing", direction, model);
     }
     return JState.state(variant);
   }
