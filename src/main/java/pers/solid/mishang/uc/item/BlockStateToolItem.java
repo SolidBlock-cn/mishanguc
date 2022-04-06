@@ -10,7 +10,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Property;
-import net.minecraft.text.*;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -56,13 +59,13 @@ public class BlockStateToolItem extends BlockToolItem {
       if (property instanceof BooleanProperty) {
         value.formatted(propertyValue == Boolean.TRUE ? Formatting.GREEN : Formatting.RED);
       } else if (property instanceof IntProperty) {
-        value.styled(style -> style.withColor(TextColor.fromRgb(0x00eedd)));
+        value.styled(style -> style.withColor(0x00eedd));
       }
       player.sendSystemMessage(
           new LiteralText("  ")
               .append(
                   new LiteralText(property.getName())
-                      .styled(style -> style.withColor(TextColor.fromRgb(0xcccccc))))
+                      .styled(style -> style.withColor(0xcccccc)))
               .append(" = ")
               .append(value),
           player.getUuid());
@@ -107,7 +110,7 @@ public class BlockStateToolItem extends BlockToolItem {
             new LiteralText("  ")
                 .append(
                     new TranslatableText("debug.mishanguc.blockStates.fluidLevel")
-                        .styled(style -> style.withColor(TextColor.fromRgb(0xcccccc))))
+                        .styled(style -> style.withColor(0xcccccc)))
                 .append(" = ")
                 .append(String.valueOf(fluidLevel)),
             player.getUuid());

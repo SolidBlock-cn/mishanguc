@@ -29,13 +29,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.block.HungSignBlock;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.util.TextContext;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 用于复制粘贴文本的工具。持有该工具，“攻击”（默认左键）告示牌（含原版告示牌、悬挂告示牌和墙上的告示牌）可以将文本复制到物品中，"使用"（默认右键）告示牌可将文本粘贴上去。
@@ -52,8 +51,8 @@ public class TextCopyToolItem extends BlockToolItem {
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(new TranslatableText("item.mishanguc.text_copy_tool.tooltip.1", new KeybindText("key.attack").fillStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xdddddd)))).formatted(Formatting.GRAY));
-    tooltip.add(new TranslatableText("item.mishanguc.text_copy_tool.tooltip.2", new KeybindText("key.use").fillStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xdddddd)))).formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.text_copy_tool.tooltip.1", new KeybindText("key.attack").setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xdddddd)))).formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.text_copy_tool.tooltip.2", new KeybindText("key.use").setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xdddddd)))).formatted(Formatting.GRAY));
     final NbtCompound tag = stack.getTag();
     if (tag != null && tag.contains("texts", NbtType.LIST)) {
       final NbtList texts = tag.getList("texts", NbtType.COMPOUND);
@@ -134,12 +133,30 @@ public class TextCopyToolItem extends BlockToolItem {
         return ActionResult.SUCCESS;
       } else if (blockEntity instanceof HungSignBlockEntity) {
         HungSignBlockEntity hungSignBlockEntity = (HungSignBlockEntity) blockEntity;
+        final Direction hitSide = blockHitResult.getSide();
+        final Direction.Axis axis = blockState.get(HungSignBlock.AXIS);
+        if (!axis.test(hitSide)) {
+          final Iterator<Direction> validDirections = Arrays.stream(Direction.values()).filter(axis).iterator();
+          // 如果点击的方向不正确，则无法复制和粘贴文本。
+          player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.wrong_side",
+              // 无效的一侧：
+              new TranslatableText("direction." + hitSide.getName()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xeecc44))),
+              // 有效的两侧：
+              new TranslatableText("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xb3ee45))),
+              new TranslatableText("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xb3ee45)))
+          ).formatted(Formatting.RED), false);
+          return ActionResult.FAIL;
+        }
         final HashMap<@NotNull Direction, @Unmodifiable @NotNull List<@NotNull TextContext>> newTexts = new HashMap<>(hungSignBlockEntity.texts);
         final ImmutableList<@NotNull TextContext> newTextsThisSide = ImmutableList.copyOf(texts.stream().map(nbtElement -> TextContext.fromNbt(nbtElement, hungSignBlockEntity.getDefaultTextContext())).iterator());
         if (stack.getOrCreateTag().getBoolean("fromVanillaSign")) {
           MishangUtils.rearrange(newTextsThisSide);
         }
-        newTexts.put(blockHitResult.getSide(), newTextsThisSide);
+        if (newTextsThisSide.isEmpty()) {
+          newTexts.remove(hitSide);
+        } else {
+          newTexts.put(hitSide, newTextsThisSide);
+        }
         hungSignBlockEntity.texts = ImmutableMap.copyOf(newTexts);
         blockEntity.markDirty();
         world.updateListeners(blockPos, blockState, blockState, 3);
@@ -195,7 +212,15 @@ public class TextCopyToolItem extends BlockToolItem {
       return ActionResult.SUCCESS;
     } else if (blockEntity instanceof HungSignBlockEntity) {
       HungSignBlockEntity hungSignBlockEntity = (HungSignBlockEntity) blockEntity;
-      final List<@NotNull TextContext> textContexts = hungSignBlockEntity.texts.get(direction);
+      final Direction.Axis axis = world.getBlockState(pos).get(HungSignBlock.AXIS);
+      if (!axis.test(direction)) {
+        // 如果点击的方向不正确，则无法复制和粘贴文本。
+        player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.wrong_side",
+            new TranslatableText("direction." + direction.getName())
+        ).formatted(Formatting.RED), false);
+        return ActionResult.FAIL;
+      }
+      final List<@NotNull TextContext> textContexts = hungSignBlockEntity.texts.getOrDefault(direction, ImmutableList.of());
       final NbtList texts = new NbtList();
       for (TextContext textContext : textContexts) {
         texts.add(textContext.writeNbt(new NbtCompound()));

@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -36,14 +37,14 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
       PlayerEntity playerEntity, BlockState blockState, BlockPos blockPos) {
     Block block = blockState.getBlock();
     if (!(block instanceof Road)) {
-      playerEntity.sendMessage(new TranslatableText("debug.mishanguc.notRoad"), false);
+      playerEntity.sendMessage(new TranslatableText("debug.mishanguc.notRoad").formatted(Formatting.RED), false);
       return ActionResult.FAIL;
     }
     playerEntity.sendMessage(
         new TranslatableText(
             "debug.mishanguc.roadConnectionState.allDir",
             String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-            .setStyle(Style.EMPTY.withBold(true).withColor(Formatting.YELLOW)),
+            .formatted(Formatting.YELLOW),
         false);
     Direction.Type.HORIZONTAL.forEach(
         direction -> {
@@ -53,9 +54,11 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
               new TranslatableText(
                   "debug.mishanguc.roadConnectionState.brief",
                   RoadConnectionState.text(direction),
-                  RoadConnectionState.text(connectionState.direction),
+                  RoadConnectionState.text(connectionState.direction).formatted(Formatting.WHITE),
                   RoadConnectionState.text(connectionState.lineColor),
-                  RoadConnectionState.text(connectionState.probability)),
+                  RoadConnectionState.text(connectionState.lineType).formatted(Formatting.WHITE),
+                  RoadConnectionState.text(connectionState.whetherConnected)
+              ).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xcccccc))),
               false);
         });
     return ActionResult.SUCCESS;

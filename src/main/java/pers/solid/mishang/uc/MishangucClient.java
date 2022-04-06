@@ -11,7 +11,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
@@ -73,7 +72,7 @@ public class MishangucClient implements ClientModInitializer {
         (entity, world) ->
             entity.sendSystemMessage(
                 new TranslatableText("notice.mishanguc.load")
-                    .styled(style -> style.withColor(TextColor.fromRgb(0xd2e877))),
+                    .styled(style -> style.withColor(0xd2e877)),
                 Util.NIL_UUID));
 
     // 网络通信

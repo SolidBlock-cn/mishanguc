@@ -257,12 +257,12 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第一行：文本大小按钮。
    */
-  public final FloatButtonWidget sizeButton = new FloatButtonWidget(this.width / 2 - 60, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.size"), x -> new TranslatableText("message.mishanguc.size.description", x), (buttons) -> focusedTextContext != null ? focusedTextContext.size : 0, value -> {
+  public final FloatButtonWidget sizeButton = new FloatButtonWidget(this.width / 2 - 60, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.size"), x -> new TranslatableText("message.mishanguc.size.description", x), buttons -> focusedTextContext != null ? focusedTextContext.size : 0, value -> {
     changed = true;
     if (focusedTextContext != null) {
       focusedTextContext.size = value;
     }
-  }, (button) -> {
+  }, button -> {
   }, descriptionAtom);
 
   /**
@@ -273,7 +273,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (focusedTextContext != null) {
       focusedTextContext.offsetX = value;
     }
-  }, (button) -> {
+  }, button -> {
   }, descriptionAtom);
 
   /**
@@ -284,7 +284,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (focusedTextContext != null) {
       focusedTextContext.offsetY = value;
     }
-  }, (button) -> {
+  }, button -> {
   }, descriptionAtom);
 
   /**
@@ -295,7 +295,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (focusedTextContext != null) {
       focusedTextContext.offsetZ = value;
     }
-  }, (button) -> {
+  }, button -> {
   }, descriptionAtom);
 
   /**
@@ -334,7 +334,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       focusedTextContext.color = DyeColor.byId((int) colorId).getSignColor();
       this.customColorTextField.setText(String.format("#%06x", focusedTextContext.color));
     }
-  }, (button) -> {
+  }, button -> {
   }, descriptionAtom);
 
   /**
@@ -397,7 +397,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (focusedTextContext != null) {
       focusedTextContext.scaleX = value;
     }
-  }, (button) -> {
+  }, button -> {
   }, descriptionAtom);
 
   /**
@@ -408,7 +408,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (focusedTextContext != null) {
       focusedTextContext.scaleY = value;
     }
-  }, (button) -> {
+  }, button -> {
   }, descriptionAtom);
 
   /**
@@ -418,7 +418,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (focusedTextContext != null) {
       focusedTextContext.horizontalAlign = HorizontalAlign.values()[(int) f];
     }
-  }, (b) -> {
+  }, b -> {
   }, descriptionAtom);
 
   /**
@@ -428,7 +428,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (focusedTextContext != null) {
       focusedTextContext.verticalAlign = VerticalAlign.values()[(int) f];
     }
-  }, (b) -> {
+  }, b -> {
   }, descriptionAtom);
 
   /**

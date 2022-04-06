@@ -150,16 +150,24 @@ public abstract class BlockEntityWithText extends BlockEntity
                 return;
               }
               if (entity instanceof HungSignBlockEntity) {
-                final Direction editedSide = ((HungSignBlockEntity) entity).editedSide;
-                ((HungSignBlockEntity) entity).editedSide = null;
+                final HungSignBlockEntity hungSignBlockEntity = (HungSignBlockEntity) entity;
+                final Direction editedSide = hungSignBlockEntity.editedSide;
+                hungSignBlockEntity.editedSide = null;
                 if (nbt == null) return;
                 final HashMap<@NotNull Direction, @NotNull List<@NotNull TextContext>> builder =
-                    new HashMap<>(((HungSignBlockEntity) entity).texts);
-                if (editedSide != null) builder.put(editedSide, textContexts);
-                ((HungSignBlockEntity) entity).texts = ImmutableMap.copyOf(builder);
+                    new HashMap<>(hungSignBlockEntity.texts);
+                if (editedSide != null) {
+                  if (!textContexts.isEmpty()) {
+                    builder.put(editedSide, textContexts);
+                  } else {
+                    builder.remove(editedSide);
+                  }
+                }
+                hungSignBlockEntity.texts = ImmutableMap.copyOf(builder);
               } else if (entity instanceof WallSignBlockEntity) {
+                WallSignBlockEntity wallSignBlockEntity = (WallSignBlockEntity) entity;
                 if (nbt == null) return;
-                ((WallSignBlockEntity) entity).textContexts = textContexts;
+                wallSignBlockEntity.textContexts = textContexts;
               }
               entity.markDirty();
             } catch (ClassCastException e) {
