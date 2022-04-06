@@ -345,5 +345,7 @@
   "item.mishanguc.text_copy_tool.message.fail.unexpected": "粘贴文本时出现未知错误。",
   "item.mishanguc.text_copy_tool.tooltip.3": "已复制的文本：",
   "item.mishanguc.text_copy_tool.message.fail.null_tag": "无法粘贴文本，因为没有复制文本。请持有此物品并对方块按%s以复制文本。",
-  "item.mishanguc.text_copy_tool.message.fail.not_sign": "您点击的方块不受支持。受支持的方块包括原版的告示牌，以及模组中的悬挂的告示牌和墙上的告示牌。"
+  "item.mishanguc.text_copy_tool.message.fail.not_sign": "您点击的方块不受支持。受支持的方块包括原版的告示牌，以及模组中的悬挂的告示牌和墙上的告示牌。",
+  "message.mishanguc.flip": "翻转",
+  "message.mishanguc.flip.description": "左右翻转当前文本的偏移和对齐。按住Ctrl可翻转所有文本。"
 }

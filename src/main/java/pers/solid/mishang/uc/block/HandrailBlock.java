@@ -195,7 +195,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
   @Environment(EnvType.CLIENT)
   @Override
   public @Nullable JState getBlockStates() {
-    return ARRPGenerator.stateForHorizontalFacingBlock(getBlockModelIdentifier());
+    return ARRPGenerator.stateForHorizontalFacingBlock(getBlockModelIdentifier(), true);
   }
 
   @SuppressWarnings("deprecation")

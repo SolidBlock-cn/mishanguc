@@ -54,7 +54,7 @@ import java.util.regex.Pattern;
  * 放置后如需打开此屏幕，使用
  *
  * <pre>{@code
- * this.client.setScreen();(new TextPadEditScreen(entity)
+ * this.client.setScreen(new TextPadEditScreen(entity))
  * }</pre>
  *
  * @param <T> 方块实体的类型。
@@ -621,6 +621,22 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     else descriptionAtom.set(BUTTON_CLEAR_DESCRIPTION_MESSAGE);
   });
 
+  /**
+   * 下方第三行：翻转排版当前文本按钮。
+   */
+  @ApiStatus.AvailableSince("0.1.7")
+  public final ButtonWidget flipButton = new ButtonWidget(this.width / 2, this.height - 50, 50, 20, new TranslatableText("message.mishanguc.flip"), button -> {
+    if (hasControlDown()) {
+      for (TextContext textContext : AbstractSignBlockEditScreen.this.textContextsEditing) {
+        textContext.flip();
+      }
+    } else {
+      if (focusedTextContext != null) {
+        focusedTextContext.flip();
+      }
+    }
+  }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(new TranslatableText("message.mishanguc.flip.description")));
+
 
   public AbstractSignBlockEditScreen(T entity, BlockPos blockPos, List<TextContext> textContextsEditing) {
     super(new TranslatableText("message.mishanguc.sign_edit"));
@@ -682,6 +698,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     this.addDrawableChild(finishButton);
     this.addDrawableChild(cancelButton);
     this.addDrawableChild(clearButton);
+    this.addDrawableChild(flipButton);
 
     // 添加文本框
     for (int i = 0, textContextsEditingSize = textContextsEditing.size();
@@ -707,6 +724,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     cancelButton.y = height - 25;
     clearButton.x = width / 2 + 100;
     clearButton.y = height - 25;
+    flipButton.x = width / 2 + 150;
+    flipButton.y = height - 25;
     placeHolder.x = width / 2 - 100;
     applyDoubleLineTemplateButton.x = width / 2 - 60;
     applyLeftArrowTemplateButton.x = width / 2 - 180;
