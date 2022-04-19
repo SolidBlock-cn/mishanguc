@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "mishanguc",
-  "version": "0.1.7",
+  "version": "0.2.0-build.1",
 
   "name": "Mishang Urban Construction",
   "description": "An amount of blocks and items that make a beautiful city!",
@@ -34,6 +34,6 @@
     "fabricloader": ">=0.13.0",
     "fabric": "*",
     "minecraft": ">=1.18",
-    "advanced_runtime_resource_pack": ">=0.5.5"
+    "better_runtime_resource_pack": ">=0.5.5"
   }
 }

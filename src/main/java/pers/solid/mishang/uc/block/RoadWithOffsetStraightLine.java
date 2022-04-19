@@ -1,7 +1,7 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.datafixers.util.Either;
-import net.devtech.arrp.json.blockstate.JState;
+import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -19,8 +19,8 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.arrp.ARRPGenerator;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
@@ -74,7 +74,6 @@ public interface RoadWithOffsetStraightLine extends Road {
                 : ctx.getPlayerFacing().rotateYClockwise());
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
   default void appendRoadTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
@@ -86,8 +85,8 @@ public interface RoadWithOffsetStraightLine extends Road {
 
   @Environment(EnvType.CLIENT)
   @Override
-  default @Nullable JState getBlockStates() {
-    return ARRPGenerator.stateForHorizontalFacingBlock(getBlockModelIdentifier(), false);
+  default @NotNull JBlockStates getBlockStates() {
+    return JBlockStates.simpleHorizontalFacing(getBlockModelId(), false);
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithOffsetStraightLine {

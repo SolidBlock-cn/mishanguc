@@ -1,8 +1,9 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.datafixers.util.Either;
-import net.devtech.arrp.json.blockstate.JState;
-import net.devtech.arrp.json.blockstate.JVariant;
+import net.devtech.arrp.json.blockstate.JBlockModel;
+import net.devtech.arrp.json.blockstate.JBlockStates;
+import net.devtech.arrp.json.blockstate.JVariants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -88,7 +89,6 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
         .with(AXIS, ctx.getPlayerFacing().getAxis());
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
   default void appendRoadTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
@@ -102,9 +102,9 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JState getBlockStates() {
-      final Identifier id = getBlockModelIdentifier();
-      JVariant variant = new JVariant();
+    public @Nullable JBlockStates getBlockStates() {
+      final Identifier id = getBlockModelId();
+      JVariants variant = new JVariants();
       // 一侧的短线所朝向的方向。
       for (Direction direction : Direction.Type.HORIZONTAL) {
         final @NotNull Direction offsetDirection1 = direction.rotateYClockwise();
@@ -118,17 +118,17 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
             Objects.requireNonNull(
                 HorizontalCornerDirection.fromDirections(direction, offsetDirection2));
         variant
-            .put(
+            .addVariant(
                 String.format(
                     "facing=%s,axis=%s", facing1.asString(), offsetDirection1.getAxis().asString()),
-                JState.model(id).y((int) (direction.asRotation())))
-            .put(
+                new JBlockModel(id).y((int) (direction.asRotation())))
+            .addVariant(
                 String.format(
                     "facing=%s,axis=%s", facing2.asString(), offsetDirection2.getAxis().asString()),
-                JState.model(MishangUtils.identifierSuffix(id, "_mirrored"))
+                new JBlockModel(id.brrp_append("_mirrored"))
                     .y((int) (direction.asRotation())));
       }
-      return JState.state(variant);
+      return JBlockStates.ofVariants(variant);
     }
   }
 }

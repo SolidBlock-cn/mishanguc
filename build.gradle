@@ -16,18 +16,13 @@ repositories {
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
-    maven {
-        url = uri("https://storage.googleapis.com/devan-maven/")
-        // for 0.4.2 and older
-        // url uri("https://raw.githubusercontent.com/Devan-Kerman/Devan-Repo/master/")
-    }
-
-    // SpoornPacks
 //    maven {
-//        url "https://jitpack.io"
-//        content { includeGroup "com.github.spoorn" }
+//        url = uri("https://storage.googleapis.com/devan-maven/")
+//        // for 0.4.2 and older
+//        // url uri("https://raw.githubusercontent.com/Devan-Kerman/Devan-Repo/master/")
 //    }
-//    flatDir { dir "..\\BRRP\\build\\devlibs" }
+
+    flatDir { dir "..\\BRRP\\build\\libs" }
 }
 
 
@@ -44,22 +39,7 @@ dependencies {
     // You may need to force-disable transitiveness on them.
 //    modImplementation("net.devtech:arrp:0.5.5")
     // I never break backwards compatibility, so just fetching the latest version should be fine
-    modImplementation("net.devtech:arrp:0.+")
-
-    // SpoornPacks，用于生成资源包和数据包
-//    modImplementation 'com.github.spoorn:SpoornPacks:4.0-1.18.2'
-
-//    modImplementation project(path: ":brrp", configuration: 'namedElements')
-//    project(':arrp') {
-//        apply plugin: 'fabric-loom'
-//        dependencies {
-//            // To change the versions see the gradle.properties file
-//            minecraft "com.mojang:minecraft:${project.minecraft_version}"
-//            mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-//            modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-//        }
-//    }
-
+    modImplementation("net.devtech:brrp:0.6.0-snapshot.2-1.18.2")
 }
 
 processResources {

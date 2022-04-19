@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
+import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blocks.HandrailBlocks;
 import pers.solid.mishang.uc.blocks.HungSignBlocks;
 import pers.solid.mishang.uc.blocks.MishangucBlocks;
@@ -72,6 +73,7 @@ public class Mishanguc implements ModInitializer {
     // 初始化静态字段
     MishangucBlocks.init();
     MishangucItems.init();
+    MishangucBlockEntities.init();
 
     // 注册事件
     BEGIN_ATTACK_BLOCK_EVENT.register(

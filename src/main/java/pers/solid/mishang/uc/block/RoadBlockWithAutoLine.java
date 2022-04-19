@@ -1,6 +1,6 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.json.blockstate.JState;
+import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -8,9 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangucProperties;
-import pers.solid.mishang.uc.arrp.ARRPGenerator;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
@@ -139,7 +137,7 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JState getBlockStates() {
-    return ARRPGenerator.simpleState(getBlockModelIdentifier());
+  public @NotNull JBlockStates getBlockStates() {
+    return JBlockStates.simple(getBlockModelId());
   }
 }
