@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.blocks;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.MapColor;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.block.*;
@@ -24,42 +22,42 @@ public final class RoadBlocks extends MishangucBlocks {
   @Cutout
   @RegisterIdentifier
   public static final RoadWithStraightLine.Impl ROAD_WITH_WHITE_LINE =
-      new RoadWithStraightLine.Impl(ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL);
+      new RoadWithStraightLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL);
   /**
    * 白色直角。
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithAngleLine.Impl ROAD_WITH_WHITE_RA_LINE =
-      new RoadWithAngleLine.Impl(ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL, false);
+      new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL, false);
   /**
    * 白色斜角。
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithAngleLine.Impl ROAD_WITH_WHITE_BA_LINE =
-      new RoadWithAngleLine.Impl(ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL, true);
+      new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL, true);
   /**
    * 黄色直线
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithStraightLine.Impl ROAD_WITH_YELLOW_LINE =
-      new RoadWithStraightLine.Impl(ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL);
+      new RoadWithStraightLine.Impl(WHITE_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL);
   /**
    * 黄色直角
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithAngleLine.Impl ROAD_WITH_YELLOW_RA_LINE =
-      new RoadWithAngleLine.Impl(ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL, false);
+      new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL, false);
   /**
    * 黄色斜角
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithAngleLine.Impl ROAD_WITH_YELLOW_BA_LINE =
-      new RoadWithAngleLine.Impl(ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL, true);
+      new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL, true);
   /**
    * 白色加黄色直角
    */
@@ -68,7 +66,7 @@ public final class RoadBlocks extends MishangucBlocks {
   public static final RoadWithDiffAngleLine.Impl
       ROAD_WITH_W_Y_RA_LINE =
       new RoadWithDiffAngleLine.Impl(
-          ROAD_SETTINGS,
+          YELLOW_ROAD_SETTINGS,
           LineColor.WHITE,
           LineColor.YELLOW,
           LineType.NORMAL,
@@ -82,7 +80,7 @@ public final class RoadBlocks extends MishangucBlocks {
   public static final RoadWithDiffAngleLine.Impl
       ROAD_WITH_WT_N_RA_LINE =
       new RoadWithDiffAngleLine.Impl(
-          ROAD_SETTINGS,
+          WHITE_ROAD_SETTINGS,
           LineColor.WHITE,
           LineColor.WHITE,
           LineType.THICK,
@@ -96,7 +94,7 @@ public final class RoadBlocks extends MishangucBlocks {
   public static final RoadWithDiffAngleLine.Impl
       ROAD_WITH_WT_Y_RA_LINE =
       new RoadWithDiffAngleLine.Impl(
-          ROAD_SETTINGS,
+          YELLOW_ROAD_SETTINGS,
           LineColor.WHITE,
           LineColor.YELLOW,
           LineType.THICK,
@@ -110,7 +108,7 @@ public final class RoadBlocks extends MishangucBlocks {
   public static final RoadWithDiffAngleLine.Impl
       ROAD_WITH_W_YD_RA_LINE =
       new RoadWithDiffAngleLine.Impl(
-          ROAD_SETTINGS,
+          YELLOW_ROAD_SETTINGS,
           LineColor.WHITE,
           LineColor.YELLOW,
           LineType.NORMAL,
@@ -124,7 +122,7 @@ public final class RoadBlocks extends MishangucBlocks {
   public static final RoadWithDiffAngleLine.Impl
       ROAD_WITH_WT_YD_RA_LINE =
       new RoadWithDiffAngleLine.Impl(
-          ROAD_SETTINGS,
+          YELLOW_ROAD_SETTINGS,
           LineColor.WHITE,
           LineColor.YELLOW,
           LineType.THICK,
@@ -139,7 +137,7 @@ public final class RoadBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final RoadWithStraightAndAngleLine.Impl
       ROAD_WITH_WHITE_S_BA_LINE =
-      new RoadWithStraightAndAngleLine.Impl(ROAD_SETTINGS, LineColor.WHITE);
+      new RoadWithStraightAndAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE);
   /**
    * 白色丁字形线。
    */
@@ -147,7 +145,7 @@ public final class RoadBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final RoadWithJointLine.Impl ROAD_WITH_WHITE_TS_LINE =
       new RoadWithJointLine.Impl(
-          ROAD_SETTINGS,
+          WHITE_ROAD_SETTINGS,
           LineColor.WHITE,
           LineColor.WHITE,
           LineType.NORMAL,
@@ -158,7 +156,7 @@ public final class RoadBlocks extends MishangucBlocks {
   @Cutout
   @RegisterIdentifier
   public static final RoadWithCrossLine.Impl ROAD_WITH_WHITE_CROSS_LINE =
-      new RoadWithCrossLine.Impl(ROAD_SETTINGS, LineColor.WHITE);
+      new RoadWithCrossLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE);
 
   /**
    * <h2>带有特殊线的单线道路</h2>
@@ -168,21 +166,21 @@ public final class RoadBlocks extends MishangucBlocks {
   @Cutout
   @RegisterIdentifier
   public static final RoadWithOffsetStraightLine.Impl ROAD_WITH_WHITE_OFFSET_LINE =
-      new RoadWithOffsetStraightLine.Impl(ROAD_SETTINGS, LineColor.WHITE);
+      new RoadWithOffsetStraightLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE);
   /**
    * 双线。
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithStraightLine.Impl ROAD_WITH_WHITE_DOUBLE_LINE =
-      new RoadWithStraightLine.Impl(ROAD_SETTINGS, LineColor.WHITE, LineType.DOUBLE);
+      new RoadWithStraightLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.DOUBLE);
   /**
    * 粗线。
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithStraightLine.Impl ROAD_WITH_WHITE_THICK_LINE =
-      new RoadWithStraightLine.Impl(ROAD_SETTINGS, LineColor.WHITE, LineType.THICK);
+      new RoadWithStraightLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.THICK);
   /**
    * 偏移的黄线
    */
@@ -190,21 +188,21 @@ public final class RoadBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final RoadWithOffsetStraightLine.Impl
       ROAD_WITH_YELLOW_OFFSET_LINE =
-      new RoadWithOffsetStraightLine.Impl(ROAD_SETTINGS, LineColor.YELLOW);
+      new RoadWithOffsetStraightLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW);
   /**
    * 双黄线
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithStraightLine.Impl ROAD_WITH_YELLOW_DOUBLE_LINE =
-      new RoadWithStraightLine.Impl(ROAD_SETTINGS, LineColor.YELLOW, LineType.DOUBLE);
+      new RoadWithStraightLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.DOUBLE);
   /**
    * 粗黄线
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithStraightLine.Impl ROAD_WITH_YELLOW_THICK_LINE =
-      new RoadWithStraightLine.Impl(ROAD_SETTINGS, LineColor.YELLOW, LineType.THICK);
+      new RoadWithStraightLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.THICK);
   /**
    * 一侧偏移的直角。
    */
@@ -213,14 +211,14 @@ public final class RoadBlocks extends MishangucBlocks {
   public static final RoadWithAngleLineWithOnePartOffset.Impl
       ROAD_WITH_WHITE_RA_LINE_OFFSET_OUT =
       new RoadWithAngleLineWithOnePartOffset.Impl(
-          ROAD_SETTINGS, LineColor.WHITE, false);
+          WHITE_ROAD_SETTINGS, LineColor.WHITE, false);
 
   @Cutout
   @RegisterIdentifier
   public static final RoadWithAngleLineWithOnePartOffset.Impl
       ROAD_WITH_WHITE_RA_LINE_OFFSET_IN =
       new RoadWithAngleLineWithOnePartOffset.Impl(
-          ROAD_SETTINGS, LineColor.WHITE, false);
+          WHITE_ROAD_SETTINGS, LineColor.WHITE, false);
   /**
    * <h2>带有特殊线的双线道路</h2>
    * <p>
@@ -230,7 +228,7 @@ public final class RoadBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final RoadWithJointLine.Impl ROAD_WITH_WHITE_TS_DOUBLE_LINE =
       new RoadWithJointLine.Impl(
-          ROAD_SETTINGS,
+          WHITE_ROAD_SETTINGS,
           LineColor.WHITE,
           LineColor.WHITE,
           LineType.NORMAL,
@@ -242,7 +240,7 @@ public final class RoadBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final RoadWithJointLine.Impl ROAD_WITH_WHITE_TS_THICK_LINE =
       new RoadWithJointLine.Impl(
-          ROAD_SETTINGS, LineColor.WHITE, LineColor.WHITE, LineType.NORMAL, LineType.THICK);
+          WHITE_ROAD_SETTINGS, LineColor.WHITE, LineColor.WHITE, LineType.NORMAL, LineType.THICK);
   /**
    * T字形，其中单侧部分有偏移。
    */
@@ -250,7 +248,7 @@ public final class RoadBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final RoadWithJointLineWithOffsetSide.Impl
       ROAD_WITH_WHITE_TS_OFFSET_LINE =
-      new RoadWithJointLineWithOffsetSide.Impl(ROAD_SETTINGS, LineColor.WHITE);
+      new RoadWithJointLineWithOffsetSide.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE);
   /**
    * 直线部分为双线。
    */
@@ -258,7 +256,7 @@ public final class RoadBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final RoadWithJointLine.Impl ROAD_WITH_WHITE_DOUBLE_TS_LINE =
       new RoadWithJointLine.Impl(
-          ROAD_SETTINGS,
+          WHITE_ROAD_SETTINGS,
           LineColor.WHITE,
           LineColor.WHITE,
           LineType.DOUBLE,
@@ -270,7 +268,7 @@ public final class RoadBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final RoadWithJointLine.Impl ROAD_WITH_WHITE_THICK_TS_LINE =
       new RoadWithJointLine.Impl(
-          ROAD_SETTINGS, LineColor.WHITE, LineColor.WHITE, LineType.THICK, LineType.NORMAL);
+          WHITE_ROAD_SETTINGS, LineColor.WHITE, LineColor.WHITE, LineType.THICK, LineType.NORMAL);
   /**
    * 黄色T字形
    */
@@ -278,7 +276,7 @@ public final class RoadBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final RoadWithJointLine.Impl ROAD_WITH_YELLOW_TS_LINE =
       new RoadWithJointLine.Impl(
-          ROAD_SETTINGS,
+          WHITE_ROAD_SETTINGS,
           LineColor.YELLOW,
           LineColor.YELLOW,
           LineType.NORMAL,
@@ -290,7 +288,7 @@ public final class RoadBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final RoadWithJointLine.Impl ROAD_WITH_Y_TS_W_LINE =
       new RoadWithJointLine.Impl(
-          ROAD_SETTINGS,
+          YELLOW_ROAD_SETTINGS,
           LineColor.YELLOW,
           LineColor.WHITE,
           LineType.NORMAL,
@@ -302,7 +300,7 @@ public final class RoadBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final RoadWithJointLine.Impl ROAD_WITH_W_TS_Y_LINE =
       new RoadWithJointLine.Impl(
-          ROAD_SETTINGS,
+          YELLOW_ROAD_SETTINGS,
           LineColor.WHITE,
           LineColor.YELLOW,
           LineType.NORMAL,
@@ -315,7 +313,7 @@ public final class RoadBlocks extends MishangucBlocks {
   public static final RoadWithJointLine.Impl
       ROAD_WITH_W_TS_YD_LINE =
       new RoadWithJointLine.Impl(
-          ROAD_SETTINGS,
+          YELLOW_ROAD_SETTINGS,
           LineColor.WHITE,
           LineColor.YELLOW,
           LineType.NORMAL,
@@ -328,7 +326,7 @@ public final class RoadBlocks extends MishangucBlocks {
   public static final RoadWithJointLine.Impl
       ROAD_WITH_WT_TS_YD_LINE =
       new RoadWithJointLine.Impl(
-          ROAD_SETTINGS,
+          YELLOW_ROAD_SETTINGS,
           LineColor.WHITE,
           LineColor.YELLOW,
           LineType.THICK,
@@ -343,7 +341,7 @@ public final class RoadBlocks extends MishangucBlocks {
   @Cutout
   public static final RoadBlockWithAutoLine ROAD_WITH_WHITE_AUTO_BA_LINE =
       new RoadBlockWithAutoLine(
-          ROAD_SETTINGS,
+          WHITE_ROAD_SETTINGS,
           RoadWithAutoLine.RoadAutoLineType.BEVEL,
           LineColor.WHITE);
   /**
@@ -353,7 +351,7 @@ public final class RoadBlocks extends MishangucBlocks {
   @Cutout
   public static final RoadBlockWithAutoLine ROAD_WITH_WHITE_AUTO_RA_LINE =
       new RoadBlockWithAutoLine(
-          ROAD_SETTINGS,
+          WHITE_ROAD_SETTINGS,
           RoadWithAutoLine.RoadAutoLineType.RIGHT_ANGLE,
           LineColor.WHITE);
   /**
@@ -363,10 +361,9 @@ public final class RoadBlocks extends MishangucBlocks {
    */
   @RegisterIdentifier
   public static final RoadBlock ROAD_FILLED_WITH_WHITE =
-      new RoadBlock(
-          FabricBlockSettings.copyOf(ROAD_SETTINGS).mapColor(MapColor.WHITE));
+      new RoadBlock(WHITE_ROAD_SETTINGS);
 
   @RegisterIdentifier
   public static final RoadBlock ROAD_FILLED_WITH_YELLOW =
-      new RoadBlock(FabricBlockSettings.copyOf(ROAD_BLOCK).mapColor(MapColor.YELLOW));
+      new RoadBlock(YELLOW_ROAD_SETTINGS);
 }

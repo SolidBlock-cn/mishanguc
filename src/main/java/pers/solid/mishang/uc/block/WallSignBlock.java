@@ -1,9 +1,10 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.ImmutableMap;
+import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JState;
-import net.devtech.arrp.json.blockstate.JVariant;
+import net.devtech.arrp.json.blockstate.JBlockStates;
+import net.devtech.arrp.json.blockstate.JVariants;
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
@@ -42,7 +43,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.arrp.ARRPGenerator;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 
 import java.util.Map;
@@ -54,7 +54,7 @@ import java.util.Map;
  * @see WallSignBlockEntity
  * @see pers.solid.mishang.uc.renderer.WallSignBlockEntityRenderer
  */
-public class WallSignBlock extends WallMountedBlock implements Waterloggable, BlockEntityProvider, ARRPGenerator {
+public class WallSignBlock extends WallMountedBlock implements Waterloggable, BlockEntityProvider, BlockResourceGenerator {
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   public static final Map<Direction, VoxelShape> SHAPES_WHEN_WALL =
       MishangUtils.createHorizontalDirectionToShape(0, 4, 0, 16, 12, 1);
@@ -209,9 +209,9 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
 
   @Override
   @Environment(EnvType.CLIENT)
-  public @Nullable JState getBlockStates() {
-    final JVariant jVariant = new JVariant();
-    final JState state = JState.state(jVariant);
+  public @Nullable JBlockStates getBlockStates() {
+    final JVariants variants = new JVariants();
+    final JBlockStates state = JBlockStates.ofVariants(variants);
     for (WallMountLocation wallMountLocation : WallMountLocation.values()) {
       final int x = switch (wallMountLocation) {
         case WALL -> 0;
@@ -220,9 +220,9 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
       };
       for (Direction direction : Direction.Type.HORIZONTAL) {
         float y = direction.asRotation();
-        jVariant.put(
+        variants.addVariant(
             String.format("face=%s,facing=%s", wallMountLocation.asString(), direction.asString()),
-            new JBlockModel(getBlockModelIdentifier()).x(x).y((int) y).uvlock());
+            new JBlockModel(getBlockModelId()).x(x).y((int) y).uvlock());
       }
     }
     return state;
@@ -231,7 +231,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   @Override
   @Environment(EnvType.CLIENT)
   public @Nullable JModel getBlockModel() {
-    return JModel.model("mishanguc:block/wall_sign").textures(new JTextures().var("texture", getBaseTexture()));
+    return new JModel("mishanguc:block/wall_sign").textures(new JTextures().var("texture", getBaseTexture()));
   }
 
   @Environment(EnvType.CLIENT)

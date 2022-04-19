@@ -1,9 +1,11 @@
 package pers.solid.mishang.uc.block;
 
 import net.devtech.arrp.api.RuntimeResourcePack;
+import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.devtech.arrp.json.blockstate.JBlockModel;
+import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.blockstate.JMultipart;
-import net.devtech.arrp.json.blockstate.JState;
+import net.devtech.arrp.json.blockstate.JWhen;
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
@@ -34,8 +36,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.arrp.ARRPGenerator;
-import pers.solid.mishang.uc.arrp.FixedWhen;
 import pers.solid.mishang.uc.mixin.EntityShapeContextAccessor;
 
 import java.util.Map;
@@ -43,7 +43,7 @@ import java.util.Map;
 /**
  * 悬挂的告示牌上面的专用的悬挂物方块。其方块状态会与其下方的悬挂告示牌方块同步。
  */
-public class HungSignBarBlock extends Block implements Waterloggable, ARRPGenerator {
+public class HungSignBarBlock extends Block implements Waterloggable, BlockResourceGenerator {
 
   public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -221,36 +221,18 @@ public class HungSignBarBlock extends Block implements Waterloggable, ARRPGenera
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JState getBlockStates() {
-    final Identifier id = getBlockModelIdentifier();
-    return JState.state(
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "_central")).uvlock())
-            .when(new FixedWhen().add("left", "true").add("right", "true")),
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "")).uvlock())
-            .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "true")),
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "")).uvlock().y(180))
-            .when(new FixedWhen().add("axis", "z").add("left", "true").add("right", "false")),
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "")).uvlock().y(-90))
-            .when(new FixedWhen().add("axis", "x").add("left", "false").add("right", "true")),
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "")).uvlock().y(90))
-            .when(new FixedWhen().add("axis", "x").add("left", "true").add("right", "false")),
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "_edge")).uvlock())
-            .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "false")),
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "_edge")).uvlock().y(180))
-            .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "false")),
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "_edge")).uvlock().y(90))
-            .when(new FixedWhen().add("axis", "x").add("left", "false").add("right", "false")),
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "_edge")).uvlock().y(270))
-            .when(new FixedWhen().add("axis", "x").add("left", "false").add("right", "false")));
+  public @Nullable JBlockStates getBlockStates() {
+    final Identifier id = getBlockModelId();
+    return JBlockStates.ofMultiparts(
+        new JMultipart(new JWhen().add("left", "true").add("right", "true"), new JBlockModel(id.brrp_append("_central")).uvlock()),
+        new JMultipart(new JWhen().add("axis", "z").add("left", "false").add("right", "true"), new JBlockModel(id).uvlock()),
+        new JMultipart(new JWhen().add("axis", "z").add("left", "true").add("right", "false"), new JBlockModel(id).uvlock().y(180)),
+        new JMultipart(new JWhen().add("axis", "x").add("left", "false").add("right", "true"), new JBlockModel(id).uvlock().y(-90)),
+        new JMultipart(new JWhen().add("axis", "x").add("left", "true").add("right", "false"), new JBlockModel(id).uvlock().y(90)),
+        new JMultipart(new JWhen().add("axis", "z").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_edge")).uvlock()),
+        new JMultipart(new JWhen().add("axis", "z").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_edge")).uvlock().y(180)),
+        new JMultipart(new JWhen().add("axis", "x").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_edge")).uvlock().y(90)),
+        new JMultipart(new JWhen().add("axis", "x").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_edge")).uvlock().y(270)));
   }
 
   @Environment(EnvType.CLIENT)
@@ -263,19 +245,19 @@ public class HungSignBarBlock extends Block implements Waterloggable, ARRPGenera
   @Environment(EnvType.CLIENT)
   @Override
   public void writeBlockModel(RuntimeResourcePack pack) {
-    final Identifier id = getBlockModelIdentifier();
+    final Identifier id = getBlockModelId();
     final String texture = getBaseTexture();
     pack.addModel(
-        JModel.model(new Identifier("mishanguc", "block/hung_sign_bar_central"))
-            .textures(new JTextures().var("texture", texture)),
-        MishangUtils.identifierSuffix(id, "_central"));
+        new JModel(new Identifier("mishanguc", "block/hung_sign_bar_central"))
+            .textures(JTextures.of("texture", texture)),
+        id.brrp_append("_central"));
     pack.addModel(
-        JModel.model(new Identifier("mishanguc", "block/hung_sign_bar"))
-            .textures(new JTextures().var("texture", texture)),
+        new JModel(new Identifier("mishanguc", "block/hung_sign_bar"))
+            .textures(JTextures.of("texture", texture)),
         id);
     pack.addModel(
-        JModel.model(new Identifier("mishanguc", "block/hung_sign_bar_edge"))
-            .textures(new JTextures().var("texture", texture)),
-        MishangUtils.identifierSuffix(id, "_edge"));
+        new JModel(new Identifier("mishanguc", "block/hung_sign_bar_edge"))
+            .textures(JTextures.of("texture", texture)),
+        id.brrp_append("_edge"));
   }
 }

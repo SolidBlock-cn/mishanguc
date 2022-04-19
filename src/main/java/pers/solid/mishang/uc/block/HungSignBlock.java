@@ -3,9 +3,10 @@ package pers.solid.mishang.uc.block;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.devtech.arrp.api.RuntimeResourcePack;
+import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.devtech.arrp.json.blockstate.JBlockModel;
+import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.blockstate.JMultipart;
-import net.devtech.arrp.json.blockstate.JState;
 import net.devtech.arrp.json.blockstate.JWhen;
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
@@ -45,8 +46,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.arrp.ARRPGenerator;
-import pers.solid.mishang.uc.arrp.FixedWhen;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.mixin.EntityShapeContextAccessor;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
@@ -59,7 +58,7 @@ import java.util.Map;
  * @see HungSignBlockEntity
  * @see pers.solid.mishang.uc.renderer.HungSignBlockEntityRenderer
  */
-public class HungSignBlock extends Block implements Waterloggable, BlockEntityProvider, ARRPGenerator {
+public class HungSignBlock extends Block implements Waterloggable, BlockEntityProvider, BlockResourceGenerator {
   /**
    * 由基础方块映射到对应的悬挂告示牌的方块。
    */
@@ -356,53 +355,33 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   @Override
   public void writeBlockModel(RuntimeResourcePack pack) {
     final String texture = getBaseTexture();
-    final Identifier id = getBlockModelIdentifier();
+    final Identifier id = getBlockModelId();
     final JTextures textures = new JTextures().var("texture", texture).var("bar", barTexture).var("texture_top", textureTop);
-    pack.addModel(JModel.model(new Identifier("mishanguc", "block/hung_sign")).textures(textures),
+    pack.addModel(new JModel(new Identifier("mishanguc", "block/hung_sign")).textures(textures),
         id);
-    pack.addModel(JModel.model(new Identifier("mishanguc", "block/hung_sign_body")).textures(textures),
-        MishangUtils.identifierSuffix(id, "_body"));
-    pack.addModel(JModel.model(new Identifier("mishanguc", "block/hung_sign_top_bar")).textures(textures),
-        MishangUtils.identifierSuffix(id, "_top_bar"));
-    pack.addModel(JModel.model(new Identifier("mishanguc", "block/hung_sign_top_bar_edge")).textures(textures),
-        MishangUtils.identifierSuffix(id, "_top_bar_edge"));
+    pack.addModel(new JModel(new Identifier("mishanguc", "block/hung_sign_body")).textures(textures),
+        id.brrp_append("_body"));
+    pack.addModel(new JModel(new Identifier("mishanguc", "block/hung_sign_top_bar")).textures(textures),
+        id.brrp_append("_top_bar"));
+    pack.addModel(new JModel(new Identifier("mishanguc", "block/hung_sign_top_bar_edge")).textures(textures),
+        id.brrp_append("_top_bar_edge"));
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JState getBlockStates() {
-    final Identifier id = getBlockModelIdentifier();
-    return JState.state(
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "_body")).uvlock())
-            .when(new JWhen().add("axis", "z")),
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "_body")).uvlock().y(90))
-            .when(new JWhen().add("axis", "x")),
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "_top_bar")).uvlock())
-            .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "true")),
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "_top_bar")).uvlock().y(180))
-            .when(new FixedWhen().add("axis", "z").add("left", "true").add("right", "false")),
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "_top_bar")).uvlock().y(-90))
-            .when(new FixedWhen().add("axis", "x").add("left", "false").add("right", "true")),
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "_top_bar")).uvlock().y(90))
-            .when(new FixedWhen().add("axis", "x").add("left", "true").add("right", "false")),
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "_top_bar_edge")).uvlock())
-            .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "false")),
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "_top_bar_edge")).uvlock().y(180))
-            .when(new FixedWhen().add("axis", "z").add("left", "false").add("right", "false")),
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "_top_bar_edge")).uvlock().y(90))
-            .when(new FixedWhen().add("axis", "x").add("left", "false").add("right", "false")),
-        new JMultipart()
-            .addModel(new JBlockModel(MishangUtils.identifierSuffix(id, "_top_bar_edge")).uvlock().y(270))
-            .when(new FixedWhen().add("axis", "x").add("left", "false").add("right", "false")));
+  public @NotNull JBlockStates getBlockStates() {
+    final Identifier id = getBlockModelId();
+    return JBlockStates.ofMultiparts(
+        new JMultipart(new JWhen().add("axis", "z"), new JBlockModel(id.brrp_append("_body")).uvlock()),
+        new JMultipart(new JWhen().add("axis", "x"), new JBlockModel(id.brrp_append("_body")).uvlock().y(90)),
+        new JMultipart(new JWhen().add("axis", "z").add("left", "false").add("right", "true"), new JBlockModel(id.brrp_append("_top_bar")).uvlock()),
+        new JMultipart(new JWhen().add("axis", "z").add("left", "true").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar")).uvlock().y(180)),
+        new JMultipart(new JWhen().add("axis", "x").add("left", "false").add("right", "true"), new JBlockModel(id.brrp_append("_top_bar")).uvlock().y(-90)),
+        new JMultipart(new JWhen().add("axis", "x").add("left", "true").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar")).uvlock().y(90)),
+        new JMultipart(new JWhen().add("axis", "z").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar_edge")).uvlock()),
+        new JMultipart(new JWhen().add("axis", "z").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar_edge")).uvlock().y(180)),
+        new JMultipart(new JWhen().add("axis", "x").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar_edge")).uvlock().y(90)),
+        new JMultipart(new JWhen().add("axis", "x").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar_edge")).uvlock().y(270)));
   }
 
 

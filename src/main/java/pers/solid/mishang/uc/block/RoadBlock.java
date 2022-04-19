@@ -1,18 +1,13 @@
 package pers.solid.mishang.uc.block;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JState;
-import net.devtech.arrp.json.blockstate.JVariant;
+import net.devtech.arrp.json.blockstate.JBlockStates;
+import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
@@ -29,26 +24,14 @@ public class RoadBlock extends AbstractRoadBlock {
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JState getBlockStates() {
-    final Identifier id = getBlockModelIdentifier();
-    return new JState().add(new JVariant().put("", new JBlockModel(id)));
+  public @NotNull JBlockStates getBlockStates() {
+    final Identifier blockModelId = getBlockModelId();
+    return JBlockStates.simpleRandomRotation(blockModelId);
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void writeBlockModel(RuntimeResourcePack pack) {
-    final JsonObject object = new JsonObject();
-    final JsonObject variants = new JsonObject();
-    final JsonArray variant = new JsonArray();
-    final String id = getBlockModelIdentifier().toString();
-    for (int i = 0; i < 360; i += 90) {
-      final JsonObject blockModel = new JsonObject();
-      variant.add(blockModel);
-      blockModel.addProperty("model", id);
-      blockModel.addProperty("y", i);
-    }
-    variants.add("", variant);
-    object.add("variants", variants);
-    pack.addAsset(getIdentifier(), new Gson().toJson(object).getBytes());
+  public @NotNull JModel getBlockModel() {
+    return new JModel("block/cube_all").addTexture("all", "mishanguc:block/asphalt");
   }
 }

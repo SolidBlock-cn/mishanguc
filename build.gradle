@@ -16,11 +16,13 @@ repositories {
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
-    maven {
-        url = uri("https://storage.googleapis.com/devan-maven/")
-        // for 0.4.2 and older
-        // url uri("https://raw.githubusercontent.com/Devan-Kerman/Devan-Repo/master/")
-    }
+//    maven {
+//        url = uri("https://storage.googleapis.com/devan-maven/")
+//        // for 0.4.2 and older
+//        // url uri("https://raw.githubusercontent.com/Devan-Kerman/Devan-Repo/master/")
+//    }
+
+    flatDir { dir "..\\BRRP\\build\\libs" }
 }
 
 
@@ -37,10 +39,7 @@ dependencies {
     // You may need to force-disable transitiveness on them.
     modImplementation("net.devtech:arrp:0.5.4")
     // I never break backwards compatibility, so just fetching the latest version should be fine
-    // modImplementation("net.devtech:arrp:0.+")
-
-
-    // optional dev env annotation support
+    modImplementation("net.devtech:brrp:0.6.0-snapshot.2-1.18.1")
 }
 
 processResources {

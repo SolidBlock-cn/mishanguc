@@ -13,7 +13,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.MishangUtils;
 
 /**
  * 简单的栏杆方块。基本上都是采用相同的纹理，如有使用也可以采用不同的纹理。其形状都是最基本的图形。
@@ -70,7 +69,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
   @Environment(EnvType.CLIENT)
   @Override
   public @NotNull JModel getBlockModel() {
-    return JModel.model(new Identifier("mishanguc", "block/simple_handrail")).textures(getTextures());
+    return new JModel(new Identifier("mishanguc", "block/simple_handrail")).textures(getTextures());
   }
 
   @Environment(EnvType.CLIENT)
@@ -115,7 +114,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
    */
   @Environment(EnvType.CLIENT)
   protected String getTexture() {
-    return texture == null ? MishangUtils.identifierPrefix(Registry.BLOCK.getId(baseBlock), "block/").toString() : texture;
+    return texture == null ? Registry.BLOCK.getId(baseBlock).brrp_prepend("block/").toString() : texture;
   }
 
   @Override
@@ -134,10 +133,10 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
       final JTextures textures = baseHandrail.getTextures();
-      final Identifier modelId = getBlockModelIdentifier();
-      pack.addModel(JModel.model(new Identifier("mishanguc", "block/simple_handrail_post")).textures(textures), MishangUtils.identifierSuffix(modelId, "_post"));
-      pack.addModel(JModel.model(new Identifier("mishanguc", "block/simple_handrail_post_side")).textures(textures), MishangUtils.identifierSuffix(modelId, "_post_side"));
-      pack.addModel(JModel.model(new Identifier("mishanguc", "block/simple_handrail_side")).textures(textures), MishangUtils.identifierSuffix(modelId, "_side"));
+      final Identifier modelId = getBlockModelId();
+      pack.addModel(new JModel(new Identifier("mishanguc", "block/simple_handrail_post")).textures(textures), modelId.brrp_append("_post"));
+      pack.addModel(new JModel(new Identifier("mishanguc", "block/simple_handrail_post_side")).textures(textures), modelId.brrp_append("_post_side"));
+      pack.addModel(new JModel(new Identifier("mishanguc", "block/simple_handrail_side")).textures(textures), modelId.brrp_append("_side"));
     }
 
     @Override
@@ -174,11 +173,11 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
       final JTextures textures = baseRail.getTextures();
-      final Identifier modelIdentifier = getBlockModelIdentifier();
-      pack.addModel(JModel.model(new Identifier("mishanguc", "block/simple_handrail_stair_middle_center")).textures(textures), modelIdentifier);
+      final Identifier modelIdentifier = getBlockModelId();
+      pack.addModel(new JModel(new Identifier("mishanguc", "block/simple_handrail_stair_middle_center")).textures(textures), modelIdentifier);
       for (Shape shape : Shape.values()) {
         for (Position position : Position.values()) {
-          pack.addModel(JModel.model(new Identifier("mishanguc", String.format("block/simple_handrail_stair_%s_%s", shape.asString(), position.asString()))).textures(textures), MishangUtils.identifierSuffix(modelIdentifier, "_" + shape.asString() + "_" + position.asString()));
+          pack.addModel(new JModel(new Identifier("mishanguc", String.format("block/simple_handrail_stair_%s_%s", shape.asString(), position.asString()))).textures(textures), modelIdentifier.brrp_append("_" + shape.asString() + "_" + position.asString()));
         }
       }
     }
@@ -197,7 +196,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
 
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
-      pack.addModel(JModel.model("mishanguc:block/simple_handrail_outer").textures(baseRail.getTextures()), getBlockModelIdentifier());
+      pack.addModel(new JModel("mishanguc:block/simple_handrail_outer").textures(baseRail.getTextures()), getBlockModelId());
     }
 
     @Override

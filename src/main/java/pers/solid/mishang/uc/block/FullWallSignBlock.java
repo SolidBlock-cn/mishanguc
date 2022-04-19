@@ -66,6 +66,6 @@ public class FullWallSignBlock extends WallSignBlock {
   @Override
   @Environment(EnvType.CLIENT)
   public @Nullable JModel getBlockModel() {
-    return JModel.model("mishanguc:block/full_wall_sign").textures(new JTextures().var("texture", getBaseTexture()));
+    return new JModel("mishanguc:block/full_wall_sign").textures(new JTextures().var("texture", getBaseTexture()));
   }
 }

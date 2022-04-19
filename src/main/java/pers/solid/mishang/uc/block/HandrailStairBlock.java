@@ -3,9 +3,10 @@ package pers.solid.mishang.uc.block;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
 import net.devtech.arrp.api.RuntimeResourcePack;
+import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JState;
-import net.devtech.arrp.json.blockstate.JVariant;
+import net.devtech.arrp.json.blockstate.JBlockStates;
+import net.devtech.arrp.json.blockstate.JVariants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -36,15 +37,13 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
-import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
-import pers.solid.mishang.uc.arrp.ARRPGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class HandrailStairBlock<T extends HandrailBlock> extends HorizontalFacingBlock implements Waterloggable, ARRPGenerator, Handrails {
+public abstract class HandrailStairBlock<T extends HandrailBlock> extends HorizontalFacingBlock implements Waterloggable, BlockResourceGenerator, Handrails {
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   public static final EnumProperty<Position> POSITION = MishangucProperties.HANDRAIL_STAIR_POSITION;
   public static final EnumProperty<Shape> SHAPE = MishangucProperties.HANDRAIL_STAIR_SHAPE;
@@ -85,17 +84,17 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JState getBlockStates() {
-    final JVariant variant = new JVariant();
-    final Identifier blockModelIdentifier = getBlockModelIdentifier();
+  public @NotNull JBlockStates getBlockStates() {
+    final JVariants variant = new JVariants();
+    final Identifier blockModelId = getBlockModelId();
     for (Direction facing : Direction.Type.HORIZONTAL) {
       for (Position position : Position.values()) {
         for (Shape shape : Shape.values()) {
-          variant.put("facing=" + facing.asString() + ",position=" + position.asString() + ",shape=" + shape.asString(), new JBlockModel(MishangUtils.identifierSuffix(blockModelIdentifier, "_" + shape.asString() + "_" + position.asString())).y(((int) facing.getOpposite().asRotation())).uvlock());
+          variant.put("facing=" + facing.asString() + ",position=" + position.asString() + ",shape=" + shape.asString(), new JBlockModel(blockModelId.brrp_append("_" + shape.asString() + "_" + position.asString())).y(((int) facing.getOpposite().asRotation())).uvlock());
         }
       }
     }
-    return JState.state(variant);
+    return JBlockStates.ofVariants(variant);
   }
 
   @Environment(EnvType.CLIENT)
