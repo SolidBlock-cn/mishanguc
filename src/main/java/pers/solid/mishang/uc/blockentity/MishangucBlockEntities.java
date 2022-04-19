@@ -30,4 +30,9 @@ public class MishangucBlockEntities {
               , null));
 
   public static final BlockEntityType<FullWallSignBlockEntity> FULL_WALL_SIGN_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("mishanguc", "full_wall_sign_block_entity"), new BlockEntityType<>(FullWallSignBlockEntity::new, MishangUtils.<Block>blockInstanceStream(WallSignBlocks.class).filter(block -> block instanceof FullWallSignBlock).collect(ImmutableSet.toImmutableSet()), null));
+
+  // 不做事情，但是会初始化类。
+  public static void init() {
+
+  }
 }

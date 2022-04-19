@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.arrp;
 import net.devtech.arrp.api.RRPCallback;
 import net.devtech.arrp.api.RRPPreGenEntrypoint;
 import net.devtech.arrp.api.RuntimeResourcePack;
+import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
 import net.devtech.arrp.json.tags.JTag;
@@ -27,7 +28,7 @@ import java.util.Arrays;
  */
 @SuppressWarnings({"SameParameterValue"})
 public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
-  private static final RuntimeResourcePack PACK = RuntimeResourcePack.create("mishanguc");
+  private static final RuntimeResourcePack PACK = RuntimeResourcePack.create(new Identifier("mishanguc", "pack"));
 
   private static Identifier blockIdentifier(String path) {
     return new Identifier("mishanguc", "block/" + path);
@@ -37,23 +38,23 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     return blockIdentifier(path).toString();
   }
 
-  private static void writeBlockModelForCubeAll(RuntimeResourcePack pack, ARRPGenerator block, String all) {
+  private static void writeBlockModelForCubeAll(RuntimeResourcePack pack, BlockResourceGenerator block, String all) {
     pack.addModel(
-        JModel.model("block/cube_all").textures(new FasterJTextures().varP("all", all)),
-        block.getBlockModelIdentifier());
+        new JModel("block/cube_all").textures(new FasterJTextures().varP("all", all)),
+        block.getBlockModelId());
   }
 
-  private static void writeBlockModelForSlabAll(RuntimeResourcePack pack, ARRPGenerator block, String all) {
+  private static void writeBlockModelForSlabAll(RuntimeResourcePack pack, BlockResourceGenerator block, String all) {
     pack.addModel(
-        JModel.model("block/slab")
+        new JModel("block/slab")
             .textures(
                 new FasterJTextures().top(all).side(all).bottom(all)),
-        block.getBlockModelIdentifier());
+        block.getBlockModelId());
     pack.addModel(
-        JModel.model("block/slab_top")
+        new JModel("block/slab_top")
             .textures(
                 new FasterJTextures().top(all).side(all).bottom(all)),
-        MishangUtils.identifierSuffix(block.getBlockModelIdentifier(), "_top"));
+        block.getBlockModelId().brrp_append("_top"));
   }
 
   /**
@@ -74,8 +75,8 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
    */
   private static void writeRoadBlockModelWithSlab(
       RuntimeResourcePack pack, AbstractRoadBlock block, String parent, JTextures textures) {
-    final Identifier id = block.getBlockModelIdentifier();
-    final Identifier slabId = RoadSlabBlocks.BLOCK_TO_SLABS.get(block).getBlockModelIdentifier();
+    final Identifier id = block.getBlockModelId();
+    final Identifier slabId = RoadSlabBlocks.BLOCK_TO_SLABS.get(block).getBlockModelId();
     writeRoadBlockModelWithSlab(pack, parent, textures, id, slabId);
   }
 
@@ -89,10 +90,10 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
    */
   private static void writeRoadBlockModelWithSlabWithMirrored(
       RuntimeResourcePack pack, AbstractRoadBlock block, String parent, JTextures textures) {
-    final Identifier id = block.getBlockModelIdentifier();
-    final Identifier slabId = RoadSlabBlocks.BLOCK_TO_SLABS.get(block).getBlockModelIdentifier();
+    final Identifier id = block.getBlockModelId();
+    final Identifier slabId = RoadSlabBlocks.BLOCK_TO_SLABS.get(block).getBlockModelId();
     writeRoadBlockModelWithSlab(pack, parent, textures, id, slabId);
-    writeRoadBlockModelWithSlab(pack, parent + "_mirrored", textures, MishangUtils.identifierSuffix(id, "_mirrored"), MishangUtils.identifierSuffix(slabId, "_mirrored"));
+    writeRoadBlockModelWithSlab(pack, parent + "_mirrored", textures, id.brrp_append("_mirrored"), slabId.brrp_append("_mirrored"));
   }
 
   /**
@@ -105,9 +106,9 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
    * @param textures 纹理变量。三个 parent 都应该使用相同的纹理。
    */
   private static void writeRoadBlockModelWithSlab(RuntimeResourcePack pack, String parent, JTextures textures, Identifier id, Identifier slabId) {
-    pack.addModel(JModel.model(blockIdentifier(parent)).textures(textures), id);
-    pack.addModel(JModel.model(ARRPGenerator.slabOf(blockIdentifier(parent))).textures(textures), slabId);
-    pack.addModel(JModel.model(ARRPGenerator.slabOf(blockIdentifier(parent)) + "_top").textures(textures), MishangUtils.identifierSuffix(slabId, "_top"));
+    pack.addModel(new JModel(blockIdentifier(parent)).textures(textures), id);
+    pack.addModel(new JModel(BRRPHelper.slabOf(blockIdentifier(parent))).textures(textures), slabId);
+    pack.addModel(new JModel(BRRPHelper.slabOf(blockIdentifier(parent)) + "_top").textures(textures), slabId.brrp_append("_top"));
   }
 
   private static void addTags() {
@@ -317,8 +318,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
 
     // 栏杆部分
     MishangUtils.<Block>blockInstanceStream(HandrailBlocks.class).forEach(block -> {
-      if (block instanceof SimpleHandrailBlock) {
-        SimpleHandrailBlock simpleHandrailBlock = (SimpleHandrailBlock) block;
+      if (block instanceof SimpleHandrailBlock simpleHandrailBlock) {
         if (HandrailBlocks.SIMPLE_STAINED_GLASS_HANDRAILS.containsValue(block)) {
           simpleStainedGlassNormalHandrails.addBlock(simpleHandrailBlock);
           simpleStainedGlassCentralHandrails.addBlock(simpleHandrailBlock.central);
@@ -348,53 +348,53 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
       }
     });
     simpleStainedGlassHandrails
-        .tag(new Identifier("mishanguc", "simple_stained_glass_normal_handrails"))
-        .tag(new Identifier("mishanguc", "simple_stained_glass_central_handrails"))
-        .tag(new Identifier("mishanguc", "simple_stained_glass_corner_handrails"))
-        .tag(new Identifier("mishanguc", "simple_stained_glass_outer_handrails"))
-        .tag(new Identifier("mishanguc", "simple_stained_glass_stair_handrails"));
+        .add(new Identifier("mishanguc", "simple_stained_glass_normal_handrails"))
+        .add(new Identifier("mishanguc", "simple_stained_glass_central_handrails"))
+        .add(new Identifier("mishanguc", "simple_stained_glass_corner_handrails"))
+        .add(new Identifier("mishanguc", "simple_stained_glass_outer_handrails"))
+        .add(new Identifier("mishanguc", "simple_stained_glass_stair_handrails"));
     simpleConcreteHandrails
-        .tag(new Identifier("mishanguc", "simple_concrete_normal_handrails"))
-        .tag(new Identifier("mishanguc", "simple_concrete_central_handrails"))
-        .tag(new Identifier("mishanguc", "simple_concrete_corner_handrails"))
-        .tag(new Identifier("mishanguc", "simple_concrete_outer_handrails"))
-        .tag(new Identifier("mishanguc", "simple_concrete_stair_handrails"));
+        .add(new Identifier("mishanguc", "simple_concrete_normal_handrails"))
+        .add(new Identifier("mishanguc", "simple_concrete_central_handrails"))
+        .add(new Identifier("mishanguc", "simple_concrete_corner_handrails"))
+        .add(new Identifier("mishanguc", "simple_concrete_outer_handrails"))
+        .add(new Identifier("mishanguc", "simple_concrete_stair_handrails"));
     simpleTerracottaHandrails
-        .tag(new Identifier("mishanguc", "simple_terracotta_normal_handrails"))
-        .tag(new Identifier("mishanguc", "simple_terracotta_central_handrails"))
-        .tag(new Identifier("mishanguc", "simple_terracotta_corner_handrails"))
-        .tag(new Identifier("mishanguc", "simple_terracotta_outer_handrails"))
-        .tag(new Identifier("mishanguc", "simple_terracotta_stair_handrails"));
+        .add(new Identifier("mishanguc", "simple_terracotta_normal_handrails"))
+        .add(new Identifier("mishanguc", "simple_terracotta_central_handrails"))
+        .add(new Identifier("mishanguc", "simple_terracotta_corner_handrails"))
+        .add(new Identifier("mishanguc", "simple_terracotta_outer_handrails"))
+        .add(new Identifier("mishanguc", "simple_terracotta_stair_handrails"));
     normalHandrails
-        .tag(new Identifier("mishanguc", "simple_stained_glass_normal_handrails"))
-        .tag(new Identifier("mishanguc", "simple_terracotta_normal_handrails"))
-        .tag(new Identifier("mishanguc", "simple_concrete_normal_handrails"));
+        .add(new Identifier("mishanguc", "simple_stained_glass_normal_handrails"))
+        .add(new Identifier("mishanguc", "simple_terracotta_normal_handrails"))
+        .add(new Identifier("mishanguc", "simple_concrete_normal_handrails"));
     handrailItems
-        .tag(new Identifier("mishanguc", "simple_stained_glass_handrails"))
-        .tag(new Identifier("mishanguc", "simple_terracotta_handrails"))
-        .tag(new Identifier("mishanguc", "simple_concrete_handrails"));
+        .add(new Identifier("mishanguc", "simple_stained_glass_handrails"))
+        .add(new Identifier("mishanguc", "simple_terracotta_handrails"))
+        .add(new Identifier("mishanguc", "simple_concrete_handrails"));
     centralHandrails
-        .tag(new Identifier("mishanguc", "simple_stained_glass_central_handrails"))
-        .tag(new Identifier("mishanguc", "simple_terracotta_central_handrails"))
-        .tag(new Identifier("mishanguc", "simple_concrete_central_handrails"));
+        .add(new Identifier("mishanguc", "simple_stained_glass_central_handrails"))
+        .add(new Identifier("mishanguc", "simple_terracotta_central_handrails"))
+        .add(new Identifier("mishanguc", "simple_concrete_central_handrails"));
     cornerHandrails
-        .tag(new Identifier("mishanguc", "simple_stained_glass_corner_handrails"))
-        .tag(new Identifier("mishanguc", "simple_terracotta_corner_handrails"))
-        .tag(new Identifier("mishanguc", "simple_concrete_corner_handrails"));
+        .add(new Identifier("mishanguc", "simple_stained_glass_corner_handrails"))
+        .add(new Identifier("mishanguc", "simple_terracotta_corner_handrails"))
+        .add(new Identifier("mishanguc", "simple_concrete_corner_handrails"));
     outerHandrails
-        .tag(new Identifier("mishanguc", "simple_stained_glass_outer_handrails"))
-        .tag(new Identifier("mishanguc", "simple_terracotta_outer_handrails"))
-        .tag(new Identifier("mishanguc", "simple_concrete_outer_handrails"));
+        .add(new Identifier("mishanguc", "simple_stained_glass_outer_handrails"))
+        .add(new Identifier("mishanguc", "simple_terracotta_outer_handrails"))
+        .add(new Identifier("mishanguc", "simple_concrete_outer_handrails"));
     stairHandrails
-        .tag(new Identifier("mishanguc", "simple_stained_glass_stair_handrails"))
-        .tag(new Identifier("mishanguc", "simple_terracotta_stair_handrails"))
-        .tag(new Identifier("mishanguc", "simple_concrete_stair_handrails"));
+        .add(new Identifier("mishanguc", "simple_stained_glass_stair_handrails"))
+        .add(new Identifier("mishanguc", "simple_terracotta_stair_handrails"))
+        .add(new Identifier("mishanguc", "simple_concrete_stair_handrails"));
     handrails
-        .tag(new Identifier("mishanguc", "normal_handrails"))
-        .tag(new Identifier("mishanguc", "central_handrails"))
-        .tag(new Identifier("mishanguc", "corner_handrails"))
-        .tag(new Identifier("mishanguc", "outer_handrails"))
-        .tag(new Identifier("mishanguc", "stair_handrails"));
+        .add(new Identifier("mishanguc", "normal_handrails"))
+        .add(new Identifier("mishanguc", "central_handrails"))
+        .add(new Identifier("mishanguc", "corner_handrails"))
+        .add(new Identifier("mishanguc", "outer_handrails"))
+        .add(new Identifier("mishanguc", "stair_handrails"));
 
     // 道路部分
     PACK.addTag(new Identifier("mishanguc", "blocks/road_blocks"), roadBlocks);
@@ -403,9 +403,9 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     PACK.addTag(new Identifier("mishanguc", "items/road_slabs"), roadSlabs);
 
     // 灯光部分
-    whiteWallLights.tag(new Identifier("mishanguc", "white_strip_wall_lights"));
-    yellowWallLights.tag(new Identifier("mishanguc", "yellow_strip_wall_lights"));
-    cyanWallLights.tag(new Identifier("mishanguc", "cyan_strip_wall_lights"));
+    whiteWallLights.add(new Identifier("mishanguc", "white_strip_wall_lights"));
+    yellowWallLights.add(new Identifier("mishanguc", "yellow_strip_wall_lights"));
+    cyanWallLights.add(new Identifier("mishanguc", "cyan_strip_wall_lights"));
 
     PACK.addTag(new Identifier("mishanguc", "blocks/white_strip_wall_lights"), whiteStripWallLights);
     PACK.addTag(new Identifier("mishanguc", "items/white_strip_wall_lights"), whiteStripWallLights);
@@ -434,15 +434,15 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
 
     // 墙上的告示牌部分
     wallSigns
-        .tag(new Identifier("mishanguc", "wooden_wall_signs"))
-        .tag(new Identifier("mishanguc", "concrete_wall_signs"))
-        .tag(new Identifier("mishanguc", "terracotta_wall_signs"));
+        .add(new Identifier("mishanguc", "wooden_wall_signs"))
+        .add(new Identifier("mishanguc", "concrete_wall_signs"))
+        .add(new Identifier("mishanguc", "terracotta_wall_signs"));
     glowingWallSigns
-        .tag(new Identifier("mishanguc", "glowing_concrete_wall_signs"))
-        .tag(new Identifier("mishanguc", "glowing_terracotta_wall_signs"));
+        .add(new Identifier("mishanguc", "glowing_concrete_wall_signs"))
+        .add(new Identifier("mishanguc", "glowing_terracotta_wall_signs"));
     fullWallSigns
-        .tag(new Identifier("mishanguc", "full_concrete_wall_signs"))
-        .tag(new Identifier("mishanguc", "full_terracotta_wall_signs"));
+        .add(new Identifier("mishanguc", "full_concrete_wall_signs"))
+        .add(new Identifier("mishanguc", "full_terracotta_wall_signs"));
     registerTag(woodenWallSigns, "wooden_wall_signs");
     registerTag(concreteWallSigns, "concrete_wall_signs");
     registerTag(terracottaWallSigns, "terracotta_wall_signs");
@@ -485,14 +485,14 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
 
     // 悬挂的告示牌部分
     hungSigns
-        .tag(new Identifier("mishanguc", "concrete_hung_signs"))
-        .tag(new Identifier("mishanguc", "terracotta_hung_signs"));
+        .add(new Identifier("mishanguc", "concrete_hung_signs"))
+        .add(new Identifier("mishanguc", "terracotta_hung_signs"));
     glowingHungSigns
-        .tag(new Identifier("mishanguc", "glowing_concrete_hung_signs"))
-        .tag(new Identifier("mishanguc", "glowing_terracotta_hung_signs"));
+        .add(new Identifier("mishanguc", "glowing_concrete_hung_signs"))
+        .add(new Identifier("mishanguc", "glowing_terracotta_hung_signs"));
     hungSignBars
-        .tag(new Identifier("mishanguc", "concrete_hung_sign_bars"))
-        .tag(new Identifier("mishanguc", "terracotta_hung_sign_bars"));
+        .add(new Identifier("mishanguc", "concrete_hung_sign_bars"))
+        .add(new Identifier("mishanguc", "terracotta_hung_sign_bars"));
     registerTag(concreteHungSigns, "concrete_hung_signs");
     registerTag(terracottaHungSigns, "terracotta_hung_signs");
     registerTag(hungSigns, "hung_signs");
@@ -540,9 +540,9 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
                 name = "item/generated";
               }
               pack.addModel(
-                  JModel.model(parent)
+                  new JModel(parent)
                       .textures(
-                          JModel.textures()
+                          new JTextures()
                               .layer0(texture.isEmpty() ? "mishanguc:item/" + name : texture)),
                   new Identifier("mishanguc", "item/" + name));
             });
@@ -736,15 +736,15 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     // 光源部分
 
     pack.addModel(
-        JModel.model(blockIdentifier("light"))
+        new JModel(blockIdentifier("light"))
             .textures(new JTextures().var("base", blockString("white_light"))),
         blockIdentifier("white_light"));
     pack.addModel(
-        JModel.model(blockIdentifier("light"))
+        new JModel(blockIdentifier("light"))
             .textures(new JTextures().var("base", blockString("yellow_light"))),
         blockIdentifier("yellow_light"));
     pack.addModel(
-        JModel.model(blockIdentifier("light"))
+        new JModel(blockIdentifier("light"))
             .textures(new JTextures().var("base", blockString("cyan_light"))),
         blockIdentifier("cyan_light"));
 
@@ -753,10 +753,8 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   @Override
   public void pregen() {
     // 客户端部分
-//    addBlockStates(PACK);
     addBlockModels(PACK);
     addItemModels(PACK);
-//    addBlockItemModels(PACK);
 
     MishangUtils.blockStream().forEach(field -> {
       Object o;
@@ -778,6 +776,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
 
     // 服务端部分
     addTags();
+    PACK.dump();
     RRPCallback.BEFORE_VANILLA.register(a -> a.add(PACK));
   }
 

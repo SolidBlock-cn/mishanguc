@@ -15,7 +15,6 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.MishangUtils;
 
 public class GlowingHungSignBlock extends HungSignBlock {
   /**
@@ -54,24 +53,24 @@ public class GlowingHungSignBlock extends HungSignBlock {
   @Environment(EnvType.CLIENT)
   @Override
   public void writeBlockModel(RuntimeResourcePack pack) {
-    final Identifier id = getBlockModelIdentifier();
+    final Identifier id = getBlockModelId();
     final String texture = getBaseTexture();
     final JTextures textures = new JTextures().var("texture", texture).var("glow", glowTexture).var("bar", barTexture).var("texture_top", textureTop);
     pack.addModel(
-        JModel.model(new Identifier("mishanguc", "block/glowing_hung_sign"))
+        new JModel(new Identifier("mishanguc", "block/glowing_hung_sign"))
             .textures(textures),
         new Identifier(id.getNamespace(), id.getPath()));
     pack.addModel(
-        JModel.model(new Identifier("mishanguc", "block/glowing_hung_sign_body"))
+        new JModel(new Identifier("mishanguc", "block/glowing_hung_sign_body"))
             .textures(textures),
-        MishangUtils.identifierSuffix(id, "_body"));
+        id.brrp_append("_body"));
     pack.addModel(
-        JModel.model(new Identifier("mishanguc", "block/hung_sign_top_bar"))
+        new JModel(new Identifier("mishanguc", "block/hung_sign_top_bar"))
             .textures(textures),
-        MishangUtils.identifierSuffix(id, "_top_bar"));
+        id.brrp_append("_top_bar"));
     pack.addModel(
-        JModel.model(new Identifier("mishanguc", "block/hung_sign_top_bar_edge"))
+        new JModel(new Identifier("mishanguc", "block/hung_sign_top_bar_edge"))
             .textures(textures),
-        MishangUtils.identifierSuffix(id, "_top_bar_edge"));
+        id.brrp_append("_top_bar_edge"));
   }
 }

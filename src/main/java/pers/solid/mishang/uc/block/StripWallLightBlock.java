@@ -2,8 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JState;
-import net.devtech.arrp.json.blockstate.JVariant;
+import net.devtech.arrp.json.blockstate.JBlockStates;
+import net.devtech.arrp.json.blockstate.JVariants;
 import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -139,25 +139,25 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JState getBlockStates() {
-    final JVariant variant = new JVariant();
-    final Identifier id = getBlockModelIdentifier();
-    final Identifier idVertical = MishangUtils.identifierSuffix(id, "_vertical");
-    variant.put("facing=up,strip_type=horizontal", new JBlockModel(id));
-    variant.put("facing=up,strip_type=vertical", new JBlockModel(idVertical));
-    variant.put("facing=down,strip_type=horizontal", new JBlockModel(id).x(180));
-    variant.put("facing=down,strip_type=vertical", new JBlockModel(idVertical).x(180));
+  public @Nullable JBlockStates getBlockStates() {
+    final JVariants variants = new JVariants();
+    final Identifier id = getBlockModelId();
+    final Identifier idVertical = id.brrp_append("_vertical");
+    variants.addVariant("facing=up,strip_type=horizontal", new JBlockModel(id));
+    variants.addVariant("facing=up,strip_type=vertical", new JBlockModel(idVertical));
+    variants.addVariant("facing=down,strip_type=horizontal", new JBlockModel(id).x(180));
+    variants.addVariant("facing=down,strip_type=vertical", new JBlockModel(idVertical).x(180));
     for (Direction direction : Direction.Type.HORIZONTAL) {
-      variant.put("strip_type=horizontal,facing", direction, new JBlockModel(id).x(-90).y(((int) direction.asRotation())));
-      variant.put("strip_type=vertical,facing", direction, new JBlockModel(idVertical).x(-90).y(((int) direction.asRotation())));
+      variants.addVariant("strip_type=horizontal,facing", direction.asString(), new JBlockModel(id).x(-90).y(((int) direction.asRotation())));
+      variants.addVariant("strip_type=vertical,facing", direction.asString(), new JBlockModel(idVertical).x(-90).y(((int) direction.asRotation())));
     }
-    return JState.state(variant);
+    return JBlockStates.ofVariants(variants);
   }
 
   @ApiStatus.AvailableSince("0.1.7")
   @Environment(EnvType.CLIENT)
   public @Nullable JModel getBlockModelVertical() {
-    return JModel.model(MishangUtils.identifierSuffix(getModelParent(), "_vertical"))
+    return new JModel(getModelParent().brrp_append("_vertical"))
         .textures(new FasterJTextures().varP("light", lightColor + "_light"));
   }
 
@@ -165,6 +165,6 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
   @Override
   public void writeBlockModel(RuntimeResourcePack pack) {
     super.writeBlockModel(pack);
-    pack.addModel(getBlockModelVertical(), MishangUtils.identifierSuffix(getBlockModelIdentifier(), "_vertical"));
+    pack.addModel(getBlockModelVertical(), getBlockModelId().brrp_append("_vertical"));
   }
 }

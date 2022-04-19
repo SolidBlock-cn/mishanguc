@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.server.BlockLootTableGenerator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -21,7 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.arrp.ARRPGenerator;
 
 import java.util.List;
 
@@ -96,6 +96,6 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
 
   @Override
   public @Nullable JLootTable getLootTable() {
-    return ARRPGenerator.simpleSlabLootTable(getIdentifier().toString());
+    return JLootTable.delegate(BlockLootTableGenerator.slabDrops(this).build());
   }
 }

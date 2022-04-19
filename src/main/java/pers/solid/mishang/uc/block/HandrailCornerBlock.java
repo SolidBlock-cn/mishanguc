@@ -1,7 +1,8 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.Maps;
-import net.devtech.arrp.json.blockstate.JState;
+import net.devtech.arrp.generator.BlockResourceGenerator;
+import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -36,12 +37,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
-import pers.solid.mishang.uc.arrp.ARRPGenerator;
+import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 
 import java.util.Map;
 
-public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block implements Waterloggable, ARRPGenerator, Handrails {
+public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block implements Waterloggable, BlockResourceGenerator, Handrails {
   /**
    * 该方块的基础的栏杆方块。
    */
@@ -100,8 +101,8 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JState getBlockStates() {
-    return ARRPGenerator.stateForHorizontalCornerFacingBlock(getBlockModelIdentifier(), true);
+  public @NotNull JBlockStates getBlockStates() {
+    return BRRPHelper.stateForHorizontalCornerFacingBlock(getBlockModelId(), true);
   }
 
   @SuppressWarnings("deprecation")

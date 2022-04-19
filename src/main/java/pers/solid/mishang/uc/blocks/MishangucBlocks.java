@@ -32,6 +32,14 @@ public class MishangucBlocks {
    */
   protected static final FabricBlockSettings ROAD_SETTINGS =
       FabricBlockSettings.of(Material.STONE, MapColor.GRAY).strength(0.5F);
+  /**
+   * 具有白色标线的道路方块使用的方块设置。
+   */
+  protected static final FabricBlockSettings WHITE_ROAD_SETTINGS = FabricBlockSettings.copyOf(ROAD_SETTINGS).mapColor(MapColor.WHITE);
+  /**
+   * 具有黄色标线的道路方块使用的方块设置。
+   */
+  protected static final FabricBlockSettings YELLOW_ROAD_SETTINGS = FabricBlockSettings.copyOf(ROAD_SETTINGS).mapColor(MapColor.YELLOW);
 
   /**
    * 绝大多数白色光方块共用的方块设置。

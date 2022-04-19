@@ -1,7 +1,8 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.json.blockstate.JState;
-import net.devtech.arrp.json.blockstate.JVariant;
+import net.devtech.arrp.json.blockstate.JBlockModel;
+import net.devtech.arrp.json.blockstate.JBlockStates;
+import net.devtech.arrp.json.blockstate.JVariants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -79,9 +80,9 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @Nullable JState getBlockStates() {
-      final Identifier id = getBlockModelIdentifier();
-      JVariant variant = new JVariant();
+    public @Nullable JBlockStates getBlockStates() {
+      final Identifier id = getBlockModelId();
+      JVariants variant = new JVariants();
       // 一侧的短线所朝向的方向。
       for (Direction direction : Direction.Type.HORIZONTAL) {
         final @NotNull Direction offsetDirection1 = direction.rotateYClockwise();
@@ -95,17 +96,17 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
             Objects.requireNonNull(
                 HorizontalCornerDirection.fromDirections(direction, offsetDirection2));
         variant
-            .put(
+            .addVariant(
                 String.format(
                     "facing=%s,axis=%s", facing1.asString(), direction.getAxis().asString()),
-                JState.model(id).y((int) (direction.asRotation())))
-            .put(
+                new JBlockModel(id).y((int) (direction.asRotation())))
+            .addVariant(
                 String.format(
                     "facing=%s,axis=%s", facing2.asString(), direction.getAxis().asString()),
-                JState.model(MishangUtils.identifierSuffix(id, "_mirrored"))
+                new JBlockModel(id.brrp_append("_mirrored"))
                     .y((int) (direction.asRotation())));
       }
-      return JState.state(variant);
+      return JBlockStates.ofVariants(variant);
     }
   }
 }

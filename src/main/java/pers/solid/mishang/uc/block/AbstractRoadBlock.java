@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -93,7 +91,6 @@ public abstract class AbstractRoadBlock extends Block implements Road {
     return lineColor;
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {

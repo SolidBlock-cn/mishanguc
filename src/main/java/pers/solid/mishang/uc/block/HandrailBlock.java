@@ -1,7 +1,8 @@
 package pers.solid.mishang.uc.block;
 
 import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.blockstate.JState;
+import net.devtech.arrp.generator.BlockResourceGenerator;
+import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
@@ -27,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
-import pers.solid.mishang.uc.arrp.ARRPGenerator;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 
 import java.util.Map;
@@ -36,7 +36,7 @@ import java.util.Map;
  * 栏杆方块。该方块目前放置在边缘的位置。<br>
  * 关于使用该方块的列表，请参见 {@link pers.solid.mishang.uc.blocks.HandrailBlocks}。
  */
-public abstract class HandrailBlock extends HorizontalFacingBlock implements Waterloggable, ARRPGenerator, Handrails {
+public abstract class HandrailBlock extends HorizontalFacingBlock implements Waterloggable, BlockResourceGenerator, Handrails {
   /**
    * 该方块是否含水、
    */
@@ -208,8 +208,8 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JState getBlockStates() {
-    return ARRPGenerator.stateForHorizontalFacingBlock(getBlockModelIdentifier(), true);
+  public @Nullable JBlockStates getBlockStates() {
+    return JBlockStates.simpleHorizontalFacing(getBlockModelId(), true);
   }
 
   @SuppressWarnings("deprecation")
@@ -225,7 +225,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
   @Environment(EnvType.CLIENT)
   @Override
   public void writeBlockStates(RuntimeResourcePack pack) {
-    ARRPGenerator.super.writeBlockStates(pack);
+    BlockResourceGenerator.super.writeBlockStates(pack);
     central().writeBlockStates(pack);
     corner().writeBlockStates(pack);
     stair().writeBlockStates(pack);
@@ -235,7 +235,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
   @Environment(EnvType.CLIENT)
   @Override
   public void writeBlockModel(RuntimeResourcePack pack) {
-    ARRPGenerator.super.writeBlockModel(pack);
+    BlockResourceGenerator.super.writeBlockModel(pack);
     central().writeBlockModel(pack);
     corner().writeBlockModel(pack);
     stair().writeBlockModel(pack);
@@ -244,7 +244,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
 
   @Override
   public void writeLootTable(RuntimeResourcePack pack) {
-    ARRPGenerator.super.writeLootTable(pack);
+    BlockResourceGenerator.super.writeLootTable(pack);
     central().writeLootTable(pack);
     corner().writeLootTable(pack);
     stair().writeLootTable(pack);

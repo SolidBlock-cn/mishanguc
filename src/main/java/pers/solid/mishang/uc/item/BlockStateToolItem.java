@@ -18,6 +18,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -51,13 +52,7 @@ public class BlockStateToolItem extends BlockToolItem {
           player.getUuid());
     }
     for (Property<?> property : properties) {
-      final Comparable<?> propertyValue = blockState.get(property);
-      final MutableText value = new LiteralText(propertyValue.toString());
-      if (property instanceof BooleanProperty) {
-        value.formatted(propertyValue == Boolean.TRUE ? Formatting.GREEN : Formatting.RED);
-      } else if (property instanceof IntProperty) {
-        value.styled(style -> style.withColor(TextColor.fromRgb(0x00eedd)));
-      }
+      final MutableText value = getFormattedValue(blockState, property);
       player.sendSystemMessage(
           new LiteralText("  ")
               .append(
@@ -67,6 +62,21 @@ public class BlockStateToolItem extends BlockToolItem {
               .append(value),
           player.getUuid());
     }
+  }
+
+  /**
+   * 本方法的目的是考虑到泛型。如果内联，则 {@link Property#name(Comparable)} 会因为泛型而存在问题。
+   */
+  @NotNull
+  private static <T extends Comparable<T>> MutableText getFormattedValue(BlockState blockState, Property<T> property) {
+    final T propertyValue = blockState.get(property);
+    final MutableText value = new LiteralText(property.name(propertyValue));
+    if (property instanceof BooleanProperty) {
+      value.formatted(propertyValue == Boolean.TRUE ? Formatting.GREEN : Formatting.RED);
+    } else if (property instanceof IntProperty) {
+      value.styled(style -> style.withColor(0x00eedd));
+    }
+    return value;
   }
 
   @Override
