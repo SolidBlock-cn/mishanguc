@@ -38,6 +38,6 @@ public class GlowingWallSignBlock extends WallSignBlock {
   @Override
   @Environment(EnvType.CLIENT)
   public @Nullable JModel getBlockModel() {
-    return JModel.model("mishanguc:block/glowing_wall_sign").textures(new JTextures().var("texture", getBaseTexture()).var("glow", glowTexture));
+    return new JModel("mishanguc:block/glowing_wall_sign").textures(new JTextures().var("texture", getBaseTexture()).var("glow", glowTexture));
   }
 }

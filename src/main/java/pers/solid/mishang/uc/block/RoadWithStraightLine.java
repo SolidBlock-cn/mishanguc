@@ -1,6 +1,9 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.datafixers.util.Either;
+import net.devtech.arrp.json.blockstate.JBlockModel;
+import net.devtech.arrp.json.blockstate.JBlockStates;
+import net.devtech.arrp.json.blockstate.JVariants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -17,8 +20,10 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
@@ -71,7 +76,6 @@ public interface RoadWithStraightLine extends Road {
             .getAxis());
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
   default void appendRoadTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
@@ -93,6 +97,16 @@ public interface RoadWithStraightLine extends Road {
     public void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
       super.appendRoadProperties(builder);
       RoadWithStraightLine.super.appendRoadProperties(builder);
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public @NotNull JBlockStates getBlockStates() {
+      final Identifier blockModelId = getBlockModelId();
+      return JBlockStates.ofVariants(new JVariants()
+          .addVariant("axis", "x", new JBlockModel(blockModelId).y(90), new JBlockModel(blockModelId).y(270))
+          .addVariant("axis", "z", new JBlockModel(blockModelId).y(0), new JBlockModel(blockModelId).y(180))
+      );
     }
   }
 }

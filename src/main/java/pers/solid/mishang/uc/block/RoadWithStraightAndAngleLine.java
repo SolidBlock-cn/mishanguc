@@ -1,5 +1,8 @@
 package pers.solid.mishang.uc.block;
 
+import net.devtech.arrp.json.blockstate.JBlockModel;
+import net.devtech.arrp.json.blockstate.JBlockStates;
+import net.devtech.arrp.json.blockstate.JVariants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -11,14 +14,18 @@ import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.List;
+import java.util.Objects;
 
 public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWithStraightLine {
   @Override
@@ -52,7 +59,6 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
         RoadWithAngleLine.super.withPlacementState(state, ctx), ctx);
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
   default void appendRoadTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
@@ -68,6 +74,25 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
     @Override
     public boolean isBevel() {
       return true;
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public @NotNull JBlockStates getBlockStates() {
+      final JVariants variants = new JVariants();
+      final Identifier blockModelId = getBlockModelId();
+      final Identifier mirroredBlockModelId = blockModelId.brrp_append("_mirrored");
+      for (Direction direction : Direction.Type.HORIZONTAL) {
+        final int rotation = (int) direction.asRotation();
+        final String axis = direction.getAxis().asString();
+        variants.addVariant(
+            String.format("axis=%s,facing=%s", axis, Objects.requireNonNull(HorizontalCornerDirection.fromDirections(direction, direction.rotateYClockwise())).asString()),
+            new JBlockModel(blockModelId).y(rotation));
+        variants.addVariant(
+            String.format("axis=%s,facing=%s", axis, Objects.requireNonNull(HorizontalCornerDirection.fromDirections(direction, direction.rotateYCounterclockwise())).asString()),
+            new JBlockModel(mirroredBlockModelId).y(rotation - 90));
+      }
+      return JBlockStates.ofVariants(variants);
     }
   }
 }

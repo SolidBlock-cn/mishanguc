@@ -1,8 +1,9 @@
 package pers.solid.mishang.uc.block;
 
+import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JState;
-import net.devtech.arrp.json.blockstate.JVariant;
+import net.devtech.arrp.json.blockstate.JBlockStates;
+import net.devtech.arrp.json.blockstate.JVariants;
 import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -22,9 +23,9 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.arrp.ARRPGenerator;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
 
 import java.util.Map;
@@ -32,7 +33,7 @@ import java.util.Map;
 import static net.minecraft.fluid.Fluids.WATER;
 
 public class CornerLightBlock extends HorizontalFacingBlock
-    implements Waterloggable, LightConnectable, ARRPGenerator {
+    implements Waterloggable, LightConnectable, BlockResourceGenerator {
   private static final EnumProperty<BlockHalf> BLOCK_HALF = Properties.BLOCK_HALF;
   private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION_WHEN_BOTTOM =
@@ -150,27 +151,27 @@ public class CornerLightBlock extends HorizontalFacingBlock
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JState getBlockStates() {
-    final JVariant variant = new JVariant();
-    final Identifier identifier = getBlockModelIdentifier();
+  public @NotNull JBlockStates getBlockStates() {
+    final JVariants variants = new JVariants();
+    final Identifier identifier = getBlockModelId();
     for (Direction direction : Direction.Type.HORIZONTAL) {
-      variant.put("half=bottom,facing", direction, new JBlockModel(identifier).y((int) direction.asRotation()));
-      variant.put("half=top,facing", direction, new JBlockModel(identifier).y((int) direction.asRotation() - 180).x(180));
+      variants.addVariant("half=bottom,facing", direction.asString(), new JBlockModel(identifier).y((int) direction.asRotation()));
+      variants.addVariant("half=top,facing", direction.asString(), new JBlockModel(identifier).y((int) direction.asRotation() - 180).x(180));
     }
-    return JState.state(variant);
+    return JBlockStates.ofVariants(variants);
   }
 
   @Environment(EnvType.CLIENT)
   @Override
   public @Nullable JModel getBlockModel() {
-    return JModel.model(getModelParent())
+    return new JModel(getModelParent())
         .textures(new FasterJTextures().varP("light", lightColor + "_light"));
   }
 
 
   @ApiStatus.AvailableSince("0.1.7")
   public Identifier getModelParent() {
-    final Identifier identifier = getIdentifier();
+    final Identifier identifier = getBlockId();
     String path = identifier.getPath();
     final int i = lightColor.length();
     try {
@@ -179,6 +180,6 @@ public class CornerLightBlock extends HorizontalFacingBlock
       }
     } catch (IndexOutOfBoundsException ignored) {
     }
-    return MishangUtils.identifierPrefix(new Identifier(identifier.getNamespace(), path), "block/");
+    return new Identifier(identifier.getNamespace(), path).brrp_prepend("block/");
   }
 }

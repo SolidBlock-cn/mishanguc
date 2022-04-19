@@ -2,8 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.datafixers.util.Either;
 import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JState;
-import net.devtech.arrp.json.blockstate.JVariant;
+import net.devtech.arrp.json.blockstate.JBlockStates;
+import net.devtech.arrp.json.blockstate.JVariants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -72,7 +72,6 @@ public interface RoadWithAngleLine extends Road {
             : rotation);
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
   default void appendRoadTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
@@ -102,14 +101,13 @@ public interface RoadWithAngleLine extends Road {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @Nullable JState getBlockStates() {
-      final Identifier id = getBlockModelIdentifier();
-      JVariant variant = new JVariant();
+    public @Nullable JBlockStates getBlockStates() {
+      final Identifier id = getBlockModelId();
+      JVariants variant = new JVariants();
       for (HorizontalCornerDirection direction : HorizontalCornerDirection.values()) {
-        variant.put("facing", direction,
-            new JBlockModel(id).y(direction.asRotation() - 45));
+        variant.addVariant("facing=" + direction.asString(), new JBlockModel(id).y(direction.asRotation() - 45));
       }
-      return JState.state(variant);
+      return JBlockStates.ofVariants(variant);
     }
   }
 }

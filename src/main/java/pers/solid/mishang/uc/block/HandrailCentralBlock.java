@@ -1,9 +1,10 @@
 package pers.solid.mishang.uc.block;
 
 import net.devtech.arrp.api.RuntimeResourcePack;
+import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.devtech.arrp.json.blockstate.JBlockModel;
+import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.blockstate.JMultipart;
-import net.devtech.arrp.json.blockstate.JState;
 import net.devtech.arrp.json.blockstate.JWhen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,8 +27,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.arrp.ARRPGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,7 @@ import java.util.Map;
  *
  * @param <T> 其基础栏杆方块的类型。
  */
-public abstract class HandrailCentralBlock<T extends HandrailBlock> extends HorizontalConnectingBlock implements ARRPGenerator, Handrails {
+public abstract class HandrailCentralBlock<T extends HandrailBlock> extends HorizontalConnectingBlock implements BlockResourceGenerator, Handrails {
   /**
    * 该方块的基础的栏杆方块。
    */
@@ -187,22 +186,18 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JState getBlockStates() {
+  public @NotNull JBlockStates getBlockStates() {
     final List<JMultipart> parts = new ArrayList<>(5);
-    final Identifier modelId = getBlockModelIdentifier();
-    final Identifier postId = MishangUtils.identifierSuffix(modelId, "_post");
-    final Identifier postSideId = MishangUtils.identifierSuffix(modelId, "_post_side");
-    final Identifier sideId = MishangUtils.identifierSuffix(modelId, "_side");
+    final Identifier modelId = getBlockModelId();
+    final Identifier postId = modelId.brrp_append("_post");
+    final Identifier postSideId = modelId.brrp_append("_post_side");
+    final Identifier sideId = modelId.brrp_append("_side");
     parts.add(new JMultipart().addModel(new JBlockModel(postId)));
     FACING_PROPERTIES.forEach((facing, property) -> {
-      parts.add(new JMultipart()
-          .addModel(new JBlockModel(sideId).y(((int) facing.asRotation())))
-          .when(new JWhen().add(property.getName(), "true")));
-      parts.add(new JMultipart()
-          .addModel(new JBlockModel(postSideId).y((int) facing.asRotation()))
-          .when(new JWhen().add(property.getName(), "false")));
+      parts.add(new JMultipart(new JWhen().add(property.getName(), "true"), new JBlockModel(sideId).y(((int) facing.asRotation()))));
+      parts.add(new JMultipart(new JWhen().add(property.getName(), "false"), new JBlockModel(postSideId).y((int) facing.asRotation())));
     });
-    return JState.state(parts.toArray(new JMultipart[5]));
+    return JBlockStates.ofMultiparts(parts.toArray(new JMultipart[5]));
   }
 
   @Environment(EnvType.CLIENT)

@@ -1,8 +1,7 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.datafixers.util.Either;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -21,7 +20,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.arrp.ARRPGenerator;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
@@ -31,7 +29,7 @@ import java.util.List;
 /**
  * 所有道路方块的接口。接口可以多重继承，并直接实现与已有类上，因此使用接口。
  */
-public interface Road extends ARRPGenerator {
+public interface Road extends BlockResourceGenerator {
 
   /**
    * 获取该方块状态中，某个特定方向上的连接状态。连接状态可用于自动路块。
@@ -129,7 +127,8 @@ public interface Road extends ARRPGenerator {
 
   /**
    * 在物品栏中为该道路添加提示信息。<br>
-   * 子类覆盖此方法时，必须注解为 {@code @Environment(EnvType.CLIENT)}。
+   * 对于 1.16.5 之前的版本，子类覆盖此方法时，必须注解为 {@code @Environment(EnvType.CLIENT)}。<br>
+   * 新版本中，由于 {@link Block#appendTooltip(ItemStack, BlockView, List, TooltipContext)} 没有再被注解，故此方法也无需再被注解。
    *
    * @param stack   物品堆。
    * @param world   世界。
@@ -139,7 +138,6 @@ public interface Road extends ARRPGenerator {
    * @see AbstractRoadSlabBlock#appendTooltip
    * @see Block#appendTooltip
    */
-  @Environment(EnvType.CLIENT)
   default void appendRoadTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
   }

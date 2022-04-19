@@ -1,6 +1,6 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.json.blockstate.JState;
+import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -19,7 +19,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.arrp.ARRPGenerator;
+import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
@@ -113,7 +113,6 @@ public class SmartRoadSlabBlock<T extends Block & Road> extends AbstractRoadSlab
     baseBlock.neighborUpdate(state, world, pos, block, fromPos, notify);
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
   public void appendRoadTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
@@ -127,8 +126,8 @@ public class SmartRoadSlabBlock<T extends Block & Road> extends AbstractRoadSlab
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JState getBlockStates() {
-    final JState baseStates = baseBlock.getBlockStates();
-    return baseStates == null ? null : ARRPGenerator.composeStateForSlab(baseStates);
+  public @Nullable JBlockStates getBlockStates() {
+    final JBlockStates baseStates = baseBlock.getBlockStates();
+    return baseStates == null ? null : BRRPHelper.composeStateForSlab(baseStates);
   }
 }
