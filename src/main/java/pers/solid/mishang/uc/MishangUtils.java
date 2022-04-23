@@ -251,7 +251,7 @@ public class MishangUtils {
   @ApiStatus.AvailableSince("0.1.7")
   @Deprecated(since = "0.2.0", forRemoval = true)
   public static Identifier identifierSuffix(Identifier identifier, String suffix) {
-    return identifier.brrp_append(suffix);
+    return new Identifier(identifier.getNamespace(), identifier.getPath() + suffix);
   }
 
   /**
@@ -266,7 +266,7 @@ public class MishangUtils {
   @ApiStatus.AvailableSince("0.1.7")
   @Deprecated(since = "0.2.0", forRemoval = true)
   public static Identifier identifierPrefix(Identifier identifier, String prefix) {
-    return identifier.brrp_prepend(prefix);
+    return new Identifier(identifier.getNamespace(), prefix + identifier.getPath());
   }
 
   public static <T extends Comparable<T>> BlockState with(BlockState state, Property<T> property, String name) {

@@ -7,7 +7,7 @@ import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.devtech.arrp.json.blockstate.JBlockModel;
 import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.blockstate.JMultipart;
-import net.devtech.arrp.json.blockstate.JWhen;
+import net.devtech.arrp.json.blockstate.JWhenProperties;
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
@@ -372,16 +372,16 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   public @NotNull JBlockStates getBlockStates() {
     final Identifier id = getBlockModelId();
     return JBlockStates.ofMultiparts(
-        new JMultipart(new JWhen().add("axis", "z"), new JBlockModel(id.brrp_append("_body")).uvlock()),
-        new JMultipart(new JWhen().add("axis", "x"), new JBlockModel(id.brrp_append("_body")).uvlock().y(90)),
-        new JMultipart(new JWhen().add("axis", "z").add("left", "false").add("right", "true"), new JBlockModel(id.brrp_append("_top_bar")).uvlock()),
-        new JMultipart(new JWhen().add("axis", "z").add("left", "true").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar")).uvlock().y(180)),
-        new JMultipart(new JWhen().add("axis", "x").add("left", "false").add("right", "true"), new JBlockModel(id.brrp_append("_top_bar")).uvlock().y(-90)),
-        new JMultipart(new JWhen().add("axis", "x").add("left", "true").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar")).uvlock().y(90)),
-        new JMultipart(new JWhen().add("axis", "z").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar_edge")).uvlock()),
-        new JMultipart(new JWhen().add("axis", "z").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar_edge")).uvlock().y(180)),
-        new JMultipart(new JWhen().add("axis", "x").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar_edge")).uvlock().y(90)),
-        new JMultipart(new JWhen().add("axis", "x").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar_edge")).uvlock().y(270)));
+        new JMultipart(JWhenProperties.of("axis", "z"), new JBlockModel(id.brrp_append("_body")).uvlock()),
+        new JMultipart(JWhenProperties.of("axis", "x"), new JBlockModel(id.brrp_append("_body")).uvlock().y(90)),
+        new JMultipart(JWhenProperties.of("axis", "z").add("left", "false").add("right", "true"), new JBlockModel(id.brrp_append("_top_bar")).uvlock()),
+        new JMultipart(JWhenProperties.of("axis", "z").add("left", "true").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar")).uvlock().y(180)),
+        new JMultipart(JWhenProperties.of("axis", "x").add("left", "false").add("right", "true"), new JBlockModel(id.brrp_append("_top_bar")).uvlock().y(-90)),
+        new JMultipart(JWhenProperties.of("axis", "x").add("left", "true").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar")).uvlock().y(90)),
+        new JMultipart(JWhenProperties.of("axis", "z").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar_edge")).uvlock()),
+        new JMultipart(JWhenProperties.of("axis", "z").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar_edge")).uvlock().y(180)),
+        new JMultipart(JWhenProperties.of("axis", "x").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar_edge")).uvlock().y(90)),
+        new JMultipart(JWhenProperties.of("axis", "x").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar_edge")).uvlock().y(270)));
   }
 
 
