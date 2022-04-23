@@ -1,17 +1,18 @@
 package pers.solid.mishang.uc.arrp;
 
-import net.devtech.arrp.api.RRPCallback;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import net.devtech.arrp.api.RRPCallbackConditional;
 import net.devtech.arrp.api.RRPPreGenEntrypoint;
 import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
-import net.devtech.arrp.json.tags.JTag;
-import net.fabricmc.api.EnvType;
+import net.devtech.arrp.json.tags.IdentifiedTag;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
@@ -111,79 +112,86 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     pack.addModel(new JModel(BRRPHelper.slabOf(blockIdentifier(parent)) + "_top").textures(textures), slabId.brrp_append("_top"));
   }
 
+  private static IdentifiedTag blockTag(String path) {
+    return new IdentifiedTag("mishanguc", "blocks", path);
+  }
+
   private static void addTags() {
     // 道路部分
-    final JImprovedTag roadBlocks = new JImprovedTag();
-    final JImprovedTag roadSlabs = new JImprovedTag();
+    final IdentifiedTag roadBlocks = blockTag("road_blocks");
+    final IdentifiedTag roadSlabs = blockTag("road_slabs");
 
     // 灯光部分
-    final JImprovedTag whiteStripWallLights = new JImprovedTag();
-    final JImprovedTag whiteWallLights = new JImprovedTag();
-    final JImprovedTag whiteCornerLights = new JImprovedTag();
-    final JImprovedTag whiteLightDecorations = new JImprovedTag();
-    final JImprovedTag yellowStripWallLights = new JImprovedTag();
-    final JImprovedTag yellowWallLights = new JImprovedTag();
-    final JImprovedTag yellowCornerLights = new JImprovedTag();
-    final JImprovedTag yellowLightDecorations = new JImprovedTag();
-    final JImprovedTag cyanStripWallLights = new JImprovedTag();
-    final JImprovedTag cyanWallLights = new JImprovedTag();
-    final JImprovedTag cyanCornerLights = new JImprovedTag();
-    final JImprovedTag cyanLightDecorations = new JImprovedTag();
+    final IdentifiedTag whiteStripWallLights = blockTag("white_strip_wall_lights");
+    final IdentifiedTag whiteWallLights = blockTag("white_wall_lights");
+    final IdentifiedTag whiteCornerLights = blockTag("white_corner_lights");
+    final IdentifiedTag whiteLightDecorations = blockTag("white_light_decorations");
+    final IdentifiedTag yellowStripWallLights = blockTag("yellow_strip_wall_lights");
+    final IdentifiedTag yellowWallLights = blockTag("yellow_wall_lights");
+    final IdentifiedTag yellowCornerLights = blockTag("yellow_corner_lights");
+    final IdentifiedTag yellowLightDecorations = blockTag("yellow_light_decorations");
+    final IdentifiedTag cyanStripWallLights = blockTag("cyan_strip_wall_lights");
+    final IdentifiedTag cyanWallLights = blockTag("cyan_wall_lights");
+    final IdentifiedTag cyanCornerLights = blockTag("cyan_corner_lights");
+    final IdentifiedTag cyanLightDecorations = blockTag("cyan_light_decorations");
 
     // 墙上的告示牌部分
-    final JImprovedTag woodenWallSigns = new JImprovedTag();
-    final JImprovedTag concreteWallSigns = new JImprovedTag();
-    final JImprovedTag terracottaWallSigns = new JImprovedTag();
-    final JImprovedTag wallSigns = new JImprovedTag();
-    final JImprovedTag glowingConcreteWallSigns = new JImprovedTag();
-    final JImprovedTag glowingTerracottaWallSigns = new JImprovedTag();
-    final JImprovedTag glowingWallSigns = new JImprovedTag();
-    final JImprovedTag fullConcreteWallSigns = new JImprovedTag();
-    final JImprovedTag fullTerracottaWallSigns = new JImprovedTag();
-    final JImprovedTag fullWallSigns = new JImprovedTag();
+    final IdentifiedTag woodenWallSigns = blockTag("wooden_wall_signs");
+    final IdentifiedTag concreteWallSigns = blockTag("concrete_wall_signs");
+    final IdentifiedTag terracottaWallSigns = blockTag("terracotta_wall_signs");
+    final IdentifiedTag wallSigns = blockTag("wall_signs");
+    final IdentifiedTag glowingConcreteWallSigns = blockTag("glowing_concrete_wall_signs");
+    final IdentifiedTag glowingTerracottaWallSigns = blockTag("glowing_terracotta_wall_signs");
+    final IdentifiedTag glowingWallSigns = blockTag("glowing_wall_signs");
+    final IdentifiedTag fullConcreteWallSigns = blockTag("full_concrete_wall_signs");
+    final IdentifiedTag fullTerracottaWallSigns = blockTag("full_terracotta_wall_signs");
+    final IdentifiedTag fullWallSigns = blockTag("full_wall_signs");
 
     // 悬挂的告示牌部分
-    final JImprovedTag concreteHungSigns = new JImprovedTag();
-    final JImprovedTag terracottaHungSigns = new JImprovedTag();
-    final JImprovedTag hungSigns = new JImprovedTag();
-    final JImprovedTag glowingConcreteHungSigns = new JImprovedTag();
-    final JImprovedTag glowingTerracottaHungSigns = new JImprovedTag();
-    final JImprovedTag glowingHungSigns = new JImprovedTag();
+    final IdentifiedTag concreteHungSigns = blockTag("concrete_hung_signs");
+    final IdentifiedTag terracottaHungSigns = blockTag("terracotta_hung_signs");
+    final IdentifiedTag hungSigns = blockTag("hung_signs");
+    final IdentifiedTag glowingConcreteHungSigns = blockTag("glowing_concrete_hung_signs");
+    final IdentifiedTag glowingTerracottaHungSigns = blockTag("glowing_terracotta_hung_signs");
+    final IdentifiedTag glowingHungSigns = blockTag("glowing_hung_signs");
+
     // 悬挂的告示牌杆部分
-    final JImprovedTag concreteHungSignBars = new JImprovedTag();
-    final JImprovedTag terracottaHungSignBars = new JImprovedTag();
-    final JImprovedTag hungSignBars = new JImprovedTag();
+    final IdentifiedTag concreteHungSignBars = blockTag("concrete_hung_sign_bars");
+    final IdentifiedTag terracottaHungSignBars = blockTag("terracotta_hung_sign_bars");
+    final IdentifiedTag hungSignBars = blockTag("hung_sign_bars");
 
     // 栏杆部分
-    final JImprovedTag handrails = new JImprovedTag();
-    final JImprovedTag handrailItems = new JImprovedTag();
-    final JImprovedTag normalHandrails = new JImprovedTag();
-    final JImprovedTag centralHandrails = new JImprovedTag();
-    final JImprovedTag cornerHandrails = new JImprovedTag();
-    final JImprovedTag outerHandrails = new JImprovedTag();
-    final JImprovedTag stairHandrails = new JImprovedTag();
+    final IdentifiedTag handrails = blockTag("handrails");
+    final IdentifiedTag handrailItems = new IdentifiedTag("mishanguc", "items", "handrails");
+    final IdentifiedTag normalHandrails = blockTag("normal_handrails");
+    final IdentifiedTag centralHandrails = blockTag("central_handrails");
+    final IdentifiedTag cornerHandrails = blockTag("corner_handrails");
+    final IdentifiedTag outerHandrails = blockTag("outer_handrails");
+    final IdentifiedTag stairHandrails = blockTag("stair_handrails");
 
     // 混凝土栏杆部分
-    final JImprovedTag simpleConcreteHandrails = new JImprovedTag();
-    final JImprovedTag simpleConcreteNormalHandrails = new JImprovedTag();
-    final JImprovedTag simpleConcreteCentralHandrails = new JImprovedTag();
-    final JImprovedTag simpleConcreteCornerHandrails = new JImprovedTag();
-    final JImprovedTag simpleConcreteOuterHandrails = new JImprovedTag();
-    final JImprovedTag simpleConcreteStairHandrails = new JImprovedTag();
+    final IdentifiedTag simpleConcreteHandrails = blockTag("simple_concrete_handrails");
+    final IdentifiedTag simpleConcreteNormalHandrails = blockTag("simple_concrete_normal_handrails");
+    final IdentifiedTag simpleConcreteCentralHandrails = blockTag("simple_concrete_central_handrails");
+    final IdentifiedTag simpleConcreteCornerHandrails = blockTag("simple_concrete_corner_handrails");
+    final IdentifiedTag simpleConcreteOuterHandrails = blockTag("simple_concrete_outer_handrails");
+    final IdentifiedTag simpleConcreteStairHandrails = blockTag("simple_concrete_stair_handrails");
+
     // 陶瓦栏杆部分
-    final JImprovedTag simpleTerracottaHandrails = new JImprovedTag();
-    final JImprovedTag simpleTerracottaNormalHandrails = new JImprovedTag();
-    final JImprovedTag simpleTerracottaCentralHandrails = new JImprovedTag();
-    final JImprovedTag simpleTerracottaCornerHandrails = new JImprovedTag();
-    final JImprovedTag simpleTerracottaOuterHandrails = new JImprovedTag();
-    final JImprovedTag simpleTerracottaStairHandrails = new JImprovedTag();
+    final IdentifiedTag simpleTerracottaHandrails = blockTag("simple_terracotta_handrails");
+    final IdentifiedTag simpleTerracottaNormalHandrails = blockTag("simple_terracotta_normal_handrails");
+    final IdentifiedTag simpleTerracottaCentralHandrails = blockTag("simple_terracotta_central_handrails");
+    final IdentifiedTag simpleTerracottaCornerHandrails = blockTag("simple_terracotta_corner_handrails");
+    final IdentifiedTag simpleTerracottaOuterHandrails = blockTag("simple_terracotta_outer_handrails");
+    final IdentifiedTag simpleTerracottaStairHandrails = blockTag("simple_terracotta_stair_handrails");
+
     // 染色玻璃栏杆部分
-    final JImprovedTag simpleStainedGlassHandrails = new JImprovedTag();
-    final JImprovedTag simpleStainedGlassNormalHandrails = new JImprovedTag();
-    final JImprovedTag simpleStainedGlassCentralHandrails = new JImprovedTag();
-    final JImprovedTag simpleStainedGlassCornerHandrails = new JImprovedTag();
-    final JImprovedTag simpleStainedGlassOuterHandrails = new JImprovedTag();
-    final JImprovedTag simpleStainedGlassStairHandrails = new JImprovedTag();
+    final IdentifiedTag simpleStainedGlassHandrails = blockTag("simple_stained_glass_handrails");
+    final IdentifiedTag simpleStainedGlassNormalHandrails = blockTag("simple_stained_glass_normal_handrails");
+    final IdentifiedTag simpleStainedGlassCentralHandrails = blockTag("simple_stained_glass_central_handrails");
+    final IdentifiedTag simpleStainedGlassCornerHandrails = blockTag("simple_stained_glass_corner_handrails");
+    final IdentifiedTag simpleStainedGlassOuterHandrails = blockTag("simple_stained_glass_outer_handrails");
+    final IdentifiedTag simpleStainedGlassStairHandrails = blockTag("simple_stained_glass_stair_handrails");
 
 
     // 扶手部分，预留
@@ -348,204 +356,185 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
       }
     });
     simpleStainedGlassHandrails
-        .add(new Identifier("mishanguc", "simple_stained_glass_normal_handrails"))
-        .add(new Identifier("mishanguc", "simple_stained_glass_central_handrails"))
-        .add(new Identifier("mishanguc", "simple_stained_glass_corner_handrails"))
-        .add(new Identifier("mishanguc", "simple_stained_glass_outer_handrails"))
-        .add(new Identifier("mishanguc", "simple_stained_glass_stair_handrails"));
+        .addTag(simpleStainedGlassNormalHandrails)
+        .addTag(simpleStainedGlassCentralHandrails)
+        .addTag(simpleStainedGlassCornerHandrails)
+        .addTag(simpleStainedGlassOuterHandrails)
+        .addTag(simpleStainedGlassStairHandrails);
     simpleConcreteHandrails
-        .add(new Identifier("mishanguc", "simple_concrete_normal_handrails"))
-        .add(new Identifier("mishanguc", "simple_concrete_central_handrails"))
-        .add(new Identifier("mishanguc", "simple_concrete_corner_handrails"))
-        .add(new Identifier("mishanguc", "simple_concrete_outer_handrails"))
-        .add(new Identifier("mishanguc", "simple_concrete_stair_handrails"));
+        .addTag(simpleConcreteNormalHandrails)
+        .addTag(simpleConcreteCentralHandrails)
+        .addTag(simpleConcreteCornerHandrails)
+        .addTag(simpleConcreteOuterHandrails)
+        .addTag(simpleConcreteStairHandrails);
     simpleTerracottaHandrails
-        .add(new Identifier("mishanguc", "simple_terracotta_normal_handrails"))
-        .add(new Identifier("mishanguc", "simple_terracotta_central_handrails"))
-        .add(new Identifier("mishanguc", "simple_terracotta_corner_handrails"))
-        .add(new Identifier("mishanguc", "simple_terracotta_outer_handrails"))
-        .add(new Identifier("mishanguc", "simple_terracotta_stair_handrails"));
+        .addTag(simpleTerracottaNormalHandrails)
+        .addTag(simpleTerracottaCentralHandrails)
+        .addTag(simpleTerracottaCornerHandrails)
+        .addTag(simpleTerracottaOuterHandrails)
+        .addTag(simpleTerracottaStairHandrails);
     normalHandrails
-        .add(new Identifier("mishanguc", "simple_stained_glass_normal_handrails"))
-        .add(new Identifier("mishanguc", "simple_terracotta_normal_handrails"))
-        .add(new Identifier("mishanguc", "simple_concrete_normal_handrails"));
+        .addTag(simpleStainedGlassNormalHandrails)
+        .addTag(simpleTerracottaNormalHandrails)
+        .addTag(simpleConcreteNormalHandrails);
     handrailItems
-        .add(new Identifier("mishanguc", "simple_stained_glass_handrails"))
-        .add(new Identifier("mishanguc", "simple_terracotta_handrails"))
-        .add(new Identifier("mishanguc", "simple_concrete_handrails"));
+        .addTag(simpleStainedGlassHandrails)
+        .addTag(simpleTerracottaHandrails)
+        .addTag(simpleConcreteHandrails);
     centralHandrails
-        .add(new Identifier("mishanguc", "simple_stained_glass_central_handrails"))
-        .add(new Identifier("mishanguc", "simple_terracotta_central_handrails"))
-        .add(new Identifier("mishanguc", "simple_concrete_central_handrails"));
+        .addTag(simpleStainedGlassCentralHandrails)
+        .addTag(simpleTerracottaCentralHandrails)
+        .addTag(simpleConcreteCentralHandrails);
     cornerHandrails
-        .add(new Identifier("mishanguc", "simple_stained_glass_corner_handrails"))
-        .add(new Identifier("mishanguc", "simple_terracotta_corner_handrails"))
-        .add(new Identifier("mishanguc", "simple_concrete_corner_handrails"));
+        .addTag(simpleStainedGlassCornerHandrails)
+        .addTag(simpleTerracottaCornerHandrails)
+        .addTag(simpleConcreteCornerHandrails);
     outerHandrails
-        .add(new Identifier("mishanguc", "simple_stained_glass_outer_handrails"))
-        .add(new Identifier("mishanguc", "simple_terracotta_outer_handrails"))
-        .add(new Identifier("mishanguc", "simple_concrete_outer_handrails"));
+        .addTag(simpleStainedGlassOuterHandrails)
+        .addTag(simpleTerracottaOuterHandrails)
+        .addTag(simpleConcreteOuterHandrails);
     stairHandrails
-        .add(new Identifier("mishanguc", "simple_stained_glass_stair_handrails"))
-        .add(new Identifier("mishanguc", "simple_terracotta_stair_handrails"))
-        .add(new Identifier("mishanguc", "simple_concrete_stair_handrails"));
+        .addTag(simpleStainedGlassStairHandrails)
+        .addTag(simpleTerracottaStairHandrails)
+        .addTag(simpleConcreteStairHandrails);
     handrails
-        .add(new Identifier("mishanguc", "normal_handrails"))
-        .add(new Identifier("mishanguc", "central_handrails"))
-        .add(new Identifier("mishanguc", "corner_handrails"))
-        .add(new Identifier("mishanguc", "outer_handrails"))
-        .add(new Identifier("mishanguc", "stair_handrails"));
+        .addTag(normalHandrails)
+        .addTag(centralHandrails)
+        .addTag(cornerHandrails)
+        .addTag(outerHandrails)
+        .addTag(stairHandrails);
 
     // 道路部分
-    PACK.addTag(new Identifier("mishanguc", "blocks/road_blocks"), roadBlocks);
-    PACK.addTag(new Identifier("mishanguc", "items/road_blocks"), roadBlocks);
-    PACK.addTag(new Identifier("mishanguc", "blocks/road_slabs"), roadSlabs);
-    PACK.addTag(new Identifier("mishanguc", "items/road_slabs"), roadSlabs);
+    registerTags(roadBlocks, roadSlabs);
 
     // 灯光部分
-    whiteWallLights.add(new Identifier("mishanguc", "white_strip_wall_lights"));
-    yellowWallLights.add(new Identifier("mishanguc", "yellow_strip_wall_lights"));
-    cyanWallLights.add(new Identifier("mishanguc", "cyan_strip_wall_lights"));
+    whiteWallLights.addTag(whiteStripWallLights);
+    yellowWallLights.addTag(yellowStripWallLights);
+    cyanWallLights.addTag(cyanStripWallLights);
 
-    PACK.addTag(new Identifier("mishanguc", "blocks/white_strip_wall_lights"), whiteStripWallLights);
-    PACK.addTag(new Identifier("mishanguc", "items/white_strip_wall_lights"), whiteStripWallLights);
-    PACK.addTag(new Identifier("mishanguc", "blocks/white_wall_lights"), whiteWallLights);
-    PACK.addTag(new Identifier("mishanguc", "items/white_wall_lights"), whiteWallLights);
-    PACK.addTag(new Identifier("mishanguc", "blocks/white_corner_lights"), whiteCornerLights);
-    PACK.addTag(new Identifier("mishanguc", "items/white_corner_lights"), whiteCornerLights);
-    PACK.addTag(new Identifier("mishanguc", "blocks/white_light_decorations"), whiteLightDecorations);
-    PACK.addTag(new Identifier("mishanguc", "items/white_light_decorations"), whiteLightDecorations);
-    PACK.addTag(new Identifier("mishanguc", "blocks/yellow_strip_wall_lights"), yellowStripWallLights);
-    PACK.addTag(new Identifier("mishanguc", "items/yellow_strip_wall_lights"), yellowStripWallLights);
-    PACK.addTag(new Identifier("mishanguc", "blocks/yellow_wall_lights"), yellowWallLights);
-    PACK.addTag(new Identifier("mishanguc", "items/yellow_wall_lights"), yellowWallLights);
-    PACK.addTag(new Identifier("mishanguc", "blocks/yellow_corner_lights"), yellowCornerLights);
-    PACK.addTag(new Identifier("mishanguc", "items/yellow_corner_lights"), yellowCornerLights);
-    PACK.addTag(new Identifier("mishanguc", "blocks/yellow_light_decorations"), yellowLightDecorations);
-    PACK.addTag(new Identifier("mishanguc", "items/yellow_light_decorations"), yellowLightDecorations);
-    PACK.addTag(new Identifier("mishanguc", "blocks/cyan_strip_wall_lights"), cyanStripWallLights);
-    PACK.addTag(new Identifier("mishanguc", "items/cyan_strip_wall_lights"), cyanStripWallLights);
-    PACK.addTag(new Identifier("mishanguc", "blocks/cyan_wall_lights"), cyanWallLights);
-    PACK.addTag(new Identifier("mishanguc", "items/cyan_wall_lights"), cyanWallLights);
-    PACK.addTag(new Identifier("mishanguc", "blocks/cyan_corner_lights"), cyanCornerLights);
-    PACK.addTag(new Identifier("mishanguc", "items/cyan_corner_lights"), cyanCornerLights);
-    PACK.addTag(new Identifier("mishanguc", "blocks/cyan_light_decorations"), cyanLightDecorations);
-    PACK.addTag(new Identifier("mishanguc", "items/cyan_light_decorations"), cyanLightDecorations);
+    registerTags(
+        whiteWallLights, whiteStripWallLights, whiteCornerLights, whiteLightDecorations,
+        yellowWallLights, yellowStripWallLights, yellowCornerLights, yellowLightDecorations,
+        cyanWallLights, cyanStripWallLights, cyanCornerLights, cyanLightDecorations
+    );
 
     // 墙上的告示牌部分
     wallSigns
-        .add(new Identifier("mishanguc", "wooden_wall_signs"))
-        .add(new Identifier("mishanguc", "concrete_wall_signs"))
-        .add(new Identifier("mishanguc", "terracotta_wall_signs"));
+        .addTag(woodenWallSigns)
+        .addTag(concreteWallSigns)
+        .addTag(terracottaWallSigns);
     glowingWallSigns
-        .add(new Identifier("mishanguc", "glowing_concrete_wall_signs"))
-        .add(new Identifier("mishanguc", "glowing_terracotta_wall_signs"));
+        .addTag(glowingConcreteWallSigns)
+        .addTag(glowingTerracottaWallSigns);
     fullWallSigns
-        .add(new Identifier("mishanguc", "full_concrete_wall_signs"))
-        .add(new Identifier("mishanguc", "full_terracotta_wall_signs"));
-    registerTag(woodenWallSigns, "wooden_wall_signs");
-    registerTag(concreteWallSigns, "concrete_wall_signs");
-    registerTag(terracottaWallSigns, "terracotta_wall_signs");
-    registerTag(wallSigns, "wall_signs");
-    registerTag(glowingConcreteWallSigns, "glowing_concrete_wall_signs");
-    registerTag(glowingTerracottaWallSigns, "glowing_terracotta_wall_signs");
-    registerTag(glowingWallSigns, "glowing_wall_signs");
-    registerTag(fullConcreteWallSigns, "full_concrete_wall_signs");
-    registerTag(fullTerracottaWallSigns, "full_terracotta_wall_signs");
-    registerTag(fullWallSigns, "full_wall_signs");
+        .addTag(fullConcreteWallSigns)
+        .addTag(fullTerracottaWallSigns);
 
-    registerTagBlockOnly(handrails, "handrails");
-    registerTagBlockOnly(normalHandrails, "normal_handrails");
-    registerTagItemOnly(handrailItems, "handrails");
-    registerTagBlockOnly(centralHandrails, "central_handrails");
-    registerTagBlockOnly(cornerHandrails, "corner_handrails");
-    registerTagBlockOnly(outerHandrails, "outer_handrails");
-    registerTagBlockOnly(stairHandrails, "stair_handrails");
-    registerTagBlockOnly(simpleConcreteHandrails, "simple_concrete_handrails");
-    registerTagBlockOnly(simpleConcreteNormalHandrails, "simple_concrete_normal_handrails");
-    registerTagItemOnly(simpleConcreteNormalHandrails, "simple_concrete_handrails");
-    registerTagBlockOnly(simpleConcreteCentralHandrails, "simple_concrete_central_handrails");
-    registerTagBlockOnly(simpleConcreteCornerHandrails, "simple_concrete_corner_handrails");
-    registerTagBlockOnly(simpleConcreteOuterHandrails, "simple_concrete_outer_handrails");
-    registerTagBlockOnly(simpleConcreteStairHandrails, "simple_concrete_stair_handrails");
-    registerTagBlockOnly(simpleTerracottaHandrails, "simple_terracotta_handrails");
-    registerTagBlockOnly(simpleTerracottaNormalHandrails, "simple_terracotta_normal_handrails");
-    registerTagItemOnly(simpleTerracottaNormalHandrails, "simple_terracotta_handrails");
-    registerTagBlockOnly(simpleTerracottaCentralHandrails, "simple_terracotta_central_handrails");
-    registerTagBlockOnly(simpleTerracottaCornerHandrails, "simple_terracotta_corner_handrails");
-    registerTagBlockOnly(simpleTerracottaOuterHandrails, "simple_terracotta_outer_handrails");
-    registerTagBlockOnly(simpleTerracottaStairHandrails, "simple_terracotta_stair_handrails");
-    registerTagBlockOnly(simpleStainedGlassHandrails, "simple_stained_glass_handrails");
-    registerTagBlockOnly(simpleStainedGlassNormalHandrails, "simple_stained_glass_normal_handrails");
-    registerTagItemOnly(simpleStainedGlassNormalHandrails, "simple_stained_glass_handrails");
-    registerTagBlockOnly(simpleStainedGlassCentralHandrails, "simple_stained_glass_central_handrails");
-    registerTagBlockOnly(simpleStainedGlassCornerHandrails, "simple_stained_glass_corner_handrails");
-    registerTagBlockOnly(simpleStainedGlassOuterHandrails, "simple_stained_glass_outer_handrails");
-    registerTagBlockOnly(simpleStainedGlassStairHandrails, "simple_stained_glass_stair_handrails");
+    registerTag(woodenWallSigns);
+    registerTag(concreteWallSigns);
+    registerTag(terracottaWallSigns);
+    registerTag(wallSigns);
+    registerTag(glowingConcreteWallSigns);
+    registerTag(glowingTerracottaWallSigns);
+    registerTag(glowingWallSigns);
+    registerTag(fullConcreteWallSigns);
+    registerTag(fullTerracottaWallSigns);
+    registerTag(fullWallSigns);
+
+    registerTagBlockOnly(handrails);
+    registerTagBlockOnly(normalHandrails);
+    handrailItems.write(PACK);
+    registerTagBlockOnly(centralHandrails);
+    registerTagBlockOnly(cornerHandrails);
+    registerTagBlockOnly(outerHandrails);
+    registerTagBlockOnly(stairHandrails);
+    registerTagBlockOnly(simpleConcreteHandrails);
+    registerTagBlockOnly(simpleConcreteNormalHandrails);
+    PACK.addTag(new Identifier("mishanguc", "items/simple_concrete_handrails"), simpleConcreteNormalHandrails);
+    registerTagBlockOnly(simpleConcreteCentralHandrails);
+    registerTagBlockOnly(simpleConcreteCornerHandrails);
+    registerTagBlockOnly(simpleConcreteOuterHandrails);
+    registerTagBlockOnly(simpleConcreteStairHandrails);
+    registerTagBlockOnly(simpleTerracottaHandrails);
+    registerTagBlockOnly(simpleTerracottaNormalHandrails);
+    PACK.addTag(new Identifier("mishanguc", "items/simple_terracotta_handrails"), simpleTerracottaNormalHandrails);
+    registerTagBlockOnly(simpleTerracottaCentralHandrails);
+    registerTagBlockOnly(simpleTerracottaCornerHandrails);
+    registerTagBlockOnly(simpleTerracottaOuterHandrails);
+    registerTagBlockOnly(simpleTerracottaStairHandrails);
+    registerTagBlockOnly(simpleStainedGlassHandrails);
+    registerTagBlockOnly(simpleStainedGlassNormalHandrails);
+    PACK.addTag(new Identifier("mishanguc", "items/simple_stained_glass_handrails"), simpleStainedGlassNormalHandrails);
+    registerTagBlockOnly(simpleStainedGlassCentralHandrails);
+    registerTagBlockOnly(simpleStainedGlassCornerHandrails);
+    registerTagBlockOnly(simpleStainedGlassOuterHandrails);
+    registerTagBlockOnly(simpleStainedGlassStairHandrails);
 
     // 悬挂的告示牌部分
     hungSigns
-        .add(new Identifier("mishanguc", "concrete_hung_signs"))
-        .add(new Identifier("mishanguc", "terracotta_hung_signs"));
+        .addTag(concreteHungSigns)
+        .addTag(terracottaHungSigns);
     glowingHungSigns
-        .add(new Identifier("mishanguc", "glowing_concrete_hung_signs"))
-        .add(new Identifier("mishanguc", "glowing_terracotta_hung_signs"));
+        .addTag(glowingConcreteHungSigns)
+        .addTag(glowingTerracottaHungSigns);
     hungSignBars
-        .add(new Identifier("mishanguc", "concrete_hung_sign_bars"))
-        .add(new Identifier("mishanguc", "terracotta_hung_sign_bars"));
-    registerTag(concreteHungSigns, "concrete_hung_signs");
-    registerTag(terracottaHungSigns, "terracotta_hung_signs");
-    registerTag(hungSigns, "hung_signs");
-    registerTag(glowingConcreteHungSigns, "glowing_concrete_hung_signs");
-    registerTag(glowingTerracottaHungSigns, "glowing_terracotta_hung_signs");
-    registerTag(glowingHungSigns, "glowing_hung_signs");
-    registerTag(concreteHungSignBars, "concrete_hung_sign_bars");
-    registerTag(terracottaHungSignBars, "terracotta_hung_sign_bars");
-    registerTag(hungSignBars, "hung_sign_bars");
+        .addTag(concreteHungSignBars)
+        .addTag(terracottaHungSignBars);
+    registerTag(concreteHungSigns);
+    registerTag(terracottaHungSigns);
+    registerTag(hungSigns);
+    registerTag(glowingConcreteHungSigns);
+    registerTag(glowingTerracottaHungSigns);
+    registerTag(glowingHungSigns);
+    registerTag(concreteHungSignBars);
+    registerTag(terracottaHungSignBars);
+    registerTag(hungSignBars);
   }
 
-  private static void registerTag(JTag tag, String name) {
-    PACK.addTag(new Identifier("mishanguc", "blocks/" + name), tag);
-    PACK.addTag(new Identifier("mishanguc", "items/" + name), tag);
+  private static void registerTag(IdentifiedTag blockTag) {
+    blockTag.write(PACK);
+    PACK.addTag(blockTag.identifier.brrp_prepend("items/"), blockTag);
   }
 
-  private static void registerTagBlockOnly(JTag tag, String name) {
-    PACK.addTag(new Identifier("mishanguc", "blocks/" + name), tag);
+  private static void registerTags(IdentifiedTag... tags) {
+    for (IdentifiedTag tag : tags) {
+      registerTag(tag);
+    }
   }
 
-  private static void registerTagItemOnly(JTag tag, String name) {
-    PACK.addTag(new Identifier("mishanguc", "items/" + name), tag);
+  private static void registerTagBlockOnly(IdentifiedTag tag) {
+    PACK.addTag(tag.identifier.brrp_prepend("blocks/"), tag);
+  }
+
+  private static void registerTagItemOnly(IdentifiedTag tag) {
+    PACK.addTag(tag.identifier.brrp_prepend("items/"), tag);
   }
 
   private static void addItemModels(RuntimeResourcePack pack) {
     Arrays.stream(MishangucItems.class.getFields())
-        .filter(
-            field -> {
-              int modifier = field.getModifiers();
-              return Modifier.isPublic(modifier)
-                  && Modifier.isStatic(modifier)
-                  && Item.class.isAssignableFrom(field.getType())
-                  && field.isAnnotationPresent(RegisterIdentifier.class)
-                  && field.isAnnotationPresent(SimpleModel.class);
-            })
-        .forEach(
-            field -> {
-              String name = field.getAnnotation(RegisterIdentifier.class).value();
-              String parent = field.getAnnotation(SimpleModel.class).parent();
-              String texture = field.getAnnotation(SimpleModel.class).texture();
-              if (name.isEmpty()) {
-                name = field.getName().toLowerCase();
-              }
-              if (parent.isEmpty()) {
-                name = "item/generated";
-              }
-              pack.addModel(
-                  new JModel(parent)
-                      .textures(
-                          new JTextures()
-                              .layer0(texture.isEmpty() ? "mishanguc:item/" + name : texture)),
-                  new Identifier("mishanguc", "item/" + name));
-            });
+        .filter(field -> {
+          int modifier = field.getModifiers();
+          return Modifier.isPublic(modifier)
+              && Modifier.isStatic(modifier)
+              && Item.class.isAssignableFrom(field.getType())
+              && field.isAnnotationPresent(RegisterIdentifier.class)
+              && field.isAnnotationPresent(SimpleModel.class);
+        })
+        .forEach(field -> {
+          String name = field.getAnnotation(RegisterIdentifier.class).value();
+          String parent = field.getAnnotation(SimpleModel.class).parent();
+          String texture = field.getAnnotation(SimpleModel.class).texture();
+          if (name.isEmpty()) {
+            name = field.getName().toLowerCase();
+          }
+          if (parent.isEmpty()) {
+            name = "item/generated";
+          }
+          pack.addModel(
+              new JModel(parent)
+                  .textures(new JTextures().layer0(texture.isEmpty() ? "mishanguc:item/" + name : texture)),
+              new Identifier("mishanguc", "item/" + name));
+        });
   }
 
   private static void addBlockModels(RuntimeResourcePack pack) {
@@ -752,9 +741,24 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
 
   @Override
   public void pregen() {
+    final boolean dev = FabricLoader.getInstance().isDevelopmentEnvironment();
+    if (!dev) generateResources(true, true);
+    RRPCallbackConditional.BEFORE_VANILLA.register((resourceType, builder) -> builder.add(dev ? generateResources(resourceType == ResourceType.CLIENT_RESOURCES, resourceType == ResourceType.SERVER_DATA) : PACK));
+  }
+
+  /**
+   * 为运行时资源包生成资源。在开发环境中，每次加载资源就会重新生成一次。在非开发环境中，游戏开始时生成一次，此后不再生成。
+   */
+  @CanIgnoreReturnValue
+  private RuntimeResourcePack generateResources(boolean client, boolean server) {
+    if (client) PACK.clearResources(ResourceType.CLIENT_RESOURCES);
+    if (server) PACK.clearResources(ResourceType.SERVER_DATA);
+
     // 客户端部分
-    addBlockModels(PACK);
-    addItemModels(PACK);
+    if (client) {
+      addBlockModels(PACK);
+      addItemModels(PACK);
+    }
 
     MishangUtils.blockStream().forEach(field -> {
       Object o;
@@ -763,21 +767,25 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
       } catch (IllegalAccessException e) {
         return;
       }
-      if (o instanceof ARRPGenerator) {
-        final ARRPGenerator arrp = (ARRPGenerator) o;
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+      if (o instanceof BlockResourceGenerator) {
+        final BlockResourceGenerator arrp = (BlockResourceGenerator) o;
+        if (client) {
           arrp.writeBlockModel(PACK);
           arrp.writeBlockStates(PACK);
           arrp.writeItemModel(PACK);
         }
-        arrp.writeLootTable(PACK);
+        if (server) {
+          arrp.writeLootTable(PACK);
+        }
       }
     });
 
     // 服务端部分
-    addTags();
-    PACK.dump();
-    RRPCallback.BEFORE_VANILLA.register(a -> a.add(PACK));
+    if (server) {
+      addTags();
+    }
+
+    return PACK;
   }
 
   @Override
