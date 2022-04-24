@@ -2,7 +2,11 @@ Welcome to use the Mishang Urban Construction mod. This mod provides you with a 
 
 This mod is not yet stable. Please do not use this mod in your formal development, as future incompatible updates may happen to make former contents removed.
 
-**This mod relies on ARRP. Make sure you have installed ARRP when installing this mod!**
+**[BEFORE 0.2.0] This mod relies on ARRP. Make sure you have installed ARRP when installing this mod!**
+
+**Since 0.2.0, this mod relies on BRRP. Please make sure you have installed [BRRP mod](https://github.com/SolidBlock-cn/BRRP) when installing this mod, and ARRP is not needed anymore!**
+
+Welcome to join Tencent QQ group **587928350** or KaiHeiLa channel invitation code **KlFS0n** to experience latest update of this mod.
 
 **This mod is published under the GPLv3 license, which you must follow when propagating this mod. According to GPLv3 license, any programs based on this mod are supposed to be under this license as well. When propagating the source code, the license file is supposed to be kept. When propagating compiled mod files, source code or links should be properly provided. Violation of GPLv3 results to termination of the license, until the mod author agrees or the GPLv3 license allows reinstating. You may refer to the GPLv3 license file for details.**
 

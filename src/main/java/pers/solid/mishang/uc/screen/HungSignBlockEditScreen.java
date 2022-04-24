@@ -2,7 +2,6 @@ package pers.solid.mishang.uc.screen;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -16,6 +15,7 @@ import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.util.TextContext;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,10 +46,9 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
     this.backedUpTexts = entity.texts;
     this.direction = direction;
     // 此时的 entity.texts 是可修改的，忽略 @Unmodifiable 注解。
-    entity.texts =
-        Util.make(
-            new Reference2ObjectArrayMap<>(entity.texts),
-            map -> map.put(direction, textContextsEditing));
+    entity.texts = Util.make(
+        new HashMap<>(entity.texts),
+        map -> map.put(direction, textContextsEditing));
   }
 
   @Override
@@ -66,11 +65,10 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
     entity.editedSide = null;
     if (changed) {
       // 固化 texts 字段
-      entity.texts =
-          ImmutableMap.copyOf(
-              Util.make(
-                  entity.texts,
-                  map -> map.put(direction, ImmutableList.copyOf(textContextsEditing))));
+      entity.texts = ImmutableMap.copyOf(
+          Util.make(
+              new HashMap<>(entity.texts),
+              map -> map.put(direction, ImmutableList.copyOf(textContextsEditing))));
     } else {
       entity.texts = backedUpTexts;
     }
