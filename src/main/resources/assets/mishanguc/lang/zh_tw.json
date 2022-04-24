@@ -347,5 +347,12 @@
   "roadConnectionState.whether.probably_connect_to": "應當連接",
   "vertical_align.mishanguc.bottom": "底",
   "vertical_align.mishanguc.middle": "中",
-  "vertical_align.mishanguc.top": "頂"
+  "vertical_align.mishanguc.top": "頂",
+  "block.mishanguc.custom_concrete_hung_sign": "懸掛的混凝土告示牌（自訂顏色）",
+  "block.mishanguc.custom_concrete_hung_sign_bar": "懸掛的混凝土告示牌杆（自訂顏色）",
+  "block.mishanguc.custom_terracotta_hung_sign": "懸掛的陶瓦告示牌（自訂顏色）",
+  "block.mishanguc.custom_terracotta_hung_sign_bar": "懸掛的陶瓦告示牌杆（自訂顏色）",
+  "block.mishanguc.custom_color_tooltip.color": "顏色：%s",
+  "block.mishanguc.custom_color_tooltip.components": "R=%s G=%s B=%s",
+  "block.mishanguc.custom_color_tooltip.auto_color": "顏色將會自動確定。"
 }

@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.blockentity;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -11,10 +12,13 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import pers.solid.mishang.uc.block.ColoredHungSignBlock;
 import pers.solid.mishang.uc.block.HungSignBlock;
 import pers.solid.mishang.uc.util.TextContext;
 
@@ -44,9 +48,18 @@ public class HungSignBlockEntity extends BlockEntityWithText {
    */
   @Nullable
   private PlayerEntity editor;
-
+  /**
+   * @see #create(javax.swing.text.html.BlockView)
+   */
   public HungSignBlockEntity() {
     super(MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY);
+  }
+
+  /**
+   * 根据对应的方块状态创建方块实体。染色方块和未染色的方块都属于相同的“方块实体类型”，但属于不同的“方块实体对象”。
+   */
+  public static HungSignBlockEntity create(BlockPos pos, BlockState state) {
+    return state.getBlock() instanceof ColoredHungSignBlock ? new HungSignBlockEntity.Colored(pos, state) : new HungSignBlockEntity(pos, state);
   }
 
   @Override
@@ -125,5 +138,40 @@ public class HungSignBlockEntity extends BlockEntityWithText {
   @Override
   public void setEditor(@Nullable PlayerEntity editor) {
     this.editor = editor;
+  }
+
+  /**
+   * 染色的悬挂告示牌方块。
+   */
+  public static class Colored extends HungSignBlockEntity implements ColoredBlockEntity {
+    public int color = ColoredBlockEntity.getDefaultColorFromPos(pos);
+
+    /**
+     * @see #create(BlockPos, BlockState)
+     */
+    @ApiStatus.Internal
+    protected Colored(BlockPos pos, BlockState state) {
+      super(pos, state);
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+      super.readNbt(nbt);
+      color = nbt.contains("color", NbtType.NUMBER) ? nbt.getInt("color") : ColoredBlockEntity.getDefaultColorFromPos(pos);
+      if (world != null) {
+        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), 3);
+      }
+    }
+
+    @Override
+    public void writeNbt(NbtCompound nbt) {
+      super.writeNbt(nbt);
+      nbt.putInt("color", color);
+    }
+
+    @Override
+    public int getColor() {
+      return color;
+    }
   }
 }

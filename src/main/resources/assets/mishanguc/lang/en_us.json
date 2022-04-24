@@ -168,6 +168,14 @@
   "block.mishanguc.invisible_wall_sign": "Invisible Wall Sign",
   "block.mishanguc.invisible_glowing_wall_sign": "Invisible Glowing Wall Sign",
 
+  "block.mishanguc.custom_concrete_hung_sign": "Concrete Hung Sign (Custom Color)",
+  "block.mishanguc.custom_concrete_hung_sign_bar": "Concrete Hung Sign Bar (Custom Color)",
+  "block.mishanguc.custom_terracotta_hung_sign": "Terracotta Hung Sign (Custom Color)",
+  "block.mishanguc.custom_terracotta_hung_sign_bar": "Terracotta Hung Sign Bar (Custom Color)",
+  "block.mishanguc.custom_color_tooltip.color": "Color: %s",
+  "block.mishanguc.custom_color_tooltip.components": "R=%s G=%s B=%s",
+  "block.mishanguc.custom_color_tooltip.auto_color": "Color will be auto-determined.",
+
   "block.mishanguc.handrail": "%s Handrail",
   "block.mishanguc.handrail_central": "%s Handrail (Central)",
   "block.mishanguc.handrail_corner": "%s Handrail (Corner)",

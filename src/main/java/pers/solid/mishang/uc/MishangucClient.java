@@ -10,7 +10,11 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegi
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -20,9 +24,11 @@ import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.HandrailBlock;
+import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
+import pers.solid.mishang.uc.blocks.HungSignBlocks;
 import pers.solid.mishang.uc.item.DataTagToolItem;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 import pers.solid.mishang.uc.renderer.HungSignBlockEntityRenderer;
@@ -66,6 +72,34 @@ public class MishangucClient implements ClientModInitializer {
     BlockEntityRendererRegistry.INSTANCE.register(
         MishangucBlockEntities.WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
     BlockEntityRendererRegistry.INSTANCE.register(MishangucBlockEntities.FULL_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
+
+    // 注册方块和颜色
+    ColorProviderRegistry.BLOCK.register(
+        (state, world, pos, tintIndex) -> {
+          if (world == null) return -1;
+          final BlockEntity entity = world.getBlockEntity(pos);
+          return entity instanceof ColoredBlockEntity coloredBlockEntity ? coloredBlockEntity.getColor() : -1;
+        },
+        HungSignBlocks.CUSTOM_CONCRETE_HUNG_SIGN,
+        HungSignBlocks.CUSTOM_CONCRETE_HUNG_SIGN_BAR,
+        HungSignBlocks.CUSTOM_TERRACOTTA_HUNG_SIGN,
+        HungSignBlocks.CUSTOM_TERRACOTTA_HUNG_SIGN_BAR
+    );
+    ColorProviderRegistry.ITEM.register(
+        (stack, tintIndex) -> {
+          final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
+          if (nbt != null && nbt.contains("color", NbtElement.NUMBER_TYPE)) {
+            return nbt.getInt("color");
+          }
+          final ClientPlayerEntity clientPlayer = MinecraftClient.getInstance().player;
+          final BlockPos blockPos = clientPlayer == null ? new BlockPos(5, 5, 5) : clientPlayer.getBlockPos();
+          return ColoredBlockEntity.getDefaultColorFromPos(blockPos);
+        },
+        HungSignBlocks.CUSTOM_CONCRETE_HUNG_SIGN,
+        HungSignBlocks.CUSTOM_CONCRETE_HUNG_SIGN_BAR,
+        HungSignBlocks.CUSTOM_TERRACOTTA_HUNG_SIGN,
+        HungSignBlocks.CUSTOM_TERRACOTTA_HUNG_SIGN_BAR
+    );
 
     // 注册客户端实体事件
     ClientEntityEvents.ENTITY_LOAD.register(
