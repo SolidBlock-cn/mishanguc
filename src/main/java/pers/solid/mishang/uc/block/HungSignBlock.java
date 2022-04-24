@@ -161,10 +161,10 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
             Direction.UP, world.getBlockState(blockPos.up()), world, blockPos, blockPos.up());
   }
 
-  @Nullable
+  @NotNull
   @Override
   public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-    return new HungSignBlockEntity(pos, state);
+    return HungSignBlockEntity.create(pos, state);
   }
 
   @SuppressWarnings("deprecation")
