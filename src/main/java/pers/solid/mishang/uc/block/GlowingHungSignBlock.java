@@ -5,6 +5,8 @@ import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
+import net.devtech.arrp.json.recipe.JRecipe;
+import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -15,6 +17,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.blocks.WallSignBlocks;
 
 public class GlowingHungSignBlock extends HungSignBlock {
   /**
@@ -71,5 +74,16 @@ public class GlowingHungSignBlock extends HungSignBlock {
         new JModel(new Identifier("mishanguc", "block/hung_sign_top_bar_edge"))
             .textures(textures),
         id.brrp_append("_top_bar_edge"));
+  }
+
+  @Override
+  public @Nullable JRecipe getCraftingRecipe() {
+    if (baseBlock == null) return null;
+    final JShapedRecipe recipe = new JShapedRecipe(this)
+        .pattern("-#-", "-#-", "-#-")
+        .addKey("#", baseBlock).addKey("-", WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
+        .resultCount(6);
+    recipe.addInventoryChangedCriterion("has_base_block", baseBlock).addInventoryChangedCriterion("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
+    return recipe;
   }
 }

@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
+import net.devtech.arrp.json.recipe.JRecipe;
+import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -11,6 +13,7 @@ import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.blocks.WallSignBlocks;
 
 public class GlowingWallSignBlock extends WallSignBlock {
   @ApiStatus.AvailableSince("0.1.7")
@@ -34,6 +37,16 @@ public class GlowingWallSignBlock extends WallSignBlock {
     return new TranslatableText("block.mishanguc.glowing_wall_sign", baseBlock.getName());
   }
 
+  @Override
+  public @Nullable JRecipe getCraftingRecipe() {
+    if (baseBlock == null) return null;
+    final JShapedRecipe recipe = new JShapedRecipe(this)
+        .pattern("---", "###", "---")
+        .addKey("#", baseBlock).addKey("-", WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
+        .resultCount(6);
+    recipe.addInventoryChangedCriterion("has_base_block", baseBlock).addInventoryChangedCriterion("has_sign", WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN);
+    return recipe;
+  }
 
   @Override
   @Environment(EnvType.CLIENT)

@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.block;
 
+import com.google.common.annotations.Beta;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -20,6 +21,7 @@ import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 
 import java.util.List;
 
+@Beta
 public class ColoredHungSignBarBlock extends HungSignBarBlock implements BlockEntityProvider {
   public ColoredHungSignBarBlock(@Nullable Block baseBlock, Settings settings) {
     super(baseBlock, settings);
