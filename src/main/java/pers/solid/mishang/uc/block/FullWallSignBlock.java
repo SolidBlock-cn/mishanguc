@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.block;
 import com.google.common.collect.ImmutableMap;
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
+import net.devtech.arrp.json.recipe.JRecipe;
+import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -21,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.FullWallSignBlockEntity;
+import pers.solid.mishang.uc.blocks.WallSignBlocks;
 
 import java.util.Map;
 
@@ -61,6 +64,17 @@ public class FullWallSignBlock extends WallSignBlock {
   @Override
   public @Nullable BlockEntity createBlockEntity(BlockView world) {
     return new FullWallSignBlockEntity();
+  }
+
+  @Override
+  public @Nullable JRecipe getCraftingRecipe() {
+    if (baseBlock == null) return null;
+    final JShapedRecipe recipe = new JShapedRecipe(this)
+        .pattern("-#-", "###", "-#-")
+        .addKey("#", baseBlock).addKey("-", WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .resultCount(4);
+    recipe.addInventoryChangedCriterion("has_base_block", baseBlock).addInventoryChangedCriterion("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
+    return recipe;
   }
 
   @Override

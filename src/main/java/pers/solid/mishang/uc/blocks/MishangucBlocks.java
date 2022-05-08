@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.blocks;
 
+import com.google.common.annotations.Beta;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
@@ -76,7 +77,6 @@ public class MishangucBlocks {
    * @see RegisterIdentifier
    */
   private static <T> void registerAll(Class<T> cls, final ItemGroup group) {
-
     for (Field field : cls.getFields()) {
       int modifier = field.getModifiers();
       final Class<?> fieldType = field.getType();
@@ -102,7 +102,7 @@ public class MishangucBlocks {
               Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_stair"), ((HandrailBlock) value).stair());
               Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_outer"), ((HandrailBlock) value).outer());
             }
-            final FabricItemSettings settings = new FabricItemSettings().group(group);
+            final FabricItemSettings settings = new FabricItemSettings().group(field.isAnnotationPresent(Beta.class) ? null : group);
             final BlockItem item =
                 HungSignBlock.class.isAssignableFrom(fieldType)
                     ? new HungSignBlockItem(value, settings)

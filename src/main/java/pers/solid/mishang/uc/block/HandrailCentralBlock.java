@@ -23,6 +23,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
@@ -105,6 +106,11 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   @Override
   public Item asItem() {
     return baseHandrail.asItem();
+  }
+
+  @Override
+  public Identifier getItemId() {
+    return Registry.ITEM.getId(asItem());
   }
 
   @Override

@@ -5,16 +5,22 @@ import net.devtech.arrp.api.RRPCallbackConditional;
 import net.devtech.arrp.api.RRPPreGenEntrypoint;
 import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.generator.BlockResourceGenerator;
+import net.devtech.arrp.generator.ResourceGeneratorHelper;
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
+import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.devtech.arrp.json.tags.IdentifiedTag;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.SimpleModel;
 import pers.solid.mishang.uc.block.*;
@@ -510,7 +516,8 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     PACK.addTag(tag.identifier.brrp_prepend("items/"), tag);
   }
 
-  private static void addItemModels(RuntimeResourcePack pack) {
+  @Environment(EnvType.CLIENT)
+  private static void writeAllItemModels(RuntimeResourcePack pack) {
     Arrays.stream(MishangucItems.class.getFields())
         .filter(field -> {
           int modifier = field.getModifiers();
@@ -537,7 +544,8 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         });
   }
 
-  private static void addBlockModels(RuntimeResourcePack pack) {
+  @Environment(EnvType.CLIENT)
+  private static void writeAllBlockModels(RuntimeResourcePack pack) {
     // 道路部分
     writeBlockModelForCubeAllWithSlab(pack, RoadBlocks.ROAD_BLOCK, "asphalt");
     writeBlockModelForCubeAllWithSlab(pack, RoadBlocks.ROAD_FILLED_WITH_WHITE, "white_ink");
@@ -750,14 +758,19 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
    * 为运行时资源包生成资源。在开发环境中，每次加载资源就会重新生成一次。在非开发环境中，游戏开始时生成一次，此后不再生成。
    */
   @CanIgnoreReturnValue
-  private RuntimeResourcePack generateResources(boolean client, boolean server) {
-    if (client) PACK.clearResources(ResourceType.CLIENT_RESOURCES);
-    if (server) PACK.clearResources(ResourceType.SERVER_DATA);
+  private RuntimeResourcePack generateResources(boolean includesClient, boolean includesServer) {
+    if (includesClient) PACK.clearResources(ResourceType.CLIENT_RESOURCES);
+    if (includesServer) PACK.clearResources(ResourceType.SERVER_DATA);
 
     // 客户端部分
-    if (client) {
-      addBlockModels(PACK);
-      addItemModels(PACK);
+    if (includesClient) {
+      // 由于注解了 @Environment(CLIENT)，所以考虑到潜在漏洞，在这里进行防冲突检测。
+      try {
+        writeAllBlockModels(PACK);
+        writeAllItemModels(PACK);
+      } catch (NoSuchMethodError e) {
+        Mishanguc.MISHANG_LOGGER.error("Not supported to load client resources in server environment.", e);
+      }
     }
 
     MishangUtils.blockStream().forEach(field -> {
@@ -769,23 +782,96 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
       }
       if (o instanceof BlockResourceGenerator) {
         final BlockResourceGenerator arrp = (BlockResourceGenerator) o;
-        if (client) {
+        if (includesClient) {
           arrp.writeBlockModel(PACK);
           arrp.writeBlockStates(PACK);
           arrp.writeItemModel(PACK);
         }
-        if (server) {
+        if (includesServer) {
           arrp.writeLootTable(PACK);
+          arrp.writeRecipes(PACK);
         }
       }
     });
 
-    // 服务端部分
-    if (server) {
+    // 服务器部分
+    if (includesServer) {
       addTags();
+      addRecipes();
     }
 
     return PACK;
+  }
+
+  /**
+   * 为本模组内的物品添加配方。
+   */
+  private void addRecipes() {
+    { // white light
+      final JShapedRecipe recipe = new JShapedRecipe(LightBlocks.WHITE_LIGHT)
+          .pattern("*#*", "#C#", "*#*")
+          .addKey("*", Items.WHITE_DYE)
+          .addKey("#", Items.GLOWSTONE)
+          .addKey("C", Items.WHITE_CONCRETE);
+      recipe
+          .addInventoryChangedCriterion("has_dye", Items.WHITE_DYE)
+          .addInventoryChangedCriterion("has_glowstone", Items.GLOWSTONE)
+          .addInventoryChangedCriterion("has_concrete", Items.WHITE_CONCRETE);
+      final Identifier id = ResourceGeneratorHelper.getItemId(LightBlocks.WHITE_LIGHT);
+      PACK.addRecipe(id, recipe);
+      PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/light/"), recipe);
+    }
+    { // yellow light
+      final JShapedRecipe recipe = new JShapedRecipe(LightBlocks.YELLOW_LIGHT)
+          .pattern("*#*", "#C#", "*#*")
+          .addKey("*", Items.YELLOW_DYE)
+          .addKey("#", Items.GLOWSTONE)
+          .addKey("C", Items.YELLOW_CONCRETE);
+      recipe
+          .addInventoryChangedCriterion("has_dye", Items.YELLOW_DYE)
+          .addInventoryChangedCriterion("has_glowstone", Items.GLOWSTONE)
+          .addInventoryChangedCriterion("has_concrete", Items.YELLOW_CONCRETE);
+      final Identifier id = ResourceGeneratorHelper.getItemId(LightBlocks.YELLOW_LIGHT);
+      PACK.addRecipe(id, recipe);
+      PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/light/"), recipe);
+    }
+    { // cyan light
+      final JShapedRecipe recipe = new JShapedRecipe(LightBlocks.CYAN_LIGHT)
+          .pattern("*#*", "#C#", "*#*")
+          .addKey("*", Items.CYAN_DYE)
+          .addKey("#", Items.GLOWSTONE)
+          .addKey("C", Items.CYAN_CONCRETE);
+      recipe
+          .addInventoryChangedCriterion("has_dye", Items.CYAN_DYE)
+          .addInventoryChangedCriterion("has_glowstone", Items.GLOWSTONE)
+          .addInventoryChangedCriterion("has_concrete", Items.CYAN_CONCRETE);
+      final Identifier id = ResourceGeneratorHelper.getItemId(LightBlocks.CYAN_LIGHT);
+      PACK.addRecipe(id, recipe);
+      PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/light/"), recipe);
+    }
+    { // invisible wall sign
+      final JShapedRecipe recipe = new JShapedRecipe(WallSignBlocks.INVISIBLE_WALL_SIGN)
+          .pattern(".#.", "#o#", ".#.")
+          .addKey(".", Items.IRON_NUGGET)
+          .addKey("#", Items.FEATHER)
+          .addKey("o", Items.GOLD_INGOT)
+          .resultCount(6);
+      recipe.addInventoryChangedCriterion("has_iron_nugget", Items.IRON_NUGGET).addInventoryChangedCriterion("has_feather", Items.FEATHER).addInventoryChangedCriterion("has_gold_ingot", Items.GOLD_INGOT);
+      final Identifier id = ResourceGeneratorHelper.getItemId(WallSignBlocks.INVISIBLE_WALL_SIGN);
+      PACK.addRecipe(id, recipe);
+      PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/signs/"), recipe);
+    }
+    { // invisible glowing wall sign
+      final JShapedRecipe recipe = new JShapedRecipe(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
+          .pattern("---", "###")
+          .addKey("-", Items.GLOWSTONE_DUST)
+          .addKey("#", WallSignBlocks.INVISIBLE_WALL_SIGN)
+          .resultCount(3);
+      recipe.addInventoryChangedCriterion("has_base_block", WallSignBlocks.INVISIBLE_WALL_SIGN);
+      final Identifier id = ResourceGeneratorHelper.getItemId(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN);
+      PACK.addRecipe(id, recipe);
+      PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/signs/"), recipe);
+    }
   }
 
   @Override

@@ -7,6 +7,8 @@ import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.blockstate.JVariants;
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
+import net.devtech.arrp.json.recipe.JRecipe;
+import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -44,6 +46,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
+import pers.solid.mishang.uc.blocks.WallSignBlocks;
 
 import java.util.Map;
 
@@ -248,6 +251,22 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     if (texture != null) return texture;
     final Identifier id = Registry.BLOCK.getId(baseBlock);
     return String.format("%s:block/%s", id.getNamespace(), id.getPath());
+  }
+
+  @Override
+  public @Nullable JRecipe getCraftingRecipe() {
+    if (baseBlock == null) return null;
+    final JShapedRecipe recipe = new JShapedRecipe(this)
+        .pattern("---", "###", "---")
+        .addKey("#", baseBlock).addKey("-", WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .resultCount(6);
+    recipe.addInventoryChangedCriterion("has_base_block", baseBlock).addInventoryChangedCriterion("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
+    return recipe;
+  }
+
+  @Override
+  public Identifier getAdvancementIdForRecipe(Identifier recipeId) {
+    return recipeId.brrp_prepend("recipes/signs/");
   }
 
   @SuppressWarnings("deprecation")

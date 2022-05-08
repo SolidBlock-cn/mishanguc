@@ -31,6 +31,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -99,13 +100,21 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
     if (placementState == null) {
       return null;
     }
+    final World world = ctx.getWorld();
+    final BlockPos blockPos = ctx.getBlockPos();
+    final BlockPos downPos = blockPos.down();
+
+    // 考虑放置之初，底部若为悬挂的告示牌方块，则该方块没有连接，因此在
+    // getStateForNeighborUpdate 的时候，将 neighborState 设为假定连接后的 state。
+    // 注意，悬挂告示牌方块的 getStateForNeighborUpdate 并不会检查其上方的告示牌杆的属性是否匹配，只要存在就行。
     return placementState.getStateForNeighborUpdate(
             Direction.DOWN,
-            ctx.getWorld().getBlockState(ctx.getBlockPos().down()),
-            ctx.getWorld(),
-            ctx.getBlockPos(),
-            ctx.getBlockPos().down())
-        .with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+            world.getBlockState(downPos)
+                .getStateForNeighborUpdate(Direction.UP, placementState, world, downPos, blockPos),
+            world,
+            blockPos,
+            downPos)
+        .with(WATERLOGGED, world.getFluidState(blockPos).getFluid() == Fluids.WATER);
   }
 
   @SuppressWarnings("deprecation")
@@ -177,6 +186,7 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
     if (direction == Direction.DOWN) {
       final Block neighborBlock = neighborState.getBlock();
       if (neighborBlock instanceof HungSignBlock || neighborBlock instanceof HungSignBarBlock) {
+        System.out.printf("%s %s %s %s %s%n", world.isClient(), neighborState, state, neighborPos, pos);
         state =
             state
                 .with(AXIS, neighborState.get(AXIS))
