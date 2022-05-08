@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.blocks;
 
+import com.google.common.annotations.Beta;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.DyeColor;
@@ -173,6 +174,7 @@ public final class HungSignBlocks extends MishangucBlocks {
    * 自定义颜色的混凝土悬挂告示牌。
    */
   @RegisterIdentifier
+  @Beta
   public static final ColoredHungSignBlock CUSTOM_CONCRETE_HUNG_SIGN = new ColoredHungSignBlock(null, FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE));
 
   /**
@@ -270,6 +272,7 @@ public final class HungSignBlocks extends MishangucBlocks {
    * 自定义颜色的混凝土悬挂告示牌杆。
    */
   @RegisterIdentifier
+  @Beta
   public static final HungSignBarBlock CUSTOM_CONCRETE_HUNG_SIGN_BAR = new ColoredHungSignBarBlock(null, FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE));
 
   /**
@@ -365,6 +368,7 @@ public final class HungSignBlocks extends MishangucBlocks {
       new HungSignBlock(Blocks.BLACK_TERRACOTTA);
 
   @RegisterIdentifier
+  @Beta
   public static final ColoredHungSignBlock CUSTOM_TERRACOTTA_HUNG_SIGN = new ColoredHungSignBlock(null, FabricBlockSettings.copyOf(Blocks.WHITE_TERRACOTTA));
 
   /**
@@ -459,6 +463,7 @@ public final class HungSignBlocks extends MishangucBlocks {
       new HungSignBarBlock(Blocks.BLACK_TERRACOTTA);
 
   @RegisterIdentifier
+  @Beta
   public static final ColoredHungSignBarBlock CUSTOM_TERRACOTTA_HUNG_SIGN_BAR = new ColoredHungSignBarBlock(null, FabricBlockSettings.copyOf(Blocks.WHITE_TERRACOTTA));
 
   /**

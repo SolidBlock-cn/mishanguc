@@ -29,6 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -213,6 +214,11 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   @Override
   public Item asItem() {
     return baseRail.asItem();
+  }
+
+  @Override
+  public Identifier getItemId() {
+    return Registry.ITEM.getId(asItem());
   }
 
   @Override
