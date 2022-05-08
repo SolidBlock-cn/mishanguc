@@ -23,9 +23,11 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -142,6 +144,11 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
   @Override
   public Item asItem() {
     return baseRail.asItem();
+  }
+
+  @Override
+  public Identifier getItemId() {
+    return Registry.ITEM.getId(asItem());
   }
 
   @Environment(EnvType.CLIENT)

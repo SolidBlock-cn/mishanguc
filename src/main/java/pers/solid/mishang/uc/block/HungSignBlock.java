@@ -10,6 +10,8 @@ import net.devtech.arrp.json.blockstate.JMultipart;
 import net.devtech.arrp.json.blockstate.JWhenProperties;
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
+import net.devtech.arrp.json.recipe.JRecipe;
+import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -47,6 +49,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
+import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.mixin.EntityShapeContextAccessor;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 import pers.solid.mishang.uc.util.TextContext;
@@ -227,11 +230,39 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       WorldAccess world,
       BlockPos pos,
       BlockPos neighborPos) {
-    state =
-        super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    state = super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     if (state.get(WATERLOGGED)) {
       world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
+    if (Direction.Type.HORIZONTAL.test(direction)) {
+      if (world.getBlockState(pos.up()).getCollisionShape(world, pos.up()).getMin(Direction.Axis.Y) == 0) {
+        state = prepareNeighborState(state, direction, neighborState);
+      } else {
+        state = state.with(LEFT, true).with(RIGHT, true);
+      }
+    } else if (direction == Direction.UP) {
+      if (neighborState.getCollisionShape(world, neighborPos).getMin(Direction.Axis.Y) == 0) {
+        for (Direction horizontalDirection : Direction.Type.HORIZONTAL) {
+          final BlockPos offsetPos = pos.offset(horizontalDirection);
+          state = prepareNeighborState(state, horizontalDirection, world.getBlockState(offsetPos));
+        }
+      } else {
+        state = state.with(LEFT, true).with(RIGHT, true);
+      }
+    }
+    return state;
+  }
+
+  /**
+   * 计算与周围某个方向连接时应有的方块状态，以确定杆子是否显示。与 {@link #getStateForNeighborUpdate} 相比，该方法不会检测上方方块是否已连接（调用此方法时，就假定上方已经连接了方块），也不会更新流体状态。
+   *
+   * @param state         该方块原先的方块状态。
+   * @param direction     毗邻方块所属的方向。
+   * @param neighborState 批零的方块状态。
+   * @return 对应的方块状态。
+   */
+  public BlockState prepareNeighborState(BlockState state, Direction direction, BlockState neighborState) {
+    if (Direction.Type.VERTICAL.test(direction)) return state;
     final @Nullable BooleanProperty property;
     final Direction.Axis axis = state.get(AXIS);
     property = switch (axis) {
@@ -240,25 +271,10 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       default -> null;
     };
     if (property != null) {
-      state =
-          state.with(
-              property,
-              neighborState.getBlock() instanceof HungSignBlock && neighborState.get(AXIS) == axis
-                  || world
-                  .getBlockState(pos.up())
-                  .getCollisionShape(world, pos.up())
-                  .getMin(Direction.Axis.Y)
-                  != 0);
-    } else if (direction == Direction.UP) {
-      for (Direction horizontalDirection : Direction.Type.HORIZONTAL) {
-        final BlockPos offset = pos.offset(horizontalDirection);
-        state =
-            getStateForNeighborUpdate(
-                state, horizontalDirection, world.getBlockState(offset), world, pos, offset);
-      }
+      return state.with(property, neighborState.getBlock() instanceof HungSignBlock && neighborState.get(AXIS) == axis);
+    } else {
+      return state;
     }
-
-    return state;
   }
 
   @SuppressWarnings("deprecation")
@@ -384,6 +400,21 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
         new JMultipart(JWhenProperties.of("axis", "x").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar_edge")).uvlock().y(270)));
   }
 
+  @Override
+  public @Nullable JRecipe getCraftingRecipe() {
+    if (baseBlock == null) return null;
+    final JShapedRecipe recipe = new JShapedRecipe(this)
+        .pattern("-#-", "-#-", "-#-")
+        .addKey("#", baseBlock).addKey("-", WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .resultCount(6);
+    recipe.addInventoryChangedCriterion("has_base_block", baseBlock).addInventoryChangedCriterion("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
+    return recipe;
+  }
+
+  @Override
+  public Identifier getAdvancementIdForRecipe(Identifier recipeId) {
+    return recipeId.brrp_prepend("recipes/signs/");
+  }
 
   @SuppressWarnings("deprecation")
   @Deprecated
