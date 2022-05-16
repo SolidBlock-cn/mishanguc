@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.block.ColoredHungSignBlock;
 import pers.solid.mishang.uc.block.HungSignBlock;
+import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.util.TextContext;
 
 import java.util.List;
@@ -27,7 +28,7 @@ import java.util.Map;
 
 /**
  * @see pers.solid.mishang.uc.block.HungSignBlock
- * @see pers.solid.mishang.uc.renderer.HungSignBlockEntityRenderer
+ * @see HungSignBlockEntityRenderer
  */
 public class HungSignBlockEntity extends BlockEntityWithText {
   public static final TextContext DEFAULT_TEXT_CONTEXT =

@@ -52,6 +52,7 @@ import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.mixin.EntityShapeContextAccessor;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
+import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.util.TextContext;
 
 import java.util.List;
@@ -59,7 +60,7 @@ import java.util.Map;
 
 /**
  * @see HungSignBlockEntity
- * @see pers.solid.mishang.uc.renderer.HungSignBlockEntityRenderer
+ * @see HungSignBlockEntityRenderer
  */
 public class HungSignBlock extends Block implements Waterloggable, BlockEntityProvider, BlockResourceGenerator {
   /**

@@ -1,10 +1,12 @@
 package pers.solid.mishang.uc.util;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonParseException;
 import it.unimi.dsi.fastutil.chars.Char2CharArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2CharMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.font.GlyphRenderer;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
@@ -12,10 +14,7 @@ import net.minecraft.nbt.AbstractNbtNumber;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
@@ -25,6 +24,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.mixin.TextRendererAccessor;
 
 /**
  * 对 {@link net.minecraft.text.Text} 的简单包装与扩展，允许设置对齐属性、尺寸等参数，以便渲染时使用。同时还提供对象与 NBT、JSON 之间的转换。
@@ -137,6 +137,12 @@ public class TextContext implements Cloneable {
   public int outlineColor = -2;
 
   /**
+   * 该对象的额外渲染对象，如果存在，渲染时则会渲染它。此项通常用于特殊的渲染功能。
+   */
+  @ApiStatus.AvailableSince("0.2.0")
+  public @Nullable TextExtra extra = null;
+
+  /**
    * 从一个 NBT 元素创建一个新的 TextContext 对象，并使用默认值。
    *
    * @param nbt NBT 复合标签或者字符串。
@@ -244,16 +250,13 @@ public class TextContext implements Cloneable {
     strikethrough = nbt.getBoolean("strikethrough");
     obfuscated = nbt.getBoolean("obfuscated");
     absolute = nbt.getBoolean("absolute");
+
+    extra = nbt.contains("extra", NbtElement.COMPOUND_TYPE) ? TextExtra.fromNbt(this, nbt.getCompound("extra")) : null;
   }
 
   @Environment(EnvType.CLIENT)
-  public void draw(
-      TextRenderer textRenderer,
-      MatrixStack matrixStack,
-      VertexConsumerProvider vertexConsumers,
-      int light,
-      float width,
-      float height) {
+  @Contract(pure = true)
+  public void draw(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, float width, float height) {
     if (text == null) {
       return;
     }
@@ -286,10 +289,10 @@ public class TextContext implements Cloneable {
     float x = 0;
     switch (horizontalAlign == null ? HorizontalAlign.CENTER : horizontalAlign) {
       case LEFT -> matrixStack.translate(-width / 2, 0, 0);
-      case CENTER -> x = -textRenderer.getWidth(text) / 2f;
+      case CENTER -> x = -getWidth(textRenderer, text) / 2f;
       case RIGHT -> {
         matrixStack.translate(width / 2, 0, 0);
-        x = -textRenderer.getWidth(text);
+        x = -getWidth(textRenderer, text);
       }
       default -> throw new IllegalStateException("Unexpected value: " + horizontalAlign);
     }
@@ -309,22 +312,46 @@ public class TextContext implements Cloneable {
     matrixStack.scale(scaleX, scaleY, 1);
 
     // 执行渲染
+    if (this.text instanceof LiteralText literalText && literalText.getRawString().equals("%al")) {
+      final float red = (float) (color >> 16 & 0xFF) / 255.0f;
+      final float green = (float) (color >> 8 & 0xFF) / 255.0f;
+      final float blue = (float) (color & 0xFF) / 255.0f;
+      final float alpha = ((color & 0xFC000000) == 0) ? 1 : (float) (color >> 24 & 0xFF) / 255.0f;
+      ImmutableList<GlyphRenderer.Rectangle> rectangles = ImmutableList.of(
+          new GlyphRenderer.Rectangle(-2.5f, 6f, 4.5f, 5f, 0.02f, red, green, blue, alpha),
+          new GlyphRenderer.Rectangle(2, 3, 3, 2, 0, red, green, blue, alpha),
+          new GlyphRenderer.Rectangle(3, 4, 4, 3, 0, red, green, blue, alpha),
+          new GlyphRenderer.Rectangle(2, 5, 3, 4, 0, red, green, blue, alpha),
+          new GlyphRenderer.Rectangle(1, 6, 2, 5, 0, red, green, blue, alpha),
+          new GlyphRenderer.Rectangle(1, 4, 3, 3, 0, red, green, blue, alpha)
+      );
+      GlyphRenderer glyphRenderer = ((TextRendererAccessor) textRenderer).invokeGetFontStorage(Style.DEFAULT_FONT_ID).getRectangleRenderer();
+      for (GlyphRenderer.Rectangle rectangle : rectangles) {
+        glyphRenderer.drawRectangle(rectangle, matrixStack.peek().getPositionMatrix(), vertexConsumers.getBuffer(glyphRenderer.getLayer(TextRenderer.TextLayerType.SEE_THROUGH)), light);
+      }
+    }
+
+    drawText(textRenderer, matrixStack, vertexConsumers, light, text, x, y);
+    if (extra != null) {
+      extra.drawExtra(textRenderer, matrixStack, vertexConsumers, light, x, y);
+    }
+    matrixStack.pop();
+  }
+
+  /**
+   * 获取文本宽度，如果存在 extra 字段，则还需要考虑该对象的宽度。
+   */
+  private float getWidth(TextRenderer textRenderer, MutableText text) {
+    final int width = textRenderer.getWidth(text);
+    return extra != null ? Math.max(width, extra.getWidth()) : width;
+  }
+
+  protected void drawText(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, MutableText text, float x, float y) {
     if (outlineColor == -2) {
-      textRenderer.draw(
-          text.asOrderedText(),
-          x,
-          y,
-          color,
-          shadow,
-          matrixStack.peek().getPositionMatrix(),
-          vertexConsumers,
-          seeThrough,
-          0,
-          light);
+      textRenderer.draw(text.asOrderedText(), x, y, color, shadow, matrixStack.peek().getPositionMatrix(), vertexConsumers, seeThrough, 0, light);
     } else {
       textRenderer.drawWithOutline(text.asOrderedText(), x, y, color, outlineColor == -1 ? MishangUtils.toSignOutlineColor(color) : outlineColor, matrixStack.peek().getPositionMatrix(), vertexConsumers, light);
     }
-    matrixStack.pop();
   }
 
   /**
@@ -332,8 +359,8 @@ public class TextContext implements Cloneable {
    *
    * @param nbt 一个待写入的 NBT 复合标签，可以是空的 NBT 复合标签：
    *            <pre>{@code
-   *                                                                                                                                     new NbtCompound()
-   *                                                                                                                                     }</pre>
+   *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     new NbtCompound()
+   *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     }</pre>
    * @return 修改后的 <tt>nbt</tt>。
    */
   public NbtCompound writeNbt(NbtCompound nbt) {
@@ -402,6 +429,12 @@ public class TextContext implements Cloneable {
     putBooleanParam(nbt, "strikethrough", strikethrough);
     putBooleanParam(nbt, "obfuscated", obfuscated);
     putBooleanParam(nbt, "absolute", absolute);
+
+    if (extra == null) {
+      nbt.remove("extra");
+    } else {
+      nbt.put("extra", extra.writeNbt(new NbtCompound()));
+    }
     return nbt;
   }
 
