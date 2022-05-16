@@ -342,8 +342,8 @@ public final class RoadBlocks extends MishangucBlocks {
   public static final RoadBlockWithAutoLine ROAD_WITH_WHITE_AUTO_BA_LINE =
       new RoadBlockWithAutoLine(
           WHITE_ROAD_SETTINGS,
-          RoadWithAutoLine.RoadAutoLineType.BEVEL,
-          LineColor.WHITE);
+          RoadWithAutoLine.RoadAutoLineType.BEVEL
+      );
   /**
    * 直角自动路块。
    */
@@ -352,8 +352,8 @@ public final class RoadBlocks extends MishangucBlocks {
   public static final RoadBlockWithAutoLine ROAD_WITH_WHITE_AUTO_RA_LINE =
       new RoadBlockWithAutoLine(
           WHITE_ROAD_SETTINGS,
-          RoadWithAutoLine.RoadAutoLineType.RIGHT_ANGLE,
-          LineColor.WHITE);
+          RoadWithAutoLine.RoadAutoLineType.RIGHT_ANGLE
+      );
   /**
    * <h2>其他</h2>
    * <p>
