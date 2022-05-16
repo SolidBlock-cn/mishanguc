@@ -9,6 +9,8 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public class RoadConnectionState {
   public final @Nullable Either<Direction, HorizontalCornerDirection> direction;
   public final WhetherConnected whetherConnected;
@@ -130,6 +132,20 @@ public class RoadConnectionState {
 
   public RoadConnectionState or(RoadConnectionState state) {
     return or(this, state);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return this == o || o instanceof RoadConnectionState that && Objects.equals(direction, that.direction) && whetherConnected == that.whetherConnected && lineColor == that.lineColor && lineType == that.lineType;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = direction != null ? direction.hashCode() : 0;
+    result = 31 * result + (whetherConnected != null ? whetherConnected.hashCode() : 0);
+    result = 31 * result + (lineColor != null ? lineColor.hashCode() : 0);
+    result = 31 * result + (lineType != null ? lineType.hashCode() : 0);
+    return result;
   }
 
   public enum WhetherConnected implements StringIdentifiable {

@@ -4,9 +4,10 @@
   "package": "pers.solid.mishang.uc.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "EntityShapeContextAccessor", "ItemUsageContextInvoker",
-    "JBlockModelAccessor", "JWhenAccessor",
-    "NbtCompoundAccessor"
+    "EntityShapeContextAccessor",
+    "ItemUsageContextInvoker",
+    "NbtCompoundAccessor",
+    "SnowBlockMixin"
   ],
   "client": [
     "BetterClientPlayerInteractionManagerMixin", "GameRendererMixin",
