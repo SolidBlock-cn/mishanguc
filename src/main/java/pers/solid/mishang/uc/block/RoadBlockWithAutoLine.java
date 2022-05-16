@@ -186,13 +186,13 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
         return defaultState;
       case 3:
         for (Map.Entry<Direction, RoadConnectionState> entry : connectionStateMap.entrySet()) {
-          if (!entry.getValue().mayConnect())
+          final RoadConnectionState state = entry.getValue();
+          if (!state.mayConnect())
           // 检测需要连接正向的方块对应的连接是否为斜线。
           {
             // 朝向的方向，即唯一没有被连接的方向的反方向。
             Direction direction = entry.getKey().getOpposite();
             // 朝向的那个方向的道路连接状态。
-            RoadConnectionState state = connectionStateMap.get(direction);
             if (state.direction == null
                 || state.direction.left().isPresent()
                 || type != RoadAutoLineType.BEVEL)

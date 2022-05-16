@@ -1,4 +1,4 @@
-package pers.solid.mishang.uc.renderer;
+package pers.solid.mishang.uc.render;
 
 import com.google.common.collect.ImmutableSet;
 import net.fabricmc.api.EnvType;
