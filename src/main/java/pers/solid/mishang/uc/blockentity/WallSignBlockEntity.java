@@ -12,13 +12,14 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
 import pers.solid.mishang.uc.util.TextContext;
 
 import java.util.List;
 
 /**
  * @see pers.solid.mishang.uc.block.WallSignBlock
- * @see pers.solid.mishang.uc.renderer.WallSignBlockEntityRenderer
+ * @see WallSignBlockEntityRenderer
  */
 public class WallSignBlockEntity extends BlockEntityWithText {
   public static final TextContext DEFAULT_TEXT_CONTEXT = new TextContext();

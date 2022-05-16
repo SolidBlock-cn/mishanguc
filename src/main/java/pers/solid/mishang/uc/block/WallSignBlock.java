@@ -45,6 +45,7 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
+import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
 
 import java.util.Map;
 
@@ -53,7 +54,7 @@ import java.util.Map;
  * 更加强大，可以编辑，且可以放在地上或者天花板上。
  *
  * @see WallSignBlockEntity
- * @see pers.solid.mishang.uc.renderer.WallSignBlockEntityRenderer
+ * @see WallSignBlockEntityRenderer
  */
 public class WallSignBlock extends WallMountedBlock implements Waterloggable, BlockEntityProvider, BlockResourceGenerator {
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
