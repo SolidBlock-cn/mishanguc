@@ -24,9 +24,9 @@ import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.blockentity.*;
 import pers.solid.mishang.uc.blocks.HungSignBlocks;
 import pers.solid.mishang.uc.item.DataTagToolItem;
+import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
-import pers.solid.mishang.uc.renderer.HungSignBlockEntityRenderer;
-import pers.solid.mishang.uc.renderer.WallSignBlockEntityRenderer;
+import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
 import pers.solid.mishang.uc.screen.HungSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
 

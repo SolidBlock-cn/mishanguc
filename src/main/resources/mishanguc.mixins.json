@@ -7,7 +7,7 @@
     "EntityShapeContextAccessor",
     "ItemUsageContextInvoker",
     "NbtCompoundAccessor",
-    "SnowBlockMixin"
+    "SnowBlockMixin", "TextRendererAccessor"
   ],
   "client": [
     "BetterClientPlayerInteractionManagerMixin", "GameRendererMixin",

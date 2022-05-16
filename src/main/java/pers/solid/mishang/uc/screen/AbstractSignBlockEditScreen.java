@@ -38,6 +38,7 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.util.HorizontalAlign;
 import pers.solid.mishang.uc.util.TextContext;
+import pers.solid.mishang.uc.util.TextExtra;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
 import java.util.Arrays;
@@ -786,7 +787,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
             new TranslatableText("message.mishanguc.text_field"));
     textFieldWidget.setMaxLength(Integer.MAX_VALUE);
     if (textContext.text != null) {
-      if (textContext.text instanceof LiteralText && textContext.text.getSiblings().isEmpty() && textContext.text.getStyle().isEmpty()) {
+      if (textContext.extra != null) {
+        textFieldWidget.setText(String.format("-%s %s", textContext.extra.getId(), textContext.extra.describeArgs()));
+      } else if (textContext.text instanceof LiteralText && textContext.text.getSiblings().isEmpty() && textContext.text.getStyle().isEmpty()) {
         final String text = textContext.text.asString();
         if (Pattern.compile("^-(\\w+?) (.+)$").matcher(text).matches()) {
           textFieldWidget.setText("-literal " + text);
@@ -821,8 +824,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
                   }
                   break;
                 default:
-                  // 未识别的名称，直接忽略。
-                  textContext1.text = new LiteralText(s);
+                  final TextExtra textExtra = TextExtra.fromDescription(textContext1, name, value);
+                  if (textExtra == null) {
+                    textContext1.extra = null;
+                    textContext1.text = new LiteralText(s);
+                  } else if (textExtra != TextExtra.INVALID) {
+                    textContext1.extra = textExtra;
+                    textContext1.text = new LiteralText("");
+                  } // 如果为 INVALID 则不执行操作。
               }
             } else {
               textContext1.text = new LiteralText(s);
