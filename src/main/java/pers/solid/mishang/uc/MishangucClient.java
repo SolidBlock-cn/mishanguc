@@ -35,27 +35,25 @@ public class MishangucClient implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
     // 设置相应的 BlockLayer
-    MishangUtils.blockStream()
-        .forEach(
-            field -> {
-              try {
-                Block value = (Block) field.get(null);
-                if (field.isAnnotationPresent(Cutout.class)) {
-                  BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout());
-                  if (value instanceof final HandrailBlock handrailBlock) {
-                    BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer());
-                  }
-                }
-                if (field.isAnnotationPresent(Translucent.class)) {
-                  BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getTranslucent());
-                  if (value instanceof final HandrailBlock handrailBlock) {
-                    BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer());
-                  }
-                }
-              } catch (IllegalAccessException | ClassCastException e) {
-                Mishanguc.MISHANG_LOGGER.warn("Error when setting BlockLayers:", e);
-              }
-            });
+    MishangUtils.blockStream().forEach(field -> {
+      try {
+        Block value = (Block) field.get(null);
+        if (field.isAnnotationPresent(Cutout.class)) {
+          BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout());
+          if (value instanceof final HandrailBlock handrailBlock) {
+            BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer());
+          }
+        }
+        if (field.isAnnotationPresent(Translucent.class)) {
+          BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getTranslucent());
+          if (value instanceof final HandrailBlock handrailBlock) {
+            BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer());
+          }
+        }
+      } catch (IllegalAccessException | ClassCastException e) {
+        Mishanguc.MISHANG_LOGGER.warn("Error when setting BlockLayers:", e);
+      }
+    });
 
     // 注册方块外观描绘
     WorldRenderEvents.BLOCK_OUTLINE.register(RendersBlockOutline.RENDERER);

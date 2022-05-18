@@ -1,12 +1,11 @@
-package pers.solid.mishang.uc.util;
+package pers.solid.mishang.uc.text;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableBiMap;
 import com.google.gson.JsonParseException;
 import it.unimi.dsi.fastutil.chars.Char2CharArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2CharMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.font.GlyphRenderer;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
@@ -14,17 +13,18 @@ import net.minecraft.nbt.AbstractNbtNumber;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.text.*;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Quaternion;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.mixin.TextRendererAccessor;
+import pers.solid.mishang.uc.util.HorizontalAlign;
+import pers.solid.mishang.uc.util.VerticalAlign;
 
 /**
  * 对 {@link net.minecraft.text.Text} 的简单包装与扩展，允许设置对齐属性、尺寸等参数，以便渲染时使用。同时还提供对象与 NBT、JSON 之间的转换。
@@ -44,6 +44,16 @@ public class TextContext implements Cloneable {
             map.put('↘', '↙');
             map.put('↙', '↘');
           });
+
+  /**
+   * 用于 {@link #flip()} 方法中，替换 {@link PatternTextSpecial} 中的样式。
+   */
+  @ApiStatus.AvailableSince("0.2.0")
+  @Unmodifiable
+  private static final ImmutableBiMap<String, String> flipPatternNameReplacement = ImmutableBiMap.of(
+      "al", "ar", "alt", "art", "alb", "arb"
+  );
+
   /**
    * 文本内容。该字段对应 NBT 中的两种情况：<br>
    * <ul>
@@ -140,7 +150,7 @@ public class TextContext implements Cloneable {
    * 该对象的额外渲染对象，如果存在，渲染时则会渲染它。此项通常用于特殊的渲染功能。
    */
   @ApiStatus.AvailableSince("0.2.0")
-  public @Nullable TextExtra extra = null;
+  public @Nullable TextSpecial extra = null;
 
   /**
    * 从一个 NBT 元素创建一个新的 TextContext 对象，并使用默认值。
@@ -251,32 +261,14 @@ public class TextContext implements Cloneable {
     obfuscated = nbt.getBoolean("obfuscated");
     absolute = nbt.getBoolean("absolute");
 
-    extra = nbt.contains("extra", NbtElement.COMPOUND_TYPE) ? TextExtra.fromNbt(this, nbt.getCompound("extra")) : null;
+    extra = nbt.contains("extra", NbtElement.COMPOUND_TYPE) ? TextSpecial.fromNbt(this, nbt.getCompound("extra")) : null;
   }
 
   @Environment(EnvType.CLIENT)
   @Contract(pure = true)
   public void draw(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, float width, float height) {
-    if (text == null) {
+    if (text == null && extra == null) {
       return;
-    }
-    // 为文本创建本地的格式化的副本。此后，本方法中的所有 text 均为此局部变量，而非 this.text。这是为了在渲染时，修改了 text 本身的内容。
-    MutableText text = this.text.shallowCopy();
-    // 处理文本格式，如加粗、斜线等。文本颜色在 <tt>draw</tt> 的参数中。
-    if (bold) {
-      text.formatted(Formatting.BOLD);
-    }
-    if (italic) {
-      text.formatted(Formatting.ITALIC);
-    }
-    if (underline) {
-      text.formatted(Formatting.UNDERLINE);
-    }
-    if (strikethrough) {
-      text.formatted(Formatting.STRIKETHROUGH);
-    }
-    if (obfuscated) {
-      text.formatted(Formatting.OBFUSCATED);
     }
 
     matrixStack.push();
@@ -299,10 +291,10 @@ public class TextContext implements Cloneable {
     float y = 0;
     switch (verticalAlign == null ? VerticalAlign.MIDDLE : verticalAlign) {
       case TOP -> matrixStack.translate(0, -height / 2, 0);
-      case MIDDLE -> y = -4;
+      case MIDDLE -> y = extra == null ? -4 : -extra.getHeight() / 2;
       case BOTTOM -> {
         matrixStack.translate(0, height / 2, 0);
-        y = -8;
+        y = extra == null ? -8 : -extra.getHeight();
       }
       default -> throw new IllegalStateException("Unexpected value: " + verticalAlign);
     }
@@ -312,26 +304,27 @@ public class TextContext implements Cloneable {
     matrixStack.scale(scaleX, scaleY, 1);
 
     // 执行渲染
-    if (this.text instanceof LiteralText literalText && literalText.getRawString().equals("%al")) {
-      final float red = (float) (color >> 16 & 0xFF) / 255.0f;
-      final float green = (float) (color >> 8 & 0xFF) / 255.0f;
-      final float blue = (float) (color & 0xFF) / 255.0f;
-      final float alpha = ((color & 0xFC000000) == 0) ? 1 : (float) (color >> 24 & 0xFF) / 255.0f;
-      ImmutableList<GlyphRenderer.Rectangle> rectangles = ImmutableList.of(
-          new GlyphRenderer.Rectangle(-2.5f, 6f, 4.5f, 5f, 0.02f, red, green, blue, alpha),
-          new GlyphRenderer.Rectangle(2, 3, 3, 2, 0, red, green, blue, alpha),
-          new GlyphRenderer.Rectangle(3, 4, 4, 3, 0, red, green, blue, alpha),
-          new GlyphRenderer.Rectangle(2, 5, 3, 4, 0, red, green, blue, alpha),
-          new GlyphRenderer.Rectangle(1, 6, 2, 5, 0, red, green, blue, alpha),
-          new GlyphRenderer.Rectangle(1, 4, 3, 3, 0, red, green, blue, alpha)
-      );
-      GlyphRenderer glyphRenderer = ((TextRendererAccessor) textRenderer).invokeGetFontStorage(Style.DEFAULT_FONT_ID).getRectangleRenderer();
-      for (GlyphRenderer.Rectangle rectangle : rectangles) {
-        glyphRenderer.drawRectangle(rectangle, matrixStack.peek().getPositionMatrix(), vertexConsumers.getBuffer(glyphRenderer.getLayer(TextRenderer.TextLayerType.SEE_THROUGH)), light);
+    if (text != null) {
+      // 为文本创建本地的格式化的副本。此后，本方法中的所有 text 均为此局部变量，而非 this.text。这是为了在渲染时，修改了 text 本身的内容。
+      MutableText text = this.text.shallowCopy();
+      // 处理文本格式，如加粗、斜线等。文本颜色在 <tt>draw</tt> 的参数中。
+      if (bold) {
+        text.formatted(Formatting.BOLD);
       }
+      if (italic) {
+        text.formatted(Formatting.ITALIC);
+      }
+      if (underline) {
+        text.formatted(Formatting.UNDERLINE);
+      }
+      if (strikethrough) {
+        text.formatted(Formatting.STRIKETHROUGH);
+      }
+      if (obfuscated) {
+        text.formatted(Formatting.OBFUSCATED);
+      }
+      drawText(textRenderer, matrixStack, vertexConsumers, light, text, x, y);
     }
-
-    drawText(textRenderer, matrixStack, vertexConsumers, light, text, x, y);
     if (extra != null) {
       extra.drawExtra(textRenderer, matrixStack, vertexConsumers, light, x, y);
     }
@@ -341,8 +334,8 @@ public class TextContext implements Cloneable {
   /**
    * 获取文本宽度，如果存在 extra 字段，则还需要考虑该对象的宽度。
    */
-  private float getWidth(TextRenderer textRenderer, MutableText text) {
-    final int width = textRenderer.getWidth(text);
+  private float getWidth(TextRenderer textRenderer, @Nullable MutableText text) {
+    final int width = text == null ? 0 : textRenderer.getWidth(text);
     return extra != null ? Math.max(width, extra.getWidth()) : width;
   }
 
@@ -359,8 +352,8 @@ public class TextContext implements Cloneable {
    *
    * @param nbt 一个待写入的 NBT 复合标签，可以是空的 NBT 复合标签：
    *            <pre>{@code
-   *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     new NbtCompound()
-   *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     }</pre>
+   *                                                                                                                                                                                              new NbtCompound()
+   *                                                                                                                                                                                 }</pre>
    * @return 修改后的 <tt>nbt</tt>。
    */
   public NbtCompound writeNbt(NbtCompound nbt) {
@@ -441,7 +434,9 @@ public class TextContext implements Cloneable {
   @Override
   public TextContext clone() {
     try {
-      return (TextContext) super.clone();
+      final TextContext clone = (TextContext) super.clone();
+      clone.extra = clone.extra != null ? clone.extra.cloneWithNewTextContext(clone) : null;
+      return clone;
     } catch (CloneNotSupportedException e) {
       throw new AssertionError();
     }
@@ -468,19 +463,22 @@ public class TextContext implements Cloneable {
     }
     if (text instanceof final LiteralText literalText) {
       final String rawString = literalText.getRawString();
-      text =
-          new LiteralText(
-              Util.make(
-                      new StringBuffer(rawString),
-                      stringBuffer -> {
-                        for (int i = 0; i < stringBuffer.length(); i++) {
-                          final char c = stringBuffer.charAt(i);
-                          if (flipStringReplacement.containsKey(c)) {
-                            stringBuffer.setCharAt(i, flipStringReplacement.get(c));
-                          }
-                        }
-                      })
-                  .toString());
+      final StringBuilder stringBuilder = new StringBuilder(rawString);
+      for (int i = 0; i < stringBuilder.length(); i++) {
+        final char c = stringBuilder.charAt(i);
+        if (flipStringReplacement.containsKey(c)) {
+          stringBuilder.setCharAt(i, flipStringReplacement.get(c));
+        }
+      }
+      text = new LiteralText(stringBuilder.toString());
+    }
+    if (extra instanceof final PatternTextSpecial patternTextSpecial) {
+      final String shapeName = patternTextSpecial.shapeName();
+      if (flipPatternNameReplacement.containsKey(shapeName)) {
+        extra = PatternTextSpecial.fromName(this, flipPatternNameReplacement.get(shapeName));
+      } else if (flipPatternNameReplacement.inverse().containsKey(shapeName)) {
+        extra = PatternTextSpecial.fromName(this, flipPatternNameReplacement.inverse().get(shapeName));
+      }
     }
     return this;
   }

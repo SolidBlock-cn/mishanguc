@@ -2,7 +2,7 @@ package pers.solid.mishang.uc.blockentity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
-import pers.solid.mishang.uc.util.TextContext;
+import pers.solid.mishang.uc.text.TextContext;
 
 public class FullWallSignBlockEntity extends WallSignBlockEntity {
   public FullWallSignBlockEntity(BlockPos pos, BlockState state) {
@@ -11,7 +11,7 @@ public class FullWallSignBlockEntity extends WallSignBlockEntity {
 
   @Override
   public float getHeight() {
-    return 8;
+    return 16;
   }
 
   @Override

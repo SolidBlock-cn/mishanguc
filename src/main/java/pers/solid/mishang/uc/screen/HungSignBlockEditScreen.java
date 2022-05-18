@@ -12,7 +12,7 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
-import pers.solid.mishang.uc.util.TextContext;
+import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;

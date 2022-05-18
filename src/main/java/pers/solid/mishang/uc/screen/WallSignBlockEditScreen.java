@@ -6,7 +6,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
-import pers.solid.mishang.uc.util.TextContext;
+import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.List;
 import java.util.stream.Collectors;
