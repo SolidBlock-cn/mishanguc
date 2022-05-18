@@ -3,7 +3,6 @@ package pers.solid.mishang.uc;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -14,10 +13,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.hit.BlockHitResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -193,15 +190,6 @@ public class Mishanguc implements ModInitializer {
     ServerPlayNetworking.registerGlobalReceiver(
         new Identifier("mishanguc", "edit_sign_finish"), BlockEntityWithText.PACKET_HANDLER);
     ServerPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "update_matching_rule"), FastBuildingToolItem.TOOL_CYCLE_HANDLER);
-
-    // 注册服务器运行事件
-    ServerWorldEvents.LOAD.register(
-        new Identifier("mishanguc", "notice"),
-        (entity, world) ->
-            entity.sendSystemMessage(
-                new TranslatableText("notice.mishanguc.load")
-                    .styled(style -> style.withColor(0xd0e8a5)),
-                Util.NIL_UUID));
 
     // 注册可燃方块
     final FlammableBlockRegistry flammableBlockRegistry = FlammableBlockRegistry.getDefaultInstance();

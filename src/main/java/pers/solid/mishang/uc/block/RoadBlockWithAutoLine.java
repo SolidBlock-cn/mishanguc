@@ -76,8 +76,8 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
 
           if (adjacentDirection == direction.getOpposite()) {
             // 道路的两个相对方向都连接了道路。
-            final LineColor color = ObjectUtils.max(connectionState.lineColor, adjacentState.lineColor);
-            final LineType type = ObjectUtils.min(connectionState.lineType, adjacentState.lineType);
+            final LineColor color = adjacentState.whetherConnected == RoadConnectionState.WhetherConnected.CONNECTED_TO ? ObjectUtils.max(connectionState.lineColor, adjacentState.lineColor) : connectionState.lineColor;
+            final LineType type = adjacentState.whetherConnected == RoadConnectionState.WhetherConnected.CONNECTED_TO ? ObjectUtils.min(connectionState.lineType, adjacentState.lineType) : connectionState.lineType;
             return (
                 color == LineColor.YELLOW ?
                     switch (type) {
@@ -137,7 +137,7 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
               }
             }
 
-            if (connectionState.lineColor == adjacentState.lineColor) {
+            if (connectionState.lineColor == adjacentState.lineColor || adjacentState.lineColor == LineColor.UNKNOWN) {
               return (switch (connectionState.lineColor) {
                 case YELLOW -> switch (type) {
                   case BEVEL -> ROAD_WITH_YELLOW_BA_LINE;

@@ -2,10 +2,12 @@ package pers.solid.mishang.uc;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Streams;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.property.Property;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
@@ -20,7 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.blocks.*;
-import pers.solid.mishang.uc.util.TextContext;
+import pers.solid.mishang.uc.text.PatternTextSpecial;
+import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
 import java.lang.reflect.Field;
@@ -273,4 +276,28 @@ public class MishangUtils {
     return property.parse(name).map((value) -> state.with(property, value)).orElse(state);
   }
 
+  private static final ImmutableMap<String, String> ARROW_TO_NAMES = ImmutableMap.of(
+      "←", "al", "→", "ar", "↖", "alt", "↗", "art", "↙", "alb", "↘", "arb"
+  );
+
+  /**
+   * 将一个告示牌中的 TextContext 中手动完成的箭头文字转化为 0.2.0 新加入的 PatternTextSpecial 格式。
+   */
+  @ApiStatus.AvailableSince("0.2.0")
+  public static void replaceArrows(Collection<TextContext> textContexts) {
+    for (TextContext textContext : textContexts) {
+      if (textContext.text instanceof final LiteralText literalText) {
+        final String rawString = literalText.getRawString();
+        if (ARROW_TO_NAMES.containsKey(rawString)) {
+          textContext.text = null;
+          textContext.extra = PatternTextSpecial.fromName(textContext, ARROW_TO_NAMES.get(rawString));
+          if ("←".equals(rawString) || "→".equals(rawString)) {
+            textContext.size /= 2;
+          } else {
+            textContext.size /= 4;
+          }
+        }
+      }
+    }
+  }
 }
