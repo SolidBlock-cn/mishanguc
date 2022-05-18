@@ -2,8 +2,6 @@ package pers.solid.mishang.uc.util;
 
 import com.google.common.collect.Sets;
 import com.mojang.serialization.Lifecycle;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.TranslatableText;
@@ -89,10 +87,8 @@ public abstract class BlockMatchingRule implements StringIdentifiable {
     return REGISTRY.getId(this);
   }
 
-  @Environment(EnvType.CLIENT)
   public MutableText getName() {
-    return new TranslatableText(
-        Util.createTranslationKey("blockMatchingRule", REGISTRY.getId(this)));
+    return new TranslatableText(Util.createTranslationKey("blockMatchingRule", REGISTRY.getId(this)));
   }
 
   /**

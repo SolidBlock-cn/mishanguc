@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.block.ColoredHungSignBlock;
 import pers.solid.mishang.uc.block.HungSignBlock;
 import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
-import pers.solid.mishang.uc.util.TextContext;
+import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.List;
 import java.util.Map;

@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.block.FullWallSignBlock;
 import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
-import pers.solid.mishang.uc.util.TextContext;
+import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.List;
 
