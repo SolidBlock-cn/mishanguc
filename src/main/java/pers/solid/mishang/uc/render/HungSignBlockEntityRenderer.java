@@ -11,7 +11,7 @@ import net.minecraft.util.math.Vec3f;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.block.HungSignBlock;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
-import pers.solid.mishang.uc.util.TextContext;
+import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.List;
 import java.util.Map;

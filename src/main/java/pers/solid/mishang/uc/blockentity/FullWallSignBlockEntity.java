@@ -1,6 +1,6 @@
 package pers.solid.mishang.uc.blockentity;
 
-import pers.solid.mishang.uc.util.TextContext;
+import pers.solid.mishang.uc.text.TextContext;
 
 public class FullWallSignBlockEntity extends WallSignBlockEntity {
   public FullWallSignBlockEntity() {
@@ -9,7 +9,7 @@ public class FullWallSignBlockEntity extends WallSignBlockEntity {
 
   @Override
   public float getHeight() {
-    return 8;
+    return 16;
   }
 
   @Override

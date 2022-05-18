@@ -53,7 +53,7 @@ import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.mixin.EntityShapeContextAccessor;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
-import pers.solid.mishang.uc.util.TextContext;
+import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.List;
 import java.util.Map;
@@ -339,6 +339,11 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       // 玩家手持岩浆膏时，可快速进行重整。
       final List<@NotNull TextContext> textContexts = entity.texts.get(hit.getSide());
       if (textContexts != null) MishangUtils.rearrange(textContexts);
+      return ActionResult.SUCCESS;
+    } else if (player.getMainHandStack().getItem() == Items.SLIME_BALL) {
+      // 玩家手持岩浆膏时，可快速进行重整。
+      final List<@NotNull TextContext> textContexts = entity.texts.get(hit.getSide());
+      if (textContexts != null) MishangUtils.replaceArrows(textContexts);
       return ActionResult.SUCCESS;
     }
     if (actionResult == ActionResult.PASS && !world.isClient) {

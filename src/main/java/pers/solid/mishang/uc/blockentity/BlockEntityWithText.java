@@ -13,6 +13,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandOutput;
 import net.minecraft.server.command.ServerCommandSource;
@@ -28,7 +29,7 @@ import net.minecraft.util.math.Vec3d;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.*;
-import pers.solid.mishang.uc.util.TextContext;
+import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +70,7 @@ public abstract class BlockEntityWithText extends BlockEntity
 
   /**
    * 该方块的文字渲染部分的高度。1表示1/16个方块。用于渲染器中的 {@link
-   * pers.solid.mishang.uc.util.TextContext#draw(TextRenderer, MatrixStack, VertexConsumerProvider,
+   * TextContext#draw(TextRenderer, MatrixStack, VertexConsumerProvider,
    * int, float, float)} 中的 height 参数。
    *
    * @return 该方块的文字渲染部分的高度。
@@ -169,6 +170,7 @@ public abstract class BlockEntityWithText extends BlockEntity
                 if (nbt == null) return;
                 wallSignBlockEntity.textContexts = textContexts;
               }
+              responseSender.sendPacket(BlockEntityUpdateS2CPacket.create(entity));
               entity.markDirty();
             } catch (ClassCastException e) {
               LOGGER.error("Error when trying to parse NBT received: ", e);

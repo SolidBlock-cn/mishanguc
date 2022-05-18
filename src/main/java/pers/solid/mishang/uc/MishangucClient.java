@@ -37,27 +37,25 @@ public class MishangucClient implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
     // 设置相应的 BlockLayer
-    MishangUtils.blockStream()
-        .forEach(
-            field -> {
-              try {
-                Block value = (Block) field.get(null);
-                if (field.isAnnotationPresent(Cutout.class)) {
-                  BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout());
+    MishangUtils.blockStream().forEach(field -> {
+      try {
+        Block value = (Block) field.get(null);
+        if (field.isAnnotationPresent(Cutout.class)) {
+          BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout());
                   if (value instanceof HandrailBlock) {
                     BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ((HandrailBlock) value).central(), ((HandrailBlock) value).corner(), ((HandrailBlock) value).stair(), ((HandrailBlock) value).outer());
-                  }
-                }
-                if (field.isAnnotationPresent(Translucent.class)) {
-                  BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getTranslucent());
+          }
+        }
+        if (field.isAnnotationPresent(Translucent.class)) {
+          BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getTranslucent());
                   if (value instanceof HandrailBlock) {
                     BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), ((HandrailBlock) value).central(), ((HandrailBlock) value).corner(), ((HandrailBlock) value).stair(), ((HandrailBlock) value).outer());
-                  }
-                }
-              } catch (IllegalAccessException | ClassCastException e) {
-                Mishanguc.MISHANG_LOGGER.warn("Error when setting BlockLayers:", e);
-              }
-            });
+          }
+        }
+      } catch (IllegalAccessException | ClassCastException e) {
+        Mishanguc.MISHANG_LOGGER.warn("Error when setting BlockLayers:", e);
+      }
+    });
 
     // 注册方块外观描绘
     WorldRenderEvents.BLOCK_OUTLINE.register(RendersBlockOutline.RENDERER);
