@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -27,11 +26,5 @@ public class RoadBlock extends AbstractRoadBlock {
   public @NotNull JBlockStates getBlockStates() {
     final Identifier blockModelId = getBlockModelId();
     return JBlockStates.simpleRandomRotation(blockModelId);
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull JModel getBlockModel() {
-    return new JModel("block/cube_all").addTexture("all", "mishanguc:block/asphalt");
   }
 }
