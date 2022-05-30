@@ -17,8 +17,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
@@ -33,7 +33,7 @@ import pers.solid.mishang.uc.item.InteractsWithEntity;
 import pers.solid.mishang.uc.item.MishangucItems;
 
 public class Mishanguc implements ModInitializer {
-  public static final Logger MISHANG_LOGGER = LogManager.getLogger("Mishang Urban Construction");
+  public static final Logger MISHANG_LOGGER = LoggerFactory.getLogger("Mishang Urban Construction");
   /**
    * 比 {@link AttackBlockCallback#EVENT} 更好！
    */
