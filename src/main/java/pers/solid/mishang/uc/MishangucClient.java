@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
@@ -21,6 +22,7 @@ import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.HandrailBlock;
+import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.blockentity.*;
 import pers.solid.mishang.uc.blocks.HungSignBlocks;
 import pers.solid.mishang.uc.item.DataTagToolItem;
@@ -92,6 +94,9 @@ public class MishangucClient implements ClientModInitializer {
         HungSignBlocks.CUSTOM_TERRACOTTA_HUNG_SIGN,
         HungSignBlocks.CUSTOM_TERRACOTTA_HUNG_SIGN_BAR
     );
+
+    // 玩家踩在道路方块上时加速
+    ClientTickEvents.END_WORLD_TICK.register(Road.CHECK_MULTIPLIER::accept);
 
     // 网络通信
     // 客户端收到服务器发来的编辑告示牌的数据包时，打开编辑界面，允许用户编辑。

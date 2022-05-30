@@ -5,7 +5,7 @@ import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.blockstate.JBlockModel;
 import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.blockstate.JMultipart;
-import net.devtech.arrp.json.blockstate.JWhen;
+import net.devtech.arrp.json.blockstate.JWhenProperties;
 import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -211,7 +211,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
       JBlockModel jBlockModel = new JBlockModel(id.brrp_append("_center"))
           .y(facing.getAxis() == Direction.Axis.Y ? 0 : (int) (facing.asRotation() + 180))
           .x(facing == Direction.DOWN ? 180 : facing == Direction.UP ? 0 : 90);
-      parts.add(new JMultipart(new JWhen().add("facing", facing.asString()), jBlockModel));
+      parts.add(new JMultipart(new JWhenProperties().add(FACING, facing), jBlockModel));
 
       // 连接物
       // 共有两种连接物模型：一种是位于底部或顶部的朝南连接，可以通过x和y的旋转得到位于底部朝向任意方向的连接，以及位于侧面朝向垂直方向的连接。
@@ -255,8 +255,8 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
           continue;
         }
         parts.add(
-            new JMultipart(new JWhen()
-                .add("facing", facing.asString())
+            new JMultipart(new JWhenProperties()
+                .add(FACING, facing)
                 .add(direction.asString(), "true"), new JBlockModel(modelName).x(x).y(y).uvlock()));
       }
     }
