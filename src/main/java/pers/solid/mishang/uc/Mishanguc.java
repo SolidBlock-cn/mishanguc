@@ -3,6 +3,7 @@ package pers.solid.mishang.uc;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -19,6 +20,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pers.solid.mishang.uc.block.HandrailBlock;
+import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blocks.HandrailBlocks;
@@ -232,5 +234,8 @@ public class Mishanguc implements ModInitializer {
       flammableBlockRegistry.add(handrail.outer(), 5, 20);
       flammableBlockRegistry.add(handrail.stair(), 5, 20);
     }
+
+    // 玩家踩在道路方块上时，予以加速。
+    ServerTickEvents.END_WORLD_TICK.register(Road.CHECK_MULTIPLIER::accept);
   }
 }
