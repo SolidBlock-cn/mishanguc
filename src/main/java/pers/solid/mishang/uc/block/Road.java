@@ -5,18 +5,20 @@ import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
+import net.minecraft.tag.TagKey;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -25,11 +27,45 @@ import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * 所有道路方块的接口。接口可以多重继承，并直接实现与已有类上，因此使用接口。
  */
 public interface Road extends BlockResourceGenerator {
+
+  EntityAttributeModifier ROAD_SPEED_BOOST = new EntityAttributeModifier(UUID.randomUUID(), "road_speed_boost", 1.75, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+  TagKey<Block> ROADS = TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "roads"));
+
+  /**
+   * 当玩家踩踏在道路方块上时，给予对应的速度倍率值。踩踏在其他方块上时，该倍率值被移除。特别注意，当玩家在道路方块之间上下楼梯的时候，会有短暂的没有踩踏在道路方块上的之间，这种情况下不应该移除其倍率值。<p>
+   * 该方法在客户端和服务器的每一刻都会执行。
+   * <p>
+   * 该方法的逻辑如下：
+   * <ul>
+   *   <li>当玩家踩在道路方块上时，一定给予效果。</li>
+   *   <li>当玩家下方的方块为无碰撞箱的方块且该方块下方为道路方块时，一定不作处理。</li>
+   *   <li>不符合上述两条条件，则立即移除效果。</li>
+   *   </ul>
+   */
+  Consumer<World> CHECK_MULTIPLIER = world -> {
+    for (PlayerEntity player : world.getPlayers()) {
+      final EntityAttributeInstance attributeInstance = player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+      final BlockPos stepPos = new BlockPos(player.getPos().x, player.getPos().y - 0.2, player.getPos().z);
+      final BlockPos stepPosDown = stepPos.down();
+      if (attributeInstance == null) continue;
+      final BlockState stepState = world.getBlockState(stepPos);
+      if (player.isOnGround() && stepState.isIn(ROADS)) {
+        // 玩家踩在道路方块上。
+        if (!attributeInstance.hasModifier(ROAD_SPEED_BOOST)) {
+          attributeInstance.addTemporaryModifier(ROAD_SPEED_BOOST);
+        }
+      } else if ((!stepState.getCollisionShape(world, stepPos).isEmpty() || !world.getBlockState(stepPosDown).isIn(ROADS)) && !stepState.isIn(ROADS)) {
+        attributeInstance.removeModifier(ROAD_SPEED_BOOST);
+      }
+    }
+  };
 
   /**
    * 获取该方块状态中，某个特定方向上的连接状态。连接状态可用于自动路块。
