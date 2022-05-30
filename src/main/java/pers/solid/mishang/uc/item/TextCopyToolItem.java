@@ -57,7 +57,7 @@ public class TextCopyToolItem extends BlockToolItem {
         tooltip.add(new TranslatableText("item.mishanguc.text_copy_tool.tooltip.3").formatted(Formatting.GRAY));
         texts.stream().map(TextContext::fromNbt).map(TextContext::asStyledText).filter(Objects::nonNull).peek(text -> {
           final TextColor color = text.getStyle().getColor();
-          if (color != null && color.equals(0)) {
+          if (color != null && color.getRgb() == 0) {
             // 考虑黑色的文本看不清楚，因此这种情况依然显示为灰色。
             text.formatted(Formatting.GRAY);
           }
