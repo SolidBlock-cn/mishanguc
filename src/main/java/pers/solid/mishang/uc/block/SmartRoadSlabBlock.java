@@ -77,20 +77,19 @@ public class SmartRoadSlabBlock<T extends Block & Road> extends AbstractRoadSlab
     }
   }
 
+  @SuppressWarnings("deprecation")
   @Override
-  @Deprecated
   public BlockState rotate(BlockState state, BlockRotation rotation) {
     return baseBlock.rotate(state, rotation);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
-  @Deprecated
   public BlockState mirror(BlockState state, BlockMirror mirror) {
     return baseBlock.mirror(state, mirror);
   }
 
   @Override
-  @Deprecated
   public ActionResult onUse(
       BlockState state,
       World world,
@@ -106,8 +105,8 @@ public class SmartRoadSlabBlock<T extends Block & Road> extends AbstractRoadSlab
     }
   }
 
+  @SuppressWarnings("deprecation")
   @Override
-  @Deprecated
   public void neighborUpdate(
       BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
     baseBlock.neighborUpdate(state, world, pos, block, fromPos, notify);
