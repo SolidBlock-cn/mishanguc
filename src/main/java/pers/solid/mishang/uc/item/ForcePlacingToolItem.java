@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.RenderLayer;
@@ -79,8 +78,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     FluidState fluidState = blockState.getFluidState();
     if (!world.isClient) {
       // 在破坏时，直接先将其内容清除。
-      final BlockEntity blockEntity;
-      if ((blockEntity = world.getBlockEntity(pos)) instanceof final Inventory inventory) {
+      if (world.getBlockEntity(pos) instanceof final Inventory inventory) {
         for (int i = 0; i < inventory.size(); i++) {
           inventory.setStack(i, ItemStack.EMPTY);
         }
