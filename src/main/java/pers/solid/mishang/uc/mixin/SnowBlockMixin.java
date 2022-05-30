@@ -1,12 +1,12 @@
 package pers.solid.mishang.uc.mixin;
 
+import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SnowBlock;
-import net.minecraft.tag.TagKey;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.WorldView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SnowBlock.class)
 public abstract class SnowBlockMixin {
-  private static final TagKey<Block> ROADS = TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "roads"));
+  private static final Tag<Block> ROADS = TagFactory.BLOCK.create(new Identifier("mishanguc", "roads"));
 
   /**
    * 雪不能放置在道路方块上面。

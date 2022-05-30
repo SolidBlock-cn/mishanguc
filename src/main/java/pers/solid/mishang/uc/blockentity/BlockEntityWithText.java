@@ -14,6 +14,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandOutput;
 import net.minecraft.server.command.ServerCommandSource;
@@ -26,9 +27,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.HashMap;
@@ -111,7 +112,7 @@ public abstract class BlockEntityWithText extends BlockEntity
   public static final PacketHandler PACKET_HANDLER = new PacketHandler();
 
   private static class PacketHandler implements ServerPlayNetworking.PlayChannelHandler {
-    protected static final Logger LOGGER = LogManager.getLogger(PacketHandler.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(PacketHandler.class);
 
     @Override
     public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {

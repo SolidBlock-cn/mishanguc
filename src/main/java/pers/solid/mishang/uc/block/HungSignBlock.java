@@ -325,9 +325,6 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     if (!state.get(AXIS).test(hit.getSide())) {
       return ActionResult.PASS;
     }
-    if (!player.getAbilities().allowModifyWorld) {
-      return ActionResult.PASS;
-    }
     if (player.getMainHandStack().getItem() == Items.MAGMA_CREAM) {
       // 玩家手持岩浆膏时，可快速进行重整。
       final List<@NotNull TextContext> textContexts = entity.texts.get(hit.getSide());

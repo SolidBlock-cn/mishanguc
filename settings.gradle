@@ -15,3 +15,9 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+rootProject.name = 'mishanguc'
+//include(':brrp')
+//project(':brrp').projectDir = new File('../BRRP')
+//include(':arrp')
+//project(':arrp').projectDir = new File('../BRRP/nested/arrp')
