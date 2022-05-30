@@ -13,7 +13,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandOutput;
 import net.minecraft.server.command.ServerCommandSource;
@@ -170,7 +169,7 @@ public abstract class BlockEntityWithText extends BlockEntity
                 if (nbt == null) return;
                 wallSignBlockEntity.textContexts = textContexts;
               }
-              responseSender.sendPacket(BlockEntityUpdateS2CPacket.create(entity));
+              entity.sync();
               entity.markDirty();
             } catch (ClassCastException e) {
               LOGGER.error("Error when trying to parse NBT received: ", e);

@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.arrp;
 
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import net.devtech.arrp.api.RRPCallbackConditional;
 import net.devtech.arrp.api.RRPPreGenEntrypoint;
 import net.devtech.arrp.api.RuntimeResourcePack;
@@ -774,7 +773,6 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   /**
    * 为运行时资源包生成资源。在开发环境中，每次加载资源就会重新生成一次。在非开发环境中，游戏开始时生成一次，此后不再生成。
    */
-  @CanIgnoreReturnValue
   private RuntimeResourcePack generateResources(boolean includesClient, boolean includesServer) {
     if (includesClient) PACK.clearResources(ResourceType.CLIENT_RESOURCES);
     if (includesServer) PACK.clearResources(ResourceType.SERVER_DATA);
