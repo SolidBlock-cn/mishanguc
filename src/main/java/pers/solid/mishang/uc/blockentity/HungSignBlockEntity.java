@@ -104,6 +104,7 @@ public class HungSignBlockEntity extends BlockEntityWithText {
       // 表示该 nbt 是空的，但游戏不会认为是空的。因为如果 nbt 真的是空的，生成 packet 的时候会直接将其忽略，因此即使告示牌没有文本，也不能让其 nbt 真的为空。
       nbt.putBoolean("empty", true);
     }
+    return nbt;
   }
 
   // todo: 1.17 是不能对方块实体进行旋转和镜像了吗？
@@ -168,9 +169,10 @@ public class HungSignBlockEntity extends BlockEntityWithText {
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
+    public NbtCompound writeNbt(NbtCompound nbt) {
       super.writeNbt(nbt);
       nbt.putInt("color", color);
+      return nbt;
     }
 
     @Override

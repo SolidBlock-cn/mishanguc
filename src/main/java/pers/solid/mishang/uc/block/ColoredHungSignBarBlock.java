@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.annotations.Beta;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -9,9 +10,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -49,8 +47,7 @@ public class ColoredHungSignBarBlock extends HungSignBarBlock implements BlockEn
     ColoredBlockEntity.appendColorTooltip(stack, tooltip);
   }
 
-  public static class Entity extends BlockEntity implements ColoredBlockEntity {
-
+  public static class Entity extends BlockEntity implements ColoredBlockEntity, BlockEntityClientSerializable {
     public Entity(BlockPos pos, BlockState state) {
       super(MishangucBlockEntities.COLORED_HUNG_SIGN_BAR_BLOCK_ENTITY, pos, state);
     }
@@ -63,9 +60,10 @@ public class ColoredHungSignBarBlock extends HungSignBarBlock implements BlockEn
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
+    public NbtCompound writeNbt(NbtCompound nbt) {
       super.writeNbt(nbt);
       nbt.putInt("color", color);
+      return nbt;
     }
 
     @Override
@@ -77,15 +75,14 @@ public class ColoredHungSignBarBlock extends HungSignBarBlock implements BlockEn
       }
     }
 
-    @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-      return BlockEntityUpdateS2CPacket.create(this);
+    public void fromClientTag(NbtCompound tag) {
+      readNbt(tag);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-      return createNbt();
+    public NbtCompound toClientTag(NbtCompound tag) {
+      return writeNbt(tag);
     }
   }
 }

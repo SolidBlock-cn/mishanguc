@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.text;
 
-import com.google.common.collect.ImmutableMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.GlyphRenderer;
@@ -16,6 +15,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.mixin.TextRendererAccessor;
+
+import java.util.Map;
 
 public record PatternTextSpecial(TextContext textContext, String shapeName, @Unmodifiable float[][] rectangles) implements TextSpecial {
   public static final float[][] EMPTY = {};
@@ -113,7 +114,8 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
     this.rectangles = rectangles;
   }
 
-  private static final ImmutableMap<String, float[][]> NAME_TO_SHAPE = ImmutableMap.of(
+  private static final @Unmodifiable Map<String, float[][]> NAME_TO_SHAPE = Map.of(
+      /* 此版本下，ImmutableMap.of 不支持超过 5 个键，因此使用 Java 9 提供的 Map.of */
       "al", ARROW_LEFT,
       "ar", ARROW_RIGHT,
       "alt", ARROW_LEFT_TOP,
@@ -135,7 +137,7 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
     GlyphRenderer glyphRenderer = ((TextRendererAccessor) textRenderer).invokeGetFontStorage(Style.DEFAULT_FONT_ID).getRectangleRenderer();
     final float size = 2;
     final RenderLayer layer = glyphRenderer.getLayer(textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
-    final Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
+    final Matrix4f matrix4f = matrixStack.peek().getModel();
     final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(layer);
     for (float[] rectangle : rectangles) {
       glyphRenderer.drawRectangle(

@@ -2,7 +2,6 @@ package pers.solid.mishang.uc;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Streams;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.text.PatternTextSpecial;
@@ -276,7 +276,8 @@ public class MishangUtils {
     return property.parse(name).map((value) -> state.with(property, value)).orElse(state);
   }
 
-  private static final ImmutableMap<String, String> ARROW_TO_NAMES = ImmutableMap.of(
+  private static final @Unmodifiable Map<String, String> ARROW_TO_NAMES = Map.of(
+      /* 此版本下，ImmutableMap.of 暂不支持超过 5 个参数，因此这里使用 Java 9 自带的 Map.of */
       "←", "al", "→", "ar", "↖", "alt", "↗", "art", "↙", "alb", "↘", "arb"
   );
 
