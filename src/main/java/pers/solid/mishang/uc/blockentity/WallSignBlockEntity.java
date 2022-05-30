@@ -11,7 +11,6 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
-import pers.solid.mishang.uc.block.FullWallSignBlock;
 import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
 import pers.solid.mishang.uc.text.TextContext;
 
@@ -76,7 +75,7 @@ public class WallSignBlockEntity extends BlockEntityWithText {
 
   @Override
   public float getHeight() {
-    return getCachedState().getBlock() instanceof FullWallSignBlock ? 16 : 8;
+    return 8;
   }
 
   @Override
