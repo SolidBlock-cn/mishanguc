@@ -5,7 +5,7 @@ import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.devtech.arrp.json.blockstate.JBlockModel;
 import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.blockstate.JMultipart;
-import net.devtech.arrp.json.blockstate.JWhen;
+import net.devtech.arrp.json.blockstate.JWhenProperties;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -203,8 +203,8 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     final Identifier sideId = modelId.brrp_append("_side");
     parts.add(new JMultipart().addModel(new JBlockModel(postId)));
     FACING_PROPERTIES.forEach((facing, property) -> {
-      parts.add(new JMultipart(new JWhen().add(property.getName(), "true"), new JBlockModel(sideId).y(((int) facing.asRotation()))));
-      parts.add(new JMultipart(new JWhen().add(property.getName(), "false"), new JBlockModel(postSideId).y((int) facing.asRotation())));
+      parts.add(new JMultipart(new JWhenProperties().add(property.getName(), "true"), new JBlockModel(sideId).y(((int) facing.asRotation()))));
+      parts.add(new JMultipart(new JWhenProperties().add(property.getName(), "false"), new JBlockModel(postSideId).y((int) facing.asRotation())));
     });
     return JBlockStates.ofMultiparts(parts.toArray(new JMultipart[5]));
   }

@@ -1000,7 +1000,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       Entry entry = this.getEntryAtPosition(mouseX, mouseY);
       if (entry != null) {
         if (entry.mouseClicked(mouseX, mouseY, button)) {
-          this.setFocused((Element) entry);
+          this.setFocused(entry);
           this.setDragging(true);
           return true;
         }

@@ -109,7 +109,7 @@ public interface TextSpecial extends Cloneable {
   }
 
   /**
-   * 该对象的宽度，用于在渲染 TextContext 时进行适当的排版。
+   * 该对象的宽度，用于在渲染 TextContext 时适当排版。
    */
   @Environment(EnvType.CLIENT)
   default float getWidth() {
@@ -117,7 +117,7 @@ public interface TextSpecial extends Cloneable {
   }
 
   /**
-   * 该对象的高度，用于在渲染 TextContext 时进行适当的排版。
+   * 该对象的高度，用于在渲染 TextContext 时适当排版。
    */
   @Environment(EnvType.CLIENT)
   default float getHeight() {
