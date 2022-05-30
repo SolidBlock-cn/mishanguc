@@ -79,7 +79,7 @@ public class BlockPlacementContext {
   /**
    * 手中的物品堆。该物品堆的物品必须是方块物品。如果手中的物品堆是空的，或者不是方块，则该值为 {@code null}。<br>
    * The {@link ItemStack} in the {@code hand}. The item in the <code>ItemStack</code> must be a
-   * {@link BlockItem}. If the item stack in hand is not block item, or is nill, then the value is {@code null}.
+   * {@link BlockItem}. If the item stack in hand is not block item, or is null, then the value is {@code null}.
    */
   final @Nullable ItemStack stackInHand;
   /**
@@ -202,15 +202,6 @@ public class BlockPlacementContext {
       this.entityToPlace = world.getBlockEntity(hit.getBlockPos());
     } else {
       this.entityToPlace = null;
-    }
-  }
-
-  public static @Nullable BlockPlacementContext ofContext(
-      ItemUsageContext context, boolean includesFluid) {
-    if (context.getPlayer() == null) {
-      return null;
-    } else {
-      return new BlockPlacementContext(context, includesFluid);
     }
   }
 

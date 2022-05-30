@@ -45,7 +45,7 @@ public interface RendersBlockOutline {
    * Render when a player holds an item stack of this item. Called in {@link
    * WorldRenderEvents.BlockOutline#onBlockOutline} of {@link #RENDERER}.<br>
    * 子类覆盖此方法时，必须注解 <code>@{@link Environment}({@link EnvType#CLIENT})</code>。<br>
-   * <code>@{@link Environment}({@link EnvType#CLIENT})</code> must be annotated when overrided by
+   * <code>@{@link Environment}({@link EnvType#CLIENT})</code> must be annotated when overrode by
    * subtype methods.
    */
   @Environment(EnvType.CLIENT)
