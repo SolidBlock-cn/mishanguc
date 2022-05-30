@@ -214,9 +214,14 @@ public class TextCopyToolItem extends BlockToolItem {
       HungSignBlockEntity hungSignBlockEntity = (HungSignBlockEntity) blockEntity;
       final Direction.Axis axis = world.getBlockState(pos).get(HungSignBlock.AXIS);
       if (!axis.test(direction)) {
+        final Iterator<Direction> validDirections = Arrays.stream(Direction.values()).filter(axis).iterator();
         // 如果点击的方向不正确，则无法复制和粘贴文本。
         player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.wrong_side",
-            new TranslatableText("direction." + direction.getName())
+            // 无效的一侧：
+            new TranslatableText("direction." + direction.getName()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xeecc44))),
+            // 有效的两侧：
+            new TranslatableText("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xb3ee45))),
+            new TranslatableText("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xb3ee45)))
         ).formatted(Formatting.RED), false);
         return ActionResult.FAIL;
       }

@@ -310,11 +310,14 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
     }
 
     public Position swap() {
-      return switch (this) {
-        case LEFT -> RIGHT;
-        case RIGHT -> LEFT;
-        default -> this;
-      };
+      switch (this) {
+        case LEFT:
+          return RIGHT;
+        case RIGHT:
+          return LEFT;
+        default:
+          return this;
+      }
     }
   }
 

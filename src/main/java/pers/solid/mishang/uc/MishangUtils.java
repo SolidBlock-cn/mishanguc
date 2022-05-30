@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Streams;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -227,7 +228,7 @@ public class MishangUtils {
    * @deprecated Please directly use {@link Identifier#brrp_append(String)}.
    */
   @ApiStatus.AvailableSince("0.1.7")
-  @Deprecated(since = "0.2.0", forRemoval = true)
+  @Deprecated
   public static Identifier identifierSuffix(Identifier identifier, String suffix) {
     return new Identifier(identifier.getNamespace(), identifier.getPath() + suffix);
   }
@@ -242,7 +243,7 @@ public class MishangUtils {
    * @deprecated Please directly use {@link Identifier#brrp_prepend(String)}.
    */
   @ApiStatus.AvailableSince("0.1.7")
-  @Deprecated(since = "0.2.0", forRemoval = true)
+  @Deprecated
   public static Identifier identifierPrefix(Identifier identifier, String prefix) {
     return new Identifier(identifier.getNamespace(), prefix + identifier.getPath());
   }
@@ -251,10 +252,8 @@ public class MishangUtils {
     return property.parse(name).map((value) -> state.with(property, value)).orElse(state);
   }
 
-  private static final @Unmodifiable Map<String, String> ARROW_TO_NAMES = Map.of(
-      /* 此版本下，ImmutableMap.of 暂不支持超过 5 个参数，因此这里使用 Java 9 自带的 Map.of */
-      "←", "al", "→", "ar", "↖", "alt", "↗", "art", "↙", "alb", "↘", "arb"
-  );
+  private static final @Unmodifiable Map<String, String> ARROW_TO_NAMES = new ImmutableMap.Builder<String, String>().putAll(ImmutableMap.of(
+      "←", "al", "→", "ar", "↖", "alt", "↗", "art", "↙", "alb")).put("↘", "arb").build();
 
   /**
    * 将一个告示牌中的 TextContext 中手动完成的箭头文字转化为 0.2.0 新加入的 PatternTextSpecial 格式。
@@ -262,7 +261,8 @@ public class MishangUtils {
   @ApiStatus.AvailableSince("0.2.0")
   public static void replaceArrows(Collection<TextContext> textContexts) {
     for (TextContext textContext : textContexts) {
-      if (textContext.text instanceof final LiteralText literalText) {
+      if (textContext.text instanceof LiteralText) {
+        LiteralText literalText = (LiteralText) textContext.text;
         final String rawString = literalText.getRawString();
         if (ARROW_TO_NAMES.containsKey(rawString)) {
           textContext.text = null;

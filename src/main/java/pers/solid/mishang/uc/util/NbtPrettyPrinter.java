@@ -45,7 +45,7 @@ public final class NbtPrettyPrinter {
     } else if (element instanceof NbtList) {
       return serialize((NbtList) element, layer, indent, depth);
     } else if (element instanceof NbtString) {
-      return serialize((NbtString) element, layer, indent, depth);
+      return serialize((NbtString) element, layer);
     }
     return element.toText(indent, depth);
   }
@@ -248,7 +248,7 @@ public final class NbtPrettyPrinter {
     }
   }
 
-  public static Text serialize(NbtString nbtString, int layer, String indent, int depth) {
+  public static Text serialize(NbtString nbtString, int layer) {
     final String string = nbtString.asString();
     final UnaryOperator<Style> strStyle = style -> style.withColor(TextColor.fromRgb(0xcccccc));
     if (layer == 0) {

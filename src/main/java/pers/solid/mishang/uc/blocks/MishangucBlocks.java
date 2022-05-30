@@ -12,7 +12,9 @@ import net.minecraft.util.registry.Registry;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.MishangucItemGroups;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
-import pers.solid.mishang.uc.block.*;
+import pers.solid.mishang.uc.block.HandrailBlock;
+import pers.solid.mishang.uc.block.HungSignBlock;
+import pers.solid.mishang.uc.block.WallSignBlock;
 import pers.solid.mishang.uc.item.HungSignBlockItem;
 import pers.solid.mishang.uc.item.NamedBlockItem;
 import pers.solid.mishang.uc.item.WallSignBlockItem;
@@ -33,11 +35,11 @@ public class MishangucBlocks {
   /**
    * 具有白色标线的道路方块使用的方块设置。
    */
-  protected static final FabricBlockSettings WHITE_ROAD_SETTINGS = FabricBlockSettings.copyOf(ROAD_SETTINGS).mapColor(MapColor.WHITE);
+  protected static final FabricBlockSettings WHITE_ROAD_SETTINGS = FabricBlockSettings.copyOf(ROAD_SETTINGS).materialColor(MapColor.WHITE);
   /**
    * 具有黄色标线的道路方块使用的方块设置。
    */
-  protected static final FabricBlockSettings YELLOW_ROAD_SETTINGS = FabricBlockSettings.copyOf(ROAD_SETTINGS).mapColor(MapColor.YELLOW);
+  protected static final FabricBlockSettings YELLOW_ROAD_SETTINGS = FabricBlockSettings.copyOf(ROAD_SETTINGS).materialColor(MapColor.YELLOW);
 
   /**
    * 绝大多数白色光方块共用的方块设置。
@@ -99,7 +101,7 @@ public class MishangucBlocks {
               Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_stair"), ((HandrailBlock) value).stair());
               Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_outer"), ((HandrailBlock) value).outer());
             }
-            final FabricItemSettings settings = new FabricItemSettings().group(value instanceof ColoredHungSignBlock || value instanceof ColoredHungSignBarBlock ? null : group);
+            final FabricItemSettings settings = new FabricItemSettings().group(group);
             final BlockItem item =
                 HungSignBlock.class.isAssignableFrom(fieldType)
                     ? new HungSignBlockItem(value, settings)

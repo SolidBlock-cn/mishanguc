@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.chars.Char2CharArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2CharMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
@@ -19,7 +20,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Quaternion;
 import org.jetbrains.annotations.*;
-import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.HorizontalAlign;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
@@ -242,7 +242,7 @@ public class TextContext implements Cloneable {
     obfuscated = nbt.getBoolean("obfuscated");
     absolute = nbt.getBoolean("absolute");
 
-    extra = nbt.contains("extra", NbtElement.COMPOUND_TYPE) ? TextSpecial.fromNbt(this, nbt.getCompound("extra")) : null;
+    extra = nbt.contains("extra", NbtType.COMPOUND) ? TextSpecial.fromNbt(this, nbt.getCompound("extra")) : null;
   }
 
   @Environment(EnvType.CLIENT)
@@ -276,13 +276,18 @@ public class TextContext implements Cloneable {
     }
     float y = 0;
     switch (verticalAlign == null ? VerticalAlign.MIDDLE : verticalAlign) {
-      case TOP -> matrixStack.translate(0, -height / 2, 0);
-      case MIDDLE -> y = extra == null ? -4 : -extra.getHeight() / 2;
-      case BOTTOM -> {
+      case TOP:
+        matrixStack.translate(0, -height / 2, 0);
+        break;
+      case MIDDLE:
+        y = extra == null ? -4 : -extra.getHeight() / 2;
+        break;
+      case BOTTOM:
         matrixStack.translate(0, height / 2, 0);
         y = extra == null ? -8 : -extra.getHeight();
-      }
-      default -> throw new IllegalStateException("Unexpected value: " + verticalAlign);
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + verticalAlign);
     }
 
     // 处理文本的 scale
@@ -326,11 +331,7 @@ public class TextContext implements Cloneable {
   }
 
   protected void drawText(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, MutableText text, float x, float y) {
-    if (outlineColor == -2) {
-      textRenderer.draw(text.asOrderedText(), x, y, color, shadow, matrixStack.peek().getModel(), vertexConsumers, seeThrough, 0, light);
-    } else {
-      textRenderer.drawWithOutline(text.asOrderedText(), x, y, color, outlineColor == -1 ? MishangUtils.toSignOutlineColor(color) : outlineColor, matrixStack.peek().getModel(), vertexConsumers, light);
-    }
+    textRenderer.draw(text.asOrderedText(), x, y, color, shadow, matrixStack.peek().getModel(), vertexConsumers, seeThrough, 0, light);
   }
 
   /**
@@ -338,8 +339,8 @@ public class TextContext implements Cloneable {
    *
    * @param nbt 一个待写入的 NBT 复合标签，可以是空的 NBT 复合标签：
    *            <pre>{@code
-   *                                                                                                                                                                                                         new NbtCompound()
-   *                                                                                                                                                                                            }</pre>
+   *                                                                                                                                                                                                                                                                           new NbtCompound()
+   *                                                                                                                                                                                                                                                              }</pre>
    * @return 修改后的 <tt>nbt</tt>。
    */
   public NbtCompound writeNbt(NbtCompound nbt) {
@@ -447,25 +448,29 @@ public class TextContext implements Cloneable {
         horizontalAlign = HorizontalAlign.LEFT;
         break;
       }
-      if (text instanceof final LiteralText){
-        final String rawString = ((LiteralText) text).getRawString();
-        final StringBuilder stringBuilder = new StringBuilder(rawString);
-        for (int i = 0; i < stringBuilder.length(); i++) {
-          final char c = stringBuilder.charAt(i);
-          if (flipStringReplacement.containsKey(c)) {
-            stringBuilder.setCharAt(i, flipStringReplacement.get(c));
-          }
-        }
-        text = new LiteralText(stringBuilder.toString());
-      }
-      if (extra instanceof final PatternTextSpecial patternTextSpecial) {
-        final String shapeName = patternTextSpecial.shapeName();
-        if (flipPatternNameReplacement.containsKey(shapeName)) {
-          extra = PatternTextSpecial.fromName(this, flipPatternNameReplacement.get(shapeName));
-        } else if (flipPatternNameReplacement.inverse().containsKey(shapeName)) {
-          extra = PatternTextSpecial.fromName(this, flipPatternNameReplacement.inverse().get(shapeName));
-        }
-      }
-      return this;
     }
+    if (text instanceof LiteralText) {
+      final String rawString = ((LiteralText) text).getRawString();
+      final StringBuilder stringBuilder = new StringBuilder(rawString);
+      for (int i = 0; i < stringBuilder.length(); i++) {
+        final char c = stringBuilder.charAt(i);
+        if (flipStringReplacement.containsKey(c)) {
+          stringBuilder.setCharAt(i, flipStringReplacement.get(c));
+        }
+      }
+      text = new LiteralText(stringBuilder.toString());
+    }
+    if (extra instanceof PatternTextSpecial) {
+      PatternTextSpecial patternTextSpecial = (PatternTextSpecial) extra;
+
+      final String shapeName = patternTextSpecial.shapeName();
+      if (flipPatternNameReplacement.containsKey(shapeName)) {
+        extra = PatternTextSpecial.fromName(this, flipPatternNameReplacement.get(shapeName));
+      } else if (flipPatternNameReplacement.inverse().containsKey(shapeName)) {
+        extra = PatternTextSpecial.fromName(this, flipPatternNameReplacement.inverse().get(shapeName));
+      }
+    }
+    return this;
   }
+}
+

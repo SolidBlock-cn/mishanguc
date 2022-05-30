@@ -9,7 +9,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.world.ClientWorld;
@@ -18,18 +17,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
-
-import java.util.List;
 
 /**
  * 用于处理台阶的工具。
@@ -53,27 +46,22 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
           && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
         final BlockHitResult raycast = ((BlockHitResult) miner.raycast(20, 0, false));
         boolean bl = raycast.getPos().y - (double) raycast.getBlockPos().getY() > 0.5D;
+        final boolean bl1;
+        final BlockState brokenState;
         if (bl) {
           // 破坏上半砖的情况。
-          final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.BOTTOM));
-          final BlockState brokenState = state.with(Properties.SLAB_TYPE, SlabType.TOP);
-          block.onBreak(world, pos, brokenState, miner);
-          if (bl1) {
-            block.onBroken(world, pos, brokenState);
-            if (miner instanceof ServerPlayerEntity && !((ServerPlayerEntity) miner).interactionManager.isCreative()) {
-              block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
-            }
-          }
+          bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.BOTTOM));
+          brokenState = state.with(Properties.SLAB_TYPE, SlabType.TOP);
         } else {
           // 破坏下半砖的情况
-          final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.TOP));
-          final BlockState brokenState = state.with(Properties.SLAB_TYPE, SlabType.BOTTOM);
-          block.onBreak(world, pos, brokenState, miner);
-          if (bl1) {
-            block.onBroken(world, pos, brokenState);
-            if (miner instanceof ServerPlayerEntity && !((ServerPlayerEntity) miner).interactionManager.isCreative()) {
-              block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
-            }
+          bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.TOP));
+          brokenState = state.with(Properties.SLAB_TYPE, SlabType.BOTTOM);
+        }
+        block.onBreak(world, pos, brokenState, miner);
+        if (bl1) {
+          block.onBroken(world, pos, brokenState);
+          if (miner instanceof ServerPlayerEntity && !((ServerPlayerEntity) miner).interactionManager.isCreative()) {
+            block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
           }
         }
         // 此处还需要模拟 ClientPlayerInteractionManager 和 ServerPlayerInteractionManager 中的情形。
@@ -82,16 +70,6 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
     } catch (IllegalArgumentException | ClassCastException ignored) {
     }
     return super.canMine(state, world, pos, miner);
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public void appendTooltip(
-      ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-    super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(
-        new TranslatableText("item.mishanguc.slab_tool.tooltip")
-            .formatted(Formatting.GRAY));
   }
 
   @Environment(EnvType.CLIENT)
@@ -111,13 +89,13 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
       if (!(crosshairTarget instanceof BlockHitResult)) {
         return true;
       }
-      boolean bl =
+      boolean isTop =
           crosshairTarget.getPos().y
               - (double) ((BlockHitResult) crosshairTarget).getBlockPos().getY()
               > 0.5D;
       // 渲染时需要使用的方块状态。
       final BlockState halfState =
-          state.with(Properties.SLAB_TYPE, bl ? SlabType.TOP : SlabType.BOTTOM);
+          state.with(Properties.SLAB_TYPE, isTop ? SlabType.TOP : SlabType.BOTTOM);
       final BlockPos blockPos = blockOutlineContext.blockPos();
       WorldRendererInvoker.drawShapeOutline(
           worldRenderContext.matrixStack(),

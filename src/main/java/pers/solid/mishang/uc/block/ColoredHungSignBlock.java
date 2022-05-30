@@ -24,8 +24,9 @@ public class ColoredHungSignBlock extends HungSignBlock {
   public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
     final ItemStack stack = super.getPickStack(world, pos, state);
     final BlockEntity blockEntity = world.getBlockEntity(pos);
-    if (blockEntity instanceof ColoredBlockEntity coloredBlockEntity) {
-      stack.getOrCreateSubNbt("BlockEntityTag").putInt("color", coloredBlockEntity.getColor());
+    if (blockEntity instanceof ColoredBlockEntity) {
+      ColoredBlockEntity coloredBlockEntity = (ColoredBlockEntity) blockEntity;
+      stack.getOrCreateSubTag("BlockEntityTag").putInt("color", coloredBlockEntity.getColor());
     }
     return stack;
   }

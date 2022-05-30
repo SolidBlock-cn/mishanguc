@@ -74,7 +74,7 @@ public class BlockStateToolItem extends BlockToolItem {
     if (property instanceof BooleanProperty) {
       value.formatted(propertyValue == Boolean.TRUE ? Formatting.GREEN : Formatting.RED);
     } else if (property instanceof IntProperty) {
-      value.styled(style -> style.withColor(0x00eedd));
+      value.styled(style -> style.withColor(TextColor.fromRgb(0x00eedd)));
     }
     return value;
   }

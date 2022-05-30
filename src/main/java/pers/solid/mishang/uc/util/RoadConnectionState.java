@@ -2,10 +2,10 @@ package pers.solid.mishang.uc.util;
 
 import com.mojang.datafixers.util.Either;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
@@ -107,19 +107,19 @@ public class RoadConnectionState {
   }
 
   public static MutableText text(LineColor lineColor) {
-    return new TranslatableText("roadConnectionState.lineColor." + lineColor.asString())
-        .formatted(
-            Util.make(
-                () -> {
-                  switch (lineColor) {
-                    case WHITE:
-                      return Formatting.WHITE;
-                    case YELLOW:
-                      return Formatting.YELLOW;
-                    default:
-                      return Formatting.GRAY;
-                  }
-                }));
+    Formatting formatting;
+    switch (lineColor) {
+      case WHITE:
+        formatting = Formatting.WHITE;
+        break;
+      case YELLOW:
+        formatting = Formatting.YELLOW;
+        break;
+      default:
+        formatting = Formatting.GRAY;
+        break;
+    }
+    return new TranslatableText("roadConnectionState.lineColor." + lineColor.asString()).setStyle(Style.EMPTY.withColor(formatting));
   }
 
   public static MutableText text(LineType lineType) {
@@ -136,7 +136,15 @@ public class RoadConnectionState {
 
   @Override
   public boolean equals(Object o) {
-    return this == o || o instanceof RoadConnectionState that && Objects.equals(direction, that.direction) && whetherConnected == that.whetherConnected && lineColor == that.lineColor && lineType == that.lineType;
+    if (this == o) return true;
+    if (!(o instanceof RoadConnectionState)) return false;
+
+    RoadConnectionState that = (RoadConnectionState) o;
+
+    if (!Objects.equals(direction, that.direction)) return false;
+    if (whetherConnected != that.whetherConnected) return false;
+    if (lineColor != that.lineColor) return false;
+    return lineType == that.lineType;
   }
 
   @Override

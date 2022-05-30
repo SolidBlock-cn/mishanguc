@@ -25,7 +25,7 @@ public final class BRRPHelper {
    * @return 方块状态。
    */
   @Environment(EnvType.CLIENT)
-  @Deprecated(forRemoval = true)
+  @Deprecated
   @ApiStatus.ScheduledForRemoval(inVersion = "0.2.0")
   @NotNull
   public static JState simpleState(@NotNull Identifier modelIdentifier) {
@@ -119,7 +119,7 @@ public final class BRRPHelper {
    * @return 战利品表。
    * @see JLootTable#simple(String)
    */
-  @Deprecated(forRemoval = true)
+  @Deprecated
   @ApiStatus.ScheduledForRemoval(inVersion = "0.2.0")
   public static JLootTable simpleLootTable(String name) {
     return new JLootTable("minecraft:block")
@@ -137,7 +137,7 @@ public final class BRRPHelper {
    * @return 战利品表。
    * @see JLootTable#delegate(LootTable)
    */
-  @Deprecated(forRemoval = true)
+  @Deprecated
   @ApiStatus.ScheduledForRemoval(inVersion = "0.2.0")
   public static JLootTable simpleSlabLootTable(String name) {
     return JLootTable.loot("minecraft:block").pool(JLootTable.pool().rolls(1)

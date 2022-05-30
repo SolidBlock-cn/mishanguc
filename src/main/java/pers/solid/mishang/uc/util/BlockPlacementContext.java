@@ -224,7 +224,6 @@ public class BlockPlacementContext {
       BlockItem.writeTagToBlockEntity(world, player, posToPlace, stackInHand);
     } else if (hitEntity != null && entityToPlace != null) {
       entityToPlace.fromTag(stateToPlace, hitEntity.writeNbt(new NbtCompound()));
-      entityToPlace.setPos(posToPlace);
       entityToPlace.markDirty();
     }
     return true;

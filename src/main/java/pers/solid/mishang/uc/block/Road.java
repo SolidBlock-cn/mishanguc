@@ -2,7 +2,7 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.datafixers.util.Either;
 import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.fabricmc.fabric.api.tag.TagFactory;
+import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -36,7 +36,7 @@ import java.util.function.Consumer;
 public interface Road extends BlockResourceGenerator {
 
   EntityAttributeModifier ROAD_SPEED_BOOST = new EntityAttributeModifier(UUID.fromString("693D7032-4767-5A57-A28F-401F8F485772"/* 根据网上的在线 UUID 生成器生成 */), "road_speed_boost", 1.75, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
-  Tag<Block> ROADS = TagFactory.BLOCK.create(new Identifier("mishanguc", "roads"));
+  Tag<Block> ROADS = TagRegistry.block(new Identifier("mishanguc", "roads"));
 
   /**
    * 当玩家踩踏在道路方块上时，给予对应的速度倍率值。踩踏在其他方块上时，该倍率值被移除。特别注意，当玩家在道路方块之间上下楼梯的时候，会存在没有踩踏在道路方块上的短暂期间，这种情况下不应该移除其倍率值。<p>

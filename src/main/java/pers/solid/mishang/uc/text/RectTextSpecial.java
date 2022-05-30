@@ -30,7 +30,7 @@ public class RectTextSpecial implements TextSpecial {
     final float alpha = ((color & 0xFC000000) == 0) ? 1 : (float) (color >> 24 & 0xFF) / 255.0f;
     GlyphRenderer glyphRenderer = ((TextRendererAccessor) textRenderer).invokeGetFontStorage(Style.DEFAULT_FONT_ID).getRectangleRenderer();
     GlyphRenderer.Rectangle rectangle = new GlyphRenderer.Rectangle(x, (height + y), (width + x), y, 0, red, green, blue, alpha);
-    glyphRenderer.drawRectangle(rectangle, matrixStack.peek().getModel(), vertexConsumers.getBuffer(glyphRenderer.getLayer(textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL)), light);
+    glyphRenderer.drawRectangle(rectangle, matrixStack.peek().getModel(), vertexConsumers.getBuffer(glyphRenderer.getLayer(textContext.seeThrough)), light);
   }
 
   @Override

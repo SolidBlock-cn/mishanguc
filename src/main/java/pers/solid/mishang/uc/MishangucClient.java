@@ -7,14 +7,15 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -22,7 +23,6 @@ import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.Road;
-import pers.solid.mishang.uc.blockentity.*;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
@@ -45,14 +45,14 @@ public class MishangucClient implements ClientModInitializer {
         Block value = (Block) field.get(null);
         if (field.isAnnotationPresent(Cutout.class)) {
           BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout());
-                  if (value instanceof HandrailBlock) {
-                    BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ((HandrailBlock) value).central(), ((HandrailBlock) value).corner(), ((HandrailBlock) value).stair(), ((HandrailBlock) value).outer());
+          if (value instanceof HandrailBlock) {
+            BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ((HandrailBlock) value).central(), ((HandrailBlock) value).corner(), ((HandrailBlock) value).stair(), ((HandrailBlock) value).outer());
           }
         }
         if (field.isAnnotationPresent(Translucent.class)) {
           BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getTranslucent());
-                  if (value instanceof HandrailBlock) {
-                    BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), ((HandrailBlock) value).central(), ((HandrailBlock) value).corner(), ((HandrailBlock) value).stair(), ((HandrailBlock) value).outer());
+          if (value instanceof HandrailBlock) {
+            BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), ((HandrailBlock) value).central(), ((HandrailBlock) value).corner(), ((HandrailBlock) value).stair(), ((HandrailBlock) value).outer());
           }
         }
       } catch (IllegalAccessException | ClassCastException e) {
@@ -75,17 +75,15 @@ public class MishangucClient implements ClientModInitializer {
         (state, world, pos, tintIndex) -> {
           if (world == null) return -1;
           final BlockEntity entity = world.getBlockEntity(pos);
-          return entity instanceof ColoredBlockEntity coloredBlockEntity ? coloredBlockEntity.getColor() : -1;
+          return entity instanceof ColoredBlockEntity ? ((ColoredBlockEntity) entity).getColor() : -1;
         },
         HungSignBlocks.CUSTOM_CONCRETE_HUNG_SIGN,
-        HungSignBlocks.CUSTOM_CONCRETE_HUNG_SIGN_BAR,
-        HungSignBlocks.CUSTOM_TERRACOTTA_HUNG_SIGN,
-        HungSignBlocks.CUSTOM_TERRACOTTA_HUNG_SIGN_BAR
+        HungSignBlocks.CUSTOM_TERRACOTTA_HUNG_SIGN
     );
     ColorProviderRegistry.ITEM.register(
         (stack, tintIndex) -> {
-          final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
-          if (nbt != null && nbt.contains("color", NbtElement.NUMBER_TYPE)) {
+          final NbtCompound nbt = stack.getSubTag("BlockEntityTag");
+          if (nbt != null && nbt.contains("color", NbtType.NUMBER)) {
             return nbt.getInt("color");
           }
           final ClientPlayerEntity clientPlayer = MinecraftClient.getInstance().player;
@@ -93,9 +91,7 @@ public class MishangucClient implements ClientModInitializer {
           return ColoredBlockEntity.getDefaultColorFromPos(blockPos);
         },
         HungSignBlocks.CUSTOM_CONCRETE_HUNG_SIGN,
-        HungSignBlocks.CUSTOM_CONCRETE_HUNG_SIGN_BAR,
-        HungSignBlocks.CUSTOM_TERRACOTTA_HUNG_SIGN,
-        HungSignBlocks.CUSTOM_TERRACOTTA_HUNG_SIGN_BAR
+        HungSignBlocks.CUSTOM_TERRACOTTA_HUNG_SIGN
     );
 
     // 玩家踩在道路方块上时加速

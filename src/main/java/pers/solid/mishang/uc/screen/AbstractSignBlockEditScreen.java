@@ -33,6 +33,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import org.lwjgl.glfw.GLFW;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.text.PatternTextSpecial;
@@ -606,9 +607,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     textFieldListScreen = new TextFieldListScreen(client, width, height, 30, height - 80, 18);
     setFocused(textFieldListScreen);
     // 添加按钮
-    /// 上方第一行
-    this.addButton(addTextButton);
-    this.addButton(removeTextButton);
 
     /// 文本列表屏幕以及占位符
     this.addButton(placeHolder);
@@ -616,6 +614,10 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     this.addButton(applyLeftArrowTemplateButton);
     this.addButton(applyRightArrowTemplateButton);
     this.addChild(textFieldListScreen);
+
+    /// 上方第一行
+    this.addButton(addTextButton);
+    this.addButton(removeTextButton);
 
     /// 下方第一行和第二行
     Arrays.stream(toolbox1).forEach(this::addButton);
@@ -973,7 +975,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       for (Entry child : children()) {
         child.textFieldWidget.setTextFieldFocused(child == focused);
       }
-      if (focused instanceof AbstractSignBlockEditScreen.TextFieldListScreen.Entry entry) {
+      if (focused instanceof AbstractSignBlockEditScreen.TextFieldListScreen.Entry) {
+        Entry entry = (Entry) focused;
         focusedTextField = entry.textFieldWidget;
         focusedTextContext = contextToWidgetBiMap.inverse().get(entry.textFieldWidget);
 
@@ -1079,7 +1082,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       @Override
       public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         switch (keyCode) {
-          case 257: {
+          case GLFW.GLFW_KEY_ENTER: {
             final List<Entry> children = textFieldListScreen.children();
             final int index = children.indexOf(getFocused());
             if (index + 1 < children.size())
@@ -1087,7 +1090,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
             else if (children.size() > 0) addTextField(index + 1);
           }
           break;
-          case 264: {
+          case GLFW.GLFW_KEY_DOWN: {
             final List<Entry> children = textFieldListScreen.children();
             final int index = children.indexOf(getFocused());
             if (index + 1 < children.size())
@@ -1095,7 +1098,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
             else if (children.size() > 0) textFieldListScreen.setFocused(children.get(0));
           }
           break;
-          case 265: {
+          case GLFW.GLFW_KEY_UP: {
             final List<Entry> children = textFieldListScreen.children();
             final int index = children.indexOf(getFocused());
             if (index - 1 >= 0) textFieldListScreen.setFocused(children.get(index - 1));
@@ -1103,7 +1106,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
               textFieldListScreen.setFocused(children.get(children.size() - 1));
           }
           break;
-          case 259:
+          case GLFW.GLFW_KEY_BACKSPACE:
             final Entry focused = textFieldListScreen.getFocused();
             if (focused != null && textFieldWidget.getText().isEmpty()) {
               final int index = textFieldListScreen.children().indexOf(focused);

@@ -61,7 +61,7 @@ public interface TextSpecial extends Cloneable {
   @Contract("_, _ -> new")
   static @Nullable TextSpecial fromNbt(TextContext textContext, @NotNull NbtCompound nbt) {
     final String id = nbt.getString("id");
-    if (id == null || id.isBlank()) {
+    if (id == null || id.isEmpty()) {
       return null;
     } else if (id.equals("rect")) {
       final RectTextSpecial rectTextSpecial = new RectTextSpecial(textContext);
@@ -85,7 +85,7 @@ public interface TextSpecial extends Cloneable {
    * 根据已有的 id 和参数返回对象，用于告示牌编辑屏幕中。如果在文本框中输入 {@code -rect 2 3}，则会调用 {@code fromDescription(textContext, "rect", "2 3")}。
    */
   static @Nullable TextSpecial fromDescription(TextContext textContext, String id, String args) {
-    if (id == null || id.isBlank()) return null;
+    if (id == null || id.isEmpty()) return null;
     else if (id.equals("rect")) {
       final RectTextSpecial rect = new RectTextSpecial(textContext);
       final String[] split = args.split(" ");

@@ -129,7 +129,9 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (direction.getAxis().isHorizontal() && stateFrom.getBlock() instanceof final Handrails block) {
+    final Block block0 = stateFrom.getBlock();
+    if (direction.getAxis().isHorizontal() && block0 instanceof Handrails) {
+      Handrails block = (Handrails) block0;
       return block.baseBlock() == this.baseBlock()
           && block.connectsIn(stateFrom, direction.getOpposite(), state.get(FACING).getDirectionInAxis(direction.rotateYClockwise().getAxis()).getOpposite());
     }

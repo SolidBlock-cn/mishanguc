@@ -264,7 +264,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
                 .add(direction.asString(), "true"), new JBlockModel(modelName).x(x).y(y).uvlock()));
       }
     }
-    return JBlockStates.ofMultiparts(parts.toArray(JMultipart[]::new));
+    return JBlockStates.ofMultiparts(parts.toArray(new JMultipart[0]));
   }
 
   @Environment(EnvType.CLIENT)

@@ -56,10 +56,9 @@ public interface RoadWithStraightLine extends Road {
     switch (rotation) {
       case CLOCKWISE_90:
       case COUNTERCLOCKWISE_90:
-        rotatedAxis =
-            axis == Direction.Axis.X
-                ? Direction.Axis.Z
-                : axis == Direction.Axis.Z ? Direction.Axis.X : axis;
+        rotatedAxis = axis == Direction.Axis.X
+            ? Direction.Axis.Z
+            : axis == Direction.Axis.Z ? Direction.Axis.X : axis;
         break;
       default:
         rotatedAxis = axis;
