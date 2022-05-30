@@ -624,6 +624,23 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineTop("white_cross_line"));
     writeRoadBlockModelWithSlab(
         pack,
+        RoadBlocks.ROAD_WITH_YELLOW_TS_LINE,
+        "road_with_joint_line",
+        new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_joint_line"));
+    writeRoadBlockModelWithSlabWithMirrored(
+        pack,
+        RoadBlocks.ROAD_WITH_YELLOW_S_BA_LINE,
+        "road_with_straight_and_angle_line",
+        FasterJTextures.ofP(
+            "line_top_straight", "yellow_straight_line",
+            "line_top_angle", "yellow_bevel_angle_line").lineSide("yellow_straight_line").base("asphalt"));
+    writeRoadBlockModelWithSlab(
+        pack,
+        RoadBlocks.ROAD_WITH_YELLOW_CROSS_LINE,
+        "road_with_cross_line",
+        new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_cross_line"));
+    writeRoadBlockModelWithSlab(
+        pack,
         RoadBlocks.ROAD_WITH_WHITE_OFFSET_LINE,
         "road_with_straight_line",
         new FasterJTextures().base("asphalt").lineSide("white_offset_straight_line").lineTop("white_offset_straight_line"));
@@ -689,11 +706,6 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         new FasterJTextures().base("asphalt").lineSide("white_straight_double_line").lineSide2("white_straight_line").lineTop("white_double_joint_line"));
     writeRoadBlockModelWithSlab(
         pack,
-        RoadBlocks.ROAD_WITH_YELLOW_TS_LINE,
-        "road_with_joint_line",
-        new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_joint_line"));
-    writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_Y_TS_W_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineSide2("white_straight_line").lineTop("yellow_joint_line_with_white_side"));
@@ -707,6 +719,11 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         RoadBlocks.ROAD_WITH_W_TS_YD_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("yellow_straight_double_line").lineTop("white_joint_line_with_yellow_double_side"));
+    writeRoadBlockModelWithSlab(
+        pack,
+        RoadBlocks.ROAD_WITH_WT_TS_Y_LINE,
+        "road_with_joint_line",
+        new FasterJTextures().base("asphalt").lineSide("white_straight_thick_line").lineSide2("yellow_straight_line").lineTop("white_thick_joint_line_with_yellow_side"));
     writeRoadBlockModelWithSlab(
         pack,
         RoadBlocks.ROAD_WITH_WT_TS_YD_LINE,

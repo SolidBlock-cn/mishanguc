@@ -48,9 +48,11 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
       case 0:
         // 全都不连接的情况。
         return ROAD_BLOCK.getDefaultState();
-      case 4:
-        // 全都连接的情况。这种情况下，不论道路颜色，一律返回白色的十字形道路。
-        return ROAD_WITH_WHITE_CROSS_LINE.getDefaultState();
+      case 4: {
+        // 全都连接的情况。这种情况下，如果至少两侧的道路为黄色，则返回黄色十字形道路，否则返回白色十字形道路。
+        final int sumYellow = connectionStateMap.values().stream().mapToInt(state -> state.lineColor == LineColor.YELLOW ? 1 : 0).sum();
+        return (sumYellow >= 2 ? ROAD_WITH_YELLOW_CROSS_LINE : ROAD_WITH_WHITE_CROSS_LINE).getDefaultState();
+      }
       case 2:
         // 仅有两种方向的情况，又分为两种：直线和直角/斜线。
         for (Map.Entry<Direction, RoadConnectionState> entry : connectionStateMap.entrySet()) {
@@ -186,18 +188,17 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
         return defaultState;
       case 3:
         for (Map.Entry<Direction, RoadConnectionState> entry : connectionStateMap.entrySet()) {
-          final RoadConnectionState state = entry.getValue();
-          if (!state.mayConnect())
+          final RoadConnectionState unconnectedState = entry.getValue();
           // 检测需要连接正向的方块对应的连接是否为斜线。
-          {
+          if (!unconnectedState.mayConnect()) {
             // 朝向的方向，即唯一没有被连接的方向的反方向。
             Direction direction = entry.getKey().getOpposite();
+            final RoadConnectionState facingState = connectionStateMap.get(direction);
             // 朝向的那个方向的道路连接状态。
-            if (state.direction == null
-                || state.direction.left().isPresent()
-                || type != RoadAutoLineType.BEVEL)
-            // 连接直线
-            {
+            if (unconnectedState.direction == null
+                || unconnectedState.direction.left().isPresent()
+                || type != RoadAutoLineType.BEVEL) {
+              // 连接直线
               RoadConnectionState stateLeft = connectionStateMap.get(direction.rotateYCounterclockwise());
               RoadConnectionState stateRight = connectionStateMap.get(direction.rotateYClockwise());
 
@@ -209,16 +210,15 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
                 // - 两端白色，前方黄色 → 白色+黄色
                 // - 两端黄色，前方白色 → 黄色+白色
 
-                if (stateLeft.lineColor != state.lineColor) {
+                if (stateLeft.lineColor != facingState.lineColor) {
                   return (
-                      stateLeft.lineColor == LineColor.WHITE && state.lineColor == LineColor.YELLOW
+                      stateLeft.lineColor == LineColor.WHITE && facingState.lineColor == LineColor.YELLOW
                           ? (
-                          stateLeft.lineType == LineType.THICK && state.lineType == LineType.DOUBLE
-                              ? ROAD_WITH_WT_TS_YD_LINE
-                              : state.lineType == LineType.DOUBLE
-                              ? ROAD_WITH_W_TS_YD_LINE : ROAD_WITH_W_TS_Y_LINE
+                          stateLeft.lineType == LineType.THICK
+                              ? (facingState.lineType == LineType.DOUBLE ? ROAD_WITH_WT_TS_YD_LINE : ROAD_WITH_WT_TS_Y_LINE)
+                              : (facingState.lineType == LineType.DOUBLE ? ROAD_WITH_W_TS_YD_LINE : ROAD_WITH_W_TS_Y_LINE)
                       )
-                          : stateLeft.lineColor == LineColor.YELLOW && state.lineColor == LineColor.WHITE
+                          : stateLeft.lineColor == LineColor.YELLOW && facingState.lineColor == LineColor.WHITE
                           ? ROAD_WITH_Y_TS_W_LINE : ROAD_WITH_WHITE_TS_LINE
                   ).getDefaultState().with(RoadWithJointLine.FACING, direction);
                 }
@@ -232,9 +232,9 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
                 // - 其他情况 → 白色普通
 
                 else {
-                  return (state.lineColor == LineColor.YELLOW
+                  return (unconnectedState.lineColor == LineColor.YELLOW
                       ? ROAD_WITH_YELLOW_TS_LINE
-                      : switch (state.lineType) {
+                      : switch (unconnectedState.lineType) {
                     case DOUBLE -> ROAD_WITH_WHITE_TS_DOUBLE_LINE;
                     case THICK -> ROAD_WITH_WHITE_TS_THICK_LINE;
                     default -> switch (stateLeft.lineType) {
@@ -247,21 +247,23 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
                 }
               } else {
                 // 存在左右两侧标线不等的情况。
-                return (switch (state.lineColor) {
+                return (switch (unconnectedState.lineColor) {
                   case YELLOW -> ROAD_WITH_YELLOW_TS_LINE;
                   case WHITE, UNKNOWN, NONE -> ROAD_WITH_WHITE_TS_LINE;
                 })
                     .getDefaultState()
                     .with(Properties.HORIZONTAL_FACING, direction);
               }
-            } else if (state.direction.right().isPresent()) {
+            } else if (unconnectedState.direction.right().isPresent()) {
               // 连接斜线
-              return ROAD_WITH_WHITE_S_BA_LINE
+              // 如果三个方向中至少两个均为黄线，则产生黄色标线的道路。
+              int sumYellow = connectionStateMap.values().stream().mapToInt(state -> state.lineColor == LineColor.YELLOW ? 1 : 0).sum();
+              return (sumYellow >= 2 ? ROAD_WITH_YELLOW_S_BA_LINE : ROAD_WITH_WHITE_S_BA_LINE)
                   .getDefaultState()
                   .with(Properties.HORIZONTAL_AXIS, direction.rotateYClockwise().getAxis())
                   .with(
                       MishangucProperties.HORIZONTAL_CORNER_FACING,
-                      state.direction.right().get().getOpposite().mirror(direction));
+                      unconnectedState.direction.right().get().getOpposite().mirror(direction));
             }
           }
         }
