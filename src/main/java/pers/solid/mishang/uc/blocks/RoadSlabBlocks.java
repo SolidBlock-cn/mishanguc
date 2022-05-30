@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.blocks;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.block.*;
@@ -83,6 +84,19 @@ public final class RoadSlabBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final SmartRoadSlabBlock<RoadWithJointLine.Impl> ROAD_SLAB_WITH_WHITE_TS_LINE = of(ROAD_WITH_WHITE_TS_LINE);
 
+  @ApiStatus.AvailableSince("0.2.0")
+  @Cutout
+  @RegisterIdentifier
+  public static final SmartRoadSlabBlock<RoadWithStraightAndAngleLine.Impl> ROAD_SLAB_WITH_YELLOW_S_BA_LINE = of(ROAD_WITH_YELLOW_S_BA_LINE);
+  @ApiStatus.AvailableSince("0.2.0")
+  @Cutout
+  @RegisterIdentifier
+  public static final SmartRoadSlabBlock<RoadWithJointLine.Impl> ROAD_SLAB_WITH_YELLOW_TS_LINE = of(ROAD_WITH_YELLOW_TS_LINE);
+  @ApiStatus.AvailableSince("0.2.0")
+  @Cutout
+  @RegisterIdentifier
+  public static final SmartRoadSlabBlock<RoadWithCrossLine.Impl> ROAD_SLAB_WITH_YELLOW_CROSS_LINE = of(ROAD_WITH_YELLOW_CROSS_LINE);
+
   @Cutout
   @RegisterIdentifier
   public static final SmartRoadSlabBlock<RoadWithCrossLine.Impl> ROAD_SLAB_WITH_WHITE_CROSS_LINE = of(ROAD_WITH_WHITE_CROSS_LINE);
@@ -141,10 +155,6 @@ public final class RoadSlabBlocks extends MishangucBlocks {
 
   @Cutout
   @RegisterIdentifier
-  public static final SmartRoadSlabBlock<RoadWithJointLine.Impl> ROAD_SLAB_WITH_YELLOW_TS_LINE = of(ROAD_WITH_YELLOW_TS_LINE);
-
-  @Cutout
-  @RegisterIdentifier
   public static final SmartRoadSlabBlock<RoadWithJointLine.Impl> ROAD_SLAB_WITH_Y_TS_W_LINE = of(ROAD_WITH_Y_TS_W_LINE);
 
   @Cutout
@@ -154,6 +164,11 @@ public final class RoadSlabBlocks extends MishangucBlocks {
   @Cutout
   @RegisterIdentifier
   public static final SmartRoadSlabBlock<RoadWithJointLine.Impl> ROAD_SLAB_WITH_W_TS_YD_LINE = of(ROAD_WITH_W_TS_YD_LINE);
+
+  @ApiStatus.AvailableSince("0.2.0")
+  @Cutout
+  @RegisterIdentifier
+  public static final SmartRoadSlabBlock<RoadWithJointLine.Impl> ROAD_SLAB_WITH_WT_TS_Y_LINE = of(ROAD_WITH_WT_TS_Y_LINE);
 
   @Cutout
   @RegisterIdentifier
@@ -187,6 +202,9 @@ public final class RoadSlabBlocks extends MishangucBlocks {
 
   private static <T extends AbstractRoadBlock & Road> SmartRoadSlabBlock<T> of(
       T baseBlock, SmartRoadSlabBlock<T> slab) {
+    if (BLOCK_TO_SLABS.containsKey(baseBlock)) {
+      throw new IllegalArgumentException(String.format("The slab for this road (%s) already exists!", baseBlock));
+    }
     BLOCK_TO_SLABS.put(baseBlock, slab);
     return slab;
   }
