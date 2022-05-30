@@ -14,7 +14,7 @@ Welcome to join Tencent QQ group **587928350** or KaiHeiLa channel invitation co
 
 中文版的介绍在[此处](README.md)。
 
-[Click here to see update log.](UpdateLog.md)
+[Click here to see update log.](UpdateLog-en.md)
 
 ## How to install
 
