@@ -46,7 +46,7 @@ public interface RoadWithJointLine extends Road {
             state.get(FACING) != direction.getOpposite(),
             getLineColor(state, direction),
             Either.left(direction),
-            LineType.NORMAL));
+            getLineType(state, direction)));
   }
 
   @Override
@@ -100,8 +100,11 @@ public interface RoadWithJointLine extends Road {
 
     @Override
     public LineColor getLineColor(BlockState blockState, Direction direction) {
-      if (blockState.get(FACING) == direction) {
+      final Direction facing = blockState.get(FACING);
+      if (facing == direction) {
         return lineColorSide;
+      } else if (facing == direction.getOpposite()) {
+        return LineColor.NONE;
       } else {
         return lineColor;
       }
@@ -109,8 +112,11 @@ public interface RoadWithJointLine extends Road {
 
     @Override
     public LineType getLineType(BlockState blockState, Direction direction) {
-      if (blockState.get(FACING) == direction) {
+      final Direction facing = blockState.get(FACING);
+      if (facing == direction) {
         return lineTypeSide;
+      } else if (facing == direction.getOpposite()) {
+        return LineType.NORMAL;
       } else {
         return lineType;
       }

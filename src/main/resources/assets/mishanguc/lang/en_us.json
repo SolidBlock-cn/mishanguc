@@ -17,6 +17,9 @@
   "block.mishanguc.road_with_white_s_ba_line": "Road with White Straight and BA Line",
   "block.mishanguc.road_with_white_ts_line": "Road with White T-shaped Line",
   "block.mishanguc.road_with_white_cross_line": "Road with White Cross Line",
+  "block.mishanguc.road_with_yellow_s_ba_line": "Road with Yellow Straight and BA Line",
+  "block.mishanguc.road_with_yellow_ts_line": "Road with Yellow T-shaped Line",
+  "block.mishanguc.road_with_yellow_cross_line": "Road with Yellow Cross Line",
 
   "block.mishanguc.road_with_white_offset_line": "Road with White Offset Straight Line",
   "block.mishanguc.road_with_white_double_line": "Road with White Straight Double Line",
@@ -32,9 +35,9 @@
   "block.mishanguc.road_with_white_double_ts_line": "Road with White Double T-shaped Line",
   "block.mishanguc.road_with_white_thick_ts_line": "Road with White Thick T-shaped Line",
 
-  "block.mishanguc.road_with_yellow_ts_line": "Road with Yellow T-shaped Line",
   "block.mishanguc.road_with_y_ts_w_line": "Road with Y Ts W Line",
   "block.mishanguc.road_with_w_ts_y_line": "Road with W Ts Y Line",
+  "block.mishanguc.road_with_wt_ts_y_line": "Road with WT Ts Y Line",
   "block.mishanguc.road_with_w_ts_yd_line": "Road with W Ts YD Line",
   "block.mishanguc.road_with_wt_ts_yd_line": "Road with WT Ts YD Line",
 
@@ -62,6 +65,9 @@
   "block.mishanguc.road_slab_with_white_s_ba_line": "Road Slab with White Straight and BA Line",
   "block.mishanguc.road_slab_with_white_ts_line": "Road Slab with White T-shaped Line",
   "block.mishanguc.road_slab_with_white_cross_line": "Road Slab with White Cross Line",
+  "block.mishanguc.road_slab_with_yellow_s_ba_line": "Road Slab with Yellow Straight and BA Line",
+  "block.mishanguc.road_slab_with_yellow_ts_line": "Road Slab with Yellow T-shaped Line",
+  "block.mishanguc.road_slab_with_yellow_cross_line": "Road Slab with Yellow Cross Line",
 
   "block.mishanguc.road_slab_with_white_offset_line": "Road Slab with White Offset Straight Line",
   "block.mishanguc.road_slab_with_white_double_line": "Road Slab with White Straight Double Line",
@@ -77,9 +83,9 @@
   "block.mishanguc.road_slab_with_white_double_ts_line": "Road Slab with White Double T-shaped Line",
   "block.mishanguc.road_slab_with_white_thick_ts_line": "Road Slab with White Thick T-shaped Line",
 
-  "block.mishanguc.road_slab_with_yellow_ts_line": "Road Slab with Yellow T-shaped Line",
   "block.mishanguc.road_slab_with_y_ts_w_line": "Road Slab with Y Ts W Line",
   "block.mishanguc.road_slab_with_w_ts_y_line": "Road Slab with W Ts Y Line",
+  "block.mishanguc.road_slab_with_wt_ts_y_line": "Road Slab with WT Ts Y Line",
   "block.mishanguc.road_slab_with_w_ts_yd_line": "Road Slab with W Ts YD Line",
   "block.mishanguc.road_slab_with_wt_ts_yd_line": "Road Slab with WT Ts YD Line",
 

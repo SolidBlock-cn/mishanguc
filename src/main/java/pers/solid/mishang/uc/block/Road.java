@@ -35,7 +35,7 @@ import java.util.function.Consumer;
  */
 public interface Road extends BlockResourceGenerator {
 
-  EntityAttributeModifier ROAD_SPEED_BOOST = new EntityAttributeModifier(UUID.randomUUID(), "road_speed_boost", 1.75, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+  EntityAttributeModifier ROAD_SPEED_BOOST = new EntityAttributeModifier(UUID.fromString("693D7032-4767-5A57-A28F-401F8F485772"/* 根据网上的在线 UUID 生成器生成 */), "road_speed_boost", 1.75, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
   TagKey<Block> ROADS = TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "roads"));
 
   /**
