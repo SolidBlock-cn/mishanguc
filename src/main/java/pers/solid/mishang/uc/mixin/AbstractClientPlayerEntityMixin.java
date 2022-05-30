@@ -30,7 +30,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity {
   /**
    * 当玩家行走在道路上时，取消掉其视场角。
    */
-  @Inject(method = "getFovMultiplier", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;getAttributeValue(Lnet/minecraft/entity/attribute/EntityAttribute;)D", shift = At.Shift.BEFORE))
+  @Inject(method = "getSpeed", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;getAttributeValue(Lnet/minecraft/entity/attribute/EntityAttribute;)D", shift = At.Shift.BEFORE))
   private void reduceRoadFovMultiplier(CallbackInfoReturnable<Float> cir) {
     final EntityAttributeInstance attributeInstance = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
     if (attributeInstance != null) {
@@ -43,7 +43,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity {
     }
   }
 
-  @Inject(method = "getFovMultiplier", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;getAttributeValue(Lnet/minecraft/entity/attribute/EntityAttribute;)D", shift = At.Shift.AFTER))
+  @Inject(method = "getSpeed", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;getAttributeValue(Lnet/minecraft/entity/attribute/EntityAttribute;)D", shift = At.Shift.AFTER))
   private void restoreAttributeAfterFOV(CallbackInfoReturnable<Float> cir) {
     final EntityAttributeInstance attributeInstance = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
     if (attributeInstance != null)
