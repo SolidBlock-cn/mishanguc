@@ -10,7 +10,6 @@ import net.minecraft.state.property.Property;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -241,35 +240,6 @@ public class MishangUtils {
       };
       default -> axis;
     };
-  }
-
-  /**
-   * 给一个标识符加上后缀。例如：
-   * <pre>
-   *   identifierSuffix(minecraft:oak_slab, "_top") -> minecraft:oak_slab_top;
-   * </pre>
-   *
-   * @deprecated Please directly use {@link Identifier#brrp_append(String)}.
-   */
-  @ApiStatus.AvailableSince("0.1.7")
-  @Deprecated(since = "0.2.0", forRemoval = true)
-  public static Identifier identifierSuffix(Identifier identifier, String suffix) {
-    return new Identifier(identifier.getNamespace(), identifier.getPath() + suffix);
-  }
-
-  /**
-   * 给一个标识符的路径部分加上前缀。例如：
-   * <pre>
-   *   identifierPrefix(minecraft:stone, "block/") -> minecraft:block/stone;
-   *   identifierPrefix(mishanguc:white_light, "block/") -> mishanguc:block/white_light;
-   * </pre>
-   *
-   * @deprecated Please directly use {@link Identifier#brrp_prepend(String)}.
-   */
-  @ApiStatus.AvailableSince("0.1.7")
-  @Deprecated(since = "0.2.0", forRemoval = true)
-  public static Identifier identifierPrefix(Identifier identifier, String prefix) {
-    return new Identifier(identifier.getNamespace(), prefix + identifier.getPath());
   }
 
   public static <T extends Comparable<T>> BlockState with(BlockState state, Property<T> property, String name) {
