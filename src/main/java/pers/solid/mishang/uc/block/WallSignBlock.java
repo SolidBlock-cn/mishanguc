@@ -273,7 +273,6 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
 
   @SuppressWarnings("deprecation")
   @Environment(EnvType.CLIENT)
-  @Deprecated
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
     return direction.getAxis().isHorizontal() && state.getBlock() instanceof WallSignBlock && stateFrom.getBlock() instanceof WallSignBlock && state.get(FACING) == stateFrom.get(FACING) && direction.getAxis() != state.get(FACING).getAxis();

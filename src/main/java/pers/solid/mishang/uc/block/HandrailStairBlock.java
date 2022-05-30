@@ -179,7 +179,6 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   }
 
   @SuppressWarnings("deprecation")
-  @Deprecated
   @Override
   public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     final Direction facing = state.get(FACING);

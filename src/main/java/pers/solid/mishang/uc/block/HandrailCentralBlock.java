@@ -55,7 +55,6 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   }
 
   @SuppressWarnings("deprecation")
-  @Deprecated
   @Override
   public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
     if (state.get(WATERLOGGED)) {

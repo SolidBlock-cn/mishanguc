@@ -158,7 +158,6 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
   }
 
   @SuppressWarnings("deprecation")
-  @Deprecated
   @Override
   public boolean canReplace(BlockState state, ItemPlacementContext context) {
     if (state.getBlock().asItem() != context.getStack().getItem()) return false;
