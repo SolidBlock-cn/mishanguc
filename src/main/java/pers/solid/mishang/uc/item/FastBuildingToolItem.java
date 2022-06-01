@@ -267,13 +267,12 @@ public class FastBuildingToolItem extends BlockToolItem {
     final ClientWorld world = worldRenderContext.world();
     final BlockPlacementContext blockPlacementContext =
         new BlockPlacementContext(
-            world, blockOutlineContext.blockPos(), player, mainHandStack, raycast, false);
+            world, blockOutlineContext.blockPos(), player, mainHandStack, raycast, includesFluid);
     for (BlockPos pos :
         matchingRule.getPlainValidBlockPoss(
             world, raycast.getBlockPos(), raycast.getSide(), range)) {
       final BlockState state = world.getBlockState(pos);
-      final BlockPlacementContext offsetBlockPlacementContext =
-          new BlockPlacementContext(blockPlacementContext, pos);
+      final BlockPlacementContext offsetBlockPlacementContext = new BlockPlacementContext(blockPlacementContext, pos);
       if (offsetBlockPlacementContext.canPlace() && offsetBlockPlacementContext.canReplace()) {
         WorldRendererInvoker.drawShapeOutline(
             worldRenderContext.matrixStack(),
@@ -295,9 +294,9 @@ public class FastBuildingToolItem extends BlockToolItem {
               offsetBlockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(),
               offsetBlockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(),
               0,
-              0.25f,
+              0.5f,
               1,
-              0.4f);
+              0.5f);
         }
       }
       WorldRendererInvoker.drawShapeOutline(
@@ -320,9 +319,9 @@ public class FastBuildingToolItem extends BlockToolItem {
             pos.getY() - blockOutlineContext.cameraY(),
             pos.getZ() - blockOutlineContext.cameraZ(),
             1,
-            0.75f,
+            0.5f,
             0,
-            0.4f);
+            0.5f);
       }
     }
     return false;
