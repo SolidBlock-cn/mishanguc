@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.item;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.MishangucItemGroups;
@@ -22,61 +23,68 @@ public final class MishangucItems {
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final IdCheckerToolItem ID_CHECKER_TOOL =
-      new IdCheckerToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
+      new IdCheckerToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxCount(1), null);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final IdCheckerToolItem FLUID_ID_CHECKER_TOOL =
-      new IdCheckerToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), true);
+      new IdCheckerToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxCount(1), true);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final FastBuildingToolItem FAST_BUILDING_TOOL =
-      new FastBuildingToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
+      new FastBuildingToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxCount(1), null);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final RotatingToolItem ROTATING_TOOL =
-      new RotatingToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
+      new RotatingToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxDamage(512), null);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final MirroringToolItem MIRRORING_TOOL =
-      new MirroringToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
+      new MirroringToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxDamage(512), null);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final SlabToolItem SLAB_TOOL =
-      new SlabToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS));
+      new SlabToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxDamage(1024));
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final ForcePlacingToolItem FORCE_PLACING_TOOL =
-      new ForcePlacingToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
+      new ForcePlacingToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxCount(1), null);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final ForcePlacingToolItem FLUID_FORCE_PLACING_TOOL =
-      new ForcePlacingToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), true);
+      new ForcePlacingToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxCount(1), true);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final BlockStateToolItem BLOCK_STATE_TOOL =
-      new BlockStateToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
+      new BlockStateToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxCount(1), null);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final BlockStateToolItem FLUID_STATE_TOOL =
-      new BlockStateToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), true);
+      new BlockStateToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxCount(1), true);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
   public static final DataTagToolItem DATA_TAG_TOOL =
-      new DataTagToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
+      new DataTagToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxCount(1), null);
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
-  public static final TextCopyToolItem TEXT_COPY_TOOL = new TextCopyToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
+  public static final TextCopyToolItem TEXT_COPY_TOOL = new TextCopyToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxDamage(1024), null);
+
+  @RegisterIdentifier
+  @SimpleModel(parent = "item/handheld")
+  public static final AllFunctioningToolItem ALL_FUNCTIONING_TOOL = new AllFunctioningToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).fireproof().rarity(Rarity.EPIC).maxCount(1));
+
+  @RegisterIdentifier
+  public static final ExplosionToolItem EXPLOSION_TOOL = new ExplosionToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxDamage(1024));
 
   private MishangucItems() {
   }

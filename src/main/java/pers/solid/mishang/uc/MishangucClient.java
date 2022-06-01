@@ -12,13 +12,19 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.item.UnclampedModelPredicateProvider;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.HandrailBlock;
@@ -26,6 +32,7 @@ import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.blockentity.*;
 import pers.solid.mishang.uc.blocks.HungSignBlocks;
 import pers.solid.mishang.uc.item.DataTagToolItem;
+import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
@@ -127,5 +134,22 @@ public class MishangucClient implements ClientModInitializer {
         });
     ClientPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "get_block_data"), new DataTagToolItem.BlockDataReceiver());
     ClientPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "get_entity_data"), new DataTagToolItem.EntityDataReceiver());
+
+    // 模型谓词提供器
+    ModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL,
+        new Identifier("mishanguc", "explosion_power"),
+        new UnclampedModelPredicateProvider() {
+          @Override
+          public float unclampedCall(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity, int seed) {
+            return MishangucItems.EXPLOSION_TOOL.power(stack);
+          }
+
+          @SuppressWarnings("deprecation")
+          @Override
+          public float call(ItemStack itemStack, @Nullable ClientWorld clientWorld, @Nullable LivingEntity livingEntity, int i) {
+            return unclampedCall(itemStack, clientWorld, livingEntity, i);
+          }
+        });
+    ModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL, new Identifier("mishanguc", "explosion_create_fire"), (stack, world, entity, seed) -> MishangucItems.EXPLOSION_TOOL.createFire(stack) ? 1 : 0);
   }
 }
