@@ -2,19 +2,14 @@ package pers.solid.mishang.uc.mixin;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import pers.solid.mishang.uc.item.FastBuildingToolItem;
+import pers.solid.mishang.uc.item.HotbarScrollInteraction;
 
 @Environment(EnvType.CLIENT)
 @Mixin(PlayerInventory.class)
@@ -31,11 +26,7 @@ public abstract class PlayerInventoryMixin {
   @Inject(method = "scrollInHotbar", at = @At("HEAD"), cancellable = true)
   public void lockSelection(double scrollAmount, CallbackInfo ci) {
     final ItemStack mainHandStack = this.getMainHandStack();
-    if ((Screen.hasShiftDown() || Screen.hasAltDown()) && mainHandStack.getItem() instanceof FastBuildingToolItem) {
-      final PacketByteBuf buf = PacketByteBufs.create();
-      buf.writeInt(selectedSlot);
-      buf.writeInt(((int) scrollAmount));
-      ClientPlayNetworking.send(new Identifier("mishanguc", "update_matching_rule"), buf);
+    if (mainHandStack.getItem() instanceof HotbarScrollInteraction interaction && interaction.shouldLockScroll(selectedSlot, scrollAmount)) {
       ci.cancel();
     }
   }

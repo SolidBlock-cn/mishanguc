@@ -32,7 +32,6 @@ import java.util.Arrays;
 /**
  * @since 0.1.7 本类应当在 onInitialize 的入口点中执行，而非 pregen 中。
  */
-@SuppressWarnings({"SameParameterValue"})
 public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   private static final RuntimeResourcePack PACK = RuntimeResourcePack.create(new Identifier("mishanguc", "pack"));
 
@@ -44,19 +43,19 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     return blockIdentifier(path).toString();
   }
 
-  private static void writeBlockModelForCubeAll(RuntimeResourcePack pack, BlockResourceGenerator block, String all) {
-    pack.addModel(
+  private static void writeBlockModelForCubeAll(BlockResourceGenerator block, String all) {
+    PACK.addModel(
         new JModel("block/cube_all").textures(new FasterJTextures().varP("all", all)),
         block.getBlockModelId());
   }
 
-  private static void writeBlockModelForSlabAll(RuntimeResourcePack pack, BlockResourceGenerator block, String all) {
-    pack.addModel(
+  private static void writeBlockModelForSlabAll(BlockResourceGenerator block, String all) {
+    PACK.addModel(
         new JModel("block/slab")
             .textures(
                 new FasterJTextures().top(all).side(all).bottom(all)),
         block.getBlockModelId());
-    pack.addModel(
+    PACK.addModel(
         new JModel("block/slab_top")
             .textures(
                 new FasterJTextures().top(all).side(all).bottom(all)),
@@ -66,55 +65,52 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   /**
    * 运行此方法需确保其楼梯名称正好为 path + "_slab"。
    */
-  private static void writeBlockModelForCubeAllWithSlab(final RuntimeResourcePack pack, AbstractRoadBlock block, String all) {
-    writeBlockModelForCubeAll(pack, block, all);
-    writeBlockModelForSlabAll(pack, RoadSlabBlocks.BLOCK_TO_SLABS.get(block), all);
+  private static void writeBlockModelForCubeAllWithSlab(AbstractRoadBlock block, String all) {
+    writeBlockModelForCubeAll(block, all);
+    writeBlockModelForSlabAll(RoadSlabBlocks.BLOCK_TO_SLABS.get(block), all);
   }
 
   /**
    * 添加一个方块以及其台阶方块的方块模型。仅用于此模组。
    *
-   * @param pack     运行时资源包。
    * @param block    方块。必须是道路方块，且在 {@link RoadSlabBlocks#BLOCK_TO_SLABS} 中有对应的台阶版本。
    * @param parent   资源包的 parent。应当保证 parent、parent+"_slab" 和 parent+"_slab_top"都要存在。
    * @param textures 纹理变量。三个 parent 都应该使用相同的纹理。
    */
   private static void writeRoadBlockModelWithSlab(
-      RuntimeResourcePack pack, AbstractRoadBlock block, String parent, JTextures textures) {
+      AbstractRoadBlock block, String parent, JTextures textures) {
     final Identifier id = block.getBlockModelId();
     final Identifier slabId = RoadSlabBlocks.BLOCK_TO_SLABS.get(block).getBlockModelId();
-    writeRoadBlockModelWithSlab(pack, parent, textures, id, slabId);
+    writeRoadBlockModelWithSlab(parent, textures, id, slabId);
   }
 
   /**
    * 添加一个方块以及其台阶方块的方块模型，以及其对应的“mirrored”的方块模型。仅用于此模组。
    *
-   * @param pack     运行时资源包。
    * @param block    方块。必须是道路方块，且在 {@link RoadSlabBlocks#BLOCK_TO_SLABS} 中有对应的台阶版本。
    * @param parent   资源包的 parent。应当保证 parent、parent+"_slab" 和 parent+"_slab_top"都要存在。
    * @param textures 纹理变量。三个 parent 都应该使用相同的纹理。
    */
   private static void writeRoadBlockModelWithSlabWithMirrored(
-      RuntimeResourcePack pack, AbstractRoadBlock block, String parent, JTextures textures) {
+      AbstractRoadBlock block, String parent, JTextures textures) {
     final Identifier id = block.getBlockModelId();
     final Identifier slabId = RoadSlabBlocks.BLOCK_TO_SLABS.get(block).getBlockModelId();
-    writeRoadBlockModelWithSlab(pack, parent, textures, id, slabId);
-    writeRoadBlockModelWithSlab(pack, parent + "_mirrored", textures, id.brrp_append("_mirrored"), slabId.brrp_append("_mirrored"));
+    writeRoadBlockModelWithSlab(parent, textures, id, slabId);
+    writeRoadBlockModelWithSlab(parent + "_mirrored", textures, id.brrp_append("_mirrored"), slabId.brrp_append("_mirrored"));
   }
 
   /**
    * 添加一个方块以及其台阶方块的方块模型。仅用于此模组。
    *
-   * @param pack     运行时资源包。
-   * @param id       道路方块的完整id。
-   * @param slabId   该方块对应的台阶方块的完整id。
    * @param parent   资源包的 parent。应当保证 parent、parent+"_slab" 和 parent+"_slab_top"都要存在。
    * @param textures 纹理变量。三个 parent 都应该使用相同的纹理。
+   * @param id       道路方块的完整id。
+   * @param slabId   该方块对应的台阶方块的完整id。
    */
-  private static void writeRoadBlockModelWithSlab(RuntimeResourcePack pack, String parent, JTextures textures, Identifier id, Identifier slabId) {
-    pack.addModel(new JModel(blockIdentifier(parent)).textures(textures), id);
-    pack.addModel(new JModel(BRRPHelper.slabOf(blockIdentifier(parent))).textures(textures), slabId);
-    pack.addModel(new JModel(BRRPHelper.slabOf(blockIdentifier(parent)) + "_top").textures(textures), slabId.brrp_append("_top"));
+  private static void writeRoadBlockModelWithSlab(String parent, JTextures textures, Identifier id, Identifier slabId) {
+    PACK.addModel(new JModel(blockIdentifier(parent)).textures(textures), id);
+    PACK.addModel(new JModel(BRRPHelper.slabOf(blockIdentifier(parent))).textures(textures), slabId);
+    PACK.addModel(new JModel(BRRPHelper.slabOf(blockIdentifier(parent)) + "_top").textures(textures), slabId.brrp_append("_top"));
   }
 
   private static IdentifiedTag blockTag(String path) {
@@ -517,7 +513,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   }
 
   @Environment(EnvType.CLIENT)
-  private static void writeAllItemModels(RuntimeResourcePack pack) {
+  private static void writeAllItemModels() {
     Arrays.stream(MishangucItems.class.getFields())
         .filter(field -> {
           int modifier = field.getModifiers();
@@ -537,201 +533,182 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
           if (parent.isEmpty()) {
             name = "item/generated";
           }
-          pack.addModel(
+          PACK.addModel(
               new JModel(parent)
                   .textures(new JTextures().layer0(texture.isEmpty() ? "mishanguc:item/" + name : texture)),
               new Identifier("mishanguc", "item/" + name));
         });
+
+    writeExplosionToolItemModels();
   }
 
   @Environment(EnvType.CLIENT)
-  private static void writeAllBlockModels(RuntimeResourcePack pack) {
+  private static void writeExplosionToolItemModels() {
+    for (final String name : new String[]{
+        "explosion_tool_fire",
+        "explosion_tool_4", "explosion_tool_4_fire",
+        "explosion_tool_8", "explosion_tool_8_fire",
+        "explosion_tool_16", "explosion_tool_16_fire",
+        "explosion_tool_32", "explosion_tool_32_fire",
+        "explosion_tool_64", "explosion_tool_64_fire",
+        "explosion_tool_128", "explosion_tool_128_fire",
+    }) {
+      PACK.addModel(new JModel("item/handheld").addTexture("layer0", "mishanguc:item/" + name), new Identifier("mishanguc", "item/" + name));
+    }
+  }
+
+  @Environment(EnvType.CLIENT)
+  private static void writeAllBlockModels() {
     // 道路部分
-    writeBlockModelForCubeAllWithSlab(pack, RoadBlocks.ROAD_BLOCK, "asphalt");
-    writeBlockModelForCubeAllWithSlab(pack, RoadBlocks.ROAD_FILLED_WITH_WHITE, "white_ink");
-    writeBlockModelForCubeAllWithSlab(pack, RoadBlocks.ROAD_FILLED_WITH_YELLOW, "yellow_ink");
+    writeBlockModelForCubeAllWithSlab(RoadBlocks.ROAD_BLOCK, "asphalt");
+    writeBlockModelForCubeAllWithSlab(RoadBlocks.ROAD_FILLED_WITH_WHITE, "white_ink");
+    writeBlockModelForCubeAllWithSlab(RoadBlocks.ROAD_FILLED_WITH_YELLOW, "yellow_ink");
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_LINE,
         "road_with_straight_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineTop("white_straight_line"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_RA_LINE,
         "road_with_angle_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineTop("white_right_angle_line"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_BA_LINE,
         "road_with_angle_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineTop("white_bevel_angle_line"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_YELLOW_LINE,
         "road_with_straight_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_straight_line"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_YELLOW_RA_LINE,
         "road_with_angle_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_right_angle_line"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_YELLOW_BA_LINE,
         "road_with_angle_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_bevel_angle_line"));
     writeRoadBlockModelWithSlabWithMirrored(
-        pack,
         RoadBlocks.ROAD_WITH_W_Y_RA_LINE,
         "road_with_angle_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineSide2("white_straight_line").lineTop("white_and_yellow_right_angle_line"));
     writeRoadBlockModelWithSlabWithMirrored(
-        pack,
         RoadBlocks.ROAD_WITH_WT_N_RA_LINE,
         "road_with_angle_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("white_straight_thick_line").lineTop("white_thick_and_normal_right_angle_line"));
     writeRoadBlockModelWithSlabWithMirrored(
-        pack,
         RoadBlocks.ROAD_WITH_WT_Y_RA_LINE,
         "road_with_angle_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineSide2("white_straight_thick_line").lineTop("white_thick_and_yellow_right_angle_line"));
     writeRoadBlockModelWithSlabWithMirrored(
-        pack,
         RoadBlocks.ROAD_WITH_W_YD_RA_LINE,
         "road_with_angle_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_double_line").lineSide2("white_straight_line").lineTop("white_and_yellow_double_right_angle_line"));
     writeRoadBlockModelWithSlabWithMirrored(
-        pack,
         RoadBlocks.ROAD_WITH_WT_YD_RA_LINE,
         "road_with_angle_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_double_line").lineSide2("white_straight_thick_line").lineTop("white_thick_and_yellow_double_right_angle_line"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_TS_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineTop("white_joint_line"));
     writeRoadBlockModelWithSlabWithMirrored(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_S_BA_LINE,
         "road_with_straight_and_angle_line",
         FasterJTextures.ofP(
             "line_top_straight", "white_straight_line",
             "line_top_angle", "white_bevel_angle_line").lineSide("white_straight_line").base("asphalt"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_CROSS_LINE,
         "road_with_cross_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineTop("white_cross_line"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_YELLOW_TS_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_joint_line"));
     writeRoadBlockModelWithSlabWithMirrored(
-        pack,
         RoadBlocks.ROAD_WITH_YELLOW_S_BA_LINE,
         "road_with_straight_and_angle_line",
         FasterJTextures.ofP(
             "line_top_straight", "yellow_straight_line",
             "line_top_angle", "yellow_bevel_angle_line").lineSide("yellow_straight_line").base("asphalt"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_YELLOW_CROSS_LINE,
         "road_with_cross_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_cross_line"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_OFFSET_LINE,
         "road_with_straight_line",
         new FasterJTextures().base("asphalt").lineSide("white_offset_straight_line").lineTop("white_offset_straight_line"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_DOUBLE_LINE,
         "road_with_straight_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_double_line").lineTop("white_straight_double_line"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_THICK_LINE,
         "road_with_straight_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_thick_line").lineTop("white_straight_thick_line"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_YELLOW_OFFSET_LINE,
         "road_with_straight_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_offset_straight_line").lineTop("yellow_offset_straight_line"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_YELLOW_DOUBLE_LINE,
         "road_with_straight_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_double_line").lineTop("yellow_straight_double_line"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_YELLOW_THICK_LINE,
         "road_with_straight_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_thick_line").lineTop("yellow_straight_thick_line"));
     writeRoadBlockModelWithSlabWithMirrored(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_RA_LINE_OFFSET_OUT,
         "road_with_angle_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("white_offset_straight_line").lineTop("white_right_angle_line_with_one_part_offset_out"));
     writeRoadBlockModelWithSlabWithMirrored(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_RA_LINE_OFFSET_IN,
         "road_with_angle_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("white_offset_straight_line2").lineTop("white_right_angle_line_with_one_part_offset_in"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_TS_DOUBLE_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("white_straight_double_line").lineTop("white_joint_line_with_double_side"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_TS_THICK_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("white_straight_thick_line").lineTop("white_joint_line_with_thick_side"));
     writeRoadBlockModelWithSlabWithMirrored(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_TS_OFFSET_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("white_offset_straight_line").lineTop("white_joint_line_with_offset_side"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_THICK_TS_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_thick_line").lineSide2("white_straight_line").lineTop("white_thick_joint_line"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_DOUBLE_TS_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_double_line").lineSide2("white_straight_line").lineTop("white_double_joint_line"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_Y_TS_W_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineSide2("white_straight_line").lineTop("yellow_joint_line_with_white_side"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_W_TS_Y_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("yellow_straight_line").lineTop("white_joint_line_with_yellow_side"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_W_TS_YD_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("yellow_straight_double_line").lineTop("white_joint_line_with_yellow_double_side"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_WT_TS_Y_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_thick_line").lineSide2("yellow_straight_line").lineTop("white_thick_joint_line_with_yellow_side"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_WT_TS_YD_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_thick_line").lineSide2("yellow_straight_double_line").lineTop("white_thick_joint_line_with_yellow_double_side"));
 
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_AUTO_BA_LINE,
         "road_with_auto_line",
         new FasterJTextures()
@@ -739,7 +716,6 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
             .line("white_auto_bevel_angle_line")
             .particle("asphalt"));
     writeRoadBlockModelWithSlab(
-        pack,
         RoadBlocks.ROAD_WITH_WHITE_AUTO_RA_LINE,
         "road_with_auto_line",
         new FasterJTextures()
@@ -749,15 +725,15 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
 
     // 光源部分
 
-    pack.addModel(
+    PACK.addModel(
         new JModel(blockIdentifier("light"))
             .textures(new JTextures().var("base", blockString("white_light"))),
         blockIdentifier("white_light"));
-    pack.addModel(
+    PACK.addModel(
         new JModel(blockIdentifier("light"))
             .textures(new JTextures().var("base", blockString("yellow_light"))),
         blockIdentifier("yellow_light"));
-    pack.addModel(
+    PACK.addModel(
         new JModel(blockIdentifier("light"))
             .textures(new JTextures().var("base", blockString("cyan_light"))),
         blockIdentifier("cyan_light"));
@@ -782,8 +758,8 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     if (includesClient) {
       // 由于注解了 @Environment(CLIENT)，所以考虑到潜在漏洞，在这里进行防冲突检测。
       try {
-        writeAllBlockModels(PACK);
-        writeAllItemModels(PACK);
+        writeAllBlockModels();
+        writeAllItemModels();
       } catch (NoSuchMethodError e) {
         Mishanguc.MISHANG_LOGGER.error("Not supported to load client resources in server environment.", e);
       }

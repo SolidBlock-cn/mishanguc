@@ -36,10 +36,15 @@ public class RotatingToolItem extends BlockToolItem {
       Hand hand,
       boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
-    if (!player.abilities.allowModifyWorld && !player.getStackInHand(hand).canPlaceOn(world.getTagManager(), new CachedBlockPosition(world, blockPos, false))) {
+    final ItemStack stack = player.getStackInHand(hand);
+    if (!player.abilities.allowModifyWorld && !stack.canPlaceOn(world.getTagManager(), new CachedBlockPosition(world, blockPos, false))) {
       return ActionResult.PASS;
     }
-    return rotateBlock(player, world, blockPos);
+    final ActionResult result = rotateBlock(player, world, blockPos);
+    if (result == ActionResult.SUCCESS) {
+      stack.damage(1, player, player1 -> player1.sendToolBreakStatus(hand));
+    }
+    return result;
   }
 
   @NotNull
@@ -65,7 +70,11 @@ public class RotatingToolItem extends BlockToolItem {
     if (!player.abilities.allowModifyWorld && !player.getMainHandStack().canDestroy(world.getTagManager(), new CachedBlockPosition(world, pos, false))) {
       return ActionResult.PASS;
     }
-    return rotateBlock(player, world, pos);
+    final ActionResult result = rotateBlock(player, world, pos);
+    if (result == ActionResult.SUCCESS) {
+      stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
+    }
+    return result;
   }
 
   @Environment(EnvType.CLIENT)

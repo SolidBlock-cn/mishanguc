@@ -1,0 +1,98 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "mishanguc:item/explosion_tool"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "mishanguc:explosion_power": 4,
+        "mishanguc:explosion_create_fire": 0
+      },
+      "model": "mishanguc:item/explosion_tool_4"
+    },
+    {
+      "predicate": {
+        "mishanguc:explosion_power": 8,
+        "mishanguc:explosion_create_fire": 0
+      },
+      "model": "mishanguc:item/explosion_tool_8"
+    },
+    {
+      "predicate": {
+        "mishanguc:explosion_power": 16,
+        "mishanguc:explosion_create_fire": 0
+      },
+      "model": "mishanguc:item/explosion_tool_16"
+    },
+    {
+      "predicate": {
+        "mishanguc:explosion_power": 32,
+        "mishanguc:explosion_create_fire": 0
+      },
+      "model": "mishanguc:item/explosion_tool_32"
+    },
+    {
+      "predicate": {
+        "mishanguc:explosion_power": 64,
+        "mishanguc:explosion_create_fire": 0
+      },
+      "model": "mishanguc:item/explosion_tool_64"
+    },
+    {
+      "predicate": {
+        "mishanguc:explosion_power": 128,
+        "mishanguc:explosion_create_fire": 0
+      },
+      "model": "mishanguc:item/explosion_tool_128"
+    },
+    {
+      "predicate": {
+        "mishanguc:explosion_create_fire": 1
+      },
+      "model": "mishanguc:item/explosion_tool_fire"
+    },
+    {
+      "predicate": {
+        "mishanguc:explosion_power": 4,
+        "mishanguc:explosion_create_fire": 1
+      },
+      "model": "mishanguc:item/explosion_tool_4_fire"
+    },
+    {
+      "predicate": {
+        "mishanguc:explosion_power": 8,
+        "mishanguc:explosion_create_fire": 1
+      },
+      "model": "mishanguc:item/explosion_tool_8_fire"
+    },
+    {
+      "predicate": {
+        "mishanguc:explosion_power": 16,
+        "mishanguc:explosion_create_fire": 1
+      },
+      "model": "mishanguc:item/explosion_tool_16_fire"
+    },
+    {
+      "predicate": {
+        "mishanguc:explosion_power": 32,
+        "mishanguc:explosion_create_fire": 1
+      },
+      "model": "mishanguc:item/explosion_tool_32_fire"
+    },
+    {
+      "predicate": {
+        "mishanguc:explosion_power": 64,
+        "mishanguc:explosion_create_fire": 1
+      },
+      "model": "mishanguc:item/explosion_tool_64_fire"
+    },
+    {
+      "predicate": {
+        "mishanguc:explosion_power": 128,
+        "mishanguc:explosion_create_fire": 1
+      },
+      "model": "mishanguc:item/explosion_tool_128_fire"
+    }
+  ]
+}
