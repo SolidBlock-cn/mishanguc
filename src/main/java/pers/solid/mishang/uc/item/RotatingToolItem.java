@@ -34,10 +34,15 @@ public class RotatingToolItem extends BlockToolItem {
       Hand hand,
       boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
-    if (!player.getAbilities().allowModifyWorld && !player.getStackInHand(hand).canPlaceOn(Registry.BLOCK, new CachedBlockPosition(world, blockPos, false))) {
+    final ItemStack stack = player.getStackInHand(hand);
+    if (!player.getAbilities().allowModifyWorld && !stack.canPlaceOn(Registry.BLOCK, new CachedBlockPosition(world, blockPos, false))) {
       return ActionResult.PASS;
     }
-    return rotateBlock(player, world, blockPos);
+    final ActionResult result = rotateBlock(player, world, blockPos);
+    if (result == ActionResult.SUCCESS) {
+      stack.damage(1, player, player1 -> player1.sendToolBreakStatus(hand));
+    }
+    return result;
   }
 
   @NotNull
@@ -56,10 +61,15 @@ public class RotatingToolItem extends BlockToolItem {
   @Override
   public ActionResult beginAttackBlock(
       PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    if (!player.getAbilities().allowModifyWorld && !player.getMainHandStack().canDestroy(Registry.BLOCK, new CachedBlockPosition(world, pos, false))) {
+    final ItemStack stack = player.getStackInHand(hand);
+    if (!player.getAbilities().allowModifyWorld && !stack.canDestroy(Registry.BLOCK, new CachedBlockPosition(world, pos, false))) {
       return ActionResult.PASS;
     }
-    return rotateBlock(player, world, pos);
+    final ActionResult result = rotateBlock(player, world, pos);
+    if (result == ActionResult.SUCCESS) {
+      stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
+    }
+    return result;
   }
 
   @Override

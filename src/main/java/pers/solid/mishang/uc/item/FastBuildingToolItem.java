@@ -3,8 +3,6 @@ package pers.solid.mishang.uc.item;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -19,9 +17,6 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
@@ -36,6 +31,7 @@ import net.minecraft.util.collection.Int2ObjectBiMap;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,7 +47,14 @@ import java.util.List;
  *
  * @see BlockMatchingRule
  */
-public class FastBuildingToolItem extends BlockToolItem {
+public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollInteraction {
+
+  private static final Int2ObjectBiMap<BlockMatchingRule> RULES_TO_CYCLE = Util.make(Int2ObjectBiMap.create(4), map -> {
+    map.add(BlockMatchingRule.SAME_STATE);
+    map.add(BlockMatchingRule.SAME_BLOCK);
+    map.add(BlockMatchingRule.SAME_MATERIAL);
+    map.add(BlockMatchingRule.ANY);
+  });
 
   public FastBuildingToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
@@ -327,43 +330,25 @@ public class FastBuildingToolItem extends BlockToolItem {
     return false;
   }
 
-  public static final ToolCycleHandler TOOL_CYCLE_HANDLER = new ToolCycleHandler();
-
-  private static class ToolCycleHandler implements ServerPlayNetworking.PlayChannelHandler {
-
-    private static final Int2ObjectBiMap<BlockMatchingRule> RULES_TO_CYCLE = Util.make(Int2ObjectBiMap.create(4), map -> {
-      map.add(BlockMatchingRule.SAME_STATE);
-      map.add(BlockMatchingRule.SAME_BLOCK);
-      map.add(BlockMatchingRule.SAME_MATERIAL);
-      map.add(BlockMatchingRule.ANY);
-    });
-
-    @Override
-    public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
-      final int selectedSlot = buf.readInt();
-      final int scrollAmount = buf.readInt();
-      server.execute(() -> {
-        final ItemStack stack = player.getInventory().getStack(selectedSlot);
-        if (!(stack.getItem() instanceof final FastBuildingToolItem item)) return;
-        final BlockMatchingRule currentRule = item.getMatchingRule(stack);
-        final int i = RULES_TO_CYCLE.getRawId(currentRule);
-        if (i == -1) return;
-        final int j = Math.floorMod(i - scrollAmount, RULES_TO_CYCLE.size());
-        final BlockMatchingRule newRule = RULES_TO_CYCLE.get(j);
-        if (newRule != null) {
-          stack.setSubNbt("MatchingRule", NbtString.of(newRule.getId().toString()));
-          final LiteralText text = new LiteralText("[ ");
-          for (Iterator<BlockMatchingRule> iterator = RULES_TO_CYCLE.iterator(); iterator.hasNext(); ) {
-            BlockMatchingRule rule = iterator.next();
-            final MutableText name = rule.getName();
-            if (rule == newRule) name.formatted(Formatting.YELLOW, Formatting.UNDERLINE);
-            text.append(name);
-            if (iterator.hasNext()) text.append(" | ");
-          }
-          text.append(" ]");
-          player.sendMessage(text, true);
-        }
-      });
+  @Override
+  public void onScroll(int selectedSlot, double scrollAmount, ServerPlayerEntity player, ItemStack stack) {
+    final BlockMatchingRule currentRule = getMatchingRule(stack);
+    final int i = RULES_TO_CYCLE.getRawId(currentRule);
+    if (i == -1) return;
+    final int j = (int) MathHelper.floorMod(i - scrollAmount, RULES_TO_CYCLE.size());
+    final BlockMatchingRule newRule = RULES_TO_CYCLE.get(j);
+    if (newRule != null) {
+      stack.setSubNbt("MatchingRule", NbtString.of(newRule.getId().toString()));
+      final LiteralText text = new LiteralText("[ ");
+      for (Iterator<BlockMatchingRule> iterator = RULES_TO_CYCLE.iterator(); iterator.hasNext(); ) {
+        BlockMatchingRule rule = iterator.next();
+        final MutableText name = rule.getName();
+        if (rule == newRule) name.formatted(Formatting.YELLOW, Formatting.UNDERLINE);
+        text.append(name);
+        if (iterator.hasNext()) text.append(" | ");
+      }
+      text.append(" ]");
+      player.sendMessage(text, true);
     }
   }
 }

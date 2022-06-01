@@ -29,7 +29,7 @@ import pers.solid.mishang.uc.blocks.HungSignBlocks;
 import pers.solid.mishang.uc.blocks.MishangucBlocks;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.item.BlockToolItem;
-import pers.solid.mishang.uc.item.FastBuildingToolItem;
+import pers.solid.mishang.uc.item.HotbarScrollInteraction;
 import pers.solid.mishang.uc.item.InteractsWithEntity;
 import pers.solid.mishang.uc.item.MishangucItems;
 
@@ -192,7 +192,16 @@ public class Mishanguc implements ModInitializer {
     // 注册服务器接收
     ServerPlayNetworking.registerGlobalReceiver(
         new Identifier("mishanguc", "edit_sign_finish"), BlockEntityWithText.PACKET_HANDLER);
-    ServerPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "update_matching_rule"), FastBuildingToolItem.TOOL_CYCLE_HANDLER);
+    ServerPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "item_scroll"), (server, player, handler, buf, responseSender) -> {
+      final int selectedSlot = buf.readInt();
+      final double scrollAmount = buf.readDouble();
+      server.execute(() -> {
+        final ItemStack stack = player.getInventory().getStack(selectedSlot);
+        if (stack.getItem() instanceof HotbarScrollInteraction interaction) {
+          interaction.onScroll(selectedSlot, scrollAmount, player, stack);
+        }
+      });
+    });
 
     // 注册可燃方块
     final FlammableBlockRegistry flammableBlockRegistry = FlammableBlockRegistry.getDefaultInstance();
