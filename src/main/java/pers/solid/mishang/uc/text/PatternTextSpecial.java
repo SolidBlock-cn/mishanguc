@@ -108,12 +108,6 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
       {4, 4, 5, 5}
   };
 
-  public PatternTextSpecial(TextContext textContext, String shapeName, float[][] rectangles) {
-    this.textContext = textContext;
-    this.shapeName = shapeName;
-    this.rectangles = rectangles;
-  }
-
   private static final @Unmodifiable Map<String, float[][]> NAME_TO_SHAPE = Map.of(
       /* 此版本下，ImmutableMap.of 不支持超过 5 个键，因此使用 Java 9 提供的 Map.of */
       "al", ARROW_LEFT,
@@ -125,6 +119,21 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
       "circle", CIRCLE,
       "ban", BAN
   );
+
+  /**
+   * 该方法会返回对象中的所有正方形列表，但是会对数组进行深度复制。
+   *
+   * @return 新的副本。
+   */
+  @Contract(value = "-> new", pure = true)
+  @Override
+  public float[][] rectangles() {
+    float[][] newArray = new float[rectangles.length][];
+    for (int i = 0; i < rectangles.length; i++) {
+      newArray[i] = rectangles[i].clone();
+    }
+    return newArray;
+  }
 
   @Environment(EnvType.CLIENT)
   @Override

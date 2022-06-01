@@ -51,10 +51,10 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
               new TranslatableText(
                   "debug.mishanguc.roadConnectionState.brief",
                   RoadConnectionState.text(direction),
-                  RoadConnectionState.text(connectionState.direction).formatted(Formatting.WHITE),
-                  RoadConnectionState.text(connectionState.lineColor),
-                  RoadConnectionState.text(connectionState.lineType).formatted(Formatting.WHITE),
-                  RoadConnectionState.text(connectionState.whetherConnected)
+                  RoadConnectionState.text(connectionState.direction()).formatted(Formatting.WHITE),
+                  RoadConnectionState.text(connectionState.lineColor()),
+                  RoadConnectionState.text(connectionState.lineType()).formatted(Formatting.WHITE),
+                  RoadConnectionState.text(connectionState.whetherConnected())
               ).setStyle(Style.EMPTY.withColor(0xcccccc)),
               false);
         });
