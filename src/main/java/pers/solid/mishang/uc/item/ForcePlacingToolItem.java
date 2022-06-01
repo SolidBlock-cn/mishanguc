@@ -171,7 +171,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           0,
           0.5f,
           1,
-          0.8f);
+          0.5f);
     }
     WorldRendererInvoker.drawShapeOutline(
         worldRenderContext.matrixStack(),
@@ -184,7 +184,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
         1,
         0,
         0,
-        0.5f);
+        0.8f);
     if (includesFluid) {
       WorldRendererInvoker.drawShapeOutline(
           worldRenderContext.matrixStack(),
@@ -211,7 +211,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       Hand hand,
       Entity entity,
       @Nullable EntityHitResult hitResult) {
-    if (!player.getAbilities().creativeMode) return ActionResult.PASS;
+    if (!player.getAbilities().creativeMode) return ActionResult.FAIL;
     entity.setInvisible(true);
     entity.setPos(entity.getX(), -114514, entity.getZ());
     entity.kill();
