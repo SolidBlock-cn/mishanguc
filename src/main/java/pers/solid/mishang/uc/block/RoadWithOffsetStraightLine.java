@@ -1,7 +1,9 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.datafixers.util.Either;
+import net.devtech.arrp.json.blockstate.JBlockModel;
 import net.devtech.arrp.json.blockstate.JBlockStates;
+import net.devtech.arrp.json.blockstate.JVariants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -50,7 +52,7 @@ public interface RoadWithOffsetStraightLine extends Road {
             direction.getAxis() != state.get(FACING).getAxis(),
             getLineColor(state, direction),
             Either.left(direction),
-            LineType.NORMAL));
+            getLineType(state, direction)));
   }
 
   @Override
@@ -86,7 +88,11 @@ public interface RoadWithOffsetStraightLine extends Road {
   @Environment(EnvType.CLIENT)
   @Override
   default @NotNull JBlockStates getBlockStates() {
-    return JBlockStates.simpleHorizontalFacing(getBlockModelId(), false);
+    final JVariants JVariants = new JVariants();
+    for (Direction direction : Direction.Type.HORIZONTAL) {
+      JVariants.addVariant(Properties.HORIZONTAL_FACING, direction, new JBlockModel(getBlockModelId()).uvlock(false).clone().y(((int) direction.rotateYClockwise().asRotation())));
+    }
+    return JBlockStates.ofVariants(JVariants);
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithOffsetStraightLine {
