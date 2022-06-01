@@ -34,10 +34,6 @@ public final class PatternTextSpecial implements TextSpecial {
     return shapeName;
   }
 
-  public @Unmodifiable float[][] rectangles() {
-    return rectangles;
-  }
-
   @Override
   public boolean equals(Object obj) {
     if (obj == this) return true;
@@ -163,6 +159,20 @@ public final class PatternTextSpecial implements TextSpecial {
       "arb", ARROW_RIGHT_BOTTOM,
       "circle", CIRCLE,
       "ban", BAN)).build();
+
+  /**
+   * 该方法会返回对象中的所有正方形列表，但是会对数组进行深度复制。
+   *
+   * @return 新的副本。
+   */
+  @Contract(value = "-> new", pure = true)
+  public float[][] rectangles() {
+    float[][] newArray = new float[rectangles.length][];
+    for (int i = 0; i < rectangles.length; i++) {
+      newArray[i] = rectangles[i].clone();
+    }
+    return newArray;
+  }
 
   @Environment(EnvType.CLIENT)
   @Override
