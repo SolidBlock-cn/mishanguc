@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.item;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -24,15 +25,21 @@ public class MirroringToolItem extends BlockToolItem {
     super(settings, includesFluid);
   }
 
-  public ActionResult mirror(World world, BlockPos blockPos, Direction side) {
+  public ActionResult mirror(World world, BlockPos blockPos, Direction side, @Nullable Entity entity) {
     final BlockState blockState = world.getBlockState(blockPos);
     final Direction.Axis axis = side.getAxis();
     final BlockMirror mirror = switch (axis) {
       case X -> BlockMirror.FRONT_BACK;
-      default -> BlockMirror.NONE;
+      default -> entity == null ? BlockMirror.NONE : switch (entity.getHorizontalFacing().getAxis()) {
+        case X -> BlockMirror.FRONT_BACK;
+        case Z -> BlockMirror.LEFT_RIGHT;
+        default -> BlockMirror.NONE;
+      };
       case Z -> BlockMirror.LEFT_RIGHT;
     };
-    return ActionResult.success(world.setBlockState(blockPos, blockState.mirror(mirror)));
+    final BlockState mirrored = blockState.mirror(mirror);
+    final boolean setBlockState = world.setBlockState(blockPos, mirrored);
+    return setBlockState && !blockState.equals(mirrored) ? ActionResult.SUCCESS : ActionResult.FAIL;
   }
 
   @Override
@@ -43,19 +50,25 @@ public class MirroringToolItem extends BlockToolItem {
       Hand hand,
       boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
-    if (!player.getAbilities().allowModifyWorld && !player.getStackInHand(hand).canPlaceOn(world.getTagManager(), new CachedBlockPosition(world, blockPos, false))) {
+    final ItemStack stack = player.getStackInHand(hand);
+    if (!player.getAbilities().allowModifyWorld && !stack.canPlaceOn(world.getTagManager(), new CachedBlockPosition(world, blockPos, false))) {
       return ActionResult.PASS;
     }
-    return mirror(world, blockPos, blockHitResult.getSide());
+    final ActionResult result = mirror(world, blockPos, blockHitResult.getSide(), player);
+    if (result == ActionResult.SUCCESS) stack.damage(1, player, player1 -> player1.sendToolBreakStatus(hand));
+    return result;
   }
 
   @Override
   public ActionResult beginAttackBlock(
       PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    if (!player.getAbilities().allowModifyWorld && !player.getMainHandStack().canDestroy(world.getTagManager(), new CachedBlockPosition(world, pos, false))) {
+    final ItemStack mainHandStack = player.getStackInHand(hand);
+    if (!player.getAbilities().allowModifyWorld && !mainHandStack.canDestroyworld.getTagManager(), new CachedBlockPosition(world, pos, false))) {
       return ActionResult.PASS;
     }
-    return mirror(world, pos, direction);
+    final ActionResult result = mirror(world, pos, direction, player);
+    if (result == ActionResult.SUCCESS) mainHandStack.damage(1, player, player1 -> player1.sendToolBreakStatus(hand));
+    return result;
   }
 
   @Override
