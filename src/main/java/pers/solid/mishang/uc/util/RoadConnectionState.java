@@ -8,26 +8,19 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class RoadConnectionState {
-  public final @Nullable Either<Direction, HorizontalCornerDirection> direction;
-  public final WhetherConnected whetherConnected;
-  public final LineColor lineColor;
-  public final LineType lineType;
-
-  public RoadConnectionState(
-      WhetherConnected whetherConnected,
-      LineColor lineColor,
-      @Nullable Either<Direction, HorizontalCornerDirection> direction,
-      LineType lineType) {
-    this.whetherConnected = whetherConnected;
-    this.lineColor = lineColor;
-    this.direction = direction;
-    this.lineType = lineType;
-  }
+/**
+ * 表示一个道路在一个方向上的连接状态。
+ *
+ * @param whetherConnected 该道路在该方向上是否已连接。
+ * @param lineColor        道路连线的颜色。
+ * @param direction        道路连线的方向。通常来说是正对着的，但偶尔也有可能是斜的方向。
+ * @param lineType         道路连接线的类型，一般是普通线，也有可能是粗线或双线。
+ * @since 0.2.0-mc1.17+ 此类更改为记录；1.16.5 由于仍为 Java 8，因此仍使用普通类的形式。
+ */
+public record RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, Either<Direction, HorizontalCornerDirection> direction, LineType lineType) {
 
   public static RoadConnectionState empty() {
     return new RoadConnectionState(
@@ -82,12 +75,8 @@ public class RoadConnectionState {
   public static MutableText text(Either<Direction, HorizontalCornerDirection> direction) {
     if (direction == null) {
       return new TranslatableText("direction.none");
-    } else if (direction.left().isPresent()) {
-      return text(direction.left().get());
-    } else if (direction.right().isPresent()) {
-      return text(direction.right().get());
     } else {
-      throw new IllegalStateException();
+      return direction.map(RoadConnectionState::text, RoadConnectionState::text);
     }
   }
 
@@ -122,15 +111,6 @@ public class RoadConnectionState {
   @Override
   public boolean equals(Object o) {
     return this == o || o instanceof RoadConnectionState that && Objects.equals(direction, that.direction) && whetherConnected == that.whetherConnected && lineColor == that.lineColor && lineType == that.lineType;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = direction != null ? direction.hashCode() : 0;
-    result = 31 * result + (whetherConnected != null ? whetherConnected.hashCode() : 0);
-    result = 31 * result + (lineColor != null ? lineColor.hashCode() : 0);
-    result = 31 * result + (lineType != null ? lineType.hashCode() : 0);
-    return result;
   }
 
   public enum WhetherConnected implements StringIdentifiable {
