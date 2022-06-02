@@ -7,6 +7,7 @@ import net.devtech.arrp.json.recipe.JShapelessRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
@@ -17,7 +18,6 @@ import net.minecraft.item.MiningToolItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.tag.TagKey;
 import net.minecraft.text.KeybindText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -26,7 +26,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,7 +36,7 @@ public class AllFunctioningToolItem extends MiningToolItem implements ItemResour
 
 
   public AllFunctioningToolItem(Settings settings) {
-    super(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, MATERIAL, TagKey.of(Registry.BLOCK_KEY, new Identifier("minecraft", "mineable/pickaxe")), settings);
+    super(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, MATERIAL, TagFactory.BLOCK.create(new Identifier("minecraft", "mineable/pickaxe")), settings);
   }
 
   @Override
