@@ -25,10 +25,7 @@ import net.minecraft.predicate.entity.EntityFlagsPredicate;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.KeybindText;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -84,26 +81,29 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
    * @return 该物品产生的爆炸类型。
    */
   public Explosion.DestructionType destructionType(ItemStack stack) {
-    final String destructionType = stack.getOrCreateNbt().getString("destructionType");
-    return switch (destructionType) {
-      case "none" -> Explosion.DestructionType.NONE;
-      case "destroy" -> Explosion.DestructionType.DESTROY;
-      default -> Explosion.DestructionType.BREAK;
-    };
+    final String destructionType = stack.getOrCreateTag().getString("destructionType");
+    switch (destructionType) {
+      case "none":
+        return Explosion.DestructionType.NONE;
+      case "destroy":
+        return Explosion.DestructionType.DESTROY;
+      default:
+        return Explosion.DestructionType.BREAK;
+    }
   }
 
   /**
    * @return 物品产生爆炸时，是否造成火焰。
    */
   public boolean createFire(ItemStack stack) {
-    return stack.getOrCreateNbt().getBoolean("createFire");
+    return stack.getOrCreateTag().getBoolean("createFire");
   }
 
   /**
    * @return 该物品的爆炸力量，用于在爆炸时使用。默认为 4。
    */
   public float power(ItemStack stack) {
-    final NbtCompound nbt = stack.getOrCreateNbt();
+    final NbtCompound nbt = stack.getOrCreateTag();
     return nbt.contains("power", NbtType.NUMBER) ? MathHelper.clamp(nbt.getFloat("power"), -128, 128) : 4;
   }
 
@@ -113,51 +113,51 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       stacks.add(new ItemStack(this));
       {
         ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putFloat("power", 8);
+        stack.getOrCreateTag().putFloat("power", 8);
         stacks.add(stack);
       }
       {
         ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putFloat("power", 16);
+        stack.getOrCreateTag().putFloat("power", 16);
         stacks.add(stack);
       }
       {
         ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putFloat("power", 32);
+        stack.getOrCreateTag().putFloat("power", 32);
         stacks.add(stack);
       }
       {
         ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putBoolean("createFire", true);
-        stack.getOrCreateNbt().putFloat("power", 4);
+        stack.getOrCreateTag().putBoolean("createFire", true);
+        stack.getOrCreateTag().putFloat("power", 4);
         stacks.add(stack);
       }
       {
         ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putBoolean("createFire", true);
-        stack.getOrCreateNbt().putFloat("power", 8);
+        stack.getOrCreateTag().putBoolean("createFire", true);
+        stack.getOrCreateTag().putFloat("power", 8);
         stacks.add(stack);
       }
       {
         ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putBoolean("createFire", true);
-        stack.getOrCreateNbt().putFloat("power", 16);
+        stack.getOrCreateTag().putBoolean("createFire", true);
+        stack.getOrCreateTag().putFloat("power", 16);
         stacks.add(stack);
       }
       {
         ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putBoolean("createFire", true);
-        stack.getOrCreateNbt().putFloat("power", 32);
+        stack.getOrCreateTag().putBoolean("createFire", true);
+        stack.getOrCreateTag().putFloat("power", 32);
         stacks.add(stack);
       }
 
       ItemStack stack4 = new ItemStack(this);
-      stack4.getOrCreateNbt().putString("destructionType", "none");
-      stack4.getOrCreateNbt().putFloat("power", 8);
+      stack4.getOrCreateTag().putString("destructionType", "none");
+      stack4.getOrCreateTag().putFloat("power", 8);
       stacks.add(stack4);
 
       ItemStack stack5 = new ItemStack(this);
-      stack5.getOrCreateNbt().putString("destructionType", "destroy");
+      stack5.getOrCreateTag().putString("destructionType", "destroy");
       stacks.add(stack5);
     }
   }
@@ -165,32 +165,32 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.1", new KeybindText("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.1", new KeybindText("key.use").styled(style -> style.withColor(TextColor.fromRgb(0xdddddd)))).formatted(Formatting.GRAY));
     tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.2").formatted(Formatting.GRAY));
     tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.3").formatted(Formatting.GRAY));
     tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.4").formatted(Formatting.GRAY));
     tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.5").formatted(Formatting.GRAY));
     tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.power", new LiteralText(String.valueOf(power(stack))).formatted(Formatting.YELLOW)).formatted(Formatting.GRAY));
     tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.createFire", createFire(stack) ? ScreenTexts.YES.copy().formatted(Formatting.GREEN) : ScreenTexts.NO.copy().formatted(Formatting.RED)).formatted(Formatting.GRAY));
-    tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.destructionType", new TranslatableText("item.mishanguc.explosion_tool.destructionType." + destructionType(stack).name().toLowerCase()).styled(style -> style.withColor(0x779999))).formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.destructionType", new TranslatableText("item.mishanguc.explosion_tool.destructionType." + destructionType(stack).name().toLowerCase()).styled(style -> style.withColor(TextColor.fromRgb(0x779999)))).formatted(Formatting.GRAY));
   }
 
   @Override
   public void onScroll(int selectedSlot, double scrollAmount, ServerPlayerEntity player, ItemStack stack) {
     final boolean creative = player.isCreative();
     final float power = MathHelper.clamp(power(stack) - (float) scrollAmount, creative ? -128 : 0, creative ? 128 : 64);
-    stack.getOrCreateNbt().putFloat("power", power);
+    stack.getOrCreateTag().putFloat("power", power);
   }
 
   @Override
   public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
-    final BlockPos basePos = pointer.getPos();
+    final BlockPos basePos = pointer.getBlockPos();
     final Direction direction = pointer.getBlockState().get(DispenserBlock.FACING);
     final ServerWorld world = pointer.getWorld();
     for (int i = 1; i < 33; i++) {
       final BlockPos pos = basePos.offset(direction, i);
       if (world.getBlockState(pos).getCollisionShape(world, pos).isEmpty()
-          && world.getEntitiesByClass(Entity.class, new Box(pos), EntityPredicates.EXCEPT_SPECTATOR.and(Entity::collides).and(EntityFlagsPredicate.Builder.create().sneaking(false).build()::test)).isEmpty()
+          && world.getEntitiesByClass(Entity.class, new Box(pos), EntityPredicates.EXCEPT_SPECTATOR.and(Entity::collides).and(new EntityFlagsPredicate(null, false, null, null, null)::test)).isEmpty()
       ) {
         continue;
       }

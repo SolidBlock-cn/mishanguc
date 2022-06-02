@@ -26,7 +26,7 @@ public abstract class PlayerInventoryMixin {
   @Inject(method = "scrollInHotbar", at = @At("HEAD"), cancellable = true)
   public void lockSelection(double scrollAmount, CallbackInfo ci) {
     final ItemStack mainHandStack = this.getMainHandStack();
-    if (mainHandStack.getItem() instanceof HotbarScrollInteraction interaction && interaction.shouldLockScroll(selectedSlot, scrollAmount)) {
+    if (mainHandStack.getItem() instanceof HotbarScrollInteraction && ((HotbarScrollInteraction) mainHandStack.getItem()).shouldLockScroll(selectedSlot, scrollAmount)) {
       ci.cancel();
     }
   }

@@ -13,17 +13,12 @@ import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredica
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.UnclampedModelPredicateProvider;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.HandrailBlock;
@@ -135,19 +130,8 @@ public class MishangucClient implements ClientModInitializer {
     // 模型谓词提供器
     FabricModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL,
         new Identifier("mishanguc", "explosion_power"),
-        new UnclampedModelPredicateProvider() {
-          @Override
-          public float unclampedCall(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity, int seed) {
-            return MishangucItems.EXPLOSION_TOOL.power(stack);
-          }
-
-          @SuppressWarnings("deprecation")
-          @Override
-          public float call(ItemStack itemStack, @Nullable ClientWorld clientWorld, @Nullable LivingEntity livingEntity, int i) {
-            return unclampedCall(itemStack, clientWorld, livingEntity, i);
-          }
-        });
-    FabricModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL, new Identifier("mishanguc", "explosion_create_fire"), (stack, world, entity, seed) -> MishangucItems.EXPLOSION_TOOL.createFire(stack) ? 1 : 0);
-    FabricModelPredicateProviderRegistry.register(MishangucItems.FAST_BUILDING_TOOL, new Identifier("mishanguc", "fast_building_range"), (stack, world, entity, seed) -> MishangucItems.FAST_BUILDING_TOOL.getRange(stack) / 64f);
+        (itemStack, clientWorld, livingEntity) -> MishangucItems.EXPLOSION_TOOL.power(itemStack));
+    FabricModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL, new Identifier("mishanguc", "explosion_create_fire"), (stack, world, entity) -> MishangucItems.EXPLOSION_TOOL.createFire(stack) ? 1 : 0);
+    FabricModelPredicateProviderRegistry.register(MishangucItems.FAST_BUILDING_TOOL, new Identifier("mishanguc", "fast_building_range"), (stack, world, entity) -> MishangucItems.FAST_BUILDING_TOOL.getRange(stack) / 64f);
   }
 }

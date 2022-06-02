@@ -7,7 +7,6 @@ import net.devtech.arrp.json.recipe.JShapelessRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
-import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
@@ -25,11 +24,11 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 
 public class AllFunctioningToolItem extends MiningToolItem implements ItemResourceGenerator {
@@ -37,7 +36,7 @@ public class AllFunctioningToolItem extends MiningToolItem implements ItemResour
 
 
   public AllFunctioningToolItem(Settings settings) {
-    super(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, MATERIAL, TagRegistry.block(new Identifier("minecraft", "mineable/pickaxe")), settings);
+    super(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, MATERIAL, Collections.emptySet(), settings);
   }
 
   @Override

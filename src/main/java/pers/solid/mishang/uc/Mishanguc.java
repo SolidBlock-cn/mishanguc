@@ -195,9 +195,9 @@ public class Mishanguc implements ModInitializer {
       final int selectedSlot = buf.readInt();
       final double scrollAmount = buf.readDouble();
       server.execute(() -> {
-        final ItemStack stack = player.getInventory().getStack(selectedSlot);
-        if (stack.getItem() instanceof HotbarScrollInteraction interaction) {
-          interaction.onScroll(selectedSlot, scrollAmount, player, stack);
+        final ItemStack stack = player.inventory.getStack(selectedSlot);
+        if (stack.getItem() instanceof HotbarScrollInteraction) {
+          ((HotbarScrollInteraction) stack.getItem()).onScroll(selectedSlot, scrollAmount, player, stack);
         }
       });
     });
