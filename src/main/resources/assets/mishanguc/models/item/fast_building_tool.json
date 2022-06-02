@@ -1,0 +1,14 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "mishanguc:item/fast_building_tool"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "mishanguc:fast_building_range": 0.5
+      },
+      "model": "mishanguc:item/fast_building_tool_dark"
+    }
+  ]
+}
