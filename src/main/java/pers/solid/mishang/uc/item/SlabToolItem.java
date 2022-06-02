@@ -2,6 +2,10 @@ package pers.solid.mishang.uc.item;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
+import net.devtech.arrp.generator.ItemResourceGenerator;
+import net.devtech.arrp.json.models.JModel;
+import net.devtech.arrp.json.recipe.JRecipe;
+import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
@@ -20,6 +24,7 @@ import net.minecraft.data.family.BlockFamily;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
@@ -27,12 +32,14 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
@@ -44,7 +51,7 @@ import java.util.List;
  * 用于处理台阶的工具。
  */
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBlockOutline.class)
-public class SlabToolItem extends Item implements RendersBlockOutline {
+public class SlabToolItem extends Item implements RendersBlockOutline, ItemResourceGenerator {
   /**
    * 从原版的 {@link BlockFamilies} 提取的方块至台阶方块的映射。
    */
@@ -122,7 +129,9 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
             if (miner instanceof final ServerPlayerEntity serverPlayerEntity && !serverPlayerEntity.interactionManager.isCreative()) {
               block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
             }
+            miner.getStackInHand(Hand.MAIN_HAND).damage(1, miner, player -> player.sendToolBreakStatus(Hand.MAIN_HAND));
           }
+          return bl1;
         } else {
           // 破坏下半砖的情况
           final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.TOP));
@@ -133,10 +142,10 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
             if (miner instanceof final ServerPlayerEntity serverPlayerEntity && !(serverPlayerEntity.interactionManager.isCreative())) {
               block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
             }
+            miner.getStackInHand(Hand.MAIN_HAND).damage(1, miner, player -> player.sendToolBreakStatus(Hand.MAIN_HAND));
           }
+          return bl1;
         }
-        // 此处还需要模拟 ClientPlayerInteractionManager 和 ServerPlayerInteractionManager 中的情形。
-        return false;
       }
     } catch (IllegalArgumentException | ClassCastException ignored) {
     }
@@ -185,5 +194,22 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
       return false;
     }
     return true;
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public @Nullable JModel getItemModel() {
+    return null;
+  }
+
+  @Override
+  public @NotNull JRecipe getCraftingRecipe() {
+    return new JShapedRecipe(this)
+        .pattern("SCS", " | ", " | ")
+        .addKey("S", Items.SHEARS)
+        .addKey("C", Items.STONE)
+        .addKey("|", Items.STICK)
+        .addInventoryChangedCriterion("has_shears", Items.SHEARS)
+        .addInventoryChangedCriterion("has_stone", Items.STONE);
   }
 }
