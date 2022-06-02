@@ -71,7 +71,7 @@ public class MirroringToolItem extends BlockToolItem implements ItemResourceGene
   public ActionResult beginAttackBlock(
       PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     final ItemStack mainHandStack = player.getStackInHand(hand);
-    if (!player.getAbilities().allowModifyWorld && !mainHandStack.canDestroyworld.getTagManager(), new CachedBlockPosition(world, pos, false))) {
+    if (!player.getAbilities().allowModifyWorld && !mainHandStack.canDestroy(world.getTagManager(), new CachedBlockPosition(world, pos, false))) {
       return ActionResult.PASS;
     }
     final ActionResult result = mirror(world, pos, direction, player);
