@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.predicate.entity.EntityFlagsPredicate;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -179,7 +180,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     for (int i = 1; i < 33; i++) {
       final BlockPos pos = basePos.offset(direction, i);
       if (world.getBlockState(pos).getCollisionShape(world, pos).isEmpty()
-          && world.getEntitiesByClass(Entity.class, new Box(pos), EntityPredicates.EXCEPT_SPECTATOR.and(Entity::collides)).isEmpty()
+          && world.getEntitiesByClass(Entity.class, new Box(pos), EntityPredicates.EXCEPT_SPECTATOR.and(Entity::collides).and(EntityFlagsPredicate.Builder.create().sneaking(false).build()::test)).isEmpty()
       ) {
         continue;
       }
