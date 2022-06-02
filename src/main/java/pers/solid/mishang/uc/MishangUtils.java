@@ -2,10 +2,7 @@ package pers.solid.mishang.uc;
 
 import com.google.common.base.Functions;
 import com.google.common.base.Suppliers;
-import com.google.common.collect.ImmutableBiMap;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Streams;
+import com.google.common.collect.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
@@ -41,7 +38,7 @@ public class MishangUtils {
   /**
    * @since 0.2.0 该字段为一个不可变的映射。
    */
-  public static final @Unmodifiable ImmutableBiMap<DyeColor, Integer> COLOR_TO_OUTLINE_COLOR = Arrays.stream(DyeColor.values()).collect(ImmutableBiMap.toImmutableBiMap(Functions.identity(), MishangUtils::toSignOutlineColor));
+  public static final @Unmodifiable BiMap<DyeColor, Integer> COLOR_TO_OUTLINE_COLOR = Arrays.stream(DyeColor.values()).collect(ImmutableBiMap.toImmutableBiMap(Functions.identity(), MishangUtils::toSignOutlineColor));
   private static final Logger LOGGER = LogManager.getLogger(MishangUtils.class);
   private static final ImmutableMap<String, String> ARROW_TO_NAMES = ImmutableMap.of(
       "←", "al", "→", "ar", "↖", "alt", "↗", "art", "↙", "alb", "↘", "arb"

@@ -34,7 +34,6 @@ public class RoadSlabBlockWithAutoLine extends SmartRoadSlabBlock<RoadBlockWithA
         .with(TYPE, defaultState.get(TYPE));
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public void neighborUpdate(
       BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {

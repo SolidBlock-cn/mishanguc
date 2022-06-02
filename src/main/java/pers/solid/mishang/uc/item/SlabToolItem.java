@@ -1,5 +1,9 @@
 package pers.solid.mishang.uc.item;
 
+import net.devtech.arrp.generator.ItemResourceGenerator;
+import net.devtech.arrp.json.models.JModel;
+import net.devtech.arrp.json.recipe.JRecipe;
+import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
@@ -15,12 +19,15 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 
@@ -28,7 +35,7 @@ import pers.solid.mishang.uc.render.RendersBlockOutline;
  * 用于处理台阶的工具。
  */
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBlockOutline.class)
-public class SlabToolItem extends Item implements RendersBlockOutline {
+public class SlabToolItem extends Item implements RendersBlockOutline, ItemResourceGenerator {
   public SlabToolItem(Settings settings) {
     super(settings);
   }
@@ -46,26 +53,33 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
           && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
         final BlockHitResult raycast = ((BlockHitResult) miner.raycast(20, 0, false));
         boolean bl = raycast.getPos().y - (double) raycast.getBlockPos().getY() > 0.5D;
-        final boolean bl1;
-        final BlockState brokenState;
         if (bl) {
           // 破坏上半砖的情况。
-          bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.BOTTOM));
-          brokenState = state.with(Properties.SLAB_TYPE, SlabType.TOP);
+          final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.BOTTOM));
+          final BlockState brokenState = state.with(Properties.SLAB_TYPE, SlabType.TOP);
+          block.onBreak(world, pos, brokenState, miner);
+          if (bl1) {
+            block.onBroken(world, pos, brokenState);
+            if (miner.isCreative()) {
+              block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
+            }
+            miner.getStackInHand(Hand.MAIN_HAND).damage(1, miner, player -> player.sendToolBreakStatus(Hand.MAIN_HAND));
+          }
+          return bl1;
         } else {
           // 破坏下半砖的情况
-          bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.TOP));
-          brokenState = state.with(Properties.SLAB_TYPE, SlabType.BOTTOM);
-        }
-        block.onBreak(world, pos, brokenState, miner);
-        if (bl1) {
-          block.onBroken(world, pos, brokenState);
-          if (miner instanceof ServerPlayerEntity && !((ServerPlayerEntity) miner).interactionManager.isCreative()) {
-            block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
+          final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.TOP));
+          final BlockState brokenState = state.with(Properties.SLAB_TYPE, SlabType.BOTTOM);
+          block.onBreak(world, pos, brokenState, miner);
+          if (bl1) {
+            block.onBroken(world, pos, brokenState);
+            if (miner.isCreative()) {
+              block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
+            }
+            miner.getStackInHand(Hand.MAIN_HAND).damage(1, miner, player -> player.sendToolBreakStatus(Hand.MAIN_HAND));
           }
+          return bl1;
         }
-        // 此处还需要模拟 ClientPlayerInteractionManager 和 ServerPlayerInteractionManager 中的情形。
-        return false;
       }
     } catch (IllegalArgumentException | ClassCastException ignored) {
     }
@@ -111,5 +125,22 @@ public class SlabToolItem extends Item implements RendersBlockOutline {
       return false;
     }
     return true;
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public @Nullable JModel getItemModel() {
+    return null;
+  }
+
+  @Override
+  public @NotNull JRecipe getCraftingRecipe() {
+    return new JShapedRecipe(this)
+        .pattern("SCS", " | ", " | ")
+        .addKey("S", Items.SHEARS)
+        .addKey("C", Items.STONE)
+        .addKey("|", Items.STICK)
+        .addInventoryChangedCriterion("has_shears", Items.SHEARS)
+        .addInventoryChangedCriterion("has_stone", Items.STONE);
   }
 }
