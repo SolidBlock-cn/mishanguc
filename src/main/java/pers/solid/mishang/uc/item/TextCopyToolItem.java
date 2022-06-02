@@ -2,6 +2,12 @@ package pers.solid.mishang.uc.item;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import net.devtech.arrp.generator.ItemResourceGenerator;
+import net.devtech.arrp.json.models.JModel;
+import net.devtech.arrp.json.recipe.JRecipe;
+import net.devtech.arrp.json.recipe.JShapedRecipe;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -9,6 +15,7 @@ import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtByte;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
@@ -37,7 +44,7 @@ import java.util.*;
 /**
  * 用于复制粘贴文本的工具。持有该工具，“攻击”（默认左键）告示牌（含原版告示牌、悬挂告示牌和墙上的告示牌）可以将文本复制到物品中，"使用"（默认右键）告示牌可将文本粘贴上去。
  */
-public class TextCopyToolItem extends BlockToolItem {
+public class TextCopyToolItem extends BlockToolItem implements ItemResourceGenerator {
   // 1.18.1 之前用 apache 的 Logger，自 1.18.2 用 slf4j 的 Logger。
   public static final Logger LOGGER = LogManager.getLogger(TextCopyToolItem.class);
 
@@ -233,5 +240,26 @@ public class TextCopyToolItem extends BlockToolItem {
       player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.not_sign").formatted(Formatting.RED), false);
     }
     return ActionResult.FAIL;
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public @Nullable JModel getItemModel() {
+    return null;
+  }
+
+  @Override
+  public @Nullable JRecipe getCraftingRecipe() {
+    return new JShapedRecipe(this)
+        .pattern(
+            "SPS",
+            " / ",
+            " / "
+        )
+        .addKey("P", Items.PAPER)
+        .addKey("S", Items.SLIME_BALL)
+        .addKey("/", Items.STICK)
+        .addInventoryChangedCriterion("has_paper", Items.PAPER)
+        .addInventoryChangedCriterion("has_slime_ball", Items.SLIME_BALL);
   }
 }

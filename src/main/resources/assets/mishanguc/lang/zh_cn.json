@@ -368,7 +368,7 @@
   "vertical_align.mishanguc.middle": "中",
   "vertical_align.mishanguc.top": "顶",
   "item.mishanguc.all_functioning_tool": "万能工具",
-  "item.mishanguc.all_functioning_tool.tooltip.1": "可以按%s立即破坏方块或杀死实体,",
+  "item.mishanguc.all_functioning_tool.tooltip.1": "可以按%s立即破坏方块或杀死实体，",
   "item.mishanguc.all_functioning_tool.tooltip.2": "或按下%s以治疗实体。",
   "item.mishanguc.explosion_tool": "爆炸工具",
   "item.mishanguc.explosion_tool.formatted": "爆炸工具 - 强度：%s，%s，%s",
