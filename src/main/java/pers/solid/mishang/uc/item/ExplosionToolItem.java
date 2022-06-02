@@ -1,6 +1,14 @@
 package pers.solid.mishang.uc.item;
 
+import net.devtech.arrp.api.RuntimeResourcePack;
+import net.devtech.arrp.generator.ItemResourceGenerator;
+import net.devtech.arrp.json.recipe.JIngredient;
+import net.devtech.arrp.json.recipe.JRecipe;
+import net.devtech.arrp.json.recipe.JShapedRecipe;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
+import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.client.gui.screen.ScreenTexts;
@@ -11,6 +19,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityFlagsPredicate;
 import net.minecraft.predicate.entity.EntityPredicates;
@@ -33,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ExplosionToolItem extends Item implements HotbarScrollInteraction, DispenserBehavior {
+public class ExplosionToolItem extends Item implements HotbarScrollInteraction, DispenserBehavior, ItemResourceGenerator {
   public ExplosionToolItem(Settings settings) {
     super(settings);
     DispenserBlock.registerBehavior(this, this);
@@ -191,5 +200,22 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       }
     }
     return stack;
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public void writeItemModel(RuntimeResourcePack pack) {
+    // void
+  }
+
+  @Override
+  public @Nullable JRecipe getCraftingRecipe() {
+    final JShapedRecipe recipe = new JShapedRecipe(this)
+        .pattern("TCT", " | ", " | ")
+        .addKey("T", Items.TNT)
+        .addKey("C", JIngredient.ofItems(Items.COMMAND_BLOCK, Items.CHAIN_COMMAND_BLOCK, Items.REPEATING_COMMAND_BLOCK))
+        .addKey("|", Items.STICK);
+    recipe.advancementBuilder.criterion("has_command_block", InventoryChangedCriterion.Conditions.items(Items.COMMAND_BLOCK, Items.CHAIN_COMMAND_BLOCK, Items.REPEATING_COMMAND_BLOCK));
+    return recipe;
   }
 }

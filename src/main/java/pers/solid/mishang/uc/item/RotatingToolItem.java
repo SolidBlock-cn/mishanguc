@@ -1,9 +1,16 @@
 package pers.solid.mishang.uc.item;
 
+import net.devtech.arrp.generator.ItemResourceGenerator;
+import net.devtech.arrp.json.models.JModel;
+import net.devtech.arrp.json.recipe.JRecipe;
+import net.devtech.arrp.json.recipe.JShapedRecipe;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -20,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class RotatingToolItem extends BlockToolItem {
+public class RotatingToolItem extends BlockToolItem implements ItemResourceGenerator {
 
   public RotatingToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
@@ -82,5 +89,21 @@ public class RotatingToolItem extends BlockToolItem {
     tooltip.add(
         new TranslatableText("item.mishanguc.rotating_tool.tooltip.2")
             .formatted(Formatting.GRAY));
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public @Nullable JModel getItemModel() {
+    return null;
+  }
+
+  @Override
+  public @NotNull JRecipe getCraftingRecipe() {
+    return new JShapedRecipe(this).pattern("DND", " | ", " | ")
+        .addKey("D", Items.PINK_DYE)
+        .addKey("N", Items.NETHERITE_INGOT)
+        .addKey("|", Items.STICK)
+        .addInventoryChangedCriterion("has_pink_dye", Items.PINK_DYE)
+        .addInventoryChangedCriterion("has_netherite_ingot", Items.NETHERITE_INGOT);
   }
 }
