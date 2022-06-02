@@ -1,8 +1,9 @@
 package pers.solid.mishang.uc;
 
-import com.google.common.base.Functions;
 import com.google.common.base.Suppliers;
-import com.google.common.collect.*;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Streams;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
@@ -35,16 +36,11 @@ import java.util.stream.Stream;
  * 本类存放一些实用方法。
  */
 public class MishangUtils {
-  /**
-   * @since 0.2.0 该字段为一个不可变的映射。
-   */
-  public static final @Unmodifiable BiMap<DyeColor, Integer> COLOR_TO_OUTLINE_COLOR = Arrays.stream(DyeColor.values()).collect(ImmutableBiMap.toImmutableBiMap(Functions.identity(), MishangUtils::toSignOutlineColor));
   private static final Logger LOGGER = LogManager.getLogger(MishangUtils.class);
-  private static final ImmutableMap<String, String> ARROW_TO_NAMES = ImmutableMap.of(
-      "←", "al", "→", "ar", "↖", "alt", "↗", "art", "↙", "alb", "↘", "arb"
-  );
   private static final Supplier<ImmutableMap<Field, Block>> memoizedBlocks = Suppliers.memoize(MishangUtils::blocksInternal);
   private static final Supplier<ImmutableMap<Field, Item>> memoizedItems = Suppliers.memoize(MishangUtils::itemsInternal);
+  private static final @Unmodifiable Map<String, String> ARROW_TO_NAMES = new ImmutableMap.Builder<String, String>().putAll(ImmutableMap.of(
+      "←", "al", "→", "ar", "↖", "alt", "↗", "art", "↙", "alb")).put("↘", "arb").build();
 
   @SuppressWarnings("SuspiciousNameCombination")
   public static EnumMap<Direction, @NotNull VoxelShape> createDirectionToShape(
@@ -274,9 +270,6 @@ public class MishangUtils {
   public static <T extends Comparable<T>> BlockState with(BlockState state, Property<T> property, String name) {
     return property.parse(name).map((value) -> state.with(property, value)).orElse(state);
   }
-
-  private static final @Unmodifiable Map<String, String> ARROW_TO_NAMES = new ImmutableMap.Builder<String, String>().putAll(ImmutableMap.of(
-      "←", "al", "→", "ar", "↖", "alt", "↗", "art", "↙", "alb")).put("↘", "arb").build();
 
   /**
    * 将一个告示牌中的 TextContext 中手动完成的箭头文字转化为 0.2.0 新加入的 PatternTextSpecial 格式。
