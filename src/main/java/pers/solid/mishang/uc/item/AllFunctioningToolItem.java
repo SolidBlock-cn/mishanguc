@@ -20,6 +20,7 @@ import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.text.KeybindText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -42,8 +43,8 @@ public class AllFunctioningToolItem extends MiningToolItem implements ItemResour
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(new TranslatableText("item.mishanguc.all_functioning_tool.tooltip.1", new KeybindText("key.attack").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
-    tooltip.add(new TranslatableText("item.mishanguc.all_functioning_tool.tooltip.2", new KeybindText("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.all_functioning_tool.tooltip.1", new KeybindText("key.attack").styled(style -> style.withColor(TextColor.fromRgb(0xdddddd)))).formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.all_functioning_tool.tooltip.2", new KeybindText("key.use").styled(style -> style.withColor(TextColor.fromRgb(0xdddddd)))).formatted(Formatting.GRAY));
   }
 
   @Override

@@ -72,7 +72,8 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
   @Override
   public ActionResult beginAttackBlock(
       PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    if (!player.abilities.allowModifyWorld && !player.getMainHandStack().canDestroy(world.getTagManager(), new CachedBlockPosition(world, pos, false))) {
+    final ItemStack stack = player.getMainHandStack();
+    if (!player.abilities.allowModifyWorld && !stack.canDestroy(world.getTagManager(), new CachedBlockPosition(world, pos, false))) {
       return ActionResult.PASS;
     }
     final ActionResult result = rotateBlock(player, world, pos);
