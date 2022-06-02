@@ -31,7 +31,6 @@ public final class MishangucItems {
       new IdCheckerToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxCount(1), true);
 
   @RegisterIdentifier
-  @SimpleModel(parent = "item/handheld")
   public static final FastBuildingToolItem FAST_BUILDING_TOOL =
       new FastBuildingToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxCount(1), null);
 
