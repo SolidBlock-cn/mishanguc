@@ -168,7 +168,8 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
 
   @Override
   public void onScroll(int selectedSlot, double scrollAmount, ServerPlayerEntity player, ItemStack stack) {
-    final float power = MathHelper.clamp(power(stack) - (float) scrollAmount, -50, 100);
+    final boolean creative = player.isCreative();
+    final float power = MathHelper.clamp(power(stack) - (float) scrollAmount, creative ? -128 : 0, creative ? 128 : 64);
     stack.getOrCreateNbt().putFloat("power", power);
   }
 

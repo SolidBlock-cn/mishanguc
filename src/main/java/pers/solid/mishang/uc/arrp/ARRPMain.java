@@ -1,21 +1,27 @@
 package pers.solid.mishang.uc.arrp;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import net.devtech.arrp.api.RRPCallbackConditional;
 import net.devtech.arrp.api.RRPPreGenEntrypoint;
 import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.generator.BlockResourceGenerator;
+import net.devtech.arrp.generator.ItemResourceGenerator;
 import net.devtech.arrp.generator.ResourceGeneratorHelper;
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
 import net.devtech.arrp.json.recipe.JShapedRecipe;
+import net.devtech.arrp.json.recipe.JShapelessRecipe;
+import net.devtech.arrp.json.recipe.JStonecuttingRecipe;
 import net.devtech.arrp.json.tags.IdentifiedTag;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
@@ -26,9 +32,6 @@ import pers.solid.mishang.uc.annotations.SimpleModel;
 import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.MishangucItems;
-
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
 
 /**
  * @since 0.1.7 本类应当在 onInitialize 的入口点中执行，而非 pregen 中。
@@ -199,14 +202,14 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     // 扶手部分，预留
 
     // 道路部分
-    MishangUtils.<Block>blockInstanceStream(RoadBlocks.class).forEach(
+    MishangUtils.instanceStream(RoadBlocks.class, Block.class).forEach(
         block -> {
           if (block instanceof AbstractRoadBlock) {
             roadBlocks.addBlock(block);
           }
         }
     );
-    MishangUtils.<Block>blockInstanceStream(RoadSlabBlocks.class).forEach(
+    MishangUtils.instanceStream(RoadSlabBlocks.class, Block.class).forEach(
         block -> {
           if (block instanceof AbstractRoadSlabBlock) {
             roadSlabs.addBlock(block);
@@ -215,7 +218,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     );
 
     // 灯光部分
-    MishangUtils.<Block>blockInstanceStream(LightBlocks.class).forEach(
+    MishangUtils.instanceStream(LightBlocks.class, Block.class).forEach(
         block -> {
           if (block instanceof StripWallLightBlock) {
             switch (((StripWallLightBlock) block).lightColor) {
@@ -246,7 +249,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     );
 
     // 悬挂的告示牌部分
-    MishangUtils.<Block>blockInstanceStream(HungSignBlocks.class).forEach(block -> {
+    MishangUtils.instanceStream(HungSignBlocks.class, Block.class).forEach(block -> {
       if (block instanceof GlowingHungSignBlock) {
         if (HungSignBlocks.GLOWING_CONCRETE_HUNG_SIGNS.containsValue(block)) {
           glowingConcreteHungSigns.addBlock(block);
@@ -275,7 +278,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     });
 
     // 墙上的告示牌部分
-    MishangUtils.<Block>blockInstanceStream(WallSignBlocks.class).forEach(block -> {
+    MishangUtils.instanceStream(WallSignBlocks.class, Block.class).forEach(block -> {
       if (block instanceof GlowingWallSignBlock) {
         if (WallSignBlocks.GLOWING_CONCRETE_WALL_SIGNS.containsValue(block)) {
           glowingConcreteWallSigns.addBlock(block);
@@ -304,7 +307,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     });
 
     // 栏杆部分
-    MishangUtils.<Block>blockInstanceStream(HandrailBlocks.class).forEach(block -> {
+    MishangUtils.instanceStream(HandrailBlocks.class, Block.class).forEach(block -> {
       if (block instanceof SimpleHandrailBlock simpleHandrailBlock) {
         if (HandrailBlocks.SIMPLE_STAINED_GLASS_HANDRAILS.containsValue(block)) {
           simpleStainedGlassNormalHandrails.addBlock(simpleHandrailBlock);
@@ -491,15 +494,10 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
 
   @Environment(EnvType.CLIENT)
   private static void writeAllItemModels() {
-    Arrays.stream(MishangucItems.class.getFields())
-        .filter(field -> {
-          int modifier = field.getModifiers();
-          return Modifier.isPublic(modifier)
-              && Modifier.isStatic(modifier)
-              && Item.class.isAssignableFrom(field.getType())
-              && field.isAnnotationPresent(RegisterIdentifier.class)
-              && field.isAnnotationPresent(SimpleModel.class);
-        })
+    MishangUtils.fieldStream(MishangucItems.class)
+        .filter(field -> Item.class.isAssignableFrom(field.getType())
+            && field.isAnnotationPresent(RegisterIdentifier.class)
+            && field.isAnnotationPresent(SimpleModel.class))
         .forEach(field -> {
           String name = field.getAnnotation(RegisterIdentifier.class).value();
           String parent = field.getAnnotation(SimpleModel.class).parent();
@@ -743,25 +741,31 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
       }
     }
 
-    MishangUtils.blockStream().forEach(field -> {
-      Object o;
-      try {
-        o = field.get(null);
-      } catch (IllegalAccessException e) {
-        return;
-      }
-      if (o instanceof final BlockResourceGenerator arrp) {
+    for (Block block : MishangUtils.blocks().values()) {
+      if (block instanceof final BlockResourceGenerator generator) {
         if (includesClient) {
-          arrp.writeBlockModel(PACK);
-          arrp.writeBlockStates(PACK);
-          arrp.writeItemModel(PACK);
+          generator.writeBlockModel(PACK);
+          generator.writeBlockStates(PACK);
+          generator.writeItemModel(PACK);
         }
         if (includesServer) {
-          arrp.writeLootTable(PACK);
-          arrp.writeRecipes(PACK);
+          generator.writeLootTable(PACK);
+          generator.writeRecipes(PACK);
         }
       }
-    });
+    }
+    for (Item item : MishangUtils.items().values()) {
+      if (item instanceof final ItemResourceGenerator generator) {
+
+        if (includesClient) {
+          generator.writeItemModel(PACK);
+        }
+
+        if (includesServer) {
+          generator.writeRecipes(PACK);
+        }
+      }
+    }
 
     // 服务器部分
     if (includesServer) {
@@ -773,51 +777,15 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   }
 
   /**
-   * 为本模组内的物品添加配方。
+   * 为本模组内的物品添加配方。该方法只会生成部分配方，还有很多配方是在 {@link net.devtech.arrp.generator.ItemResourceGenerator#writeRecipes(RuntimeResourcePack)} 的子方法中定义的。
    */
   private void addRecipes() {
-    { // white light
-      final JShapedRecipe recipe = new JShapedRecipe(LightBlocks.WHITE_LIGHT)
-          .pattern("*#*", "#C#", "*#*")
-          .addKey("*", Items.WHITE_DYE)
-          .addKey("#", Items.GLOWSTONE)
-          .addKey("C", Items.WHITE_CONCRETE);
-      recipe
-          .addInventoryChangedCriterion("has_dye", Items.WHITE_DYE)
-          .addInventoryChangedCriterion("has_glowstone", Items.GLOWSTONE)
-          .addInventoryChangedCriterion("has_concrete", Items.WHITE_CONCRETE);
-      final Identifier id = ResourceGeneratorHelper.getItemId(LightBlocks.WHITE_LIGHT);
-      PACK.addRecipe(id, recipe);
-      PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/light/"), recipe);
-    }
-    { // yellow light
-      final JShapedRecipe recipe = new JShapedRecipe(LightBlocks.YELLOW_LIGHT)
-          .pattern("*#*", "#C#", "*#*")
-          .addKey("*", Items.YELLOW_DYE)
-          .addKey("#", Items.GLOWSTONE)
-          .addKey("C", Items.YELLOW_CONCRETE);
-      recipe
-          .addInventoryChangedCriterion("has_dye", Items.YELLOW_DYE)
-          .addInventoryChangedCriterion("has_glowstone", Items.GLOWSTONE)
-          .addInventoryChangedCriterion("has_concrete", Items.YELLOW_CONCRETE);
-      final Identifier id = ResourceGeneratorHelper.getItemId(LightBlocks.YELLOW_LIGHT);
-      PACK.addRecipe(id, recipe);
-      PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/light/"), recipe);
-    }
-    { // cyan light
-      final JShapedRecipe recipe = new JShapedRecipe(LightBlocks.CYAN_LIGHT)
-          .pattern("*#*", "#C#", "*#*")
-          .addKey("*", Items.CYAN_DYE)
-          .addKey("#", Items.GLOWSTONE)
-          .addKey("C", Items.CYAN_CONCRETE);
-      recipe
-          .addInventoryChangedCriterion("has_dye", Items.CYAN_DYE)
-          .addInventoryChangedCriterion("has_glowstone", Items.GLOWSTONE)
-          .addInventoryChangedCriterion("has_concrete", Items.CYAN_CONCRETE);
-      final Identifier id = ResourceGeneratorHelper.getItemId(LightBlocks.CYAN_LIGHT);
-      PACK.addRecipe(id, recipe);
-      PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/light/"), recipe);
-    }
+    addRecipesForWallSigns();
+    addRecipesForLights();
+  }
+
+  private void addRecipesForWallSigns() {
+    // 隐形告示牌是合成其他告示牌的基础。
     { // invisible wall sign
       final JShapedRecipe recipe = new JShapedRecipe(WallSignBlocks.INVISIBLE_WALL_SIGN)
           .pattern(".#.", "#o#", ".#.")
@@ -841,6 +809,138 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
       PACK.addRecipe(id, recipe);
       PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/signs/"), recipe);
     }
+  }
+
+  private void addRecipesForLights() {
+    // 先是三个完整方块的合成表。
+    { // white light
+      final JShapedRecipe recipe = new JShapedRecipe(LightBlocks.WHITE_LIGHT)
+          .resultCount(8)
+          .pattern("*#*", "#C#", "*#*")
+          .addKey("*", Items.WHITE_DYE)
+          .addKey("#", Items.GLOWSTONE)
+          .addKey("C", Items.WHITE_CONCRETE);
+      recipe
+          .addInventoryChangedCriterion("has_dye", Items.WHITE_DYE)
+          .addInventoryChangedCriterion("has_glowstone", Items.GLOWSTONE)
+          .addInventoryChangedCriterion("has_concrete", Items.WHITE_CONCRETE);
+      final Identifier id = ResourceGeneratorHelper.getItemId(LightBlocks.WHITE_LIGHT);
+      PACK.addRecipe(id, recipe);
+      PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/light/"), recipe);
+    }
+    { // yellow light
+      final JShapedRecipe recipe = new JShapedRecipe(LightBlocks.YELLOW_LIGHT)
+          .resultCount(8)
+          .pattern("*#*", "#C#", "*#*")
+          .addKey("*", Items.YELLOW_DYE)
+          .addKey("#", Items.GLOWSTONE)
+          .addKey("C", Items.YELLOW_CONCRETE);
+      recipe
+          .addInventoryChangedCriterion("has_dye", Items.YELLOW_DYE)
+          .addInventoryChangedCriterion("has_glowstone", Items.GLOWSTONE)
+          .addInventoryChangedCriterion("has_concrete", Items.YELLOW_CONCRETE);
+      final Identifier id = ResourceGeneratorHelper.getItemId(LightBlocks.YELLOW_LIGHT);
+      PACK.addRecipe(id, recipe);
+      PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/light/"), recipe);
+    }
+    { // cyan light
+      final JShapedRecipe recipe = new JShapedRecipe(LightBlocks.CYAN_LIGHT)
+          .resultCount(8)
+          .pattern("*#*", "#C#", "*#*")
+          .addKey("*", Items.CYAN_DYE)
+          .addKey("#", Items.GLOWSTONE)
+          .addKey("C", Items.CYAN_CONCRETE);
+      recipe
+          .addInventoryChangedCriterion("has_dye", Items.CYAN_DYE)
+          .addInventoryChangedCriterion("has_glowstone", Items.GLOWSTONE)
+          .addInventoryChangedCriterion("has_concrete", Items.CYAN_CONCRETE);
+      final Identifier id = ResourceGeneratorHelper.getItemId(LightBlocks.CYAN_LIGHT);
+      PACK.addRecipe(id, recipe);
+      PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/light/"), recipe);
+    }
+
+
+    // 白色灯光
+
+    addShapelessRecipeForLight(LightBlocks.WHITE_SMALL_WALL_LIGHT, 1, LightBlocks.WHITE_SMALL_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addStonecuttingRecipeForLight(LightBlocks.WHITE_LIGHT, LightBlocks.WHITE_SMALL_WALL_LIGHT_TUBE, 16);
+    addShapelessRecipeForLight(LightBlocks.WHITE_LARGE_WALL_LIGHT, 1, LightBlocks.WHITE_LARGE_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addStonecuttingRecipeForLight(LightBlocks.WHITE_LIGHT, LightBlocks.WHITE_LARGE_WALL_LIGHT_TUBE, 12);
+    addShapelessRecipeForLight(LightBlocks.WHITE_THIN_STRIP_WALL_LIGHT, 1, LightBlocks.WHITE_THICK_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addStonecuttingRecipeForLight(LightBlocks.WHITE_LIGHT, LightBlocks.WHITE_THIN_STRIP_WALL_LIGHT_TUBE, 12);
+    addShapelessRecipeForLight(LightBlocks.WHITE_THIN_STRIP_WALL_LIGHT, 1, LightBlocks.WHITE_THICK_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addStonecuttingRecipeForLight(LightBlocks.WHITE_LIGHT, LightBlocks.WHITE_THICK_STRIP_WALL_LIGHT_TUBE, 8);
+    addStonecuttingRecipeForLight(LightBlocks.WHITE_LIGHT, LightBlocks.WHITE_DOUBLE_STRIP_WALL_LIGHT_TUBE, 10);
+    // 角落灯管方块由两个普通灯管方块合成。
+    addShapelessRecipeForLight(LightBlocks.WHITE_THIN_STRIP_CORNER_LIGHT_TUBE, 1, LightBlocks.WHITE_THIN_STRIP_WALL_LIGHT_TUBE, LightBlocks.WHITE_THIN_STRIP_WALL_LIGHT_TUBE);
+    addShapelessRecipeForLight(LightBlocks.WHITE_THICK_STRIP_CORNER_LIGHT_TUBE, 1, LightBlocks.WHITE_THICK_STRIP_WALL_LIGHT_TUBE, LightBlocks.WHITE_THICK_STRIP_WALL_LIGHT_TUBE);
+    addShapelessRecipeForLight(LightBlocks.WHITE_DOUBLE_STRIP_CORNER_LIGHT_TUBE, 1, LightBlocks.WHITE_DOUBLE_STRIP_WALL_LIGHT_TUBE, LightBlocks.WHITE_DOUBLE_STRIP_WALL_LIGHT_TUBE);
+    // 灯光装饰方块，一律由切石形成。
+    addStonecuttingRecipeForLight(LightBlocks.WHITE_LIGHT, LightBlocks.WHITE_WALL_LIGHT_SIMPLE_DECORATION, 6);
+    addStonecuttingRecipeForLight(LightBlocks.WHITE_LIGHT, LightBlocks.WHITE_WALL_LIGHT_POINT_DECORATION, 6);
+    addStonecuttingRecipeForLight(LightBlocks.WHITE_LIGHT, LightBlocks.WHITE_WALL_LIGHT_RHOMBUS_DECORATION, 6);
+    addStonecuttingRecipeForLight(LightBlocks.WHITE_LIGHT, LightBlocks.WHITE_WALL_LIGHT_HASH_DECORATION, 6);
+    addStonecuttingRecipeForLight(LightBlocks.WHITE_LIGHT, LightBlocks.WHITE_WALL_LIGHT_ROUND_DECORATION, 4);
+
+    // 黄色灯光
+
+    addShapelessRecipeForLight(LightBlocks.YELLOW_SMALL_WALL_LIGHT, 1, LightBlocks.YELLOW_SMALL_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addStonecuttingRecipeForLight(LightBlocks.YELLOW_LIGHT, LightBlocks.YELLOW_SMALL_WALL_LIGHT_TUBE, 16);
+    addShapelessRecipeForLight(LightBlocks.YELLOW_LARGE_WALL_LIGHT, 1, LightBlocks.YELLOW_LARGE_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addStonecuttingRecipeForLight(LightBlocks.YELLOW_LIGHT, LightBlocks.YELLOW_LARGE_WALL_LIGHT_TUBE, 12);
+    addShapelessRecipeForLight(LightBlocks.YELLOW_THIN_STRIP_WALL_LIGHT, 1, LightBlocks.YELLOW_THICK_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addStonecuttingRecipeForLight(LightBlocks.YELLOW_LIGHT, LightBlocks.YELLOW_THIN_STRIP_WALL_LIGHT_TUBE, 12);
+    addShapelessRecipeForLight(LightBlocks.YELLOW_THIN_STRIP_WALL_LIGHT, 1, LightBlocks.YELLOW_THICK_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addStonecuttingRecipeForLight(LightBlocks.YELLOW_LIGHT, LightBlocks.YELLOW_THICK_STRIP_WALL_LIGHT_TUBE, 8);
+    addStonecuttingRecipeForLight(LightBlocks.YELLOW_LIGHT, LightBlocks.YELLOW_DOUBLE_STRIP_WALL_LIGHT_TUBE, 10);
+    // 角落灯管方块由两个普通灯管方块合成。
+    addShapelessRecipeForLight(LightBlocks.YELLOW_THIN_STRIP_CORNER_LIGHT_TUBE, 1, LightBlocks.YELLOW_THIN_STRIP_WALL_LIGHT_TUBE, LightBlocks.YELLOW_THIN_STRIP_WALL_LIGHT_TUBE);
+    addShapelessRecipeForLight(LightBlocks.YELLOW_THICK_STRIP_CORNER_LIGHT_TUBE, 1, LightBlocks.YELLOW_THICK_STRIP_WALL_LIGHT_TUBE, LightBlocks.YELLOW_THICK_STRIP_WALL_LIGHT_TUBE);
+    addShapelessRecipeForLight(LightBlocks.YELLOW_DOUBLE_STRIP_CORNER_LIGHT_TUBE, 1, LightBlocks.YELLOW_DOUBLE_STRIP_WALL_LIGHT_TUBE, LightBlocks.YELLOW_DOUBLE_STRIP_WALL_LIGHT_TUBE);
+    // 灯光装饰方块，一律由切石形成。
+    addStonecuttingRecipeForLight(LightBlocks.YELLOW_LIGHT, LightBlocks.YELLOW_WALL_LIGHT_SIMPLE_DECORATION, 6);
+    addStonecuttingRecipeForLight(LightBlocks.YELLOW_LIGHT, LightBlocks.YELLOW_WALL_LIGHT_POINT_DECORATION, 6);
+    addStonecuttingRecipeForLight(LightBlocks.YELLOW_LIGHT, LightBlocks.YELLOW_WALL_LIGHT_RHOMBUS_DECORATION, 6);
+    addStonecuttingRecipeForLight(LightBlocks.YELLOW_LIGHT, LightBlocks.YELLOW_WALL_LIGHT_HASH_DECORATION, 6);
+
+    // 青色
+
+    addShapelessRecipeForLight(LightBlocks.CYAN_SMALL_WALL_LIGHT, 1, LightBlocks.CYAN_SMALL_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addStonecuttingRecipeForLight(LightBlocks.CYAN_LIGHT, LightBlocks.CYAN_SMALL_WALL_LIGHT_TUBE, 16);
+    addShapelessRecipeForLight(LightBlocks.CYAN_LARGE_WALL_LIGHT, 1, LightBlocks.CYAN_LARGE_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addStonecuttingRecipeForLight(LightBlocks.CYAN_LIGHT, LightBlocks.CYAN_LARGE_WALL_LIGHT_TUBE, 12);
+    addShapelessRecipeForLight(LightBlocks.CYAN_THIN_STRIP_WALL_LIGHT, 1, LightBlocks.CYAN_THICK_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addStonecuttingRecipeForLight(LightBlocks.CYAN_LIGHT, LightBlocks.CYAN_THIN_STRIP_WALL_LIGHT_TUBE, 12);
+    addShapelessRecipeForLight(LightBlocks.CYAN_THIN_STRIP_WALL_LIGHT, 1, LightBlocks.CYAN_THICK_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addStonecuttingRecipeForLight(LightBlocks.CYAN_LIGHT, LightBlocks.CYAN_THICK_STRIP_WALL_LIGHT_TUBE, 8);
+    addStonecuttingRecipeForLight(LightBlocks.CYAN_LIGHT, LightBlocks.CYAN_DOUBLE_STRIP_WALL_LIGHT_TUBE, 10);
+    // 角落灯管方块由两个普通灯管方块合成。
+    addShapelessRecipeForLight(LightBlocks.CYAN_THIN_STRIP_CORNER_LIGHT_TUBE, 1, LightBlocks.CYAN_THIN_STRIP_WALL_LIGHT_TUBE, LightBlocks.CYAN_THIN_STRIP_WALL_LIGHT_TUBE);
+    addShapelessRecipeForLight(LightBlocks.CYAN_THICK_STRIP_CORNER_LIGHT_TUBE, 1, LightBlocks.CYAN_THICK_STRIP_WALL_LIGHT_TUBE, LightBlocks.CYAN_THICK_STRIP_WALL_LIGHT_TUBE);
+    addShapelessRecipeForLight(LightBlocks.CYAN_DOUBLE_STRIP_CORNER_LIGHT_TUBE, 1, LightBlocks.CYAN_DOUBLE_STRIP_WALL_LIGHT_TUBE, LightBlocks.CYAN_DOUBLE_STRIP_WALL_LIGHT_TUBE);
+    // 灯光装饰方块，一律由切石形成。
+    addStonecuttingRecipeForLight(LightBlocks.CYAN_LIGHT, LightBlocks.CYAN_WALL_LIGHT_SIMPLE_DECORATION, 6);
+    addStonecuttingRecipeForLight(LightBlocks.CYAN_LIGHT, LightBlocks.CYAN_WALL_LIGHT_POINT_DECORATION, 6);
+    addStonecuttingRecipeForLight(LightBlocks.CYAN_LIGHT, LightBlocks.CYAN_WALL_LIGHT_RHOMBUS_DECORATION, 6);
+    addStonecuttingRecipeForLight(LightBlocks.CYAN_LIGHT, LightBlocks.CYAN_WALL_LIGHT_HASH_DECORATION, 6);
+  }
+
+  private static void addStonecuttingRecipeForLight(ItemConvertible ingredient, ItemConvertible result, int count) {
+    final JStonecuttingRecipe recipe = new JStonecuttingRecipe(ingredient, result, count);
+    recipe.addInventoryChangedCriterion("has_the_ingredient", ingredient);
+    final Identifier id = ResourceGeneratorHelper.getItemId(result);
+    PACK.addRecipe(id, recipe);
+    PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/lights"), recipe);
+  }
+
+  private static void addShapelessRecipeForLight(ItemConvertible result, int count, ItemConvertible... ingredients) {
+    final JShapelessRecipe recipe = new JShapelessRecipe(result, ingredients).resultCount(count);
+    for (ItemConvertible ingredient : ImmutableSet.copyOf(ingredients)) {
+      recipe.addInventoryChangedCriterion("has_" + ResourceGeneratorHelper.getItemId(ingredient).getPath(), ingredient);
+    }
+    final Identifier id = ResourceGeneratorHelper.getItemId(result);
+    PACK.addRecipe(id, recipe);
+    PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/lights"), recipe);
   }
 
   @Override

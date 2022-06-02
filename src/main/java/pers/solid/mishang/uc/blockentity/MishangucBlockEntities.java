@@ -18,7 +18,7 @@ public class MishangucBlockEntities {
           new Identifier("mishanguc", "hung_block_entity"),
           FabricBlockEntityTypeBuilder.create(
               HungSignBlockEntity::create,
-              MishangUtils.<Block>blockInstanceStream(HungSignBlocks.class).toArray(Block[]::new)
+              MishangUtils.instanceStream(HungSignBlocks.class, Block.class).toArray(Block[]::new)
           ).build());
 
   public static final BlockEntityType<WallSignBlockEntity> WALL_SIGN_BLOCK_ENTITY =
@@ -27,10 +27,10 @@ public class MishangucBlockEntities {
           new Identifier("mishanguc", "wall_sign_block_entity"),
           FabricBlockEntityTypeBuilder.create(
               WallSignBlockEntity::new,
-              MishangUtils.<Block>blockInstanceStream(WallSignBlocks.class).filter(block -> !(block instanceof FullWallSignBlock)).toArray(Block[]::new)
+              MishangUtils.instanceStream(WallSignBlocks.class, Block.class).filter(block -> !(block instanceof FullWallSignBlock)).toArray(Block[]::new)
           ).build());
 
-  public static final BlockEntityType<FullWallSignBlockEntity> FULL_WALL_SIGN_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("mishanguc", "full_wall_sign_block_entity"), FabricBlockEntityTypeBuilder.create(FullWallSignBlockEntity::new, MishangUtils.<Block>blockInstanceStream(WallSignBlocks.class).filter(block -> block instanceof FullWallSignBlock).toArray(Block[]::new)).build());
+  public static final BlockEntityType<FullWallSignBlockEntity> FULL_WALL_SIGN_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("mishanguc", "full_wall_sign_block_entity"), FabricBlockEntityTypeBuilder.create(FullWallSignBlockEntity::new, MishangUtils.instanceStream(WallSignBlocks.class, Block.class).filter(block -> block instanceof FullWallSignBlock).toArray(Block[]::new)).build());
 
   public static final BlockEntityType<ColoredHungSignBarBlock.Entity> COLORED_HUNG_SIGN_BAR_BLOCK_ENTITY = Registry.register(
       Registry.BLOCK_ENTITY_TYPE,
