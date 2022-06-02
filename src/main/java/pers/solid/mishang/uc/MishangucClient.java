@@ -11,7 +11,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.fabricmc.fabric.api.util.NbtType;
-import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.UnclampedModelPredicateProvider;
@@ -47,9 +46,8 @@ public class MishangucClient implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
     // 设置相应的 BlockLayer
-    MishangUtils.blockFieldStream().forEach(field -> {
+    MishangUtils.blocks().forEach((field, value) -> {
       try {
-        Block value = (Block) field.get(null);
         if (field.isAnnotationPresent(Cutout.class)) {
           BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout());
           if (value instanceof HandrailBlock) {
@@ -62,7 +60,7 @@ public class MishangucClient implements ClientModInitializer {
             BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), ((HandrailBlock) value).central(), ((HandrailBlock) value).corner(), ((HandrailBlock) value).stair(), ((HandrailBlock) value).outer());
           }
         }
-      } catch (IllegalAccessException | ClassCastException e) {
+      } catch (Throwable e) {
         Mishanguc.MISHANG_LOGGER.warn("Error when setting BlockLayers:", e);
       }
     });
