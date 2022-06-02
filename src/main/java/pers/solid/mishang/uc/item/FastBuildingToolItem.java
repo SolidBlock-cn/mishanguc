@@ -49,7 +49,7 @@ import java.util.List;
  */
 public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollInteraction {
 
-  private static final Int2ObjectBiMap<BlockMatchingRule> RULES_TO_CYCLE = Util.make(Int2ObjectBiMap.create(4), map -> {
+  private static final Int2ObjectBiMap<BlockMatchingRule> RULES_TO_CYCLE = Util.make(new Int2ObjectBiMap<>(4), map -> {
     map.add(BlockMatchingRule.SAME_STATE);
     map.add(BlockMatchingRule.SAME_BLOCK);
     map.add(BlockMatchingRule.SAME_MATERIAL);

@@ -40,11 +40,12 @@ public class MishangUtils {
    */
   public static final @Unmodifiable BiMap<DyeColor, Integer> COLOR_TO_OUTLINE_COLOR = Arrays.stream(DyeColor.values()).collect(ImmutableBiMap.toImmutableBiMap(Functions.identity(), MishangUtils::toSignOutlineColor));
   private static final Logger LOGGER = LogManager.getLogger(MishangUtils.class);
-  private static final ImmutableMap<String, String> ARROW_TO_NAMES = ImmutableMap.of(
-      "←", "al", "→", "ar", "↖", "alt", "↗", "art", "↙", "alb", "↘", "arb"
-  );
   private static final Supplier<ImmutableMap<Field, Block>> memoizedBlocks = Suppliers.memoize(MishangUtils::blocksInternal);
   private static final Supplier<ImmutableMap<Field, Item>> memoizedItems = Suppliers.memoize(MishangUtils::itemsInternal);
+  private static final @Unmodifiable Map<String, String> ARROW_TO_NAMES = Map.of(
+      /* 此版本下，ImmutableMap.of 暂不支持超过 5 个参数，因此这里使用 Java 9 自带的 Map.of */
+      "←", "al", "→", "ar", "↖", "alt", "↗", "art", "↙", "alb", "↘", "arb"
+  );
 
   @SuppressWarnings("SuspiciousNameCombination")
   public static EnumMap<Direction, @NotNull VoxelShape> createDirectionToShape(
@@ -290,11 +291,6 @@ public class MishangUtils {
   public static <T extends Comparable<T>> BlockState with(BlockState state, Property<T> property, String name) {
     return property.parse(name).map((value) -> state.with(property, value)).orElse(state);
   }
-
-  private static final @Unmodifiable Map<String, String> ARROW_TO_NAMES = Map.of(
-      /* 此版本下，ImmutableMap.of 暂不支持超过 5 个参数，因此这里使用 Java 9 自带的 Map.of */
-      "←", "al", "→", "ar", "↖", "alt", "↗", "art", "↙", "alb", "↘", "arb"
-  );
 
   /**
    * 将一个告示牌中的 TextContext 中手动完成的箭头文字转化为 0.2.0 新加入的 PatternTextSpecial 格式。
