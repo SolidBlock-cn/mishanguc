@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -89,7 +89,7 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
           90,
           200,
           20,
-          new TranslatableText("message.mishanguc.copy_from_back"),
+          Text.translatable("message.mishanguc.copy_from_back"),
           button -> {
             final HungSignBlockEntity entity = this.entity;
             if (entity.editedSide == null) {

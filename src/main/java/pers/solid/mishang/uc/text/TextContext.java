@@ -13,10 +13,9 @@ import net.minecraft.nbt.AbstractNbtNumber;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
@@ -58,7 +57,7 @@ public class TextContext implements Cloneable {
    * 文本内容。该字段对应 NBT 中的两种情况：<br>
    * <ul>
    *   <li>若 NBT 中存在字段 “textJson”，则将其作为原始 JSON 文本进行解析。</li>
-   *   <li>否则，直接使用 NBT 字段 “text”，并直接将其作为原始文本（{@link LiteralText}）使用。</li>
+   *   <li>否则，直接使用 NBT 字段 “text”，并直接将其作为原始文本（{@link net.minecraft.text.LiteralTextContent}）使用。</li>
    * </ul>
    */
   public @Nullable MutableText text;
@@ -172,7 +171,7 @@ public class TextContext implements Cloneable {
   public static @NotNull TextContext fromNbt(NbtElement nbt, TextContext defaults) {
     final TextContext textContext = defaults.clone();
     if (nbt instanceof NbtString) {
-      textContext.text = new LiteralText(nbt.asString());
+      textContext.text = Text.literal(nbt.asString());
     } else if (nbt instanceof NbtCompound nbtCompound) {
       textContext.readNbt(nbtCompound);
     }
@@ -204,10 +203,10 @@ public class TextContext implements Cloneable {
       try {
         text = Text.Serializer.fromLenientJson(textJson);
       } catch (JsonParseException e) {
-        text = new TranslatableText("message.mishanguc.invalid_json", e.getMessage());
+        text = Text.translatable("message.mishanguc.invalid_json", e.getMessage());
       }
     } else if (nbtText instanceof NbtString) {
-      text = new LiteralText(nbtText.asString());
+      text = Text.literal(nbtText.asString());
     } else {
       text = null;
     }
@@ -306,7 +305,7 @@ public class TextContext implements Cloneable {
     // 执行渲染
     if (text != null) {
       // 为文本创建本地的格式化的副本。此后，本方法中的所有 text 均为此局部变量，而非 this.text。这是为了在渲染时，修改了 text 本身的内容。
-      MutableText text = this.text.shallowCopy();
+      MutableText text = this.text.copy();
       // 处理文本格式，如加粗、斜线等。文本颜色在 <tt>draw</tt> 的参数中。
       if (bold) {
         text.formatted(Formatting.BOLD);
@@ -352,14 +351,14 @@ public class TextContext implements Cloneable {
    *
    * @param nbt 一个待写入的 NBT 复合标签，可以是空的 NBT 复合标签：
    *            <pre>{@code
-   *                                                                                                                                                                                              new NbtCompound()
-   *                                                                                                                                                                                 }</pre>
+   *                                                                                                                                                                                                                                                     new NbtCompound()
+   *                                                                                                                                                                                                                                        }</pre>
    * @return 修改后的 <tt>nbt</tt>。
    */
   public NbtCompound writeNbt(NbtCompound nbt) {
     if (text != null) {
-      if (text instanceof LiteralText && text.getSiblings().isEmpty() && text.getStyle().isEmpty()) {
-        nbt.putString("text", text.asString());
+      if (text.getContent() instanceof LiteralTextContent literalTextContent && text.getSiblings().isEmpty() && text.getStyle().isEmpty()) {
+        nbt.putString("text", literalTextContent.string());
       } else {
         nbt.putString("textJson", Text.Serializer.toJson(text));
       }
@@ -461,8 +460,8 @@ public class TextContext implements Cloneable {
       case LEFT -> horizontalAlign = HorizontalAlign.RIGHT;
       case RIGHT -> horizontalAlign = HorizontalAlign.LEFT;
     }
-    if (text instanceof final LiteralText literalText) {
-      final String rawString = literalText.getRawString();
+    if (text.getContent() instanceof final LiteralTextContent literalTextContent) {
+      final String rawString = literalTextContent.string();
       final StringBuilder stringBuilder = new StringBuilder(rawString);
       for (int i = 0; i < stringBuilder.length(); i++) {
         final char c = stringBuilder.charAt(i);
@@ -470,7 +469,7 @@ public class TextContext implements Cloneable {
           stringBuilder.setCharAt(i, flipStringReplacement.get(c));
         }
       }
-      text = new LiteralText(stringBuilder.toString());
+      text = Text.literal(stringBuilder.toString());
     }
     if (extra instanceof final PatternTextSpecial patternTextSpecial) {
       final String shapeName = patternTextSpecial.shapeName();

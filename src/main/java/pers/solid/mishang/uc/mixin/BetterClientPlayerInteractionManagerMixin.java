@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.mixin;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.client.network.SequencedPacketCreator;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -18,7 +20,7 @@ import pers.solid.mishang.uc.Mishanguc;
 
 /**
  * 本 mixin 参考了 {@link
- * net.fabricmc.fabric.mixin.event.interaction.MixinClientPlayerInteractionManager}，不过这个 mixin
+ * net.fabricmc.fabric.mixin.event.interaction.client.MixinClientPlayerInteractionManager}，不过这个 mixin
  * 有个很大的问题，一是在客户端结果不为 PASS 时会阻止产生 packet 导致服务器不执行该 callback，而且方块破坏过程中也会执行该 mixin。因此改进了此 mixin。<br>
  * 该 mixin 具有两个特点：一是在客户端结果不返回 PASS 时也会发送 packet，这样可以让服务器也执行，二是分类开始破坏和中途破坏两个情况。
  */
@@ -32,8 +34,7 @@ public abstract class BetterClientPlayerInteractionManagerMixin {
   private GameMode gameMode;
 
   @Shadow
-  protected abstract void sendPlayerAction(
-      PlayerActionC2SPacket.Action action, BlockPos pos, Direction direction);
+  protected abstract void sendSequencedPacket(ClientWorld world, SequencedPacketCreator packetCreator);
 
   @Inject(
       at =
@@ -50,7 +51,9 @@ public abstract class BetterClientPlayerInteractionManagerMixin {
             .interact(client.player, client.world, Hand.MAIN_HAND, pos, direction);
 
     if (result != ActionResult.PASS) {
-      sendPlayerAction(PlayerActionC2SPacket.Action.START_DESTROY_BLOCK, pos, direction);
+      sendSequencedPacket(this.client.world, (sequence) -> {
+        return new PlayerActionC2SPacket(PlayerActionC2SPacket.Action.START_DESTROY_BLOCK, pos, direction, sequence);
+      });
       info.setReturnValue(result == ActionResult.SUCCESS);
       info.cancel();
     }

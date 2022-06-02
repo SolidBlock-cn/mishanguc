@@ -17,7 +17,6 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -94,18 +93,18 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        new TranslatableText("item.mishanguc.force_placing_tool.tooltip.1")
+        Text.translatable("item.mishanguc.force_placing_tool.tooltip.1")
             .formatted(Formatting.GRAY));
     tooltip.add(
-        new TranslatableText("item.mishanguc.force_placing_tool.tooltip.2")
+        Text.translatable("item.mishanguc.force_placing_tool.tooltip.2")
             .formatted(Formatting.GRAY));
     if (Boolean.TRUE.equals(includesFluid(stack))) {
       tooltip.add(
-          new TranslatableText("item.mishanguc.force_placing_tool.tooltip.fluids")
+          Text.translatable("item.mishanguc.force_placing_tool.tooltip.fluids")
               .formatted(Formatting.GRAY));
     }
     tooltip.add(
-        new TranslatableText("item.mishanguc.force_placing_tool.tooltip.3")
+        Text.translatable("item.mishanguc.force_placing_tool.tooltip.3")
             .formatted(Formatting.GRAY));
   }
 

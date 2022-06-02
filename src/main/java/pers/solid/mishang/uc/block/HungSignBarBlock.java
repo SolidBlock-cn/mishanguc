@@ -22,7 +22,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -224,7 +224,7 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
   @Override
   public MutableText getName() {
     if (baseBlock != null) {
-      return new TranslatableText("block.mishanguc.hung_sign_bar", baseBlock.getName());
+      return Text.translatable("block.mishanguc.hung_sign_bar", baseBlock.getName());
     }
     return super.getName();
   }

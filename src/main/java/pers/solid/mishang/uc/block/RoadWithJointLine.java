@@ -15,7 +15,6 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Formatting;
@@ -76,10 +75,10 @@ public interface RoadWithJointLine extends Road {
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     Road.super.appendRoadTooltip(stack, world, tooltip, options);
     tooltip.add(
-        new TranslatableText("block.mishanguc.tooltip.road_with_joint_line.1")
+        Text.translatable("block.mishanguc.tooltip.road_with_joint_line.1")
             .formatted(Formatting.GRAY));
     tooltip.add(
-        new TranslatableText("block.mishanguc.tooltip.road_with_joint_line.2")
+        Text.translatable("block.mishanguc.tooltip.road_with_joint_line.2")
             .formatted(Formatting.GRAY));
   }
 

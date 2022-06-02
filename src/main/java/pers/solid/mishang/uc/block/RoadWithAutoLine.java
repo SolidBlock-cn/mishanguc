@@ -12,7 +12,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -122,10 +121,10 @@ public interface RoadWithAutoLine extends Road {
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     Road.super.appendRoadTooltip(stack, world, tooltip, options);
     tooltip.add(
-        new TranslatableText("block.mishanguc.tooltip.road_with_auto_line.1")
+        Text.translatable("block.mishanguc.tooltip.road_with_auto_line.1")
             .formatted(Formatting.GRAY));
     tooltip.add(
-        new TranslatableText("block.mishanguc.tooltip.road_with_auto_line.2")
+        Text.translatable("block.mishanguc.tooltip.road_with_auto_line.2")
             .formatted(Formatting.GRAY));
   }
 

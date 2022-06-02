@@ -7,7 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.Property;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Direction;
@@ -297,8 +297,8 @@ public class MishangUtils {
   @ApiStatus.AvailableSince("0.2.0")
   public static void replaceArrows(Collection<TextContext> textContexts) {
     for (TextContext textContext : textContexts) {
-      if (textContext.text instanceof final LiteralText literalText) {
-        final String rawString = literalText.getRawString();
+      if (textContext.text.getContent() instanceof final LiteralTextContent literalTextContent) {
+        final String rawString = literalTextContent.string();
         if (ARROW_TO_NAMES.containsKey(rawString)) {
           textContext.text = null;
           textContext.extra = PatternTextSpecial.fromName(textContext, ARROW_TO_NAMES.get(rawString));

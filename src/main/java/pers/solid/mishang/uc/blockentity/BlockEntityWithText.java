@@ -22,7 +22,6 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -47,7 +46,7 @@ public abstract class BlockEntityWithText extends BlockEntity {
    */
   public ServerCommandSource getCommandSource(@Nullable ServerPlayerEntity player) {
     String string = player == null ? "TextPad" : player.getName().getString();
-    Text text = player == null ? new LiteralText("TextPad") : player.getDisplayName();
+    Text text = player == null ? Text.literal("TextPad") : player.getDisplayName();
     return new ServerCommandSource(
         CommandOutput.DUMMY,
         Vec3d.ofCenter(this.pos),

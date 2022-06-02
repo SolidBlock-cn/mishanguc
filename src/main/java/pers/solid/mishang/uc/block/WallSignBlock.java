@@ -27,7 +27,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -152,7 +152,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   public MutableText getName() {
     return baseBlock == null
         ? super.getName()
-        : new TranslatableText("block.mishanguc.wall_sign", baseBlock.getName());
+        : Text.translatable("block.mishanguc.wall_sign", baseBlock.getName());
   }
 
   /**

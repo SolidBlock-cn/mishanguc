@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Formatting;
@@ -77,10 +76,10 @@ public interface RoadWithAngleLine extends Road {
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     Road.super.appendRoadTooltip(stack, world, tooltip, options);
     tooltip.add(
-        new TranslatableText("block.mishanguc.tooltip.road_with_angle_line.1")
+        Text.translatable("block.mishanguc.tooltip.road_with_angle_line.1")
             .formatted(Formatting.GRAY));
     tooltip.add(
-        new TranslatableText("block.mishanguc.tooltip.road_with_angle_line.2")
+        Text.translatable("block.mishanguc.tooltip.road_with_angle_line.2")
             .formatted(Formatting.GRAY));
   }
 

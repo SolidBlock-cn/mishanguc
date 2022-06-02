@@ -7,8 +7,10 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,14 +20,15 @@ import pers.solid.mishang.uc.block.Road;
 @Environment(EnvType.CLIENT)
 @Mixin(AbstractClientPlayerEntity.class)
 public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity {
-  private AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
-    super(world, pos, yaw, profile);
-  }
 
   /**
    * 在计算视场角之前，移除该属性，计算完成之后重新加入该属性。因此，此值只是一个临时值。
    */
   private boolean cachedHasAttribute = false;
+
+  private AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile, @Nullable PlayerPublicKey publicKey) {
+    super(world, pos, yaw, gameProfile, publicKey);
+  }
 
   /**
    * 当玩家行走在道路上时，取消掉其视场角。
