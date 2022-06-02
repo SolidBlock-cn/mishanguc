@@ -19,7 +19,7 @@ import pers.solid.mishang.uc.mixin.TextRendererAccessor;
 import java.util.Map;
 
 public record PatternTextSpecial(TextContext textContext, String shapeName, @Unmodifiable float[][] rectangles) implements TextSpecial {
-  public static final float[][] EMPTY = {};
+  private static final float[][] EMPTY = {};
   private static final float[][] ARROW_LEFT =
       {
           // 箭头的中间部分：
@@ -133,6 +133,11 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
       newArray[i] = rectangles[i].clone();
     }
     return newArray;
+  }
+
+  @Contract(pure = true)
+  public boolean isEmpty() {
+    return rectangles == EMPTY;
   }
 
   @Environment(EnvType.CLIENT)

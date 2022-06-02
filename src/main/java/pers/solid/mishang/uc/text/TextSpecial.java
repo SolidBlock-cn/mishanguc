@@ -99,7 +99,7 @@ public interface TextSpecial extends Cloneable {
       return rect;
     } else if (id.equals("pattern")) {
       final PatternTextSpecial pattern = PatternTextSpecial.fromName(textContext, args);
-      if (pattern.rectangles() == PatternTextSpecial.EMPTY) {
+      if (pattern.isEmpty()) {
         return INVALID;
       } else {
         return pattern;
