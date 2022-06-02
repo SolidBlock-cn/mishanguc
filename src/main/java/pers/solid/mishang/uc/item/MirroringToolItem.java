@@ -1,11 +1,18 @@
 package pers.solid.mishang.uc.item;
 
+import net.devtech.arrp.generator.ItemResourceGenerator;
+import net.devtech.arrp.json.models.JModel;
+import net.devtech.arrp.json.recipe.JRecipe;
+import net.devtech.arrp.json.recipe.JShapedRecipe;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -16,11 +23,12 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class MirroringToolItem extends BlockToolItem {
+public class MirroringToolItem extends BlockToolItem implements ItemResourceGenerator {
   public MirroringToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
@@ -87,5 +95,23 @@ public class MirroringToolItem extends BlockToolItem {
           new TranslatableText("item.mishanguc.block_tool.tooltip.includesFluid")
               .formatted(Formatting.GRAY));
     }
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public @Nullable JModel getItemModel() {
+    return null;
+  }
+
+  @Override
+  public @NotNull JRecipe getCraftingRecipe() {
+    return new JShapedRecipe(this).pattern("CNL", " | ", " | ")
+        .addKey("C", Items.CYAN_DYE)
+        .addKey("N", Items.NETHERITE_INGOT)
+        .addKey("L", Items.LIME_DYE)
+        .addKey("|", Items.STICK)
+        .addInventoryChangedCriterion("has_cyan_dye", Items.CYAN_DYE)
+        .addInventoryChangedCriterion("has_netherite_ingot", Items.NETHERITE_INGOT)
+        .addInventoryChangedCriterion("has_lime_dye", Items.LIME_DYE);
   }
 }
