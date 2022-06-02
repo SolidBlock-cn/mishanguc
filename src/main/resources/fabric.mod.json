@@ -34,7 +34,7 @@
     "fabricloader": ">=0.13.0",
     "fabric": "*",
     "minecraft": ">=1.16.4",
-    "better_runtime_resource_pack": "*"
+    "better_runtime_resource_pack": ">=0.6.2"
   },
   "breaks": {
     "minecraft": ">=1.17"

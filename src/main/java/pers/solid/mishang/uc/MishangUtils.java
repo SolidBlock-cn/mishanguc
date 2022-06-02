@@ -1,9 +1,14 @@
 package pers.solid.mishang.uc;
 
+import com.google.common.base.Functions;
+import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Streams;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.item.Item;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.BlockRotation;
@@ -17,8 +22,8 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
-import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.blocks.*;
+import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.text.PatternTextSpecial;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.VerticalAlign;
@@ -26,13 +31,23 @@ import pers.solid.mishang.uc.util.VerticalAlign;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
  * 本类存放一些实用方法。
  */
 public class MishangUtils {
+  /**
+   * @since 0.2.0 该字段为一个不可变的映射。
+   */
+  public static final @Unmodifiable ImmutableBiMap<DyeColor, Integer> COLOR_TO_OUTLINE_COLOR = Arrays.stream(DyeColor.values()).collect(ImmutableBiMap.toImmutableBiMap(Functions.identity(), MishangUtils::toSignOutlineColor));
   private static final Logger LOGGER = LogManager.getLogger(MishangUtils.class);
+  private static final ImmutableMap<String, String> ARROW_TO_NAMES = ImmutableMap.of(
+      "←", "al", "→", "ar", "↖", "alt", "↗", "art", "↙", "alb", "↘", "arb"
+  );
+  private static final Supplier<ImmutableMap<Field, Block>> memoizedBlocks = Suppliers.memoize(MishangUtils::blocksInternal);
+  private static final Supplier<ImmutableMap<Field, Item>> memoizedItems = Suppliers.memoize(MishangUtils::itemsInternal);
 
   @SuppressWarnings("SuspiciousNameCombination")
   public static EnumMap<Direction, @NotNull VoxelShape> createDirectionToShape(
@@ -73,14 +88,12 @@ public class MishangUtils {
     for (Direction direction : Direction.values()) {
       final VoxelShape first = firstDirectionToShape.get(direction);
       if (first != null) {
-        map.put(
-            direction,
-            VoxelShapes.union(
-                first,
-                Arrays.stream(directionToShapes)
-                    .filter(Objects::nonNull)
-                    .map(directionToShape -> directionToShape.get(direction))
-                    .toArray(VoxelShape[]::new)));
+        map.put(direction, VoxelShapes.union(
+            first,
+            Arrays.stream(directionToShapes)
+                .filter(Objects::nonNull)
+                .map(directionToShape -> directionToShape.get(direction))
+                .toArray(VoxelShape[]::new)));
       }
     }
     return map;
@@ -104,63 +117,106 @@ public class MishangUtils {
   /**
    * @return 所有方块字段的流。使用反射。<br>
    * 该方法可以在 {@link MishangucBlocks} 被加载之前执行，并不会尝试访问字段内容。
+   * @since 0.2.0 该方法由 blockStream 更名为 blockFieldStream。
    */
-  public static Stream<Field> blockStream() {
+  public static Stream<Field> blockFieldStream() {
     return Streams.concat(
-            Arrays.stream(RoadBlocks.class.getFields()),
-            Arrays.stream(RoadSlabBlocks.class.getFields()),
-            Arrays.stream(LightBlocks.class.getFields()),
-            Arrays.stream(HungSignBlocks.class.getFields()),
-            Arrays.stream(WallSignBlocks.class.getFields()),
-            Arrays.stream(HandrailBlocks.class.getFields()))
-        .filter(
-            field -> {
-              int modifier = field.getModifiers();
-              return Modifier.isPublic(modifier)
-                  && Modifier.isStatic(modifier)
-                  && Block.class.isAssignableFrom(field.getType())
-                  && field.isAnnotationPresent(RegisterIdentifier.class);
-            });
+        fieldStream(RoadBlocks.class),
+        fieldStream(RoadSlabBlocks.class),
+        fieldStream(LightBlocks.class),
+        fieldStream(HungSignBlocks.class),
+        fieldStream(WallSignBlocks.class),
+        fieldStream(HandrailBlocks.class)
+    );
+  }
+
+  public static Stream<Field> itemFieldStream() {
+    return fieldStream(MishangucItems.class);
+  }
+
+  @ApiStatus.AvailableSince("0.2.0")
+  @ApiStatus.Internal
+  private static @Unmodifiable ImmutableMap<Field, Block> blocksInternal() {
+    ImmutableMap.Builder<Field, Block> builder = new ImmutableMap.Builder<>();
+    instanceEntryStream(blockFieldStream(), Block.class).forEach(builder::put);
+    final ImmutableMap<Field, Block> build = builder.build();
+    if (build.isEmpty()) {
+      throw new AssertionError("The collection returned is empty, which is not expected.. You may have to report to the author of Mishang Urban Construction mod.");
+    }
+    return build;
+  }
+
+  @ApiStatus.AvailableSince("0.2.0")
+  @ApiStatus.Internal
+  private static @Unmodifiable ImmutableMap<Field, Item> itemsInternal() {
+    ImmutableMap.Builder<Field, Item> builder = new ImmutableMap.Builder<>();
+    instanceEntryStream(itemFieldStream(), Item.class).forEach(builder::put);
+    final ImmutableMap<Field, Item> build = builder.build();
+    if (build.isEmpty()) {
+      throw new AssertionError("The collection returned is empty, which is not expected.. You may have to report to the author of Mishang Urban Construction mod.");
+    }
+    return build;
   }
 
   /**
-   * @return 当前方块字段的流。使用反射。
-   */
-  @ApiStatus.AvailableSince("0.1.7")
-  public static <T> Stream<Field> blockStream(Class<T> cls) {
-    return Arrays.stream(cls.getFields())
-        .filter(
-            field -> {
-              int modifier = field.getModifiers();
-              return Modifier.isPublic(modifier)
-                  && Modifier.isStatic(modifier)
-                  && Block.class.isAssignableFrom(field.getType())
-                  && field.isAnnotationPresent(RegisterIdentifier.class);
-            });
-  }
-
-  /**
-   * 返回类中所有的 public static final 字段的值。例如：
-   * <pre>{@code
-   *  Collection<Block> hungSignBarBlocks =
-   *    <Block>getInstances(HungSignBlocks.class).collect(ImmutableSet.toImmutableSet())
-   * }</pre>
+   * 该模组的所有方块字段及其值的集合。会通过反射来访问字段，并记住这个值，下次直接返回该值。
    *
-   * @param cls 类。
-   * @param <T> 字段类型。不在此类型的会被忽略，但是应当留意。
-   * @return 类的所有 public static final 字段的值。
+   * @return 由方块字段和值组成的不可变映射。第一次调用时会生成，此后的所有调用都会直接使用这个值。
    */
-  @ApiStatus.AvailableSince("0.1.7")
-  public static <T> Stream<T> blockInstanceStream(Class<?> cls) {
-    return blockStream(cls).map(field -> {
+  @ApiStatus.AvailableSince("0.2.0")
+  public static @Unmodifiable ImmutableMap<Field, Block> blocks() {
+    return memoizedBlocks.get();
+  }
+
+  /**
+   * 该模组的所有物品字段及其值的集合。会通过反射来访问字段，并记住这个值，下次直接返回该值。
+   *
+   * @return 由物品字段和值组成的不可变映射。第一次调用时会生成，此后的所有调用都会直接使用这个值。
+   */
+  @ApiStatus.AvailableSince("0.2.0")
+  public static @Unmodifiable ImmutableMap<Field, Item> items() {
+    return memoizedItems.get();
+  }
+
+  /**
+   * 迭代某个类中的所有字段，并返回由 public static final 字段组成的流。
+   *
+   * @param containerClass 包含该字段的类，该字段不一定要属于该类。
+   * @return 由类中的 public static final 字段组成的流。
+   */
+  public static Stream<Field> fieldStream(Class<?> containerClass) {
+    return Arrays.stream(containerClass.getFields())
+        .filter(
+            field -> {
+              int modifier = field.getModifiers();
+              return Modifier.isPublic(modifier)
+                  && Modifier.isStatic(modifier)
+                  && Modifier.isFinal(modifier);
+            });
+  }
+
+  public static <T> Stream<Map.Entry<Field, T>> instanceEntryStream(Stream<Field> fieldStream, Class<T> castToClass) {
+    return fieldStream.map(field -> {
+      final Object o;
       try {
-        //noinspection unchecked
-        return (T) field.get(null);
-      } catch (ClassCastException | IllegalAccessException e) {
-        LOGGER.error("Error: ", e);
+        o = field.get(null);
+      } catch (IllegalAccessException e) {
+        throw new InternalError("Cannot access value of the field in Mishang Urban Construction mod.", e);
+      }
+      if (castToClass.isInstance(o)) {
+        return Maps.immutableEntry(field, castToClass.cast(o));
+      } else {
         return null;
       }
     }).filter(Objects::nonNull);
+  }
+
+  public static <T> Stream<Map.Entry<Field, T>> instanceEntryStream(Class<?> containerClass, Class<T> castToClass) {
+    return instanceEntryStream(fieldStream(containerClass), castToClass);
+  }
+
+  public static <T> Stream<T> instanceStream(Class<?> containerClass, Class<T> castToClass) {
+    return instanceEntryStream(containerClass, castToClass).map(Map.Entry::getValue);
   }
 
   /**

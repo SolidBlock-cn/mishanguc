@@ -47,7 +47,7 @@ public class MishangucClient implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
     // 设置相应的 BlockLayer
-    MishangUtils.blockStream().forEach(field -> {
+    MishangUtils.blockFieldStream().forEach(field -> {
       try {
         Block value = (Block) field.get(null);
         if (field.isAnnotationPresent(Cutout.class)) {
