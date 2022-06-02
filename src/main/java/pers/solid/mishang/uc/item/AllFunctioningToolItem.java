@@ -31,7 +31,7 @@ public class AllFunctioningToolItem extends MiningToolItem {
 
 
   public AllFunctioningToolItem(Settings settings) {
-    super(114513, 114510, MATERIAL, TagKey.of(Registry.BLOCK_KEY, new Identifier("minecraft", "mineable/pickaxe")), settings);
+    super(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, MATERIAL, TagKey.of(Registry.BLOCK_KEY, new Identifier("minecraft", "mineable/pickaxe")), settings);
   }
 
   @Override
@@ -53,7 +53,7 @@ public class AllFunctioningToolItem extends MiningToolItem {
 
   @Override
   public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
-    world.addParticle(new BlockStateParticleEffect(FabricParticleTypes.complex(false, BlockStateParticleEffect.PARAMETERS_FACTORY), state), pos.getX(), pos.getY(), pos.getZ(), 1, -1, 1);
+    world.addParticle(new BlockStateParticleEffect(FabricParticleTypes.complex(false, BlockStateParticleEffect.PARAMETERS_FACTORY), state), pos.getX(), pos.getY(), pos.getZ(), 3, -3, 3);
     return super.postMine(stack, world, state, pos, miner);
   }
 

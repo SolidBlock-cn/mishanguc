@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.mixin.TextRendererAccessor;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 
@@ -40,12 +41,12 @@ public final class PatternTextSpecial implements TextSpecial {
     if (obj == null || obj.getClass() != this.getClass()) return false;
     PatternTextSpecial that = (PatternTextSpecial) obj;
     return Objects.equals(this.textContext, that.textContext) &&
-        Objects.equals(this.shapeName, that.shapeName);
+        Objects.equals(this.shapeName, that.shapeName) && Arrays.deepEquals(this.rectangles, that.rectangles());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(textContext, shapeName);
+    return Objects.hash(textContext, shapeName, Arrays.deepHashCode(rectangles));
   }
 
   @Override
@@ -172,6 +173,11 @@ public final class PatternTextSpecial implements TextSpecial {
       newArray[i] = rectangles[i].clone();
     }
     return newArray;
+  }
+
+  @Contract(pure = true)
+  public boolean isEmpty() {
+    return rectangles == EMPTY;
   }
 
   @Environment(EnvType.CLIENT)
