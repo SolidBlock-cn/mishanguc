@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.item;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.Maps;
 import net.devtech.arrp.generator.ItemResourceGenerator;
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.recipe.JRecipe;
@@ -25,15 +26,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -41,11 +39,12 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * 用于处理台阶的工具。
@@ -56,20 +55,15 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
    * 从原版的 {@link BlockFamilies} 提取的方块至台阶方块的映射。
    */
   @ApiStatus.AvailableSince("0.1.3")
-  protected static final BiMap<Block, Block> BLOCK_TO_SLAB =
-      Util.make(
-          () -> {
-            final ImmutableBiMap.Builder<Block, Block> builder = new ImmutableBiMap.Builder<>();
-            BlockFamilies.getFamilies()
-                .filter(blockFamily -> blockFamily.getVariant(BlockFamily.Variant.SLAB) != null)
-                .forEach(
-                    blockFamily ->
-                        builder.put(
-                            blockFamily.getBaseBlock(),
-                            blockFamily.getVariant(BlockFamily.Variant.SLAB)));
-            builder.putAll(RoadSlabBlocks.BLOCK_TO_SLABS);
-            return builder.build();
-          });
+  protected static final BiMap<Block, Block> BLOCK_TO_SLAB = BlockFamilies.getFamilies()
+      .filter(blockFamily -> blockFamily.getVariant(BlockFamily.Variant.SLAB) != null)
+      .map(blockFamily -> {
+        final Block variant = blockFamily.getVariant(BlockFamily.Variant.SLAB);
+        final Block baseBlock = blockFamily.getBaseBlock();
+        return baseBlock == null || variant == null ? null : Maps.immutableEntry(baseBlock, variant);
+      })
+      .filter(Objects::nonNull)
+      .collect(ImmutableBiMap.toImmutableBiMap(Map.Entry::getKey, Map.Entry::getValue));
 
   public SlabToolItem(Settings settings) {
     super(settings);
@@ -98,9 +92,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
   public void appendTooltip(
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(
-        new TranslatableText("item.mishanguc.slab_tool.tooltip")
-            .setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+    tooltip.add(new TranslatableText("item.mishanguc.slab_tool.tooltip").formatted(Formatting.GRAY));
   }
 
   /**
@@ -118,38 +110,25 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
       if (state.contains(Properties.SLAB_TYPE)
           && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
         final BlockHitResult raycast = ((BlockHitResult) miner.raycast(20, 0, false));
-        boolean bl = raycast.getPos().y - (double) raycast.getBlockPos().getY() > 0.5D;
-        if (bl) {
-          // 破坏上半砖的情况。
-          final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.BOTTOM));
-          final BlockState brokenState = state.with(Properties.SLAB_TYPE, SlabType.TOP);
-          block.onBreak(world, pos, brokenState, miner);
-          if (bl1) {
-            block.onBroken(world, pos, brokenState);
-            if (miner instanceof final ServerPlayerEntity serverPlayerEntity && !serverPlayerEntity.interactionManager.isCreative()) {
-              block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
-            }
-            miner.getStackInHand(Hand.MAIN_HAND).damage(1, miner, player -> player.sendToolBreakStatus(Hand.MAIN_HAND));
+        boolean isTop = raycast.getPos().y - (double) raycast.getBlockPos().getY() > 0.5D;
+        final SlabType slabTypeToSet = isTop ? SlabType.BOTTOM : SlabType.TOP;
+        final SlabType slabTypeBroken = isTop ? SlabType.TOP : SlabType.BOTTOM;
+        // 破坏上半砖的情况。
+        final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, slabTypeToSet));
+        final BlockState brokenState = state.with(Properties.SLAB_TYPE, slabTypeBroken);
+        block.onBreak(world, pos, brokenState, miner);
+        if (bl1) {
+          block.onBroken(world, pos, brokenState);
+          if (!miner.isCreative()) {
+            block.afterBreak(world, miner, pos, brokenState, world.getBlockEntity(pos), miner.getMainHandStack().copy());
           }
-          return bl1;
-        } else {
-          // 破坏下半砖的情况
-          final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.TOP));
-          final BlockState brokenState = state.with(Properties.SLAB_TYPE, SlabType.BOTTOM);
-          block.onBreak(world, pos, brokenState, miner);
-          if (bl1) {
-            block.onBroken(world, pos, brokenState);
-            if (miner instanceof final ServerPlayerEntity serverPlayerEntity && !(serverPlayerEntity.interactionManager.isCreative())) {
-              block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
-            }
-            miner.getStackInHand(Hand.MAIN_HAND).damage(1, miner, player -> player.sendToolBreakStatus(Hand.MAIN_HAND));
-          }
-          return bl1;
+          miner.getStackInHand(Hand.MAIN_HAND).damage(1, miner, player -> player.sendToolBreakStatus(Hand.MAIN_HAND));
         }
+        return !bl1;
       }
     } catch (IllegalArgumentException | ClassCastException ignored) {
     }
-    return super.canMine(state, world, pos, miner);
+    return true;
   }
 
   @Environment(EnvType.CLIENT)

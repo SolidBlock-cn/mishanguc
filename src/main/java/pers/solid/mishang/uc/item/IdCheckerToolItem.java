@@ -18,6 +18,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -129,7 +130,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
   }
 
   @Override
-  public ActionResult attackEntityCallback(
+  public @NotNull ActionResult attackEntityCallback(
       PlayerEntity player,
       World world,
       Hand hand,
@@ -139,7 +140,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
   }
 
   @Override
-  public ActionResult useEntityCallback(
+  public @NotNull ActionResult useEntityCallback(
       PlayerEntity player,
       World world,
       Hand hand,

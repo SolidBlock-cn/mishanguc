@@ -928,7 +928,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     recipe.addInventoryChangedCriterion("has_the_ingredient", ingredient);
     final Identifier id = ResourceGeneratorHelper.getItemId(result);
     PACK.addRecipe(id, recipe);
-    PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/lights"), recipe);
+    PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/light/"), recipe);
   }
 
   private static void addShapelessRecipeForLight(ItemConvertible result, int count, ItemConvertible... ingredients) {
@@ -938,7 +938,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     }
     final Identifier id = ResourceGeneratorHelper.getItemId(result);
     PACK.addRecipe(id, recipe);
-    PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/lights"), recipe);
+    PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/light/"), recipe);
   }
 
   @Override
