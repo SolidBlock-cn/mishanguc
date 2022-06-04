@@ -36,7 +36,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
    * If the value of it is <code>null</code>, it usually means "it depends", typically "does while
    * sneaking".
    */
-  final @Nullable Boolean includesFluid;
+  protected final @Nullable Boolean includesFluid;
 
   public BlockToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings);

@@ -9,6 +9,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -23,26 +24,27 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class AllFunctioningToolItem extends MiningToolItem implements ItemResourceGenerator {
-  protected static final AnyFunctioningToolMaterial MATERIAL = new AnyFunctioningToolMaterial();
+public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGenerator, InteractsWithEntity {
+  protected static final OmnipotentToolMaterial MATERIAL = new OmnipotentToolMaterial();
 
-
-  public AllFunctioningToolItem(Settings settings) {
+  public OmnipotentToolItem(Settings settings) {
     super(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, MATERIAL, TagKey.of(Registry.BLOCK_KEY, new Identifier("minecraft", "mineable/pickaxe")), settings);
   }
 
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(Text.translatable("item.mishanguc.all_functioning_tool.tooltip.1", Text.keybind("key.attack").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.all_functioning_tool.tooltip.2", Text.keybind("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
+    tooltip.add(Text.translatable("item.mishanguc.omnipotent_tool.tooltip.1", Text.keybind("key.attack").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
+    tooltip.add(Text.translatable("item.mishanguc.omnipotent_tool.tooltip.2", Text.keybind("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
   }
 
   @Override
@@ -62,8 +64,10 @@ public class AllFunctioningToolItem extends MiningToolItem implements ItemResour
   }
 
   @Override
-  public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-    entity.heal(Float.POSITIVE_INFINITY);
+  public @NotNull ActionResult useEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
+    if (entity instanceof LivingEntity livingEntity) {
+      livingEntity.heal(Float.POSITIVE_INFINITY);
+    }
     return ActionResult.SUCCESS;
   }
 
@@ -85,8 +89,8 @@ public class AllFunctioningToolItem extends MiningToolItem implements ItemResour
         .addInventoryChangedCriterion("has_repeating_command_block", Items.REPEATING_COMMAND_BLOCK);
   }
 
-  private static class AnyFunctioningToolMaterial implements ToolMaterial {
-    private AnyFunctioningToolMaterial() {
+  private static class OmnipotentToolMaterial implements ToolMaterial {
+    private OmnipotentToolMaterial() {
     }
 
     @Override

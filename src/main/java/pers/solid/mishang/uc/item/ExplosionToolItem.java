@@ -48,11 +48,11 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
   @Override
   public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
     final ItemStack stack = user.getStackInHand(hand);
-    if (world.isClient) return TypedActionResult.success(stack);
     final HitResult raycast = user.raycast(128, 0, user.isSneaking());
     if (raycast.getType() == HitResult.Type.MISS) {
       return TypedActionResult.fail(stack);
     }
+    if (world.isClient) return TypedActionResult.success(stack);
     final Vec3d pos = raycast.getPos();
     final GameRules.BooleanRule booleanRule = world.getGameRules().get(GameRules.DO_TILE_DROPS);
     final boolean backup = booleanRule.get();

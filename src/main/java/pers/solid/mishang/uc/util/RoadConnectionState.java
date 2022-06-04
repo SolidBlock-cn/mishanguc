@@ -2,11 +2,9 @@ package pers.solid.mishang.uc.util;
 
 import com.mojang.datafixers.util.Either;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
 
 import java.util.Objects;
@@ -89,11 +87,11 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
   }
 
   public static MutableText text(LineColor lineColor) {
-    return Text.translatable("roadConnectionState.lineColor." + lineColor.asString()).setStyle(Style.EMPTY.withColor(Util.make(() -> switch (lineColor) {
+    return Text.translatable("roadConnectionState.lineColor." + lineColor.asString()).formatted(switch (lineColor) {
       case WHITE -> Formatting.WHITE;
       case YELLOW -> Formatting.YELLOW;
       default -> Formatting.GRAY;
-    })));
+    });
   }
 
   public static MutableText text(LineType lineType) {
