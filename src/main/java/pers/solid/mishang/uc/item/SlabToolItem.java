@@ -52,38 +52,25 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
       if (state.contains(Properties.SLAB_TYPE)
           && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
         final BlockHitResult raycast = ((BlockHitResult) miner.raycast(20, 0, false));
-        boolean bl = raycast.getPos().y - (double) raycast.getBlockPos().getY() > 0.5D;
-        if (bl) {
-          // 破坏上半砖的情况。
-          final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.BOTTOM));
-          final BlockState brokenState = state.with(Properties.SLAB_TYPE, SlabType.TOP);
-          block.onBreak(world, pos, brokenState, miner);
-          if (bl1) {
-            block.onBroken(world, pos, brokenState);
-            if (miner.isCreative()) {
-              block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
-            }
-            miner.getStackInHand(Hand.MAIN_HAND).damage(1, miner, player -> player.sendToolBreakStatus(Hand.MAIN_HAND));
+        boolean isTop = raycast.getPos().y - (double) raycast.getBlockPos().getY() > 0.5D;
+        final SlabType slabTypeToSet = isTop ? SlabType.BOTTOM : SlabType.TOP;
+        final SlabType slabTypeBroken = isTop ? SlabType.TOP : SlabType.BOTTOM;
+        // 破坏上半砖的情况。
+        final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, slabTypeToSet));
+        final BlockState brokenState = state.with(Properties.SLAB_TYPE, slabTypeBroken);
+        block.onBreak(world, pos, brokenState, miner);
+        if (bl1) {
+          block.onBroken(world, pos, brokenState);
+          if (!miner.isCreative()) {
+            block.afterBreak(world, miner, pos, brokenState, world.getBlockEntity(pos), miner.getMainHandStack().copy());
           }
-          return bl1;
-        } else {
-          // 破坏下半砖的情况
-          final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, SlabType.TOP));
-          final BlockState brokenState = state.with(Properties.SLAB_TYPE, SlabType.BOTTOM);
-          block.onBreak(world, pos, brokenState, miner);
-          if (bl1) {
-            block.onBroken(world, pos, brokenState);
-            if (miner.isCreative()) {
-              block.afterBreak(world, miner, pos, brokenState, null, new ItemStack(this));
-            }
-            miner.getStackInHand(Hand.MAIN_HAND).damage(1, miner, player -> player.sendToolBreakStatus(Hand.MAIN_HAND));
-          }
-          return bl1;
+          miner.getStackInHand(Hand.MAIN_HAND).damage(1, miner, player -> player.sendToolBreakStatus(Hand.MAIN_HAND));
         }
+        return !bl1;
       }
     } catch (IllegalArgumentException | ClassCastException ignored) {
     }
-    return super.canMine(state, world, pos, miner);
+    return true;
   }
 
   @Environment(EnvType.CLIENT)

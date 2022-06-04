@@ -34,6 +34,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.NbtPrettyPrinter;
 
@@ -101,7 +102,7 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
   }
 
   @Override
-  public ActionResult attackEntityCallback(
+  public @NotNull ActionResult attackEntityCallback(
       PlayerEntity player,
       World world,
       Hand hand,
@@ -112,7 +113,7 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
   }
 
   @Override
-  public ActionResult useEntityCallback(
+  public @NotNull ActionResult useEntityCallback(
       PlayerEntity player,
       World world,
       Hand hand,

@@ -2,7 +2,6 @@ package pers.solid.mishang.uc.util;
 
 import com.mojang.datafixers.util.Either;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.StringIdentifiable;
@@ -149,7 +148,7 @@ public final class RoadConnectionState {
         formatting = Formatting.GRAY;
         break;
     }
-    return new TranslatableText("roadConnectionState.lineColor." + lineColor.asString()).setStyle(Style.EMPTY.withColor(formatting));
+    return new TranslatableText("roadConnectionState.lineColor." + lineColor.asString()).formatted(formatting);
   }
 
   public static MutableText text(LineType lineType) {

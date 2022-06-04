@@ -80,7 +80,7 @@ public final class MishangucItems {
 
   @RegisterIdentifier
   @SimpleModel(parent = "item/handheld")
-  public static final AllFunctioningToolItem ALL_FUNCTIONING_TOOL = new AllFunctioningToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).fireproof().rarity(Rarity.EPIC).maxCount(1));
+  public static final OmnipotentToolItem OMNIPOTENT_TOOL = new OmnipotentToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).fireproof().rarity(Rarity.EPIC).maxCount(1));
 
   @RegisterIdentifier
   public static final ExplosionToolItem EXPLOSION_TOOL = new ExplosionToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxDamage(1024));
