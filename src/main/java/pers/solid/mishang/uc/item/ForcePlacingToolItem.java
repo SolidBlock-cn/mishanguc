@@ -145,7 +145,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
             mainHandStack,
             raycast,
             includesFluid);
-    WorldRendererInvoker.drawShapeOutline(
+    WorldRendererInvoker.drawCuboidShapeOutline(
         worldRenderContext.matrixStack(),
         vertexConsumer,
         blockPlacementContext.stateToPlace.getOutlineShape(
@@ -158,7 +158,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
         1,
         0.8f);
     if (includesFluid) {
-      WorldRendererInvoker.drawShapeOutline(
+      WorldRendererInvoker.drawCuboidShapeOutline(
           worldRenderContext.matrixStack(),
           vertexConsumer,
           blockPlacementContext
@@ -173,7 +173,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           1,
           0.5f);
     }
-    WorldRendererInvoker.drawShapeOutline(
+    WorldRendererInvoker.drawCuboidShapeOutline(
         worldRenderContext.matrixStack(),
         vertexConsumer,
         blockPlacementContext.hitState.getOutlineShape(
@@ -186,7 +186,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
         0,
         0.8f);
     if (includesFluid) {
-      WorldRendererInvoker.drawShapeOutline(
+      WorldRendererInvoker.drawCuboidShapeOutline(
           worldRenderContext.matrixStack(),
           vertexConsumer,
           blockPlacementContext

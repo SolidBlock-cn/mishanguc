@@ -135,7 +135,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
     final ClientWorld world = worldRenderContext.world();
     final BlockPos blockPos = blockOutlineContext.blockPos();
     final BlockState state = blockOutlineContext.blockState();
-    WorldRendererInvoker.drawShapeOutline(
+    WorldRendererInvoker.drawCuboidShapeOutline(
         worldRenderContext.matrixStack(),
         vertexConsumer,
         state.getOutlineShape(world, blockPos),
@@ -147,7 +147,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
         0,
         0.8f);
     if (includesFluid(itemStack, player.isSneaking())) {
-      WorldRendererInvoker.drawShapeOutline(
+      WorldRendererInvoker.drawCuboidShapeOutline(
           worldRenderContext.matrixStack(),
           vertexConsumer,
           state.getFluidState().getShape(world, blockPos),

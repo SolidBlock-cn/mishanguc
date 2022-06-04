@@ -275,7 +275,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
       final BlockState state = world.getBlockState(pos);
       final BlockPlacementContext offsetBlockPlacementContext = new BlockPlacementContext(blockPlacementContext, pos);
       if (offsetBlockPlacementContext.canPlace() && offsetBlockPlacementContext.canReplace()) {
-        WorldRendererInvoker.drawShapeOutline(
+        WorldRendererInvoker.drawCuboidShapeOutline(
             worldRenderContext.matrixStack(),
             vertexConsumer,
             offsetBlockPlacementContext.stateToPlace.getOutlineShape(world, pos),
@@ -287,7 +287,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
             1,
             0.8f);
         if (includesFluid) {
-          WorldRendererInvoker.drawShapeOutline(
+          WorldRendererInvoker.drawCuboidShapeOutline(
               worldRenderContext.matrixStack(),
               vertexConsumer,
               offsetBlockPlacementContext.stateToPlace.getFluidState().getShape(world, pos),
@@ -300,7 +300,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
               0.5f);
         }
       }
-      WorldRendererInvoker.drawShapeOutline(
+      WorldRendererInvoker.drawCuboidShapeOutline(
           worldRenderContext.matrixStack(),
           vertexConsumer,
           state.getOutlineShape(world, pos),
@@ -312,7 +312,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
           0,
           0.8f);
       if (includesFluid) {
-        WorldRendererInvoker.drawShapeOutline(
+        WorldRendererInvoker.drawCuboidShapeOutline(
             worldRenderContext.matrixStack(),
             vertexConsumer,
             state.getFluidState().getShape(world, pos),

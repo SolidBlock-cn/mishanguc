@@ -158,7 +158,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
       final BlockState halfState =
           state.with(Properties.SLAB_TYPE, isTop ? SlabType.TOP : SlabType.BOTTOM);
       final BlockPos blockPos = blockOutlineContext.blockPos();
-      WorldRendererInvoker.drawShapeOutline(
+      WorldRendererInvoker.drawCuboidShapeOutline(
           worldRenderContext.matrixStack(),
           consumers.getBuffer(RenderLayer.LINES),
           halfState.getOutlineShape(world, blockPos, ShapeContext.of(blockOutlineContext.entity())),

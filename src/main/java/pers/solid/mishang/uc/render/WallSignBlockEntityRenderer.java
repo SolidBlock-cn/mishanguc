@@ -57,7 +57,7 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
       final Item mainHandStackItem = player.getMainHandStack().getItem();
       if (mainHandStackItem instanceof final BlockItem blockItem
           && INVISIBLE_BLOCKS.contains(blockItem.getBlock())) {
-        WorldRendererInvoker.drawShapeOutline(
+        WorldRendererInvoker.drawCuboidShapeOutline(
             matrices,
             vertexConsumers.getBuffer(RenderLayer.LINES),
             entity

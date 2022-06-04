@@ -17,14 +17,14 @@ public interface WorldRendererInvoker {
    *
    * @see WorldRenderer
    */
-  @Invoker("drawShapeOutline")
-  static void drawShapeOutline(
+  @Invoker("drawCuboidShapeOutline")
+  static void drawCuboidShapeOutline(
       MatrixStack matrices,
       VertexConsumer vertexConsumer,
-      VoxelShape voxelShape,
-      double x,
-      double y,
-      double z,
+      VoxelShape shape,
+      double offsetX,
+      double offsetY,
+      double offsetZ,
       float red,
       float green,
       float blue,
