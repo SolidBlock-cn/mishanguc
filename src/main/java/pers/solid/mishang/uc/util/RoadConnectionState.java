@@ -3,7 +3,7 @@ package pers.solid.mishang.uc.util;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
-import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.Util;
@@ -65,23 +65,23 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
   }
 
   public static MutableText text(Direction direction) {
-    return Text.translatable("direction." + direction.asString());
+    return new TranslatableText("direction." + direction.asString());
   }
 
   public static MutableText text(HorizontalCornerDirection direction) {
-    return Text.translatable("direction." + direction.asString());
+    return new TranslatableText("direction." + direction.asString());
   }
 
   public static MutableText text(Either<Direction, HorizontalCornerDirection> direction) {
     if (direction == null) {
-      return Text.translatable("direction.none");
+      return new TranslatableText("direction.none");
     } else {
       return direction.map(RoadConnectionState::text, RoadConnectionState::text);
     }
   }
 
   public static MutableText text(WhetherConnected whetherConnected) {
-    return Text.translatable("roadConnectionState.whether." + whetherConnected.asString()).formatted(switch (whetherConnected) {
+    return new TranslatableText("roadConnectionState.whether." + whetherConnected.asString()).formatted(switch (whetherConnected) {
       case NOT_CONNECTED_TO -> Formatting.RED;
       case CONNECTED_TO -> Formatting.GREEN;
       default -> Formatting.YELLOW;
@@ -89,7 +89,7 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
   }
 
   public static MutableText text(LineColor lineColor) {
-    return Text.translatable("roadConnectionState.lineColor." + lineColor.asString()).setStyle(Style.EMPTY.withColor(Util.make(() -> switch (lineColor) {
+    return new TranslatableText("roadConnectionState.lineColor." + lineColor.asString()).setStyle(Style.EMPTY.withColor(Util.make(() -> switch (lineColor) {
       case WHITE -> Formatting.WHITE;
       case YELLOW -> Formatting.YELLOW;
       default -> Formatting.GRAY;
@@ -97,7 +97,7 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
   }
 
   public static MutableText text(LineType lineType) {
-    return Text.translatable("roadConnectionState.lineType." + lineType.asString());
+    return new TranslatableText("roadConnectionState.lineType." + lineType.asString());
   }
 
   public boolean mayConnect() {

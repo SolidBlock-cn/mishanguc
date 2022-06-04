@@ -2,8 +2,7 @@ package pers.solid.mishang.uc.util;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.StringIdentifiable;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +23,7 @@ public enum VerticalAlign implements StringIdentifiable {
     return M.get(this);
   }
 
-  public MutableText getName() {
-    return Text.translatable("vertical_align.mishanguc." + asString());
+  public TranslatableText getName() {
+    return new TranslatableText("vertical_align.mishanguc." + asString());
   }
 }

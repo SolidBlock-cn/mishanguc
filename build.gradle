@@ -31,10 +31,8 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    var brrp_mc_version = project.brrp_mc_version ?: project.minecraft_version
-
     // BRRP.
-    modImplementation("net.devtech:brrp:${project.brrp_version}-${brrp_mc_version}")
+    modImplementation("net.devtech:brrp:${project.brrp_version}-${project.minecraft_version}")
 }
 
 processResources {

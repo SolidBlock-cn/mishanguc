@@ -7,6 +7,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.ApiStatus;
@@ -142,6 +143,6 @@ public class FloatButtonWidget extends ButtonWidget {
   @Override
   public Text getMessage() {
     if (getValue() == defaultValue) return super.getMessage();
-    else return Text.literal("").append(super.getMessage()).formatted(Formatting.ITALIC);
+    else return new LiteralText("").append(super.getMessage()).formatted(Formatting.ITALIC);
   }
 }

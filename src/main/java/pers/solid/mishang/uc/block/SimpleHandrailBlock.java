@@ -8,7 +8,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.NotNull;
@@ -120,7 +120,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
   @Override
   public MutableText getName() {
     if (baseBlock != null) {
-      return Text.translatable("block.mishanguc.simple_handrail", baseBlock.getName());
+      return new TranslatableText("block.mishanguc.simple_handrail", baseBlock.getName());
     } else return super.getName();
   }
 
@@ -142,7 +142,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public MutableText getName() {
       final Block block = baseBlock();
-      return block == null ? super.getName() : Text.translatable("block.mishanguc.simple_handrail_central", block.getName());
+      return block == null ? super.getName() : new TranslatableText("block.mishanguc.simple_handrail_central", block.getName());
     }
   }
 
@@ -160,7 +160,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public MutableText getName() {
       final Block block = baseBlock();
-      return block == null ? super.getName() : Text.translatable("block.mishanguc.simple_handrail_corner", block.getName());
+      return block == null ? super.getName() : new TranslatableText("block.mishanguc.simple_handrail_corner", block.getName());
     }
   }
 
@@ -185,7 +185,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public MutableText getName() {
       final Block block = baseBlock();
-      return block == null ? super.getName() : Text.translatable("block.mishanguc.simple_handrail_stair", block.getName());
+      return block == null ? super.getName() : new TranslatableText("block.mishanguc.simple_handrail_stair", block.getName());
     }
   }
 
@@ -202,7 +202,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public MutableText getName() {
       final Block block = baseBlock();
-      return block == null ? super.getName() : Text.translatable("block.mishanguc.simple_handrail_outer", block.getName());
+      return block == null ? super.getName() : new TranslatableText("block.mishanguc.simple_handrail_outer", block.getName());
     }
   }
 }

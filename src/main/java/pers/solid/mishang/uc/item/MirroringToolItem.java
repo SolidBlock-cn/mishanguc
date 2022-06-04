@@ -14,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.Formatting;
@@ -84,15 +85,15 @@ public class MirroringToolItem extends BlockToolItem implements ItemResourceGene
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        Text.translatable("item.mishanguc.mirroring_tool.tooltip").formatted(Formatting.GRAY));
+        new TranslatableText("item.mishanguc.mirroring_tool.tooltip").formatted(Formatting.GRAY));
     final Boolean includesFluid = includesFluid(stack);
     if (includesFluid == null) {
       tooltip.add(
-          Text.translatable("item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking")
+          new TranslatableText("item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking")
               .formatted(Formatting.GRAY));
     } else if (includesFluid) {
       tooltip.add(
-          Text.translatable("item.mishanguc.block_tool.tooltip.includesFluid")
+          new TranslatableText("item.mishanguc.block_tool.tooltip.includesFluid")
               .formatted(Formatting.GRAY));
     }
   }

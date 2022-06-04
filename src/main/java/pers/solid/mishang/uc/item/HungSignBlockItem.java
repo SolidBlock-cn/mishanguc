@@ -9,8 +9,10 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -69,9 +71,9 @@ public class HungSignBlockItem extends NamedBlockItem {
     map.forEach(
         (direction, textContexts) -> {
           tooltip.add(
-              Text.translatable(
-                      "block.mishanguc.tooltip.hung_sign_block",
-                      Text.translatable("direction." + direction.asString()))
+              new TranslatableText(
+                  "block.mishanguc.tooltip.hung_sign_block",
+                  new TranslatableText("direction." + direction.asString()))
                   .formatted(Formatting.GRAY));
           textContexts.forEach(
               textContext -> {
@@ -98,10 +100,10 @@ public class HungSignBlockItem extends NamedBlockItem {
                 }));
     final ImmutableList<Text> build = appendable.build();
     if (!build.isEmpty()) {
-      final MutableText appendableText = Text.literal("");
+      final MutableText appendableText = new LiteralText("");
       build.forEach(t -> appendableText.append(" ").append(t));
       text.append(
-          Text.literal(" -" + appendableText.asTruncatedString(20)).formatted(Formatting.GRAY));
+          new LiteralText(" -" + appendableText.asTruncatedString(20)).formatted(Formatting.GRAY));
     }
     return text;
   }

@@ -21,7 +21,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
@@ -269,7 +269,7 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   @Override
   public MutableText getName() {
     final Block block = baseBlock();
-    return block == null ? super.getName() : Text.translatable("block.mishanguc.handrail_stair", block.getName());
+    return block == null ? super.getName() : new TranslatableText("block.mishanguc.handrail_stair", block.getName());
   }
 
   public enum Position implements StringIdentifiable {

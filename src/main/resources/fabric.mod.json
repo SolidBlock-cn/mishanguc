@@ -33,12 +33,13 @@
   "depends": {
     "fabricloader": ">=0.13.0",
     "fabric": "*",
-    "minecraft": [
-      ">=1.19-beta.5",
-      ">=1.19"
-    ],
+    "minecraft": ">=1.18.2",
     "better_runtime_resource_pack": ">=0.6.2"
   },
   "breaks": {
+    "minecraft": [
+      "~1.19",
+      ">=1.19"
+    ]
   }
 }

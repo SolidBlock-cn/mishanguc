@@ -8,8 +8,10 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -69,7 +71,7 @@ public class WallSignBlockItem extends NamedBlockItem {
                 .iterator());
     if (!texts.isEmpty()) {
       tooltip.add(
-          Text.translatable("block.mishanguc.tooltip.wall_sign_block")
+          new TranslatableText("block.mishanguc.tooltip.wall_sign_block")
               .formatted(Formatting.GRAY));
       tooltip.addAll(texts);
     }
@@ -87,10 +89,10 @@ public class WallSignBlockItem extends NamedBlockItem {
                 .filter(Objects::nonNull)
                 .iterator());
     if (!texts.isEmpty()) {
-      MutableText appendable = Text.literal("");
+      MutableText appendable = new LiteralText("");
       texts.forEach(t -> appendable.append(" ").append(t));
       text.append(
-          Text.literal(" -" + appendable.asTruncatedString(25)).formatted(Formatting.GRAY));
+          new LiteralText(" -" + appendable.asTruncatedString(25)).formatted(Formatting.GRAY));
     }
     return text;
   }

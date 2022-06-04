@@ -30,6 +30,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
@@ -98,7 +99,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        Text.translatable("item.mishanguc.slab_tool.tooltip")
+        new TranslatableText("item.mishanguc.slab_tool.tooltip")
             .setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
   }
 

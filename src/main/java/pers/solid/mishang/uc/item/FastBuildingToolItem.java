@@ -18,8 +18,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -146,17 +148,17 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        Text.translatable("item.mishanguc.fast_building_tool.tooltip.1")
+        new TranslatableText("item.mishanguc.fast_building_tool.tooltip.1")
             .formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.fast_building_tool.tooltip.2").formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.fast_building_tool.tooltip.2").formatted(Formatting.GRAY));
     tooltip.add(
-        Text.translatable(
-                "item.mishanguc.fast_building_tool.tooltip.range", Text.literal(Integer.toString(this.getRange(stack))).formatted(Formatting.GREEN))
+        new TranslatableText(
+            "item.mishanguc.fast_building_tool.tooltip.range", new LiteralText(Integer.toString(this.getRange(stack))).formatted(Formatting.GREEN))
             .formatted(Formatting.GRAY));
     tooltip.add(
-        Text.translatable(
-                "item.mishanguc.fast_building_tool.tooltip.matchingRule",
-                this.getMatchingRule(stack).getName().formatted(Formatting.GREEN))
+        new TranslatableText(
+            "item.mishanguc.fast_building_tool.tooltip.matchingRule",
+            this.getMatchingRule(stack).getName().formatted(Formatting.GREEN))
             .formatted(Formatting.GRAY));
   }
 
@@ -232,7 +234,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
 
   @Override
   public Text getName(ItemStack stack) {
-    return Text.literal("")
+    return new LiteralText("")
         .append(super.getName(stack))
         .append(" - ")
         .append(getMatchingRule(stack).getName());
@@ -337,7 +339,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
     final BlockMatchingRule newRule = RULES_TO_CYCLE.get(j);
     if (newRule != null) {
       stack.setSubNbt("MatchingRule", NbtString.of(newRule.getId().toString()));
-      final MutableText text = Text.literal("[ ");
+      final LiteralText text = new LiteralText("[ ");
       for (Iterator<BlockMatchingRule> iterator = RULES_TO_CYCLE.iterator(); iterator.hasNext(); ) {
         BlockMatchingRule rule = iterator.next();
         final MutableText name = rule.getName();

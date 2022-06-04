@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.ApiStatus;
@@ -114,7 +115,7 @@ public class BooleanButtonWidget extends ButtonWidget {
     final @Nullable Boolean value = getValue();
     return value == null
         ? message
-        : Text.literal("")
+        : new LiteralText("")
         .append(message)
         .fillStyle(Style.EMPTY.withColor(value ? 0xb2ff96 : 0xffac96));
   }

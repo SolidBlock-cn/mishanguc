@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
+import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -22,10 +23,12 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityFlagsPredicate;
 import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.KeybindText;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -70,10 +73,10 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
 
   @Override
   public Text getName(ItemStack stack) {
-    return Text.translatable(getTranslationKey(stack) + ".formatted",
+    return new TranslatableText(getTranslationKey(stack) + ".formatted",
         /* explosion power: */power(stack),
-        /* with fire: */Text.translatable("item.mishanguc.explosion_tool.createFire." + createFire(stack)),
-        /* destruction type: */Text.translatable("item.mishanguc.explosion_tool.destructionType." + destructionType(stack).name().toLowerCase())
+        /* with fire: */new TranslatableText("item.mishanguc.explosion_tool.createFire." + createFire(stack)),
+        /* destruction type: */new TranslatableText("item.mishanguc.explosion_tool.destructionType." + destructionType(stack).name().toLowerCase())
     );
   }
 
@@ -162,14 +165,14 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(Text.translatable("item.mishanguc.explosion_tool.tooltip.1", Text.keybind("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.explosion_tool.tooltip.2").formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.explosion_tool.tooltip.3").formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.explosion_tool.tooltip.4").formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.explosion_tool.tooltip.5").formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.explosion_tool.tooltip.power", Text.literal(String.valueOf(power(stack))).formatted(Formatting.YELLOW)).formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.explosion_tool.tooltip.createFire", createFire(stack) ? ScreenTexts.YES.copy().formatted(Formatting.GREEN) : ScreenTexts.NO.copy().formatted(Formatting.RED)).formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.explosion_tool.tooltip.destructionType", Text.translatable("item.mishanguc.explosion_tool.destructionType." + destructionType(stack).name().toLowerCase()).styled(style -> style.withColor(0x779999))).formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.1", new KeybindText("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.2").formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.3").formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.4").formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.5").formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.power", new LiteralText(String.valueOf(power(stack))).formatted(Formatting.YELLOW)).formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.createFire", createFire(stack) ? ScreenTexts.YES.copy().formatted(Formatting.GREEN) : ScreenTexts.NO.copy().formatted(Formatting.RED)).formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.explosion_tool.tooltip.destructionType", new TranslatableText("item.mishanguc.explosion_tool.destructionType." + destructionType(stack).name().toLowerCase()).styled(style -> style.withColor(0x779999))).formatted(Formatting.GRAY));
   }
 
   @Override

@@ -31,20 +31,21 @@ public class ScreenMixin {
       method = "handleTextClick",
       at =
       @At(
-          target = "Lnet/minecraft/client/network/ClientPlayerEntity;sendCommand(Ljava/lang/String;)V",
+          target = "Lnet/minecraft/client/gui/screen/Screen;sendMessage(Ljava/lang/String;Z)V",
           shift = At.Shift.BEFORE,
           value = "INVOKE"),
       cancellable = true)
   public void handleTextClickMixin(Style style, CallbackInfoReturnable<Boolean> cir) {
     final ClickEvent clickEvent = style.getClickEvent();
     if (clickEvent instanceof final TextClickEvent textClickEvent && client != null && client.player != null) {
-      this.client.player.sendMessage(
-          textClickEvent.text);
+      this.client.player.sendSystemMessage(
+          textClickEvent.text, this.client.player.getUuid());
       cir.setReturnValue(true);
       cir.cancel();
     } else if (clickEvent instanceof final NbtClickEvent nbtClickEvent && client != null && client.player != null) {
-      this.client.player.sendMessage(
-          NbtPrettyPrinter.serialize(nbtClickEvent.nbt));
+      this.client.player.sendSystemMessage(
+          NbtPrettyPrinter.serialize(nbtClickEvent.nbt),
+          this.client.player.getUuid());
       cir.setReturnValue(true);
       cir.cancel();
     }

@@ -12,6 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Formatting;
@@ -83,10 +84,10 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        Text.translatable("item.mishanguc.rotating_tool.tooltip.1")
+        new TranslatableText("item.mishanguc.rotating_tool.tooltip.1")
             .formatted(Formatting.GRAY));
     tooltip.add(
-        Text.translatable("item.mishanguc.rotating_tool.tooltip.2")
+        new TranslatableText("item.mishanguc.rotating_tool.tooltip.2")
             .formatted(Formatting.GRAY));
   }
 

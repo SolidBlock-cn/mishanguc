@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -33,13 +34,13 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
       PlayerEntity playerEntity, BlockState blockState, BlockPos blockPos) {
     Block block = blockState.getBlock();
     if (!(block instanceof final Road road)) {
-      playerEntity.sendMessage(Text.translatable("debug.mishanguc.notRoad").formatted(Formatting.RED), false);
+      playerEntity.sendMessage(new TranslatableText("debug.mishanguc.notRoad").formatted(Formatting.RED), false);
       return ActionResult.FAIL;
     }
     playerEntity.sendMessage(
-        Text.translatable(
-                "debug.mishanguc.roadConnectionState.allDir",
-                String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
+        new TranslatableText(
+            "debug.mishanguc.roadConnectionState.allDir",
+            String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
             .formatted(Formatting.YELLOW),
         false);
     Direction.Type.HORIZONTAL.forEach(
@@ -47,7 +48,7 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
           final RoadConnectionState connectionState =
               road.getConnectionStateOf(blockState, direction);
           playerEntity.sendMessage(
-              Text.translatable(
+              new TranslatableText(
                   "debug.mishanguc.roadConnectionState.brief",
                   RoadConnectionState.text(direction),
                   RoadConnectionState.text(connectionState.direction()).formatted(Formatting.WHITE),
@@ -83,7 +84,7 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(Text.translatable("item.mishanguc.road_connection_state_debugging_tool.tooltip.1").formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.road_connection_state_debugging_tool.tooltip.2").formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.road_connection_state_debugging_tool.tooltip.1").formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.road_connection_state_debugging_tool.tooltip.2").formatted(Formatting.GRAY));
   }
 }

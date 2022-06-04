@@ -14,6 +14,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
@@ -75,10 +76,10 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     RoadWithAngleLine.super.appendRoadTooltip(stack, world, tooltip, options);
     tooltip.add(
-        Text.translatable("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.1")
+        new TranslatableText("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.1")
             .formatted(Formatting.GRAY));
     tooltip.add(
-        Text.translatable("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.2")
+        new TranslatableText("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.2")
             .formatted(Formatting.GRAY));
   }
 

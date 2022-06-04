@@ -20,7 +20,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
@@ -178,7 +178,7 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
   @Override
   public MutableText getName() {
     final Block block = baseBlock();
-    return block == null ? super.getName() : Text.translatable("block.mishanguc.handrail_corner", block.getName());
+    return block == null ? super.getName() : new TranslatableText("block.mishanguc.handrail_corner", block.getName());
   }
 
   @Override

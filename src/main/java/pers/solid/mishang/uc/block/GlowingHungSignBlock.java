@@ -12,7 +12,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +47,7 @@ public class GlowingHungSignBlock extends HungSignBlock {
   @Override
   public MutableText getName() {
     if (baseBlock != null) {
-      return Text.translatable("block.mishanguc.glowing_hung_sign", baseBlock.getName());
+      return new TranslatableText("block.mishanguc.glowing_hung_sign", baseBlock.getName());
     }
     return super.getName();
   }
