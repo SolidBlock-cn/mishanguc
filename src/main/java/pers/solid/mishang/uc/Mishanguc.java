@@ -213,18 +213,21 @@ public class Mishanguc implements ModInitializer {
         HungSignBlocks.JUNGLE_HUNG_SIGN,
         HungSignBlocks.ACACIA_HUNG_SIGN,
         HungSignBlocks.DARK_OAK_HUNG_SIGN,
+        HungSignBlocks.MANGROVE_HUNG_SIGN,
         HungSignBlocks.OAK_HUNG_SIGN_BAR,
         HungSignBlocks.SPRUCE_HUNG_SIGN_BAR,
         HungSignBlocks.BIRCH_HUNG_SIGN_BAR,
         HungSignBlocks.JUNGLE_HUNG_SIGN_BAR,
         HungSignBlocks.ACACIA_HUNG_SIGN_BAR,
         HungSignBlocks.DARK_OAK_HUNG_SIGN_BAR,
+        HungSignBlocks.MANGROVE_HUNG_SIGN_BAR,
         WallSignBlocks.OAK_WALL_SIGN,
         WallSignBlocks.SPRUCE_WALL_SIGN,
         WallSignBlocks.BIRCH_WALL_SIGN,
         WallSignBlocks.JUNGLE_WALL_SIGN,
         WallSignBlocks.ACACIA_WALL_SIGN,
-        WallSignBlocks.DARK_OAK_WALL_SIGN
+        WallSignBlocks.DARK_OAK_WALL_SIGN,
+        WallSignBlocks.MANGROVE_WALL_SIGN
     };
     for (Block block : woodenBlocks) {
       flammableBlockRegistry.add(block, 5, 20);
@@ -235,7 +238,8 @@ public class Mishanguc implements ModInitializer {
         HandrailBlocks.SIMPLE_BIRCH_HANDRAIL,
         HandrailBlocks.SIMPLE_JUNGLE_HANDRAIL,
         HandrailBlocks.SIMPLE_ACACIA_HANDRAIL,
-        HandrailBlocks.SIMPLE_DARK_OAK_HANDRAIL
+        HandrailBlocks.SIMPLE_DARK_OAK_HANDRAIL,
+        HandrailBlocks.SIMPLE_MANGROVE_HANDRAIL
     };
     for (HandrailBlock handrail : woodenHandrails) {
       flammableBlockRegistry.add(handrail, 5, 20);

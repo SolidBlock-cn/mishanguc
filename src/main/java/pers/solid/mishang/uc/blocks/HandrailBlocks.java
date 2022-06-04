@@ -161,6 +161,9 @@ public final class HandrailBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_DARK_OAK_HANDRAIL = new SimpleHandrailBlock(Blocks.DARK_OAK_WOOD);
   @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.0-mc1.19")
+  public static final SimpleHandrailBlock SIMPLE_MANGROVE_HANDRAIL = new SimpleHandrailBlock(Blocks.MANGROVE_WOOD);
+  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_CRIMSON_HANDRAIL = new SimpleHandrailBlock(Blocks.CRIMSON_STEM);
   @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_WARPED_HANDRAIL = new SimpleHandrailBlock(Blocks.CRIMSON_STEM);
@@ -172,6 +175,7 @@ public final class HandrailBlocks extends MishangucBlocks {
     SIMPLE_JUNGLE_HANDRAIL.texture = "block/jungle_log";
     SIMPLE_ACACIA_HANDRAIL.texture = "block/acacia_log";
     SIMPLE_DARK_OAK_HANDRAIL.texture = "block/dark_oak_log";
+    SIMPLE_MANGROVE_HANDRAIL.texture = "block/mangrove_log";
     SIMPLE_CRIMSON_HANDRAIL.texture = "block/crimson_stem";
     SIMPLE_WARPED_HANDRAIL.texture = "block/warped_stem";
   }

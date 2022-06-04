@@ -47,6 +47,10 @@ public final class WallSignBlocks extends MishangucBlocks {
       new WallSignBlock(Blocks.DARK_OAK_PLANKS);
 
   @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.0-mc1.19")
+  public static final WallSignBlock MANGROVE_WALL_SIGN = new WallSignBlock(Blocks.MANGROVE_PLANKS);
+
+  @RegisterIdentifier
   public static final WallSignBlock CRIMSON_WALL_SIGN =
       new WallSignBlock(Blocks.CRIMSON_PLANKS);
 
