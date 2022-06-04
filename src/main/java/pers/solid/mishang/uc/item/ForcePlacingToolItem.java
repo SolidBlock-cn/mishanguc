@@ -26,6 +26,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
@@ -205,7 +206,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   }
 
   @Override
-  public ActionResult attackEntityCallback(
+  public @NotNull ActionResult attackEntityCallback(
       PlayerEntity player,
       World world,
       Hand hand,
@@ -219,7 +220,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   }
 
   @Override
-  public ActionResult useEntityCallback(
+  public @NotNull ActionResult useEntityCallback(
       PlayerEntity player,
       World world,
       Hand hand,

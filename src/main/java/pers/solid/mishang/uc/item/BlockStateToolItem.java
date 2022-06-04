@@ -88,7 +88,7 @@ public class BlockStateToolItem extends BlockToolItem {
       Hand hand,
       boolean fluidIncluded) {
     if (world.isClient) {
-      return getBlockStateOf(player, world, blockHitResult.getBlockPos(), false);
+      return getBlockStateOf(player, world, blockHitResult.getBlockPos(), fluidIncluded);
     } else {
       return ActionResult.SUCCESS;
     }

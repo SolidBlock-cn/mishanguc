@@ -82,14 +82,11 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
     final BlockEntity blockEntity = world.getBlockEntity(blockPos);
     final NbtList texts;
     final NbtCompound tag = stack.getNbt();
-    if (tag == null) {
+    if (tag == null || !tag.contains("texts", NbtType.LIST)) {
       player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.null_tag", new KeybindText("key.attack").fillStyle(Style.EMPTY.withColor(0xdeb305))).formatted(Formatting.RED), false);
       return ActionResult.FAIL;
-    } else if (tag.contains("texts", NbtType.LIST)) {
-      texts = tag.getList("texts", NbtType.COMPOUND);
     } else {
-      player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.tag").formatted(Formatting.RED), false);
-      return ActionResult.FAIL;
+      texts = tag.getList("texts", NbtType.COMPOUND);
     }
     try {
       if (blockEntity instanceof SignBlockEntity signBlockEntity) {
