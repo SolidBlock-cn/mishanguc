@@ -1,6 +1,40 @@
 ## Update Log
 
-Note: Not all versions in the update log are definitely published. Please refer to relevant pages in CurseForge and Mortinth, or the "releases" section in the GitHub.
+Note: Not all versions in the update log are definitely published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
+
+### 0.2.0
+
+Updated following content:
+
+- Licence switched to LGPLv3.
+- Use BRRP as the dependency, instead of former ARRP.
+- Added custom colored sign blocks, but as it is not stable yet, it is not formally added.
+- Added crafting recipe for some content.
+- Adjusted the texture of road block.
+- No longer allow snow placed on road blocks (blocks with `mishanguc:roads` tag), to prevent the situation roads can't be seen in snowy days.
+- Added `-rect` and `-pattern` feature or sign blocks. Clicking a sign holding slime ball can replace arrow characters with `-pattern` form.
+- Walking on road blocks (blocks with `mishanguc:roads` tag) can accelerate, which does not affect FOV.
+- Added yellow straight line and angle line roads (previously there is only white), yellow cross line roads (previously there is only white), road with white thick T-shaped yellow line (previously there is only road with white normal line with yellow line, and white thick line with yellow double line). Auto-connecting road blocks are adjusted accordingly.
+- Changed Chinese names of some road blocks (see the update log in Chinese).
+- Changed `RoadConnectionState` into a record. For versions for 1.16.5, though record is not supported in Java 8, relevant changed are made following the relevant formats.
+- Adjusted the outline drawing of fast building tool and force placing tool, to make them consistent.
+- Some items have durability now.
+- When mirroring tool is used on the up or down surface of blocks, the mirror will be determined by player's horizontal facing.
+- Added explosion tool and omnipotent tool.
+- All items are not stackable now.
+- When operating on blocks with rotating tools or mirroring tools, if the operated block is the same as that before the operation, the operation is regarded fail.
+- The model of fast building tool can be affected by its properties. If the matching range is larger, the texture is deeper.
+- Adjusted the display of mod info. It displays only when player logs into the world, and will not display again when the player respawns or switches dimension.
+
+Fixed following issues:
+
+- When displaying values of enum properties using block state tool, the result is not the result of `StringIdentifiable#asString`, but directly the name of enum value in the code.
+- When placing a sign bar above a hung sign, the sign bars above it do not update.
+- When running on a dedicated server, switching the matching rule of fast building tool causes crash.
+- The height of display range of full wall sign block is not correct.
+- Fast building tool does not correctly draws the outline of fluid.
+- Slab tool may drop abnormally when mining.
+- (For versions above 1.19) Added hung sign, sign bar, wall sing and handrail for made of mangrove.
 
 ### 0.1.7
 

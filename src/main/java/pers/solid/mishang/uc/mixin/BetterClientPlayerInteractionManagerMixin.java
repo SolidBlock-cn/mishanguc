@@ -51,9 +51,7 @@ public abstract class BetterClientPlayerInteractionManagerMixin {
             .interact(client.player, client.world, Hand.MAIN_HAND, pos, direction);
 
     if (result != ActionResult.PASS) {
-      sendSequencedPacket(this.client.world, (sequence) -> {
-        return new PlayerActionC2SPacket(PlayerActionC2SPacket.Action.START_DESTROY_BLOCK, pos, direction, sequence);
-      });
+      sendSequencedPacket(this.client.world, (sequence) -> new PlayerActionC2SPacket(PlayerActionC2SPacket.Action.START_DESTROY_BLOCK, pos, direction, sequence));
       info.setReturnValue(result == ActionResult.SUCCESS);
       info.cancel();
     }
