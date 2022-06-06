@@ -242,11 +242,11 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
 
   @Environment(EnvType.CLIENT)
   @Override
-  public boolean rendersBlockOutline(
+  public boolean renderBlockOutline(
       PlayerEntity player,
       ItemStack mainHandStack,
       WorldRenderContext worldRenderContext,
-      WorldRenderContext.BlockOutlineContext blockOutlineContext) {
+      WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
     final MinecraftClient client = MinecraftClient.getInstance();
     if (!player.getAbilities().creativeMode) {
       // 只有在创造模式下，才会绘制边框。
@@ -302,29 +302,32 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
               0.5f);
         }
       }
-      WorldRendererInvoker.drawShapeOutline(
-          worldRenderContext.matrixStack(),
-          vertexConsumer,
-          state.getOutlineShape(world, pos),
-          pos.getX() - blockOutlineContext.cameraX(),
-          pos.getY() - blockOutlineContext.cameraY(),
-          pos.getZ() - blockOutlineContext.cameraZ(),
-          1,
-          0,
-          0,
-          0.8f);
-      if (includesFluid) {
+      if (hand == Hand.MAIN_HAND) {
+        // 只有当主手持有此物品时，才绘制边框。
         WorldRendererInvoker.drawShapeOutline(
             worldRenderContext.matrixStack(),
             vertexConsumer,
-            state.getFluidState().getShape(world, pos),
+            state.getOutlineShape(world, pos),
             pos.getX() - blockOutlineContext.cameraX(),
             pos.getY() - blockOutlineContext.cameraY(),
             pos.getZ() - blockOutlineContext.cameraZ(),
             1,
-            0.5f,
             0,
-            0.5f);
+            0,
+            0.8f);
+        if (includesFluid) {
+        WorldRendererInvoker.drawShapeOutline(
+              worldRenderContext.matrixStack(),
+              vertexConsumer,
+              state.getFluidState().getShape(world, pos),
+              pos.getX() - blockOutlineContext.cameraX(),
+              pos.getY() - blockOutlineContext.cameraY(),
+              pos.getZ() - blockOutlineContext.cameraZ(),
+              1,
+              0.5f,
+              0,
+              0.5f);
+        }
       }
     }
     return false;
