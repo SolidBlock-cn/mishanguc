@@ -132,11 +132,11 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
 
   @Environment(EnvType.CLIENT)
   @Override
-  public boolean rendersBlockOutline(
+  public boolean renderBlockOutline(
       PlayerEntity player,
       ItemStack itemStack,
       WorldRenderContext worldRenderContext,
-      WorldRenderContext.BlockOutlineContext blockOutlineContext) {
+      WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
     final VertexConsumerProvider consumers = worldRenderContext.consumers();
     if (consumers == null) return true;
     final ClientWorld world = worldRenderContext.world();
