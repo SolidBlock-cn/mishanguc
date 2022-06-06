@@ -83,17 +83,9 @@ public class Mishanguc implements ModInitializer {
           final ItemStack stack = player.getMainHandStack();
           final Item item = stack.getItem();
           if (item instanceof BlockToolItem) {
-            final BlockHitResult hitResult =
-                (BlockHitResult)
-                    player.raycast(
-                        5, 0, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
-            return ((BlockToolItem) item)
-                .beginAttackBlock(
-                    player,
-                    world,
-                    hand, hitResult.getBlockPos(),
-                    hitResult.getSide(),
-                    ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
+            BlockToolItem blockToolItem = (BlockToolItem) item;
+            final BlockHitResult hitResult = (BlockHitResult) player.raycast(5, 0, blockToolItem.includesFluid(stack, player.isSneaking()));
+            return blockToolItem.beginAttackBlock(player, world, hand, hitResult.getBlockPos(), hitResult.getSide(), blockToolItem.includesFluid(stack, player.isSneaking()));
           } else {
             return ActionResult.PASS;
           }
@@ -108,17 +100,9 @@ public class Mishanguc implements ModInitializer {
           final ItemStack stack = player.getStackInHand(hand);
           final Item item = stack.getItem();
           if (item instanceof BlockToolItem) {
-            final BlockHitResult hitResult =
-                (BlockHitResult)
-                    player.raycast(
-                        5, 0, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
-            return ((BlockToolItem) item)
-                .progressAttackBlock(
-                    player,
-                    world,
-                    hand, hitResult.getBlockPos(),
-                    hitResult.getSide(),
-                    ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
+            BlockToolItem blockToolItem = (BlockToolItem) item;
+            final BlockHitResult hitResult = (BlockHitResult) player.raycast(5, 0, blockToolItem.includesFluid(stack, player.isSneaking()));
+            return blockToolItem.progressAttackBlock(player, world, hand, hitResult.getBlockPos(), hitResult.getSide(), blockToolItem.includesFluid(stack, player.isSneaking()));
           } else {
             return ActionResult.PASS;
           }
@@ -132,17 +116,9 @@ public class Mishanguc implements ModInitializer {
           final ItemStack stack = player.getStackInHand(hand);
           final Item item = stack.getItem();
           if (item instanceof BlockToolItem) {
-            final BlockHitResult hitResult =
-                (BlockHitResult)
-                    player.raycast(
-                        5, 0, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
-            return ((BlockToolItem) item)
-                .beginAttackBlock(
-                    player,
-                    world,
-                    hand, hitResult.getBlockPos(),
-                    hitResult.getSide(),
-                    ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
+            BlockToolItem blockToolItem = (BlockToolItem) item;
+            final BlockHitResult hitResult = (BlockHitResult) player.raycast(5, 0, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
+            return blockToolItem.beginAttackBlock(player, world, hand, hitResult.getBlockPos(), hitResult.getSide(), ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
           } else {
             return ActionResult.PASS;
           }
@@ -155,13 +131,8 @@ public class Mishanguc implements ModInitializer {
             return ActionResult.PASS;
           }
           if (item instanceof BlockToolItem) {
-            return ((BlockToolItem) item)
-                .useOnBlock(
-                    player,
-                    world,
-                    hitResult,
-                    hand,
-                    ((BlockToolItem) item).includesFluid(stackInHand, player.isSneaking()));
+            BlockToolItem blockToolItem = (BlockToolItem) item;
+            return blockToolItem.useOnBlock(player, world, hitResult, hand, blockToolItem.includesFluid(stackInHand, player.isSneaking()));
           } else {
             return ActionResult.PASS;
           }
@@ -171,8 +142,7 @@ public class Mishanguc implements ModInitializer {
           final ItemStack stackInHand = player.getStackInHand(hand);
           final Item item = stackInHand.getItem();
           if (item instanceof InteractsWithEntity) {
-            return ((InteractsWithEntity) item)
-                .attackEntityCallback(player, world, hand, entity, hitResult);
+            return ((InteractsWithEntity) item).attackEntityCallback(player, world, hand, entity, hitResult);
           } else {
             return ActionResult.PASS;
           }
@@ -182,8 +152,7 @@ public class Mishanguc implements ModInitializer {
           final ItemStack stackInHand = player.getStackInHand(hand);
           final Item item = stackInHand.getItem();
           if (item instanceof InteractsWithEntity) {
-            return ((InteractsWithEntity) item)
-                .useEntityCallback(player, world, hand, entity, hitResult);
+            return ((InteractsWithEntity) item).useEntityCallback(player, world, hand, entity, hitResult);
           } else {
             return ActionResult.PASS;
           }

@@ -48,10 +48,6 @@ public class BlockPlacementContext {
    * #stateToPlace}.
    */
   public final @NotNull BlockState stateToReplace;
-  /**
-   * 放置之前，{@link #posToPlace} 位置处的方块。该方块将会被 {@link #entityToPlace} 替换掉。
-   */
-  public final @Nullable BlockEntity entityToReplace;
 
   public final boolean includesFluid;
   /**
@@ -75,18 +71,18 @@ public class BlockPlacementContext {
    * 拿着方块物品的手。<br>
    * The hand that holds the BlockItem.
    */
-  @Nullable Hand hand;
+  public @Nullable Hand hand;
   /**
    * 手中的物品堆。该物品堆的物品必须是方块物品。如果手中的物品堆是空的，或者不是方块，则该值为 {@code null}。<br>
    * The {@link ItemStack} in the {@code hand}. The item in the <code>ItemStack</code> must be a
    * {@link BlockItem}. If the item stack in hand is not block item, or is null, then the value is {@code null}.
    */
-  final @Nullable ItemStack stackInHand;
+  public final @Nullable ItemStack stackInHand;
   /**
    * 手中物品堆中的方块物品对应的方块。<br>
    * The block of the blockItem in the {@link #stackInHand}.
    */
-  @Nullable Block handBlock;
+  public @Nullable Block handBlock;
 
   /**
    * 请留意这个 {@link #player} 如果是 <code>null</code> 将会抛出异常！因此构造时请一定留意！ Please pay attention when
@@ -147,7 +143,6 @@ public class BlockPlacementContext {
             hit);
     posToPlace = includesFluid ? blockPos.offset(hit.getSide()) : placementContext.getBlockPos();
     stateToReplace = world.getBlockState(posToPlace);
-    entityToReplace = world.getBlockEntity(posToPlace);
 
     // 需要放置的方块
     @Nullable BlockState stateToPlace1 = null;
@@ -155,7 +150,7 @@ public class BlockPlacementContext {
     for (@NotNull Hand hand1 : Hand.values()) {
       ItemStack stackInHand0 = this.player.getStackInHand(hand1);
       if (stackInHand0.getItem() instanceof BlockItem) {
-        // 若手中持有方块物品，则 stateToPlace、entityToReplace 为该物品
+        // 若手中持有方块物品，则 stateToPlace 为该物品
         handBlock = ((BlockItem) stackInHand0.getItem()).getBlock();
         stateToPlace1 = handBlock.getPlacementState(placementContext);
         if (stateToPlace1 == null) continue;

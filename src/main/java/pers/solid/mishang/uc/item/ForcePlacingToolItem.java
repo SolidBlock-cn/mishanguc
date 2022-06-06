@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.item;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -12,7 +13,10 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.boss.dragon.EnderDragonFight;
+import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.Inventory;
@@ -24,17 +28,22 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
+import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
 
 import java.util.List;
 
-public class ForcePlacingToolItem extends BlockToolItem implements InteractsWithEntity {
+@EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
+public class ForcePlacingToolItem extends BlockToolItem implements InteractsWithEntity, RendersBeforeOutline {
 
   public ForcePlacingToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
@@ -116,11 +125,11 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   @SuppressWarnings("AlibabaMethodTooLong")
   @Environment(EnvType.CLIENT)
   @Override
-  public boolean rendersBlockOutline(
+  public boolean renderBlockOutline(
       PlayerEntity player,
-      ItemStack mainHandStack,
+      ItemStack itemStack,
       WorldRenderContext worldRenderContext,
-      WorldRenderContext.BlockOutlineContext blockOutlineContext) {
+      WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
     final MinecraftClient client = MinecraftClient.getInstance();
     if (!player.abilities.creativeMode) {
       // 只有在创造模式下，才会绘制边框。
@@ -131,26 +140,26 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       return true;
     }
     final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.LINES);
-    final BlockHitResult raycast;
-    try {
-      raycast = (BlockHitResult) client.crosshairTarget;
-      if (raycast == null) {
-        return true;
-      }
-    } catch (ClassCastException e) {
+
+    final BlockHitResult blockHitResult;
+    final MatrixStack matrices = worldRenderContext.matrixStack();
+    HitResult crosshairTarget = client.crosshairTarget;
+    if (crosshairTarget instanceof BlockHitResult) {
+      blockHitResult = (BlockHitResult) crosshairTarget;
+    } else {
       return true;
     }
-    final boolean includesFluid = this.includesFluid(mainHandStack, player.isSneaking());
+    final boolean includesFluid = this.includesFluid(itemStack, player.isSneaking());
     final BlockPlacementContext blockPlacementContext =
         new BlockPlacementContext(
             worldRenderContext.world(),
             blockOutlineContext.blockPos(),
             player,
-            mainHandStack,
-            raycast,
+            itemStack,
+            blockHitResult,
             includesFluid);
     WorldRendererInvoker.drawShapeOutline(
-        worldRenderContext.matrixStack(),
+        matrices,
         vertexConsumer,
         blockPlacementContext.stateToPlace.getOutlineShape(
             blockPlacementContext.world, blockPlacementContext.posToPlace),
@@ -163,7 +172,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
         0.8f);
     if (includesFluid) {
       WorldRendererInvoker.drawShapeOutline(
-          worldRenderContext.matrixStack(),
+          matrices,
           vertexConsumer,
           blockPlacementContext
               .stateToPlace
@@ -177,33 +186,36 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           1,
           0.5f);
     }
-    WorldRendererInvoker.drawShapeOutline(
-        worldRenderContext.matrixStack(),
-        vertexConsumer,
-        blockPlacementContext.hitState.getOutlineShape(
-            blockPlacementContext.world, blockPlacementContext.blockPos),
-        blockPlacementContext.blockPos.getX() - blockOutlineContext.cameraX(),
-        blockPlacementContext.blockPos.getY() - blockOutlineContext.cameraY(),
-        blockPlacementContext.blockPos.getZ() - blockOutlineContext.cameraZ(),
-        1,
-        0,
-        0,
-        0.8f);
-    if (includesFluid) {
+    if (hand == Hand.MAIN_HAND) {
+      // 只有当主手持有此物品时，才绘制红色边框。
       WorldRendererInvoker.drawShapeOutline(
-          worldRenderContext.matrixStack(),
+          matrices,
           vertexConsumer,
-          blockPlacementContext
-              .hitState
-              .getFluidState()
-              .getShape(blockPlacementContext.world, blockPlacementContext.blockPos),
+          blockPlacementContext.hitState.getOutlineShape(
+              blockPlacementContext.world, blockPlacementContext.blockPos),
           blockPlacementContext.blockPos.getX() - blockOutlineContext.cameraX(),
           blockPlacementContext.blockPos.getY() - blockOutlineContext.cameraY(),
           blockPlacementContext.blockPos.getZ() - blockOutlineContext.cameraZ(),
           1,
-          0.5f,
           0,
-          0.5f);
+          0,
+          0.8f);
+      if (includesFluid) {
+        WorldRendererInvoker.drawShapeOutline(
+            matrices,
+            vertexConsumer,
+            blockPlacementContext
+                .hitState
+                .getFluidState()
+                .getShape(blockPlacementContext.world, blockPlacementContext.blockPos),
+            blockPlacementContext.blockPos.getX() - blockOutlineContext.cameraX(),
+            blockPlacementContext.blockPos.getY() - blockOutlineContext.cameraY(),
+            blockPlacementContext.blockPos.getZ() - blockOutlineContext.cameraZ(),
+            1,
+            0.5f,
+            0,
+            0.5f);
+      }
     }
     return false;
   }
@@ -216,9 +228,16 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       Entity entity,
       @Nullable EntityHitResult hitResult) {
     if (!player.abilities.creativeMode) return ActionResult.FAIL;
-    entity.setInvisible(true);
-    entity.setPos(entity.getX(), -114514, entity.getZ());
-    entity.kill();
+    entity.remove();
+    if (entity instanceof EnderDragonPart) {
+      EnderDragonPart enderDragonPart = (EnderDragonPart) entity;
+      enderDragonPart.owner.remove();
+      final EnderDragonFight fight = enderDragonPart.owner.getFight();
+      if (fight != null) {
+        fight.updateFight(enderDragonPart.owner);
+        fight.dragonKilled(enderDragonPart.owner);
+      }
+    }
     return ActionResult.SUCCESS;
   }
 
@@ -230,5 +249,21 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       Entity entity,
       @Nullable EntityHitResult hitResult) {
     return ActionResult.PASS;
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public void renderBeforeOutline(WorldRenderContext context, HitResult hitResult, Hand hand) {
+    // 只在使用主手持有此物品时进行渲染。
+    if (hand != Hand.MAIN_HAND) return;
+    final MatrixStack matrices = context.matrixStack();
+    final VertexConsumerProvider consumers = context.consumers();
+    if (consumers == null) return;
+    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.getLines());
+    final Vec3d cameraPos = context.camera().getPos();
+    if (hitResult instanceof EntityHitResult) {
+      final Entity entity = ((EntityHitResult) hitResult).getEntity();
+      WorldRendererInvoker.drawShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, 1.0f, 0f, 0f, 0.8f);
+    }
   }
 }

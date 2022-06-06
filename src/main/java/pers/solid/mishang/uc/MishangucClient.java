@@ -31,6 +31,7 @@ import pers.solid.mishang.uc.blocks.HungSignBlocks;
 import pers.solid.mishang.uc.item.DataTagToolItem;
 import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
+import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
 import pers.solid.mishang.uc.screen.HungSignBlockEditScreen;
@@ -62,6 +63,7 @@ public class MishangucClient implements ClientModInitializer {
 
     // 注册方块外观描绘
     WorldRenderEvents.BLOCK_OUTLINE.register(RendersBlockOutline.RENDERER);
+    WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register(RendersBeforeOutline.RENDERER);
 
     // 注册方块实体渲染器
     BlockEntityRendererRegistry.INSTANCE.register(
