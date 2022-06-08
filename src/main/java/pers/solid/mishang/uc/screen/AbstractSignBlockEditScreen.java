@@ -836,6 +836,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
                   } // 如果为 INVALID 则不执行操作。
               }
             } else {
+              textContext1.extra = null;
               textContext1.text = new LiteralText(s);
             }
           }
