@@ -329,11 +329,13 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       // 玩家手持岩浆膏时，可快速进行重整。
       final List<@NotNull TextContext> textContexts = entity.texts.get(hit.getSide());
       if (textContexts != null) MishangUtils.rearrange(textContexts);
+      entity.markDirty();
       return ActionResult.SUCCESS;
     } else if (player.getMainHandStack().getItem() == Items.SLIME_BALL) {
       // 玩家手持岩浆膏时，可快速进行重整。
       final List<@NotNull TextContext> textContexts = entity.texts.get(hit.getSide());
       if (textContexts != null) MishangUtils.replaceArrows(textContexts);
+      entity.markDirty();
       return ActionResult.SUCCESS;
     }
     if (actionResult == ActionResult.PASS && !world.isClient) {
