@@ -13,10 +13,7 @@ import net.minecraft.nbt.AbstractNbtNumber;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
@@ -270,6 +267,30 @@ public class TextContext implements Cloneable {
     if (text == null && extra == null) {
       return;
     }
+    final OrderedText orderedText;
+    if (text != null) {
+      // 为文本创建本地的格式化的副本。此后，本方法中的所有 text 均为此局部变量，而非 this.text。这是为了在渲染时，修改了 text 本身的内容。
+      MutableText formattedText = this.text.copy();
+      // 处理文本格式，如加粗、斜线等。文本颜色在 <tt>draw</tt> 的参数中。
+      if (bold) {
+        formattedText.formatted(Formatting.BOLD);
+      }
+      if (italic) {
+        formattedText.formatted(Formatting.ITALIC);
+      }
+      if (underline) {
+        formattedText.formatted(Formatting.UNDERLINE);
+      }
+      if (strikethrough) {
+        formattedText.formatted(Formatting.STRIKETHROUGH);
+      }
+      if (obfuscated) {
+        formattedText.formatted(Formatting.OBFUSCATED);
+      }
+      orderedText = formattedText.asOrderedText();
+    } else {
+      orderedText = null;
+    }
 
     matrixStack.push();
 
@@ -281,10 +302,10 @@ public class TextContext implements Cloneable {
     float x = 0;
     switch (horizontalAlign == null ? HorizontalAlign.CENTER : horizontalAlign) {
       case LEFT -> matrixStack.translate(-width / 2, 0, 0);
-      case CENTER -> x = -getWidth(textRenderer, text) / 2f;
+      case CENTER -> x = -getWidth(textRenderer, orderedText) / 2f;
       case RIGHT -> {
         matrixStack.translate(width / 2, 0, 0);
-        x = -getWidth(textRenderer, text);
+        x = -getWidth(textRenderer, orderedText);
       }
       default -> throw new IllegalStateException("Unexpected value: " + horizontalAlign);
     }
@@ -304,26 +325,8 @@ public class TextContext implements Cloneable {
     matrixStack.scale(scaleX, scaleY, 1);
 
     // 执行渲染
-    if (text != null) {
-      // 为文本创建本地的格式化的副本。此后，本方法中的所有 text 均为此局部变量，而非 this.text。这是为了在渲染时，修改了 text 本身的内容。
-      MutableText text = this.text.shallowCopy();
-      // 处理文本格式，如加粗、斜线等。文本颜色在 <tt>draw</tt> 的参数中。
-      if (bold) {
-        text.formatted(Formatting.BOLD);
-      }
-      if (italic) {
-        text.formatted(Formatting.ITALIC);
-      }
-      if (underline) {
-        text.formatted(Formatting.UNDERLINE);
-      }
-      if (strikethrough) {
-        text.formatted(Formatting.STRIKETHROUGH);
-      }
-      if (obfuscated) {
-        text.formatted(Formatting.OBFUSCATED);
-      }
-      drawText(textRenderer, matrixStack, vertexConsumers, light, text, x, y);
+    if (orderedText != null) {
+      drawText(textRenderer, matrixStack, vertexConsumers, light, orderedText, x, y);
     }
     if (extra != null) {
       extra.drawExtra(textRenderer, matrixStack, vertexConsumers, light, x, y);
@@ -334,16 +337,16 @@ public class TextContext implements Cloneable {
   /**
    * 获取文本宽度，如果存在 extra 字段，则还需要考虑该对象的宽度。
    */
-  private float getWidth(TextRenderer textRenderer, @Nullable MutableText text) {
+  private float getWidth(TextRenderer textRenderer, @Nullable OrderedText text) {
     final int width = text == null ? 0 : textRenderer.getWidth(text);
     return extra != null ? Math.max(width, extra.getWidth()) : width;
   }
 
-  protected void drawText(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, MutableText text, float x, float y) {
+  protected void drawText(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, OrderedText text, float x, float y) {
     if (outlineColor == -2) {
-      textRenderer.draw(text.asOrderedText(), x, y, color, shadow, matrixStack.peek().getModel(), vertexConsumers, seeThrough, 0, light);
+      textRenderer.draw(text, x, y, color, shadow, matrixStack.peek().getModel(), vertexConsumers, seeThrough, 0, light);
     } else {
-      textRenderer.drawWithOutline(text.asOrderedText(), x, y, color, outlineColor == -1 ? MishangUtils.toSignOutlineColor(color) : outlineColor, matrixStack.peek().getModel(), vertexConsumers, light);
+      textRenderer.drawWithOutline(text, x, y, color, outlineColor == -1 ? MishangUtils.toSignOutlineColor(color) : outlineColor, matrixStack.peek().getModel(), vertexConsumers, light);
     }
   }
 
@@ -351,9 +354,7 @@ public class TextContext implements Cloneable {
    * 将文本的数据写入 NBT 中。
    *
    * @param nbt 一个待写入的 NBT 复合标签，可以是空的 NBT 复合标签：
-   *            <pre>{@code
-   *                                                                                                                                                                                              new NbtCompound()
-   *                                                                                                                                                                                 }</pre>
+   *            <pre>{@code  new NbtCompound()}</pre>
    * @return 修改后的 <tt>nbt</tt>。
    */
   public NbtCompound writeNbt(NbtCompound nbt) {
@@ -444,7 +445,7 @@ public class TextContext implements Cloneable {
 
   public @Nullable MutableText asStyledText() {
     if (text == null) return null;
-    final MutableText text = this.text.copy();
+    final MutableText text = this.text.shallowCopy();
     if (bold) text.formatted(Formatting.BOLD);
     if (italic) text.formatted(Formatting.ITALIC);
     if (underline) text.formatted(Formatting.UNDERLINE);
