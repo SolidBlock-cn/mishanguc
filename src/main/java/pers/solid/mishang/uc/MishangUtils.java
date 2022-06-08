@@ -40,11 +40,18 @@ public class MishangUtils {
    */
   public static final @Unmodifiable BiMap<DyeColor, Integer> COLOR_TO_OUTLINE_COLOR = Arrays.stream(DyeColor.values()).collect(ImmutableBiMap.toImmutableBiMap(Functions.identity(), MishangUtils::toSignOutlineColor));
   private static final Logger LOGGER = LogManager.getLogger(MishangUtils.class);
-  private static final ImmutableMap<String, String> ARROW_TO_NAMES = ImmutableMap.of(
-      "←", "al", "→", "ar", "↖", "alt", "↗", "art", "↙", "alb", "↘", "arb"
-  );
   private static final Supplier<ImmutableMap<Field, Block>> memoizedBlocks = Suppliers.memoize(MishangUtils::blocksInternal);
   private static final Supplier<ImmutableMap<Field, Item>> memoizedItems = Suppliers.memoize(MishangUtils::itemsInternal);
+  private static final @Unmodifiable Map<String, String> ARROW_TO_NAMES = new ImmutableMap.Builder<String, String>()
+      .put("←", "al")
+      .put("→", "ar")
+      .put("↑", "at")
+      .put("↓", "ab")
+      .put("↖", "alt")
+      .put("↗", "art")
+      .put("↙", "alb")
+      .put("↘", "arb")
+      .build();
 
   @SuppressWarnings("SuspiciousNameCombination")
   public static EnumMap<Direction, @NotNull VoxelShape> createDirectionToShape(
@@ -302,10 +309,10 @@ public class MishangUtils {
         if (ARROW_TO_NAMES.containsKey(rawString)) {
           textContext.text = null;
           textContext.extra = PatternTextSpecial.fromName(textContext, ARROW_TO_NAMES.get(rawString));
-          if ("←".equals(rawString) || "→".equals(rawString)) {
-            textContext.size /= 2;
+          if ("←".equals(rawString) || "→".equals(rawString) || "↑".equals(rawString) || "↓".equals(rawString)) {
+            textContext.size /= 1;
           } else {
-            textContext.size /= 4;
+            textContext.size /= 2;
           }
         }
       }

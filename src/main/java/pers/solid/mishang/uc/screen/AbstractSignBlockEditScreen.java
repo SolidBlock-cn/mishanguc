@@ -159,7 +159,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     BlockEntityWithText entity = AbstractSignBlockEditScreen.this.entity;
     final TextContext textContext0 = entity.getDefaultTextContext();
     textContext0.extra = PatternTextSpecial.fromName(textContext0, "al");
-    textContext0.size = 4;
+    textContext0.size = 8;
     textContext0.offsetX = -4;
     textContext0.absolute = true;
     AbstractSignBlockEditScreen.this.addTextField(0, textContext0, false);
@@ -181,7 +181,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     BlockEntityWithText entity = AbstractSignBlockEditScreen.this.entity;
     final TextContext textContext0 = entity.getDefaultTextContext();
     textContext0.extra = PatternTextSpecial.fromName(textContext0, "ar");
-    textContext0.size = 4;
+    textContext0.size = 8;
     textContext0.offsetX = 4;
     textContext0.absolute = true;
     AbstractSignBlockEditScreen.this.addTextField(0, textContext0, false);

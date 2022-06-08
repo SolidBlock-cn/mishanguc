@@ -18,6 +18,8 @@ import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.mixin.TextRendererAccessor;
 
+import java.util.Map;
+
 public record PatternTextSpecial(TextContext textContext, String shapeName, @Unmodifiable float[][] rectangles) implements TextSpecial {
   private static final float[][] EMPTY = {};
   private static final float[][] ARROW_LEFT =
@@ -44,6 +46,29 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
           {4, 4, 5, 6}
       };
 
+  private static final float[][] ARROW_TOP =
+      {
+          // 箭头的中间部分：
+          {3, 0, 4, 7},
+          // 箭头的左边：
+          {2, 1, 3, 2},
+          {1, 2, 3, 3},
+          // 箭头的右边：
+          {4, 1, 5, 2},
+          {4, 2, 6, 3},
+      };
+  private static final float[][] ARROW_BOTTOM =
+      {
+          // 箭头的中间部分：
+          {3, 0, 4, 7},
+          // 箭头的左边：
+          {2, 5, 3, 6},
+          {1, 4, 3, 5},
+          // 箭头的右边：
+          {4, 5, 5, 6},
+          {4, 4, 6, 5},
+      };
+
   private static final float[][] ARROW_LEFT_TOP =
       {
           // 箭头的左尾：
@@ -54,7 +79,8 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
           {2, 2, 3, 3},
           {3, 3, 4, 4},
           {4, 4, 5, 5},
-          {5, 5, 6, 6}
+          {5, 5, 6, 6},
+          {6, 6, 7, 7}
       };
   private static final float[][] ARROW_RIGHT_TOP =
       {
@@ -66,7 +92,8 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
           {4, 2, 5, 3},
           {3, 3, 4, 4},
           {2, 4, 3, 5},
-          {1, 5, 2, 6}
+          {1, 5, 2, 6},
+          {0, 6, 1, 7}
       };
   private static final float[][] ARROW_LEFT_BOTTOM =
       {
@@ -78,7 +105,8 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
           {2, 4, 3, 5},
           {3, 3, 4, 4},
           {4, 2, 5, 3},
-          {5, 1, 6, 2}
+          {5, 1, 6, 2},
+          {6, 0, 7, 1}
       };
   private static final float[][] ARROW_RIGHT_BOTTOM =
       {
@@ -90,7 +118,8 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
           {4, 4, 5, 5},
           {3, 3, 4, 4},
           {2, 2, 3, 3},
-          {1, 1, 2, 2}
+          {1, 1, 2, 2},
+          {0, 0, 1, 1}
       };
   private static final float[][] CIRCLE = {
       {2, 1, 5, 2},
@@ -108,16 +137,18 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
       {4, 4, 5, 5}
   };
 
-  private static final ImmutableMap<String, float[][]> NAME_TO_SHAPE = ImmutableMap.of(
-      "al", ARROW_LEFT,
-      "ar", ARROW_RIGHT,
-      "alt", ARROW_LEFT_TOP,
-      "art", ARROW_RIGHT_TOP,
-      "alb", ARROW_LEFT_BOTTOM,
-      "arb", ARROW_RIGHT_BOTTOM,
-      "circle", CIRCLE,
-      "ban", BAN
-  );
+  private static final @Unmodifiable Map<String, float[][]> NAME_TO_SHAPE = new ImmutableMap.Builder<String, float[][]>()
+      .put("al", ARROW_LEFT)
+      .put("ar", ARROW_RIGHT)
+      .put("at", ARROW_TOP)
+      .put("ab", ARROW_BOTTOM)
+      .put("alt", ARROW_LEFT_TOP)
+      .put("art", ARROW_RIGHT_TOP)
+      .put("alb", ARROW_LEFT_BOTTOM)
+      .put("arb", ARROW_RIGHT_BOTTOM)
+      .put("circle", CIRCLE)
+      .put("ban", BAN)
+      .build();
 
   /**
    * 该方法会返回对象中的所有正方形列表，但是会对数组进行深度复制。
@@ -148,7 +179,7 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
     final float blue = (float) (color & 0xFF) / 255.0f;
     final float alpha = ((color & 0xFC000000) == 0) ? 1 : (float) (color >> 24 & 0xFF) / 255.0f;
     GlyphRenderer glyphRenderer = ((TextRendererAccessor) textRenderer).invokeGetFontStorage(Style.DEFAULT_FONT_ID).getRectangleRenderer();
-    final float size = 2;
+    final float sizeMultiplier = 1;
     final RenderLayer layer = glyphRenderer.getLayer(textContext.outlineColor != -2 ? TextRenderer.TextLayerType.POLYGON_OFFSET : textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
     final Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
     final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(layer);
@@ -157,10 +188,10 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
     final boolean shadow = textContext.shadow;
     // 用于文本渲染的矩阵。当存在阴影时，文本渲染需要适当调整。
     for (float[] rectangle : rectangles) {
-      final float minX = (rectangle[0] + x) * size;
-      final float minY = (rectangle[3] + y) * size;
-      final float maxX = (rectangle[2] + x) * size;
-      final float maxY = (rectangle[1] + y) * size;
+      final float minX = (rectangle[0] + x) * sizeMultiplier;
+      final float minY = (rectangle[3] + y) * sizeMultiplier;
+      final float maxX = (rectangle[2] + x) * sizeMultiplier;
+      final float maxY = (rectangle[1] + y) * sizeMultiplier;
       if (shadow) {
         float g = red * 0.25f;
         float h = green * 0.25f;
