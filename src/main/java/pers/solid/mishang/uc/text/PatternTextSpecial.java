@@ -11,7 +11,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Style;
 import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3f;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -155,13 +154,10 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
     final RenderLayer layer = glyphRenderer.getLayer(textContext.outlineColor != -2 ? TextRenderer.TextLayerType.POLYGON_OFFSET : textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
     final Matrix4f matrix4f = matrixStack.peek().getModel();
     final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(layer);
-    final VertexConsumer vertexConsumerOutline = vertexConsumers.getBuffer(glyphRenderer.getLayer(TextRenderer.TextLayerType.NORMAL));
 
     // 文本是否存在阴影。
     final boolean shadow = textContext.shadow;
     // 用于文本渲染的矩阵。当存在阴影时，文本渲染需要适当调整。
-    final Matrix4f matrix4f2 = shadow ? matrix4f.copy() : matrix4f;
-    if (shadow) matrix4f2.addToLastColumn(new Vec3f(0, 0, 0.3f));
     for (float[] rectangle : rectangles) {
       final float minX = (rectangle[0] + x) * size;
       final float minY = (rectangle[3] + y) * size;
@@ -177,6 +173,7 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
         );
       }
       if (textContext.outlineColor != -2) {
+        final VertexConsumer vertexConsumerOutline = vertexConsumers.getBuffer(glyphRenderer.getLayer(TextRenderer.TextLayerType.NORMAL));
         int outlineColor = textContext.outlineColor == -1 ? MishangUtils.toSignOutlineColor(color) : textContext.outlineColor;
         float outlineR = (outlineColor >> 16 & 255) / 255f;
         float outlineG = (outlineColor >> 8 & 255) / 255f;
@@ -188,7 +185,7 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
 
       }
       glyphRenderer.drawRectangle(
-          new GlyphRenderer.Rectangle(minX, minY, maxX, maxY, textContext.outlineColor != -2 ? 0.2f : shadow ? 0.24f : 0, red, green, blue, alpha),
+          new GlyphRenderer.Rectangle(minX, minY, maxX, maxY, shadow ? 0.24f : textContext.outlineColor != -2 ? 0.02f : 0, red, green, blue, alpha),
           matrix4f, vertexConsumer, light
       );
     }
