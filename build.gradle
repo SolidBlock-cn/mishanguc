@@ -31,6 +31,8 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
+    def brrp_mc_version = project.hasProperty("brrp_mc_version") ? project.brrp_mc_version : project.minecraft_version
+
     // BRRP.
     modImplementation("net.devtech:brrp:${project.brrp_version}-${project.minecraft_version}")
 }

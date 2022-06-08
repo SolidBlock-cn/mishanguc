@@ -91,8 +91,6 @@ When adding multiple lines of text, texts are not automatically rearranged, and 
 
 [SINCE 0.2.0] You can type `-pattern <pattern name>` to create a pattern defined by this mod. This mod only installed pre-defined several arrow patterns. Although they can be achieved by texts, there are some issues: unless the player enables "force Unicode font", the up/down/left/right arrow characters (`↑↓←→`) displays one time larger than corner arrow characters (`↖↙↗↘`), and these characters are not aligned well; for example, two arrow characters are not displayed on a same horizontal baseline. In light of such issues, I suggest directly using `-pattern <pattern name>` to display arrows. Available pattern names include: `al`, `ar`, `alt`, `art`, `alb`, `arb`, `circle`, `ban`.
 
-Notice: when using `-rect` and `-pattern`, the outline does not work. This issue may be fixed in future versions.
-
 Buttons are enhanced on the sign edit screen: Click the button to adjust value; right-click the button or click with Shift down to adjust in opposite direction; click with the mouse wheel or click with Shift+Alt to return default value. Mouse wheel can also be scrolled to adjust values. Besides, hold Ctrl to adjust 8 times speed, or hold Alt to adjust 1/8 times speed.
 
 #### Handrails
@@ -168,7 +166,7 @@ Can be used to force placing or break a block without causing block updates. If 
 
 When placing blocks, the block clicked will be copied, but if you have a block on your offhand, that block will be placed instead. When holding Shift, you can place and destroy fluid (water or lava). When *destroying* a fluid block, nearby fluid (if there is) will not flow, but if you *place* a fluid block with the block, it will flow normally.
 
-You can also remove entities with this tool, without having animation of entities hurt, or any side effect. For example, removing villagers does not cause them to raise price; removing slimes does not make them divide. This tool cannot be used to remove ender dragon, but you can remove wardens climbing out, or even kill Creative Mode players.
+You can also remove entities with this tool, without having animation of entities hurt, or any side effect. For example, removing villagers does not cause them to raise price; removing slimes does not make them divide. This tool may fail to remove ender dragon clearly, but you can remove wardens climbing out, or even kill Creative Mode players.
 
 This tool can be used by Creative Mode players only.
 
@@ -222,7 +220,3 @@ In Survival Mode, this tool can be used to mine any block instantly (of cause, b
 When attacking entities, they will be definitely slain. Compared to force placing tool, the omnipotent tool *kills* entities instead of *removing* entities, so it can normally irritate entities or make slimes divide, can normally kill ender dragon, and cannot kill wardens climbing out. Clicking "use" button (default right mouse button) can heal it totally.
 
 Similar to netherite tools, this tool is totally fireproof.
-
-## About API
-
-As some limitations are found with Fabric API, this mod simply extends the API, to fulfill some features without breaking compatibility.

@@ -13,6 +13,7 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -245,20 +246,23 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
   @Override
   public boolean renderBlockOutline(
       PlayerEntity player,
-      ItemStack mainHandStack,
+      ItemStack itemStack,
       WorldRenderContext worldRenderContext,
       WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
     final MinecraftClient client = MinecraftClient.getInstance();
     if (!player.abilities.creativeMode) {
       // 只有在创造模式下，才会绘制边框。
       return true;
+    } else if (hand == Hand.OFF_HAND && player.getMainHandStack().getItem() instanceof BlockItem) {
+      // 当玩家副手持有物品，主手持有方块时，直接跳过，不绘制。
+      return true;
     }
     final VertexConsumerProvider consumers = worldRenderContext.consumers();
     if (consumers == null) return true;
     final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.LINES);
-    final boolean includesFluid = this.includesFluid(mainHandStack, player.isSneaking());
-    final BlockMatchingRule matchingRule = this.getMatchingRule(mainHandStack);
-    final int range = this.getRange(mainHandStack);
+    final boolean includesFluid = this.includesFluid(itemStack, player.isSneaking());
+    final BlockMatchingRule matchingRule = this.getMatchingRule(itemStack);
+    final int range = this.getRange(itemStack);
     final BlockHitResult raycast;
     try {
       raycast = (BlockHitResult) client.crosshairTarget;
@@ -271,7 +275,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
     final ClientWorld world = worldRenderContext.world();
     final BlockPlacementContext blockPlacementContext =
         new BlockPlacementContext(
-            world, blockOutlineContext.blockPos(), player, mainHandStack, raycast, includesFluid);
+            world, blockOutlineContext.blockPos(), player, itemStack, raycast, includesFluid);
     for (BlockPos pos :
         matchingRule.getPlainValidBlockPoss(
             world, raycast.getBlockPos(), raycast.getSide(), range)) {
