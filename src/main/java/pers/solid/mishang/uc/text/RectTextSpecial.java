@@ -38,7 +38,7 @@ public class RectTextSpecial implements TextSpecial {
       GlyphRenderer.Rectangle shadowRectangle = new GlyphRenderer.Rectangle(x + 1, (height + y) + 1, (width + x) + 1, y + 1, 0, red * 0.25f, green * 0.25f, blue * 0.25f, alpha);
       glyphRenderer.drawRectangle(shadowRectangle, matrix4f, vertexConsumer, light);
     }
-    GlyphRenderer.Rectangle rectangle = new GlyphRenderer.Rectangle(x, (height + y), (width + x), y, textContext.shadow ? 0.24f : 0, red, green, blue, alpha);
+    GlyphRenderer.Rectangle rectangle = new GlyphRenderer.Rectangle(x, (height + y), (width + x), y, textContext.shadow ? 0.24f :  0, red, green, blue, alpha);
     glyphRenderer.drawRectangle(rectangle, matrix4f, vertexConsumer, light);
   }
 

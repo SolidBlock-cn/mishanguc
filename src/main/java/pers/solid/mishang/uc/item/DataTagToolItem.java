@@ -140,8 +140,8 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
   @Environment(EnvType.CLIENT)
   @Override
   public void renderBeforeOutline(WorldRenderContext context, HitResult hitResult, ClientPlayerEntity player, Hand hand) {
-    if (hitResult instanceof EntityHitResult entityHitResult && !player.isSpectator()) {
-      final Entity entity = entityHitResult.getEntity();
+    if (hitResult instanceof EntityHitResult && !player.isSpectator()) {
+      final Entity entity = ((EntityHitResult) hitResult).getEntity();
       final MatrixStack matrices = context.matrixStack();
       final VertexConsumerProvider consumers = context.consumers();
       if (consumers == null) return;

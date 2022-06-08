@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.HitResult;
@@ -37,8 +38,9 @@ public interface RendersBeforeOutline {
     if (player == null) return true;
     for (final Hand hand : new Hand[]{Hand.MAIN_HAND, Hand.OFF_HAND}) {
       final ItemStack stackInHand = player.getStackInHand(hand);
-      if (stackInHand.getItem() instanceof RendersBeforeOutline rendersBeforeOutline) {
-        rendersBeforeOutline.renderBeforeOutline(context, hitResult, player, hand);
+      final Item item = stackInHand.getItem();
+      if (item instanceof RendersBeforeOutline) {
+        ((RendersBeforeOutline) item).renderBeforeOutline(context, hitResult, player, hand);
       }
     }
     return true;

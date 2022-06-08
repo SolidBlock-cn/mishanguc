@@ -12,7 +12,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Style;
 import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3f;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -198,8 +197,6 @@ public final class PatternTextSpecial implements TextSpecial {
     // 文本是否存在阴影。
     final boolean shadow = textContext.shadow;
     // 用于文本渲染的矩阵。当存在阴影时，文本渲染需要适当调整。
-    final Matrix4f matrix4f2 = shadow ? matrix4f.copy() : matrix4f;
-    if (shadow) matrix4f2.addToLastColumn(new Vec3f(0, 0, 0.3f));
     for (float[] rectangle : rectangles) {
       final float minX = (rectangle[0] + x) * size;
       final float minY = (rectangle[3] + y) * size;
@@ -215,7 +212,7 @@ public final class PatternTextSpecial implements TextSpecial {
         );
       }
       glyphRenderer.drawRectangle(
-          new GlyphRenderer.Rectangle(minX, minY, maxX, maxY, shadow ? 0.24f : 0, red, green, blue, alpha),
+          new GlyphRenderer.Rectangle(minX, minY, maxX, maxY, shadow ? 0.24f :  0, red, green, blue, alpha),
           matrix4f, vertexConsumer, light
       );
     }
