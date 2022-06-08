@@ -2,15 +2,11 @@ Welcome to use the Mishang Urban Construction mod. This mod provides you with a 
 
 This mod is not yet stable. Please do not use this mod in your formal development, as future incompatible updates may happen to make former contents removed.
 
-**[BEFORE 0.2.0] This mod relies on ARRP. Make sure you have installed ARRP when installing this mod!**
-
 **Since 0.2.0, this mod relies on BRRP. Please make sure you have installed [BRRP mod](https://github.com/SolidBlock-cn/BRRP) when installing this mod, and ARRP is not needed anymore!**
-
-Welcome to join Tencent QQ group **587928350** or KaiHeiLa channel invitation code **KlFS0n** to experience the latest update of this mod.
 
 **This mod is published under the LGPLv3 license, which you must follow when propagating this mod.**
 
-*Road blocks are renamed since 0.1.7, and previous road blocks will be removed. Please make a backup of your world in advance.*
+Welcome to join Tencent QQ group **587928350** or KaiHeiLa channel invitation code **KlFS0n** to experience the latest update of this mod.
 
 中文版的介绍在[此处](README.md)。
 
@@ -89,7 +85,7 @@ When adding multiple lines of text, texts are not automatically rearranged, and 
 
 [SINCE 0.2.0] You can type `-rect <width> <height>` to make a specified rectangle. Its side is also affected by text size and X and Y scales.
 
-[SINCE 0.2.0] You can type `-pattern <pattern name>` to create a pattern defined by this mod. This mod only installed pre-defined several arrow patterns. Although they can be achieved by texts, there are some issues: unless the player enables "force Unicode font", the up/down/left/right arrow characters (`↑↓←→`) displays one time larger than corner arrow characters (`↖↙↗↘`), and these characters are not aligned well; for example, two arrow characters are not displayed on a same horizontal baseline. In light of such issues, I suggest directly using `-pattern <pattern name>` to display arrows. Available pattern names include: `al`, `ar`, `alt`, `art`, `alb`, `arb`, `circle`, `ban`.
+[SINCE 0.2.0] You can type `-pattern <pattern name>` to create a pattern defined by this mod. This mod only installed pre-defined several arrow patterns. Although they can be achieved by texts, there are some issues: unless the player enables "force Unicode font", the up/down/left/right arrow characters (`↑↓←→`) displays one time larger than corner arrow characters (`↖↙↗↘`), and these characters are not aligned well; for example, two arrow characters are not displayed on a same horizontal baseline. In light of such issues, I suggest directly using `-pattern <pattern name>` to display arrows. Available pattern names include: `al`, `ar`, `at`, `ab`, `alt`, `art`, `alb`, `arb`, `circle`, `ban`.
 
 Buttons are enhanced on the sign edit screen: Click the button to adjust value; right-click the button or click with Shift down to adjust in opposite direction; click with the mouse wheel or click with Shift+Alt to return default value. Mouse wheel can also be scrolled to adjust values. Besides, hold Ctrl to adjust 8 times speed, or hold Alt to adjust 1/8 times speed.
 
