@@ -25,6 +25,7 @@ Updated following content:
 - When operating on blocks with rotating tools or mirroring tools, if the operated block is the same as that before the operation, the operation is regarded fail.
 - The model of fast building tool can be affected by its properties. If the matching range is larger, the texture is deeper.
 - Adjusted the display of mod info. It displays only when player logs into the world, and will not display again when the player respawns or switches dimension.
+- Optimized the rendering of text.
 
 Fixed following issues:
 
