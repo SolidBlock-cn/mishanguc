@@ -184,9 +184,11 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
 
       if (player.getMainHandStack().getItem() == Items.MAGMA_CREAM) {
         MishangUtils.rearrange(entity.textContexts);
+        entity.markDirty();
         return ActionResult.SUCCESS;
       } else if (player.getMainHandStack().getItem() == Items.SLIME_BALL) {
         MishangUtils.replaceArrows(entity.textContexts);
+        entity.markDirty();
         return ActionResult.SUCCESS;
       } else if (world.isClient) {
         return ActionResult.SUCCESS;
