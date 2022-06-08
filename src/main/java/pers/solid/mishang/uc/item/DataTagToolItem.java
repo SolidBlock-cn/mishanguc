@@ -2,7 +2,9 @@ package pers.solid.mishang.uc.item;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -11,6 +13,11 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.command.BlockDataObject;
 import net.minecraft.command.EntityDataObject;
 import net.minecraft.entity.Entity;
@@ -29,18 +36,24 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
+import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.NbtPrettyPrinter;
 
 import java.util.List;
 
-public class DataTagToolItem extends BlockToolItem implements InteractsWithEntity {
+@EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
+public class DataTagToolItem extends BlockToolItem implements InteractsWithEntity, RendersBeforeOutline {
   public DataTagToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
@@ -107,7 +120,8 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
       Hand hand,
       Entity entity,
       @Nullable EntityHitResult hitResult) {
-    if (!world.isClient) return getEntityDataOf((ServerPlayerEntity) player, entity);
+    if (player.isSpectator()) return ActionResult.PASS;
+    else if (!world.isClient) return getEntityDataOf((ServerPlayerEntity) player, entity);
     else return ActionResult.SUCCESS;
   }
 
@@ -118,8 +132,22 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
       Hand hand,
       Entity entity,
       @Nullable EntityHitResult hitResult) {
-    if (!world.isClient) return getEntityDataOf((ServerPlayerEntity) player, entity);
+    if (!world.isClient && !player.isSpectator()) return getEntityDataOf((ServerPlayerEntity) player, entity);
     else return ActionResult.SUCCESS;
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public void renderBeforeOutline(WorldRenderContext context, HitResult hitResult, ClientPlayerEntity player, Hand hand) {
+    if (hitResult instanceof EntityHitResult entityHitResult && !player.isSpectator()) {
+      final Entity entity = entityHitResult.getEntity();
+      final MatrixStack matrices = context.matrixStack();
+      final VertexConsumerProvider consumers = context.consumers();
+      if (consumers == null) return;
+      final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.getLines());
+      final Vec3d cameraPos = context.camera().getPos();
+      WorldRendererInvoker.drawShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, 0f, 1f, 0f, 0.8f);
+    }
   }
 
   /**

@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.util;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -205,6 +206,7 @@ public class BlockPlacementContext {
    * Place the block. Calls {@link World#setBlockState}.
    */
   @SuppressWarnings("UnusedReturnValue")
+  @CanIgnoreReturnValue
   public boolean setBlockState(int flags) {
     return world.setBlockState(posToPlace, stateToPlace, flags);
   }
@@ -213,6 +215,7 @@ public class BlockPlacementContext {
    * 放置方块实体。
    */
   @SuppressWarnings("UnusedReturnValue")
+  @CanIgnoreReturnValue
   public boolean setBlockEntity() {
     BlockEntity entityToPlace = world.getBlockEntity(posToPlace);
     if (stackInHand != null) {
