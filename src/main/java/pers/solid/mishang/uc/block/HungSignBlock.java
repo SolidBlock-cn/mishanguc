@@ -44,6 +44,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.chunk.WorldChunk;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -316,44 +317,56 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       Hand hand,
       BlockHitResult hit) {
     final ActionResult actionResult = super.onUse(state, world, pos, player, hand, hit);
+    if (actionResult != ActionResult.PASS) return actionResult;
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     if (!(blockEntity instanceof final HungSignBlockEntity entity)) {
       return ActionResult.PASS;
-    }
-    // 若方块实体不对应，或者编辑的这一侧不可编辑，则在客户端和服务器均略过。
-    // Skip if the block entity does not correspond, or the side is not editable.
-    if (!state.get(AXIS).test(hit.getSide())) {
+    } else if (!state.get(AXIS).test(hit.getSide())) {
+      // 若方块实体不对应，或者编辑的这一侧不可编辑，则在客户端和服务器均略过。
+      // Skip if the block entity does not correspond, or the side is not editable.
       return ActionResult.PASS;
-    }
-    if (player.getMainHandStack().getItem() == Items.MAGMA_CREAM) {
+    } else if (!player.getAbilities().allowModifyWorld) {
+      // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
+      return ActionResult.FAIL;
+    } else if (player.getMainHandStack().getItem() == Items.MAGMA_CREAM) {
       // 玩家手持岩浆膏时，可快速进行重整。
       final List<@NotNull TextContext> textContexts = entity.texts.get(hit.getSide());
       if (textContexts != null) MishangUtils.rearrange(textContexts);
       entity.markDirty();
       return ActionResult.SUCCESS;
     } else if (player.getMainHandStack().getItem() == Items.SLIME_BALL) {
-      // 玩家手持岩浆膏时，可快速进行重整。
+      // 玩家手持粘液球时，可快速进行替换箭头。
       final List<@NotNull TextContext> textContexts = entity.texts.get(hit.getSide());
       if (textContexts != null) MishangUtils.replaceArrows(textContexts);
       entity.markDirty();
       return ActionResult.SUCCESS;
-    }
-    if (actionResult == ActionResult.PASS && !world.isClient) {
-      entity.checkEditorValidity();
-      final PlayerEntity editor = entity.getEditor();
-      if (editor != null && editor != player) {
-        // 这种情况下，告示牌被占用，玩家无权编辑。
-        // In this case, the sign is occupied, and the player has no editing permission.
-        player.sendMessage(new TranslatableText("message.mishanguc.no_editing_permission.occupied", editor.getName()), false);
-        return ActionResult.FAIL;
+    } else if (player.getMainHandStack().getItem() == Items.SLIME_BLOCK) {
+      final WorldChunk worldChunk = world.getWorldChunk(pos);
+      for (BlockEntity value : worldChunk.getBlockEntities().values()) {
+        if (value instanceof HungSignBlockEntity hungSignBlockEntity) {
+          hungSignBlockEntity.texts.values().forEach(MishangUtils::replaceArrows);
+          hungSignBlockEntity.markDirty();
+        }
       }
-      entity.editedSide = hit.getSide();
-      entity.setEditor(player);
-      ServerPlayNetworking.send(
-          ((ServerPlayerEntity) player),
-          new Identifier("mishanguc", "edit_sign"),
-          PacketByteBufs.create().writeBlockPos(pos).writeEnumConstant(hit.getSide()));
+      return ActionResult.SUCCESS;
+    } else if (world.isClient) {
+      return ActionResult.SUCCESS;
     }
+
+    entity.checkEditorValidity();
+    final PlayerEntity editor = entity.getEditor();
+    if (editor != null && editor != player) {
+      // 这种情况下，告示牌被占用，玩家无权编辑。
+      // In this case, the sign is occupied, and the player has no editing permission.
+      player.sendMessage(new TranslatableText("message.mishanguc.no_editing_permission.occupied", editor.getName()), false);
+      return ActionResult.FAIL;
+    }
+    entity.editedSide = hit.getSide();
+    entity.setEditor(player);
+    ServerPlayNetworking.send(
+        ((ServerPlayerEntity) player),
+        new Identifier("mishanguc", "edit_sign"),
+        PacketByteBufs.create().writeBlockPos(pos).writeEnumConstant(hit.getSide()));
     return ActionResult.SUCCESS;
   }
 

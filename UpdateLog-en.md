@@ -12,7 +12,7 @@ Updated following content:
 - Added crafting recipe for some content.
 - Adjusted the texture of road block.
 - No longer allow snow placed on road blocks (blocks with `mishanguc:roads` tag), to prevent the situation roads can't be seen in snowy days.
-- Added `-rect` and `-pattern` feature or sign blocks. Clicking a sign holding slime ball can replace arrow characters with `-pattern` form.
+- Added `-rect` and `-pattern` feature or sign blocks. Clicking a sign holding slime ball can replace arrow characters with `-pattern` form. Clicking holding a slime ball can replace the block entities of the same type in a whole chunk.
 - Walking on road blocks (blocks with `mishanguc:roads` tag) can accelerate, which does not affect FOV.
 - Added yellow straight line and angle line roads (previously there is only white), yellow cross line roads (previously there is only white), road with white thick T-shaped yellow line (previously there is only road with white normal line with yellow line, and white thick line with yellow double line). Auto-connecting road blocks are adjusted accordingly.
 - Changed Chinese names of some road blocks (see the update log in Chinese).
@@ -25,7 +25,9 @@ Updated following content:
 - When operating on blocks with rotating tools or mirroring tools, if the operated block is the same as that before the operation, the operation is regarded fail.
 - The model of fast building tool can be affected by its properties. If the matching range is larger, the texture is deeper.
 - Adjusted the display of mod info. It displays only when player logs into the world, and will not display again when the player respawns or switches dimension.
+- No longer allow ID checker tools and data tag tools have effect when in Spectator Mode. Now when you hit entities in Spectator Mode holding this item, you will spectate it as in other cases.
 - Optimized the rendering of text.
+- (For versions above 1.19) Added hung sign, sign bar, wall sing and handrail for made of mangrove.
 
 Fixed following issues:
 
@@ -33,9 +35,11 @@ Fixed following issues:
 - When placing a sign bar above a hung sign, the sign bars above it do not update.
 - When running on a dedicated server, switching the matching rule of fast building tool causes crash.
 - The height of display range of full wall sign block is not correct.
-- Fast building tool does not correctly draws the outline of fluid.
+- Fast building tool does not correctly draw the outline of fluid.
 - Slab tool may drop abnormally when mining.
-- (For versions above 1.19) Added hung sign, sign bar, wall sing and handrail for made of mangrove.
+- Adventure Mode players can edit hung signs.
+- The outline rendered does not match the real situation when holding items in offhand. (Note: When holding items in offhand and main hand is empty, you can trigger "use" but cannot trigger "attack" or "break".)
+-
 
 ### 0.1.7
 
