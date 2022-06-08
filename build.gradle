@@ -31,7 +31,7 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    var brrp_mc_version = project.brrp_mc_version ?: project.minecraft_version
+    def brrp_mc_version = project.hasProperty("brrp_mc_version") ? project.brrp_mc_version : project.minecraft_version
 
     // BRRP.
     modImplementation("net.devtech:brrp:${project.brrp_version}-${brrp_mc_version}")
@@ -46,7 +46,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    // Minecraft 1.17 (21w19a) upwards uses Java 16.
+    // Minecraft 1.18 upwards uses Java 17.
     it.options.release = 17
 }
 

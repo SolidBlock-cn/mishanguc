@@ -149,7 +149,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   @ApiStatus.AvailableSince("0.1.6")
   public final ButtonWidget applyDoubleLineTemplateButton = new ButtonWidget(width / 2 - 50, 70, 120, 20, Text.translatable("message.mishanguc.apply_double_line_template"), button -> {
     addTextField(0, AbstractSignBlockEditScreen.this.entity.getDefaultTextContext(), false);
-    addTextField(1, Util.make(AbstractSignBlockEditScreen.this.entity.getDefaultTextContext(), textContext -> textContext.size /= 4), false);
+    addTextField(1, Util.make(AbstractSignBlockEditScreen.this.entity.getDefaultTextContext(), textContext -> textContext.size /= 2), false);
     textFieldListScreen.setFocused(textFieldListScreen.children().get(0));
     rearrange();
   });
