@@ -9,16 +9,17 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.boss.dragon.EnderDragonFight;
 import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -131,6 +132,9 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     if (!player.getAbilities().creativeMode) {
       // 只有在创造模式下，才会绘制边框。
       return true;
+    } else if (hand == Hand.OFF_HAND && player.getMainHandStack().getItem() instanceof BlockItem) {
+      // 当玩家副手持有物品，主手持有方块时，直接跳过，不绘制。
+      return true;
     }
     final VertexConsumerProvider consumers = worldRenderContext.consumers();
     if (consumers == null) {
@@ -224,15 +228,10 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       Hand hand,
       Entity entity,
       @Nullable EntityHitResult hitResult) {
-    if (!player.getAbilities().creativeMode) return ActionResult.FAIL;
+    if (!player.getAbilities().creativeMode) return ActionResult.PASS;
     entity.remove(Entity.RemovalReason.KILLED);
     if (entity instanceof EnderDragonPart enderDragonPart) {
-      enderDragonPart.owner.remove(Entity.RemovalReason.KILLED);
-      final EnderDragonFight fight = enderDragonPart.owner.getFight();
-      if (fight != null) {
-        fight.updateFight(enderDragonPart.owner);
-        fight.dragonKilled(enderDragonPart.owner);
-      }
+      enderDragonPart.owner.kill();
     }
     return ActionResult.SUCCESS;
   }
@@ -249,9 +248,9 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void renderBeforeOutline(WorldRenderContext context, HitResult hitResult, Hand hand) {
+  public void renderBeforeOutline(WorldRenderContext context, HitResult hitResult, ClientPlayerEntity player, Hand hand) {
     // 只在使用主手持有此物品时进行渲染。
-    if (hand != Hand.MAIN_HAND) return;
+    if (hand != Hand.MAIN_HAND || !player.getAbilities().creativeMode) return;
     final MatrixStack matrices = context.matrixStack();
     final VertexConsumerProvider consumers = context.consumers();
     if (consumers == null) return;
