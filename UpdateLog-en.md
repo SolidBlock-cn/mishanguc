@@ -12,7 +12,7 @@ Updated following content:
 Fixed following issues:
 
 - Hung sign and hung sign bar blocks are not mirrored correctly.
-- When holding some tools, the ShapeContext is ignored when drawing outline。
+- When holding some tools, the ShapeContext is ignored when drawing outline.
 
 ### 0.2.0
 
