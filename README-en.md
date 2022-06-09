@@ -2,7 +2,7 @@ Welcome to use the Mishang Urban Construction mod. This mod provides you with a 
 
 This mod is not yet stable. Please do not use this mod in your formal development, as future incompatible updates may happen to make former contents removed.
 
-**Since 0.2.0, this mod relies on BRRP. Please make sure you have installed [BRRP mod](https://github.com/SolidBlock-cn/BRRP) when installing this mod, and ARRP is not needed anymore!**
+**This mod relies on [BRRP](https://github.com/SolidBlock-cn/BRRP) (Better Runtime Resource Pack) mod. Please do make sure that BRRP is installed when installing this mod, or the game will not start.** The [ARRP](https://github.com/Devan-Kerman/ARRP) (Advanced Runtime Resource Pack) mod that old versions rely on can be deleted or disabled. Please do not install BRRP and ARRP simultaneously. You do not need to install ARRP even if other mods rely on ARRP, as BRRP includes all features of ARRP.
 
 **This mod is published under the LGPLv3 license, which you must follow when propagating this mod.**
 

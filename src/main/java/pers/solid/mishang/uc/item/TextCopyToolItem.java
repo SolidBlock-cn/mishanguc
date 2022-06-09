@@ -74,6 +74,25 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
   }
 
   @Override
+  public Text getName(ItemStack stack) {
+    final NbtCompound nbt = stack.getNbt();
+    if (nbt == null || !nbt.contains("texts", NbtType.LIST)) return super.getName(stack);
+    final MutableText text = super.getName(stack).shallowCopy();
+    final List<MutableText> texts = ImmutableList.copyOf(
+        nbt.getList("texts", NbtType.COMPOUND).stream()
+            .map(TextContext::fromNbt)
+            .map(TextContext::asStyledText)
+            .iterator());
+    if (!texts.isEmpty()) {
+      MutableText appendable = new LiteralText("");
+      texts.forEach(t -> appendable.append(" ").append(t));
+      text.append(
+          new LiteralText(" -" + appendable.asTruncatedString(25)).formatted(Formatting.GRAY));
+    }
+    return text;
+  }
+
+  @Override
   public ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
     if (world.isClient) return ActionResult.SUCCESS;
     final ItemStack stack = player.getStackInHand(hand);
