@@ -23,7 +23,9 @@ import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -31,10 +33,7 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -51,7 +50,6 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
-import pers.solid.mishang.uc.mixin.EntityShapeContextAccessor;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.text.TextContext;
@@ -94,8 +92,8 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       MishangUtils.createHorizontalDirectionToShape(7.5, 13, 11, 8.5, 16, 12);
   private static final Map<Direction, @Nullable VoxelShape> BAR_SHAPES_EDGE =
       MishangUtils.createHorizontalDirectionToShape(7.5, 13, 13, 8.5, 16, 14);
-  private static final VoxelShape SHAPE_WIDENED_X = createCuboidShape(5.5, 6, 0, 10.5, 16, 16);
-  private static final VoxelShape SHAPE_WIDENED_Z = createCuboidShape(0, 6, 5.5, 16, 16, 10.5);
+  private static final VoxelShape SHAPE_WIDENED_X = createCuboidShape(6.5, 6, 0, 9.5, 16, 16);
+  private static final VoxelShape SHAPE_WIDENED_Z = createCuboidShape(0, 6, 6.5, 16, 16, 9.5);
   public final @Nullable Block baseBlock;
 
   /**
@@ -174,22 +172,14 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
 
   @SuppressWarnings("deprecation")
   @Override
-  public VoxelShape getOutlineShape(
-      BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+  public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     final Direction.Axis axis = state.get(AXIS);
     final boolean left = state.get(LEFT);
     final boolean right = state.get(RIGHT);
-    final boolean isHoldingHungSigns;
-    if (context instanceof EntityShapeContext) {
-      final Item heldItem = ((EntityShapeContextAccessor) context).getHeldItem().getItem();
-      if (heldItem instanceof final BlockItem blockItem) {
-        final Block block = blockItem.getBlock();
-        isHoldingHungSigns = block instanceof HungSignBlock || block instanceof HungSignBarBlock;
-      } else isHoldingHungSigns = false;
-    } else isHoldingHungSigns = false;
+    final boolean shouldCollideWide = context != ShapeContext.absent();
     switch (axis) {
       case X:
-        if (isHoldingHungSigns) return SHAPE_WIDENED_X;
+        if (shouldCollideWide) return SHAPE_WIDENED_X;
         else if (!left && !right)
           return VoxelShapes.union(
               SHAPE_X, BAR_SHAPES_EDGE.get(Direction.SOUTH), BAR_SHAPES_EDGE.get(Direction.NORTH));
@@ -199,7 +189,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
               !left ? BAR_SHAPES.get(Direction.SOUTH) : VoxelShapes.empty(),
               !right ? BAR_SHAPES.get(Direction.NORTH) : VoxelShapes.empty());
       case Z:
-        if (isHoldingHungSigns) return SHAPE_WIDENED_Z;
+        if (shouldCollideWide) return SHAPE_WIDENED_Z;
         else if (!left && !right)
           return VoxelShapes.union(
               SHAPE_Z, BAR_SHAPES_EDGE.get(Direction.WEST), BAR_SHAPES_EDGE.get(Direction.EAST));
@@ -283,17 +273,26 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   @Override
   public BlockState rotate(BlockState state, BlockRotation rotation) {
     final Direction.Axis oldAxis = state.get(AXIS);
-    state =
-        super.rotate(state, rotation)
-            .with(
-                AXIS,
-                rotation == BlockRotation.CLOCKWISE_90
-                    || rotation == BlockRotation.COUNTERCLOCKWISE_90
-                    ? (oldAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X)
-                    : oldAxis);
+    state = super.rotate(state, rotation)
+        .with(AXIS,
+            rotation == BlockRotation.CLOCKWISE_90
+                || rotation == BlockRotation.COUNTERCLOCKWISE_90
+                ? (oldAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X)
+                : oldAxis);
     if (rotation == BlockRotation.CLOCKWISE_180
         || (oldAxis == Direction.Axis.X && rotation == BlockRotation.COUNTERCLOCKWISE_90)
         || (oldAxis == Direction.Axis.Z && rotation == BlockRotation.CLOCKWISE_90)) {
+      state = state.with(LEFT, state.get(RIGHT)).with(RIGHT, state.get(LEFT));
+    }
+    return state;
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public BlockState mirror(BlockState state, BlockMirror mirror) {
+    state = super.mirror(state, mirror);
+    final Direction.Axis axis = state.get(AXIS);
+    if ((axis == Direction.Axis.Z && mirror == BlockMirror.FRONT_BACK) || (axis == Direction.Axis.X && mirror == BlockMirror.LEFT_RIGHT)) {
       state = state.with(LEFT, state.get(RIGHT)).with(RIGHT, state.get(LEFT));
     }
     return state;
@@ -358,7 +357,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     if (editor != null && editor != player) {
       // 这种情况下，告示牌被占用，玩家无权编辑。
       // In this case, the sign is occupied, and the player has no editing permission.
-        player.sendMessage(Text.translatable("message.mishanguc.no_editing_permission.occupied", editor.getName()), false);
+      player.sendMessage(Text.translatable("message.mishanguc.no_editing_permission.occupied", editor.getName()), false);
       return ActionResult.FAIL;
     }
     entity.editedSide = hit.getSide();

@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -138,7 +139,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
     WorldRendererInvoker.drawCuboidShapeOutline(
         worldRenderContext.matrixStack(),
         vertexConsumer,
-        state.getOutlineShape(world, blockPos),
+        state.getOutlineShape(world, blockPos, ShapeContext.of(player)),
         blockPos.getX() - blockOutlineContext.cameraX(),
         blockPos.getY() - blockOutlineContext.cameraY(),
         blockPos.getZ() - blockOutlineContext.cameraZ(),

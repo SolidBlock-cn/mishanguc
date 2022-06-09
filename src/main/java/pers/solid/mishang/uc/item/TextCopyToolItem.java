@@ -19,6 +19,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtByte;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
@@ -73,6 +74,25 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         }).forEach(tooltip::add);
       }
     }
+  }
+
+  @Override
+  public Text getName(ItemStack stack) {
+    final NbtCompound nbt = stack.getNbt();
+    if (nbt == null || !nbt.contains("texts", NbtType.LIST)) return super.getName(stack);
+    final MutableText text = super.getName(stack).shallowCopy();
+    final List<MutableText> texts = ImmutableList.copyOf(
+        nbt.getList("texts", NbtType.COMPOUND).stream()
+            .map(TextContext::fromNbt)
+            .map(TextContext::asStyledText)
+            .iterator());
+    if (!texts.isEmpty()) {
+      MutableText appendable = new LiteralText("");
+      texts.forEach(t -> appendable.append(" ").append(t));
+      text.append(
+          new LiteralText(" -" + appendable.asTruncatedString(25)).formatted(Formatting.GRAY));
+    }
+    return text;
   }
 
   @Override

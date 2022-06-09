@@ -26,6 +26,8 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.HorizontalAlign;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
+import java.util.Arrays;
+
 /**
  * 对 {@link net.minecraft.text.Text} 的简单包装与扩展，允许设置对齐属性、尺寸等参数，以便渲染时使用。同时还提供对象与 NBT、JSON 之间的转换。
  */
@@ -153,6 +155,27 @@ public class TextContext implements Cloneable {
   public @Nullable TextSpecial extra = null;
 
   /**
+   * <p>该字段用来检测 {@link #bold}、{@link #italic}、{@link #underline}、{@link #strikethrough}、{@link #obfuscated} 是否发生改变。如果发生改变了，则该字段将与 {@code {bold, italic, underline, strikethrough, obfuscated}} 不相等，此时会通过 {@link #reformatText()} 重新更新 {@link #formattedText} 对象，同时更新此字段的值。。
+   * <p>请注意，渲染时文本的上述样式是需要考虑的，但不会直接写入 text 字段的值中，因此需要本地创建一个 {@code formattedText}。但如果每一帧都实例化一次 {@link #formattedText} 将消耗大量内存，影响性能，因此只会在样式或者文本被更改时，更新 {@code formattedText}。
+   */
+  @Environment(EnvType.CLIENT)
+  @ApiStatus.AvailableSince("0.2.1")
+  private transient boolean[] cachedStyles = null;
+  /**
+   * 该字段用来检测 {@link #text} 字段是否发生改变。如果发生改变了，则该字段与 {@link #text} 将会不相等，此时将会调用 {@link #reformatText()} 重新生成 {@link #formattedText}，同时将此字段更新为 {@link #text} 的值。
+   */
+  @Environment(EnvType.CLIENT)
+  @ApiStatus.AvailableSince("0.2.1")
+  private transient Text cachedText = null;
+  /**
+   * <p>将 {@link #text} 应用 {@link #bold} 等格式后的文本对象。注意：上述格式并不会直接写入 {@link #text} 对象中。
+   * <p>渲染时，会直接使用此对象，而不直接使用 {@link #text} 对象。在每帧渲染时，如果 {@link #text} 或 {@link #bold} 等字段发生改变了，则会调用 {@link #reformatText()} 重新生成此字段的值。请注意：并不是每一帧都这么做，否则将会消耗大量内存。
+   */
+  @Environment(EnvType.CLIENT)
+  @ApiStatus.AvailableSince("0.2.1")
+  private transient MutableText formattedText = null;
+
+  /**
    * 从一个 NBT 元素创建一个新的 TextContext 对象，并使用默认值。
    *
    * @param nbt NBT 复合标签或者字符串。
@@ -270,30 +293,10 @@ public class TextContext implements Cloneable {
     if (text == null && extra == null) {
       return;
     }
-    final OrderedText orderedText;
-    if (text != null) {
-      // 为文本创建本地的格式化的副本。此后，本方法中的所有 text 均为此局部变量，而非 this.text。这是为了在渲染时，修改了 text 本身的内容。
-      MutableText formattedText = this.text.copy();
-      // 处理文本格式，如加粗、斜线等。文本颜色在 <tt>draw</tt> 的参数中。
-      if (bold) {
-        formattedText.formatted(Formatting.BOLD);
-      }
-      if (italic) {
-        formattedText.formatted(Formatting.ITALIC);
-      }
-      if (underline) {
-        formattedText.formatted(Formatting.UNDERLINE);
-      }
-      if (strikethrough) {
-        formattedText.formatted(Formatting.STRIKETHROUGH);
-      }
-      if (obfuscated) {
-        formattedText.formatted(Formatting.OBFUSCATED);
-      }
-      orderedText = formattedText.asOrderedText();
-    } else {
-      orderedText = null;
+    if (!Arrays.equals(cachedStyles, new boolean[]{bold, italic, underline, strikethrough, obfuscated}) || text != cachedText) {
+      reformatText();
     }
+    final OrderedText orderedText = formattedText == null ? null : formattedText.asOrderedText();
 
     matrixStack.push();
 
@@ -335,6 +338,40 @@ public class TextContext implements Cloneable {
       extra.drawExtra(textRenderer, matrixStack, vertexConsumers, light, x, y);
     }
     matrixStack.pop();
+  }
+
+  /**
+   * 当检测到文本对象的 bold、italic、underline、strikethrough 和 obfuscated 有更新，或者 text 字段被改变之后，重新设置该文本的 formattedText 对象。<p>
+   * 此前的版本的做法是，每渲染一次都产生一次 formattedText，这种做法有非常大的问题，因为每一帧都要产生对象，并将文本 order 一次。事实上，如果文本或者样式没有改变，那么 formattedText 就不需要更换，其 orderedText 也可以直接使用。<p>
+   * 此方法只会在渲染（{@link #draw}）时调用，并且不会每一帧都调用。
+   */
+  @Environment(EnvType.CLIENT)
+  @ApiStatus.AvailableSince("0.2.1")
+  private void reformatText() {
+    if (text == null) {
+      cachedText = null;
+      formattedText = null;
+      return;
+    }
+    cachedText = text;
+    formattedText = text.shallowCopy();
+
+    if (bold) {
+      formattedText.formatted(Formatting.BOLD);
+    }
+    if (italic) {
+      formattedText.formatted(Formatting.ITALIC);
+    }
+    if (underline) {
+      formattedText.formatted(Formatting.UNDERLINE);
+    }
+    if (strikethrough) {
+      formattedText.formatted(Formatting.STRIKETHROUGH);
+    }
+    if (obfuscated) {
+      formattedText.formatted(Formatting.OBFUSCATED);
+    }
+    cachedStyles = new boolean[]{bold, italic, underline, strikethrough, obfuscated};
   }
 
   /**
