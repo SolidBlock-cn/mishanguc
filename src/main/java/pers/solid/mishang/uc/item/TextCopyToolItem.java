@@ -80,17 +80,18 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
   public Text getName(ItemStack stack) {
     final NbtCompound nbt = stack.getNbt();
     if (nbt == null || !nbt.contains("texts", NbtType.LIST)) return super.getName(stack);
-    final MutableText text = super.getName(stack).shallowCopy();
+    final MutableText text = super.getName(stack).copy();
     final List<MutableText> texts = ImmutableList.copyOf(
         nbt.getList("texts", NbtType.COMPOUND).stream()
             .map(TextContext::fromNbt)
             .map(TextContext::asStyledText)
+            .filter(Objects::nonNull)
             .iterator());
     if (!texts.isEmpty()) {
-      MutableText appendable = new LiteralText("");
+      MutableText appendable = Text.empty();
       texts.forEach(t -> appendable.append(" ").append(t));
       text.append(
-          new LiteralText(" -" + appendable.asTruncatedString(25)).formatted(Formatting.GRAY));
+          Text.literal(" -" + appendable.asTruncatedString(25)).formatted(Formatting.GRAY));
     }
     return text;
   }

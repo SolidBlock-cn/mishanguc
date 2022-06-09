@@ -354,7 +354,7 @@ public class TextContext implements Cloneable {
       return;
     }
     cachedText = text;
-    formattedText = text.shallowCopy();
+    formattedText = text.copy();
 
     if (bold) {
       formattedText.formatted(Formatting.BOLD);
