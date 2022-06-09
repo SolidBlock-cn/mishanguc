@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
@@ -166,7 +167,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
         matrices,
         vertexConsumer,
         blockPlacementContext.stateToPlace.getOutlineShape(
-            blockPlacementContext.world, blockPlacementContext.posToPlace),
+            blockPlacementContext.world, blockPlacementContext.posToPlace, ShapeContext.of(player)),
         blockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(),
         blockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(),
         blockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(),
@@ -196,7 +197,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           matrices,
           vertexConsumer,
           blockPlacementContext.hitState.getOutlineShape(
-              blockPlacementContext.world, blockPlacementContext.blockPos),
+              blockPlacementContext.world, blockPlacementContext.blockPos, ShapeContext.of(player)),
           blockPlacementContext.blockPos.getX() - blockOutlineContext.cameraX(),
           blockPlacementContext.blockPos.getY() - blockOutlineContext.cameraY(),
           blockPlacementContext.blockPos.getZ() - blockOutlineContext.cameraZ(),

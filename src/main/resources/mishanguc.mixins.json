@@ -4,14 +4,14 @@
   "package": "pers.solid.mishang.uc.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "EntityShapeContextAccessor", "ItemUsageContextInvoker",
-    "NbtCompoundAccessor", "ServerWorldMixin", "SnowBlockMixin",
-    "TextRendererAccessor"
+    "ItemUsageContextInvoker",
+    "NbtCompoundAccessor", "PlayerInventoryMixin", "ServerWorldMixin", "SnowBlockMixin"
   ],
   "client": [
     "AbstractClientPlayerEntityMixin",
     "BetterClientPlayerInteractionManagerMixin", "GameRendererMixin",
-    "PlayerInventoryMixin", "ScreenMixin", "WorldRendererInvoker"
+    "ScreenMixin",
+    "TextRendererAccessor", "WorldRendererInvoker"
   ],
   "injectors": {
     "defaultRequire": 1

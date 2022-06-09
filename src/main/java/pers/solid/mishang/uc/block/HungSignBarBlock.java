@@ -11,11 +11,12 @@ import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
+import net.minecraft.block.Waterloggable;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -23,6 +24,7 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -37,7 +39,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.mixin.EntityShapeContextAccessor;
 
 import java.util.Map;
 
@@ -55,15 +56,15 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
   private static final Map<Direction, @Nullable VoxelShape> BAR_SHAPES_EDGE =
       MishangUtils.createHorizontalDirectionToShape(7.5, 0, 13, 8.5, 16, 14);
   private static final Map<Direction, @Nullable VoxelShape> BAR_SHAPES_WIDE =
-      MishangUtils.createHorizontalDirectionToShape(5.5, 0, 9, 10.5, 16, 14);
+      MishangUtils.createHorizontalDirectionToShape(6.5, 0, 10, 9.5, 16, 13);
   private static final Map<Direction, @Nullable VoxelShape> BAR_SHAPES_EDGE_WIDE =
-      MishangUtils.createHorizontalDirectionToShape(5.5, 0, 11, 10.5, 16, 16);
+      MishangUtils.createHorizontalDirectionToShape(6.5, 0, 12, 9.5, 16, 15);
   /**
    * 当 left 和 right 均为 false 时，显示在正中央，采用此轮廓。
    */
   private static final VoxelShape BAR_SHAPE_CENTRAL = createCuboidShape(7.5, 0, 7.5, 8.5, 16, 8.5);
 
-  private static final VoxelShape BAR_SHAPE_CENTRAL_WIDE = createCuboidShape(5, 0, 5, 11, 16, 11);
+  private static final VoxelShape BAR_SHAPE_CENTRAL_WIDE = createCuboidShape(6.5, 0, 6.5, 9.5, 16, 9.5);
   public final @Nullable Block baseBlock;
   /**
    * 告示牌杆的纹理。若为 {@code null}，则根据其 {@link #baseBlock} 的 id 来推断。
@@ -132,21 +133,14 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
     final Boolean right = state.get(RIGHT);
 
     // 如果玩家正在拿着悬挂告示牌方块，或者悬挂告示牌柱方块，则为 true。
-    final boolean isHoldingSignBars;
-    if (context instanceof EntityShapeContext) {
-      final Item heldItem = ((EntityShapeContextAccessor) context).getHeldItem();
-      if (heldItem instanceof BlockItem) {
-        final Block block = ((BlockItem) heldItem).getBlock();
-        isHoldingSignBars = block instanceof HungSignBlock || block instanceof HungSignBarBlock;
-      } else isHoldingSignBars = false;
-    } else isHoldingSignBars = false;
+    final boolean shouldCollideWide = context != ShapeContext.absent();
     if (left && right) {
-      return isHoldingSignBars ? BAR_SHAPE_CENTRAL_WIDE : BAR_SHAPE_CENTRAL;
+      return shouldCollideWide ? BAR_SHAPE_CENTRAL_WIDE : BAR_SHAPE_CENTRAL;
     }
     final Map<Direction, @Nullable VoxelShape> barShapes =
-        isHoldingSignBars ? BAR_SHAPES_WIDE : BAR_SHAPES;
+        shouldCollideWide ? BAR_SHAPES_WIDE : BAR_SHAPES;
     final Map<Direction, @Nullable VoxelShape> barShapesEdge =
-        isHoldingSignBars ? BAR_SHAPES_EDGE_WIDE : BAR_SHAPES_EDGE;
+        shouldCollideWide ? BAR_SHAPES_EDGE_WIDE : BAR_SHAPES_EDGE;
     switch (axis) {
       case X:
         if (!(left || right))
@@ -204,18 +198,27 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
   @Override
   public BlockState rotate(BlockState state, BlockRotation rotation) {
     final Direction.Axis oldAxis = state.get(AXIS);
-    state =
-        super.rotate(state, rotation)
-            .with(
-                AXIS,
-                rotation == BlockRotation.CLOCKWISE_90
-                    || rotation == BlockRotation.COUNTERCLOCKWISE_90
-                    ? (oldAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X)
-                    : oldAxis);
-    //noinspection AlibabaAvoidComplexCondition
+    state = super.rotate(state, rotation)
+        .with(
+            AXIS,
+            rotation == BlockRotation.CLOCKWISE_90
+                || rotation == BlockRotation.COUNTERCLOCKWISE_90
+                ? (oldAxis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X)
+                : oldAxis);
     if (rotation == BlockRotation.CLOCKWISE_180
         || (oldAxis == Direction.Axis.X && rotation == BlockRotation.COUNTERCLOCKWISE_90)
         || (oldAxis == Direction.Axis.Z && rotation == BlockRotation.CLOCKWISE_90)) {
+      state = state.with(LEFT, state.get(RIGHT)).with(RIGHT, state.get(LEFT));
+    }
+    return state;
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public BlockState mirror(BlockState state, BlockMirror mirror) {
+    state = super.mirror(state, mirror);
+    final Direction.Axis axis = state.get(AXIS);
+    if ((axis == Direction.Axis.Z && mirror == BlockMirror.FRONT_BACK) || (axis == Direction.Axis.X && mirror == BlockMirror.LEFT_RIGHT)) {
       state = state.with(LEFT, state.get(RIGHT)).with(RIGHT, state.get(LEFT));
     }
     return state;
