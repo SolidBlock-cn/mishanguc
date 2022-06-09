@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.RenderLayer;
@@ -284,7 +285,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
         WorldRendererInvoker.drawShapeOutline(
             worldRenderContext.matrixStack(),
             vertexConsumer,
-            offsetBlockPlacementContext.stateToPlace.getOutlineShape(world, pos),
+            offsetBlockPlacementContext.stateToPlace.getOutlineShape(world, pos, ShapeContext.of(player)),
             offsetBlockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(),
             offsetBlockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(),
             offsetBlockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(),
@@ -311,7 +312,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
         WorldRendererInvoker.drawShapeOutline(
             worldRenderContext.matrixStack(),
             vertexConsumer,
-            state.getOutlineShape(world, pos),
+            state.getOutlineShape(world, pos, ShapeContext.of(player)),
             pos.getX() - blockOutlineContext.cameraX(),
             pos.getY() - blockOutlineContext.cameraY(),
             pos.getZ() - blockOutlineContext.cameraZ(),
@@ -320,7 +321,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
             0,
             0.8f);
         if (includesFluid) {
-        WorldRendererInvoker.drawShapeOutline(
+          WorldRendererInvoker.drawShapeOutline(
               worldRenderContext.matrixStack(),
               vertexConsumer,
               state.getFluidState().getShape(world, pos),

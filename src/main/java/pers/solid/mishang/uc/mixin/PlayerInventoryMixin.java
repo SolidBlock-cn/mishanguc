@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.mixin;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pers.solid.mishang.uc.item.HotbarScrollInteraction;
 
-@Environment(EnvType.CLIENT)
 @Mixin(PlayerInventory.class)
 public abstract class PlayerInventoryMixin {
   @Shadow

@@ -2,7 +2,7 @@
 
 模组还不稳定，请勿将本模组内容用于实际开发中，以免因模组出现不兼容的更新而导致旧的内容消失。
 
-**自 0.2.0 开始，本模组依赖 BRRP，安装本模组时请确保已安装 [BRRP 模组](https://github.com/SolidBlock-cn/BRRP)，并不再需要安装 ARRP 模组！**
+**本模组依赖 [BRRP](https://github.com/SolidBlock-cn/BRRP)（更好的运行时资源包，Better Runtime Resource Pack）模组。安装本模组时必须确保已安装 BRRP 模组，否则游戏无法运行！**此前旧版本依赖的 [ARRP](https://github.com/Devan-Kerman/ARRP)（高级运行时资源包，Advanced Runtime Resource Pack）模组可以删除或禁用，请不要同时安装 BRRP 和 ARRP。即使有其他模组依赖 ARRP，也不需要安装 ARRP，因为 BRRP 可以包含 ARRP 的所有功能。
 
 **本模组是按照 LGPLv3 协议发布的，传播本模组时须遵守本协议。**
 

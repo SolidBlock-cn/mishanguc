@@ -2,6 +2,18 @@
 
 Note: Not all versions in the update log are definitely published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 0.2.1
+
+Updated following content:
+
+- Text copy tools now displays its copied content in the item name.
+- Adjusted the outline shape of hung signs and hung sign bars, which is slightly wider than their collision box, but narrower than former outline shape when holding hung signs or hung sign bars. Now the outline shape will not be wider when you hold a hung sign or bar than when not.
+
+Fixed following issues:
+
+- Hung sign and hung sign bar blocks are not mirrored correctly.
+- When holding some tools, the ShapeContext is ignored when drawing outline。
+
 ### 0.2.0
 
 Updated following content:
@@ -39,7 +51,6 @@ Fixed following issues:
 - Slab tool may drop abnormally when mining.
 - Adventure Mode players can edit hung signs.
 - The outline rendered does not match the real situation when holding items in offhand. (Note: When holding items in offhand and main hand is empty, you can trigger "use" but cannot trigger "attack" or "break".)
--
 
 ### 0.1.7
 
