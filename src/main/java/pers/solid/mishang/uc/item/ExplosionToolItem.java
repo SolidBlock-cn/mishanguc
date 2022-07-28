@@ -187,7 +187,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     for (int i = 1; i < 33; i++) {
       final BlockPos pos = basePos.offset(direction, i);
       if (world.getBlockState(pos).getCollisionShape(world, pos).isEmpty()
-          && world.getEntitiesByClass(Entity.class, new Box(pos), EntityPredicates.EXCEPT_SPECTATOR.and(Entity::collides).and(EntityFlagsPredicate.Builder.create().sneaking(false).build()::test)).isEmpty()
+          && world.getEntitiesByClass(Entity.class, new Box(pos), EntityPredicates.EXCEPT_SPECTATOR.and(Entity::canHit).and(EntityFlagsPredicate.Builder.create().sneaking(false).build()::test)).isEmpty()
       ) {
         continue;
       }
