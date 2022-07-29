@@ -3,16 +3,8 @@
   "minVersion": "0.8",
   "package": "pers.solid.mishang.uc.mixin",
   "compatibilityLevel": "JAVA_16",
-  "mixins": [
-    "ItemUsageContextInvoker",
-    "NbtCompoundAccessor", "PlayerInventoryMixin", "ServerWorldMixin", "SnowBlockMixin"
-  ],
-  "client": [
-    "AbstractClientPlayerEntityMixin",
-    "BetterClientPlayerInteractionManagerMixin", "GameRendererMixin",
-    "ScreenMixin",
-    "TextRendererAccessor", "WorldRendererInvoker"
-  ],
+  "mixins": ["AbstractBlockStateMixin", "ItemUsageContextInvoker", "NbtCompoundAccessor", "PlayerInventoryMixin", "ServerWorldMixin", "SnowBlockMixin"],
+  "client": ["AbstractClientPlayerEntityMixin", "BetterClientPlayerInteractionManagerMixin", "GameRendererMixin", "ScreenMixin", "TextRendererAccessor", "WorldRendererInvoker"],
   "injectors": {
     "defaultRequire": 1
   }

@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.arrp;
 
+import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 import net.devtech.arrp.api.RRPCallbackConditional;
 import net.devtech.arrp.api.RRPPreGenEntrypoint;
@@ -470,6 +471,11 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     registerTag(concreteHungSignBars);
     registerTag(terracottaHungSignBars);
     registerTag(hungSignBars);
+
+    // 染色方块部分
+    final IdentifiedTag colored = blockTag("colored");
+    MishangUtils.blocks().values().stream().filter(Predicates.instanceOf(ColoredBlock.class)).forEach(colored::addBlock);
+    registerTag(colored);
   }
 
   private static void registerTag(IdentifiedTag blockTag) {

@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.blocks;
 
 import com.google.common.annotations.Beta;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Util;
@@ -174,8 +173,7 @@ public final class HungSignBlocks extends MishangucBlocks {
    * 自定义颜色的混凝土悬挂告示牌。
    */
   @RegisterIdentifier
-  @Beta
-  public static final ColoredHungSignBlock CUSTOM_CONCRETE_HUNG_SIGN = new ColoredHungSignBlock(null, FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE));
+  public static final ColoredHungSignBlock COLORED_CONCRETE_HUNG_SIGN = new ColoredHungSignBlock(ColoredBlocks.COLORED_CONCRETE);
 
   /**
    * 由所有混凝土告示牌组成的映射。
@@ -272,8 +270,7 @@ public final class HungSignBlocks extends MishangucBlocks {
    * 自定义颜色的混凝土悬挂告示牌杆。
    */
   @RegisterIdentifier
-  @Beta
-  public static final HungSignBarBlock CUSTOM_CONCRETE_HUNG_SIGN_BAR = new ColoredHungSignBarBlock(null, FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE));
+  public static final HungSignBarBlock COLORED_CONCRETE_HUNG_SIGN_BAR = new ColoredHungSignBarBlock(ColoredBlocks.COLORED_CONCRETE);
 
   /**
    * 由所有混凝土告示牌杆组成的映射。
@@ -369,7 +366,7 @@ public final class HungSignBlocks extends MishangucBlocks {
 
   @RegisterIdentifier
   @Beta
-  public static final ColoredHungSignBlock CUSTOM_TERRACOTTA_HUNG_SIGN = new ColoredHungSignBlock(null, FabricBlockSettings.copyOf(Blocks.WHITE_TERRACOTTA));
+  public static final ColoredHungSignBlock COLORED_TERRACOTTA_HUNG_SIGN = new ColoredHungSignBlock(ColoredBlocks.COLORED_TERRACOTTA);
 
   /**
    * 由所有陶瓦告示牌组成的映射。
@@ -464,7 +461,7 @@ public final class HungSignBlocks extends MishangucBlocks {
 
   @RegisterIdentifier
   @Beta
-  public static final ColoredHungSignBarBlock CUSTOM_TERRACOTTA_HUNG_SIGN_BAR = new ColoredHungSignBarBlock(null, FabricBlockSettings.copyOf(Blocks.WHITE_TERRACOTTA));
+  public static final ColoredHungSignBarBlock COLORED_TERRACOTTA_HUNG_SIGN_BAR = new ColoredHungSignBarBlock(ColoredBlocks.COLORED_TERRACOTTA);
 
   /**
    * 由所有陶瓦告示牌杆组成的映射。
@@ -675,10 +672,10 @@ public final class HungSignBlocks extends MishangucBlocks {
           });
 
   static {
-    CUSTOM_CONCRETE_HUNG_SIGN.baseTexture = "block/white_concrete";
-    CUSTOM_CONCRETE_HUNG_SIGN_BAR.texture = "block/white_concrete";
-    CUSTOM_TERRACOTTA_HUNG_SIGN.baseTexture = "block/white_terracotta";
-    CUSTOM_TERRACOTTA_HUNG_SIGN_BAR.texture = "block/white_terracotta";
+    COLORED_CONCRETE_HUNG_SIGN.baseTexture = "block/white_concrete";
+    COLORED_CONCRETE_HUNG_SIGN_BAR.texture = "block/white_concrete";
+    COLORED_TERRACOTTA_HUNG_SIGN.baseTexture = "block/white_terracotta";
+    COLORED_TERRACOTTA_HUNG_SIGN_BAR.texture = "block/white_terracotta";
   }
 
   // 以下是比较杂项的一些发光悬挂告示牌方块。

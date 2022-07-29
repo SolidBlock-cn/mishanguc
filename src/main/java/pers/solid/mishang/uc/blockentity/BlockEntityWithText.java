@@ -15,17 +15,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.CommandOutput;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,24 +34,7 @@ public abstract class BlockEntityWithText extends BlockEntity
     super(type, pos, state);
   }
 
-  /**
-   * @see net.minecraft.block.entity.SignBlockEntity#getCommandSource(ServerPlayerEntity)
-   */
-  public ServerCommandSource getCommandSource(@Nullable ServerPlayerEntity player) {
-    String string = player == null ? "TextPad" : player.getName().getString();
-    Text text = player == null ? new LiteralText("TextPad") : player.getDisplayName();
-    return new ServerCommandSource(
-        CommandOutput.DUMMY,
-        Vec3d.ofCenter(this.pos),
-        Vec2f.ZERO,
-        (ServerWorld) this.world,
-        2,
-        string,
-        text,
-        world == null ? null : world.getServer(),
-        player);
-  }
-
+  @Nullable
   @Override
   public void fromClientTag(NbtCompound tag) {
     readNbt(tag);
