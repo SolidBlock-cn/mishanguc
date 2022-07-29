@@ -12,6 +12,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Style;
 import net.minecraft.util.math.Matrix4f;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -122,19 +123,60 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
           {0, 0, 1, 1}
       };
   private static final float[][] CIRCLE = {
-      {2, 1, 5, 2},
-      {2, 5, 5, 6},
-      {1, 2, 2, 5},
-      {5, 2, 6, 5}
+      // 自 0.2.1，略微调大了尺寸
+      // slightly enlarged since 0.2.1
+      {2, 0, 5, 1},
+      {2, 6, 5, 7},
+      {0, 2, 1, 5},
+      {6, 2, 7, 5},
+      {1, 1, 2, 2},
+      {5, 1, 6, 2},
+      {1, 5, 2, 6},
+      {5, 5, 6, 6}
   };
   private static final float[][] BAN = {
-      {2, 1, 5, 2},
-      {2, 5, 5, 6},
-      {1, 2, 2, 5},
-      {5, 2, 6, 5},
+      // 自 0.2.1，略微调大了尺寸
+      // slightly enlarged since 0.2.1
+      {2, 0, 5, 1},
+      {2, 6, 5, 7},
+      {0, 2, 1, 5},
+      {6, 2, 7, 5},
+      {1, 1, 2, 2},
+      {5, 1, 6, 2},
+      {1, 5, 2, 6},
+      {5, 5, 6, 6},
       {2, 2, 3, 3},
       {3, 3, 4, 4},
       {4, 4, 5, 5}
+  };
+
+  @ApiStatus.AvailableSince("0.2.2")
+  private static final float[][] U_TURN_LEFT_BOTTOM = {
+      {3, 0, 6, 1},
+      {6, 1, 7, 6},
+      {2, 1, 3, 7},
+      {0, 4, 1, 5},
+      {1, 5, 2, 6},
+      {4, 4, 5, 5},
+      {3, 5, 4, 6}
+  };
+  @ApiStatus.AvailableSince("0.2.2")
+  private static final float[][] U_TURN_RIGHT_BOTTOM = flipLeftRight(U_TURN_LEFT_BOTTOM);
+  @ApiStatus.AvailableSince("0.2.2")
+  private static final float[][] U_TURN_LEFT_TOP = flipUpDown(U_TURN_LEFT_BOTTOM);
+  @ApiStatus.AvailableSince("0.2.2")
+  private static final float[][] U_TURN_RIGHT_TOP = flipUpDown(U_TURN_RIGHT_BOTTOM);
+  @ApiStatus.AvailableSince("0.2.2")
+  private static final float[][] CROSS = {
+      {1, 1, 2, 2},
+      {2, 2, 3, 3},
+      {3, 3, 4, 4},
+      {4, 4, 5, 5},
+      {5, 5, 6, 6},
+      {4, 2, 5, 3},
+      {5, 1, 6, 2},
+      {2, 4, 3, 5},
+      {1, 5, 2, 6}
   };
 
   private static final @Unmodifiable Map<String, float[][]> NAME_TO_SHAPE = new ImmutableMap.Builder<String, float[][]>()
@@ -148,6 +190,11 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
       .put("arb", ARROW_RIGHT_BOTTOM)
       .put("circle", CIRCLE)
       .put("ban", BAN)
+      .put("ulb", U_TURN_LEFT_BOTTOM)
+      .put("urb", U_TURN_RIGHT_BOTTOM)
+      .put("ult", U_TURN_LEFT_TOP)
+      .put("urt", U_TURN_RIGHT_TOP)
+      .put("cross", CROSS)
       .build();
 
   /**
@@ -178,6 +225,7 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
     final float green = (float) (color >> 8 & 0xFF) / 255.0f;
     final float blue = (float) (color & 0xFF) / 255.0f;
     final float alpha = ((color & 0xFC000000) == 0) ? 1 : (float) (color >> 24 & 0xFF) / 255.0f;
+    //noinspection resource
     GlyphRenderer glyphRenderer = ((TextRendererAccessor) textRenderer).invokeGetFontStorage(Style.DEFAULT_FONT_ID).getRectangleRenderer();
     final float sizeMultiplier = 1;
     final RenderLayer layer = glyphRenderer.getLayer(textContext.outlineColor != -2 ? TextRenderer.TextLayerType.POLYGON_OFFSET : textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
@@ -261,5 +309,38 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
 
   public static PatternTextSpecial fromName(TextContext textContext, String shapeName) {
     return new PatternTextSpecial(textContext, shapeName, NAME_TO_SHAPE.getOrDefault(shapeName, EMPTY));
+  }
+
+  @ApiStatus.AvailableSince("0.2.1")
+  @Contract(value = "_ -> new", pure = true)
+  private static float[][] flipLeftRight(float[][] original) {
+    final float[][] flipped = new float[original.length][];
+    for (int i = 0; i < original.length; i++) {
+      final float[] originalPiece = original[i];
+      flipped[i] = new float[]{7 - originalPiece[2], originalPiece[1], 7 - originalPiece[0], originalPiece[3]};
+    }
+    return flipped;
+  }
+
+  @ApiStatus.AvailableSince("0.2.1")
+  @Contract(value = "_ -> new", pure = true)
+  private static float[][] flipUpDown(float[][] original) {
+    final float[][] flipped = new float[original.length][];
+    for (int i = 0; i < original.length; i++) {
+      final float[] originalPiece = original[i];
+      flipped[i] = new float[]{originalPiece[0], 7 - originalPiece[3], originalPiece[2], 7 - originalPiece[1]};
+    }
+    return flipped;
+  }
+
+  @ApiStatus.AvailableSince("0.2.1")
+  @Contract(value = "_ -> new", pure = true)
+  private static float[][] flipAll(float[][] original) {
+    final float[][] flipped = new float[original.length][];
+    for (int i = 0; i < original.length; i++) {
+      final float[] originalPiece = original[i];
+      flipped[i] = new float[]{7 - originalPiece[2], 7 - originalPiece[3], 7 - originalPiece[0], 7 - originalPiece[1]};
+    }
+    return flipped;
   }
 }

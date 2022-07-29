@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.item.Item;
@@ -24,10 +25,7 @@ import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
-import pers.solid.mishang.uc.blocks.HandrailBlocks;
-import pers.solid.mishang.uc.blocks.HungSignBlocks;
-import pers.solid.mishang.uc.blocks.MishangucBlocks;
-import pers.solid.mishang.uc.blocks.WallSignBlocks;
+import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.BlockToolItem;
 import pers.solid.mishang.uc.item.HotbarScrollInteraction;
 import pers.solid.mishang.uc.item.InteractsWithEntity;
@@ -170,6 +168,7 @@ public class Mishanguc implements ModInitializer {
 
     // 注册可燃方块
     final FlammableBlockRegistry flammableBlockRegistry = FlammableBlockRegistry.getDefaultInstance();
+    final FuelRegistry fuelRegistry = FuelRegistry.INSTANCE;
 
     final Block[] woodenBlocks = {
         HungSignBlocks.OAK_HUNG_SIGN,
@@ -192,10 +191,12 @@ public class Mishanguc implements ModInitializer {
         WallSignBlocks.JUNGLE_WALL_SIGN,
         WallSignBlocks.ACACIA_WALL_SIGN,
         WallSignBlocks.DARK_OAK_WALL_SIGN,
-        WallSignBlocks.MANGROVE_WALL_SIGN
+        WallSignBlocks.MANGROVE_WALL_SIGN,
+        WallSignBlocks.COLORED_WOODEN_WALL_SIGN
     };
     for (Block block : woodenBlocks) {
       flammableBlockRegistry.add(block, 5, 20);
+      fuelRegistry.add(block, 100);
     }
     final HandrailBlock[] woodenHandrails = {
         HandrailBlocks.SIMPLE_OAK_HANDRAIL,
@@ -212,7 +213,17 @@ public class Mishanguc implements ModInitializer {
       flammableBlockRegistry.add(handrail.corner(), 5, 20);
       flammableBlockRegistry.add(handrail.outer(), 5, 20);
       flammableBlockRegistry.add(handrail.stair(), 5, 20);
+      fuelRegistry.add(handrail, 100);
+      fuelRegistry.add(handrail.central(), 100);
+      fuelRegistry.add(handrail.corner(), 100);
+      fuelRegistry.add(handrail.outer(), 100);
+      fuelRegistry.add(handrail.stair(), 100);
     }
+
+    flammableBlockRegistry.add(ColoredBlocks.COLORED_PLANKS, 5, 20);
+    fuelRegistry.add(ColoredBlocks.COLORED_PLANKS, 300);
+    flammableBlockRegistry.add(ColoredBlocks.COLORED_WOOL, 30, 60);
+    fuelRegistry.add(ColoredBlocks.COLORED_WOOL, 100);
 
     // 玩家踩在道路方块上时，予以加速。
     ServerTickEvents.END_WORLD_TICK.register(Road.CHECK_MULTIPLIER::accept);
