@@ -1,38 +1,35 @@
 package pers.solid.mishang.uc.block;
 
-import com.google.common.annotations.Beta;
-import net.minecraft.block.Block;
+import net.devtech.arrp.generator.BRRPCubeBlock;
+import net.devtech.arrp.json.models.JTextures;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
 
-@Beta
-public class ColoredHungSignBarBlock extends HungSignBarBlock implements BlockEntityProvider, ColoredBlock {
-  public ColoredHungSignBarBlock(@NotNull Block baseBlock) {
-    super(baseBlock);
+public class ColoredCubeBlock extends BRRPCubeBlock implements BlockEntityProvider, ColoredBlock {
+
+  @ApiStatus.Internal
+  public ColoredCubeBlock(Settings settings, String parent, JTextures textures) {
+    super(settings, parent, textures);
   }
 
-  @Nullable
-  @Override
-  public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-    return new SimpleColoredBlockEntity(pos, state);
+  public static ColoredCubeBlock cubeAll(Settings settings, String allTexture) {
+    return new ColoredCubeBlock(settings, "mishanguc:block/colored_cube_all", JTextures.ofAll(allTexture));
   }
 
-  @Override
-  protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-    super.appendProperties(builder);
+  public static ColoredCubeBlock cubeBottomTop(Settings settings, String topTexture, String sideTexture, String bottomTexture) {
+    return new ColoredCubeBlock(settings, "mishanguc:block/colored_cube_bottom_top", JTextures.ofSides(topTexture, sideTexture, bottomTexture));
   }
 
   @Override
@@ -46,4 +43,9 @@ public class ColoredHungSignBarBlock extends HungSignBarBlock implements BlockEn
     ColoredBlockEntity.appendColorTooltip(stack, tooltip);
   }
 
+  @Nullable
+  @Override
+  public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    return new SimpleColoredBlockEntity(pos, state);
+  }
 }
