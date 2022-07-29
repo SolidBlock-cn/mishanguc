@@ -6,6 +6,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -69,6 +70,9 @@ public interface TextSpecial extends Cloneable {
       return rectTextSpecial;
     } else if (id.equals("pattern")) {
       return PatternTextSpecial.fromNbt(textContext, nbt);
+    } else if (id.equals("texture_beta")) {
+      final Identifier texture = Identifier.tryParse(nbt.getString("texture"));
+      return texture != null ? new TextureTextSpecial(texture, textContext) : null;
     }
     return null;
   }
@@ -103,6 +107,13 @@ public interface TextSpecial extends Cloneable {
         return INVALID;
       } else {
         return pattern;
+      }
+    } else if (id.equals("texture_beta")) {
+      final Identifier identifier = Identifier.tryParse(args);
+      if (identifier == null) {
+        return INVALID;
+      } else {
+        return new TextureTextSpecial(identifier, textContext);
       }
     }
     return null;

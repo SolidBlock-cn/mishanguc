@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.block;
 
 import com.google.common.annotations.Beta;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
@@ -13,14 +14,20 @@ import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
-import pers.solid.mishang.uc.blockentity.ColoredHungSignBlockEntity;
+import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
 
 @Beta
-public class ColoredHungSignBlock extends HungSignBlock implements ColoredBlock {
-  public ColoredHungSignBlock(@NotNull Block baseBlock) {
+public class ColoredHungSignBarBlock extends HungSignBarBlock implements BlockEntityProvider, ColoredBlock {
+  public ColoredHungSignBarBlock(@NotNull Block baseBlock) {
     super(baseBlock);
+  }
+
+  @Nullable
+  @Override
+  public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    return new SimpleColoredBlockEntity(pos, state);
   }
 
   @Override
@@ -39,8 +46,4 @@ public class ColoredHungSignBlock extends HungSignBlock implements ColoredBlock 
     ColoredBlockEntity.appendColorTooltip(stack, tooltip);
   }
 
-  @Override
-  public @NotNull BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-    return new ColoredHungSignBlockEntity(pos, state);
-  }
 }

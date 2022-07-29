@@ -1,0 +1,12 @@
+{
+  "parent": "mishanguc:block/colored_cube_without_shade",
+  "textures": {
+    "particle": "#all",
+    "down": "#all",
+    "up": "#all",
+    "north": "#all",
+    "east": "#all",
+    "south": "#all",
+    "west": "#all"
+  }
+}

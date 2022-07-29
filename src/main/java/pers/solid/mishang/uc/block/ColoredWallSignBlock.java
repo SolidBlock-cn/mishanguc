@@ -1,31 +1,23 @@
 package pers.solid.mishang.uc.block;
 
-import com.google.common.annotations.Beta;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
-import pers.solid.mishang.uc.blockentity.ColoredHungSignBlockEntity;
+import pers.solid.mishang.uc.blockentity.ColoredWallSignBlockEntity;
 
 import java.util.List;
 
-@Beta
-public class ColoredHungSignBlock extends HungSignBlock implements ColoredBlock {
-  public ColoredHungSignBlock(@NotNull Block baseBlock) {
+public class ColoredWallSignBlock extends WallSignBlock implements ColoredBlock {
+  public ColoredWallSignBlock(@NotNull Block baseBlock) {
     super(baseBlock);
-  }
-
-  @Override
-  protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-    super.appendProperties(builder);
   }
 
   @Override
@@ -39,8 +31,9 @@ public class ColoredHungSignBlock extends HungSignBlock implements ColoredBlock 
     ColoredBlockEntity.appendColorTooltip(stack, tooltip);
   }
 
+  @Nullable
   @Override
-  public @NotNull BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-    return new ColoredHungSignBlockEntity(pos, state);
+  public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    return new ColoredWallSignBlockEntity(pos, state);
   }
 }

@@ -103,9 +103,9 @@ public class MishangucBlocks {
             }
             final FabricItemSettings settings = new FabricItemSettings().group(group);
             final BlockItem item =
-                HungSignBlock.class.isAssignableFrom(fieldType)
+                value instanceof HungSignBlock
                     ? new HungSignBlockItem(value, settings)
-                    : WallSignBlock.class.isAssignableFrom(fieldType)
+                    : value instanceof WallSignBlock
                     ? new WallSignBlockItem(value, settings)
                     : new NamedBlockItem(value, settings);
             Registry.register(Registry.ITEM, new Identifier("mishanguc", path), item);
@@ -124,5 +124,6 @@ public class MishangucBlocks {
     registerAll(HungSignBlocks.class, MishangucItemGroups.SIGNS);
     registerAll(WallSignBlocks.class, MishangucItemGroups.SIGNS);
     registerAll(HandrailBlocks.class, MishangucItemGroups.DECORATIONS);
+    registerAll(ColoredBlocks.class, MishangucItemGroups.COLORED_BLOCKS);
   }
 }

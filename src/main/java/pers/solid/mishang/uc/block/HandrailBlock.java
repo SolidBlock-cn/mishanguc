@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public abstract class HandrailBlock extends HorizontalFacingBlock implements Waterloggable, BlockResourceGenerator, Handrails {
   /**
-   * 该方块是否含水、
+   * 该方块是否含水。
    */
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 

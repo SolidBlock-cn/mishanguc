@@ -49,9 +49,13 @@ public class TextContext implements Cloneable {
    */
   @ApiStatus.AvailableSince("0.2.0")
   @Unmodifiable
-  private static final ImmutableBiMap<String, String> flipPatternNameReplacement = ImmutableBiMap.of(
-      "al", "ar", "alt", "art", "alb", "arb"
-  );
+  private static final ImmutableBiMap<String, String> flipPatternNameReplacement = new ImmutableBiMap.Builder<String, String>()
+      .put("al", "ar")
+      .put("alt", "art")
+      .put("alb", "arb")
+      .put("ulb", "urb")
+      .put("ult", "urt")
+      .build();
 
   /**
    * 文本内容。该字段对应 NBT 中的两种情况：<br>
@@ -373,6 +377,8 @@ public class TextContext implements Cloneable {
     return extra != null ? Math.max(width, extra.getWidth()) : width;
   }
 
+  @Environment(EnvType.CLIENT)
+  @Contract(pure = true)
   protected void drawText(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, OrderedText text, float x, float y) {
     textRenderer.draw(text, x, y, color, shadow, matrixStack.peek().getModel(), vertexConsumers, seeThrough, 0, light);
   }

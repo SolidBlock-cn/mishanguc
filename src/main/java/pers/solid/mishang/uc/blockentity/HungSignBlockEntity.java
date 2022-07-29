@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.blockentity;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -11,6 +12,7 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,8 +48,12 @@ public class HungSignBlockEntity extends BlockEntityWithText {
   @Nullable
   private PlayerEntity editor;
 
-  public HungSignBlockEntity() {
-    super(MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY);
+  public HungSignBlockEntity(BlockPos pos, BlockState state) {
+    super(MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY, pos, state);
+  }
+
+  protected HungSignBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    super(type, pos, state);
   }
 
   @Override
@@ -127,4 +133,5 @@ public class HungSignBlockEntity extends BlockEntityWithText {
   public void setEditor(@Nullable PlayerEntity editor) {
     this.editor = editor;
   }
+
 }

@@ -1,6 +1,23 @@
 ## Update Log
 
-Note: Not all versions in the update log are definitely published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
+Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
+
+### 0.2.2
+
+Updated following content:
+
+- Added colored blocks. Colored blocks can be tinted any color; the color on placed depends on where placed. If picked with pressing your mouse wheel, the color of that item will be fixed.
+    - Colored signs and sign bars are included.
+    - Colored glasses do not tint beacon beams.
+    - Colored ice becomes simple water after smelting.
+    - Relevant block and item tag `mishanguc:colored` is also added.
+    - Colored block displays its nearest `MapColor` when displaying on map.
+- Some block items can be burnt in furnace.
+- **Changed the id of hung sign block entity type, which means all existing texts of hung sign blocks in old versions will disappear. Therefore, after updating this mod and before entering world, if there is any hung sign blocks, it is recommended to replace all strings `"hung_block_entity"` with `"hung_sign_block_entity"` in chunk NBT data with tools such as NBTExplorer.**
+- When adding a text in the text edit screen, if any text is selected, the added text format is the same as the selected one, instead of default format.
+- The `-pattern` option has more pattern names, including `ulb`, `urb`, `ult`, `urt`.
+- Slightly enlarged the display size of `-pattern circle` and `-pattern ban`.
+- You may type `-texture_beta <textureLocation>` in text edit screen, which is just temporary.
 
 ### 0.2.1
 
