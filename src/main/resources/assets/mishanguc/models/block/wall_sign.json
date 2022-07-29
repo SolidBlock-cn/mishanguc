@@ -8,12 +8,12 @@
       "from": [0, 4, 0],
       "to": [16, 12, 1],
       "faces": {
-        "north": {"texture": "#texture", "cullface": "north"},
-        "east": {"texture": "#texture", "cullface": "east"},
-        "south": {"texture": "#texture"},
-        "west": {"texture": "#texture", "cullface": "west"},
-        "up": {"texture": "#texture"},
-        "down": {"texture": "#texture"}
+        "north": {"tintindex": 0, "texture": "#texture", "cullface": "north"},
+        "east": {"tintindex": 0, "texture": "#texture", "cullface": "east"},
+        "south": {"tintindex": 0, "texture": "#texture"},
+        "west": {"tintindex": 0, "texture": "#texture", "cullface": "west"},
+        "up": {"tintindex": 0, "texture": "#texture"},
+        "down": {"tintindex": 0, "texture": "#texture"}
       }
     }
   ],

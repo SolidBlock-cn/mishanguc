@@ -7,6 +7,7 @@ import net.minecraft.util.Util;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.Translucent;
+import pers.solid.mishang.uc.block.ColoredWallSignBlock;
 import pers.solid.mishang.uc.block.FullWallSignBlock;
 import pers.solid.mishang.uc.block.GlowingWallSignBlock;
 import pers.solid.mishang.uc.block.WallSignBlock;
@@ -53,6 +54,10 @@ public final class WallSignBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final WallSignBlock WARPED_WALL_SIGN =
       new WallSignBlock(Blocks.WARPED_PLANKS);
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.2")
+  public static final ColoredWallSignBlock COLORED_WOODEN_WALL_SIGN = new ColoredWallSignBlock(ColoredBlocks.COLORED_PLANKS);
 
   // 混凝土
 
@@ -142,6 +147,10 @@ public final class WallSignBlocks extends MishangucBlocks {
             map.put(DyeColor.BLACK, BLACK_CONCRETE_WALL_SIGN);
           });
 
+  @ApiStatus.AvailableSince("0.2.2")
+  @RegisterIdentifier
+  public static final ColoredWallSignBlock COLORED_CONCRETE_WALL_SIGN = new ColoredWallSignBlock(ColoredBlocks.COLORED_CONCRETE);
+
   // 陶瓦
 
   @RegisterIdentifier
@@ -229,6 +238,10 @@ public final class WallSignBlocks extends MishangucBlocks {
             map.put(DyeColor.RED, RED_TERRACOTTA_WALL_SIGN);
             map.put(DyeColor.BLACK, BLACK_TERRACOTTA_WALL_SIGN);
           });
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.2")
+  public static final ColoredWallSignBlock COLORED_TERRACOTTA_WALL_SIGN = new ColoredWallSignBlock(ColoredBlocks.COLORED_TERRACOTTA);
 
   // 发光的混凝土
 
@@ -529,6 +542,9 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final GlowingWallSignBlock GLOWING_BLUE_ICE_WALL_SIGN = new GlowingWallSignBlock(Blocks.BLUE_ICE);
 
   static {
+    COLORED_WOODEN_WALL_SIGN.texture = "mishanguc:block/pale_planks";
+    COLORED_TERRACOTTA_WALL_SIGN.texture = "block/white_terracotta";
+    COLORED_CONCRETE_WALL_SIGN.texture = "block/white_concrete";
     SNOW_WALL_SIGN.texture = "block/snow";
     GLOWING_SNOW_WALL_SIGN.texture = "block/snow";
   }

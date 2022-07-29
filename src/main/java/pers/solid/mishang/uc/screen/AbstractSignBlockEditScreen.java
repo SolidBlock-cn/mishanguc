@@ -763,7 +763,11 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * @param index 添加到的位置，对应在数组或列表中的次序。
    */
   public void addTextField(int index) {
-    addTextField(index, entity.getDefaultTextContext(), false);
+    // 添加时，默认相当于上一行的。
+    final TextContext emptyTextContext = index > 0 ? textContextsEditing.get(index - 1).clone() : entity.getDefaultTextContext();
+    emptyTextContext.text = null;
+    emptyTextContext.extra = null;
+    addTextField(index, emptyTextContext, false);
   }
 
   /**
@@ -1046,7 +1050,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       for (Entry child : children()) {
         child.textFieldWidget.setTextFieldFocused(child == focused);
       }
-      if (focused instanceof AbstractSignBlockEditScreen.TextFieldListScreen.Entry entry) {
+      if (focused instanceof AbstractSignBlockEditScreen<?>.TextFieldListScreen.Entry entry) {
         focusedTextField = entry.textFieldWidget;
         focusedTextContext = contextToWidgetBiMap.inverse().get(entry.textFieldWidget);
 
@@ -1114,7 +1118,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         if (this == o) {
           return true;
         }
-        if (!(o instanceof final AbstractSignBlockEditScreen.TextFieldListScreen.Entry entry)) {
+        if (!(o instanceof final AbstractSignBlockEditScreen<?>.TextFieldListScreen.Entry entry)) {
           return false;
         }
 
