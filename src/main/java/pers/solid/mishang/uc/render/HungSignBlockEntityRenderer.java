@@ -21,7 +21,7 @@ import java.util.Map;
  * @see HungSignBlockEntity
  */
 @Environment(EnvType.CLIENT)
-public class HungSignBlockEntityRenderer implements BlockEntityRenderer<HungSignBlockEntity> {
+public class HungSignBlockEntityRenderer<T extends HungSignBlockEntity> implements BlockEntityRenderer<T> {
 
   private final BlockEntityRendererFactory.Context ctx;
 
