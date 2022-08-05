@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.text;
 
+import com.google.common.annotations.Beta;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
@@ -10,6 +11,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
+@Beta
 public record TextureTextSpecial(Identifier identifier, @NotNull TextContext textContext) implements TextSpecial {
 
   @Override
