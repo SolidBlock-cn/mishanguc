@@ -486,16 +486,7 @@ public class TextContext implements Cloneable {
   @Contract(mutates = "this")
   public TextContext flip() {
     offsetX = -offsetX;
-    switch (horizontalAlign) {
-      case LEFT: {
-        horizontalAlign = HorizontalAlign.RIGHT;
-        break;
-      }
-      case RIGHT: {
-        horizontalAlign = HorizontalAlign.LEFT;
-        break;
-      }
-    }
+    horizontalAlign = horizontalAlign.flip();
     if (text instanceof LiteralText) {
       final String rawString = ((LiteralText) text).getRawString();
       final StringBuilder stringBuilder = new StringBuilder(rawString);

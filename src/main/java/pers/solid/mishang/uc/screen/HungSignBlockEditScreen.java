@@ -6,7 +6,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
@@ -14,10 +13,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
@@ -33,22 +29,12 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
 
   public HungSignBlockEditScreen(
       HungSignBlockEntity entity, Direction direction, BlockPos blockPos) {
-    super(
-        entity,
-        blockPos,
-        Util.make(
-            () -> {
-              final @Unmodifiable List<@NotNull TextContext> get = entity.texts.get(direction);
-              return get == null
-                  ? new ArrayList<>()
-                  : get.stream().map(TextContext::clone).collect(Collectors.toList());
-            }));
+    super(entity, blockPos, Optional.ofNullable(entity.texts.get(direction)).map(textContexts -> textContexts.stream().map(TextContext::clone).collect(Collectors.toList())).orElseGet(ArrayList::new));
     this.backedUpTexts = entity.texts;
     this.direction = direction;
     // 此时的 entity.texts 是可修改的，忽略 @Unmodifiable 注解。
-    entity.texts = Util.make(
-        new HashMap<>(entity.texts),
-        map -> map.put(direction, textContextsEditing));
+    entity.texts = new HashMap<>(entity.texts);
+    entity.texts.put(direction, textContextsEditing);
   }
 
   @Override
@@ -65,10 +51,9 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
     entity.editedSide = null;
     if (changed) {
       // 固化 texts 字段
-      entity.texts = ImmutableMap.copyOf(
-          Util.make(
-              new HashMap<>(entity.texts),
-              map -> map.put(direction, ImmutableList.copyOf(textContextsEditing))));
+      final HashMap<@NotNull Direction, @Unmodifiable @NotNull List<@NotNull TextContext>> map = new HashMap<>(entity.texts);
+      map.put(direction, ImmutableList.copyOf(textContextsEditing));
+      entity.texts = ImmutableMap.copyOf(map);
     } else {
       entity.texts = backedUpTexts;
     }
@@ -111,6 +96,4 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
     super.removeTextField(index);
     copyFromBackButton.visible = placeHolder.visible;
   }
-
-
 }
