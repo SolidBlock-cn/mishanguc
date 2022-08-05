@@ -18,6 +18,17 @@ Updated following content:
 - The `-pattern` option has more pattern names, including `ulb`, `urb`, `ult`, `urt`.
 - Slightly enlarged the display size of `-pattern circle` and `-pattern ban`.
 - You may type `-texture_beta <textureLocation>` in text edit screen, which is just temporary.
+- Updates some language files.
+- Added tooltips for some buttons in the text edit screen.
+- In the text edit screen, the text guidance when no texts are added is optimized.
+
+Fixed following issues:
+
+- In the text edit screen, the display situation may differ when moving selection.
+- Cannot edit the custom color or texts.
+- Potential error when adding or removing text.
+- When the text color is dark, the text color tooltip in the text-editing screen may look unclear.
+- When copying text from back, if there is no text on the back, crashes might be caused.
 
 ### 0.2.1
 

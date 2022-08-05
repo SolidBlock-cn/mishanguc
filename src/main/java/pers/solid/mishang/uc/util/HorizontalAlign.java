@@ -5,9 +5,13 @@ import com.google.common.collect.ImmutableBiMap;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.StringIdentifiable;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("AlibabaEnumConstantsMustHaveComment")
+/**
+ * 文本的水平对齐方式。
+ */
 public enum HorizontalAlign implements StringIdentifiable {
   LEFT,
   CENTER,
@@ -26,5 +30,17 @@ public enum HorizontalAlign implements StringIdentifiable {
 
   public MutableText getName() {
     return Text.translatable("horizontal_align.mishanguc." + asString());
+  }
+
+  /**
+   * 左右交换，居中的不变。
+   */
+  @Contract(pure = true)
+  public @NotNull HorizontalAlign flip() {
+    return switch (this) {
+      case LEFT -> RIGHT;
+      case RIGHT -> LEFT;
+      default -> this;
+    };
   }
 }
