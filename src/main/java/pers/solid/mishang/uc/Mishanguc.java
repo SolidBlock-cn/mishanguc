@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -12,23 +13,32 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.chunk.WorldChunk;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
+import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.BlockToolItem;
 import pers.solid.mishang.uc.item.HotbarScrollInteraction;
 import pers.solid.mishang.uc.item.InteractsWithEntity;
 import pers.solid.mishang.uc.item.MishangucItems;
+import pers.solid.mishang.uc.text.TextContext;
+
+import java.util.List;
 
 public class Mishanguc implements ModInitializer {
   public static final Logger MISHANG_LOGGER = LogManager.getLogger("Mishang Urban Construction");
@@ -226,5 +236,31 @@ public class Mishanguc implements ModInitializer {
 
     // 玩家踩在道路方块上时，予以加速。
     ServerTickEvents.END_WORLD_TICK.register(Road.CHECK_MULTIPLIER::accept);
+
+    CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(CommandManager.literal("mishanguc:convert_hung_size").requires((source) -> source.hasPermissionLevel(2)).executes((context) -> {
+      final WorldChunk worldChunk = context.getSource().getWorld().getWorldChunk(new BlockPos(context.getSource().getPosition()));
+      int successes = 0;
+      for (BlockEntity value : worldChunk.getBlockEntities().values()) {
+        if (value instanceof HungSignBlockEntity hungSignBlockEntity) {
+          for (List<TextContext> textContexts : hungSignBlockEntity.texts.values()) {
+            for (TextContext textContext : textContexts) {
+              if (textContext.size == 2.5) {
+                textContext.size = 3;
+              } else if (textContext.size == 5) {
+                textContext.size = 6;
+              } else {
+                continue;
+              }
+              context.getSource().getWorld().updateListeners(hungSignBlockEntity.getPos(), hungSignBlockEntity.getCachedState(), hungSignBlockEntity.getCachedState(), 3);
+              hungSignBlockEntity.markDirty();
+              MishangUtils.rearrange(textContexts);
+              successes++;
+            }
+          }
+        }
+      }
+      context.getSource().sendFeedback(Text.literal(Integer.toString(successes)), false);
+      return successes;
+    })));
   }
 }

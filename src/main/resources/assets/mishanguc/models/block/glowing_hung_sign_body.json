@@ -2,8 +2,8 @@
   "parent": "mishanguc:block/template_hung_sign",
   "elements": [
     {
-      "from": [0, 6, 7.5],
-      "to": [16, 12, 7.75],
+      "from": [0, 5, 7.5],
+      "to": [16, 13, 7.75],
       "faces": {
         "north": {"tintindex": 0, "texture": "#texture"},
         "down": {"tintindex": 0, "texture": "#texture"},
@@ -12,8 +12,8 @@
       }
     },
     {
-      "from": [0, 6, 8.25],
-      "to": [16, 12, 8.5],
+      "from": [0, 5, 8.25],
+      "to": [16, 13, 8.5],
       "faces": {
         "south": {"tintindex": 0, "texture": "#texture"},
         "down": {"tintindex": 0, "texture": "#texture"},
@@ -22,8 +22,8 @@
       }
     },
     {
-      "from": [0, 6, 7.75],
-      "to": [16, 12, 8.25],
+      "from": [0, 5, 7.75],
+      "to": [16, 13, 8.25],
       "faces": {
         "down": {"texture": "#glow"},
         "west": {"texture": "#glow", "cullface": "west"},
@@ -32,8 +32,8 @@
       "shade": false
     },
     {
-      "from": [0, 12, 7.25],
-      "to": [16, 13, 8.75],
+      "from": [0, 13, 7.25],
+      "to": [16, 14, 8.75],
       "faces": {
         "west": {"tintindex": 0, "texture": "#texture_top", "cullface": "west"},
         "east": {"tintindex": 0, "texture": "#texture_top", "cullface": "east"},

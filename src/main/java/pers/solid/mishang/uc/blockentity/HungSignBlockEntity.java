@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class HungSignBlockEntity extends BlockEntityWithText {
   public static final TextContext DEFAULT_TEXT_CONTEXT =
-      Util.make(new TextContext(), textContext1 -> textContext1.size = 5);
+      Util.make(new TextContext(), textContext1 -> textContext1.size = 6);
   /**
    * 该方块正在被编辑的方向。同时存在于客户端与服务器。<br>
    * 若未被编辑则为 {@code null}。<br>
@@ -116,7 +116,7 @@ public class HungSignBlockEntity extends BlockEntityWithText {
 
   @Override
   public float getHeight() {
-    return 6;
+    return 7;
   }
 
   @Override
