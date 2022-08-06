@@ -14,7 +14,7 @@ import pers.solid.mishang.uc.blocks.WallSignBlocks;
 
 import java.util.stream.Stream;
 
-public class MishangucBlockEntities {
+public final class MishangucBlockEntities {
 
   public static final BlockEntityType<SimpleColoredBlockEntity>
       SIMPLE_COLORED_BLOCK_ENTITY = Registry.register(
@@ -35,6 +35,17 @@ public class MishangucBlockEntities {
               .filter(Predicates.instanceOf(ColoredBlocks.class).negate())
               .toArray(Block[]::new)
       ).build());
+
+  public static final BlockEntityType<HungSignBlockEntity> HUNG_SIGN_BLOCK_ENTITY_removed = Registry.register(
+      Registry.BLOCK_ENTITY_TYPE,
+      new Identifier("mishanguc", "hung_block_entity"),
+      FabricBlockEntityTypeBuilder.create(
+          HungSignBlockEntity::new,
+          MishangUtils.instanceStream(HungSignBlocks.class, HungSignBlock.class)
+              .filter(Predicates.instanceOf(ColoredBlocks.class).negate())
+              .toArray(Block[]::new)
+      ).build()
+  );
 
   public static final BlockEntityType<ColoredHungSignBlockEntity>
       COLORED_HUNG_SIGN_BLOCK_ENTITY = Registry.register(
