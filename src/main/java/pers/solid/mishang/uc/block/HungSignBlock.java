@@ -84,16 +84,16 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
 
   private static final VoxelShape SHAPE_X =
       VoxelShapes.union(
-          createCuboidShape(7.5, 6, 0, 8.5, 12, 16), createCuboidShape(7.25, 12, 0, 8.75, 13, 16));
+          createCuboidShape(7.5, 5, 0, 8.5, 14, 16), createCuboidShape(7.25, 12, 0, 8.75, 13, 16));
   private static final VoxelShape SHAPE_Z =
       VoxelShapes.union(
-          createCuboidShape(0, 6, 7.5, 16, 12, 8.5), createCuboidShape(0, 12, 7.25, 16, 13, 8.75));
+          createCuboidShape(0, 5, 7.5, 16, 14, 8.5), createCuboidShape(0, 12, 7.25, 16, 13, 8.75));
   private static final Map<Direction, @Nullable VoxelShape> BAR_SHAPES =
       MishangUtils.createHorizontalDirectionToShape(7.5, 13, 11, 8.5, 16, 12);
   private static final Map<Direction, @Nullable VoxelShape> BAR_SHAPES_EDGE =
       MishangUtils.createHorizontalDirectionToShape(7.5, 13, 13, 8.5, 16, 14);
-  private static final VoxelShape SHAPE_WIDENED_X = createCuboidShape(6.5, 6, 0, 9.5, 16, 16);
-  private static final VoxelShape SHAPE_WIDENED_Z = createCuboidShape(0, 6, 6.5, 16, 16, 9.5);
+  private static final VoxelShape SHAPE_WIDENED_X = createCuboidShape(6.5, 5, 0, 9.5, 16, 16);
+  private static final VoxelShape SHAPE_WIDENED_Z = createCuboidShape(0, 5, 6.5, 16, 16, 9.5);
   public final @Nullable Block baseBlock;
 
   /**
