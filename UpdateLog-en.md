@@ -13,7 +13,7 @@ Updated following content:
     - Relevant block and item tag `mishanguc:colored` is also added.
     - Colored block displays its nearest `MapColor` when displaying on map.
 - Some block items can be burnt in furnace.
-- **Changed the id of hung sign block entity type, which means all existing texts of hung sign blocks in old versions will disappear. Therefore, after updating this mod and before entering world, if there is any hung sign blocks, it is recommended to replace all strings `"hung_block_entity"` with `"hung_sign_block_entity"` in chunk NBT data with tools such as NBTExplorer.**
+- Changed the id of hung sign block entity type, with the limited compatibility for the old ID.
 - When adding a text in the text edit screen, if any text is selected, the added text format is the same as the selected one, instead of default format.
 - The `-pattern` option has more pattern names, including `ulb`, `urb`, `ult`, `urt`.
 - Slightly enlarged the display size of `-pattern circle` and `-pattern ban`.
@@ -21,6 +21,7 @@ Updated following content:
 - Updates some language files.
 - Added tooltips for some buttons in the text edit screen.
 - In the text edit screen, the text guidance when no texts are added is optimized.
+- Slightly enlarged the hung sign block to keep consistent with wall sign block.
 
 Fixed following issues:
 
