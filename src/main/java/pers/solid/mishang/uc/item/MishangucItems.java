@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.MishangucItemGroups;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
@@ -84,6 +85,10 @@ public final class MishangucItems {
 
   @RegisterIdentifier
   public static final ExplosionToolItem EXPLOSION_TOOL = new ExplosionToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxDamage(1024));
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.1")
+  public static final ColorToolItem COLOR_TOOL = new ColorToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
 
   private MishangucItems() {
   }

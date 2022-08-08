@@ -34,4 +34,9 @@ public class ColoredHungSignBlockEntity extends HungSignBlockEntity implements C
   public int getColor() {
     return color;
   }
+
+  @Override
+  public void setColor(int color) {
+    this.color = color;
+  }
 }

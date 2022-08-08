@@ -410,5 +410,12 @@
   "block.mishanguc.colored_pure_light_without_shade": "染色純色燈塊（無陰影）",
   "block.mishanguc.colored_glass": "染色玻璃",
   "block.mishanguc.colored_ice": "染色冰",
-  "itemGroup.mishanguc.colored_blocks": "迷上城建 | 染色方塊"
+  "itemGroup.mishanguc.colored_blocks": "迷上城建 | 染色方塊",
+  "item.mishanguc.color_tool": "顏色工具",
+  "item.mishanguc.color_tool.tooltip.1": "%s 以從方塊中複製顏色。",
+  "item.mishanguc.color_tool.tooltip.2": "%s 以將顏色應用到支持自訂顏色的方塊上。",
+  "item.mishanguc.color_tool.message.no_data": "你應該先從方塊中複製一個顏色。",
+  "item.mishanguc.color_tool.message.not_colored": "無法設置方塊的顏色。只有本模組中的特定方塊可以擁有自定義顏色。",
+  "item.mishanguc.color_tool.message.success_set": "成功將方塊顏色設為 %s。",
+  "item.mishanguc.color_tool.message.success_copied": "成功從方塊中複製顏色 %s。"
 }
