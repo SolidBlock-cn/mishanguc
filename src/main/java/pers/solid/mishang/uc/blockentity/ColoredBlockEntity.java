@@ -8,6 +8,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.BlockView;
+import pers.solid.mishang.uc.MishangUtils;
 
 import java.awt.*;
 import java.util.List;
@@ -25,9 +26,7 @@ public interface ColoredBlockEntity {
       final int color = blockEntityTag.getInt("color");
       Color colorObject = new Color(color);
       tooltip.add(Text.translatable("block.mishanguc.colored_block.tooltip.color",
-          Text.empty()
-              .append(Text.literal("■").styled(style -> style.withColor(color)))
-              .append(Integer.toHexString(color))
+          MishangUtils.describeColor(color)
       ).formatted(Formatting.GRAY));
       tooltip.add(Text.translatable("block.mishanguc.colored_block.tooltip.color_components",
           colorObject.getRed(),
@@ -58,4 +57,6 @@ public interface ColoredBlockEntity {
   }
 
   int getColor();
+
+  void setColor(int color);
 }

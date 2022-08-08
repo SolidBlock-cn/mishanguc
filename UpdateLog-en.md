@@ -22,6 +22,8 @@ Updated following content:
 - Added tooltips for some buttons in the text edit screen.
 - In the text edit screen, the text guidance when no texts are added is optimized.
 - Slightly enlarged the hung sign block to keep consistent with wall sign block.
+- When holding text copy tool, outlines will not be drawn for blocks that do not support text copying.
+- Added color tool.
 
 Fixed following issues:
 

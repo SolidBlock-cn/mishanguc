@@ -413,5 +413,12 @@
   "itemGroup.mishanguc.colored_blocks": "迷上城建 | 染色方块",
   "message.mishanguc.apply_double_line_template.description": "快速添加两行并自动重排，一行大一行小。通常用于双语告示牌中。",
   "message.mishanguc.apply_left_arrow_template.description": "快速添加双行以及一个左箭头。通常用于双语的指路告示牌中。",
-  "message.mishanguc.apply_right_arrow_template.description": "快速添加双行以及一个右箭头。通常用于双语的指路告示牌中。"
+  "message.mishanguc.apply_right_arrow_template.description": "快速添加双行以及一个右箭头。通常用于双语的指路告示牌中。",
+  "item.mishanguc.color_tool": "颜色工具",
+  "item.mishanguc.color_tool.tooltip.1": "%s以从方块中复制颜色，",
+  "item.mishanguc.color_tool.tooltip.2": "%s以将颜色应用到支持自定义颜色的方块上。",
+  "item.mishanguc.color_tool.message.no_data": "你应该先从方块中复制一个颜色。",
+  "item.mishanguc.color_tool.message.not_colored": "无法设置方块的颜色。只有本模组中的特定方块可以拥有自定义颜色。",
+  "item.mishanguc.color_tool.message.success_set": "成功将方块颜色设为%s。",
+  "item.mishanguc.color_tool.message.success_copied": "成功从方块中复制了颜色%s。"
 }
