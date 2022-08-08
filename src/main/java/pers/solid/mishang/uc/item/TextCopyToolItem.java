@@ -8,6 +8,7 @@ import net.devtech.arrp.json.recipe.JRecipe;
 import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -31,11 +32,11 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.HungSignBlock;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
@@ -49,7 +50,7 @@ import java.util.*;
  */
 public class TextCopyToolItem extends BlockToolItem implements ItemResourceGenerator {
   // 1.18.1 之前用 apache 的 Logger，自 1.18.2 用 slf4j 的 Logger。
-  public static final Logger LOGGER = LogManager.getLogger(TextCopyToolItem.class);
+  public static final Logger LOGGER = LoggerFactory.getLogger(TextCopyToolItem.class);
 
   public TextCopyToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
@@ -260,6 +261,17 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
       player.sendMessage(Text.translatable("item.mishanguc.text_copy_tool.message.fail.not_sign").formatted(Formatting.RED), false);
     }
     return ActionResult.FAIL;
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext worldRenderContext, WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
+    final BlockEntity blockEntity = worldRenderContext.world().getBlockEntity(blockOutlineContext.blockPos());
+    if (blockEntity instanceof SignBlockEntity || blockEntity instanceof HungSignBlockEntity || blockEntity instanceof WallSignBlockEntity) {
+      return super.renderBlockOutline(player, itemStack, worldRenderContext, blockOutlineContext, hand);
+    } else {
+      return false;
+    }
   }
 
   @Environment(EnvType.CLIENT)
