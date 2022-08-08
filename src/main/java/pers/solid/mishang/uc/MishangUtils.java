@@ -7,7 +7,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.Property;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Direction;
@@ -318,5 +319,10 @@ public class MishangUtils {
         }
       }
     }
+  }
+
+  @ApiStatus.AvailableSince("0.2.1")
+  public static MutableText describeColor(int color) {
+    return Text.empty().append(Text.literal("■").styled(style -> style.withColor(color))).append(String.format("#%06x", color));
   }
 }

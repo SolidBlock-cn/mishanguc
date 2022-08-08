@@ -285,6 +285,14 @@
   "item.mishanguc.emotion_tool.5": "or tame a tamable entity,",
   "item.mishanguc.emotion_tool.6": "or let the villager reduce price.",
 
+  "item.mishanguc.color_tool": "Color Tool",
+  "item.mishanguc.color_tool.tooltip.1": "%s to copy color from a block,",
+  "item.mishanguc.color_tool.tooltip.2": "%s to apply the color to a block that supports custom colors.",
+  "item.mishanguc.color_tool.message.no_data": "You should copy a color from any block first.",
+  "item.mishanguc.color_tool.message.not_colored": "Cannot set the color of the block. Only some specific blocks in this mod can have custom colors.",
+  "item.mishanguc.color_tool.message.success_set": "Successfully set the block color to %s.",
+  "item.mishanguc.color_tool.message.success_copied": "Successfully copied the color %s from the block.",
+
   "blockMatchingRule.mishanguc.same_state": "Same Block State",
   "blockMatchingRule.mishanguc.same_block": "Same Block",
   "blockMatchingRule.mishanguc.same_material": "Same Material",
