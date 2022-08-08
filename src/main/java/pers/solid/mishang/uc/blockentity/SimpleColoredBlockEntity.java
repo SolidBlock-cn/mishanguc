@@ -24,6 +24,11 @@ public class SimpleColoredBlockEntity extends BlockEntity implements ColoredBloc
   }
 
   @Override
+  public void setColor(int color) {
+    this.color = color;
+  }
+
+  @Override
   public void readNbt(NbtCompound nbt) {
     super.readNbt(nbt);
     color = nbt.getInt("color");
