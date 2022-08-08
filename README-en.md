@@ -216,3 +216,7 @@ In Survival Mode, this tool can be used to mine any block instantly (of cause, b
 When attacking entities, they will be definitely slain. Compared to force placing tool, the omnipotent tool *kills* entities instead of *removing* entities, so it can normally irritate entities or make slimes divide, can normally kill ender dragon, and cannot kill wardens climbing out. Clicking "use" button (default right mouse button) can heal it totally.
 
 Similar to netherite tools, this tool is totally fireproof.
+
+#### Color tool
+
+Can be used to pick a color for any block, and apply the block to some specific blocks in this mod that support custom color.
