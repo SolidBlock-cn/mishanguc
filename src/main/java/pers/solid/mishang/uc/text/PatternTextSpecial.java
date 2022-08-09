@@ -268,16 +268,14 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
     }
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public float getHeight() {
-    return 7;
+  public float height() {
+    return 7 / 8f;
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public float getWidth() {
-    return 7;
+  public float width() {
+    return 7 / 8f;
   }
 
   @Override
@@ -291,7 +289,7 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
   }
 
   @Override
-  public String describeArgs() {
+  public String asStringArgs() {
     return shapeName;
   }
 
