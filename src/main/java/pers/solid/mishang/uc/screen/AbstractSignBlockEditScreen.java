@@ -792,7 +792,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
             Text.translatable("message.mishanguc.text_field"));
     textFieldWidget.setMaxLength(Integer.MAX_VALUE);
     if (textContext.extra != null) {
-      textFieldWidget.setText(String.format("-%s %s", textContext.extra.getId(), textContext.extra.describeArgs()));
+      textFieldWidget.setText(String.format("-%s %s", textContext.extra.getId(), textContext.extra.asStringArgs()));
     } else if (textContext.text != null) {
       if (textContext.text.getContent() instanceof LiteralTextContent literalTextContent && textContext.text.getSiblings().isEmpty() && textContext.text.getStyle().isEmpty()) {
         final String text = literalTextContent.string();
@@ -829,7 +829,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
                   }
                   break;
                 default:
-                  final TextSpecial textSpecial = TextSpecial.fromDescription(textContext1, name, value);
+                  final TextSpecial textSpecial = TextSpecial.fromStringArgs(textContext1, name, value);
                   if (textSpecial == null) {
                     textContext1.extra = null;
                     textContext1.text = Text.literal(s);
