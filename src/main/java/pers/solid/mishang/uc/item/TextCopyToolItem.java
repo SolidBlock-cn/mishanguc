@@ -215,7 +215,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         textContext.text = signBlockEntity.getTextOnRow(i, false).shallowCopy();
         if (textContext.text.equals(LiteralText.EMPTY)) continue;
         textContext.color = signBlockEntity.getTextColor().getSignColor();
-        final NbtCompound nbt0 = textContext.writeNbt(new NbtCompound());
+        final NbtCompound nbt0 = textContext.createNbt();
         nbt0.remove("size"); // 原版告示牌的文本没有 size
         texts.add(nbt0);
       }
@@ -227,7 +227,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
       // 迷上城建模组的墙上告示牌方块
       final NbtList texts = new NbtList();
       for (TextContext textContext : wallSignBlockEntity.textContexts) {
-        texts.add(textContext.writeNbt(new NbtCompound()));
+        texts.add(textContext.createNbt());
       }
       stack.setSubNbt("texts", texts);
       stack.setSubNbt("fromVanillaSign", NbtByte.of(false));
@@ -250,7 +250,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
       final List<@NotNull TextContext> textContexts = hungSignBlockEntity.texts.getOrDefault(direction, ImmutableList.of());
       final NbtList texts = new NbtList();
       for (TextContext textContext : textContexts) {
-        texts.add(textContext.writeNbt(new NbtCompound()));
+        texts.add(textContext.createNbt());
       }
       stack.setSubNbt("texts", texts);
       stack.setSubNbt("fromVanillaSign", NbtByte.of(false));
