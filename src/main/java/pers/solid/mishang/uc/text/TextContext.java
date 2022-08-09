@@ -26,6 +26,7 @@ import pers.solid.mishang.uc.util.HorizontalAlign;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * 对 {@link net.minecraft.text.Text} 的简单包装与扩展，允许设置对齐属性、尺寸等参数，以便渲染时使用。同时还提供对象与 NBT、JSON 之间的转换。
@@ -135,7 +136,9 @@ public class TextContext implements Cloneable {
    */
   public boolean obfuscated = false;
   /**
-   * 是否为绝对定位。如果为 <code>false</code>，会按照从上到下的顺序渲染。
+   * 是否为绝对定位。
+   *
+   * @see MishangUtils#rearrange(Collection)
    */
   public boolean absolute = false;
 
@@ -152,7 +155,7 @@ public class TextContext implements Cloneable {
   public int outlineColor = -2;
 
   /**
-   * 该对象的额外渲染对象，如果存在，渲染时则会渲染它。此项通常用于特殊的渲染功能。
+   * 该对象的特殊渲染内容，如果存在，渲染时则会渲染它。此项通常用于特殊的渲染功能。
    */
   @ApiStatus.AvailableSince("0.2.0")
   public @Nullable TextSpecial extra = null;
@@ -213,16 +216,12 @@ public class TextContext implements Cloneable {
     }
   }
 
-  @Override
-  public boolean equals(Object o) {
-    return super.equals(o);
-  }
-
   /**
    * 从一个 NBT 复合标签中读取数据，写入当前的 textContext 中。
    *
    * @param nbt NBT 复合标签。
    */
+  @Contract(mutates = "this")
   public void readNbt(@NotNull NbtCompound nbt) {
     final @Nullable NbtElement nbtText = nbt.get("text");
     final String textJson = nbt.getString("textJson");
@@ -303,33 +302,30 @@ public class TextContext implements Cloneable {
 
     matrixStack.push();
 
-    // 处理文本的 offset
+    // 处理文本的偏移
     matrixStack.translate(offsetX, offsetY, offsetZ);
     // 处理文本的旋转
-    if (rotationX != 0 || rotationY != 0 || rotationZ != 0)
+    if (rotationX != 0 || rotationY != 0 || rotationZ != 0) {
       matrixStack.multiply(new Quaternion(rotationX, rotationY, rotationZ, true));
+    }
+
+    // 处理文本在 x 和 y 方向的对齐
     float x = 0;
     switch (horizontalAlign == null ? HorizontalAlign.CENTER : horizontalAlign) {
       case LEFT -> matrixStack.translate(-width / 2, 0, 0);
-      case CENTER -> x = -getWidth(textRenderer, orderedText) / 2f;
-      case RIGHT -> {
-        matrixStack.translate(width / 2, 0, 0);
-        x = -getWidth(textRenderer, orderedText);
-      }
+      case CENTER -> matrixStack.translate(-getWidth(textRenderer, orderedText) / 4, 0, 0);
+      case RIGHT -> matrixStack.translate(width / 2 - getWidth(textRenderer, orderedText) / 2, 0, 0);
       default -> throw new IllegalStateException("Unexpected value: " + horizontalAlign);
     }
     float y = 0;
     switch (verticalAlign == null ? VerticalAlign.MIDDLE : verticalAlign) {
       case TOP -> matrixStack.translate(0, -height / 2, 0);
-      case MIDDLE -> y = extra == null ? -4 : -extra.getHeight() / 2;
-      case BOTTOM -> {
-        matrixStack.translate(0, height / 2, 0);
-        y = extra == null ? -8 : -extra.getHeight();
-      }
+      case MIDDLE -> matrixStack.translate(0, -getHeight() / 4, 0);
+      case BOTTOM -> matrixStack.translate(0, height / 2 - getHeight() / 2, 0);
       default -> throw new IllegalStateException("Unexpected value: " + verticalAlign);
     }
 
-    // 处理文本的 scale
+    // 处理文本的大小，这个大小对文本自身以及 {@link #extra} 都是有效的。
     matrixStack.scale(size / 16f, size / 16f, size / 16f);
     matrixStack.scale(scaleX, scaleY, 1);
 
@@ -381,8 +377,16 @@ public class TextContext implements Cloneable {
    * 获取文本宽度，如果存在 extra 字段，则还需要考虑该对象的宽度。
    */
   private float getWidth(TextRenderer textRenderer, @Nullable OrderedText text) {
-    final int width = text == null ? 0 : textRenderer.getWidth(text);
-    return extra != null ? Math.max(width, extra.getWidth()) : width;
+    final float width = text == null ? 0 : textRenderer.getWidth(text) * size / 8;
+    return extra != null ? Math.max(width, extra.width() * size) : width;
+  }
+
+  public float getHeight() {
+    return extra != null ? extra.height() * size : size;
+  }
+
+  public float getMarginTop() {
+    return extra != null ? 0 : size / 8f;
   }
 
   @Environment(EnvType.CLIENT)
@@ -400,9 +404,9 @@ public class TextContext implements Cloneable {
    *
    * @param nbt 一个待写入的 NBT 复合标签，可以是空的 NBT 复合标签：
    *            <pre>{@code  new NbtCompound()}</pre>
-   * @return 修改后的 <tt>nbt</tt>。
    */
-  public NbtCompound writeNbt(NbtCompound nbt) {
+  @Contract(mutates = "param1")
+  public void writeNbt(@NotNull NbtCompound nbt) {
     if (text != null) {
       if (text instanceof LiteralText && text.getSiblings().isEmpty() && text.getStyle().isEmpty()) {
         nbt.putString("text", text.asString());
@@ -474,7 +478,13 @@ public class TextContext implements Cloneable {
     } else {
       nbt.put("extra", extra.writeNbt(new NbtCompound()));
     }
-    return nbt;
+  }
+
+  @Contract("-> new")
+  public final NbtCompound createNbt() {
+    final NbtCompound nbtCompound = new NbtCompound();
+    writeNbt(nbtCompound);
+    return nbtCompound;
   }
 
   @Override
