@@ -20,10 +20,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtByte;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
+import net.minecraft.text.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
@@ -220,7 +217,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         textContext.text = signBlockEntity.getTextOnRow(i).shallowCopy();
         if (textContext.text.equals(LiteralText.EMPTY)) continue;
         textContext.color = signBlockEntity.getTextColor().getSignColor();
-        final NbtCompound nbt0 = textContext.writeNbt(new NbtCompound());
+        final NbtCompound nbt0 = textContext.createNbt();
         nbt0.remove("size"); // 原版告示牌的文本没有 size
         texts.add(nbt0);
       }
@@ -233,7 +230,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
       WallSignBlockEntity wallSignBlockEntity = (WallSignBlockEntity) blockEntity;
       final NbtList texts = new NbtList();
       for (TextContext textContext : wallSignBlockEntity.textContexts) {
-        texts.add(textContext.writeNbt(new NbtCompound()));
+        texts.add(textContext.createNbt());
       }
       stack.putSubTag("texts", texts);
       stack.putSubTag("fromVanillaSign", NbtByte.of(false));
@@ -257,7 +254,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
       final List<@NotNull TextContext> textContexts = hungSignBlockEntity.texts.getOrDefault(direction, ImmutableList.of());
       final NbtList texts = new NbtList();
       for (TextContext textContext : textContexts) {
-        texts.add(textContext.writeNbt(new NbtCompound()));
+        texts.add(textContext.createNbt());
       }
       stack.putSubTag("texts", texts);
       stack.putSubTag("fromVanillaSign", NbtByte.of(false));

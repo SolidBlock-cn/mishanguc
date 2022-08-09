@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.Property;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
@@ -235,26 +236,24 @@ public class MishangUtils {
         directionToContexts.get(textContext.verticalAlign).add(textContext);
       }
     }
-    final float lineMargin = 1 / 8f;
-    directionToContexts.forEach(
-        ((verticalAlign, list) -> {
-          float stackedHeight = 0;
-          for (TextContext textContext : list) {
-            stackedHeight += textContext.size * lineMargin / 2;
-            textContext.offsetY = stackedHeight;
-            stackedHeight += textContext.size * (1 + lineMargin) / 2;
-          }
-          for (TextContext textContext : list) {
-            switch (verticalAlign) {
-              case MIDDLE:
-                textContext.offsetY -= (stackedHeight - textContext.size / 2f) / 2f;
-                break;
-              case BOTTOM:
-                textContext.offsetY -= stackedHeight - textContext.size / 2f;
-                break;
-            }
-          }
-        }));
+    directionToContexts.forEach((verticalAlign, list) -> {
+      float stackedHeight = 0;
+      for (TextContext textContext : list) {
+        textContext.offsetY = (stackedHeight += textContext.getMarginTop() / 2f);
+        stackedHeight += textContext.getHeight() / 2f;
+        stackedHeight += textContext.getMarginTop() / 2f;
+      }
+      for (TextContext textContext : list) {
+        switch (verticalAlign) {
+          case MIDDLE:
+            textContext.offsetY -= (stackedHeight - textContext.getHeight() / 2f) / 2f;
+            break;
+          case BOTTOM:
+            textContext.offsetY -= stackedHeight - textContext.getHeight() / 2f;
+            break;
+        }
+      }
+    });
   }
 
   /**

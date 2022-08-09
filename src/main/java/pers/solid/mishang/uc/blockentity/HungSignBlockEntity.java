@@ -87,7 +87,7 @@ public class HungSignBlockEntity extends BlockEntityWithText {
       }
       final NbtList nbtList = new NbtList();
       for (TextContext textContext : textContexts) {
-        nbtList.add(textContext.writeNbt(new NbtCompound()));
+        nbtList.add(textContext.createNbt());
       }
       nbt.put(direction.asString(), nbtList);
     }

@@ -296,16 +296,14 @@ public final class PatternTextSpecial implements TextSpecial {
     }
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public float getHeight() {
-    return 7;
+  public float height() {
+    return 7 / 8f;
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public float getWidth() {
-    return 7;
+  public float width() {
+    return 7 / 8f;
   }
 
   @Override
@@ -319,7 +317,7 @@ public final class PatternTextSpecial implements TextSpecial {
   }
 
   @Override
-  public String describeArgs() {
+  public String asStringArgs() {
     return shapeName;
   }
 

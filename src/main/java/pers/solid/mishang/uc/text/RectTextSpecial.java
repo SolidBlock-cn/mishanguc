@@ -13,14 +13,14 @@ import net.minecraft.util.math.Matrix4f;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.mixin.TextRendererAccessor;
 
-public class RectTextSpecial implements TextSpecial {
-  protected float width;
-  protected float height;
-  public final @NotNull TextContext textContext;
-
-  public RectTextSpecial(@NotNull TextContext textContext) {
-    this.textContext = textContext;
-  }
+/**
+ * 长方形，可以指定其宽度和高度。
+ *
+ * @param width  长方形宽度，若为 8 则与文本大小的高度（注意不是文本宽度）相同。
+ * @param height 长方形的高度，若为 8 则与文本大小的高度相同。
+ * @since 0.2.1 将此类改成了记录。
+ */
+public record RectTextSpecial(float width, float height, @NotNull TextContext textContext) implements TextSpecial {
 
   @Environment(EnvType.CLIENT)
   @Override
@@ -47,9 +47,8 @@ public class RectTextSpecial implements TextSpecial {
     return "rect";
   }
 
-  public void readNbt(@NotNull NbtCompound nbt) {
-    width = nbt.getFloat("width");
-    height = nbt.getFloat("height");
+  public static RectTextSpecial fromNbt(@NotNull NbtCompound nbt, @NotNull TextContext textContext) {
+    return new RectTextSpecial(nbt.getFloat("width"), nbt.getFloat("height"), textContext);
   }
 
   @Override
@@ -61,22 +60,20 @@ public class RectTextSpecial implements TextSpecial {
   }
 
   @Override
-  public String describeArgs() {
+  public String asStringArgs() {
     return String.format("%s %s",
         width % 1 == 0 ? Integer.toString((int) width) : Float.toString(width),
         height % 1 == 0 ? Integer.toString((int) height) : Float.toString(height));
   }
 
   @Override
-  @Environment(EnvType.CLIENT)
-  public float getWidth() {
-    return width;
+  public float width() {
+    return width / 8;
   }
 
   @Override
-  @Environment(EnvType.CLIENT)
-  public float getHeight() {
-    return height;
+  public float height() {
+    return height / 8;
   }
 
   @Override
@@ -90,9 +87,6 @@ public class RectTextSpecial implements TextSpecial {
 
   @Override
   public TextSpecial cloneWithNewTextContext(@NotNull TextContext textContext) {
-    final RectTextSpecial clone = new RectTextSpecial(textContext);
-    clone.width = width;
-    clone.height = height;
-    return clone;
+    return new RectTextSpecial(width, height, textContext);
   }
 }
