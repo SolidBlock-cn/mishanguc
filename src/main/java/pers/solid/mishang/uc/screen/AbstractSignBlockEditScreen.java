@@ -855,7 +855,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     entity.setEditor(null);
     final NbtList list = new NbtList();
     for (TextContext textContext : textContextsEditing) {
-      list.add(textContext.writeNbt(new NbtCompound()));
+      list.add(textContext.createNbt());
     }
     ClientPlayNetworking.send(
         new Identifier("mishanguc", "edit_sign_finish"),

@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.Event;
@@ -13,11 +14,14 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
+import net.minecraft.tag.BlockTags;
+import net.minecraft.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
@@ -26,6 +30,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.WorldChunk;
 import org.apache.logging.log4j.LogManager;
 import org.slf4j.Logger;
+import pers.solid.mishang.uc.block.ColoredBlock;
 import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
@@ -74,13 +79,112 @@ public class Mishanguc implements ModInitializer {
                 return ActionResult.PASS;
               });
 
-  @Override
-  public void onInitialize() {
-    // 初始化静态字段
-    MishangucBlocks.init();
-    MishangucItems.init();
-    MishangucBlockEntities.init();
+  private static void registerCommands() {
+    CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(CommandManager.literal("mishanguc:convert_hung_size").requires((source) -> source.hasPermissionLevel(2)).executes((context) -> {
+      final WorldChunk worldChunk = context.getSource().getWorld().getWorldChunk(new BlockPos(context.getSource().getPosition()));
+      int successes = 0;
+      for (BlockEntity value : worldChunk.getBlockEntities().values()) {
+        if (value instanceof HungSignBlockEntity hungSignBlockEntity) {
+          for (List<TextContext> textContexts : hungSignBlockEntity.texts.values()) {
+            for (TextContext textContext : textContexts) {
+              if (textContext.size == 2.5) {
+                textContext.size = 3;
+              } else if (textContext.size == 5) {
+                textContext.size = 6;
+              } else {
+                continue;
+              }
+              context.getSource().getWorld().updateListeners(hungSignBlockEntity.getPos(), hungSignBlockEntity.getCachedState(), hungSignBlockEntity.getCachedState(), 3);
+              hungSignBlockEntity.markDirty();
+              MishangUtils.rearrange(textContexts);
+              successes++;
+            }
+          }
+        }
+      }
+      context.getSource().sendFeedback(Text.literal(Integer.toString(successes)), false);
+      return successes;
+    })));
+  }
 
+  private static void registerFlammableAndFuels() {
+    // 注册可燃方块
+    final FlammableBlockRegistry flammableBlockRegistry = FlammableBlockRegistry.getDefaultInstance();
+    final FuelRegistry fuelRegistry = FuelRegistry.INSTANCE;
+
+    final Block[] woodenBlocks = {
+        HungSignBlocks.OAK_HUNG_SIGN,
+        HungSignBlocks.SPRUCE_HUNG_SIGN,
+        HungSignBlocks.BIRCH_HUNG_SIGN,
+        HungSignBlocks.JUNGLE_HUNG_SIGN,
+        HungSignBlocks.ACACIA_HUNG_SIGN,
+        HungSignBlocks.DARK_OAK_HUNG_SIGN,
+        HungSignBlocks.OAK_HUNG_SIGN_BAR,
+        HungSignBlocks.SPRUCE_HUNG_SIGN_BAR,
+        HungSignBlocks.BIRCH_HUNG_SIGN_BAR,
+        HungSignBlocks.JUNGLE_HUNG_SIGN_BAR,
+        HungSignBlocks.ACACIA_HUNG_SIGN_BAR,
+        HungSignBlocks.DARK_OAK_HUNG_SIGN_BAR,
+        WallSignBlocks.OAK_WALL_SIGN,
+        WallSignBlocks.SPRUCE_WALL_SIGN,
+        WallSignBlocks.BIRCH_WALL_SIGN,
+        WallSignBlocks.JUNGLE_WALL_SIGN,
+        WallSignBlocks.ACACIA_WALL_SIGN,
+        WallSignBlocks.DARK_OAK_WALL_SIGN,
+        WallSignBlocks.COLORED_WOODEN_WALL_SIGN
+    };
+    for (Block block : woodenBlocks) {
+      flammableBlockRegistry.add(block, 5, 20);
+      fuelRegistry.add(block, 100);
+    }
+    final HandrailBlock[] woodenHandrails = {
+        HandrailBlocks.SIMPLE_OAK_HANDRAIL,
+        HandrailBlocks.SIMPLE_SPRUCE_HANDRAIL,
+        HandrailBlocks.SIMPLE_BIRCH_HANDRAIL,
+        HandrailBlocks.SIMPLE_JUNGLE_HANDRAIL,
+        HandrailBlocks.SIMPLE_ACACIA_HANDRAIL,
+        HandrailBlocks.SIMPLE_DARK_OAK_HANDRAIL
+    };
+    for (HandrailBlock handrail : woodenHandrails) {
+      flammableBlockRegistry.add(handrail, 5, 20);
+      flammableBlockRegistry.add(handrail.central(), 5, 20);
+      flammableBlockRegistry.add(handrail.corner(), 5, 20);
+      flammableBlockRegistry.add(handrail.outer(), 5, 20);
+      flammableBlockRegistry.add(handrail.stair(), 5, 20);
+      fuelRegistry.add(handrail, 100);
+      fuelRegistry.add(handrail.central(), 100);
+      fuelRegistry.add(handrail.corner(), 100);
+      fuelRegistry.add(handrail.outer(), 100);
+      fuelRegistry.add(handrail.stair(), 100);
+    }
+
+    flammableBlockRegistry.add(ColoredBlocks.COLORED_PLANKS, 5, 20);
+    fuelRegistry.add(ColoredBlocks.COLORED_PLANKS, 300);
+    flammableBlockRegistry.add(ColoredBlocks.COLORED_PLANK_STAIRS, 5, 20);
+    fuelRegistry.add(ColoredBlocks.COLORED_PLANK_STAIRS, 300);
+    flammableBlockRegistry.add(ColoredBlocks.COLORED_PLANK_SLAB, 5, 20);
+    fuelRegistry.add(ColoredBlocks.COLORED_PLANK_SLAB, 150);
+    flammableBlockRegistry.add(ColoredBlocks.COLORED_WOOL, 30, 60);
+    fuelRegistry.add(ColoredBlocks.COLORED_WOOL, 100);
+  }
+
+  private static void registerNetworkingReceiver() {
+    // 注册服务器接收
+    ServerPlayNetworking.registerGlobalReceiver(
+        new Identifier("mishanguc", "edit_sign_finish"), BlockEntityWithText.PACKET_HANDLER);
+    ServerPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "item_scroll"), (server, player, handler, buf, responseSender) -> {
+      final int selectedSlot = buf.readInt();
+      final double scrollAmount = buf.readDouble();
+      server.execute(() -> {
+        final ItemStack stack = player.getInventory().getStack(selectedSlot);
+        if (stack.getItem() instanceof HotbarScrollInteraction interaction) {
+          interaction.onScroll(selectedSlot, scrollAmount, player, stack);
+        }
+      });
+    });
+  }
+
+  private static void registerEvents() {
     // 注册事件
     BEGIN_ATTACK_BLOCK_EVENT.register(
         // 仅限客户端执行
@@ -165,102 +269,86 @@ public class Mishanguc implements ModInitializer {
             return ActionResult.PASS;
           }
         });
-    // 注册服务器接收
-    ServerPlayNetworking.registerGlobalReceiver(
-        new Identifier("mishanguc", "edit_sign_finish"), BlockEntityWithText.PACKET_HANDLER);
-    ServerPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "item_scroll"), (server, player, handler, buf, responseSender) -> {
-      final int selectedSlot = buf.readInt();
-      final double scrollAmount = buf.readDouble();
-      server.execute(() -> {
-        final ItemStack stack = player.inventory.getStack(selectedSlot);
-        if (stack.getItem() instanceof HotbarScrollInteraction) {
-          ((HotbarScrollInteraction) stack.getItem()).onScroll(selectedSlot, scrollAmount, player, stack);
-        }
-      });
-    });
+  }
 
-    // 注册可燃方块
-    final FlammableBlockRegistry flammableBlockRegistry = FlammableBlockRegistry.getDefaultInstance();
-    final FuelRegistry fuelRegistry = FuelRegistry.INSTANCE;
+  private static void registerColoredBlocks() {
+    final Object2ObjectMap<Block, Block> blockMap = ColoredBlock.BASE_TO_COLORED;
+    final Object2ObjectMap<TagKey<Block>, Block> tagMap = ColoredBlock.BASE_TAG_TO_COLORED;
+    tagMap.put(BlockTags.WOOL, ColoredBlocks.COLORED_WOOL);
+    tagMap.put(BlockTags.TERRACOTTA, ColoredBlocks.COLORED_TERRACOTTA);
+    blockMap.put(Blocks.WHITE_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+    blockMap.put(Blocks.ORANGE_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+    blockMap.put(Blocks.MAGENTA_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+    blockMap.put(Blocks.LIGHT_BLUE_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+    blockMap.put(Blocks.YELLOW_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+    blockMap.put(Blocks.LIME_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+    blockMap.put(Blocks.PINK_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+    blockMap.put(Blocks.GRAY_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+    blockMap.put(Blocks.LIGHT_GRAY_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+    blockMap.put(Blocks.CYAN_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+    blockMap.put(Blocks.PURPLE_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+    blockMap.put(Blocks.BLUE_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+    blockMap.put(Blocks.BROWN_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+    blockMap.put(Blocks.GREEN_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+    blockMap.put(Blocks.RED_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+    blockMap.put(Blocks.BLACK_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+    tagMap.put(BlockTags.PLANKS, ColoredBlocks.COLORED_PLANKS);
+    tagMap.put(BlockTags.WOODEN_STAIRS, ColoredBlocks.COLORED_PLANK_STAIRS);
+    tagMap.put(BlockTags.WOODEN_SLABS, ColoredBlocks.COLORED_PLANK_SLAB);
+    blockMap.put(Blocks.DIRT, ColoredBlocks.COLORED_DIRT);
+    blockMap.put(Blocks.COBBLESTONE, ColoredBlocks.COLORED_COBBLESTONE);
+    blockMap.put(Blocks.COBBLESTONE_STAIRS, ColoredBlocks.COLORED_COBBLESTONE_STAIRS);
+    blockMap.put(Blocks.COBBLESTONE_SLAB, ColoredBlocks.COLORED_COBBLESTONE_SLAB);
+    blockMap.put(Blocks.STONE, ColoredBlocks.COLORED_STONE);
+    blockMap.put(Blocks.STONE_STAIRS, ColoredBlocks.COLORED_STONE_STAIRS);
+    blockMap.put(Blocks.STONE_SLAB, ColoredBlocks.COLORED_STONE_SLAB);
+    blockMap.put(Blocks.QUARTZ_BLOCK, ColoredBlocks.COLORED_QUARTZ_BLOCK);
+    blockMap.put(Blocks.CHISELED_QUARTZ_BLOCK, ColoredBlocks.COLORED_CHISELED_QUARTZ_BLOCK);
+    blockMap.put(Blocks.QUARTZ_BRICKS, ColoredBlocks.COLORED_QUARTZ_BRICKS);
+    blockMap.put(Blocks.SMOOTH_QUARTZ, ColoredBlocks.COLORED_SMOOTH_QUARTZ);
+    blockMap.put(Blocks.QUARTZ_PILLAR, ColoredBlocks.COLORED_QUARTZ_PILLAR);
+    blockMap.put(Blocks.PURPUR_BLOCK, ColoredBlocks.COLORED_PURPUR_BLOCK);
+    blockMap.put(Blocks.PURPUR_PILLAR, ColoredBlocks.COLORED_PURPUR_PILLAR);
+    blockMap.put(LightBlocks.WHITE_LIGHT, ColoredBlocks.COLORED_LIGHT);
+    blockMap.put(LightBlocks.YELLOW_LIGHT, ColoredBlocks.COLORED_LIGHT);
+    blockMap.put(LightBlocks.CYAN_LIGHT, ColoredBlocks.COLORED_LIGHT);
+    blockMap.put(Blocks.GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.WHITE_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.ORANGE_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.MAGENTA_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.LIGHT_BLUE_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.YELLOW_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.LIME_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.PINK_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.GRAY_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.LIGHT_GRAY_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.CYAN_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.PURPLE_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.BLUE_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.BROWN_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.GREEN_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.RED_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.BLACK_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.ICE, ColoredBlocks.COLORED_ICE);
+    blockMap.put(Blocks.SNOW_BLOCK, ColoredBlocks.COLORED_SNOW_BLOCK);
+    blockMap.put(Blocks.PACKED_ICE, ColoredBlocks.COLORED_PACKED_ICE);
+  }
 
-    final Block[] woodenBlocks = {
-        HungSignBlocks.OAK_HUNG_SIGN,
-        HungSignBlocks.SPRUCE_HUNG_SIGN,
-        HungSignBlocks.BIRCH_HUNG_SIGN,
-        HungSignBlocks.JUNGLE_HUNG_SIGN,
-        HungSignBlocks.ACACIA_HUNG_SIGN,
-        HungSignBlocks.DARK_OAK_HUNG_SIGN,
-        HungSignBlocks.OAK_HUNG_SIGN_BAR,
-        HungSignBlocks.SPRUCE_HUNG_SIGN_BAR,
-        HungSignBlocks.BIRCH_HUNG_SIGN_BAR,
-        HungSignBlocks.JUNGLE_HUNG_SIGN_BAR,
-        HungSignBlocks.ACACIA_HUNG_SIGN_BAR,
-        HungSignBlocks.DARK_OAK_HUNG_SIGN_BAR,
-        WallSignBlocks.OAK_WALL_SIGN,
-        WallSignBlocks.SPRUCE_WALL_SIGN,
-        WallSignBlocks.BIRCH_WALL_SIGN,
-        WallSignBlocks.JUNGLE_WALL_SIGN,
-        WallSignBlocks.ACACIA_WALL_SIGN,
-        WallSignBlocks.DARK_OAK_WALL_SIGN,
-        WallSignBlocks.COLORED_WOODEN_WALL_SIGN
-    };
-    for (Block block : woodenBlocks) {
-      flammableBlockRegistry.add(block, 5, 20);
-      fuelRegistry.add(block, 100);
-    }
-    final HandrailBlock[] woodenHandrails = {
-        HandrailBlocks.SIMPLE_OAK_HANDRAIL,
-        HandrailBlocks.SIMPLE_SPRUCE_HANDRAIL,
-        HandrailBlocks.SIMPLE_BIRCH_HANDRAIL,
-        HandrailBlocks.SIMPLE_JUNGLE_HANDRAIL,
-        HandrailBlocks.SIMPLE_ACACIA_HANDRAIL,
-        HandrailBlocks.SIMPLE_DARK_OAK_HANDRAIL
-    };
-    for (HandrailBlock handrail : woodenHandrails) {
-      flammableBlockRegistry.add(handrail, 5, 20);
-      flammableBlockRegistry.add(handrail.central(), 5, 20);
-      flammableBlockRegistry.add(handrail.corner(), 5, 20);
-      flammableBlockRegistry.add(handrail.outer(), 5, 20);
-      flammableBlockRegistry.add(handrail.stair(), 5, 20);
-      fuelRegistry.add(handrail, 100);
-      fuelRegistry.add(handrail.central(), 100);
-      fuelRegistry.add(handrail.corner(), 100);
-      fuelRegistry.add(handrail.outer(), 100);
-      fuelRegistry.add(handrail.stair(), 100);
-    }
+  @Override
+  public void onInitialize() {
+    // 初始化静态字段
+    MishangucBlocks.init();
+    MishangucItems.init();
+    MishangucBlockEntities.init();
 
-    flammableBlockRegistry.add(ColoredBlocks.COLORED_PLANKS, 5, 20);
-    fuelRegistry.add(ColoredBlocks.COLORED_PLANKS, 300);
-    flammableBlockRegistry.add(ColoredBlocks.COLORED_WOOL, 30, 60);
-    fuelRegistry.add(ColoredBlocks.COLORED_WOOL, 100);
+    registerEvents();
+    registerNetworkingReceiver();
+    registerFlammableAndFuels();
 
     // 玩家踩在道路方块上时，予以加速。
     ServerTickEvents.END_WORLD_TICK.register(Road.CHECK_MULTIPLIER::accept);
 
-    CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(CommandManager.literal("mishanguc:convert_hung_size").requires((source) -> source.hasPermissionLevel(2)).executes((context) -> {
-      final WorldChunk worldChunk = context.getSource().getWorld().getWorldChunk(new BlockPos(context.getSource().getPosition()));
-      int successes = 0;
-      for (BlockEntity value : worldChunk.getBlockEntities().values()) {
-        if (value instanceof HungSignBlockEntity hungSignBlockEntity) {
-          for (List<TextContext> textContexts : hungSignBlockEntity.texts.values()) {
-            for (TextContext textContext : textContexts) {
-              if (textContext.size == 2.5) {
-                textContext.size = 3;
-              } else if (textContext.size == 5) {
-                textContext.size = 6;
-              } else {
-                continue;
-              }
-              context.getSource().getWorld().updateListeners(hungSignBlockEntity.getPos(), hungSignBlockEntity.getCachedState(), hungSignBlockEntity.getCachedState(), 3);
-              hungSignBlockEntity.markDirty();
-              MishangUtils.rearrange(textContexts);
-              successes++;
-            }
-          }
-        }
-      }
-      context.getSource().sendFeedback(Text.literal(Integer.toString(successes)), false);
-      return successes;
-    })));
+    registerCommands();
+    registerColoredBlocks();
   }
 }

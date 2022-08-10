@@ -13,7 +13,12 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.item.UnclampedModelPredicateProvider;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.Identifier;
@@ -41,63 +46,43 @@ import java.awt.*;
 public class MishangucClient implements ClientModInitializer {
   @Override
   public void onInitializeClient() {
-    // 设置相应的 BlockLayer
-    MishangUtils.blocks().forEach((field, value) -> {
-      try {
-        if (field.isAnnotationPresent(Cutout.class)) {
-          BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout());
-          if (value instanceof HandrailBlock) {
-            BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ((HandrailBlock) value).central(), ((HandrailBlock) value).corner(), ((HandrailBlock) value).stair(), ((HandrailBlock) value).outer());
-          }
-        }
-        if (field.isAnnotationPresent(Translucent.class)) {
-          BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getTranslucent());
-          if (value instanceof HandrailBlock) {
-            BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), ((HandrailBlock) value).central(), ((HandrailBlock) value).corner(), ((HandrailBlock) value).stair(), ((HandrailBlock) value).outer());
-          }
-        }
-      } catch (Throwable e) {
-        Mishanguc.MISHANG_LOGGER.warn("Error when setting BlockLayers:", e);
-      }
-    });
+    registerBlockLayers();
 
-    // 注册方块外观描绘
-    WorldRenderEvents.BLOCK_OUTLINE.register(RendersBlockOutline.RENDERER);
-    WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register(RendersBeforeOutline.RENDERER);
+    registerRenderEvents();
 
-    // 注册方块实体渲染器
-    BlockEntityRendererRegistry.INSTANCE.register(MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY, HungSignBlockEntityRenderer::new);
-    BlockEntityRendererRegistry.INSTANCE.register(MishangucBlockEntities.COLORED_HUNG_SIGN_BLOCK_ENTITY, HungSignBlockEntityRenderer::new);
-    BlockEntityRendererRegistry.INSTANCE.register(MishangucBlockEntities.WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
-    BlockEntityRendererRegistry.INSTANCE.register(MishangucBlockEntities.COLORED_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
-    BlockEntityRendererRegistry.INSTANCE.register(MishangucBlockEntities.FULL_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer<FullWallSignBlockEntity>::new);
+    registerBlockEntityRenderers();
 
-    // 注册方块和颜色
-    final Block[] coloredBlocks = MishangUtils.blocks().values().stream().filter(Predicates.instanceOf(ColoredBlock.class)).toArray(Block[]::new);
-    ColorProviderRegistry.BLOCK.register(
-        (state, world, pos, tintIndex) -> {
-          if (world == null || pos == null) return -1;
-          BlockEntity entity = world.getBlockEntity(pos);
-          // 考虑到玩家掉落产生粒子时，坐标会向上偏离一格。
-          if (entity == null) entity = world.getBlockEntity(pos.down());
-          return entity instanceof ColoredBlockEntity coloredBlockEntity ? coloredBlockEntity.getColor() : -1;
-        },
-        coloredBlocks
-    );
-    ColorProviderRegistry.ITEM.register(
-        (stack, tintIndex) -> {
-          final NbtCompound nbt = stack.getSubTag("BlockEntityTag");
-          if (nbt != null && nbt.contains("color", NbtElement.NUMBER_TYPE)) {
-            return nbt.getInt("color"); // 此处忽略 colorRemembered
-          }
-          return Color.HSBtoRGB(Util.getMeasuringTimeMs() / 8000f, 0.5f, 0.95f);
-        },
-        coloredBlocks
-    );
+    registerBlockColors();
 
     // 玩家踩在道路方块上时加速
     ClientTickEvents.END_WORLD_TICK.register(Road.CHECK_MULTIPLIER::accept);
 
+    registerNetworking();
+
+    registerModelPredicateProviders();
+  }
+
+  private static void registerModelPredicateProviders() {
+    // 模型谓词提供器
+    ModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL,
+        new Identifier("mishanguc", "explosion_power"),
+        new UnclampedModelPredicateProvider() {
+          @Override
+          public float unclampedCall(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity, int seed) {
+            return MishangucItems.EXPLOSION_TOOL.power(stack);
+          }
+
+          @SuppressWarnings("deprecation")
+          @Override
+          public float call(ItemStack itemStack, @Nullable ClientWorld clientWorld, @Nullable LivingEntity livingEntity, int i) {
+            return unclampedCall(itemStack, clientWorld, livingEntity, i);
+          }
+        });
+    FabricModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL, new Identifier("mishanguc", "explosion_create_fire"), (stack, world, entity, seed) -> MishangucItems.EXPLOSION_TOOL.createFire(stack) ? 1 : 0);
+    FabricModelPredicateProviderRegistry.register(MishangucItems.FAST_BUILDING_TOOL, new Identifier("mishanguc", "fast_building_range"), (stack, world, entity, seed) -> MishangucItems.FAST_BUILDING_TOOL.getRange(stack) / 64f);
+  }
+
+  private static void registerNetworking() {
     // 网络通信
     // 客户端收到服务器发来的编辑告示牌的数据包时，打开编辑界面，允许用户编辑。
     ClientPlayNetworking.registerGlobalReceiver(
@@ -127,12 +112,67 @@ public class MishangucClient implements ClientModInitializer {
         });
     ClientPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "get_block_data"), new DataTagToolItem.BlockDataReceiver());
     ClientPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "get_entity_data"), new DataTagToolItem.EntityDataReceiver());
+  }
 
-    // 模型谓词提供器
-    FabricModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL,
-        new Identifier("mishanguc", "explosion_power"),
-        (itemStack, clientWorld, livingEntity) -> MishangucItems.EXPLOSION_TOOL.power(itemStack));
-    FabricModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL, new Identifier("mishanguc", "explosion_create_fire"), (stack, world, entity) -> MishangucItems.EXPLOSION_TOOL.createFire(stack) ? 1 : 0);
-    FabricModelPredicateProviderRegistry.register(MishangucItems.FAST_BUILDING_TOOL, new Identifier("mishanguc", "fast_building_range"), (stack, world, entity) -> MishangucItems.FAST_BUILDING_TOOL.getRange(stack) / 64f);
+  private static void registerBlockColors() {
+    // 注册方块和颜色
+    final Block[] coloredBlocks = MishangUtils.blocks().values().stream().filter(Predicates.instanceOf(ColoredBlock.class)).toArray(Block[]::new);
+    ColorProviderRegistry.BLOCK.register(
+        (state, world, pos, tintIndex) -> {
+          if (world == null || pos == null) return -1;
+          BlockEntity entity = world.getBlockEntity(pos);
+          // 考虑到玩家掉落产生粒子时，坐标会向上偏离一格。
+          if (entity == null) entity = world.getBlockEntity(pos.down());
+          return entity instanceof ColoredBlockEntity coloredBlockEntity ? coloredBlockEntity.getColor() : -1;
+        },
+        coloredBlocks
+    );
+    ColorProviderRegistry.ITEM.register(
+        (stack, tintIndex) -> {
+          final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
+          if (nbt != null && nbt.contains("color", NbtElement.NUMBER_TYPE)) {
+            return nbt.getInt("color"); // 此处忽略 colorRemembered
+          }
+          return Color.HSBtoRGB(Util.getMeasuringTimeMs() / 4096f + (stack.getItem().hashCode() >> 16) / 64f, 0.5f, 0.95f);
+        },
+        coloredBlocks
+    );
+  }
+
+  private static void registerBlockEntityRenderers() {
+    // 注册方块实体渲染器
+    BlockEntityRendererRegistry.register(MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY, HungSignBlockEntityRenderer::new);
+    BlockEntityRendererRegistry.register(MishangucBlockEntities.COLORED_HUNG_SIGN_BLOCK_ENTITY, HungSignBlockEntityRenderer::new);
+    BlockEntityRendererRegistry.register(MishangucBlockEntities.WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
+    BlockEntityRendererRegistry.register(MishangucBlockEntities.COLORED_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
+    BlockEntityRendererRegistry.register(MishangucBlockEntities.FULL_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer<FullWallSignBlockEntity>::new);
+  }
+
+  private static void registerRenderEvents() {
+    // 注册方块外观描绘
+    WorldRenderEvents.BLOCK_OUTLINE.register(RendersBlockOutline.RENDERER);
+    WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register(RendersBeforeOutline.RENDERER);
+  }
+
+  private static void registerBlockLayers() {
+    // 设置相应的 BlockLayer
+    MishangUtils.blocks().forEach((field, value) -> {
+      try {
+        if (field.isAnnotationPresent(Cutout.class)) {
+          BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout());
+          if (value instanceof final HandrailBlock handrailBlock) {
+            BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer());
+          }
+        }
+        if (field.isAnnotationPresent(Translucent.class)) {
+          BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getTranslucent());
+          if (value instanceof final HandrailBlock handrailBlock) {
+            BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer());
+          }
+        }
+      } catch (Throwable e) {
+        Mishanguc.MISHANG_LOGGER.warn("Error when setting BlockLayers:", e);
+      }
+    });
   }
 }
