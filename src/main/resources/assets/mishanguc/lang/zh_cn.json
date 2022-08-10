@@ -420,5 +420,16 @@
   "item.mishanguc.color_tool.message.no_data": "你应该先从方块中复制一个颜色。",
   "item.mishanguc.color_tool.message.not_colored": "无法设置方块的颜色。只有本模组中的特定方块可以拥有自定义颜色。",
   "item.mishanguc.color_tool.message.success_set": "成功将方块颜色设为%s。",
-  "item.mishanguc.color_tool.message.success_copied": "成功从方块中复制了颜色%s。"
+  "item.mishanguc.color_tool.message.success_copied": "成功从方块中复制了颜色%s。",
+  "block.mishanguc.colored_plank_stairs": "染色木楼梯",
+  "block.mishanguc.colored_plank_slab": "染色木台阶",
+  "block.mishanguc.colored_dirt": "染色泥土",
+  "block.mishanguc.colored_cobblestone": "染色圆石",
+  "block.mishanguc.colored_cobblestone_stairs": "染色圆石楼梯",
+  "block.mishanguc.colored_cobblestone_slab": "染色圆石台阶",
+  "block.mishanguc.colored_stone": "染色石头",
+  "block.mishanguc.colored_stone_stairs": "染色石楼梯",
+  "block.mishanguc.colored_stone_slab": "染色石台阶",
+  "block.mishanguc.colored_snow_block": "染色雪块",
+  "block.mishanguc.colored_packed_ice": "染色浮冰"
 }

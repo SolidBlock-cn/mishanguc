@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.blocks;
 
+import net.devtech.arrp.generator.BRRPCubeBlock;
+import net.devtech.arrp.json.models.JTextures;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.util.math.BlockPos;
@@ -8,14 +10,17 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
-import pers.solid.mishang.uc.block.*;
+import pers.solid.mishang.uc.block.AutoConnectWallLightBlock;
+import pers.solid.mishang.uc.block.CornerLightBlock;
+import pers.solid.mishang.uc.block.StripWallLightBlock;
+import pers.solid.mishang.uc.block.WallLightBlock;
 
 import java.util.Map;
 
 public final class LightBlocks extends MishangucBlocks {
 
   @RegisterIdentifier
-  public static final CubeAllBlock WHITE_LIGHT = new CubeAllBlock(WHITE_LIGHT_SETTINGS);
+  public static final BRRPCubeBlock WHITE_LIGHT = new BRRPCubeBlock(WHITE_LIGHT_SETTINGS, "mishanguc:block/light", JTextures.ofAll("mishanguc:block/white_light"));
 
   @RegisterIdentifier
   public static final WallLightBlock WHITE_SMALL_WALL_LIGHT_TUBE =
@@ -90,7 +95,7 @@ public final class LightBlocks extends MishangucBlocks {
         }
       };
   @RegisterIdentifier
-  public static final CubeAllBlock YELLOW_LIGHT = new CubeAllBlock(YELLOW_LIGHT_SETTINGS);
+  public static final BRRPCubeBlock YELLOW_LIGHT = new BRRPCubeBlock(YELLOW_LIGHT_SETTINGS, "mishanguc:block/light", JTextures.ofAll("mishanguc:block/yellow_light"));
 
   @RegisterIdentifier
   public static final WallLightBlock YELLOW_SMALL_WALL_LIGHT_TUBE =
@@ -153,7 +158,7 @@ public final class LightBlocks extends MishangucBlocks {
       new AutoConnectWallLightBlock("yellow", "hash", YELLOW_WALL_LIGHT_SETTINGS);
 
   @RegisterIdentifier
-  public static final CubeAllBlock CYAN_LIGHT = new CubeAllBlock(CYAN_LIGHT_SETTINGS);
+  public static final BRRPCubeBlock CYAN_LIGHT = new BRRPCubeBlock(CYAN_LIGHT_SETTINGS, "mishanguc:block/light", JTextures.ofAll("mishanguc:block/cyan_light"));
 
   @RegisterIdentifier
   public static final WallLightBlock CYAN_SMALL_WALL_LIGHT_TUBE =
