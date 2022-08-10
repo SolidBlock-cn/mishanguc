@@ -417,5 +417,16 @@
   "item.mishanguc.color_tool.message.no_data": "你應該先從方塊中複製一個顏色。",
   "item.mishanguc.color_tool.message.not_colored": "無法設置方塊的顏色。只有本模組中的特定方塊可以擁有自定義顏色。",
   "item.mishanguc.color_tool.message.success_set": "成功將方塊顏色設為 %s。",
-  "item.mishanguc.color_tool.message.success_copied": "成功從方塊中複製顏色 %s。"
+  "item.mishanguc.color_tool.message.success_copied": "成功從方塊中複製顏色 %s。",
+  "block.mishanguc.colored_plank_stairs": "染色木樓梯",
+  "block.mishanguc.colored_plank_slab": "染色木半磚",
+  "block.mishanguc.colored_dirt": "染色泥土",
+  "block.mishanguc.colored_cobblestone": "染色碎石",
+  "block.mishanguc.colored_cobblestone_stairs": "染色碎石樓梯",
+  "block.mishanguc.colored_cobblestone_slab": "染色碎石半磚",
+  "block.mishanguc.colored_stone": "染色石頭",
+  "block.mishanguc.colored_stone_stairs": "染色石頭樓梯",
+  "block.mishanguc.colored_stone_slab": "染色石頭半磚",
+  "block.mishanguc.colored_snow_block": "染色雪",
+  "block.mishanguc.colored_packed_ice": "染色冰磚"
 }
