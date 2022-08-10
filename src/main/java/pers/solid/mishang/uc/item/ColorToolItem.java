@@ -19,10 +19,12 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.block.ColoredBlock;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
 
 public class ColorToolItem extends BlockToolItem implements ItemResourceGenerator {
   public ColorToolItem(Settings settings, @Nullable Boolean includesFluid) {
@@ -66,27 +68,52 @@ public class ColorToolItem extends BlockToolItem implements ItemResourceGenerato
   @Override
   public ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
-    final BlockEntity blockEntity = world.getBlockEntity(blockPos);
+    BlockEntity blockEntity = world.getBlockEntity(blockPos);
     final ItemStack stack = player.getStackInHand(hand);
     final NbtCompound nbt = stack.getNbt();
     if (nbt == null || !nbt.contains("color", NbtType.NUMBER)) {
       if (!world.isClient) {
-        player.sendMessage(Text.translatable("item.mishanguc.color_tool.message.no_data").formatted(Formatting.RED));
+        player.sendMessage(Text.translatable("item.mishanguc.color_tool.message.no_data").formatted(Formatting.RED), true);
+        return ActionResult.FAIL;
       }
-      return ActionResult.FAIL;
+      return ActionResult.PASS;
+    }
+    if (!(blockEntity instanceof ColoredBlockEntity)) {
+      final BlockState blockState = world.getBlockState(blockPos);
+      final Block block = blockState.getBlock();
+      final Block coloredBlock;
+      if (ColoredBlock.BASE_TO_COLORED.containsKey(block)) {
+        coloredBlock = ColoredBlock.BASE_TO_COLORED.get(block);
+      } else {
+        coloredBlock = ColoredBlock.BASE_TAG_TO_COLORED.entrySet().stream()
+            .filter(entry -> blockState.isIn(entry.getKey()))
+            .findAny()
+            .map(Map.Entry::getValue)
+            .orElse(null);
+      }
+
+      if (coloredBlock != null) {
+        final BlockState coloredState = coloredBlock.getStateWithProperties(blockState);
+        world.setBlockState(blockPos, coloredState);
+        final BlockEntity oldBlockEntity = blockEntity;
+        blockEntity = world.getBlockEntity(blockPos);
+        if (oldBlockEntity != null && blockEntity != null) {
+          blockEntity.readNbt(oldBlockEntity.createNbt());
+        }
+      }
     }
     if (blockEntity instanceof ColoredBlockEntity coloredBlockEntity) {
       final int color = nbt.getInt("color");
       coloredBlockEntity.setColor(color);
       world.updateListeners(blockPos, blockEntity.getCachedState(), blockEntity.getCachedState(), Block.NOTIFY_LISTENERS);
       if (!world.isClient) {
-        player.sendMessage(Text.translatable("item.mishanguc.color_tool.message.success_set", MishangUtils.describeColor(color)));
+        player.sendMessage(Text.translatable("item.mishanguc.color_tool.message.success_set", MishangUtils.describeColor(color)), true);
       }
       return ActionResult.success(world.isClient);
     } else {
       if (!world.isClient) {
-        player.sendMessage(Text.translatable("item.mishanguc.color_tool.message.not_colored"));
-        return ActionResult.CONSUME;
+        player.sendMessage(Text.translatable("item.mishanguc.color_tool.message.not_colored").formatted(Formatting.RED), true);
+        return ActionResult.FAIL;
       }
       return ActionResult.PASS;
     }
@@ -104,7 +131,7 @@ public class ColorToolItem extends BlockToolItem implements ItemResourceGenerato
       stack.getOrCreateNbt().putInt("color", color = blockState.getMapColor(world, pos).color);
     }
     if (!world.isClient) {
-      player.sendMessage(Text.translatable("item.mishanguc.color_tool.message.success_copied", MishangUtils.describeColor(color)));
+      player.sendMessage(Text.translatable("item.mishanguc.color_tool.message.success_copied", MishangUtils.describeColor(color)), true);
     }
     return null;
   }

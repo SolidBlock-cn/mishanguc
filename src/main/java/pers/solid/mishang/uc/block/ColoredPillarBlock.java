@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.block;
 import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.devtech.arrp.json.blockstate.JBlockStates;
+import net.devtech.arrp.json.loot.JLootTable;
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
@@ -12,13 +13,13 @@ import net.minecraft.block.PillarBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.server.BlockLootTableGenerator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class ColoredPillarBlock extends PillarBlock implements ColoredBlock, Blo
   @Override
   public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     super.appendTooltip(stack, world, tooltip, options);
-    ColoredBlockEntity.appendColorTooltip(stack, tooltip);
+    ColoredBlock.appendColorTooltip(stack, tooltip);
   }
 
   @Nullable
@@ -65,5 +66,10 @@ public class ColoredPillarBlock extends PillarBlock implements ColoredBlock, Blo
   @Override
   public @Nullable JBlockStates getBlockStates() {
     return JBlockStates.delegate(BlockStateModelGenerator.createAxisRotatedBlockState(this, getBlockModelId(), getBlockModelId().brrp_append("_horizontal")));
+  }
+
+  @Override
+  public JLootTable getLootTable() {
+    return JLootTable.delegate(BlockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION).build());
   }
 }
