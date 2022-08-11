@@ -86,7 +86,6 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
         j = k;
       }
     }
-
     return false;
   }
 
