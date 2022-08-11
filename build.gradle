@@ -1,7 +1,16 @@
 plugins {
     id 'fabric-loom' version '0.12-SNAPSHOT'
     id 'maven-publish'
+
+    // Modrinth
+    id "com.modrinth.minotaur" version "2.+"
 }
+
+
+import com.modrinth.minotaur.dependencies.ModDependency
+import org.apache.commons.io.FileUtils
+
+import java.nio.charset.Charset
 
 sourceCompatibility = JavaVersion.VERSION_16
 targetCompatibility = JavaVersion.VERSION_16
@@ -79,4 +88,49 @@ publishing {
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
     }
+}
+
+// 将模组发布至 Modrinth
+
+modrinth {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in))
+    println "输入 GitHub 访问令牌（https://modrinth.com/dashboard/settings）："
+
+    token = br.readLine() // 获取你在本教程的基础部分得到的GitHub访问令牌。
+    projectId = "rItLmRo4" // 迷上城建模组的 Modrinth ID
+    versionNumber = project.mod_version + '-' + project.minecraft_version
+    versionType = 'beta'
+    uploadFile = remapJar // 这链接到一个构建你的 mod jar 文件的任务，并将 "uploadFile" 设置为 mod jar。
+    gameVersions = Arrays.asList(project.minotaur_supported_versions.split(','))
+
+
+    var lines = FileUtils.readLines(new File('UpdateLog-en.md'), Charset.defaultCharset())
+    StringBuilder builder = new StringBuilder()
+    def iterator = lines.iterator()
+    while (iterator.hasNext()) {
+        var line = iterator.next()
+        if (line.matches("^###\\s*" + project.mod_version + '$')) {
+            while (iterator.hasNext()) {
+                var line2 = iterator.next()
+                println line2
+                if (line2.startsWith("###")) {
+                    break
+                }
+                builder.append(line2)
+                builder.append('\n')
+            }
+            break
+        }
+    }
+    var content = builder.toString().trim()
+    println "当前版本更新记录："
+    println content
+    changelog = content
+
+    loaders = ['fabric']
+
+    dependencies = [
+            new ModDependency('P7dR8mSH', 'required'), // Fabric API
+            new ModDependency('JnrDtPAE', 'required')
+    ]
 }

@@ -10,11 +10,10 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.block.Block;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.UnclampedModelPredicateProvider;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.world.ClientWorld;
@@ -139,13 +138,13 @@ public class MishangucClient implements ClientModInitializer {
               if (world.getBlockEntity(outPos) instanceof ColoredBlockEntity coloredBlockEntity) {
                 final int color = coloredBlockEntity.getColor();
                 accumulatedNum += 1;
-                accumulatedRed += color >> 4 & 255;
-                accumulatedGreen += color >> 2 & 255;
+                accumulatedRed += color >> 16 & 255;
+                accumulatedGreen += color >> 8 & 255;
                 accumulatedBlue += color & 255;
               }
             }
             if (accumulatedNum > 0) {
-              return (accumulatedRed << 4) + (accumulatedGreen << 2) + accumulatedBlue;
+              return (accumulatedRed / accumulatedNum << 16) + (accumulatedGreen / accumulatedNum << 8) + accumulatedBlue / accumulatedNum;
             } else {
               return -1;
             }
