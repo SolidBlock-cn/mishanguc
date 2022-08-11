@@ -125,7 +125,31 @@ public class MishangucClient implements ClientModInitializer {
           BlockEntity entity = world.getBlockEntity(pos);
           // 考虑到玩家掉落产生粒子时，坐标会向上偏离一格。
           if (entity == null) entity = world.getBlockEntity(pos.down());
-          return entity instanceof ColoredBlockEntity coloredBlockEntity ? coloredBlockEntity.getColor() : -1;
+          if (entity instanceof ColoredBlockEntity coloredBlockEntity) {
+            return coloredBlockEntity.getColor();
+          } else {
+            // 考虑到坐标本身的位置没有方块颜色，因此根据附近坐标来推断方块颜色。
+            // 受部分渲染器影响，方块颜色会与周围插值，故需确保有自定义颜色的方块周围也会带有相同的自定义颜色。
+            int accumulatedNum = 0;
+            int accumulatedRed = 0;
+            int accumulatedGreen = 0;
+            int accumulatedBlue = 0;
+            for (BlockPos outPos : BlockPos.iterateOutwards(pos, 1, 1, 1)) {
+              if (outPos.equals(pos)) continue;
+              if (world.getBlockEntity(outPos) instanceof ColoredBlockEntity coloredBlockEntity) {
+                final int color = coloredBlockEntity.getColor();
+                accumulatedNum += 1;
+                accumulatedRed += color >> 4 & 255;
+                accumulatedGreen += color >> 2 & 255;
+                accumulatedBlue += color & 255;
+              }
+            }
+            if (accumulatedNum > 0) {
+              return (accumulatedRed << 4) + (accumulatedGreen << 2) + accumulatedBlue;
+            } else {
+              return -1;
+            }
+          }
         },
         coloredBlocks
     );
