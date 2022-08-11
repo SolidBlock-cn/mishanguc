@@ -27,7 +27,7 @@ Updated following content:
 
 Fixed following issues:
 
-- In the text edit screen, the display situation may differ when moving selection.
+- In the text edit screen, the display may differ when moving selection.
 - Cannot edit the custom color or texts.
 - Potential error when adding or removing text.
 - When the text color is dark, the text color tooltip in the text-editing screen may look unclear.
