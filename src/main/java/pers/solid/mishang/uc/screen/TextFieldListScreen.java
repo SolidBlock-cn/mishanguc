@@ -68,7 +68,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
    * 与 {@link EntryListWidget#moveSelectionIf(MoveDirection, Predicate)} 相比，把 {@link MathHelper#clamp} 改成了 {@link MathHelper#floorMod}。
    */
   @Override
-  protected boolean moveSelectionIf(MoveDirection direction, Predicate<Entry> predicate) {
+  protected void moveSelectionIf(MoveDirection direction, Predicate<Entry> predicate) {
     int i = direction == EntryListWidget.MoveDirection.UP ? -1 : 1;
     if (!this.children().isEmpty()) {
       int j = this.children().indexOf(this.getSelectedOrNull());
@@ -81,13 +81,10 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
         if (predicate.test(entry)) {
           this.setSelected(entry);
           this.ensureVisible(entry);
-          return true;
         }
         j = k;
       }
     }
-
-    return false;
   }
 
   /**
