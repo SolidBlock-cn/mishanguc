@@ -29,11 +29,11 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.HungSignBlock;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
@@ -47,7 +47,7 @@ import java.util.*;
  */
 public class TextCopyToolItem extends BlockToolItem implements ItemResourceGenerator {
   // 1.18.1 之前用 apache 的 Logger，自 1.18.2 用 slf4j 的 Logger。
-  public static final Logger LOGGER = LoggerFactory.getLogger(TextCopyToolItem.class);
+  public static final Logger LOGGER = LogManager.getLogger(TextCopyToolItem.class);
 
   public TextCopyToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);

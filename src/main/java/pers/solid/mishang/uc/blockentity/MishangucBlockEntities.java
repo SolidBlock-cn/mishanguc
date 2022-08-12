@@ -36,6 +36,7 @@ public final class MishangucBlockEntities {
               .toArray(Block[]::new)
       ).build());
 
+  @Deprecated
   public static final BlockEntityType<HungSignBlockEntity> HUNG_SIGN_BLOCK_ENTITY_removed = Registry.register(
       Registry.BLOCK_ENTITY_TYPE,
       new Identifier("mishanguc", "hung_block_entity"),
@@ -88,6 +89,13 @@ public final class MishangucBlockEntities {
                   .toArray(Block[]::new))
           .build()
   );
+
+  @Deprecated
+  public static final BlockEntityType<SimpleColoredBlockEntity> COLORED_HUNG_SIGN_BAR_BLOCK_ENTITY_removed = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("mishanguc", "colored_hung_sign_bar_block_entity"), FabricBlockEntityTypeBuilder.create(
+      SimpleColoredBlockEntity::new,
+      HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN_BAR,
+      HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN_BAR
+  ).build());
 
   // 不做事情，但是会初始化类。
   public static void init() {

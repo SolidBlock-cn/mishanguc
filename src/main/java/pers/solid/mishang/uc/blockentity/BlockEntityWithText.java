@@ -32,7 +32,6 @@ public abstract class BlockEntityWithText extends BlockEntity
     super(type);
   }
 
-  @Nullable
   @Override
   public void fromClientTag(NbtCompound tag) {
     fromTag(null, tag);

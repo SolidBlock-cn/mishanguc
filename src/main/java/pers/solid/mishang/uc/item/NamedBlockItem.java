@@ -10,6 +10,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pers.solid.mishang.uc.MishangUtils;
@@ -42,9 +43,9 @@ public class NamedBlockItem extends BlockItem {
         final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
         if (nbt != null && nbt.contains("color", NbtType.NUMBER)) {
           final int color = nbt.getInt("color");
-          return Text.translatable("block.mishanguc.colored_block.color", block.getName(), MishangUtils.describeColor(color));
+          return new TranslatableText("block.mishanguc.colored_block.color", block.getName(), MishangUtils.describeColor(color));
         } else {
-          return Text.translatable("block.mishanguc.colored_block.auto_color", block.getName());
+          return new TranslatableText("block.mishanguc.colored_block.auto_color", block.getName());
         }
       }
       return block.getName();

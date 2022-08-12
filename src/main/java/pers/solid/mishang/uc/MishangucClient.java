@@ -13,7 +13,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.item.UnclampedModelPredicateProvider;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.world.ClientWorld;
@@ -64,7 +63,7 @@ public class MishangucClient implements ClientModInitializer {
 
   private static void registerModelPredicateProviders() {
     // 模型谓词提供器
-    ModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL,
+    FabricModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL,
         new Identifier("mishanguc", "explosion_power"),
         new UnclampedModelPredicateProvider() {
           @Override

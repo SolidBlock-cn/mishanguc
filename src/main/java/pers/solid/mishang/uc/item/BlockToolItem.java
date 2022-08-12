@@ -91,7 +91,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
       PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded);
 
   /**
-   * 使用此物品中途破坏方块时的翻译。
+   * 使用此物品中途破坏方块时的反应。
    *
    * @see Mishanguc#PROGRESS_ATTACK_BLOCK_EVENT
    */

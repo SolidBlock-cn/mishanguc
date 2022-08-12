@@ -35,32 +35,31 @@ public class BlockStateToolItem extends BlockToolItem {
     // 吐槽：为什么 Block#getName 要注解为 @Environment(EnvType.CLIENT)，导致这些东西都只能在客户端使用。
     final Collection<Property<?>> properties = blockState.getProperties();
     if (properties.isEmpty()) {
-      player.sendSystemMessage(
+      player.sendMessage(
           new TranslatableText(
               "debug.mishanguc.blockStates.none",
               String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()),
               blockState.getBlock().getName().formatted(Formatting.BOLD))
-              .formatted(Formatting.RED),
-          player.getUuid());
+              .formatted(Formatting.RED), false);
     } else {
-      player.sendSystemMessage(
+      player.sendMessage(
           new TranslatableText(
               "debug.mishanguc.blockStates",
               String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()),
               blockState.getBlock().getName().formatted(Formatting.BOLD))
               .formatted(Formatting.YELLOW),
-          player.getUuid());
+          false);
     }
     for (Property<?> property : properties) {
       final MutableText value = getFormattedValue(blockState, property);
-      player.sendSystemMessage(
+      player.sendMessage(
           new LiteralText("  ")
               .append(
                   new LiteralText(property.getName())
                       .styled(style -> style.withColor(TextColor.fromRgb(0xcccccc))))
               .append(" = ")
               .append(value),
-          player.getUuid());
+          false);
     }
   }
 
@@ -113,14 +112,14 @@ public class BlockStateToolItem extends BlockToolItem {
       final FluidState fluidState = world.getFluidState(blockPos);
       final int fluidLevel = fluidState.getLevel();
       if (fluidLevel != 0) {
-        player.sendSystemMessage(
+        player.sendMessage(
             new LiteralText("  ")
                 .append(
                     new TranslatableText("debug.mishanguc.blockStates.fluidLevel")
                         .styled(style -> style.withColor(TextColor.fromRgb(0xcccccc))))
                 .append(" = ")
                 .append(String.valueOf(fluidLevel)),
-            player.getUuid());
+            false);
       }
     }
     return ActionResult.SUCCESS;

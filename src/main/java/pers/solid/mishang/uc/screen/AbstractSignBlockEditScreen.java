@@ -255,7 +255,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第一行：文本大小按钮。
    */
-  public final FloatButtonWidget sizeButton = new FloatButtonWidget(this.width / 2 - 60, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.size"), x -> new TranslatableText("message.mishanguc.size.description", x), buttons -> focusedTextContext != null ? focusedTextContext.size : 0, value -> {
+  public final FloatButtonWidget sizeButton = new FloatButtonWidget(this.width / 2 - 60, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.size"), x -> new TranslatableText("message.mishanguc.size.description", x), buttons -> selectedTextContext != null ? selectedTextContext.size : 0, value -> {
     changed = true;
     if (selectedTextContext != null) {
       selectedTextContext.size = value;
@@ -306,13 +306,13 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       return new TranslatableText("message.mishanguc.color");
     } else if (colorId == -2 && selectedTextContext != null) {
       return new TranslatableText("message.mishanguc.color.composed",
-          Text.empty()
+          new LiteralText("")
               .append(new LiteralText("■").styled(style -> style.withColor(selectedTextContext.color)))
               .append(new LiteralText(String.format("#%06x", selectedTextContext.color))));
     }
     final DyeColor dyeColor = DyeColor.byId((int) colorId);
     return new TranslatableText("message.mishanguc.color.composed",
-        Text.empty()
+        new LiteralText("")
             .append(new LiteralText("■")
                 .styled(style -> style.withColor(dyeColor.getSignColor())))
             .append(new TranslatableText("color.minecraft." + dyeColor.asString())));
@@ -623,8 +623,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
 
     /// 下方第三行
     this.addButton(moveUpButton);
-    this.addButton(moveDownButton);
     this.addButton(rearrangeButton);
+    this.addButton(moveDownButton);
     this.addButton(finishButton);
     this.addButton(cancelButton);
     this.addButton(clearButton);
@@ -660,6 +660,13 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     applyDoubleLineTemplateButton.x = width / 2 - 60;
     applyLeftArrowTemplateButton.x = width / 2 - 180;
     applyRightArrowTemplateButton.x = width / 2 + 60;
+  }
+
+  protected void initTextHolders() {
+    this.addDrawableChild(placeHolder);
+    this.addDrawableChild(applyLeftArrowTemplateButton);
+    this.addDrawableChild(applyDoubleLineTemplateButton);
+    this.addDrawableChild(applyRightArrowTemplateButton);
   }
 
   @Override
@@ -927,11 +934,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (entity.isRemoved()) {
       finishEditing();
     }
-  }
-
-  @Override
-  public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-    return super.keyPressed(keyCode, scanCode, modifiers);
   }
 
   /**
