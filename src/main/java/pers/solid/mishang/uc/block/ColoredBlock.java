@@ -11,10 +11,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.function.CopyNbtLootFunction;
-import net.minecraft.loot.function.LootFunction;
 import net.minecraft.loot.provider.nbt.ContextLootNbtProvider;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.tag.TagKey;
+import net.minecraft.tag.Tag;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -32,7 +31,7 @@ import java.util.List;
  */
 public interface ColoredBlock extends BlockEntityProvider {
 
-  LootFunction COPY_COLOR_LOOT_FUNCTION = CopyNbtLootFunction.builder(ContextLootNbtProvider.BLOCK_ENTITY).withOperation("color", "BlockEntityTag.color").build();
+  CopyNbtLootFunction.Builder COPY_COLOR_LOOT_FUNCTION = CopyNbtLootFunction.builder(ContextLootNbtProvider.BLOCK_ENTITY).withOperation("color", "BlockEntityTag.color");
 
   /**
    * 给方块添加关于颜色的提示。
@@ -75,5 +74,5 @@ public interface ColoredBlock extends BlockEntityProvider {
   }
 
   Object2ObjectMap<Block, Block> BASE_TO_COLORED = new Object2ObjectOpenHashMap<>();
-  Object2ObjectMap<TagKey<Block>, Block> BASE_TAG_TO_COLORED = new Object2ObjectOpenHashMap<>();
+  Object2ObjectMap<Tag<Block>, Block> BASE_TAG_TO_COLORED = new Object2ObjectOpenHashMap<>();
 }

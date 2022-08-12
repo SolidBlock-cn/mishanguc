@@ -12,17 +12,17 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.TagKey;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.registry.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.block.ColoredBlock;
@@ -235,7 +235,7 @@ public class Mishanguc implements ModInitializer {
 
   private static void registerColoredBlocks() {
     final Object2ObjectMap<Block, Block> blockMap = ColoredBlock.BASE_TO_COLORED;
-    final Object2ObjectMap<TagKey<Block>, Block> tagMap = ColoredBlock.BASE_TAG_TO_COLORED;
+    final Object2ObjectMap<Tag<Block>, Block> tagMap = ColoredBlock.BASE_TAG_TO_COLORED;
     tagMap.put(BlockTags.WOOL, ColoredBlocks.COLORED_WOOL);
     tagMap.put(BlockTags.TERRACOTTA, ColoredBlocks.COLORED_TERRACOTTA);
     blockMap.put(Blocks.WHITE_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
@@ -295,13 +295,13 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(Blocks.SNOW_BLOCK, ColoredBlocks.COLORED_SNOW_BLOCK);
     blockMap.put(Blocks.PACKED_ICE, ColoredBlocks.COLORED_PACKED_ICE);
 
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "concrete_hung_signs")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "concrete_hung_sign_bars")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN_BAR);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "terracotta_hung_signs")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "terracotta_hung_sign_bars")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "wooden_wall_signs")), WallSignBlocks.COLORED_WOODEN_WALL_SIGN);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "concrete_wall_signs")), WallSignBlocks.COLORED_CONCRETE_WALL_SIGN);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "terracotta_wall_signs")), WallSignBlocks.COLORED_TERRACOTTA_WALL_SIGN);
+    tagMap.put(TagFactory.BLOCK.create(new Identifier("mishanguc", "concrete_hung_signs")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN);
+    tagMap.put(TagFactory.BLOCK.create(new Identifier("mishanguc", "concrete_hung_sign_bars")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN_BAR);
+    tagMap.put(TagFactory.BLOCK.create(new Identifier("mishanguc", "terracotta_hung_signs")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN);
+    tagMap.put(TagFactory.BLOCK.create(new Identifier("mishanguc", "terracotta_hung_sign_bars")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN);
+    tagMap.put(TagFactory.BLOCK.create(new Identifier("mishanguc", "wooden_wall_signs")), WallSignBlocks.COLORED_WOODEN_WALL_SIGN);
+    tagMap.put(TagFactory.BLOCK.create(new Identifier("mishanguc", "concrete_wall_signs")), WallSignBlocks.COLORED_CONCRETE_WALL_SIGN);
+    tagMap.put(TagFactory.BLOCK.create(new Identifier("mishanguc", "terracotta_wall_signs")), WallSignBlocks.COLORED_TERRACOTTA_WALL_SIGN);
   }
 
   @Override

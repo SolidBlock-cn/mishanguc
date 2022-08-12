@@ -12,7 +12,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.PillarBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.client.model.BlockStateModelGenerator;
 import net.minecraft.data.server.BlockLootTableGenerator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
