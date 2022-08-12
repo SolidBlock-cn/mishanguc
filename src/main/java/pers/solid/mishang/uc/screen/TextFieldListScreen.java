@@ -34,27 +34,6 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
     this.setRenderHeader(false, 0);
   }
 
-  /**
-   * @deprecated Please use {@link #setSelected(Entry)}.
-   */
-  @SuppressWarnings("DeprecatedIsStillUsed")
-  @Nullable
-  @Override
-  @Deprecated
-  public Entry getFocused() {
-    return super.getFocused();
-  }
-
-  /**
-   * @deprecated Please use {@link #setSelected(Entry)}.
-   */
-  @SuppressWarnings("DeprecatedIsStillUsed")
-  @Deprecated
-  @Override
-  public void setFocused(@Nullable Element focused) {
-    super.setFocused(focused);
-  }
-
   @Override
   public boolean changeFocus(boolean lookForwards) {
     final boolean changeFocus = super.changeFocus(lookForwards);
