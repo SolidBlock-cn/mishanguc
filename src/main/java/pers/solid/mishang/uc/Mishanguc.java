@@ -2,7 +2,7 @@ package pers.solid.mishang.uc;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -22,7 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.TagKey;
-import net.minecraft.text.Text;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -81,7 +81,7 @@ public class Mishanguc implements ModInitializer {
               });
 
   private static void registerCommands() {
-    CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(CommandManager.literal("mishanguc:convert_hung_size").requires((source) -> source.hasPermissionLevel(2)).executes((context) -> {
+    CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> dispatcher.register(CommandManager.literal("mishanguc:convert_hung_size").requires((source) -> source.hasPermissionLevel(2)).executes((context) -> {
       final WorldChunk worldChunk = context.getSource().getWorld().getWorldChunk(new BlockPos(context.getSource().getPosition()));
       int successes = 0;
       for (BlockEntity value : worldChunk.getBlockEntities().values()) {
@@ -103,7 +103,7 @@ public class Mishanguc implements ModInitializer {
           }
         }
       }
-      context.getSource().sendFeedback(Text.literal(Integer.toString(successes)), false);
+      context.getSource().sendFeedback(new LiteralText(Integer.toString(successes)), false);
       return successes;
     })));
   }
