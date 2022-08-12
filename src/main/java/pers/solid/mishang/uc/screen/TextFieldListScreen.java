@@ -32,6 +32,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
     this.signBlockEditScreen = signBlockEditScreen;
     this.setRenderBackground(false);
     this.setRenderHeader(false, 0);
+    this.setRenderSelection(false);
   }
 
   @Override
