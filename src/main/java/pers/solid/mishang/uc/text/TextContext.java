@@ -295,17 +295,31 @@ public class TextContext implements Cloneable {
     // 处理文本在 x 和 y 方向的对齐
     float x = 0;
     switch (horizontalAlign == null ? HorizontalAlign.CENTER : horizontalAlign) {
-      case LEFT -> matrixStack.translate(-width / 2, 0, 0);
-      case CENTER -> matrixStack.translate(-getWidth(textRenderer, orderedText) / 4, 0, 0);
-      case RIGHT -> matrixStack.translate(width / 2 - getWidth(textRenderer, orderedText) / 2, 0, 0);
-      default -> throw new IllegalStateException("Unexpected value: " + horizontalAlign);
+      case LEFT:
+        matrixStack.translate(-width / 2, 0, 0);
+        break;
+      case CENTER:
+        matrixStack.translate(-getWidth(textRenderer, orderedText) / 4, 0, 0);
+        break;
+      case RIGHT:
+        matrixStack.translate(width / 2 - getWidth(textRenderer, orderedText) / 2, 0, 0);
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + horizontalAlign);
     }
     float y = 0;
     switch (verticalAlign == null ? VerticalAlign.MIDDLE : verticalAlign) {
-      case TOP -> matrixStack.translate(0, -height / 2, 0);
-      case MIDDLE -> matrixStack.translate(0, -getHeight() / 4, 0);
-      case BOTTOM -> matrixStack.translate(0, height / 2 - getHeight() / 2, 0);
-      default -> throw new IllegalStateException("Unexpected value: " + verticalAlign);
+      case TOP:
+        matrixStack.translate(0, -height / 2, 0);
+        break;
+      case MIDDLE:
+        matrixStack.translate(0, -getHeight() / 4, 0);
+        break;
+      case BOTTOM:
+        matrixStack.translate(0, height / 2 - getHeight() / 2, 0);
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + verticalAlign);
     }
 
     // 处理文本的大小，这个大小对文本自身以及 {@link #extra} 都是有效的。

@@ -9,10 +9,8 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.KeybindText;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.state.property.Property;
+import net.minecraft.text.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -36,10 +34,10 @@ public class ColorToolItem extends BlockToolItem implements ItemResourceGenerato
 
   @Override
   public Text getName(ItemStack stack) {
-    final NbtCompound nbt = stack.getNbt();
+    final NbtCompound nbt = stack.getTag();
     if (nbt != null && nbt.contains("color", NbtType.NUMBER)) {
       final int color = nbt.getInt("color");
-      return new TranslatableText("block.mishanguc.colored_block.color", super.getName(stack), new LiteralText("").append(new LiteralText("■").styled(style -> style.withColor(color))).append(Integer.toHexString(color)));
+      return new TranslatableText("block.mishanguc.colored_block.color", super.getName(stack), new LiteralText("").append(new LiteralText("■").styled(style -> style.withColor(TextColor.fromRgb(color)))).append(Integer.toHexString(color)));
     } else {
       return super.getName(stack);
     }
@@ -47,16 +45,16 @@ public class ColorToolItem extends BlockToolItem implements ItemResourceGenerato
 
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-    final NbtCompound nbt = stack.getNbt();
-    tooltip.add(new TranslatableText("item.mishanguc.color_tool.tooltip.1", new KeybindText("key.attack").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
-    tooltip.add(new TranslatableText("item.mishanguc.color_tool.tooltip.2", new KeybindText("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
+    final NbtCompound nbt = stack.getTag();
+    tooltip.add(new TranslatableText("item.mishanguc.color_tool.tooltip.1", new KeybindText("key.attack").styled(style -> style.withColor(TextColor.fromRgb(0xdddddd)))).formatted(Formatting.GRAY));
+    tooltip.add(new TranslatableText("item.mishanguc.color_tool.tooltip.2", new KeybindText("key.use").styled(style -> style.withColor(TextColor.fromRgb(0xdddddd)))).formatted(Formatting.GRAY));
     if (nbt != null && nbt.contains("color", NbtType.NUMBER)) {
       // 此时该对象已经定义了颜色。
       final int color = nbt.getInt("color");
       Color colorObject = new Color(color);
       tooltip.add(new TranslatableText("block.mishanguc.colored_block.tooltip.color",
           new LiteralText("")
-              .append(new LiteralText("■").styled(style -> style.withColor(color)))
+              .append(new LiteralText("■").styled(style -> style.withColor(TextColor.fromRgb(color))))
               .append(Integer.toHexString(color))
       ).formatted(Formatting.GRAY));
       tooltip.add(new TranslatableText("block.mishanguc.colored_block.tooltip.color_components",
@@ -68,12 +66,13 @@ public class ColorToolItem extends BlockToolItem implements ItemResourceGenerato
     }
   }
 
+  @SuppressWarnings({"unchecked", "rawtypes"})
   @Override
   public ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
     BlockEntity blockEntity = world.getBlockEntity(blockPos);
     final ItemStack stack = player.getStackInHand(hand);
-    final NbtCompound nbt = stack.getNbt();
+    final NbtCompound nbt = stack.getTag();
     if (nbt == null || !nbt.contains("color", NbtType.NUMBER)) {
       if (!world.isClient) {
         player.sendMessage(new TranslatableText("item.mishanguc.color_tool.message.no_data").formatted(Formatting.RED), true);
@@ -96,19 +95,24 @@ public class ColorToolItem extends BlockToolItem implements ItemResourceGenerato
       }
 
       if (coloredBlock != null) {
-        final BlockState coloredState = coloredBlock.getStateWithProperties(blockState);
+        BlockState coloredState = coloredBlock.getDefaultState();
+        for (Property<?> property : blockState.getProperties()) {
+          if (coloredState.contains(property)) {
+            coloredState = coloredState.with((Property) property, blockState.get(property));
+          }
+        }
         world.setBlockState(blockPos, coloredState);
         final BlockEntity oldBlockEntity = blockEntity;
         blockEntity = world.getBlockEntity(blockPos);
         if (oldBlockEntity != null && blockEntity != null) {
-          blockEntity.readNbt(oldBlockEntity.writeNbt(new NbtCompound()));
+          blockEntity.fromTag(world.getBlockState(blockPos), oldBlockEntity.writeNbt(new NbtCompound()));
         }
       }
     }
-    if (blockEntity instanceof ColoredBlockEntity coloredBlockEntity) {
+    if (blockEntity instanceof ColoredBlockEntity) {
       final int color = nbt.getInt("color");
-      coloredBlockEntity.setColor(color);
-      world.updateListeners(blockPos, blockEntity.getCachedState(), blockEntity.getCachedState(), Block.NOTIFY_LISTENERS);
+      ((ColoredBlockEntity) blockEntity).setColor(color);
+      world.updateListeners(blockPos, blockEntity.getCachedState(), blockEntity.getCachedState(), 2);
       if (!world.isClient) {
         player.sendMessage(new TranslatableText("item.mishanguc.color_tool.message.success_set", MishangUtils.describeColor(color)), true);
       }
@@ -128,10 +132,11 @@ public class ColorToolItem extends BlockToolItem implements ItemResourceGenerato
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     final ItemStack stack = player.getStackInHand(hand);
     final int color;
-    if (blockEntity instanceof ColoredBlockEntity coloredBlockEntity) {
-      stack.getOrCreateNbt().putInt("color", color = coloredBlockEntity.getColor());
+    if (blockEntity instanceof ColoredBlockEntity) {
+      ColoredBlockEntity coloredBlockEntity = (ColoredBlockEntity) blockEntity;
+      stack.getOrCreateTag().putInt("color", color = coloredBlockEntity.getColor());
     } else {
-      stack.getOrCreateNbt().putInt("color", color = blockState.getMapColor(world, pos).color);
+      stack.getOrCreateTag().putInt("color", color = blockState.getTopMaterialColor(world, pos).color);
     }
     if (!world.isClient) {
       player.sendMessage(new TranslatableText("item.mishanguc.color_tool.message.success_copied", MishangUtils.describeColor(color)), true);

@@ -13,14 +13,48 @@ import net.minecraft.util.math.Matrix4f;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.mixin.TextRendererAccessor;
 
+import java.util.Objects;
+
 /**
  * 长方形，可以指定其宽度和高度。
  *
- * @param width  长方形宽度，若为 8 则与文本大小的高度（注意不是文本宽度）相同。
- * @param height 长方形的高度，若为 8 则与文本大小的高度相同。
  * @since 0.2.1 将此类改成了记录。
  */
-public record RectTextSpecial(float width, float height, @NotNull TextContext textContext) implements TextSpecial {
+public final class RectTextSpecial implements TextSpecial {
+  private final float width;
+  private final float height;
+  private final TextContext textContext;
+
+  /**
+   * @param width  长方形宽度，若为 8 则与文本大小的高度（注意不是文本宽度）相同。
+   * @param height 长方形的高度，若为 8 则与文本大小的高度相同。
+   */
+  public RectTextSpecial(float width, float height, @NotNull TextContext textContext) {
+    this.width = width;
+    this.height = height;
+    this.textContext = textContext;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) return true;
+    if (obj == null || obj.getClass() != this.getClass()) return false;
+    RectTextSpecial that = (RectTextSpecial) obj;
+    return Float.floatToIntBits(this.width) == Float.floatToIntBits(that.width) &&
+        Float.floatToIntBits(this.height) == Float.floatToIntBits(that.height);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(width, height);
+  }
+
+  @Override
+  public String toString() {
+    return "RectTextSpecial[" +
+        "width=" + width + ", " +
+        "height=" + height + ']';
+  }
 
   @Environment(EnvType.CLIENT)
   @Override
@@ -38,7 +72,7 @@ public record RectTextSpecial(float width, float height, @NotNull TextContext te
       GlyphRenderer.Rectangle shadowRectangle = new GlyphRenderer.Rectangle(x + 1, (height + y) + 1, (width + x) + 1, y + 1, 0, red * 0.25f, green * 0.25f, blue * 0.25f, alpha);
       glyphRenderer.drawRectangle(shadowRectangle, matrix4f, vertexConsumer, light);
     }
-    GlyphRenderer.Rectangle rectangle = new GlyphRenderer.Rectangle(x, (height + y), (width + x), y, textContext.shadow ? 0.24f :  0, red, green, blue, alpha);
+    GlyphRenderer.Rectangle rectangle = new GlyphRenderer.Rectangle(x, (height + y), (width + x), y, textContext.shadow ? 0.24f : 0, red, green, blue, alpha);
     glyphRenderer.drawRectangle(rectangle, matrix4f, vertexConsumer, light);
   }
 

@@ -12,7 +12,6 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,12 +47,12 @@ public class HungSignBlockEntity extends BlockEntityWithText {
   @Nullable
   private PlayerEntity editor;
 
-  public HungSignBlockEntity(BlockPos pos, BlockState state) {
-    super(MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY, pos, state);
+  public HungSignBlockEntity() {
+    super(MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY);
   }
 
-  protected HungSignBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-    super(type, pos, state);
+  protected HungSignBlockEntity(BlockEntityType<?> type) {
+    super(type);
   }
 
   @Override

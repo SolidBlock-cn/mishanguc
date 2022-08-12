@@ -41,8 +41,8 @@ public class ColoredHungSignBlock extends HungSignBlock implements ColoredBlock 
   }
 
   @Override
-  public @NotNull BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-    return new ColoredHungSignBlockEntity(pos, state);
+  public @NotNull BlockEntity createBlockEntity(BlockView world) {
+    return new ColoredHungSignBlockEntity();
   }
 
   @Override

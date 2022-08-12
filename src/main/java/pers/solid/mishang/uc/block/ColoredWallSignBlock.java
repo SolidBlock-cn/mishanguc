@@ -34,8 +34,8 @@ public class ColoredWallSignBlock extends WallSignBlock implements ColoredBlock 
 
   @Nullable
   @Override
-  public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-    return new ColoredWallSignBlockEntity(pos, state);
+  public BlockEntity createBlockEntity(BlockView world) {
+    return new ColoredWallSignBlockEntity();
   }
 
   @Override

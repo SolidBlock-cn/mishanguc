@@ -255,7 +255,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         ).formatted(Formatting.RED), false);
         return ActionResult.FAIL;
       }
-      final List<@NotNull TextContext> textContexts = hungSignBlockEntity.texts.getOrDefault(direction, ImmutableList.of());
+      final List<@NotNull TextContext> textContexts = ((HungSignBlockEntity) blockEntity).texts.getOrDefault(direction, ImmutableList.of());
       final NbtList texts = new NbtList();
       for (TextContext textContext : textContexts) {
         texts.add(textContext.createNbt());

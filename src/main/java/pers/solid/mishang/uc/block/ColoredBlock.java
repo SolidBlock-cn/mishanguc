@@ -11,7 +11,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.function.CopyNbtLootFunction;
-import net.minecraft.loot.provider.nbt.ContextLootNbtProvider;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.Text;
@@ -31,7 +30,7 @@ import java.util.List;
  */
 public interface ColoredBlock extends BlockEntityProvider {
 
-  CopyNbtLootFunction.Builder COPY_COLOR_LOOT_FUNCTION = CopyNbtLootFunction.builder(ContextLootNbtProvider.BLOCK_ENTITY).withOperation("color", "BlockEntityTag.color");
+  CopyNbtLootFunction.Builder COPY_COLOR_LOOT_FUNCTION = CopyNbtLootFunction.builder(CopyNbtLootFunction.Source.BLOCK_ENTITY).withOperation("color", "BlockEntityTag.color");
 
   /**
    * 给方块添加关于颜色的提示。
@@ -39,7 +38,7 @@ public interface ColoredBlock extends BlockEntityProvider {
    * @see Block#appendTooltip(ItemStack, BlockView, List, TooltipContext)
    */
   static void appendColorTooltip(ItemStack stack, List<Text> tooltip) {
-    final NbtCompound blockEntityTag = stack.getSubNbt("BlockEntityTag");
+    final NbtCompound blockEntityTag = stack.getSubTag("BlockEntityTag");
     if (blockEntityTag != null && blockEntityTag.contains("color", NbtType.NUMBER)) {
       // 此时该对象已经定义了颜色。
       final int color = blockEntityTag.getInt("color");
@@ -67,8 +66,8 @@ public interface ColoredBlock extends BlockEntityProvider {
   default ItemStack getColoredPickStack(BlockView world, BlockPos pos, BlockState state, Function3<BlockView, BlockPos, BlockState, ItemStack> superGetPickStack) {
     final ItemStack stack = superGetPickStack.apply(world, pos, state);
     final BlockEntity blockEntity = world.getBlockEntity(pos);
-    if (blockEntity instanceof ColoredBlockEntity coloredBlockEntity) {
-      stack.getOrCreateSubNbt("BlockEntityTag").putInt("color", coloredBlockEntity.getColor());
+    if (blockEntity instanceof ColoredBlockEntity) {
+      stack.getOrCreateSubTag("BlockEntityTag").putInt("color", ((ColoredBlockEntity) blockEntity).getColor());
     }
     return stack;
   }

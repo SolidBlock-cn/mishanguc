@@ -11,15 +11,11 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegi
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
+import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.item.UnclampedModelPredicateProvider;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
@@ -29,7 +25,10 @@ import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.ColoredBlock;
 import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.Road;
-import pers.solid.mishang.uc.blockentity.*;
+import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
+import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
+import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
+import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.item.DataTagToolItem;
 import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
@@ -65,20 +64,9 @@ public class MishangucClient implements ClientModInitializer {
     // 模型谓词提供器
     FabricModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL,
         new Identifier("mishanguc", "explosion_power"),
-        new UnclampedModelPredicateProvider() {
-          @Override
-          public float unclampedCall(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity, int seed) {
-            return MishangucItems.EXPLOSION_TOOL.power(stack);
-          }
-
-          @SuppressWarnings("deprecation")
-          @Override
-          public float call(ItemStack itemStack, @Nullable ClientWorld clientWorld, @Nullable LivingEntity livingEntity, int i) {
-            return unclampedCall(itemStack, clientWorld, livingEntity, i);
-          }
-        });
-    FabricModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL, new Identifier("mishanguc", "explosion_create_fire"), (stack, world, entity, seed) -> MishangucItems.EXPLOSION_TOOL.createFire(stack) ? 1 : 0);
-    FabricModelPredicateProviderRegistry.register(MishangucItems.FAST_BUILDING_TOOL, new Identifier("mishanguc", "fast_building_range"), (stack, world, entity, seed) -> MishangucItems.FAST_BUILDING_TOOL.getRange(stack) / 64f);
+        (stack, world, entity) -> MishangucItems.EXPLOSION_TOOL.power(stack));
+    FabricModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL, new Identifier("mishanguc", "explosion_create_fire"), (stack, world, entity) -> MishangucItems.EXPLOSION_TOOL.createFire(stack) ? 1 : 0);
+    FabricModelPredicateProviderRegistry.register(MishangucItems.FAST_BUILDING_TOOL, new Identifier("mishanguc", "fast_building_range"), (stack, world, entity) -> MishangucItems.FAST_BUILDING_TOOL.getRange(stack) / 64f);
   }
 
   private static void registerNetworking() {
@@ -122,8 +110,8 @@ public class MishangucClient implements ClientModInitializer {
           BlockEntity entity = world.getBlockEntity(pos);
           // 考虑到玩家掉落产生粒子时，坐标会向上偏离一格。
           if (entity == null) entity = world.getBlockEntity(pos.down());
-          if (entity instanceof ColoredBlockEntity coloredBlockEntity) {
-            return coloredBlockEntity.getColor();
+          if (entity instanceof ColoredBlockEntity) {
+            return ((ColoredBlockEntity) entity).getColor();
           } else {
             // 考虑到坐标本身的位置没有方块颜色，因此根据附近坐标来推断方块颜色。
             // 受部分渲染器影响，方块颜色会与周围插值，故需确保有自定义颜色的方块周围也会带有相同的自定义颜色。
@@ -133,8 +121,9 @@ public class MishangucClient implements ClientModInitializer {
             int accumulatedBlue = 0;
             for (BlockPos outPos : BlockPos.iterateOutwards(pos, 1, 1, 1)) {
               if (outPos.equals(pos)) continue;
-              if (world.getBlockEntity(outPos) instanceof ColoredBlockEntity coloredBlockEntity) {
-                final int color = coloredBlockEntity.getColor();
+              final BlockEntity outEntity = world.getBlockEntity(outPos);
+              if (outEntity instanceof ColoredBlockEntity) {
+                final int color = ((ColoredBlockEntity) outEntity).getColor();
                 accumulatedNum += 1;
                 accumulatedRed += color >> 16 & 255;
                 accumulatedGreen += color >> 8 & 255;
@@ -152,8 +141,8 @@ public class MishangucClient implements ClientModInitializer {
     );
     ColorProviderRegistry.ITEM.register(
         (stack, tintIndex) -> {
-          final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
-          if (nbt != null && nbt.contains("color", NbtElement.NUMBER_TYPE)) {
+          final NbtCompound nbt = stack.getSubTag("BlockEntityTag");
+          if (nbt != null && nbt.contains("color", NbtType.NUMBER)) {
             return nbt.getInt("color"); // 此处忽略 colorRemembered
           }
           return Color.HSBtoRGB(Util.getMeasuringTimeMs() / 4096f + (stack.getItem().hashCode() >> 16) / 64f, 0.5f, 0.95f);
@@ -164,11 +153,11 @@ public class MishangucClient implements ClientModInitializer {
 
   private static void registerBlockEntityRenderers() {
     // 注册方块实体渲染器
-    BlockEntityRendererRegistry.register(MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY, HungSignBlockEntityRenderer::new);
-    BlockEntityRendererRegistry.register(MishangucBlockEntities.COLORED_HUNG_SIGN_BLOCK_ENTITY, HungSignBlockEntityRenderer::new);
-    BlockEntityRendererRegistry.register(MishangucBlockEntities.WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
-    BlockEntityRendererRegistry.register(MishangucBlockEntities.COLORED_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
-    BlockEntityRendererRegistry.register(MishangucBlockEntities.FULL_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer<FullWallSignBlockEntity>::new);
+    BlockEntityRendererRegistry.INSTANCE.register(MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY, HungSignBlockEntityRenderer::new);
+    BlockEntityRendererRegistry.INSTANCE.register(MishangucBlockEntities.COLORED_HUNG_SIGN_BLOCK_ENTITY, HungSignBlockEntityRenderer::new);
+    BlockEntityRendererRegistry.INSTANCE.register(MishangucBlockEntities.WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
+    BlockEntityRendererRegistry.INSTANCE.register(MishangucBlockEntities.COLORED_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
+    BlockEntityRendererRegistry.INSTANCE.register(MishangucBlockEntities.FULL_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
   }
 
   private static void registerRenderEvents() {
@@ -183,13 +172,15 @@ public class MishangucClient implements ClientModInitializer {
       try {
         if (field.isAnnotationPresent(Cutout.class)) {
           BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout());
-          if (value instanceof final HandrailBlock handrailBlock) {
+          if (value instanceof HandrailBlock) {
+            HandrailBlock handrailBlock = (HandrailBlock) value;
             BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer());
           }
         }
         if (field.isAnnotationPresent(Translucent.class)) {
           BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getTranslucent());
-          if (value instanceof final HandrailBlock handrailBlock) {
+          if (value instanceof HandrailBlock) {
+            HandrailBlock handrailBlock = (HandrailBlock) value;
             BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer());
           }
         }

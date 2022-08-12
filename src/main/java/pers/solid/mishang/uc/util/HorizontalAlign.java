@@ -36,10 +36,13 @@ public enum HorizontalAlign implements StringIdentifiable {
    */
   @Contract(pure = true)
   public @NotNull HorizontalAlign flip() {
-    return switch (this) {
-      case LEFT -> RIGHT;
-      case RIGHT -> LEFT;
-      default -> this;
-    };
+    switch (this) {
+      case LEFT:
+        return RIGHT;
+      case RIGHT:
+        return LEFT;
+      default:
+        return this;
+    }
   }
 }

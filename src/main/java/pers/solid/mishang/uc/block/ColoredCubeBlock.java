@@ -46,8 +46,8 @@ public class ColoredCubeBlock extends BRRPCubeBlock implements BlockEntityProvid
 
   @Nullable
   @Override
-  public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-    return new SimpleColoredBlockEntity(pos, state);
+  public BlockEntity createBlockEntity(BlockView world) {
+    return new SimpleColoredBlockEntity();
   }
 
   @Override

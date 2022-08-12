@@ -45,8 +45,8 @@ public class ColoredPillarBlock extends PillarBlock implements ColoredBlock, Blo
 
   @Nullable
   @Override
-  public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-    return new SimpleColoredBlockEntity(pos, state);
+  public BlockEntity createBlockEntity(BlockView world) {
+    return new SimpleColoredBlockEntity();
   }
 
   @Environment(EnvType.CLIENT)

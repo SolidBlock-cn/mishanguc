@@ -4,12 +4,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -30,7 +28,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
                              MinecraftClient client, int width, int height, int top, int bottom, int itemHeight) {
     super(client, width, height, top, bottom, itemHeight);
     this.signBlockEditScreen = signBlockEditScreen;
-    this.setRenderBackground(false);
+    this.method_31322(false);
     this.setRenderHeader(false, 0);
     this.setRenderSelection(false);
   }
@@ -51,7 +49,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
   protected void moveSelectionIf(MoveDirection direction, Predicate<Entry> predicate) {
     int i = direction == EntryListWidget.MoveDirection.UP ? -1 : 1;
     if (!this.children().isEmpty()) {
-      int j = this.children().indexOf(this.getSelectedOrNull());
+      int j = this.children().indexOf(this.getSelected());
       while (true) {
         int k = MathHelper.floorMod(j + i, this.getEntryCount());
         if (j == k) {
@@ -126,12 +124,6 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
     return width - 6;
   }
 
-  @ApiStatus.AvailableSince("mc1.17")
-  @Override
-  public void appendNarrations(NarrationMessageBuilder builder) {
-
-  }
-
   /**
    * {@link TextFieldListScreen} 中的项。由于 {@link TextFieldWidget} 不是 {@link EntryListWidget.Entry}
    * 的子类，所以对该类进行了包装。
@@ -148,9 +140,9 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;
-      if (!(o instanceof Entry entry)) return false;
+      if (!(o instanceof Entry)) return false;
 
-      return textFieldWidget.equals(entry.textFieldWidget);
+      return textFieldWidget.equals(((Entry) o).textFieldWidget);
     }
 
     @Override
@@ -192,30 +184,16 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
       switch (keyCode) {
-        case GLFW.GLFW_KEY_ENTER -> {
+        case GLFW.GLFW_KEY_ENTER: {
           final List<Entry> children = TextFieldListScreen.this.children();
-          final int index = children.indexOf(getSelectedOrNull());
+          final int index = children.indexOf(getSelected());
           if (index + 1 < children.size())
             TextFieldListScreen.this.setSelected(children.get(index + 1));
           else if (children.size() > 0) signBlockEditScreen.addTextField(index + 1);
+          break;
         }
-        /* 下列代码已经在 EntryListWidget#keyPressed 中实现了
-        case GLFW.GLFW_KEY_DOWN -> {
-          final List<Entry> children = TextFieldListScreen.this.children();
-          final int index = children.indexOf(getSelectedOrNull());
-          if (index + 1 < children.size())
-            TextFieldListScreen.this.setSelected(children.get(index + 1));
-          else if (children.size() > 0) TextFieldListScreen.this.setSelected(children.get(0));
-        }
-        case GLFW.GLFW_KEY_UP -> {
-          final List<Entry> children = TextFieldListScreen.this.children();
-          final int index = children.indexOf(getSelectedOrNull());
-          if (index - 1 >= 0) TextFieldListScreen.this.setSelected(children.get(index - 1));
-          else if (children.size() > 0 && index == 0)
-            TextFieldListScreen.this.setSelected(children.get(children.size() - 1));
-        }*/
-        case GLFW.GLFW_KEY_BACKSPACE -> {
-          final Entry focused = TextFieldListScreen.this.getSelectedOrNull();
+        case GLFW.GLFW_KEY_BACKSPACE:
+          final Entry focused = TextFieldListScreen.this.getSelected();
           if (focused != null && textFieldWidget.getText().isEmpty()) {
             final int index = TextFieldListScreen.this.children().indexOf(focused);
             if (index >= 0) {
@@ -225,7 +203,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
               }
             }
           }
-        }
+          break;
       }
       return super.keyPressed(keyCode, scanCode, modifiers)
           || textFieldWidget.keyPressed(keyCode, scanCode, modifiers);

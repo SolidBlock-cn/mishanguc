@@ -12,7 +12,7 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
-import net.fabricmc.fabric.api.tag.TagFactory;
+import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.CachedBlockPosition;
@@ -24,7 +24,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import org.apache.logging.log4j.LogManager;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 import pers.solid.mishang.uc.block.ColoredBlock;
 import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.Road;
@@ -142,9 +142,9 @@ public class Mishanguc implements ModInitializer {
       final int selectedSlot = buf.readInt();
       final double scrollAmount = buf.readDouble();
       server.execute(() -> {
-        final ItemStack stack = player.getInventory().getStack(selectedSlot);
-        if (stack.getItem() instanceof HotbarScrollInteraction interaction) {
-          interaction.onScroll(selectedSlot, scrollAmount, player, stack);
+        final ItemStack stack = player.inventory.getStack(selectedSlot);
+        if (stack.getItem() instanceof HotbarScrollInteraction) {
+          ((HotbarScrollInteraction) stack.getItem()).onScroll(selectedSlot, scrollAmount, player, stack);
         }
       });
     });
@@ -314,13 +314,13 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(Blocks.SNOW_BLOCK, ColoredBlocks.COLORED_SNOW_BLOCK);
     blockMap.put(Blocks.PACKED_ICE, ColoredBlocks.COLORED_PACKED_ICE);
 
-    tagMap.put(TagFactory.BLOCK.create(new Identifier("mishanguc", "concrete_hung_signs")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN);
-    tagMap.put(TagFactory.BLOCK.create(new Identifier("mishanguc", "concrete_hung_sign_bars")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN_BAR);
-    tagMap.put(TagFactory.BLOCK.create(new Identifier("mishanguc", "terracotta_hung_signs")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN);
-    tagMap.put(TagFactory.BLOCK.create(new Identifier("mishanguc", "terracotta_hung_sign_bars")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN);
-    tagMap.put(TagFactory.BLOCK.create(new Identifier("mishanguc", "wooden_wall_signs")), WallSignBlocks.COLORED_WOODEN_WALL_SIGN);
-    tagMap.put(TagFactory.BLOCK.create(new Identifier("mishanguc", "concrete_wall_signs")), WallSignBlocks.COLORED_CONCRETE_WALL_SIGN);
-    tagMap.put(TagFactory.BLOCK.create(new Identifier("mishanguc", "terracotta_wall_signs")), WallSignBlocks.COLORED_TERRACOTTA_WALL_SIGN);
+    tagMap.put(TagRegistry.block(new Identifier("mishanguc", "concrete_hung_signs")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN);
+    tagMap.put(TagRegistry.block(new Identifier("mishanguc", "concrete_hung_sign_bars")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN_BAR);
+    tagMap.put(TagRegistry.block(new Identifier("mishanguc", "terracotta_hung_signs")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN);
+    tagMap.put(TagRegistry.block(new Identifier("mishanguc", "terracotta_hung_sign_bars")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN);
+    tagMap.put(TagRegistry.block(new Identifier("mishanguc", "wooden_wall_signs")), WallSignBlocks.COLORED_WOODEN_WALL_SIGN);
+    tagMap.put(TagRegistry.block(new Identifier("mishanguc", "concrete_wall_signs")), WallSignBlocks.COLORED_CONCRETE_WALL_SIGN);
+    tagMap.put(TagRegistry.block(new Identifier("mishanguc", "terracotta_wall_signs")), WallSignBlocks.COLORED_TERRACOTTA_WALL_SIGN);
   }
 
   @Override

@@ -47,7 +47,7 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
   @Override
   protected void initTextHolders() {
     super.initTextHolders();
-    this.addDrawableChild(copyFromBackButton);
+    this.addButton(copyFromBackButton);
   }
 
   @Override

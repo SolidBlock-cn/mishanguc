@@ -1,8 +1,6 @@
 package pers.solid.mishang.uc;
 
-import com.google.common.base.Functions;
 import com.google.common.base.Suppliers;
-import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Streams;
@@ -12,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Direction;
@@ -37,10 +36,6 @@ import java.util.stream.Stream;
  * 本类存放一些实用方法。
  */
 public class MishangUtils {
-  /**
-   * @since 0.2.0 该字段为一个不可变的映射。
-   */
-  public static final @Unmodifiable BiMap<DyeColor, Integer> COLOR_TO_OUTLINE_COLOR = Arrays.stream(DyeColor.values()).collect(ImmutableBiMap.toImmutableBiMap(Functions.identity(), MishangUtils::toSignOutlineColor));
   private static final Supplier<ImmutableMap<Field, Block>> memoizedBlocks = Suppliers.memoize(MishangUtils::blocksInternal);
   private static final Supplier<ImmutableMap<Field, Item>> memoizedItems = Suppliers.memoize(MishangUtils::itemsInternal);
   private static final @Unmodifiable Map<String, String> ARROW_TO_NAMES = new ImmutableMap.Builder<String, String>()
@@ -306,6 +301,6 @@ public class MishangUtils {
 
   @ApiStatus.AvailableSince("0.2.1")
   public static MutableText describeColor(int color) {
-    return new LiteralText("").append(new LiteralText("■").styled(style -> style.withColor(color))).append(String.format("#%06x", color));
+    return new LiteralText("").append(new LiteralText("■").styled(style -> style.withColor(TextColor.fromRgb(color)))).append(String.format("#%06x", color));
   }
 }

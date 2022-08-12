@@ -307,14 +307,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     } else if (colorId == -2 && selectedTextContext != null) {
       return new TranslatableText("message.mishanguc.color.composed",
           new LiteralText("")
-              .append(new LiteralText("■").styled(style -> style.withColor(selectedTextContext.color)))
+              .append(new LiteralText("■").styled(style -> style.withColor(TextColor.fromRgb(selectedTextContext.color))))
               .append(new LiteralText(String.format("#%06x", selectedTextContext.color))));
     }
     final DyeColor dyeColor = DyeColor.byId((int) colorId);
     return new TranslatableText("message.mishanguc.color.composed",
         new LiteralText("")
             .append(new LiteralText("■")
-                .styled(style -> style.withColor(dyeColor.getSignColor())))
+                .styled(style -> style.withColor(TextColor.fromRgb(dyeColor.getSignColor()))))
             .append(new TranslatableText("color.minecraft." + dyeColor.asString())));
   }, button -> {
     changed = true;
@@ -487,7 +487,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    */
   public final ButtonWidget moveUpButton = new ButtonWidget(this.width - 20, this.height - 50, 30, 20, new TranslatableText("message.mishanguc.moveUp"), button -> {
     if (selectedTextField == null) return;
-    int i = textFieldListScreen.children().indexOf(textFieldListScreen.getSelectedOrNull());
+    int i = textFieldListScreen.children().indexOf(textFieldListScreen.getSelected());
     final TextContext textContext = AbstractSignBlockEditScreen.this.textContextsEditing.get(i);
     removeTextField(i);
     if (i > 0) i--;
@@ -499,7 +499,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    */
   public final ButtonWidget moveDownButton = new ButtonWidget(this.width - 20, this.height - 50, 30, 20, new TranslatableText("message.mishanguc.moveDown"), button -> {
     if (selectedTextField == null) return;
-    int i = textFieldListScreen.children().indexOf(textFieldListScreen.getSelectedOrNull());
+    int i = textFieldListScreen.children().indexOf(textFieldListScreen.getSelected());
     final TextContext textContext = AbstractSignBlockEditScreen.this.textContextsEditing.get(i);
     removeTextField(i);
     if (i < textFieldListScreen.children().size()) i++;
@@ -606,16 +606,16 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     setFocused(textFieldListScreen);
     // 添加按钮
 
-    /// 文本列表屏幕以及占位符
-    this.addButton(placeHolder);
-    this.addButton(applyDoubleLineTemplateButton);
-    this.addButton(applyLeftArrowTemplateButton);
-    this.addButton(applyRightArrowTemplateButton);
-    this.addChild(textFieldListScreen);
-
     /// 上方第一行
     this.addButton(addTextButton);
     this.addButton(removeTextButton);
+
+    /// 文本列表屏幕以及占位符
+    this.addButton(placeHolder);
+    this.addButton(applyLeftArrowTemplateButton);
+    this.addButton(applyDoubleLineTemplateButton);
+    this.addButton(applyRightArrowTemplateButton);
+    this.addChild(textFieldListScreen);
 
     /// 下方第一行和第二行
     Arrays.stream(toolbox1).forEach(this::addButton);
@@ -663,10 +663,10 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   }
 
   protected void initTextHolders() {
-    this.addDrawableChild(placeHolder);
-    this.addDrawableChild(applyLeftArrowTemplateButton);
-    this.addDrawableChild(applyDoubleLineTemplateButton);
-    this.addDrawableChild(applyRightArrowTemplateButton);
+    this.addButton(placeHolder);
+    this.addButton(applyLeftArrowTemplateButton);
+    this.addButton(applyDoubleLineTemplateButton);
+    this.addButton(applyRightArrowTemplateButton);
   }
 
   @Override
@@ -825,8 +825,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     final TextFieldWidget removedWidget =
         textFieldListScreen.children().remove(index).textFieldWidget;
     final TextContext removedTextContext = contextToWidgetBiMap.inverse().get(removedWidget);
-    if (textFieldListScreen.getSelectedOrNull() != null
-        && removedWidget == textFieldListScreen.getSelectedOrNull().textFieldWidget) {
+    if (textFieldListScreen.getSelected() != null
+        && removedWidget == textFieldListScreen.getSelected().textFieldWidget) {
       textFieldListScreen.setSelected(null);
     }
     if (textFieldListScreen.children().size() > index) {

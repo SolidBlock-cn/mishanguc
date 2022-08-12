@@ -4,10 +4,7 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import pers.solid.mishang.uc.blocks.ColoredBlocks;
-import pers.solid.mishang.uc.blocks.HandrailBlocks;
-import pers.solid.mishang.uc.blocks.LightBlocks;
-import pers.solid.mishang.uc.blocks.RoadBlocks;
+import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.MishangucItems;
 
 public class MishangucItemGroups {

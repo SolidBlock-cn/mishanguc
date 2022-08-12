@@ -5,7 +5,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
@@ -23,8 +22,6 @@ import java.util.Map;
  */
 @Environment(EnvType.CLIENT)
 public class HungSignBlockEntityRenderer<T extends HungSignBlockEntity> extends BlockEntityRenderer<T> {
-
-  private final BlockEntityRendererFactory.Context ctx;
 
   public HungSignBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
     super(dispatcher);

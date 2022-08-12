@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -40,7 +41,7 @@ public class NamedBlockItem extends BlockItem {
     final Block block = getBlock();
     try {
       if (getBlock() instanceof ColoredBlock) {
-        final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
+        final NbtCompound nbt = stack.getSubTag("BlockEntityTag");
         if (nbt != null && nbt.contains("color", NbtType.NUMBER)) {
           final int color = nbt.getInt("color");
           return new TranslatableText("block.mishanguc.colored_block.color", block.getName(), MishangUtils.describeColor(color));
@@ -61,16 +62,17 @@ public class NamedBlockItem extends BlockItem {
   protected boolean place(ItemPlacementContext context, BlockState state) {
     final ItemStack stack = context.getStack();
     if (getBlock() instanceof ColoredBlock) {
-      final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
+      final NbtCompound nbt = stack.getSubTag("BlockEntityTag");
       if (nbt != null && nbt.contains("color", NbtType.NUMBER)) {
         cachedColor = nbt.getInt("color");
       } else {
         final BlockPos blockPos = ((ItemUsageContextInvoker) context).invokeGetHitResult().getBlockPos();
         final World world = context.getWorld();
-        if (world.getBlockEntity(blockPos) instanceof ColoredBlockEntity coloredBlockEntity) {
-          cachedColor = coloredBlockEntity.getColor();
+        final BlockEntity blockEntity = world.getBlockEntity(blockPos);
+        if (blockEntity instanceof ColoredBlockEntity) {
+          cachedColor = ((ColoredBlockEntity) blockEntity).getColor();
         } else {
-          cachedColor = world.getBlockState(blockPos).getMapColor(world, blockPos).color;
+          cachedColor = world.getBlockState(blockPos).getTopMaterialColor(world, blockPos).color;
         }
       }
       final boolean place = super.place(context, state);
