@@ -19,9 +19,9 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.HashMap;
@@ -34,7 +34,6 @@ public abstract class BlockEntityWithText extends BlockEntity
     super(type, pos, state);
   }
 
-  @Nullable
   @Override
   public void fromClientTag(NbtCompound tag) {
     readNbt(tag);
@@ -87,7 +86,7 @@ public abstract class BlockEntityWithText extends BlockEntity
   public static final PacketHandler PACKET_HANDLER = new PacketHandler();
 
   private static class PacketHandler implements ServerPlayNetworking.PlayChannelHandler {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(PacketHandler.class);
+    protected static final Logger LOGGER = LogManager.getLogger(PacketHandler.class);
 
     @Override
     public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {

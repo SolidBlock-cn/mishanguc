@@ -32,27 +32,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
     this.signBlockEditScreen = signBlockEditScreen;
     this.setRenderBackground(false);
     this.setRenderHeader(false, 0);
-  }
-
-  /**
-   * @deprecated Please use {@link #setSelected(Entry)}.
-   */
-  @SuppressWarnings("DeprecatedIsStillUsed")
-  @Nullable
-  @Override
-  @Deprecated
-  public Entry getFocused() {
-    return super.getFocused();
-  }
-
-  /**
-   * @deprecated Please use {@link #setSelected(Entry)}.
-   */
-  @SuppressWarnings("DeprecatedIsStillUsed")
-  @Deprecated
-  @Override
-  public void setFocused(@Nullable Element focused) {
-    super.setFocused(focused);
+    this.setRenderSelection(false);
   }
 
   @Override
@@ -81,6 +61,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
         if (predicate.test(entry)) {
           this.setSelected(entry);
           this.ensureVisible(entry);
+          break;
         }
         j = k;
       }

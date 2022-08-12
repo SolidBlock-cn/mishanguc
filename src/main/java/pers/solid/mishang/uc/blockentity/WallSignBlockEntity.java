@@ -63,7 +63,6 @@ public class WallSignBlockEntity extends BlockEntityWithText {
   public NbtCompound writeNbt(NbtCompound nbt) {
     final NbtCompound nbtCompound = super.writeNbt(nbt);
     if (textContexts.size() == 1) {
-      final NbtCompound nbtCompound = new NbtCompound();
       textContexts.get(0).writeNbt(nbtCompound);
       nbt.put("text", nbtCompound);
     } else {

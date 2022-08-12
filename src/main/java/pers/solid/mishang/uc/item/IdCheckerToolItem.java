@@ -49,14 +49,14 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
       final Block block = blockState.getBlock();
       final Identifier identifier = Registry.BLOCK.getId(block);
       final int rawId = Registry.BLOCK.getRawId(block);
-      player.sendSystemMessage(
+      player.sendMessage(
           new LiteralText("")
               .append(new TranslatableText(
                   "debug.mishanguc.blockId.header",
                   String.format(
                       "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
                   .formatted(Formatting.YELLOW)),
-          Util.NIL_UUID);
+          false);
       broadcastId(player, block.getName(), identifier, rawId);
       return ActionResult.SUCCESS;
     }
@@ -68,7 +68,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
    */
   private void broadcastId(
       PlayerEntity player, Text name, @Nullable Identifier identifier, int rawId) {
-    player.sendSystemMessage(
+    player.sendMessage(
         new LiteralText("  ").append(new TranslatableText("debug.mishanguc.id.name", name))
             .append("\n  ")
             .append(new TranslatableText(
@@ -79,7 +79,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
             .append("\n  ")
             .append(new TranslatableText(
                 "debug.mishanguc.id.rawId", new LiteralText(Integer.toString(rawId)))),
-        Util.NIL_UUID);
+        false);
   }
 
   @Override
@@ -108,14 +108,14 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
       final Registry<Biome> biomes = world.getRegistryManager().get(Registry.BIOME_KEY);
       final Identifier identifier = biomes.getId(biome);
       final int rawId = biomes.getRawId(biome);
-      user.sendSystemMessage(
+      user.sendMessage(
           new LiteralText("").append(
               new TranslatableText(
                   "debug.mishanguc.biomeId.header",
                   String.format(
                       "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
                   .formatted(Formatting.YELLOW)),
-          Util.NIL_UUID);
+          false);
       broadcastId(
           user,
           new TranslatableText(Util.createTranslationKey("biome", identifier)),
@@ -164,14 +164,14 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
     if (player.isSpectator()) return ActionResult.PASS;
     if (!world.isClient) return ActionResult.SUCCESS;
     final BlockPos blockPos = entity.getBlockPos();
-    player.sendSystemMessage(
+    player.sendMessage(
         new LiteralText("").append(
             new TranslatableText(
                 "debug.mishanguc.entityId.header",
                 String.format(
                     "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
                 .formatted(Formatting.YELLOW)),
-        Util.NIL_UUID);
+        false);
     final EntityType<?> type = entity.getType();
     broadcastId(
         player,

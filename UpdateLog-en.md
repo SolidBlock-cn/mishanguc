@@ -2,7 +2,7 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
-### 0.2.2
+### 0.2.3
 
 Updated following content:
 
@@ -23,7 +23,7 @@ Updated following content:
 - In the text edit screen, the text guidance when no texts are added is optimized.
 - Slightly enlarged the hung sign block to keep consistent with wall sign block.
 - When holding text copy tool, outlines will not be drawn for blocks that do not support text copying.
-- Added color tool.
+- Added color tool, which can be used to pick color from block and apply the color on the block.
 
 Fixed following issues:
 
@@ -32,6 +32,8 @@ Fixed following issues:
 - Potential error when adding or removing text.
 - When the text color is dark, the text color tooltip in the text-editing screen may look unclear.
 - When copying text from back, if there is no text on the back, crashes might be caused.
+- Text fields on the text edit screen are not correctly rendered.
+- The Tab order in the text edit screen is not correct.
 
 ### 0.2.1
 
