@@ -679,16 +679,17 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     textFieldListScreen = new TextFieldListScreen(this, client, width, height, 30, height - 80, 18);
     setFocused(textFieldListScreen);
     // 添加按钮
+
+    /// 上方第一行，先 addChild 再 addDrawable 以确保 tab 顺序正确，同时不被 textFieldListScreen 覆盖。
+    this.addSelectableChild(addTextButton);
+    this.addSelectableChild(removeTextButton);
+
     /// 文本列表屏幕以及占位符
-    this.addDrawableChild(placeHolder);
-    this.addDrawableChild(applyDoubleLineTemplateButton);
-    this.addDrawableChild(applyLeftArrowTemplateButton);
-    this.addDrawableChild(applyRightArrowTemplateButton);
+    initTextHolders();
     this.addDrawableChild(textFieldListScreen);
 
-    /// 上方第一行
-    this.addDrawableChild(addTextButton);
-    this.addDrawableChild(removeTextButton);
+    this.addDrawable(addTextButton);
+    this.addDrawable(removeTextButton);
 
     /// 下方第一行和第二行
     Arrays.stream(toolbox1).forEach(this::addDrawableChild);
@@ -696,8 +697,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
 
     /// 下方第三行
     this.addDrawableChild(moveUpButton);
-    this.addDrawableChild(moveDownButton);
     this.addDrawableChild(rearrangeButton);
+    this.addDrawableChild(moveDownButton);
     this.addDrawableChild(finishButton);
     this.addDrawableChild(cancelButton);
     this.addDrawableChild(clearButton);
@@ -733,6 +734,13 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     applyDoubleLineTemplateButton.x = width / 2 - 60;
     applyLeftArrowTemplateButton.x = width / 2 - 180;
     applyRightArrowTemplateButton.x = width / 2 + 60;
+  }
+
+  protected void initTextHolders() {
+    this.addDrawableChild(placeHolder);
+    this.addDrawableChild(applyLeftArrowTemplateButton);
+    this.addDrawableChild(applyDoubleLineTemplateButton);
+    this.addDrawableChild(applyRightArrowTemplateButton);
   }
 
   @Override
@@ -999,11 +1007,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (entity.isRemoved()) {
       finishEditing();
     }
-  }
-
-  @Override
-  public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-    return super.keyPressed(keyCode, scanCode, modifiers);
   }
 
   /**
