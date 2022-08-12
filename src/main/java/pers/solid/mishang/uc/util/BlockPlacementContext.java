@@ -51,11 +51,7 @@ public class BlockPlacementContext {
   public final @NotNull BlockState stateToReplace;
 
   public final boolean includesFluid;
-  /**
-   * 需要放置的方块实体。<br>
-   * The {@link BlockEntity} to place in the {@link #posToPlace}.
-   */
-  public final @Nullable BlockEntity entityToPlace;
+
 
   public final @NotNull ItemPlacementContext placementContext;
   /**
@@ -194,11 +190,6 @@ public class BlockPlacementContext {
 
     // 此时终于确定好了 stateToPlace
     this.stateToPlace = stateToPlace1;
-    if (hitEntity != null) {
-      this.entityToPlace = world.getBlockEntity(hit.getBlockPos());
-    } else {
-      this.entityToPlace = null;
-    }
   }
 
   /**
@@ -214,9 +205,7 @@ public class BlockPlacementContext {
   /**
    * 放置方块实体。
    */
-  @SuppressWarnings("UnusedReturnValue")
-  @CanIgnoreReturnValue
-  public boolean setBlockEntity() {
+  public void setBlockEntity() {
     BlockEntity entityToPlace = world.getBlockEntity(posToPlace);
     if (stackInHand != null) {
       BlockItem.writeNbtToBlockEntity(world, player, posToPlace, stackInHand);
@@ -224,7 +213,6 @@ public class BlockPlacementContext {
       entityToPlace.readNbt(hitEntity.createNbt());
       entityToPlace.markDirty();
     }
-    return true;
   }
 
   /**
