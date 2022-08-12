@@ -16,6 +16,7 @@ import net.minecraft.loot.provider.nbt.ContextLootNbtProvider;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.tag.TagKey;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -44,10 +45,10 @@ public interface ColoredBlock extends BlockEntityProvider {
       // 此时该对象已经定义了颜色。
       final int color = blockEntityTag.getInt("color");
       Color colorObject = new Color(color);
-      tooltip.add(Text.translatable("block.mishanguc.colored_block.tooltip.color",
+      tooltip.add(new TranslatableText("block.mishanguc.colored_block.tooltip.color",
           MishangUtils.describeColor(color)
       ).formatted(Formatting.GRAY));
-      tooltip.add(Text.translatable("block.mishanguc.colored_block.tooltip.color_components",
+      tooltip.add(new TranslatableText("block.mishanguc.colored_block.tooltip.color_components",
           colorObject.getRed(),
           colorObject.getGreen(),
           colorObject.getBlue(),
@@ -55,7 +56,7 @@ public interface ColoredBlock extends BlockEntityProvider {
       ).formatted(Formatting.GRAY));
     } else {
       // 没有定义颜色的情况。
-      tooltip.add(Text.translatable("block.mishanguc.colored_block.tooltip.auto_color").formatted(Formatting.GRAY));
+      tooltip.add(new TranslatableText("block.mishanguc.colored_block.tooltip.auto_color").formatted(Formatting.GRAY));
     }
   }
 
