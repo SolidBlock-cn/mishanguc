@@ -16,7 +16,7 @@ public final class RoadBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final RoadBlock ROAD_BLOCK = new RoadBlock(ROAD_SETTINGS);
   /**
-   * <h2>单直线道路</h2>
+   * <h2>单一的直线道路</h2>
    * <p>
    * 白色直线。
    */
@@ -24,17 +24,17 @@ public final class RoadBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final RoadWithStraightLine.Impl ROAD_WITH_WHITE_LINE = new RoadWithStraightLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL);
   /**
-   * 白色直角。
+   * 白色双线。
    */
   @Cutout
   @RegisterIdentifier
-  public static final RoadWithAngleLine.Impl ROAD_WITH_WHITE_RA_LINE = new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL, false);
+  public static final RoadWithStraightLine.Impl ROAD_WITH_WHITE_DOUBLE_LINE = new RoadWithStraightLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.DOUBLE);
   /**
-   * 白色斜角。
+   * 白色粗线。
    */
   @Cutout
   @RegisterIdentifier
-  public static final RoadWithAngleLine.Impl ROAD_WITH_WHITE_BA_LINE = new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL, true);
+  public static final RoadWithStraightLine.Impl ROAD_WITH_WHITE_THICK_LINE = new RoadWithStraightLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.THICK);
   /**
    * 黄色直线
    */
@@ -42,17 +42,59 @@ public final class RoadBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final RoadWithStraightLine.Impl ROAD_WITH_YELLOW_LINE = new RoadWithStraightLine.Impl(WHITE_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL);
   /**
+   * 双黄线
+   */
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithStraightLine.Impl ROAD_WITH_YELLOW_DOUBLE_LINE = new RoadWithStraightLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.DOUBLE);
+  /**
+   * 粗黄线
+   */
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithStraightLine.Impl ROAD_WITH_YELLOW_THICK_LINE = new RoadWithStraightLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.THICK);
+  /**
+   * <h3>偏移的直线</h3>
+   * 白色偏移的直线。
+   */
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithOffsetStraightLine.Impl ROAD_WITH_WHITE_OFFSET_LINE = new RoadWithOffsetStraightLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL);
+
+  /**
+   * 偏移的黄线。
+   */
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithOffsetStraightLine.Impl ROAD_WITH_YELLOW_OFFSET_LINE = new RoadWithOffsetStraightLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL);
+  /**
+   * 白色的半双线。
+   */
+  @ApiStatus.AvailableSince("0.2.4")
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithOffsetStraightLine.Impl ROAD_WITH_WHITE_HALF_DOUBLE_LINE = new RoadWithOffsetStraightLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL);
+  /**
+   * 黄色的半双线。
+   */
+  @ApiStatus.AvailableSince("0.2.4")
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithOffsetStraightLine.Impl ROAD_WITH_YELLOW_HALF_DOUBLE_LINE = new RoadWithOffsetStraightLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL);
+  /**
+   * <h2>角落标线</h2>
+   * <h3>直角</h3>
+   * 白色直角。
+   */
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithAngleLine.Impl ROAD_WITH_WHITE_RA_LINE = new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL, false);
+  /**
    * 黄色直角
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithAngleLine.Impl ROAD_WITH_YELLOW_RA_LINE = new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL, false);
-  /**
-   * 黄色斜角
-   */
-  @Cutout
-  @RegisterIdentifier
-  public static final RoadWithAngleLine.Impl ROAD_WITH_YELLOW_BA_LINE = new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL, true);
   /**
    * 白色加黄色直角
    */
@@ -85,99 +127,45 @@ public final class RoadBlocks extends MishangucBlocks {
   public static final RoadWithDiffAngleLine.Impl
       ROAD_WITH_WT_YD_RA_LINE = new RoadWithDiffAngleLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.WHITE, LineColor.YELLOW, LineType.THICK, LineType.DOUBLE, false);
   /**
-   * <h2>由两条线组成的道路</h2>
-   * <p>
-   * 白色直线+斜角。
+   * <h3>斜线</h3>
+   * 白色斜线。
    */
   @Cutout
   @RegisterIdentifier
-  public static final RoadWithStraightAndAngleLine.Impl ROAD_WITH_WHITE_S_BA_LINE = new RoadWithStraightAndAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE);
+  public static final RoadWithAngleLine.Impl ROAD_WITH_WHITE_BA_LINE = new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL, true);
   /**
-   * 白色丁字形线。
+   * 黄色斜线。
    */
   @Cutout
   @RegisterIdentifier
-  public static final RoadWithJointLine.Impl ROAD_WITH_WHITE_TS_LINE = new RoadWithJointLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineColor.WHITE, LineType.NORMAL, LineType.NORMAL);
+  public static final RoadWithAngleLine.Impl ROAD_WITH_YELLOW_BA_LINE = new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL, true);
   /**
-   * 白色十字交叉线。
-   */
-  @Cutout
-  @RegisterIdentifier
-  public static final RoadWithCrossLine.Impl ROAD_WITH_WHITE_CROSS_LINE =
-      new RoadWithCrossLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE);
-  /**
-   * 黄色直线+斜角
-   */
-  @ApiStatus.AvailableSince("0.2.0")
-  @Cutout
-  @RegisterIdentifier
-  public static final RoadWithStraightAndAngleLine.Impl ROAD_WITH_YELLOW_S_BA_LINE = new RoadWithStraightAndAngleLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW);
-  /**
-   * 黄色丁字形线。
-   */
-  @Cutout
-  @RegisterIdentifier
-  public static final RoadWithJointLine.Impl ROAD_WITH_YELLOW_TS_LINE = new RoadWithJointLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineColor.YELLOW, LineType.NORMAL, LineType.NORMAL);
-  /**
-   * 黄色十字交叉线。
-   */
-  @ApiStatus.AvailableSince("0.2.0")
-  @Cutout
-  @RegisterIdentifier
-  public static final RoadWithCrossLine.Impl ROAD_WITH_YELLOW_CROSS_LINE = new RoadWithCrossLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW);
-
-  /**
-   * <h2>带有特殊线的单线道路</h2>
-   * <p>
-   * 偏移的直线。
-   */
-  @Cutout
-  @RegisterIdentifier
-  public static final RoadWithOffsetStraightLine.Impl ROAD_WITH_WHITE_OFFSET_LINE = new RoadWithOffsetStraightLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE);
-  /**
-   * 双线。
-   */
-  @Cutout
-  @RegisterIdentifier
-  public static final RoadWithStraightLine.Impl ROAD_WITH_WHITE_DOUBLE_LINE = new RoadWithStraightLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.DOUBLE);
-  /**
-   * 粗线。
-   */
-  @Cutout
-  @RegisterIdentifier
-  public static final RoadWithStraightLine.Impl ROAD_WITH_WHITE_THICK_LINE = new RoadWithStraightLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.THICK);
-  /**
-   * 偏移的黄线
-   */
-  @Cutout
-  @RegisterIdentifier
-  public static final RoadWithOffsetStraightLine.Impl ROAD_WITH_YELLOW_OFFSET_LINE = new RoadWithOffsetStraightLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW);
-  /**
-   * 双黄线
-   */
-  @Cutout
-  @RegisterIdentifier
-  public static final RoadWithStraightLine.Impl ROAD_WITH_YELLOW_DOUBLE_LINE = new RoadWithStraightLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.DOUBLE);
-  /**
-   * 粗黄线
-   */
-  @Cutout
-  @RegisterIdentifier
-  public static final RoadWithStraightLine.Impl ROAD_WITH_YELLOW_THICK_LINE = new RoadWithStraightLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.THICK);
-  /**
-   * 一侧向外偏移的直角。
+   * <h3>有偏移的直角</h3>
+   * 白色一侧向外偏移的直角。
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithAngleLineWithOnePartOffset.Impl ROAD_WITH_WHITE_RA_LINE_OFFSET_OUT = new RoadWithAngleLineWithOnePartOffset.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, false);
   /**
-   * 一侧箱内偏移的直角。
+   * 白色一侧箱内偏移的直角。
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithAngleLineWithOnePartOffset.Impl ROAD_WITH_WHITE_RA_LINE_OFFSET_IN = new RoadWithAngleLineWithOnePartOffset.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, false);
   /**
-   * <h2>带有特殊线的双线道路</h2>
+   * <h2>T字形线路</h2>
+   * 白色T字形线。
+   */
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithJointLine.Impl ROAD_WITH_WHITE_TS_LINE = new RoadWithJointLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineColor.WHITE, LineType.NORMAL, LineType.NORMAL);
+  /**
+   * 黄色T字形线。
+   */
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithJointLine.Impl ROAD_WITH_YELLOW_TS_LINE = new RoadWithJointLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineColor.YELLOW, LineType.NORMAL, LineType.NORMAL);
+  /**
    * <p>
    * T字形，其中单侧部分为双线。
    */
@@ -195,55 +183,128 @@ public final class RoadBlocks extends MishangucBlocks {
    */
   @Cutout
   @RegisterIdentifier
-  public static final RoadWithJointLineWithOffsetSide.Impl ROAD_WITH_WHITE_TS_OFFSET_LINE = new RoadWithJointLineWithOffsetSide.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE);
+  public static final RoadWithJointLineWithOffsetSide.Impl ROAD_WITH_WHITE_TS_OFFSET_LINE = new RoadWithJointLineWithOffsetSide.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL);
   /**
-   * 直线部分为双线。
+   * T字形，直线部分为双线。
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithJointLine.Impl ROAD_WITH_WHITE_DOUBLE_TS_LINE = new RoadWithJointLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineColor.WHITE, LineType.DOUBLE, LineType.NORMAL);
   /**
-   * 直线部分为粗线。
+   * T字形，直线部分为粗线。
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithJointLine.Impl ROAD_WITH_WHITE_THICK_TS_LINE = new RoadWithJointLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineColor.WHITE, LineType.THICK, LineType.NORMAL);
   /**
-   * 黄色加白色
+   * 黄色加白色。
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithJointLine.Impl ROAD_WITH_Y_TS_W_LINE = new RoadWithJointLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineColor.WHITE, LineType.NORMAL, LineType.NORMAL);
   /**
-   * 白色加黄色
+   * 白色加黄色。
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithJointLine.Impl ROAD_WITH_W_TS_Y_LINE = new RoadWithJointLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.WHITE, LineColor.YELLOW, LineType.NORMAL, LineType.NORMAL);
   /**
-   * 白色加黄色双
+   * 白色加黄色双。
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithJointLine.Impl ROAD_WITH_W_TS_YD_LINE = new RoadWithJointLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.WHITE, LineColor.YELLOW, LineType.NORMAL, LineType.DOUBLE);
   /**
-   * 白色粗加黄色
+   * 白色粗加黄色。
    */
   @ApiStatus.AvailableSince("0.2.0")
   @Cutout
   @RegisterIdentifier
   public static final RoadWithJointLine.Impl ROAD_WITH_WT_TS_Y_LINE = new RoadWithJointLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.WHITE, LineColor.YELLOW, LineType.THICK, LineType.NORMAL);
   /**
-   * 白色粗加黄色双
+   * 白色粗加黄色双。
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithJointLine.Impl ROAD_WITH_WT_TS_YD_LINE = new RoadWithJointLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.WHITE, LineColor.YELLOW, LineType.THICK, LineType.DOUBLE);
+  /**
+   * <h2>直斜混合</h2>
+   * 白色直线+斜线。
+   */
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithStraightAndAngleLine.Impl ROAD_WITH_WHITE_S_BA_LINE = new RoadWithStraightAndAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL);
+  /**
+   * 黄色直线+斜线
+   */
+  @ApiStatus.AvailableSince("0.2.0")
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithStraightAndAngleLine.Impl ROAD_WITH_YELLOW_S_BA_LINE = new RoadWithStraightAndAngleLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL);
+
+  /**
+   * 白色直线+黄色斜线
+   */
+  @ApiStatus.AvailableSince("0.2.4")
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithStraightAndAngleLine.Impl ROAD_WITH_W_S_Y_BA_LINE = new RoadWithStraightAndAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineColor.YELLOW, LineType.NORMAL, LineType.NORMAL);
+  /**
+   * 黄色直线+白色斜线
+   */
+  @ApiStatus.AvailableSince("0.2.4")
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithStraightAndAngleLine.Impl ROAD_WITH_Y_S_W_BA_LINE = new RoadWithStraightAndAngleLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineColor.WHITE, LineType.NORMAL, LineType.NORMAL);
+  /**
+   * 白色粗线+斜线
+   */
+  @ApiStatus.AvailableSince("0.2.4")
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithStraightAndAngleLine.Impl ROAD_WITH_WT_S_N_BA_LINE = new RoadWithStraightAndAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineColor.WHITE, LineType.THICK, LineType.NORMAL);
+  /**
+   * 黄色粗线+斜线
+   */
+  @ApiStatus.AvailableSince("0.2.4")
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithStraightAndAngleLine.Impl ROAD_WITH_YT_S_N_BA_LINE = new RoadWithStraightAndAngleLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineColor.YELLOW, LineType.THICK, LineType.NORMAL);
+  /**
+   * 白色粗线+黄色斜线
+   */
+  @ApiStatus.AvailableSince("0.2.4")
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithStraightAndAngleLine.Impl ROAD_WITH_WT_S_YN_BA_LINE = new RoadWithStraightAndAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineColor.YELLOW, LineType.THICK, LineType.NORMAL);
+  /**
+   * 黄色粗线+白色斜线
+   */
+  @ApiStatus.AvailableSince("0.2.4")
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithStraightAndAngleLine.Impl ROAD_WITH_YT_S_WN_BA_LINE = new RoadWithStraightAndAngleLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineColor.WHITE, LineType.THICK, LineType.NORMAL);
+  /**
+   * <h2>十字交叉</h2>
+   * 白色十字交叉线。
+   */
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithCrossLine.Impl ROAD_WITH_WHITE_CROSS_LINE =
+      new RoadWithCrossLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE);
+  /**
+   * 黄色十字交叉线。
+   */
+  @ApiStatus.AvailableSince("0.2.0")
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithCrossLine.Impl ROAD_WITH_YELLOW_CROSS_LINE = new RoadWithCrossLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW);
+
 
   /**
    * <h2>自动路块</h2>
    * <p>
-   * 斜角自动路块。放置后遇到方块更新会自动确定线路走向。
+   * 斜线自动路块。放置后遇到方块更新会自动确定线路走向。
    */
   @RegisterIdentifier
   @Cutout

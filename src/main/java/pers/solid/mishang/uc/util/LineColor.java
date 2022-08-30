@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.util;
 
+import net.minecraft.text.MutableText;
 import net.minecraft.util.StringIdentifiable;
 
 /**
@@ -11,13 +12,18 @@ public enum LineColor implements StringIdentifiable {
   UNKNOWN,
   NONE;
 
+  private final String name;
+
+  LineColor() {
+    name = name().toLowerCase();
+  }
+
   @Override
   public String asString() {
-    return switch (this) {
-      case WHITE -> "white";
-      case YELLOW -> "yellow";
-      case UNKNOWN -> "unknown";
-      default -> "none";
-    };
+    return name;
+  }
+
+  public MutableText getName() {
+    return TextBridge.translatable("lineColor." + name);
   }
 }

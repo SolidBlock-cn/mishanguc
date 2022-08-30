@@ -19,11 +19,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -40,6 +39,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -52,7 +52,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
 
   @Override
   public ActionResult useOnBlock(
-      PlayerEntity player,
+      ItemStack stack, PlayerEntity player,
       World world,
       BlockHitResult blockHitResult,
       Hand hand,
@@ -80,7 +80,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
 
   @Override
   public ActionResult beginAttackBlock(
-      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!player.getAbilities().creativeMode) {
       // 仅限创造模式玩家使用。
       return ActionResult.PASS;
@@ -90,11 +90,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     FluidState fluidState = blockState.getFluidState();
     if (!world.isClient) {
       // 在破坏时，直接先将其内容清除。
-      if (world.getBlockEntity(pos) instanceof final Inventory inventory) {
-        for (int i = 0; i < inventory.size(); i++) {
-          inventory.setStack(i, ItemStack.EMPTY);
-        }
-      }
+      world.removeBlockEntity(pos);
       world.setBlockState(
           pos, fluidIncluded ? Blocks.AIR.getDefaultState() : fluidState.getBlockState(), 24);
     }
@@ -106,18 +102,18 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        new TranslatableText("item.mishanguc.force_placing_tool.tooltip.1")
+        TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.1")
             .formatted(Formatting.GRAY));
     tooltip.add(
-        new TranslatableText("item.mishanguc.force_placing_tool.tooltip.2")
+        TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.2")
             .formatted(Formatting.GRAY));
     if (Boolean.TRUE.equals(includesFluid(stack))) {
       tooltip.add(
-          new TranslatableText("item.mishanguc.force_placing_tool.tooltip.fluids")
+          TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.fluids")
               .formatted(Formatting.GRAY));
     }
     tooltip.add(
-        new TranslatableText("item.mishanguc.force_placing_tool.tooltip.3")
+        TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.3")
             .formatted(Formatting.GRAY));
   }
 
@@ -132,9 +128,12 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     if (!player.getAbilities().creativeMode) {
       // 只有在创造模式下，才会绘制边框。
       return true;
-    } else if (hand == Hand.OFF_HAND && player.getMainHandStack().getItem() instanceof BlockItem) {
-      // 当玩家副手持有物品，主手持有方块时，直接跳过，不绘制。
-      return true;
+    } else {
+      final Item item = player.getMainHandStack().getItem();
+      if (hand == Hand.OFF_HAND && (item instanceof BlockItem || item instanceof HoldingToolItem)) {
+        // 当玩家副手持有物品，主手持有方块时，直接跳过，不绘制。
+        return true;
+      }
     }
     final VertexConsumerProvider consumers = worldRenderContext.consumers();
     if (consumers == null) {

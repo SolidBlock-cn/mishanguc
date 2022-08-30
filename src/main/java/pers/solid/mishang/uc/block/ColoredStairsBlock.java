@@ -27,6 +27,10 @@ public class ColoredStairsBlock extends BRRPStairsBlock implements ColoredBlock 
     super(baseBlock, settings);
   }
 
+  public ColoredStairsBlock(Block baseBlock) {
+    super(baseBlock);
+  }
+
   @Override
   public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
     return getColoredPickStack(world, pos, state, super::getPickStack);

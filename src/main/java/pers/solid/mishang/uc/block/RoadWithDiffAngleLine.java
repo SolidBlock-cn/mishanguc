@@ -7,11 +7,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
@@ -20,8 +23,9 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
+import pers.solid.mishang.uc.util.TextBridge;
 
-import java.util.Objects;
+import java.util.List;
 
 /**
  * 类似于 {@link RoadWithAngleLine}，但是直角两边可能不同。
@@ -74,6 +78,12 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
     }
 
     @Override
+    public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
+      tooltip.add(TextBridge.translatable("lineType.diffAngleLine.composed.1", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
+      tooltip.add(TextBridge.translatable("lineType.diffAngleLine.composed.2", lineColor2.getName(), lineType2.getName()).formatted(Formatting.BLUE));
+    }
+
+    @Override
     public LineType getLineType(BlockState state, Direction direction) {
       return state.get(AXIS) == direction.getAxis() ? lineType2 : lineType;
     }
@@ -87,24 +97,20 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
       for (Direction direction : Direction.Type.HORIZONTAL) {
         final @NotNull Direction offsetDirection1 = direction.rotateYClockwise();
         // direction 的右偏方向
-        final @NotNull HorizontalCornerDirection facing1 =
-            Objects.requireNonNull(
-                HorizontalCornerDirection.fromDirections(direction, offsetDirection1));
+        final @NotNull HorizontalCornerDirection facing1 = HorizontalCornerDirection.fromDirections(direction, offsetDirection1);
         final @NotNull Direction offsetDirection2 = direction.rotateYCounterclockwise();
         // direction 的左偏方向
-        final @NotNull HorizontalCornerDirection facing2 =
-            Objects.requireNonNull(
-                HorizontalCornerDirection.fromDirections(direction, offsetDirection2));
+        final @NotNull HorizontalCornerDirection facing2 = HorizontalCornerDirection.fromDirections(direction, offsetDirection2);
         variant
             .addVariant(
                 String.format(
                     "facing=%s,axis=%s", facing1.asString(), direction.getAxis().asString()),
-                new JBlockModel(id).y((int) (direction.asRotation())))
+                new JBlockModel(id).y((int) direction.asRotation()))
             .addVariant(
                 String.format(
                     "facing=%s,axis=%s", facing2.asString(), direction.getAxis().asString()),
                 new JBlockModel(id.brrp_append("_mirrored"))
-                    .y((int) (direction.asRotation())));
+                    .y((int) direction.asRotation()));
       }
       return JBlockStates.ofVariants(variant);
     }

@@ -9,11 +9,11 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
+import pers.solid.mishang.uc.util.TextBridge;
 
 public class GlowingWallSignBlock extends WallSignBlock {
   @ApiStatus.AvailableSince("0.1.7")
@@ -34,7 +34,7 @@ public class GlowingWallSignBlock extends WallSignBlock {
 
   @Override
   public MutableText getName() {
-    return new TranslatableText("block.mishanguc.glowing_wall_sign", baseBlock.getName());
+    return TextBridge.translatable("block.mishanguc.glowing_wall_sign", baseBlock.getName());
   }
 
   @Override

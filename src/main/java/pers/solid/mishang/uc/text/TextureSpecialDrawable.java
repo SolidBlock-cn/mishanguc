@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
  * @param textContext 该对象对应的文本。在 {@link TextContext#draw} 中渲染时，会根据其大小来决定这个纹理渲染的大小，偏移等参数也是同理。
  */
 @Beta
-public record TextureTextSpecial(@NotNull Identifier identifier, @NotNull TextContext textContext) implements TextSpecial {
+public record TextureSpecialDrawable(@NotNull Identifier identifier, @NotNull TextContext textContext) implements SpecialDrawable {
 
   @Override
   @Environment(EnvType.CLIENT)
@@ -39,8 +39,13 @@ public record TextureTextSpecial(@NotNull Identifier identifier, @NotNull TextCo
   }
 
   @Override
-  public String getId() {
+  public @NotNull String getId() {
     return "texture";
+  }
+
+  @Override
+  public @NotNull SpecialDrawableType<TextureSpecialDrawable> getType() {
+    return SpecialDrawableTypes.TEXTURE;
   }
 
   @Override
@@ -54,15 +59,14 @@ public record TextureTextSpecial(@NotNull Identifier identifier, @NotNull TextCo
   }
 
   @Override
-  public TextureTextSpecial cloneWithNewTextContext(@NotNull TextContext textContext) {
-    return new TextureTextSpecial(identifier, textContext);
+  public TextureSpecialDrawable cloneWithNewTextContext(@NotNull TextContext textContext) {
+    return new TextureSpecialDrawable(identifier, textContext);
   }
 
   @Override
-  public NbtCompound writeNbt(NbtCompound nbt) {
-    final NbtCompound nbtCompound = TextSpecial.super.writeNbt(nbt);
-    nbtCompound.putString("texture", identifier.toString());
-    return nbtCompound;
+  public void writeNbt(NbtCompound nbt) {
+    SpecialDrawable.super.writeNbt(nbt);
+    nbt.putString("texture", identifier.toString());
   }
 
   @Override
