@@ -22,6 +22,7 @@ import net.minecraft.util.math.Quaternion;
 import org.jetbrains.annotations.*;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.HorizontalAlign;
+import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
 import java.util.Arrays;
@@ -47,7 +48,7 @@ public class TextContext implements Cloneable {
           });
 
   /**
-   * 用于 {@link #flip()} 方法中，替换 {@link PatternTextSpecial} 中的样式。
+   * 用于 {@link #flip()} 方法中，替换 {@link PatternSpecialDrawable} 中的样式。
    */
   @ApiStatus.AvailableSince("0.2.0")
   @Unmodifiable
@@ -63,7 +64,7 @@ public class TextContext implements Cloneable {
    * 文本内容。该字段对应 NBT 中的两种情况：<br>
    * <ul>
    *   <li>若 NBT 中存在字段 “textJson”，则将其作为原始 JSON 文本进行解析。</li>
-   *   <li>否则，直接使用 NBT 字段 “text”，并直接将其作为原始文本（{@link LiteralText}）使用。</li>
+   *   <li>否则，直接使用 NBT 字段 “text”，并直接将其作为原始文本（{@link net.minecraft.text.LiteralText}）使用。</li>
    * </ul>
    */
   public @Nullable MutableText text;
@@ -150,7 +151,7 @@ public class TextContext implements Cloneable {
    * 该对象的特殊渲染内容，如果存在，渲染时则会渲染它。此项通常用于特殊的渲染功能。
    */
   @ApiStatus.AvailableSince("0.2.0")
-  public @Nullable TextSpecial extra = null;
+  public @Nullable SpecialDrawable extra = null;
 
   /**
    * <p>该字段用来检测 {@link #bold}、{@link #italic}、{@link #underline}、{@link #strikethrough}、{@link #obfuscated} 是否发生改变。如果发生改变了，则该字段将与 {@code {bold, italic, underline, strikethrough, obfuscated}} 不相等，此时会通过 {@link #reformatText()} 重新更新 {@link #formattedText} 对象，同时更新此字段的值。。
@@ -221,10 +222,10 @@ public class TextContext implements Cloneable {
       try {
         text = Text.Serializer.fromLenientJson(textJson);
       } catch (JsonParseException e) {
-        text = new TranslatableText("message.mishanguc.invalid_json", e.getMessage());
+        text = TextBridge.translatable("message.mishanguc.invalid_json", e.getMessage());
       }
     } else if (nbtText instanceof NbtString) {
-      text = new LiteralText(nbtText.asString());
+      text = TextBridge.literal(nbtText.asString());
     } else {
       text = null;
     }
@@ -401,8 +402,8 @@ public class TextContext implements Cloneable {
   @Contract(mutates = "param1")
   public void writeNbt(@NotNull NbtCompound nbt) {
     if (text != null) {
-      if (text instanceof LiteralText && text.getSiblings().isEmpty() && text.getStyle().isEmpty()) {
-        nbt.putString("text", text.asString());
+      if (text instanceof LiteralText literalText && text.getSiblings().isEmpty() && text.getStyle().isEmpty()) {
+        nbt.putString("text", literalText.getRawString());
       } else {
         nbt.putString("textJson", Text.Serializer.toJson(text));
       }
@@ -464,7 +465,7 @@ public class TextContext implements Cloneable {
     if (extra == null) {
       nbt.remove("extra");
     } else {
-      nbt.put("extra", extra.writeNbt(new NbtCompound()));
+      nbt.put("extra", extra.createNbt());
     }
   }
 
@@ -488,7 +489,7 @@ public class TextContext implements Cloneable {
 
   public @Nullable MutableText asStyledText() {
     if (text == null) return null;
-    final MutableText text = this.text.shallowCopy();
+    final MutableText text = this.text.copy();
     if (bold) text.formatted(Formatting.BOLD);
     if (italic) text.formatted(Formatting.ITALIC);
     if (underline) text.formatted(Formatting.UNDERLINE);
@@ -511,16 +512,14 @@ public class TextContext implements Cloneable {
           stringBuilder.setCharAt(i, flipStringReplacement.get(c));
         }
       }
-      text = new LiteralText(stringBuilder.toString());
+      text = TextBridge.literal(stringBuilder.toString());
     }
-    if (extra instanceof PatternTextSpecial) {
-      PatternTextSpecial patternTextSpecial = (PatternTextSpecial) extra;
-
+    if (extra instanceof final PatternSpecialDrawable patternTextSpecial) {
       final String shapeName = patternTextSpecial.shapeName();
       if (flipPatternNameReplacement.containsKey(shapeName)) {
-        extra = PatternTextSpecial.fromName(this, flipPatternNameReplacement.get(shapeName));
+        extra = PatternSpecialDrawable.fromName(this, flipPatternNameReplacement.get(shapeName));
       } else if (flipPatternNameReplacement.inverse().containsKey(shapeName)) {
-        extra = PatternTextSpecial.fromName(this, flipPatternNameReplacement.inverse().get(shapeName));
+        extra = PatternSpecialDrawable.fromName(this, flipPatternNameReplacement.inverse().get(shapeName));
       }
     }
     return this;

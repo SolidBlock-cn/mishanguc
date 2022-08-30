@@ -16,9 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -35,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -51,13 +50,10 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
       final Identifier identifier = Registry.BLOCK.getId(block);
       final int rawId = Registry.BLOCK.getRawId(block);
       player.sendMessage(
-          new LiteralText("")
-              .append(new TranslatableText(
-                  "debug.mishanguc.blockId.header",
-                  String.format(
+          TextBridge.literal("")
+              .append(TextBridge.translatable("debug.mishanguc.blockId.header", String.format(
                       "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-                  .formatted(Formatting.YELLOW)),
-          false);
+                  .formatted(Formatting.YELLOW)), false);
       broadcastId(player, block.getName(), identifier, rawId);
       return ActionResult.SUCCESS;
     }
@@ -70,22 +66,18 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
   private void broadcastId(
       PlayerEntity player, Text name, @Nullable Identifier identifier, int rawId) {
     player.sendMessage(
-        new LiteralText("  ").append(new TranslatableText("debug.mishanguc.id.name", name))
+        TextBridge.literal("  ").append(TextBridge.translatable("debug.mishanguc.id.name", name))
             .append("\n  ")
-            .append(new TranslatableText(
-                "debug.mishanguc.id.id",
-                identifier == null
-                    ? new TranslatableText("gui.none")
-                    : new LiteralText(identifier.toString())))
+            .append(TextBridge.translatable("debug.mishanguc.id.id", identifier == null
+                ? TextBridge.translatable("gui.none")
+                : TextBridge.literal(identifier.toString())))
             .append("\n  ")
-            .append(new TranslatableText(
-                "debug.mishanguc.id.rawId", new LiteralText(Integer.toString(rawId)))),
-        false);
+            .append(TextBridge.translatable("debug.mishanguc.id.rawId", TextBridge.literal(Integer.toString(rawId)))), false);
   }
 
   @Override
   public ActionResult useOnBlock(
-      PlayerEntity player,
+      ItemStack stack, PlayerEntity player,
       World world,
       BlockHitResult blockHitResult,
       Hand hand,
@@ -96,7 +88,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
 
   @Override
   public ActionResult beginAttackBlock(
-      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (world.isClient) return getIdOf(player, world, pos);
     else return ActionResult.SUCCESS;
   }
@@ -110,16 +102,13 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
       final Identifier identifier = biomes.getId(biome);
       final int rawId = biomes.getRawId(biome);
       user.sendMessage(
-          new LiteralText("").append(
-              new TranslatableText(
-                  "debug.mishanguc.biomeId.header",
-                  String.format(
+          TextBridge.literal("").append(
+              TextBridge.translatable("debug.mishanguc.biomeId.header", String.format(
                       "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-                  .formatted(Formatting.YELLOW)),
-          false);
+                  .formatted(Formatting.YELLOW)), false);
       broadcastId(
           user,
-          new TranslatableText(Util.createTranslationKey("biome", identifier)),
+          TextBridge.translatable(Util.createTranslationKey("biome", identifier)),
           identifier,
           rawId);
     }
@@ -132,16 +121,16 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        new TranslatableText("item.mishanguc.id_checker_tool.tooltip.1")
+        TextBridge.translatable("item.mishanguc.id_checker_tool.tooltip.1")
             .formatted(Formatting.GRAY));
     final @Nullable Boolean includesFluid = includesFluid(stack);
     if (includesFluid == null) {
       tooltip.add(
-          new TranslatableText("item.mishanguc.id_checker_tool.tooltip.2")
+          TextBridge.translatable("item.mishanguc.id_checker_tool.tooltip.2")
               .formatted(Formatting.GRAY));
     } else if (includesFluid) {
       tooltip.add(
-          new TranslatableText("item.mishanguc.id_checker_tool.tooltip.3")
+          TextBridge.translatable("item.mishanguc.id_checker_tool.tooltip.3")
               .formatted(Formatting.GRAY));
     }
   }
@@ -167,13 +156,10 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
     if (!world.isClient) return ActionResult.SUCCESS;
     final BlockPos blockPos = entity.getBlockPos();
     player.sendMessage(
-        new LiteralText("").append(
-            new TranslatableText(
-                "debug.mishanguc.entityId.header",
-                String.format(
+        TextBridge.literal("").append(
+            TextBridge.translatable("debug.mishanguc.entityId.header", String.format(
                     "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-                .formatted(Formatting.YELLOW)),
-        false);
+                .formatted(Formatting.YELLOW)), false);
     final EntityType<?> type = entity.getType();
     broadcastId(
         player,

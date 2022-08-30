@@ -20,7 +20,7 @@ import java.util.Objects;
  *
  * @since 0.2.1 将此类改成了记录。
  */
-public final class RectTextSpecial implements TextSpecial {
+public final class RectTextSpecial implements SpecialDrawable {
   private final float width;
   private final float height;
   private final TextContext textContext;
@@ -77,20 +77,38 @@ public final class RectTextSpecial implements TextSpecial {
   }
 
   @Override
-  public String getId() {
+  public @NotNull String getId() {
     return "rect";
   }
 
-  public static RectTextSpecial fromNbt(@NotNull NbtCompound nbt, @NotNull TextContext textContext) {
-    return new RectTextSpecial(nbt.getFloat("width"), nbt.getFloat("height"), textContext);
+  @Override
+  public @NotNull SpecialDrawableType<RectSpecialDrawable> getType() {
+    return SpecialDrawableTypes.RECT;
+  }
+
+  public static RectSpecialDrawable fromNbt(@NotNull TextContext textContext, @NotNull NbtCompound nbt) {
+    return new RectSpecialDrawable(nbt.getFloat("width"), nbt.getFloat("height"), textContext);
+  }
+
+  public static RectSpecialDrawable fromStringArgs(TextContext textContext, String args) {
+    final RectSpecialDrawable rect;
+    final String[] split = args.split(" ");
+    if (split.length < 2) return null;
+    try {
+      final float width = Float.parseFloat(split[0]);
+      final float height = Float.parseFloat(split[1]);
+      rect = new RectSpecialDrawable(width, height, textContext);
+    } catch (NumberFormatException e) {
+      return null;
+    }
+    return rect;
   }
 
   @Override
-  public NbtCompound writeNbt(NbtCompound nbt) {
-    TextSpecial.super.writeNbt(nbt);
+  public void writeNbt(NbtCompound nbt) {
+    SpecialDrawable.super.writeNbt(nbt);
     nbt.putFloat("width", width);
     nbt.putFloat("height", height);
-    return nbt;
   }
 
   @Override
@@ -111,16 +129,16 @@ public final class RectTextSpecial implements TextSpecial {
   }
 
   @Override
-  public RectTextSpecial clone() {
+  public RectSpecialDrawable clone() {
     try {
-      return (RectTextSpecial) super.clone();
+      return (RectSpecialDrawable) super.clone();
     } catch (CloneNotSupportedException e) {
       throw new RuntimeException(e);
     }
   }
 
   @Override
-  public TextSpecial cloneWithNewTextContext(@NotNull TextContext textContext) {
-    return new RectTextSpecial(width, height, textContext);
+  public SpecialDrawable cloneWithNewTextContext(@NotNull TextContext textContext) {
+    return new RectSpecialDrawable(width, height, textContext);
   }
 }

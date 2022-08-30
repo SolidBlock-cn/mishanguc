@@ -18,6 +18,7 @@ import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
@@ -25,13 +26,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
-import pers.solid.mishang.uc.util.HorizontalCornerDirection;
-import pers.solid.mishang.uc.util.LineColor;
-import pers.solid.mishang.uc.util.LineType;
-import pers.solid.mishang.uc.util.RoadConnectionState;
+import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 类似于 {@link RoadWithJointLine}，不过较短的那一条线是被偏移的。
@@ -62,7 +59,7 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
         state.get(FACING).hasDirection(direction) || state.get(AXIS).test(direction),
         getLineColor(state, direction),
         Either.left(direction.getOpposite()),
-        LineType.NORMAL);
+        LineType.NORMAL, state);
   }
 
   @Override
@@ -93,11 +90,23 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
   default void appendRoadTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     Road.super.appendRoadTooltip(stack, world, tooltip, options);
+    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_joint_line_with_offset_side.1").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_joint_line_with_offset_side.2").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_joint_line_with_offset_side.3").formatted(Formatting.GRAY));
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithJointLineWithOffsetSide {
-    public Impl(Settings settings, LineColor lineColor) {
-      super(settings, lineColor, LineType.NORMAL);
+    private final LineColor lineColorSide;
+    private final LineType lineTypeSide;
+
+    public Impl(Settings settings, LineColor lineColor, LineType lineType) {
+      this(settings, lineColor, lineColor, lineType, lineType);
+    }
+
+    public Impl(Settings settings, LineColor lineColor, LineColor lineColorSide, LineType lineType, LineType lineTypeSide) {
+      super(settings, lineColor, lineType);
+      this.lineColorSide = lineColorSide;
+      this.lineTypeSide = lineTypeSide;
     }
 
     @Environment(EnvType.CLIENT)
@@ -109,26 +118,44 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
       for (Direction direction : Direction.Type.HORIZONTAL) {
         final @NotNull Direction offsetDirection1 = direction.rotateYClockwise();
         // direction 的右偏方向
-        final @NotNull HorizontalCornerDirection facing1 =
-            Objects.requireNonNull(
-                HorizontalCornerDirection.fromDirections(direction, offsetDirection1));
+        final @NotNull HorizontalCornerDirection facing1 = HorizontalCornerDirection.fromDirections(direction, offsetDirection1);
         final @NotNull Direction offsetDirection2 = direction.rotateYCounterclockwise();
         // direction 的左偏方向
-        final @NotNull HorizontalCornerDirection facing2 =
-            Objects.requireNonNull(
-                HorizontalCornerDirection.fromDirections(direction, offsetDirection2));
+        final @NotNull HorizontalCornerDirection facing2 = HorizontalCornerDirection.fromDirections(direction, offsetDirection2);
         variant
             .addVariant(
                 String.format(
                     "facing=%s,axis=%s", facing1.asString(), offsetDirection1.getAxis().asString()),
-                new JBlockModel(id).y((int) (direction.asRotation())))
+                new JBlockModel(id).y((int) direction.asRotation()))
             .addVariant(
                 String.format(
                     "facing=%s,axis=%s", facing2.asString(), offsetDirection2.getAxis().asString()),
                 new JBlockModel(id.brrp_append("_mirrored"))
-                    .y((int) (direction.asRotation())));
+                    .y((int) direction.asRotation()));
       }
       return JBlockStates.ofVariants(variant);
+    }
+
+    @Override
+    public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
+      tooltip.add(TextBridge.translatable("lineType.jointWithOffsetSide.composed.1", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
+      tooltip.add(TextBridge.translatable("lineType.jointWithOffsetSide.composed.2", lineColorSide.getName(), lineTypeSide.getName()).formatted(Formatting.BLUE));
+    }
+
+    @Override
+    public LineColor getLineColor(BlockState state, Direction direction) {
+      if (state.get(FACING).hasDirection(direction) && !state.get(AXIS).test(direction)) {
+        return lineColorSide;
+      }
+      return super.getLineColor(state, direction);
+    }
+
+    @Override
+    public LineType getLineType(BlockState state, Direction direction) {
+      if (state.get(FACING).hasDirection(direction) && !state.get(AXIS).test(direction)) {
+        return lineTypeSide;
+      }
+      return super.getLineType(state, direction);
     }
   }
 }

@@ -21,6 +21,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
@@ -31,7 +33,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
- * 所有道路方块的接口。接口可以多重继承，并直接实现与已有类上，因此使用接口。
+ * 所有道路方块类型均实现的接口。接口可以多重继承，并直接实现于已有类上，因此使用接口。
  */
 public interface Road extends BlockResourceGenerator {
 
@@ -75,8 +77,7 @@ public interface Road extends BlockResourceGenerator {
    * @return 连接状态。
    */
   default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
-    return RoadConnectionState.notConnectedTo(
-        getLineColor(state, direction), Either.left(direction), LineType.NORMAL);
+    return new RoadConnectionState(RoadConnectionState.WhetherConnected.NOT_CONNECTED, getLineColor(state, direction), Either.left(direction), LineType.NORMAL, state);
   }
 
   /**
@@ -122,6 +123,16 @@ public interface Road extends BlockResourceGenerator {
   }
 
   /**
+   * 处理方块更新。实现此接口的类，应该覆盖 {@link Block#getStateForNeighborUpdate} 并使用此方法。
+   *
+   * @since 0.2.4
+   */
+  @ApiStatus.AvailableSince("0.2.4")
+  default BlockState withStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    return state;
+  }
+
+  /**
    * 对道路进行使用的操作。
    *
    * @param state  该道路方块的方块状态。
@@ -145,12 +156,12 @@ public interface Road extends BlockResourceGenerator {
   /**
    * 附近有方块更新时的操作。
    *
-   * @param state   方块状态。
-   * @param world   世界。
-   * @param pos     坐标。
-   * @param block   方块。
-   * @param fromPos 导致触发方块更新的方块。
-   * @param notify  一个布尔值。
+   * @param state       方块状态。
+   * @param world       世界。
+   * @param pos         坐标。
+   * @param sourceBlock 方块。
+   * @param sourcePos   导致触发方块更新的方块。
+   * @param notify      一个布尔值。
    * @see AbstractRoadBlock#neighborUpdate
    * @see AbstractRoadSlabBlock#neighborUpdate
    * @see Block#neighborUpdate
@@ -158,7 +169,7 @@ public interface Road extends BlockResourceGenerator {
    */
   @SuppressWarnings("deprecation")
   default void neighborRoadUpdate(
-      BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+      BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
   }
 
   /**
@@ -181,4 +192,10 @@ public interface Road extends BlockResourceGenerator {
   LineColor getLineColor(BlockState blockState, Direction direction);
 
   LineType getLineType(BlockState blockState, Direction direction);
+
+  /**
+   * 给道路添加描述性内容，这部分文本通常是蓝色的。
+   */
+  @ApiStatus.AvailableSince("0.2.4")
+  void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options);
 }

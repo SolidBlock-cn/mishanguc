@@ -13,7 +13,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Formatting;
@@ -24,6 +23,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -35,14 +35,13 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
 
   @Override
   public ActionResult useOnBlock(
-      PlayerEntity player,
+      ItemStack stack, PlayerEntity player,
       World world,
       BlockHitResult blockHitResult,
       Hand hand,
       boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
-    final ItemStack stack = player.getStackInHand(hand);
-    if (!player.abilities.allowModifyWorld && !stack.canPlaceOn(world.getTagManager(), new CachedBlockPosition(world, blockPos, false))) {
+    if (!player.abilities.allowModifyWorld && !stack.canPlaceOn(world.getTagManager, new CachedBlockPosition(world, blockPos, false))) {
       return ActionResult.PASS;
     }
     final ActionResult result = rotateBlock(player, world, blockPos);
@@ -71,8 +70,7 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
 
   @Override
   public ActionResult beginAttackBlock(
-      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    final ItemStack stack = player.getMainHandStack();
+      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!player.abilities.allowModifyWorld && !stack.canDestroy(world.getTagManager(), new CachedBlockPosition(world, pos, false))) {
       return ActionResult.PASS;
     }
@@ -89,10 +87,10 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        new TranslatableText("item.mishanguc.rotating_tool.tooltip.1")
+        TextBridge.translatable("item.mishanguc.rotating_tool.tooltip.1")
             .formatted(Formatting.GRAY));
     tooltip.add(
-        new TranslatableText("item.mishanguc.rotating_tool.tooltip.2")
+        TextBridge.translatable("item.mishanguc.rotating_tool.tooltip.2")
             .formatted(Formatting.GRAY));
   }
 

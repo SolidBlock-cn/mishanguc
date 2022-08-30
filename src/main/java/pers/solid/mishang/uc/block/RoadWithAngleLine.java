@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Formatting;
@@ -23,10 +22,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangucProperties;
-import pers.solid.mishang.uc.util.HorizontalCornerDirection;
-import pers.solid.mishang.uc.util.LineColor;
-import pers.solid.mishang.uc.util.LineType;
-import pers.solid.mishang.uc.util.RoadConnectionState;
+import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
 
@@ -44,7 +40,7 @@ public interface RoadWithAngleLine extends Road {
         state.get(FACING).hasDirection(direction),
         getLineColor(state, direction),
         isBevel() ? Either.right(state.get(FACING).mirror(direction)) : Either.left(direction),
-        getLineType(state, direction));
+        getLineType(state, direction), state);
   }
 
   @Override
@@ -77,10 +73,10 @@ public interface RoadWithAngleLine extends Road {
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     Road.super.appendRoadTooltip(stack, world, tooltip, options);
     tooltip.add(
-        new TranslatableText("block.mishanguc.tooltip.road_with_angle_line.1")
+        TextBridge.translatable("block.mishanguc.tooltip.road_with_angle_line.1")
             .formatted(Formatting.GRAY));
     tooltip.add(
-        new TranslatableText("block.mishanguc.tooltip.road_with_angle_line.2")
+        TextBridge.translatable("block.mishanguc.tooltip.road_with_angle_line.2")
             .formatted(Formatting.GRAY));
   }
 
@@ -108,6 +104,16 @@ public interface RoadWithAngleLine extends Road {
         variant.addVariant("facing=" + direction.asString(), new JBlockModel(id).y(direction.asRotation() - 45));
       }
       return JBlockStates.ofVariants(variant);
+    }
+
+    @Override
+    public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
+      if (isBevel()) {
+        tooltip.add(TextBridge.translatable("lineType.angle.bevel").formatted(Formatting.BLUE));
+      } else {
+        tooltip.add(TextBridge.translatable("lineType.angle.right").formatted(Formatting.BLUE));
+      }
+      tooltip.add(TextBridge.translatable("lineType.angle.composed", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
     }
   }
 }

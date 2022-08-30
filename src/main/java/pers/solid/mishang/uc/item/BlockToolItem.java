@@ -76,7 +76,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
    * 使用此物品右键单击物品时的反应。 The reaction when right-clicking the block with the item.
    */
   public abstract ActionResult useOnBlock(
-      PlayerEntity player,
+      ItemStack stack, PlayerEntity player,
       World world,
       BlockHitResult blockHitResult,
       Hand hand,
@@ -88,7 +88,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
    * @see Mishanguc#BEGIN_ATTACK_BLOCK_EVENT
    */
   public abstract ActionResult beginAttackBlock(
-      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded);
+      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded);
 
   /**
    * 使用此物品中途破坏方块时的反应。

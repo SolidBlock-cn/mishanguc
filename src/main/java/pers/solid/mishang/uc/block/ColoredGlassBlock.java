@@ -61,6 +61,6 @@ public class ColoredGlassBlock extends AbstractGlassBlock implements ColoredBloc
 
   @Override
   public JLootTable getLootTable() {
-    return JLootTable.delegate(BlockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION).build());
+    return JLootTable.delegate(BlockLootTableGenerator.dropsWithSilkTouch(this).apply(COPY_COLOR_LOOT_FUNCTION).build());
   }
 }

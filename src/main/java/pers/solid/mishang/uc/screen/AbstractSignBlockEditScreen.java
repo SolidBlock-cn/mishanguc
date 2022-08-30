@@ -18,7 +18,10 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.text.*;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -30,10 +33,11 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
-import pers.solid.mishang.uc.text.PatternTextSpecial;
+import pers.solid.mishang.uc.text.PatternSpecialDrawable;
+import pers.solid.mishang.uc.text.SpecialDrawable;
 import pers.solid.mishang.uc.text.TextContext;
-import pers.solid.mishang.uc.text.TextSpecial;
 import pers.solid.mishang.uc.util.HorizontalAlign;
+import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
 import java.util.Arrays;
@@ -61,16 +65,16 @@ import java.util.regex.Pattern;
 @Environment(EnvType.CLIENT)
 public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText> extends Screen {
   // 由于需要多次使用，故作为字段存储。
-  private static final TranslatableText REARRANGE_SUCCESS_NOTICE =
-      new TranslatableText("message.mishanguc.rearrange.success");
-  private static final TranslatableText BUTTON_CLEAR_MESSAGE =
-      new TranslatableText("message.mishanguc.clear");
-  private static final TranslatableText BUTTON_CLEAR_CONFIRM_MESSAGE =
-      new TranslatableText("message.mishanguc.clear.confirm");
-  private static final TranslatableText BUTTON_CLEAR_CONFIRM_DESCRIPTION_MESSAGE =
-      new TranslatableText("message.mishanguc.clear.confirm.description");
-  private static final TranslatableText BUTTON_CLEAR_DESCRIPTION_MESSAGE =
-      new TranslatableText("message.mishanguc.clear.description");
+  private static final MutableText REARRANGE_SUCCESS_NOTICE =
+      TextBridge.translatable("message.mishanguc.rearrange.success");
+  private static final MutableText BUTTON_CLEAR_MESSAGE =
+      TextBridge.translatable("message.mishanguc.clear");
+  private static final MutableText BUTTON_CLEAR_CONFIRM_MESSAGE =
+      TextBridge.translatable("message.mishanguc.clear.confirm");
+  private static final MutableText BUTTON_CLEAR_CONFIRM_DESCRIPTION_MESSAGE =
+      TextBridge.translatable("message.mishanguc.clear.confirm.description");
+  private static final MutableText BUTTON_CLEAR_DESCRIPTION_MESSAGE =
+      TextBridge.translatable("message.mishanguc.clear.description");
   public final BlockPos blockPos;
   public final List<TextContext> textContextsEditing;
   /**
@@ -78,7 +82,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    */
   @ApiStatus.AvailableSince("0.1.6")
   public final AtomicReference<@Unmodifiable Text> descriptionAtom =
-      new AtomicReference<>(LiteralText.EMPTY);
+      new AtomicReference<>(TextBridge.empty());
 
   public final T entity;
 
@@ -109,21 +113,21 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 上方第一行：添加文本按钮
    */
-  public final ButtonWidget addTextButton = new ButtonWidget(width / 2 - 120 - 100, 10, 200, 20, new TranslatableText("message.mishanguc.add_text"), button1 -> {
+  public final ButtonWidget addTextButton = new ButtonWidget(width / 2 - 120 - 100, 10, 200, 20, TextBridge.translatable("message.mishanguc.add_text"), button1 -> {
     int index = textFieldListScreen.children().indexOf(textFieldListScreen.children().stream().filter(entry -> entry.textFieldWidget == selectedTextField).findFirst().orElse(null));
     addTextField(index == -1 ? textFieldListScreen.children().size() : index + 1);
-  }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(new TranslatableText("message.mishanguc.add_text.description")));
+  }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(TextBridge.translatable("message.mishanguc.add_text.description")));
 
   /**
    * 上方第一行：移除文本按钮
    */
-  public final ButtonWidget removeTextButton = new ButtonWidget(width / 2 + 120 - 100, 10, 200, 20, new TranslatableText("message.mishanguc.remove_text"), button -> {
+  public final ButtonWidget removeTextButton = new ButtonWidget(width / 2 + 120 - 100, 10, 200, 20, TextBridge.translatable("message.mishanguc.remove_text"), button -> {
     if (selectedTextField == null) return;
     int index = textFieldListScreen.children().indexOf(textFieldListScreen.children().stream().filter(entry -> entry.textFieldWidget == selectedTextField).findFirst().orElse(null));
     if (index != -1) {
       removeTextField(index);
     }
-  }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(new TranslatableText("message.mishanguc.remove_text.description")));
+  }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(TextBridge.translatable("message.mishanguc.remove_text.description")));
 
 
 
@@ -134,25 +138,25 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 没有添加文本时，显示的一条“点击此处添加文本”的消息。文本添加后，该按钮将消失。
    */
-  public final ButtonWidget placeHolder = new ButtonWidget(0, 35, 200, 20, new TranslatableText("message.mishanguc.add_first_text"), button -> {
+  public final ButtonWidget placeHolder = new ButtonWidget(0, 35, 200, 20, TextBridge.translatable("message.mishanguc.add_first_text"), button -> {
     addTextField(0);
     setFocused(textFieldListScreen);
     textFieldListScreen.setSelected(textFieldListScreen.children().get(0));
   });
 
   @ApiStatus.AvailableSince("0.1.6")
-  public final ButtonWidget applyDoubleLineTemplateButton = new ButtonWidget(width / 2 - 50, 70, 120, 20, new TranslatableText("message.mishanguc.apply_double_line_template"), button -> {
+  public final ButtonWidget applyDoubleLineTemplateButton = new ButtonWidget(width / 2 - 50, 70, 120, 20, TextBridge.translatable("message.mishanguc.apply_double_line_template"), button -> {
     addTextField(0, AbstractSignBlockEditScreen.this.entity.getDefaultTextContext(), false);
     addTextField(1, Util.make(AbstractSignBlockEditScreen.this.entity.getDefaultTextContext(), textContext -> textContext.size /= 2), false);
     textFieldListScreen.setSelected(textFieldListScreen.children().get(0));
     rearrange();
-  }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(new TranslatableText("message.mishanguc.apply_double_line_template.description")));
+  }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(TextBridge.translatable("message.mishanguc.apply_double_line_template.description")));
 
   @ApiStatus.AvailableSince("0.1.6")
-  public final ButtonWidget applyLeftArrowTemplateButton = new ButtonWidget(width / 2 - 150, 70, 120, 20, new TranslatableText("message.mishanguc.apply_left_arrow_template"), (ButtonWidget button) -> {
+  public final ButtonWidget applyLeftArrowTemplateButton = new ButtonWidget(width / 2 - 150, 70, 120, 20, TextBridge.translatable("message.mishanguc.apply_left_arrow_template"), (ButtonWidget button) -> {
     BlockEntityWithText entity = AbstractSignBlockEditScreen.this.entity;
     final TextContext textContext0 = entity.getDefaultTextContext();
-    textContext0.extra = PatternTextSpecial.fromName(textContext0, "al");
+    textContext0.extra = PatternSpecialDrawable.fromName(textContext0, "al");
     textContext0.size = 8;
     textContext0.offsetX = -4;
     textContext0.absolute = true;
@@ -168,13 +172,13 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     AbstractSignBlockEditScreen.this.addTextField(2, textContext2, false);
     textFieldListScreen.setSelected(textFieldListScreen.children().get(1));
     rearrange();
-  }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(new TranslatableText("message.mishanguc.apply_left_arrow_template.description")));
+  }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(TextBridge.translatable("message.mishanguc.apply_left_arrow_template.description")));
 
   @ApiStatus.AvailableSince("0.1.6")
-  public final ButtonWidget applyRightArrowTemplateButton = new ButtonWidget(width / 2 - 50, 70, 120, 20, new TranslatableText("message.mishanguc.apply_right_arrow_template"), (ButtonWidget button) -> {
+  public final ButtonWidget applyRightArrowTemplateButton = new ButtonWidget(width / 2 - 50, 70, 120, 20, TextBridge.translatable("message.mishanguc.apply_right_arrow_template"), (ButtonWidget button) -> {
     BlockEntityWithText entity = AbstractSignBlockEditScreen.this.entity;
     final TextContext textContext0 = entity.getDefaultTextContext();
-    textContext0.extra = PatternTextSpecial.fromName(textContext0, "ar");
+    textContext0.extra = PatternSpecialDrawable.fromName(textContext0, "ar");
     textContext0.size = 8;
     textContext0.offsetX = 4;
     textContext0.absolute = true;
@@ -190,7 +194,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     AbstractSignBlockEditScreen.this.addTextField(2, textContext2, false);
     textFieldListScreen.setSelected(textFieldListScreen.children().get(1));
     rearrange();
-  }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(new TranslatableText("message.mishanguc.apply_right_arrow_template.description")));
+  }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(TextBridge.translatable("message.mishanguc.apply_right_arrow_template.description")));
 
 
   /*
@@ -200,62 +204,62 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第一行：加粗按钮。
    */
-  public final BooleanButtonWidget boldButton = new BooleanButtonWidget(this.width / 2 - 200, this.height - 50, 20, 20, new LiteralText("B").formatted(Formatting.BOLD), button -> selectedTextContext == null ? null : selectedTextContext.bold, b -> {
+  public final BooleanButtonWidget boldButton = new BooleanButtonWidget(this.width / 2 - 200, this.height - 50, 20, 20, TextBridge.literal("B").formatted(Formatting.BOLD), button -> selectedTextContext == null ? null : selectedTextContext.bold, b -> {
     changed = true;
     if (selectedTextContext != null) selectedTextContext.bold = b;
-  }, b -> b == null ? new TranslatableText("message.mishanguc.bold") : new TranslatableText("message.mishanguc.bold.composed", new TranslatableText(b ? "options.on" : "options.off")), button -> {
+  }, b -> b == null ? TextBridge.translatable("message.mishanguc.bold") : TextBridge.translatable("message.mishanguc.bold.composed", TextBridge.translatable(b ? "options.on" : "options.off")), button -> {
   }, descriptionAtom);
 
   /**
    * 下方第一行：斜体按钮。
    */
-  public final BooleanButtonWidget italicButton = new BooleanButtonWidget(this.width / 2 - 180, this.height - 50, 20, 20, new LiteralText("I").formatted(Formatting.ITALIC), button -> selectedTextContext == null ? null : selectedTextContext.italic, b -> {
+  public final BooleanButtonWidget italicButton = new BooleanButtonWidget(this.width / 2 - 180, this.height - 50, 20, 20, TextBridge.literal("I").formatted(Formatting.ITALIC), button -> selectedTextContext == null ? null : selectedTextContext.italic, b -> {
     changed = true;
     if (selectedTextContext != null) selectedTextContext.italic = b;
-  }, b -> b == null ? new TranslatableText("message.mishanguc.italic") : new TranslatableText("message.mishanguc.italic.composed", new TranslatableText(b ? "options.on" : "options.off")), button -> {
+  }, b -> b == null ? TextBridge.translatable("message.mishanguc.italic") : TextBridge.translatable("message.mishanguc.italic.composed", TextBridge.translatable(b ? "options.on" : "options.off")), button -> {
   }, descriptionAtom);
 
   /**
    * 下方第一行：下划线按钮。
    */
-  public final BooleanButtonWidget underlineButton = new BooleanButtonWidget(this.width / 2 - 160, this.height - 50, 20, 20, new LiteralText("U").formatted(Formatting.UNDERLINE), button -> selectedTextContext == null ? null : selectedTextContext.underline, b -> {
+  public final BooleanButtonWidget underlineButton = new BooleanButtonWidget(this.width / 2 - 160, this.height - 50, 20, 20, TextBridge.literal("U").formatted(Formatting.UNDERLINE), button -> selectedTextContext == null ? null : selectedTextContext.underline, b -> {
     changed = true;
     if (selectedTextContext != null) selectedTextContext.underline = b;
-  }, b -> b == null ? new TranslatableText("message.mishanguc.underline") : new TranslatableText("message.mishanguc.underline.composed", new TranslatableText(b ? "options.on" : "options.off")), button -> {
+  }, b -> b == null ? TextBridge.translatable("message.mishanguc.underline") : TextBridge.translatable("message.mishanguc.underline.composed", TextBridge.translatable(b ? "options.on" : "options.off")), button -> {
   }, descriptionAtom);
 
   /**
    * 下方第一行：删除线按钮。
    */
-  public final BooleanButtonWidget strikethroughButton = new BooleanButtonWidget(this.width / 2 - 140, this.height - 50, 20, 20, new LiteralText("S").formatted(Formatting.STRIKETHROUGH), button -> selectedTextContext == null ? null : selectedTextContext.strikethrough, b -> {
+  public final BooleanButtonWidget strikethroughButton = new BooleanButtonWidget(this.width / 2 - 140, this.height - 50, 20, 20, TextBridge.literal("S").formatted(Formatting.STRIKETHROUGH), button -> selectedTextContext == null ? null : selectedTextContext.strikethrough, b -> {
     changed = true;
     if (selectedTextContext != null) selectedTextContext.strikethrough = b;
-  }, b -> b == null ? new TranslatableText("message.mishanguc.strikethrough") : new TranslatableText("message.mishanguc.strikethrough.composed", new TranslatableText(b ? "options.on" : "options.off")), button -> {
+  }, b -> b == null ? TextBridge.translatable("message.mishanguc.strikethrough") : TextBridge.translatable("message.mishanguc.strikethrough.composed", TextBridge.translatable(b ? "options.on" : "options.off")), button -> {
   }, descriptionAtom);
 
   /**
    * 下方第一行：随机文字（obfuscated）按钮。
    */
-  public final BooleanButtonWidget obfuscatedButton = new BooleanButtonWidget(this.width / 2 - 120, this.height - 50, 20, 20, new LiteralText("O").formatted(Formatting.OBFUSCATED), button -> selectedTextContext == null ? null : selectedTextContext.obfuscated, b -> {
+  public final BooleanButtonWidget obfuscatedButton = new BooleanButtonWidget(this.width / 2 - 120, this.height - 50, 20, 20, TextBridge.literal("O").formatted(Formatting.OBFUSCATED), button -> selectedTextContext == null ? null : selectedTextContext.obfuscated, b -> {
     changed = true;
     if (selectedTextContext != null) selectedTextContext.obfuscated = b;
-  }, b -> b == null ? new TranslatableText("message.mishanguc.obfuscated") : new TranslatableText("message.mishanguc.obfuscated.composed", new TranslatableText(b ? "options.on" : "options.off")), button -> {
+  }, b -> b == null ? TextBridge.translatable("message.mishanguc.obfuscated") : TextBridge.translatable("message.mishanguc.obfuscated.composed", TextBridge.translatable(b ? "options.on" : "options.off")), button -> {
   }, descriptionAtom);
 
 
   /**
    * 下方第一行：阴影按钮。
    */
-  public final BooleanButtonWidget shadeButton = new BooleanButtonWidget(this.width / 2 - 100, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.shade"), button -> selectedTextContext == null ? null : selectedTextContext.shadow, b -> {
+  public final BooleanButtonWidget shadeButton = new BooleanButtonWidget(this.width / 2 - 100, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.shade"), button -> selectedTextContext == null ? null : selectedTextContext.shadow, b -> {
     changed = true;
     if (selectedTextContext != null) selectedTextContext.shadow = b;
-  }, b -> b == null ? new TranslatableText("message.mishanguc.shade.description") : new TranslatableText("message.mishanguc.shade.composed", new TranslatableText(b ? "options.on" : "options.off")), button -> {
+  }, b -> b == null ? TextBridge.translatable("message.mishanguc.shade.description") : TextBridge.translatable("message.mishanguc.shade.composed", TextBridge.translatable(b ? "options.on" : "options.off")), button -> {
   }, descriptionAtom);
 
   /**
    * 下方第一行：文本大小按钮。
    */
-  public final FloatButtonWidget sizeButton = new FloatButtonWidget(this.width / 2 - 60, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.size"), x -> new TranslatableText("message.mishanguc.size.description", x), buttons -> selectedTextContext != null ? selectedTextContext.size : 0, value -> {
+  public final FloatButtonWidget sizeButton = new FloatButtonWidget(this.width / 2 - 60, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.size"), x -> TextBridge.translatable("message.mishanguc.size.description", x), buttons -> selectedTextContext != null ? selectedTextContext.size : 0, value -> {
     changed = true;
     if (selectedTextContext != null) {
       selectedTextContext.size = value;
@@ -266,7 +270,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第一行：X偏移。
    */
-  public final FloatButtonWidget offsetXButton = new FloatButtonWidget(this.width / 2 - 10, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.offsetX"), x -> new TranslatableText("message.mishanguc.offsetX.composed", x), button -> selectedTextContext != null ? selectedTextContext.offsetX : 0, value -> {
+  public final FloatButtonWidget offsetXButton = new FloatButtonWidget(this.width / 2 - 10, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.offsetX"), x -> TextBridge.translatable("message.mishanguc.offsetX.composed", x), button -> selectedTextContext != null ? selectedTextContext.offsetX : 0, value -> {
     changed = true;
     if (selectedTextContext != null) {
       selectedTextContext.offsetX = value;
@@ -277,7 +281,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第一行：Y偏移。
    */
-  public final FloatButtonWidget offsetYButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.offsetY"), x -> new TranslatableText("message.mishanguc.offsetY.composed", x), button -> selectedTextContext != null ? selectedTextContext.offsetY : 0, value -> {
+  public final FloatButtonWidget offsetYButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.offsetY"), x -> TextBridge.translatable("message.mishanguc.offsetY.composed", x), button -> selectedTextContext != null ? selectedTextContext.offsetY : 0, value -> {
     changed = true;
     if (selectedTextContext != null) {
       selectedTextContext.offsetY = value;
@@ -288,7 +292,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第一行：Z偏移。
    */
-  public final FloatButtonWidget offsetZButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.offsetZ"), x -> new TranslatableText("message.mishanguc.offsetZ.composed", x), button -> selectedTextContext != null ? selectedTextContext.offsetZ : 0, value -> {
+  public final FloatButtonWidget offsetZButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.offsetZ"), x -> TextBridge.translatable("message.mishanguc.offsetZ.composed", x), button -> selectedTextContext != null ? selectedTextContext.offsetZ : 0, value -> {
     changed = true;
     if (selectedTextContext != null) {
       selectedTextContext.offsetZ = value;
@@ -301,21 +305,21 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    *
    * @see #customColorTextField
    */
-  public final FloatButtonWidget colorButton = new FloatButtonWidget(0, 0, 40, 20, new TranslatableText("message.mishanguc.color"), colorId -> {
+  public final FloatButtonWidget colorButton = new FloatButtonWidget(0, 0, 40, 20, TextBridge.translatable("message.mishanguc.color"), colorId -> {
     if (colorId == -1) {
-      return new TranslatableText("message.mishanguc.color");
+      return TextBridge.translatable("message.mishanguc.color");
     } else if (colorId == -2 && selectedTextContext != null) {
-      return new TranslatableText("message.mishanguc.color.composed",
-          new LiteralText("")
-              .append(new LiteralText("■").styled(style -> style.withColor(TextColor.fromRgb(selectedTextContext.color))))
-              .append(new LiteralText(String.format("#%06x", selectedTextContext.color))));
+      return TextBridge.translatable("message.mishanguc.color.composed",
+          TextBridge.empty()
+              .append(TextBridge.literal("■").styled(style -> style.withColor(TextColor.fromRgb(selectedTextContext.color))))
+              .append(TextBridge.literal(String.format("#%06x", selectedTextContext.color))));
     }
     final DyeColor dyeColor = DyeColor.byId((int) colorId);
-    return new TranslatableText("message.mishanguc.color.composed",
-        new LiteralText("")
-            .append(new LiteralText("■")
+    return TextBridge.translatable("message.mishanguc.color.composed",
+        TextBridge.empty()
+            .append(TextBridge.literal("■")
                 .styled(style -> style.withColor(TextColor.fromRgb(dyeColor.getSignColor()))))
-            .append(new TranslatableText("color.minecraft." + dyeColor.asString())));
+            .append(TextBridge.translatable("color.minecraft." + dyeColor.asString())));
   }, button -> {
     changed = true;
     if (selectedTextContext == null) {
@@ -346,7 +350,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    *
    * @see #colorButton
    */
-  public final TextFieldWidget customColorTextField = Util.make(new TextFieldWidget(MinecraftClient.getInstance().textRenderer, 0, 0, 50, 20, new TranslatableText("message.mishanguc.custom_color")), widget ->
+  public final TextFieldWidget customColorTextField = Util.make(new TextFieldWidget(MinecraftClient.getInstance().textRenderer, 0, 0, 50, 20, TextBridge.translatable("message.mishanguc.custom_color")), widget ->
       widget.setChangedListener(
           s -> {
             changed = true;
@@ -364,7 +368,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * 下方第二行：X旋转。
    */
   @ApiStatus.AvailableSince("0.1.6")
-  public final FloatButtonWidget rotationXButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.rotationX"), x -> new TranslatableText("message.mishanguc.rotationX.composed", x), button -> selectedTextContext != null ? selectedTextContext.rotationX : 0, value -> {
+  public final FloatButtonWidget rotationXButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.rotationX"), x -> TextBridge.translatable("message.mishanguc.rotationX.composed", x), button -> selectedTextContext != null ? selectedTextContext.rotationX : 0, value -> {
     changed = true;
     if (selectedTextContext != null) selectedTextContext.rotationX = value;
   }, button -> {
@@ -374,7 +378,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * 下方第二行：Y旋转。
    */
   @ApiStatus.AvailableSince("0.1.6")
-  public final FloatButtonWidget rotationYButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.rotationY"), x -> new TranslatableText("message.mishanguc.rotationY.composed", x), button -> selectedTextContext != null ? selectedTextContext.rotationY : 0, value -> {
+  public final FloatButtonWidget rotationYButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.rotationY"), x -> TextBridge.translatable("message.mishanguc.rotationY.composed", x), button -> selectedTextContext != null ? selectedTextContext.rotationY : 0, value -> {
     changed = true;
     if (selectedTextContext != null) selectedTextContext.rotationY = value;
   }, button -> {
@@ -384,7 +388,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * 下方第二行：Z旋转。
    */
   @ApiStatus.AvailableSince("0.1.6")
-  public final FloatButtonWidget rotationZButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.rotationZ"), x -> new TranslatableText("message.mishanguc.rotationZ.composed", x), button -> selectedTextContext != null ? selectedTextContext.rotationZ : 0, value -> {
+  public final FloatButtonWidget rotationZButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.rotationZ"), x -> TextBridge.translatable("message.mishanguc.rotationZ.composed", x), button -> selectedTextContext != null ? selectedTextContext.rotationZ : 0, value -> {
     changed = true;
     if (selectedTextContext != null) selectedTextContext.rotationZ = value;
   }, button -> {
@@ -393,7 +397,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第二行：X缩放。
    */
-  public final FloatButtonWidget scaleXButton = new FloatButtonWidget(this.width / 2 + 90, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.scaleX"), x -> new TranslatableText("message.mishanguc.scaleX.composed", x), button -> selectedTextContext != null ? selectedTextContext.scaleX : 1, value -> {
+  public final FloatButtonWidget scaleXButton = new FloatButtonWidget(this.width / 2 + 90, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.scaleX"), x -> TextBridge.translatable("message.mishanguc.scaleX.composed", x), button -> selectedTextContext != null ? selectedTextContext.scaleX : 1, value -> {
     changed = true;
     if (selectedTextContext != null) {
       selectedTextContext.scaleX = value;
@@ -404,7 +408,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第二行：Y缩放。
    */
-  public final FloatButtonWidget scaleYButton = new FloatButtonWidget(this.width / 2 + 140, this.height - 50, 40, 20, new TranslatableText("message.mishanguc.scaleY"), x -> new TranslatableText("message.mishanguc.scaleY.composed", x), button -> selectedTextContext != null ? selectedTextContext.scaleY : 1, value -> {
+  public final FloatButtonWidget scaleYButton = new FloatButtonWidget(this.width / 2 + 140, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.scaleY"), x -> TextBridge.translatable("message.mishanguc.scaleY.composed", x), button -> selectedTextContext != null ? selectedTextContext.scaleY : 1, value -> {
     changed = true;
     if (selectedTextContext != null) {
       selectedTextContext.scaleY = value;
@@ -415,7 +419,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第二行：水平对齐方式。
    */
-  public final FloatButtonWidget horizontalAlignButton = new FloatButtonWidget(0, 0, 50, 20, new TranslatableText("message.mishanguc.horizontal_align"), f -> f != -1 ? new TranslatableText("message.mishanguc.horizontal_align.composed", HorizontalAlign.values()[(int) f].getName()) : new TranslatableText("message.mishanguc.horizontal_align"), b -> selectedTextContext != null ? selectedTextContext.horizontalAlign.ordinal() : -1, f -> {
+  public final FloatButtonWidget horizontalAlignButton = new FloatButtonWidget(0, 0, 50, 20, TextBridge.translatable("message.mishanguc.horizontal_align"), f -> f != -1 ? TextBridge.translatable("message.mishanguc.horizontal_align.composed", HorizontalAlign.values()[(int) f].getName()) : TextBridge.translatable("message.mishanguc.horizontal_align"), b -> selectedTextContext != null ? selectedTextContext.horizontalAlign.ordinal() : -1, f -> {
     if (selectedTextContext != null) {
       selectedTextContext.horizontalAlign = HorizontalAlign.values()[(int) f];
     }
@@ -425,7 +429,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第二行：垂直对齐方式。
    */
-  public final FloatButtonWidget verticalAlignButton = new FloatButtonWidget(0, 0, 50, 20, new TranslatableText("message.mishanguc.vertical_align"), f -> f != -1 ? new TranslatableText("message.mishanguc.vertical_align.composed", VerticalAlign.values()[(int) f].getName()) : new TranslatableText("message.mishanguc.vertical_align"), b -> selectedTextContext != null ? selectedTextContext.verticalAlign.ordinal() : -1, f -> {
+  public final FloatButtonWidget verticalAlignButton = new FloatButtonWidget(0, 0, 50, 20, TextBridge.translatable("message.mishanguc.vertical_align"), f -> f != -1 ? TextBridge.translatable("message.mishanguc.vertical_align.composed", VerticalAlign.values()[(int) f].getName()) : TextBridge.translatable("message.mishanguc.vertical_align"), b -> selectedTextContext != null ? selectedTextContext.verticalAlign.ordinal() : -1, f -> {
     if (selectedTextContext != null) {
       selectedTextContext.verticalAlign = VerticalAlign.values()[(int) f];
     }
@@ -435,19 +439,19 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第二行：切换文字是否可以看穿。
    */
-  public final BooleanButtonWidget seeThroughButton = new BooleanButtonWidget(0, 0, 60, 20, new TranslatableText("message.mishanguc.see_through"), button -> selectedTextContext == null ? null : selectedTextContext.seeThrough, b -> {
+  public final BooleanButtonWidget seeThroughButton = new BooleanButtonWidget(0, 0, 60, 20, TextBridge.translatable("message.mishanguc.see_through"), button -> selectedTextContext == null ? null : selectedTextContext.seeThrough, b -> {
     changed = true;
     if (selectedTextContext != null) selectedTextContext.seeThrough = b;
-  }, b -> b == null ? new TranslatableText("message.mishanguc.see_through") : new TranslatableText("message.mishanguc.see_through.composed", new TranslatableText(b ? "options.on" : "options.off")), button -> {
+  }, b -> b == null ? TextBridge.translatable("message.mishanguc.see_through") : TextBridge.translatable("message.mishanguc.see_through.composed", TextBridge.translatable(b ? "options.on" : "options.off")), button -> {
   }, descriptionAtom);
 
   /**
    * 下方第二行：绝对模式。
    */
-  public final BooleanButtonWidget absoluteButton = new BooleanButtonWidget(0, 0, 50, 20, new TranslatableText("message.mishanguc.absolute"), button -> selectedTextContext != null ? selectedTextContext.absolute : null, b -> {
+  public final BooleanButtonWidget absoluteButton = new BooleanButtonWidget(0, 0, 50, 20, TextBridge.translatable("message.mishanguc.absolute"), button -> selectedTextContext != null ? selectedTextContext.absolute : null, b -> {
     changed = true;
     if (selectedTextContext != null) selectedTextContext.absolute = b;
-  }, b -> b == null ? new TranslatableText("message.mishanguc.absolute.description") : new TranslatableText("message.mishanguc.absolute.composed", new TranslatableText(b ? "options.on" : "options.off")), button -> {
+  }, b -> b == null ? TextBridge.translatable("message.mishanguc.absolute.description") : TextBridge.translatable("message.mishanguc.absolute.composed", TextBridge.translatable(b ? "options.on" : "options.off")), button -> {
   }, descriptionAtom);
 
 
@@ -485,49 +489,49 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第三行：上移按钮。
    */
-  public final ButtonWidget moveUpButton = new ButtonWidget(this.width - 20, this.height - 50, 30, 20, new TranslatableText("message.mishanguc.moveUp"), button -> {
+  public final ButtonWidget moveUpButton = new ButtonWidget(this.width - 20, this.height - 50, 30, 20, TextBridge.translatable("message.mishanguc.moveUp"), button -> {
     if (selectedTextField == null) return;
     int i = textFieldListScreen.children().indexOf(textFieldListScreen.getSelected());
     final TextContext textContext = AbstractSignBlockEditScreen.this.textContextsEditing.get(i);
     removeTextField(i);
     if (i > 0) i--;
     addTextField(i, textContext, false);
-  }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(new TranslatableText("message.mishanguc.moveUp.description")));
+  }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(TextBridge.translatable("message.mishanguc.moveUp.description")));
 
   /**
    * 下方第三行：下移按钮。
    */
-  public final ButtonWidget moveDownButton = new ButtonWidget(this.width - 20, this.height - 50, 30, 20, new TranslatableText("message.mishanguc.moveDown"), button -> {
+  public final ButtonWidget moveDownButton = new ButtonWidget(this.width - 20, this.height - 50, 30, 20, TextBridge.translatable("message.mishanguc.moveDown"), button -> {
     if (selectedTextField == null) return;
     int i = textFieldListScreen.children().indexOf(textFieldListScreen.getSelected());
     final TextContext textContext = AbstractSignBlockEditScreen.this.textContextsEditing.get(i);
     removeTextField(i);
     if (i < textFieldListScreen.children().size()) i++;
     addTextField(i, textContext, false);
-  }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(new TranslatableText("message.mishanguc.moveDown.description")));
+  }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(TextBridge.translatable("message.mishanguc.moveDown.description")));
 
   /**
    * 下方第三行：重排按钮。
    */
-  public final ButtonWidget rearrangeButton = new ButtonWidget(this.width / 2 + 190, this.height - 50, 70, 20, new TranslatableText("message.mishanguc.rearrange"), button -> {
+  public final ButtonWidget rearrangeButton = new ButtonWidget(this.width / 2 + 190, this.height - 50, 70, 20, TextBridge.translatable("message.mishanguc.rearrange"), button -> {
     rearrange();
     descriptionAtom.set(REARRANGE_SUCCESS_NOTICE);
   }, (a, b, c, d) -> {
     if (descriptionAtom.get() != REARRANGE_SUCCESS_NOTICE)
-      descriptionAtom.set(new TranslatableText("message.mishanguc.rearrange.tooltip"));
+      descriptionAtom.set(TextBridge.translatable("message.mishanguc.rearrange.tooltip"));
   });
 
   /**
    * 下方第三行：完成编辑按钮。
    */
   public final ButtonWidget finishButton = new ButtonWidget(this.width / 2 - 100, this.height - 30, 120, 20, ScreenTexts.DONE, buttonWidget -> this.finishEditing(), (button, matrices, mouseX, mouseY) ->
-      descriptionAtom.set(new TranslatableText("message.mishanguc.finish.description")));
+      descriptionAtom.set(TextBridge.translatable("message.mishanguc.finish.description")));
 
   /**
    * 下方第三行：取消编辑按钮。
    */
   public final ButtonWidget cancelButton = new ButtonWidget(this.width / 2, height - 30, 40, 20, ScreenTexts.CANCEL, button -> this.cancelEditing(), (button, matrices, mouseX, mouseY) ->
-      descriptionAtom.set(new TranslatableText("message.mishanguc.cancel.description")));
+      descriptionAtom.set(TextBridge.translatable("message.mishanguc.cancel.description")));
 
   /**
    * 下方第三行：清除所有文本的按钮。
@@ -554,7 +558,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * 下方第三行：翻转排版当前文本按钮。
    */
   @ApiStatus.AvailableSince("0.1.7")
-  public final ButtonWidget flipButton = new ButtonWidget(this.width / 2, this.height - 50, 50, 20, new TranslatableText("message.mishanguc.flip"), button -> {
+  public final ButtonWidget flipButton = new ButtonWidget(this.width / 2, this.height - 50, 50, 20, TextBridge.translatable("message.mishanguc.flip"), button -> {
     if (hasControlDown()) {
       for (TextContext textContext : AbstractSignBlockEditScreen.this.textContextsEditing) {
         textContext.flip();
@@ -564,11 +568,11 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         selectedTextContext.flip();
       }
     }
-  }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(new TranslatableText("message.mishanguc.flip.description")));
+  }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(TextBridge.translatable("message.mishanguc.flip.description")));
 
 
   public AbstractSignBlockEditScreen(T entity, BlockPos blockPos, List<TextContext> textContextsEditing) {
-    super(new TranslatableText("message.mishanguc.sign_edit"));
+    super(TextBridge.translatable("message.mishanguc.sign_edit"));
     this.entity = entity;
     this.blockPos = blockPos;
     this.textContextsEditing = textContextsEditing;
@@ -672,7 +676,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   @Override
   public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
     textFieldListScreen.render(matrices, mouseX, mouseY, delta);
-    descriptionAtom.set(LiteralText.EMPTY);
+    descriptionAtom.set(TextBridge.empty());
     super.render(matrices, mouseX, mouseY, delta);
     final Text description = descriptionAtom.get();
     final MultilineText multilineText = MultilineText.create(textRenderer, description, width);
@@ -682,7 +686,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         height - 75, 9,
         0xcccccc);
     if (placeHolder.visible) {
-      final MutableText text0 = new TranslatableText("message.mishanguc.or");
+      final MutableText text0 = TextBridge.translatable("message.mishanguc.or");
       textRenderer.drawWithShadow(
           matrices,
           text0,
@@ -724,13 +728,13 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
             height / 4,
             width - 4,
             15,
-            new TranslatableText("message.mishanguc.text_field"));
+            TextBridge.translatable("message.mishanguc.text_field"));
     textFieldWidget.setMaxLength(Integer.MAX_VALUE);
     if (textContext.extra != null) {
       textFieldWidget.setText(String.format("-%s %s", textContext.extra.getId(), textContext.extra.asStringArgs()));
     } else if (textContext.text != null) {
-      if (textContext.text instanceof LiteralText && textContext.text.getSiblings().isEmpty() && textContext.text.getStyle().isEmpty()) {
-        final String text = textContext.text.asString();
+      if (textContext.text instanceof LiteralText literalText && textContext.text.getSiblings().isEmpty() && textContext.text.getStyle().isEmpty()) {
+        final String text = literalText.getRawString();
         if (Pattern.compile("^-(\\w+?) (.+)$").matcher(text).matches()) {
           textFieldWidget.setText("-literal " + text);
         } else {
@@ -754,7 +758,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
               final String value = matcher.group(2);
               switch (name) {
                 case "literal":
-                  textContext1.text = new LiteralText(value);
+                  textContext1.text = TextBridge.literal(value);
                   break;
                 case "json":
                   try {
@@ -764,18 +768,18 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
                   }
                   break;
                 default:
-                  final TextSpecial textSpecial = TextSpecial.fromStringArgs(textContext1, name, value);
-                  if (textSpecial == null) {
+                  final SpecialDrawable specialDrawable = SpecialDrawable.fromStringArgs(textContext1, name, value);
+                  if (specialDrawable == null) {
                     textContext1.extra = null;
-                    textContext1.text = new LiteralText(s);
-                  } else if (textSpecial != TextSpecial.INVALID) {
-                    textContext1.extra = textSpecial;
-                    textContext1.text = new LiteralText("");
+                    textContext1.text = TextBridge.literal(s);
+                  } else if (specialDrawable != SpecialDrawable.INVALID) {
+                    textContext1.extra = specialDrawable;
+                    textContext1.text = TextBridge.literal("");
                   } // 如果为 INVALID 则不执行操作。
               }
             } else {
               textContext1.extra = null;
-              textContext1.text = new LiteralText(s);
+              textContext1.text = TextBridge.literal(s);
             }
           }
           changed = true;

@@ -20,7 +20,7 @@ import java.util.Objects;
  * 表示一个纹理的特殊文本内容，用于渲染其纹理，一般来说这个纹理的宽度和高度是和文本的大小相同的。
  */
 @Beta
-public final class TextureTextSpecial implements TextSpecial {
+public final class TextureTextSpecial implements SpecialDrawable {
   private final Identifier identifier;
   private final TextContext textContext;
 
@@ -78,8 +78,13 @@ public final class TextureTextSpecial implements TextSpecial {
   }
 
   @Override
-  public String getId() {
+  public @NotNull String getId() {
     return "texture";
+  }
+
+  @Override
+  public @NotNull SpecialDrawableType<TextureSpecialDrawable> getType() {
+    return SpecialDrawableTypes.TEXTURE;
   }
 
   @Override
@@ -93,15 +98,14 @@ public final class TextureTextSpecial implements TextSpecial {
   }
 
   @Override
-  public TextureTextSpecial cloneWithNewTextContext(@NotNull TextContext textContext) {
-    return new TextureTextSpecial(identifier, textContext);
+  public TextureSpecialDrawable cloneWithNewTextContext(@NotNull TextContext textContext) {
+    return new TextureSpecialDrawable(identifier, textContext);
   }
 
   @Override
-  public NbtCompound writeNbt(NbtCompound nbt) {
-    final NbtCompound nbtCompound = TextSpecial.super.writeNbt(nbt);
-    nbtCompound.putString("texture", identifier.toString());
-    return nbtCompound;
+  public void writeNbt(NbtCompound nbt) {
+    SpecialDrawable.super.writeNbt(nbt);
+    nbt.putString("texture", identifier.toString());
   }
 
   @Override

@@ -7,12 +7,17 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.util.TextBridge;
 
 /**
  * 简单的栏杆方块。基本上都是采用相同的纹理，如有使用也可以采用不同的纹理。其形状都是最基本的图形。
@@ -74,7 +79,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JModel getItemModel() {
+  public @NotNull JModel getItemModel() {
     return new JModel().parent("mishanguc:block/simple_handrail_inventory").textures(getTextures());
   }
 
@@ -121,8 +126,14 @@ public class SimpleHandrailBlock extends HandrailBlock {
   @Override
   public MutableText getName() {
     if (baseBlock != null) {
-      return new TranslatableText("block.mishanguc.simple_handrail", baseBlock.getName());
+      return TextBridge.translatable("block.mishanguc.simple_handrail", baseBlock.getName());
     } else return super.getName();
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
+    return VoxelShapes.empty();
   }
 
   public static class CentralBlock extends HandrailCentralBlock<SimpleHandrailBlock> {
@@ -144,7 +155,13 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public MutableText getName() {
       final Block block = baseBlock();
-      return block == null ? super.getName() : new TranslatableText("block.mishanguc.simple_handrail_central", block.getName());
+      return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_central", block.getName());
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
+      return VoxelShapes.empty();
     }
   }
 
@@ -163,7 +180,13 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public MutableText getName() {
       final Block block = baseBlock();
-      return block == null ? super.getName() : new TranslatableText("block.mishanguc.simple_handrail_corner", block.getName());
+      return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_corner", block.getName());
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
+      return VoxelShapes.empty();
     }
   }
 
@@ -175,7 +198,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Environment(EnvType.CLIENT)
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
-      final JTextures textures = baseRail.getTextures();
+      final JTextures textures = baseHandrail.getTextures();
       final Identifier modelIdentifier = getBlockModelId();
       pack.addModel(new JModel(new Identifier("mishanguc", "block/simple_handrail_stair_middle_center")).textures(textures), modelIdentifier);
       for (Shape shape : Shape.values()) {
@@ -189,7 +212,13 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public MutableText getName() {
       final Block block = baseBlock();
-      return block == null ? super.getName() : new TranslatableText("block.mishanguc.simple_handrail_stair", block.getName());
+      return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_stair", block.getName());
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
+      return VoxelShapes.empty();
     }
   }
 
@@ -200,14 +229,20 @@ public class SimpleHandrailBlock extends HandrailBlock {
 
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
-      pack.addModel(new JModel("mishanguc:block/simple_handrail_outer").textures(baseRail.getTextures()), getBlockModelId());
+      pack.addModel(new JModel("mishanguc:block/simple_handrail_outer").textures(baseHandrail.getTextures()), getBlockModelId());
     }
 
     // 不要注解为 @Environment(EnvType.CLIENT)
     @Override
     public MutableText getName() {
       final Block block = baseBlock();
-      return block == null ? super.getName() : new TranslatableText("block.mishanguc.simple_handrail_outer", block.getName());
+      return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_outer", block.getName());
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
+      return VoxelShapes.empty();
     }
   }
 }

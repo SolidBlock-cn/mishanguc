@@ -99,6 +99,7 @@ public final class MishangucBlockEntities {
   ));
 
   // 不做事情，但是会初始化类。
+  @SuppressWarnings("EmptyMethod")
   public static void init() {
 
   }

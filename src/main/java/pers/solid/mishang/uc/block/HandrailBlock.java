@@ -33,8 +33,16 @@ import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 import java.util.Map;
 
 /**
- * 栏杆方块。该方块目前放置在边缘的位置。<br>
- * 关于使用该方块的列表，请参见 {@link pers.solid.mishang.uc.blocks.HandrailBlocks}。
+ * <p>栏杆方块。栏杆方块共有 5 种形态：
+ * <ul>
+ *   <li>普通的栏杆，即这个类，这类方块放置在方块的接近边缘的位置。</li>
+ *   <li>中央的栏杆。这类方块往往途径方块正中央，并根据周围的方块来决定其形状。参见 {@link #central()}。</li>
+ *   <li>角落的栏杆。相当于两个普通的栏杆结合起来，形成一个角落的位置。参见 {@link #corner()}。</li>
+ *   <li>角落外部的栏杆。同样是角落，但只占了一个角落的位置，用于将两个不同方向的普通栏杆在第三个方块的位置连接起来。参见 {@link #outer()}</li>
+ *   <li>楼梯上的栏杆。显然，放在楼梯上，它可以是在楼梯位置的边缘或者中间，同时也有可能是在楼梯开始处、结束处或上升的过程中，参见 {@link #stair()}。</li>
+ *   </ul>
+ *   <p>五种栏杆方块共用同一个物品，物品放置时根据其位置和情形决定栏杆的形态。
+ * <p>关于使用该方块的列表，请参见 {@link pers.solid.mishang.uc.blocks.HandrailBlocks}。
  */
 public abstract class HandrailBlock extends HorizontalFacingBlock implements Waterloggable, BlockResourceGenerator, Handrails {
   /**
@@ -42,7 +50,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
    */
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
-  public static final Map<Direction, VoxelShape> SHAPES = MishangUtils.createHorizontalDirectionToShape(0, 0, 1, 16, 14, 2);
+  public static final Map<Direction, VoxelShape> SHAPES = MishangUtils.createHorizontalDirectionToShape(0, 0, 0.5, 16, 16, 2.5);
 
   public HandrailBlock(Settings settings) {
     super(settings);
@@ -191,10 +199,10 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (direction.getAxis().isHorizontal() && stateFrom.getBlock() instanceof Handrails) {
-      final Handrails block = (Handrails) stateFrom.getBlock();
-      return block.baseBlock() == this.baseBlock()
-          && block.connectsIn(stateFrom, direction.getOpposite(), state.get(FACING));
+    final Block block = stateFrom.getBlock();
+    if (direction.getAxis().isHorizontal() && block instanceof final Handrails handrails) {
+      return block.asItem() == asItem()
+          && handrails.connectsIn(stateFrom, direction.getOpposite(), state.get(FACING));
     }
     return super.isSideInvisible(state, stateFrom, direction);
   }
@@ -285,6 +293,10 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
    * @return 该方块对应的位于角落外部位置的方块。应该是直接返回一个常量实例的字段。
    */
   public abstract HandrailOuterBlock<? extends HandrailBlock> outer();
+
+  public final Block[] selfAndVariants() {
+    return new Block[]{this, central(), corner(), stair(), outer()};
+  }
 
   @Override
   public abstract @Nullable Block baseBlock();

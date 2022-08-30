@@ -2,7 +2,7 @@ package pers.solid.mishang.uc.util;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.MutableText;
 import net.minecraft.util.StringIdentifiable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -27,8 +27,8 @@ public enum HorizontalAlign implements StringIdentifiable {
     return M.get(this);
   }
 
-  public TranslatableText getName() {
-    return new TranslatableText("horizontal_align.mishanguc." + asString());
+  public MutableText getName() {
+    return TextBridge.translatable("horizontal_align.mishanguc." + asString());
   }
 
   /**

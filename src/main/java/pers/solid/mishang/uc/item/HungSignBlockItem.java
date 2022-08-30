@@ -12,10 +12,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -24,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 import java.util.Map;
@@ -75,9 +74,7 @@ public class HungSignBlockItem extends NamedBlockItem {
     map.forEach(
         (direction, textContexts) -> {
           tooltip.add(
-              new TranslatableText(
-                  "block.mishanguc.tooltip.hung_sign_block",
-                  new TranslatableText("direction." + direction.asString()))
+              TextBridge.translatable("block.mishanguc.tooltip.hung_sign_block", TextBridge.translatable("direction." + direction.asString()))
                   .formatted(Formatting.GRAY));
           textContexts.forEach(
               textContext -> {
@@ -104,10 +101,10 @@ public class HungSignBlockItem extends NamedBlockItem {
                 }));
     final ImmutableList<Text> build = appendable.build();
     if (!build.isEmpty()) {
-      final MutableText appendableText = new LiteralText("");
+      final MutableText appendableText = TextBridge.literal("");
       build.forEach(t -> appendableText.append(" ").append(t));
       text.append(
-          new LiteralText(" -" + appendableText.asTruncatedString(20)).formatted(Formatting.GRAY));
+          TextBridge.literal(" -" + appendableText.asTruncatedString(20)).formatted(Formatting.GRAY));
     }
     return text;
   }

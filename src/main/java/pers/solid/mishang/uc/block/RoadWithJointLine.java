@@ -15,7 +15,6 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Formatting;
@@ -26,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ public interface RoadWithJointLine extends Road {
             state.get(FACING) != direction.getOpposite(),
             getLineColor(state, direction),
             Either.left(direction),
-            getLineType(state, direction)));
+            getLineType(state, direction), state));
   }
 
   @Override
@@ -76,10 +76,10 @@ public interface RoadWithJointLine extends Road {
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     Road.super.appendRoadTooltip(stack, world, tooltip, options);
     tooltip.add(
-        new TranslatableText("block.mishanguc.tooltip.road_with_joint_line.1")
+        TextBridge.translatable("block.mishanguc.tooltip.road_with_joint_line.1")
             .formatted(Formatting.GRAY));
     tooltip.add(
-        new TranslatableText("block.mishanguc.tooltip.road_with_joint_line.2")
+        TextBridge.translatable("block.mishanguc.tooltip.road_with_joint_line.2")
             .formatted(Formatting.GRAY));
   }
 
@@ -108,6 +108,11 @@ public interface RoadWithJointLine extends Road {
       } else {
         return lineColor;
       }
+    }
+
+    @Override
+    public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
+      tooltip.add(TextBridge.translatable("lineType.joint.composed", lineColor.getName(), lineType.getName(), lineColorSide.getName(), lineTypeSide.getName()).formatted(Formatting.BLUE));
     }
 
     @Override

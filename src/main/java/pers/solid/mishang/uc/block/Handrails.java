@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,6 +14,7 @@ public interface Handrails {
   /**
    * @return 该楼梯方块的基础方块。如有需要可以为 {@code null}。注意该方法通常直接返回一个字段的值。
    */
+  @Contract(pure = true)
   @Nullable Block baseBlock();
 
   /**

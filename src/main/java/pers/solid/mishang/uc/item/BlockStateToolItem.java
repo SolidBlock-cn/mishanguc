@@ -10,7 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Property;
-import net.minecraft.text.*;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -20,6 +22,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,26 +39,21 @@ public class BlockStateToolItem extends BlockToolItem {
     final Collection<Property<?>> properties = blockState.getProperties();
     if (properties.isEmpty()) {
       player.sendMessage(
-          new TranslatableText(
-              "debug.mishanguc.blockStates.none",
-              String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()),
-              blockState.getBlock().getName().formatted(Formatting.BOLD))
-              .formatted(Formatting.RED), false);
+          TextBridge.translatable("debug.mishanguc.blockStates.none", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getBlock().getName().formatted(Formatting.BOLD))
+              .formatted(Formatting.RED),
+          false);
     } else {
       player.sendMessage(
-          new TranslatableText(
-              "debug.mishanguc.blockStates",
-              String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()),
-              blockState.getBlock().getName().formatted(Formatting.BOLD))
+          TextBridge.translatable("debug.mishanguc.blockStates", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getBlock().getName().formatted(Formatting.BOLD))
               .formatted(Formatting.YELLOW),
           false);
     }
     for (Property<?> property : properties) {
       final MutableText value = getFormattedValue(blockState, property);
       player.sendMessage(
-          new LiteralText("  ")
+          TextBridge.literal("  ")
               .append(
-                  new LiteralText(property.getName())
+                  TextBridge.literal(property.getName())
                       .styled(style -> style.withColor(TextColor.fromRgb(0xcccccc))))
               .append(" = ")
               .append(value),
@@ -69,7 +67,7 @@ public class BlockStateToolItem extends BlockToolItem {
   @NotNull
   private static <T extends Comparable<T>> MutableText getFormattedValue(BlockState blockState, Property<T> property) {
     final T propertyValue = blockState.get(property);
-    final MutableText value = new LiteralText(property.name(propertyValue));
+    final MutableText value = TextBridge.literal(property.name(propertyValue));
     if (property instanceof BooleanProperty) {
       value.formatted(propertyValue == Boolean.TRUE ? Formatting.GREEN : Formatting.RED);
     } else if (property instanceof IntProperty) {
@@ -80,7 +78,7 @@ public class BlockStateToolItem extends BlockToolItem {
 
   @Override
   public ActionResult useOnBlock(
-      PlayerEntity player,
+      ItemStack stack, PlayerEntity player,
       World world,
       BlockHitResult blockHitResult,
       Hand hand,
@@ -94,7 +92,7 @@ public class BlockStateToolItem extends BlockToolItem {
 
   @Override
   public ActionResult beginAttackBlock(
-      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!world.isClient()) return ActionResult.SUCCESS;
     return getBlockStateOf(player, world, pos, fluidIncluded);
   }
@@ -113,9 +111,9 @@ public class BlockStateToolItem extends BlockToolItem {
       final int fluidLevel = fluidState.getLevel();
       if (fluidLevel != 0) {
         player.sendMessage(
-            new LiteralText("  ")
+            TextBridge.literal("  ")
                 .append(
-                    new TranslatableText("debug.mishanguc.blockStates.fluidLevel")
+                    TextBridge.translatable("debug.mishanguc.blockStates.fluidLevel")
                         .styled(style -> style.withColor(TextColor.fromRgb(0xcccccc))))
                 .append(" = ")
                 .append(String.valueOf(fluidLevel)),
@@ -131,15 +129,15 @@ public class BlockStateToolItem extends BlockToolItem {
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        new TranslatableText("item.mishanguc.block_state_tool.tooltip").formatted(Formatting.GRAY));
+        TextBridge.translatable("item.mishanguc.block_state_tool.tooltip").formatted(Formatting.GRAY));
     final Boolean includesFluid = includesFluid(stack);
     if (includesFluid == null) {
       tooltip.add(
-          new TranslatableText("item.mishanguc.block_state_tool.tooltip.includesFluidWhileSneaking")
+          TextBridge.translatable("item.mishanguc.block_state_tool.tooltip.includesFluidWhileSneaking")
               .formatted(Formatting.GRAY));
     } else if (includesFluid) {
       tooltip.add(
-          new TranslatableText("item.mishanguc.block_state_tool.tooltip.includesFluid")
+          TextBridge.translatable("item.mishanguc.block_state_tool.tooltip.includesFluid")
               .formatted(Formatting.GRAY));
     }
   }

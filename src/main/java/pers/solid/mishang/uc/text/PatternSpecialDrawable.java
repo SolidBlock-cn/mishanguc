@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 
 // 本类是一个记录，但 Java 8 不支持记录，故转化为普通类。
-public final class PatternTextSpecial implements TextSpecial {
+public final class PatternTextSpecial implements SpecialDrawable {
   private final TextContext textContext;
   private final String shapeName;
   private final @Unmodifiable float[][] rectangles;
@@ -307,13 +307,18 @@ public final class PatternTextSpecial implements TextSpecial {
   }
 
   @Override
-  public String getId() {
+  public @NotNull String getId() {
     return "pattern";
   }
 
   @Override
-  public TextSpecial cloneWithNewTextContext(@NotNull TextContext textContext) {
-    return new PatternTextSpecial(textContext, shapeName, rectangles);
+  public @NotNull SpecialDrawableType<PatternSpecialDrawable> getType() {
+    return SpecialDrawableTypes.PATTERN;
+  }
+
+  @Override
+  public SpecialDrawable cloneWithNewTextContext(@NotNull TextContext textContext) {
+    return new PatternSpecialDrawable(textContext, shapeName, rectangles);
   }
 
   @Override
@@ -322,19 +327,19 @@ public final class PatternTextSpecial implements TextSpecial {
   }
 
   @Contract(value = "_,_ -> new", pure = true)
-  public static PatternTextSpecial fromNbt(TextContext textContext, NbtCompound nbt) {
+  public static PatternSpecialDrawable fromNbt(TextContext textContext, NbtCompound nbt) {
     final String shapeName = nbt.getString("shapeName");
     return fromName(textContext, shapeName);
   }
 
   @Override
-  public NbtCompound writeNbt(NbtCompound nbt) {
+  public void writeNbt(NbtCompound nbt) {
+    SpecialDrawable.super.writeNbt(nbt);
     nbt.putString("shapeName", shapeName);
-    return TextSpecial.super.writeNbt(nbt);
   }
 
-  public static PatternTextSpecial fromName(TextContext textContext, String shapeName) {
-    return new PatternTextSpecial(textContext, shapeName, NAME_TO_SHAPE.getOrDefault(shapeName, EMPTY));
+  public static PatternSpecialDrawable fromName(TextContext textContext, String shapeName) {
+    return new PatternSpecialDrawable(textContext, shapeName, NAME_TO_SHAPE.getOrDefault(shapeName, EMPTY));
   }
 
   @ApiStatus.AvailableSince("0.2.1")

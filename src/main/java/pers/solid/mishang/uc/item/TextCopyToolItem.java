@@ -39,6 +39,7 @@ import pers.solid.mishang.uc.block.HungSignBlock;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.*;
 
@@ -63,7 +64,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
     if (tag != null && tag.contains("texts", NbtType.LIST)) {
       final NbtList texts = tag.getList("texts", NbtType.COMPOUND);
       if (!texts.isEmpty()) {
-        tooltip.add(new TranslatableText("item.mishanguc.text_copy_tool.tooltip.3").formatted(Formatting.GRAY));
+        tooltip.add(TextBridge.translatable("item.mishanguc.text_copy_tool.tooltip.3").formatted(Formatting.GRAY));
         texts.stream().map(TextContext::fromNbt).map(TextContext::asStyledText).filter(Objects::nonNull).peek(text -> {
           final TextColor color = text.getStyle().getColor();
           if (color != null && color.getRgb() == 0) {
@@ -87,17 +88,16 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
             .filter(Objects::nonNull)
             .iterator());
     if (!texts.isEmpty()) {
-      MutableText appendable = new LiteralText("");
+      MutableText appendable = TextBridge.empty();
       texts.forEach(t -> appendable.append(" ").append(t));
       text.append(
-          new LiteralText(" -" + appendable.asTruncatedString(25)).formatted(Formatting.GRAY));
+          TextBridge.literal(" -" + appendable.asTruncatedString(25)).formatted(Formatting.GRAY));
     }
     return text;
   }
 
   @Override
-  public ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
-    final ItemStack stack = player.getStackInHand(hand);
+  public ActionResult useOnBlock(ItemStack stack, PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
     final BlockState blockState = world.getBlockState(blockPos);
     final BlockEntity blockEntity = world.getBlockEntity(blockPos);
@@ -129,20 +129,20 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
               } else if (possibleColor != color) {
                 // possible != null, color != null
                 // 由于只支持一个颜色，故仅使用第一个颜色。
-                player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.warn.colorConsistencyLimit").formatted(Formatting.YELLOW), true);
+                player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.warn.colorConsistencyLimit").formatted(Formatting.YELLOW), true);
               }
             }
             if (color == null) {
               // 由于只支持部分颜色，故这些颜色没有使用。
-              player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.warn.colorSelectionLimit").formatted(Formatting.YELLOW), true);
+              player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.warn.colorSelectionLimit").formatted(Formatting.YELLOW), true);
             }
           } else {
-            player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.warn.outOfBound").formatted(Formatting.YELLOW), true);
+            player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.warn.outOfBound").formatted(Formatting.YELLOW), true);
           }
         }
         blockEntity.markDirty();
         world.updateListeners(blockPos, blockState, blockState, 3);
-        player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.paste", Math.min(texts.size(), 4)), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.success.paste", Math.min(texts.size(), 4)), true);
         stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
         return ActionResult.SUCCESS;
       } else if (blockEntity instanceof WallSignBlockEntity) {
@@ -154,7 +154,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         }
         blockEntity.markDirty();
         world.updateListeners(blockPos, blockState, blockState, 3);
-        player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.paste", wallSignBlockEntity.textContexts.size()), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.success.paste", wallSignBlockEntity.textContexts.size()), true);
         stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
         return ActionResult.SUCCESS;
       } else if (blockEntity instanceof HungSignBlockEntity) {
@@ -187,16 +187,17 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         hungSignBlockEntity.texts = ImmutableMap.copyOf(newTexts);
         blockEntity.markDirty();
         world.updateListeners(blockPos, blockState, blockState, 3);
-        player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.paste", newTextsThisSide.size()), false);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.success.paste", newTextsThisSide.size()), false);
         stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
         return ActionResult.SUCCESS;
       } else {
         if (world.isClient) return ActionResult.PASS;
         // 点击的方块不是可以识别的告示牌方块。
-        player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.not_sign").formatted(Formatting.RED), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.not_sign").formatted(Formatting.RED), true);
+        return ActionResult.FAIL;
       }
     } catch (Throwable throwable) {
-      player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.unexpected").formatted(Formatting.RED), true);
+      player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.unexpected").formatted(Formatting.RED), true);
       LOGGER.error("Unexpected error found when pasting text", throwable);
     }
     return ActionResult.PASS;
@@ -206,7 +207,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
    * 持有该物品，左键（攻击，默认为左键）点击告示牌可复制其文字。如果被点击的告示牌不是文字，则不产生效果。若点击悬挂的告示牌，则只会复制其中一边的文字。
    */
   @Override
-  public ActionResult beginAttackBlock(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+  public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     // 本方法仅限在服务器上使用。
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     final ItemStack stack = player.getStackInHand(hand);
@@ -267,7 +268,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
     } else {
       if (world.isClient) return ActionResult.SUCCESS;
       // 点击的方块不是可以识别的告示牌方块。
-      player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.not_sign").formatted(Formatting.RED), true);
+      player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.not_sign").formatted(Formatting.RED), true);
       return ActionResult.FAIL;
     }
   }

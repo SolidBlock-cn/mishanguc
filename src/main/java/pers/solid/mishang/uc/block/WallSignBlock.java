@@ -27,7 +27,6 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -49,6 +48,7 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Map;
 
@@ -162,7 +162,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   public MutableText getName() {
     return baseBlock == null
         ? super.getName()
-        : new TranslatableText("block.mishanguc.wall_sign", baseBlock.getName());
+        : TextBridge.translatable("block.mishanguc.wall_sign", baseBlock.getName());
   }
 
   /**
@@ -216,7 +216,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
       // 这种情况下，告示牌被占用，玩家无权编辑。
       // In this case, the sign is occupied, and the players has not editing
       // permission.
-      player.sendMessage(new TranslatableText("message.mishanguc.no_editing_permission.occupied", editor.getName()), false);
+      player.sendMessage(TextBridge.translatable("message.mishanguc.no_editing_permission.occupied", editor.getName()), false);
       return ActionResult.FAIL;
     }
     // 此时告示牌已被编辑。

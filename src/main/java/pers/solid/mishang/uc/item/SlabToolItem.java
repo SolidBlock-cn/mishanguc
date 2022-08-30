@@ -47,7 +47,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
    */
   @Override
   public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-    Block block = state.getBlock();
+    final Block block = state.getBlock();
     try {
       if (state.contains(Properties.SLAB_TYPE)
           && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
