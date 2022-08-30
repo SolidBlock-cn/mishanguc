@@ -49,7 +49,7 @@ public class TextContext implements Cloneable {
           });
 
   /**
-   * 用于 {@link #flip()} 方法中，替换 {@link PatternTextSpecial} 中的样式。
+   * 用于 {@link #flip()} 方法中，替换 {@link PatternSpecialDrawable} 中的样式。
    */
   @ApiStatus.AvailableSince("0.2.0")
   @Unmodifiable
@@ -159,7 +159,7 @@ public class TextContext implements Cloneable {
    * 该对象的特殊渲染内容，如果存在，渲染时则会渲染它。此项通常用于特殊的渲染功能。
    */
   @ApiStatus.AvailableSince("0.2.0")
-  public @Nullable TextSpecial extra = null;
+  public @Nullable SpecialDrawable extra = null;
 
   /**
    * <p>该字段用来检测 {@link #bold}、{@link #italic}、{@link #underline}、{@link #strikethrough}、{@link #obfuscated} 是否发生改变。如果发生改变了，则该字段将与 {@code {bold, italic, underline, strikethrough, obfuscated}} 不相等，此时会通过 {@link #reformatText()} 重新更新 {@link #formattedText} 对象，同时更新此字段的值。。
@@ -287,7 +287,7 @@ public class TextContext implements Cloneable {
     obfuscated = nbt.getBoolean("obfuscated");
     absolute = nbt.getBoolean("absolute");
 
-    extra = nbt.contains("extra", NbtElement.COMPOUND_TYPE) ? TextSpecial.fromNbt(this, nbt.getCompound("extra")) : null;
+    extra = nbt.contains("extra", NbtElement.COMPOUND_TYPE) ? SpecialDrawable.fromNbt(this, nbt.getCompound("extra")) : null;
   }
 
   @Environment(EnvType.CLIENT)
@@ -477,7 +477,7 @@ public class TextContext implements Cloneable {
     if (extra == null) {
       nbt.remove("extra");
     } else {
-      nbt.put("extra", extra.writeNbt(new NbtCompound()));
+      nbt.put("extra", extra.createNbt());
     }
   }
 
@@ -526,12 +526,12 @@ public class TextContext implements Cloneable {
       }
       text = Text.literal(stringBuilder.toString());
     }
-    if (extra instanceof final PatternTextSpecial patternTextSpecial) {
+    if (extra instanceof final PatternSpecialDrawable patternTextSpecial) {
       final String shapeName = patternTextSpecial.shapeName();
       if (flipPatternNameReplacement.containsKey(shapeName)) {
-        extra = PatternTextSpecial.fromName(this, flipPatternNameReplacement.get(shapeName));
+        extra = PatternSpecialDrawable.fromName(this, flipPatternNameReplacement.get(shapeName));
       } else if (flipPatternNameReplacement.inverse().containsKey(shapeName)) {
-        extra = PatternTextSpecial.fromName(this, flipPatternNameReplacement.inverse().get(shapeName));
+        extra = PatternSpecialDrawable.fromName(this, flipPatternNameReplacement.inverse().get(shapeName));
       }
     }
     return this;

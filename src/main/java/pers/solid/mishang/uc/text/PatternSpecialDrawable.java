@@ -21,7 +21,7 @@ import pers.solid.mishang.uc.mixin.TextRendererAccessor;
 
 import java.util.Map;
 
-public record PatternTextSpecial(TextContext textContext, String shapeName, @Unmodifiable float[][] rectangles) implements TextSpecial {
+public record PatternSpecialDrawable(TextContext textContext, String shapeName, @Unmodifiable float[][] rectangles) implements SpecialDrawable {
   private static final float[][] EMPTY = {};
   private static final float[][] ARROW_LEFT =
       {
@@ -279,13 +279,18 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
   }
 
   @Override
-  public String getId() {
+  public @NotNull String getId() {
     return "pattern";
   }
 
   @Override
-  public TextSpecial cloneWithNewTextContext(@NotNull TextContext textContext) {
-    return new PatternTextSpecial(textContext, shapeName, rectangles);
+  public @NotNull SpecialDrawableType<PatternSpecialDrawable> getType() {
+    return SpecialDrawableTypes.PATTERN;
+  }
+
+  @Override
+  public SpecialDrawable cloneWithNewTextContext(@NotNull TextContext textContext) {
+    return new PatternSpecialDrawable(textContext, shapeName, rectangles);
   }
 
   @Override
@@ -294,19 +299,19 @@ public record PatternTextSpecial(TextContext textContext, String shapeName, @Unm
   }
 
   @Contract(value = "_,_ -> new", pure = true)
-  public static PatternTextSpecial fromNbt(TextContext textContext, NbtCompound nbt) {
+  public static PatternSpecialDrawable fromNbt(TextContext textContext, NbtCompound nbt) {
     final String shapeName = nbt.getString("shapeName");
     return fromName(textContext, shapeName);
   }
 
   @Override
-  public NbtCompound writeNbt(NbtCompound nbt) {
+  public void writeNbt(NbtCompound nbt) {
+    SpecialDrawable.super.writeNbt(nbt);
     nbt.putString("shapeName", shapeName);
-    return TextSpecial.super.writeNbt(nbt);
   }
 
-  public static PatternTextSpecial fromName(TextContext textContext, String shapeName) {
-    return new PatternTextSpecial(textContext, shapeName, NAME_TO_SHAPE.getOrDefault(shapeName, EMPTY));
+  public static PatternSpecialDrawable fromName(TextContext textContext, String shapeName) {
+    return new PatternSpecialDrawable(textContext, shapeName, NAME_TO_SHAPE.getOrDefault(shapeName, EMPTY));
   }
 
   @ApiStatus.AvailableSince("0.2.1")

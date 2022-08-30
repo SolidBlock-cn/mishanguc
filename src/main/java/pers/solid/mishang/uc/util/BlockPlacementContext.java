@@ -212,6 +212,7 @@ public class BlockPlacementContext {
     } else if (hitEntity != null && entityToPlace != null) {
       entityToPlace.readNbt(hitEntity.createNbt());
       entityToPlace.markDirty();
+      world.updateListeners(posToPlace, entityToPlace.getCachedState(), entityToPlace.getCachedState(), Block.NOTIFY_ALL);
     }
   }
 
