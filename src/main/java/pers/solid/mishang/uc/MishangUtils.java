@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.MishangucItems;
-import pers.solid.mishang.uc.text.PatternTextSpecial;
+import pers.solid.mishang.uc.text.PatternSpecialDrawable;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
@@ -309,7 +309,7 @@ public class MishangUtils {
         final String rawString = literalTextContent.string();
         if (ARROW_TO_NAMES.containsKey(rawString)) {
           textContext.text = null;
-          textContext.extra = PatternTextSpecial.fromName(textContext, ARROW_TO_NAMES.get(rawString));
+          textContext.extra = PatternSpecialDrawable.fromName(textContext, ARROW_TO_NAMES.get(rawString));
           if ("←".equals(rawString) || "→".equals(rawString) || "↑".equals(rawString) || "↓".equals(rawString)) {
             textContext.size /= 1;
           } else {

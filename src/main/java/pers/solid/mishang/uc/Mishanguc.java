@@ -35,6 +35,7 @@ import pers.solid.mishang.uc.item.BlockToolItem;
 import pers.solid.mishang.uc.item.HotbarScrollInteraction;
 import pers.solid.mishang.uc.item.InteractsWithEntity;
 import pers.solid.mishang.uc.item.MishangucItems;
+import pers.solid.mishang.uc.text.SpecialDrawableTypes;
 
 public class Mishanguc implements ModInitializer {
   public static final Logger MISHANG_LOGGER = LoggerFactory.getLogger("Mishang Urban Construction");
@@ -314,6 +315,7 @@ public class Mishanguc implements ModInitializer {
     MishangucBlocks.init();
     MishangucItems.init();
     MishangucBlockEntities.init();
+    SpecialDrawableTypes.init();
 
     registerEvents();
     registerNetworkingReceiver();

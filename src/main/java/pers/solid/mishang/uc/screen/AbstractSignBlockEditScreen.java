@@ -33,9 +33,9 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
-import pers.solid.mishang.uc.text.PatternTextSpecial;
+import pers.solid.mishang.uc.text.PatternSpecialDrawable;
+import pers.solid.mishang.uc.text.SpecialDrawable;
 import pers.solid.mishang.uc.text.TextContext;
-import pers.solid.mishang.uc.text.TextSpecial;
 import pers.solid.mishang.uc.util.HorizontalAlign;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
@@ -155,7 +155,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public final ButtonWidget applyLeftArrowTemplateButton = new ButtonWidget(width / 2 - 150, 70, 120, 20, Text.translatable("message.mishanguc.apply_left_arrow_template"), (ButtonWidget button) -> {
     BlockEntityWithText entity = AbstractSignBlockEditScreen.this.entity;
     final TextContext textContext0 = entity.getDefaultTextContext();
-    textContext0.extra = PatternTextSpecial.fromName(textContext0, "al");
+    textContext0.extra = PatternSpecialDrawable.fromName(textContext0, "al");
     textContext0.size = 8;
     textContext0.offsetX = -4;
     textContext0.absolute = true;
@@ -177,7 +177,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public final ButtonWidget applyRightArrowTemplateButton = new ButtonWidget(width / 2 - 50, 70, 120, 20, Text.translatable("message.mishanguc.apply_right_arrow_template"), (ButtonWidget button) -> {
     BlockEntityWithText entity = AbstractSignBlockEditScreen.this.entity;
     final TextContext textContext0 = entity.getDefaultTextContext();
-    textContext0.extra = PatternTextSpecial.fromName(textContext0, "ar");
+    textContext0.extra = PatternSpecialDrawable.fromName(textContext0, "ar");
     textContext0.size = 8;
     textContext0.offsetX = 4;
     textContext0.absolute = true;
@@ -837,12 +837,12 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
                   }
                   break;
                 default:
-                  final TextSpecial textSpecial = TextSpecial.fromStringArgs(textContext1, name, value);
-                  if (textSpecial == null) {
+                  final SpecialDrawable specialDrawable = SpecialDrawable.fromStringArgs(textContext1, name, value);
+                  if (specialDrawable == null) {
                     textContext1.extra = null;
                     textContext1.text = Text.literal(s);
-                  } else if (textSpecial != TextSpecial.INVALID) {
-                    textContext1.extra = textSpecial;
+                  } else if (specialDrawable != SpecialDrawable.INVALID) {
+                    textContext1.extra = specialDrawable;
                     textContext1.text = Text.literal("");
                   } // 如果为 INVALID 则不执行操作。
               }
