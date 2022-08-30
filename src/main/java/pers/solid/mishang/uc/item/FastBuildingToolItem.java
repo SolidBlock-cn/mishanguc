@@ -20,10 +20,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -40,6 +38,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.util.BlockMatchingRule;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Iterator;
 import java.util.List;
@@ -64,7 +63,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
 
   @Override
   public ActionResult useOnBlock(
-      PlayerEntity player,
+      ItemStack stack, PlayerEntity player,
       World world,
       BlockHitResult blockHitResult,
       Hand hand,
@@ -76,7 +75,6 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
     final Direction side = blockHitResult.getSide();
     final BlockPos centerBlockPos = blockHitResult.getBlockPos();
     final BlockState centerState = world.getBlockState(centerBlockPos);
-    final ItemStack stack = player.getStackInHand(hand);
     final BlockPlacementContext blockPlacementContext =
         new BlockPlacementContext(
             world, centerBlockPos, player, stack, blockHitResult, fluidIncluded);
@@ -103,13 +101,12 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
 
   @Override
   public ActionResult beginAttackBlock(
-      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!player.getAbilities().creativeMode) {
       // 仅限创造模式玩家使用。
       return ActionResult.PASS;
     }
     if (!world.isClient()) {
-      final ItemStack stack = player.getMainHandStack();
       final int range = this.getRange(stack);
       final BlockMatchingRule matchingRule = this.getMatchingRule(stack);
       for (BlockPos pos1 : matchingRule.getPlainValidBlockPoss(world, pos, direction, range)) {
@@ -150,17 +147,14 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        new TranslatableText("item.mishanguc.fast_building_tool.tooltip.1")
+        TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.1")
             .formatted(Formatting.GRAY));
-    tooltip.add(new TranslatableText("item.mishanguc.fast_building_tool.tooltip.2").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.2").formatted(Formatting.GRAY));
     tooltip.add(
-        new TranslatableText(
-            "item.mishanguc.fast_building_tool.tooltip.range", new LiteralText(Integer.toString(this.getRange(stack))).formatted(Formatting.GREEN))
+        TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.range", TextBridge.literal(Integer.toString(this.getRange(stack))).formatted(Formatting.GREEN))
             .formatted(Formatting.GRAY));
     tooltip.add(
-        new TranslatableText(
-            "item.mishanguc.fast_building_tool.tooltip.matchingRule",
-            this.getMatchingRule(stack).getName().formatted(Formatting.GREEN))
+        TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.matchingRule", this.getMatchingRule(stack).getName().formatted(Formatting.GREEN))
             .formatted(Formatting.GRAY));
   }
 
@@ -236,7 +230,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
 
   @Override
   public Text getName(ItemStack stack) {
-    return new LiteralText("")
+    return TextBridge.literal("")
         .append(super.getName(stack))
         .append(" - ")
         .append(getMatchingRule(stack).getName());
@@ -347,7 +341,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
     final BlockMatchingRule newRule = RULES_TO_CYCLE.get(j);
     if (newRule != null) {
       stack.setSubNbt("MatchingRule", NbtString.of(newRule.getId().toString()));
-      final LiteralText text = new LiteralText("[ ");
+      final MutableText text = TextBridge.literal("[ ");
       for (Iterator<BlockMatchingRule> iterator = RULES_TO_CYCLE.iterator(); iterator.hasNext(); ) {
         BlockMatchingRule rule = iterator.next();
         final MutableText name = rule.getName();

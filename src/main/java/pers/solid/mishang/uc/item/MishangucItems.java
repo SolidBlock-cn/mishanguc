@@ -88,7 +88,23 @@ public final class MishangucItems {
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.2.1")
-  public static final ColorToolItem COLOR_TOOL = new ColorToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS), null);
+  public static final ColorToolItem COLOR_TOOL = new ColorToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxDamage(1024), null);
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final RoadToolItem ROAD_TOOL = new RoadToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxDamage(512));
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  @SimpleModel(parent = "item/handheld")
+  public static final TpToolItem TP_TOOL = new TpToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxDamage(2048));
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  @SimpleModel(parent = "item/handheld")
+  public static final GrowthToolItem GROWTH_TOOL = new GrowthToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxDamage(1024));
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  @SimpleModel(parent = "item/generated", texture = "item/diamond")
+  public static final HoldingToolItem CARRYING_TOOL = new HoldingToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxCount(1), null);
 
   private MishangucItems() {
   }

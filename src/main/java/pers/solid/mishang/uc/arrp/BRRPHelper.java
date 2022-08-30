@@ -1,12 +1,16 @@
 package pers.solid.mishang.uc.arrp;
 
+import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.blockstate.JBlockModel;
 import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.blockstate.JVariants;
+import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 
 import java.util.Map;
@@ -71,5 +75,15 @@ public final class BRRPHelper {
 
   public static Identifier slabOf(Identifier identifier) {
     return new Identifier(identifier.getNamespace(), slabOf(identifier.getPath()));
+  }
+
+  @ApiStatus.AvailableSince("0.2.4")
+  public static void addModelWithSlab(RuntimeResourcePack pack, JModel model, Identifier id, @Nullable Identifier slabModelId) {
+    pack.addModel(model, id);
+    if (slabModelId != null) {
+      final String slabParent = slabOf(model.parent);
+      pack.addModel(model.clone().parent(slabParent), slabModelId);
+      pack.addModel(model.clone().parent(slabParent + "_top"), slabModelId.brrp_append("_top"));
+    }
   }
 }

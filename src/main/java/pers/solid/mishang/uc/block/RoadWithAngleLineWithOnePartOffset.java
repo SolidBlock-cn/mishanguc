@@ -14,7 +14,6 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
@@ -23,9 +22,9 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
-import java.util.Objects;
 
 public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
   /**
@@ -76,10 +75,10 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     RoadWithAngleLine.super.appendRoadTooltip(stack, world, tooltip, options);
     tooltip.add(
-        new TranslatableText("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.1")
+        TextBridge.translatable("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.1")
             .formatted(Formatting.GRAY));
     tooltip.add(
-        new TranslatableText("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.2")
+        TextBridge.translatable("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.2")
             .formatted(Formatting.GRAY));
   }
 
@@ -100,16 +99,14 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
         variant.addVariant(
             String.format(
                 "facing=%s,axis=%s",
-                Objects.requireNonNull(
-                        HorizontalCornerDirection.fromDirections(direction, offsetDirection1))
+                HorizontalCornerDirection.fromDirections(direction, offsetDirection1)
                     .asString(),
                 direction.getAxis().asString()),
             new JBlockModel(id).y((int) (direction.asRotation())));
         variant.addVariant(
             String.format(
                 "facing=%s,axis=%s",
-                Objects.requireNonNull(
-                        HorizontalCornerDirection.fromDirections(direction, offsetDirection2))
+                HorizontalCornerDirection.fromDirections(direction, offsetDirection2)
                     .asString(),
                 direction.getAxis().asString()),
             new JBlockModel(id.brrp_append("_mirrored"))

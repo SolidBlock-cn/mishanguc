@@ -1,11 +1,17 @@
 plugins {
-    id 'fabric-loom' version '0.12-SNAPSHOT'
+    id 'fabric-loom' version '1.0-SNAPSHOT'
+    // Quiltflower 反编译器
+    id 'io.github.juuxel.loom-quiltflower' version '1.7.1'
     id 'maven-publish'
 
     // Modrinth
     id "com.modrinth.minotaur" version "2.+"
     // CurseGradle
     id 'com.matthewprenger.cursegradle' version '1.4.0'
+}
+
+quiltflower {
+    quiltflowerVersion = '1.8.1'
 }
 
 
@@ -116,9 +122,8 @@ println "当前版本更新记录："
 println content
 
 curseforge {
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in))
     println "输入 CurseForge 访问令牌："
-    apiKey = br.readLine()
+    apiKey = " "
     if (apiKey == null) apiKey = ' '
     project {
         id = '583071'
@@ -145,10 +150,9 @@ curseforge {
 // 将模组发布至 Modrinth
 
 modrinth {
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in))
     println "输入 Modrinth 访问令牌："
 
-    token = br.readLine() // 获取你在本教程的基础部分得到的GitHub访问令牌。
+    token = "" // 获取你在本教程的基础部分得到的GitHub访问令牌。
     projectId = "rItLmRo4" // 迷上城建模组的 Modrinth ID
     versionNumber = project.mod_version + '-' + project.minecraft_version
     versionType = 'beta'

@@ -2,7 +2,6 @@ package pers.solid.mishang.uc.arrp;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import net.devtech.arrp.api.RRPCallbackConditional;
 import net.devtech.arrp.api.RRPPreGenEntrypoint;
 import net.devtech.arrp.api.RuntimeResourcePack;
@@ -25,7 +24,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
@@ -85,7 +87,8 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   private static void writeRoadBlockModelWithSlab(
       AbstractRoadBlock block, String parent, JTextures textures) {
     final Identifier id = block.getBlockModelId();
-    final Identifier slabId = RoadSlabBlocks.BLOCK_TO_SLABS.get(block).getBlockModelId();
+    final AbstractRoadSlabBlock slab = RoadSlabBlocks.BLOCK_TO_SLABS.get(block);
+    final Identifier slabId = slab == null ? null : slab.getBlockModelId();
     writeRoadBlockModelWithSlab(parent, textures, id, slabId);
   }
 
@@ -99,9 +102,10 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   private static void writeRoadBlockModelWithSlabWithMirrored(
       AbstractRoadBlock block, String parent, JTextures textures) {
     final Identifier id = block.getBlockModelId();
-    final Identifier slabId = RoadSlabBlocks.BLOCK_TO_SLABS.get(block).getBlockModelId();
+    final AbstractRoadSlabBlock slab = RoadSlabBlocks.BLOCK_TO_SLABS.get(block);
+    final Identifier slabId = slab == null ? null : slab.getBlockModelId();
     writeRoadBlockModelWithSlab(parent, textures, id, slabId);
-    writeRoadBlockModelWithSlab(parent + "_mirrored", textures, id.brrp_append("_mirrored"), slabId.brrp_append("_mirrored"));
+    writeRoadBlockModelWithSlab(parent + "_mirrored", textures, id.brrp_append("_mirrored"), slabId == null ? null : slabId.brrp_append("_mirrored"));
   }
 
   /**
@@ -112,10 +116,12 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
    * @param id       道路方块的完整id。
    * @param slabId   该方块对应的台阶方块的完整id。
    */
-  private static void writeRoadBlockModelWithSlab(String parent, JTextures textures, Identifier id, Identifier slabId) {
+  private static void writeRoadBlockModelWithSlab(String parent, JTextures textures, @NotNull Identifier id, @Nullable Identifier slabId) {
     PACK.addModel(new JModel(blockIdentifier(parent)).textures(textures), id);
-    PACK.addModel(new JModel(BRRPHelper.slabOf(blockIdentifier(parent))).textures(textures), slabId);
-    PACK.addModel(new JModel(BRRPHelper.slabOf(blockIdentifier(parent)) + "_top").textures(textures), slabId.brrp_append("_top"));
+    if (slabId != null) {
+      PACK.addModel(new JModel(BRRPHelper.slabOf(blockIdentifier(parent))).textures(textures), slabId);
+      PACK.addModel(new JModel(BRRPHelper.slabOf(blockIdentifier(parent)) + "_top").textures(textures), slabId.brrp_append("_top"));
+    }
   }
 
   private static IdentifiedTag blockTag(String path) {
@@ -123,6 +129,13 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   }
 
   private static void addTags() {
+    // mineable 部分；大多数 mineable 标签都是手动生成，目前仅对栏杆部分的 mineable 标签实行自动生成。
+    final IdentifiedTag pickaxeMineable = new IdentifiedTag("block", BlockTags.PICKAXE_MINEABLE.id());
+    final IdentifiedTag axeMineable = new IdentifiedTag("block", BlockTags.AXE_MINEABLE.id());
+    final IdentifiedTag needsStoneTool = new IdentifiedTag("block", BlockTags.NEEDS_STONE_TOOL.id());
+    final IdentifiedTag needsIronTool = new IdentifiedTag("block", BlockTags.NEEDS_IRON_TOOL.id());
+    final IdentifiedTag needsDiamondTool = new IdentifiedTag("block", BlockTags.NEEDS_DIAMOND_TOOL.id());
+
     // 道路部分
     final IdentifiedTag roadBlocks = blockTag("road_blocks");
     final IdentifiedTag roadSlabs = blockTag("road_slabs");
@@ -154,6 +167,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     final IdentifiedTag fullWallSigns = blockTag("full_wall_signs");
 
     // 悬挂的告示牌部分
+    final IdentifiedTag woodenHungSigns = blockTag("wooden_hung_signs");
     final IdentifiedTag concreteHungSigns = blockTag("concrete_hung_signs");
     final IdentifiedTag terracottaHungSigns = blockTag("terracotta_hung_signs");
     final IdentifiedTag hungSigns = blockTag("hung_signs");
@@ -162,6 +176,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     final IdentifiedTag glowingHungSigns = blockTag("glowing_hung_signs");
 
     // 悬挂的告示牌杆部分
+    final IdentifiedTag woodenHungSignBars = blockTag("wooden_hung_sign_bars");
     final IdentifiedTag concreteHungSignBars = blockTag("concrete_hung_sign_bars");
     final IdentifiedTag terracottaHungSignBars = blockTag("terracotta_hung_sign_bars");
     final IdentifiedTag hungSignBars = blockTag("hung_sign_bars");
@@ -199,8 +214,22 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     final IdentifiedTag simpleStainedGlassOuterHandrails = blockTag("simple_stained_glass_outer_handrails");
     final IdentifiedTag simpleStainedGlassStairHandrails = blockTag("simple_stained_glass_stair_handrails");
 
+    // 染色木头部分
+    final IdentifiedTag simpleWoodenHandrails = blockTag("simple_wooden_handrails");
+    final IdentifiedTag simpleWoodenNormalHandrails = blockTag("simple_wooden_normal_handrails");
+    final IdentifiedTag simpleWoodenCentralHandrails = blockTag("simple_wooden_central_handrails");
+    final IdentifiedTag simpleWoodenCornerHandrails = blockTag("simple_wooden_corner_handrails");
+    final IdentifiedTag simpleWoodenOuterHandrails = blockTag("simple_wooden_outer_handrails");
+    final IdentifiedTag simpleWoodenStairHandrails = blockTag("simple_wooden_stair_handrails");
 
-    // 扶手部分，预留
+    // 玻璃栏杆部分
+    final IdentifiedTag glassHandrails = blockTag("glass_handrails");
+    final IdentifiedTag glassNormalHandrails = blockTag("glass_normal_handrails");
+    final IdentifiedTag glassCentralHandrails = blockTag("glass_central_handrails");
+    final IdentifiedTag glassCornerHandrails = blockTag("glass_corner_handrails");
+    final IdentifiedTag glassOuterHandrails = blockTag("glass_outer_handrails");
+    final IdentifiedTag glassStairHandrails = blockTag("glass_stair_handrails");
+
 
     // 道路部分
     MishangUtils.instanceStream(RoadBlocks.class, Block.class).forEach(
@@ -252,26 +281,30 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     // 悬挂的告示牌部分
     MishangUtils.instanceStream(HungSignBlocks.class, Block.class).forEach(block -> {
       if (block instanceof GlowingHungSignBlock) {
-        if (HungSignBlocks.GLOWING_CONCRETE_HUNG_SIGNS.containsValue(block)) {
+        if (MishangUtils.isConcrete(((GlowingHungSignBlock) block).baseBlock)) {
           glowingConcreteHungSigns.addBlock(block);
-        } else if (HungSignBlocks.GLOWING_TERRACOTTA_HUNG_SIGNS.containsValue(block)) {
+        } else if (MishangUtils.isTerracotta(((GlowingHungSignBlock) block).baseBlock)) {
           glowingTerracottaHungSigns.addBlock(block);
         } else {
           glowingHungSigns.addBlock(block);
         }
       } else if (block instanceof HungSignBlock) {
-        if (HungSignBlocks.CONCRETE_HUNG_SIGNS.containsValue(block)) {
+        if (MishangUtils.isConcrete(((HungSignBlock) block).baseBlock)) {
           concreteHungSigns.addBlock(block);
-        } else if (HungSignBlocks.TERRACOTTA_HUNG_SIGNS.containsValue(block)) {
+        } else if (MishangUtils.isTerracotta(((HungSignBlock) block).baseBlock)) {
           terracottaHungSigns.addBlock(block);
+        } else if (MishangUtils.isPlanks(((HungSignBlock) block).baseBlock)) {
+          woodenHungSigns.addBlock(block);
         } else {
           hungSigns.addBlock(block);
         }
       } else if (block instanceof HungSignBarBlock) {
-        if (HungSignBlocks.CONCRETE_HUNG_SIGN_BARS.containsValue(block)) {
+        if (MishangUtils.isConcrete(((HungSignBarBlock) block).baseBlock)) {
           concreteHungSignBars.addBlock(block);
-        } else if (HungSignBlocks.TERRACOTTA_HUNG_SIGN_BARS.containsValue(block)) {
+        } else if (MishangUtils.isTerracotta(((HungSignBarBlock) block).baseBlock)) {
           terracottaHungSignBars.addBlock(block);
+        } else if (MishangUtils.isWood(((HungSignBarBlock) block).baseBlock)) {
+          woodenHungSignBars.addBlock(block);
         } else {
           hungSignBars.addBlock(block);
         }
@@ -281,26 +314,28 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     // 墙上的告示牌部分
     MishangUtils.instanceStream(WallSignBlocks.class, Block.class).forEach(block -> {
       if (block instanceof GlowingWallSignBlock) {
-        if (WallSignBlocks.GLOWING_CONCRETE_WALL_SIGNS.containsValue(block)) {
+        if (MishangUtils.isConcrete(((GlowingWallSignBlock) block).baseBlock)) {
           glowingConcreteWallSigns.addBlock(block);
-        } else if (WallSignBlocks.GLOWING_TERRACOTTA_WALL_SIGNS.containsValue(block)) {
+        } else if (MishangUtils.isTerracotta(((GlowingWallSignBlock) block).baseBlock)) {
           glowingTerracottaWallSigns.addBlock(block);
         } else {
           glowingWallSigns.addBlock(block);
         }
       } else if (block instanceof FullWallSignBlock) {
-        if (WallSignBlocks.FULL_CONCRETE_WALL_SIGNS.containsValue(block)) {
+        if (MishangUtils.isConcrete(((FullWallSignBlock) block).baseBlock)) {
           fullConcreteWallSigns.addBlock(block);
-        } else if (WallSignBlocks.FULL_TERRACOTTA_WALL_SIGNS.containsValue(block)) {
+        } else if (MishangUtils.isTerracotta(((FullWallSignBlock) block).baseBlock)) {
           fullTerracottaWallSigns.addBlock(block);
         } else {
           fullWallSigns.addBlock(block);
         }
       } else if (block instanceof WallSignBlock) {
-        if (WallSignBlocks.CONCRETE_WALL_SIGNS.containsValue(block)) {
+        if (MishangUtils.isConcrete(((WallSignBlock) block).baseBlock)) {
           concreteWallSigns.addBlock(block);
-        } else if (WallSignBlocks.TERRACOTTA_WALL_SIGNS.containsValue(block)) {
+        } else if (MishangUtils.isTerracotta(((WallSignBlock) block).baseBlock)) {
           terracottaWallSigns.addBlock(block);
+        } else if (MishangUtils.isPlanks(((WallSignBlock) block).baseBlock)) {
+          woodenWallSigns.addBlock(block);
         } else {
           wallSigns.addBlock(block);
         }
@@ -310,24 +345,30 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     // 栏杆部分
     MishangUtils.instanceStream(HandrailBlocks.class, Block.class).forEach(block -> {
       if (block instanceof SimpleHandrailBlock simpleHandrailBlock) {
-        if (HandrailBlocks.SIMPLE_STAINED_GLASS_HANDRAILS.containsValue(block)) {
+        if (MishangUtils.isStained_glass(((SimpleHandrailBlock) block).baseBlock)) {
           simpleStainedGlassNormalHandrails.addBlock(simpleHandrailBlock);
           simpleStainedGlassCentralHandrails.addBlock(simpleHandrailBlock.central);
           simpleStainedGlassCornerHandrails.addBlock(simpleHandrailBlock.corner);
           simpleStainedGlassOuterHandrails.addBlock(simpleHandrailBlock.outer);
           simpleStainedGlassStairHandrails.addBlock(simpleHandrailBlock.stair);
-        } else if (HandrailBlocks.SIMPLE_CONCRETE_HANDRAILS.containsValue(block)) {
+        } else if (MishangUtils.isConcrete(((SimpleHandrailBlock) block).baseBlock)) {
           simpleConcreteNormalHandrails.addBlock(simpleHandrailBlock);
           simpleConcreteCentralHandrails.addBlock(simpleHandrailBlock.central);
           simpleConcreteCornerHandrails.addBlock(simpleHandrailBlock.corner);
           simpleConcreteOuterHandrails.addBlock(simpleHandrailBlock.outer);
           simpleConcreteStairHandrails.addBlock(simpleHandrailBlock.stair);
-        } else if (HandrailBlocks.SIMPLE_TERRACOTTA_HANDRAILS.containsValue(block)) {
+        } else if (MishangUtils.isTerracotta(((SimpleHandrailBlock) block).baseBlock)) {
           simpleTerracottaNormalHandrails.addBlock(simpleHandrailBlock);
           simpleTerracottaCentralHandrails.addBlock(simpleHandrailBlock.central);
           simpleTerracottaCornerHandrails.addBlock(simpleHandrailBlock.corner);
           simpleTerracottaOuterHandrails.addBlock(simpleHandrailBlock.outer);
           simpleTerracottaStairHandrails.addBlock(simpleHandrailBlock.stair);
+        } else if (MishangUtils.isWood(((SimpleHandrailBlock) block).baseBlock)) {
+          simpleWoodenNormalHandrails.addBlock(simpleHandrailBlock);
+          simpleWoodenCentralHandrails.addBlock(simpleHandrailBlock.central);
+          simpleWoodenCornerHandrails.addBlock(simpleHandrailBlock.corner);
+          simpleWoodenOuterHandrails.addBlock(simpleHandrailBlock.outer);
+          simpleWoodenStairHandrails.addBlock(simpleHandrailBlock.stair);
         } else {
           handrailItems.addBlock(simpleHandrailBlock);
           normalHandrails.addBlock(simpleHandrailBlock);
@@ -335,6 +376,26 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
           cornerHandrails.addBlock(simpleHandrailBlock.corner);
           outerHandrails.addBlock(simpleHandrailBlock.outer);
           stairHandrails.addBlock(simpleHandrailBlock.stair);
+        }
+      } else if (block instanceof GlassHandrailBlock glassHandrailBlock) {
+        glassNormalHandrails.addBlock(glassHandrailBlock);
+        glassCentralHandrails.addBlock(glassHandrailBlock.central());
+        glassCornerHandrails.addBlock(glassHandrailBlock.corner());
+        glassOuterHandrails.addBlock(glassHandrailBlock.outer());
+        glassStairHandrails.addBlock(glassHandrailBlock.stair());
+        final Block[] blocks = glassHandrailBlock.selfAndVariants();
+        final Block baseBlock = glassHandrailBlock.baseBlock();
+        if (MishangUtils.isWood(baseBlock)) {
+          axeMineable.addBlocks(blocks);
+        } else {
+          pickaxeMineable.addBlocks(blocks);
+          if (baseBlock == Blocks.GOLD_BLOCK || baseBlock == Blocks.EMERALD_BLOCK || baseBlock == Blocks.DIAMOND_BLOCK) {
+            needsIronTool.addBlocks(blocks);
+          } else if (baseBlock == Blocks.OBSIDIAN || baseBlock == Blocks.CRYING_OBSIDIAN) {
+            needsDiamondTool.addBlocks(blocks);
+          } else if (baseBlock == Blocks.IRON_BLOCK) {
+            needsStoneTool.addBlocks(blocks);
+          }
         }
       }
     });
@@ -356,36 +417,61 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         .addTag(simpleTerracottaCornerHandrails)
         .addTag(simpleTerracottaOuterHandrails)
         .addTag(simpleTerracottaStairHandrails);
+    simpleWoodenHandrails
+        .addTag(simpleWoodenNormalHandrails)
+        .addTag(simpleWoodenCentralHandrails)
+        .addTag(simpleWoodenCornerHandrails)
+        .addTag(simpleWoodenOuterHandrails)
+        .addTag(simpleWoodenStairHandrails);
     normalHandrails
+        .addTag(glassNormalHandrails)
         .addTag(simpleStainedGlassNormalHandrails)
         .addTag(simpleTerracottaNormalHandrails)
-        .addTag(simpleConcreteNormalHandrails);
+        .addTag(simpleConcreteNormalHandrails)
+        .addTag(simpleWoodenNormalHandrails);
     handrailItems
         .addTag(simpleStainedGlassHandrails)
         .addTag(simpleTerracottaHandrails)
-        .addTag(simpleConcreteHandrails);
+        .addTag(simpleConcreteHandrails)
+        .addTag(simpleWoodenHandrails);
     centralHandrails
+        .addTag(glassCentralHandrails)
         .addTag(simpleStainedGlassCentralHandrails)
         .addTag(simpleTerracottaCentralHandrails)
-        .addTag(simpleConcreteCentralHandrails);
+        .addTag(simpleConcreteCentralHandrails)
+        .addTag(simpleWoodenCentralHandrails);
     cornerHandrails
+        .addTag(glassCornerHandrails)
         .addTag(simpleStainedGlassCornerHandrails)
         .addTag(simpleTerracottaCornerHandrails)
-        .addTag(simpleConcreteCornerHandrails);
+        .addTag(simpleConcreteCornerHandrails)
+        .addTag(simpleWoodenCornerHandrails);
     outerHandrails
+        .addTag(glassOuterHandrails)
         .addTag(simpleStainedGlassOuterHandrails)
         .addTag(simpleTerracottaOuterHandrails)
-        .addTag(simpleConcreteOuterHandrails);
+        .addTag(simpleConcreteOuterHandrails)
+        .addTag(simpleWoodenOuterHandrails);
     stairHandrails
+        .addTag(glassStairHandrails)
         .addTag(simpleStainedGlassStairHandrails)
         .addTag(simpleTerracottaStairHandrails)
-        .addTag(simpleConcreteStairHandrails);
+        .addTag(simpleConcreteStairHandrails)
+        .addTag(simpleWoodenStairHandrails);
+    glassHandrails.addTags(glassNormalHandrails, glassCentralHandrails, glassCornerHandrails, glassOuterHandrails, glassStairHandrails);
     handrails
         .addTag(normalHandrails)
         .addTag(centralHandrails)
         .addTag(cornerHandrails)
         .addTag(outerHandrails)
         .addTag(stairHandrails);
+
+    // mineable 部分
+    registerTagBlockOnly(pickaxeMineable);
+    registerTagBlockOnly(axeMineable);
+    registerTagBlockOnly(needsDiamondTool);
+    registerTagBlockOnly(needsIronTool);
+    registerTagBlockOnly(needsStoneTool);
 
     // 道路部分
     registerTags(roadBlocks, roadSlabs);
@@ -452,23 +538,41 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     registerTagBlockOnly(simpleStainedGlassCornerHandrails);
     registerTagBlockOnly(simpleStainedGlassOuterHandrails);
     registerTagBlockOnly(simpleStainedGlassStairHandrails);
+    registerTagBlockOnly(simpleWoodenHandrails);
+    registerTagBlockOnly(simpleWoodenNormalHandrails);
+    PACK.addTag(new Identifier("mishanguc", "items/simple_wooden_handrails"), simpleWoodenNormalHandrails);
+    registerTagBlockOnly(simpleWoodenCentralHandrails);
+    registerTagBlockOnly(simpleWoodenCornerHandrails);
+    registerTagBlockOnly(simpleWoodenOuterHandrails);
+    registerTagBlockOnly(simpleWoodenStairHandrails);
+    registerTagBlockOnly(glassHandrails);
+    registerTagBlockOnly(glassNormalHandrails);
+    PACK.addTag(new Identifier("mishanguc", "item/glass_handrails"), glassNormalHandrails);
+    registerTagBlockOnly(glassCentralHandrails);
+    registerTagBlockOnly(glassCornerHandrails);
+    registerTagBlockOnly(glassOuterHandrails);
+    registerTagBlockOnly(glassStairHandrails);
 
     // 悬挂的告示牌部分
     hungSigns
+        .addTag(woodenHungSigns)
         .addTag(concreteHungSigns)
         .addTag(terracottaHungSigns);
     glowingHungSigns
         .addTag(glowingConcreteHungSigns)
         .addTag(glowingTerracottaHungSigns);
     hungSignBars
+        .addTag(woodenHungSignBars)
         .addTag(concreteHungSignBars)
         .addTag(terracottaHungSignBars);
+    registerTag(woodenHungSigns);
     registerTag(concreteHungSigns);
     registerTag(terracottaHungSigns);
     registerTag(hungSigns);
     registerTag(glowingConcreteHungSigns);
     registerTag(glowingTerracottaHungSigns);
     registerTag(glowingHungSigns);
+    registerTag(woodenHungSignBars);
     registerTag(concreteHungSignBars);
     registerTag(terracottaHungSignBars);
     registerTag(hungSignBars);
@@ -592,12 +696,6 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         RoadBlocks.ROAD_WITH_WHITE_TS_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineTop("white_joint_line"));
-    writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_WHITE_S_BA_LINE,
-        "road_with_straight_and_angle_line",
-        FasterJTextures.ofP(
-            "line_top_straight", "white_straight_line",
-            "line_top_angle", "white_bevel_angle_line").lineSide("white_straight_line").base("asphalt"));
     writeRoadBlockModelWithSlab(
         RoadBlocks.ROAD_WITH_WHITE_CROSS_LINE,
         "road_with_cross_line",
@@ -606,12 +704,6 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         RoadBlocks.ROAD_WITH_YELLOW_TS_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_joint_line"));
-    writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_YELLOW_S_BA_LINE,
-        "road_with_straight_and_angle_line",
-        FasterJTextures.ofP(
-            "line_top_straight", "yellow_straight_line",
-            "line_top_angle", "yellow_bevel_angle_line").lineSide("yellow_straight_line").base("asphalt"));
     writeRoadBlockModelWithSlab(
         RoadBlocks.ROAD_WITH_YELLOW_CROSS_LINE,
         "road_with_cross_line",
@@ -620,6 +712,10 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         RoadBlocks.ROAD_WITH_WHITE_OFFSET_LINE,
         "road_with_straight_line",
         new FasterJTextures().base("asphalt").lineSide("white_offset_straight_line").lineTop("white_offset_straight_line"));
+    writeRoadBlockModelWithSlab(
+        RoadBlocks.ROAD_WITH_WHITE_HALF_DOUBLE_LINE,
+        "road_with_straight_line",
+        new FasterJTextures().base("asphalt").lineSide("white_half_double_line").lineTop("white_half_double_line"));
     writeRoadBlockModelWithSlab(
         RoadBlocks.ROAD_WITH_WHITE_DOUBLE_LINE,
         "road_with_straight_line",
@@ -632,6 +728,10 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         RoadBlocks.ROAD_WITH_YELLOW_OFFSET_LINE,
         "road_with_straight_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_offset_straight_line").lineTop("yellow_offset_straight_line"));
+    writeRoadBlockModelWithSlab(
+        RoadBlocks.ROAD_WITH_YELLOW_HALF_DOUBLE_LINE,
+        "road_with_straight_line",
+        new FasterJTextures().base("asphalt").lineSide("yellow_half_double_line").lineTop("yellow_half_double_line"));
     writeRoadBlockModelWithSlab(
         RoadBlocks.ROAD_WITH_YELLOW_DOUBLE_LINE,
         "road_with_straight_line",
@@ -731,8 +831,8 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   /**
    * 为运行时资源包生成资源。在开发环境中，每次加载资源就会重新生成一次。在非开发环境中，游戏开始时生成一次，此后不再生成。
    */
-  @CanIgnoreReturnValue
-  private RuntimeResourcePack generateResources(boolean includesClient, boolean includesServer) {
+  //  @CanIgnoreReturnValue
+  private static RuntimeResourcePack generateResources(boolean includesClient, boolean includesServer) {
     if (includesClient) PACK.clearResources(ResourceType.CLIENT_RESOURCES);
     if (includesServer) PACK.clearResources(ResourceType.SERVER_DATA);
 
@@ -785,12 +885,12 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   /**
    * 为本模组内的物品添加配方。该方法只会生成部分配方，还有很多配方是在 {@link net.devtech.arrp.generator.ItemResourceGenerator#writeRecipes(RuntimeResourcePack)} 的子方法中定义的。
    */
-  private void addRecipes() {
+  private static void addRecipes() {
     addRecipesForWallSigns();
     addRecipesForLights();
   }
 
-  private void addRecipesForWallSigns() {
+  private static void addRecipesForWallSigns() {
     // 隐形告示牌是合成其他告示牌的基础。
     { // invisible wall sign
       final JShapedRecipe recipe = new JShapedRecipe(WallSignBlocks.INVISIBLE_WALL_SIGN)
@@ -817,7 +917,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     }
   }
 
-  private void addRecipesForLights() {
+  private static void addRecipesForLights() {
     // 先是三个完整方块的合成表。
     { // white light
       final JShapedRecipe recipe = new JShapedRecipe(LightBlocks.WHITE_LIGHT)
