@@ -14,7 +14,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.Formatting;
@@ -26,6 +25,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -53,13 +53,12 @@ public class MirroringToolItem extends BlockToolItem implements ItemResourceGene
 
   @Override
   public ActionResult useOnBlock(
-      PlayerEntity player,
+      ItemStack stack, PlayerEntity player,
       World world,
       BlockHitResult blockHitResult,
       Hand hand,
       boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
-    final ItemStack stack = player.getStackInHand(hand);
     if (!player.getAbilities().allowModifyWorld && !stack.canPlaceOn(Registry.BLOCK, new CachedBlockPosition(world, blockPos, false))) {
       return ActionResult.PASS;
     }
@@ -70,13 +69,12 @@ public class MirroringToolItem extends BlockToolItem implements ItemResourceGene
 
   @Override
   public ActionResult beginAttackBlock(
-      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    final ItemStack mainHandStack = player.getStackInHand(hand);
-    if (!player.getAbilities().allowModifyWorld && !mainHandStack.canDestroy(Registry.BLOCK, new CachedBlockPosition(world, pos, false))) {
+      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    if (!player.getAbilities().allowModifyWorld && !stack.canDestroy(Registry.BLOCK, new CachedBlockPosition(world, pos, false))) {
       return ActionResult.PASS;
     }
     final ActionResult result = mirror(world, pos, direction, player);
-    if (result == ActionResult.SUCCESS) mainHandStack.damage(1, player, player1 -> player1.sendToolBreakStatus(hand));
+    if (result == ActionResult.SUCCESS) stack.damage(1, player, player1 -> player1.sendToolBreakStatus(hand));
     return result;
   }
 
@@ -85,15 +83,15 @@ public class MirroringToolItem extends BlockToolItem implements ItemResourceGene
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        new TranslatableText("item.mishanguc.mirroring_tool.tooltip").formatted(Formatting.GRAY));
+        TextBridge.translatable("item.mishanguc.mirroring_tool.tooltip").formatted(Formatting.GRAY));
     final Boolean includesFluid = includesFluid(stack);
     if (includesFluid == null) {
       tooltip.add(
-          new TranslatableText("item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking")
+          TextBridge.translatable("item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking")
               .formatted(Formatting.GRAY));
     } else if (includesFluid) {
       tooltip.add(
-          new TranslatableText("item.mishanguc.block_tool.tooltip.includesFluid")
+          TextBridge.translatable("item.mishanguc.block_tool.tooltip.includesFluid")
               .formatted(Formatting.GRAY));
     }
   }

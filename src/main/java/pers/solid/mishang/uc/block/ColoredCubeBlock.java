@@ -3,7 +3,6 @@ package pers.solid.mishang.uc.block;
 import net.devtech.arrp.generator.BRRPCubeBlock;
 import net.devtech.arrp.json.loot.JLootTable;
 import net.devtech.arrp.json.models.JTextures;
-import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
@@ -18,7 +17,7 @@ import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
 
-public class ColoredCubeBlock extends BRRPCubeBlock implements BlockEntityProvider, ColoredBlock {
+public class ColoredCubeBlock extends BRRPCubeBlock implements ColoredBlock {
 
   @ApiStatus.Internal
   public ColoredCubeBlock(Settings settings, String parent, JTextures textures) {

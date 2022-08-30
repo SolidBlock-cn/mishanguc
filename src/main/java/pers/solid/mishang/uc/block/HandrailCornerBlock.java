@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.block;
 import com.google.common.collect.Maps;
 import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.devtech.arrp.json.blockstate.JBlockStates;
+import net.devtech.arrp.json.loot.JLootTable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -10,30 +11,26 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.data.server.BlockLootTableGenerator;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,8 +49,8 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   public final @NotNull T baseHandrail;
   public static final Map<HorizontalCornerDirection, VoxelShape> SHAPES = Util.make(() -> {
-    final Map<Direction, @Nullable VoxelShape> shapes1 = MishangUtils.createHorizontalDirectionToShape(0, 0, 1, 15, 14, 2);
-    final Map<Direction, @Nullable VoxelShape> shapes2 = MishangUtils.createHorizontalDirectionToShape(1, 0, 1, 16, 14, 2);
+    final Map<Direction, @Nullable VoxelShape> shapes1 = MishangUtils.createHorizontalDirectionToShape(0, 0, 0.5, 15, 16, 2.5);
+    final Map<Direction, @Nullable VoxelShape> shapes2 = MishangUtils.createHorizontalDirectionToShape(0.5, 0, 1, 16, 16, 2.5);
     return Direction.Type.HORIZONTAL.stream().collect(Maps.toImmutableEnumMap(direction -> HorizontalCornerDirection.fromDirections(direction, direction.rotateYClockwise()), direction -> VoxelShapes.union(shapes1.get(direction), shapes2.get(direction.rotateYClockwise()))));
   });
 
@@ -118,37 +115,9 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
     return SHAPES.get(state.get(FACING));
   }
 
-  private static Direction clientCachedHitSide;
-  private static Direction serverCachedHitSide;
-
   @Override
-  public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-    super.onBreak(world, pos, state, player);
-    final HitResult raycast = player.raycast(20f, 0, false);
-    if (!(raycast instanceof BlockHitResult blockHitResult)) return;
-    if (world.isClient()) clientCachedHitSide = blockHitResult.getSide();
-    else serverCachedHitSide = blockHitResult.getSide();
-  }
-
-  @Override
-  public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
-    super.onBroken(world, pos, state);
-    final Direction hitSide;
-    if (world.isClient()) {
-      hitSide = clientCachedHitSide;
-      clientCachedHitSide = null;
-    } else {
-      hitSide = serverCachedHitSide;
-      serverCachedHitSide = null;
-    }
-    final HorizontalCornerDirection facing = state.get(FACING);
-    final Direction dir1 = facing.getDirectionInAxis(Direction.Axis.X);
-    final Direction dir2 = facing.getDirectionInAxis(Direction.Axis.Z);
-    final HandrailCornerBlock<? extends HandrailBlock> block = (HandrailCornerBlock<? extends HandrailBlock>) state.getBlock();
-    switch (hitSide.getAxis()) {
-      case X -> world.setBlockState(pos, block.baseHandrail.getDefaultState().with(WATERLOGGED, state.get(WATERLOGGED)).with(HandrailBlock.FACING, dir2), 0);
-      case Z -> world.setBlockState(pos, block.baseHandrail.getDefaultState().with(WATERLOGGED, state.get(WATERLOGGED)).with(HandrailBlock.FACING, dir1), 0);
-    }
+  public JLootTable getLootTable() {
+    return JLootTable.delegate(BlockLootTableGenerator.drops(this, ConstantLootNumberProvider.create(2)).build());
   }
 
   @SuppressWarnings("deprecation")
@@ -168,17 +137,12 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (direction.getAxis().isHorizontal() && stateFrom.getBlock() instanceof final Handrails block) {
-      return block.baseBlock() == this.baseBlock()
-          && block.connectsIn(stateFrom, direction.getOpposite(), state.get(FACING).getDirectionInAxis(direction.rotateYClockwise().getAxis()));
+    final Block block = stateFrom.getBlock();
+    if (direction.getAxis().isHorizontal() && block instanceof final Handrails handrails) {
+      return block.asItem() == asItem()
+          && handrails.connectsIn(stateFrom, direction.getOpposite(), state.get(FACING).getDirectionInAxis(direction.rotateYClockwise().getAxis()));
     }
     return super.isSideInvisible(state, stateFrom, direction);
-  }
-
-  @Override
-  public MutableText getName() {
-    final Block block = baseBlock();
-    return block == null ? super.getName() : new TranslatableText("block.mishanguc.handrail_corner", block.getName());
   }
 
   @Override

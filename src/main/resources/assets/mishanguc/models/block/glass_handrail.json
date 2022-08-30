@@ -1,0 +1,88 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "top": "#frame",
+    "side": "#frame",
+    "bottom": "#frame",
+    "particle": "#glass"
+  },
+  "elements": [
+    {
+      "from": [0, 15, 0.5],
+      "to": [16, 16, 2.5],
+      "faces": {
+        "north": {"texture": "#top"},
+        "east": {"texture": "#top", "cullface": "east"},
+        "south": {"texture": "#top"},
+        "west": {"texture": "#top", "cullface": "west"},
+        "up": {"texture": "#top"},
+        "down": {"texture": "#top"}
+      },
+      "description": "Top part of the frame"
+    },
+    {
+      "from": [1, 2, 0.5],
+      "to": [15, 3, 2.5],
+      "faces": {
+        "north": {"texture": "#bottom"},
+        "east": {"texture": "#bottom", "cullface": "east"},
+        "south": {"texture": "#bottom"},
+        "west": {"texture": "#bottom", "cullface": "west"},
+        "up": {"texture": "#bottom"},
+        "down": {"texture": "#bottom"}
+      },
+      "description": "Bottom part of the frame"
+    },
+    {
+      "from": [0, 0, 0.5],
+      "to": [1, 15, 2.5],
+      "faces": {
+        "east": {"texture": "#side"},
+        "west": {"texture": "#side", "cullface": "west"},
+        "south": {"texture": "#side"},
+        "north": {"texture": "#side"},
+        "down": {"texture": "#side", "cullface": "down"}
+      },
+      "description": "West part of the frame"
+    },
+    {
+      "from": [15, 0, 0.5],
+      "to": [16, 15, 2.5],
+      "faces": {
+        "east": {"texture": "#side", "cullface": "east"},
+        "west": {"texture": "#side"},
+        "south": {"texture": "#side"},
+        "north": {"texture": "#side"},
+        "down": {"texture": "#side", "cullface": "down"}
+      },
+      "description": "East part of the frame"
+    },
+    {
+      "from": [1, 3, 1],
+      "to": [15, 12, 2],
+      "faces": {
+        "north": {"texture": "#glass"},
+        "south": {"texture": "#glass"}
+      },
+      "description": "The glass part below the decoration."
+    },
+    {
+      "from": [1, 12, 1],
+      "to": [15, 14, 2],
+      "faces": {
+        "north": {"texture": "#decoration", "tintindex": 0},
+        "south": {"texture": "#decoration", "tintindex": 0}
+      },
+      "description": "The decoration part."
+    },
+    {
+      "from": [1, 14, 1],
+      "to": [15, 15, 2],
+      "faces": {
+        "north": {"texture": "#glass"},
+        "south": {"texture": "#glass"}
+      },
+      "description": "The glass part above the decoration."
+    }
+  ]
+}

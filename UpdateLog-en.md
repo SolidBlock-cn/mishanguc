@@ -2,6 +2,32 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 0.2.4
+
+Updated following content
+
+- Added introduction (tooltip) for road blocks, and fixed some too ambiguous names.
+- Modified the notice on player entering world.
+- Added more road blocks, such as road with different straight and bevel lines, and half double line.
+    - Added a "bevel_top" property for road with straight and bevel lines of different colors.
+- Slab tools can handle road blocks of this mod.
+- Added text describing the lines for road blocks, as well as a tooltip of speed-up on the road.
+- Resorted road and its slab blocks.
+- Renamed the Chinese name of some road blocks.
+- Added growth tool, carrying tool and road tool.
+- When breaking a handrail block composed of two ones, no longer leave one.
+- Added more colored blocks, including colored leaves.
+- Adjusted the durability of tp tool, and the durability worn on each tp depends on the distance moved.
+- Adjusted and optimized the generation logic of automatic line on road, in order to handle some blocks newly added.
+- Added framed glass handrail blocks, allowing custom tinting. Adjusted the culling between handrail blocks.
+- Adjusted the display of handrail blocks in inventory.
+
+Fixed following issues:
+
+- Tools needed when breaking block are not well configured.
+- Force-placing tool and fast-building tool do not sync data when replacing block entities with the same block state.
+- The item model of color tool is not based on handheld item model.
+
 ### 0.2.3
 
 Updated following content:

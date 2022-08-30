@@ -16,7 +16,7 @@ public class NbtClickEvent extends ClickEvent {
   public final NbtElement nbt;
 
   public NbtClickEvent(NbtElement nbt) {
-    super(Action.RUN_COMMAND, "/tell @s INVALID_COMMAND_ACCESS");
+    super(Action.RUN_COMMAND, "");
     this.nbt = nbt;
   }
 }

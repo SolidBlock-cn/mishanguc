@@ -1,0 +1,64 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "top": "#frame",
+    "side": "#frame",
+    "bottom": "#frame",
+    "particle": "#glass"
+  },
+  "elements": [
+    {
+      "from": [7, 15, 9],
+      "to": [9, 16, 16],
+      "faces": {
+        "north": {"texture": "#top"},
+        "east": {"texture": "#top"},
+        "south": {"texture": "#top", "cullface": "south"},
+        "west": {"texture": "#top"},
+        "up": {"texture": "#top"},
+        "down": {"texture": "#top"}
+      },
+      "description": "Central part of the frame"
+    },
+    {
+      "from": [7, 2, 9],
+      "to": [9, 3, 16],
+      "faces": {
+        "north": {"texture": "#top"},
+        "east": {"texture": "#top"},
+        "south": {"texture": "#top", "cullface": "south"},
+        "west": {"texture": "#top"},
+        "up": {"texture": "#top"},
+        "down": {"texture": "#top"}
+      },
+      "description": "Central part of the frame"
+    },
+    {
+      "from": [7.5, 3, 9],
+      "to": [8.5, 12, 16],
+      "faces": {
+        "west": {"texture": "#glass"},
+        "east": {"texture": "#glass"}
+      },
+      "description": "The glass part below the decoration."
+    },
+    {
+      "from": [7.5, 12, 9],
+      "to": [8.5, 14, 16],
+      "faces": {
+        "west": {"texture": "#decoration", "tintindex": 0},
+        "east": {"texture": "#decoration", "tintindex": 0}
+      },
+      "description": "The decoration part."
+    },
+    {
+      "from": [7.5, 14, 9],
+      "to": [8.5, 15, 16],
+      "faces": {
+        "west": {"texture": "#glass"},
+        "east": {"texture": "#glass"}
+      },
+      "description": "The glass part above the decoration."
+    }
+  ]
+}

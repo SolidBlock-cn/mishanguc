@@ -9,13 +9,13 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.ColoredBlock;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
+import pers.solid.mishang.uc.util.TextBridge;
 
 /**
  * <p>类似于 {@link BlockItem}，但是名称会调用 {@link Block#getName()}。</p>
@@ -41,9 +41,9 @@ public class NamedBlockItem extends BlockItem {
         final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
         if (nbt != null && nbt.contains("color", NbtType.NUMBER)) {
           final int color = nbt.getInt("color");
-          return new TranslatableText("block.mishanguc.colored_block.color", block.getName(), MishangUtils.describeColor(color));
+          return TextBridge.translatable("block.mishanguc.colored_block.color", block.getName(), MishangUtils.describeColor(color));
         } else {
-          return new TranslatableText("block.mishanguc.colored_block.auto_color", block.getName());
+          return TextBridge.translatable("block.mishanguc.colored_block.auto_color", block.getName());
         }
       }
       return block.getName();

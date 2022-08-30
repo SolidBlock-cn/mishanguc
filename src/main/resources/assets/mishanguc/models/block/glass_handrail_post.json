@@ -1,0 +1,24 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "top": "#frame",
+    "side": "#frame",
+    "bottom": "#frame",
+    "particle": "#glass"
+  },
+  "elements": [
+    {
+      "from": [7, 0, 7],
+      "to": [9, 16, 9],
+      "faces": {
+        "up": {"texture": "#top"},
+        "down": {"texture": "#top"},
+        "south": {"texture": "#top"},
+        "east": {"texture": "#top"},
+        "north": {"texture": "#top"},
+        "west": {"texture": "#top"}
+      },
+      "description": "The frame"
+    }
+  ]
+}

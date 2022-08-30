@@ -7,32 +7,32 @@
   },
   "elements": [
     {
-      "from": [0, 12, 7.5],
-      "to": [16, 13, 8.5],
+      "from": [7.5, 12, 0],
+      "to": [8.5, 13, 16],
       "faces": {
         "north": {"texture": "#top"},
-        "east": {"texture": "#top", "cullface": "east"},
-        "south": {"texture": "#top"},
-        "west": {"texture": "#top", "cullface": "west"},
-        "up": {"texture": "#top"},
+        "east": {"texture": "#top"},
+        "south": {"texture": "#top", "cullface": "south"},
+        "west": {"texture": "#top"},
+        "up": {"texture": "#top", "cullface": "north"},
         "down": {"texture": "#top"}
       }
     },
     {
-      "from": [0, 0, 7.5],
-      "to": [16, 1, 8.5],
+      "from": [7.5, 0, 0],
+      "to": [8.5, 1, 16],
       "faces": {
-        "north": {"texture": "#bottom"},
-        "east": {"texture": "#bottom", "cullface": "east"},
-        "south": {"texture": "#bottom"},
-        "west": {"texture": "#bottom", "cullface": "west"},
+        "north": {"texture": "#bottom", "cullface": "north"},
+        "east": {"texture": "#bottom"},
+        "south": {"texture": "#bottom", "cullface": "south"},
+        "west": {"texture": "#bottom"},
         "up": {"texture": "#bottom"},
         "down": {"texture": "#bottom", "cullface": "down"}
       }
     },
     {
-      "from": [1.5, 1, 7.5],
-      "to": [2.5, 12, 8.5],
+      "from": [7.5, 1, 1.5],
+      "to": [8.5, 12, 2.5],
       "faces": {
         "north": {"texture": "#texture"},
         "east": {"texture": "#texture"},
@@ -41,8 +41,8 @@
       }
     },
     {
-      "from": [5.5, 1, 7.5],
-      "to": [6.5, 12, 8.5],
+      "from": [7.5, 1, 5.5],
+      "to": [8.5, 12, 6.5],
       "faces": {
         "north": {"texture": "#texture"},
         "east": {"texture": "#texture"},
@@ -51,8 +51,8 @@
       }
     },
     {
-      "from": [9.5, 1, 7.5],
-      "to": [10.5, 12, 8.5],
+      "from": [7.5, 1, 9.5],
+      "to": [8.5, 12, 10.5],
       "faces": {
         "north": {"texture": "#texture"},
         "east": {"texture": "#texture"},
@@ -61,8 +61,8 @@
       }
     },
     {
-      "from": [13.5, 1, 7.5],
-      "to": [14.5, 12, 8.5],
+      "from": [7.5, 1, 13.5],
+      "to": [8.5, 12, 14.5],
       "faces": {
         "north": {"texture": "#texture"},
         "east": {"texture": "#texture"},
