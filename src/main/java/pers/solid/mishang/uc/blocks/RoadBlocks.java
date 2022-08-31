@@ -91,7 +91,7 @@ public final class RoadBlocks extends MishangucBlocks {
    */
   @Cutout
   @RegisterIdentifier
-  public static final RoadWithStraightAndAngleLine.Impl ROAD_WITH_WHITE_S_BA_LINE = new RoadWithStraightAndAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE);
+  public static final RoadWithStraightAndAngleLine.Impl ROAD_WITH_WHITE_S_BA_LINE = new RoadWithStraightAndAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL);
   /**
    * 白色丁字形线。
    */
@@ -111,7 +111,7 @@ public final class RoadBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.0")
   @Cutout
   @RegisterIdentifier
-  public static final RoadWithStraightAndAngleLine.Impl ROAD_WITH_YELLOW_S_BA_LINE = new RoadWithStraightAndAngleLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW);
+  public static final RoadWithStraightAndAngleLine.Impl ROAD_WITH_YELLOW_S_BA_LINE = new RoadWithStraightAndAngleLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL);
   /**
    * 黄色丁字形线。
    */
@@ -195,7 +195,7 @@ public final class RoadBlocks extends MishangucBlocks {
    */
   @Cutout
   @RegisterIdentifier
-  public static final RoadWithJointLineWithOffsetSide.Impl ROAD_WITH_WHITE_TS_OFFSET_LINE = new RoadWithJointLineWithOffsetSide.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE);
+  public static final RoadWithJointLineWithOffsetSide.Impl ROAD_WITH_WHITE_TS_OFFSET_LINE = new RoadWithJointLineWithOffsetSide.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL);
   /**
    * 直线部分为双线。
    */

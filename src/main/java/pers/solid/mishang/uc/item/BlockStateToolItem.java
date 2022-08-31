@@ -19,6 +19,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Collection;
 import java.util.List;
@@ -35,27 +36,21 @@ public class BlockStateToolItem extends BlockToolItem {
     final Collection<Property<?>> properties = blockState.getProperties();
     if (properties.isEmpty()) {
       player.sendMessage(
-          Text.translatable(
-                  "debug.mishanguc.blockStates.none",
-                  String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()),
-                  blockState.getBlock().getName().formatted(Formatting.BOLD))
+          TextBridge.translatable("debug.mishanguc.blockStates.none", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getBlock().getName().formatted(Formatting.BOLD))
               .formatted(Formatting.RED),
           false);
     } else {
       player.sendMessage(
-          Text.translatable(
-                  "debug.mishanguc.blockStates",
-                  String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()),
-                  blockState.getBlock().getName().formatted(Formatting.BOLD))
+          TextBridge.translatable("debug.mishanguc.blockStates", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getBlock().getName().formatted(Formatting.BOLD))
               .formatted(Formatting.YELLOW),
           false);
     }
     for (Property<?> property : properties) {
       final MutableText value = getFormattedValue(blockState, property);
       player.sendMessage(
-          Text.literal("  ")
+          TextBridge.literal("  ")
               .append(
-                  Text.literal(property.getName())
+                  TextBridge.literal(property.getName())
                       .styled(style -> style.withColor(0xcccccc)))
               .append(" = ")
               .append(value),
@@ -69,7 +64,7 @@ public class BlockStateToolItem extends BlockToolItem {
   @NotNull
   private static <T extends Comparable<T>> MutableText getFormattedValue(BlockState blockState, Property<T> property) {
     final T propertyValue = blockState.get(property);
-    final MutableText value = Text.literal(property.name(propertyValue));
+    final MutableText value = TextBridge.literal(property.name(propertyValue));
     if (property instanceof BooleanProperty) {
       value.formatted(propertyValue == Boolean.TRUE ? Formatting.GREEN : Formatting.RED);
     } else if (property instanceof IntProperty) {
@@ -113,9 +108,9 @@ public class BlockStateToolItem extends BlockToolItem {
       final int fluidLevel = fluidState.getLevel();
       if (fluidLevel != 0) {
         player.sendMessage(
-            Text.literal("  ")
+            TextBridge.literal("  ")
                 .append(
-                    Text.translatable("debug.mishanguc.blockStates.fluidLevel")
+                    TextBridge.translatable("debug.mishanguc.blockStates.fluidLevel")
                         .styled(style -> style.withColor(0xcccccc)))
                 .append(" = ")
                 .append(String.valueOf(fluidLevel)),
@@ -130,15 +125,15 @@ public class BlockStateToolItem extends BlockToolItem {
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        Text.translatable("item.mishanguc.block_state_tool.tooltip").formatted(Formatting.GRAY));
+        TextBridge.translatable("item.mishanguc.block_state_tool.tooltip").formatted(Formatting.GRAY));
     final Boolean includesFluid = includesFluid(stack);
     if (includesFluid == null) {
       tooltip.add(
-          Text.translatable("item.mishanguc.block_state_tool.tooltip.includesFluidWhileSneaking")
+          TextBridge.translatable("item.mishanguc.block_state_tool.tooltip.includesFluidWhileSneaking")
               .formatted(Formatting.GRAY));
     } else if (includesFluid) {
       tooltip.add(
-          Text.translatable("item.mishanguc.block_state_tool.tooltip.includesFluid")
+          TextBridge.translatable("item.mishanguc.block_state_tool.tooltip.includesFluid")
               .formatted(Formatting.GRAY));
     }
   }

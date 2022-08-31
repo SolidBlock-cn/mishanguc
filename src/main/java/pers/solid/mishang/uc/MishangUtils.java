@@ -9,7 +9,6 @@ import net.minecraft.item.Item;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Direction;
@@ -25,6 +24,7 @@ import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.text.PatternSpecialDrawable;
 import pers.solid.mishang.uc.text.TextContext;
+import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
 import java.lang.reflect.Field;
@@ -322,6 +322,6 @@ public class MishangUtils {
 
   @ApiStatus.AvailableSince("0.2.1")
   public static MutableText describeColor(int color) {
-    return Text.empty().append(Text.literal("■").styled(style -> style.withColor(color))).append(String.format("#%06x", color));
+    return TextBridge.empty().append(TextBridge.literal("■").styled(style -> style.withColor(color))).append(String.format("#%06x", color));
   }
 }

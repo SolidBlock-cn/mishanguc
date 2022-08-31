@@ -10,6 +10,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.ApiStatus;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -142,6 +143,6 @@ public class FloatButtonWidget extends ButtonWidget {
   @Override
   public Text getMessage() {
     if (getValue() == defaultValue) return super.getMessage();
-    else return Text.literal("").append(super.getMessage()).formatted(Formatting.ITALIC);
+    else return TextBridge.literal("").append(super.getMessage()).formatted(Formatting.ITALIC);
   }
 }

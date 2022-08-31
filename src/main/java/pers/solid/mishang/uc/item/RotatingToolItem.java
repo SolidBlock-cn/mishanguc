@@ -23,6 +23,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -83,10 +84,10 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        Text.translatable("item.mishanguc.rotating_tool.tooltip.1")
+        TextBridge.translatable("item.mishanguc.rotating_tool.tooltip.1")
             .formatted(Formatting.GRAY));
     tooltip.add(
-        Text.translatable("item.mishanguc.rotating_tool.tooltip.2")
+        TextBridge.translatable("item.mishanguc.rotating_tool.tooltip.2")
             .formatted(Formatting.GRAY));
   }
 

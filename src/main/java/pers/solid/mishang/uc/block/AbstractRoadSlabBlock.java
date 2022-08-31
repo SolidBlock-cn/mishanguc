@@ -91,6 +91,7 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
   public void appendTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     super.appendTooltip(stack, world, tooltip, options);
+    appendDescriptionTooltip(tooltip, options);
     appendRoadTooltip(stack, world, tooltip, options);
   }
 

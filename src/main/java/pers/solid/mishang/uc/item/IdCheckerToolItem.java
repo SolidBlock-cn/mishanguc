@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -48,11 +49,9 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
       final Identifier identifier = Registry.BLOCK.getId(block);
       final int rawId = Registry.BLOCK.getRawId(block);
       player.sendMessage(
-          Text.literal("")
-              .append(Text.translatable(
-                      "debug.mishanguc.blockId.header",
-                      String.format(
-                          "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
+          TextBridge.literal("")
+              .append(TextBridge.translatable("debug.mishanguc.blockId.header", String.format(
+                      "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
                   .formatted(Formatting.YELLOW)));
       broadcastId(player, block.getName(), identifier, rawId);
       return ActionResult.SUCCESS;
@@ -66,16 +65,13 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
   private void broadcastId(
       PlayerEntity player, Text name, @Nullable Identifier identifier, int rawId) {
     player.sendMessage(
-        Text.literal("  ").append(Text.translatable("debug.mishanguc.id.name", name))
+        TextBridge.literal("  ").append(TextBridge.translatable("debug.mishanguc.id.name", name))
             .append("\n  ")
-            .append(Text.translatable(
-                "debug.mishanguc.id.id",
-                identifier == null
-                    ? Text.translatable("gui.none")
-                    : Text.literal(identifier.toString())))
+            .append(TextBridge.translatable("debug.mishanguc.id.id", identifier == null
+                ? TextBridge.translatable("gui.none")
+                : TextBridge.literal(identifier.toString())))
             .append("\n  ")
-            .append(Text.translatable(
-                "debug.mishanguc.id.rawId", Text.literal(Integer.toString(rawId)))));
+            .append(TextBridge.translatable("debug.mishanguc.id.rawId", TextBridge.literal(Integer.toString(rawId)))));
   }
 
   @Override
@@ -105,15 +101,13 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
       final Identifier identifier = biomes.getId(biome);
       final int rawId = biomes.getRawId(biome);
       user.sendMessage(
-          Text.literal("").append(
-              Text.translatable(
-                      "debug.mishanguc.biomeId.header",
-                      String.format(
-                          "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
+          TextBridge.literal("").append(
+              TextBridge.translatable("debug.mishanguc.biomeId.header", String.format(
+                      "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
                   .formatted(Formatting.YELLOW)));
       broadcastId(
           user,
-          Text.translatable(Util.createTranslationKey("biome", identifier)),
+          TextBridge.translatable(Util.createTranslationKey("biome", identifier)),
           identifier,
           rawId);
     }
@@ -125,16 +119,16 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        Text.translatable("item.mishanguc.id_checker_tool.tooltip.1")
+        TextBridge.translatable("item.mishanguc.id_checker_tool.tooltip.1")
             .formatted(Formatting.GRAY));
     final @Nullable Boolean includesFluid = includesFluid(stack);
     if (includesFluid == null) {
       tooltip.add(
-          Text.translatable("item.mishanguc.id_checker_tool.tooltip.2")
+          TextBridge.translatable("item.mishanguc.id_checker_tool.tooltip.2")
               .formatted(Formatting.GRAY));
     } else if (includesFluid) {
       tooltip.add(
-          Text.translatable("item.mishanguc.id_checker_tool.tooltip.3")
+          TextBridge.translatable("item.mishanguc.id_checker_tool.tooltip.3")
               .formatted(Formatting.GRAY));
     }
   }
@@ -160,11 +154,9 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
     if (!world.isClient) return ActionResult.SUCCESS;
     final BlockPos blockPos = entity.getBlockPos();
     player.sendMessage(
-        Text.literal("").append(
-            Text.translatable(
-                    "debug.mishanguc.entityId.header",
-                    String.format(
-                        "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
+        TextBridge.literal("").append(
+            TextBridge.translatable("debug.mishanguc.entityId.header", String.format(
+                    "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
                 .formatted(Formatting.YELLOW)));
     final EntityType<?> type = entity.getType();
     broadcastId(

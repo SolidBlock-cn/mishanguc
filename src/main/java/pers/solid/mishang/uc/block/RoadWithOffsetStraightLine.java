@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -80,7 +81,7 @@ public interface RoadWithOffsetStraightLine extends Road {
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     Road.super.appendRoadTooltip(stack, world, tooltip, options);
     tooltip.add(
-        Text.translatable("block.mishanguc.tooltip.road_with_offset_straight_line")
+        TextBridge.translatable("block.mishanguc.tooltip.road_with_offset_straight_line")
             .formatted(Formatting.GRAY));
   }
 
@@ -97,6 +98,11 @@ public interface RoadWithOffsetStraightLine extends Road {
   class Impl extends AbstractRoadBlock implements RoadWithOffsetStraightLine {
     public Impl(Settings settings, LineColor lineColor) {
       super(settings, lineColor, LineType.NORMAL);
+    }
+
+    @Override
+    public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
+      tooltip.add(TextBridge.translatable("lineType.offsetStraight.composed", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
     }
   }
 }

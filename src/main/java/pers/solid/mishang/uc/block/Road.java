@@ -21,6 +21,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
@@ -31,7 +32,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
- * 所有道路方块的接口。接口可以多重继承，并直接实现与已有类上，因此使用接口。
+ * 所有道路方块类型均实现的接口。接口可以多重继承，并直接实现于已有类上，因此使用接口。
  */
 public interface Road extends BlockResourceGenerator {
 
@@ -181,4 +182,10 @@ public interface Road extends BlockResourceGenerator {
   LineColor getLineColor(BlockState blockState, Direction direction);
 
   LineType getLineType(BlockState blockState, Direction direction);
+
+  /**
+   * 给道路添加描述性内容，这部分文本通常是蓝色的。
+   */
+  @ApiStatus.AvailableSince("0.2.4")
+  void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options);
 }
