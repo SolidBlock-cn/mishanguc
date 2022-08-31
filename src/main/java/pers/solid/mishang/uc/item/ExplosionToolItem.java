@@ -36,6 +36,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -70,11 +71,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
 
   @Override
   public Text getName(ItemStack stack) {
-    return Text.translatable(getTranslationKey(stack) + ".formatted",
-        /* explosion power: */power(stack),
-        /* with fire: */Text.translatable("item.mishanguc.explosion_tool.createFire." + createFire(stack)),
-        /* destruction type: */Text.translatable("item.mishanguc.explosion_tool.destructionType." + destructionType(stack).name().toLowerCase())
-    );
+    return TextBridge.translatable(getTranslationKey(stack) + ".formatted", power(stack), TextBridge.translatable("item.mishanguc.explosion_tool.createFire." + createFire(stack)), TextBridge.translatable("item.mishanguc.explosion_tool.destructionType." + destructionType(stack).name().toLowerCase()));
   }
 
   /**
@@ -162,14 +159,14 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(Text.translatable("item.mishanguc.explosion_tool.tooltip.1", Text.keybind("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.explosion_tool.tooltip.2").formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.explosion_tool.tooltip.3").formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.explosion_tool.tooltip.4").formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.explosion_tool.tooltip.5").formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.explosion_tool.tooltip.power", Text.literal(String.valueOf(power(stack))).formatted(Formatting.YELLOW)).formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.explosion_tool.tooltip.createFire", createFire(stack) ? ScreenTexts.YES.copy().formatted(Formatting.GREEN) : ScreenTexts.NO.copy().formatted(Formatting.RED)).formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.explosion_tool.tooltip.destructionType", Text.translatable("item.mishanguc.explosion_tool.destructionType." + destructionType(stack).name().toLowerCase()).styled(style -> style.withColor(0x779999))).formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.1", TextBridge.keybind("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.2").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.3").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.4").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.5").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.power", TextBridge.literal(String.valueOf(power(stack))).formatted(Formatting.YELLOW)).formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.createFire", createFire(stack) ? ScreenTexts.YES.copy().formatted(Formatting.GREEN) : ScreenTexts.NO.copy().formatted(Formatting.RED)).formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.destructionType", TextBridge.translatable("item.mishanguc.explosion_tool.destructionType." + destructionType(stack).name().toLowerCase()).styled(style -> style.withColor(0x779999))).formatted(Formatting.GRAY));
   }
 
   @Override

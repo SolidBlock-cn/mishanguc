@@ -40,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 import java.util.Map;
@@ -91,7 +92,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
   public void appendTooltip(
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(Text.translatable("item.mishanguc.slab_tool.tooltip").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.slab_tool.tooltip").formatted(Formatting.GRAY));
   }
 
   /**

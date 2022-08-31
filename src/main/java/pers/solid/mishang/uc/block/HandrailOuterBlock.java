@@ -20,7 +20,6 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
@@ -38,6 +37,7 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Map;
 
@@ -112,7 +112,7 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
   @Override
   public MutableText getName() {
     final Block block = baseBlock();
-    return block == null ? super.getName() : Text.translatable("block.mishanguc.handrail_outer", block.getName());
+    return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.handrail_outer", block.getName());
   }
 
   @SuppressWarnings("deprecation")

@@ -5,13 +5,13 @@ import com.google.common.collect.ImmutableMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -79,7 +79,7 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
           90,
           200,
           20,
-          Text.translatable("message.mishanguc.copy_from_back"),
+          TextBridge.translatable("message.mishanguc.copy_from_back"),
           button -> {
             final HungSignBlockEntity entity = this.entity;
             if (entity.editedSide == null) {

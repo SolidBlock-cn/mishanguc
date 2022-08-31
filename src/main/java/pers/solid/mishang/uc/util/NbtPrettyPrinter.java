@@ -59,10 +59,10 @@ public final class NbtPrettyPrinter {
       case 0 -> {
         // 第0层的情况，整个数据的前一部分会完整展示。每一项显示在单独一行。
         int n = 0;
-        MutableText text = Text.literal("");
+        MutableText text = TextBridge.literal("");
         if (compound.isEmpty()) {
           return text.append(Strings.repeat(indent, depth))
-              .append(Text.translatable("debug.mishanguc.nbt.compound_empty"));
+              .append(TextBridge.translatable("debug.mishanguc.nbt.compound_empty"));
         }
         text.append("{");
         for (Iterator<Map.Entry<String, NbtElement>> iterator = entries.entrySet().iterator();
@@ -72,7 +72,7 @@ public final class NbtPrettyPrinter {
                   ? Strings.repeat(indent, depth).replaceAll(" $", "")
                   : Strings.repeat(indent, depth));
           Map.Entry<String, NbtElement> entry = iterator.next();
-          text.append(Text.literal(entry.getKey()).formatted(Formatting.AQUA)).append(": ");
+          text.append(TextBridge.literal(entry.getKey()).formatted(Formatting.AQUA)).append(": ");
           text.append(serialize(entry.getValue(), layer + 1, indent, depth + 1));
           if (iterator.hasNext()) {
             text.append(",");
@@ -89,13 +89,13 @@ public final class NbtPrettyPrinter {
               final Map.Entry<String, NbtElement> next = iterator.next();
               remainsEntries.put(next.getKey(), next.getValue());
             }
-            text.append(Text.translatable("debug.mishanguc.nbt.compound_eclipse", entries.size() - n)
+            text.append(TextBridge.translatable("debug.mishanguc.nbt.compound_eclipse", entries.size() - n)
                 .formatted(Formatting.GRAY)
                 .styled(style -> style
                     .withClickEvent(new NbtClickEvent(remains))
                     .withHoverEvent(new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT,
-                        Text.translatable("debug.mishanguc.nbt.compound_display_remains")))));
+                        TextBridge.translatable("debug.mishanguc.nbt.compound_display_remains")))));
             break;
           }
           n++;
@@ -105,12 +105,12 @@ public final class NbtPrettyPrinter {
       case 1 -> {
         // 第1层的情况，应简短显示，尽可能保持在两行以内。
         final int size = compound.getSize();
-        MutableText text = Text.literal("{");
+        MutableText text = TextBridge.literal("{");
         int n = 0;
         for (Iterator<Map.Entry<String, NbtElement>> iterator = entries.entrySet().iterator();
              iterator.hasNext(); ) {
           Map.Entry<String, NbtElement> entry = iterator.next();
-          text.append(Text.literal(entry.getKey())
+          text.append(TextBridge.literal(entry.getKey())
                   .styled(style -> style.withColor(0x99ffff)))
               .append(": ");
           // 如果该元素为唯一元素，则layer不+1。
@@ -121,35 +121,35 @@ public final class NbtPrettyPrinter {
             text.append(", ");
           }
           if (n >= 5) {
-            text.append(Text.translatable(" ")
+            text.append(TextBridge.translatable(" ")
                 .formatted(Formatting.GRAY)
-                .append(Text.translatable("debug.mishanguc.nbt.compound_total", entries.size()))
+                .append(TextBridge.translatable("debug.mishanguc.nbt.compound_total", entries.size()))
                 .styled(style -> style
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("debug.mishanguc.nbt.compound_display_full")))
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextBridge.translatable("debug.mishanguc.nbt.compound_display_full")))
                     .withClickEvent(new NbtClickEvent(compound))));
             break;
           }
         }
         if (1 < n && n < 5) {
           text.append(
-              Text.translatable(" ")
+              TextBridge.translatable(" ")
                   .formatted(Formatting.GRAY)
-                  .append(Text.translatable("debug.mishanguc.nbt.compound_expand", entries.size()))
+                  .append(TextBridge.translatable("debug.mishanguc.nbt.compound_expand", entries.size()))
                   .styled(style -> style.withHoverEvent(
-                          new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("debug.mishanguc.nbt.compound_display_full")))
+                          new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextBridge.translatable("debug.mishanguc.nbt.compound_display_full")))
                       .withClickEvent(new NbtClickEvent(compound))));
         }
         return text.append("}");
       }
       default -> {
-        MutableText text = Text.literal("{");
+        MutableText text = TextBridge.literal("{");
         if (compound.getSize() > 1) {
           text.append(
-              Text.translatable("debug.mishanguc.nbt.compound_brief", compound.getSize())
+              TextBridge.translatable("debug.mishanguc.nbt.compound_brief", compound.getSize())
                   .formatted(Formatting.GRAY)
                   .styled(style -> style
                       .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                          Text.translatable(
+                          TextBridge.translatable(
                               "debug.mishanguc.nbt.compound_display_full")))
                       .withClickEvent(new NbtClickEvent(compound))));
         }
@@ -165,11 +165,11 @@ public final class NbtPrettyPrinter {
   public static Text serialize(NbtList nbtList, int layer, String indent, int depth) {
     switch (layer) {
       case 0 -> {
-        MutableText text = Text.literal("");
+        MutableText text = TextBridge.literal("");
         int n = 0;
         if (nbtList.isEmpty()) {
           return text.append(Strings.repeat(indent, depth))
-              .append(Text.translatable("debug.mishanguc.nbt.list_empty"));
+              .append(TextBridge.translatable("debug.mishanguc.nbt.list_empty"));
         }
         text.append("[");
         for (Iterator<NbtElement> iterator = nbtList.iterator(); iterator.hasNext(); ) {
@@ -190,10 +190,10 @@ public final class NbtPrettyPrinter {
             while (iterator.hasNext()) {
               remains.add(iterator.next());
             }
-            text.append(Text.translatable("debug.mishanguc.nbt.list_eclipse", nbtList.size() - n)
+            text.append(TextBridge.translatable("debug.mishanguc.nbt.list_eclipse", nbtList.size() - n)
                 .formatted(Formatting.GRAY)
                 .styled(style -> style
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("debug.mishanguc.nbt.list_display_remains")))
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextBridge.translatable("debug.mishanguc.nbt.list_display_remains")))
                     .withClickEvent(new NbtClickEvent(remains))));
             return text;
           }
@@ -202,7 +202,7 @@ public final class NbtPrettyPrinter {
         return text.append(" ]");
       }
       case 1 -> {
-        MutableText text = Text.literal("[");
+        MutableText text = TextBridge.literal("[");
         final int size = nbtList.size();
         int n = 0;
         for (Iterator<NbtElement> iterator = nbtList.iterator(); iterator.hasNext(); ) {
@@ -213,33 +213,33 @@ public final class NbtPrettyPrinter {
             text.append(", ");
           }
           if (n >= 5) {
-            text.append(Text.literal(" ")
+            text.append(TextBridge.literal(" ")
                 .formatted(Formatting.GRAY)
-                .append(Text.translatable("debug.mishanguc.nbt.list_total", nbtList.size()))
+                .append(TextBridge.translatable("debug.mishanguc.nbt.list_total", nbtList.size()))
                 .styled(style -> style
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("debug.mishanguc.nbt.list_display_full")))
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextBridge.translatable("debug.mishanguc.nbt.list_display_full")))
                     .withClickEvent(new NbtClickEvent(nbtList))));
             break;
           }
         }
         if (n < 5 && n > 1) {
-          text.append(Text.literal(" ")
+          text.append(TextBridge.literal(" ")
               .formatted(Formatting.GRAY)
-              .append(Text.translatable("debug.mishanguc.nbt.list_expand", nbtList.size()))
+              .append(TextBridge.translatable("debug.mishanguc.nbt.list_expand", nbtList.size()))
               .styled(style -> style
-                  .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("debug.mishanguc.nbt.list_display_full")))
+                  .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextBridge.translatable("debug.mishanguc.nbt.list_display_full")))
                   .withClickEvent(new NbtClickEvent(nbtList))));
         }
         text.append("]");
         return text;
       }
       default -> {
-        MutableText text = Text.literal("[");
+        MutableText text = TextBridge.literal("[");
         if (nbtList.size() > 1) {
-          text.append(Text.translatable("debug.mishanguc.nbt.list_brief", nbtList.size())
+          text.append(TextBridge.translatable("debug.mishanguc.nbt.list_brief", nbtList.size())
               .formatted(Formatting.GRAY)
               .styled(style -> style
-                  .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("debug.mishanguc.nbt.list_display_full")))
+                  .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextBridge.translatable("debug.mishanguc.nbt.list_display_full")))
                   .withClickEvent(new NbtClickEvent(nbtList))));
         }
         text.append("]");
@@ -252,17 +252,17 @@ public final class NbtPrettyPrinter {
     final String string = nbtString.asString();
     final UnaryOperator<Style> strStyle = style -> style.withColor(0xcccccc);
     if (layer == 0) {
-      return Text.literal(string).styled(strStyle);
+      return TextBridge.literal(string).styled(strStyle);
     } else if (layer == 1) {
       return string.length() > 160
-          ? Text.literal(string.substring(0, 155))
+          ? TextBridge.literal(string.substring(0, 155))
           .styled(strStyle)
-          .append(Text.translatable("debug.mishanguc.nbt.string.eclipse", string.length()))
-          : Text.literal(string).styled(strStyle);
+          .append(TextBridge.translatable("debug.mishanguc.nbt.string.eclipse", string.length()))
+          : TextBridge.literal(string).styled(strStyle);
     } else {
       return string.length() > 40
-          ? Text.literal(string.substring(0, 35)).styled(strStyle).append("……")
-          : Text.literal(string).styled(strStyle);
+          ? TextBridge.literal(string.substring(0, 35)).styled(strStyle).append("……")
+          : TextBridge.literal(string).styled(strStyle);
     }
   }
 }

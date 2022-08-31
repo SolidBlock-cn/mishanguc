@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 import java.util.Map;
@@ -69,9 +70,7 @@ public class HungSignBlockItem extends NamedBlockItem {
     map.forEach(
         (direction, textContexts) -> {
           tooltip.add(
-              Text.translatable(
-                      "block.mishanguc.tooltip.hung_sign_block",
-                      Text.translatable("direction." + direction.asString()))
+              TextBridge.translatable("block.mishanguc.tooltip.hung_sign_block", TextBridge.translatable("direction." + direction.asString()))
                   .formatted(Formatting.GRAY));
           textContexts.forEach(
               textContext -> {
@@ -98,10 +97,10 @@ public class HungSignBlockItem extends NamedBlockItem {
                 }));
     final ImmutableList<Text> build = appendable.build();
     if (!build.isEmpty()) {
-      final MutableText appendableText = Text.literal("");
+      final MutableText appendableText = TextBridge.literal("");
       build.forEach(t -> appendableText.append(" ").append(t));
       text.append(
-          Text.literal(" -" + appendableText.asTruncatedString(20)).formatted(Formatting.GRAY));
+          TextBridge.literal(" -" + appendableText.asTruncatedString(20)).formatted(Formatting.GRAY));
     }
     return text;
   }

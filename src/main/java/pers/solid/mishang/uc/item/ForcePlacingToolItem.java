@@ -39,6 +39,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -105,18 +106,18 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        Text.translatable("item.mishanguc.force_placing_tool.tooltip.1")
+        TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.1")
             .formatted(Formatting.GRAY));
     tooltip.add(
-        Text.translatable("item.mishanguc.force_placing_tool.tooltip.2")
+        TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.2")
             .formatted(Formatting.GRAY));
     if (Boolean.TRUE.equals(includesFluid(stack))) {
       tooltip.add(
-          Text.translatable("item.mishanguc.force_placing_tool.tooltip.fluids")
+          TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.fluids")
               .formatted(Formatting.GRAY));
     }
     tooltip.add(
-        Text.translatable("item.mishanguc.force_placing_tool.tooltip.3")
+        TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.3")
             .formatted(Formatting.GRAY));
   }
 

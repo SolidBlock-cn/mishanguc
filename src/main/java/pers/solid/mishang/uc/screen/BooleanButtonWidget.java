@@ -8,6 +8,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
@@ -114,7 +115,7 @@ public class BooleanButtonWidget extends ButtonWidget {
     final @Nullable Boolean value = getValue();
     return value == null
         ? message
-        : Text.literal("")
+        : TextBridge.literal("")
         .append(message)
         .fillStyle(Style.EMPTY.withColor(value ? 0xb2ff96 : 0xffac96));
   }

@@ -19,7 +19,6 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -28,6 +27,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +78,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   @Override
   public MutableText getName() {
     final Block block = baseBlock();
-    return block == null ? super.getName() : Text.translatable("block.mishanguc.handrail_central", block.getName());
+    return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.handrail_central", block.getName());
   }
 
   @SuppressWarnings("deprecation")

@@ -4,7 +4,6 @@ import com.google.common.collect.Sets;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.block.BlockState;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.Util;
@@ -88,7 +87,7 @@ public abstract class BlockMatchingRule implements StringIdentifiable {
   }
 
   public MutableText getName() {
-    return Text.translatable(Util.createTranslationKey("blockMatchingRule", REGISTRY.getId(this)));
+    return TextBridge.translatable(Util.createTranslationKey("blockMatchingRule", REGISTRY.getId(this)));
   }
 
   /**

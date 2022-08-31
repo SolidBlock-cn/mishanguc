@@ -24,6 +24,7 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -121,10 +122,10 @@ public interface RoadWithAutoLine extends Road {
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     Road.super.appendRoadTooltip(stack, world, tooltip, options);
     tooltip.add(
-        Text.translatable("block.mishanguc.tooltip.road_with_auto_line.1")
+        TextBridge.translatable("block.mishanguc.tooltip.road_with_auto_line.1")
             .formatted(Formatting.GRAY));
     tooltip.add(
-        Text.translatable("block.mishanguc.tooltip.road_with_auto_line.2")
+        TextBridge.translatable("block.mishanguc.tooltip.road_with_auto_line.2")
             .formatted(Formatting.GRAY));
   }
 

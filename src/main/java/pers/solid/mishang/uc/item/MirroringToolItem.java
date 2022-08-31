@@ -25,6 +25,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -84,15 +85,15 @@ public class MirroringToolItem extends BlockToolItem implements ItemResourceGene
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        Text.translatable("item.mishanguc.mirroring_tool.tooltip").formatted(Formatting.GRAY));
+        TextBridge.translatable("item.mishanguc.mirroring_tool.tooltip").formatted(Formatting.GRAY));
     final Boolean includesFluid = includesFluid(stack);
     if (includesFluid == null) {
       tooltip.add(
-          Text.translatable("item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking")
+          TextBridge.translatable("item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking")
               .formatted(Formatting.GRAY));
     } else if (includesFluid) {
       tooltip.add(
-          Text.translatable("item.mishanguc.block_tool.tooltip.includesFluid")
+          TextBridge.translatable("item.mishanguc.block_tool.tooltip.includesFluid")
               .formatted(Formatting.GRAY));
     }
   }

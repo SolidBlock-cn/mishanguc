@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 import java.util.Objects;
@@ -75,10 +76,10 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     RoadWithAngleLine.super.appendRoadTooltip(stack, world, tooltip, options);
     tooltip.add(
-        Text.translatable("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.1")
+        TextBridge.translatable("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.1")
             .formatted(Formatting.GRAY));
     tooltip.add(
-        Text.translatable("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.2")
+        TextBridge.translatable("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.2")
             .formatted(Formatting.GRAY));
   }
 

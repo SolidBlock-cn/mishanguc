@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.util.RoadConnectionState;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -33,13 +34,11 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
       PlayerEntity playerEntity, BlockState blockState, BlockPos blockPos) {
     Block block = blockState.getBlock();
     if (!(block instanceof final Road road)) {
-      playerEntity.sendMessage(Text.translatable("debug.mishanguc.notRoad").formatted(Formatting.RED), false);
+      playerEntity.sendMessage(TextBridge.translatable("debug.mishanguc.notRoad").formatted(Formatting.RED), false);
       return ActionResult.FAIL;
     }
     playerEntity.sendMessage(
-        Text.translatable(
-                "debug.mishanguc.roadConnectionState.allDir",
-                String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
+        TextBridge.translatable("debug.mishanguc.roadConnectionState.allDir", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
             .formatted(Formatting.YELLOW),
         false);
     Direction.Type.HORIZONTAL.forEach(
@@ -47,14 +46,7 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
           final RoadConnectionState connectionState =
               road.getConnectionStateOf(blockState, direction);
           playerEntity.sendMessage(
-              Text.translatable(
-                  "debug.mishanguc.roadConnectionState.brief",
-                  RoadConnectionState.text(direction),
-                  RoadConnectionState.text(connectionState.direction()).formatted(Formatting.WHITE),
-                  RoadConnectionState.text(connectionState.lineColor()),
-                  RoadConnectionState.text(connectionState.lineType()).formatted(Formatting.WHITE),
-                  RoadConnectionState.text(connectionState.whetherConnected())
-              ).setStyle(Style.EMPTY.withColor(0xcccccc)),
+              TextBridge.translatable("debug.mishanguc.roadConnectionState.brief", RoadConnectionState.text(direction), RoadConnectionState.text(connectionState.direction()).formatted(Formatting.WHITE), RoadConnectionState.text(connectionState.lineColor()), RoadConnectionState.text(connectionState.lineType()).formatted(Formatting.WHITE), RoadConnectionState.text(connectionState.whetherConnected())).setStyle(Style.EMPTY.withColor(0xcccccc)),
               false);
         });
     return ActionResult.SUCCESS;
@@ -83,7 +75,7 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(Text.translatable("item.mishanguc.road_connection_state_debugging_tool.tooltip.1").formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.road_connection_state_debugging_tool.tooltip.2").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.road_connection_state_debugging_tool.tooltip.1").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.road_connection_state_debugging_tool.tooltip.2").formatted(Formatting.GRAY));
   }
 }

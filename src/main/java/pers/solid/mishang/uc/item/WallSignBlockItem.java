@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 import java.util.Objects;
@@ -69,7 +70,7 @@ public class WallSignBlockItem extends NamedBlockItem {
                 .iterator());
     if (!texts.isEmpty()) {
       tooltip.add(
-          Text.translatable("block.mishanguc.tooltip.wall_sign_block")
+          TextBridge.translatable("block.mishanguc.tooltip.wall_sign_block")
               .formatted(Formatting.GRAY));
       tooltip.addAll(texts);
     }
@@ -87,10 +88,10 @@ public class WallSignBlockItem extends NamedBlockItem {
                 .filter(Objects::nonNull)
                 .iterator());
     if (!texts.isEmpty()) {
-      MutableText appendable = Text.literal("");
+      MutableText appendable = TextBridge.literal("");
       texts.forEach(t -> appendable.append(" ").append(t));
       text.append(
-          Text.literal(" -" + appendable.asTruncatedString(25)).formatted(Formatting.GRAY));
+          TextBridge.literal(" -" + appendable.asTruncatedString(25)).formatted(Formatting.GRAY));
     }
     return text;
   }

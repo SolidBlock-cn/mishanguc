@@ -7,11 +7,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +23,9 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
+import pers.solid.mishang.uc.util.TextBridge;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -71,6 +76,12 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
     @Override
     public LineColor getLineColor(BlockState state, Direction direction) {
       return state.get(AXIS) == direction.getAxis() ? lineColor2 : lineColor;
+    }
+
+    @Override
+    public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
+      tooltip.add(TextBridge.translatable("lineType.diffAngleLine.composed.1", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
+      tooltip.add(TextBridge.translatable("lineType.diffAngleLine.composed.2", lineColor2.getName(), lineType2.getName()).formatted(Formatting.BLUE));
     }
 
     @Override

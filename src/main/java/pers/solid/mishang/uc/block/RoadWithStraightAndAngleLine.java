@@ -14,15 +14,13 @@ import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.util.HorizontalCornerDirection;
-import pers.solid.mishang.uc.util.LineColor;
-import pers.solid.mishang.uc.util.LineType;
-import pers.solid.mishang.uc.util.RoadConnectionState;
+import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -67,8 +65,17 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithStraightAndAngleLine {
-    public Impl(Settings settings, LineColor lineColor) {
-      super(settings, lineColor, LineType.NORMAL);
+    private final LineColor lineColorSide;
+    private final LineType lineTypeSide;
+
+    public Impl(Settings settings, LineColor lineColor, LineColor lineColorSide, LineType lineType, LineType lineTypeSide) {
+      super(settings, lineColor, lineType);
+      this.lineColorSide = lineColorSide;
+      this.lineTypeSide = lineTypeSide;
+    }
+
+    public Impl(Settings settings, LineColor lineColor, LineType lineType) {
+      this(settings, lineColor, lineColor, lineType, lineType);
     }
 
     @Override
@@ -93,6 +100,28 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
             new JBlockModel(mirroredBlockModelId).y(rotation - 90));
       }
       return JBlockStates.ofVariants(variants);
+    }
+
+    @Override
+    public LineColor getLineColor(BlockState state, Direction direction) {
+      if (state.get(FACING).hasDirection(direction) && !state.get(AXIS).test(direction)) {
+        return lineColorSide;
+      }
+      return super.getLineColor(state, direction);
+    }
+
+    @Override
+    public LineType getLineType(BlockState state, Direction direction) {
+      if (state.get(FACING).hasDirection(direction) && !state.get(AXIS).test(direction)) {
+        return lineTypeSide;
+      }
+      return super.getLineType(state, direction);
+    }
+
+    @Override
+    public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
+      tooltip.add(TextBridge.translatable("lineType.straightAndAngle.composed.1", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
+      tooltip.add(TextBridge.translatable("lineType.straightAndAngle.composed.2", lineColorSide.getName(), lineTypeSide.getName()).formatted(Formatting.BLUE));
     }
   }
 }

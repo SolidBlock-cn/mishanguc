@@ -24,6 +24,7 @@ import net.minecraft.util.math.Quaternion;
 import org.jetbrains.annotations.*;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.HorizontalAlign;
+import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
 import java.util.Arrays;
@@ -202,7 +203,7 @@ public class TextContext implements Cloneable {
   public static @NotNull TextContext fromNbt(NbtElement nbt, TextContext defaults) {
     final TextContext textContext = defaults.clone();
     if (nbt instanceof NbtString) {
-      textContext.text = Text.literal(nbt.asString());
+      textContext.text = TextBridge.literal(nbt.asString());
     } else if (nbt instanceof NbtCompound nbtCompound) {
       textContext.readNbt(nbtCompound);
     }
@@ -230,10 +231,10 @@ public class TextContext implements Cloneable {
       try {
         text = Text.Serializer.fromLenientJson(textJson);
       } catch (JsonParseException e) {
-        text = Text.translatable("message.mishanguc.invalid_json", e.getMessage());
+        text = TextBridge.translatable("message.mishanguc.invalid_json", e.getMessage());
       }
     } else if (nbtText instanceof NbtString) {
-      text = Text.literal(nbtText.asString());
+      text = TextBridge.literal(nbtText.asString());
     } else {
       text = null;
     }
@@ -524,7 +525,7 @@ public class TextContext implements Cloneable {
           stringBuilder.setCharAt(i, flipStringReplacement.get(c));
         }
       }
-      text = Text.literal(stringBuilder.toString());
+      text = TextBridge.literal(stringBuilder.toString());
     }
     if (extra instanceof final PatternSpecialDrawable patternTextSpecial) {
       final String shapeName = patternTextSpecial.shapeName();

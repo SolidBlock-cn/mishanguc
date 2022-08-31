@@ -38,6 +38,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.util.BlockMatchingRule;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Iterator;
 import java.util.List;
@@ -148,17 +149,14 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(
-        Text.translatable("item.mishanguc.fast_building_tool.tooltip.1")
+        TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.1")
             .formatted(Formatting.GRAY));
-    tooltip.add(Text.translatable("item.mishanguc.fast_building_tool.tooltip.2").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.2").formatted(Formatting.GRAY));
     tooltip.add(
-        Text.translatable(
-                "item.mishanguc.fast_building_tool.tooltip.range", Text.literal(Integer.toString(this.getRange(stack))).formatted(Formatting.GREEN))
+        TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.range", TextBridge.literal(Integer.toString(this.getRange(stack))).formatted(Formatting.GREEN))
             .formatted(Formatting.GRAY));
     tooltip.add(
-        Text.translatable(
-                "item.mishanguc.fast_building_tool.tooltip.matchingRule",
-                this.getMatchingRule(stack).getName().formatted(Formatting.GREEN))
+        TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.matchingRule", this.getMatchingRule(stack).getName().formatted(Formatting.GREEN))
             .formatted(Formatting.GRAY));
   }
 
@@ -234,7 +232,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
 
   @Override
   public Text getName(ItemStack stack) {
-    return Text.literal("")
+    return TextBridge.literal("")
         .append(super.getName(stack))
         .append(" - ")
         .append(getMatchingRule(stack).getName());
@@ -345,7 +343,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
     final BlockMatchingRule newRule = RULES_TO_CYCLE.get(j);
     if (newRule != null) {
       stack.setSubNbt("MatchingRule", NbtString.of(newRule.getId().toString()));
-      final MutableText text = Text.literal("[ ");
+      final MutableText text = TextBridge.literal("[ ");
       for (Iterator<BlockMatchingRule> iterator = RULES_TO_CYCLE.iterator(); iterator.hasNext(); ) {
         BlockMatchingRule rule = iterator.next();
         final MutableText name = rule.getName();

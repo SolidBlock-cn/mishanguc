@@ -16,7 +16,6 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -29,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Map;
 
@@ -172,7 +172,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
   @Override
   public MutableText getName() {
     final Block block = baseBlock();
-    return block == null ? super.getName() : Text.translatable("block.mishanguc.handrail", block.getName());
+    return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.handrail", block.getName());
   }
 
   @SuppressWarnings("deprecation")

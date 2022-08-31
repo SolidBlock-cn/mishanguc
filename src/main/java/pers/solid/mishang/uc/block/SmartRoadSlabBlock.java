@@ -31,7 +31,7 @@ import java.util.List;
  *
  * @param <T> 基础方块类型。
  */
-public class SmartRoadSlabBlock<T extends Block & Road> extends AbstractRoadSlabBlock {
+public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoadSlabBlock {
   private static Block cachedBaseBlock;
   public final T baseBlock;
 
@@ -63,6 +63,11 @@ public class SmartRoadSlabBlock<T extends Block & Road> extends AbstractRoadSlab
   @Override
   public LineType getLineType(BlockState blockState, Direction direction) {
     return baseBlock.getLineType(blockState, direction);
+  }
+
+  @Override
+  public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
+    baseBlock.appendDescriptionTooltip(tooltip, options);
   }
 
   @Nullable

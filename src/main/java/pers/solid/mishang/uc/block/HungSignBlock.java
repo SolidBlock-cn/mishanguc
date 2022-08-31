@@ -32,7 +32,6 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -53,6 +52,7 @@ import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.text.TextContext;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 import java.util.Map;
@@ -357,7 +357,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     if (editor != null && editor != player) {
       // 这种情况下，告示牌被占用，玩家无权编辑。
       // In this case, the sign is occupied, and the player has no editing permission.
-      player.sendMessage(Text.translatable("message.mishanguc.no_editing_permission.occupied", editor.getName()), false);
+      player.sendMessage(TextBridge.translatable("message.mishanguc.no_editing_permission.occupied", editor.getName()), false);
       return ActionResult.FAIL;
     }
     entity.editedSide = hit.getSide();
@@ -372,7 +372,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   @Override
   public MutableText getName() {
     if (baseBlock != null) {
-      return Text.translatable("block.mishanguc.hung_sign", baseBlock.getName());
+      return TextBridge.translatable("block.mishanguc.hung_sign", baseBlock.getName());
     }
     return super.getName();
   }

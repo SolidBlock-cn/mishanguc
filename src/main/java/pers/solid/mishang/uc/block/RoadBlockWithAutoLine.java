@@ -4,7 +4,9 @@ import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.Direction;
 import org.apache.commons.lang3.ObjectUtils;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +17,7 @@ import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 import static pers.solid.mishang.uc.blocks.RoadBlocks.*;
@@ -276,5 +279,10 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
   @Override
   public @NotNull JBlockStates getBlockStates() {
     return JBlockStates.simple(getBlockModelId());
+  }
+
+  @Override
+  public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
+    
   }
 }

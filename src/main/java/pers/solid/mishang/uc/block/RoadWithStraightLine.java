@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ public interface RoadWithStraightLine extends Road {
 
   @Override
   default void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
+    Road.super.appendRoadProperties(builder);
     builder.add(AXIS);
   }
 
@@ -80,10 +82,10 @@ public interface RoadWithStraightLine extends Road {
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     Road.super.appendRoadTooltip(stack, world, tooltip, options);
     tooltip.add(
-        Text.translatable("block.mishanguc.tooltip.road_with_straight_line.1")
+        TextBridge.translatable("block.mishanguc.tooltip.road_with_straight_line.1")
             .formatted(Formatting.GRAY));
     tooltip.add(
-        Text.translatable("block.mishanguc.tooltip.road_with_straight_line.2")
+        TextBridge.translatable("block.mishanguc.tooltip.road_with_straight_line.2")
             .formatted(Formatting.GRAY));
   }
 
@@ -93,9 +95,8 @@ public interface RoadWithStraightLine extends Road {
     }
 
     @Override
-    public void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
-      super.appendRoadProperties(builder);
-      RoadWithStraightLine.super.appendRoadProperties(builder);
+    public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
+      tooltip.add(TextBridge.translatable("lineType.straight.composed", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
     }
 
     @Environment(EnvType.CLIENT)

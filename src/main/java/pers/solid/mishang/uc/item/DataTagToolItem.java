@@ -47,6 +47,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.NbtPrettyPrinter;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(Text.translatable("item.mishanguc.data_tag_tool.tooltip").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.data_tag_tool.tooltip").formatted(Formatting.GRAY));
   }
 
   @Override
@@ -165,20 +166,14 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
         final NbtCompound blockData = buf.readNbt();
         client.execute(() -> {
           client.inGameHud.getChatHud().addMessage(
-              Text.translatable(
-                      "debug.mishanguc.dataTag.block.header",
-                      String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()),
-                      block.getName().formatted(Formatting.BOLD))
+              TextBridge.translatable("debug.mishanguc.dataTag.block.header", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), block.getName().formatted(Formatting.BOLD))
                   .formatted(Formatting.YELLOW));
           client.inGameHud.getChatHud().addMessage(NbtPrettyPrinter.serialize(blockData));
         });
       } else {
         // 此时认为该方块没有数据。
         client.execute(() -> client.inGameHud.getChatHud().addMessage(
-            Text.translatable(
-                    "debug.mishanguc.dataTag.block.null",
-                    String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()),
-                    block.getName().formatted(Formatting.BOLD))
+            TextBridge.translatable("debug.mishanguc.dataTag.block.null", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), block.getName().formatted(Formatting.BOLD))
                 .formatted(Formatting.RED)));
       }
     }
@@ -195,11 +190,8 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
       final Text entityName = buf.readText();
       final BlockPos entityPos = buf.readBlockPos();
       final NbtCompound entityNbt = buf.readNbt();
-      client.inGameHud.getChatHud().addMessage(Text.translatable(
-              "debug.mishanguc.dataTag.entity.entity",
-              String.format(
-                  "%s %s %s", entityPos.getX(), entityPos.getY(), entityPos.getZ()),
-              Text.literal("").append(entityName).formatted(Formatting.BOLD))
+      client.inGameHud.getChatHud().addMessage(TextBridge.translatable("debug.mishanguc.dataTag.entity.entity", String.format(
+              "%s %s %s", entityPos.getX(), entityPos.getY(), entityPos.getZ()), TextBridge.literal("").append(entityName).formatted(Formatting.BOLD))
           .formatted(Formatting.YELLOW));
       client.inGameHud.getChatHud().addMessage(NbtPrettyPrinter.serialize(entityNbt));
     }
