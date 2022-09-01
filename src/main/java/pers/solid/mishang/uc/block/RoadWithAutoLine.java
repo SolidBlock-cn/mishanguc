@@ -105,16 +105,16 @@ public interface RoadWithAutoLine extends Road {
 
   @Override
   default void neighborRoadUpdate(
-      BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+      BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
     // 屏蔽上下方的更新。
-    if (!fromPos.equals(pos.up())
-        && !fromPos.equals(pos.down())
-        && !(world.getBlockState(fromPos).getBlock() instanceof AirBlock))
+    if (!sourcePos.equals(pos.up())
+        && !sourcePos.equals(pos.down())
+        && !(world.getBlockState(sourcePos).getBlock() instanceof AirBlock))
     // flags设为2从而使得 <code>flags&1 !=0</code> 不成立，从而不递归更新邻居，参考 {@link World#setBlockState}。
     {
       world.setBlockState(pos, makeState(getConnectionStateMap(world, pos), state), 2);
     }
-    Road.super.neighborRoadUpdate(state, world, pos, block, fromPos, notify);
+    Road.super.neighborRoadUpdate(state, world, pos, sourceBlock, sourcePos, notify);
   }
 
   @Override

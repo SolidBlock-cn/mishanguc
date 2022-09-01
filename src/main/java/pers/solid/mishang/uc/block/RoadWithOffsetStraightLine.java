@@ -96,8 +96,8 @@ public interface RoadWithOffsetStraightLine extends Road {
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithOffsetStraightLine {
-    public Impl(Settings settings, LineColor lineColor) {
-      super(settings, lineColor, LineType.NORMAL);
+    public Impl(Settings settings, LineColor lineColor, LineType lineType) {
+      super(settings, lineColor, lineType);
     }
 
     @Override

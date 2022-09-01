@@ -2,8 +2,9 @@
   "parent": "mishanguc:block/road_with_line",
   "textures": {
     "particle": "#base",
-    "line_bottom_straight": "#line_top_straight",
-    "line_bottom_angle": "#line_top_angle"
+    "line_bottom_layer1": "#line_top_layer1",
+    "line_bottom_layer2": "#line_top_layer2",
+    "line_side2": "#line_side"
   },
   "elements": [
     {
@@ -22,8 +23,8 @@
       "from": [0, 8, 0],
       "to": [16, 16, 16],
       "faces": {
-        "down": {"texture": "#line_bottom_straight", "uv": [0, 16, 16, 0]},
-        "up": {"texture": "#line_top_straight", "cullface": "up"},
+        "down": {"texture": "#line_bottom_layer1", "uv": [0, 16, 16, 0]},
+        "up": {"texture": "#line_top_layer1", "cullface": "up"},
         "south": {"texture": "#line_side", "cullface": "south"},
         "north": {"texture": "#line_side", "cullface": "north"}
       }
@@ -32,9 +33,9 @@
       "from": [0, 0, 0],
       "to": [16, 16, 16],
       "faces": {
-        "down": {"texture": "#line_bottom_angle"},
-        "up": {"texture": "#line_top_angle", "cullface": "up"},
-        "west": {"texture": "#line_side", "cullface": "west"}
+        "down": {"texture": "#line_bottom_layer2"},
+        "up": {"texture": "#line_top_layer2", "cullface": "up"},
+        "west": {"texture": "#line_side2", "cullface": "west"}
       }
     }
   ]

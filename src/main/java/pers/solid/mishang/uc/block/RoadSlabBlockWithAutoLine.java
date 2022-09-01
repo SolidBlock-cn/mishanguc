@@ -36,9 +36,9 @@ public class RoadSlabBlockWithAutoLine extends SmartRoadSlabBlock<RoadBlockWithA
 
   @Override
   public void neighborUpdate(
-      BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-    super.neighborUpdate(state, world, pos, block, fromPos, notify);
-    neighborRoadUpdate(state, world, pos, block, fromPos, notify);
+      BlockState state, World world, BlockPos pos, Block block, BlockPos sourcePos, boolean notify) {
+    super.neighborUpdate(state, world, pos, block, sourcePos, notify);
+    neighborRoadUpdate(state, world, pos, block, sourcePos, notify);
   }
 
   private <T extends Comparable<T>> BlockState sendProperty(

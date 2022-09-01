@@ -8,18 +8,17 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -81,9 +80,15 @@ public abstract class AbstractRoadBlock extends Block implements Road {
   @SuppressWarnings("deprecation")
   @Override
   public void neighborUpdate(
-      BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-    super.neighborUpdate(state, world, pos, block, fromPos, notify);
-    neighborRoadUpdate(state, world, pos, block, fromPos, notify);
+      BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+    super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
+    neighborRoadUpdate(state, world, pos, sourceBlock, sourcePos, notify);
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    return withStateForNeighborUpdate(super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos), direction, neighborState, world, pos, neighborPos);
   }
 
   @Override
@@ -96,6 +101,7 @@ public abstract class AbstractRoadBlock extends Block implements Road {
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     super.appendTooltip(stack, world, tooltip, options);
     appendDescriptionTooltip(tooltip, options);
+    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road").formatted(Formatting.GRAY));
     appendRoadTooltip(stack, world, tooltip, options);
   }
 }
