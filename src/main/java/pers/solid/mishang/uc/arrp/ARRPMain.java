@@ -26,6 +26,8 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
@@ -85,7 +87,8 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   private static void writeRoadBlockModelWithSlab(
       AbstractRoadBlock block, String parent, JTextures textures) {
     final Identifier id = block.getBlockModelId();
-    final Identifier slabId = RoadSlabBlocks.BLOCK_TO_SLABS.get(block).getBlockModelId();
+    final AbstractRoadSlabBlock slab = RoadSlabBlocks.BLOCK_TO_SLABS.get(block);
+    final Identifier slabId = slab == null ? null : slab.getBlockModelId();
     writeRoadBlockModelWithSlab(parent, textures, id, slabId);
   }
 
@@ -99,9 +102,10 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   private static void writeRoadBlockModelWithSlabWithMirrored(
       AbstractRoadBlock block, String parent, JTextures textures) {
     final Identifier id = block.getBlockModelId();
-    final Identifier slabId = RoadSlabBlocks.BLOCK_TO_SLABS.get(block).getBlockModelId();
+    final AbstractRoadSlabBlock slab = RoadSlabBlocks.BLOCK_TO_SLABS.get(block);
+    final Identifier slabId = slab == null ? null : slab.getBlockModelId();
     writeRoadBlockModelWithSlab(parent, textures, id, slabId);
-    writeRoadBlockModelWithSlab(parent + "_mirrored", textures, id.brrp_append("_mirrored"), slabId.brrp_append("_mirrored"));
+    writeRoadBlockModelWithSlab(parent + "_mirrored", textures, id.brrp_append("_mirrored"), slabId == null ? null : slabId.brrp_append("_mirrored"));
   }
 
   /**
@@ -112,10 +116,12 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
    * @param id       道路方块的完整id。
    * @param slabId   该方块对应的台阶方块的完整id。
    */
-  private static void writeRoadBlockModelWithSlab(String parent, JTextures textures, Identifier id, Identifier slabId) {
+  private static void writeRoadBlockModelWithSlab(String parent, JTextures textures, @NotNull Identifier id, @Nullable Identifier slabId) {
     PACK.addModel(new JModel(blockIdentifier(parent)).textures(textures), id);
-    PACK.addModel(new JModel(BRRPHelper.slabOf(blockIdentifier(parent))).textures(textures), slabId);
-    PACK.addModel(new JModel(BRRPHelper.slabOf(blockIdentifier(parent)) + "_top").textures(textures), slabId.brrp_append("_top"));
+    if (slabId != null) {
+      PACK.addModel(new JModel(BRRPHelper.slabOf(blockIdentifier(parent))).textures(textures), slabId);
+      PACK.addModel(new JModel(BRRPHelper.slabOf(blockIdentifier(parent)) + "_top").textures(textures), slabId.brrp_append("_top"));
+    }
   }
 
   private static IdentifiedTag blockTag(String path) {
@@ -592,12 +598,12 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         RoadBlocks.ROAD_WITH_WHITE_TS_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineTop("white_joint_line"));
-    writeRoadBlockModelWithSlabWithMirrored(
+    /*writeRoadBlockModelWithSlabWithMirrored(
         RoadBlocks.ROAD_WITH_WHITE_S_BA_LINE,
         "road_with_straight_and_angle_line",
         FasterJTextures.ofP(
-            "line_top_straight", "white_straight_line",
-            "line_top_angle", "white_bevel_angle_line").lineSide("white_straight_line").base("asphalt"));
+            "line_top_layer1", "white_straight_line",
+            "line_top_layer2", "white_bevel_angle_line").lineSide("white_straight_line").base("asphalt"));*/
     writeRoadBlockModelWithSlab(
         RoadBlocks.ROAD_WITH_WHITE_CROSS_LINE,
         "road_with_cross_line",
@@ -606,12 +612,12 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         RoadBlocks.ROAD_WITH_YELLOW_TS_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_joint_line"));
-    writeRoadBlockModelWithSlabWithMirrored(
+    /*writeRoadBlockModelWithSlabWithMirrored(
         RoadBlocks.ROAD_WITH_YELLOW_S_BA_LINE,
         "road_with_straight_and_angle_line",
         FasterJTextures.ofP(
-            "line_top_straight", "yellow_straight_line",
-            "line_top_angle", "yellow_bevel_angle_line").lineSide("yellow_straight_line").base("asphalt"));
+            "line_top_layer1", "yellow_straight_line",
+            "line_top_layer2", "yellow_bevel_angle_line").lineSide("yellow_straight_line").base("asphalt"));*/
     writeRoadBlockModelWithSlab(
         RoadBlocks.ROAD_WITH_YELLOW_CROSS_LINE,
         "road_with_cross_line",
@@ -620,6 +626,10 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         RoadBlocks.ROAD_WITH_WHITE_OFFSET_LINE,
         "road_with_straight_line",
         new FasterJTextures().base("asphalt").lineSide("white_offset_straight_line").lineTop("white_offset_straight_line"));
+    writeRoadBlockModelWithSlab(
+        RoadBlocks.ROAD_WITH_WHITE_HALF_DOUBLE_LINE,
+        "road_with_straight_line",
+        new FasterJTextures().base("asphalt").lineSide("white_half_double_line").lineTop("white_half_double_line"));
     writeRoadBlockModelWithSlab(
         RoadBlocks.ROAD_WITH_WHITE_DOUBLE_LINE,
         "road_with_straight_line",
@@ -632,6 +642,10 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         RoadBlocks.ROAD_WITH_YELLOW_OFFSET_LINE,
         "road_with_straight_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_offset_straight_line").lineTop("yellow_offset_straight_line"));
+    writeRoadBlockModelWithSlab(
+        RoadBlocks.ROAD_WITH_YELLOW_HALF_DOUBLE_LINE,
+        "road_with_straight_line",
+        new FasterJTextures().base("asphalt").lineSide("yellow_half_double_line").lineTop("yellow_half_double_line"));
     writeRoadBlockModelWithSlab(
         RoadBlocks.ROAD_WITH_YELLOW_DOUBLE_LINE,
         "road_with_straight_line",
@@ -648,6 +662,50 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         RoadBlocks.ROAD_WITH_WHITE_RA_LINE_OFFSET_IN,
         "road_with_angle_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("white_offset_straight_line2").lineTop("white_right_angle_line_with_one_part_offset_in"));
+    /*writeRoadBlockModelWithSlabWithMirrored(
+        RoadBlocks.ROAD_WITH_W_S_Y_BA_LINE,
+        "road_with_straight_and_angle_line",
+        FasterJTextures.ofP(
+            "line_top_layer1", "white_straight_line",
+            "line_top_layer2", "yellow_bevel_angle_line"
+        ).lineSide("white_straight_line").lineSide2("yellow_straight_line").base("asphalt"));
+    writeRoadBlockModelWithSlabWithMirrored(
+        RoadBlocks.ROAD_WITH_Y_S_W_BA_LINE,
+        "road_with_straight_and_angle_line",
+        FasterJTextures.ofP(
+            "line_top_layer1", "yellow_straight_line",
+            "line_top_layer2", "white_bevel_angle_line"
+        ).lineSide("yellow_straight_line").lineSide2("white_straight_line").base("asphalt"));
+    writeRoadBlockModelWithSlabWithMirrored(
+        RoadBlocks.ROAD_WITH_WT_S_N_BA_LINE,
+        "road_with_straight_and_angle_line",
+        FasterJTextures.ofP(
+            "line_top_layer1", "white_straight_thick_line",
+            "line_top_layer2", "white_bevel_angle_line"
+        ).lineSide("white_straight_thick_line").lineSide2("white_straight_line").base("asphalt"));
+    writeRoadBlockModelWithSlabWithMirrored(
+        RoadBlocks.ROAD_WITH_YT_S_N_BA_LINE,
+        "road_with_straight_and_angle_line",
+        FasterJTextures.ofP(
+            "line_top_layer1", "yellow_straight_thick_line",
+            "line_top_layer2", "yellow_bevel_angle_line"
+        ).lineSide("yellow_straight_thick_line").lineSide2("yellow_straight_line").base("asphalt"));
+    writeRoadBlockModelWithSlabWithMirrored(
+        RoadBlocks.ROAD_WITH_WT_S_YN_BA_LINE,
+        "road_with_straight_and_angle_line",
+        FasterJTextures.ofP(
+            "line_top_layer1", "white_straight_thick_line",
+            "line_top_layer2", "yellow_bevel_angle_line"
+        ).lineSide("white_straight_thick_line").lineSide2("yellow_straight_line").base("asphalt")
+    );
+    writeRoadBlockModelWithSlabWithMirrored(
+        RoadBlocks.ROAD_WITH_YT_S_WN_BA_LINE,
+        "road_with_straight_and_angle_line",
+        FasterJTextures.ofP(
+            "line_top_layer1", "yellow_straight_thick_line",
+            "line_top_layer2", "white_bevel_angle_line"
+        ).lineSide("yellow_straight_thick_line").lineSide2("white_straight_line").base("asphalt")
+    );*/
     writeRoadBlockModelWithSlab(
         RoadBlocks.ROAD_WITH_WHITE_TS_DOUBLE_LINE,
         "road_with_joint_line",
@@ -732,7 +790,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
    * 为运行时资源包生成资源。在开发环境中，每次加载资源就会重新生成一次。在非开发环境中，游戏开始时生成一次，此后不再生成。
    */
   @CanIgnoreReturnValue
-  private RuntimeResourcePack generateResources(boolean includesClient, boolean includesServer) {
+  private static RuntimeResourcePack generateResources(boolean includesClient, boolean includesServer) {
     if (includesClient) PACK.clearResources(ResourceType.CLIENT_RESOURCES);
     if (includesServer) PACK.clearResources(ResourceType.SERVER_DATA);
 
@@ -785,12 +843,12 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   /**
    * 为本模组内的物品添加配方。该方法只会生成部分配方，还有很多配方是在 {@link net.devtech.arrp.generator.ItemResourceGenerator#writeRecipes(RuntimeResourcePack)} 的子方法中定义的。
    */
-  private void addRecipes() {
+  private static void addRecipes() {
     addRecipesForWallSigns();
     addRecipesForLights();
   }
 
-  private void addRecipesForWallSigns() {
+  private static void addRecipesForWallSigns() {
     // 隐形告示牌是合成其他告示牌的基础。
     { // invisible wall sign
       final JShapedRecipe recipe = new JShapedRecipe(WallSignBlocks.INVISIBLE_WALL_SIGN)
@@ -817,7 +875,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     }
   }
 
-  private void addRecipesForLights() {
+  private static void addRecipesForLights() {
     // 先是三个完整方块的合成表。
     { // white light
       final JShapedRecipe recipe = new JShapedRecipe(LightBlocks.WHITE_LIGHT)

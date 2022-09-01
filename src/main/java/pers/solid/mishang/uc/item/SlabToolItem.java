@@ -27,7 +27,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -38,6 +37,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.block.AbstractRoadBlock;
+import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -76,15 +77,8 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
    * @param slabBlock      台阶方块，不是具体的方块状态。
    * @return 台阶方块的方块状态。
    */
-  @SuppressWarnings("unchecked")
   protected static BlockState toSlab(BlockState baseBlockState, Block slabBlock) {
-    BlockState slabState = slabBlock.getDefaultState();
-    for (@SuppressWarnings("rawtypes") Property property : baseBlockState.getProperties()) {
-      try {
-        slabState = slabState.with(property, baseBlockState.get(property));
-      } catch (IllegalArgumentException ignored) {
-      }
-    }
+    final BlockState slabState = slabBlock.getStateWithProperties(baseBlockState);
     return slabState.with(Properties.SLAB_TYPE, SlabType.DOUBLE);
   }
 
@@ -102,10 +96,12 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
    */
   @Override
   public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-    Block block = state.getBlock();
+    final Block block = state.getBlock();
     try {
-      if (BLOCK_TO_SLAB.containsKey(state.getBlock())) {
-        state = toSlab(state, BLOCK_TO_SLAB.get(state.getBlock()));
+      if (BLOCK_TO_SLAB.containsKey(block)) {
+        state = toSlab(state, BLOCK_TO_SLAB.get(block));
+      } else if (block instanceof AbstractRoadBlock && RoadSlabBlocks.BLOCK_TO_SLABS.containsKey(block)) {
+        state = toSlab(state, RoadSlabBlocks.BLOCK_TO_SLABS.get(block));
       }
       if (state.contains(Properties.SLAB_TYPE)
           && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
@@ -150,8 +146,11 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
         crosshairTarget.getPos().y
             - (double) blockHitResult.getBlockPos().getY()
             > 0.5D;
-    if (BLOCK_TO_SLAB.containsKey(state.getBlock())) {
-      state = toSlab(state, BLOCK_TO_SLAB.get(state.getBlock()));
+    final Block block = state.getBlock();
+    if (BLOCK_TO_SLAB.containsKey(block)) {
+      state = toSlab(state, BLOCK_TO_SLAB.get(block));
+    } else if (block instanceof AbstractRoadBlock && RoadSlabBlocks.BLOCK_TO_SLABS.containsKey(block)) {
+      state = toSlab(state, RoadSlabBlocks.BLOCK_TO_SLABS.get(block));
     }
     if (state.contains(Properties.SLAB_TYPE)
         && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {

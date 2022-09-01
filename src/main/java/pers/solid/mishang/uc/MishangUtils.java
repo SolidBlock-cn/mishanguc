@@ -24,6 +24,8 @@ import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.text.PatternSpecialDrawable;
 import pers.solid.mishang.uc.text.TextContext;
+import pers.solid.mishang.uc.util.LineColor;
+import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
@@ -323,5 +325,18 @@ public class MishangUtils {
   @ApiStatus.AvailableSince("0.2.1")
   public static MutableText describeColor(int color) {
     return TextBridge.empty().append(TextBridge.literal("■").styled(style -> style.withColor(color))).append(String.format("#%06x", color));
+  }
+
+  @ApiStatus.AvailableSince("0.2.4")
+  public static String composeStraightLineTexture(LineColor lineColor, LineType lineType) {
+    if (lineType == LineType.NORMAL) {
+      return lineColor.asString() + "_straight_line";
+    } else {
+      return lineColor.asString() + "_straight_" + lineType.asString() + "_line";
+    }
+  }
+
+  public static String composeAngleLineTexture(LineColor lineColor, boolean bevel) {
+    return lineColor.asString() + "_" + (bevel ? "bevel" : "right") + "_angle_line";
   }
 }

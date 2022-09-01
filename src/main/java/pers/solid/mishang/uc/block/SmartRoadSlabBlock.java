@@ -18,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.util.LineColor;
@@ -82,13 +83,11 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
     }
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState rotate(BlockState state, BlockRotation rotation) {
     return baseBlock.rotate(state, rotation);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState mirror(BlockState state, BlockMirror mirror) {
     return baseBlock.mirror(state, mirror);
@@ -110,11 +109,17 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
     }
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public void neighborUpdate(
-      BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-    baseBlock.neighborUpdate(state, world, pos, block, fromPos, notify);
+      BlockState state, World world, BlockPos pos, Block block, BlockPos sourcePos, boolean notify) {
+    baseBlock.neighborUpdate(state, world, pos, block, sourcePos, notify);
+  }
+
+  @Override
+  public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    return getStateWithProperties(baseBlock.getStateWithProperties(state).getStateForNeighborUpdate(direction, neighborState, world, pos, neighborPos))
+        .with(TYPE, state.get(TYPE))
+        .with(WATERLOGGED, state.get(WATERLOGGED));
   }
 
   @Override
