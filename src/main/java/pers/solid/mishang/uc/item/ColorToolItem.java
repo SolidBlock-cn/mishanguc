@@ -1,6 +1,9 @@
 package pers.solid.mishang.uc.item;
 
 import net.devtech.arrp.generator.ItemResourceGenerator;
+import net.devtech.arrp.json.models.JModel;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -17,6 +20,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.ColoredBlock;
@@ -62,10 +66,9 @@ public class ColorToolItem extends BlockToolItem implements ItemResourceGenerato
   }
 
   @Override
-  public ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
+  public ActionResult useOnBlock(ItemStack stack, PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
     BlockEntity blockEntity = world.getBlockEntity(blockPos);
-    final ItemStack stack = player.getStackInHand(hand);
     final NbtCompound nbt = stack.getNbt();
     if (nbt == null || !nbt.contains("color", NbtType.NUMBER)) {
       if (!world.isClient) {
@@ -105,6 +108,7 @@ public class ColorToolItem extends BlockToolItem implements ItemResourceGenerato
       if (!world.isClient) {
         player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.success_set", MishangUtils.describeColor(color)), true);
       }
+      stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
       return ActionResult.success(world.isClient);
     } else {
       if (!world.isClient) {
@@ -116,10 +120,9 @@ public class ColorToolItem extends BlockToolItem implements ItemResourceGenerato
   }
 
   @Override
-  public ActionResult beginAttackBlock(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+  public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     final BlockState blockState = world.getBlockState(pos);
     final BlockEntity blockEntity = world.getBlockEntity(pos);
-    final ItemStack stack = player.getStackInHand(hand);
     final int color;
     if (blockEntity instanceof ColoredBlockEntity coloredBlockEntity) {
       stack.getOrCreateNbt().putInt("color", color = coloredBlockEntity.getColor());
@@ -130,5 +133,11 @@ public class ColorToolItem extends BlockToolItem implements ItemResourceGenerato
       player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.success_copied", MishangUtils.describeColor(color)), true);
     }
     return null;
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public @NotNull JModel getItemModel() {
+    return new JModel("item/handheld").addTexture("layer0", getTextureId());
   }
 }

@@ -6,7 +6,6 @@ import net.devtech.arrp.json.recipe.JRecipe;
 import net.devtech.arrp.json.recipe.JShapelessRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -16,8 +15,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.MiningToolItem;
 import net.minecraft.item.ToolMaterial;
-import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -60,7 +60,9 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
 
   @Override
   public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
-    world.addParticle(new BlockStateParticleEffect(FabricParticleTypes.complex(false, BlockStateParticleEffect.PARAMETERS_FACTORY), state), pos.getX(), pos.getY(), pos.getZ(), 3, -3, 3);
+    if (world instanceof ServerWorld serverWorld) {
+      serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 16, 0.5, 0.5, 0.5, 0);
+    }
     return super.postMine(stack, world, state, pos, miner);
   }
 
@@ -68,6 +70,9 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
   public @NotNull ActionResult useEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
     if (entity instanceof LivingEntity livingEntity) {
       livingEntity.heal(Float.POSITIVE_INFINITY);
+      if (world instanceof ServerWorld serverWorld) {
+        serverWorld.spawnParticles(ParticleTypes.HAPPY_VILLAGER, entity.getX(), entity.getY(), entity.getZ(), 0, 0.5, 0.5, 0.5, 0);
+      }
     }
     return ActionResult.SUCCESS;
   }

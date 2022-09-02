@@ -53,13 +53,12 @@ public class MirroringToolItem extends BlockToolItem implements ItemResourceGene
 
   @Override
   public ActionResult useOnBlock(
-      PlayerEntity player,
+      ItemStack stack, PlayerEntity player,
       World world,
       BlockHitResult blockHitResult,
       Hand hand,
       boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
-    final ItemStack stack = player.getStackInHand(hand);
     if (!player.getAbilities().allowModifyWorld && !stack.canPlaceOn(Registry.BLOCK, new CachedBlockPosition(world, blockPos, false))) {
       return ActionResult.PASS;
     }
@@ -70,13 +69,12 @@ public class MirroringToolItem extends BlockToolItem implements ItemResourceGene
 
   @Override
   public ActionResult beginAttackBlock(
-      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    final ItemStack mainHandStack = player.getStackInHand(hand);
-    if (!player.getAbilities().allowModifyWorld && !mainHandStack.canDestroy(Registry.BLOCK, new CachedBlockPosition(world, pos, false))) {
+      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    if (!player.getAbilities().allowModifyWorld && !stack.canDestroy(Registry.BLOCK, new CachedBlockPosition(world, pos, false))) {
       return ActionResult.PASS;
     }
     final ActionResult result = mirror(world, pos, direction, player);
-    if (result == ActionResult.SUCCESS) mainHandStack.damage(1, player, player1 -> player1.sendToolBreakStatus(hand));
+    if (result == ActionResult.SUCCESS) stack.damage(1, player, player1 -> player1.sendToolBreakStatus(hand));
     return result;
   }
 

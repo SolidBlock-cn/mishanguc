@@ -76,7 +76,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
 
   @Override
   public ActionResult useOnBlock(
-      PlayerEntity player,
+      ItemStack stack, PlayerEntity player,
       World world,
       BlockHitResult blockHitResult,
       Hand hand,
@@ -87,7 +87,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
 
   @Override
   public ActionResult beginAttackBlock(
-      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (world.isClient) return getIdOf(player, world, pos);
     else return ActionResult.SUCCESS;
   }

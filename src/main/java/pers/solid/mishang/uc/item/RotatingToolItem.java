@@ -35,13 +35,12 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
 
   @Override
   public ActionResult useOnBlock(
-      PlayerEntity player,
+      ItemStack stack, PlayerEntity player,
       World world,
       BlockHitResult blockHitResult,
       Hand hand,
       boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
-    final ItemStack stack = player.getStackInHand(hand);
     if (!player.getAbilities().allowModifyWorld && !stack.canPlaceOn(Registry.BLOCK, new CachedBlockPosition(world, blockPos, false))) {
       return ActionResult.PASS;
     }
@@ -67,8 +66,7 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
 
   @Override
   public ActionResult beginAttackBlock(
-      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    final ItemStack stack = player.getStackInHand(hand);
+      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!player.getAbilities().allowModifyWorld && !stack.canDestroy(Registry.BLOCK, new CachedBlockPosition(world, pos, false))) {
       return ActionResult.PASS;
     }

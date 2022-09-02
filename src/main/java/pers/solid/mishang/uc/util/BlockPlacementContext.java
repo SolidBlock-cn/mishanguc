@@ -23,6 +23,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.item.HoldingToolItem;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 
 import java.util.Objects;
@@ -70,16 +71,11 @@ public class BlockPlacementContext {
    */
   public @Nullable Hand hand;
   /**
-   * 手中的物品堆。该物品堆的物品必须是方块物品。如果手中的物品堆是空的，或者不是方块，则该值为 {@code null}。<br>
+   * 手中的物品堆。该物品堆的物品必须是方块物品，或者是 {@link HoldingToolItem}。如果手中的物品堆是空的，或者不是方块，则该值为 {@code null}。<br>
    * The {@link ItemStack} in the {@code hand}. The item in the <code>ItemStack</code> must be a
-   * {@link BlockItem}. If the item stack in hand is not block item, or is null, then the value is {@code null}.
+   * {@link BlockItem} or {@link HoldingToolItem}. If the item stack in hand is not block item, or is null, then the value is {@code null}.
    */
   public final @Nullable ItemStack stackInHand;
-  /**
-   * 手中物品堆中的方块物品对应的方块。<br>
-   * The block of the blockItem in the {@link #stackInHand}.
-   */
-  public @Nullable Block handBlock;
 
   /**
    * 请留意这个 {@link #player} 如果是 <code>null</code> 将会抛出异常！因此构造时请一定留意！ Please pay attention when
@@ -148,7 +144,12 @@ public class BlockPlacementContext {
       ItemStack stackInHand0 = this.player.getStackInHand(hand1);
       if (stackInHand0.getItem() instanceof final BlockItem blockItem) {
         // 若手中持有方块物品，则 stateToPlace 为该物品
-        handBlock = blockItem.getBlock();
+      /*
+        手中物品堆中的方块物品对应的方块。<br>
+        The block of the blockItem in the {@link #stackInHand}.
+        @since 0.2.4 替换为局部变量
+       */
+        final @Nullable Block handBlock = blockItem.getBlock();
         stateToPlace1 = handBlock.getPlacementState(placementContext);
         if (stateToPlace1 == null) continue;
 
@@ -163,6 +164,11 @@ public class BlockPlacementContext {
             }
           }
         }
+        stackInHand1 = stackInHand0;
+        hand = hand1;
+        break;
+      } else if (stackInHand0.getItem() instanceof HoldingToolItem) {
+        stateToPlace1 = HoldingToolItem.getHoldingBlockState(stackInHand0);
         stackInHand1 = stackInHand0;
         hand = hand1;
         break;
