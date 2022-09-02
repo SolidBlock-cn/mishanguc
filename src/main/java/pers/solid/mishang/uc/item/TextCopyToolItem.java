@@ -99,8 +99,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
   }
 
   @Override
-  public ActionResult useOnBlock(PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
-    final ItemStack stack = player.getStackInHand(hand);
+  public ActionResult useOnBlock(ItemStack stack, PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
     final BlockState blockState = world.getBlockState(blockPos);
     final BlockEntity blockEntity = world.getBlockEntity(blockPos);
@@ -201,10 +200,9 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
    * 持有该物品，左键（攻击，默认为左键）点击告示牌可复制其文字。如果被点击的告示牌不是文字，则不产生效果。若点击悬挂的告示牌，则只会复制其中一边的文字。
    */
   @Override
-  public ActionResult beginAttackBlock(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+  public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     // 本方法仅限在服务器上使用。
     final BlockEntity blockEntity = world.getBlockEntity(pos);
-    final ItemStack stack = player.getStackInHand(hand);
     if (blockEntity instanceof SignBlockEntity signBlockEntity) {
       if (world.isClient) return ActionResult.SUCCESS;
       // 原版的告示牌

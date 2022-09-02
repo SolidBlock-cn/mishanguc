@@ -63,7 +63,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
 
   @Override
   public ActionResult useOnBlock(
-      PlayerEntity player,
+      ItemStack stack, PlayerEntity player,
       World world,
       BlockHitResult blockHitResult,
       Hand hand,
@@ -75,7 +75,6 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
     final Direction side = blockHitResult.getSide();
     final BlockPos centerBlockPos = blockHitResult.getBlockPos();
     final BlockState centerState = world.getBlockState(centerBlockPos);
-    final ItemStack stack = player.getStackInHand(hand);
     final BlockPlacementContext blockPlacementContext =
         new BlockPlacementContext(
             world, centerBlockPos, player, stack, blockHitResult, fluidIncluded);
@@ -102,13 +101,12 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
 
   @Override
   public ActionResult beginAttackBlock(
-      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!player.getAbilities().creativeMode) {
       // 仅限创造模式玩家使用。
       return ActionResult.PASS;
     }
     if (!world.isClient()) {
-      final ItemStack stack = player.getMainHandStack();
       final int range = this.getRange(stack);
       final BlockMatchingRule matchingRule = this.getMatchingRule(stack);
       for (BlockPos pos1 : matchingRule.getPlainValidBlockPoss(world, pos, direction, range)) {

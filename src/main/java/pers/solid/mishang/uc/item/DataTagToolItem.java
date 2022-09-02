@@ -65,7 +65,7 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
 
   @Override
   public ActionResult useOnBlock(
-      PlayerEntity player,
+      ItemStack stack, PlayerEntity player,
       World world,
       BlockHitResult blockHitResult,
       Hand hand,
@@ -79,7 +79,7 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
 
   @Override
   public ActionResult beginAttackBlock(
-      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!world.isClient) return getBlockDataOf((ServerPlayerEntity) player, (ServerWorld) world, pos);
     else return ActionResult.SUCCESS;
   }
