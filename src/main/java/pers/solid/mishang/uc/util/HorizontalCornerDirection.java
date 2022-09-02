@@ -5,8 +5,10 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+/**
+ * 水平的角落的方向。Minecraft 原版的 {@link Direction} 包含 6 个正的方向，其中 4 个水平正方向之间会有 4 个角落的方向，也就是偏 45° 的方向。
+ */
 public enum HorizontalCornerDirection implements StringIdentifiable {
   /**
    * 西南
@@ -42,16 +44,29 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
     this.dir2 = dir2;
   }
 
-  public static @Nullable HorizontalCornerDirection fromDirections(@NotNull Direction dir1, @NotNull Direction dir2) {
+  /**
+   * 根据两个相邻的水平方向返回一个水平的角落方向，如果这两个方向之间不能形成水平的角落方向将会抛出错误。
+   *
+   * @param dir1 第一个方向。
+   * @param dir2 第二个方向。
+   * @return 对应的水平角落方向。
+   * @throws IllegalArgumentException 如果两个方向不相邻，或者有些不是水平的。
+   */
+  public static @NotNull HorizontalCornerDirection fromDirections(@NotNull Direction dir1, @NotNull Direction dir2) {
     for (HorizontalCornerDirection direction : HorizontalCornerDirection.values()) {
       if ((direction.dir1 == dir1 && direction.dir2 == dir2) || (direction.dir1 == dir2 && direction.dir2 == dir1)) {
         return direction;
       }
     }
-    return null;
+    throw new IllegalArgumentException("There is no horizontal corner direction composed of " + dir1.asString() + " " + dir2.asString() + ".");
   }
 
-  public static HorizontalCornerDirection fromId(int id) {
+  /**
+   * 根据 id 返回一个方向对象。
+   *
+   * @param id 这个方向的内部 id。
+   */
+  public static @NotNull HorizontalCornerDirection fromId(int id) {
     id = id & 3;
     for (HorizontalCornerDirection direction : HorizontalCornerDirection.values()) {
       if (direction.id == id) {
@@ -61,6 +76,12 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
     throw new IllegalStateException();
   }
 
+  /**
+   * 根据水平的旋转角度返回方向，会返回最近的水平角落方向。
+   *
+   * @param rotation 角度。
+   * @return 与这个角度最近的水平角落方向。
+   */
   public static HorizontalCornerDirection fromRotation(float rotation) {
     return fromId(Math.floorDiv((int) rotation, 90));
   }
@@ -71,8 +92,11 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
   }
 
   /**
+   * 获取该水平角落方向在指定坐标轴上的原版方向。
+   *
    * @param axis 坐标轴。
    * @return 指定坐标轴上的方向。
+   * @throws IllegalStateException 不存在此轴上的方向时。
    */
   public Direction getDirectionInAxis(Direction.Axis axis) {
     if (dir1.getAxis() == axis) {
@@ -81,32 +105,33 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
     if (dir2.getAxis() == axis) {
       return dir2;
     }
-    throw new IllegalStateException(
-        String.format(
-            "Direction %s has no direction in axis %s!", this.asString(), axis.asString()));
+    throw new IllegalStateException("Direction " + this.asString() + " has no direction in axis " + axis.asString() + "!");
   }
 
   public int asRotation() {
     return rotation;
   }
 
+  /**
+   * 该水平角落方向所在的两个原版方向是否拥有指定的方向。
+   */
   public boolean hasDirection(Direction direction) {
     return direction == dir1 || direction == dir2;
   }
 
-  public HorizontalCornerDirection rotateYClockwise() {
+  public @NotNull HorizontalCornerDirection rotateYClockwise() {
     return fromDirections(dir1.rotateYClockwise(), dir2.rotateYClockwise());
   }
 
-  public HorizontalCornerDirection rotateYCounterclockwise() {
+  public @NotNull HorizontalCornerDirection rotateYCounterclockwise() {
     return fromDirections(dir1.rotateYCounterclockwise(), dir2.rotateYCounterclockwise());
   }
 
-  public HorizontalCornerDirection mirror(BlockMirror mirror) {
+  public @NotNull HorizontalCornerDirection mirror(BlockMirror mirror) {
     return fromDirections(mirror.apply(dir1), mirror.apply(dir2));
   }
 
-  public HorizontalCornerDirection mirror(Direction direction) {
+  public @NotNull HorizontalCornerDirection mirror(Direction direction) {
     BlockMirror mirror = switch (direction.getAxis()) {
       case X -> BlockMirror.LEFT_RIGHT;
       case Z -> BlockMirror.FRONT_BACK;
@@ -115,7 +140,7 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
     return mirror(mirror);
   }
 
-  public HorizontalCornerDirection rotate(BlockRotation rotation) {
+  public @NotNull HorizontalCornerDirection rotate(BlockRotation rotation) {
     return switch (rotation) {
       case NONE -> this;
       case CLOCKWISE_90 -> this.rotateYClockwise();
@@ -124,7 +149,7 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
     };
   }
 
-  public HorizontalCornerDirection getOpposite() {
+  public @NotNull HorizontalCornerDirection getOpposite() {
     return fromDirections(dir1.getOpposite(), dir2.getOpposite());
   }
 }

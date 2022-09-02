@@ -35,7 +35,6 @@ import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
 import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWithStraightLine {
@@ -170,8 +169,8 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       for (Direction direction : Direction.Type.HORIZONTAL) {
         final int rotation = (int) direction.asRotation();
         final String axis = direction.getAxis().asString();
-        final String facing1 = Objects.requireNonNull(HorizontalCornerDirection.fromDirections(direction, direction.rotateYClockwise())).asString();
-        final String facing2 = Objects.requireNonNull(HorizontalCornerDirection.fromDirections(direction, direction.rotateYCounterclockwise())).asString();
+        final String facing1 = HorizontalCornerDirection.fromDirections(direction, direction.rotateYClockwise()).asString();
+        final String facing2 = HorizontalCornerDirection.fromDirections(direction, direction.rotateYCounterclockwise()).asString();
         if (hasBevelTop) {
           variants.addVariant(
               String.format("axis=%s,facing=%s,bevel_top=false", axis, facing1),

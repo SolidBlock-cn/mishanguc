@@ -1,12 +1,16 @@
 package pers.solid.mishang.uc.util;
 
 import com.mojang.datafixers.util.Either;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
-
-import java.util.Objects;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import pers.solid.mishang.uc.block.SmartRoadSlabBlock;
 
 /**
  * 表示一个道路在一个方向上的连接状态。
@@ -15,50 +19,22 @@ import java.util.Objects;
  * @param lineColor        道路连线的颜色。
  * @param direction        道路连线的方向。通常来说是正对着的，但偶尔也有可能是斜的方向。
  * @param lineType         道路连接线的类型，一般是普通线，也有可能是粗线或双线。
+ * @param blockState       该道路连接状态所拥有的方块状态。
  * @since 0.2.0-mc1.17+ 此类更改为记录；1.16.5 由于仍为 Java 8，因此仍使用普通类的形式。
  */
-public record RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, Either<Direction, HorizontalCornerDirection> direction, LineType lineType) {
+public record RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, Either<Direction, HorizontalCornerDirection> direction, LineType lineType, BlockState blockState) implements Comparable<RoadConnectionState> {
 
-  public static RoadConnectionState empty() {
-    return new RoadConnectionState(
-        WhetherConnected.NOT_CONNECTED_TO, LineColor.NONE, null, LineType.NORMAL);
+  @Contract("_ -> new")
+  public static RoadConnectionState empty(BlockState blockState) {
+    return new RoadConnectionState(WhetherConnected.NOT_CONNECTED, LineColor.NONE, null, LineType.NORMAL, blockState);
   }
 
-  public static RoadConnectionState notConnectedTo(
-      LineColor lineColor,
-      Either<Direction, HorizontalCornerDirection> direction,
-      LineType lineType) {
-    return new RoadConnectionState(WhetherConnected.NOT_CONNECTED_TO, lineColor, direction, lineType);
-  }
-
-  public static RoadConnectionState connectedTo(
-      LineColor lineColor,
-      Either<Direction, HorizontalCornerDirection> direction,
-      LineType lineType) {
-    return new RoadConnectionState(WhetherConnected.CONNECTED_TO, lineColor, direction, lineType);
-  }
-
-  public static RoadConnectionState mayConnectTo(
-      LineColor lineColor,
-      Either<Direction, HorizontalCornerDirection> direction,
-      LineType lineType) {
-    return new RoadConnectionState(WhetherConnected.MAY_CONNECT_TO, lineColor, direction, lineType);
-  }
-
-  public static RoadConnectionState of(
-      boolean bool,
-      LineColor lineColor,
-      Either<Direction, HorizontalCornerDirection> direction,
-      LineType lineType) {
-    return new RoadConnectionState(
-        bool ? WhetherConnected.CONNECTED_TO : WhetherConnected.NOT_CONNECTED_TO,
-        lineColor,
-        direction,
-        lineType);
+  public static RoadConnectionState of(boolean whetherConnected, LineColor lineColor, Either<Direction, HorizontalCornerDirection> direction, LineType lineType, BlockState blockState) {
+    return new RoadConnectionState(whetherConnected ? WhetherConnected.CONNECTED : WhetherConnected.NOT_CONNECTED, lineColor, direction, lineType, blockState);
   }
 
   public static RoadConnectionState or(RoadConnectionState state1, RoadConnectionState state2) {
-    return state1.whetherConnected.compareTo(state2.whetherConnected) > 0 ? state1 : state2;
+    return state1.compareTo(state2) > 0 ? state1 : state2;
   }
 
   public static MutableText text(Direction direction) {
@@ -79,8 +55,8 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
 
   public static MutableText text(WhetherConnected whetherConnected) {
     return TextBridge.translatable("roadConnectionState.whether." + whetherConnected.asString()).formatted(switch (whetherConnected) {
-      case NOT_CONNECTED_TO -> Formatting.RED;
-      case CONNECTED_TO -> Formatting.GREEN;
+      case NOT_CONNECTED -> Formatting.RED;
+      case CONNECTED -> Formatting.GREEN;
       default -> Formatting.YELLOW;
     });
   }
@@ -97,8 +73,15 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
     return lineType.getName();
   }
 
+  @Contract(pure = true)
   public boolean mayConnect() {
-    return this.whetherConnected.compareTo(WhetherConnected.MAY_CONNECT_TO) >= 0;
+    return this.whetherConnected.compareTo(WhetherConnected.MAY_CONNECT) >= 0;
+  }
+
+  @ApiStatus.AvailableSince("0.2.4")
+  @Contract(pure = true)
+  public boolean sureConnect() {
+    return whetherConnected == WhetherConnected.CONNECTED;
   }
 
   public RoadConnectionState or(RoadConnectionState state) {
@@ -106,15 +89,22 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
   }
 
   @Override
-  public boolean equals(Object o) {
-    return this == o || o instanceof RoadConnectionState that && Objects.equals(direction, that.direction) && whetherConnected == that.whetherConnected && lineColor == that.lineColor && lineType == that.lineType;
+  public int compareTo(@NotNull RoadConnectionState o) {
+    return whetherConnected.compareTo(o.whetherConnected);
+  }
+
+  @Contract(pure = true)
+  public Block block() {
+    final Block block = blockState.getBlock();
+    return block instanceof SmartRoadSlabBlock<?> slab ? slab.baseBlock : block;
   }
 
   public enum WhetherConnected implements StringIdentifiable {
-    NOT_CONNECTED_TO("not_connected_to"),
-    MAY_CONNECT_TO("may_connect_to"),
-    PROBABLY_CONNECT_TO("probably_connected_to"),
-    CONNECTED_TO("connected_to");
+    NOT_CONNECTED("not_connected"),
+    MAY_CONNECT("may_connect"),
+    @Deprecated @ApiStatus.ScheduledForRemoval(inVersion = "0.2.5")
+    PROBABLY_CONNECTED("probably_connected"),
+    CONNECTED("connected");
 
     private final String id;
 

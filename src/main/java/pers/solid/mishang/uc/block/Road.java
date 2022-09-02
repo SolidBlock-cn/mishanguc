@@ -77,8 +77,7 @@ public interface Road extends BlockResourceGenerator {
    * @return 连接状态。
    */
   default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
-    return RoadConnectionState.notConnectedTo(
-        getLineColor(state, direction), Either.left(direction), LineType.NORMAL);
+    return new RoadConnectionState(RoadConnectionState.WhetherConnected.NOT_CONNECTED, getLineColor(state, direction), Either.left(direction), LineType.NORMAL, state);
   }
 
   /**

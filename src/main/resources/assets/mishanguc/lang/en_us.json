@@ -441,10 +441,10 @@
   "lineType.double": "Double",
   "lineType.thick": "Thick",
 
-  "roadConnectionState.whether.not_connected_to": "Not connected to",
-  "roadConnectionState.whether.may_connect_to": "May connect to",
-  "roadConnectionState.whether.probably_connect_to": "Probably connected to",
-  "roadConnectionState.whether.connected_to": "Connected to",
+  "roadConnectionState.whether.not_connected": "Not connected",
+  "roadConnectionState.whether.may_connect": "May connect",
+  "roadConnectionState.whether.probably_connected": "Probably connected",
+  "roadConnectionState.whether.connected": "Connected",
 
   "itemGroup.mishanguc.roads": "Mishang Urban Construction | Roads",
   "itemGroup.mishanguc.lights": "Mishang Urban Construction | Lights",
