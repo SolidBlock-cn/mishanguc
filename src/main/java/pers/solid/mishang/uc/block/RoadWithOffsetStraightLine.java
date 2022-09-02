@@ -52,7 +52,7 @@ public interface RoadWithOffsetStraightLine extends Road {
             direction.getAxis() != state.get(FACING).getAxis(),
             getLineColor(state, direction),
             Either.left(direction),
-            getLineType(state, direction)));
+            getLineType(state, direction), state));
   }
 
   @Override

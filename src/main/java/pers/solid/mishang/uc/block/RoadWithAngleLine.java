@@ -40,7 +40,7 @@ public interface RoadWithAngleLine extends Road {
         state.get(FACING).hasDirection(direction),
         getLineColor(state, direction),
         isBevel() ? Either.right(state.get(FACING).mirror(direction)) : Either.left(direction),
-        getLineType(state, direction));
+        getLineType(state, direction), state);
   }
 
   @Override

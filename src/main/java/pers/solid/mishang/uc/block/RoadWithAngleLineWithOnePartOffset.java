@@ -25,7 +25,6 @@ import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
-import java.util.Objects;
 
 public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
   /**
@@ -100,16 +99,14 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
         variant.addVariant(
             String.format(
                 "facing=%s,axis=%s",
-                Objects.requireNonNull(
-                        HorizontalCornerDirection.fromDirections(direction, offsetDirection1))
+                HorizontalCornerDirection.fromDirections(direction, offsetDirection1)
                     .asString(),
                 direction.getAxis().asString()),
             new JBlockModel(id).y((int) (direction.asRotation())));
         variant.addVariant(
             String.format(
                 "facing=%s,axis=%s",
-                Objects.requireNonNull(
-                        HorizontalCornerDirection.fromDirections(direction, offsetDirection2))
+                HorizontalCornerDirection.fromDirections(direction, offsetDirection2)
                     .asString(),
                 direction.getAxis().asString()),
             new JBlockModel(id.brrp_append("_mirrored"))

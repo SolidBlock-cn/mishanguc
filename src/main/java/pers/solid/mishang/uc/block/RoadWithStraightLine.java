@@ -47,7 +47,7 @@ public interface RoadWithStraightLine extends Road {
         direction.getAxis() == axis,
         getLineColor(state, direction),
         Either.left(direction),
-        getLineType(state, direction));
+        getLineType(state, direction), state);
   }
 
   @Override

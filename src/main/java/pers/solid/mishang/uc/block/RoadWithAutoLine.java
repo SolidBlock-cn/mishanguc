@@ -1,10 +1,10 @@
 package pers.solid.mishang.uc.block;
 
-import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -21,6 +21,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.apache.commons.lang3.ObjectUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
@@ -47,25 +49,21 @@ public interface RoadWithAutoLine extends Road {
    * @param pos0  坐标。
    * @return 连接状态的映射。
    */
-  default EnumMap<Direction, RoadConnectionState> getConnectionStateMap(
+  default EnumMap<Direction, @NotNull RoadConnectionState> getConnectionStateMap(
       WorldAccess world, BlockPos pos0) {
-    EnumMap<Direction, RoadConnectionState> connectionStateMap = Maps.newEnumMap(Direction.class);
+    EnumMap<Direction, @NotNull RoadConnectionState> connectionStateMap = new EnumMap<>(Direction.class);
     for (Direction direction : Direction.Type.HORIZONTAL) {
-      RoadConnectionState state = RoadConnectionState.empty();
+      RoadConnectionState state = null;
       // 检查毗邻方块及其上下方。
       for (BlockPos pos : new BlockPos[]{pos0, pos0.up(), pos0.down()}) {
         BlockState nextState = world.getBlockState(pos.offset(direction, 1));
         Block nextBlock = nextState.getBlock();
         if (nextBlock instanceof final Road road) {
-          RoadConnectionState connectionState =
-              road.getConnectionStateOf(nextState, direction.getOpposite());
-          if (connectionState.mayConnect()) {
-            state = connectionState;
-            break;
-          }
+          state = road.getConnectionStateOf(nextState, direction.getOpposite());
+          break;
         }
       }
-      connectionStateMap.put(direction, state);
+      connectionStateMap.put(direction, ObjectUtils.getIfNull(state, () -> RoadConnectionState.empty(Blocks.AIR.getDefaultState())));
     }
     return connectionStateMap;
   }
@@ -74,9 +72,7 @@ public interface RoadWithAutoLine extends Road {
   default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
     return Road.super
         .getConnectionStateOf(state, direction)
-        .or(
-            RoadConnectionState.mayConnectTo(
-                getLineColor(state, direction), Either.left(direction), LineType.NORMAL));
+        .or(new RoadConnectionState(RoadConnectionState.WhetherConnected.MAY_CONNECT, getLineColor(state, direction), Either.left(direction), LineType.NORMAL, state));
   }
 
   @Override
@@ -109,9 +105,8 @@ public interface RoadWithAutoLine extends Road {
     // 屏蔽上下方的更新。
     if (!sourcePos.equals(pos.up())
         && !sourcePos.equals(pos.down())
-        && !(world.getBlockState(sourcePos).getBlock() instanceof AirBlock))
-    // flags设为2从而使得 <code>flags&1 !=0</code> 不成立，从而不递归更新邻居，参考 {@link World#setBlockState}。
-    {
+        && !(world.getBlockState(sourcePos).getBlock() instanceof AirBlock)) {
+      // flags设为2从而使得 <code>flags&1 !=0</code> 不成立，从而不递归更新邻居，参考 {@link World#setBlockState}。
       world.setBlockState(pos, makeState(getConnectionStateMap(world, pos), state), 2);
     }
     Road.super.neighborRoadUpdate(state, world, pos, sourceBlock, sourcePos, notify);
@@ -138,7 +133,7 @@ public interface RoadWithAutoLine extends Road {
      */
     RIGHT_ANGLE,
     /**
-     * 45°的斜角
+     * 45°的斜线
      */
     BEVEL
   }

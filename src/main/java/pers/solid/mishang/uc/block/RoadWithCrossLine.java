@@ -22,9 +22,7 @@ public interface RoadWithCrossLine extends Road {
   default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
     return Road.super
         .getConnectionStateOf(state, direction)
-        .or(
-            RoadConnectionState.connectedTo(
-                getLineColor(state, direction), Either.left(direction), LineType.NORMAL));
+        .or(new RoadConnectionState(RoadConnectionState.WhetherConnected.CONNECTED, getLineColor(state, direction), Either.left(direction), LineType.NORMAL, state));
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithCrossLine {

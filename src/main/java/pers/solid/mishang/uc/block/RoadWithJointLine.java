@@ -46,7 +46,7 @@ public interface RoadWithJointLine extends Road {
             state.get(FACING) != direction.getOpposite(),
             getLineColor(state, direction),
             Either.left(direction),
-            getLineType(state, direction)));
+            getLineType(state, direction), state));
   }
 
   @Override

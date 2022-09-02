@@ -22,7 +22,7 @@ public class RoadBlock extends AbstractRoadBlock {
 
   @Override
   public RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
-    return RoadConnectionState.empty();
+    return RoadConnectionState.empty(state);
   }
 
   @Environment(EnvType.CLIENT)
@@ -34,6 +34,6 @@ public class RoadBlock extends AbstractRoadBlock {
 
   @Override
   public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
-    
+
   }
 }

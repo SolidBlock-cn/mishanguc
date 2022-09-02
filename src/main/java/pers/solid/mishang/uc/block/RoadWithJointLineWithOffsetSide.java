@@ -29,7 +29,6 @@ import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 类似于 {@link RoadWithJointLine}，不过较短的那一条线是被偏移的。
@@ -60,7 +59,7 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
         state.get(FACING).hasDirection(direction) || state.get(AXIS).test(direction),
         getLineColor(state, direction),
         Either.left(direction.getOpposite()),
-        LineType.NORMAL);
+        LineType.NORMAL, state);
   }
 
   @Override
@@ -119,24 +118,20 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
       for (Direction direction : Direction.Type.HORIZONTAL) {
         final @NotNull Direction offsetDirection1 = direction.rotateYClockwise();
         // direction 的右偏方向
-        final @NotNull HorizontalCornerDirection facing1 =
-            Objects.requireNonNull(
-                HorizontalCornerDirection.fromDirections(direction, offsetDirection1));
+        final @NotNull HorizontalCornerDirection facing1 = HorizontalCornerDirection.fromDirections(direction, offsetDirection1);
         final @NotNull Direction offsetDirection2 = direction.rotateYCounterclockwise();
         // direction 的左偏方向
-        final @NotNull HorizontalCornerDirection facing2 =
-            Objects.requireNonNull(
-                HorizontalCornerDirection.fromDirections(direction, offsetDirection2));
+        final @NotNull HorizontalCornerDirection facing2 = HorizontalCornerDirection.fromDirections(direction, offsetDirection2);
         variant
             .addVariant(
                 String.format(
                     "facing=%s,axis=%s", facing1.asString(), offsetDirection1.getAxis().asString()),
-                new JBlockModel(id).y((int) (direction.asRotation())))
+                new JBlockModel(id).y((int) direction.asRotation()))
             .addVariant(
                 String.format(
                     "facing=%s,axis=%s", facing2.asString(), offsetDirection2.getAxis().asString()),
                 new JBlockModel(id.brrp_append("_mirrored"))
-                    .y((int) (direction.asRotation())));
+                    .y((int) direction.asRotation()));
       }
       return JBlockStates.ofVariants(variant);
     }
