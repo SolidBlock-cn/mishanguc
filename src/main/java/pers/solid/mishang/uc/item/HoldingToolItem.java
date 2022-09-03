@@ -155,7 +155,7 @@ public class HoldingToolItem extends BlockToolItem
     return null;
   }
 
-  private MutableText getEntityName(@NotNull ItemStack stack) {
+  private static MutableText getEntityName(@NotNull ItemStack stack) {
     final NbtCompound nbt = stack.getNbt();
     if (nbt == null) return TextBridge.empty();
     if (nbt.contains("holdingEntityName", NbtType.STRING)) {
