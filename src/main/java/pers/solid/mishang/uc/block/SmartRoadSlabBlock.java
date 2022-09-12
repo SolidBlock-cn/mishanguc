@@ -37,12 +37,10 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
   public final T baseBlock;
 
   public SmartRoadSlabBlock(T baseBlock) {
-    super(
-        Util.make(
-            () -> {
-              cachedBaseBlock = baseBlock;
-              return FabricBlockSettings.copyOf(baseBlock);
-            }));
+    super(Util.make(() -> {
+      cachedBaseBlock = baseBlock;
+      return FabricBlockSettings.copyOf(baseBlock);
+    }));
     this.baseBlock = baseBlock;
   }
 

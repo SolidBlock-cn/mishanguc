@@ -269,10 +269,17 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(Blocks.STONE, ColoredBlocks.COLORED_STONE);
     blockMap.put(Blocks.STONE_STAIRS, ColoredBlocks.COLORED_STONE_STAIRS);
     blockMap.put(Blocks.STONE_SLAB, ColoredBlocks.COLORED_STONE_SLAB);
+    blockMap.put(Blocks.STONE_BRICKS, ColoredBlocks.COLORED_STONE_BRICKS);
+    blockMap.put(Blocks.STONE_BRICK_STAIRS, ColoredBlocks.COLORED_STONE_BRICK_STAIRS);
+    blockMap.put(Blocks.STONE_BRICK_SLAB, ColoredBlocks.COLORED_STONE_BRICK_SLAB);
     blockMap.put(Blocks.QUARTZ_BLOCK, ColoredBlocks.COLORED_QUARTZ_BLOCK);
+    blockMap.put(Blocks.QUARTZ_STAIRS, ColoredBlocks.COLORED_QUARTZ_STAIRS);
+    blockMap.put(Blocks.QUARTZ_SLAB, ColoredBlocks.COLORED_QUARTZ_SLAB);
     blockMap.put(Blocks.CHISELED_QUARTZ_BLOCK, ColoredBlocks.COLORED_CHISELED_QUARTZ_BLOCK);
     blockMap.put(Blocks.QUARTZ_BRICKS, ColoredBlocks.COLORED_QUARTZ_BRICKS);
     blockMap.put(Blocks.SMOOTH_QUARTZ, ColoredBlocks.COLORED_SMOOTH_QUARTZ);
+    blockMap.put(Blocks.SMOOTH_QUARTZ_STAIRS, ColoredBlocks.COLORED_SMOOTH_QUARTZ_STAIRS);
+    blockMap.put(Blocks.SMOOTH_QUARTZ_SLAB, ColoredBlocks.COLORED_SMOOTH_QUARTZ_SLAB);
     blockMap.put(Blocks.QUARTZ_PILLAR, ColoredBlocks.COLORED_QUARTZ_PILLAR);
     blockMap.put(Blocks.PURPUR_BLOCK, ColoredBlocks.COLORED_PURPUR_BLOCK);
     blockMap.put(Blocks.PURPUR_PILLAR, ColoredBlocks.COLORED_PURPUR_PILLAR);
@@ -299,6 +306,16 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(Blocks.ICE, ColoredBlocks.COLORED_ICE);
     blockMap.put(Blocks.SNOW_BLOCK, ColoredBlocks.COLORED_SNOW_BLOCK);
     blockMap.put(Blocks.PACKED_ICE, ColoredBlocks.COLORED_PACKED_ICE);
+    blockMap.put(Blocks.OAK_LEAVES, ColoredBlocks.COLORED_OAK_LEAVES);
+    blockMap.put(Blocks.DARK_OAK_LEAVES, ColoredBlocks.COLORED_DARK_OAK_LEAVES);
+    blockMap.put(Blocks.SPRUCE_LEAVES, ColoredBlocks.COLORED_SPRUCE_LEAVES);
+    blockMap.put(Blocks.JUNGLE_LEAVES, ColoredBlocks.COLORED_JUNGLE_LEAVES);
+    blockMap.put(Blocks.BIRCH_LEAVES, ColoredBlocks.COLORED_BIRCH_LEAVES);
+    blockMap.put(Blocks.ACACIA_LEAVES, ColoredBlocks.COLORED_ACACIA_LEAVES);
+    blockMap.put(Blocks.MANGROVE_LEAVES, ColoredBlocks.COLORED_MANGROVE_LEAVES);
+    blockMap.put(Blocks.BRICKS, ColoredBlocks.COLORED_BRICKS);
+    blockMap.put(Blocks.BRICK_STAIRS, ColoredBlocks.COLORED_BRICK_STAIRS);
+    blockMap.put(Blocks.BRICK_SLAB, ColoredBlocks.COLORED_BRICK_SLAB);
 
     tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "concrete_hung_signs")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN);
     tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "concrete_hung_sign_bars")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN_BAR);

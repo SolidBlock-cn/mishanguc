@@ -74,7 +74,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JModel getItemModel() {
+  public @NotNull JModel getItemModel() {
     return new JModel().parent("mishanguc:block/simple_handrail_inventory").textures(getTextures());
   }
 

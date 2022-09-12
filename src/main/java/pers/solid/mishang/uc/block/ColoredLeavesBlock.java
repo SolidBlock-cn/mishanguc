@@ -1,34 +1,38 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.generator.BRRPStairsBlock;
+import net.devtech.arrp.generator.BlockResourceGenerator;
+import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.loot.JLootTable;
 import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.data.server.BlockLootTableGenerator;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootTable;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
+import java.util.function.Function;
 
-public class ColoredStairsBlock extends BRRPStairsBlock implements ColoredBlock {
-  public ColoredStairsBlock(Block baseBlock, Settings settings) {
-    super(baseBlock, settings);
-  }
+@ApiStatus.AvailableSince("0.2.4")
+public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock, BlockResourceGenerator {
+  private final Function<Block, LootTable.Builder> lootBuilder;
+  private final String allTexture;
 
-  public ColoredStairsBlock(Block baseBlock) {
-    super(baseBlock);
+  public ColoredLeavesBlock(Settings settings, Function<Block, LootTable.Builder> lootBuilder, String allTexture) {
+    super(settings);
+    this.lootBuilder = lootBuilder;
+    this.allTexture = allTexture;
   }
 
   @Override
@@ -42,7 +46,7 @@ public class ColoredStairsBlock extends BRRPStairsBlock implements ColoredBlock 
     ColoredBlock.appendColorTooltip(stack, tooltip);
   }
 
-  @NotNull
+  @Nullable
   @Override
   public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
     return new SimpleColoredBlockEntity(pos, state);
@@ -50,22 +54,18 @@ public class ColoredStairsBlock extends BRRPStairsBlock implements ColoredBlock 
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JModel getBlockModel() {
-    return super.getBlockModel().parent(new Identifier("mishanguc", "block/colored_stairs"));
+  public @NotNull JBlockStates getBlockStates() {
+    return JBlockStates.simple(getBlockModelId());
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void writeBlockModel(RuntimeResourcePack pack) {
-    final JModel blockModel = getBlockModel();
-    final Identifier id = getBlockModelId();
-    pack.addModel(blockModel, id);
-    pack.addModel(blockModel.parent(new Identifier("mishanguc", "block/colored_inner_stairs")), id.brrp_append("_inner"));
-    pack.addModel(blockModel.parent(new Identifier("mishanguc", "block/colored_outer_stairs")), id.brrp_append("_outer"));
+  public @NotNull JModel getBlockModel() {
+    return new JModel("block/leaves").addTexture("all", allTexture);
   }
 
   @Override
   public JLootTable getLootTable() {
-    return JLootTable.delegate(BlockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION).build());
+    return JLootTable.delegate(lootBuilder.apply(this).apply(COPY_COLOR_LOOT_FUNCTION).build());
   }
 }
