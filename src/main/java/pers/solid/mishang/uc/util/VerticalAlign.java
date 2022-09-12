@@ -6,7 +6,6 @@ import net.minecraft.text.MutableText;
 import net.minecraft.util.StringIdentifiable;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("AlibabaEnumConstantsMustHaveComment")
 public enum VerticalAlign implements StringIdentifiable {
   TOP,
   MIDDLE,

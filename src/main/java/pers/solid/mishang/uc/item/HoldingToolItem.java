@@ -393,7 +393,7 @@ public class HoldingToolItem extends BlockToolItem
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JModel getItemModel() {
+  public @NotNull JModel getItemModel() {
     return new JModel("item/handheld").textures(JTextures.ofLayer0(getTextureId()))
         .addOverride(new JOverride("mishanguc:is_holding_block", 1f, getTextureId() + "_with_block"))
         .addOverride(new JOverride("mishanguc:is_holding_entity", 1f, getTextureId() + "_with_entity"));

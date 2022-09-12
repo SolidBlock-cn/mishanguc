@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.block;
 import com.google.common.collect.Maps;
 import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.devtech.arrp.json.blockstate.JBlockStates;
+import net.devtech.arrp.json.loot.JLootTable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -10,11 +11,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.data.server.BlockLootTableGenerator;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -24,15 +26,12 @@ import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -118,37 +117,9 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
     return SHAPES.get(state.get(FACING));
   }
 
-  private static Direction clientCachedHitSide;
-  private static Direction serverCachedHitSide;
-
   @Override
-  public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-    super.onBreak(world, pos, state, player);
-    final HitResult raycast = player.raycast(20f, 0, false);
-    if (!(raycast instanceof BlockHitResult blockHitResult)) return;
-    if (world.isClient()) clientCachedHitSide = blockHitResult.getSide();
-    else serverCachedHitSide = blockHitResult.getSide();
-  }
-
-  @Override
-  public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
-    super.onBroken(world, pos, state);
-    final Direction hitSide;
-    if (world.isClient()) {
-      hitSide = clientCachedHitSide;
-      clientCachedHitSide = null;
-    } else {
-      hitSide = serverCachedHitSide;
-      serverCachedHitSide = null;
-    }
-    final HorizontalCornerDirection facing = state.get(FACING);
-    final Direction dir1 = facing.getDirectionInAxis(Direction.Axis.X);
-    final Direction dir2 = facing.getDirectionInAxis(Direction.Axis.Z);
-    final HandrailCornerBlock<? extends HandrailBlock> block = (HandrailCornerBlock<? extends HandrailBlock>) state.getBlock();
-    switch (hitSide.getAxis()) {
-      case X -> world.setBlockState(pos, block.baseHandrail.getDefaultState().with(WATERLOGGED, state.get(WATERLOGGED)).with(HandrailBlock.FACING, dir2), 0);
-      case Z -> world.setBlockState(pos, block.baseHandrail.getDefaultState().with(WATERLOGGED, state.get(WATERLOGGED)).with(HandrailBlock.FACING, dir1), 0);
-    }
+  public JLootTable getLootTable() {
+    return JLootTable.delegate(BlockLootTableGenerator.drops(this, ConstantLootNumberProvider.create(2)).build());
   }
 
   @SuppressWarnings("deprecation")

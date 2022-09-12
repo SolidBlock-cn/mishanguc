@@ -111,6 +111,7 @@ public class RoadToolItem extends BlockToolItem implements ItemResourceGenerator
     return false;
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public @NotNull JModel getItemModel() {
     return ItemResourceGenerator.super.getItemModel().parent("item/handheld");

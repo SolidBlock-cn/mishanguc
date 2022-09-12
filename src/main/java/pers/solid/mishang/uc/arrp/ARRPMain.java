@@ -160,6 +160,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     final IdentifiedTag fullWallSigns = blockTag("full_wall_signs");
 
     // 悬挂的告示牌部分
+    final IdentifiedTag woodenHungSigns = blockTag("wooden_hung_signs");
     final IdentifiedTag concreteHungSigns = blockTag("concrete_hung_signs");
     final IdentifiedTag terracottaHungSigns = blockTag("terracotta_hung_signs");
     final IdentifiedTag hungSigns = blockTag("hung_signs");
@@ -168,6 +169,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     final IdentifiedTag glowingHungSigns = blockTag("glowing_hung_signs");
 
     // 悬挂的告示牌杆部分
+    final IdentifiedTag woodenHungSignBars = blockTag("wooden_hung_sign_bars");
     final IdentifiedTag concreteHungSignBars = blockTag("concrete_hung_sign_bars");
     final IdentifiedTag terracottaHungSignBars = blockTag("terracotta_hung_sign_bars");
     final IdentifiedTag hungSignBars = blockTag("hung_sign_bars");
@@ -204,6 +206,14 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     final IdentifiedTag simpleStainedGlassCornerHandrails = blockTag("simple_stained_glass_corner_handrails");
     final IdentifiedTag simpleStainedGlassOuterHandrails = blockTag("simple_stained_glass_outer_handrails");
     final IdentifiedTag simpleStainedGlassStairHandrails = blockTag("simple_stained_glass_stair_handrails");
+
+    // 染色木头部分
+    final IdentifiedTag simpleWoodenHandrails = blockTag("simple_wooden_handrails");
+    final IdentifiedTag simpleWoodenNormalHandrails = blockTag("simple_wooden_normal_handrails");
+    final IdentifiedTag simpleWoodenCentralHandrails = blockTag("simple_wooden_central_handrails");
+    final IdentifiedTag simpleWoodenCornerHandrails = blockTag("simple_wooden_corner_handrails");
+    final IdentifiedTag simpleWoodenOuterHandrails = blockTag("simple_wooden_outer_handrails");
+    final IdentifiedTag simpleWoodenStairHandrails = blockTag("simple_wooden_stair_handrails");
 
 
     // 扶手部分，预留
@@ -258,26 +268,30 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     // 悬挂的告示牌部分
     MishangUtils.instanceStream(HungSignBlocks.class, Block.class).forEach(block -> {
       if (block instanceof GlowingHungSignBlock) {
-        if (HungSignBlocks.GLOWING_CONCRETE_HUNG_SIGNS.containsValue(block)) {
+        if (MishangUtils.isConcrete(((GlowingHungSignBlock) block).baseBlock)) {
           glowingConcreteHungSigns.addBlock(block);
-        } else if (HungSignBlocks.GLOWING_TERRACOTTA_HUNG_SIGNS.containsValue(block)) {
+        } else if (MishangUtils.isTerracotta(((GlowingHungSignBlock) block).baseBlock)) {
           glowingTerracottaHungSigns.addBlock(block);
         } else {
           glowingHungSigns.addBlock(block);
         }
       } else if (block instanceof HungSignBlock) {
-        if (HungSignBlocks.CONCRETE_HUNG_SIGNS.containsValue(block)) {
+        if (MishangUtils.isConcrete(((HungSignBlock) block).baseBlock)) {
           concreteHungSigns.addBlock(block);
-        } else if (HungSignBlocks.TERRACOTTA_HUNG_SIGNS.containsValue(block)) {
+        } else if (MishangUtils.isTerracotta(((HungSignBlock) block).baseBlock)) {
           terracottaHungSigns.addBlock(block);
+        } else if (MishangUtils.isPlanks(((HungSignBlock) block).baseBlock)) {
+          woodenHungSigns.addBlock(block);
         } else {
           hungSigns.addBlock(block);
         }
       } else if (block instanceof HungSignBarBlock) {
-        if (HungSignBlocks.CONCRETE_HUNG_SIGN_BARS.containsValue(block)) {
+        if (MishangUtils.isConcrete(((HungSignBarBlock) block).baseBlock)) {
           concreteHungSignBars.addBlock(block);
-        } else if (HungSignBlocks.TERRACOTTA_HUNG_SIGN_BARS.containsValue(block)) {
+        } else if (MishangUtils.isTerracotta(((HungSignBarBlock) block).baseBlock)) {
           terracottaHungSignBars.addBlock(block);
+        } else if (MishangUtils.isWood(((HungSignBarBlock) block).baseBlock)) {
+          woodenHungSignBars.addBlock(block);
         } else {
           hungSignBars.addBlock(block);
         }
@@ -287,26 +301,28 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     // 墙上的告示牌部分
     MishangUtils.instanceStream(WallSignBlocks.class, Block.class).forEach(block -> {
       if (block instanceof GlowingWallSignBlock) {
-        if (WallSignBlocks.GLOWING_CONCRETE_WALL_SIGNS.containsValue(block)) {
+        if (MishangUtils.isConcrete(((GlowingWallSignBlock) block).baseBlock)) {
           glowingConcreteWallSigns.addBlock(block);
-        } else if (WallSignBlocks.GLOWING_TERRACOTTA_WALL_SIGNS.containsValue(block)) {
+        } else if (MishangUtils.isTerracotta(((GlowingWallSignBlock) block).baseBlock)) {
           glowingTerracottaWallSigns.addBlock(block);
         } else {
           glowingWallSigns.addBlock(block);
         }
       } else if (block instanceof FullWallSignBlock) {
-        if (WallSignBlocks.FULL_CONCRETE_WALL_SIGNS.containsValue(block)) {
+        if (MishangUtils.isConcrete(((FullWallSignBlock) block).baseBlock)) {
           fullConcreteWallSigns.addBlock(block);
-        } else if (WallSignBlocks.FULL_TERRACOTTA_WALL_SIGNS.containsValue(block)) {
+        } else if (MishangUtils.isTerracotta(((FullWallSignBlock) block).baseBlock)) {
           fullTerracottaWallSigns.addBlock(block);
         } else {
           fullWallSigns.addBlock(block);
         }
       } else if (block instanceof WallSignBlock) {
-        if (WallSignBlocks.CONCRETE_WALL_SIGNS.containsValue(block)) {
+        if (MishangUtils.isConcrete(((WallSignBlock) block).baseBlock)) {
           concreteWallSigns.addBlock(block);
-        } else if (WallSignBlocks.TERRACOTTA_WALL_SIGNS.containsValue(block)) {
+        } else if (MishangUtils.isTerracotta(((WallSignBlock) block).baseBlock)) {
           terracottaWallSigns.addBlock(block);
+        } else if (MishangUtils.isPlanks(((WallSignBlock) block).baseBlock)) {
+          woodenWallSigns.addBlock(block);
         } else {
           wallSigns.addBlock(block);
         }
@@ -316,24 +332,30 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     // 栏杆部分
     MishangUtils.instanceStream(HandrailBlocks.class, Block.class).forEach(block -> {
       if (block instanceof SimpleHandrailBlock simpleHandrailBlock) {
-        if (HandrailBlocks.SIMPLE_STAINED_GLASS_HANDRAILS.containsValue(block)) {
+        if (MishangUtils.isStained_glass(((SimpleHandrailBlock) block).baseBlock)) {
           simpleStainedGlassNormalHandrails.addBlock(simpleHandrailBlock);
           simpleStainedGlassCentralHandrails.addBlock(simpleHandrailBlock.central);
           simpleStainedGlassCornerHandrails.addBlock(simpleHandrailBlock.corner);
           simpleStainedGlassOuterHandrails.addBlock(simpleHandrailBlock.outer);
           simpleStainedGlassStairHandrails.addBlock(simpleHandrailBlock.stair);
-        } else if (HandrailBlocks.SIMPLE_CONCRETE_HANDRAILS.containsValue(block)) {
+        } else if (MishangUtils.isConcrete(((SimpleHandrailBlock) block).baseBlock)) {
           simpleConcreteNormalHandrails.addBlock(simpleHandrailBlock);
           simpleConcreteCentralHandrails.addBlock(simpleHandrailBlock.central);
           simpleConcreteCornerHandrails.addBlock(simpleHandrailBlock.corner);
           simpleConcreteOuterHandrails.addBlock(simpleHandrailBlock.outer);
           simpleConcreteStairHandrails.addBlock(simpleHandrailBlock.stair);
-        } else if (HandrailBlocks.SIMPLE_TERRACOTTA_HANDRAILS.containsValue(block)) {
+        } else if (MishangUtils.isTerracotta(((SimpleHandrailBlock) block).baseBlock)) {
           simpleTerracottaNormalHandrails.addBlock(simpleHandrailBlock);
           simpleTerracottaCentralHandrails.addBlock(simpleHandrailBlock.central);
           simpleTerracottaCornerHandrails.addBlock(simpleHandrailBlock.corner);
           simpleTerracottaOuterHandrails.addBlock(simpleHandrailBlock.outer);
           simpleTerracottaStairHandrails.addBlock(simpleHandrailBlock.stair);
+        } else if (MishangUtils.isWood(((SimpleHandrailBlock) block).baseBlock)) {
+          simpleWoodenNormalHandrails.addBlock(simpleHandrailBlock);
+          simpleWoodenCentralHandrails.addBlock(simpleHandrailBlock.central);
+          simpleWoodenCornerHandrails.addBlock(simpleHandrailBlock.corner);
+          simpleWoodenOuterHandrails.addBlock(simpleHandrailBlock.outer);
+          simpleWoodenStairHandrails.addBlock(simpleHandrailBlock.stair);
         } else {
           handrailItems.addBlock(simpleHandrailBlock);
           normalHandrails.addBlock(simpleHandrailBlock);
@@ -362,30 +384,42 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         .addTag(simpleTerracottaCornerHandrails)
         .addTag(simpleTerracottaOuterHandrails)
         .addTag(simpleTerracottaStairHandrails);
+    simpleWoodenHandrails
+        .addTag(simpleWoodenNormalHandrails)
+        .addTag(simpleWoodenCentralHandrails)
+        .addTag(simpleWoodenCornerHandrails)
+        .addTag(simpleWoodenOuterHandrails)
+        .addTag(simpleWoodenStairHandrails);
     normalHandrails
         .addTag(simpleStainedGlassNormalHandrails)
         .addTag(simpleTerracottaNormalHandrails)
-        .addTag(simpleConcreteNormalHandrails);
+        .addTag(simpleConcreteNormalHandrails)
+        .addTag(simpleWoodenNormalHandrails);
     handrailItems
         .addTag(simpleStainedGlassHandrails)
         .addTag(simpleTerracottaHandrails)
-        .addTag(simpleConcreteHandrails);
+        .addTag(simpleConcreteHandrails)
+        .addTag(simpleWoodenHandrails);
     centralHandrails
         .addTag(simpleStainedGlassCentralHandrails)
         .addTag(simpleTerracottaCentralHandrails)
-        .addTag(simpleConcreteCentralHandrails);
+        .addTag(simpleConcreteCentralHandrails)
+        .addTag(simpleWoodenCentralHandrails);
     cornerHandrails
         .addTag(simpleStainedGlassCornerHandrails)
         .addTag(simpleTerracottaCornerHandrails)
-        .addTag(simpleConcreteCornerHandrails);
+        .addTag(simpleConcreteCornerHandrails)
+        .addTag(simpleWoodenCornerHandrails);
     outerHandrails
         .addTag(simpleStainedGlassOuterHandrails)
         .addTag(simpleTerracottaOuterHandrails)
-        .addTag(simpleConcreteOuterHandrails);
+        .addTag(simpleConcreteOuterHandrails)
+        .addTag(simpleWoodenOuterHandrails);
     stairHandrails
         .addTag(simpleStainedGlassStairHandrails)
         .addTag(simpleTerracottaStairHandrails)
-        .addTag(simpleConcreteStairHandrails);
+        .addTag(simpleConcreteStairHandrails)
+        .addTag(simpleWoodenStairHandrails);
     handrails
         .addTag(normalHandrails)
         .addTag(centralHandrails)
@@ -458,23 +492,34 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     registerTagBlockOnly(simpleStainedGlassCornerHandrails);
     registerTagBlockOnly(simpleStainedGlassOuterHandrails);
     registerTagBlockOnly(simpleStainedGlassStairHandrails);
+    registerTagBlockOnly(simpleWoodenHandrails);
+    registerTagBlockOnly(simpleWoodenNormalHandrails);
+    PACK.addTag(new Identifier("mishanguc", "items/simple_wooden_handrails"), simpleWoodenNormalHandrails);
+    registerTagBlockOnly(simpleWoodenCentralHandrails);
+    registerTagBlockOnly(simpleWoodenCornerHandrails);
+    registerTagBlockOnly(simpleWoodenOuterHandrails);
+    registerTagBlockOnly(simpleWoodenStairHandrails);
 
     // 悬挂的告示牌部分
     hungSigns
+        .addTag(woodenHungSigns)
         .addTag(concreteHungSigns)
         .addTag(terracottaHungSigns);
     glowingHungSigns
         .addTag(glowingConcreteHungSigns)
         .addTag(glowingTerracottaHungSigns);
     hungSignBars
+        .addTag(woodenHungSignBars)
         .addTag(concreteHungSignBars)
         .addTag(terracottaHungSignBars);
+    registerTag(woodenHungSigns);
     registerTag(concreteHungSigns);
     registerTag(terracottaHungSigns);
     registerTag(hungSigns);
     registerTag(glowingConcreteHungSigns);
     registerTag(glowingTerracottaHungSigns);
     registerTag(glowingHungSigns);
+    registerTag(woodenHungSignBars);
     registerTag(concreteHungSignBars);
     registerTag(terracottaHungSignBars);
     registerTag(hungSignBars);

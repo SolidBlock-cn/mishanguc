@@ -46,6 +46,18 @@ public final class NbtPrettyPrinter {
       return serialize(nbtList, layer, indent, depth);
     } else if (element instanceof final NbtString nbtString) {
       return serialize(nbtString, layer);
+    } else if (element instanceof final NbtByte nbtByte) {
+      return TextBridge.literal(String.valueOf(nbtByte.byteValue())).append(TextBridge.literal("b").formatted(Formatting.GRAY));
+    } else if (element instanceof final NbtShort nbtShort) {
+      return TextBridge.literal(String.valueOf(nbtShort.shortValue())).append(TextBridge.literal("s").formatted(Formatting.GRAY));
+    } else if (element instanceof final NbtInt nbtInt) {
+      return TextBridge.literal(String.valueOf(nbtInt.intValue()));
+    } else if (element instanceof final NbtLong nbtLong) {
+      return TextBridge.literal(String.valueOf(nbtLong.longValue())).append(TextBridge.literal("l").formatted(Formatting.GRAY));
+    } else if (element instanceof final NbtFloat nbtFloat) {
+      return TextBridge.literal(String.valueOf(nbtFloat.floatValue())).append(TextBridge.literal("f").formatted(Formatting.GRAY));
+    } else if (element instanceof final NbtDouble nbtDouble) {
+      return TextBridge.literal(String.valueOf(nbtDouble.doubleValue())).append(TextBridge.literal("d").formatted(Formatting.GRAY));
     }
     return NbtHelper.toPrettyPrintedText(element);
   }

@@ -1,5 +1,5 @@
 {
-  "parent": "mishanguc:block/colored_stairs",
+  "parent": "block/outer_stairs",
   "elements": [
     {
       "from": [0, 0, 0],

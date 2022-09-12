@@ -500,5 +500,22 @@
   "roadConnectionState.whether.probably_connected": "應當連接",
   "vertical_align.mishanguc.bottom": "底",
   "vertical_align.mishanguc.middle": "中",
-  "vertical_align.mishanguc.top": "頂"
+  "vertical_align.mishanguc.top": "頂",
+  "block.mishanguc.colored_stone_bricks": "染色石磚",
+  "block.mishanguc.colored_stone_brick_stairs": "染色石磚樓梯",
+  "block.mishanguc.colored_stone_brick_slab": "染色石磚半磚",
+  "block.mishanguc.colored_bricks": "染色紅磚",
+  "block.mishanguc.colored_brick_stairs": "染色紅磚樓梯",
+  "block.mishanguc.colored_brick_slab": "染色紅磚半磚",
+  "block.mishanguc.colored_quartz_stairs": "染色石英樓梯",
+  "block.mishanguc.colored_quartz_slab": "染色石英半磚",
+  "block.mishanguc.colored_smooth_quartz_stairs": "染色平滑石英樓梯",
+  "block.mishanguc.colored_smooth_quartz_slab": "染色平滑石英半磚",
+  "block.mishanguc.colored_oak_leaves": "染色橡木樹葉",
+  "block.mishanguc.colored_spruce_leaves": "染色杉木樹葉",
+  "block.mishanguc.colored_birch_leaves": "染色樺木樹葉",
+  "block.mishanguc.colored_acacia_leaves": "染色相思木樹葉",
+  "block.mishanguc.colored_jungle_leaves": "染色叢林木樹葉",
+  "block.mishanguc.colored_dark_oak_leaves": "染色黑橡木樹葉",
+  "block.mishanguc.colored_mangrove_leaves": "染色紅樹樹葉"
 }

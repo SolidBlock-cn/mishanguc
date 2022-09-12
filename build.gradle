@@ -1,11 +1,17 @@
 plugins {
     id 'fabric-loom' version '0.12-SNAPSHOT'
+    // Quiltflower 反编译器
+    id 'io.github.juuxel.loom-quiltflower' version '1.7.1'
     id 'maven-publish'
 
     // Modrinth
     id "com.modrinth.minotaur" version "2.+"
     // CurseGradle
     id 'com.matthewprenger.cursegradle' version '1.4.0'
+}
+
+quiltflower {
+    quiltflowerVersion = '1.8.1'
 }
 
 

@@ -96,7 +96,7 @@ public final class MishangucItems {
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.2.4")
   @SimpleModel(parent = "item/handheld")
-  public static final TpToolItem TP_TOOL = new TpToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxDamage(256));
+  public static final TpToolItem TP_TOOL = new TpToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxDamage(2048));
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.2.4")
   @SimpleModel(parent = "item/handheld")
