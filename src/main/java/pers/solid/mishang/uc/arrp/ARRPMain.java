@@ -550,7 +550,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     registerTagBlockOnly(glassNormalHandrails);
     PACK.addTag(new Identifier("mishanguc", "item/glass_handrails"), glassNormalHandrails);
     registerTagBlockOnly(glassCentralHandrails);
-    registerTagBlockOnly(glassCentralHandrails);
+    registerTagBlockOnly(glassCornerHandrails);
     registerTagBlockOnly(glassOuterHandrails);
     registerTagBlockOnly(glassStairHandrails);
 
