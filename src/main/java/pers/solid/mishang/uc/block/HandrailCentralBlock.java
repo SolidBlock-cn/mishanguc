@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.devtech.arrp.json.blockstate.JBlockModel;
 import net.devtech.arrp.json.blockstate.JBlockStates;
@@ -18,7 +17,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -27,7 +25,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,24 +72,19 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     } else return neighborState.getBlock() instanceof HandrailCentralBlock;
   }
 
-  @Override
-  public MutableText getName() {
-    final Block block = baseBlock();
-    return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.handrail_central", block.getName());
-  }
-
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (direction.getAxis().isHorizontal() && stateFrom.getBlock() instanceof final Handrails block) {
-      return block.baseBlock() == this.baseBlock()
-          && block.connectsIn(stateFrom, direction.getOpposite(), null);
+    final Block block = stateFrom.getBlock();
+    if (direction.getAxis().isHorizontal() && block instanceof final Handrails handrails) {
+      return block.asItem() == asItem()
+          && handrails.connectsIn(stateFrom, direction.getOpposite(), null);
     }
     return super.isSideInvisible(state, stateFrom, direction);
   }
 
   public HandrailCentralBlock(@NotNull T baseBlock, Settings settings) {
-    this(baseBlock, 0.5f, 0.5f, 14f, 14f, 14, settings);
+    this(baseBlock, 1f, 1f, 16f, 16f, 16f, settings);
   }
 
   public HandrailCentralBlock(@NotNull T baseBlock) {
@@ -199,15 +191,11 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     final Identifier sideId = modelId.brrp_append("_side");
     parts.add(new JMultipart().addModel(new JBlockModel(postId)));
     FACING_PROPERTIES.forEach((facing, property) -> {
-      parts.add(new JMultipart(new JWhenProperties().add(property.getName(), "true"), new JBlockModel(sideId).y(((int) facing.asRotation()))));
-      parts.add(new JMultipart(new JWhenProperties().add(property.getName(), "false"), new JBlockModel(postSideId).y((int) facing.asRotation())));
+      parts.add(new JMultipart(new JWhenProperties().add(property.getName(), "true"), new JBlockModel(sideId).y(((int) facing.asRotation())).uvlock()));
+      parts.add(new JMultipart(new JWhenProperties().add(property.getName(), "false"), new JBlockModel(postSideId).y((int) facing.asRotation()).uvlock()));
     });
     return JBlockStates.ofMultiparts(parts.toArray(new JMultipart[5]));
   }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public abstract void writeBlockModel(RuntimeResourcePack pack);
 
   @Override
   public @Nullable Block baseBlock() {

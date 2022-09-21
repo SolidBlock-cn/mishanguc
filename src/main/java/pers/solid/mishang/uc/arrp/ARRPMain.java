@@ -25,6 +25,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -129,6 +130,13 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   }
 
   private static void addTags() {
+    // mineable 部分；大多数 mineable 标签都是手动生成，目前仅对栏杆部分的 mineable 标签实行自动生成。
+    final IdentifiedTag pickaxeMineable = new IdentifiedTag("block", BlockTags.PICKAXE_MINEABLE.id());
+    final IdentifiedTag axeMineable = new IdentifiedTag("block", BlockTags.AXE_MINEABLE.id());
+    final IdentifiedTag needsStoneTool = new IdentifiedTag("block", BlockTags.NEEDS_STONE_TOOL.id());
+    final IdentifiedTag needsIronTool = new IdentifiedTag("block", BlockTags.NEEDS_IRON_TOOL.id());
+    final IdentifiedTag needsDiamondTool = new IdentifiedTag("block", BlockTags.NEEDS_DIAMOND_TOOL.id());
+
     // 道路部分
     final IdentifiedTag roadBlocks = blockTag("road_blocks");
     final IdentifiedTag roadSlabs = blockTag("road_slabs");
@@ -215,8 +223,14 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     final IdentifiedTag simpleWoodenOuterHandrails = blockTag("simple_wooden_outer_handrails");
     final IdentifiedTag simpleWoodenStairHandrails = blockTag("simple_wooden_stair_handrails");
 
+    // 玻璃栏杆部分
+    final IdentifiedTag glassHandrails = blockTag("glass_handrails");
+    final IdentifiedTag glassNormalHandrails = blockTag("glass_normal_handrails");
+    final IdentifiedTag glassCentralHandrails = blockTag("glass_central_handrails");
+    final IdentifiedTag glassCornerHandrails = blockTag("glass_corner_handrails");
+    final IdentifiedTag glassOuterHandrails = blockTag("glass_outer_handrails");
+    final IdentifiedTag glassStairHandrails = blockTag("glass_stair_handrails");
 
-    // 扶手部分，预留
 
     // 道路部分
     MishangUtils.instanceStream(RoadBlocks.class, Block.class).forEach(
@@ -364,6 +378,26 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
           outerHandrails.addBlock(simpleHandrailBlock.outer);
           stairHandrails.addBlock(simpleHandrailBlock.stair);
         }
+      } else if (block instanceof GlassHandrailBlock glassHandrailBlock) {
+        glassNormalHandrails.addBlock(glassHandrailBlock);
+        glassCentralHandrails.addBlock(glassHandrailBlock.central());
+        glassCornerHandrails.addBlock(glassHandrailBlock.corner());
+        glassOuterHandrails.addBlock(glassHandrailBlock.outer());
+        glassStairHandrails.addBlock(glassHandrailBlock.stair());
+        final Block[] blocks = glassHandrailBlock.selfAndVariants();
+        final Block baseBlock = glassHandrailBlock.baseBlock();
+        if (MishangUtils.isWood(baseBlock)) {
+          axeMineable.addBlocks(blocks);
+        } else {
+          pickaxeMineable.addBlocks(blocks);
+          if (baseBlock == Blocks.GOLD_BLOCK || baseBlock == Blocks.EMERALD_BLOCK || baseBlock == Blocks.DIAMOND_BLOCK) {
+            needsIronTool.addBlocks(blocks);
+          } else if (baseBlock == Blocks.OBSIDIAN || baseBlock == Blocks.CRYING_OBSIDIAN) {
+            needsDiamondTool.addBlocks(blocks);
+          } else if (baseBlock == Blocks.IRON_BLOCK) {
+            needsStoneTool.addBlocks(blocks);
+          }
+        }
       }
     });
     simpleStainedGlassHandrails
@@ -391,6 +425,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         .addTag(simpleWoodenOuterHandrails)
         .addTag(simpleWoodenStairHandrails);
     normalHandrails
+        .addTag(glassNormalHandrails)
         .addTag(simpleStainedGlassNormalHandrails)
         .addTag(simpleTerracottaNormalHandrails)
         .addTag(simpleConcreteNormalHandrails)
@@ -401,31 +436,43 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         .addTag(simpleConcreteHandrails)
         .addTag(simpleWoodenHandrails);
     centralHandrails
+        .addTag(glassCentralHandrails)
         .addTag(simpleStainedGlassCentralHandrails)
         .addTag(simpleTerracottaCentralHandrails)
         .addTag(simpleConcreteCentralHandrails)
         .addTag(simpleWoodenCentralHandrails);
     cornerHandrails
+        .addTag(glassCornerHandrails)
         .addTag(simpleStainedGlassCornerHandrails)
         .addTag(simpleTerracottaCornerHandrails)
         .addTag(simpleConcreteCornerHandrails)
         .addTag(simpleWoodenCornerHandrails);
     outerHandrails
+        .addTag(glassOuterHandrails)
         .addTag(simpleStainedGlassOuterHandrails)
         .addTag(simpleTerracottaOuterHandrails)
         .addTag(simpleConcreteOuterHandrails)
         .addTag(simpleWoodenOuterHandrails);
     stairHandrails
+        .addTag(glassStairHandrails)
         .addTag(simpleStainedGlassStairHandrails)
         .addTag(simpleTerracottaStairHandrails)
         .addTag(simpleConcreteStairHandrails)
         .addTag(simpleWoodenStairHandrails);
+    glassHandrails.addTags(glassNormalHandrails, glassCentralHandrails, glassCornerHandrails, glassOuterHandrails, glassStairHandrails);
     handrails
         .addTag(normalHandrails)
         .addTag(centralHandrails)
         .addTag(cornerHandrails)
         .addTag(outerHandrails)
         .addTag(stairHandrails);
+
+    // mineable 部分
+    registerTagBlockOnly(pickaxeMineable);
+    registerTagBlockOnly(axeMineable);
+    registerTagBlockOnly(needsDiamondTool);
+    registerTagBlockOnly(needsIronTool);
+    registerTagBlockOnly(needsStoneTool);
 
     // 道路部分
     registerTags(roadBlocks, roadSlabs);
@@ -499,6 +546,13 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     registerTagBlockOnly(simpleWoodenCornerHandrails);
     registerTagBlockOnly(simpleWoodenOuterHandrails);
     registerTagBlockOnly(simpleWoodenStairHandrails);
+    registerTagBlockOnly(glassHandrails);
+    registerTagBlockOnly(glassNormalHandrails);
+    PACK.addTag(new Identifier("mishanguc", "item/glass_handrails"), glassNormalHandrails);
+    registerTagBlockOnly(glassCentralHandrails);
+    registerTagBlockOnly(glassCentralHandrails);
+    registerTagBlockOnly(glassOuterHandrails);
+    registerTagBlockOnly(glassStairHandrails);
 
     // 悬挂的告示牌部分
     hungSigns

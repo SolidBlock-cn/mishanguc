@@ -1,0 +1,46 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "top": "#frame",
+    "side": "#frame",
+    "bottom": "#frame",
+    "particle": "#glass"
+  },
+  "elements": [
+    {
+      "from": [0.5, 15, 13.5],
+      "to": [2.5, 16, 15.5],
+      "faces": {
+        "north": {"texture": "#top"},
+        "east": {"texture": "#top"},
+        "up": {"texture": "#top"},
+        "down": {"texture": "#top"}
+      },
+      "description": "Top part of the frame part2"
+    },
+    {
+      "from": [0, 0, 13.5],
+      "to": [1, 16, 15.5],
+      "faces": {
+        "north": {"texture": "#side"},
+        "east": {"texture": "#side"},
+        "west": {"texture": "#side", "cullface": "west"},
+        "south": {"texture": "#side"},
+        "up": {"texture": "#side"},
+        "down": {"texture": "#side"}
+      }
+    },
+    {
+      "from": [0.5, 0, 15],
+      "to": [2.5, 16, 16],
+      "faces": {
+        "north": {"texture": "#side"},
+        "east": {"texture": "#side"},
+        "west": {"texture": "#side"},
+        "south": {"texture": "#side", "cullface": "south"},
+        "up": {"texture": "#side"},
+        "down": {"texture": "#side"}
+      }
+    }
+  ]
+}

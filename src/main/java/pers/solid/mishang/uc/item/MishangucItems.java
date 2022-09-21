@@ -104,7 +104,7 @@ public final class MishangucItems {
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.2.4")
   @SimpleModel(parent = "item/generated", texture = "item/diamond")
-  public static final HoldingToolItem HOLDING_TOOL = new HoldingToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxCount(1), null);
+  public static final HoldingToolItem CARRYING_TOOL = new HoldingToolItem(new FabricItemSettings().group(MishangucItemGroups.TOOLS).maxCount(1), null);
 
   private MishangucItems() {
   }

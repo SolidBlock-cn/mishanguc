@@ -2,7 +2,6 @@ package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
-import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.devtech.arrp.json.blockstate.JBlockModel;
 import net.devtech.arrp.json.blockstate.JBlockStates;
@@ -48,7 +47,7 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   public static final EnumProperty<Position> POSITION = MishangucProperties.HANDRAIL_STAIR_POSITION;
   public static final EnumProperty<Shape> SHAPE = MishangucProperties.HANDRAIL_STAIR_SHAPE;
-  public final @NotNull T baseRail;
+  public final @NotNull T baseHandrail;
 
   @Unmodifiable
   public static final Map<Direction, Map<Position, Map<Shape, VoxelShape>>> SHAPES = Maps.toMap(
@@ -63,9 +62,9 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
       )
   );
 
-  protected HandrailStairBlock(@NotNull T baseRail, Settings settings) {
+  protected HandrailStairBlock(@NotNull T baseHandrail, Settings settings) {
     super(settings);
-    this.baseRail = baseRail;
+    this.baseHandrail = baseHandrail;
     setDefaultState(stateManager.getDefaultState()
         .with(WATERLOGGED, false)
         .with(POSITION, Position.CENTER)
@@ -73,8 +72,8 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
         .with(SHAPE, Shape.MIDDLE));
   }
 
-  public HandrailStairBlock(@NotNull T baseRail) {
-    this(baseRail, FabricBlockSettings.copyOf(baseRail));
+  public HandrailStairBlock(@NotNull T baseHandrail) {
+    this(baseHandrail, FabricBlockSettings.copyOf(baseHandrail));
   }
 
   @Override
@@ -97,10 +96,6 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
     }
     return JBlockStates.ofVariants(variant);
   }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public abstract void writeBlockModel(RuntimeResourcePack pack);
 
   @Nullable
   @Override
@@ -177,34 +172,34 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
     List<VoxelShape> shapes = new ArrayList<>();
 
     // 沿着楼梯前进上升的方向的单位向量。
-    final Vec3d vector = Vec3d.of(facing.getVector());
+    final Vec3d forwardUnit = Vec3d.of(facing.getVector());
     // 沿着楼梯前进方向看，向右的单位向量。
-    final Vec3d vector2 = Vec3d.of(facing.rotateYClockwise().getVector());
-    new Vec3d(0.5d, 0, 0.5d).add(vector.multiply(0.5));
-    Vec3d basePoint = new Vec3d(0.5d, 0, 0.5d).add(vector.multiply(0.5));
+    final Vec3d rightUnit = Vec3d.of(facing.rotateYClockwise().getVector());
+    new Vec3d(0.5d, 0, 0.5d).add(forwardUnit.multiply(0.5));
+    Vec3d basePoint = new Vec3d(0.5d, 0, 0.5d).add(forwardUnit.multiply(0.5));
     basePoint = switch (position) {
-      case LEFT -> basePoint.add(vector2.multiply(-7d / 16));
-      case CENTER -> basePoint.add(vector2.multiply(-1 / 32d));
-      case RIGHT -> basePoint.add(vector2.multiply(6d / 16));
+      case LEFT -> basePoint.add(rightUnit.multiply(-7.5d / 16));
+      case CENTER -> basePoint.add(rightUnit.multiply(-1d / 16));
+      case RIGHT -> basePoint.add(rightUnit.multiply(5.5d / 16));
     };
 
     // 上半部分的栏杆
     if (shape == Shape.TOP) {
-      shapes.add(VoxelShapes.cuboid(new Box(basePoint, basePoint.add(0, 14d / 16, 0).add(vector.multiply(-0.5d)).add(vector2.multiply(1 / 16d)))));
-      basePoint = basePoint.add(vector.multiply(-0.5d));
+      shapes.add(VoxelShapes.cuboid(new Box(basePoint, basePoint.add(0, 16d / 16, 0).add(forwardUnit.multiply(-0.5d)).add(rightUnit.multiply(2 / 16d)))));
+      basePoint = basePoint.add(forwardUnit.multiply(-0.5d));
     } else for (int i = 0; i < 8; i++) {
-      shapes.add(VoxelShapes.cuboid(new Box(basePoint, basePoint.add(0, (22 - i) / 16d, 0).add(vector.multiply(-1d / 16)).add(vector2.multiply(1d / 16)))));
-      basePoint = basePoint.add(vector.multiply(-1d / 16));
+      shapes.add(VoxelShapes.cuboid(new Box(basePoint, basePoint.add(0, (24 - i) / 16d, 0).add(forwardUnit.multiply(-1d / 16)).add(rightUnit.multiply(2d / 16)))));
+      basePoint = basePoint.add(forwardUnit.multiply(-1d / 16));
     }
     basePoint = basePoint.add(0, -0.5d, 0);
 
     // 下半部分的栏杆
     if (shape == Shape.BOTTOM) {
       basePoint = basePoint.add(0, 0.5d, 0);
-      shapes.add(VoxelShapes.cuboid(new Box(basePoint, basePoint.add(0, 14d / 16, 0).add(vector.multiply(-0.5d)).add(vector2.multiply(1 / 16d)))));
+      shapes.add(VoxelShapes.cuboid(new Box(basePoint, basePoint.add(0, 16d / 16, 0).add(forwardUnit.multiply(-0.5d)).add(rightUnit.multiply(2 / 16d)))));
     } else for (int i = 0; i < 8; i++) {
-      shapes.add(VoxelShapes.cuboid(new Box(basePoint, basePoint.add(0, (22 - i) / 16d, 0).add(vector.multiply(-1d / 16)).add(vector2.multiply(1d / 16)))));
-      basePoint = basePoint.add(vector.multiply(-1d / 16));
+      shapes.add(VoxelShapes.cuboid(new Box(basePoint, basePoint.add(0, (24 - i) / 16d, 0).add(forwardUnit.multiply(-1d / 16)).add(rightUnit.multiply(2d / 16)))));
+      basePoint = basePoint.add(forwardUnit.multiply(-1d / 16));
     }
 
     return VoxelShapes.union(VoxelShapes.empty(), shapes.toArray(new VoxelShape[0]));
@@ -212,7 +207,7 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
 
   @Override
   public Item asItem() {
-    return baseRail.asItem();
+    return baseHandrail.asItem();
   }
 
   @Override
@@ -222,7 +217,7 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
 
   @Override
   public @Nullable Block baseBlock() {
-    return baseRail.baseBlock();
+    return baseHandrail.baseBlock();
   }
 
   @Override
@@ -235,9 +230,10 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (stateFrom.getBlock() instanceof final Handrails block) {
-      return block.baseBlock() == this.baseBlock()
-          && block.connectsIn(stateFrom, direction.getOpposite(), equivalentFacing(state));
+    final Block block = stateFrom.getBlock();
+    if (block instanceof final Handrails handrails) {
+      return handrails.connectsIn(stateFrom, direction.getOpposite(), equivalentFacing(state))
+          && block.asItem() == this.asItem();  // 仅限同一栏杆物品对应的方块
     }
     return super.isSideInvisible(state, stateFrom, direction);
   }

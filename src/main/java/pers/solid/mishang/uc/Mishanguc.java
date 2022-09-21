@@ -26,6 +26,7 @@ import net.minecraft.util.registry.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.block.ColoredBlock;
+import pers.solid.mishang.uc.block.GlassHandrailBlock;
 import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
@@ -114,7 +115,21 @@ public class Mishanguc implements ModInitializer {
         HandrailBlocks.SIMPLE_JUNGLE_HANDRAIL,
         HandrailBlocks.SIMPLE_ACACIA_HANDRAIL,
         HandrailBlocks.SIMPLE_DARK_OAK_HANDRAIL,
-        HandrailBlocks.SIMPLE_MANGROVE_HANDRAIL
+        HandrailBlocks.SIMPLE_MANGROVE_HANDRAIL,
+        HandrailBlocks.GLASS_OAK_HANDRAIL,
+        HandrailBlocks.GLASS_SPRUCE_HANDRAIL,
+        HandrailBlocks.GLASS_BIRCH_HANDRAIL,
+        HandrailBlocks.GLASS_JUNGLE_HANDRAIL,
+        HandrailBlocks.GLASS_ACACIA_HANDRAIL,
+        HandrailBlocks.GLASS_DARK_OAK_HANDRAIL,
+        HandrailBlocks.GLASS_MANGROVE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_OAK_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_SPRUCE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_BIRCH_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_JUNGLE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_ACACIA_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_DARK_OAK_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_MANGROVE_HANDRAIL
     };
     for (HandrailBlock handrail : woodenHandrails) {
       flammableBlockRegistry.add(handrail, 5, 20);
@@ -316,6 +331,13 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(Blocks.BRICKS, ColoredBlocks.COLORED_BRICKS);
     blockMap.put(Blocks.BRICK_STAIRS, ColoredBlocks.COLORED_BRICK_STAIRS);
     blockMap.put(Blocks.BRICK_SLAB, ColoredBlocks.COLORED_BRICK_SLAB);
+    for (GlassHandrailBlock block : HandrailBlocks.DECORATED_IRON_HANDRAILS.values()) {
+      blockMap.put(block, HandrailBlocks.COLORED_DECORATED_IRON_HANDRAIL);
+      blockMap.put(block.corner(), HandrailBlocks.COLORED_DECORATED_IRON_HANDRAIL.corner());
+      blockMap.put(block.central(), HandrailBlocks.COLORED_DECORATED_IRON_HANDRAIL.central());
+      blockMap.put(block.outer(), HandrailBlocks.COLORED_DECORATED_IRON_HANDRAIL.outer());
+      blockMap.put(block.stair(), HandrailBlocks.COLORED_DECORATED_IRON_HANDRAIL.stair());
+    }
 
     tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "concrete_hung_signs")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN);
     tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "concrete_hung_sign_bars")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN_BAR);
