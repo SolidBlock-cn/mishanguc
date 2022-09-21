@@ -21,7 +21,6 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.MutableText;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
@@ -39,7 +38,6 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Map;
 
@@ -51,8 +49,8 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   public final @NotNull T baseHandrail;
   public static final Map<HorizontalCornerDirection, VoxelShape> SHAPES = Util.make(() -> {
-    final Map<Direction, @Nullable VoxelShape> shapes1 = MishangUtils.createHorizontalDirectionToShape(0, 0, 1, 15, 14, 2);
-    final Map<Direction, @Nullable VoxelShape> shapes2 = MishangUtils.createHorizontalDirectionToShape(1, 0, 1, 16, 14, 2);
+    final Map<Direction, @Nullable VoxelShape> shapes1 = MishangUtils.createHorizontalDirectionToShape(0, 0, 0.5, 15, 16, 2.5);
+    final Map<Direction, @Nullable VoxelShape> shapes2 = MishangUtils.createHorizontalDirectionToShape(0.5, 0, 1, 16, 16, 2.5);
     return Direction.Type.HORIZONTAL.stream().collect(Maps.toImmutableEnumMap(direction -> HorizontalCornerDirection.fromDirections(direction, direction.rotateYClockwise()), direction -> VoxelShapes.union(shapes1.get(direction), shapes2.get(direction.rotateYClockwise()))));
   });
 
@@ -139,17 +137,12 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (direction.getAxis().isHorizontal() && stateFrom.getBlock() instanceof final Handrails block) {
-      return block.baseBlock() == this.baseBlock()
-          && block.connectsIn(stateFrom, direction.getOpposite(), state.get(FACING).getDirectionInAxis(direction.rotateYClockwise().getAxis()));
+    final Block block = stateFrom.getBlock();
+    if (direction.getAxis().isHorizontal() && block instanceof final Handrails handrails) {
+      return block.asItem() == asItem()
+          && handrails.connectsIn(stateFrom, direction.getOpposite(), state.get(FACING).getDirectionInAxis(direction.rotateYClockwise().getAxis()));
     }
     return super.isSideInvisible(state, stateFrom, direction);
-  }
-
-  @Override
-  public MutableText getName() {
-    final Block block = baseBlock();
-    return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.handrail_corner", block.getName());
   }
 
   @Override

@@ -173,25 +173,25 @@ public class HoldingToolItem extends BlockToolItem
     final Text name = super.getName(stack);
     final Block holdingBlock = getHoldingBlock(stack);
     if (hasHoldingEntity(stack)) {
-      return TextBridge.translatable("item.mishanguc.holding_tool.holding", name, getEntityName(stack));
+      return TextBridge.translatable("item.mishanguc.carrying_tool.holding", name, getEntityName(stack));
     } else if (holdingBlock == null) {
-      return TextBridge.translatable("item.mishanguc.holding_tool.empty", name);
+      return TextBridge.translatable("item.mishanguc.carrying_tool.empty", name);
     } else {
-      return TextBridge.translatable("item.mishanguc.holding_tool.holding", name, holdingBlock.getName());
+      return TextBridge.translatable("item.mishanguc.carrying_tool.holding", name, holdingBlock.getName());
     }
   }
 
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(TextBridge.translatable("item.mishanguc.holding_tool.tooltip.1").formatted(Formatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.holding_tool.tooltip.2").formatted(Formatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.holding_tool.tooltip.3").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.1").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.2").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.3").formatted(Formatting.GRAY));
     final Block holdingBlock = getHoldingBlock(stack);
     if (holdingBlock != null) {
-      tooltip.add(TextBridge.translatable("item.mishanguc.holding_tool.tooltip.currently", holdingBlock.getName().formatted(Formatting.YELLOW)).formatted(Formatting.GREEN));
+      tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.currently", holdingBlock.getName().formatted(Formatting.YELLOW)).formatted(Formatting.GREEN));
     } else if (hasHoldingEntity(stack)) {
-      tooltip.add(TextBridge.translatable("item.mishanguc.holding_tool.tooltip.currently", getEntityName(stack).formatted(Formatting.YELLOW)).formatted(Formatting.GREEN));
+      tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.currently", getEntityName(stack).formatted(Formatting.YELLOW)).formatted(Formatting.GREEN));
     }
   }
 
@@ -205,7 +205,7 @@ public class HoldingToolItem extends BlockToolItem
         if (world.isClient) {
           blockPlacementContext.playSound();
         } else {
-          player.sendMessage(TextBridge.translatable(player.isCreative() ? "item.mishanguc.holding_tool.message.placed_creative" : "item.mishanguc.holding_tool.message.placed", blockPlacementContext.stateToPlace.getBlock().getName()), true);
+          player.sendMessage(TextBridge.translatable(player.isCreative() ? "item.mishanguc.carrying_tool.message.placed_creative" : "item.mishanguc.carrying_tool.message.placed", blockPlacementContext.stateToPlace.getBlock().getName()), true);
         }
         if (!player.isCreative()) {
           setHoldingBlockState(stack, null);
@@ -223,7 +223,7 @@ public class HoldingToolItem extends BlockToolItem
         entity.updatePosition(pos.x, pos.y, pos.z);
         final boolean spawnEntity = world.spawnEntity(entity);
         if (spawnEntity) {
-          player.sendMessage(TextBridge.translatable(player.isCreative() ? "item.mishanguc.holding_tool.message.spawned_creative" : "item.mishanguc.holding_tool.message.spawned", getEntityName(stack)), true);
+          player.sendMessage(TextBridge.translatable(player.isCreative() ? "item.mishanguc.carrying_tool.message.spawned_creative" : "item.mishanguc.carrying_tool.message.spawned", getEntityName(stack)), true);
           if (!player.isCreative()) {
             setHoldingEntity(stack, null);
           } else {
@@ -246,7 +246,7 @@ public class HoldingToolItem extends BlockToolItem
         if (world.isClient) {
           return ActionResult.PASS;
         } else {
-          player.sendMessage(TextBridge.translatable("item.mishanguc.holding_tool.message.no_placing").formatted(Formatting.RED), true);
+          player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_placing").formatted(Formatting.RED), true);
           return ActionResult.FAIL;
         }
       }
@@ -258,7 +258,7 @@ public class HoldingToolItem extends BlockToolItem
     final Block alreadyHolding = getHoldingBlock(stack);
     if (alreadyHolding != null && !player.isCreative()) {
       if (!world.isClient) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.holding_tool.message.no_picking", getHoldingBlock(stack).getName()).formatted(Formatting.RED), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", getHoldingBlock(stack).getName()).formatted(Formatting.RED), true);
         return ActionResult.FAIL;
       } else {
         return ActionResult.CONSUME;
@@ -268,7 +268,7 @@ public class HoldingToolItem extends BlockToolItem
     if (alreadyHoldingEntity && !player.isCreative()) {
       if (world.isClient) return ActionResult.CONSUME;
       else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.holding_tool.message.no_picking", getEntityName(stack)).formatted(Formatting.RED), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", getEntityName(stack)).formatted(Formatting.RED), true);
         return ActionResult.FAIL;
       }
     }
@@ -287,11 +287,11 @@ public class HoldingToolItem extends BlockToolItem
     }
     if (!world.isClient) {
       if (alreadyHolding == null) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.holding_tool.message.pick", removed.getBlock().getName()), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick", removed.getBlock().getName()), true);
       } else if (alreadyHoldingEntity) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.holding_tool.message.pick_overriding", getEntityName(stack)), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_overriding", getEntityName(stack)), true);
       } else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.holding_tool.message.picked_overriding", removed.getBlock().getName(), alreadyHolding.getName()), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.picked_overriding", removed.getBlock().getName(), alreadyHolding.getName()), true);
       }
     }
     setHoldingEntity(stack, null);
@@ -324,7 +324,7 @@ public class HoldingToolItem extends BlockToolItem
           setHoldingBlockState(stack, null);
           stack.removeSubNbt("BlockEntityTag");
         }
-        user.sendMessage(TextBridge.translatable(user.isCreative() ? "item.mishanguc.holding_tool.message.block_thrown_creative" : "item.mishanguc.holding_tool.message.block_thrown", holdingBlockState.getBlock().getName()), true);
+        user.sendMessage(TextBridge.translatable(user.isCreative() ? "item.mishanguc.carrying_tool.message.block_thrown_creative" : "item.mishanguc.carrying_tool.message.block_thrown", holdingBlockState.getBlock().getName()), true);
         return TypedActionResult.success(use.getValue());
       } else {
         return TypedActionResult.fail(use.getValue());
@@ -338,7 +338,7 @@ public class HoldingToolItem extends BlockToolItem
         entity.setVelocity(Vec3d.fromPolar(user.getPitch(), user.getYaw()).multiply(2).add(user.getVelocity()));
         final boolean spawnEntity = world.spawnEntity(entity);
         if (spawnEntity) {
-          user.sendMessage(TextBridge.translatable(user.isCreative() ? "item.mishanguc.holding_tool.message.entity_thrown_creative" : "item.mishanguc.holding_tool.message.entity_thrown", getEntityName(stack)), true);
+          user.sendMessage(TextBridge.translatable(user.isCreative() ? "item.mishanguc.carrying_tool.message.entity_thrown_creative" : "item.mishanguc.carrying_tool.message.entity_thrown", getEntityName(stack)), true);
           if (!user.isCreative()) {
             setHoldingEntity(stack, null);
           } else {
@@ -363,23 +363,23 @@ public class HoldingToolItem extends BlockToolItem
     if (hasHoldingEntity(stack) && !player.isCreative()) {
       if (world.isClient) return ActionResult.SUCCESS;
       else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.holding_tool.message.no_picking", getEntityName(stack)).formatted(Formatting.RED), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", getEntityName(stack)).formatted(Formatting.RED), true);
         return ActionResult.FAIL;
       }
     } else if (hasHoldingBlockState(stack) && !player.isCreative()) {
       if (world.isClient) return ActionResult.SUCCESS;
       else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.holding_tool.message.no_picking", getHoldingBlock(stack).getName()).formatted(Formatting.RED), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", getHoldingBlock(stack).getName()).formatted(Formatting.RED), true);
         return ActionResult.FAIL;
       }
     }
     if (!world.isClient) {
       if (hasHoldingEntity(stack)) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.holding_tool.message.pick_entity_overriding", entity.getName(), getEntityName(stack)), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity_overriding", entity.getName(), getEntityName(stack)), true);
       } else if (hasHoldingBlockState(stack)) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.holding_tool.message.pick_entity_overriding", entity.getName(), getHoldingBlock(stack).getName()), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity_overriding", entity.getName(), getHoldingBlock(stack).getName()), true);
       } else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.holding_tool.message.pick_entity", entity.getName()), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity", entity.getName()), true);
       }
     }
     setHoldingBlockState(stack, null);

@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.Maps;
-import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.fabricmc.api.EnvType;
@@ -19,7 +18,6 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.MutableText;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
@@ -37,7 +35,6 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Map;
 
@@ -50,20 +47,20 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   public static final Map<HorizontalCornerDirection, VoxelShape> SHAPES = Util.make(() -> {
 
-    final Map<Direction, @Nullable VoxelShape> map1 = MishangUtils.createHorizontalDirectionToShape(0, 0, 14, 2, 14, 15);
-    final Map<Direction, @Nullable VoxelShape> map2 = MishangUtils.createHorizontalDirectionToShape(1, 0, 15, 2, 14, 16);
+    final Map<Direction, @Nullable VoxelShape> map1 = MishangUtils.createHorizontalDirectionToShape(0.5, 0, 13.5, 2.5, 16, 15.5);
+    final Map<Direction, @Nullable VoxelShape> map2 = MishangUtils.createHorizontalDirectionToShape(0.5, 0, 15.5, 2.5, 16, 16);
     return Direction.Type.HORIZONTAL.stream().collect(Maps.toImmutableEnumMap(direction -> HorizontalCornerDirection.fromDirections(direction, direction.rotateYClockwise()), direction -> VoxelShapes.union(map1.get(direction), map2.get(direction))));
   });
-  public final @NotNull T baseRail;
+  public final @NotNull T baseHandrail;
 
-  public HandrailOuterBlock(@NotNull T baseRail, Settings settings) {
+  public HandrailOuterBlock(@NotNull T baseHandrail, Settings settings) {
     super(settings);
-    this.baseRail = baseRail;
+    this.baseHandrail = baseHandrail;
     setDefaultState(stateManager.getDefaultState().with(WATERLOGGED, false).with(FACING, HorizontalCornerDirection.SOUTH_WEST));
   }
 
-  public HandrailOuterBlock(@NotNull T baseRail) {
-    this(baseRail, FabricBlockSettings.copyOf(baseRail));
+  public HandrailOuterBlock(@NotNull T baseHandrail) {
+    this(baseHandrail, FabricBlockSettings.copyOf(baseHandrail));
   }
 
   @Override
@@ -74,7 +71,7 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
 
   @Override
   public @Nullable Block baseBlock() {
-    return baseRail.baseBlock();
+    return baseHandrail.baseBlock();
   }
 
   @SuppressWarnings("deprecation")
@@ -109,12 +106,6 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
     return placementState.with(FACING, HorizontalCornerDirection.fromRotation(ctx.getPlayerYaw())).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
   }
 
-  @Override
-  public MutableText getName() {
-    final Block block = baseBlock();
-    return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.handrail_outer", block.getName());
-  }
-
   @SuppressWarnings("deprecation")
   @Override
   public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
@@ -127,9 +118,10 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (direction.getAxis().isHorizontal() && stateFrom.getBlock() instanceof final Handrails block) {
-      return block.baseBlock() == this.baseBlock()
-          && block.connectsIn(stateFrom, direction.getOpposite(), state.get(FACING).getDirectionInAxis(direction.rotateYClockwise().getAxis()).getOpposite());
+    final Block block = stateFrom.getBlock();
+    if (direction.getAxis().isHorizontal() && block instanceof final Handrails handrails) {
+      return block.asItem() == asItem()
+          && handrails.connectsIn(stateFrom, direction.getOpposite(), state.get(FACING).getDirectionInAxis(direction.rotateYClockwise().getAxis()).getOpposite());
     }
     return super.isSideInvisible(state, stateFrom, direction);
   }
@@ -142,7 +134,7 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
 
   @Override
   public Item asItem() {
-    return baseRail.asItem();
+    return baseHandrail.asItem();
   }
 
   @Override
@@ -155,7 +147,4 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
   public @NotNull JBlockStates getBlockStates() {
     return BRRPHelper.stateForHorizontalCornerFacingBlock(getBlockModelId(), true);
   }
-
-  @Override
-  public abstract void writeBlockModel(RuntimeResourcePack pack);
 }
