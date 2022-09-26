@@ -55,6 +55,8 @@ import pers.solid.mishang.uc.util.BlockPlacementContext;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
@@ -258,7 +260,7 @@ public class HoldingToolItem extends BlockToolItem
     final Block alreadyHolding = getHoldingBlock(stack);
     if (alreadyHolding != null && !player.isCreative()) {
       if (!world.isClient) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", getHoldingBlock(stack).getName()).formatted(Formatting.RED), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.ofNullable(getHoldingBlock(stack)).map(Block::getName).orElse(TextBridge.empty())).formatted(Formatting.RED), true);
         return ActionResult.FAIL;
       } else {
         return ActionResult.CONSUME;
@@ -369,7 +371,7 @@ public class HoldingToolItem extends BlockToolItem
     } else if (hasHoldingBlockState(stack) && !player.isCreative()) {
       if (world.isClient) return ActionResult.SUCCESS;
       else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", getHoldingBlock(stack).getName()).formatted(Formatting.RED), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.ofNullable(getHoldingBlock(stack)).map(Block::getName).orElse(TextBridge.empty())).formatted(Formatting.RED), true);
         return ActionResult.FAIL;
       }
     }
@@ -377,7 +379,7 @@ public class HoldingToolItem extends BlockToolItem
       if (hasHoldingEntity(stack)) {
         player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity_overriding", entity.getName(), getEntityName(stack)), true);
       } else if (hasHoldingBlockState(stack)) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity_overriding", entity.getName(), getHoldingBlock(stack).getName()), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity_overriding", entity.getName(), Objects.requireNonNull(getHoldingBlock(stack)).getName()), true);
       } else {
         player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity", entity.getName()), true);
       }

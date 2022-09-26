@@ -2,7 +2,6 @@ package pers.solid.mishang.uc.arrp;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import net.devtech.arrp.api.RRPCallbackConditional;
 import net.devtech.arrp.api.RRPPreGenEntrypoint;
 import net.devtech.arrp.api.RuntimeResourcePack;
@@ -697,12 +696,6 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         RoadBlocks.ROAD_WITH_WHITE_TS_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineTop("white_joint_line"));
-    /*writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_WHITE_S_BA_LINE,
-        "road_with_straight_and_angle_line",
-        FasterJTextures.ofP(
-            "line_top_layer1", "white_straight_line",
-            "line_top_layer2", "white_bevel_angle_line").lineSide("white_straight_line").base("asphalt"));*/
     writeRoadBlockModelWithSlab(
         RoadBlocks.ROAD_WITH_WHITE_CROSS_LINE,
         "road_with_cross_line",
@@ -711,12 +704,6 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         RoadBlocks.ROAD_WITH_YELLOW_TS_LINE,
         "road_with_joint_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_joint_line"));
-    /*writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_YELLOW_S_BA_LINE,
-        "road_with_straight_and_angle_line",
-        FasterJTextures.ofP(
-            "line_top_layer1", "yellow_straight_line",
-            "line_top_layer2", "yellow_bevel_angle_line").lineSide("yellow_straight_line").base("asphalt"));*/
     writeRoadBlockModelWithSlab(
         RoadBlocks.ROAD_WITH_YELLOW_CROSS_LINE,
         "road_with_cross_line",
@@ -761,50 +748,6 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         RoadBlocks.ROAD_WITH_WHITE_RA_LINE_OFFSET_IN,
         "road_with_angle_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("white_offset_straight_line2").lineTop("white_right_angle_line_with_one_part_offset_in"));
-    /*writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_W_S_Y_BA_LINE,
-        "road_with_straight_and_angle_line",
-        FasterJTextures.ofP(
-            "line_top_layer1", "white_straight_line",
-            "line_top_layer2", "yellow_bevel_angle_line"
-        ).lineSide("white_straight_line").lineSide2("yellow_straight_line").base("asphalt"));
-    writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_Y_S_W_BA_LINE,
-        "road_with_straight_and_angle_line",
-        FasterJTextures.ofP(
-            "line_top_layer1", "yellow_straight_line",
-            "line_top_layer2", "white_bevel_angle_line"
-        ).lineSide("yellow_straight_line").lineSide2("white_straight_line").base("asphalt"));
-    writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_WT_S_N_BA_LINE,
-        "road_with_straight_and_angle_line",
-        FasterJTextures.ofP(
-            "line_top_layer1", "white_straight_thick_line",
-            "line_top_layer2", "white_bevel_angle_line"
-        ).lineSide("white_straight_thick_line").lineSide2("white_straight_line").base("asphalt"));
-    writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_YT_S_N_BA_LINE,
-        "road_with_straight_and_angle_line",
-        FasterJTextures.ofP(
-            "line_top_layer1", "yellow_straight_thick_line",
-            "line_top_layer2", "yellow_bevel_angle_line"
-        ).lineSide("yellow_straight_thick_line").lineSide2("yellow_straight_line").base("asphalt"));
-    writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_WT_S_YN_BA_LINE,
-        "road_with_straight_and_angle_line",
-        FasterJTextures.ofP(
-            "line_top_layer1", "white_straight_thick_line",
-            "line_top_layer2", "yellow_bevel_angle_line"
-        ).lineSide("white_straight_thick_line").lineSide2("yellow_straight_line").base("asphalt")
-    );
-    writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_YT_S_WN_BA_LINE,
-        "road_with_straight_and_angle_line",
-        FasterJTextures.ofP(
-            "line_top_layer1", "yellow_straight_thick_line",
-            "line_top_layer2", "white_bevel_angle_line"
-        ).lineSide("yellow_straight_thick_line").lineSide2("white_straight_line").base("asphalt")
-    );*/
     writeRoadBlockModelWithSlab(
         RoadBlocks.ROAD_WITH_WHITE_TS_DOUBLE_LINE,
         "road_with_joint_line",
@@ -888,7 +831,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   /**
    * 为运行时资源包生成资源。在开发环境中，每次加载资源就会重新生成一次。在非开发环境中，游戏开始时生成一次，此后不再生成。
    */
-  @CanIgnoreReturnValue
+  //  @CanIgnoreReturnValue
   private static RuntimeResourcePack generateResources(boolean includesClient, boolean includesServer) {
     if (includesClient) PACK.clearResources(ResourceType.CLIENT_RESOURCES);
     if (includesServer) PACK.clearResources(ResourceType.SERVER_DATA);

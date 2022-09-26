@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.util;
 
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -150,7 +149,7 @@ public class BlockPlacementContext {
         @since 0.2.4 替换为局部变量
        */
         final @Nullable Block handBlock = blockItem.getBlock();
-        stateToPlace1 = handBlock.getPlacementState(placementContext);
+        stateToPlace1 = handBlock == null ? null : handBlock.getPlacementState(placementContext);
         if (stateToPlace1 == null) continue;
 
         // 尝试 placeFromTag
@@ -203,7 +202,7 @@ public class BlockPlacementContext {
    * Place the block. Calls {@link World#setBlockState}.
    */
   @SuppressWarnings("UnusedReturnValue")
-  @CanIgnoreReturnValue
+//  @CanIgnoreReturnValue
   public boolean setBlockState(int flags) {
     return world.setBlockState(posToPlace, stateToPlace, flags);
   }

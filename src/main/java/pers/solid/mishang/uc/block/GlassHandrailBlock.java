@@ -59,7 +59,7 @@ public class GlassHandrailBlock extends HandrailBlock {
 
   @Override
   public @NotNull JTextures getTextures() {
-    return new JTextures().var("frame", frameTexture).var("glass", "block/glass").var("decoration", decorationTexture);
+    return new JTextures().var("frame", frameTexture).var("glass", "mishanguc:block/glass_unframed").var("decoration", decorationTexture);
   }
 
   @Override
