@@ -37,8 +37,8 @@
       "from": [7.5, 3, 9],
       "to": [8.5, 12, 16],
       "faces": {
-        "west": {"texture": "#glass", "uv": [1, 4, 8, 13]},
-        "east": {"texture": "#glass", "uv": [8, 4, 15, 13]}
+        "west": {"texture": "#glass"},
+        "east": {"texture": "#glass"}
       },
       "description": "The glass part below the decoration."
     },
@@ -55,8 +55,8 @@
       "from": [7.5, 14, 9],
       "to": [8.5, 15, 16],
       "faces": {
-        "west": {"texture": "#glass", "uv": [1, 1, 8, 2]},
-        "east": {"texture": "#glass", "uv": [8, 1, 15, 2]}
+        "west": {"texture": "#glass"},
+        "east": {"texture": "#glass"}
       },
       "description": "The glass part above the decoration."
     }

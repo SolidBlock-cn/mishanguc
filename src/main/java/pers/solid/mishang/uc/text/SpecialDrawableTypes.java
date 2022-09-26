@@ -75,6 +75,7 @@ public final class SpecialDrawableTypes {
     }
   }
 
+  @SuppressWarnings("EmptyMethod")
   public static void init() {
   }
 }
