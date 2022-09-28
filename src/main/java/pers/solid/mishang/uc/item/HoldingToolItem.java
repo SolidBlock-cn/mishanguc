@@ -278,7 +278,7 @@ public class HoldingToolItem extends BlockToolItem
     setHoldingBlockState(stack, removed);
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     if (blockEntity != null) {
-      blockEntity.setStackNbt(stack);
+      blockEntity.writeNbt(stack.getOrCreateSubNbt("BlockEntityTag"));
     } else {
       stack.removeSubNbt("BlockEntityTag");
     }

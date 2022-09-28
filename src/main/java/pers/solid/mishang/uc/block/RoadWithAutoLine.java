@@ -21,7 +21,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import org.apache.commons.lang3.ObjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.LineType;
@@ -63,7 +62,7 @@ public interface RoadWithAutoLine extends Road {
           break;
         }
       }
-      connectionStateMap.put(direction, ObjectUtils.getIfNull(state, () -> RoadConnectionState.empty(Blocks.AIR.getDefaultState())));
+      connectionStateMap.put(direction, state == null ? RoadConnectionState.empty(Blocks.AIR.getDefaultState()) : state);
     }
     return connectionStateMap;
   }
