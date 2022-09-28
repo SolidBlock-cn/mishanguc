@@ -310,13 +310,11 @@ public class HoldingToolItem extends BlockToolItem
     final BlockState holdingBlockState = getHoldingBlockState(stack);
     if (holdingBlockState != null) {
       if (world.isClient) return TypedActionResult.success(use.getValue());
-      final FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(EntityType.FALLING_BLOCK, world);
-      NbtCompound nbt = new NbtCompound();
-      nbt.put("BlockState", stack.getSubNbt("holdingBlockState"));
-      fallingBlockEntity.readNbt(nbt);
       final Vec3d eyePos = user.getEyePos();
+      final FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(world, eyePos.x, eyePos.y, eyePos.z, Optional.ofNullable(stack.getSubNbt("holdingBlockState")).map(NbtHelper::toBlockState).orElseGet(Blocks.AIR::getDefaultState));
       fallingBlockEntity.updatePositionAndAngles(eyePos.x, eyePos.y, eyePos.z, user.getYaw(), user.getPitch());
       fallingBlockEntity.setVelocity(Vec3d.fromPolar(user.getPitch(), user.getYaw()).multiply(2).add(user.getVelocity()));
+      fallingBlockEntity.timeFalling = 1;
       fallingBlockEntity.dropItem = true;
       fallingBlockEntity.blockEntityData = stack.getSubNbt("BlockEntityTag");
       fallingBlockEntity.setHurtEntities(holdingBlockState.getBlock().getBlastResistance(), Integer.MAX_VALUE);
