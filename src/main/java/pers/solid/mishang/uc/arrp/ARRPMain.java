@@ -130,11 +130,11 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
 
   private static void addTags() {
     // mineable 部分；大多数 mineable 标签都是手动生成，目前仅对栏杆部分的 mineable 标签实行自动生成。
-    final IdentifiedTag pickaxeMineable = new IdentifiedTag("block", BlockTags.PICKAXE_MINEABLE.id());
-    final IdentifiedTag axeMineable = new IdentifiedTag("block", BlockTags.AXE_MINEABLE.id());
-    final IdentifiedTag needsStoneTool = new IdentifiedTag("block", BlockTags.NEEDS_STONE_TOOL.id());
-    final IdentifiedTag needsIronTool = new IdentifiedTag("block", BlockTags.NEEDS_IRON_TOOL.id());
-    final IdentifiedTag needsDiamondTool = new IdentifiedTag("block", BlockTags.NEEDS_DIAMOND_TOOL.id());
+    final IdentifiedTag pickaxeMineable = new IdentifiedTag("block", BlockTags.PICKAXE_MINEABLE.getId());
+    final IdentifiedTag axeMineable = new IdentifiedTag("block", BlockTags.AXE_MINEABLE.getId());
+    final IdentifiedTag needsStoneTool = new IdentifiedTag("block", BlockTags.NEEDS_STONE_TOOL.getId());
+    final IdentifiedTag needsIronTool = new IdentifiedTag("block", BlockTags.NEEDS_IRON_TOOL.getId());
+    final IdentifiedTag needsDiamondTool = new IdentifiedTag("block", BlockTags.NEEDS_DIAMOND_TOOL.getId());
 
     // 道路部分
     final IdentifiedTag roadBlocks = blockTag("road_blocks");
