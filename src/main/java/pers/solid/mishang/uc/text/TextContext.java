@@ -270,7 +270,7 @@ public class TextContext implements Cloneable {
     obfuscated = nbt.getBoolean("obfuscated");
     absolute = nbt.getBoolean("absolute");
 
-    extra = nbt.contains("extra", NbtType.COMPOUND) ? TextSpecial.fromNbt(this, nbt.getCompound("extra")) : null;
+    extra = nbt.contains("extra", NbtType.COMPOUND) ? SpecialDrawable.fromNbt(this, nbt.getCompound("extra")) : null;
   }
 
   @Environment(EnvType.CLIENT)
@@ -402,8 +402,8 @@ public class TextContext implements Cloneable {
   @Contract(mutates = "param1")
   public void writeNbt(@NotNull NbtCompound nbt) {
     if (text != null) {
-      if (text instanceof LiteralText literalText && text.getSiblings().isEmpty() && text.getStyle().isEmpty()) {
-        nbt.putString("text", literalText.getRawString());
+      if (text instanceof LiteralText && text.getSiblings().isEmpty() && text.getStyle().isEmpty()) {
+        nbt.putString("text", ((LiteralText) text).getRawString());
       } else {
         nbt.putString("textJson", Text.Serializer.toJson(text));
       }
@@ -514,8 +514,8 @@ public class TextContext implements Cloneable {
       }
       text = TextBridge.literal(stringBuilder.toString());
     }
-    if (extra instanceof final PatternSpecialDrawable patternTextSpecial) {
-      final String shapeName = patternTextSpecial.shapeName();
+    if (extra instanceof PatternSpecialDrawable) {
+      final String shapeName = ((PatternSpecialDrawable) extra).shapeName();
       if (flipPatternNameReplacement.containsKey(shapeName)) {
         extra = PatternSpecialDrawable.fromName(this, flipPatternNameReplacement.get(shapeName));
       } else if (flipPatternNameReplacement.inverse().containsKey(shapeName)) {

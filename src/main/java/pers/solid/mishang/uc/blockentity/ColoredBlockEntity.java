@@ -34,6 +34,6 @@ public interface ColoredBlockEntity extends BlockEntityClientSerializable {
 
   @Override
   default void fromClientTag(NbtCompound tag) {
-    ((BlockEntity) this).readNbt(tag);
+    ((BlockEntity) this).fromTag(((BlockEntity) this).getCachedState(), tag);
   }
 }

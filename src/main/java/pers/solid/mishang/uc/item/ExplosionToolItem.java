@@ -170,7 +170,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.5").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.power", TextBridge.literal(String.valueOf(power(stack))).formatted(Formatting.YELLOW)).formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.createFire", createFire(stack) ? ScreenTexts.YES.copy().formatted(Formatting.GREEN) : ScreenTexts.NO.copy().formatted(Formatting.RED)).formatted(Formatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.destructionType", TextBridge.translatable("item.mishanguc.explosion_tool.destructionType." + destructionType(stack).name().toLowerCase()).styled(style -> style.withColor(0x779999))).formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.destructionType", TextBridge.translatable("item.mishanguc.explosion_tool.destructionType." + destructionType(stack).name().toLowerCase()).styled(style -> style.withColor(TextColor.fromRgb(0x779999)))).formatted(Formatting.GRAY));
   }
 
   @Override

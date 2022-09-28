@@ -20,7 +20,7 @@ import java.util.Objects;
  *
  * @since 0.2.1 将此类改成了记录。
  */
-public final class RectTextSpecial implements SpecialDrawable {
+public final class RectSpecialDrawable implements SpecialDrawable {
   private final float width;
   private final float height;
   private final TextContext textContext;
@@ -29,7 +29,7 @@ public final class RectTextSpecial implements SpecialDrawable {
    * @param width  长方形宽度，若为 8 则与文本大小的高度（注意不是文本宽度）相同。
    * @param height 长方形的高度，若为 8 则与文本大小的高度相同。
    */
-  public RectTextSpecial(float width, float height, @NotNull TextContext textContext) {
+  public RectSpecialDrawable(float width, float height, @NotNull TextContext textContext) {
     this.width = width;
     this.height = height;
     this.textContext = textContext;
@@ -39,7 +39,7 @@ public final class RectTextSpecial implements SpecialDrawable {
   public boolean equals(Object obj) {
     if (obj == this) return true;
     if (obj == null || obj.getClass() != this.getClass()) return false;
-    RectTextSpecial that = (RectTextSpecial) obj;
+    RectSpecialDrawable that = (RectSpecialDrawable) obj;
     return Float.floatToIntBits(this.width) == Float.floatToIntBits(that.width) &&
         Float.floatToIntBits(this.height) == Float.floatToIntBits(that.height);
   }

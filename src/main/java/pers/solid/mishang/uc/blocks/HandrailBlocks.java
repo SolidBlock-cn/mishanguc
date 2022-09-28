@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.blocks;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.DyeColor;
 import org.jetbrains.annotations.ApiStatus;
@@ -143,11 +144,11 @@ public final class HandrailBlocks extends MishangucBlocks {
   // 冰雪。
   @Translucent
   @RegisterIdentifier
-  public static final SimpleHandrailBlock SIMPLE_ICE_HANDRAIL = new SimpleHandrailBlock(Blocks.ICE);
+  public static final SimpleHandrailBlock SIMPLE_ICE_HANDRAIL = new SimpleHandrailBlock(Blocks.ICE, FabricBlockSettings.copyOf(Blocks.ICE).breakByTool(FabricToolTags.PICKAXES));
   @RegisterIdentifier
-  public static final SimpleHandrailBlock SIMPLE_PACKED_ICE_HANDRAIL = new SimpleHandrailBlock(Blocks.PACKED_ICE);
+  public static final SimpleHandrailBlock SIMPLE_PACKED_ICE_HANDRAIL = new SimpleHandrailBlock(Blocks.PACKED_ICE, FabricBlockSettings.copyOf(Blocks.PACKED_ICE).breakByTool(FabricToolTags.PICKAXES));
   @RegisterIdentifier
-  public static final SimpleHandrailBlock SIMPLE_BLUE_ICE_HANDRAIL = new SimpleHandrailBlock(Blocks.BLUE_ICE);
+  public static final SimpleHandrailBlock SIMPLE_BLUE_ICE_HANDRAIL = new SimpleHandrailBlock(Blocks.BLUE_ICE, FabricBlockSettings.copyOf(Blocks.BLUE_ICE).breakByTool(FabricToolTags.PICKAXES));
   @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_SNOW_HANDRAIL = new SimpleHandrailBlock(Blocks.SNOW_BLOCK);
 
@@ -187,7 +188,7 @@ public final class HandrailBlocks extends MishangucBlocks {
   // 染色玻璃。
 
   @RegisterIdentifier
-  public static final SimpleHandrailBlock SIMPLE_DIRT_HANDRAIL = new SimpleHandrailBlock(Blocks.DIRT);
+  public static final SimpleHandrailBlock SIMPLE_DIRT_HANDRAIL = new SimpleHandrailBlock(Blocks.DIRT, FabricBlockSettings.copyOf(Blocks.DIRT).breakByTool(FabricToolTags.SHOVELS));
   @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_STONE_HANDRAIL = new SimpleHandrailBlock(Blocks.STONE);
   @RegisterIdentifier
@@ -271,67 +272,67 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final GlassHandrailBlock WHITE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).strength(2.5f, 6f).mapColor(DyeColor.WHITE), "block/iron_block", "block/white_concrete");
+  public static final GlassHandrailBlock WHITE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).strength(2.5f, 6f).materialColor(DyeColor.WHITE).breakByTool(FabricToolTags.PICKAXES, 1), "block/iron_block", "block/white_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final GlassHandrailBlock ORANGE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.ORANGE), "block/iron_block", "block/orange_concrete");
+  public static final GlassHandrailBlock ORANGE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).materialColor(DyeColor.ORANGE).breakByTool(FabricToolTags.PICKAXES, 1), "block/iron_block", "block/orange_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final GlassHandrailBlock MAGENTA_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.MAGENTA), "block/iron_block", "block/magenta_concrete");
+  public static final GlassHandrailBlock MAGENTA_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).materialColor(DyeColor.MAGENTA).breakByTool(FabricToolTags.PICKAXES, 1), "block/iron_block", "block/magenta_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final GlassHandrailBlock LIGHT_BLUE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.LIGHT_BLUE), "block/iron_block", "block/light_blue_concrete");
+  public static final GlassHandrailBlock LIGHT_BLUE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).materialColor(DyeColor.LIGHT_BLUE).breakByTool(FabricToolTags.PICKAXES, 1), "block/iron_block", "block/light_blue_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final GlassHandrailBlock YELLOW_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.YELLOW), "block/iron_block", "block/yellow_concrete");
+  public static final GlassHandrailBlock YELLOW_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).materialColor(DyeColor.YELLOW).breakByTool(FabricToolTags.PICKAXES, 1), "block/iron_block", "block/yellow_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final GlassHandrailBlock LIME_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.LIME), "block/iron_block", "block/lime_concrete");
+  public static final GlassHandrailBlock LIME_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).materialColor(DyeColor.LIME).breakByTool(FabricToolTags.PICKAXES, 1), "block/iron_block", "block/lime_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final GlassHandrailBlock PINK_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.PINK), "block/iron_block", "block/pink_concrete");
+  public static final GlassHandrailBlock PINK_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).materialColor(DyeColor.PINK).breakByTool(FabricToolTags.PICKAXES, 1), "block/iron_block", "block/pink_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final GlassHandrailBlock GRAY_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.GRAY), "block/iron_block", "block/gray_concrete");
+  public static final GlassHandrailBlock GRAY_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).materialColor(DyeColor.GRAY).breakByTool(FabricToolTags.PICKAXES, 1), "block/iron_block", "block/gray_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final GlassHandrailBlock LIGHT_GRAY_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.LIGHT_GRAY), "block/iron_block", "block/light_gray_concrete");
+  public static final GlassHandrailBlock LIGHT_GRAY_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).materialColor(DyeColor.LIGHT_GRAY).breakByTool(FabricToolTags.PICKAXES, 1), "block/iron_block", "block/light_gray_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final GlassHandrailBlock CYAN_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.CYAN), "block/iron_block", "block/cyan_concrete");
+  public static final GlassHandrailBlock CYAN_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).materialColor(DyeColor.CYAN).breakByTool(FabricToolTags.PICKAXES, 1), "block/iron_block", "block/cyan_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final GlassHandrailBlock PURPLE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.PURPLE), "block/iron_block", "block/purple_concrete");
+  public static final GlassHandrailBlock PURPLE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).materialColor(DyeColor.PURPLE).breakByTool(FabricToolTags.PICKAXES, 1), "block/iron_block", "block/purple_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final GlassHandrailBlock BLUE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.BLUE), "block/iron_block", "block/blue_concrete");
+  public static final GlassHandrailBlock BLUE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).materialColor(DyeColor.BLUE).breakByTool(FabricToolTags.PICKAXES, 1), "block/iron_block", "block/blue_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final GlassHandrailBlock BROWN_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.BROWN), "block/iron_block", "block/brown_concrete");
+  public static final GlassHandrailBlock BROWN_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).materialColor(DyeColor.BROWN).breakByTool(FabricToolTags.PICKAXES, 1), "block/iron_block", "block/brown_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final GlassHandrailBlock GREEN_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.GREEN), "block/iron_block", "block/green_concrete");
+  public static final GlassHandrailBlock GREEN_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).materialColor(DyeColor.GREEN).breakByTool(FabricToolTags.PICKAXES, 1), "block/iron_block", "block/green_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final GlassHandrailBlock RED_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.RED), "block/iron_block", "block/red_concrete");
+  public static final GlassHandrailBlock RED_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).materialColor(DyeColor.RED).breakByTool(FabricToolTags.PICKAXES, 1), "block/iron_block", "block/red_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final GlassHandrailBlock BLACK_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.BLACK), "block/iron_block", "block/black_concrete");
+  public static final GlassHandrailBlock BLACK_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).materialColor(DyeColor.BLACK).breakByTool(FabricToolTags.PICKAXES, 1), "block/iron_block", "block/black_concrete");
 
   public static final EnumMap<DyeColor, GlassHandrailBlock> DECORATED_IRON_HANDRAILS = new EnumMap<>(DyeColor.class);
 
@@ -360,7 +361,7 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_IRON_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL), "block/iron_block", "block/white_concrete");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_IRON_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).breakByTool(FabricToolTags.PICKAXES, 1), "block/iron_block", "block/white_concrete");
 
   /**
    * 可自定义染色的金栏杆方块。
@@ -368,22 +369,22 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_GOLD_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.GOLD_BLOCK, FabricBlockSettings.copyOf(Blocks.GOLD_BLOCK).strength(1.5f, 6f), "block/gold_block", "block/white_concrete");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_GOLD_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.GOLD_BLOCK, FabricBlockSettings.copyOf(Blocks.GOLD_BLOCK).strength(1.5f, 6f).breakByTool(FabricToolTags.PICKAXES, 2), "block/gold_block", "block/white_concrete");
 
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_EMERALD_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.EMERALD_BLOCK, FabricBlockSettings.copyOf(Blocks.EMERALD_BLOCK).strength(2.5f, 6f), "block/emerald_block", "block/white_concrete");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_EMERALD_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.EMERALD_BLOCK, FabricBlockSettings.copyOf(Blocks.EMERALD_BLOCK).strength(2.5f, 6f).breakByTool(FabricToolTags.PICKAXES, 2), "block/emerald_block", "block/white_concrete");
 
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_DIAMOND_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.DIAMOND_BLOCK, FabricBlockSettings.copyOf(Blocks.DIAMOND_BLOCK).strength(2.5f, 6f), "block/diamond_block", "block/white_concrete");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_DIAMOND_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.DIAMOND_BLOCK, FabricBlockSettings.copyOf(Blocks.DIAMOND_BLOCK).strength(2.5f, 6f).breakByTool(FabricToolTags.PICKAXES, 2), "block/diamond_block", "block/white_concrete");
 
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_NETHERITE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.NETHERITE_BLOCK, FabricBlockSettings.copyOf(Blocks.NETHERITE_BLOCK).strength(25f, 1200f), "block/netherite_block", "block/white_concrete");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_NETHERITE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.NETHERITE_BLOCK, FabricBlockSettings.copyOf(Blocks.NETHERITE_BLOCK).strength(25f, 1200f).breakByTool(FabricToolTags.PICKAXES, 3), "block/netherite_block", "block/white_concrete");
 
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier

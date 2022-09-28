@@ -2,6 +2,7 @@ package pers.solid.mishang.uc;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Streams;
 import net.minecraft.block.Block;
@@ -17,10 +18,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
+import org.jetbrains.annotations.*;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.text.PatternSpecialDrawable;
@@ -356,5 +354,18 @@ public class MishangUtils {
 
   public static String composeAngleLineTexture(LineColor lineColor, boolean bevel) {
     return lineColor.asString() + "_" + (bevel ? "bevel" : "right") + "_angle_line";
+  }
+
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  @ApiStatus.AvailableSince("0.2.4, 1.16.5")
+  @Contract(pure = true)
+  public static BlockState copyPropertiesFrom(final BlockState to, final BlockState from) {
+    BlockState blockState = to;
+    for (Property<?> property : from.getProperties()) {
+      if (blockState.contains(property)) {
+        blockState = blockState.with((Property) property, from.get(property));
+      }
+    }
+    return blockState;
   }
 }

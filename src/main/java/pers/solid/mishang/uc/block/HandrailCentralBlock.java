@@ -17,8 +17,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -74,21 +72,14 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     } else return neighborState.getBlock() instanceof HandrailCentralBlock;
   }
 
-  // 不要注解为 @Environment(EnvType.CLIENT)
-  @Override
-  public MutableText getName() {
-    final Block block = baseBlock();
-    return block == null ? super.getName() : new TranslatableText("block.mishanguc.handrail_central", block.getName());
-  }
-
   @Environment(EnvType.CLIENT)
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
     final Block block = stateFrom.getBlock();
-    if (direction.getAxis().isHorizontal() && block instanceof final Handrails handrails) {
+    if (direction.getAxis().isHorizontal() && block instanceof Handrails) {
       return block.asItem() == asItem()
-          && handrails.connectsIn(stateFrom, direction.getOpposite(), null);
+          && ((Handrails) block).connectsIn(stateFrom, direction.getOpposite(), null);
     }
     return super.isSideInvisible(state, stateFrom, direction);
   }

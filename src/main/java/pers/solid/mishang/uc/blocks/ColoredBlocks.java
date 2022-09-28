@@ -8,6 +8,7 @@ import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.data.client.model.BlockStateModelGenerator;
@@ -23,19 +24,19 @@ import pers.solid.mishang.uc.block.*;
 @ApiStatus.AvailableSince("0.2.2")
 public final class ColoredBlocks extends MishangucBlocks {
   @RegisterIdentifier
-  public static final ColoredCubeBlock COLORED_WOOL = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.WHITE_WOOL), "block/white_wool");
+  public static final ColoredCubeBlock COLORED_WOOL = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.WHITE_WOOL).breakByTool(FabricToolTags.SHEARS), "block/white_wool");
   @RegisterIdentifier
   public static final ColoredCubeBlock COLORED_TERRACOTTA = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.WHITE_TERRACOTTA), "block/white_terracotta");
   @RegisterIdentifier
   public static final ColoredCubeBlock COLORED_CONCRETE = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE), "block/white_concrete");
   @RegisterIdentifier
-  public static final ColoredCubeBlock COLORED_PLANKS = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.BIRCH_PLANKS), "mishanguc:block/pale_planks");
+  public static final ColoredCubeBlock COLORED_PLANKS = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.BIRCH_PLANKS).breakByTool(FabricToolTags.AXES), "mishanguc:block/pale_planks");
   @RegisterIdentifier
-  public static final ColoredStairsBlock COLORED_PLANK_STAIRS = new ColoredStairsBlock(COLORED_PLANKS, FabricBlockSettings.copyOf(Blocks.BIRCH_STAIRS));
+  public static final ColoredStairsBlock COLORED_PLANK_STAIRS = new ColoredStairsBlock(COLORED_PLANKS, FabricBlockSettings.copyOf(Blocks.BIRCH_STAIRS).breakByTool(FabricToolTags.AXES));
   @RegisterIdentifier
-  public static final ColoredSlabBlock COLORED_PLANK_SLAB = new ColoredSlabBlock(COLORED_PLANKS, FabricBlockSettings.copyOf(Blocks.BIRCH_SLAB));
+  public static final ColoredSlabBlock COLORED_PLANK_SLAB = new ColoredSlabBlock(COLORED_PLANKS, FabricBlockSettings.copyOf(Blocks.BIRCH_SLAB).breakByTool(FabricToolTags.AXES));
   @RegisterIdentifier
-  public static final ColoredCubeBlock COLORED_DIRT = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.DIRT), "mishanguc:block/pale_dirt");
+  public static final ColoredCubeBlock COLORED_DIRT = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.DIRT).breakByTool(FabricToolTags.SHOVELS), "mishanguc:block/pale_dirt");
   @RegisterIdentifier
   public static final ColoredCubeBlock COLORED_COBBLESTONE = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.COBBLESTONE), "mishanguc:block/pale_cobblestone");
   @RegisterIdentifier
@@ -123,30 +124,30 @@ public final class ColoredBlocks extends MishangucBlocks {
   public static final ColoredGlassBlock COLORED_GLASS = new ColoredGlassBlock(FabricBlockSettings.copyOf(Blocks.WHITE_STAINED_GLASS), JTextures.ofAll("block/white_stained_glass"));
   @RegisterIdentifier
   @Translucent
-  public static final ColoredIceBlock COLORED_ICE = new ColoredIceBlock(FabricBlockSettings.copyOf(Blocks.ICE), JTextures.ofAll("mishanguc:block/pale_ice"));
+  public static final ColoredIceBlock COLORED_ICE = new ColoredIceBlock(FabricBlockSettings.copyOf(Blocks.ICE).breakByTool(FabricToolTags.PICKAXES), JTextures.ofAll("mishanguc:block/pale_ice"));
   @RegisterIdentifier
-  public static final ColoredCubeBlock COLORED_SNOW_BLOCK = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.SNOW_BLOCK), "block/snow");
+  public static final ColoredCubeBlock COLORED_SNOW_BLOCK = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.SNOW_BLOCK).breakByTool(FabricToolTags.SHOVELS), "block/snow");
   @RegisterIdentifier
-  public static final ColoredCubeBlock COLORED_PACKED_ICE = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.PACKED_ICE), "mishanguc:block/pale_packed_ice");
+  public static final ColoredCubeBlock COLORED_PACKED_ICE = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.PACKED_ICE).breakByTool(FabricToolTags.SHOVELS), "mishanguc:block/pale_packed_ice");
 
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
-  public static final ColoredLeavesBlock COLORED_OAK_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES), block -> BlockLootTableGenerator.oakLeavesDrop(block, Blocks.OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/oak_leaves");
+  public static final ColoredLeavesBlock COLORED_OAK_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES).breakByTool(FabricToolTags.HOES), block -> BlockLootTableGenerator.oakLeavesDrop(block, Blocks.OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/oak_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
-  public static final ColoredLeavesBlock COLORED_DARK_OAK_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.DARK_OAK_LEAVES), block -> BlockLootTableGenerator.oakLeavesDrop(block, Blocks.DARK_OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/dark_oak_leaves");
+  public static final ColoredLeavesBlock COLORED_DARK_OAK_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.DARK_OAK_LEAVES).breakByTool(FabricToolTags.HOES), block -> BlockLootTableGenerator.oakLeavesDrop(block, Blocks.DARK_OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/dark_oak_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
-  public static final ColoredLeavesBlock COLORED_BIRCH_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.BIRCH_LEAVES), block -> BlockLootTableGenerator.leavesDrop(block, Blocks.BIRCH_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/birch_leaves");
+  public static final ColoredLeavesBlock COLORED_BIRCH_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.BIRCH_LEAVES).breakByTool(FabricToolTags.HOES), block -> BlockLootTableGenerator.leavesDrop(block, Blocks.BIRCH_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/birch_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
-  public static final ColoredLeavesBlock COLORED_ACACIA_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.ACACIA_LEAVES), block -> BlockLootTableGenerator.leavesDrop(block, Blocks.ACACIA_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/acacia_leaves");
+  public static final ColoredLeavesBlock COLORED_ACACIA_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.ACACIA_LEAVES).breakByTool(FabricToolTags.HOES), block -> BlockLootTableGenerator.leavesDrop(block, Blocks.ACACIA_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/acacia_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
-  public static final ColoredLeavesBlock COLORED_JUNGLE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.JUNGLE_LEAVES), block -> BlockLootTableGenerator.leavesDrop(block, Blocks.JUNGLE_SAPLING, 0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F), "block/jungle_leaves");
+  public static final ColoredLeavesBlock COLORED_JUNGLE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.JUNGLE_LEAVES).breakByTool(FabricToolTags.HOES), block -> BlockLootTableGenerator.leavesDrop(block, Blocks.JUNGLE_SAPLING, 0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F), "block/jungle_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
-  public static final ColoredLeavesBlock COLORED_SPRUCE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.SPRUCE_LEAVES), block -> BlockLootTableGenerator.leavesDrop(block, Blocks.SPRUCE_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/spruce_leaves");
+  public static final ColoredLeavesBlock COLORED_SPRUCE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.SPRUCE_LEAVES).breakByTool(FabricToolTags.HOES), block -> BlockLootTableGenerator.leavesDrop(block, Blocks.SPRUCE_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/spruce_leaves");
 
   @RegisterIdentifier
   public static final ColoredCubeBlock COLORED_PURE_BLOCK = ColoredCubeBlock.cubeAll(FabricBlockSettings.of(Material.STONE, DyeColor.WHITE).strength(0.2f), "mishanguc:block/white_pure");

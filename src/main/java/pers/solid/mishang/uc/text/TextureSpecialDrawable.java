@@ -20,7 +20,7 @@ import java.util.Objects;
  * 表示一个纹理的特殊文本内容，用于渲染其纹理，一般来说这个纹理的宽度和高度是和文本的大小相同的。
  */
 @Beta
-public final class TextureTextSpecial implements SpecialDrawable {
+public final class TextureSpecialDrawable implements SpecialDrawable {
   private final Identifier identifier;
   private final TextContext textContext;
 
@@ -28,7 +28,7 @@ public final class TextureTextSpecial implements SpecialDrawable {
    * @param identifier  纹理在游戏资源中的路径，如 {@code "textures/block/stone.png"}。
    * @param textContext 该对象对应的文本。在 {@link TextContext#draw} 中渲染时，会根据其大小来决定这个纹理渲染的大小，偏移等参数也是同理。
    */
-  public TextureTextSpecial(@NotNull Identifier identifier, @NotNull TextContext textContext) {
+  public TextureSpecialDrawable(@NotNull Identifier identifier, @NotNull TextContext textContext) {
     this.identifier = identifier;
     this.textContext = textContext;
   }
@@ -45,7 +45,7 @@ public final class TextureTextSpecial implements SpecialDrawable {
   public boolean equals(Object obj) {
     if (obj == this) return true;
     if (obj == null || obj.getClass() != this.getClass()) return false;
-    TextureTextSpecial that = (TextureTextSpecial) obj;
+    TextureSpecialDrawable that = (TextureSpecialDrawable) obj;
     return Objects.equals(this.identifier, that.identifier) &&
         Objects.equals(this.textContext, that.textContext);
   }
@@ -57,7 +57,7 @@ public final class TextureTextSpecial implements SpecialDrawable {
 
   @Override
   public String toString() {
-    return "TextureTextSpecial[" +
+    return "TextureSpecialDrawable[" +
         "identifier=" + identifier + ", " +
         "textContext=" + textContext + ']';
   }

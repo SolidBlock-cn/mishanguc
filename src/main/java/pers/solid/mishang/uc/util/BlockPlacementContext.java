@@ -148,7 +148,7 @@ public class BlockPlacementContext {
         The block of the blockItem in the {@link #stackInHand}.
         @since 0.2.4 替换为局部变量
        */
-        final @Nullable Block handBlock = blockItem.getBlock();
+        final @Nullable Block handBlock = ((BlockItem) stackInHand0.getItem()).getBlock();
         stateToPlace1 = handBlock == null ? null : handBlock.getPlacementState(placementContext);
         if (stateToPlace1 == null) continue;
 
@@ -217,7 +217,7 @@ public class BlockPlacementContext {
     } else if (hitEntity != null && entityToPlace != null) {
       entityToPlace.fromTag(stateToPlace, hitEntity.writeNbt(new NbtCompound()));
       entityToPlace.markDirty();
-      world.updateListeners(posToPlace, entityToPlace.getCachedState(), entityToPlace.getCachedState(), Block.NOTIFY_ALL);
+      world.updateListeners(posToPlace, entityToPlace.getCachedState(), entityToPlace.getCachedState(), 3);
     }
   }
 

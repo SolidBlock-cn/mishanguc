@@ -62,7 +62,15 @@ public final class SpecialDrawableTypes {
     return register(namePath, new Simple<>(fromNbt, fromStringArgs));
   }
 
-  private record Simple<S extends SpecialDrawable>(BiFunction<TextContext, NbtCompound, S> fromNbt, BiFunction<TextContext, String, S> fromStringArgs) implements SpecialDrawableType<S> {
+  private static final class Simple<S extends SpecialDrawable> implements SpecialDrawableType<S> {
+
+    private final BiFunction<TextContext, NbtCompound, S> fromNbt;
+    private final BiFunction<TextContext, String, S> fromStringArgs;
+
+    private Simple(BiFunction<TextContext, NbtCompound, S> fromNbt, BiFunction<TextContext, String, S> fromStringArgs) {
+      this.fromNbt = fromNbt;
+      this.fromStringArgs = fromStringArgs;
+    }
 
     @Override
     public S fromNbt(TextContext textContext, @NotNull NbtCompound nbt) {

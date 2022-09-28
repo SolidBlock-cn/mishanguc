@@ -69,9 +69,9 @@ public class MishangucClient implements ClientModInitializer {
         new Identifier("mishanguc", "explosion_power"),
         (stack, world, entity) -> MishangucItems.EXPLOSION_TOOL.power(stack));
     FabricModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL, new Identifier("mishanguc", "explosion_create_fire"), (stack, world, entity) -> MishangucItems.EXPLOSION_TOOL.createFire(stack) ? 1 : 0);
-    FabricModelPredicateProviderRegistry.register(MishangucItems.FAST_BUILDING_TOOL, new Identifier("mishanguc", "fast_building_range"), (stack, world, entity, seed) -> MishangucItems.FAST_BUILDING_TOOL.getRange(stack) / 64f);
-    FabricModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, new Identifier("mishanguc", "is_holding_block"), (stack, world, entity, seed) -> BooleanUtils.toInteger(HoldingToolItem.hasHoldingBlockState(stack)));
-    FabricModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, new Identifier("mishanguc", "is_holding_entity"), (stack, world, entity, seed) -> BooleanUtils.toInteger(HoldingToolItem.hasHoldingEntity(stack)));
+    FabricModelPredicateProviderRegistry.register(MishangucItems.FAST_BUILDING_TOOL, new Identifier("mishanguc", "fast_building_range"), (stack, world, entity) -> MishangucItems.FAST_BUILDING_TOOL.getRange(stack) / 64f);
+    FabricModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, new Identifier("mishanguc", "is_holding_block"), (stack, world, entity) -> BooleanUtils.toInteger(HoldingToolItem.hasHoldingBlockState(stack)));
+    FabricModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, new Identifier("mishanguc", "is_holding_entity"), (stack, world, entity) -> BooleanUtils.toInteger(HoldingToolItem.hasHoldingEntity(stack)));
   }
 
   private static void registerNetworking() {
@@ -109,7 +109,7 @@ public class MishangucClient implements ClientModInitializer {
   private static void registerBlockColors() {
     // 注册方块和颜色
     final Block[] coloredBlocks = MishangUtils.blocks().values().stream().filter(Predicates.instanceOf(ColoredBlock.class))
-        .flatMap(block -> block instanceof HandrailBlock handrailBlock ? Stream.of(handrailBlock, handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer()) : Stream.of(block))  // since 0.2.4 用于可着色的栏杆方块及其变种
+        .flatMap(block -> block instanceof HandrailBlock ? Stream.of(((HandrailBlock) block), ((HandrailBlock) block).central(), ((HandrailBlock) block).corner(), ((HandrailBlock) block).stair(), ((HandrailBlock) block).outer()) : Stream.of(block))  // since 0.2.4 用于可着色的栏杆方块及其变种
         .toArray(Block[]::new);
     ColorProviderRegistry.BLOCK.register(
         (state, world, pos, tintIndex) -> {

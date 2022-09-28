@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.blocks;
 
 import com.google.common.annotations.Beta;
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Util;
@@ -27,54 +28,54 @@ public final class HungSignBlocks extends MishangucBlocks {
   // 木告示牌部分。仅有不发光的告示牌。
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock OAK_HUNG_SIGN = new HungSignBlock(Blocks.OAK_PLANKS);
+  public static final HungSignBlock OAK_HUNG_SIGN = new HungSignBlock(Blocks.OAK_PLANKS, FabricToolTags.AXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock SPRUCE_HUNG_SIGN = new HungSignBlock(Blocks.SPRUCE_PLANKS);
+  public static final HungSignBlock SPRUCE_HUNG_SIGN = new HungSignBlock(Blocks.SPRUCE_PLANKS, FabricToolTags.AXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock BIRCH_HUNG_SIGN = new HungSignBlock(Blocks.BIRCH_PLANKS);
+  public static final HungSignBlock BIRCH_HUNG_SIGN = new HungSignBlock(Blocks.BIRCH_PLANKS, FabricToolTags.AXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock JUNGLE_HUNG_SIGN = new HungSignBlock(Blocks.JUNGLE_PLANKS);
+  public static final HungSignBlock JUNGLE_HUNG_SIGN = new HungSignBlock(Blocks.JUNGLE_PLANKS, FabricToolTags.AXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock ACACIA_HUNG_SIGN = new HungSignBlock(Blocks.ACACIA_PLANKS);
+  public static final HungSignBlock ACACIA_HUNG_SIGN = new HungSignBlock(Blocks.ACACIA_PLANKS, FabricToolTags.AXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock DARK_OAK_HUNG_SIGN = new HungSignBlock(Blocks.DARK_OAK_PLANKS);
+  public static final HungSignBlock DARK_OAK_HUNG_SIGN = new HungSignBlock(Blocks.DARK_OAK_PLANKS, FabricToolTags.AXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock CRIMSON_HUNG_SIGN = new HungSignBlock(Blocks.CRIMSON_PLANKS);
+  public static final HungSignBlock CRIMSON_HUNG_SIGN = new HungSignBlock(Blocks.CRIMSON_PLANKS, FabricToolTags.AXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock WARPED_HUNG_SIGN = new HungSignBlock(Blocks.WARPED_PLANKS);
+  public static final HungSignBlock WARPED_HUNG_SIGN = new HungSignBlock(Blocks.WARPED_PLANKS, FabricToolTags.AXES);
 
   // 木告示牌杆部分。
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock OAK_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.OAK_WOOD);
+  public static final HungSignBarBlock OAK_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.OAK_WOOD, FabricToolTags.AXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock SPRUCE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.SPRUCE_WOOD);
+  public static final HungSignBarBlock SPRUCE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.SPRUCE_WOOD, FabricToolTags.AXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock BIRCH_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.BIRCH_WOOD);
+  public static final HungSignBarBlock BIRCH_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.BIRCH_WOOD, FabricToolTags.AXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock JUNGLE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.JUNGLE_WOOD);
+  public static final HungSignBarBlock JUNGLE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.JUNGLE_WOOD, FabricToolTags.AXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock ACACIA_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.ACACIA_WOOD);
+  public static final HungSignBarBlock ACACIA_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.ACACIA_WOOD, FabricToolTags.AXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock DARK_OAK_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.DARK_OAK_WOOD);
+  public static final HungSignBarBlock DARK_OAK_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.DARK_OAK_WOOD, FabricToolTags.AXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock CRIMSON_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.CRIMSON_HYPHAE);
+  public static final HungSignBarBlock CRIMSON_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.CRIMSON_HYPHAE, FabricToolTags.AXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock WARPED_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.WARPED_HYPHAE);
+  public static final HungSignBarBlock WARPED_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.WARPED_HYPHAE, FabricToolTags.AXES);
 
   static {
     OAK_HUNG_SIGN.barTexture = "block/oak_log";
@@ -712,85 +713,85 @@ public final class HungSignBlocks extends MishangucBlocks {
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock IRON_HUNG_SIGN = new HungSignBlock(Blocks.IRON_BLOCK);
+  public static final HungSignBlock IRON_HUNG_SIGN = new HungSignBlock(Blocks.IRON_BLOCK, FabricToolTags.PICKAXES, 1);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock GLOWING_IRON_HUNG_SIGN = new GlowingHungSignBlock(Blocks.IRON_BLOCK);
+  public static final HungSignBlock GLOWING_IRON_HUNG_SIGN = new GlowingHungSignBlock(Blocks.IRON_BLOCK, FabricToolTags.PICKAXES, 1);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock IRON_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.IRON_BLOCK);
+  public static final HungSignBarBlock IRON_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.IRON_BLOCK, FabricToolTags.PICKAXES, 1);
 
   // 金块
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock GOLD_HUNG_SIGN = new HungSignBlock(Blocks.GOLD_BLOCK);
+  public static final HungSignBlock GOLD_HUNG_SIGN = new HungSignBlock(Blocks.GOLD_BLOCK, FabricToolTags.PICKAXES, 2);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingHungSignBlock GLOWING_GOLD_HUNG_SIGN = new GlowingHungSignBlock(Blocks.GOLD_BLOCK);
+  public static final GlowingHungSignBlock GLOWING_GOLD_HUNG_SIGN = new GlowingHungSignBlock(Blocks.GOLD_BLOCK, FabricToolTags.PICKAXES, 2);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock GOLD_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.GOLD_BLOCK);
+  public static final HungSignBarBlock GOLD_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.GOLD_BLOCK, FabricToolTags.PICKAXES, 2);
 
   // 钻石块
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock DIAMOND_HUNG_SIGN = new HungSignBlock(Blocks.DIAMOND_BLOCK);
+  public static final HungSignBlock DIAMOND_HUNG_SIGN = new HungSignBlock(Blocks.DIAMOND_BLOCK, FabricToolTags.PICKAXES, 2);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingHungSignBlock GLOWING_DIAMOND_HUNG_SIGN = new GlowingHungSignBlock(Blocks.DIAMOND_BLOCK);
+  public static final GlowingHungSignBlock GLOWING_DIAMOND_HUNG_SIGN = new GlowingHungSignBlock(Blocks.DIAMOND_BLOCK, FabricToolTags.PICKAXES, 2);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock DIAMOND_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.DIAMOND_BLOCK);
+  public static final HungSignBarBlock DIAMOND_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.DIAMOND_BLOCK, FabricToolTags.PICKAXES, 2);
 
   // 绿宝石块
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock EMERALD_HUNG_SIGN = new HungSignBlock(Blocks.EMERALD_BLOCK);
+  public static final HungSignBlock EMERALD_HUNG_SIGN = new HungSignBlock(Blocks.EMERALD_BLOCK, FabricToolTags.PICKAXES, 2);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingHungSignBlock GLOWING_EMERALD_HUNG_SIGN = new GlowingHungSignBlock(Blocks.EMERALD_BLOCK);
+  public static final GlowingHungSignBlock GLOWING_EMERALD_HUNG_SIGN = new GlowingHungSignBlock(Blocks.EMERALD_BLOCK, FabricToolTags.PICKAXES, 2);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock EMERALD_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.EMERALD_BLOCK);
+  public static final HungSignBarBlock EMERALD_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.EMERALD_BLOCK, FabricToolTags.PICKAXES, 2);
 
   // 青金石块
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock LAPIS_HUNG_SIGN = new HungSignBlock(Blocks.LAPIS_BLOCK);
+  public static final HungSignBlock LAPIS_HUNG_SIGN = new HungSignBlock(Blocks.LAPIS_BLOCK, FabricToolTags.PICKAXES, 1);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingHungSignBlock GLOWING_LAPIS_HUNG_SIGN = new GlowingHungSignBlock(Blocks.LAPIS_BLOCK);
+  public static final GlowingHungSignBlock GLOWING_LAPIS_HUNG_SIGN = new GlowingHungSignBlock(Blocks.LAPIS_BLOCK, FabricToolTags.PICKAXES, 1);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock LAPIS_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.LAPIS_BLOCK);
+  public static final HungSignBarBlock LAPIS_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.LAPIS_BLOCK, FabricToolTags.PICKAXES, 1);
 
   // 下界岩
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock NETHERRACK_HUNG_SIGN = new HungSignBlock(Blocks.NETHERRACK);
+  public static final HungSignBlock NETHERRACK_HUNG_SIGN = new HungSignBlock(Blocks.NETHERRACK, FabricToolTags.PICKAXES);
 
   @RegisterIdentifier
   public static final GlowingHungSignBlock GLOWING_NETHERRACK_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.NETHERRACK);
+      new GlowingHungSignBlock(Blocks.NETHERRACK, FabricToolTags.PICKAXES);
 
   @RegisterIdentifier
   public static final HungSignBarBlock NETHERRACK_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.NETHERRACK);
+      new HungSignBarBlock(Blocks.NETHERRACK, FabricToolTags.PICKAXES);
 
   // 下界砖
 
@@ -845,17 +846,17 @@ public final class HungSignBlocks extends MishangucBlocks {
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock SNOW_HUNG_SIGN = new HungSignBlock(Blocks.SNOW_BLOCK);
+  public static final HungSignBlock SNOW_HUNG_SIGN = new HungSignBlock(Blocks.SNOW_BLOCK, FabricToolTags.SHOVELS);
 
   @RegisterIdentifier
-  public static final GlowingHungSignBlock GLOWING_SNOW_HUNG_SIGN = new GlowingHungSignBlock(Blocks.SNOW_BLOCK);
+  public static final GlowingHungSignBlock GLOWING_SNOW_HUNG_SIGN = new GlowingHungSignBlock(Blocks.SNOW_BLOCK, FabricToolTags.SHOVELS);
 
   // 冰
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
   @Translucent
-  public static final HungSignBlock ICE_HUNG_SIGN = new HungSignBlock(Blocks.ICE);
+  public static final HungSignBlock ICE_HUNG_SIGN = new HungSignBlock(Blocks.ICE, FabricToolTags.PICKAXES);
 
   static {
     SNOW_HUNG_SIGN.baseTexture = "block/snow";
@@ -871,28 +872,28 @@ public final class HungSignBlocks extends MishangucBlocks {
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock PACKED_ICE_HUNG_SIGN = new HungSignBlock(Blocks.PACKED_ICE);
+  public static final HungSignBlock PACKED_ICE_HUNG_SIGN = new HungSignBlock(Blocks.PACKED_ICE, FabricToolTags.PICKAXES);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingHungSignBlock GLOWING_PACKED_ICE_HUNG_SIGN = new GlowingHungSignBlock(Blocks.PACKED_ICE);
+  public static final GlowingHungSignBlock GLOWING_PACKED_ICE_HUNG_SIGN = new GlowingHungSignBlock(Blocks.PACKED_ICE, FabricToolTags.PICKAXES);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock PACKED_ICE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.PACKED_ICE);
+  public static final HungSignBarBlock PACKED_ICE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.PACKED_ICE, FabricToolTags.PICKAXES);
 
   // 蓝冰
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock BLUE_ICE_HUNG_SIGN = new HungSignBlock(Blocks.BLUE_ICE);
+  public static final HungSignBlock BLUE_ICE_HUNG_SIGN = new HungSignBlock(Blocks.BLUE_ICE, FabricToolTags.PICKAXES);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingHungSignBlock GLOWING_BLUE_ICE_HUNG_SIGN = new GlowingHungSignBlock(Blocks.BLUE_ICE);
+  public static final GlowingHungSignBlock GLOWING_BLUE_ICE_HUNG_SIGN = new GlowingHungSignBlock(Blocks.BLUE_ICE, FabricToolTags.PICKAXES);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock BLUE_ICE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.BLUE_ICE);
+  public static final HungSignBarBlock BLUE_ICE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.BLUE_ICE, FabricToolTags.PICKAXES);
 
 }

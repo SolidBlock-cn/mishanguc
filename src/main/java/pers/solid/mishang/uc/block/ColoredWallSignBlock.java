@@ -6,7 +6,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.server.BlockLootTableGenerator;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tag.Tag;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -19,6 +21,10 @@ import java.util.List;
 public class ColoredWallSignBlock extends WallSignBlock implements ColoredBlock {
   public ColoredWallSignBlock(@NotNull Block baseBlock) {
     super(baseBlock);
+  }
+
+  public ColoredWallSignBlock(@NotNull Block baseBlock, Tag<Item> tag) {
+    super(baseBlock, tag);
   }
 
   @Override

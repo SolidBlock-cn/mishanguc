@@ -210,7 +210,6 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
   public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     // 本方法仅限在服务器上使用。
     final BlockEntity blockEntity = world.getBlockEntity(pos);
-    final ItemStack stack = player.getStackInHand(hand);
     if (blockEntity instanceof SignBlockEntity) {
       if (world.isClient) return ActionResult.SUCCESS;
       // 原版的告示牌

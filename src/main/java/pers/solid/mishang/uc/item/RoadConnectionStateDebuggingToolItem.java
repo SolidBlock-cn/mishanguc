@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -48,7 +49,7 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
           final RoadConnectionState connectionState =
               ((Road) block).getConnectionStateOf(blockState, direction);
           playerEntity.sendMessage(
-              TextBridge.translatable("debug.mishanguc.roadConnectionState.brief", RoadConnectionState.text(direction), RoadConnectionState.text(connectionState.direction()).formatted(Formatting.WHITE), RoadConnectionState.text(connectionState.lineColor()), RoadConnectionState.text(connectionState.lineType()).formatted(Formatting.WHITE), RoadConnectionState.text(connectionState.whetherConnected())).setStyle(Style.EMPTY.withColor(0xcccccc)),
+              TextBridge.translatable("debug.mishanguc.roadConnectionState.brief", RoadConnectionState.text(direction), RoadConnectionState.text(connectionState.direction()).formatted(Formatting.WHITE), RoadConnectionState.text(connectionState.lineColor()), RoadConnectionState.text(connectionState.lineType()).formatted(Formatting.WHITE), RoadConnectionState.text(connectionState.whetherConnected())).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xcccccc))),
               false);
         });
     return ActionResult.SUCCESS;

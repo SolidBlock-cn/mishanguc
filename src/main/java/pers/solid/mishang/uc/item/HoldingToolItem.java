@@ -69,18 +69,18 @@ public class HoldingToolItem extends BlockToolItem
 
   @Contract(pure = true)
   public static boolean hasHoldingBlockState(@NotNull ItemStack stack) {
-    return stack.getSubNbt("holdingBlockState") != null;
+    return stack.getSubTag("holdingBlockState") != null;
   }
 
   @Contract(pure = true)
   public static boolean hasHoldingEntity(@NotNull ItemStack stack) {
-    final NbtCompound nbt = stack.getNbt();
+    final NbtCompound nbt = stack.getTag();
     return nbt != null && nbt.contains("holdingEntityType", NbtType.STRING);
   }
 
   @Contract(pure = true)
   public static @Nullable Block getHoldingBlock(@NotNull ItemStack stack) {
-    final NbtCompound holdingBlockStateNbt = stack.getSubNbt("holdingBlockState");
+    final NbtCompound holdingBlockStateNbt = stack.getSubTag("holdingBlockState");
     if (holdingBlockStateNbt == null) return null;
     final Identifier identifier = Identifier.tryParse(holdingBlockStateNbt.getString("Name"));
     return Registry.BLOCK.get(identifier);
@@ -88,7 +88,7 @@ public class HoldingToolItem extends BlockToolItem
 
   @Contract(pure = true)
   public static @Nullable BlockState getHoldingBlockState(@NotNull ItemStack stack) {
-    final NbtCompound holdingBlockStateNbt = stack.getSubNbt("holdingBlockState");
+    final NbtCompound holdingBlockStateNbt = stack.getSubTag("holdingBlockState");
     if (holdingBlockStateNbt != null) {
       try {
         return NbtHelper.toBlockState(holdingBlockStateNbt);
@@ -103,15 +103,15 @@ public class HoldingToolItem extends BlockToolItem
   @Contract(mutates = "param1")
   public static void setHoldingEntity(@NotNull ItemStack stack, @Nullable Entity entity) {
     if (entity == null) {
-      stack.removeSubNbt("holdingEntityType");
-      stack.removeSubNbt("EntityTag");
-      stack.removeSubNbt("holdingEntityName");
-      stack.removeSubNbt("holdingEntityWidth");
-      stack.removeSubNbt("holdingEntityHeight");
+      stack.removeSubTag("holdingEntityType");
+      stack.removeSubTag("EntityTag");
+      stack.removeSubTag("holdingEntityName");
+      stack.removeSubTag("holdingEntityWidth");
+      stack.removeSubTag("holdingEntityHeight");
     } else {
       NbtCompound entityTag = new NbtCompound();
       entity.saveSelfNbt(entityTag);
-      final NbtCompound nbt = stack.getOrCreateNbt();
+      final NbtCompound nbt = stack.getOrCreateTag();
       nbt.put("EntityTag", entityTag);
       nbt.putString("holdingEntityType", Registry.ENTITY_TYPE.getId(entity.getType()).toString());
       nbt.putString("holdingEntityName", Text.Serializer.toJson(entity.getName()));
@@ -125,7 +125,7 @@ public class HoldingToolItem extends BlockToolItem
    */
   @Contract(mutates = "param1")
   private static void setHoldingEntityUUID(ItemStack stack, UUID uuid) {
-    final NbtCompound entityTag = stack.getSubNbt("EntityTag");
+    final NbtCompound entityTag = stack.getSubTag("EntityTag");
     if (entityTag != null) {
       entityTag.putUuid("UUID", uuid);
     }
@@ -134,15 +134,15 @@ public class HoldingToolItem extends BlockToolItem
   @Contract(mutates = "param1")
   public static void setHoldingBlockState(@NotNull ItemStack stack, @Nullable BlockState state) {
     if (state == null) {
-      stack.removeSubNbt("holdingBlockState");
+      stack.removeSubTag("holdingBlockState");
     } else {
-      stack.setSubNbt("holdingBlockState", NbtHelper.fromBlockState(state));
+      stack.putSubTag("holdingBlockState", NbtHelper.fromBlockState(state));
     }
   }
 
   @Contract(pure = true)
   public static @Nullable Entity createHoldingEntity(@NotNull ItemStack stack, ServerWorld world, PlayerEntity player) {
-    final NbtCompound nbt = stack.getNbt();
+    final NbtCompound nbt = stack.getTag();
     if (nbt != null) {
       final String holdingEntityType = nbt.getString("holdingEntityType");
       final Identifier entityTypeId = Identifier.tryParse(holdingEntityType);
@@ -158,7 +158,7 @@ public class HoldingToolItem extends BlockToolItem
   }
 
   private static MutableText getEntityName(@NotNull ItemStack stack) {
-    final NbtCompound nbt = stack.getNbt();
+    final NbtCompound nbt = stack.getTag();
     if (nbt == null) return TextBridge.empty();
     if (nbt.contains("holdingEntityName", NbtType.STRING)) {
       return Text.Serializer.fromJson(nbt.getString("holdingEntityName"));
@@ -211,15 +211,15 @@ public class HoldingToolItem extends BlockToolItem
         }
         if (!player.isCreative()) {
           setHoldingBlockState(stack, null);
-          stack.removeSubNbt("BlockEntityTag");
+          stack.removeSubTag("BlockEntityTag");
         }
         return ActionResult.success(world.isClient);
       } else {
         return ActionResult.PASS;
       }
     } else if (hasHoldingEntity(stack)) {
-      if (world instanceof ServerWorld serverWorld) {
-        final Entity entity = createHoldingEntity(stack, serverWorld, player);
+      if (world instanceof ServerWorld) {
+        final Entity entity = createHoldingEntity(stack, ((ServerWorld) world), player);
         if (entity == null) return ActionResult.PASS;
         final Vec3d pos = blockHitResult.getPos();
         entity.updatePosition(pos.x, pos.y, pos.z);
@@ -278,9 +278,9 @@ public class HoldingToolItem extends BlockToolItem
     setHoldingBlockState(stack, removed);
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     if (blockEntity != null) {
-      blockEntity.writeNbt(stack.getOrCreateSubNbt("BlockEntityTag"));
+      blockEntity.writeNbt(stack.getOrCreateSubTag("BlockEntityTag"));
     } else {
-      stack.removeSubNbt("BlockEntityTag");
+      stack.removeSubTag("BlockEntityTag");
     }
     world.removeBlockEntity(pos);
     world.setBlockState(pos, Blocks.AIR.getDefaultState());
@@ -310,19 +310,19 @@ public class HoldingToolItem extends BlockToolItem
     final BlockState holdingBlockState = getHoldingBlockState(stack);
     if (holdingBlockState != null) {
       if (world.isClient) return TypedActionResult.success(use.getValue());
-      final Vec3d eyePos = user.getEyePos();
-      final FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(world, eyePos.x, eyePos.y, eyePos.z, Optional.ofNullable(stack.getSubNbt("holdingBlockState")).map(NbtHelper::toBlockState).orElseGet(Blocks.AIR::getDefaultState));
-      fallingBlockEntity.updatePositionAndAngles(eyePos.x, eyePos.y, eyePos.z, user.getYaw(), user.getPitch());
-      fallingBlockEntity.setVelocity(Vec3d.fromPolar(user.getPitch(), user.getYaw()).multiply(2).add(user.getVelocity()));
+      final Vec3d eyePos = user.getPos().add(0, user.getStandingEyeHeight(), 0);
+      final FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(world, eyePos.x, eyePos.y, eyePos.z, Optional.ofNullable(stack.getSubTag("holdingBlockState")).map(NbtHelper::toBlockState).orElseGet(Blocks.AIR::getDefaultState));
+      fallingBlockEntity.updatePositionAndAngles(eyePos.x, eyePos.y, eyePos.z, user.getYaw(1), user.getPitch(1));
+      fallingBlockEntity.setVelocity(Vec3d.fromPolar(user.getPitch(1), user.getYaw(1)).multiply(2).add(user.getVelocity()));
       fallingBlockEntity.timeFalling = 1;
       fallingBlockEntity.dropItem = true;
-      fallingBlockEntity.blockEntityData = stack.getSubNbt("BlockEntityTag");
-      fallingBlockEntity.setHurtEntities(holdingBlockState.getBlock().getBlastResistance(), Integer.MAX_VALUE);
+      fallingBlockEntity.blockEntityData = stack.getSubTag("BlockEntityTag");
+      fallingBlockEntity.setHurtEntities(true);
       final boolean spawnEntity = world.spawnEntity(fallingBlockEntity);
       if (spawnEntity) {
         if (!user.isCreative()) {
           setHoldingBlockState(stack, null);
-          stack.removeSubNbt("BlockEntityTag");
+          stack.removeSubTag("BlockEntityTag");
         }
         user.sendMessage(TextBridge.translatable(user.isCreative() ? "item.mishanguc.carrying_tool.message.block_thrown_creative" : "item.mishanguc.carrying_tool.message.block_thrown", holdingBlockState.getBlock().getName()), true);
         return TypedActionResult.success(use.getValue());
@@ -330,12 +330,12 @@ public class HoldingToolItem extends BlockToolItem
         return TypedActionResult.fail(use.getValue());
       }
     } else if (hasHoldingEntity(stack)) {
-      if (world instanceof ServerWorld serverWorld) {
-        final Entity entity = createHoldingEntity(stack, serverWorld, user);
+      if (world instanceof ServerWorld) {
+        final Entity entity = createHoldingEntity(stack, (ServerWorld) world, user);
         if (entity == null) return use;
         final Vec3d pos = user.getPos();
-        entity.updatePositionAndAngles(pos.x, pos.y, pos.z, user.getYaw(), user.getPitch());
-        entity.setVelocity(Vec3d.fromPolar(user.getPitch(), user.getYaw()).multiply(2).add(user.getVelocity()));
+        entity.updatePositionAndAngles(pos.x, pos.y, pos.z, user.getYaw(1), user.getPitch(1));
+        entity.setVelocity(Vec3d.fromPolar(user.getPitch(1), user.getYaw(1)).multiply(2).add(user.getVelocity()));
         final boolean spawnEntity = world.spawnEntity(entity);
         if (spawnEntity) {
           user.sendMessage(TextBridge.translatable(user.isCreative() ? "item.mishanguc.carrying_tool.message.entity_thrown_creative" : "item.mishanguc.carrying_tool.message.entity_thrown", getEntityName(stack)), true);
@@ -384,9 +384,9 @@ public class HoldingToolItem extends BlockToolItem
     }
     setHoldingBlockState(stack, null);
     setHoldingEntity(stack, entity);
-    entity.remove(Entity.RemovalReason.DISCARDED);
-    if (entity instanceof EnderDragonPart enderDragonPart) {
-      enderDragonPart.owner.kill();
+    entity.remove();
+    if (entity instanceof EnderDragonPart) {
+      ((EnderDragonPart) entity).owner.kill();
     }
     return ActionResult.SUCCESS;
   }
@@ -457,7 +457,7 @@ public class HoldingToolItem extends BlockToolItem
     // 只在使用主手持有此物品时进行渲染。
     if (hand != Hand.MAIN_HAND || player.isSpectator()) return;
     final ItemStack stack = player.getMainHandStack();
-    final NbtCompound nbt = stack.getNbt();
+    final NbtCompound nbt = stack.getTag();
     final VertexConsumerProvider consumers = context.consumers();
     final MatrixStack matrices = context.matrixStack();
     if (consumers == null) return;
@@ -470,8 +470,8 @@ public class HoldingToolItem extends BlockToolItem
       WorldRendererInvoker.drawShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(pos.x - width / 2, pos.y, pos.z - width / 2, pos.x + width / 2, pos.y + height, pos.z + width / 2), -cameraPos.x, -cameraPos.y, -cameraPos.z, 0, 1, 1, 0.8f);
     }
     if (!player.isCreative() && (hasHoldingBlockState(stack) || hasHoldingEntity(stack))) return;
-    if (hitResult instanceof EntityHitResult entityHitResult) {
-      final Entity entity = entityHitResult.getEntity();
+    if (hitResult instanceof EntityHitResult) {
+      final Entity entity = ((EntityHitResult) hitResult).getEntity();
       WorldRendererInvoker.drawShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, 1.0f, 0f, 0f, 0.8f);
     }
   }

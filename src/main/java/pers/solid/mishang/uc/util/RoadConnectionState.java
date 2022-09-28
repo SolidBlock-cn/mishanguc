@@ -25,6 +25,7 @@ public final class RoadConnectionState implements Comparable<RoadConnectionState
   private final LineColor lineColor;
   private final Either<Direction, HorizontalCornerDirection> direction;
   private final LineType lineType;
+  private final BlockState blockState;
 
   /**
    * @param whetherConnected 该道路在该方向上是否已连接。
@@ -34,11 +35,12 @@ public final class RoadConnectionState implements Comparable<RoadConnectionState
    * @param blockState       该道路连接状态所拥有的方块状态。
    * @since 0.2.0-mc1.17+ 此类更改为记录；1.16.5 由于仍为 Java 8，因此仍使用普通类的形式。
    */
-  RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, Either<Direction, HorizontalCornerDirection> direction, LineType lineType) {
+  public RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, Either<Direction, HorizontalCornerDirection> direction, LineType lineType, BlockState blockState) {
     this.whetherConnected = whetherConnected;
     this.lineColor = lineColor;
     this.direction = direction;
     this.lineType = lineType;
+    this.blockState = blockState;
   }
 
   public WhetherConnected whetherConnected() {
@@ -57,6 +59,10 @@ public final class RoadConnectionState implements Comparable<RoadConnectionState
     return lineType;
   }
 
+  public BlockState blockState() {
+    return blockState;
+  }
+
   @Override
   public int hashCode() {
     return Objects.hash(whetherConnected, lineColor);
@@ -71,14 +77,7 @@ public final class RoadConnectionState implements Comparable<RoadConnectionState
 
   public static RoadConnectionState empty() {
     return new RoadConnectionState(
-        WhetherConnected.NOT_CONNECTED_TO, LineColor.NONE, null, LineType.NORMAL);
-  }
-
-  public static RoadConnectionState notConnectedTo(
-      LineColor lineColor,
-      Either<Direction, HorizontalCornerDirection> direction,
-      LineType lineType) {
-    return new RoadConnectionState(WhetherConnected.NOT_CONNECTED_TO, lineColor, direction, lineType);
+        WhetherConnected.NOT_CONNECTED, LineColor.NONE, null, LineType.NORMAL, null);
   }
 
   @Contract("_ -> new")
@@ -113,10 +112,10 @@ public final class RoadConnectionState implements Comparable<RoadConnectionState
   public static MutableText text(WhetherConnected whetherConnected) {
     Formatting formatting;
     switch (whetherConnected) {
-      case NOT_CONNECTED_TO:
+      case NOT_CONNECTED:
         formatting = Formatting.RED;
         break;
-      case CONNECTED_TO:
+      case CONNECTED:
         formatting = Formatting.GREEN;
         break;
       default:
@@ -172,32 +171,34 @@ public final class RoadConnectionState implements Comparable<RoadConnectionState
     if (whetherConnected != that.whetherConnected) return false;
     if (lineColor != that.lineColor) return false;
     return lineType == that.lineType;
-    public int compareTo (@NotNull RoadConnectionState o){
-      return whetherConnected.compareTo(o.whetherConnected);
+  }
+
+  public int compareTo(@NotNull RoadConnectionState o) {
+    return whetherConnected.compareTo(o.whetherConnected);
+  }
+
+  @Contract(pure = true)
+  public Block block() {
+    final Block block = blockState.getBlock();
+    return block instanceof SmartRoadSlabBlock<?> ? ((SmartRoadSlabBlock<?>) block).baseBlock : block;
+  }
+
+  public enum WhetherConnected implements StringIdentifiable {
+    NOT_CONNECTED("not_connected"),
+    MAY_CONNECT("may_connect"),
+    @Deprecated @ApiStatus.ScheduledForRemoval(inVersion = "0.2.5")
+    PROBABLY_CONNECTED("probably_connected"),
+    CONNECTED("connected");
+
+    private final String id;
+
+    WhetherConnected(String id) {
+      this.id = id;
     }
 
-    @Contract(pure = true)
-    public Block block () {
-      final Block block = blockState.getBlock();
-      return block instanceof SmartRoadSlabBlock<?> slab ? slab.baseBlock : block;
-    }
-
-    public enum WhetherConnected implements StringIdentifiable {
-      NOT_CONNECTED("not_connected"),
-      MAY_CONNECT("may_connect"),
-      @Deprecated @ApiStatus.ScheduledForRemoval(inVersion = "0.2.5")
-      PROBABLY_CONNECTED("probably_connected"),
-      CONNECTED("connected");
-
-      private final String id;
-
-      WhetherConnected(String id) {
-        this.id = id;
-      }
-
-      @Override
-      public String asString() {
-        return this.id;
-      }
+    @Override
+    public String asString() {
+      return this.id;
     }
   }
+}

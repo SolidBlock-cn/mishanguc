@@ -61,8 +61,8 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
 
   @Override
   public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
-    if (world instanceof ServerWorld serverWorld) {
-      serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 32, 0.5, 0.5, 0.5, 0);
+    if (world instanceof ServerWorld) {
+      ((ServerWorld) world).spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 32, 0.5, 0.5, 0.5, 0);
     }
     return super.postMine(stack, world, state, pos, miner);
   }
@@ -71,8 +71,8 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
   public @NotNull ActionResult useEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
     if (entity instanceof LivingEntity) {
       ((LivingEntity) entity).heal(Float.POSITIVE_INFINITY);
-      if (world instanceof ServerWorld serverWorld) {
-        serverWorld.spawnParticles(ParticleTypes.HAPPY_VILLAGER, entity.getX(), entity.getY(), entity.getZ(), 32, 0.5, 0.5, 0.5, 0.5);
+      if (world instanceof ServerWorld) {
+        ((ServerWorld) world).spawnParticles(ParticleTypes.HAPPY_VILLAGER, entity.getX(), entity.getY(), entity.getZ(), 32, 0.5, 0.5, 0.5, 0.5);
       }
     }
     return ActionResult.SUCCESS;
@@ -80,8 +80,8 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
 
   @Override
   public @NotNull ActionResult attackEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
-    if (world instanceof ServerWorld serverWorld) {
-      serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE, entity.getX(), entity.getY(), entity.getZ(), 32, 0.5, 0.5, 0.5, 0.5);
+    if (world instanceof ServerWorld) {
+      ((ServerWorld) world).spawnParticles(ParticleTypes.LARGE_SMOKE, entity.getX(), entity.getY(), entity.getZ(), 32, 0.5, 0.5, 0.5, 0.5);
     }
     return ActionResult.PASS;
   }

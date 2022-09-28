@@ -11,6 +11,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.tag.Tag;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
@@ -31,6 +33,18 @@ public class GlowingHungSignBlock extends HungSignBlock {
 
   public GlowingHungSignBlock(@Nullable Block baseBlock, FabricBlockSettings settings) {
     super(baseBlock, settings.luminance(15));
+    this.glowTexture = DEFAULT_GLOW_TEXTURE;
+  }
+
+  @ApiStatus.AvailableSince("0.2.4, 1.16")
+  public GlowingHungSignBlock(@NotNull Block baseBlock, Tag<Item> tag) {
+    super(baseBlock, FabricBlockSettings.copyOf(baseBlock).luminance(15).breakByTool(tag));
+    this.glowTexture = DEFAULT_GLOW_TEXTURE;
+  }
+
+  @ApiStatus.AvailableSince("0.2.4, 1.16")
+  public GlowingHungSignBlock(@NotNull Block baseBlock, Tag<Item> tag, int level) {
+    super(baseBlock, FabricBlockSettings.copyOf(baseBlock).luminance(15).breakByTool(tag, level));
     this.glowTexture = DEFAULT_GLOW_TEXTURE;
   }
 

@@ -191,11 +191,19 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
     final Vec3d rightUnit = Vec3d.of(facing.rotateYClockwise().getVector());
     new Vec3d(0.5d, 0, 0.5d).add(forwardUnit.multiply(0.5));
     Vec3d basePoint = new Vec3d(0.5d, 0, 0.5d).add(forwardUnit.multiply(0.5));
-    basePoint = switch (position) {
-      case LEFT -> basePoint.add(rightUnit.multiply(-7.5d / 16));
-      case CENTER -> basePoint.add(rightUnit.multiply(-1d / 16));
-      case RIGHT -> basePoint.add(rightUnit.multiply(5.5d / 16));
-    };
+    switch (position) {
+      case LEFT:
+        basePoint = basePoint.add(rightUnit.multiply(-7.5d / 16));
+        break;
+      case CENTER:
+        basePoint = basePoint.add(rightUnit.multiply(-1d / 16));
+        break;
+      case RIGHT:
+        basePoint = basePoint.add(rightUnit.multiply(5.5d / 16));
+        break;
+      default:
+        throw new IllegalArgumentException();
+    }
 
     // 上半部分的栏杆
     if (shape == Shape.TOP) {
@@ -246,8 +254,8 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
     final Block block = stateFrom.getBlock();
-    if (block instanceof final Handrails handrails) {
-      return handrails.connectsIn(stateFrom, direction.getOpposite(), equivalentFacing(state))
+    if (block instanceof Handrails) {
+      return ((Handrails) block).connectsIn(stateFrom, direction.getOpposite(), equivalentFacing(state))
           && block.asItem() == this.asItem();  // 仅限同一栏杆物品对应的方块
     }
     return super.isSideInvisible(state, stateFrom, direction);

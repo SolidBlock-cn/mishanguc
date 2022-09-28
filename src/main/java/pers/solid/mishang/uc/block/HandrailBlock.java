@@ -15,8 +15,6 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -188,21 +186,14 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
     return possibleNewFacing != null && facing.getAxis() != possibleNewFacing.getAxis();
   }
 
-  // 不要注解为 @Environment(EnvType.CLIENT)
-  @Override
-  public MutableText getName() {
-    final Block block = baseBlock();
-    return block == null ? super.getName() : new TranslatableText("block.mishanguc.handrail", block.getName());
-  }
-
   @Environment(EnvType.CLIENT)
   @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
     final Block block = stateFrom.getBlock();
-    if (direction.getAxis().isHorizontal() && block instanceof final Handrails handrails) {
+    if (direction.getAxis().isHorizontal() && block instanceof Handrails) {
       return block.asItem() == asItem()
-          && handrails.connectsIn(stateFrom, direction.getOpposite(), state.get(FACING));
+          && ((Handrails) block).connectsIn(stateFrom, direction.getOpposite(), state.get(FACING));
     }
     return super.isSideInvisible(state, stateFrom, direction);
   }

@@ -16,7 +16,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
+import net.minecraft.loot.ConstantLootTableRange;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -117,7 +117,7 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
 
   @Override
   public JLootTable getLootTable() {
-    return JLootTable.delegate(BlockLootTableGenerator.drops(this, ConstantLootNumberProvider.create(2)).build());
+    return JLootTable.delegate(BlockLootTableGenerator.drops(this, ConstantLootTableRange.create(2)).build());
   }
 
   @SuppressWarnings("deprecation")
@@ -139,9 +139,9 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
     final Block block = stateFrom.getBlock();
-    if (direction.getAxis().isHorizontal() && block instanceof final Handrails handrails) {
+    if (direction.getAxis().isHorizontal() && block instanceof Handrails) {
       return block.asItem() == asItem()
-          && handrails.connectsIn(stateFrom, direction.getOpposite(), state.get(FACING).getDirectionInAxis(direction.rotateYClockwise().getAxis()));
+          && ((Handrails) block).connectsIn(stateFrom, direction.getOpposite(), state.get(FACING).getDirectionInAxis(direction.rotateYClockwise().getAxis()));
     }
     return super.isSideInvisible(state, stateFrom, direction);
   }

@@ -34,7 +34,7 @@ public abstract class BlockEntityWithText extends BlockEntity
 
   @Override
   public void fromClientTag(NbtCompound tag) {
-    fromTag(null, tag);
+    fromTag(getCachedState(), tag);
   }
 
   @Override

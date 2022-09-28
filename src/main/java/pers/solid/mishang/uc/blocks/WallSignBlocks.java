@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.blocks;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Util;
@@ -25,39 +26,39 @@ public final class WallSignBlocks extends MishangucBlocks {
 
   @RegisterIdentifier
   public static final WallSignBlock OAK_WALL_SIGN =
-      new WallSignBlock(Blocks.OAK_PLANKS);
+      new WallSignBlock(Blocks.OAK_PLANKS, FabricToolTags.AXES);
 
   @RegisterIdentifier
   public static final WallSignBlock SPRUCE_WALL_SIGN =
-      new WallSignBlock(Blocks.SPRUCE_PLANKS);
+      new WallSignBlock(Blocks.SPRUCE_PLANKS, FabricToolTags.AXES);
 
   @RegisterIdentifier
   public static final WallSignBlock BIRCH_WALL_SIGN =
-      new WallSignBlock(Blocks.BIRCH_PLANKS);
+      new WallSignBlock(Blocks.BIRCH_PLANKS, FabricToolTags.AXES);
 
   @RegisterIdentifier
   public static final WallSignBlock JUNGLE_WALL_SIGN =
-      new WallSignBlock(Blocks.JUNGLE_PLANKS);
+      new WallSignBlock(Blocks.JUNGLE_PLANKS, FabricToolTags.AXES);
 
   @RegisterIdentifier
   public static final WallSignBlock ACACIA_WALL_SIGN =
-      new WallSignBlock(Blocks.ACACIA_PLANKS);
+      new WallSignBlock(Blocks.ACACIA_PLANKS, FabricToolTags.AXES);
 
   @RegisterIdentifier
   public static final WallSignBlock DARK_OAK_WALL_SIGN =
-      new WallSignBlock(Blocks.DARK_OAK_PLANKS);
+      new WallSignBlock(Blocks.DARK_OAK_PLANKS, FabricToolTags.AXES);
 
   @RegisterIdentifier
   public static final WallSignBlock CRIMSON_WALL_SIGN =
-      new WallSignBlock(Blocks.CRIMSON_PLANKS);
+      new WallSignBlock(Blocks.CRIMSON_PLANKS, FabricToolTags.AXES);
 
   @RegisterIdentifier
   public static final WallSignBlock WARPED_WALL_SIGN =
-      new WallSignBlock(Blocks.WARPED_PLANKS);
+      new WallSignBlock(Blocks.WARPED_PLANKS, FabricToolTags.AXES);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.2.2")
-  public static final ColoredWallSignBlock COLORED_WOODEN_WALL_SIGN = new ColoredWallSignBlock(ColoredBlocks.COLORED_PLANKS);
+  public static final ColoredWallSignBlock COLORED_WOODEN_WALL_SIGN = new ColoredWallSignBlock(ColoredBlocks.COLORED_PLANKS, FabricToolTags.AXES);
 
   // 混凝土
 
@@ -440,50 +441,50 @@ public final class WallSignBlocks extends MishangucBlocks {
   @RegisterIdentifier
   @ApiStatus.AvailableSince
       ("0.1.7")
-  public static final WallSignBlock IRON_WALL_SIGN = new WallSignBlock(Blocks.IRON_BLOCK);
+  public static final WallSignBlock IRON_WALL_SIGN = new WallSignBlock(Blocks.IRON_BLOCK, FabricToolTags.PICKAXES, 1);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingWallSignBlock GLOWING_IRON_WALL_SIGN = new GlowingWallSignBlock(Blocks.IRON_BLOCK);
+  public static final GlowingWallSignBlock GLOWING_IRON_WALL_SIGN = new GlowingWallSignBlock(Blocks.IRON_BLOCK, FabricToolTags.PICKAXES, 1);
   // 金块
   @RegisterIdentifier
   @ApiStatus.AvailableSince
       ("0.1.7")
-  public static final WallSignBlock GOLD_WALL_SIGN = new WallSignBlock(Blocks.GOLD_BLOCK);
+  public static final WallSignBlock GOLD_WALL_SIGN = new WallSignBlock(Blocks.GOLD_BLOCK, FabricToolTags.PICKAXES, 2);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingWallSignBlock GLOWING_GOLD_WALL_SIGN = new GlowingWallSignBlock(Blocks.GOLD_BLOCK);
+  public static final GlowingWallSignBlock GLOWING_GOLD_WALL_SIGN = new GlowingWallSignBlock(Blocks.GOLD_BLOCK, FabricToolTags.PICKAXES, 2);
   // 钻石块
   @RegisterIdentifier
   @ApiStatus.AvailableSince
       ("0.1.7")
-  public static final WallSignBlock DIAMOND_WALL_SIGN = new WallSignBlock(Blocks.DIAMOND_BLOCK);
+  public static final WallSignBlock DIAMOND_WALL_SIGN = new WallSignBlock(Blocks.DIAMOND_BLOCK, FabricToolTags.PICKAXES, 3);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingWallSignBlock GLOWING_DIAMOND_WALL_SIGN = new GlowingWallSignBlock(Blocks.DIAMOND_BLOCK);
+  public static final GlowingWallSignBlock GLOWING_DIAMOND_WALL_SIGN = new GlowingWallSignBlock(Blocks.DIAMOND_BLOCK, FabricToolTags.PICKAXES, 3);
   // 绿宝石块
   @RegisterIdentifier
   @ApiStatus.AvailableSince
       ("0.1.7")
-  public static final WallSignBlock EMERALD_WALL_SIGN = new WallSignBlock(Blocks.EMERALD_BLOCK);
+  public static final WallSignBlock EMERALD_WALL_SIGN = new WallSignBlock(Blocks.EMERALD_BLOCK, FabricToolTags.PICKAXES, 2);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingWallSignBlock GLOWING_EMERALD_WALL_SIGN = new GlowingWallSignBlock(Blocks.EMERALD_BLOCK);
+  public static final GlowingWallSignBlock GLOWING_EMERALD_WALL_SIGN = new GlowingWallSignBlock(Blocks.EMERALD_BLOCK, FabricToolTags.PICKAXES, 2);
   // 青金石块
   @RegisterIdentifier
   @ApiStatus.AvailableSince
       ("0.1.7")
-  public static final WallSignBlock LAPIS_WALL_SIGN = new WallSignBlock(Blocks.LAPIS_BLOCK);
+  public static final WallSignBlock LAPIS_WALL_SIGN = new WallSignBlock(Blocks.LAPIS_BLOCK, FabricToolTags.PICKAXES, 1);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingWallSignBlock GLOWING_LAPIS_WALL_SIGN = new GlowingWallSignBlock(Blocks.LAPIS_BLOCK);
+  public static final GlowingWallSignBlock GLOWING_LAPIS_WALL_SIGN = new GlowingWallSignBlock(Blocks.LAPIS_BLOCK, FabricToolTags.PICKAXES, 1);
   // 下界岩
   @RegisterIdentifier
   @ApiStatus.AvailableSince
       ("0.1.7")
-  public static final WallSignBlock NETHERRACK_WALL_SIGN = new WallSignBlock(Blocks.NETHERRACK);
+  public static final WallSignBlock NETHERRACK_WALL_SIGN = new WallSignBlock(Blocks.NETHERRACK, FabricToolTags.PICKAXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingWallSignBlock GLOWING_NETHERRACK_WALL_SIGN = new GlowingWallSignBlock(Blocks.NETHERRACK);
+  public static final GlowingWallSignBlock GLOWING_NETHERRACK_WALL_SIGN = new GlowingWallSignBlock(Blocks.NETHERRACK, FabricToolTags.PICKAXES);
   // 下界砖
   @RegisterIdentifier
   @ApiStatus.AvailableSince
@@ -519,27 +520,27 @@ public final class WallSignBlocks extends MishangucBlocks {
   // 雪
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final WallSignBlock SNOW_WALL_SIGN = new WallSignBlock(Blocks.SNOW_BLOCK);
+  public static final WallSignBlock SNOW_WALL_SIGN = new WallSignBlock(Blocks.SNOW_BLOCK, FabricToolTags.SHOVELS);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingWallSignBlock GLOWING_SNOW_WALL_SIGN = new GlowingWallSignBlock(Blocks.SNOW_BLOCK);
+  public static final GlowingWallSignBlock GLOWING_SNOW_WALL_SIGN = new GlowingWallSignBlock(Blocks.SNOW_BLOCK, FabricToolTags.SHOVELS);
   // 冰
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
   @Translucent
-  public static final WallSignBlock ICE_WALL_SIGN = new WallSignBlock(Blocks.ICE);
+  public static final WallSignBlock ICE_WALL_SIGN = new WallSignBlock(Blocks.ICE, FabricToolTags.PICKAXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final WallSignBlock PACKED_ICE_WALL_SIGN = new WallSignBlock(Blocks.PACKED_ICE);
+  public static final WallSignBlock PACKED_ICE_WALL_SIGN = new WallSignBlock(Blocks.PACKED_ICE, FabricToolTags.PICKAXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingWallSignBlock GLOWING_PACKED_ICE_WALL_SIGN = new GlowingWallSignBlock(Blocks.PACKED_ICE);
+  public static final GlowingWallSignBlock GLOWING_PACKED_ICE_WALL_SIGN = new GlowingWallSignBlock(Blocks.PACKED_ICE, FabricToolTags.PICKAXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final WallSignBlock BLUE_ICE_WALL_SIGN = new WallSignBlock(Blocks.BLUE_ICE);
+  public static final WallSignBlock BLUE_ICE_WALL_SIGN = new WallSignBlock(Blocks.BLUE_ICE, FabricToolTags.PICKAXES);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingWallSignBlock GLOWING_BLUE_ICE_WALL_SIGN = new GlowingWallSignBlock(Blocks.BLUE_ICE);
+  public static final GlowingWallSignBlock GLOWING_BLUE_ICE_WALL_SIGN = new GlowingWallSignBlock(Blocks.BLUE_ICE, FabricToolTags.PICKAXES);
 
   static {
     COLORED_WOODEN_WALL_SIGN.texture = "mishanguc:block/pale_planks";

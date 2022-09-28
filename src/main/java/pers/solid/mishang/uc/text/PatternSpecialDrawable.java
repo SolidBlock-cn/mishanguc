@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 
 // 本类是一个记录，但 Java 8 不支持记录，故转化为普通类。
-public final class PatternTextSpecial implements SpecialDrawable {
+public final class PatternSpecialDrawable implements SpecialDrawable {
   private final TextContext textContext;
   private final String shapeName;
   private final @Unmodifiable float[][] rectangles;
@@ -40,7 +40,7 @@ public final class PatternTextSpecial implements SpecialDrawable {
   public boolean equals(Object obj) {
     if (obj == this) return true;
     if (obj == null || obj.getClass() != this.getClass()) return false;
-    PatternTextSpecial that = (PatternTextSpecial) obj;
+    PatternSpecialDrawable that = (PatternSpecialDrawable) obj;
     return Objects.equals(this.textContext, that.textContext) &&
         Objects.equals(this.shapeName, that.shapeName) && Arrays.deepEquals(this.rectangles, that.rectangles());
   }
@@ -52,7 +52,7 @@ public final class PatternTextSpecial implements SpecialDrawable {
 
   @Override
   public String toString() {
-    return "PatternTextSpecial[" +
+    return "PatternSpecialDrawable[" +
         "textContext=" + textContext + ", " +
         "shapeName=" + shapeName + ']';
   }
@@ -214,7 +214,7 @@ public final class PatternTextSpecial implements SpecialDrawable {
       {1, 5, 2, 6}
   };
 
-  public PatternTextSpecial(TextContext textContext, String shapeName, float[][] rectangles) {
+  public PatternSpecialDrawable(TextContext textContext, String shapeName, float[][] rectangles) {
     this.textContext = textContext;
     this.shapeName = shapeName;
     this.rectangles = rectangles;

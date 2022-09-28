@@ -17,11 +17,13 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.tag.Tag;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
@@ -86,6 +88,17 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
   @ApiStatus.AvailableSince("0.1.7")
   public HungSignBarBlock(@NotNull Block baseBlock) {
     this(baseBlock, FabricBlockSettings.copyOf(baseBlock));
+  }
+
+
+  @ApiStatus.AvailableSince("0.2.4, 1.16")
+  public HungSignBarBlock(@NotNull Block baseBlock, Tag<Item> tag) {
+    this(baseBlock, FabricBlockSettings.copyOf(baseBlock).breakByTool(tag));
+  }
+
+  @ApiStatus.AvailableSince("0.2.4, 1.16")
+  public HungSignBarBlock(@NotNull Block baseBlock, Tag<Item> tag, int miningLevel) {
+    this(baseBlock, FabricBlockSettings.copyOf(baseBlock).breakByTool(tag, miningLevel));
   }
 
   @Override

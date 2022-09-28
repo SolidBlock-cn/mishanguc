@@ -24,7 +24,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -129,12 +128,6 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   }
 
   private static void addTags() {
-    // mineable 部分；大多数 mineable 标签都是手动生成，目前仅对栏杆部分的 mineable 标签实行自动生成。
-    final IdentifiedTag pickaxeMineable = new IdentifiedTag("block", BlockTags.PICKAXE_MINEABLE.getId());
-    final IdentifiedTag axeMineable = new IdentifiedTag("block", BlockTags.AXE_MINEABLE.getId());
-    final IdentifiedTag needsStoneTool = new IdentifiedTag("block", BlockTags.NEEDS_STONE_TOOL.getId());
-    final IdentifiedTag needsIronTool = new IdentifiedTag("block", BlockTags.NEEDS_IRON_TOOL.getId());
-    final IdentifiedTag needsDiamondTool = new IdentifiedTag("block", BlockTags.NEEDS_DIAMOND_TOOL.getId());
 
     // 道路部分
     final IdentifiedTag roadBlocks = blockTag("road_blocks");
@@ -367,7 +360,8 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
 
     // 栏杆部分
     MishangUtils.instanceStream(HandrailBlocks.class, Block.class).forEach(block -> {
-      if (block instanceof SimpleHandrailBlock simpleHandrailBlock) {
+      if (block instanceof SimpleHandrailBlock) {
+        final SimpleHandrailBlock simpleHandrailBlock = (SimpleHandrailBlock) block;
         if (MishangUtils.isStained_glass(((SimpleHandrailBlock) block).baseBlock)) {
           simpleStainedGlassNormalHandrails.addBlock(simpleHandrailBlock);
           simpleStainedGlassCentralHandrails.addBlock(simpleHandrailBlock.central);
@@ -400,7 +394,8 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
           outerHandrails.addBlock(simpleHandrailBlock.outer);
           stairHandrails.addBlock(simpleHandrailBlock.stair);
         }
-      } else if (block instanceof GlassHandrailBlock glassHandrailBlock) {
+      } else if (block instanceof GlassHandrailBlock) {
+        final GlassHandrailBlock glassHandrailBlock = (GlassHandrailBlock) block;
         glassNormalHandrails.addBlock(glassHandrailBlock);
         glassCentralHandrails.addBlock(glassHandrailBlock.central());
         glassCornerHandrails.addBlock(glassHandrailBlock.corner());
@@ -408,18 +403,6 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         glassStairHandrails.addBlock(glassHandrailBlock.stair());
         final Block[] blocks = glassHandrailBlock.selfAndVariants();
         final Block baseBlock = glassHandrailBlock.baseBlock();
-        if (MishangUtils.isWood(baseBlock)) {
-          axeMineable.addBlocks(blocks);
-        } else {
-          pickaxeMineable.addBlocks(blocks);
-          if (baseBlock == Blocks.GOLD_BLOCK || baseBlock == Blocks.EMERALD_BLOCK || baseBlock == Blocks.DIAMOND_BLOCK) {
-            needsIronTool.addBlocks(blocks);
-          } else if (baseBlock == Blocks.OBSIDIAN || baseBlock == Blocks.CRYING_OBSIDIAN) {
-            needsDiamondTool.addBlocks(blocks);
-          } else if (baseBlock == Blocks.IRON_BLOCK) {
-            needsStoneTool.addBlocks(blocks);
-          }
-        }
       }
     });
     simpleStainedGlassHandrails
@@ -488,13 +471,6 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         .addTag(cornerHandrails)
         .addTag(outerHandrails)
         .addTag(stairHandrails);
-
-    // mineable 部分
-    registerTagBlockOnly(pickaxeMineable);
-    registerTagBlockOnly(axeMineable);
-    registerTagBlockOnly(needsDiamondTool);
-    registerTagBlockOnly(needsIronTool);
-    registerTagBlockOnly(needsStoneTool);
 
     // 道路部分
     registerTags(roadBlocks, roadSlabs);
@@ -885,7 +861,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
       }
     }
     for (Item item : MishangUtils.items().values()) {
-      if (item instanceof  ItemResourceGenerator) {
+      if (item instanceof ItemResourceGenerator) {
         ItemResourceGenerator generator = (ItemResourceGenerator) item;
 
         if (includesClient) {

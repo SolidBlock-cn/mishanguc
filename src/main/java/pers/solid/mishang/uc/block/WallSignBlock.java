@@ -20,12 +20,14 @@ import net.minecraft.block.enums.WallMountLocation;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.tag.Tag;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -100,6 +102,16 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   @ApiStatus.AvailableSince("0.1.7")
   public WallSignBlock(@NotNull Block baseBlock) {
     this(baseBlock, FabricBlockSettings.copyOf(baseBlock));
+  }
+
+  @ApiStatus.AvailableSince("0.2.4, 1.16")
+  public WallSignBlock(@NotNull Block baseBlock, Tag<Item> tag) {
+    this(baseBlock, FabricBlockSettings.copyOf(baseBlock).breakByTool(tag));
+  }
+
+  @ApiStatus.AvailableSince("0.2.4, 1.16")
+  public WallSignBlock(@NotNull Block baseBlock, Tag<Item> tag, int level) {
+    this(baseBlock, FabricBlockSettings.copyOf(baseBlock).breakByTool(tag, level));
   }
 
   @Override
@@ -181,7 +193,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     if (actionResult != ActionResult.PASS) return actionResult;
     // 在服务端触发打开告示牌编辑界面。Open the edit interface, triggered in the server side.
     final BlockEntity blockEntity = world.getBlockEntity(pos);
-      if (!(blockEntity instanceof WallSignBlockEntity)) {
+    if (!(blockEntity instanceof WallSignBlockEntity)) {
       return ActionResult.PASS;
     }
     WallSignBlockEntity entity = (WallSignBlockEntity) blockEntity;

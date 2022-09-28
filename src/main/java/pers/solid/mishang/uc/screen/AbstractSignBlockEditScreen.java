@@ -733,8 +733,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (textContext.extra != null) {
       textFieldWidget.setText(String.format("-%s %s", textContext.extra.getId(), textContext.extra.asStringArgs()));
     } else if (textContext.text != null) {
-      if (textContext.text instanceof LiteralText literalText && textContext.text.getSiblings().isEmpty() && textContext.text.getStyle().isEmpty()) {
-        final String text = literalText.getRawString();
+      if (textContext.text instanceof LiteralText && textContext.text.getSiblings().isEmpty() && textContext.text.getStyle().isEmpty()) {
+        final String text = ((LiteralText) textContext.text).getRawString();
         if (Pattern.compile("^-(\\w+?) (.+)$").matcher(text).matches()) {
           textFieldWidget.setText("-literal " + text);
         } else {

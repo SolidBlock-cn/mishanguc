@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.IntProperty;
+import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -70,25 +71,28 @@ public class GrowthToolItem extends Item implements InteractsWithEntity {
     int damage = 0;
     for (BlockPos pos : BlockPos.iterateOutwards(new BlockPos(center), 4, 4, 4)) {
       final BlockState blockState = world.getBlockState(pos);
-      if (blockState.getBlock().getStateManager().getProperty("age") instanceof IntProperty intProperty) {
+      final Property<?> property = blockState.getBlock().getStateManager().getProperty("age");
+      if (property instanceof IntProperty) {
+        final IntProperty intProperty = (IntProperty) property;
         final Integer target = isPositive ? Collections.max(intProperty.getValues()) : Collections.min(intProperty.getValues());
         if (!blockState.get(intProperty).equals(target)) {
           world.setBlockState(pos, blockState.with(intProperty, target));
           createParticle(world, Vec3d.ofCenter(pos), isPositive);
           damage += 1;
         }
-      } else if (isPositive && blockState.getBlock() instanceof Fertilizable fertilizable && fertilizable.isFertilizable(world, pos, blockState, false)) {
-        fertilizable.grow(((ServerWorld) world), world.getRandom(), pos, blockState);
+      } else if (isPositive && blockState.getBlock() instanceof Fertilizable && ((Fertilizable) blockState.getBlock()).isFertilizable(world, pos, blockState, false)) {
+        ((Fertilizable) blockState.getBlock()).grow(((ServerWorld) world), world.getRandom(), pos, blockState);
         createParticle(world, Vec3d.ofCenter(pos), isPositive);
         damage += 1;
       }
     }
-    for (Entity entity : world.getNonSpectatingEntities(Entity.class, Box.of(center, 9, 9, 9))) {
-      if (entity instanceof PassiveEntity passiveEntity && passiveEntity.getBreedingAge() < 0) {
-        passiveEntity.setBreedingAge(isPositive ? 0 : PassiveEntity.BABY_AGE);
+    for (Entity entity : world.getNonSpectatingEntities(Entity.class, new Box(center.add(-4.5, -4.5, -4.5), center.add(4.5, 4.5, 4.5)))) {
+      if (entity instanceof PassiveEntity && ((PassiveEntity) entity).getBreedingAge() < 0) {
+        ((PassiveEntity) entity).setBreedingAge(isPositive ? 0 : -24000);
         createParticle(world, entity.getPos(), isPositive);
         damage += 1;
-      } else if (entity instanceof MobEntity mobEntity) {
+      } else if (entity instanceof MobEntity) {
+        final MobEntity mobEntity = (MobEntity) entity;
         if (mobEntity.isBaby() == isPositive) {
           mobEntity.setBaby(!isPositive);
           createParticle(world, entity.getPos(), isPositive);
@@ -100,8 +104,8 @@ public class GrowthToolItem extends Item implements InteractsWithEntity {
   }
 
   public static void createParticle(World world, Vec3d pos, boolean isPositive) {
-    if (world instanceof ServerWorld serverWorld) {
-      serverWorld.spawnParticles(isPositive ? ParticleTypes.HAPPY_VILLAGER : ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 8, 1, 1, 1, 0);
+    if (world instanceof ServerWorld) {
+      ((ServerWorld) world).spawnParticles(isPositive ? ParticleTypes.HAPPY_VILLAGER : ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 8, 1, 1, 1, 0);
     }
   }
 

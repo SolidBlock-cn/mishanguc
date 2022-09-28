@@ -132,18 +132,18 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       if (stateForNeighborUpdate.contains(BEVEL_TOP) && stateForNeighborUpdate.get(AXIS).test(direction) && stateForNeighborUpdate.get(FACING).hasDirection(direction)) {
         // 如果连接的那个方块在连接部分的道路标线与当前道路的斜线部分颜色一致，那么 bevel_top = true。
         final Block neighborBlock = neighborState.getBlock();
-        final boolean bevelTop = neighborBlock instanceof Road road && road.getLineColor(neighborState, direction.getOpposite()) == lineColorSide;
+        final boolean bevelTop = neighborBlock instanceof Road && ((Road) neighborBlock).getLineColor(neighborState, direction.getOpposite()) == lineColorSide;
         if (bevelTop) {
           return stateForNeighborUpdate.with(BEVEL_TOP, true);
         } else {
           final BlockPos up = neighborPos.up();
           final BlockState upState = world.getBlockState(up);
-          if (upState.getBlock() instanceof Road road && road.getLineColor(upState, direction.getOpposite()) == lineColorSide) {
+          if (upState.getBlock() instanceof Road && ((Road) upState.getBlock()).getLineColor(upState, direction.getOpposite()) == lineColorSide) {
             return stateForNeighborUpdate.with(BEVEL_TOP, true);
           }
           final BlockPos down = neighborPos.down();
           final BlockState downState = world.getBlockState(down);
-          if (downState.getBlock() instanceof Road road && road.getLineColor(downState, direction.getOpposite()) == lineColorSide) {
+          if (downState.getBlock() instanceof Road && ((Road) downState.getBlock()).getLineColor(downState, direction.getOpposite()) == lineColorSide) {
             return stateForNeighborUpdate.with(BEVEL_TOP, true);
           }
         }

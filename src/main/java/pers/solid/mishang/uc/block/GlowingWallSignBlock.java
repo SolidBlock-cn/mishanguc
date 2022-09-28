@@ -8,6 +8,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.tag.Tag;
 import net.minecraft.text.MutableText;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +32,16 @@ public class GlowingWallSignBlock extends WallSignBlock {
 
   public GlowingWallSignBlock(@NotNull Block baseBlock) {
     this(baseBlock, FabricBlockSettings.copyOf(baseBlock).luminance(15));
+  }
+
+  @ApiStatus.AvailableSince("0.2.4, 1.16")
+  public GlowingWallSignBlock(@NotNull Block baseBlock, Tag<Item> tag) {
+    this(baseBlock, FabricBlockSettings.copyOf(baseBlock).breakByTool(tag).luminance(15));
+  }
+
+  @ApiStatus.AvailableSince("0.2.4, 1.16")
+  public GlowingWallSignBlock(@NotNull Block baseBlock, Tag<Item> tag, int level) {
+    this(baseBlock, FabricBlockSettings.copyOf(baseBlock).breakByTool(tag, level).luminance(15));
   }
 
   // 不要注解为 @Environment(EnvType.CLIENT)

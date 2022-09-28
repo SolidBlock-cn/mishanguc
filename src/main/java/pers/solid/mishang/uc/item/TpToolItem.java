@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -27,7 +28,7 @@ public class TpToolItem extends Item {
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
-    tooltip.add(TextBridge.translatable("item.mishanguc.tp_tool.tooltip", TextBridge.keybind("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.tp_tool.tooltip", TextBridge.keybind("key.use").styled(style -> style.withColor(TextColor.fromRgb(0xdddddd)))).formatted(Formatting.GRAY));
   }
 
   @Override
@@ -45,7 +46,7 @@ public class TpToolItem extends Item {
 //    world.emitGameEvent(GameEvent.TELEPORT, pos, GameEvent.Emitter.of(user));
     world.sendEntityStatus(user, (byte) 46);
     world.playSound(null, pos.x, pos.y, pos.z, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
-    data.getValue().damage((int) MathHelper.sqrt((float) (MathHelper.square(oldPos.x - pos.x) + MathHelper.square(oldPos.y - pos.y) + MathHelper.square(oldPos.z - pos.z))), user, playerEntity -> playerEntity.sendToolBreakStatus(hand));
+    data.getValue().damage((int) MathHelper.sqrt((float) (Math.pow(oldPos.x - pos.x, 2) + Math.pow(oldPos.y - pos.y, 2) + Math.pow(oldPos.z - pos.z, 2))), user, playerEntity -> playerEntity.sendToolBreakStatus(hand));
     return data;
   }
 }

@@ -57,8 +57,8 @@ public interface RoadWithAutoLine extends Road {
       for (BlockPos pos : new BlockPos[]{pos0, pos0.up(), pos0.down()}) {
         BlockState nextState = world.getBlockState(pos.offset(direction, 1));
         Block nextBlock = nextState.getBlock();
-        if (nextBlock instanceof final Road road) {
-          state = road.getConnectionStateOf(nextState, direction.getOpposite());
+        if (nextBlock instanceof Road) {
+          state = ((Road) nextBlock).getConnectionStateOf(nextState, direction.getOpposite());
           break;
         }
       }

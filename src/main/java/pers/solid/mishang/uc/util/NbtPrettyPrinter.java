@@ -37,24 +37,24 @@ public final class NbtPrettyPrinter {
    * @see NbtElement#toText(String, int)
    */
   public static Text serialize(NbtElement element, int layer, String indent, int depth) {
-    if (element instanceof final NbtCompound nbtCompound) {
-      return serialize(nbtCompound, layer, indent, depth);
-    } else if (element instanceof final NbtList nbtList) {
-      return serialize(nbtList, layer, indent, depth);
-    } else if (element instanceof final NbtString nbtString) {
-      return serialize(nbtString, layer);
-    } else if (element instanceof final NbtByte nbtByte) {
-      return TextBridge.literal(String.valueOf(nbtByte.byteValue())).append(TextBridge.literal("b").formatted(Formatting.GRAY));
-    } else if (element instanceof final NbtShort nbtShort) {
-      return TextBridge.literal(String.valueOf(nbtShort.shortValue())).append(TextBridge.literal("s").formatted(Formatting.GRAY));
-    } else if (element instanceof final NbtInt nbtInt) {
-      return TextBridge.literal(String.valueOf(nbtInt.intValue()));
-    } else if (element instanceof final NbtLong nbtLong) {
-      return TextBridge.literal(String.valueOf(nbtLong.longValue())).append(TextBridge.literal("l").formatted(Formatting.GRAY));
-    } else if (element instanceof final NbtFloat nbtFloat) {
-      return TextBridge.literal(String.valueOf(nbtFloat.floatValue())).append(TextBridge.literal("f").formatted(Formatting.GRAY));
-    } else if (element instanceof final NbtDouble nbtDouble) {
-      return TextBridge.literal(String.valueOf(nbtDouble.doubleValue())).append(TextBridge.literal("d").formatted(Formatting.GRAY));
+    if (element instanceof NbtCompound) {
+      return serialize(((NbtCompound) element), layer, indent, depth);
+    } else if (element instanceof NbtList) {
+      return serialize((NbtList) element, layer, indent, depth);
+    } else if (element instanceof NbtString) {
+      return serialize((NbtString) element, layer);
+    } else if (element instanceof NbtByte) {
+      return TextBridge.literal(String.valueOf(((NbtByte) element).byteValue())).append(TextBridge.literal("b").formatted(Formatting.GRAY));
+    } else if (element instanceof NbtShort) {
+      return TextBridge.literal(String.valueOf(((NbtShort) element).shortValue())).append(TextBridge.literal("s").formatted(Formatting.GRAY));
+    } else if (element instanceof NbtInt) {
+      return TextBridge.literal(String.valueOf(((NbtInt) element).intValue()));
+    } else if (element instanceof NbtLong) {
+      return TextBridge.literal(String.valueOf(((NbtLong) element).longValue())).append(TextBridge.literal("l").formatted(Formatting.GRAY));
+    } else if (element instanceof NbtFloat) {
+      return TextBridge.literal(String.valueOf(((NbtFloat) element).floatValue())).append(TextBridge.literal("f").formatted(Formatting.GRAY));
+    } else if (element instanceof NbtDouble) {
+      return TextBridge.literal(String.valueOf(((NbtDouble) element).doubleValue())).append(TextBridge.literal("d").formatted(Formatting.GRAY));
     }
     return element.toText(indent, depth);
   }
