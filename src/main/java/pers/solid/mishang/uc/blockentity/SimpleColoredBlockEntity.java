@@ -44,7 +44,7 @@ public class SimpleColoredBlockEntity extends BlockEntity implements ColoredBloc
 
   @Override
   public BlockEntityUpdateS2CPacket toUpdatePacket() {
-    return new BlockEntityUpdateS2CPacket(this.pos, 11, this.toInitialChunkDataNbt());
+    return new BlockEntityUpdateS2CPacket(this.pos, 127, this.toInitialChunkDataNbt());
   }
 
   @Override

@@ -1,8 +1,11 @@
 package pers.solid.mishang.uc.blockentity;
 
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.MapColor;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.nbt.NbtCompound;
 
-public interface ColoredBlockEntity {
+public interface ColoredBlockEntity extends BlockEntityClientSerializable {
 
   default MapColor getNearestMapColor() {
     final int color = getColor();
@@ -23,4 +26,14 @@ public interface ColoredBlockEntity {
   int getColor();
 
   void setColor(int color);
+
+  @Override
+  default NbtCompound toClientTag(NbtCompound tag) {
+    return ((BlockEntity) this).writeNbt(tag);
+  }
+
+  @Override
+  default void fromClientTag(NbtCompound tag) {
+    ((BlockEntity) this).readNbt(tag);
+  }
 }
