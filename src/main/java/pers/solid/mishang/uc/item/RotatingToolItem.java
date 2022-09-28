@@ -40,7 +40,7 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
       Hand hand,
       boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
-    if (!player.getAbilities().allowModifyWorld && !stack.canPlaceOn(world.getTagManager, new CachedBlockPosition(world, blockPos, false))) {
+    if (!player.getAbilities().allowModifyWorld && !stack.canPlaceOn(world.getTagManager(), new CachedBlockPosition(world, blockPos, false))) {
       return ActionResult.PASS;
     }
     final ActionResult result = rotateBlock(player, world, blockPos);
