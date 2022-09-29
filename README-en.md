@@ -1,4 +1,4 @@
-Welcome to use the Mishang Urban Construction mod. This mod provides you with a series of blocks to build roads, railings and lights, as well as blocks with customizable colors. There are also some useful tools to conveniently build or debug. Details of this mod can be seen [here](docs/en.md).
+Welcome to use the Mishang Urban Construction mod. This mod provides you with a series of blocks to build roads, railings and lights, as well as blocks with customizable colors. There are also some useful tools to conveniently build or debug. Details of this mod can be seen [here](https://github.com/SolidBlock-cn/mishanguc/wiki).
 
 Currently, under development and not stable, and more content will be added in future versions. Please do not use this mod in your formal development, as future incompatible updates may happen to make former contents removed.
 
