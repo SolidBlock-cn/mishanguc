@@ -426,88 +426,105 @@ public final class WallSignBlocks extends MishangucBlocks {
   // 一些比较杂项的
   /// 石头
   @RegisterIdentifier
-  @ApiStatus.AvailableSince
-      ("0.1.7")
+  @ApiStatus.AvailableSince("0.1.7")
   public static final WallSignBlock STONE_WALL_SIGN = new WallSignBlock(Blocks.STONE);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
   public static final GlowingWallSignBlock GLOWING_STONE_WALL_SIGN = new GlowingWallSignBlock(Blocks.STONE);
+  /// 圆石
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final WallSignBlock COBBLESTONE_WALL_SIGN = new WallSignBlock(Blocks.COBBLESTONE);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final GlowingWallSignBlock GLOWING_COBBLESTONE_WALL_SIGN = new GlowingWallSignBlock(Blocks.COBBLESTONE);
   /// 石砖
   @RegisterIdentifier
-  @ApiStatus.AvailableSince
-      ("0.1.7")
+  @ApiStatus.AvailableSince("0.1.7")
   public static final WallSignBlock STONE_BRICK_WALL_SIGN = new WallSignBlock(Blocks.STONE_BRICKS);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
   public static final GlowingWallSignBlock GLOWING_STONE_BRICK_WALL_SIGN = new GlowingWallSignBlock(Blocks.STONE_BRICKS);
   // 铁块
   @RegisterIdentifier
-  @ApiStatus.AvailableSince
-      ("0.1.7")
+  @ApiStatus.AvailableSince("0.1.7")
   public static final WallSignBlock IRON_WALL_SIGN = new WallSignBlock(Blocks.IRON_BLOCK);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
   public static final GlowingWallSignBlock GLOWING_IRON_WALL_SIGN = new GlowingWallSignBlock(Blocks.IRON_BLOCK);
   // 金块
   @RegisterIdentifier
-  @ApiStatus.AvailableSince
-      ("0.1.7")
+  @ApiStatus.AvailableSince("0.1.7")
   public static final WallSignBlock GOLD_WALL_SIGN = new WallSignBlock(Blocks.GOLD_BLOCK);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
   public static final GlowingWallSignBlock GLOWING_GOLD_WALL_SIGN = new GlowingWallSignBlock(Blocks.GOLD_BLOCK);
   // 钻石块
   @RegisterIdentifier
-  @ApiStatus.AvailableSince
-      ("0.1.7")
+  @ApiStatus.AvailableSince("0.1.7")
   public static final WallSignBlock DIAMOND_WALL_SIGN = new WallSignBlock(Blocks.DIAMOND_BLOCK);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
   public static final GlowingWallSignBlock GLOWING_DIAMOND_WALL_SIGN = new GlowingWallSignBlock(Blocks.DIAMOND_BLOCK);
   // 绿宝石块
   @RegisterIdentifier
-  @ApiStatus.AvailableSince
-      ("0.1.7")
+  @ApiStatus.AvailableSince("0.1.7")
   public static final WallSignBlock EMERALD_WALL_SIGN = new WallSignBlock(Blocks.EMERALD_BLOCK);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
   public static final GlowingWallSignBlock GLOWING_EMERALD_WALL_SIGN = new GlowingWallSignBlock(Blocks.EMERALD_BLOCK);
   // 青金石块
   @RegisterIdentifier
-  @ApiStatus.AvailableSince
-      ("0.1.7")
+  @ApiStatus.AvailableSince("0.1.7")
   public static final WallSignBlock LAPIS_WALL_SIGN = new WallSignBlock(Blocks.LAPIS_BLOCK);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
   public static final GlowingWallSignBlock GLOWING_LAPIS_WALL_SIGN = new GlowingWallSignBlock(Blocks.LAPIS_BLOCK);
+  // 下界合金块
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final WallSignBlock NETHERITE_WALL_SIGN = new WallSignBlock(Blocks.NETHERITE_BLOCK);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final GlowingWallSignBlock GLOWING_NETHERITE_WALL_SIGN = new GlowingWallSignBlock(Blocks.NETHERITE_BLOCK);
+  // 黑曜石
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final WallSignBlock OBSIDIAN_WALL_SIGN = new WallSignBlock(Blocks.OBSIDIAN);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final GlowingWallSignBlock GLOWING_OBSIDIAN_WALL_SIGN = new GlowingWallSignBlock(Blocks.OBSIDIAN);
+  // 哭泣的黑曜石
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final WallSignBlock CRYING_OBSIDIAN_WALL_SIGN = new WallSignBlock(Blocks.CRYING_OBSIDIAN);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final GlowingWallSignBlock GLOWING_CRYING_OBSIDIAN_WALL_SIGN = new GlowingWallSignBlock(Blocks.CRYING_OBSIDIAN);
   // 下界岩
   @RegisterIdentifier
-  @ApiStatus.AvailableSince
-      ("0.1.7")
+  @ApiStatus.AvailableSince("0.1.7")
   public static final WallSignBlock NETHERRACK_WALL_SIGN = new WallSignBlock(Blocks.NETHERRACK);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
   public static final GlowingWallSignBlock GLOWING_NETHERRACK_WALL_SIGN = new GlowingWallSignBlock(Blocks.NETHERRACK);
   // 下界砖
   @RegisterIdentifier
-  @ApiStatus.AvailableSince
-      ("0.1.7")
+  @ApiStatus.AvailableSince("0.1.7")
   public static final WallSignBlock NETHER_BRICK_WALL_SIGN = new WallSignBlock(Blocks.NETHER_BRICKS);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
   public static final GlowingWallSignBlock GLOWING_NETHER_BRICK_WALL_SIGN = new GlowingWallSignBlock(Blocks.NETHER_BRICKS);
   // 黑石
   @RegisterIdentifier
-  @ApiStatus.AvailableSince
-      ("0.1.7")
+  @ApiStatus.AvailableSince("0.1.7")
   public static final WallSignBlock BLACKSTONE_WALL_SIGN = new WallSignBlock(Blocks.BLACKSTONE);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
   public static final GlowingWallSignBlock GLOWING_BLACKSTONE_WALL_SIGN = new GlowingWallSignBlock(Blocks.BLACKSTONE);
   // 磨制黑石
   @RegisterIdentifier
-  @ApiStatus.AvailableSince
-      ("0.1.7")
+  @ApiStatus.AvailableSince("0.1.7")
   public static final WallSignBlock POLISHED_BLACKSTONE_WALL_SIGN = new WallSignBlock(Blocks.POLISHED_BLACKSTONE);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
