@@ -16,11 +16,13 @@ Updated following content
 - Renamed the Chinese name of some road blocks.
 - Added growth tool, carrying tool and road tool.
 - When breaking a handrail block composed of two ones, no longer leave one.
-- Added more colored blocks, including colored leaves.
+- Added more colored blocks, including colored leaves, colored andesite.
 - Adjusted the durability of tp tool, and the durability worn on each tp depends on the distance moved.
 - Adjusted and optimized the generation logic of automatic line on road, in order to handle some blocks newly added.
 - Added framed glass handrail blocks, allowing custom tinting. Adjusted the culling between handrail blocks.
 - Adjusted the display of handrail blocks in inventory.
+- Changed item id: black_stone_hung_sign → blackstone_hung_sign.
+- Added some vanilla colored blocks to vanilla tags. For example, colored wool can be sheared and dampen vibrations like vanilla wools.
 
 Fixed following issues:
 
