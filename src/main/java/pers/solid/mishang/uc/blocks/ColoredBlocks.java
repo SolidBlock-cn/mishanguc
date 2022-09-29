@@ -20,14 +20,32 @@ import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.*;
 
+/**
+ * 此类包含迷上城建模组的所有染色方块。注意：这些方块通常需要适当配置好 mineable 标签（1.16.5 及以下版本，只需要在 FabricBlockSetting 中设置）以配置可破坏的方块。此外，还需要配置好 {@link pers.solid.mishang.uc.Mishanguc#registerColoredBlocks} 以配置方块与方块之间的对应关系。
+ *
+ * @see ColoredBlock
+ * @see pers.solid.mishang.uc.blockentity.ColoredBlockEntity
+ */
 @ApiStatus.AvailableSince("0.2.2")
 public final class ColoredBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final ColoredCubeBlock COLORED_WOOL = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.WHITE_WOOL), "block/white_wool");
   @RegisterIdentifier
   public static final ColoredCubeBlock COLORED_TERRACOTTA = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.WHITE_TERRACOTTA), "block/white_terracotta");
+  @ApiStatus.AvailableSince("0.2.4")
+  @RegisterIdentifier
+  public static final ColoredStairsBlock COLORED_TERRACOTTA_STAIRS = new ColoredStairsBlock(COLORED_TERRACOTTA);
+  @ApiStatus.AvailableSince("0.2.4")
+  @RegisterIdentifier
+  public static final ColoredSlabBlock COLORED_TERRACOTTA_SLAB = new ColoredSlabBlock(COLORED_TERRACOTTA);
   @RegisterIdentifier
   public static final ColoredCubeBlock COLORED_CONCRETE = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE), "block/white_concrete");
+  @ApiStatus.AvailableSince("0.2.4")
+  @RegisterIdentifier
+  public static final ColoredStairsBlock COLORED_CONCRETE_STAIRS = new ColoredStairsBlock(COLORED_CONCRETE);
+  @ApiStatus.AvailableSince("0.2.4")
+  @RegisterIdentifier
+  public static final ColoredSlabBlock COLORED_CONCRETE_SLAB = new ColoredSlabBlock(COLORED_CONCRETE);
   @RegisterIdentifier
   public static final ColoredCubeBlock COLORED_PLANKS = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.BIRCH_PLANKS), "mishanguc:block/pale_planks");
   @RegisterIdentifier
@@ -42,6 +60,42 @@ public final class ColoredBlocks extends MishangucBlocks {
   public static final ColoredStairsBlock COLORED_COBBLESTONE_STAIRS = new ColoredStairsBlock(COLORED_COBBLESTONE, FabricBlockSettings.copyOf(Blocks.COBBLESTONE_STAIRS));
   @RegisterIdentifier
   public static final ColoredSlabBlock COLORED_COBBLESTONE_SLAB = new ColoredSlabBlock(COLORED_COBBLESTONE, FabricBlockSettings.copyOf(Blocks.COBBLESTONE_SLAB));
+  @ApiStatus.AvailableSince("0.2.4")
+  @RegisterIdentifier
+  public static final ColoredCubeBlock COLORED_ANDESITE = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.ANDESITE), "block/andesite");
+  @ApiStatus.AvailableSince("0.2.4")
+  @RegisterIdentifier
+  public static final ColoredStairsBlock COLORED_ANDESITE_STAIRS = new ColoredStairsBlock(COLORED_ANDESITE, FabricBlockSettings.copyOf(Blocks.ANDESITE_STAIRS));
+  @ApiStatus.AvailableSince("0.2.4")
+  @RegisterIdentifier
+  public static final ColoredSlabBlock COLORED_ANDESITE_SLAB = new ColoredSlabBlock(COLORED_ANDESITE, FabricBlockSettings.copyOf(Blocks.ANDESITE_SLAB));
+  @ApiStatus.AvailableSince("0.2.4")
+  @RegisterIdentifier
+  public static final ColoredCubeBlock COLORED_DIORITE = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.DIORITE), "block/diorite");
+  @ApiStatus.AvailableSince("0.2.4")
+  @RegisterIdentifier
+  public static final ColoredStairsBlock COLORED_DIORITE_STAIRS = new ColoredStairsBlock(COLORED_DIORITE, FabricBlockSettings.copyOf(Blocks.DIORITE_STAIRS));
+  @ApiStatus.AvailableSince("0.2.4")
+  @RegisterIdentifier
+  public static final ColoredSlabBlock COLORED_DIORITE_SLAB = new ColoredSlabBlock(COLORED_DIORITE, FabricBlockSettings.copyOf(Blocks.DIORITE_SLAB));
+  @ApiStatus.AvailableSince("0.2.4, mc1.17")
+  @RegisterIdentifier
+  public static final ColoredCubeBlock COLORED_CALCITE = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.CALCITE), "block/calcite");
+  @ApiStatus.AvailableSince("0.2.4, mc1.17")
+  @RegisterIdentifier
+  public static final ColoredStairsBlock COLORED_CALCITE_STAIRS = new ColoredStairsBlock(COLORED_CALCITE);
+  @ApiStatus.AvailableSince("0.2.4, mc1.17")
+  @RegisterIdentifier
+  public static final ColoredSlabBlock COLORED_CALCITE_SLAB = new ColoredSlabBlock(COLORED_CALCITE);
+  @ApiStatus.AvailableSince("0.2.4, mc1.17")
+  @RegisterIdentifier
+  public static final ColoredCubeBlock COLORED_TUFF = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.TUFF), "block/tuff");
+  @ApiStatus.AvailableSince("0.2.4, mc1.17")
+  @RegisterIdentifier
+  public static final ColoredStairsBlock COLORED_TUFF_STAIRS = new ColoredStairsBlock(COLORED_TUFF);
+  @ApiStatus.AvailableSince("0.2.4, mc1.17")
+  @RegisterIdentifier
+  public static final ColoredSlabBlock COLORED_TUFF_SLAB = new ColoredSlabBlock(COLORED_TUFF);
 
   @RegisterIdentifier
   public static final ColoredCubeBlock COLORED_STONE = new ColoredCubeBlock(FabricBlockSettings.copyOf(Blocks.STONE), "mishanguc:block/colored_cube_all", JTextures.ofAll("mishanguc:block/pale_stone")) {
@@ -111,6 +165,15 @@ public final class ColoredBlocks extends MishangucBlocks {
   public static final ColoredSlabBlock COLORED_SMOOTH_QUARTZ_SLAB = new ColoredSlabBlock(COLORED_SMOOTH_QUARTZ);
   @RegisterIdentifier
   public static final ColoredPillarBlock COLORED_QUARTZ_PILLAR = new ColoredPillarBlock(FabricBlockSettings.copyOf(Blocks.QUARTZ_PILLAR), JTextures.of("side", "block/quartz_pillar").var("end", "block/quartz_pillar_top"));
+  @ApiStatus.AvailableSince("0.2.4")
+  @RegisterIdentifier
+  public static final ColoredCubeBlock COLORED_IRON_BLOCK = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), "block/iron_block");
+  @ApiStatus.AvailableSince("0.2.4")
+  @RegisterIdentifier
+  public static final ColoredStairsBlock COLORED_IRON_STAIRS = new ColoredStairsBlock(COLORED_IRON_BLOCK);
+  @ApiStatus.AvailableSince("0.2.4")
+  @RegisterIdentifier
+  public static final ColoredSlabBlock COLORED_IRON_SLAB = new ColoredSlabBlock(COLORED_IRON_BLOCK);
   @RegisterIdentifier
   public static final ColoredCubeBlock COLORED_PURPUR_BLOCK = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.PURPUR_BLOCK), "mishanguc:block/pale_purpur_block");
   @RegisterIdentifier
