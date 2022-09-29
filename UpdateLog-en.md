@@ -12,7 +12,7 @@ Updated following content
     - Added a "bevel_top" property for road with straight and bevel lines of different colors.
 - Slab tools can handle road blocks of this mod.
 - Added text describing the lines for road blocks, as well as a tooltip of speed-up on the road.
-- Resorted road and its slab blocks.
+- Resorted roads and their slab blocks.
 - Renamed the Chinese name of some road blocks.
 - Added growth tool, carrying tool and road tool.
 - When breaking a handrail block composed of two ones, no longer leave one.
@@ -22,7 +22,7 @@ Updated following content
 - Added framed glass handrail blocks, allowing custom tinting. Adjusted the culling between handrail blocks.
 - Adjusted the display of handrail blocks in inventory.
 - Changed item id: black_stone_hung_sign → blackstone_hung_sign.
-- Added some vanilla colored blocks to vanilla tags. For example, colored wool can be sheared and dampen vibrations like vanilla wools.
+- Added some vanilla colored blocks to vanilla tags. For example, colored wool can be sheared and can dampen vibrations like vanilla wools.
 
 Fixed following issues:
 
