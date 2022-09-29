@@ -16,9 +16,6 @@ quiltflower {
 
 
 import com.modrinth.minotaur.dependencies.ModDependency
-import org.apache.commons.io.FileUtils
-
-import java.nio.charset.Charset
 
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
@@ -98,33 +95,37 @@ publishing {
     }
 }
 
-// 从 UpdateLog-en.md 中提取更新日志
-var lines = FileUtils.readLines(new File('UpdateLog-en.md'), Charset.defaultCharset())
-StringBuilder builder = new StringBuilder()
-def iterator = lines.iterator()
-while (iterator.hasNext()) {
-    var line = iterator.next()
-    if (line.matches("^###\\s*" + project.mod_version + '$')) {
-        while (iterator.hasNext()) {
-            var line2 = iterator.next()
-            println line2
-            if (line2.startsWith("###")) {
-                break
-            }
-            builder.append(line2)
-            builder.append('\n')
+/**
+ * 从 UpdateLog-en.md 中提取更新日志
+ */
+String getUpdateLog(String modVersion = project.mod_version) {
+    StringBuilder builder = new StringBuilder()
+    boolean start = false
+    new File('UpdateLog-en.md').eachLine {
+        if (it.matches("^###\\s*" + modVersion + '$')) {
+            start = true
+        } else if (it.startsWith("###")) {
+            start = false
+        } else if (start) {
+            builder.append it
+            builder.append '\n'
         }
-        break
+        return
     }
+    return builder.toString().trim()
 }
-var content = builder.toString().trim()
-println "当前版本更新记录："
+
+println "当前版本（${project.mod_version}）更新记录："
+final var content = getUpdateLog(project.mod_version)
 println content
 
 curseforge {
-    println "输入 CurseForge 访问令牌："
-    apiKey = " "
-    if (apiKey == null) apiKey = ' '
+    try {
+        apiKey = new File('apiKey.txt').text
+    } catch (IOException ignore) {
+        apiKey = ' '
+    }
+    println "CurseForge 令牌：【${apiKey}】"
     project {
         id = '583071'
         changelog = content
@@ -150,9 +151,13 @@ curseforge {
 // 将模组发布至 Modrinth
 
 modrinth {
-    println "输入 Modrinth 访问令牌："
+    try {
+        token = new File('token.txt').text
+    } catch (IOException ignore) {
+        token = ' '
+    }
+    println "Modrinth 令牌：${token}"
 
-    token = "" // 获取你在本教程的基础部分得到的GitHub访问令牌。
     projectId = "rItLmRo4" // 迷上城建模组的 Modrinth ID
     versionNumber = project.mod_version + '-' + project.minecraft_version
     versionType = 'beta'
