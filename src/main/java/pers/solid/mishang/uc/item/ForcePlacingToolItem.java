@@ -228,9 +228,11 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       Entity entity,
       @Nullable EntityHitResult hitResult) {
     if (!player.getAbilities().creativeMode) return ActionResult.PASS;
-    entity.remove(Entity.RemovalReason.KILLED);
-    if (entity instanceof EnderDragonPart enderDragonPart) {
-      enderDragonPart.owner.kill();
+    if (!world.isClient) {
+      entity.remove(Entity.RemovalReason.KILLED);
+      if (entity instanceof EnderDragonPart enderDragonPart) {
+        enderDragonPart.owner.kill();
+      }
     }
     return ActionResult.SUCCESS;
   }

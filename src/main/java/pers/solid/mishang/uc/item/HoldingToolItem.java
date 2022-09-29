@@ -383,12 +383,12 @@ public class HoldingToolItem extends BlockToolItem
       } else {
         player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity", entity.getName()), true);
       }
-    }
-    setHoldingBlockState(stack, null);
-    setHoldingEntity(stack, entity);
-    entity.remove(Entity.RemovalReason.DISCARDED);
-    if (entity instanceof EnderDragonPart enderDragonPart) {
-      enderDragonPart.owner.kill();
+      setHoldingBlockState(stack, null);
+      setHoldingEntity(stack, entity);
+      entity.remove(Entity.RemovalReason.DISCARDED);
+      if (entity instanceof EnderDragonPart enderDragonPart) {
+        enderDragonPart.owner.kill();
+      }
     }
     return ActionResult.SUCCESS;
   }
