@@ -391,9 +391,9 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
           pickaxeMineable.addBlocks(blocks);
           if (baseBlock == Blocks.GOLD_BLOCK || baseBlock == Blocks.EMERALD_BLOCK || baseBlock == Blocks.DIAMOND_BLOCK) {
             needsIronTool.addBlocks(blocks);
-          } else if (baseBlock == Blocks.OBSIDIAN || baseBlock == Blocks.CRYING_OBSIDIAN) {
+          } else if (baseBlock == Blocks.OBSIDIAN || baseBlock == Blocks.CRYING_OBSIDIAN || baseBlock == Blocks.NETHERITE_BLOCK) {
             needsDiamondTool.addBlocks(blocks);
-          } else if (baseBlock == Blocks.IRON_BLOCK) {
+          } else if (baseBlock == Blocks.IRON_BLOCK || baseBlock == Blocks.LAPIS_BLOCK) {
             needsStoneTool.addBlocks(blocks);
           }
         }

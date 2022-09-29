@@ -290,6 +290,15 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(Blocks.COBBLESTONE, ColoredBlocks.COLORED_COBBLESTONE);
     blockMap.put(Blocks.COBBLESTONE_STAIRS, ColoredBlocks.COLORED_COBBLESTONE_STAIRS);
     blockMap.put(Blocks.COBBLESTONE_SLAB, ColoredBlocks.COLORED_COBBLESTONE_SLAB);
+    blockMap.put(Blocks.ANDESITE, ColoredBlocks.COLORED_ANDESITE);
+    blockMap.put(Blocks.ANDESITE_STAIRS, ColoredBlocks.COLORED_ANDESITE_STAIRS);
+    blockMap.put(Blocks.ANDESITE_SLAB, ColoredBlocks.COLORED_ANDESITE_SLAB);
+    blockMap.put(Blocks.DIORITE, ColoredBlocks.COLORED_DIORITE);
+    blockMap.put(Blocks.DIORITE_STAIRS, ColoredBlocks.COLORED_DIORITE_STAIRS);
+    blockMap.put(Blocks.DIORITE_SLAB, ColoredBlocks.COLORED_DIORITE_SLAB);
+    blockMap.put(Blocks.CALCITE, ColoredBlocks.COLORED_CALCITE);
+    blockMap.put(Blocks.TUFF, ColoredBlocks.COLORED_TUFF);
+    blockMap.put(Blocks.IRON_BLOCK, ColoredBlocks.COLORED_IRON_BLOCK);
     blockMap.put(Blocks.STONE, ColoredBlocks.COLORED_STONE);
     blockMap.put(Blocks.STONE_STAIRS, ColoredBlocks.COLORED_STONE_STAIRS);
     blockMap.put(Blocks.STONE_SLAB, ColoredBlocks.COLORED_STONE_SLAB);
