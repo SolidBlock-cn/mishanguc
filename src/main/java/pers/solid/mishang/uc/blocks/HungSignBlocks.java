@@ -695,6 +695,20 @@ public final class HungSignBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBarBlock STONE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STONE);
 
+  // 圆石
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final HungSignBlock COBBLESTONE_HUNG_SIGN = new HungSignBlock(Blocks.COBBLESTONE);
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final GlowingHungSignBlock GLOWING_COBBLESTONE_HUNG_SIGN = new GlowingHungSignBlock(Blocks.COBBLESTONE);
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final HungSignBarBlock COBBLESTONE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.COBBLESTONE);
+
   // 石砖
 
   @RegisterIdentifier
@@ -779,6 +793,48 @@ public final class HungSignBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBarBlock LAPIS_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.LAPIS_BLOCK, FabricToolTags.PICKAXES, 1);
 
+  // 下界合金
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final HungSignBlock NETHERITE_HUNG_SIGN = new HungSignBlock(Blocks.NETHERITE_BLOCK, FabricToolTags.PICKAXES, 3);
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final GlowingHungSignBlock GLOWING_NETHERITE_HUNG_SIGN = new GlowingHungSignBlock(Blocks.NETHERITE_BLOCK, FabricToolTags.PICKAXES, 3);
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final HungSignBarBlock NETHERITE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.NETHERITE_BLOCK, FabricToolTags.PICKAXES, 3);
+
+  // 黑曜石
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final HungSignBlock OBSIDIAN_HUNG_SIGN = new HungSignBlock(Blocks.OBSIDIAN, FabricToolTags.PICKAXES, 3);
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final GlowingHungSignBlock GLOWING_OBSIDIAN_HUNG_SIGN = new GlowingHungSignBlock(Blocks.OBSIDIAN, FabricToolTags.PICKAXES, 3);
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final HungSignBarBlock OBSIDIAN_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.OBSIDIAN, FabricToolTags.PICKAXES, 3);
+
+  // 哭泣的黑曜石
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final HungSignBlock CRYING_OBSIDIAN_HUNG_SIGN = new HungSignBlock(Blocks.CRYING_OBSIDIAN, FabricToolTags.PICKAXES, 3);
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final GlowingHungSignBlock GLOWING_CRYING_OBSIDIAN_HUNG_SIGN = new GlowingHungSignBlock(Blocks.CRYING_OBSIDIAN, FabricToolTags.PICKAXES, 3);
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("0.2.4")
+  public static final HungSignBarBlock CRYING_OBSIDIAN_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.CRYING_OBSIDIAN, FabricToolTags.PICKAXES, 3);
+
   // 下界岩
 
   @RegisterIdentifier
@@ -811,7 +867,7 @@ public final class HungSignBlocks extends MishangucBlocks {
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock BLACK_STONE_HUNG_SIGN = new HungSignBlock(Blocks.BLACKSTONE);
+  public static final HungSignBlock BLACKSTONE_HUNG_SIGN = new HungSignBlock(Blocks.BLACKSTONE);
 
   @RegisterIdentifier
   public static final GlowingHungSignBlock GLOWING_BLACKSTONE_HUNG_SIGN =

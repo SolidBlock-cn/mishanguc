@@ -103,6 +103,9 @@ public class MishangucBlocks {
               Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_outer"), ((HandrailBlock) value).outer());
             }
             final FabricItemSettings settings = new FabricItemSettings().group(group);
+            if (path.contains("netherite")) {
+              settings.fireproof();
+            }
             final BlockItem item =
                 value instanceof HungSignBlock
                     ? new HungSignBlockItem(value, settings)

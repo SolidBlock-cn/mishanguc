@@ -193,12 +193,10 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
     if (direction == Direction.DOWN) {
       final Block neighborBlock = neighborState.getBlock();
       if (neighborBlock instanceof HungSignBlock || neighborBlock instanceof HungSignBarBlock) {
-        System.out.printf("%s %s %s %s %s%n", world.isClient(), neighborState, state, neighborPos, pos);
-        state =
-            state
-                .with(AXIS, neighborState.get(AXIS))
-                .with(LEFT, neighborState.get(LEFT))
-                .with(RIGHT, neighborState.get(RIGHT));
+        state = state
+            .with(AXIS, neighborState.get(AXIS))
+            .with(LEFT, neighborState.get(LEFT))
+            .with(RIGHT, neighborState.get(RIGHT));
       } else state = state.with(LEFT, true).with(RIGHT, true);
     }
     return state;
