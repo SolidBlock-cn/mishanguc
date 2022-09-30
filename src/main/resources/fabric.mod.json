@@ -38,5 +38,6 @@
   },
   "breaks": {
     "minecraft": ">=1.18.2"
-  }
+  },
+  "custom": {"branch": "1.18.1"}
 }
