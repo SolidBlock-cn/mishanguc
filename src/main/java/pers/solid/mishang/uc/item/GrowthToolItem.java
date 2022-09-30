@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.item;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Fertilizable;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.MobEntity;
@@ -77,10 +76,6 @@ public class GrowthToolItem extends Item implements InteractsWithEntity {
           createParticle(world, Vec3d.ofCenter(pos), isPositive);
           damage += 1;
         }
-      } else if (isPositive && blockState.getBlock() instanceof Fertilizable fertilizable && fertilizable.isFertilizable(world, pos, blockState, false)) {
-        fertilizable.grow(((ServerWorld) world), world.getRandom(), pos, blockState);
-        createParticle(world, Vec3d.ofCenter(pos), isPositive);
-        damage += 1;
       }
     }
     for (Entity entity : world.getNonSpectatingEntities(Entity.class, Box.of(center, 9, 9, 9))) {

@@ -1,17 +1,30 @@
-欢迎使用迷上城建（Mishang Urban Construction）模组。本模组为您提供了一系列方块，可以制作出道路、栏杆、灯光等，并且还有能够自定义颜色的方块。此外，还有一些工具，可以用来方便地建造或者调试。本模组的详细内容请参见[此处](https://github.com/SolidBlock-cn/mishanguc/wiki)。
+# 迷上城建模组
 
-目前本模组还在开发中，各功能还不稳定，未来还会加入更加内容。请勿将本模组内容用于实际开发中，以免因模组出现不兼容的更新而导致旧的内容消失。
+迷上城建（Mishang Urban Construction）是一个建筑与装饰类的模组，提供了一系列有用的方块，例如：
 
-**本模组是按照 LGPLv3 协议发布的，传播本模组时须遵守本协议。**
+- 道路方块：可以设置标线以显得真实，站在道路上面可以有加速效果。
+- 告示牌：可以显示文本，有多种样式，且与原版的告示牌相比，本模组的告示牌的文字可以灵活地调节颜色、大小、位置等参数。
+- 栏杆方块：可以有多种连接样式，并且可以放置在楼梯上。
+- 自定义颜色的方块。
 
-欢迎加入QQ群 **587928350** 或开黑啦频道邀请码 **KlFS0n** 体验本模组的最新更新。
+此外，本模组还提供了一系列实用工具，可用于放置与调试，例如：
+
+- 快速建造工具：快速地放置一个平面上的多个方块。
+- 强制放置工具：放置方块时忽略放置限制和方块更新。
+- 传送工具：随心所欲地传送至任意一个地方
+- ID检查工具、方块状态工具、数据标签工具：查看某个方块、实体的属性和NBT或查询当前生物群系。
+- 爆炸工具：点击即可产生爆炸。
+- 旋转工具和镜像工具：点击方块即可将其旋转或翻转。
+- ……
+
+本模组的详细内容请参见 [GitHub](https://github.com/SolidBlock-cn/mishanguc/wiki) 或 [MC模组百科](https://www.mcmod.cn/class/5743.html)。
+
+本模组**依赖 Fabric API 和 [BRRP](https://github.com/SolidBlock-cn/BRRP)**（更好的运行时资源包，Better Runtime Resource Pack）模组。BRRP 是 [ARRP](https://github.com/Devan-Kerman/ARRP)（高级运行时资源包，Advanced Runtime Resource Pack）的一个分支，请不要同时安装 BRRP 和 ARRP（即使有其他模组依赖 ARRP也不需要安装 ARRP，因为 BRRP 兼容 ARRP 的所有功能）。更新记录请查看[此处](UpdateLog.md)。
+
+本模组只有 Fabric 版本，没有 Forge 版本。
+
+本模组是按照 LGPLv3 协议发布的，传播本模组时须遵守本协议。
+
+欢迎加入QQ群 **587928350** 或开黑啦频道邀请码 **KlFS0n** 进行交流。
 
 For English version of the description, see [this file](README-en.md).
-
-[点击此处查看更新记录。](UpdateLog.md)
-
-## 如何安装
-
-本模组依赖 Fabric API 和 [BRRP](https://github.com/SolidBlock-cn/BRRP)（更好的运行时资源包，Better Runtime Resource Pack）模组。安装本模组时必须确保已安装 BRRP 模组，否则游戏无法运行！BRRP 是 [ARRP](https://github.com/Devan-Kerman/ARRP)（高级运行时资源包，Advanced Runtime Resource Pack）的一个分支，请不要同时安装 BRRP 和 ARRP。即使有其他模组依赖 ARRP，也不需要安装 ARRP，因为 BRRP 可以包含 ARRP 的所有功能。
-
-只有 Fabric 版本，没有 Forge 版本。

@@ -2,9 +2,20 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.0.0
+
+Updated following content:
+
+- Adjusted the texture of carrying tool.
+- Added game rules to specify which players are those only who can use force placing tool, explosion tool or carrying tool. When the player has no permission to use, the player will get informed.
+- Attacking a player with force placing tool will directly kill, instead of causing strange behaviours. Carrying tools cannot be used on players.
+- The message that the mod is not stable will no longer be sent. When using 1.19 or 1.19.1, a notice will be sent that the version will be no longer supported later; you can set game rules to suppress the notice.
+- Non-OPs cannot handle operator blocks with most items in this mod.
+- Growth tool no longer works as bone meal.
+
 ### 0.2.4
 
-Updated following content
+Updated following content:
 
 - Added introduction (tooltip) for road blocks, and fixed some too ambiguous names.
 - Modified the notice on player entering world.
