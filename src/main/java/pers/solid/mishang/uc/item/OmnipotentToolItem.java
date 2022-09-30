@@ -104,6 +104,13 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
         .addInventoryChangedCriterion("has_repeating_command_block", Items.REPEATING_COMMAND_BLOCK);
   }
 
+  @Override
+  public ItemStack getDefaultStack() {
+    final ItemStack defaultStack = super.getDefaultStack();
+    defaultStack.getOrCreateNbt().putBoolean("Unbreakable", true);
+    return defaultStack;
+  }
+
   private static class OmnipotentToolMaterial implements ToolMaterial {
     private OmnipotentToolMaterial() {
     }

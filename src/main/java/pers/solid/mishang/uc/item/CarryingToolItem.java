@@ -290,6 +290,9 @@ public class CarryingToolItem extends BlockToolItem
       }
     }
     final BlockState removed = world.getBlockState(pos);
+    if (removed.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+      return ActionResult.FAIL;
+    }
     setHoldingBlockState(stack, removed);
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     if (blockEntity != null) {
@@ -324,6 +327,9 @@ public class CarryingToolItem extends BlockToolItem
     final ItemStack stack = user.getStackInHand(hand);
     final BlockState holdingBlockState = getHoldingBlockState(stack);
     if (holdingBlockState != null) {
+      if (holdingBlockState.getBlock() instanceof OperatorBlock && !user.hasPermissionLevel(2)) {
+        return TypedActionResult.fail(stack);
+      }
       if (world.isClient) return TypedActionResult.success(use.getValue());
       final Vec3d eyePos = user.getPos().add(0, user.getStandingEyeHeight(), 0);
       final FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(world, eyePos.x, eyePos.y, eyePos.z, Optional.ofNullable(stack.getSubTag("holdingBlockState")).map(NbtHelper::toBlockState).orElseGet(Blocks.AIR::getDefaultState));
@@ -379,7 +385,7 @@ public class CarryingToolItem extends BlockToolItem
       if (world.isClient) {
         return ActionResult.PASS;
       } else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_player").formatted(Formatting.RED));
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_player").formatted(Formatting.RED), false);
         return ActionResult.FAIL;
       }
     } else if (hasHoldingEntity(stack) && !player.isCreative()) {
@@ -405,9 +411,9 @@ public class CarryingToolItem extends BlockToolItem
       }
       setHoldingBlockState(stack, null);
       setHoldingEntity(stack, entity);
-    entity.remove();
-    if (entity instanceof EnderDragonPart) {
-      ((EnderDragonPart) entity).owner.kill();
+      entity.remove();
+      if (entity instanceof EnderDragonPart) {
+        ((EnderDragonPart) entity).owner.kill();
       }
     }
     return ActionResult.SUCCESS;

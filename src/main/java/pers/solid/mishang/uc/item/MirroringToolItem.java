@@ -7,6 +7,7 @@ import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -77,6 +78,9 @@ public class MirroringToolItem extends BlockToolItem implements ItemResourceGene
     if (!player.abilities.allowModifyWorld && !stack.canPlaceOn(world.getTagManager(), new CachedBlockPosition(world, blockPos, false))) {
       return ActionResult.PASS;
     }
+    if (world.getBlockState(blockPos).getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+      return ActionResult.FAIL;
+    }
     final ActionResult result = mirror(world, blockPos, blockHitResult.getSide(), player);
     if (result == ActionResult.SUCCESS) stack.damage(1, player, player1 -> player1.sendToolBreakStatus(hand));
     return result;
@@ -87,6 +91,9 @@ public class MirroringToolItem extends BlockToolItem implements ItemResourceGene
       ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!player.abilities.allowModifyWorld && !stack.canDestroy(world.getTagManager(), new CachedBlockPosition(world, pos, false))) {
       return ActionResult.PASS;
+    }
+    if (world.getBlockState(pos).getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+      return ActionResult.FAIL;
     }
     final ActionResult result = mirror(world, pos, direction, player);
     if (result == ActionResult.SUCCESS) stack.damage(1, player, player1 -> player1.sendToolBreakStatus(hand));

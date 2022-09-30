@@ -186,9 +186,12 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
 
   @Override
   public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
+    final ServerWorld world = pointer.getWorld();
+    if (!world.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).get().hasAccess(null)) {
+      return stack;
+    }
     final BlockPos basePos = pointer.getBlockPos();
     final Direction direction = pointer.getBlockState().get(DispenserBlock.FACING);
-    final ServerWorld world = pointer.getWorld();
     for (int i = 1; i < 33; i++) {
       final BlockPos pos = basePos.offset(direction, i);
       if (world.getBlockState(pos).getCollisionShape(world, pos).isEmpty()
