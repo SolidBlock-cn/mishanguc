@@ -10,10 +10,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.util.NbtType;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
@@ -290,6 +287,9 @@ public class CarryingToolItem extends BlockToolItem
       }
     }
     final BlockState removed = world.getBlockState(pos);
+    if (removed.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+      return ActionResult.FAIL;
+    }
     setHoldingBlockState(stack, removed);
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     if (blockEntity != null) {
@@ -324,6 +324,9 @@ public class CarryingToolItem extends BlockToolItem
     final ItemStack stack = user.getStackInHand(hand);
     final BlockState holdingBlockState = getHoldingBlockState(stack);
     if (holdingBlockState != null) {
+      if (holdingBlockState.getBlock() instanceof OperatorBlock && !user.hasPermissionLevel(2)) {
+        return TypedActionResult.fail(stack);
+      }
       if (world.isClient) return TypedActionResult.success(use.getValue());
       final Vec3d eyePos = user.getEyePos();
       final FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(world, eyePos.x, eyePos.y, eyePos.z, Optional.ofNullable(stack.getSubNbt("holdingBlockState")).map(NbtHelper::toBlockState).orElseGet(Blocks.AIR::getDefaultState));
@@ -379,7 +382,7 @@ public class CarryingToolItem extends BlockToolItem
       if (world.isClient) {
         return ActionResult.PASS;
       } else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_player").formatted(Formatting.RED));
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_player").formatted(Formatting.RED), false);
         return ActionResult.FAIL;
       }
     } else if (hasHoldingEntity(stack) && !player.isCreative()) {
