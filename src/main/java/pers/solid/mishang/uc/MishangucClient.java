@@ -31,7 +31,6 @@ import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.item.DataTagToolItem;
-import pers.solid.mishang.uc.item.HoldingToolItem;
 import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
@@ -80,8 +79,8 @@ public class MishangucClient implements ClientModInitializer {
         (stack, world, entity) -> MishangucItems.EXPLOSION_TOOL.power(stack));
     FabricModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL, new Identifier("mishanguc", "explosion_create_fire"), (stack, world, entity) -> MishangucItems.EXPLOSION_TOOL.createFire(stack) ? 1 : 0);
     FabricModelPredicateProviderRegistry.register(MishangucItems.FAST_BUILDING_TOOL, new Identifier("mishanguc", "fast_building_range"), (stack, world, entity) -> MishangucItems.FAST_BUILDING_TOOL.getRange(stack) / 64f);
-    FabricModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, new Identifier("mishanguc", "is_holding_block"), (stack, world, entity) -> BooleanUtils.toInteger(HoldingToolItem.hasHoldingBlockState(stack)));
-    FabricModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, new Identifier("mishanguc", "is_holding_entity"), (stack, world, entity) -> BooleanUtils.toInteger(HoldingToolItem.hasHoldingEntity(stack)));
+    FabricModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, new Identifier("mishanguc", "is_holding_block"), (stack, world, entity) -> BooleanUtils.toInteger(CarryingToolItem.hasHoldingBlockState(stack)));
+    FabricModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, new Identifier("mishanguc", "is_holding_entity"), (stack, world, entity) -> BooleanUtils.toInteger(CarryingToolItem.hasHoldingEntity(stack)));
   }
 
   private static void registerNetworking() {

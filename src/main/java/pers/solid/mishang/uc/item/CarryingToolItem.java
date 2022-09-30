@@ -63,9 +63,9 @@ import java.util.UUID;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
 @ApiStatus.AvailableSince("0.2.4")
-public class HoldingToolItem extends BlockToolItem
+public class CarryingToolItem extends BlockToolItem
     implements ItemResourceGenerator, InteractsWithEntity, RendersBeforeOutline {
-  public HoldingToolItem(Settings settings, @Nullable Boolean includesFluid) {
+  public CarryingToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
 
