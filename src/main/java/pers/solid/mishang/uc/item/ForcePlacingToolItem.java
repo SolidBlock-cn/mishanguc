@@ -133,7 +133,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       return true;
     } else {
       final Item item = player.getMainHandStack().getItem();
-      if (hand == Hand.OFF_HAND && (item instanceof BlockItem || item instanceof HoldingToolItem)) {
+      if (hand == Hand.OFF_HAND && (item instanceof BlockItem || item instanceof CarryingToolItem)) {
         // 当玩家副手持有物品，主手持有方块时，直接跳过，不绘制。
         return true;
       }
