@@ -49,6 +49,8 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangucClient;
+import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
@@ -199,6 +201,9 @@ public class HoldingToolItem extends BlockToolItem
 
   @Override
   public ActionResult useOnBlock(ItemStack stack, PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
+    if (!hasAccess(player, world, true)) {
+      return ActionResult.PASS;
+    }
     if (hasHoldingBlockState(stack)) {
       final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockHitResult.getBlockPos(), player, stack, blockHitResult, fluidIncluded);
       if (blockPlacementContext.canPlace()) {
@@ -255,8 +260,18 @@ public class HoldingToolItem extends BlockToolItem
     }
   }
 
+  private boolean hasAccess(PlayerEntity player, World world, boolean warn) {
+    if (world.isClient) {
+      return MishangucClient.CLIENT_CARRYING_TOOL_ACCESS.get().hasAccess(player);
+    } else {
+      final MishangucRules.ToolAccess toolAccess = world.getGameRules().get(MishangucRules.CARRYING_TOOL_ACCESS).get();
+      return toolAccess.hasAccess(player, warn);
+    }
+  }
+
   @Override
   public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    if (!hasAccess(player, world, true)) return ActionResult.PASS;
     final Block alreadyHolding = getHoldingBlock(stack);
     if (alreadyHolding != null && !player.isCreative()) {
       if (!world.isClient) {
@@ -303,7 +318,7 @@ public class HoldingToolItem extends BlockToolItem
   @Override
   public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
     final TypedActionResult<ItemStack> use = super.use(world, user, hand);
-    if (use.getResult().isAccepted()) {
+    if (use.getResult().isAccepted() || !hasAccess(user, world, true)) {
       return use;
     }
     final ItemStack stack = user.getStackInHand(hand);
@@ -358,9 +373,16 @@ public class HoldingToolItem extends BlockToolItem
 
   @Override
   public @NotNull ActionResult attackEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
-    if (player.isSpectator()) return ActionResult.PASS;
+    if (!hasAccess(player, world, true) || player.isSpectator()) return ActionResult.PASS;
     final ItemStack stack = player.getStackInHand(hand);
-    if (hasHoldingEntity(stack) && !player.isCreative()) {
+    if (entity instanceof PlayerEntity) {
+      if (world.isClient) {
+        return ActionResult.PASS;
+      } else {
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_player").formatted(Formatting.RED));
+        return ActionResult.FAIL;
+      }
+    } else if (hasHoldingEntity(stack) && !player.isCreative()) {
       if (world.isClient) return ActionResult.SUCCESS;
       else {
         player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", getEntityName(stack)).formatted(Formatting.RED), true);
@@ -410,6 +432,7 @@ public class HoldingToolItem extends BlockToolItem
   @Environment(EnvType.CLIENT)
   @Override
   public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext worldRenderContext, WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
+    if (!hasAccess(player, worldRenderContext.world(), true)) return true;
     final MinecraftClient client = MinecraftClient.getInstance();
     final VertexConsumerProvider consumers = worldRenderContext.consumers();
     if (consumers == null) {
@@ -454,8 +477,8 @@ public class HoldingToolItem extends BlockToolItem
   @Environment(EnvType.CLIENT)
   @Override
   public void renderBeforeOutline(WorldRenderContext context, HitResult hitResult, ClientPlayerEntity player, Hand hand) {
-    // 只在使用主手持有此物品时进行渲染。
-    if (hand != Hand.MAIN_HAND || player.isSpectator()) return;
+    // 只在使用主手且有权限时持有此物品时进行渲染。
+    if (hand != Hand.MAIN_HAND || player.isSpectator() || !hasAccess(player, context.world(), true)) return;
     final ItemStack stack = player.getMainHandStack();
     final NbtCompound nbt = stack.getTag();
     final VertexConsumerProvider consumers = context.consumers();

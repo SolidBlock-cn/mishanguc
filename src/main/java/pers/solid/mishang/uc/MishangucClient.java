@@ -41,10 +41,20 @@ import pers.solid.mishang.uc.screen.HungSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
 
 import java.awt.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 @Environment(EnvType.CLIENT)
 public class MishangucClient implements ClientModInitializer {
+  /**
+   * @see MishangucRules#FORCE_PLACING_TOOL_ACCESS
+   */
+  public static final AtomicReference<MishangucRules.ToolAccess> CLIENT_FORCE_PLACING_TOOL_ACCESS = new AtomicReference<>(MishangucRules.ToolAccess.CREATIVE_ONLY);
+  /**
+   * @see MishangucRules#CARRYING_TOOL_ACCESS
+   */
+  public static final AtomicReference<MishangucRules.ToolAccess> CLIENT_CARRYING_TOOL_ACCESS = new AtomicReference<>(MishangucRules.ToolAccess.ALL);
+
   @Override
   public void onInitializeClient() {
     registerBlockLayers();
@@ -104,6 +114,7 @@ public class MishangucClient implements ClientModInitializer {
         });
     ClientPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "get_block_data"), new DataTagToolItem.BlockDataReceiver());
     ClientPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "get_entity_data"), new DataTagToolItem.EntityDataReceiver());
+    ClientPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "rule_changed"), MishangucRules::handle);
   }
 
   private static void registerBlockColors() {

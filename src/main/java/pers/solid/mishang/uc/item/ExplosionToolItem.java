@@ -37,6 +37,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
@@ -54,7 +55,10 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     if (raycast.getType() == HitResult.Type.MISS) {
       return TypedActionResult.fail(stack);
     }
-    if (world.isClient) return TypedActionResult.success(stack);
+    if (world.isClient) return TypedActionResult.pass(stack);
+    if (!world.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).get().hasAccess(user, true)) {
+      return TypedActionResult.pass(super.use(world, user, hand).getValue());
+    }
     final Vec3d pos = raycast.getPos();
     final GameRules.BooleanRule booleanRule = world.getGameRules().get(GameRules.DO_TILE_DROPS);
     final boolean backup = booleanRule.get();

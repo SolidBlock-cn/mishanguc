@@ -34,8 +34,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangucClient;
+import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
@@ -57,8 +60,8 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       BlockHitResult blockHitResult,
       Hand hand,
       boolean fluidIncluded) {
-    if (!player.abilities.creativeMode) {
-      // 仅限创造模式玩家使用。
+    if (!hasAccess(player, world, true)) {
+      // 仅限特定情况下使用。
       return ActionResult.PASS;
     }
     BlockPlacementContext blockPlacementContext =
@@ -81,8 +84,8 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   @Override
   public ActionResult beginAttackBlock(
       ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    if (!player.abilities.creativeMode) {
-      // 仅限创造模式玩家使用。
+    if (!hasAccess(player, world, true)) {
+      // 仅限特定情况下使用。
       return ActionResult.PASS;
     }
     final BlockState blockState = world.getBlockState(pos);
@@ -125,8 +128,8 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       WorldRenderContext worldRenderContext,
       WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
     final MinecraftClient client = MinecraftClient.getInstance();
-    if (!player.abilities.creativeMode) {
-      // 只有在创造模式下，才会绘制边框。
+    if (!hasAccess(player, worldRenderContext.world(), false)) {
+      // 只有在符合条件的情况下，才会绘制边框。
       return true;
     } else {
       final Item item = player.getMainHandStack().getItem();
@@ -227,14 +230,31 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       Hand hand,
       Entity entity,
       @Nullable EntityHitResult hitResult) {
-    if (!player.abilities.creativeMode) return ActionResult.PASS;
+    if (!hasAccess(player, world, true)) return ActionResult.PASS;
     if (!world.isClient) {
-      entity.remove();
-    if (entity instanceof EnderDragonPart) {
+      if (entity instanceof PlayerEntity) {
+        entity.kill();
+      } else {
+        entity.remove();
+      }
+      if (entity instanceof EnderDragonPart) {
         ((EnderDragonPart) entity).owner.kill();
       }
     }
     return ActionResult.SUCCESS;
+  }
+
+  /**
+   * 玩家是否有权使用此物品。
+   */
+  @ApiStatus.AvailableSince("1.0.0")
+  private static boolean hasAccess(PlayerEntity player, World world, boolean warn) {
+    if (world.isClient) {
+      return MishangucClient.CLIENT_FORCE_PLACING_TOOL_ACCESS.get().hasAccess(player);
+    } else {
+      final MishangucRules.ToolAccess toolAccess = world.getGameRules().get(MishangucRules.FORCE_PLACING_TOOL_ACCESS).get();
+      return toolAccess.hasAccess(player, warn);
+    }
   }
 
   @Override
@@ -251,7 +271,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   @Override
   public void renderBeforeOutline(WorldRenderContext context, HitResult hitResult, ClientPlayerEntity player, Hand hand) {
     // 只在使用主手持有此物品时进行渲染。
-    if (hand != Hand.MAIN_HAND || !player.abilities.creativeMode) return;
+    if (hand != Hand.MAIN_HAND || !hasAccess(player, context.world(), false)) return;
     final MatrixStack matrices = context.matrixStack();
     final VertexConsumerProvider consumers = context.consumers();
     if (consumers == null) return;
