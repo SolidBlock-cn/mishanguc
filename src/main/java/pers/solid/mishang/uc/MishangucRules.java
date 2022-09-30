@@ -19,6 +19,7 @@ import net.minecraft.util.StringIdentifiable;
 import net.minecraft.world.GameRules;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.TextBridge;
 
 /**
@@ -28,7 +29,7 @@ import pers.solid.mishang.uc.util.TextBridge;
  */
 @ApiStatus.AvailableSince("1.0.0")
 public final class MishangucRules {
-  public static final GameRules.Key<GameRules.BooleanRule> WARN_DEPRECATED_VERSIONS = register("warn_deprecated_version", GameRuleFactory.createBooleanRule(true));
+  public static final GameRules.Key<GameRules.BooleanRule> WARN_DEPRECATED_VERSION = register("warn_deprecated_version", GameRuleFactory.createBooleanRule(true));
 
   public static final GameRules.Key<EnumRule<ToolAccess>> FORCE_PLACING_TOOL_ACCESS = register("force_placing_tool_access", GameRuleFactory.createEnumRule(ToolAccess.CREATIVE_ONLY, (server, rule) -> sync(server, rule.get(), 0)));
 
@@ -68,23 +69,23 @@ public final class MishangucRules {
   public enum ToolAccess implements StringIdentifiable {
     ALL {
       @Override
-      public boolean hasAccess(PlayerEntity player) {
+      public boolean hasAccess(@Nullable PlayerEntity player) {
         return true;
       }
     }, CREATIVE_ONLY {
       @Override
-      public boolean hasAccess(PlayerEntity player) {
-        return player.isCreative();
+      public boolean hasAccess(@Nullable PlayerEntity player) {
+        return player != null && player.isCreative();
       }
     }, OP_ONLY {
       @Override
-      public boolean hasAccess(PlayerEntity player) {
-        return player.hasPermissionLevel(2);
+      public boolean hasAccess(@Nullable PlayerEntity player) {
+        return player != null && player.hasPermissionLevel(2);
       }
     }, CREATIVE_OP_ONLY {
       @Override
-      public boolean hasAccess(PlayerEntity player) {
-        return player.isCreative() && player.hasPermissionLevel(2);
+      public boolean hasAccess(@Nullable PlayerEntity player) {
+        return player != null && player.isCreative() && player.hasPermissionLevel(2);
       }
     };
     private final String name;
@@ -99,7 +100,7 @@ public final class MishangucRules {
     }
 
     @Contract(pure = true)
-    public abstract boolean hasAccess(PlayerEntity player);
+    public abstract boolean hasAccess(@Nullable PlayerEntity player);
 
     public boolean hasAccess(PlayerEntity player, boolean warn) {
       final boolean hasAccess = hasAccess(player);

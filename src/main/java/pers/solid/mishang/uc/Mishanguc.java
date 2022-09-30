@@ -4,13 +4,13 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
@@ -263,20 +263,21 @@ public class Mishanguc implements ModInitializer {
         preferred = null;
       }
       if (preferred != null) {
-        ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
-          if (!player.world.getGameRules().getBoolean(MishangucRules.WARN_DEPRECATED_VERSIONS)) return;
-          if (joined) {
-            player.sendMessage(TextBridge.translatable("notice.mishanguc.version_check", version, preferred, TextBridge.literal("/gamerule " + MishangucRules.WARN_DEPRECATED_VERSIONS.getName() + " false").formatted(Formatting.YELLOW, Formatting.UNDERLINE).styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/gamerule " + MishangucRules.WARN_DEPRECATED_VERSIONS.getName() + " false")))).styled(style -> style.withColor(0xdabf40)));
-          }
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+          if (!handler.player.world.getGameRules().getBoolean(MishangucRules.WARN_DEPRECATED_VERSION)) return;
+          handler.player.sendMessage(
+              TextBridge.translatable("notice.mishanguc.version_check", version, preferred, TextBridge.literal(
+                          "/gamerule " + MishangucRules.WARN_DEPRECATED_VERSION.getName() + " false")
+                      .formatted(Formatting.YELLOW, Formatting.UNDERLINE)
+                      .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/gamerule " + MishangucRules.WARN_DEPRECATED_VERSION.getName() + " false"))))
+                  .styled(style -> style.withColor(0xdabf40)), false);
         });
       }
     });
-    ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
-      if (joined) {
-        final GameRules gameRules = player.world.getGameRules();
-        MishangucRules.sync(gameRules.get(MishangucRules.FORCE_PLACING_TOOL_ACCESS).get(), 0, player);
-        MishangucRules.sync(gameRules.get(MishangucRules.CARRYING_TOOL_ACCESS).get(), 1, player);
-      }
+    ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+      final GameRules gameRules = handler.player.world.getGameRules();
+      MishangucRules.sync(gameRules.get(MishangucRules.FORCE_PLACING_TOOL_ACCESS).get(), 0, handler.player);
+      MishangucRules.sync(gameRules.get(MishangucRules.CARRYING_TOOL_ACCESS).get(), 1, handler.player);
     });
   }
 
