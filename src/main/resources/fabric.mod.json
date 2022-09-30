@@ -40,5 +40,6 @@
     "better_runtime_resource_pack": ">=0.6.2"
   },
   "breaks": {
-  }
+  },
+  "custom": {"branch": "1.19.2"}
 }

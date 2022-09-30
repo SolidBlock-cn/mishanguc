@@ -47,6 +47,6 @@ public class TpToolItem extends Item {
     world.sendEntityStatus(user, (byte) 46);
     world.playSound(null, pos.x, pos.y, pos.z, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
     data.getValue().damage((int) MathHelper.sqrt((float) (MathHelper.square(oldPos.x - pos.x) + MathHelper.square(oldPos.y - pos.y) + MathHelper.square(oldPos.z - pos.z))), user, playerEntity -> playerEntity.sendToolBreakStatus(hand));
-    return data;
+    return TypedActionResult.success(data.getValue());
   }
 }
