@@ -3,10 +3,7 @@ package pers.solid.mishang.uc.item;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.RenderLayer;
@@ -68,16 +65,15 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
       BlockHitResult blockHitResult,
       Hand hand,
       boolean fluidIncluded) {
-    if (!player.getAbilities().creativeMode) {
+    if (!player.isCreative()) {
       // 仅限创造模式玩家使用。
       return ActionResult.PASS;
     }
     final Direction side = blockHitResult.getSide();
     final BlockPos centerBlockPos = blockHitResult.getBlockPos();
     final BlockState centerState = world.getBlockState(centerBlockPos);
-    final BlockPlacementContext blockPlacementContext =
-        new BlockPlacementContext(
-            world, centerBlockPos, player, stack, blockHitResult, fluidIncluded);
+    final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(
+        world, centerBlockPos, player, stack, blockHitResult, fluidIncluded);
     final int range = this.getRange(stack);
     final BlockMatchingRule matchingRule = this.getMatchingRule(stack);
     boolean soundPlayed = false;
@@ -102,7 +98,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
   @Override
   public ActionResult beginAttackBlock(
       ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    if (!player.getAbilities().creativeMode) {
+    if (!player.isCreative()) {
       // 仅限创造模式玩家使用。
       return ActionResult.PASS;
     }
@@ -110,7 +106,9 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
       final int range = this.getRange(stack);
       final BlockMatchingRule matchingRule = this.getMatchingRule(stack);
       for (BlockPos pos1 : matchingRule.getPlainValidBlockPoss(world, pos, direction, range)) {
-        if (fluidIncluded) {
+        if (world.getBlockState(pos1).getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+          // 非管理员不应该破坏管理方块。
+        } else if (fluidIncluded) {
           world.setBlockState(pos1, Blocks.AIR.getDefaultState());
         } else {
           world.removeBlock(pos1, false);
@@ -158,79 +156,31 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
             .formatted(Formatting.GRAY));
   }
 
+  protected ItemStack createStack(int range, BlockMatchingRule blockMatchingRule) {
+    final ItemStack stack = new ItemStack(this);
+    final NbtCompound nbt = stack.getOrCreateNbt();
+    nbt.putInt("Range", range);
+    nbt.putString("MatchingRule", blockMatchingRule.asString());
+    return stack;
+  }
+
   @Override
   public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
     if (this.isIn(group)) {
-      stacks.add(
-          Util.make(
-              new ItemStack(this),
-              stack -> {
-                final NbtCompound tag = stack.getOrCreateNbt();
-                tag.putInt("Range", 16);
-                tag.putString("MatchingRule", BlockMatchingRule.SAME_STATE.asString());
-              }));
-      stacks.add(
-          Util.make(
-              new ItemStack(this),
-              stack -> {
-                final NbtCompound tag = stack.getOrCreateNbt();
-                tag.putInt("Range", 64);
-                tag.putString("MatchingRule", BlockMatchingRule.SAME_STATE.asString());
-              }));
-      stacks.add(
-          Util.make(
-              new ItemStack(this),
-              stack -> {
-                final NbtCompound tag = stack.getOrCreateNbt();
-                tag.putInt("Range", 16);
-                tag.putString("MatchingRule", BlockMatchingRule.SAME_BLOCK.asString());
-              }));
-      stacks.add(
-          Util.make(
-              new ItemStack(this),
-              stack -> {
-                final NbtCompound tag = stack.getOrCreateNbt();
-                tag.putInt("Range", 64);
-                tag.putString("MatchingRule", BlockMatchingRule.SAME_BLOCK.asString());
-              }));
-      stacks.add(
-          Util.make(
-              new ItemStack(this),
-              stack -> {
-                final NbtCompound tag = stack.getOrCreateNbt();
-                tag.putInt("Range", 16);
-                tag.putString("MatchingRule", BlockMatchingRule.SAME_MATERIAL.asString());
-              }));
-      stacks.add(
-          Util.make(
-              new ItemStack(this),
-              stack -> {
-                final NbtCompound tag = stack.getOrCreateNbt();
-                tag.putInt("Range", 64);
-                tag.putString("MatchingRule", BlockMatchingRule.SAME_MATERIAL.asString());
-              }));
-      stacks.add(
-          Util.make(
-              new ItemStack(this),
-              stack -> {
-                final NbtCompound tag = stack.getOrCreateNbt();
-                tag.putInt("Range", 16);
-                tag.putString("MatchingRule", BlockMatchingRule.ANY.asString());
-              }));
-      stacks.add(
-          Util.make(
-              new ItemStack(this),
-              stack -> {
-                final NbtCompound tag = stack.getOrCreateNbt();
-                tag.putInt("Range", 64);
-                tag.putString("MatchingRule", BlockMatchingRule.ANY.asString());
-              }));
+      stacks.add(createStack(16, BlockMatchingRule.SAME_STATE));
+      stacks.add(createStack(64, BlockMatchingRule.SAME_STATE));
+      stacks.add(createStack(16, BlockMatchingRule.SAME_BLOCK));
+      stacks.add(createStack(64, BlockMatchingRule.SAME_BLOCK));
+      stacks.add(createStack(16, BlockMatchingRule.SAME_MATERIAL));
+      stacks.add(createStack(64, BlockMatchingRule.SAME_MATERIAL));
+      stacks.add(createStack(16, BlockMatchingRule.ANY));
+      stacks.add(createStack(64, BlockMatchingRule.ANY));
     }
   }
 
   @Override
   public Text getName(ItemStack stack) {
-    return TextBridge.literal("")
+    return TextBridge.empty()
         .append(super.getName(stack))
         .append(" - ")
         .append(getMatchingRule(stack).getName());
@@ -244,7 +194,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
       WorldRenderContext worldRenderContext,
       WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
     final MinecraftClient client = MinecraftClient.getInstance();
-    if (!player.getAbilities().creativeMode) {
+    if (!player.isCreative()) {
       // 只有在创造模式下，才会绘制边框。
       return true;
     } else if (hand == Hand.OFF_HAND && player.getMainHandStack().getItem() instanceof BlockItem) {
@@ -301,8 +251,8 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
               0.5f);
         }
       }
-      if (hand == Hand.MAIN_HAND) {
-        // 只有当主手持有此物品时，才绘制边框。
+      if (hand == Hand.MAIN_HAND && !(state.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
+        // 只有当主手持有此物品时，才绘制边框，且对非管理员玩家忽略管理员方块。
         WorldRendererInvoker.drawCuboidShapeOutline(
             worldRenderContext.matrixStack(),
             vertexConsumer,

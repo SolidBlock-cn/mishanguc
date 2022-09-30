@@ -270,9 +270,14 @@ public class Mishanguc implements ModInitializer {
       }
       if (preferred != null) {
         ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
-          if (!player.world.getGameRules().getBoolean(MishangucRules.WARN_DEPRECATED_VERSIONS)) return;
+          if (!player.world.getGameRules().getBoolean(MishangucRules.WARN_DEPRECATED_VERSION)) return;
           if (joined) {
-            player.sendMessage(TextBridge.translatable("notice.mishanguc.version_check", version, preferred, TextBridge.literal("/gamerule " + MishangucRules.WARN_DEPRECATED_VERSIONS.getName() + " false").formatted(Formatting.YELLOW, Formatting.UNDERLINE).styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/gamerule " + MishangucRules.WARN_DEPRECATED_VERSIONS.getName() + " false")))).styled(style -> style.withColor(0xdabf40)));
+            player.sendMessage(
+                TextBridge.translatable("notice.mishanguc.version_check", version, preferred, TextBridge.literal(
+                            "/gamerule " + MishangucRules.WARN_DEPRECATED_VERSION.getName() + " false")
+                        .formatted(Formatting.YELLOW, Formatting.UNDERLINE)
+                        .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/gamerule " + MishangucRules.WARN_DEPRECATED_VERSION.getName() + " false"))))
+                    .styled(style -> style.withColor(0xdabf40)));
           }
         });
       }

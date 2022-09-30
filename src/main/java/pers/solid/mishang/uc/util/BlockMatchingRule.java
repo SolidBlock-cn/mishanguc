@@ -103,19 +103,17 @@ public abstract class BlockMatchingRule implements StringIdentifiable {
       @NotNull World world, @NotNull BlockPos centerPos, @NotNull Direction side, int range) {
     final LinkedHashSet<BlockPos> set = Sets.newLinkedHashSet();
     final Direction.Axis axis = side.getAxis();
-    for (BlockPos pos :
-        BlockPos.iterateOutwards(
-            centerPos,
-            axis == Direction.Axis.X ? 0 : range,
-            axis == Direction.Axis.Y ? 0 : range,
-            axis == Direction.Axis.Z ? 0 : range)) {
+    for (BlockPos pos : BlockPos.iterateOutwards(
+        centerPos,
+        axis == Direction.Axis.X ? 0 : range,
+        axis == Direction.Axis.Y ? 0 : range,
+        axis == Direction.Axis.Z ? 0 : range)) {
       final BlockPos offsetPos = pos.offset(side);
-      final boolean isValid =
-          world
-              .getBlockState(offsetPos)
-              .getCollisionShape(world, pos)
-              .getFace(side.getOpposite())
-              .isEmpty();
+      final boolean isValid = world
+          .getBlockState(offsetPos)
+          .getCollisionShape(world, pos)
+          .getFace(side.getOpposite())
+          .isEmpty();
       if (!isValid || !this.match(world.getBlockState(pos), world.getBlockState(centerPos))) {
         continue;
       }
@@ -123,12 +121,11 @@ public abstract class BlockMatchingRule implements StringIdentifiable {
         set.add(pos.toImmutable());
         continue;
       }
-      for (BlockPos pos1 :
-          BlockPos.iterateOutwards(
-              pos,
-              axis == Direction.Axis.X ? 0 : 1,
-              axis == Direction.Axis.Y ? 0 : 1,
-              axis == Direction.Axis.Z ? 0 : 1)) {
+      for (BlockPos pos1 : BlockPos.iterateOutwards(
+          pos,
+          axis == Direction.Axis.X ? 0 : 1,
+          axis == Direction.Axis.Y ? 0 : 1,
+          axis == Direction.Axis.Z ? 0 : 1)) {
         if (set.contains(pos1.toImmutable())) {
           set.add(pos.toImmutable());
         }
