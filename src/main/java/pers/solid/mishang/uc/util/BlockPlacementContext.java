@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.item.HoldingToolItem;
+import pers.solid.mishang.uc.item.CarryingToolItem;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 
 import java.util.Objects;
@@ -70,9 +70,9 @@ public class BlockPlacementContext {
    */
   public @Nullable Hand hand;
   /**
-   * 手中的物品堆。该物品堆的物品必须是方块物品，或者是 {@link HoldingToolItem}。如果手中的物品堆是空的，或者不是方块，则该值为 {@code null}。<br>
+   * 手中的物品堆。该物品堆的物品必须是方块物品，或者是 {@link CarryingToolItem}。如果手中的物品堆是空的，或者不是方块，则该值为 {@code null}。<br>
    * The {@link ItemStack} in the {@code hand}. The item in the <code>ItemStack</code> must be a
-   * {@link BlockItem} or {@link HoldingToolItem}. If the item stack in hand is not block item, or is null, then the value is {@code null}.
+   * {@link BlockItem} or {@link CarryingToolItem}. If the item stack in hand is not block item, or is null, then the value is {@code null}.
    */
   public final @Nullable ItemStack stackInHand;
 
@@ -166,8 +166,8 @@ public class BlockPlacementContext {
         stackInHand1 = stackInHand0;
         hand = hand1;
         break;
-      } else if (stackInHand0.getItem() instanceof HoldingToolItem) {
-        stateToPlace1 = HoldingToolItem.getHoldingBlockState(stackInHand0);
+      } else if (stackInHand0.getItem() instanceof CarryingToolItem) {
+        stateToPlace1 = CarryingToolItem.getHoldingBlockState(stackInHand0);
         stackInHand1 = stackInHand0;
         hand = hand1;
         break;
