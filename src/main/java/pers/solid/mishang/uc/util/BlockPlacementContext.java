@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -27,6 +28,9 @@ import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 
 import java.util.Objects;
 
+/**
+ * 用于预测方块放置时的位置以及方块状态，同时处理方块实体。主要用于强制放置工具和快速建造工具，既可用于放置和破坏，也可用于相应的轮廓绘制。
+ */
 public class BlockPlacementContext {
   public final @NotNull World world;
   public final @NotNull BlockPos blockPos;
@@ -49,7 +53,9 @@ public class BlockPlacementContext {
    * #stateToPlace}.
    */
   public final @NotNull BlockState stateToReplace;
-
+  /**
+   * 是否会连同流体一起放置与破坏。
+   */
   public final boolean includesFluid;
 
 
@@ -125,14 +131,13 @@ public class BlockPlacementContext {
     // 需要被替换的方块
     hitState = world.getBlockState(hit.getBlockPos());
     hitEntity = world.getBlockEntity(hit.getBlockPos());
-    placementContext =
-        new ItemPlacementContext(
-            player,
-            hand,
-            hand == null
-                ? new ItemStack(hitState.getBlock().asItem())
-                : player.getStackInHand(hand),
-            hit);
+    placementContext = new ItemPlacementContext(
+        player,
+        hand,
+        hand == null
+            ? new ItemStack(hitState.getBlock().asItem())
+            : player.getStackInHand(hand),
+        hit);
     posToPlace = includesFluid ? blockPos.offset(hit.getSide()) : placementContext.getBlockPos();
     stateToReplace = world.getBlockState(posToPlace);
 
@@ -143,11 +148,11 @@ public class BlockPlacementContext {
       ItemStack stackInHand0 = this.player.getStackInHand(hand1);
       if (stackInHand0.getItem() instanceof final BlockItem blockItem) {
         // 若手中持有方块物品，则 stateToPlace 为该物品
-      /*
-        手中物品堆中的方块物品对应的方块。<br>
-        The block of the blockItem in the {@link #stackInHand}.
-        @since 0.2.4 替换为局部变量
-       */
+        /*
+          手中物品堆中的方块物品对应的方块。<br>
+          The block of the blockItem in the {@link #stackInHand}.
+          @since 0.2.4 替换为局部变量
+         */
         final @Nullable Block handBlock = blockItem.getBlock();
         stateToPlace1 = handBlock == null ? null : handBlock.getPlacementState(placementContext);
         if (stateToPlace1 == null) continue;
@@ -177,10 +182,9 @@ public class BlockPlacementContext {
     stackInHand = stackInHand1;
     if (stateToPlace1 == null) {
       // 手中没有有效的方块物品，则使用 hitState。
-      stateToPlace1 =
-          placementContext.canReplaceExisting() && !includesFluid
-              ? hitState.getBlock().getPlacementState(placementContext)
-              : null;
+      stateToPlace1 = placementContext.canReplaceExisting() && !includesFluid
+          ? hitState.getBlock().getPlacementState(placementContext)
+          : null;
     }
     if (stateToPlace1 == null) {
       stateToPlace1 = hitState;
@@ -188,9 +192,8 @@ public class BlockPlacementContext {
 
     // 尝试放置含水
     if (!includesFluid && stateToPlace1.getProperties().contains(Properties.WATERLOGGED)) {
-      stateToPlace1 =
-          stateToPlace1.with(
-              Properties.WATERLOGGED, stateToReplace.getFluidState().getFluid() == Fluids.WATER);
+      stateToPlace1 = stateToPlace1.with(
+          Properties.WATERLOGGED, stateToReplace.getFluidState().getFluid() == Fluids.WATER);
     }
 
     // 此时终于确定好了 stateToPlace
@@ -198,11 +201,8 @@ public class BlockPlacementContext {
   }
 
   /**
-   * 放置方块。<br>
-   * Place the block. Calls {@link World#setBlockState}.
+   * 放置方块。
    */
-  @SuppressWarnings("UnusedReturnValue")
-//  @CanIgnoreReturnValue
   public boolean setBlockState(int flags) {
     return world.setBlockState(posToPlace, stateToPlace, flags);
   }
@@ -230,6 +230,9 @@ public class BlockPlacementContext {
    * Calls {@link BlockState#canPlaceAt}.
    */
   public boolean canPlace() {
+    if (stateToPlace.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+      return false;
+    }
     return stateToPlace.canPlaceAt(world, posToPlace);
   }
 
