@@ -31,7 +31,6 @@ import net.minecraft.util.collection.Int2ObjectBiMap;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -292,7 +291,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
     final BlockMatchingRule currentRule = getMatchingRule(stack);
     final int i = RULES_TO_CYCLE.getRawId(currentRule);
     if (i == -1) return;
-    final int j = (int) MathHelper.floorMod(i - scrollAmount, RULES_TO_CYCLE.size());
+    final int j = Math.floorMod((int) (i - scrollAmount), RULES_TO_CYCLE.size());
     final BlockMatchingRule newRule = RULES_TO_CYCLE.get(j);
     if (newRule != null) {
       stack.putSubTag("MatchingRule", NbtString.of(newRule.getId().toString()));

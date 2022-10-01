@@ -11,6 +11,7 @@ import net.minecraft.state.property.Property;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.TextColor;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Direction;
@@ -373,5 +374,17 @@ public class MishangUtils {
   @ApiStatus.AvailableSince("1.0.0, 1.16.5")
   public static boolean isOperatorBlock(final Block block) {
     return (block instanceof CommandBlock || block instanceof StructureBlock || block instanceof JigsawBlock);
+  }
+
+  /**
+   * 1.17 之前，{@link Block#getName()} 仅限客户端使用。
+   */
+  @ApiStatus.AvailableSince("1.0.0, 1.16.5")
+  public static MutableText getBlockName(final Block block) {
+    try {
+      return block.getName();
+    } catch (NoSuchMethodError ignore) {
+      return new TranslatableText(block.getTranslationKey());
+    }
   }
 }

@@ -174,7 +174,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   public MutableText getName() {
     return baseBlock == null
         ? super.getName()
-        : TextBridge.translatable("block.mishanguc.wall_sign", baseBlock.getName());
+        : TextBridge.translatable("block.mishanguc.wall_sign", MishangUtils.getBlockName(baseBlock));
   }
 
   /**

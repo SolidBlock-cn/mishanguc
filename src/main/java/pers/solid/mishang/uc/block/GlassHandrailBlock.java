@@ -11,6 +11,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.function.Function;
@@ -91,7 +92,7 @@ public class GlassHandrailBlock extends HandrailBlock {
 
     @Override
     public MutableText getName() {
-      return TextBridge.translatable("block.mishanguc.handrail_central", baseHandrail.getName());
+      return TextBridge.translatable("block.mishanguc.handrail_central", MishangUtils.getBlockName(baseHandrail));
     }
 
     protected CentralBlock(@NotNull GlassHandrailBlock baseRail) {
@@ -113,7 +114,7 @@ public class GlassHandrailBlock extends HandrailBlock {
 
     @Override
     public MutableText getName() {
-      return TextBridge.translatable("block.mishanguc.handrail_corner", baseHandrail.getName());
+      return TextBridge.translatable("block.mishanguc.handrail_corner", MishangUtils.getBlockName(baseHandrail));
     }
 
     protected CornerBlock(@NotNull GlassHandrailBlock baseRail) {
@@ -134,7 +135,7 @@ public class GlassHandrailBlock extends HandrailBlock {
 
     @Override
     public MutableText getName() {
-      return TextBridge.translatable("block.mishanguc.handrail_stair", baseHandrail.getName());
+      return TextBridge.translatable("block.mishanguc.handrail_stair", MishangUtils.getBlockName(baseHandrail));
     }
 
     @Environment(EnvType.CLIENT)
@@ -159,7 +160,7 @@ public class GlassHandrailBlock extends HandrailBlock {
 
     @Override
     public MutableText getName() {
-      return TextBridge.translatable("block.mishanguc.handrail_outer", baseHandrail.getName());
+      return TextBridge.translatable("block.mishanguc.handrail_outer", MishangUtils.getBlockName(baseHandrail));
     }
 
     @Override

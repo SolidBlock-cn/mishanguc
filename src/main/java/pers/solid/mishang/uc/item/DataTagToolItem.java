@@ -44,6 +44,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.NbtPrettyPrinter;
@@ -167,14 +168,14 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
         final NbtCompound blockData = buf.readNbt();
         client.execute(() -> {
           client.inGameHud.getChatHud().addMessage(
-              TextBridge.translatable("debug.mishanguc.dataTag.block.header", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), block.getName().formatted(Formatting.BOLD))
+              TextBridge.translatable("debug.mishanguc.dataTag.block.header", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), MishangUtils.getBlockName(block).formatted(Formatting.BOLD))
                   .formatted(Formatting.YELLOW));
           client.inGameHud.getChatHud().addMessage(NbtPrettyPrinter.serialize(blockData));
         });
       } else {
         // 此时认为该方块没有数据。
         client.execute(() -> client.inGameHud.getChatHud().addMessage(
-            TextBridge.translatable("debug.mishanguc.dataTag.block.null", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), block.getName().formatted(Formatting.BOLD))
+            TextBridge.translatable("debug.mishanguc.dataTag.block.null", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), MishangUtils.getBlockName(block).formatted(Formatting.BOLD))
                 .formatted(Formatting.RED)));
       }
     }

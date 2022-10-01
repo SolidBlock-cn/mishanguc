@@ -22,6 +22,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Collection;
@@ -39,12 +40,12 @@ public class BlockStateToolItem extends BlockToolItem {
     final Collection<Property<?>> properties = blockState.getProperties();
     if (properties.isEmpty()) {
       player.sendMessage(
-          TextBridge.translatable("debug.mishanguc.blockStates.none", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getBlock().getName().formatted(Formatting.BOLD))
+          TextBridge.translatable("debug.mishanguc.blockStates.none", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), MishangUtils.getBlockName(blockState.getBlock()).formatted(Formatting.BOLD))
               .formatted(Formatting.RED),
           false);
     } else {
       player.sendMessage(
-          TextBridge.translatable("debug.mishanguc.blockStates", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getBlock().getName().formatted(Formatting.BOLD))
+          TextBridge.translatable("debug.mishanguc.blockStates", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), MishangUtils.getBlockName(blockState.getBlock()).formatted(Formatting.BOLD))
               .formatted(Formatting.YELLOW),
           false);
     }

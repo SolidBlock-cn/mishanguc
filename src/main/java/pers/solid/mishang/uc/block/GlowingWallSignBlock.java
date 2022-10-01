@@ -14,6 +14,7 @@ import net.minecraft.text.MutableText;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.util.TextBridge;
 
@@ -47,7 +48,7 @@ public class GlowingWallSignBlock extends WallSignBlock {
   // 不要注解为 @Environment(EnvType.CLIENT)
   @Override
   public MutableText getName() {
-    return TextBridge.translatable("block.mishanguc.glowing_wall_sign", baseBlock.getName());
+    return TextBridge.translatable("block.mishanguc.glowing_wall_sign", MishangUtils.getBlockName(baseBlock));
   }
 
   @Override

@@ -36,6 +36,7 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.util.TextBridge;
 
@@ -289,7 +290,7 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   @Override
   public MutableText getName() {
     final Block block = baseBlock();
-    return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.handrail_stair", block.getName());
+    return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.handrail_stair", MishangUtils.getBlockName(block));
   }
 
   public enum Position implements StringIdentifiable {

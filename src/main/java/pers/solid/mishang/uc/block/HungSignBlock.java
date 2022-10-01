@@ -132,7 +132,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   public HungSignBlock(@NotNull Block baseBlock) {
     this(baseBlock, FabricBlockSettings.copyOf(baseBlock));
   }
-  
+
   @ApiStatus.AvailableSince("0.2.4, 1.16")
   public HungSignBlock(@NotNull Block baseBlock, Tag<Item> tag) {
     this(baseBlock, FabricBlockSettings.copyOf(baseBlock).breakByTool(tag));
@@ -394,7 +394,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   @Override
   public MutableText getName() {
     if (baseBlock != null) {
-      return TextBridge.translatable("block.mishanguc.hung_sign", baseBlock.getName());
+      return TextBridge.translatable("block.mishanguc.hung_sign", MishangUtils.getBlockName(baseBlock));
     }
     return super.getName();
   }

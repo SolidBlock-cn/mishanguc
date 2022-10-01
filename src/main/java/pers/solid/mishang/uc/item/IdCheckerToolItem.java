@@ -31,6 +31,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -54,7 +55,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
               .append(TextBridge.translatable("debug.mishanguc.blockId.header", String.format(
                       "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
                   .formatted(Formatting.YELLOW)), false);
-      broadcastId(player, block.getName(), identifier, rawId);
+      broadcastId(player, MishangUtils.getBlockName(block), identifier, rawId);
       return ActionResult.SUCCESS;
     }
     return ActionResult.SUCCESS;

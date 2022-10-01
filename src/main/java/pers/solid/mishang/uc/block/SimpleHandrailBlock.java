@@ -17,6 +17,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.TextBridge;
 
 /**
@@ -126,7 +127,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
   @Override
   public MutableText getName() {
     if (baseBlock != null) {
-      return TextBridge.translatable("block.mishanguc.simple_handrail", baseBlock.getName());
+      return TextBridge.translatable("block.mishanguc.simple_handrail", MishangUtils.getBlockName(baseBlock));
     } else return super.getName();
   }
 
@@ -155,7 +156,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public MutableText getName() {
       final Block block = baseBlock();
-      return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_central", block.getName());
+      return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_central", MishangUtils.getBlockName(block));
     }
 
     @SuppressWarnings("deprecation")
@@ -180,7 +181,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public MutableText getName() {
       final Block block = baseBlock();
-      return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_corner", block.getName());
+      return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_corner", MishangUtils.getBlockName(block));
     }
 
     @SuppressWarnings("deprecation")
@@ -212,7 +213,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public MutableText getName() {
       final Block block = baseBlock();
-      return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_stair", block.getName());
+      return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_stair", MishangUtils.getBlockName(block));
     }
 
     @SuppressWarnings("deprecation")
@@ -236,7 +237,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public MutableText getName() {
       final Block block = baseBlock();
-      return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_outer", block.getName());
+      return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_outer", MishangUtils.getBlockName(block));
     }
 
     @SuppressWarnings("deprecation")
