@@ -2,7 +2,6 @@ package pers.solid.mishang.uc.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -216,6 +215,7 @@ public class BlockPlacementContext {
       BlockItem.writeTagToBlockEntity(world, player, posToPlace, stackInHand);
     } else if (hitEntity != null && entityToPlace != null) {
       entityToPlace.fromTag(stateToPlace, hitEntity.writeNbt(new NbtCompound()));
+      entityToPlace.setPos(posToPlace);
       entityToPlace.markDirty();
       world.updateListeners(posToPlace, entityToPlace.getCachedState(), entityToPlace.getCachedState(), 3);
     }
@@ -230,7 +230,7 @@ public class BlockPlacementContext {
    * Calls {@link BlockState#canPlaceAt}.
    */
   public boolean canPlace() {
-    if (stateToPlace.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+    if (MishangUtils.isOperatorBlock(stateToPlace.getBlock()) && !player.hasPermissionLevel(2)) {
       return false;
     }
     return stateToPlace.canPlaceAt(world, posToPlace);

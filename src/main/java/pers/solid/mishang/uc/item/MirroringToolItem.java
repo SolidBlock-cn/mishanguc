@@ -7,7 +7,6 @@ import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -25,6 +24,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
@@ -78,7 +78,7 @@ public class MirroringToolItem extends BlockToolItem implements ItemResourceGene
     if (!player.abilities.allowModifyWorld && !stack.canPlaceOn(world.getTagManager(), new CachedBlockPosition(world, blockPos, false))) {
       return ActionResult.PASS;
     }
-    if (world.getBlockState(blockPos).getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+    if (MishangUtils.isOperatorBlock(world.getBlockState(blockPos).getBlock()) && !player.hasPermissionLevel(2)) {
       return ActionResult.FAIL;
     }
     final ActionResult result = mirror(world, blockPos, blockHitResult.getSide(), player);
@@ -92,7 +92,7 @@ public class MirroringToolItem extends BlockToolItem implements ItemResourceGene
     if (!player.abilities.allowModifyWorld && !stack.canDestroy(world.getTagManager(), new CachedBlockPosition(world, pos, false))) {
       return ActionResult.PASS;
     }
-    if (world.getBlockState(pos).getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+    if (MishangUtils.isOperatorBlock(world.getBlockState(pos).getBlock()) && !player.hasPermissionLevel(2)) {
       return ActionResult.FAIL;
     }
     final ActionResult result = mirror(world, pos, direction, player);

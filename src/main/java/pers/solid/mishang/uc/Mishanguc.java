@@ -15,6 +15,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.CachedBlockPosition;
@@ -23,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.ClickEvent;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -273,7 +275,7 @@ public class Mishanguc implements ModInitializer {
                           "/gamerule " + MishangucRules.WARN_DEPRECATED_VERSION.getName() + " false")
                       .formatted(Formatting.YELLOW, Formatting.UNDERLINE)
                       .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/gamerule " + MishangucRules.WARN_DEPRECATED_VERSION.getName() + " false"))))
-                  .styled(style -> style.withColor(0xdabf40)), false);
+                  .styled(style -> style.withColor(TextColor.fromRgb(0xdabf40))), false);
         });
       }
     });

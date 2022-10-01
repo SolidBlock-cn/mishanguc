@@ -5,9 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Streams;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.*;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.LiteralText;
@@ -367,5 +365,13 @@ public class MishangUtils {
       }
     }
     return blockState;
+  }
+
+  /**
+   * 1.17 之前还没有 OperatorBlock 接口，故使用此类代替。
+   */
+  @ApiStatus.AvailableSince("1.0.0, 1.16.5")
+  public static boolean isOperatorBlock(final Block block) {
+    return (block instanceof CommandBlock || block instanceof StructureBlock || block instanceof JigsawBlock);
   }
 }

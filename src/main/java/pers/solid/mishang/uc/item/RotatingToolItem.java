@@ -6,7 +6,6 @@ import net.devtech.arrp.json.recipe.JRecipe;
 import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.item.TooltipContext;
@@ -24,6 +23,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
 
   @NotNull
   private ActionResult rotateBlock(PlayerEntity player, World world, BlockPos blockPos) {
-    if (world.getBlockState(blockPos).getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+    if (MishangUtils.isOperatorBlock(world.getBlockState(blockPos).getBlock()) && !player.hasPermissionLevel(2)) {
       return ActionResult.FAIL;
     }
     final BlockRotation rotation = player.isSneaking() ? BlockRotation.COUNTERCLOCKWISE_90 : BlockRotation.CLOCKWISE_90;

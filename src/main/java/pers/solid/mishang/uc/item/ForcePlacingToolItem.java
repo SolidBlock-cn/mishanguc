@@ -73,11 +73,9 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
             blockHitResult,
             fluidIncluded);
     blockPlacementContext.playSound();
-    if (!world.isClient()) {
-      // 放置方块。
-      blockPlacementContext.setBlockState(0b11010);
-      blockPlacementContext.setBlockEntity();
-    }
+    // 放置方块。对客户端和服务器均生效。
+    blockPlacementContext.setBlockState(0b11010);
+    blockPlacementContext.setBlockEntity();
     return ActionResult.success(world.isClient);
   }
 

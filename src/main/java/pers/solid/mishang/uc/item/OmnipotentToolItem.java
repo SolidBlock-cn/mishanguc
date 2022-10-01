@@ -107,7 +107,7 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
   @Override
   public ItemStack getDefaultStack() {
     final ItemStack defaultStack = super.getDefaultStack();
-    defaultStack.getOrCreateNbt().putBoolean("Unbreakable", true);
+    defaultStack.getOrCreateTag().putBoolean("Unbreakable", true);
     return defaultStack;
   }
 

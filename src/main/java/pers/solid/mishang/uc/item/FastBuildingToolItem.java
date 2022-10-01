@@ -35,6 +35,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.util.BlockMatchingRule;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
@@ -109,7 +110,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
       final int range = this.getRange(stack);
       final BlockMatchingRule matchingRule = this.getMatchingRule(stack);
       for (BlockPos pos1 : matchingRule.getPlainValidBlockPoss(world, pos, direction, range)) {
-        if (world.getBlockState(pos1).getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+        if (MishangUtils.isOperatorBlock(world.getBlockState(pos1).getBlock()) && !player.hasPermissionLevel(2)) {
           // 非管理员不应该破坏管理方块。
         } else if (fluidIncluded) {
           world.setBlockState(pos1, Blocks.AIR.getDefaultState());
@@ -255,7 +256,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
               0.5f);
         }
       }
-      if (hand == Hand.MAIN_HAND && !(state.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
+      if (hand == Hand.MAIN_HAND && !(MishangUtils.isOperatorBlock(state.getBlock()) && !player.hasPermissionLevel(2))) {
         // 只有当主手持有此物品时，才绘制边框，且对非管理员玩家忽略管理员方块。
         WorldRendererInvoker.drawShapeOutline(
             worldRenderContext.matrixStack(),

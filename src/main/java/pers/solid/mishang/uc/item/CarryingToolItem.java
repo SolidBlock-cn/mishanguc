@@ -49,6 +49,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucClient;
 import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
@@ -290,7 +291,7 @@ public class CarryingToolItem extends BlockToolItem
       }
     }
     final BlockState removed = world.getBlockState(pos);
-    if (removed.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+    if (MishangUtils.isOperatorBlock(removed.getBlock()) && !player.hasPermissionLevel(2)) {
       return ActionResult.FAIL;
     }
     setHoldingBlockState(stack, removed);
@@ -327,7 +328,7 @@ public class CarryingToolItem extends BlockToolItem
     final ItemStack stack = user.getStackInHand(hand);
     final BlockState holdingBlockState = getHoldingBlockState(stack);
     if (holdingBlockState != null) {
-      if (holdingBlockState.getBlock() instanceof OperatorBlock && !user.hasPermissionLevel(2)) {
+      if (MishangUtils.isOperatorBlock(holdingBlockState.getBlock()) && !user.hasPermissionLevel(2)) {
         return TypedActionResult.fail(stack);
       }
       if (world.isClient) return TypedActionResult.success(use.getValue());
