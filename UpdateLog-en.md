@@ -13,6 +13,10 @@ Updated following content:
 - Non-OPs cannot handle operator blocks with most items in this mod.
 - Growth tool no longer works as bone meal.
 
+Fixed following issues:
+
+- In 1.16.5, when placing force placing tools and fast building tools, block entities are not correctly updated.
+
 ### 0.2.4
 
 Updated following content:
