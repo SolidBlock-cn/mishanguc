@@ -34,6 +34,7 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -396,7 +397,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     if (baseBlock != null) {
       return TextBridge.translatable("block.mishanguc.hung_sign", MishangUtils.getBlockName(baseBlock));
     }
-    return super.getName();
+    return new TranslatableText(getTranslationKey());
   }
 
   @Environment(EnvType.CLIENT)

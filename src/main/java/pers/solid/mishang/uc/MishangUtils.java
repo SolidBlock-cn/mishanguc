@@ -5,6 +5,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Streams;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.MappingResolver;
 import net.minecraft.block.*;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.Property;
@@ -27,6 +29,9 @@ import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -381,9 +386,21 @@ public class MishangUtils {
    */
   @ApiStatus.AvailableSince("1.0.0, 1.16.5")
   public static MutableText getBlockName(final Block block) {
+    final MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
     try {
-      return block.getName();
-    } catch (NoSuchMethodError ignore) {
+      final String methodName = resolver.mapMethodName(
+          "intermediary",
+          resolver.unmapClassName("intermediary", Block.class.getName()),
+          "method_9518",
+          "()Lnet/minecraft/class_5250;");
+      MethodHandles.Lookup lookup = MethodHandles.publicLookup();
+      MethodHandle namespaceGetter = lookup.findVirtual(
+          block.getClass(),
+          methodName,
+          MethodType.methodType(MutableText.class)
+      );
+      return (MutableText) namespaceGetter.invoke(block);
+    } catch (Throwable ignore) {
       return new TranslatableText(block.getTranslationKey());
     }
   }

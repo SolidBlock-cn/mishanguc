@@ -276,7 +276,7 @@ public class CarryingToolItem extends BlockToolItem
     final Block alreadyHolding = getHoldingBlock(stack);
     if (alreadyHolding != null && !player.isCreative()) {
       if (!world.isClient) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.ofNullable(getHoldingBlock(stack)).map(Block::getName).orElse(TextBridge.empty())).formatted(Formatting.RED), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.ofNullable(getHoldingBlock(stack)).map(MishangUtils::getBlockName).orElse(TextBridge.empty())).formatted(Formatting.RED), true);
         return ActionResult.FAIL;
       } else {
         return ActionResult.CONSUME;
@@ -409,7 +409,7 @@ public class CarryingToolItem extends BlockToolItem
     } else if (hasHoldingBlockState(stack) && !player.isCreative()) {
       if (world.isClient) return ActionResult.SUCCESS;
       else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.ofNullable(getHoldingBlock(stack)).map(Block::getName).orElse(TextBridge.empty())).formatted(Formatting.RED), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.ofNullable(getHoldingBlock(stack)).map(MishangUtils::getBlockName).orElse(TextBridge.empty())).formatted(Formatting.RED), true);
         return ActionResult.FAIL;
       }
     }
