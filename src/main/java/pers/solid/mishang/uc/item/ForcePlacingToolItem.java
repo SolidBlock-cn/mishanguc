@@ -64,14 +64,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       // 仅限特定情况下使用。
       return ActionResult.PASS;
     }
-    BlockPlacementContext blockPlacementContext =
-        new BlockPlacementContext(
-            world,
-            blockHitResult.getBlockPos(),
-            player,
-            player.getStackInHand(hand),
-            blockHitResult,
-            fluidIncluded);
+    BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockHitResult.getBlockPos(), player, player.getStackInHand(hand), blockHitResult, fluidIncluded);
     blockPlacementContext.playSound();
     // 放置方块。对客户端和服务器均生效。
     blockPlacementContext.setBlockState(0b11010);
@@ -89,12 +82,9 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     final BlockState blockState = world.getBlockState(pos);
     world.syncWorldEvent(player, 2001, pos, Block.getRawIdFromState(world.getBlockState(pos)));
     FluidState fluidState = blockState.getFluidState();
-    if (!world.isClient) {
-      // 在破坏时，直接先将其内容清除。
-      world.removeBlockEntity(pos);
-      world.setBlockState(
-          pos, fluidIncluded ? Blocks.AIR.getDefaultState() : fluidState.getBlockState(), 24);
-    }
+    // 在破坏时，直接先将其内容清除。
+    world.removeBlockEntity(pos);
+    world.setBlockState(pos, fluidIncluded ? Blocks.AIR.getDefaultState() : fluidState.getBlockState(), 24);
     return ActionResult.success(world.isClient);
   }
 
