@@ -18,7 +18,7 @@ public class TextClickEvent extends ClickEvent {
   public final Text text;
 
   public TextClickEvent(Text text) {
-    super(Action.RUN_COMMAND, "/tell @s INVALID_COMMAND_ACCESS");
+    super(Action.RUN_COMMAND, "/");
     this.text = text;
   }
 }

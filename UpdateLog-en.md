@@ -2,6 +2,15 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.0.1
+
+Fixed following issues:
+
+- When fetching NBT with a data tag tool, clicking the "expand" in the result does not work.
+- Typo in Chinese translation.
+- Incorrect text height in hung sign blocks.
+- Wrong display name of full wall signs.
+
 ### 1.0.0
 
 Updated following content:
