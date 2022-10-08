@@ -42,8 +42,8 @@ public class HungSignBlockEntity extends BlockEntityWithText {
   public @Unmodifiable Map<@NotNull Direction, @Unmodifiable @NotNull List<@NotNull TextContext>>
       texts = ImmutableMap.of();
   /**
-   * 编辑该方块的玩家。若为 <code>true</code>，则其他玩家不可编辑。<br>
-   * The player editing the block. <code>true</code> means other players cannot edit.
+   * 编辑该方块的玩家。若为非 <code>null</code>，则其他玩家不可编辑。<br>
+   * The player editing the block. non-<code>null</code> means other players cannot edit.
    */
   @Nullable
   private PlayerEntity editor;
@@ -94,6 +94,8 @@ public class HungSignBlockEntity extends BlockEntityWithText {
     if (nbt.isEmpty()) {
       // 表示该 nbt 是空的，但游戏不会认为是空的。因为如果 nbt 真的是空的，生成 packet 的时候会直接将其忽略，因此即使告示牌没有文本，也不能让其 nbt 真的为空。
       nbt.putBoolean("empty", true);
+    } else {
+      nbt.remove("empty");
     }
     return nbt;
   }
@@ -118,7 +120,7 @@ public class HungSignBlockEntity extends BlockEntityWithText {
 
   @Override
   public float getHeight() {
-    return 7;
+    return 8;
   }
 
   @Override
