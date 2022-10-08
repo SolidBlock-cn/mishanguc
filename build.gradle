@@ -167,7 +167,7 @@ modrinth {
     } catch (IOException ignore) {
         token = ' '
     }
-    println "Modrinth 令牌：${token}"
+    println "Modrinth 令牌：【${token}】"
 
     projectId = "rItLmRo4" // 迷上城建模组的 Modrinth ID
     versionNumber = project.mod_version + '-' + project.minecraft_version

@@ -70,12 +70,6 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
       MishangUtils.createHorizontalDirectionToShape(0, 0, 4, 16, 1, 12);
   public static final Map<Direction, VoxelShape> SHAPES_WHEN_CEILING =
       MishangUtils.createHorizontalDirectionToShape(0, 15, 4, 16, 16, 12);
-  /**
-   * 告示牌自身的纹理。默认为 {@code null}，可在后期修改。若为 {@code null}，则直接根据其基础方块 {@link #baseBlock} 推断纹理。
-   */
-  @ApiStatus.AvailableSince("0.1.7")
-  public @Nullable String texture;
-
   @Unmodifiable
   public static final Map<WallMountLocation, Map<Direction, VoxelShape>>
       SHAPE_PER_WALL_MOUNT_LOCATION =
@@ -86,8 +80,12 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
           SHAPES_WHEN_FLOOR,
           WallMountLocation.WALL,
           SHAPES_WHEN_WALL);
-
   public final Block baseBlock;
+  /**
+   * 告示牌自身的纹理。默认为 {@code null}，可在后期修改。若为 {@code null}，则直接根据其基础方块 {@link #baseBlock} 推断纹理。
+   */
+  @ApiStatus.AvailableSince("0.1.7")
+  public @Nullable String texture;
 
   public WallSignBlock(@Nullable Block baseBlock, Settings settings) {
     super(settings);

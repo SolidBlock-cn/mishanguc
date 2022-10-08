@@ -13,6 +13,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.WallMountLocation;
+import net.minecraft.text.MutableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -24,6 +25,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.FullWallSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Map;
 
@@ -53,6 +55,13 @@ public class FullWallSignBlock extends WallSignBlock {
   @ApiStatus.AvailableSince("0.1.7")
   public FullWallSignBlock(@NotNull Block baseBlock) {
     this(baseBlock, FabricBlockSettings.copyOf(baseBlock));
+  }
+
+  @Override
+  public MutableText getName() {
+    return baseBlock == null
+        ? super.getName()
+        : TextBridge.translatable("block.mishanguc.full_wall_sign", baseBlock.getName());
   }
 
   @Override
