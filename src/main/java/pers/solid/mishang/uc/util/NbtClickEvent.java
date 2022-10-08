@@ -16,7 +16,7 @@ public class NbtClickEvent extends ClickEvent {
   public final NbtElement nbt;
 
   public NbtClickEvent(NbtElement nbt) {
-    super(Action.RUN_COMMAND, "");
+    super(Action.RUN_COMMAND, "/");
     this.nbt = nbt;
   }
 }
