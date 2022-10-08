@@ -10,6 +10,7 @@ Fixed following issues:
 - Typo in Chinese translation.
 - Incorrect text height in hung sign blocks.
 - Wrong display name of full wall signs.
+- Wall signs cause the server to error.
 
 ### 1.0.0
 
