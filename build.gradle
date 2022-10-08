@@ -141,7 +141,7 @@ curseforge {
         id = '583071'
         changelog = content
         changelogType = 'markdown'
-        releaseType = 'beta'
+        releaseType = 'release'
         mainArtifact remapJar
 
         for (final def v in (project.supported_versions.split(',') as String[])) {
@@ -171,7 +171,7 @@ modrinth {
 
     projectId = "rItLmRo4" // 迷上城建模组的 Modrinth ID
     versionNumber = project.mod_version + '-' + project.minecraft_version
-    versionType = 'beta'
+    versionType = 'release'
     uploadFile = remapJar
     gameVersions = Arrays.asList(project.supported_versions.split(','))
 
