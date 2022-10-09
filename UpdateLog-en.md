@@ -2,6 +2,17 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.0.2
+
+Updated following content:
+
+- Glowing hung signs and glowing wall signs with customizable colors.
+- Added more signs with custom colors, and optimized the source.
+
+Fixed following issues:
+
+- Tinting a terracotta hung sign bar with a color tool converts it into a sign instead of sign bar.
+
 ### 1.0.1
 
 Fixed following issues:
