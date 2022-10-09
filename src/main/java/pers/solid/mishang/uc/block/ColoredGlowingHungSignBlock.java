@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.google.common.annotations.Beta;
 import net.devtech.arrp.json.loot.JLootTable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -17,9 +16,8 @@ import pers.solid.mishang.uc.blockentity.ColoredHungSignBlockEntity;
 
 import java.util.List;
 
-@Beta
-public class ColoredHungSignBlock extends HungSignBlock implements ColoredBlock {
-  public ColoredHungSignBlock(@NotNull Block baseBlock) {
+public class ColoredGlowingHungSignBlock extends GlowingHungSignBlock implements ColoredBlock {
+  public ColoredGlowingHungSignBlock(@NotNull Block baseBlock) {
     super(baseBlock);
   }
 
@@ -35,8 +33,8 @@ public class ColoredHungSignBlock extends HungSignBlock implements ColoredBlock 
   }
 
   @Override
-  public @NotNull BlockEntity createBlockEntity(BlockView world) {
-    return new ColoredHungSignBlockEntity();
+  public @NotNull BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    return new ColoredHungSignBlockEntity(pos, state);
   }
 
   @Override

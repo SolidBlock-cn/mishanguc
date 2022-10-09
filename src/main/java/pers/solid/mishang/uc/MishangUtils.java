@@ -185,7 +185,7 @@ public class MishangUtils {
     instanceEntryStream(blockFieldStream(), Block.class).forEach(builder::put);
     final ImmutableMap<Field, Block> build = builder.build();
     if (build.isEmpty()) {
-      throw new AssertionError("The collection returned is empty, which is not expected.. You may have to report to the author of Mishang Urban Construction mod.");
+      throw new AssertionError("The collection returned is empty, which is not expected. You may have to report to the author of Mishang Urban Construction mod.");
     }
     return build;
   }
@@ -197,7 +197,7 @@ public class MishangUtils {
     instanceEntryStream(itemFieldStream(), Item.class).forEach(builder::put);
     final ImmutableMap<Field, Item> build = builder.build();
     if (build.isEmpty()) {
-      throw new AssertionError("The collection returned is empty, which is not expected.. You may have to report to the author of Mishang Urban Construction mod.");
+      throw new AssertionError("The collection returned is empty, which is not expected. You may have to report to the author of Mishang Urban Construction mod.");
     }
     return build;
   }
@@ -259,7 +259,7 @@ public class MishangUtils {
     return instanceEntryStream(fieldStream(containerClass), castToClass);
   }
 
-  public static <T> Stream<T> instanceStream(Class<?> containerClass, Class<T> castToClass) {
+  public static <T> Stream<@NotNull T> instanceStream(Class<?> containerClass, Class<T> castToClass) {
     return instanceEntryStream(containerClass, castToClass).map(Map.Entry::getValue);
   }
 

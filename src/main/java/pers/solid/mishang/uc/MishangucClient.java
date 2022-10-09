@@ -96,17 +96,11 @@ public class MishangucClient implements ClientModInitializer {
                 client.world != null ? client.world.getBlockEntity(blockPos) : null;
             if (blockEntity instanceof HungSignBlockEntity) {
               final Direction direction = buf.readEnumConstant(Direction.class);
-              client.execute(
-                  () ->
-                      client.openScreen(
-                          new HungSignBlockEditScreen(
-                              (HungSignBlockEntity) blockEntity, direction, blockPos)));
+              client.execute(() ->
+                  client.openScreen(new HungSignBlockEditScreen((HungSignBlockEntity) blockEntity, direction, blockPos)));
             } else if (blockEntity instanceof WallSignBlockEntity) {
-              client.execute(
-                  () ->
-                      client.openScreen(
-                          new WallSignBlockEditScreen(
-                              (WallSignBlockEntity) blockEntity, blockPos)));
+              client.execute(() ->
+                  client.openScreen(new WallSignBlockEditScreen((WallSignBlockEntity) blockEntity, blockPos)));
             }
           } catch (NullPointerException | ClassCastException exception) {
             Mishanguc.MISHANG_LOGGER.error("Error when creating sign edit screen:", exception);

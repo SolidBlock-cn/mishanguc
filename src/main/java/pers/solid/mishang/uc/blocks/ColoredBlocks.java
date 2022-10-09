@@ -161,6 +161,28 @@ public final class ColoredBlocks extends MishangucBlocks {
   public static final ColoredCubeBlock COLORED_PURPUR_BLOCK = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.PURPUR_BLOCK), "mishanguc:block/pale_purpur_block");
   @RegisterIdentifier
   public static final ColoredPillarBlock COLORED_PURPUR_PILLAR = new ColoredPillarBlock(FabricBlockSettings.copyOf(Blocks.PURPUR_PILLAR), JTextures.of("side", "mishanguc:block/pale_purpur_pillar").var("end", "mishanguc:block/pale_purpur_pillar_top"));
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.2")
+  public static final ColoredCubeBlock COLORED_END_STONE = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.END_STONE), "mishanguc:block/pale_end_stone");
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.2")
+  public static final ColoredStairsBlock COLORED_END_STONE_STAIRS = new ColoredStairsBlock(COLORED_END_STONE);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.2")
+  public static final ColoredSlabBlock COLORED_END_STONE_SLAB = new ColoredSlabBlock(COLORED_END_STONE);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.2")
+  public static final ColoredCubeBlock COLORED_END_STONE_BRICKS = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.END_STONE_BRICKS), "mishanguc:block/pale_end_stone_bricks");
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.2")
+  public static final ColoredStairsBlock COLORED_END_STONE_BRICK_STAIRS = new ColoredStairsBlock(COLORED_END_STONE_BRICKS);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.2")
+  public static final ColoredSlabBlock COLORED_END_STONE_BRICK_SLAB = new ColoredSlabBlock(COLORED_END_STONE_BRICKS);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.2")
+  @Translucent
+  public static final ColoredNetherPortalBlock COLORED_NETHER_PORTAL = new ColoredNetherPortalBlock(FabricBlockSettings.copyOf(Blocks.NETHER_PORTAL));
 
   @RegisterIdentifier
   public static final ColoredCubeBlock COLORED_LIGHT = new ColoredCubeBlock(WHITE_LIGHT_SETTINGS, "mishanguc:block/colored_cube_all_without_shade", JTextures.ofAll("mishanguc:block/white_light"));

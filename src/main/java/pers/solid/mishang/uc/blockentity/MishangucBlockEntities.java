@@ -2,7 +2,9 @@ package pers.solid.mishang.uc.blockentity;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -17,90 +19,51 @@ import java.util.stream.Stream;
 
 public final class MishangucBlockEntities {
 
-  public static final BlockEntityType<SimpleColoredBlockEntity>
-      SIMPLE_COLORED_BLOCK_ENTITY = Registry.register(
-      Registry.BLOCK_ENTITY_TYPE,
-      new Identifier("mishanguc", "simple_colored_block_entity"),
-      new BlockEntityType<>(
+  public static final BlockEntityType<SimpleColoredBlockEntity> SIMPLE_COLORED_BLOCK_ENTITY = register(
+      "simple_colored_block_entity",
           SimpleColoredBlockEntity::new,
-          Stream.concat(MishangUtils.instanceStream(ColoredBlocks.class, Block.class), MishangUtils.instanceStream(HungSignBlocks.class, ColoredHungSignBarBlock.class))
-              .collect(Collectors.toSet()), null
-      ));
-  public static final BlockEntityType<HungSignBlockEntity>
-      HUNG_SIGN_BLOCK_ENTITY = Registry.register(
-      Registry.BLOCK_ENTITY_TYPE,
-      new Identifier("mishanguc", "hung_sign_block_entity"),
-      new BlockEntityType<>(
-          HungSignBlockEntity::new,
-          MishangUtils.instanceStream(HungSignBlocks.class, HungSignBlock.class)
-              .filter(Predicates.instanceOf(ColoredBlocks.class).negate())
-              .collect(Collectors.toSet()), null
-      ));
+      Stream.concat(
+          MishangUtils.instanceStream(ColoredBlocks.class, Block.class),
+          MishangUtils.instanceStream(HungSignBlocks.class, ColoredHungSignBarBlock.class)));
+  public static final BlockEntityType<HungSignBlockEntity> HUNG_SIGN_BLOCK_ENTITY = register(
+      "hung_sign_block_entity",
+      HungSignBlockEntity::new,
+      MishangUtils.instanceStream(HungSignBlocks.class, HungSignBlock.class)
+          .filter(block -> !(block instanceof ColoredBlock)));
 
-  @Deprecated
-  public static final BlockEntityType<HungSignBlockEntity> HUNG_SIGN_BLOCK_ENTITY_removed = Registry.register(
-      Registry.BLOCK_ENTITY_TYPE,
-      new Identifier("mishanguc", "hung_block_entity"),
-      new BlockEntityType<>(
-          HungSignBlockEntity::new,
-          MishangUtils.instanceStream(HungSignBlocks.class, HungSignBlock.class)
-              .filter(Predicates.instanceOf(ColoredBlocks.class).negate())
-              .collect(Collectors.toSet()), null
-      )
-  );
-
-  public static final BlockEntityType<ColoredHungSignBlockEntity>
-      COLORED_HUNG_SIGN_BLOCK_ENTITY = Registry.register(
-      Registry.BLOCK_ENTITY_TYPE,
-      new Identifier("mishanguc", "colored_hung_sign_block_entity"),
-      new BlockEntityType<>(
+  public static final BlockEntityType<ColoredHungSignBlockEntity> COLORED_HUNG_SIGN_BLOCK_ENTITY = register(
+      "colored_hung_sign_block_entity",
           ColoredHungSignBlockEntity::new,
-          MishangUtils.instanceStream(HungSignBlocks.class, ColoredHungSignBlock.class)
-              .collect(Collectors.toSet()), null
-      ));
+      MishangUtils.instanceStream(HungSignBlocks.class, HungSignBlock.class).filter(block -> block instanceof ColoredBlock));
 
-  public static final BlockEntityType<WallSignBlockEntity>
-      WALL_SIGN_BLOCK_ENTITY = Registry.register(
-      Registry.BLOCK_ENTITY_TYPE,
-      new Identifier("mishanguc", "wall_sign_block_entity"),
-      new BlockEntityType<>(
+  public static final BlockEntityType<WallSignBlockEntity> WALL_SIGN_BLOCK_ENTITY = register(
+      "wall_sign_block_entity",
           WallSignBlockEntity::new,
           MishangUtils.instanceStream(WallSignBlocks.class, Block.class)
-              .filter(block -> !(block instanceof FullWallSignBlock))
-              .collect(Collectors.toSet()),
-          null));
+          .filter(block -> !(block instanceof FullWallSignBlock || block instanceof ColoredBlock)));
 
-  public static final BlockEntityType<FullWallSignBlockEntity>
-      FULL_WALL_SIGN_BLOCK_ENTITY = Registry.register(
-      Registry.BLOCK_ENTITY_TYPE,
-      new Identifier("mishanguc", "full_wall_sign_block_entity"),
-      new BlockEntityType<>(FullWallSignBlockEntity::new, MishangUtils.instanceStream(WallSignBlocks.class, Block.class)
-          .filter(block -> block instanceof FullWallSignBlock)
-          .filter(Predicates.instanceOf(ColoredWallSignBlockEntity.class).negate())
-          .collect(Collectors.toSet()),
-          null));
+  public static final BlockEntityType<FullWallSignBlockEntity> FULL_WALL_SIGN_BLOCK_ENTITY = register(
+      "full_wall_sign_block_entity",
+      FullWallSignBlockEntity::new,
+      MishangUtils.instanceStream(WallSignBlocks.class, FullWallSignBlock.class)
+          .filter(block -> !(block instanceof ColoredBlock)));
 
-  public static final BlockEntityType<ColoredWallSignBlockEntity>
-      COLORED_WALL_SIGN_BLOCK_ENTITY = Registry.register(
-      Registry.BLOCK_ENTITY_TYPE,
-      new Identifier("mishanguc", "colored_wall_sign_block_entity"),
-      new BlockEntityType<>(
+  public static final BlockEntityType<ColoredWallSignBlockEntity> COLORED_WALL_SIGN_BLOCK_ENTITY = register(
+      "colored_wall_sign_block_entity",
           ColoredWallSignBlockEntity::new,
-          MishangUtils.instanceStream(WallSignBlocks.class, ColoredWallSignBlock.class)
-              .collect(Collectors.toSet()),
-          null)
-  );
-
-  @Deprecated
-  public static final BlockEntityType<SimpleColoredBlockEntity> COLORED_HUNG_SIGN_BAR_BLOCK_ENTITY_removed = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("mishanguc", "colored_hung_sign_bar_block_entity"), new BlockEntityType<>(
-      SimpleColoredBlockEntity::new,
-      ImmutableSet.of(HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN_BAR,
-          HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN_BAR), null
-  ));
+      MishangUtils.instanceStream(WallSignBlocks.class, WallSignBlock.class)
+          .filter(block -> block instanceof ColoredBlock));
 
   // 不做事情，但是会初始化类。
   @SuppressWarnings("EmptyMethod")
   public static void init() {
+  }
 
+  private static <T extends BlockEntity> BlockEntityType<T> register(String name, FabricBlockEntityTypeBuilder.Factory<T> factory, Block... blocks) {
+    return Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("mishanguc", name), FabricBlockEntityTypeBuilder.create(factory, blocks).build());
+  }
+
+  private static <T extends BlockEntity> BlockEntityType<T> register(String name, FabricBlockEntityTypeBuilder.Factory<T> factory, Stream<? extends Block> blockStream) {
+    return register(name, factory, blockStream.toArray(Block[]::new));
   }
 }

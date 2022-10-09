@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.google.common.annotations.Beta;
 import net.devtech.arrp.json.loot.JLootTable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -13,13 +12,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.blockentity.ColoredHungSignBlockEntity;
+import pers.solid.mishang.uc.blockentity.ColoredWallSignBlockEntity;
 
 import java.util.List;
 
-@Beta
-public class ColoredHungSignBlock extends HungSignBlock implements ColoredBlock {
-  public ColoredHungSignBlock(@NotNull Block baseBlock) {
+public class ColoredGlowingWallSignBlock extends GlowingWallSignBlock implements ColoredBlock {
+  public ColoredGlowingWallSignBlock(@NotNull Block baseBlock) {
     super(baseBlock);
   }
 
@@ -34,9 +32,10 @@ public class ColoredHungSignBlock extends HungSignBlock implements ColoredBlock 
     ColoredBlock.appendColorTooltip(stack, tooltip);
   }
 
+  @Nullable
   @Override
-  public @NotNull BlockEntity createBlockEntity(BlockView world) {
-    return new ColoredHungSignBlockEntity();
+  public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    return new ColoredWallSignBlockEntity(pos, state);
   }
 
   @Override

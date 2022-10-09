@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.ImmutableMap;
 import net.devtech.arrp.generator.BlockResourceGenerator;
+import net.devtech.arrp.generator.ResourceGeneratorHelper;
 import net.devtech.arrp.json.blockstate.JBlockModel;
 import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.blockstate.JVariants;
@@ -17,6 +18,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.WallMountLocation;
+import net.minecraft.data.client.TextureKey;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -36,7 +38,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -276,8 +277,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   @Environment(EnvType.CLIENT)
   public String getBaseTexture() {
     if (texture != null) return texture;
-    final Identifier id = Registry.BLOCK.getId(baseBlock);
-    return String.format("%s:block/%s", id.getNamespace(), id.getPath());
+    return ResourceGeneratorHelper.getTextureId(baseBlock == null ? this : baseBlock, TextureKey.ALL);
   }
 
   @Override
