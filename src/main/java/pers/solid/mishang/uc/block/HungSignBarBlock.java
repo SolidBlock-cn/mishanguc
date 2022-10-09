@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.block;
 
 import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.generator.BlockResourceGenerator;
+import net.devtech.arrp.generator.ResourceGeneratorHelper;
 import net.devtech.arrp.json.blockstate.JBlockModel;
 import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.blockstate.JMultipart;
@@ -15,6 +16,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
+import net.minecraft.data.client.TextureKey;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -28,7 +30,6 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -74,13 +75,11 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
   public HungSignBarBlock(@Nullable Block baseBlock, Settings settings) {
     super(settings);
     this.baseBlock = baseBlock;
-    this.setDefaultState(
-        this.stateManager
-            .getDefaultState()
-            .with(WATERLOGGED, false)
-            .with(AXIS, Direction.Axis.X)
-            .with(LEFT, true)
-            .with(RIGHT, true));
+    this.setDefaultState(this.stateManager.getDefaultState()
+        .with(WATERLOGGED, false)
+        .with(AXIS, Direction.Axis.X)
+        .with(LEFT, true)
+        .with(RIGHT, true));
   }
 
   @ApiStatus.AvailableSince("0.1.7")
@@ -249,8 +248,7 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
   @Environment(EnvType.CLIENT)
   public String getBaseTexture() {
     if (texture != null) return texture;
-    final Identifier id = Registry.BLOCK.getId(baseBlock);
-    return String.format("%s:block/%s", id.getNamespace(), id.getPath());
+    return ResourceGeneratorHelper.getTextureId(baseBlock == null ? this : baseBlock, TextureKey.ALL);
   }
 
   @Environment(EnvType.CLIENT)

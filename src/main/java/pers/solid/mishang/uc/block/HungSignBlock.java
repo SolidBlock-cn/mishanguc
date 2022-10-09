@@ -1,9 +1,8 @@
 package pers.solid.mishang.uc.block;
 
-import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
-import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.generator.BlockResourceGenerator;
+import net.devtech.arrp.generator.ResourceGeneratorHelper;
 import net.devtech.arrp.json.blockstate.JBlockModel;
 import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.blockstate.JMultipart;
@@ -20,6 +19,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.data.client.TextureKey;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -36,7 +36,6 @@ import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -62,11 +61,6 @@ import java.util.Map;
  * @see HungSignBlockEntityRenderer
  */
 public class HungSignBlock extends Block implements Waterloggable, BlockEntityProvider, BlockResourceGenerator {
-  /**
-   * 由基础方块映射到对应的悬挂告示牌的方块。
-   */
-  @ApiStatus.AvailableSince("0.1.7")
-  public static final Reference2ReferenceMap<Block, HungSignBlock> BASE_TO_HUNG_SIGN = new Reference2ReferenceOpenHashMap<>();
   public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   /**
@@ -116,7 +110,6 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   public HungSignBlock(@Nullable Block baseBlock, Settings settings) {
     super(settings);
     this.baseBlock = baseBlock;
-    this.putToMap();
     this.setDefaultState(
         this.stateManager
             .getDefaultState()
@@ -137,11 +130,6 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     builder.add(AXIS, WATERLOGGED, LEFT, RIGHT);
   }
 
-  @ApiStatus.AvailableSince("0.1.7")
-  protected void putToMap() {
-    BASE_TO_HUNG_SIGN.put(baseBlock, this);
-  }
-
   @Nullable
   @Override
   public BlockState getPlacementState(ItemPlacementContext ctx) {
@@ -154,8 +142,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     final BlockState blockState =
         world.getBlockState(((ItemUsageContextInvoker) ctx).invokeGetHitResult().getBlockPos());
     return placementState
-        .with(
-            AXIS,
+        .with(AXIS,
             blockState.getBlock() instanceof HungSignBlock && blockState.contains(AXIS)
                 ? blockState.get(AXIS)
                 : ctx.getPlayerFacing().getAxis())
@@ -380,8 +367,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   @Environment(EnvType.CLIENT)
   public String getBaseTexture() {
     if (baseTexture != null) return baseTexture;
-    final Identifier id = Registry.BLOCK.getId(baseBlock);
-    return String.format("%s:block/%s", id.getNamespace(), id.getPath());
+    return ResourceGeneratorHelper.getTextureId(baseBlock == null ? this : baseBlock, TextureKey.ALL);
   }
 
   @Environment(EnvType.CLIENT)

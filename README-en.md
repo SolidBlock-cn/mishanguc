@@ -11,7 +11,9 @@ Moreover, the mod contains a series of useful tools, such as:
 
 - Fast building tool: can quickly place multiple blocks on a plane.
 - Force placing tool: places block ignoring placing restrictions and block updates.
+- Tp tool: teleport to any place as you want.
 - ID checking tool, block state tool, data tag tool: query properties or NBT of a block or entity or query the current biome.
+- Explosion tool: click to create an explosion.
 - Rotating or mirroring tool: click on a block to rotate or flip it.
 - ……
 
