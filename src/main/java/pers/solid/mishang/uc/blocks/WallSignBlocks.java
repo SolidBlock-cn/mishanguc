@@ -1,19 +1,13 @@
 package pers.solid.mishang.uc.blocks;
 
+import com.google.common.collect.ImmutableMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.Util;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.Translucent;
-import pers.solid.mishang.uc.block.ColoredWallSignBlock;
-import pers.solid.mishang.uc.block.FullWallSignBlock;
-import pers.solid.mishang.uc.block.GlowingWallSignBlock;
-import pers.solid.mishang.uc.block.WallSignBlock;
-
-import java.util.EnumMap;
-import java.util.Map;
+import pers.solid.mishang.uc.block.*;
 
 /**
  * <h1>墙上的告示牌方块</h1>
@@ -125,27 +119,24 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final WallSignBlock BLACK_CONCRETE_WALL_SIGN =
       new WallSignBlock(Blocks.BLACK_CONCRETE);
 
-  public static final Map<DyeColor, WallSignBlock> CONCRETE_WALL_SIGNS =
-      Util.make(
-          new EnumMap<>(DyeColor.class),
-          map -> {
-            map.put(DyeColor.WHITE, WHITE_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.ORANGE, ORANGE_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.MAGENTA, MAGENTA_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.LIGHT_BLUE, LIGHT_BLUE_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.YELLOW, YELLOW_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.LIME, LIME_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.PINK, PINK_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.GRAY, GRAY_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.LIGHT_GRAY, LIGHT_GRAY_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.CYAN, CYAN_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.PURPLE, PURPLE_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.BLUE, BLUE_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.BROWN, BROWN_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.GREEN, GREEN_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.RED, RED_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.BLACK, BLACK_CONCRETE_WALL_SIGN);
-          });
+  public static final ImmutableMap<DyeColor, WallSignBlock> CONCRETE_WALL_SIGNS = new ImmutableMap.Builder<DyeColor, WallSignBlock>()
+      .put(DyeColor.WHITE, WHITE_CONCRETE_WALL_SIGN)
+      .put(DyeColor.ORANGE, ORANGE_CONCRETE_WALL_SIGN)
+      .put(DyeColor.MAGENTA, MAGENTA_CONCRETE_WALL_SIGN)
+      .put(DyeColor.LIGHT_BLUE, LIGHT_BLUE_CONCRETE_WALL_SIGN)
+      .put(DyeColor.YELLOW, YELLOW_CONCRETE_WALL_SIGN)
+      .put(DyeColor.LIME, LIME_CONCRETE_WALL_SIGN)
+      .put(DyeColor.PINK, PINK_CONCRETE_WALL_SIGN)
+      .put(DyeColor.GRAY, GRAY_CONCRETE_WALL_SIGN)
+      .put(DyeColor.LIGHT_GRAY, LIGHT_GRAY_CONCRETE_WALL_SIGN)
+      .put(DyeColor.CYAN, CYAN_CONCRETE_WALL_SIGN)
+      .put(DyeColor.PURPLE, PURPLE_CONCRETE_WALL_SIGN)
+      .put(DyeColor.BLUE, BLUE_CONCRETE_WALL_SIGN)
+      .put(DyeColor.BROWN, BROWN_CONCRETE_WALL_SIGN)
+      .put(DyeColor.GREEN, GREEN_CONCRETE_WALL_SIGN)
+      .put(DyeColor.RED, RED_CONCRETE_WALL_SIGN)
+      .put(DyeColor.BLACK, BLACK_CONCRETE_WALL_SIGN)
+      .build();
 
   @ApiStatus.AvailableSince("0.2.2")
   @RegisterIdentifier
@@ -217,27 +208,24 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final WallSignBlock BLACK_TERRACOTTA_WALL_SIGN =
       new WallSignBlock(Blocks.BLACK_TERRACOTTA);
 
-  public static final Map<DyeColor, WallSignBlock> TERRACOTTA_WALL_SIGNS =
-      Util.make(
-          new EnumMap<>(DyeColor.class),
-          map -> {
-            map.put(DyeColor.WHITE, WHITE_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.ORANGE, ORANGE_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.MAGENTA, MAGENTA_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.LIGHT_BLUE, LIGHT_BLUE_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.YELLOW, YELLOW_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.LIME, LIME_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.PINK, PINK_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.GRAY, GRAY_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.LIGHT_GRAY, LIGHT_GRAY_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.CYAN, CYAN_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.PURPLE, PURPLE_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.BLUE, BLUE_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.BROWN, BROWN_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.GREEN, GREEN_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.RED, RED_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.BLACK, BLACK_TERRACOTTA_WALL_SIGN);
-          });
+  public static final ImmutableMap<DyeColor, WallSignBlock> TERRACOTTA_WALL_SIGNS = new ImmutableMap.Builder<DyeColor, WallSignBlock>()
+      .put(DyeColor.WHITE, WHITE_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.ORANGE, ORANGE_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.MAGENTA, MAGENTA_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.LIGHT_BLUE, LIGHT_BLUE_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.YELLOW, YELLOW_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.LIME, LIME_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.PINK, PINK_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.GRAY, GRAY_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.LIGHT_GRAY, LIGHT_GRAY_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.CYAN, CYAN_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.PURPLE, PURPLE_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.BLUE, BLUE_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.BROWN, BROWN_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.GREEN, GREEN_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.RED, RED_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.BLACK, BLACK_TERRACOTTA_WALL_SIGN)
+      .build();
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.2.2")
@@ -309,27 +297,28 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final GlowingWallSignBlock GLOWING_BLACK_CONCRETE_WALL_SIGN =
       new GlowingWallSignBlock(Blocks.BLACK_CONCRETE);
 
-  public static final Map<DyeColor, GlowingWallSignBlock> GLOWING_CONCRETE_WALL_SIGNS =
-      Util.make(
-          new EnumMap<>(DyeColor.class),
-          map -> {
-            map.put(DyeColor.WHITE, GLOWING_WHITE_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.ORANGE, GLOWING_ORANGE_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.MAGENTA, GLOWING_MAGENTA_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.LIGHT_BLUE, GLOWING_LIGHT_BLUE_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.YELLOW, GLOWING_YELLOW_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.LIME, GLOWING_LIME_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.PINK, GLOWING_PINK_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.GRAY, GLOWING_GRAY_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.LIGHT_GRAY, GLOWING_LIGHT_GRAY_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.CYAN, GLOWING_CYAN_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.PURPLE, GLOWING_PURPLE_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.BLUE, GLOWING_BLUE_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.BROWN, GLOWING_BROWN_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.GREEN, GLOWING_GREEN_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.RED, GLOWING_RED_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.BLACK, GLOWING_BLACK_CONCRETE_WALL_SIGN);
-          });
+  public static final ImmutableMap<DyeColor, GlowingWallSignBlock> GLOWING_CONCRETE_WALL_SIGNS = new ImmutableMap.Builder<DyeColor, GlowingWallSignBlock>()
+      .put(DyeColor.WHITE, GLOWING_WHITE_CONCRETE_WALL_SIGN)
+      .put(DyeColor.ORANGE, GLOWING_ORANGE_CONCRETE_WALL_SIGN)
+      .put(DyeColor.MAGENTA, GLOWING_MAGENTA_CONCRETE_WALL_SIGN)
+      .put(DyeColor.LIGHT_BLUE, GLOWING_LIGHT_BLUE_CONCRETE_WALL_SIGN)
+      .put(DyeColor.YELLOW, GLOWING_YELLOW_CONCRETE_WALL_SIGN)
+      .put(DyeColor.LIME, GLOWING_LIME_CONCRETE_WALL_SIGN)
+      .put(DyeColor.PINK, GLOWING_PINK_CONCRETE_WALL_SIGN)
+      .put(DyeColor.GRAY, GLOWING_GRAY_CONCRETE_WALL_SIGN)
+      .put(DyeColor.LIGHT_GRAY, GLOWING_LIGHT_GRAY_CONCRETE_WALL_SIGN)
+      .put(DyeColor.CYAN, GLOWING_CYAN_CONCRETE_WALL_SIGN)
+      .put(DyeColor.PURPLE, GLOWING_PURPLE_CONCRETE_WALL_SIGN)
+      .put(DyeColor.BLUE, GLOWING_BLUE_CONCRETE_WALL_SIGN)
+      .put(DyeColor.BROWN, GLOWING_BROWN_CONCRETE_WALL_SIGN)
+      .put(DyeColor.GREEN, GLOWING_GREEN_CONCRETE_WALL_SIGN)
+      .put(DyeColor.RED, GLOWING_RED_CONCRETE_WALL_SIGN)
+      .put(DyeColor.BLACK, GLOWING_BLACK_CONCRETE_WALL_SIGN)
+      .build();
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.2")
+  public static final ColoredGlowingWallSignBlock COLORED_GLOWING_CONCRETE_WALL_SIGN = new ColoredGlowingWallSignBlock(ColoredBlocks.COLORED_CONCRETE);
 
   // 发光的陶瓦
 
@@ -397,27 +386,28 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final GlowingWallSignBlock GLOWING_BLACK_TERRACOTTA_WALL_SIGN =
       new GlowingWallSignBlock(Blocks.BLACK_TERRACOTTA);
 
-  public static final Map<DyeColor, GlowingWallSignBlock> GLOWING_TERRACOTTA_WALL_SIGNS =
-      Util.make(
-          new EnumMap<>(DyeColor.class),
-          map -> {
-            map.put(DyeColor.WHITE, GLOWING_WHITE_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.ORANGE, GLOWING_ORANGE_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.MAGENTA, GLOWING_MAGENTA_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.LIGHT_BLUE, GLOWING_LIGHT_BLUE_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.YELLOW, GLOWING_YELLOW_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.LIME, GLOWING_LIME_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.PINK, GLOWING_PINK_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.GRAY, GLOWING_GRAY_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.LIGHT_GRAY, GLOWING_LIGHT_GRAY_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.CYAN, GLOWING_CYAN_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.PURPLE, GLOWING_PURPLE_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.BLUE, GLOWING_BLUE_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.BROWN, GLOWING_BROWN_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.GREEN, GLOWING_GREEN_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.RED, GLOWING_RED_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.BLACK, GLOWING_BLACK_TERRACOTTA_WALL_SIGN);
-          });
+  public static final ImmutableMap<DyeColor, GlowingWallSignBlock> GLOWING_TERRACOTTA_WALL_SIGNS = new ImmutableMap.Builder<DyeColor, GlowingWallSignBlock>()
+      .put(DyeColor.WHITE, GLOWING_WHITE_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.ORANGE, GLOWING_ORANGE_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.MAGENTA, GLOWING_MAGENTA_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.LIGHT_BLUE, GLOWING_LIGHT_BLUE_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.YELLOW, GLOWING_YELLOW_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.LIME, GLOWING_LIME_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.PINK, GLOWING_PINK_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.GRAY, GLOWING_GRAY_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.LIGHT_GRAY, GLOWING_LIGHT_GRAY_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.CYAN, GLOWING_CYAN_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.PURPLE, GLOWING_PURPLE_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.BLUE, GLOWING_BLUE_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.BROWN, GLOWING_BROWN_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.GREEN, GLOWING_GREEN_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.RED, GLOWING_RED_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.BLACK, GLOWING_BLACK_TERRACOTTA_WALL_SIGN)
+      .build();
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.2")
+  public static final ColoredGlowingWallSignBlock COLORED_COLORED_TERRACOTTA_WALL_SIGN = new ColoredGlowingWallSignBlock(ColoredBlocks.COLORED_TERRACOTTA);
 
   // 一些比较杂项的
   /// 石头
@@ -427,6 +417,12 @@ public final class WallSignBlocks extends MishangucBlocks {
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
   public static final GlowingWallSignBlock GLOWING_STONE_WALL_SIGN = new GlowingWallSignBlock(Blocks.STONE);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.2")
+  public static final ColoredWallSignBlock COLORED_STONE_WALL_SIGN = new ColoredWallSignBlock(ColoredBlocks.COLORED_STONE);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.2")
+  public static final ColoredGlowingWallSignBlock COLORED_GLOWING_STONE_WALL_SIGN = new ColoredGlowingWallSignBlock(ColoredBlocks.COLORED_STONE);
   /// 圆石
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.2.4")
@@ -434,6 +430,12 @@ public final class WallSignBlocks extends MishangucBlocks {
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.2.4")
   public static final GlowingWallSignBlock GLOWING_COBBLESTONE_WALL_SIGN = new GlowingWallSignBlock(Blocks.COBBLESTONE);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.2")
+  public static final ColoredWallSignBlock COLORED_COBBLESTONE_WALL_SIGN = new ColoredWallSignBlock(ColoredBlocks.COLORED_COBBLESTONE);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.2")
+  public static final ColoredGlowingWallSignBlock COLORED_GLOWING_COBBLESTONE_WALL_SIGN = new ColoredGlowingWallSignBlock(ColoredBlocks.COLORED_COBBLESTONE);
   /// 石砖
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
@@ -441,6 +443,12 @@ public final class WallSignBlocks extends MishangucBlocks {
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
   public static final GlowingWallSignBlock GLOWING_STONE_BRICK_WALL_SIGN = new GlowingWallSignBlock(Blocks.STONE_BRICKS);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.2")
+  public static final ColoredWallSignBlock COLORED_STONE_BRICK_WALL_SIGN = new ColoredWallSignBlock(ColoredBlocks.COLORED_STONE_BRICKS);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.2")
+  public static final ColoredGlowingWallSignBlock COLORED_GLOWING_STONE_BRICK_WALL_SIGN = new ColoredGlowingWallSignBlock(ColoredBlocks.COLORED_STONE_BRICKS);
   // 铁块
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
@@ -448,6 +456,12 @@ public final class WallSignBlocks extends MishangucBlocks {
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
   public static final GlowingWallSignBlock GLOWING_IRON_WALL_SIGN = new GlowingWallSignBlock(Blocks.IRON_BLOCK);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.2")
+  public static final ColoredWallSignBlock COLORED_IRON_WALL_SIGN = new ColoredWallSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.2")
+  public static final ColoredGlowingWallSignBlock COLORED_GLOWING_IRON_WALL_SIGN = new ColoredGlowingWallSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
   // 金块
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
@@ -559,9 +573,6 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final GlowingWallSignBlock GLOWING_BLUE_ICE_WALL_SIGN = new GlowingWallSignBlock(Blocks.BLUE_ICE);
 
   static {
-    COLORED_WOODEN_WALL_SIGN.texture = "mishanguc:block/pale_planks";
-    COLORED_TERRACOTTA_WALL_SIGN.texture = "block/white_terracotta";
-    COLORED_CONCRETE_WALL_SIGN.texture = "block/white_concrete";
     SNOW_WALL_SIGN.texture = "block/snow";
     GLOWING_SNOW_WALL_SIGN.texture = "block/snow";
   }
@@ -632,27 +643,24 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final FullWallSignBlock FULL_BLACK_CONCRETE_WALL_SIGN =
       new FullWallSignBlock(Blocks.BLACK_CONCRETE);
 
-  public static final Map<DyeColor, FullWallSignBlock> FULL_CONCRETE_WALL_SIGNS =
-      Util.make(
-          new EnumMap<>(DyeColor.class),
-          map -> {
-            map.put(DyeColor.WHITE, FULL_WHITE_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.ORANGE, FULL_ORANGE_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.MAGENTA, FULL_MAGENTA_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.LIGHT_BLUE, FULL_LIGHT_BLUE_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.YELLOW, FULL_YELLOW_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.LIME, FULL_LIME_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.PINK, FULL_PINK_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.GRAY, FULL_GRAY_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.LIGHT_GRAY, FULL_LIGHT_GRAY_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.CYAN, FULL_CYAN_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.PURPLE, FULL_PURPLE_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.BLUE, FULL_BLUE_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.BROWN, FULL_BROWN_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.GREEN, FULL_GREEN_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.RED, FULL_RED_CONCRETE_WALL_SIGN);
-            map.put(DyeColor.BLACK, FULL_BLACK_CONCRETE_WALL_SIGN);
-          });
+  public static final ImmutableMap<DyeColor, FullWallSignBlock> FULL_CONCRETE_WALL_SIGNS = new ImmutableMap.Builder<DyeColor, FullWallSignBlock>()
+      .put(DyeColor.WHITE, FULL_WHITE_CONCRETE_WALL_SIGN)
+      .put(DyeColor.ORANGE, FULL_ORANGE_CONCRETE_WALL_SIGN)
+      .put(DyeColor.MAGENTA, FULL_MAGENTA_CONCRETE_WALL_SIGN)
+      .put(DyeColor.LIGHT_BLUE, FULL_LIGHT_BLUE_CONCRETE_WALL_SIGN)
+      .put(DyeColor.YELLOW, FULL_YELLOW_CONCRETE_WALL_SIGN)
+      .put(DyeColor.LIME, FULL_LIME_CONCRETE_WALL_SIGN)
+      .put(DyeColor.PINK, FULL_PINK_CONCRETE_WALL_SIGN)
+      .put(DyeColor.GRAY, FULL_GRAY_CONCRETE_WALL_SIGN)
+      .put(DyeColor.LIGHT_GRAY, FULL_LIGHT_GRAY_CONCRETE_WALL_SIGN)
+      .put(DyeColor.CYAN, FULL_CYAN_CONCRETE_WALL_SIGN)
+      .put(DyeColor.PURPLE, FULL_PURPLE_CONCRETE_WALL_SIGN)
+      .put(DyeColor.BLUE, FULL_BLUE_CONCRETE_WALL_SIGN)
+      .put(DyeColor.BROWN, FULL_BROWN_CONCRETE_WALL_SIGN)
+      .put(DyeColor.GREEN, FULL_GREEN_CONCRETE_WALL_SIGN)
+      .put(DyeColor.RED, FULL_RED_CONCRETE_WALL_SIGN)
+      .put(DyeColor.BLACK, FULL_BLACK_CONCRETE_WALL_SIGN)
+      .build();
 
   // 完整的陶瓦
 
@@ -720,27 +728,24 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final FullWallSignBlock FULL_BLACK_TERRACOTTA_WALL_SIGN =
       new FullWallSignBlock(Blocks.BLACK_TERRACOTTA);
 
-  public static final Map<DyeColor, FullWallSignBlock> FULL_TERRACOTTA_WALL_SIGNS =
-      Util.make(
-          new EnumMap<>(DyeColor.class),
-          map -> {
-            map.put(DyeColor.WHITE, FULL_WHITE_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.ORANGE, FULL_ORANGE_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.MAGENTA, FULL_MAGENTA_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.LIGHT_BLUE, FULL_LIGHT_BLUE_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.YELLOW, FULL_YELLOW_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.LIME, FULL_LIME_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.PINK, FULL_PINK_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.GRAY, FULL_GRAY_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.LIGHT_GRAY, FULL_LIGHT_GRAY_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.CYAN, FULL_CYAN_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.PURPLE, FULL_PURPLE_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.BLUE, FULL_BLUE_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.BROWN, FULL_BROWN_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.GREEN, FULL_GREEN_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.RED, FULL_RED_TERRACOTTA_WALL_SIGN);
-            map.put(DyeColor.BLACK, FULL_BLACK_TERRACOTTA_WALL_SIGN);
-          });
+  public static final ImmutableMap<DyeColor, FullWallSignBlock> FULL_TERRACOTTA_WALL_SIGNS = new ImmutableMap.Builder<DyeColor, FullWallSignBlock>()
+      .put(DyeColor.WHITE, FULL_WHITE_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.ORANGE, FULL_ORANGE_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.MAGENTA, FULL_MAGENTA_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.LIGHT_BLUE, FULL_LIGHT_BLUE_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.YELLOW, FULL_YELLOW_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.LIME, FULL_LIME_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.PINK, FULL_PINK_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.GRAY, FULL_GRAY_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.LIGHT_GRAY, FULL_LIGHT_GRAY_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.CYAN, FULL_CYAN_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.PURPLE, FULL_PURPLE_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.BLUE, FULL_BLUE_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.BROWN, FULL_BROWN_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.GREEN, FULL_GREEN_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.RED, FULL_RED_TERRACOTTA_WALL_SIGN)
+      .put(DyeColor.BLACK, FULL_BLACK_TERRACOTTA_WALL_SIGN)
+      .build();
 
   /**
    * 隐形的告示牌。

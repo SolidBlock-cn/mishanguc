@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
-import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
@@ -20,11 +18,6 @@ import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.util.TextBridge;
 
 public class GlowingHungSignBlock extends HungSignBlock {
-  /**
-   * 由基础方块映射到对应的发光悬挂告示牌的方块。
-   */
-  @ApiStatus.AvailableSince("0.1.7")
-  public static final Reference2ReferenceMap<Block, HungSignBlock> BASE_TO_GLOWING_HUNG_SIGN = new Reference2ReferenceOpenHashMap<>();
   @ApiStatus.AvailableSince("0.1.7")
   protected static final String DEFAULT_GLOW_TEXTURE = "mishanguc:block/white_light";
   public String glowTexture;
@@ -37,11 +30,6 @@ public class GlowingHungSignBlock extends HungSignBlock {
   @ApiStatus.AvailableSince("0.1.7")
   public GlowingHungSignBlock(@NotNull Block baseBlock) {
     this(baseBlock, FabricBlockSettings.copyOf(baseBlock).luminance(15));
-  }
-
-  @Override
-  protected void putToMap() {
-    BASE_TO_GLOWING_HUNG_SIGN.put(baseBlock, this);
   }
 
   @Override
