@@ -345,6 +345,11 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(Blocks.QUARTZ_PILLAR, ColoredBlocks.COLORED_QUARTZ_PILLAR);
     blockMap.put(Blocks.PURPUR_BLOCK, ColoredBlocks.COLORED_PURPUR_BLOCK);
     blockMap.put(Blocks.PURPUR_PILLAR, ColoredBlocks.COLORED_PURPUR_PILLAR);
+    blockMap.put(Blocks.END_STONE, ColoredBlocks.COLORED_END_STONE);
+    blockMap.put(Blocks.END_STONE_BRICKS, ColoredBlocks.COLORED_END_STONE_BRICKS);
+    blockMap.put(Blocks.END_STONE_BRICK_STAIRS, ColoredBlocks.COLORED_END_STONE_BRICK_STAIRS);
+    blockMap.put(Blocks.END_STONE_BRICK_SLAB, ColoredBlocks.COLORED_END_STONE_BRICK_SLAB);
+    blockMap.put(Blocks.NETHER_PORTAL, ColoredBlocks.COLORED_NETHER_PORTAL);
     blockMap.put(LightBlocks.WHITE_LIGHT, ColoredBlocks.COLORED_LIGHT);
     blockMap.put(LightBlocks.YELLOW_LIGHT, ColoredBlocks.COLORED_LIGHT);
     blockMap.put(LightBlocks.CYAN_LIGHT, ColoredBlocks.COLORED_LIGHT);
@@ -387,12 +392,37 @@ public class Mishanguc implements ModInitializer {
     }
 
     tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "concrete_hung_signs")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN);
+    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "glowing_concrete_hung_signs")), HungSignBlocks.COLORED_GLOWING_CONCRETE_HUNG_SIGN);
     tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "concrete_hung_sign_bars")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN_BAR);
     tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "terracotta_hung_signs")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "terracotta_hung_sign_bars")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN);
+    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "glowing_terracotta_hung_signs")), HungSignBlocks.COLORED_GLOWING_TERRACOTTA_HUNG_SIGN);
+    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "terracotta_hung_sign_bars")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN_BAR);
+
+    blockMap.put(HungSignBlocks.STONE_HUNG_SIGN, HungSignBlocks.COLORED_STONE_HUNG_SIGN);
+    blockMap.put(HungSignBlocks.GLOWING_STONE_HUNG_SIGN, HungSignBlocks.COLORED_GLOWING_STONE_HUNG_SIGN);
+    blockMap.put(HungSignBlocks.STONE_HUNG_SIGN_BAR, HungSignBlocks.COLORED_STONE_HUNG_SIGN_BAR);
+    blockMap.put(HungSignBlocks.COBBLESTONE_HUNG_SIGN, HungSignBlocks.COLORED_COBBLESTONE_HUNG_SIGN);
+    blockMap.put(HungSignBlocks.GLOWING_COBBLESTONE_HUNG_SIGN, HungSignBlocks.COLORED_GLOWING_COBBLESTONE_HUNG_SIGN);
+    blockMap.put(HungSignBlocks.COBBLESTONE_HUNG_SIGN_BAR, HungSignBlocks.COLORED_COBBLESTONE_HUNG_SIGN_BAR);
+    blockMap.put(HungSignBlocks.STONE_BRICK_HUNG_SIGN, HungSignBlocks.COLORED_STONE_BRICK_HUNG_SIGN);
+    blockMap.put(HungSignBlocks.GLOWING_STONE_BRICK_HUNG_SIGN, HungSignBlocks.COLORED_GLOWING_STONE_BRICK_HUNG_SIGN);
+    blockMap.put(HungSignBlocks.STONE_BRICK_HUNG_SIGN_BAR, HungSignBlocks.COLORED_STONE_BRICK_HUNG_SIGN_BAR);
+    blockMap.put(HungSignBlocks.IRON_HUNG_SIGN, HungSignBlocks.COLORED_IRON_HUNG_SIGN);
+    blockMap.put(HungSignBlocks.GLOWING_IRON_HUNG_SIGN, HungSignBlocks.COLORED_GLOWING_IRON_HUNG_SIGN);
+    blockMap.put(HungSignBlocks.IRON_HUNG_SIGN_BAR, HungSignBlocks.COLORED_IRON_HUNG_SIGN_BAR);
+
     tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "wooden_wall_signs")), WallSignBlocks.COLORED_WOODEN_WALL_SIGN);
     tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "concrete_wall_signs")), WallSignBlocks.COLORED_CONCRETE_WALL_SIGN);
     tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "terracotta_wall_signs")), WallSignBlocks.COLORED_TERRACOTTA_WALL_SIGN);
+
+    blockMap.put(WallSignBlocks.STONE_WALL_SIGN, WallSignBlocks.COLORED_STONE_WALL_SIGN);
+    blockMap.put(WallSignBlocks.GLOWING_STONE_WALL_SIGN, WallSignBlocks.COLORED_GLOWING_STONE_WALL_SIGN);
+    blockMap.put(WallSignBlocks.COBBLESTONE_WALL_SIGN, WallSignBlocks.COLORED_COBBLESTONE_WALL_SIGN);
+    blockMap.put(WallSignBlocks.GLOWING_COBBLESTONE_WALL_SIGN, WallSignBlocks.COLORED_GLOWING_COBBLESTONE_WALL_SIGN);
+    blockMap.put(WallSignBlocks.STONE_BRICK_WALL_SIGN, WallSignBlocks.COLORED_STONE_BRICK_WALL_SIGN);
+    blockMap.put(WallSignBlocks.GLOWING_STONE_BRICK_WALL_SIGN, WallSignBlocks.COLORED_GLOWING_STONE_BRICK_WALL_SIGN);
+    blockMap.put(WallSignBlocks.IRON_WALL_SIGN, WallSignBlocks.COLORED_IRON_WALL_SIGN);
+    blockMap.put(WallSignBlocks.GLOWING_IRON_WALL_SIGN, WallSignBlocks.COLORED_GLOWING_IRON_WALL_SIGN);
   }
 
   @Override
