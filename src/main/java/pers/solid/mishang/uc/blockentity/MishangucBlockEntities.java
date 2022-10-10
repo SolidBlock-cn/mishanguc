@@ -10,6 +10,7 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.blocks.ColoredBlocks;
 import pers.solid.mishang.uc.blocks.HungSignBlocks;
+import pers.solid.mishang.uc.blocks.StandingSignBlocks;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 
 import java.util.stream.Stream;
@@ -49,6 +50,18 @@ public final class MishangucBlockEntities {
       "colored_wall_sign_block_entity",
       ColoredWallSignBlockEntity::new,
       MishangUtils.instanceStream(WallSignBlocks.class, WallSignBlock.class)
+          .filter(block -> block instanceof ColoredBlock));
+
+  public static final BlockEntityType<StandingSignBlockEntity> STANDING_SIGN_BLOCK_ENTITY = register(
+      "standing_sign_block_entity",
+      StandingSignBlockEntity::new,
+      MishangUtils.instanceStream(StandingSignBlocks.class, StandingSignBlock.class)
+          .filter(block -> !(block instanceof ColoredBlock)));
+
+  public static final BlockEntityType<ColoredStandingSignBlockEntity> COLORED_STANDING_SIGN_BLOCK_ENTITY = register(
+      "colored_standing_sign_block_entity",
+      ColoredStandingSignBlockEntity::new,
+      MishangUtils.instanceStream(StandingSignBlocks.class, StandingSignBlock.class)
           .filter(block -> block instanceof ColoredBlock));
 
   // 不做事情，但是会初始化类。
