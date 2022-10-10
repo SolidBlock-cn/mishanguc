@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.apache.commons.lang3.BooleanUtils;
@@ -114,8 +115,8 @@ public class MishangucClient implements ClientModInitializer {
               client.execute(() ->
                   client.setScreen(new WallSignBlockEditScreen(wallSignBlockEntity, blockPos)));
             } else if (blockEntity instanceof final StandingSignBlockEntity standingSignBlockEntity) {
-              final Direction direction = buf.readEnumConstant(Direction.class);
-              final Boolean isFront = StandingSignBlock.getIsFront(blockEntity.getCachedState(), direction);
+              final BlockHitResult blockHitResult = buf.readBlockHitResult();
+              final Boolean isFront = StandingSignBlock.getHitSide(blockEntity.getCachedState(), blockHitResult);
               if (isFront != null) {
                 client.execute(() -> {
                   client.setScreen(new StandingSignBlockEditScreen(standingSignBlockEntity, blockPos, isFront));

@@ -20,7 +20,6 @@ import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 类似于一般的方块物品，但是会读取 BlockEntityTag 中的内容来显示文字。
@@ -62,12 +61,10 @@ public class WallSignBlockItem extends NamedBlockItem {
     super.appendTooltip(stack, world, tooltip, context);
     final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
     if (nbt == null) return;
-    final List<MutableText> texts =
-        ImmutableList.copyOf(
-            getTextContextsFromNbt(nbt).stream()
-                .map(TextContext::asStyledText)
-                .filter(Objects::nonNull)
-                .iterator());
+    final List<MutableText> texts = ImmutableList.copyOf(
+        getTextContextsFromNbt(nbt).stream()
+            .map(TextContext::asStyledText)
+            .iterator());
     if (!texts.isEmpty()) {
       tooltip.add(
           TextBridge.translatable("block.mishanguc.tooltip.wall_sign_block")
@@ -81,14 +78,13 @@ public class WallSignBlockItem extends NamedBlockItem {
     final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
     if (nbt == null) return super.getName(stack);
     final MutableText text = super.getName(stack).copy();
-    final List<MutableText> texts =
-        ImmutableList.copyOf(
-            getTextContextsFromNbt(nbt).stream()
-                .map(TextContext::asStyledText)
-                .filter(Objects::nonNull)
-                .iterator());
+    final List<MutableText> texts = ImmutableList.copyOf(
+        getTextContextsFromNbt(nbt).stream()
+            .map(TextContext::asStyledText)
+            .limit(20)
+            .iterator());
     if (!texts.isEmpty()) {
-      MutableText appendable = TextBridge.literal("");
+      MutableText appendable = TextBridge.empty();
       texts.forEach(t -> appendable.append(" ").append(t));
       text.append(
           TextBridge.literal(" -" + appendable.asTruncatedString(25)).formatted(Formatting.GRAY));
