@@ -131,6 +131,14 @@
 
   "block.mishanguc.tooltip.hung_sign_block": "Text on the %s side:",
   "block.mishanguc.tooltip.wall_sign_block": "Texts:",
+  "block.mishanguc.tooltip.standing_sign_block_front": "Texts on front side:",
+  "block.mishanguc.tooltip.standing_sign_block_back": "Texts on back side:",
+  "block.mishanguc.hung_sign.tooltip.1": "Can be written texts on both sides.",
+  "block.mishanguc.hung_sign.tooltip.2": "Usually placed below ceiling or sign bars.",
+  "block.mishanguc.wall_sign.tooltip.1": "Click to write texts on it.",
+  "block.mishanguc.wall_sign.tooltip.2": "Can be placed on wall, ceiling or floor.",
+  "block.mishanguc.standing_sign.tooltip.1": "Can be written texts on both sides.",
+  "block.mishanguc.standing_sign.tooltip.2": "Click when sneaking to toggle the display of post.",
 
   "block.mishanguc.white_light": "White Light",
   "block.mishanguc.white_small_wall_light_tube": "White Small Wall Light Tube",

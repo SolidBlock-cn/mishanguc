@@ -102,7 +102,7 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
 
   @Override
   public TextContext getDefaultTextContext() {
-    return DEFAULT_TEXT_CONTEXT;
+    return DEFAULT_TEXT_CONTEXT.clone();
   }
 
   @Override
