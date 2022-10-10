@@ -446,6 +446,18 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   @Environment(EnvType.CLIENT)
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    return direction.getAxis().isHorizontal() && state.getBlock() instanceof HungSignBlock && stateFrom.getBlock() instanceof HungSignBlock && state.get(AXIS) == stateFrom.get(AXIS) && direction.getAxis() != state.get(AXIS);
+    if (direction.getAxis().isHorizontal() && state.getBlock() instanceof HungSignBlock && stateFrom.getBlock() instanceof HungSignBlock hungSignBlockFrom && state.get(AXIS) == stateFrom.get(AXIS) && direction.getAxis() != state.get(AXIS)) {
+      if (hungSignBlockFrom.baseBlock instanceof TransparentBlock) {
+        if (baseBlock instanceof TransparentBlock) {
+          // 自身和相邻方块都为透明方块，则双方均为同一方块时隐藏。
+          return baseBlock == hungSignBlockFrom.baseBlock;
+        } else {
+          return false;
+        }
+      }
+      return true;
+    } else {
+      return super.isSideInvisible(state, stateFrom, direction);
+    }
   }
 }

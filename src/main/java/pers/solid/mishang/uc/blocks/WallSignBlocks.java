@@ -757,4 +757,7 @@ public final class WallSignBlocks extends MishangucBlocks {
 
   @RegisterIdentifier
   public static final FullWallSignBlock INVISIBLE_GLOWING_WALL_SIGN = new FullWallSignBlock(null, FabricBlockSettings.copyOf(Blocks.BARRIER).noCollision().luminance(15));
+
+  private WallSignBlocks() {
+  }
 }

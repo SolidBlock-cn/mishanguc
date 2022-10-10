@@ -127,6 +127,7 @@ public class MishangucBlocks {
     registerAll(LightBlocks.class, MishangucItemGroups.LIGHTS);
     registerAll(HungSignBlocks.class, MishangucItemGroups.SIGNS);
     registerAll(WallSignBlocks.class, MishangucItemGroups.SIGNS);
+    registerAll(StandingSignBlocks.class, MishangucItemGroups.SIGNS);
     registerAll(HandrailBlocks.class, MishangucItemGroups.DECORATIONS);
     registerAll(ColoredBlocks.class, MishangucItemGroups.COLORED_BLOCKS);
   }

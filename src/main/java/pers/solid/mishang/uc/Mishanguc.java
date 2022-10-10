@@ -107,7 +107,16 @@ public class Mishanguc implements ModInitializer {
         WallSignBlocks.JUNGLE_WALL_SIGN,
         WallSignBlocks.ACACIA_WALL_SIGN,
         WallSignBlocks.DARK_OAK_WALL_SIGN,
-        WallSignBlocks.COLORED_WOODEN_WALL_SIGN
+        WallSignBlocks.COLORED_WOODEN_WALL_SIGN,
+        StandingSignBlocks.OAK_STANDING_SIGN,
+        StandingSignBlocks.SPRUCE_STANDING_SIGN,
+        StandingSignBlocks.BIRCH_STANDING_SIGN,
+        StandingSignBlocks.ACACIA_STANDING_SIGN,
+        StandingSignBlocks.JUNGLE_STANDING_SIGN,
+        StandingSignBlocks.DARK_OAK_STANDING_SIGN,
+        StandingSignBlocks.CRIMSON_STANDING_SIGN,
+        StandingSignBlocks.WARPED_STANDING_SIGN,
+        StandingSignBlocks.MANGROVE_STANDING_SIGN,
     };
     for (Block block : woodenBlocks) {
       flammableBlockRegistry.add(block, 5, 20);
@@ -404,6 +413,10 @@ public class Mishanguc implements ModInitializer {
     tagMap.put(TagRegistry.block(new Identifier("mishanguc", "terracotta_hung_signs")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN);
     tagMap.put(TagRegistry.block(new Identifier("mishanguc", "glowing_terracotta_hung_signs")), HungSignBlocks.COLORED_GLOWING_TERRACOTTA_HUNG_SIGN);
     tagMap.put(TagRegistry.block(new Identifier("mishanguc", "terracotta_hung_sign_bars")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN_BAR);
+    tagMap.put(TagRegistry.block(new Identifier("mishanguc", "concrete_standing_signs")), StandingSignBlocks.COLORED_CONCRETE_STANDING_SIGN);
+    tagMap.put(TagRegistry.block(new Identifier("mishanguc", "terracotta_standing_signs")), StandingSignBlocks.COLORED_TERRACOTTA_STANDING_SIGN);
+    tagMap.put(TagRegistry.block(new Identifier("mishanguc", "glowing_concrete_standing_signs")), StandingSignBlocks.COLORED_GLOWING_CONCRETE_STANDING_SIGN);
+    tagMap.put(TagRegistry.block(new Identifier("mishanguc", "glowing_terracotta_standing_signs")), StandingSignBlocks.COLORED_GLOWING_TERRACOTTA_STANDING_SIGN);
 
     blockMap.put(HungSignBlocks.STONE_HUNG_SIGN, HungSignBlocks.COLORED_STONE_HUNG_SIGN);
     blockMap.put(HungSignBlocks.GLOWING_STONE_HUNG_SIGN, HungSignBlocks.COLORED_GLOWING_STONE_HUNG_SIGN);

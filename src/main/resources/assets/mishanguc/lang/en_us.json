@@ -193,6 +193,8 @@
   "block.mishanguc.wall_sign": "%s Wall Sign",
   "block.mishanguc.glowing_wall_sign": "Glowing %s Wall Sign",
   "block.mishanguc.full_wall_sign": "Full %s Wall Sign",
+  "block.mishanguc.standing_sign": "%s Standing Sign",
+  "block.mishanguc.glowing_standing_sign": "Glowing %s Standing Sign",
   "block.mishanguc.invisible_wall_sign": "Invisible Wall Sign",
   "block.mishanguc.invisible_glowing_wall_sign": "Invisible Glowing Wall Sign",
 

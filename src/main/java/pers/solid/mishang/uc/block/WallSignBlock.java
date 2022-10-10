@@ -60,6 +60,7 @@ import java.util.Map;
  * 与 Minecraft 原版的 {@link net.minecraft.block.WallSignBlock} 不同，这里的 {@code WallSignBlock}
  * 更加强大，可以编辑，且可以放在地上或者天花板上。
  *
+ * @see WallSignBlocks
  * @see WallSignBlockEntity
  * @see WallSignBlockEntityRenderer
  */
@@ -300,6 +301,18 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   @Environment(EnvType.CLIENT)
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    return direction.getAxis().isHorizontal() && state.getBlock() instanceof WallSignBlock && stateFrom.getBlock() instanceof WallSignBlock && state.get(FACING) == stateFrom.get(FACING) && direction.getAxis() != state.get(FACING).getAxis();
+    if (direction.getAxis().isHorizontal() && state.getBlock() instanceof WallSignBlock && stateFrom.getBlock() instanceof WallSignBlock wallSignBlockFrom && state.get(FACING) == stateFrom.get(FACING) && direction.getAxis() != state.get(FACING).getAxis()) {
+      if (wallSignBlockFrom.baseBlock instanceof TransparentBlock) {
+        if (baseBlock instanceof TransparentBlock) {
+          // 自身和相邻方块都为透明方块，则双方均为同一方块时隐藏。
+          return baseBlock == wallSignBlockFrom.baseBlock;
+        } else {
+          return false;
+        }
+      }
+      return true;
+    } else {
+      return super.isSideInvisible(state, stateFrom, direction);
+    }
   }
 }
