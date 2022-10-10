@@ -14,9 +14,11 @@ import pers.solid.mishang.uc.MishangucItemGroups;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.HungSignBlock;
+import pers.solid.mishang.uc.block.StandingSignBlock;
 import pers.solid.mishang.uc.block.WallSignBlock;
 import pers.solid.mishang.uc.item.HungSignBlockItem;
 import pers.solid.mishang.uc.item.NamedBlockItem;
+import pers.solid.mishang.uc.item.StandingSignBlockItem;
 import pers.solid.mishang.uc.item.WallSignBlockItem;
 
 import java.lang.reflect.Field;
@@ -110,6 +112,8 @@ public class MishangucBlocks {
                     ? new HungSignBlockItem(value, settings)
                     : value instanceof WallSignBlock
                     ? new WallSignBlockItem(value, settings)
+                    : value instanceof StandingSignBlock
+                    ? new StandingSignBlockItem(value, settings)
                     : new NamedBlockItem(value, settings);
             Registry.register(Registry.ITEM, new Identifier("mishanguc", path), item);
           }

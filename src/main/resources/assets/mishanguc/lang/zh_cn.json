@@ -596,5 +596,13 @@
   "roadConnectionState.whether.probably_connected": "应当连接",
   "vertical_align.mishanguc.bottom": "底",
   "vertical_align.mishanguc.middle": "中",
-  "vertical_align.mishanguc.top": "顶"
+  "vertical_align.mishanguc.top": "顶",
+  "block.mishanguc.tooltip.standing_sign_block_front": "前面一侧的文本：",
+  "block.mishanguc.tooltip.standing_sign_block_back": "后面一侧的文本：",
+  "block.mishanguc.hung_sign.tooltip.1": "两面都可以写文本。",
+  "block.mishanguc.hung_sign.tooltip.2": "通常放在天花板或者告示牌杆的下方。",
+  "block.mishanguc.wall_sign.tooltip.1": "点击即可在上面写文字。",
+  "block.mishanguc.wall_sign.tooltip.2": "可以放在墙上、天花板或地上。",
+  "block.mishanguc.standing_sign.tooltip.1": "两面都可以写文本。",
+  "block.mishanguc.standing_sign.tooltip.2": "潜行时点击以切换柱子的显示状态。"
 }

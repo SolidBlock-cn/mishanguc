@@ -17,11 +17,13 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
@@ -29,11 +31,13 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -49,6 +53,8 @@ import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 import pers.solid.mishang.uc.util.TextBridge;
+
+import java.util.List;
 
 /**
  * 本模组中的直立告示牌方块。
@@ -90,13 +96,20 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
    * 根据 BlockHitResult 来判断玩家点击的告示牌是点击的哪一面（front 或 back）。如果点击的是顶部而无法判断哪一面，则返回 {@code null}。
    */
   @Contract(pure = true)
-  public static @Nullable Boolean getIsFront(BlockState blockState, BlockHitResult blockHitResult) {
+  public static @Nullable Boolean getHitSide(BlockState blockState, BlockHitResult blockHitResult) {
     final Direction side = blockHitResult.getSide();
-    return getIsFront(blockState, side);
+    if (side.getAxis().isVertical()) {
+      final Vec3d pos = blockHitResult.getPos();
+      double minAngle = MathHelper.RADIANS_PER_DEGREE * (360 / 16f * blockState.get(ROTATION));
+      double clickAngle = MathHelper.atan2(pos.z % 1 - 0.5, pos.x % 1 - 0.5);
+      return (minAngle < clickAngle && clickAngle < minAngle + MathHelper.PI)
+          || (minAngle - 2 * MathHelper.PI < clickAngle && clickAngle < minAngle - MathHelper.PI);
+    }
+    return getHitSide(blockState, side);
   }
 
   @Contract(pure = true)
-  public static @Nullable Boolean getIsFront(BlockState blockState, Direction side) {
+  public static @Nullable Boolean getHitSide(BlockState blockState, Direction side) {
     final int rotation = blockState.get(ROTATION);
     return switch (rotation) {
       case 0 -> switch (side) {
@@ -196,6 +209,13 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   public MutableText getName() {
     if (baseBlock != null) return TextBridge.translatable("block.mishanguc.standing_sign", baseBlock.getName());
     return super.getName();
+  }
+
+  @Override
+  public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+    super.appendTooltip(stack, world, tooltip, options);
+    tooltip.add(TextBridge.translatable("block.mishanguc.standing_sign.tooltip.1").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("block.mishanguc.standing_sign.tooltip.2").formatted(Formatting.GRAY));
   }
 
   @Environment(EnvType.CLIENT)
@@ -323,7 +343,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     }
 
     final BlockEntity blockEntity = world.getBlockEntity(pos);
-    final Boolean isFront = getIsFront(state, hit);
+    final Boolean isFront = getHitSide(state, hit);
     if (!(blockEntity instanceof StandingSignBlockEntity entity)) return ActionResult.PASS;
     else if (player.isSneaking()) {
       // 潜行时点击告示牌，可以切换底部杆子的显示。
@@ -372,7 +392,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     ServerPlayNetworking.send(
         ((ServerPlayerEntity) player),
         new Identifier("mishanguc", "edit_sign"),
-        PacketByteBufs.create().writeBlockPos(pos).writeEnumConstant(hit.getSide()));
+        Util.make(PacketByteBufs.create(), packet -> packet.writeBlockPos(pos).writeBlockHitResult(hit)));
     return ActionResult.SUCCESS;
   }
 }

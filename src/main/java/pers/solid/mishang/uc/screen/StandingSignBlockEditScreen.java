@@ -1,6 +1,6 @@
 package pers.solid.mishang.uc.screen;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.ApiStatus;
@@ -9,7 +9,6 @@ import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @ApiStatus.AvailableSince("1.0.2")
@@ -19,9 +18,9 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
   private final List<TextContext> backedUpTexts;
 
   public StandingSignBlockEditScreen(StandingSignBlockEntity entity, BlockPos blockPos, boolean isFront) {
-    super(entity, blockPos, new ArrayList<>(entity.getTextsOnSide(isFront)));
+    super(entity, blockPos, Lists.newArrayList(entity.getTextsOnSide(isFront).stream().map(TextContext::clone).iterator()));
     this.isFront = isFront;
-    this.backedUpTexts = ImmutableList.copyOf(entity.getTextsOnSide(isFront));
+    this.backedUpTexts = entity.getTextsOnSide(isFront);
     entity.setTextsOnSide(isFront, textContextsEditing);
   }
 
