@@ -9,6 +9,7 @@ Updated following content:
 - Glowing hung signs and glowing wall signs with customizable colors.
 - Added more signs with custom colors, and optimized the source.
 - Standing signs.
+- Added information tooltip for sign block items.
 
 Fixed following issues:
 

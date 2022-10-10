@@ -8,10 +8,12 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.util.math.Matrix4f;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.mixin.TextRendererAccessor;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Objects;
 
@@ -140,5 +142,12 @@ public final class RectSpecialDrawable implements SpecialDrawable {
   @Override
   public SpecialDrawable cloneWithNewTextContext(@NotNull TextContext textContext) {
     return new RectSpecialDrawable(width, height, textContext);
+  }
+
+  @Override
+  public @NotNull MutableText asStyledText() {
+    return TextBridge.empty()
+        .append(TextBridge.literal("■").styled(style -> style.withColor(textContext.color)))
+        .append(" (" + width + "×" + height + ")");
   }
 }

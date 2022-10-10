@@ -11,7 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -45,18 +44,20 @@ public class HungSignBlockItem extends NamedBlockItem {
     ImmutableMap.Builder<Direction, List<TextContext>> builder = new ImmutableMap.Builder<>();
     for (Direction direction : Direction.Type.HORIZONTAL) {
       final NbtElement element = nbt.get(direction.asString());
-      if (element instanceof NbtString || element instanceof NbtCompound) {
+      if (element == null) continue;
+      if (element instanceof NbtList) {
+        ImmutableList.Builder<TextContext> listBuilder = new ImmutableList.Builder<>();
+        for (NbtElement nbtElement : ((NbtList) element)) {
+          TextContext textContext = TextContext.fromNbt(nbtElement, HungSignBlockEntity.DEFAULT_TEXT_CONTEXT);
+          listBuilder.add(textContext);
+        }
+        final ImmutableList<TextContext> build = listBuilder.build();
+        if (!build.isEmpty()) builder.put(direction, build);
+      } else {
         builder.put(
             direction,
             ImmutableList.of(
-                TextContext.fromNbt(element, HungSignBlockEntity.DEFAULT_TEXT_CONTEXT.clone())));
-      } else if (element instanceof NbtList) {
-        ImmutableList.Builder<TextContext> listBuilder = new ImmutableList.Builder<>();
-        for (NbtElement nbtElement : ((NbtList) element)) {
-          TextContext textContext = TextContext.fromNbt(nbtElement);
-          listBuilder.add(textContext);
-        }
-        builder.put(direction, listBuilder.build());
+                TextContext.fromNbt(element, HungSignBlockEntity.DEFAULT_TEXT_CONTEXT)));
       }
     }
     return builder.build();

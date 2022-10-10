@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.item;
 
+import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.devtech.arrp.generator.ItemResourceGenerator;
@@ -26,6 +27,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -43,7 +45,10 @@ import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * 用于复制粘贴文本的工具。持有该工具，“攻击”（默认左键）告示牌（含原版告示牌、悬挂告示牌和墙上的告示牌）可以将文本复制到物品中，"使用"（默认右键）告示牌可将文本粘贴上去。
@@ -67,7 +72,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
       final NbtList texts = tag.getList("texts", NbtType.COMPOUND);
       if (!texts.isEmpty()) {
         tooltip.add(TextBridge.translatable("item.mishanguc.text_copy_tool.tooltip.3").formatted(Formatting.GRAY));
-        texts.stream().map(TextContext::fromNbt).map(TextContext::asStyledText).filter(Objects::nonNull).peek(text -> {
+        texts.stream().map(TextContext::fromNbt).map(TextContext::asStyledText).peek(text -> {
           final TextColor color = text.getStyle().getColor();
           if (color != null && color.getRgb() == 0) {
             // 考虑黑色的文本看不清楚，因此这种情况依然显示为灰色。
@@ -87,7 +92,6 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         nbt.getList("texts", NbtType.COMPOUND).stream()
             .map(TextContext::fromNbt)
             .map(TextContext::asStyledText)
-            .filter(Objects::nonNull)
             .iterator());
     if (!texts.isEmpty()) {
       MutableText appendable = TextBridge.empty();
@@ -194,7 +198,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         return ActionResult.SUCCESS;
       } else if (blockEntity instanceof StandingSignBlockEntity standingSignBlockEntity) {
         if (world.isClient) return ActionResult.SUCCESS;
-        final Boolean isFront = StandingSignBlock.getIsFront(blockState, blockHitResult);
+        final Boolean isFront = StandingSignBlock.getHitSide(blockState, blockHitResult);
         if (isFront != null) {
           standingSignBlockEntity.setTextsOnSide(isFront, texts.stream().map(nbtElement -> TextContext.fromNbt(nbtElement, standingSignBlockEntity.getDefaultTextContext())).collect(ImmutableList.toImmutableList()));
           if (stack.getOrCreateNbt().getBoolean("fromVanillaSign")) {
@@ -256,12 +260,14 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
       stack.putSubTag("fromVanillaSign", NbtByte.of(false));
       player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.copy", texts.size()), false);
       return ActionResult.SUCCESS;
-    } else if (blockEntity instanceof HungSignBlockEntity) {
-      if (world.isClient) return ActionResult.SUCCESS;
-      final Direction.Axis axis = world.getBlockState(pos).get(HungSignBlock.AXIS);
-      if (!axis.test(direction)) {
-        final Iterator<Direction> validDirections = Arrays.stream(Direction.values()).filter(axis).iterator();
-        // 如果点击的方向不正确，则无法复制和粘贴文本。
+    } else {
+      final BlockState blockState = world.getBlockState(pos);
+      if (blockEntity instanceof HungSignBlockEntity) {
+        if (world.isClient) return ActionResult.SUCCESS;
+        final Direction.Axis axis = blockState.get(HungSignBlock.AXIS);
+        if (!axis.test(direction)) {
+          final Iterator<Direction> validDirections = Arrays.stream(Direction.values()).filter(axis).iterator();
+          // 如果点击的方向不正确，则无法复制和粘贴文本。
         player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.wrong_side",
             // 无效的一侧：
             new TranslatableText("direction." + direction.getName()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xeecc44))),
@@ -269,22 +275,37 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
             new TranslatableText("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xb3ee45))),
             new TranslatableText("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xb3ee45)))
         ).formatted(Formatting.RED), false);
+          return ActionResult.FAIL;
+        }
+      final List<@NotNull TextContext> textContexts = ((HungSignBlockEntity) blockEntity).texts.getOrDefault(direction, ImmutableList.of());
+        final NbtList texts = new NbtList();
+        for (TextContext textContext : textContexts) {
+          texts.add(textContext.createNbt());
+        }
+        stack.putSubTag("texts", texts);
+        stack.putSubTag("fromVanillaSign", NbtByte.of(false));
+        player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.copy", texts.size()), true);
+        return ActionResult.SUCCESS;
+      } else if (blockEntity instanceof StandingSignBlockEntity standingSignBlockEntity) {
+        Boolean hitSide = StandingSignBlock.getHitSide(blockState, direction);
+        if (hitSide == null) {
+          final HitResult raycast0 = player.raycast(4.5, 0, includesFluid(stack, false));
+          if (raycast0 instanceof BlockHitResult) hitSide = StandingSignBlock.getHitSide(blockState, (BlockHitResult) raycast0);
+        }
+        if (hitSide == null) return world.isClient ? ActionResult.PASS : ActionResult.FAIL;
+        final List<TextContext> textContexts = standingSignBlockEntity.getTextsOnSide(hitSide);
+        final NbtList texts = new NbtList();
+        texts.addAll(Collections2.transform(textContexts, TextContext::createNbt));
+        stack.setSubNbt("texts", texts);
+        stack.setSubNbt("fromVanillaSign", NbtByte.of(false));
+        player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.success.copy", texts.size()), true);
+        return ActionResult.SUCCESS;
+      } else {
+        if (world.isClient) return ActionResult.SUCCESS;
+        // 点击的方块不是可以识别的告示牌方块。
+        player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.not_sign").formatted(Formatting.RED), true);
         return ActionResult.FAIL;
       }
-      final List<@NotNull TextContext> textContexts = ((HungSignBlockEntity) blockEntity).texts.getOrDefault(direction, ImmutableList.of());
-      final NbtList texts = new NbtList();
-      for (TextContext textContext : textContexts) {
-        texts.add(textContext.createNbt());
-      }
-      stack.putSubTag("texts", texts);
-      stack.putSubTag("fromVanillaSign", NbtByte.of(false));
-      player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.copy", texts.size()), true);
-      return ActionResult.SUCCESS;
-    } else {
-      if (world.isClient) return ActionResult.SUCCESS;
-      // 点击的方块不是可以识别的告示牌方块。
-      player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.not_sign").formatted(Formatting.RED), true);
-      return ActionResult.FAIL;
     }
   }
 
@@ -292,7 +313,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
   @Override
   public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext worldRenderContext, WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
     final BlockEntity blockEntity = worldRenderContext.world().getBlockEntity(blockOutlineContext.blockPos());
-    if (blockEntity instanceof SignBlockEntity || blockEntity instanceof HungSignBlockEntity || blockEntity instanceof WallSignBlockEntity) {
+    if (blockEntity instanceof SignBlockEntity || blockEntity instanceof HungSignBlockEntity || blockEntity instanceof WallSignBlockEntity || blockEntity instanceof StandingSignBlockEntity) {
       return super.renderBlockOutline(player, itemStack, worldRenderContext, blockOutlineContext, hand);
     } else {
       return false;
