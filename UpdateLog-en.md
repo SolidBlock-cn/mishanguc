@@ -10,12 +10,14 @@ Updated following content:
 - Added more signs with custom colors, and optimized the source.
 - Standing signs.
 - Added information tooltip for sign block items.
+- Road with bevel angle double or thick line.
 
 Fixed following issues:
 
 - Tinting a terracotta hung sign bar with a color tool converts it into a sign instead of sign bar.
 - If an opaque sign block connects with a translucent sign, the opaque fase will be incorrectly invisible.
 - Some wrong code in the hung sign models.
+- Incorrect configuration of auto lines of road.
 
 ### 1.0.1
 
