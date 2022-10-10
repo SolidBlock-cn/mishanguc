@@ -3,10 +3,13 @@
 
   "block.mishanguc.road_with_white_line": "Road with White Straight Line",
   "block.mishanguc.road_with_white_ba_line": "Road with White Bevel-Angle Line",
+  "block.mishanguc.road_with_white_ba_double_line": "Road with White Bevel-Angle Double Line",
+  "block.mishanguc.road_with_white_ba_thick_line": "Road with White Bevel-Angle Thick Line",
   "block.mishanguc.road_with_white_ra_line": "Road with White Right-Angle Line",
-
   "block.mishanguc.road_with_yellow_line": "Road with Yellow Straight Line",
   "block.mishanguc.road_with_yellow_ba_line": "Road with Yellow Bevel-Angle Line",
+  "block.mishanguc.road_with_yellow_ba_double_line": "Road with Yellow Bevel-Angle Double Line",
+  "block.mishanguc.road_with_yellow_ba_thick_line": "Road with Yellow Bevel-Angle Thick Line",
   "block.mishanguc.road_with_yellow_ra_line": "Road with Yellow Right-Angle Line",
   "block.mishanguc.road_with_w_y_ra_line": "Road with W&R Right-Angle Line",
   "block.mishanguc.road_with_wt_n_ra_line": "Road with WT&N Right-Angle Line",
@@ -60,10 +63,13 @@
 
   "block.mishanguc.road_slab_with_white_line": "Road Slab with White Straight Line",
   "block.mishanguc.road_slab_with_white_ba_line": "Road Slab with White Bevel-Angle Line",
+  "block.mishanguc.road_slab_with_white_ba_double_line": "Road Slab with White Bevel-Angle Double Line",
+  "block.mishanguc.road_slab_with_white_ba_thick_line": "Road Slab with White Bevel-Angle Thick Line",
   "block.mishanguc.road_slab_with_white_ra_line": "Road Slab with White Right-Angle Line",
-
   "block.mishanguc.road_slab_with_yellow_line": "Road Slab with Yellow Straight Line",
   "block.mishanguc.road_slab_with_yellow_ba_line": "Road Slab with Yellow Bevel-Angle Line",
+  "block.mishanguc.road_slab_with_yellow_ba_double_line": "Road Slab with Yellow Bevel-Angle Double Line",
+  "block.mishanguc.road_slab_with_yellow_ba_thick_line": "Road Slab with Yellow Bevel-Angle Thick Line",
   "block.mishanguc.road_slab_with_yellow_ra_line": "Road Slab with Yellow Right-Angle Line",
   "block.mishanguc.road_slab_with_w_y_ra_line": "Road Slab with W&R Right-Angle Line",
   "block.mishanguc.road_slab_with_wt_n_ra_line": "Road Slab with WT&N Right-Angle Line",
