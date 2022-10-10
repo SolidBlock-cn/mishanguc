@@ -6,11 +6,13 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Collection;
 
@@ -150,4 +152,8 @@ public interface SpecialDrawable extends Cloneable {
   @Contract(value = "_ -> new", pure = true)
   @ApiStatus.Internal
   SpecialDrawable cloneWithNewTextContext(@NotNull TextContext textContext);
+
+  default @NotNull MutableText asStyledText() {
+    return TextBridge.literal(getType().getId().getPath() + " " + asStringArgs());
+  }
 }
