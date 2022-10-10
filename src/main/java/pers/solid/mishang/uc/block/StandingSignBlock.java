@@ -181,6 +181,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
         .with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
     if (state.get(WATERLOGGED)) {
@@ -190,16 +191,19 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     return direction == Direction.DOWN ? state1.with(DOWN, neighborState.isSideSolid(world, neighborPos, Direction.UP, SideShapeType.CENTER)) : state1;
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public FluidState getFluidState(BlockState state) {
     return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public BlockState rotate(BlockState state, BlockRotation rotation) {
     return state.with(ROTATION, rotation.rotate(state.get(ROTATION), 16));
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public BlockState mirror(BlockState state, BlockMirror mirror) {
     return state.with(ROTATION, mirror.mirror(state.get(ROTATION), 16));
@@ -282,6 +286,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     return recipeId.brrp_prepend("recipes/signs/");
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     final VoxelShape bodyShape = switch (state.get(ROTATION)) {
@@ -300,11 +305,13 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     return new StandingSignBlockEntity(pos, state);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
     return state.get(ROTATION) % 4 == 0 && state.get(DOWN) ? CULLING_SHAPE : VoxelShapes.empty();
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     return VoxelShapes.empty();
@@ -313,6 +320,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   /**
    * 鉴于其实际外观与碰撞形状不一致，告示牌使用手动的侧面隐形判断。
    */
+  @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
     if (direction.getAxis().isHorizontal() && stateFrom.getBlock() instanceof StandingSignBlock standingSignBlockFrom) {
@@ -335,6 +343,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     return super.isSideInvisible(state, stateFrom, direction);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
     final ActionResult actionResult = super.onUse(state, world, pos, player, hand, hit);

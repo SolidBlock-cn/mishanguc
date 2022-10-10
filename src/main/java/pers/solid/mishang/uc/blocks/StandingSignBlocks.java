@@ -36,8 +36,6 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final StandingSignBlock CRIMSON_STANDING_SIGN = new StandingSignBlock(Blocks.CRIMSON_PLANKS);
   @RegisterIdentifier
   public static final StandingSignBlock WARPED_STANDING_SIGN = new StandingSignBlock(Blocks.WARPED_PLANKS);
-  @RegisterIdentifier
-  public static final StandingSignBlock MANGROVE_STANDING_SIGN = new StandingSignBlock(Blocks.MANGROVE_PLANKS);
 
   static {
     OAK_STANDING_SIGN.barTexture = "block/oak_log";
@@ -46,9 +44,8 @@ public final class StandingSignBlocks extends MishangucBlocks {
     ACACIA_STANDING_SIGN.barTexture = "block/acacia_log";
     JUNGLE_STANDING_SIGN.barTexture = "block/jungle_log";
     DARK_OAK_STANDING_SIGN.barTexture = "block/dark_oak_log";
-    CRIMSON_STANDING_SIGN.barTexture = "block/crimson_log";
-    WARPED_STANDING_SIGN.barTexture = "block/warped_log";
-    MANGROVE_STANDING_SIGN.barTexture = "block/mangrove_log";
+    CRIMSON_STANDING_SIGN.barTexture = "block/crimson_stem";
+    WARPED_STANDING_SIGN.barTexture = "block/warped_stem";
   }
 
   public static final ImmutableMap<SignType, StandingSignBlock> WOODEN_SIGNS = new ImmutableMap.Builder<SignType, StandingSignBlock>()
@@ -60,7 +57,6 @@ public final class StandingSignBlocks extends MishangucBlocks {
       .put(SignType.DARK_OAK, DARK_OAK_STANDING_SIGN)
       .put(SignType.CRIMSON, CRIMSON_STANDING_SIGN)
       .put(SignType.WARPED, WARPED_STANDING_SIGN)
-      .put(SignType.MANGROVE, MANGROVE_STANDING_SIGN)
       .build();
 
   @RegisterIdentifier
@@ -403,6 +399,9 @@ public final class StandingSignBlocks extends MishangucBlocks {
 
   static {
     SNOW_STANDING_SIGN.baseTexture = "block/snow";
+    SNOW_STANDING_SIGN.barTexture = "block/packed_ice";
     GLOWING_SNOW_STANDING_SIGN.baseTexture = "block/snow";
+    GLOWING_SNOW_STANDING_SIGN.barTexture = "block/packed_ice";
+    ICE_STANDING_SIGN.barTexture = "block/blue_ice";
   }
 }

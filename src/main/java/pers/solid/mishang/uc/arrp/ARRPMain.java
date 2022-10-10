@@ -695,6 +695,14 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         "road_with_angle_line",
         new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineTop("white_bevel_angle_line"));
     writeRoadBlockModelWithSlab(
+        RoadBlocks.ROAD_WITH_WHITE_BA_DOUBLE_LINE,
+        "road_with_angle_line",
+        new FasterJTextures().base("asphalt").lineSide("white_straight_double_line").lineTop("white_bevel_angle_double_line"));
+    writeRoadBlockModelWithSlab(
+        RoadBlocks.ROAD_WITH_WHITE_BA_THICK_LINE,
+        "road_with_angle_line",
+        new FasterJTextures().base("asphalt").lineSide("white_straight_thick_line").lineTop("white_bevel_angle_thick_line"));
+    writeRoadBlockModelWithSlab(
         RoadBlocks.ROAD_WITH_YELLOW_LINE,
         "road_with_straight_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_straight_line"));
@@ -706,6 +714,14 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         RoadBlocks.ROAD_WITH_YELLOW_BA_LINE,
         "road_with_angle_line",
         new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_bevel_angle_line"));
+    writeRoadBlockModelWithSlab(
+        RoadBlocks.ROAD_WITH_YELLOW_BA_DOUBLE_LINE,
+        "road_with_angle_line",
+        new FasterJTextures().base("asphalt").lineSide("yellow_straight_double_line").lineTop("yellow_bevel_angle_double_line"));
+    writeRoadBlockModelWithSlab(
+        RoadBlocks.ROAD_WITH_YELLOW_BA_THICK_LINE,
+        "road_with_angle_line",
+        new FasterJTextures().base("asphalt").lineSide("yellow_straight_thick_line").lineTop("yellow_bevel_angle_thick_line"));
     writeRoadBlockModelWithSlabWithMirrored(
         RoadBlocks.ROAD_WITH_W_Y_RA_LINE,
         "road_with_angle_line",

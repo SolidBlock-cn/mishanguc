@@ -115,7 +115,6 @@ public class Mishanguc implements ModInitializer {
         StandingSignBlocks.DARK_OAK_STANDING_SIGN,
         StandingSignBlocks.CRIMSON_STANDING_SIGN,
         StandingSignBlocks.WARPED_STANDING_SIGN,
-        StandingSignBlocks.MANGROVE_STANDING_SIGN,
     };
     for (Block block : woodenBlocks) {
       flammableBlockRegistry.add(block, 5, 20);
