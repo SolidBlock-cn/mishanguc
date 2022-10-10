@@ -95,10 +95,8 @@ public abstract class BlockEntityWithText extends BlockEntity
       final NbtCompound nbt = buf.readNbt();
       server.execute(
           () -> {
-            final BlockEntityWithText entity =
-                (BlockEntityWithText) player.world.getBlockEntity(blockPos);
-            // 该参数仅限对应实体为 HungSignBlockEntity 时存在，也仅在此情况下，buf 中会存在此值。。
             try {
+              final BlockEntityWithText entity = (BlockEntityWithText) player.world.getBlockEntity(blockPos);
               if (entity == null) {
                 LOGGER.warn(
                     "The entity is null! Cannot write the block entity data at {} {} {}.",
@@ -109,15 +107,11 @@ public abstract class BlockEntityWithText extends BlockEntity
               }
               final PlayerEntity editorAllowed = entity.getEditor();
               entity.setEditor(null);
-              final @Unmodifiable List<TextContext> textContexts =
-                  nbt != null
-                      ? new ImmutableList.Builder<TextContext>()
-                      .addAll(
-                          nbt.getList("texts", 10).stream()
-                              .map(e -> TextContext.fromNbt(e, entity.getDefaultTextContext()))
-                              .iterator())
-                      .build()
-                      : null;
+              final @Unmodifiable ImmutableList<TextContext> textContexts = nbt != null
+                  ? nbt.getList("texts", 10).stream()
+                  .map(e -> TextContext.fromNbt(e, entity.getDefaultTextContext()))
+                  .collect(ImmutableList.toImmutableList())
+                  : null;
               if (editorAllowed != player) {
                 LOGGER.warn(
                     "The player editing the block entity {} {} {} is not the player allowed to edit.",
@@ -143,6 +137,11 @@ public abstract class BlockEntityWithText extends BlockEntity
               } else if (entity instanceof final WallSignBlockEntity wallSignBlockEntity) {
                 if (nbt == null) return;
                 wallSignBlockEntity.textContexts = textContexts;
+              } else if (entity instanceof final StandingSignBlockEntity standingSignBlockEntity) {
+                final Boolean editedSite = standingSignBlockEntity.editedSide;
+                if (editedSite != null) {
+                  standingSignBlockEntity.setTextsOnSide(editedSite, textContexts);
+                }
               }
               entity.sync();
               entity.markDirty();

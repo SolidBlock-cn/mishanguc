@@ -39,7 +39,9 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.HungSignBlock;
+import pers.solid.mishang.uc.block.StandingSignBlock;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
+import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -183,6 +185,20 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.success.paste", newTextsThisSide.size()), false);
         stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
         return ActionResult.SUCCESS;
+      } else if (blockEntity instanceof StandingSignBlockEntity standingSignBlockEntity) {
+        if (world.isClient) return ActionResult.SUCCESS;
+        final Boolean isFront = StandingSignBlock.getIsFront(blockState, blockHitResult);
+        if (isFront != null) {
+          standingSignBlockEntity.setTextsOnSide(isFront, texts.stream().map(nbtElement -> TextContext.fromNbt(nbtElement, standingSignBlockEntity.getDefaultTextContext())).collect(ImmutableList.toImmutableList()));
+          if (stack.getOrCreateNbt().getBoolean("fromVanillaSign")) {
+            MishangUtils.rearrange(standingSignBlockEntity.getTextsOnSide(isFront));
+          }
+          blockEntity.markDirty();
+          world.updateListeners(blockPos, blockState, blockState, 3);
+          player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.success.paste", standingSignBlockEntity.getTextsOnSide(isFront).size()), true);
+          stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
+          return ActionResult.SUCCESS;
+        }
       } else {
         if (world.isClient) return ActionResult.PASS;
         // 点击的方块不是可以识别的告示牌方块。
