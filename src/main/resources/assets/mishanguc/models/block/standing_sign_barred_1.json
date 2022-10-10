@@ -1,0 +1,38 @@
+{
+  "parent": "mishanguc:block/template_standing_sign",
+  "elements": [
+    {
+      "from": [0, 8, 7.5],
+      "to": [16, 16, 8.5],
+      "rotation": {
+        "origin": [8, 8, 8],
+        "axis": "y",
+        "angle": -22.5
+      },
+      "faces": {
+        "north": {"tintindex": 0, "texture": "#texture"},
+        "south": {"tintindex": 0, "texture": "#texture"},
+        "down": {"tintindex": 0, "texture": "#texture"},
+        "up": {"tintindex": 0, "texture": "#texture"},
+        "west": {"tintindex": 0, "texture": "#texture"},
+        "east": {"tintindex": 0, "texture": "#texture"}
+      }
+    },
+    {
+      "from": [7.5, 0, 7.5],
+      "to": [8.5, 8, 8.5],
+      "rotation": {
+        "origin": [8, 8, 8],
+        "axis": "y",
+        "angle": -22.5
+      },
+      "faces": {
+        "north": {"tintindex": 1, "texture": "#bar"},
+        "south": {"tintindex": 1, "texture": "#bar"},
+        "east": {"tintindex": 1, "texture": "#bar"},
+        "west": {"tintindex": 1, "texture": "#bar"},
+        "down": {"tintindex": 1, "texture": "#bar", "cullface": "down"}
+      }
+    }
+  ]
+}
