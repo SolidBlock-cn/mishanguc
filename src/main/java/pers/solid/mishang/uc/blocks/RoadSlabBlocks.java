@@ -96,9 +96,25 @@ public final class RoadSlabBlocks extends MishangucBlocks {
   @Cutout
   @RegisterIdentifier
   public static final SmartRoadSlabBlock<RoadWithAngleLine.Impl> ROAD_SLAB_WITH_WHITE_BA_LINE = of(ROAD_WITH_WHITE_BA_LINE);
+  @ApiStatus.AvailableSince("1.0.2")
+  @Cutout
+  @RegisterIdentifier
+  public static final SmartRoadSlabBlock<RoadWithAngleLine.Impl> ROAD_SLAB_WITH_WHITE_BA_DOUBLE_LINE = of(ROAD_WITH_WHITE_BA_DOUBLE_LINE);
+  @ApiStatus.AvailableSince("1.0.2")
+  @Cutout
+  @RegisterIdentifier
+  public static final SmartRoadSlabBlock<RoadWithAngleLine.Impl> ROAD_SLAB_WITH_WHITE_BA_THICK_LINE = of(ROAD_WITH_WHITE_BA_THICK_LINE);
   @Cutout
   @RegisterIdentifier
   public static final SmartRoadSlabBlock<RoadWithAngleLine.Impl> ROAD_SLAB_WITH_YELLOW_BA_LINE = of(ROAD_WITH_YELLOW_BA_LINE);
+  @ApiStatus.AvailableSince("1.0.2")
+  @Cutout
+  @RegisterIdentifier
+  public static final SmartRoadSlabBlock<RoadWithAngleLine.Impl> ROAD_SLAB_WITH_YELLOW_BA_DOUBLE_LINE = of(ROAD_WITH_YELLOW_BA_DOUBLE_LINE);
+  @ApiStatus.AvailableSince("1.0.2")
+  @Cutout
+  @RegisterIdentifier
+  public static final SmartRoadSlabBlock<RoadWithAngleLine.Impl> ROAD_SLAB_WITH_YELLOW_BA_THICK_LINE = of(ROAD_WITH_YELLOW_BA_THICK_LINE);
   /**
    * <h3>有偏移的直角</h3>
    */
