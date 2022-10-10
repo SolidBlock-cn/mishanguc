@@ -8,10 +8,13 @@ Updated following content:
 
 - Glowing hung signs and glowing wall signs with customizable colors.
 - Added more signs with custom colors, and optimized the source.
+- Standing signs.
 
 Fixed following issues:
 
 - Tinting a terracotta hung sign bar with a color tool converts it into a sign instead of sign bar.
+- If an opaque sign block connects with a translucent sign, the opaque fase will be incorrectly invisible.
+- Some wrong code in the hung sign models.
 
 ### 1.0.1
 
