@@ -31,15 +31,14 @@ import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.ColoredBlock;
 import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.Road;
+import pers.solid.mishang.uc.block.StandingSignBlock;
 import pers.solid.mishang.uc.blockentity.*;
 import pers.solid.mishang.uc.item.CarryingToolItem;
 import pers.solid.mishang.uc.item.DataTagToolItem;
 import pers.solid.mishang.uc.item.MishangucItems;
-import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
-import pers.solid.mishang.uc.render.RendersBeforeOutline;
-import pers.solid.mishang.uc.render.RendersBlockOutline;
-import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
+import pers.solid.mishang.uc.render.*;
 import pers.solid.mishang.uc.screen.HungSignBlockEditScreen;
+import pers.solid.mishang.uc.screen.StandingSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
 
 import java.awt.*;
@@ -114,6 +113,14 @@ public class MishangucClient implements ClientModInitializer {
             } else if (blockEntity instanceof final WallSignBlockEntity wallSignBlockEntity) {
               client.execute(() ->
                   client.setScreen(new WallSignBlockEditScreen(wallSignBlockEntity, blockPos)));
+            } else if (blockEntity instanceof final StandingSignBlockEntity standingSignBlockEntity) {
+              final Direction direction = buf.readEnumConstant(Direction.class);
+              final Boolean isFront = StandingSignBlock.getIsFront(blockEntity.getCachedState(), direction);
+              if (isFront != null) {
+                client.execute(() -> {
+                  client.setScreen(new StandingSignBlockEditScreen(standingSignBlockEntity, blockPos, isFront));
+                });
+              }
             }
           } catch (NullPointerException | ClassCastException exception) {
             Mishanguc.MISHANG_LOGGER.error("Error when creating sign edit screen:", exception);
@@ -182,6 +189,8 @@ public class MishangucClient implements ClientModInitializer {
     BlockEntityRendererRegistry.register(MishangucBlockEntities.WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
     BlockEntityRendererRegistry.register(MishangucBlockEntities.COLORED_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
     BlockEntityRendererRegistry.register(MishangucBlockEntities.FULL_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer<FullWallSignBlockEntity>::new);
+    BlockEntityRendererRegistry.register(MishangucBlockEntities.STANDING_SIGN_BLOCK_ENTITY, StandingSignBlockEntityRenderer::new);
+    BlockEntityRendererRegistry.register(MishangucBlockEntities.COLORED_STANDING_SIGN_BLOCK_ENTITY, StandingSignBlockEntityRenderer::new);
   }
 
   private static void registerRenderEvents() {

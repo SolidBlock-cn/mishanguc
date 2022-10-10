@@ -175,6 +175,15 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     final IdentifiedTag glowingTerracottaHungSigns = blockTag("glowing_terracotta_hung_signs");
     final IdentifiedTag glowingHungSigns = blockTag("glowing_hung_signs");
 
+    // 悬挂的告示牌部分
+    final IdentifiedTag woodenStandingSigns = blockTag("wooden_standing_signs");
+    final IdentifiedTag concreteStandingSigns = blockTag("concrete_standing_signs");
+    final IdentifiedTag terracottaStandingSigns = blockTag("terracotta_standing_signs");
+    final IdentifiedTag standingSigns = blockTag("standing_signs");
+    final IdentifiedTag glowingConcreteStandingSigns = blockTag("glowing_concrete_standing_signs");
+    final IdentifiedTag glowingTerracottaStandingSigns = blockTag("glowing_terracotta_standing_signs");
+    final IdentifiedTag glowingStandingSigns = blockTag("glowing_standing_signs");
+
     // 悬挂的告示牌杆部分
     final IdentifiedTag woodenHungSignBars = blockTag("wooden_hung_sign_bars");
     final IdentifiedTag concreteHungSignBars = blockTag("concrete_hung_sign_bars");
@@ -338,6 +347,28 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
           woodenWallSigns.addBlock(block);
         } else {
           wallSigns.addBlock(block);
+        }
+      }
+    });
+
+    MishangUtils.instanceStream(StandingSignBlocks.class, Block.class).forEach(block -> {
+      if (block instanceof GlowingStandingSignBlock) {
+        if (MishangUtils.isConcrete(((GlowingStandingSignBlock) block).baseBlock)) {
+          glowingConcreteStandingSigns.addBlock(block);
+        } else if (MishangUtils.isTerracotta(((GlowingStandingSignBlock) block).baseBlock)) {
+          glowingTerracottaStandingSigns.addBlock(block);
+        } else {
+          glowingStandingSigns.addBlock(block);
+        }
+      } else if (block instanceof StandingSignBlock) {
+        if (MishangUtils.isConcrete(((StandingSignBlock) block).baseBlock)) {
+          concreteStandingSigns.addBlock(block);
+        } else if (MishangUtils.isTerracotta(((StandingSignBlock) block).baseBlock)) {
+          terracottaStandingSigns.addBlock(block);
+        } else if (MishangUtils.isPlanks(((StandingSignBlock) block).baseBlock)) {
+          woodenStandingSigns.addBlock(block);
+        } else {
+          standingSigns.addBlock(block);
         }
       }
     });
@@ -565,6 +596,8 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         .addTag(woodenHungSignBars)
         .addTag(concreteHungSignBars)
         .addTag(terracottaHungSignBars);
+    standingSigns.addTags(woodenStandingSigns, concreteStandingSigns, terracottaStandingSigns);
+    glowingStandingSigns.addTags(glowingConcreteStandingSigns, glowingTerracottaStandingSigns);
     registerTag(woodenHungSigns);
     registerTag(concreteHungSigns);
     registerTag(terracottaHungSigns);
@@ -576,6 +609,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     registerTag(concreteHungSignBars);
     registerTag(terracottaHungSignBars);
     registerTag(hungSignBars);
+    registerTags(woodenStandingSigns, concreteStandingSigns, terracottaStandingSigns, glowingConcreteStandingSigns, glowingTerracottaStandingSigns, standingSigns, glowingStandingSigns);
 
     // 染色方块部分
     final IdentifiedTag colored = blockTag("colored");

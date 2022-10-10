@@ -195,6 +195,7 @@ public class MishangUtils {
         fieldStream(LightBlocks.class),
         fieldStream(HungSignBlocks.class),
         fieldStream(WallSignBlocks.class),
+        fieldStream(StandingSignBlocks.class),
         fieldStream(HandrailBlocks.class),
         fieldStream(ColoredBlocks.class)
     );
