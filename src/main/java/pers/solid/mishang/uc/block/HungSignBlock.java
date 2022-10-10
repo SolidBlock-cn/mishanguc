@@ -19,6 +19,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -32,6 +33,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -362,6 +364,13 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       return TextBridge.translatable("block.mishanguc.hung_sign", baseBlock.getName());
     }
     return super.getName();
+  }
+
+  @Override
+  public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+    super.appendTooltip(stack, world, tooltip, options);
+    tooltip.add(TextBridge.translatable("block.mishanguc.hung_sign.tooltip.1").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("block.mishanguc.hung_sign.tooltip.2").formatted(Formatting.GRAY));
   }
 
   @Environment(EnvType.CLIENT)

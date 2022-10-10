@@ -500,15 +500,17 @@ public class TextContext implements Cloneable {
     }
   }
 
-  public @Nullable MutableText asStyledText() {
-    if (text == null) return null;
-    final MutableText text = this.text.copy();
+  public @NotNull MutableText asStyledText() {
+    final MutableText text = this.text == null ? TextBridge.empty() : this.text.copy();
     if (bold) text.formatted(Formatting.BOLD);
     if (italic) text.formatted(Formatting.ITALIC);
     if (underline) text.formatted(Formatting.UNDERLINE);
     if (strikethrough) text.formatted(Formatting.STRIKETHROUGH);
     if (obfuscated) text.formatted(Formatting.OBFUSCATED);
     text.styled(style -> style.withColor(color));
+    if (extra != null) {
+      return extra.asStyledText();
+    }
     return text;
   }
 

@@ -8,7 +8,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Util;
@@ -17,7 +16,6 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
-import pers.solid.mishang.uc.block.HungSignBlock;
 import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.text.TextContext;
 
@@ -62,16 +60,17 @@ public class HungSignBlockEntity extends BlockEntityWithText {
     ImmutableMap.Builder<Direction, List<TextContext>> builder = new ImmutableMap.Builder<>();
     for (Direction direction : Direction.Type.HORIZONTAL) {
       final NbtElement element = nbt.get(direction.asString());
-      if (element instanceof NbtString || element instanceof NbtCompound) {
-        builder.put(
-            direction, ImmutableList.of(TextContext.fromNbt(element, getDefaultTextContext())));
-      } else if (element instanceof NbtList) {
+      if (element instanceof NbtList) {
         ImmutableList.Builder<TextContext> listBuilder = new ImmutableList.Builder<>();
         for (NbtElement nbtElement : ((NbtList) element)) {
           TextContext textContext = TextContext.fromNbt(nbtElement);
           listBuilder.add(textContext);
         }
-        builder.put(direction, listBuilder.build());
+        final ImmutableList<TextContext> build = listBuilder.build();
+        if (!build.isEmpty()) builder.put(direction, build);
+      } else {
+        builder.put(
+            direction, ImmutableList.of(TextContext.fromNbt(element, getDefaultTextContext())));
       }
     }
     texts = builder.build();
@@ -82,7 +81,7 @@ public class HungSignBlockEntity extends BlockEntityWithText {
     super.writeNbt(nbt);
     for (Direction direction : Direction.Type.HORIZONTAL) {
       final List<@NotNull TextContext> textContexts = texts.get(direction);
-      if (textContexts == null || textContexts.isEmpty() || direction.getAxis() != getCachedState().get(HungSignBlock.AXIS)) {
+      if (textContexts == null || textContexts.isEmpty()) {
         continue;
       }
       final NbtList nbtList = new NbtList();

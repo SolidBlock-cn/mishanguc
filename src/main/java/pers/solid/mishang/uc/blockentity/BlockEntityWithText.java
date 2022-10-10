@@ -58,7 +58,7 @@ public abstract class BlockEntityWithText extends BlockEntity
    *
    * @return 该方块实体的默认 <tt>TextContext</tt>。
    */
-  @Contract("->new")
+  @Contract("-> new")
   public abstract TextContext getDefaultTextContext();
 
   /**

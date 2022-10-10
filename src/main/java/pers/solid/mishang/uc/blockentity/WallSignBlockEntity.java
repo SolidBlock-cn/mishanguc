@@ -83,9 +83,7 @@ public class WallSignBlockEntity extends BlockEntityWithText {
 
   @Override
   public TextContext getDefaultTextContext() {
-    final TextContext textContext = new TextContext();
-    textContext.size = 6;
-    return textContext;
+    return DEFAULT_TEXT_CONTEXT.clone();
   }
 
   @Override
