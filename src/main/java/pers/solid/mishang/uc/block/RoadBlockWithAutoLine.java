@@ -199,38 +199,25 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
             }
 
             if (connectionState.lineColor() == adjacentState.lineColor() || adjacentState.lineColor() == LineColor.UNKNOWN) {
-              RoadWithAngleLine.Impl block;
-              switch (connectionState.lineColor()) {
-                case YELLOW:
-                  switch (type) {
-                    case BEVEL:
-                      block = ROAD_WITH_YELLOW_BA_LINE;
-                      break;
-                    case RIGHT_ANGLE:
-                      block = ROAD_WITH_YELLOW_RA_LINE;
-                      break;
-                    default:
-                      throw new IllegalArgumentException();
-                  }
-                  break;
-                case WHITE:
-                case NONE:
-                case UNKNOWN:
-                  switch (type) {
-                    case BEVEL:
-                      block = ROAD_WITH_WHITE_BA_LINE;
-                      break;
-                    case RIGHT_ANGLE:
-                      block = ROAD_WITH_WHITE_RA_LINE;
-                      break;
-                    default:
-                      throw new IllegalArgumentException();
-                  }
-                  break;
-                default:
-                  throw new IllegalArgumentException();
-              }
-              return block.getDefaultState().with(RoadWithAngleLine.FACING, HorizontalCornerDirection.fromDirections(direction, adjacentDirection));
+              final LineType lineType = ObjectUtils.min(connectionState.lineType(), adjacentState.lineType());
+              return (switch (connectionState.lineColor()) {
+                case YELLOW -> switch (type) {
+                  case BEVEL -> switch (lineType) {
+                    case DOUBLE -> ROAD_WITH_YELLOW_BA_DOUBLE_LINE;
+                    case THICK -> ROAD_WITH_YELLOW_BA_THICK_LINE;
+                    default -> ROAD_WITH_YELLOW_BA_LINE;
+                  };
+                  case RIGHT_ANGLE -> ROAD_WITH_YELLOW_RA_LINE;
+                };
+                case WHITE, NONE, UNKNOWN -> switch (type) {
+                  case BEVEL -> switch (lineType) {
+                    case DOUBLE -> ROAD_WITH_WHITE_BA_DOUBLE_LINE;
+                    case THICK -> ROAD_WITH_WHITE_BA_THICK_LINE;
+                    default -> ROAD_WITH_WHITE_BA_LINE;
+                  };
+                  case RIGHT_ANGLE -> ROAD_WITH_WHITE_RA_LINE;
+                };
+              }).getDefaultState().with(RoadWithAngleLine.FACING, HorizontalCornerDirection.fromDirections(direction, adjacentDirection));
             } else if (connectionState.lineColor() == LineColor.UNKNOWN) {
               continue;
             }
@@ -348,52 +335,28 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
                 // - 两端白色粗线 → 白色粗+白色
                 // - 其他情况 → 白色普通
 
-                if (unconnectedState.lineColor() == LineColor.YELLOW) {
+                if (facingState.lineColor() == LineColor.YELLOW) {
                   return ROAD_WITH_YELLOW_TS_LINE.getDefaultState()
                       .with(RoadWithJointLine.FACING, facingDirection);
                 } else {
-                  RoadWithJointLine.Impl block;
-                  switch (unconnectedState.lineType()) {
-                    case DOUBLE:
-                      block = ROAD_WITH_WHITE_TS_DOUBLE_LINE;
-                      break;
-                    case THICK:
-                      block = ROAD_WITH_WHITE_TS_THICK_LINE;
-                      break;
-                    default:
-                      switch (stateLeft.lineType()) {
-                        case DOUBLE:
-                          block = ROAD_WITH_WHITE_DOUBLE_TS_LINE;
-                          break;
-                        case THICK:
-                          block = ROAD_WITH_WHITE_THICK_TS_LINE;
-                          break;
-                        default:
-                          block = ROAD_WITH_WHITE_TS_LINE;
-                          break;
-                      }
-                      break;
-                  }
-                  return block.getDefaultState()
+                  return (switch (facingState.lineType()) {
+                    case DOUBLE -> ROAD_WITH_WHITE_TS_DOUBLE_LINE;
+                    case THICK -> ROAD_WITH_WHITE_TS_THICK_LINE;
+                    default -> switch (stateLeft.lineType()) {
+                      case DOUBLE -> ROAD_WITH_WHITE_DOUBLE_TS_LINE;
+                      case THICK -> ROAD_WITH_WHITE_THICK_TS_LINE;
+                      default -> ROAD_WITH_WHITE_TS_LINE;
+                    };
+                  }).getDefaultState()
                       .with(RoadWithJointLine.FACING, facingDirection);
                 }
               }
             } else {
               // 存在左右两侧标线不等的情况。
-              RoadWithJointLine.Impl block;
-              switch (unconnectedState.lineColor()) {
-                case YELLOW:
-                  block = ROAD_WITH_YELLOW_TS_LINE;
-                  break;
-                case WHITE:
-                case UNKNOWN:
-                case NONE:
-                  block = ROAD_WITH_WHITE_TS_LINE;
-                  break;
-                default:
-                  throw new IllegalArgumentException();
-              }
-              return block
+              return (switch (facingState.lineColor()) {
+                case YELLOW -> ROAD_WITH_YELLOW_TS_LINE;
+                case WHITE, UNKNOWN, NONE -> ROAD_WITH_WHITE_TS_LINE;
+              })
                   .getDefaultState()
                   .with(Properties.HORIZONTAL_FACING, facingDirection);
             }

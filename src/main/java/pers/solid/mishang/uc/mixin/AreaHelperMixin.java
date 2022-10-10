@@ -17,7 +17,7 @@ public abstract class AreaHelperMixin {
     cir.setReturnValue(cir.getReturnValueZ() || state.isOf(ColoredBlocks.COLORED_NETHER_PORTAL));
   }
 
-  @Redirect(method = "getPotentialHeight", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isOf(Lnet/minecraft/block/Block;)Z"))
+  @Redirect(method = "method_30490", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isOf(Lnet/minecraft/block/Block;)Z"))
   private boolean redirectedPotentialHeight(BlockState instance, Block block) {
     return instance.isOf(block) || instance.isOf(ColoredBlocks.COLORED_NETHER_PORTAL);
   }

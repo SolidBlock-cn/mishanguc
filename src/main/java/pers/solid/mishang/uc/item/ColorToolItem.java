@@ -43,7 +43,7 @@ public class ColorToolItem extends BlockToolItem implements ItemResourceGenerato
     final NbtCompound nbt = stack.getTag();
     if (nbt != null && nbt.contains("color", NbtType.NUMBER)) {
       final int color = nbt.getInt("color");
-      return TextBridge.translatable("block.mishanguc.colored_block.color", super.getName(stack), TextBridge.empty().append(TextBridge.literal("■").styled(style -> style.withColor(TextColor.fromRgb(color)))).append(Integer.toHexString(color)));
+      return TextBridge.translatable("block.mishanguc.colored_block.color", super.getName(stack), MishangUtils.describeColor(color));
     } else {
       return super.getName(stack);
     }

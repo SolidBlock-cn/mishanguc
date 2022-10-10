@@ -134,11 +134,39 @@ public final class RoadBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final RoadWithAngleLine.Impl ROAD_WITH_WHITE_BA_LINE = new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL, true);
   /**
+   * 白色双斜线。
+   */
+  @ApiStatus.AvailableSince("1.0.2")
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithAngleLine.Impl ROAD_WITH_WHITE_BA_DOUBLE_LINE = new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.DOUBLE, true);
+  /**
+   * 白色粗斜线。
+   */
+  @ApiStatus.AvailableSince("1.0.2")
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithAngleLine.Impl ROAD_WITH_WHITE_BA_THICK_LINE = new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.THICK, true);
+  /**
    * 黄色斜线。
    */
   @Cutout
   @RegisterIdentifier
   public static final RoadWithAngleLine.Impl ROAD_WITH_YELLOW_BA_LINE = new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL, true);
+  /**
+   * 黄色双斜线。
+   */
+  @ApiStatus.AvailableSince("1.0.2")
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithAngleLine.Impl ROAD_WITH_YELLOW_BA_DOUBLE_LINE = new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.YELLOW, LineType.DOUBLE, true);
+  /**
+   * 黄色粗斜线。
+   */
+  @ApiStatus.AvailableSince("1.0.2")
+  @Cutout
+  @RegisterIdentifier
+  public static final RoadWithAngleLine.Impl ROAD_WITH_YELLOW_BA_THICK_LINE = new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.YELLOW, LineType.THICK, true);
   /**
    * <h3>有偏移的直角</h3>
    * 白色一侧向外偏移的直角。
