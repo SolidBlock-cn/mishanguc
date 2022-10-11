@@ -28,9 +28,9 @@ public class StandingSignBlockItem extends NamedBlockItem {
   protected static @NotNull Stream<TextContext> getTextContextsFromNbt(@Nullable NbtElement nbt) {
     if (nbt == null) return Stream.empty();
     else if (nbt instanceof NbtList nbtList) {
-      return nbtList.stream().map(nbt1 -> TextContext.fromNbt(nbt1, StandingSignBlockEntity.DEFAULT_TEXT_CONTEXT));
+      return nbtList.stream().map(nbt1 -> TextContext.fromNbt(nbt1, StandingSignBlockEntity.DEFAULT_TEXT_CONTEXT.clone()));
     } else {
-      return Stream.of(TextContext.fromNbt(nbt, StandingSignBlockEntity.DEFAULT_TEXT_CONTEXT));
+      return Stream.of(TextContext.fromNbt(nbt, StandingSignBlockEntity.DEFAULT_TEXT_CONTEXT.clone()));
     }
   }
 
