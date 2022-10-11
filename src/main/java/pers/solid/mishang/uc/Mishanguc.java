@@ -428,6 +428,14 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(WallSignBlocks.GLOWING_STONE_BRICK_WALL_SIGN, WallSignBlocks.COLORED_GLOWING_STONE_BRICK_WALL_SIGN);
     blockMap.put(WallSignBlocks.IRON_WALL_SIGN, WallSignBlocks.COLORED_IRON_WALL_SIGN);
     blockMap.put(WallSignBlocks.GLOWING_IRON_WALL_SIGN, WallSignBlocks.COLORED_GLOWING_IRON_WALL_SIGN);
+    blockMap.put(StandingSignBlocks.STONE_STANDING_SIGN, StandingSignBlocks.COLORED_STONE_STANDING_SIGN);
+    blockMap.put(StandingSignBlocks.GLOWING_STONE_STANDING_SIGN, StandingSignBlocks.COLORED_GLOWING_STONE_STANDING_SIGN);
+    blockMap.put(StandingSignBlocks.COBBLESTONE_STANDING_SIGN, StandingSignBlocks.COLORED_COBBLESTONE_STANDING_SIGN);
+    blockMap.put(StandingSignBlocks.GLOWING_COBBLESTONE_STANDING_SIGN, StandingSignBlocks.COLORED_GLOWING_COBBLESTONE_STANDING_SIGN);
+    blockMap.put(StandingSignBlocks.STONE_BRICK_STANDING_SIGN, StandingSignBlocks.COLORED_STONE_BRICK_STANDING_SIGN);
+    blockMap.put(StandingSignBlocks.GLOWING_STONE_BRICK_STANDING_SIGN, StandingSignBlocks.COLORED_GLOWING_STONE_BRICK_STANDING_SIGN);
+    blockMap.put(StandingSignBlocks.IRON_STANDING_SIGN, StandingSignBlocks.COLORED_IRON_STANDING_SIGN);
+    blockMap.put(StandingSignBlocks.GLOWING_IRON_STANDING_SIGN, StandingSignBlocks.COLORED_GLOWING_IRON_STANDING_SIGN);
   }
 
   @Override
