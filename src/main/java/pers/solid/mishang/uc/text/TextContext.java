@@ -197,17 +197,17 @@ public class TextContext implements Cloneable {
    * 从一个 NBT 元素创建一个新的 TextContext 对象，并使用指定的默认值。该默认值用于，在没有标签时如何处理。
    *
    * @param nbt      NBT 复合标签或者字符串。
-   * @param defaults 一个默认的 TextContext 对象。在内部会被复制一次。该对象内的属性会被使用。
+   * @param defaults 一个默认的 TextContext 对象。该对象的值会直接修改。
    * @return 新的 TextContext 对象。
    */
+  @Contract(value = "_, _ -> param2", mutates = "param2")
   public static @NotNull TextContext fromNbt(NbtElement nbt, TextContext defaults) {
-    final TextContext textContext = defaults.clone();
-    if (nbt instanceof NbtString) {
-      textContext.text = TextBridge.literal(nbt.asString());
+    if (nbt instanceof NbtString || nbt instanceof AbstractNbtNumber) {
+      defaults.text = TextBridge.literal(nbt.asString());
     } else if (nbt instanceof NbtCompound nbtCompound) {
-      textContext.readNbt(nbtCompound);
+      defaults.readNbt(nbtCompound);
     }
-    return textContext;
+    return defaults;
   }
 
   private static void putBooleanParam(NbtCompound nbt, String name, boolean value) {

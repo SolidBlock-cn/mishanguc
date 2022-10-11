@@ -60,18 +60,18 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
     final NbtElement nbtFrontTexts = nbt.get("frontTexts");
     if (nbtFrontTexts instanceof NbtList nbtList) {
       frontTexts = nbtList.stream()
-          .map(nbtElement -> TextContext.fromNbt(nbtElement, getDefaultTextContext()))
+          .map(nbtElement -> TextContext.fromNbt(nbtElement, createDefaultTextContext()))
           .collect(ImmutableList.toImmutableList());
     } else {
-      frontTexts = ImmutableList.of(TextContext.fromNbt(nbtFrontTexts, getDefaultTextContext()));
+      frontTexts = ImmutableList.of(TextContext.fromNbt(nbtFrontTexts, createDefaultTextContext()));
     }
     final NbtElement nbtBackTexts = nbt.get("backTexts");
     if (nbtBackTexts instanceof NbtList nbtList) {
       backTexts = nbtList.stream()
-          .map(nbtElement -> TextContext.fromNbt(nbtElement, getDefaultTextContext()))
+          .map(nbtElement -> TextContext.fromNbt(nbtElement, createDefaultTextContext()))
           .collect(ImmutableList.toImmutableList());
     } else {
-      backTexts = ImmutableList.of(TextContext.fromNbt(nbtBackTexts, getDefaultTextContext()));
+      backTexts = ImmutableList.of(TextContext.fromNbt(nbtBackTexts, createDefaultTextContext()));
     }
   }
 
@@ -101,7 +101,7 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  public TextContext getDefaultTextContext() {
+  public TextContext createDefaultTextContext() {
     return DEFAULT_TEXT_CONTEXT.clone();
   }
 

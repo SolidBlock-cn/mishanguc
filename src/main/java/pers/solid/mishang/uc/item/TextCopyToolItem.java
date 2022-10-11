@@ -154,7 +154,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         return ActionResult.SUCCESS;
       } else if (blockEntity instanceof WallSignBlockEntity wallSignBlockEntity) {
         if (world.isClient) return ActionResult.SUCCESS;
-        wallSignBlockEntity.textContexts = ImmutableList.copyOf(texts.stream().map(nbtElement -> TextContext.fromNbt(nbtElement, wallSignBlockEntity.getDefaultTextContext())).iterator());
+        wallSignBlockEntity.textContexts = ImmutableList.copyOf(texts.stream().map(nbtElement -> TextContext.fromNbt(nbtElement, wallSignBlockEntity.createDefaultTextContext())).iterator());
         if (stack.getOrCreateNbt().getBoolean("fromVanillaSign")) {
           MishangUtils.rearrange(wallSignBlockEntity.textContexts);
         }
@@ -174,7 +174,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
           return ActionResult.FAIL;
         }
         final HashMap<@NotNull Direction, @Unmodifiable @NotNull List<@NotNull TextContext>> newTexts = new HashMap<>(hungSignBlockEntity.texts);
-        final ImmutableList<@NotNull TextContext> newTextsThisSide = ImmutableList.copyOf(texts.stream().map(nbtElement -> TextContext.fromNbt(nbtElement, hungSignBlockEntity.getDefaultTextContext())).iterator());
+        final ImmutableList<@NotNull TextContext> newTextsThisSide = ImmutableList.copyOf(texts.stream().map(nbtElement -> TextContext.fromNbt(nbtElement, hungSignBlockEntity.createDefaultTextContext())).iterator());
         if (stack.getOrCreateNbt().getBoolean("fromVanillaSign")) {
           MishangUtils.rearrange(newTextsThisSide);
         }
@@ -193,7 +193,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         if (world.isClient) return ActionResult.SUCCESS;
         final Boolean isFront = StandingSignBlock.getHitSide(blockState, blockHitResult);
         if (isFront != null) {
-          standingSignBlockEntity.setTextsOnSide(isFront, texts.stream().map(nbtElement -> TextContext.fromNbt(nbtElement, standingSignBlockEntity.getDefaultTextContext())).collect(ImmutableList.toImmutableList()));
+          standingSignBlockEntity.setTextsOnSide(isFront, texts.stream().map(nbtElement -> TextContext.fromNbt(nbtElement, standingSignBlockEntity.createDefaultTextContext())).collect(ImmutableList.toImmutableList()));
           if (stack.getOrCreateNbt().getBoolean("fromVanillaSign")) {
             MishangUtils.rearrange(standingSignBlockEntity.getTextsOnSide(isFront));
           }
