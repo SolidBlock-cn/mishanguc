@@ -11,6 +11,7 @@ Updated following content:
 - Standing signs.
 - Added information tooltip for sign block items.
 - Road with bevel angle double or thick line.
+- Set the texture of bar part of ice hung sign to blue ice.
 
 Fixed following issues:
 
