@@ -52,12 +52,12 @@ public abstract class BlockEntityWithText extends BlockEntity
   public abstract @Range(from = 0, to = 16) float getHeight();
 
   /**
-   * 该方块实体的默认的 {@link TextContext} 对象。可以是 {@code new TextContext()}。
+   * 该方块实体的默认的 {@link TextContext} 对象。
    *
    * @return 该方块实体的默认 <tt>TextContext</tt>。
    */
   @Contract("-> new")
-  public abstract TextContext getDefaultTextContext();
+  public abstract TextContext createDefaultTextContext();
 
   /**
    * @return 正在编辑该告示牌的玩家。如果没有玩家正在编辑，则返回 {@code null}。
@@ -107,7 +107,7 @@ public abstract class BlockEntityWithText extends BlockEntity
               entity.setEditor(null);
               final @Unmodifiable ImmutableList<TextContext> textContexts = nbt != null
                   ? nbt.getList("texts", 10).stream()
-                  .map(e -> TextContext.fromNbt(e, entity.getDefaultTextContext()))
+                  .map(e -> TextContext.fromNbt(e, entity.createDefaultTextContext()))
                   .collect(ImmutableList.toImmutableList())
                   : null;
               if (editorAllowed != player) {

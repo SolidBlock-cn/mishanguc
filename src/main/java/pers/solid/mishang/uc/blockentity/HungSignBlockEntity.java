@@ -67,9 +67,9 @@ public class HungSignBlockEntity extends BlockEntityWithText {
         }
         final ImmutableList<TextContext> build = listBuilder.build();
         if (!build.isEmpty()) builder.put(direction, build);
-      } else {
+      } else if (element != null) {
         builder.put(
-            direction, ImmutableList.of(TextContext.fromNbt(element, getDefaultTextContext())));
+            direction, ImmutableList.of(TextContext.fromNbt(element, createDefaultTextContext())));
       }
     }
     texts = builder.build();
@@ -120,7 +120,7 @@ public class HungSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  public TextContext getDefaultTextContext() {
+  public TextContext createDefaultTextContext() {
     return DEFAULT_TEXT_CONTEXT.clone();
   }
 

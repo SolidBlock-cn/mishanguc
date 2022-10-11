@@ -48,7 +48,7 @@ public class HungSignBlockItem extends NamedBlockItem {
       if (element instanceof NbtList) {
         ImmutableList.Builder<TextContext> listBuilder = new ImmutableList.Builder<>();
         for (NbtElement nbtElement : ((NbtList) element)) {
-          TextContext textContext = TextContext.fromNbt(nbtElement, HungSignBlockEntity.DEFAULT_TEXT_CONTEXT);
+          TextContext textContext = TextContext.fromNbt(nbtElement, HungSignBlockEntity.DEFAULT_TEXT_CONTEXT.clone());
           listBuilder.add(textContext);
         }
         final ImmutableList<TextContext> build = listBuilder.build();
@@ -57,7 +57,7 @@ public class HungSignBlockItem extends NamedBlockItem {
         builder.put(
             direction,
             ImmutableList.of(
-                TextContext.fromNbt(element, HungSignBlockEntity.DEFAULT_TEXT_CONTEXT)));
+                TextContext.fromNbt(element, HungSignBlockEntity.DEFAULT_TEXT_CONTEXT.clone())));
       }
     }
     return builder.build();

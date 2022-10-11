@@ -176,13 +176,25 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   @Override
   public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     final Direction.Axis axis = state.get(AXIS);
-    final boolean left = state.get(LEFT);
-    final boolean right = state.get(RIGHT);
-    final boolean shouldCollideWide = context != ShapeContext.absent();
     switch (axis) {
       case X:
-        if (shouldCollideWide) return SHAPE_WIDENED_X;
-        else if (!left && !right)
+        return SHAPE_WIDENED_X;
+      case Z:
+        return SHAPE_WIDENED_Z;
+      default:
+        return VoxelShapes.empty();
+    }
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    final Direction.Axis axis = state.get(AXIS);
+    final boolean left = state.get(LEFT);
+    final boolean right = state.get(RIGHT);
+    switch (axis) {
+      case X:
+        if (!left && !right)
           return VoxelShapes.union(
               SHAPE_X, BAR_SHAPES_EDGE.get(Direction.SOUTH), BAR_SHAPES_EDGE.get(Direction.NORTH));
         else
@@ -191,8 +203,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
               !left ? BAR_SHAPES.get(Direction.SOUTH) : VoxelShapes.empty(),
               !right ? BAR_SHAPES.get(Direction.NORTH) : VoxelShapes.empty());
       case Z:
-        if (shouldCollideWide) return SHAPE_WIDENED_Z;
-        else if (!left && !right)
+        if (!left && !right)
           return VoxelShapes.union(
               SHAPE_Z, BAR_SHAPES_EDGE.get(Direction.WEST), BAR_SHAPES_EDGE.get(Direction.EAST));
         else
@@ -203,6 +214,18 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       default:
         return VoxelShapes.empty();
     }
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos) {
+    return getOutlineShape(state, world, pos, ShapeContext.absent());
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
+    return getCollisionShape(state, world, pos, ShapeContext.absent());
   }
 
   @SuppressWarnings("deprecation")

@@ -79,7 +79,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   protected static final VoxelShape SHAPE_NS_WIDE = createCuboidShape(2, 8, 5, 14, 16, 11);
   protected static final VoxelShape SHAPE_WE_WIDE = createCuboidShape(5, 8, 2, 11, 16, 14);
   protected static final VoxelShape SHAPE_CENTER = createCuboidShape(2.5, 8, 2.5, 13.5, 16, 13.5);
-  protected static final VoxelShape CULLING_SHAPE = createCuboidShape(7.5, 8, 7.5, 8.5, 8, 8.5);
+  protected static final VoxelShape CULLING_SHAPE = createCuboidShape(7.5, 0, 7.5, 8.5, 8, 8.5);
   protected static final VoxelShape BAR_SHAPE = createCuboidShape(6.5, 0, 6.5, 9.5, 8, 9.5);
   public final @Nullable Block baseBlock;
   public @Nullable String baseTexture, barTexture;
