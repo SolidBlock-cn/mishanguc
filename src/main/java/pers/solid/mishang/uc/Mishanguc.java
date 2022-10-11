@@ -419,6 +419,8 @@ public class Mishanguc implements ModInitializer {
     tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "wooden_wall_signs")), WallSignBlocks.COLORED_WOODEN_WALL_SIGN);
     tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "concrete_wall_signs")), WallSignBlocks.COLORED_CONCRETE_WALL_SIGN);
     tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "terracotta_wall_signs")), WallSignBlocks.COLORED_TERRACOTTA_WALL_SIGN);
+    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "glowing_concrete_wall_signs")), WallSignBlocks.COLORED_GLOWING_CONCRETE_WALL_SIGN);
+    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "glowing_terracotta_wall_signs")), WallSignBlocks.COLORED_GLOWING_TERRACOTTA_WALL_SIGN);
 
     blockMap.put(WallSignBlocks.STONE_WALL_SIGN, WallSignBlocks.COLORED_STONE_WALL_SIGN);
     blockMap.put(WallSignBlocks.GLOWING_STONE_WALL_SIGN, WallSignBlocks.COLORED_GLOWING_STONE_WALL_SIGN);
