@@ -146,8 +146,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
 
   @ApiStatus.AvailableSince("0.1.6")
   public final ButtonWidget applyDoubleLineTemplateButton = new ButtonWidget(width / 2 - 50, 70, 120, 20, TextBridge.translatable("message.mishanguc.apply_double_line_template"), button -> {
-    addTextField(0, AbstractSignBlockEditScreen.this.entity.getDefaultTextContext(), false);
-    addTextField(1, Util.make(AbstractSignBlockEditScreen.this.entity.getDefaultTextContext(), textContext -> textContext.size /= 2), false);
+    addTextField(0, AbstractSignBlockEditScreen.this.entity.createDefaultTextContext(), false);
+    addTextField(1, Util.make(AbstractSignBlockEditScreen.this.entity.createDefaultTextContext(), textContext -> textContext.size /= 2), false);
     textFieldListScreen.setSelected(textFieldListScreen.children().get(0));
     rearrange();
   }, (button, matrices, mouseX, mouseY) -> descriptionAtom.set(TextBridge.translatable("message.mishanguc.apply_double_line_template.description")));
@@ -155,17 +155,17 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   @ApiStatus.AvailableSince("0.1.6")
   public final ButtonWidget applyLeftArrowTemplateButton = new ButtonWidget(width / 2 - 150, 70, 120, 20, TextBridge.translatable("message.mishanguc.apply_left_arrow_template"), (ButtonWidget button) -> {
     BlockEntityWithText entity = AbstractSignBlockEditScreen.this.entity;
-    final TextContext textContext0 = entity.getDefaultTextContext();
+    final TextContext textContext0 = entity.createDefaultTextContext();
     textContext0.extra = PatternSpecialDrawable.fromName(textContext0, "al");
     textContext0.size = 8;
     textContext0.offsetX = -4;
     textContext0.absolute = true;
     AbstractSignBlockEditScreen.this.addTextField(0, textContext0, false);
-    final TextContext textContext1 = entity.getDefaultTextContext();
+    final TextContext textContext1 = entity.createDefaultTextContext();
     textContext1.offsetX = 8;
     textContext1.horizontalAlign = HorizontalAlign.LEFT;
     AbstractSignBlockEditScreen.this.addTextField(1, textContext1, false);
-    final TextContext textContext2 = entity.getDefaultTextContext();
+    final TextContext textContext2 = entity.createDefaultTextContext();
     textContext2.offsetX = 8;
     textContext2.horizontalAlign = HorizontalAlign.LEFT;
     textContext2.size /= 2;
@@ -177,17 +177,17 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   @ApiStatus.AvailableSince("0.1.6")
   public final ButtonWidget applyRightArrowTemplateButton = new ButtonWidget(width / 2 - 50, 70, 120, 20, TextBridge.translatable("message.mishanguc.apply_right_arrow_template"), (ButtonWidget button) -> {
     BlockEntityWithText entity = AbstractSignBlockEditScreen.this.entity;
-    final TextContext textContext0 = entity.getDefaultTextContext();
+    final TextContext textContext0 = entity.createDefaultTextContext();
     textContext0.extra = PatternSpecialDrawable.fromName(textContext0, "ar");
     textContext0.size = 8;
     textContext0.offsetX = 4;
     textContext0.absolute = true;
     AbstractSignBlockEditScreen.this.addTextField(0, textContext0, false);
-    final TextContext textContext1 = entity.getDefaultTextContext();
+    final TextContext textContext1 = entity.createDefaultTextContext();
     textContext1.offsetX = -8;
     textContext1.horizontalAlign = HorizontalAlign.RIGHT;
     AbstractSignBlockEditScreen.this.addTextField(1, textContext1, false);
-    final TextContext textContext2 = entity.getDefaultTextContext();
+    final TextContext textContext2 = entity.createDefaultTextContext();
     textContext2.offsetX = -8;
     textContext2.horizontalAlign = HorizontalAlign.RIGHT;
     textContext2.size /= 2;
@@ -648,7 +648,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     this.blockPos = blockPos;
     this.textContextsEditing = textContextsEditing;
     entity.setEditor(this.client != null ? this.client.player : null);
-    sizeButton.defaultValue = entity.getDefaultTextContext().size;
+    sizeButton.defaultValue = entity.createDefaultTextContext().size;
   }
 
   /**
@@ -773,7 +773,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    */
   public void addTextField(int index) {
     // 添加时，默认相当于上一行的。
-    final TextContext emptyTextContext = index > 0 ? textContextsEditing.get(index - 1).clone() : entity.getDefaultTextContext();
+    final TextContext emptyTextContext = index > 0 ? textContextsEditing.get(index - 1).clone() : entity.createDefaultTextContext();
     emptyTextContext.text = null;
     emptyTextContext.extra = null;
     addTextField(index, emptyTextContext, false);
