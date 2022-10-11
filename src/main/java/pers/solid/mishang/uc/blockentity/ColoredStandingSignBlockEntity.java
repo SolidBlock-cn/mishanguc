@@ -22,9 +22,10 @@ public class ColoredStandingSignBlockEntity extends StandingSignBlockEntity impl
   }
 
   @Override
-  public void writeNbt(NbtCompound nbt) {
+  public NbtCompound writeNbt(NbtCompound nbt) {
     super.writeNbt(nbt);
     nbt.putInt("color", color);
+    return nbt;
   }
 
   @Override
