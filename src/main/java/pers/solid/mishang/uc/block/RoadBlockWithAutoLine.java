@@ -182,7 +182,7 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
             }
 
             if (connectionState.lineColor() == adjacentState.lineColor() || adjacentState.lineColor() == LineColor.UNKNOWN) {
-              final LineType lineType = ObjectUtils.min(connectionState.lineType(), adjacentState.lineType());
+              final LineType lineType = connectionState.sureConnect() && adjacentState.sureConnect() ? ObjectUtils.min(connectionState.lineType(), adjacentState.lineType()) : connectionState.sureConnect() ? connectionState.lineType() : adjacentState.lineType();
               return (switch (connectionState.lineColor()) {
                 case YELLOW -> switch (type) {
                   case BEVEL -> switch (lineType) {
