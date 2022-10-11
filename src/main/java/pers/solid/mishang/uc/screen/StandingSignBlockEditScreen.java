@@ -34,7 +34,7 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
   @Override
   protected void initTextHolders() {
     super.initTextHolders();
-    this.addDrawableChild(copyFromBackButton);
+    this.addButton(copyFromBackButton);
   }
 
   @Override

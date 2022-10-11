@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.blocks;
 
 import com.google.common.collect.ImmutableMap;
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.SignType;
@@ -24,21 +25,21 @@ public final class StandingSignBlocks extends MishangucBlocks {
   }
 
   @RegisterIdentifier
-  public static final StandingSignBlock OAK_STANDING_SIGN = new StandingSignBlock(Blocks.OAK_PLANKS);
+  public static final StandingSignBlock OAK_STANDING_SIGN = new StandingSignBlock(Blocks.OAK_PLANKS, FabricToolTags.AXES);
   @RegisterIdentifier
-  public static final StandingSignBlock SPRUCE_STANDING_SIGN = new StandingSignBlock(Blocks.SPRUCE_PLANKS);
+  public static final StandingSignBlock SPRUCE_STANDING_SIGN = new StandingSignBlock(Blocks.SPRUCE_PLANKS, FabricToolTags.AXES);
   @RegisterIdentifier
-  public static final StandingSignBlock BIRCH_STANDING_SIGN = new StandingSignBlock(Blocks.BIRCH_PLANKS);
+  public static final StandingSignBlock BIRCH_STANDING_SIGN = new StandingSignBlock(Blocks.BIRCH_PLANKS, FabricToolTags.AXES);
   @RegisterIdentifier
-  public static final StandingSignBlock ACACIA_STANDING_SIGN = new StandingSignBlock(Blocks.ACACIA_PLANKS);
+  public static final StandingSignBlock ACACIA_STANDING_SIGN = new StandingSignBlock(Blocks.ACACIA_PLANKS, FabricToolTags.AXES);
   @RegisterIdentifier
-  public static final StandingSignBlock JUNGLE_STANDING_SIGN = new StandingSignBlock(Blocks.JUNGLE_PLANKS);
+  public static final StandingSignBlock JUNGLE_STANDING_SIGN = new StandingSignBlock(Blocks.JUNGLE_PLANKS, FabricToolTags.AXES);
   @RegisterIdentifier
-  public static final StandingSignBlock DARK_OAK_STANDING_SIGN = new StandingSignBlock(Blocks.DARK_OAK_PLANKS);
+  public static final StandingSignBlock DARK_OAK_STANDING_SIGN = new StandingSignBlock(Blocks.DARK_OAK_PLANKS, FabricToolTags.AXES);
   @RegisterIdentifier
-  public static final StandingSignBlock CRIMSON_STANDING_SIGN = new StandingSignBlock(Blocks.CRIMSON_PLANKS);
+  public static final StandingSignBlock CRIMSON_STANDING_SIGN = new StandingSignBlock(Blocks.CRIMSON_PLANKS, FabricToolTags.AXES);
   @RegisterIdentifier
-  public static final StandingSignBlock WARPED_STANDING_SIGN = new StandingSignBlock(Blocks.WARPED_PLANKS);
+  public static final StandingSignBlock WARPED_STANDING_SIGN = new StandingSignBlock(Blocks.WARPED_PLANKS, FabricToolTags.AXES);
 
   static {
     OAK_STANDING_SIGN.barTexture = "block/oak_log";
@@ -309,50 +310,50 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final ColoredGlowingStandingSignBlock COLORED_GLOWING_STONE_BRICK_STANDING_SIGN = new ColoredGlowingStandingSignBlock(ColoredBlocks.COLORED_STONE_BRICKS);
   /// 铁块
   @RegisterIdentifier
-  public static final StandingSignBlock IRON_STANDING_SIGN = new StandingSignBlock(Blocks.IRON_BLOCK);
+  public static final StandingSignBlock IRON_STANDING_SIGN = new StandingSignBlock(Blocks.IRON_BLOCK, FabricToolTags.PICKAXES, 1);
   @RegisterIdentifier
-  public static final GlowingStandingSignBlock GLOWING_IRON_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.IRON_BLOCK);
+  public static final GlowingStandingSignBlock GLOWING_IRON_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.IRON_BLOCK, FabricToolTags.PICKAXES, 1);
   @RegisterIdentifier
-  public static final ColoredStandingSignBlock COLORED_IRON_STANDING_SIGN = new ColoredStandingSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
+  public static final ColoredStandingSignBlock COLORED_IRON_STANDING_SIGN = new ColoredStandingSignBlock(ColoredBlocks.COLORED_IRON_BLOCK, FabricToolTags.PICKAXES, 1);
   @RegisterIdentifier
-  public static final ColoredGlowingStandingSignBlock COLORED_GLOWING_IRON_STANDING_SIGN = new ColoredGlowingStandingSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
+  public static final ColoredGlowingStandingSignBlock COLORED_GLOWING_IRON_STANDING_SIGN = new ColoredGlowingStandingSignBlock(ColoredBlocks.COLORED_IRON_BLOCK, FabricToolTags.PICKAXES, 1);
   /// 金块
   @RegisterIdentifier
-  public static final StandingSignBlock GOLD_STANDING_SIGN = new StandingSignBlock(Blocks.GOLD_BLOCK);
+  public static final StandingSignBlock GOLD_STANDING_SIGN = new StandingSignBlock(Blocks.GOLD_BLOCK, FabricToolTags.PICKAXES, 2);
   @RegisterIdentifier
-  public static final GlowingStandingSignBlock GLOWING_GOLD_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.GOLD_BLOCK);
+  public static final GlowingStandingSignBlock GLOWING_GOLD_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.GOLD_BLOCK, FabricToolTags.PICKAXES, 2);
   /// 钻石块
   @RegisterIdentifier
-  public static final StandingSignBlock DIAMOND_STANDING_SIGN = new StandingSignBlock(Blocks.DIAMOND_BLOCK);
+  public static final StandingSignBlock DIAMOND_STANDING_SIGN = new StandingSignBlock(Blocks.DIAMOND_BLOCK, FabricToolTags.PICKAXES, 3);
   @RegisterIdentifier
-  public static final GlowingStandingSignBlock GLOWING_DIAMOND_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.DIAMOND_BLOCK);
+  public static final GlowingStandingSignBlock GLOWING_DIAMOND_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.DIAMOND_BLOCK, FabricToolTags.PICKAXES, 3);
 
 
   // 绿宝石块
   @RegisterIdentifier
-  public static final StandingSignBlock EMERALD_STANDING_SIGN = new StandingSignBlock(Blocks.EMERALD_BLOCK);
+  public static final StandingSignBlock EMERALD_STANDING_SIGN = new StandingSignBlock(Blocks.EMERALD_BLOCK, FabricToolTags.PICKAXES, 2);
   @RegisterIdentifier
-  public static final GlowingStandingSignBlock GLOWING_EMERALD_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.EMERALD_BLOCK);
+  public static final GlowingStandingSignBlock GLOWING_EMERALD_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.EMERALD_BLOCK, FabricToolTags.PICKAXES, 2);
   // 青金石块
   @RegisterIdentifier
-  public static final StandingSignBlock LAPIS_STANDING_SIGN = new StandingSignBlock(Blocks.LAPIS_BLOCK);
+  public static final StandingSignBlock LAPIS_STANDING_SIGN = new StandingSignBlock(Blocks.LAPIS_BLOCK, FabricToolTags.PICKAXES, 1);
   @RegisterIdentifier
-  public static final GlowingStandingSignBlock GLOWING_LAPIS_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.LAPIS_BLOCK);
+  public static final GlowingStandingSignBlock GLOWING_LAPIS_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.LAPIS_BLOCK, FabricToolTags.PICKAXES, 1);
   // 下界合金块
   @RegisterIdentifier
-  public static final StandingSignBlock NETHERITE_STANDING_SIGN = new StandingSignBlock(Blocks.NETHERITE_BLOCK);
+  public static final StandingSignBlock NETHERITE_STANDING_SIGN = new StandingSignBlock(Blocks.NETHERITE_BLOCK, FabricToolTags.PICKAXES, 3);
   @RegisterIdentifier
-  public static final GlowingStandingSignBlock GLOWING_NETHERITE_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.NETHERITE_BLOCK);
+  public static final GlowingStandingSignBlock GLOWING_NETHERITE_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.NETHERITE_BLOCK, FabricToolTags.PICKAXES, 3);
   // 黑曜石
   @RegisterIdentifier
-  public static final StandingSignBlock OBSIDIAN_STANDING_SIGN = new StandingSignBlock(Blocks.OBSIDIAN);
+  public static final StandingSignBlock OBSIDIAN_STANDING_SIGN = new StandingSignBlock(Blocks.OBSIDIAN, FabricToolTags.PICKAXES, 3);
   @RegisterIdentifier
-  public static final GlowingStandingSignBlock GLOWING_OBSIDIAN_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.OBSIDIAN);
+  public static final GlowingStandingSignBlock GLOWING_OBSIDIAN_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.OBSIDIAN, FabricToolTags.PICKAXES, 3);
   // 哭泣的黑曜石
   @RegisterIdentifier
-  public static final StandingSignBlock CRYING_OBSIDIAN_STANDING_SIGN = new StandingSignBlock(Blocks.CRYING_OBSIDIAN);
+  public static final StandingSignBlock CRYING_OBSIDIAN_STANDING_SIGN = new StandingSignBlock(Blocks.CRYING_OBSIDIAN, FabricToolTags.PICKAXES, 3);
   @RegisterIdentifier
-  public static final GlowingStandingSignBlock GLOWING_CRYING_OBSIDIAN_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.CRYING_OBSIDIAN);
+  public static final GlowingStandingSignBlock GLOWING_CRYING_OBSIDIAN_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.CRYING_OBSIDIAN, FabricToolTags.PICKAXES, 3);
   // 下界岩
   @RegisterIdentifier
   public static final StandingSignBlock NETHERRACK_STANDING_SIGN = new StandingSignBlock(Blocks.NETHERRACK);
@@ -384,9 +385,9 @@ public final class StandingSignBlocks extends MishangucBlocks {
 
   // 雪
   @RegisterIdentifier
-  public static final StandingSignBlock SNOW_STANDING_SIGN = new StandingSignBlock(Blocks.SNOW_BLOCK);
+  public static final StandingSignBlock SNOW_STANDING_SIGN = new StandingSignBlock(Blocks.SNOW_BLOCK, FabricToolTags.SHOVELS);
   @RegisterIdentifier
-  public static final GlowingStandingSignBlock GLOWING_SNOW_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.SNOW_BLOCK);
+  public static final GlowingStandingSignBlock GLOWING_SNOW_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.SNOW_BLOCK, FabricToolTags.SHOVELS);
   // 冰
   @RegisterIdentifier
   @Translucent

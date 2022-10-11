@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.block;
 import net.devtech.arrp.generator.BRRPCubeBlock;
 import net.devtech.arrp.json.loot.JLootTable;
 import net.devtech.arrp.json.models.JTextures;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
@@ -37,6 +39,7 @@ public class ColoredCubeBlock extends BRRPCubeBlock implements ColoredBlock {
     return getColoredPickStack(world, pos, state, super::getPickStack);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     super.appendTooltip(stack, world, tooltip, options);

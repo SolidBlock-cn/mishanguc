@@ -185,7 +185,7 @@ public class CarryingToolItem extends BlockToolItem
       return TextBridge.translatable("item.mishanguc.carrying_tool.holding", name, MishangUtils.getBlockName(holdingBlock));
     }
   }
-
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);

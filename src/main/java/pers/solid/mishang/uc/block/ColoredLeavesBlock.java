@@ -39,7 +39,7 @@ public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock, Blo
   public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
     return getColoredPickStack(world, pos, state, super::getPickStack);
   }
-
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     super.appendTooltip(stack, world, tooltip, options);

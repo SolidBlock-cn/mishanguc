@@ -48,7 +48,7 @@ public class ColorToolItem extends BlockToolItem implements ItemResourceGenerato
       return super.getName(stack);
     }
   }
-
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     final NbtCompound nbt = stack.getTag();

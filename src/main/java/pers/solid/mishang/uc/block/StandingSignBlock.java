@@ -22,6 +22,7 @@ import net.minecraft.data.client.model.TextureKey;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -30,6 +31,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.tag.Tag;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
@@ -92,6 +94,14 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     this(baseBlock, FabricBlockSettings.copyOf(baseBlock));
   }
 
+  public StandingSignBlock(@NotNull Block baseBlock, Tag<Item> tag) {
+    this(baseBlock, FabricBlockSettings.copyOf(baseBlock).breakByTool(tag));
+  }
+
+  public StandingSignBlock(@NotNull Block baseBlock, Tag<Item> tag, int level) {
+    this(baseBlock, FabricBlockSettings.copyOf(baseBlock).breakByTool(tag, level));
+  }
+
   /**
    * 根据 BlockHitResult 来判断玩家点击的告示牌是点击的哪一面（front 或 back）。如果点击的是顶部而无法判断哪一面，则返回 {@code null}。
    */
@@ -100,10 +110,10 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     final Direction side = blockHitResult.getSide();
     if (side.getAxis().isVertical()) {
       final Vec3d pos = blockHitResult.getPos();
-      double minAngle = MathHelper.RADIANS_PER_DEGREE * (360 / 16f * blockState.get(ROTATION));
+      double minAngle = Math.toRadians(360 / 16f * blockState.get(ROTATION));
       double clickAngle = MathHelper.atan2(MathHelper.floorMod(pos.z, 1) - 0.5, MathHelper.floorMod(pos.x, 1) - 0.5);
-      return (minAngle < clickAngle && clickAngle < minAngle + MathHelper.PI)
-          || (minAngle - 2 * MathHelper.PI < clickAngle && clickAngle < minAngle - MathHelper.PI);
+      return (minAngle < clickAngle && clickAngle < minAngle + Math.PI)
+          || (minAngle - 2 * Math.PI < clickAngle && clickAngle < minAngle - Math.PI);
     }
     return getHitSide(blockState, side);
   }
@@ -111,49 +121,98 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   @Contract(pure = true)
   public static @Nullable Boolean getHitSide(BlockState blockState, Direction side) {
     final int rotation = blockState.get(ROTATION);
-    return switch (rotation) {
-      case 0 -> switch (side) {
-        case NORTH -> Boolean.FALSE;
-        case SOUTH -> Boolean.TRUE;
-        default -> null;
-      };
-      case 8 -> switch (side) {
-        case SOUTH -> Boolean.FALSE;
-        case NORTH -> Boolean.TRUE;
-        default -> null;
-      };
-      case 4 -> switch (side) {
-        case EAST -> Boolean.FALSE;
-        case WEST -> Boolean.TRUE;
-        default -> null;
-      };
-      case 12 -> switch (side) {
-        case WEST -> Boolean.FALSE;
-        case EAST -> Boolean.TRUE;
-        default -> null;
-      };
-      case 1, 2, 3 -> switch (side) {
-        case WEST, SOUTH -> Boolean.TRUE;
-        case EAST, NORTH -> Boolean.FALSE;
-        default -> null;
-      };
-      case 5, 6, 7 -> switch (side) {
-        case WEST, NORTH -> Boolean.TRUE;
-        case EAST, SOUTH -> Boolean.FALSE;
-        default -> null;
-      };
-      case 9, 10, 11 -> switch (side) {
-        case EAST, NORTH -> Boolean.TRUE;
-        case WEST, SOUTH -> Boolean.FALSE;
-        default -> null;
-      };
-      case 13, 14, 15 -> switch (side) {
-        case EAST, SOUTH -> Boolean.TRUE;
-        case WEST, NORTH -> Boolean.FALSE;
-        default -> null;
-      };
-      default -> null;
-    };
+    switch (rotation) {
+      case 0:
+        switch (side) {
+          case NORTH:
+            return Boolean.FALSE;
+          case SOUTH:
+            return Boolean.TRUE;
+          default:
+            return null;
+        }
+      case 8:
+        switch (side) {
+          case SOUTH:
+            return Boolean.FALSE;
+          case NORTH:
+            return Boolean.TRUE;
+          default:
+            return null;
+        }
+      case 4:
+        switch (side) {
+          case EAST:
+            return Boolean.FALSE;
+          case WEST:
+            return Boolean.TRUE;
+          default:
+            return null;
+        }
+      case 12:
+        switch (side) {
+          case WEST:
+            return Boolean.FALSE;
+          case EAST:
+            return Boolean.TRUE;
+          default:
+            return null;
+        }
+      case 1:
+      case 2:
+      case 3:
+        switch (side) {
+          case WEST:
+          case SOUTH:
+            return Boolean.TRUE;
+          case EAST:
+          case NORTH:
+            return Boolean.FALSE;
+          default:
+            return null;
+        }
+      case 5:
+      case 6:
+      case 7:
+        switch (side) {
+          case WEST:
+          case NORTH:
+            return Boolean.TRUE;
+          case EAST:
+          case SOUTH:
+            return Boolean.FALSE;
+          default:
+            return null;
+        }
+      case 9:
+      case 10:
+      case 11:
+        switch (side) {
+          case EAST:
+          case NORTH:
+            return Boolean.TRUE;
+          case WEST:
+          case SOUTH:
+            return Boolean.FALSE;
+          default:
+            return null;
+        }
+      case 13:
+      case 14:
+      case 15:
+        switch (side) {
+          case EAST:
+          case SOUTH:
+            return Boolean.TRUE;
+          case WEST:
+          case NORTH:
+            return Boolean.FALSE;
+          default:
+            return null;
+        }
+      default:
+        return null;
+    }
   }
 
   @Environment(EnvType.CLIENT)
@@ -215,6 +274,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     return super.getName();
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     super.appendTooltip(stack, world, tooltip, options);
@@ -289,20 +349,39 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-    final VoxelShape bodyShape = switch (state.get(ROTATION)) {
-      case 0, 8 -> SHAPE_NS;
-      case 1, 7, 9, 15 -> SHAPE_NS_WIDE;
-      default -> SHAPE_CENTER;
-      case 3, 5, 11, 13 -> SHAPE_WE_WIDE;
-      case 4, 12 -> SHAPE_WE;
-    };
+    VoxelShape bodyShape;
+    switch (state.get(ROTATION)) {
+      case 0:
+      case 8:
+        bodyShape = SHAPE_NS;
+        break;
+      case 1:
+      case 7:
+      case 9:
+      case 15:
+        bodyShape = SHAPE_NS_WIDE;
+        break;
+      default:
+        bodyShape = SHAPE_CENTER;
+        break;
+      case 3:
+      case 5:
+      case 11:
+      case 13:
+        bodyShape = SHAPE_WE_WIDE;
+        break;
+      case 4:
+      case 12:
+        bodyShape = SHAPE_WE;
+        break;
+    }
     return state.get(DOWN) ? VoxelShapes.union(bodyShape, BAR_SHAPE) : bodyShape;
   }
 
   @Nullable
   @Override
-  public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-    return new StandingSignBlockEntity(pos, state);
+  public BlockEntity createBlockEntity(BlockView world) {
+    return new StandingSignBlockEntity();
   }
 
   @SuppressWarnings("deprecation")
@@ -321,11 +400,13 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
    * 鉴于其实际外观与碰撞形状不一致，告示牌使用手动的侧面隐形判断。
    */
   @SuppressWarnings("deprecation")
+  @Environment(EnvType.CLIENT)
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (direction.getAxis().isHorizontal() && stateFrom.getBlock() instanceof StandingSignBlock standingSignBlockFrom) {
+    if (direction.getAxis().isHorizontal() && stateFrom.getBlock() instanceof StandingSignBlock) {
       final int r1 = state.get(ROTATION);
       final int r2 = stateFrom.get(ROTATION);
+      final StandingSignBlock standingSignBlockFrom = (StandingSignBlock) stateFrom.getBlock();
       if ((r1 - r2) % 8 == 0) {
         if (direction.getAxis() == Direction.Axis.X && (r1 == 0 || r1 == 8) || direction.getAxis() == Direction.Axis.Z && (r1 == 4 || r1 == 12)) {
           if (standingSignBlockFrom.baseBlock instanceof TransparentBlock) {
@@ -353,42 +434,46 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
 
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     final Boolean isFront = getHitSide(state, hit);
-    if (!(blockEntity instanceof StandingSignBlockEntity entity)) return ActionResult.PASS;
-    else if (player.isSneaking()) {
-      // 潜行时点击告示牌，可以切换底部杆子的显示。
-      world.setBlockState(pos, state.with(DOWN, !state.get(DOWN)));
-      return ActionResult.SUCCESS;
-    } else if (isFront == null) return ActionResult.PASS;
-    else if (!player.getAbilities().allowModifyWorld) {
-      // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
-      return ActionResult.FAIL;
-    } else if (player.getMainHandStack().getItem() == Items.MAGMA_CREAM) {
-      // 玩家手持岩浆膏时，可快速进行重整。
-      MishangUtils.rearrange(entity.getTextsOnSide(isFront));
-      world.updateListeners(pos, state, state, Block.NOTIFY_ALL);
-      entity.markDirty();
-      return ActionResult.SUCCESS;
-    } else if (player.getMainHandStack().getItem() == Items.SLIME_BALL) {
-      // 玩家手持粘液球时，可快速进行替换箭头。
-      MishangUtils.replaceArrows(entity.getTextsOnSide(isFront));
-      world.updateListeners(pos, state, state, Block.NOTIFY_ALL);
-      entity.markDirty();
-      return ActionResult.SUCCESS;
-    } else if (player.getMainHandStack().getItem() == Items.SLIME_BLOCK) {
-      final WorldChunk worldChunk = world.getWorldChunk(pos);
-      for (BlockEntity value : worldChunk.getBlockEntities().values()) {
-        if (value instanceof StandingSignBlockEntity standingSignBlockEntity) {
-          MishangUtils.rearrange(standingSignBlockEntity.frontTexts);
-          MishangUtils.rearrange(standingSignBlockEntity.backTexts);
-          world.updateListeners(value.getPos(), value.getCachedState(), value.getCachedState(), Block.NOTIFY_ALL);
-          standingSignBlockEntity.markDirty();
+    if (!(blockEntity instanceof StandingSignBlockEntity)) return ActionResult.PASS;
+    else {
+      final StandingSignBlockEntity entity = (StandingSignBlockEntity) blockEntity;
+      if (player.isSneaking()) {
+        // 潜行时点击告示牌，可以切换底部杆子的显示。
+        world.setBlockState(pos, state.with(DOWN, !state.get(DOWN)));
+        return ActionResult.SUCCESS;
+      } else if (isFront == null) return ActionResult.PASS;
+      else if (!player.abilities.allowModifyWorld) {
+        // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
+        return ActionResult.FAIL;
+      } else if (player.getMainHandStack().getItem() == Items.MAGMA_CREAM) {
+        // 玩家手持岩浆膏时，可快速进行重整。
+        MishangUtils.rearrange(entity.getTextsOnSide(isFront));
+        world.updateListeners(pos, state, state, 3);
+        entity.markDirty();
+        return ActionResult.SUCCESS;
+      } else if (player.getMainHandStack().getItem() == Items.SLIME_BALL) {
+        // 玩家手持粘液球时，可快速进行替换箭头。
+        MishangUtils.replaceArrows(entity.getTextsOnSide(isFront));
+        world.updateListeners(pos, state, state, 3);
+        entity.markDirty();
+        return ActionResult.SUCCESS;
+      } else if (player.getMainHandStack().getItem() == Items.SLIME_BLOCK) {
+        final WorldChunk worldChunk = world.getWorldChunk(pos);
+        for (BlockEntity value : worldChunk.getBlockEntities().values()) {
+          if (value instanceof StandingSignBlockEntity) {
+            final StandingSignBlockEntity standingSignBlockEntity = (StandingSignBlockEntity) value;
+            MishangUtils.rearrange(standingSignBlockEntity.frontTexts);
+            MishangUtils.rearrange(standingSignBlockEntity.backTexts);
+            world.updateListeners(value.getPos(), value.getCachedState(), value.getCachedState(), 3);
+            standingSignBlockEntity.markDirty();
+          }
         }
+        return ActionResult.SUCCESS;
+      } else if (world.isClient) {
+        return ActionResult.SUCCESS;
       }
-      return ActionResult.SUCCESS;
-    } else if (world.isClient) {
-      return ActionResult.SUCCESS;
     }
-
+    StandingSignBlockEntity entity = (StandingSignBlockEntity) blockEntity;
     entity.checkEditorValidity();
     final PlayerEntity editor = entity.getEditor();
     if (editor != null && editor != player) {

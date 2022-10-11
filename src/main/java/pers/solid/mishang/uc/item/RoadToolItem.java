@@ -38,7 +38,7 @@ public class RoadToolItem extends BlockToolItem implements ItemResourceGenerator
   public RoadToolItem(Settings settings) {
     super(settings, Boolean.FALSE);
   }
-
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);

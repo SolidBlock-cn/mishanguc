@@ -137,7 +137,8 @@ public abstract class BlockEntityWithText extends BlockEntity
                 WallSignBlockEntity wallSignBlockEntity = (WallSignBlockEntity) entity;
                 if (nbt == null) return;
                 wallSignBlockEntity.textContexts = textContexts;
-              } else if (entity instanceof final StandingSignBlockEntity standingSignBlockEntity) {
+              } else if (entity instanceof StandingSignBlockEntity) {
+                final StandingSignBlockEntity standingSignBlockEntity = (StandingSignBlockEntity) entity;
                 final Boolean editedSite = standingSignBlockEntity.editedSide;
                 if (editedSite != null) {
                   standingSignBlockEntity.setTextsOnSide(editedSite, textContexts);

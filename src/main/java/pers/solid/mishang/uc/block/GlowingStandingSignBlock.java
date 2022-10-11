@@ -8,7 +8,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.tag.Tag;
 import net.minecraft.text.MutableText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,6 +30,14 @@ public class GlowingStandingSignBlock extends StandingSignBlock {
 
   public GlowingStandingSignBlock(@NotNull Block baseBlock) {
     this(baseBlock, FabricBlockSettings.copyOf(baseBlock).luminance(15));
+  }
+
+  public GlowingStandingSignBlock(@NotNull Block baseBlock, Tag<Item> tag, int level) {
+    super(baseBlock, tag, level);
+  }
+
+  public GlowingStandingSignBlock(@NotNull Block baseBlock, Tag<Item> tag) {
+    super(baseBlock, tag);
   }
 
   @Override

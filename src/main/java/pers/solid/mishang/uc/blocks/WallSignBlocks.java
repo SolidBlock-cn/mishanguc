@@ -459,10 +459,10 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final GlowingWallSignBlock GLOWING_IRON_WALL_SIGN = new GlowingWallSignBlock(Blocks.IRON_BLOCK, FabricToolTags.PICKAXES, 1);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.2")
-  public static final ColoredWallSignBlock COLORED_IRON_WALL_SIGN = new ColoredWallSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
+  public static final ColoredWallSignBlock COLORED_IRON_WALL_SIGN = new ColoredWallSignBlock(ColoredBlocks.COLORED_IRON_BLOCK, FabricToolTags.PICKAXES, 1);
   @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.2")
-  public static final ColoredGlowingWallSignBlock COLORED_GLOWING_IRON_WALL_SIGN = new ColoredGlowingWallSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
+  public static final ColoredGlowingWallSignBlock COLORED_GLOWING_IRON_WALL_SIGN = new ColoredGlowingWallSignBlock(ColoredBlocks.COLORED_IRON_BLOCK, FabricToolTags.PICKAXES, 1);
   // 金块
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")

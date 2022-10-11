@@ -10,6 +10,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.math.Matrix4f;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.mixin.TextRendererAccessor;
@@ -147,7 +148,7 @@ public final class RectSpecialDrawable implements SpecialDrawable {
   @Override
   public @NotNull MutableText asStyledText() {
     return TextBridge.empty()
-        .append(TextBridge.literal("■").styled(style -> style.withColor(textContext.color)))
+        .append(TextBridge.literal("■").styled(style -> style.withColor(TextColor.fromRgb(textContext.color))))
         .append(" (" + width + "×" + height + ")");
   }
 }

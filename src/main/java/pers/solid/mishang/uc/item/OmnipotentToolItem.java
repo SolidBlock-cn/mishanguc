@@ -41,7 +41,7 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
   public OmnipotentToolItem(Settings settings) {
     super(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, MATERIAL, Collections.emptySet(), settings);
   }
-
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);

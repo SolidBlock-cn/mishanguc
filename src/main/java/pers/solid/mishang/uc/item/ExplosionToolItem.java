@@ -163,7 +163,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       stacks.add(stack5);
     }
   }
-
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);

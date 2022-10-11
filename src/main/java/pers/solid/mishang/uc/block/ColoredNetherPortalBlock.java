@@ -46,6 +46,7 @@ public class ColoredNetherPortalBlock extends NetherPortalBlock implements Color
     return getColoredPickStack(world, pos, state, (blockView, pos1, state1) -> new ItemStack(this));
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     super.appendTooltip(stack, world, tooltip, options);
@@ -54,8 +55,8 @@ public class ColoredNetherPortalBlock extends NetherPortalBlock implements Color
 
   @Nullable
   @Override
-  public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-    return new SimpleColoredBlockEntity(pos, state);
+  public BlockEntity createBlockEntity(BlockView world) {
+    return new SimpleColoredBlockEntity();
   }
 
   @Environment(EnvType.CLIENT)

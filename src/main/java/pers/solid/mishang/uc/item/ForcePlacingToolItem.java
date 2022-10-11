@@ -87,7 +87,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     world.setBlockState(pos, fluidIncluded ? Blocks.AIR.getDefaultState() : fluidState.getBlockState(), 24);
     return ActionResult.success(world.isClient);
   }
-
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(
       ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {

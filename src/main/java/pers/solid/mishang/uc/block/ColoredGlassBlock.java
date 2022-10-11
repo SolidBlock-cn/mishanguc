@@ -35,6 +35,7 @@ public class ColoredGlassBlock extends AbstractGlassBlock implements ColoredBloc
     return getColoredPickStack(world, pos, state, super::getPickStack);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     super.appendTooltip(stack, world, tooltip, options);

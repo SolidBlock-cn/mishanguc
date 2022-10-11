@@ -1,8 +1,8 @@
 package pers.solid.mishang.uc.blocks;
 
 import com.google.common.annotations.Beta;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import com.google.common.collect.ImmutableMap;
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.DyeColor;
 import org.jetbrains.annotations.ApiStatus;
@@ -660,11 +660,6 @@ public final class HungSignBlocks extends MishangucBlocks {
       .put(DyeColor.RED, GLOWING_RED_TERRACOTTA_HUNG_SIGN)
       .put(DyeColor.BLACK, GLOWING_BLACK_TERRACOTTA_HUNG_SIGN)
       .build();
-/*
-  static {
-    COLORED_CONCRETE_HUNG_SIGN.baseTexture = COLORED_GLOWING_CONCRETE_HUNG_SIGN.baseTexture = COLORED_CONCRETE_HUNG_SIGN_BAR.texture = "block/white_concrete";
-    COLORED_TERRACOTTA_HUNG_SIGN.baseTexture = COLORED_GLOWING_TERRACOTTA_HUNG_SIGN.baseTexture = COLORED_TERRACOTTA_HUNG_SIGN_BAR.texture = "block/white_terracotta";
-  }*/
 
   // 以下是比较杂项的一些发光悬挂告示牌方块。
 
@@ -762,15 +757,15 @@ public final class HungSignBlocks extends MishangucBlocks {
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.2")
-  public static final ColoredHungSignBlock COLORED_IRON_HUNG_SIGN = new ColoredHungSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
+  public static final ColoredHungSignBlock COLORED_IRON_HUNG_SIGN = new ColoredHungSignBlock(ColoredBlocks.COLORED_IRON_BLOCK, FabricToolTags.PICKAXES, 1);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.2")
-  public static final ColoredGlowingHungSignBlock COLORED_GLOWING_IRON_HUNG_SIGN = new ColoredGlowingHungSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
+  public static final ColoredGlowingHungSignBlock COLORED_GLOWING_IRON_HUNG_SIGN = new ColoredGlowingHungSignBlock(ColoredBlocks.COLORED_IRON_BLOCK, FabricToolTags.PICKAXES, 1);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.2")
-  public static final ColoredHungSignBarBlock COLORED_IRON_HUNG_SIGN_BAR = new ColoredHungSignBarBlock(ColoredBlocks.COLORED_IRON_BLOCK);
+  public static final ColoredHungSignBarBlock COLORED_IRON_HUNG_SIGN_BAR = new ColoredHungSignBarBlock(ColoredBlocks.COLORED_IRON_BLOCK, FabricToolTags.PICKAXES, 1);
 
   // 金块
 

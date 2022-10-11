@@ -8,7 +8,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
@@ -46,19 +45,21 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
    */
   public @Nullable Boolean editedSide;
 
-  public StandingSignBlockEntity(BlockPos pos, BlockState state) {
-    super(MishangucBlockEntities.STANDING_SIGN_BLOCK_ENTITY, pos, state);
+  public StandingSignBlockEntity() {
+    super(MishangucBlockEntities.STANDING_SIGN_BLOCK_ENTITY);
   }
 
-  protected StandingSignBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-    super(type, pos, state);
+  protected StandingSignBlockEntity(BlockEntityType<?> type) {
+    super(type);
   }
 
   @Override
-  public void readNbt(NbtCompound nbt) {
-    super.readNbt(nbt);
+  public void fromTag(BlockState blockState, NbtCompound nbt) {
+    super.fromTag(blockState, nbt);
     final NbtElement nbtFrontTexts = nbt.get("frontTexts");
-    if (nbtFrontTexts instanceof NbtList nbtList) {
+    if (nbtFrontTexts instanceof NbtList) {
+      final NbtList nbtList = (NbtList) nbtFrontTexts;
+
       frontTexts = nbtList.stream()
           .map(nbtElement -> TextContext.fromNbt(nbtElement, getDefaultTextContext()))
           .collect(ImmutableList.toImmutableList());
@@ -66,7 +67,8 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
       frontTexts = ImmutableList.of(TextContext.fromNbt(nbtFrontTexts, getDefaultTextContext()));
     }
     final NbtElement nbtBackTexts = nbt.get("backTexts");
-    if (nbtBackTexts instanceof NbtList nbtList) {
+    if (nbtBackTexts instanceof NbtList) {
+      final NbtList nbtList = (NbtList) nbtBackTexts;
       backTexts = nbtList.stream()
           .map(nbtElement -> TextContext.fromNbt(nbtElement, getDefaultTextContext()))
           .collect(ImmutableList.toImmutableList());

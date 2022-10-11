@@ -33,6 +33,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -182,6 +183,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
         : TextBridge.translatable("block.mishanguc.wall_sign", MishangUtils.getBlockName(baseBlock));
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     super.appendTooltip(stack, world, tooltip, options);
@@ -312,7 +314,8 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   @Environment(EnvType.CLIENT)
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (direction.getAxis().isHorizontal() && state.getBlock() instanceof WallSignBlock && stateFrom.getBlock() instanceof WallSignBlock wallSignBlockFrom && state.get(FACING) == stateFrom.get(FACING) && direction.getAxis() != state.get(FACING).getAxis()) {
+    if (direction.getAxis().isHorizontal() && state.getBlock() instanceof WallSignBlock && stateFrom.getBlock() instanceof WallSignBlock && state.get(FACING) == stateFrom.get(FACING) && direction.getAxis() != state.get(FACING).getAxis()) {
+      final WallSignBlock wallSignBlockFrom = (WallSignBlock) stateFrom.getBlock();
       if (wallSignBlockFrom.baseBlock instanceof TransparentBlock) {
         if (baseBlock instanceof TransparentBlock) {
           // 自身和相邻方块都为透明方块，则双方均为同一方块时隐藏。

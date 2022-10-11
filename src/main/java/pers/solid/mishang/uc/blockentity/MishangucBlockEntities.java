@@ -1,6 +1,6 @@
 package pers.solid.mishang.uc.blockentity;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -13,6 +13,8 @@ import pers.solid.mishang.uc.blocks.HungSignBlocks;
 import pers.solid.mishang.uc.blocks.StandingSignBlocks;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 
+import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public final class MishangucBlockEntities {
@@ -69,11 +71,15 @@ public final class MishangucBlockEntities {
   public static void init() {
   }
 
-  private static <T extends BlockEntity> BlockEntityType<T> register(String name, FabricBlockEntityTypeBuilder.Factory<T> factory, Block... blocks) {
-    return Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("mishanguc", name), FabricBlockEntityTypeBuilder.create(factory, blocks).build());
+  private static <T extends BlockEntity> BlockEntityType<T> register(String name, Supplier<? extends T> supplier, Block... blocks) {
+    return register(name, supplier, ImmutableSet.copyOf(blocks));
   }
 
-  private static <T extends BlockEntity> BlockEntityType<T> register(String name, FabricBlockEntityTypeBuilder.Factory<T> factory, Stream<? extends Block> blockStream) {
-    return register(name, factory, blockStream.toArray(Block[]::new));
+  private static <T extends BlockEntity> BlockEntityType<T> register(String name, Supplier<? extends T> supplier, Set<Block> blocks) {
+    return Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("mishanguc", name), new BlockEntityType<>(supplier, blocks, null));
+  }
+
+  private static <T extends BlockEntity> BlockEntityType<T> register(String name, Supplier<T> supplier, Stream<? extends Block> blockStream) {
+    return register(name, supplier, ImmutableSet.copyOf(blockStream.iterator()));
   }
 }

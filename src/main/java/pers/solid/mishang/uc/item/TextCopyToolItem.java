@@ -196,12 +196,13 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.success.paste", newTextsThisSide.size()), false);
         stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
         return ActionResult.SUCCESS;
-      } else if (blockEntity instanceof StandingSignBlockEntity standingSignBlockEntity) {
+      } else if (blockEntity instanceof StandingSignBlockEntity) {
+        final StandingSignBlockEntity standingSignBlockEntity = (StandingSignBlockEntity) blockEntity;
         if (world.isClient) return ActionResult.SUCCESS;
         final Boolean isFront = StandingSignBlock.getHitSide(blockState, blockHitResult);
         if (isFront != null) {
           standingSignBlockEntity.setTextsOnSide(isFront, texts.stream().map(nbtElement -> TextContext.fromNbt(nbtElement, standingSignBlockEntity.getDefaultTextContext())).collect(ImmutableList.toImmutableList()));
-          if (stack.getOrCreateNbt().getBoolean("fromVanillaSign")) {
+          if (stack.getOrCreateTag().getBoolean("fromVanillaSign")) {
             MishangUtils.rearrange(standingSignBlockEntity.getTextsOnSide(isFront));
           }
           blockEntity.markDirty();
@@ -268,16 +269,16 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         if (!axis.test(direction)) {
           final Iterator<Direction> validDirections = Arrays.stream(Direction.values()).filter(axis).iterator();
           // 如果点击的方向不正确，则无法复制和粘贴文本。
-        player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.wrong_side",
-            // 无效的一侧：
-            new TranslatableText("direction." + direction.getName()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xeecc44))),
-            // 有效的两侧：
-            new TranslatableText("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xb3ee45))),
-            new TranslatableText("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xb3ee45)))
-        ).formatted(Formatting.RED), false);
+          player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.wrong_side",
+              // 无效的一侧：
+              new TranslatableText("direction." + direction.getName()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xeecc44))),
+              // 有效的两侧：
+              new TranslatableText("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xb3ee45))),
+              new TranslatableText("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xb3ee45)))
+          ).formatted(Formatting.RED), false);
           return ActionResult.FAIL;
         }
-      final List<@NotNull TextContext> textContexts = ((HungSignBlockEntity) blockEntity).texts.getOrDefault(direction, ImmutableList.of());
+        final List<@NotNull TextContext> textContexts = ((HungSignBlockEntity) blockEntity).texts.getOrDefault(direction, ImmutableList.of());
         final NbtList texts = new NbtList();
         for (TextContext textContext : textContexts) {
           texts.add(textContext.createNbt());
@@ -286,8 +287,9 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         stack.putSubTag("fromVanillaSign", NbtByte.of(false));
         player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.copy", texts.size()), true);
         return ActionResult.SUCCESS;
-      } else if (blockEntity instanceof StandingSignBlockEntity standingSignBlockEntity) {
+      } else if (blockEntity instanceof StandingSignBlockEntity) {
         Boolean hitSide = StandingSignBlock.getHitSide(blockState, direction);
+        final StandingSignBlockEntity standingSignBlockEntity = (StandingSignBlockEntity) blockEntity;
         if (hitSide == null) {
           final HitResult raycast0 = player.raycast(4.5, 0, includesFluid(stack, false));
           if (raycast0 instanceof BlockHitResult) hitSide = StandingSignBlock.getHitSide(blockState, (BlockHitResult) raycast0);
@@ -296,8 +298,8 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         final List<TextContext> textContexts = standingSignBlockEntity.getTextsOnSide(hitSide);
         final NbtList texts = new NbtList();
         texts.addAll(Collections2.transform(textContexts, TextContext::createNbt));
-        stack.setSubNbt("texts", texts);
-        stack.setSubNbt("fromVanillaSign", NbtByte.of(false));
+        stack.putSubTag("texts", texts);
+        stack.putSubTag("fromVanillaSign", NbtByte.of(false));
         player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.success.copy", texts.size()), true);
         return ActionResult.SUCCESS;
       } else {

@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.block;
 
 import net.devtech.arrp.json.loot.JLootTable;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -26,6 +28,7 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
     return getColoredPickStack(world, pos, state, super::getPickStack);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     super.appendTooltip(stack, world, tooltip, options);
@@ -54,6 +57,7 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
       return getColoredPickStack(world, pos, state, super::getPickStack);
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
       super.appendTooltip(stack, world, tooltip, options);
@@ -83,6 +87,7 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
       return getColoredPickStack(world, pos, state, super::getPickStack);
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
       super.appendTooltip(stack, world, tooltip, options);
@@ -112,6 +117,7 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
       return getColoredPickStack(world, pos, state, super::getPickStack);
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
       super.appendTooltip(stack, world, tooltip, options);
@@ -141,6 +147,7 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
       return getColoredPickStack(world, pos, state, super::getPickStack);
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
       super.appendTooltip(stack, world, tooltip, options);

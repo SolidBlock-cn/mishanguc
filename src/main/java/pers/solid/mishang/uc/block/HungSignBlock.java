@@ -35,6 +35,7 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
@@ -388,6 +389,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     return new TranslatableText(getTranslationKey());
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     super.appendTooltip(stack, world, tooltip, options);
@@ -454,7 +456,8 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   @Environment(EnvType.CLIENT)
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
-    if (direction.getAxis().isHorizontal() && state.getBlock() instanceof HungSignBlock && stateFrom.getBlock() instanceof HungSignBlock hungSignBlockFrom && state.get(AXIS) == stateFrom.get(AXIS) && direction.getAxis() != state.get(AXIS)) {
+    if (direction.getAxis().isHorizontal() && state.getBlock() instanceof HungSignBlock && stateFrom.getBlock() instanceof HungSignBlock && state.get(AXIS) == stateFrom.get(AXIS) && direction.getAxis() != state.get(AXIS)) {
+      final HungSignBlock hungSignBlockFrom = (HungSignBlock) stateFrom.getBlock();
       if (hungSignBlockFrom.baseBlock instanceof TransparentBlock) {
         if (baseBlock instanceof TransparentBlock) {
           // 自身和相邻方块都为透明方块，则双方均为同一方块时隐藏。

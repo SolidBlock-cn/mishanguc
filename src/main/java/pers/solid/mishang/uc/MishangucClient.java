@@ -32,10 +32,7 @@ import pers.solid.mishang.uc.blockentity.*;
 import pers.solid.mishang.uc.item.CarryingToolItem;
 import pers.solid.mishang.uc.item.DataTagToolItem;
 import pers.solid.mishang.uc.item.MishangucItems;
-import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
-import pers.solid.mishang.uc.render.RendersBeforeOutline;
-import pers.solid.mishang.uc.render.RendersBlockOutline;
-import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
+import pers.solid.mishang.uc.render.*;
 import pers.solid.mishang.uc.screen.HungSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.StandingSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
@@ -101,13 +98,12 @@ public class MishangucClient implements ClientModInitializer {
             } else if (blockEntity instanceof WallSignBlockEntity) {
               client.execute(() ->
                   client.openScreen(new WallSignBlockEditScreen((WallSignBlockEntity) blockEntity, blockPos)));
-            } else if (blockEntity instanceof final StandingSignBlockEntity standingSignBlockEntity) {
+            } else if (blockEntity instanceof StandingSignBlockEntity) {
               final BlockHitResult blockHitResult = buf.readBlockHitResult();
               final Boolean isFront = StandingSignBlock.getHitSide(blockEntity.getCachedState(), blockHitResult);
+              final StandingSignBlockEntity standingSignBlockEntity = (StandingSignBlockEntity) blockEntity;
               if (isFront != null) {
-                client.execute(() -> {
-                  client.openScreen(new StandingSignBlockEditScreen(standingSignBlockEntity, blockPos, isFront));
-                });
+                client.execute(() -> client.openScreen(new StandingSignBlockEditScreen(standingSignBlockEntity, blockPos, isFront)));
               }
             }
           } catch (NullPointerException | ClassCastException exception) {
@@ -178,8 +174,8 @@ public class MishangucClient implements ClientModInitializer {
     BlockEntityRendererRegistry.INSTANCE.register(MishangucBlockEntities.WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
     BlockEntityRendererRegistry.INSTANCE.register(MishangucBlockEntities.COLORED_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
     BlockEntityRendererRegistry.INSTANCE.register(MishangucBlockEntities.FULL_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
-    BlockEntityRendererRegistry.register(MishangucBlockEntities.STANDING_SIGN_BLOCK_ENTITY, StandingSignBlockEntityRenderer::new);
-    BlockEntityRendererRegistry.register(MishangucBlockEntities.COLORED_STANDING_SIGN_BLOCK_ENTITY, StandingSignBlockEntityRenderer::new);
+    BlockEntityRendererRegistry.INSTANCE.register(MishangucBlockEntities.STANDING_SIGN_BLOCK_ENTITY, StandingSignBlockEntityRenderer::new);
+    BlockEntityRendererRegistry.INSTANCE.register(MishangucBlockEntities.COLORED_STANDING_SIGN_BLOCK_ENTITY, StandingSignBlockEntityRenderer::new);
   }
 
   private static void registerRenderEvents() {
