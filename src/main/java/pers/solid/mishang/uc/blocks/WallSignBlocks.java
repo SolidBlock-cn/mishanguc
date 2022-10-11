@@ -408,7 +408,7 @@ public final class WallSignBlocks extends MishangucBlocks {
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.2")
-  public static final ColoredGlowingWallSignBlock COLORED_COLORED_TERRACOTTA_WALL_SIGN = new ColoredGlowingWallSignBlock(ColoredBlocks.COLORED_TERRACOTTA);
+  public static final ColoredGlowingWallSignBlock COLORED_GLOWING_TERRACOTTA_WALL_SIGN = new ColoredGlowingWallSignBlock(ColoredBlocks.COLORED_TERRACOTTA);
 
   // 一些比较杂项的
   /// 石头
