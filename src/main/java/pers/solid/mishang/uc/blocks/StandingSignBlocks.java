@@ -7,7 +7,10 @@ import net.minecraft.util.SignType;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.Translucent;
-import pers.solid.mishang.uc.block.*;
+import pers.solid.mishang.uc.block.ColoredGlowingStandingSignBlock;
+import pers.solid.mishang.uc.block.ColoredStandingSignBlock;
+import pers.solid.mishang.uc.block.GlowingStandingSignBlock;
+import pers.solid.mishang.uc.block.StandingSignBlock;
 
 /**
  * <h1>直立的告示牌方块</h1>
@@ -312,7 +315,7 @@ public final class StandingSignBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final ColoredStandingSignBlock COLORED_IRON_STANDING_SIGN = new ColoredStandingSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
   @RegisterIdentifier
-  public static final ColoredGlowingWallSignBlock COLORED_GLOWING_IRON_STANDING_SIGN = new ColoredGlowingWallSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
+  public static final ColoredGlowingStandingSignBlock COLORED_GLOWING_IRON_STANDING_SIGN = new ColoredGlowingStandingSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
   /// 金块
   @RegisterIdentifier
   public static final StandingSignBlock GOLD_STANDING_SIGN = new StandingSignBlock(Blocks.GOLD_BLOCK);
