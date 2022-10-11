@@ -7,7 +7,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.ApiStatus;
@@ -77,7 +76,7 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  protected void writeNbt(NbtCompound nbt) {
+  public NbtCompound writeNbt(NbtCompound nbt) {
     super.writeNbt(nbt);
     if (frontTexts.size() == 1) {
       nbt.put("frontTexts", frontTexts.get(0).createNbt());
@@ -93,6 +92,7 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
       backTexts.forEach(textContext -> nbtList.add(textContext.createNbt()));
       nbt.put("backTexts", nbtList);
     }
+    return nbt;
   }
 
   @Override
@@ -113,15 +113,6 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
   @Override
   public void setEditor(@Nullable PlayerEntity editor) {
     this.editor = editor;
-  }
-
-  public BlockEntityUpdateS2CPacket toUpdatePacket() {
-    return BlockEntityUpdateS2CPacket.create(this);
-  }
-
-  @Override
-  public NbtCompound toInitialChunkDataNbt() {
-    return this.createNbt();
   }
 
   /**
