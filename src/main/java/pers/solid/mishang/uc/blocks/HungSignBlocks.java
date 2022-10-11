@@ -951,7 +951,7 @@ public final class HungSignBlocks extends MishangucBlocks {
     GLOWING_SNOW_HUNG_SIGN.baseTexture = "block/snow";
     GLOWING_SNOW_HUNG_SIGN.barTexture = "block/packed_ice";
     GLOWING_SNOW_HUNG_SIGN.textureTop = "block/packed_ice";
-    ICE_HUNG_SIGN.textureTop = "block/blue_ice";
+    ICE_HUNG_SIGN.textureTop = ICE_HUNG_SIGN.barTexture = "block/blue_ice";
   }
 
   // 浮冰
