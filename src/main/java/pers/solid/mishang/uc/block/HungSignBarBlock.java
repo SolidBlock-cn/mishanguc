@@ -131,15 +131,13 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
     final Boolean left = state.get(LEFT);
     final Boolean right = state.get(RIGHT);
 
-    // 如果玩家正在拿着悬挂告示牌方块，或者悬挂告示牌柱方块，则为 true。
-    final boolean shouldCollideWide = context != ShapeContext.absent();
     if (left && right) {
-      return shouldCollideWide ? BAR_SHAPE_CENTRAL_WIDE : BAR_SHAPE_CENTRAL;
+      return BAR_SHAPE_CENTRAL_WIDE;
     }
     final Map<Direction, @Nullable VoxelShape> barShapes =
-        shouldCollideWide ? BAR_SHAPES_WIDE : BAR_SHAPES;
+        BAR_SHAPES_WIDE;
     final Map<Direction, @Nullable VoxelShape> barShapesEdge =
-        shouldCollideWide ? BAR_SHAPES_EDGE_WIDE : BAR_SHAPES_EDGE;
+        BAR_SHAPES_EDGE_WIDE;
     switch (axis) {
       case X:
         if (!(left || right))
@@ -160,6 +158,53 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
       default:
         return VoxelShapes.empty();
     }
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos) {
+    return getOutlineShape(state, world, pos, ShapeContext.absent());
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    final Direction.Axis axis = state.get(AXIS);
+    final Boolean left = state.get(LEFT);
+    final Boolean right = state.get(RIGHT);
+    if (left && right) {
+      return BAR_SHAPE_CENTRAL;
+    }
+    final Map<Direction, @Nullable VoxelShape> barShapes =
+        BAR_SHAPES;
+    final Map<Direction, @Nullable VoxelShape> barShapesEdge =
+        BAR_SHAPES_EDGE;
+    switch (axis) {
+      case X:
+        if (!(left || right))
+          return VoxelShapes.union(
+              barShapesEdge.get(Direction.SOUTH), barShapesEdge.get(Direction.NORTH));
+        else
+          return VoxelShapes.union(
+              !left ? barShapes.get(Direction.SOUTH) : VoxelShapes.empty(),
+              !right ? barShapes.get(Direction.NORTH) : VoxelShapes.empty());
+      case Z:
+        if (!(left || right))
+          return VoxelShapes.union(
+              barShapesEdge.get(Direction.WEST), barShapesEdge.get(Direction.EAST));
+        else
+          return VoxelShapes.union(
+              !left ? barShapes.get(Direction.WEST) : VoxelShapes.empty(),
+              !right ? barShapes.get(Direction.EAST) : VoxelShapes.empty());
+      default:
+        return VoxelShapes.empty();
+    }
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
+    return getCollisionShape(state, world, pos, ShapeContext.absent());
   }
 
   @SuppressWarnings("deprecation")

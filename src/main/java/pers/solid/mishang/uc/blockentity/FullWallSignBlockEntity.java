@@ -15,7 +15,7 @@ public class FullWallSignBlockEntity extends WallSignBlockEntity {
   }
 
   @Override
-  public TextContext getDefaultTextContext() {
+  public TextContext createDefaultTextContext() {
     final TextContext textContext = new TextContext();
     textContext.size = 8;
     return textContext;
