@@ -19,6 +19,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -33,6 +34,7 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -47,7 +49,9 @@ import pers.solid.mishang.uc.block.AbstractRoadBlock;
 import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
+import pers.solid.mishang.uc.util.TextBridge;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -56,7 +60,6 @@ import java.util.Objects;
  */
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBlockOutline.class)
 public class SlabToolItem extends Item implements RendersBlockOutline, ItemResourceGenerator {
-  private static final Map<Pair<ServerWorld, BlockPos>, Runnable> SERVER_PERFORM_BREAK_WAITING = new Object2ObjectOpenHashMap<>();
   /**
    * 从原版的 {@link BlockFamilies} 提取的方块至台阶方块的映射。
    */
@@ -70,49 +73,52 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
       })
       .filter(Objects::nonNull)
       .collect(ImmutableBiMap.toImmutableBiMap(Map.Entry::getKey, Map.Entry::getValue));
+  /**
+   * @since 1.0.3 用于协调处理 canMine 与 performBreak。服务器不知道客户端的 crosshairTarget，需要由客户端发送。服务器先判断为允许挖掘，再根据这里面的内容还原该方块。
+   */
+  private static final Map<Pair<ServerWorld, BlockPos>, Runnable> SERVER_BLOCK_BREAKING_BRIDGE = new Object2ObjectOpenHashMap<>();
 
   public SlabToolItem(Settings settings) {
     super(settings);
   }
 
   /**
-   * 破坏台阶的一部分。
+   * 将基础方块的方块状态转化为台阶方块，并尝试移植相应的方块状态属性。
    *
-   * @see Item#canMine
+   * @param baseBlockState 基础方块的方块状态。
+   * @param slabBlock      台阶方块，不是具体的方块状态。
+   * @return 台阶方块的方块状态。
    */
-  @Override
-  public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-    // 处理双台阶的情况。
-    if (world.isClient && miner instanceof ClientPlayerEntity) {
-      final HitResult raycast = MinecraftClient.getInstance().crosshairTarget;
-      if (!(raycast instanceof BlockHitResult) || raycast.getType() == HitResult.Type.MISS) return false;
-      boolean isTop = raycast.getPos().y - (double) ((BlockHitResult) raycast).getBlockPos().getY() > 0.5D;
-      final boolean bl1 = performBreak(world, pos, miner, isTop);
-      final PacketByteBuf buf = PacketByteBufs.create();
-      buf.writeBlockPos(pos);
-      buf.writeBoolean(isTop);
-      ClientPlayNetworking.send(new Identifier("mishanguc", "slab_tool"), buf);
-      return !bl1;
+  protected static BlockState toDoubleSlab(BlockState baseBlockState, Block slabBlock) {
+    final BlockState slabState = slabBlock.getStateWithProperties(baseBlockState);
+    return slabState.with(Properties.SLAB_TYPE, SlabType.DOUBLE);
+  }
+
+  /**
+   * 尝试将 blockState 转化为双台阶。当它可以转化为双台阶，或者自身已经就是双台阶时，返回这个双台阶，否会返回 {@code null}。
+   */
+  protected static BlockState tryToDoubleSlab(BlockState state) {
+    final Block block = state.getBlock();
+    if (BLOCK_TO_SLAB.containsKey(block)) {
+      state = toDoubleSlab(state, BLOCK_TO_SLAB.get(block));
+    } else if (block instanceof AbstractRoadBlock && RoadSlabBlocks.BLOCK_TO_SLABS.containsKey(block)) {
+      state = toDoubleSlab(state, RoadSlabBlocks.BLOCK_TO_SLABS.get(block));
+    }
+    if (state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
+      return state;
     } else {
-      // 注意：需要考虑这样的情况：
-      // 客户端使用工具破坏方块后，发送 mishanguc:slab_tool 的 packet 到服务器
-      // 服务器收到 packet 之后，执行 performBreak，然后再收到原版 packet，执行此处的 canMine，得出不准确的结果。
-      // 因此，需要确保服务器上的 canMine 在 performBreak 之前执行。
-      final Runnable remove = SERVER_PERFORM_BREAK_WAITING.remove(Pair.of(((ServerWorld) miner.getWorld()), pos));
-      if (remove != null) {
-        // 服务器已经处理了封包，将 performBreak 推迟到 canMine 之后执行。
-        remove.run();
-        return false;
-      } else {
-        // 服务器还没有执行 performBreak。可能它根本就不是台阶。
-        return true;
-      }
+      return null;
     }
   }
 
   private static boolean performBreak(World world, BlockPos pos, PlayerEntity miner, boolean isTop) {
     BlockState state = world.getBlockState(pos);
     final Block block = state.getBlock();
+    if (BLOCK_TO_SLAB.containsKey(block)) {
+      state = toDoubleSlab(state, BLOCK_TO_SLAB.get(block));
+    } else if (block instanceof AbstractRoadBlock && RoadSlabBlocks.BLOCK_TO_SLABS.containsKey(block)) {
+      state = toDoubleSlab(state, RoadSlabBlocks.BLOCK_TO_SLABS.get(block));
+    }
     if (state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
       final SlabType slabTypeToSet = isTop ? SlabType.BOTTOM : SlabType.TOP;
       final SlabType slabTypeBroken = isTop ? SlabType.TOP : SlabType.BOTTOM;
@@ -132,6 +138,48 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
     return false;
   }
 
+  @Override
+  public void appendTooltip(
+      ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    super.appendTooltip(stack, world, tooltip, context);
+    tooltip.add(TextBridge.translatable("item.mishanguc.slab_tool.tooltip").formatted(Formatting.GRAY));
+  }
+
+  /**
+   * 破坏台阶的一部分。
+   *
+   * @see Handler#receive
+   */
+  @Override
+  public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+    // 处理双台阶的情况。
+    if (world.isClient && miner instanceof ClientPlayerEntity) {
+      final HitResult raycast = MinecraftClient.getInstance().crosshairTarget;
+      if (!(raycast instanceof BlockHitResult) || raycast.getType() == HitResult.Type.MISS) return false;
+      boolean isTop = raycast.getPos().y - (double) ((BlockHitResult) raycast).getBlockPos().getY() > 0.5D;
+      final boolean bl1 = performBreak(world, pos, miner, isTop);
+      final PacketByteBuf buf = PacketByteBufs.create();
+      buf.writeBlockPos(pos);
+      buf.writeBoolean(isTop);
+      ClientPlayNetworking.send(new Identifier("mishanguc", "slab_tool"), buf);
+      return !bl1;
+    } else {
+      // 注意：需要考虑这样的情况：
+      // 客户端使用工具破坏方块后，发送 mishanguc:slab_tool 的 packet 到服务器
+      // 服务器收到 packet 之后，执行 performBreak，然后再收到原版 packet，执行此处的 canMine，得出不准确的结果。
+      // 因此，需要确保服务器上的 canMine 在 performBreak 之前执行。
+      final Runnable remove = SERVER_BLOCK_BREAKING_BRIDGE.remove(Pair.of(((ServerWorld) miner.getWorld()), pos));
+      if (remove != null) {
+        // 服务器已经处理了封包，将 performBreak 推迟到 canMine 之后执行。
+        remove.run();
+        return false;
+      } else {
+        // 服务器还没有执行 performBreak。可能它根本就不是台阶，也有可能是本来就在 canMine 完成之后再执行 performBreak。
+        return tryToDoubleSlab(state) == null;
+      }
+    }
+  }
+
   @Environment(EnvType.CLIENT)
   @Override
   public boolean renderBlockOutline(
@@ -149,74 +197,64 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
       if (!(crosshairTarget instanceof BlockHitResult)) {
         return true;
       }
-      boolean isTop =
-          crosshairTarget.getPos().y
-              - (double) ((BlockHitResult) crosshairTarget).getBlockPos().getY()
-              > 0.5D;
-      // 渲染时需要使用的方块状态。
-      final BlockState halfState =
-          state.with(Properties.SLAB_TYPE, isTop ? SlabType.TOP : SlabType.BOTTOM);
-      final BlockPos blockPos = blockOutlineContext.blockPos();
-      WorldRendererInvoker.drawShapeOutline(
-          worldRenderContext.matrixStack(),
-          consumers.getBuffer(RenderLayer.LINES),
-          halfState.getOutlineShape(world, blockPos, ShapeContext.of(blockOutlineContext.entity())),
-          (double) blockPos.getX() - blockOutlineContext.cameraX(),
-          (double) blockPos.getY() - blockOutlineContext.cameraY(),
-          (double) blockPos.getZ() - blockOutlineContext.cameraZ(),
-          0.0F,
-          0.0F,
-          0.0F,
-          0.4F);
-      return false;
+      boolean isTop = crosshairTarget.getPos().y - (double) ((BlockHitResult) crosshairTarget).getBlockPos().getY() > 0.5D;
+      state = tryToDoubleSlab(state);
+      if (state != null) {
+        // 渲染时需要使用的方块状态。
+        final BlockState halfState =
+            state.with(Properties.SLAB_TYPE, isTop ? SlabType.TOP : SlabType.BOTTOM);
+        final BlockPos blockPos = blockOutlineContext.blockPos();
+        WorldRendererInvoker.drawShapeOutline(
+            worldRenderContext.matrixStack(),
+            consumers.getBuffer(RenderLayer.LINES),
+            halfState.getOutlineShape(world, blockPos, ShapeContext.of(blockOutlineContext.entity())),
+            (double) blockPos.getX() - blockOutlineContext.cameraX(),
+            (double) blockPos.getY() - blockOutlineContext.cameraY(),
+            (double) blockPos.getZ() - blockOutlineContext.cameraZ(),
+            0.0F,
+            0.0F,
+            0.0F,
+            0.4F);
+        return false;
+      }
+      return true;
     }
-    return true;
-  }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @Nullable JModel getItemModel() {
-    return null;
-  }
-
-  @Override
-  public @NotNull JRecipe getCraftingRecipe() {
-    return new JShapedRecipe(this)
-        .pattern("SCS", " | ", " | ")
-        .addKey("S", Items.SHEARS)
-        .addKey("C", Items.STONE)
-        .addKey("|", Items.STICK)
-        .addInventoryChangedCriterion("has_shears", Items.SHEARS)
-        .addInventoryChangedCriterion("has_stone", Items.STONE);
-  }
-
-  @ApiStatus.AvailableSince("1.0.3")
-  public enum Handler implements ServerPlayNetworking.PlayChannelHandler {
-    INSTANCE;
+    @Environment(EnvType.CLIENT)
+    @Override
+    public @Nullable JModel getItemModel () {
+      return null;
+    }
 
     @Override
-    public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
-      final BlockPos blockPos = buf.readBlockPos();
-      final boolean isTop = buf.readBoolean();
-      server.execute(() -> {
-        if (player.getEyePos().squaredDistanceTo(Vec3d.ofCenter(blockPos)) > 36) {
-          return;
-        }
-        BlockState state = player.world.getBlockState(blockPos);
-        final Block block = state.getBlock();
-        if (BLOCK_TO_SLAB.containsKey(block)) {
-          state = toSlab(state, BLOCK_TO_SLAB.get(block));
-        } else if (block instanceof AbstractRoadBlock && RoadSlabBlocks.BLOCK_TO_SLABS.containsKey(block)) {
-          state = toSlab(state, RoadSlabBlocks.BLOCK_TO_SLABS.get(block));
-        }
-        if (state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
-          // canMine 还没有执行，需要放到 canMine 后面执行。
-          SERVER_PERFORM_BREAK_WAITING.put(Pair.of(player.getWorld(), blockPos), () -> performBreak(player.world, blockPos, player, isTop));
-        } else {
+    public @NotNull JRecipe getCraftingRecipe () {
+      return new JShapedRecipe(this)
+          .pattern("SCS", " | ", " | ")
+          .addKey("S", Items.SHEARS)
+          .addKey("C", Items.STONE)
+          .addKey("|", Items.STICK)
+          .addInventoryChangedCriterion("has_shears", Items.SHEARS)
+          .addInventoryChangedCriterion("has_stone", Items.STONE);
+    }
+
+    @ApiStatus.AvailableSince("1.0.3")
+    public enum Handler implements ServerPlayNetworking.PlayChannelHandler {
+      INSTANCE;
+
+      /**
+       * @see #canMine(BlockState, World, BlockPos, PlayerEntity)
+       */
+      @Override
+      public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+        final BlockPos blockPos = buf.readBlockPos();
+        final boolean isTop = buf.readBoolean();
+        server.execute(() -> {
+          if (player.getEyePos().squaredDistanceTo(Vec3d.ofCenter(blockPos)) > 36) {
+            return;
+          }
           // canMine 已经执行，此时直接执行。
           performBreak(player.world, blockPos, player, isTop);
-        }
-      });
+        });
+      }
     }
   }
-}
