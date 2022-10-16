@@ -82,7 +82,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
   /**
    * @since 1.0.3 用于协调处理 canMine 与 performBreak。服务器不知道客户端的 crosshairTarget，需要由客户端发送。服务器先判断为允许挖掘，再根据这里面的内容还原该方块。
    */
-  private static final Map<Pair<ServerWorld, BlockPos>, BridgeState> SERVER_BLOCK_BREAKING_BRIDGE = new Object2ObjectOpenHashMap<>();
+  private static final Map<Pair<ServerWorld, BlockPos>, Runnable> SERVER_BLOCK_BREAKING_BRIDGE = new Object2ObjectOpenHashMap<>();
 
   public SlabToolItem(Settings settings) {
     super(settings);
@@ -139,9 +139,6 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
         }
         miner.getStackInHand(Hand.MAIN_HAND).damage(1, miner, player -> player.sendToolBreakStatus(Hand.MAIN_HAND));
       }
-      if (world instanceof ServerWorld && SERVER_BLOCK_BREAKING_BRIDGE.remove(Pair.of(world, pos)) != BridgeState.CAN_MINE_CALLED_FIRST) {
-        SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of((ServerWorld) world, pos), BridgeState.PERFORM_BREAK_CALLED_FIRST);
-      }
       return bl1;
     }
     return false;
@@ -177,14 +174,15 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
       // 客户端使用工具破坏方块后，发送 mishanguc:slab_tool 的 packet 到服务器
       // 服务器收到 packet 之后，执行 performBreak，然后再收到原版 packet，执行此处的 canMine，得出不准确的结果。
       // 因此，需要确保服务器上的 canMine 在 performBreak 之前执行。
-      final BridgeState remove = SERVER_BLOCK_BREAKING_BRIDGE.remove(Pair.of(world, pos));
-      if (remove == BridgeState.PERFORM_BREAK_CALLED_FIRST) {
-        // 服务器已经处理了封包，将 performBreak 推迟到 canMine 之后执行。
+      final Runnable remove = SERVER_BLOCK_BREAKING_BRIDGE.remove(Pair.of(world, pos));
+      if (remove instanceof PacketReceivedFirst) {
+        // 执行从封包的 receive 中推迟过来的。
+        remove.run();
         return false;
       } else {
         // 服务器还没有执行 performBreak。可能它根本就不是台阶，也有可能是本来就在 canMine 完成之后再执行 performBreak。
         final boolean b = tryToDoubleSlab(state) == null;
-        if (remove == null && !b) SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of((ServerWorld) world, pos), BridgeState.CAN_MINE_CALLED_FIRST);
+        if (remove == null && !b) SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of((ServerWorld) world, pos), CAN_MINE_CALLED_FIRST);
         return b;
       }
     }
@@ -260,16 +258,23 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
         if (player.getEyePos().squaredDistanceTo(Vec3d.ofCenter(blockPos)) > ServerPlayNetworkHandler.MAX_BREAK_SQUARED_DISTANCE) {
           return;
         }
-        if (!(player.getMainHandStack().getItem() instanceof SlabToolItem)) {
+        if (!(player.getMainHandStack().getItem() instanceof SlabToolItem) || !player.getAbilities().allowModifyWorld) {
           return;
         }
-        // canMine 已经执行，此时直接执行。
-        performBreak(player.world, blockPos, player, isTop);
+        final Runnable remove = SERVER_BLOCK_BREAKING_BRIDGE.remove(Pair.of(player.getWorld(), blockPos));
+        if (remove == CAN_MINE_CALLED_FIRST) {
+          performBreak(player.world, blockPos, player, isTop);
+        } else if (tryToDoubleSlab(player.world.getBlockState(blockPos)) != null) {
+          // 收到封包之后，送到 canMine 中执行。
+          SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of(player.getWorld(), blockPos), (PacketReceivedFirst) () -> performBreak(player.world, blockPos, player, isTop));
+        }
       });
     }
   }
 
-  private enum BridgeState {
-    CAN_MINE_CALLED_FIRST, PERFORM_BREAK_CALLED_FIRST;
+  private interface PacketReceivedFirst extends Runnable {
   }
+
+  private static final Runnable CAN_MINE_CALLED_FIRST = () -> {
+  };
 }
