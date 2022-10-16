@@ -118,9 +118,7 @@ public class MishangucClient implements ClientModInitializer {
               final BlockHitResult blockHitResult = buf.readBlockHitResult();
               final Boolean isFront = StandingSignBlock.getHitSide(blockEntity.getCachedState(), blockHitResult);
               if (isFront != null) {
-                client.execute(() -> {
-                  client.setScreen(new StandingSignBlockEditScreen(standingSignBlockEntity, blockPos, isFront));
-                });
+                client.execute(() -> client.setScreen(new StandingSignBlockEditScreen(standingSignBlockEntity, blockPos, isFront)));
               }
             }
           } catch (NullPointerException | ClassCastException exception) {
