@@ -668,11 +668,6 @@ public final class HungSignBlocks extends MishangucBlocks {
       .put(DyeColor.RED, GLOWING_RED_TERRACOTTA_HUNG_SIGN)
       .put(DyeColor.BLACK, GLOWING_BLACK_TERRACOTTA_HUNG_SIGN)
       .build();
-/*
-  static {
-    COLORED_CONCRETE_HUNG_SIGN.baseTexture = COLORED_GLOWING_CONCRETE_HUNG_SIGN.baseTexture = COLORED_CONCRETE_HUNG_SIGN_BAR.texture = "block/white_concrete";
-    COLORED_TERRACOTTA_HUNG_SIGN.baseTexture = COLORED_GLOWING_TERRACOTTA_HUNG_SIGN.baseTexture = COLORED_TERRACOTTA_HUNG_SIGN_BAR.texture = "block/white_terracotta";
-  }*/
 
   // 以下是比较杂项的一些发光悬挂告示牌方块。
 

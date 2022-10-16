@@ -44,7 +44,7 @@ public class WallSignBlockItem extends NamedBlockItem {
       return ImmutableList.of(TextContext.fromNbt(nbt, WallSignBlockEntity.DEFAULT_TEXT_CONTEXT.clone()));
     } else if (nbtText instanceof NbtCompound) {
       return ImmutableList.of(
-          TextContext.fromNbt(nbtText, WallSignBlockEntity.DEFAULT_TEXT_CONTEXT));
+          TextContext.fromNbt(nbtText, WallSignBlockEntity.DEFAULT_TEXT_CONTEXT.clone()));
     } else if (nbtText instanceof NbtList) {
       ImmutableList.Builder<TextContext> builder = new ImmutableList.Builder<>();
       for (NbtElement nbtElement : ((NbtList) nbtText)) {
