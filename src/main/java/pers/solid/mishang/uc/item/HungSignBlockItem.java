@@ -80,7 +80,7 @@ public class HungSignBlockItem extends NamedBlockItem {
           textContexts.forEach(
               textContext -> {
                 final MutableText mutableText = textContext.asStyledText();
-                if (mutableText != null) tooltip.add(mutableText);
+                tooltip.add(mutableText);
               });
         });
   }
@@ -98,7 +98,7 @@ public class HungSignBlockItem extends NamedBlockItem {
             textContexts.forEach(
                 textContext -> {
                   final MutableText styledText = textContext.asStyledText();
-                  if (styledText != null) appendable.add(styledText);
+                  appendable.add(styledText);
                 }));
     final ImmutableList<Text> build = appendable.build();
     if (!build.isEmpty()) {
