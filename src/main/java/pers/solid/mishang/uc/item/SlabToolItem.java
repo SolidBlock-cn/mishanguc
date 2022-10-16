@@ -1,6 +1,6 @@
 package pers.solid.mishang.uc.item;
 
-import com.google.common.collect.ImmutableBiMap;
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.devtech.arrp.generator.ItemResourceGenerator;
 import net.devtech.arrp.json.models.JModel;
@@ -34,17 +34,18 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.AbstractRoadBlock;
 import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
@@ -53,7 +54,6 @@ import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * 用于处理台阶的工具。
@@ -61,22 +61,9 @@ import java.util.Objects;
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBlockOutline.class)
 public class SlabToolItem extends Item implements RendersBlockOutline, ItemResourceGenerator {
   /**
-   * 从原版的 {@link BlockFamilies} 提取的方块至台阶方块的映射。
-   */
-  @ApiStatus.AvailableSince("0.1.3")
-  protected static final BiMap<Block, Block> BLOCK_TO_SLAB = BlockFamilies.getFamilies()
-      .filter(blockFamily -> blockFamily.getVariant(BlockFamily.Variant.SLAB) != null)
-      .map(blockFamily -> {
-        final Block variant = blockFamily.getVariant(BlockFamily.Variant.SLAB);
-        final Block baseBlock = blockFamily.getBaseBlock();
-        return baseBlock == null || variant == null ? null : Maps.immutableEntry(baseBlock, variant);
-      })
-      .filter(Objects::nonNull)
-      .collect(ImmutableBiMap.toImmutableBiMap(Map.Entry::getKey, Map.Entry::getValue));
-  /**
    * @since 1.0.3 用于协调处理 canMine 与 performBreak。服务器不知道客户端的 crosshairTarget，需要由客户端发送。服务器先判断为允许挖掘，再根据这里面的内容还原该方块。
    */
-  private static final Map<Pair<ServerWorld, BlockPos>, BridgeState> SERVER_BLOCK_BREAKING_BRIDGE = new Object2ObjectOpenHashMap<>();
+  private static final Map<Pair<ServerWorld, BlockPos>, Runnable> SERVER_BLOCK_BREAKING_BRIDGE = new Object2ObjectOpenHashMap<>();
 
   public SlabToolItem(Settings settings) {
     super(settings);
@@ -90,7 +77,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
    * @return 台阶方块的方块状态。
    */
   protected static BlockState toDoubleSlab(BlockState baseBlockState, Block slabBlock) {
-    final BlockState slabState = slabBlock.getStateWithProperties(baseBlockState);
+    final BlockState slabState = MishangUtils.copyPropertiesFrom(slabBlock.getDefaultState(), baseBlockState);
     return slabState.with(Properties.SLAB_TYPE, SlabType.DOUBLE);
   }
 
@@ -99,9 +86,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
    */
   protected static BlockState tryToDoubleSlab(BlockState state) {
     final Block block = state.getBlock();
-    if (BLOCK_TO_SLAB.containsKey(block)) {
-      state = toDoubleSlab(state, BLOCK_TO_SLAB.get(block));
-    } else if (block instanceof AbstractRoadBlock && RoadSlabBlocks.BLOCK_TO_SLABS.containsKey(block)) {
+    if (block instanceof AbstractRoadBlock && RoadSlabBlocks.BLOCK_TO_SLABS.containsKey(block)) {
       state = toDoubleSlab(state, RoadSlabBlocks.BLOCK_TO_SLABS.get(block));
     }
     if (state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
@@ -114,9 +99,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
   private static boolean performBreak(World world, BlockPos pos, PlayerEntity miner, boolean isTop) {
     BlockState state = world.getBlockState(pos);
     final Block block = state.getBlock();
-    if (BLOCK_TO_SLAB.containsKey(block)) {
-      state = toDoubleSlab(state, BLOCK_TO_SLAB.get(block));
-    } else if (block instanceof AbstractRoadBlock && RoadSlabBlocks.BLOCK_TO_SLABS.containsKey(block)) {
+    if (block instanceof AbstractRoadBlock && RoadSlabBlocks.BLOCK_TO_SLABS.containsKey(block)) {
       state = toDoubleSlab(state, RoadSlabBlocks.BLOCK_TO_SLABS.get(block));
     }
     if (state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
@@ -132,9 +115,6 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
           block.afterBreak(world, miner, pos, brokenState, world.getBlockEntity(pos), miner.getMainHandStack().copy());
         }
         miner.getStackInHand(Hand.MAIN_HAND).damage(1, miner, player -> player.sendToolBreakStatus(Hand.MAIN_HAND));
-      }
-      if (world instanceof ServerWorld && SERVER_BLOCK_BREAKING_BRIDGE.remove(Pair.of(world, pos)) != BridgeState.CAN_MINE_CALLED_FIRST) {
-        SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of((ServerWorld) world, pos), BridgeState.PERFORM_BREAK_CALLED_FIRST);
       }
       return bl1;
     }
@@ -171,14 +151,15 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
       // 客户端使用工具破坏方块后，发送 mishanguc:slab_tool 的 packet 到服务器
       // 服务器收到 packet 之后，执行 performBreak，然后再收到原版 packet，执行此处的 canMine，得出不准确的结果。
       // 因此，需要确保服务器上的 canMine 在 performBreak 之前执行。
-      final BridgeState remove = SERVER_BLOCK_BREAKING_BRIDGE.remove(Pair.of(world, pos));
-      if (remove == BridgeState.PERFORM_BREAK_CALLED_FIRST) {
-        // 服务器已经处理了封包，将 performBreak 推迟到 canMine 之后执行。
+      final Runnable remove = SERVER_BLOCK_BREAKING_BRIDGE.remove(Pair.of(world, pos));
+      if (remove instanceof PacketReceivedFirst) {
+        // 执行从封包的 receive 中推迟过来的。
+        remove.run();
         return false;
       } else {
         // 服务器还没有执行 performBreak。可能它根本就不是台阶，也有可能是本来就在 canMine 完成之后再执行 performBreak。
         final boolean b = tryToDoubleSlab(state) == null;
-        if (remove == null && !b) SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of((ServerWorld) world, pos), BridgeState.CAN_MINE_CALLED_FIRST);
+        if (remove == null && !b) SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of((ServerWorld) world, pos), CAN_MINE_CALLED_FIRST);
         return b;
       }
     }
@@ -194,7 +175,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
     final VertexConsumerProvider consumers = worldRenderContext.consumers();
     if (consumers == null || hand != Hand.MAIN_HAND) return true;
     final ClientWorld world = worldRenderContext.world();
-    final BlockState state = blockOutlineContext.blockState();
+    BlockState state = blockOutlineContext.blockState();
     if (state.contains(Properties.SLAB_TYPE)
         && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
       final HitResult crosshairTarget = MinecraftClient.getInstance().crosshairTarget;
@@ -221,51 +202,56 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
             0.4F);
         return false;
       }
-      return true;
     }
+    return true;
+  }
 
-    @Environment(EnvType.CLIENT)
+  @Environment(EnvType.CLIENT)
+  @Override
+  public @Nullable JModel getItemModel() {
+    return null;
+  }
+
+  @Override
+  public @NotNull JRecipe getCraftingRecipe() {
+    return new JShapedRecipe(this)
+        .pattern("SCS", " | ", " | ")
+        .addKey("S", Items.SHEARS)
+        .addKey("C", Items.STONE)
+        .addKey("|", Items.STICK)
+        .addInventoryChangedCriterion("has_shears", Items.SHEARS)
+        .addInventoryChangedCriterion("has_stone", Items.STONE);
+  }
+
+  @ApiStatus.AvailableSince("1.0.3")
+  public enum Handler implements ServerPlayNetworking.PlayChannelHandler {
+    INSTANCE;
+
+    /**
+     * @see #canMine(BlockState, World, BlockPos, PlayerEntity)
+     */
     @Override
-    public @Nullable JModel getItemModel () {
-      return null;
-    }
-
-    @Override
-    public @NotNull JRecipe getCraftingRecipe () {
-      return new JShapedRecipe(this)
-          .pattern("SCS", " | ", " | ")
-          .addKey("S", Items.SHEARS)
-          .addKey("C", Items.STONE)
-          .addKey("|", Items.STICK)
-          .addInventoryChangedCriterion("has_shears", Items.SHEARS)
-          .addInventoryChangedCriterion("has_stone", Items.STONE);
-    }
-
-    @ApiStatus.AvailableSince("1.0.3")
-    public enum Handler implements ServerPlayNetworking.PlayChannelHandler {
-      INSTANCE;
-
-      /**
-       * @see #canMine(BlockState, World, BlockPos, PlayerEntity)
-       */
-      @Override
-      public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
-        final BlockPos blockPos = buf.readBlockPos();
-        final boolean isTop = buf.readBoolean();
-        server.execute(() -> {
-          if (player.getEyePos().squaredDistanceTo(Vec3d.ofCenter(blockPos)) > 36) {
-            return;
-          }
-        if (!(player.getMainHandStack().getItem() instanceof SlabToolItem)) {
+    public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+      final BlockPos blockPos = buf.readBlockPos();
+      final boolean isTop = buf.readBoolean();
+      server.execute(() -> {
+        if (!(player.getMainHandStack().getItem() instanceof SlabToolItem) || !player.abilities.allowModifyWorld) {
           return;
         }
-          // canMine 已经执行，此时直接执行。
+        final Runnable remove = SERVER_BLOCK_BREAKING_BRIDGE.remove(Pair.of(player.getServerWorld(), blockPos));
+        if (remove == CAN_MINE_CALLED_FIRST) {
           performBreak(player.world, blockPos, player, isTop);
-        });
-      }
+        } else if (tryToDoubleSlab(player.world.getBlockState(blockPos)) != null) {
+          // 收到封包之后，送到 canMine 中执行。
+          SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of(player.getServerWorld(), blockPos), (PacketReceivedFirst) () -> performBreak(player.world, blockPos, player, isTop));
+        }
+      });
     }
+  }
 
-  private enum BridgeState {
-    CAN_MINE_CALLED_FIRST, PERFORM_BREAK_CALLED_FIRST;
+  private interface PacketReceivedFirst extends Runnable {
   }
-  }
+
+  private static final Runnable CAN_MINE_CALLED_FIRST = () -> {
+  };
+}

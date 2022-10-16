@@ -185,6 +185,7 @@ public class CarryingToolItem extends BlockToolItem
       return TextBridge.translatable("item.mishanguc.carrying_tool.holding", name, MishangUtils.getBlockName(holdingBlock));
     }
   }
+
   @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
@@ -335,7 +336,7 @@ public class CarryingToolItem extends BlockToolItem
       float g = MathHelper.sin(-yaw * 0.017453292F - 3.1415927F);
       float h = -MathHelper.cos(-pitch * 0.017453292F);
       float i = MathHelper.sin(-pitch * 0.017453292F);
-      fromPolar = new Vec3d((double) (g * h), (double) i, (double) (f * h));
+      fromPolar = new Vec3d(g * h, i, f * h);
     }
     final Vec3d velocity = fromPolar.multiply(2).add(user.getVelocity());
     if (holdingBlockState != null) {
