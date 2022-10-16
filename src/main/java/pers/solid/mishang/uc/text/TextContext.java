@@ -379,12 +379,12 @@ public class TextContext implements Cloneable {
    * 获取文本宽度，如果存在 extra 字段，则还需要考虑该对象的宽度。
    */
   private float getWidth(TextRenderer textRenderer, @Nullable OrderedText text) {
-    final float width = text == null ? 0 : textRenderer.getWidth(text) * size / 8;
+    final float width = text == null ? 0 : textRenderer.getWidth(text) * size / 8 * scaleX;
     return extra != null ? Math.max(width, extra.width() * size) : width;
   }
 
   public float getHeight() {
-    return extra != null ? extra.height() * size : size;
+    return (extra != null ? extra.height() * size : size) * scaleY;
   }
 
   public float getMarginTop() {

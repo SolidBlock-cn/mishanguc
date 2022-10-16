@@ -9,6 +9,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -22,7 +23,7 @@ import java.util.List;
  * @see WallSignBlockEntityRenderer
  */
 public class WallSignBlockEntity extends BlockEntityWithText {
-  public static final TextContext DEFAULT_TEXT_CONTEXT = new TextContext();
+  public static final TextContext DEFAULT_TEXT_CONTEXT = Util.make(new TextContext(), textContext -> textContext.size = 6);
   /**
    * 正在编辑该告示牌的玩家。若为 <code>null</code>，则表示该告示牌为空闲模式。
    */
