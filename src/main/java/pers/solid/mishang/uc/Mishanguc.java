@@ -39,10 +39,7 @@ import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blocks.*;
-import pers.solid.mishang.uc.item.BlockToolItem;
-import pers.solid.mishang.uc.item.HotbarScrollInteraction;
-import pers.solid.mishang.uc.item.InteractsWithEntity;
-import pers.solid.mishang.uc.item.MishangucItems;
+import pers.solid.mishang.uc.item.*;
 import pers.solid.mishang.uc.text.SpecialDrawableTypes;
 import pers.solid.mishang.uc.util.TextBridge;
 
@@ -178,6 +175,7 @@ public class Mishanguc implements ModInitializer {
         }
       });
     });
+    ServerPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "slab_tool"), SlabToolItem.Handler.INSTANCE);
   }
 
   private static void registerEvents() {

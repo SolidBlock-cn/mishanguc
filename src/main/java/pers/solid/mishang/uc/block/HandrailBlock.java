@@ -154,7 +154,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
           .with(WATERLOGGED, waterlogged);
     }
 
-    final @Nullable HorizontalCornerDirection possibleCornerDirection = facingToReplace == null ? null : HorizontalCornerDirection.fromDirections(facing, facingToReplace);
+    final @Nullable HorizontalCornerDirection possibleCornerDirection = facingToReplace == null ? null : HorizontalCornerDirection.fromDirections(facing, facingToReplace, null);
     if (possibleCornerDirection != null) {
       return corner().getDefaultState()
           .with(MishangucProperties.HORIZONTAL_CORNER_FACING, possibleCornerDirection)

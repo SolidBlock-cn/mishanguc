@@ -2,6 +2,16 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.0.3
+
+Fixed following issues:
+
+- Client and server sides may differ when breaking with slab tool.
+- The default text size of wall signs is incorrect.
+- Text scale is not considered in the calculation of text height and width, causing when the scales are not default, text alignment is incorrect.
+- Possible crash when placing handrail blocks with fast building tool.
+- When holding blocks in offhand, using fast-building tool, placing may cause bugs (such as placing on slabs when you're holding non-slab blocks, the player is incorrectly considered to be doubling the slabs and will incorrectly replace the slabs with blocks in hand).
+
 ### 1.0.2
 
 Updated following content:

@@ -89,6 +89,8 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
               color = connectionState.lineColor();
             } else if (connectionState.lineColor() == LineColor.UNKNOWN) {
               color = adjacentState.lineColor();
+            } else if (adjacentState.lineColor() == LineColor.UNKNOWN) {
+              color = connectionState.lineColor();
             } else {
               color = ObjectUtils.max(connectionState.lineColor(), adjacentState.lineColor());
             }
@@ -336,13 +338,12 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
 
             // 若旁边两侧道路连接的颜色和类型相同，则考虑比较复杂的情况：
             if (stateLeft.lineColor() == stateRight.lineColor() && stateLeft.lineType() == stateRight.lineType()) {
-              // 优先考虑混色部分，产生的均为T形线。
-              // - 两端白色粗线，前方黄色双线 → 白色粗+黄色双
-              // - 两端白线，前方黄色双线 → 白色+黄色双
-              // - 两端白色，前方黄色 → 白色+黄色
-              // - 两端黄色，前方白色 → 黄色+白色
-
-              if (stateLeft.lineColor() != facingState.lineColor()) {
+              if (stateLeft.lineColor() != facingState.lineColor() && facingState.lineColor() != LineColor.UNKNOWN) {
+                // 优先考虑混色部分，产生的均为T形线。
+                // - 两端白色粗线，前方黄色双线 → 白色粗+黄色双
+                // - 两端白线，前方黄色双线 → 白色+黄色双
+                // - 两端白色，前方黄色 → 白色+黄色
+                // - 两端黄色，前方白色 → 黄色+白色
                 if (stateLeft.lineColor() == LineColor.WHITE && facingState.lineColor() == LineColor.YELLOW) {
                   RoadWithJointLine.Impl block;
                   switch (stateLeft.lineType()) {
@@ -369,7 +370,7 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
                 // - 两端白色粗线 → 白色粗+白色
                 // - 其他情况 → 白色普通
 
-                if (facingState.lineColor() == LineColor.YELLOW) {
+                if (facingState.lineColor() == LineColor.YELLOW || (facingState.lineColor() == LineColor.UNKNOWN && stateLeft.lineColor() == LineColor.YELLOW)) {
                   return ROAD_WITH_YELLOW_TS_LINE.getDefaultState()
                       .with(RoadWithJointLine.FACING, facingDirection);
                 } else {

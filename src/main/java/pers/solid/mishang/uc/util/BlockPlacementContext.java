@@ -130,19 +130,12 @@ public class BlockPlacementContext {
     // 需要被替换的方块
     hitState = world.getBlockState(hit.getBlockPos());
     hitEntity = world.getBlockEntity(hit.getBlockPos());
-    placementContext = new ItemPlacementContext(
-        player,
-        hand,
-        hand == null
-            ? new ItemStack(hitState.getBlock().asItem())
-            : player.getStackInHand(hand),
-        hit);
-    posToPlace = includesFluid ? blockPos.offset(hit.getSide()) : placementContext.getBlockPos();
-    stateToReplace = world.getBlockState(posToPlace);
 
     // 需要放置的方块
     @Nullable BlockState stateToPlace1 = null;
     @Nullable ItemStack stackInHand1 = null;
+    ItemPlacementContext placementContext1 = null;
+
     for (@NotNull Hand hand1 : Hand.values()) {
       ItemStack stackInHand0 = this.player.getStackInHand(hand1);
       if (stackInHand0.getItem() instanceof BlockItem) {
@@ -153,8 +146,12 @@ public class BlockPlacementContext {
           @since 0.2.4 替换为局部变量
          */
         final @Nullable Block handBlock = ((BlockItem) stackInHand0.getItem()).getBlock();
-        stateToPlace1 = handBlock == null ? null : handBlock.getPlacementState(placementContext);
-        if (stateToPlace1 == null) continue;
+        placementContext1 = new ItemPlacementContext(player, hand1, stackInHand0, hit);
+        stateToPlace1 = handBlock == null ? null : handBlock.getPlacementState(placementContext1);
+        if (stateToPlace1 == null) {
+          placementContext1 = null;
+          continue;
+        }
 
         // 尝试 placeFromTag
         final NbtCompound blockStateTag = stackInHand0.getSubTag("BlockStateTag");
@@ -171,6 +168,7 @@ public class BlockPlacementContext {
         hand = hand1;
         break;
       } else if (stackInHand0.getItem() instanceof CarryingToolItem) {
+        placementContext1 = new ItemPlacementContext(player, hand1, stackInHand0, hit);
         stateToPlace1 = CarryingToolItem.getHoldingBlockState(stackInHand0);
         stackInHand1 = stackInHand0;
         hand = hand1;
@@ -179,6 +177,9 @@ public class BlockPlacementContext {
     }
 
     stackInHand = stackInHand1;
+    placementContext = placementContext1 == null ? new ItemPlacementContext(player, hand, hitState.getBlock().asItem().getDefaultStack(), hit) : placementContext1;
+    posToPlace = includesFluid ? blockPos.offset(hit.getSide()) : placementContext.getBlockPos();
+    stateToReplace = world.getBlockState(posToPlace);
     if (stateToPlace1 == null) {
       // 手中没有有效的方块物品，则使用 hitState。
       stateToPlace1 = placementContext.canReplaceExisting() && !includesFluid

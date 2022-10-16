@@ -4,7 +4,9 @@ import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 水平的角落的方向。Minecraft 原版的 {@link Direction} 包含 6 个正的方向，其中 4 个水平正方向之间会有 4 个角落的方向，也就是偏 45° 的方向。
@@ -52,13 +54,22 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
    * @return 对应的水平角落方向。
    * @throws IllegalArgumentException 如果两个方向不相邻，或者有些不是水平的。
    */
-  public static @NotNull HorizontalCornerDirection fromDirections(@NotNull Direction dir1, @NotNull Direction dir2) {
+  public static @NotNull HorizontalCornerDirection fromDirections(@NotNull Direction dir1, @NotNull Direction dir2) throws IllegalArgumentException {
     for (HorizontalCornerDirection direction : HorizontalCornerDirection.values()) {
       if ((direction.dir1 == dir1 && direction.dir2 == dir2) || (direction.dir1 == dir2 && direction.dir2 == dir1)) {
         return direction;
       }
     }
     throw new IllegalArgumentException("There is no horizontal corner direction composed of " + dir1.asString() + " " + dir2.asString() + ".");
+  }
+  
+  @Contract(value = "_, _, !null -> !null", pure = true)
+  public static @Nullable HorizontalCornerDirection fromDirections(@NotNull Direction dir1, @NotNull Direction dir2, @Nullable HorizontalCornerDirection defaultValue) {
+    try {
+      return fromDirections(dir1, dir2);
+    } catch (IllegalArgumentException ignore) {
+      return defaultValue;
+    }
   }
 
   /**
