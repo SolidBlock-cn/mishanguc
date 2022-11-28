@@ -2,6 +2,18 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.0.4
+
+Updated following content:
+
+- Handrail blocks may connect to fences, fence gates, walls and glass panes.
+- Adjusted the display format of message of Text Copy Tool.
+- Slab tools can break down blocks into non-vanilla slabs.
+
+Fixed following issues:
+
+- Some road blocks have wrong textures.
+
 ### 1.0.3
 
 Fixed following issues:

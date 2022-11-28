@@ -8,15 +8,13 @@ import net.devtech.arrp.json.blockstate.JWhenProperties;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalConnectingBlock;
-import net.minecraft.block.StairsBlock;
+import net.minecraft.block.*;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -67,9 +65,16 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
       return false;
     } else if (neighborState.isSideSolidFullSquare(world, neighborPos, direction.getOpposite())) {
       return true;
-    } else if (neighborState.getBlock() instanceof HandrailStairBlock) {
-      return neighborState.get(HandrailStairBlock.POSITION) == HandrailStairBlock.Position.CENTER && neighborState.get(HandrailStairBlock.FACING).getAxis() == direction.getAxis();
-    } else return neighborState.getBlock() instanceof HandrailCentralBlock;
+    } else if (connectsHandrailTo(direction, neighborState)) {
+      return true;
+    } else {
+      return neighborState.isIn(BlockTags.FENCES) || (neighborState.getBlock() instanceof FenceGateBlock && FenceGateBlock.canWallConnect(state, direction)) || neighborState.isIn(BlockTags.WALLS) || neighborState.getBlock() instanceof PaneBlock;
+    }
+  }
+
+
+  public static boolean connectsHandrailTo(Direction direction, BlockState neighborState) {
+    return neighborState.getBlock() instanceof HandrailStairBlock && neighborState.get(HandrailStairBlock.POSITION) == HandrailStairBlock.Position.CENTER && neighborState.get(HandrailStairBlock.FACING).getAxis() == direction.getAxis() || neighborState.getBlock() instanceof HandrailCentralBlock;
   }
 
   @SuppressWarnings("deprecation")
