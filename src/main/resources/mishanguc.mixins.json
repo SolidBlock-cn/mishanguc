@@ -4,9 +4,10 @@
   "package": "pers.solid.mishang.uc.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "AbstractBlockStateMixin", "AreaHelperMixin", "ItemUsageContextInvoker",
-    "NbtCompoundAccessor", "NetherPortalBlockMixin", "PlayerInventoryMixin",
-    "PointOfInterestTypesMixin", "SnowBlockMixin"
+    "AbstractBlockStateMixin", "AreaHelperMixin", "FenceBlockMixin",
+    "ItemUsageContextInvoker", "NbtCompoundAccessor", "NetherPortalBlockMixin",
+    "PaneBlockMixin", "PlayerInventoryMixin", "PointOfInterestTypesMixin",
+    "SnowBlockMixin", "WallBlockMixin"
   ],
   "client": [
     "AbstractClientPlayerEntityMixin",
