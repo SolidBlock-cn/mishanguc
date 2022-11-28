@@ -5,6 +5,7 @@ import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
@@ -38,7 +39,7 @@ public class GlassHandrailBlock extends HandrailBlock {
   }
 
   protected GlassHandrailBlock(Block baseBlock, Settings settings, String frameTexture, String decorationTexture, Function<GlassHandrailBlock, CentralBlock> centralProvider, Function<GlassHandrailBlock, CornerBlock> cornerProvider, Function<GlassHandrailBlock, StairBlock> stairProvider, Function<GlassHandrailBlock, OuterBlock> outerProvider) {
-    super(settings);
+    super(settings.nonOpaque());
     this.baseBlock = baseBlock;
     this.frameTexture = frameTexture;
     this.decorationTexture = decorationTexture;
@@ -96,7 +97,7 @@ public class GlassHandrailBlock extends HandrailBlock {
     }
 
     protected CentralBlock(@NotNull GlassHandrailBlock baseRail) {
-      super(baseRail);
+      super(baseRail, FabricBlockSettings.copyOf(baseRail).nonOpaque());
     }
 
     @Environment(EnvType.CLIENT)
@@ -118,7 +119,7 @@ public class GlassHandrailBlock extends HandrailBlock {
     }
 
     protected CornerBlock(@NotNull GlassHandrailBlock baseRail) {
-      super(baseRail);
+      super(baseRail, FabricBlockSettings.copyOf(baseRail).nonOpaque());
     }
 
     @Override
@@ -130,7 +131,7 @@ public class GlassHandrailBlock extends HandrailBlock {
   public static class StairBlock extends HandrailStairBlock<GlassHandrailBlock> {
 
     protected StairBlock(@NotNull GlassHandrailBlock baseRail) {
-      super(baseRail);
+      super(baseRail, FabricBlockSettings.copyOf(baseRail).nonOpaque());
     }
 
     @Override
@@ -155,7 +156,7 @@ public class GlassHandrailBlock extends HandrailBlock {
   public static class OuterBlock extends HandrailOuterBlock<GlassHandrailBlock> {
 
     protected OuterBlock(@NotNull GlassHandrailBlock baseRail) {
-      super(baseRail);
+      super(baseRail, FabricBlockSettings.copyOf(baseRail).nonOpaque());
     }
 
     @Override

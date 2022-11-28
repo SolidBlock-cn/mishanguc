@@ -14,6 +14,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -42,16 +43,21 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.block.AbstractRoadBlock;
 import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 import pers.solid.mishang.uc.util.TextBridge;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
@@ -78,7 +84,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
    */
   protected static BlockState toDoubleSlab(BlockState baseBlockState, Block slabBlock) {
     final BlockState slabState = MishangUtils.copyPropertiesFrom(slabBlock.getDefaultState(), baseBlockState);
-    return slabState.with(Properties.SLAB_TYPE, SlabType.DOUBLE);
+    return slabState.contains(Properties.SLAB_TYPE) ? slabState.with(Properties.SLAB_TYPE, SlabType.DOUBLE) : slabState;
   }
 
   /**
@@ -88,6 +94,9 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
     final Block block = state.getBlock();
     if (block instanceof AbstractRoadBlock && RoadSlabBlocks.BLOCK_TO_SLABS.containsKey(block)) {
       state = toDoubleSlab(state, RoadSlabBlocks.BLOCK_TO_SLABS.get(block));
+    } else {
+      final Block slab = ExtShapeBridge.getExtShapeSlabBlock(block);
+      if (slab != null) state = toDoubleSlab(state, slab);
     }
     if (state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
       return state;
@@ -101,6 +110,9 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
     final Block block = state.getBlock();
     if (block instanceof AbstractRoadBlock && RoadSlabBlocks.BLOCK_TO_SLABS.containsKey(block)) {
       state = toDoubleSlab(state, RoadSlabBlocks.BLOCK_TO_SLABS.get(block));
+    } else {
+      final Block slab = ExtShapeBridge.getExtShapeSlabBlock(block);
+      if (slab != null) state = toDoubleSlab(state, slab);
     }
     if (state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
       final SlabType slabTypeToSet = isTop ? SlabType.BOTTOM : SlabType.TOP;
@@ -254,4 +266,49 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
 
   private static final Runnable CAN_MINE_CALLED_FIRST = () -> {
   };
+
+  @ApiStatus.AvailableSince("1.0.4")
+  private static final class ExtShapeBridge {
+    private static final Class<?> extshape_BlockMappings_class;
+    private static final Method extshape_getBlockOf_method;
+    private static final Object extshape_slab_shape;
+
+    static {
+      Object extshape_slab_shape1 = null;
+      Method extshape_getBlockOf_method1 = null;
+      Class<?> extshape_BlockMappings_class1 = null;
+      Class<?> extshape_BlockShape_class = null;
+
+      if (FabricLoader.getInstance().isModLoaded("extshape")) try {
+        extshape_BlockMappings_class1 = Class.forName("pers.solid.extshape.mappings.BlockMappings");
+        extshape_BlockShape_class = Class.forName("pers.solid.extshape.builder.BlockShape");
+        extshape_getBlockOf_method1 = MethodUtils.getAccessibleMethod(extshape_BlockMappings_class1, "getBlockOf", extshape_BlockShape_class, Block.class);
+        extshape_slab_shape1 = FieldUtils.getDeclaredField(extshape_BlockShape_class, "SLAB").get(null);
+      } catch (Throwable e) {
+        extshape_BlockMappings_class1 = null;
+        extshape_getBlockOf_method1 = null;
+        if (!(e instanceof ClassNotFoundException || e instanceof ClassCastException)) {
+          Mishanguc.MISHANG_LOGGER.error("Unknown exception when trying to connect with Extended Block Shape mod:", e);
+        }
+      }
+      extshape_slab_shape = extshape_slab_shape1;
+      extshape_getBlockOf_method = extshape_getBlockOf_method1;
+      extshape_BlockMappings_class = extshape_BlockMappings_class1;
+      if (extshape_slab_shape != null && extshape_getBlockOf_method != null) {
+        Mishanguc.MISHANG_LOGGER.info("Mishang Urban Construction mod has successfully created bridged into Extended Block Shapes mod!");
+      }
+    }
+
+    public static @Nullable Block getExtShapeSlabBlock(Block baseBlock) {
+      if (extshape_BlockMappings_class == null || extshape_getBlockOf_method == null || extshape_slab_shape == null) {
+        return null;
+      }
+      try {
+        return (Block) extshape_getBlockOf_method.invoke(null, extshape_slab_shape, baseBlock);
+      } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException | ClassCastException e) {
+        Mishanguc.MISHANG_LOGGER.error("Unexpected error when trying to get slab of block {}. This should not happen no matter whether you have installed Mishang Urban Construction mod.", baseBlock, e);
+        return null;
+      }
+    }
+  }
 }

@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.blocks;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.MapColor;
@@ -30,11 +31,13 @@ import java.lang.reflect.Modifier;
  */
 public class MishangucBlocks {
 
+  protected static final Material ROAD_MATERIAL = new FabricMaterialBuilder(MapColor.GRAY).build();
+
   /**
    * 绝大多数柏油路方块共用的方块设置。
    */
   protected static final FabricBlockSettings ROAD_SETTINGS =
-      FabricBlockSettings.of(Material.STONE, MapColor.GRAY).strength(0.5F).breakByTool(FabricToolTags.PICKAXES);
+      FabricBlockSettings.of(ROAD_MATERIAL, MapColor.GRAY).strength(0.5F).breakByTool(FabricToolTags.PICKAXES);
   /**
    * 具有白色标线的道路方块使用的方块设置。
    */

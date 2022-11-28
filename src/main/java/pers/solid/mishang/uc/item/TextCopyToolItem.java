@@ -135,15 +135,15 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
               } else if (possibleColor != color) {
                 // possible != null, color != null
                 // 由于只支持一个颜色，故仅使用第一个颜色。
-                player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.warn.colorConsistencyLimit").formatted(Formatting.YELLOW), true);
+                player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.warn.colorConsistencyLimit").formatted(Formatting.YELLOW), false);
               }
             }
             if (color == null) {
               // 由于只支持部分颜色，故这些颜色没有使用。
-              player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.warn.colorSelectionLimit").formatted(Formatting.YELLOW), true);
+              player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.warn.colorSelectionLimit").formatted(Formatting.YELLOW), false);
             }
           } else {
-            player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.warn.outOfBound").formatted(Formatting.YELLOW), true);
+            player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.warn.outOfBound").formatted(Formatting.YELLOW), false);
           }
         }
         blockEntity.markDirty();
@@ -193,7 +193,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         hungSignBlockEntity.texts = ImmutableMap.copyOf(newTexts);
         blockEntity.markDirty();
         world.updateListeners(blockPos, blockState, blockState, 3);
-        player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.success.paste", newTextsThisSide.size()), false);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.success.paste", newTextsThisSide.size()), true);
         stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
         return ActionResult.SUCCESS;
       } else if (blockEntity instanceof StandingSignBlockEntity) {
@@ -258,7 +258,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         texts.add(textContext.createNbt());
       }
       stack.putSubTag("texts", texts);
-      stack.putSubTag("fromVanillaSign", NbtByte.of(false));
+      stack.putSubTag("fromVanillaSign", NbtByte.of(true));
       player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.copy", texts.size()), false);
       return ActionResult.SUCCESS;
     } else {
