@@ -29,7 +29,7 @@ import java.lang.reflect.Modifier;
  * 迷上城建模组的所有方块。
  */
 public class MishangucBlocks {
-  
+
   protected static final Material ROAD_MATERIAL = new FabricMaterialBuilder(MapColor.GRAY).build();
 
   /**
@@ -59,7 +59,7 @@ public class MishangucBlocks {
   /**
    * 绝大多数黄色光方块共用的方块设置。
    */
-  protected static final FabricBlockSettings YELLOW_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, MapColor.YELLOW).luminance(14).strength(0.2f);
+  protected static final FabricBlockSettings YELLOW_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, MapColor.YELLOW).luminance(15).strength(0.2f);
   /**
    * 墙上的黄色灯等方块等用到的方块设置。与{@link #YELLOW_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。
    */
@@ -68,7 +68,7 @@ public class MishangucBlocks {
   /**
    * 绝大多数青色光方块共用的方块设置。
    */
-  protected static final FabricBlockSettings CYAN_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, MapColor.CYAN).luminance(13).strength(0.2f);
+  protected static final FabricBlockSettings CYAN_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, MapColor.CYAN).luminance(15).strength(0.2f);
   /**
    * 墙上的青色灯等方块等用到的方块设置。与{@link #YELLOW_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。
    */
