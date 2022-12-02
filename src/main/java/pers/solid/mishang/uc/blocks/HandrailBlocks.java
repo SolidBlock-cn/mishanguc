@@ -171,7 +171,7 @@ public final class HandrailBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_CRIMSON_HANDRAIL = new SimpleHandrailBlock(Blocks.CRIMSON_STEM);
   @RegisterIdentifier
-  public static final SimpleHandrailBlock SIMPLE_WARPED_HANDRAIL = new SimpleHandrailBlock(Blocks.CRIMSON_STEM);
+  public static final SimpleHandrailBlock SIMPLE_WARPED_HANDRAIL = new SimpleHandrailBlock(Blocks.WARPED_STEM);
 
   static {
     SIMPLE_OAK_HANDRAIL.texture = "block/oak_log";
