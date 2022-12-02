@@ -10,6 +10,7 @@ Updated following content:
 - Adjusted the display format of message of Text Copy Tool.
 - Slab tools can break down blocks into non-vanilla slabs.
 - Added blocks made of block of bamboo, bamboo planks, and bamboo mosaic, which require the 1.20 feature data packs of Minecraft to be enabled.
+- Color tools can more smartly handle text styles, including styles in the vanilla signs.
 
 Fixed following issues:
 
