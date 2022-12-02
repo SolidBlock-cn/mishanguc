@@ -14,6 +14,7 @@ Updated following content:
 Fixed following issues:
 
 - Some road blocks have wrong textures.
+- Some handrail blocks may incorrectly make their textures hidden when connecting.
 - Simply warped stem handrail has a wrong name and block property.
 
 ### 1.0.3
