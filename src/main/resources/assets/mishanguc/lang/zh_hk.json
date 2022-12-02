@@ -605,7 +605,7 @@
   "message.tool_access.creative_op_only": "僅限創造模式下嘅管理員",
   "message.tool_access.op_only": "僅限管理員",
   "modmenu.descriptionTranslation.mishanguc": "一系列用於構築城市嘅方塊和物品！當前不穩定，請勿用於您嘅正式物品！",
-  "notice.mishanguc.version_check": "請注意：迷上城建模組用於 Minecraft 版本 %s 的開發將在不久之後停止，請考慮使用 %s。管理員可以輸入命令 %s 為當前世界禁止此提示。",
+  "notice.mishanguc.version_check": "請注意：迷上城建模組已經不再開發用於 Minecraft %s 的版本，請考慮使用 %s。管理員可以輸入命令 %s 為當前世界禁止此提示。",
   "roadConnectionState.whether.connected": "已連接",
   "roadConnectionState.whether.may_connect": "可能連接",
   "roadConnectionState.whether.not_connected": "未連接",
