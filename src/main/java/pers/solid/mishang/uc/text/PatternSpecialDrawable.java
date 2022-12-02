@@ -10,6 +10,7 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.util.math.Matrix4f;
 import org.jetbrains.annotations.ApiStatus;
@@ -373,5 +374,10 @@ public final class PatternSpecialDrawable implements SpecialDrawable {
       flipped[i] = new float[]{7 - originalPiece[2], 7 - originalPiece[3], 7 - originalPiece[0], 7 - originalPiece[1]};
     }
     return flipped;
+  }
+
+  @Override
+  public @NotNull MutableText asStyledText() {
+    return SpecialDrawable.super.asStyledText().styled(style -> style.withColor(textContext.color));
   }
 }

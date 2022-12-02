@@ -124,7 +124,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
           if (i < 4) {
             // 设置告示牌文字
             final TextContext textContext = TextContext.fromNbt(texts.get(i));
-            signBlockEntity.setTextOnRow(i, textContext.text);
+            signBlockEntity.setTextOnRow(i, textContext.asStyledText());
 
             // 设置告示牌颜色
             final DyeColor possibleColor = MishangUtils.colorBySignColor(textContext.color);
@@ -132,10 +132,6 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
               if (color == null) {
                 color = possibleColor;
                 signBlockEntity.setTextColor(possibleColor);
-              } else if (possibleColor != color) {
-                // possible != null, color != null
-                // 由于只支持一个颜色，故仅使用第一个颜色。
-                player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.warn.colorConsistencyLimit").formatted(Formatting.YELLOW), false);
               }
             }
             if (color == null) {
@@ -239,8 +235,22 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
       for (int i = 0; i < 4; i++) {
         final TextContext textContext = new TextContext();
         textContext.text = signBlockEntity.getTextOnRow(i).shallowCopy();
-        if (textContext.text.equals(LiteralText.EMPTY)) continue;
+        if (TextBridge.isEmpty(textContext.text)) continue;
         textContext.color = signBlockEntity.getTextColor().getSignColor();
+
+        final Style style = textContext.text.getStyle();
+        if (textContext.text instanceof LiteralText && textContext.text.getSiblings().isEmpty() && style.getClickEvent() == null && style.getHoverEvent() == null && style.getFont() == Style.DEFAULT_FONT_ID && style.getInsertion() == null) {
+          // 对于文本为 literalText 的情况，应该将其 style 对象中的属性转化为 textContent 中的属性，除非 style 中有无法转换的部分。
+          textContext.bold = style.isBold();
+          textContext.italic = style.isItalic();
+          textContext.strikethrough = style.isStrikethrough();
+          textContext.underline = style.isUnderlined();
+          textContext.obfuscated = style.isObfuscated();
+          if (style.getColor() != null) {
+            textContext.color = style.getColor().getRgb();
+          }
+          textContext.text = TextBridge.literal(((LiteralText) textContext.text).getRawString());
+        }
         final NbtCompound nbt0 = textContext.createNbt();
         nbt0.remove("size"); // 原版告示牌的文本没有 size
         texts.add(nbt0);
@@ -259,7 +269,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
       }
       stack.putSubTag("texts", texts);
       stack.putSubTag("fromVanillaSign", NbtByte.of(true));
-      player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.success.copy", texts.size()), false);
+      player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.success.copy", texts.size()), true);
       return ActionResult.SUCCESS;
     } else {
       final BlockState blockState = world.getBlockState(pos);
