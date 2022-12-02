@@ -20,6 +20,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.*;
 import org.joml.Quaternionf;
 import pers.solid.mishang.uc.MishangUtils;
@@ -308,7 +309,7 @@ public class TextContext implements Cloneable {
     matrixStack.translate(offsetX, offsetY, offsetZ);
     // 处理文本的旋转
     if (rotationX != 0 || rotationY != 0 || rotationZ != 0) {
-      matrixStack.multiply(new Quaternionf(rotationX, rotationY, rotationZ, 0));
+      matrixStack.multiply(new Quaternionf().rotateXYZ(MathHelper.RADIANS_PER_DEGREE * rotationX, MathHelper.RADIANS_PER_DEGREE * rotationY, MathHelper.RADIANS_PER_DEGREE * rotationZ));
     }
 
     // 处理文本在 x 和 y 方向的对齐
