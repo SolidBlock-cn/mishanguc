@@ -99,7 +99,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
       BlockPos pos,
       BlockPos neighborPos) {
     if (state.get(Properties.WATERLOGGED)) {
-      world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+      world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
     final BlockState newState =
         super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);

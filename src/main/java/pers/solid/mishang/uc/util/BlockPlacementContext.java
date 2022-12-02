@@ -170,7 +170,7 @@ public class BlockPlacementContext {
         break;
       } else if (stackInHand0.getItem() instanceof CarryingToolItem) {
         placementContext1 = new ItemPlacementContext(player, hand1, stackInHand0, hit);
-        stateToPlace1 = CarryingToolItem.getHoldingBlockState(stackInHand0);
+        stateToPlace1 = CarryingToolItem.getHoldingBlockState(stackInHand0, world);
         stackInHand1 = stackInHand0;
         hand = hand1;
         break;

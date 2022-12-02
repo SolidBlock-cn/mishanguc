@@ -16,6 +16,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
@@ -24,7 +27,6 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -46,8 +48,8 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
     BlockState blockState = world.getBlockState(blockPos);
     if (player != null) {
       final Block block = blockState.getBlock();
-      final Identifier identifier = Registry.BLOCK.getId(block);
-      final int rawId = Registry.BLOCK.getRawId(block);
+      final Identifier identifier = Registries.BLOCK.getId(block);
+      final int rawId = Registries.BLOCK.getRawId(block);
       player.sendMessage(
           TextBridge.literal("")
               .append(TextBridge.translatable("debug.mishanguc.blockId.header", String.format(
@@ -97,7 +99,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
     if (world.isClient) {
       final BlockPos blockPos = user.getBlockPos();
       final Biome biome = user.getEntityWorld().getBiome(blockPos).value();
-      final Registry<Biome> biomes = world.getRegistryManager().get(Registry.BIOME_KEY);
+      final Registry<Biome> biomes = world.getRegistryManager().get(RegistryKeys.BIOME);
       final Identifier identifier = biomes.getId(biome);
       final int rawId = biomes.getRawId(biome);
       user.sendMessage(
@@ -162,8 +164,8 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
     broadcastId(
         player,
         entity.getName(),
-        Registry.ENTITY_TYPE.getId(type),
-        Registry.ENTITY_TYPE.getRawId(type));
+        Registries.ENTITY_TYPE.getId(type),
+        Registries.ENTITY_TYPE.getRawId(type));
     return ActionResult.SUCCESS;
   }
 

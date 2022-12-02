@@ -41,7 +41,7 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
   protected void init() {
     super.init();
     entity.editedSide = direction;
-    copyFromBackButton.x = width / 2 - 100;
+    copyFromBackButton.setX(width / 2 - 100);
   }
 
   @Override
@@ -74,11 +74,7 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
    * 从背面复制文本的按钮。复制过程中会进行镜像。
    */
   public final ButtonWidget copyFromBackButton =
-      new ButtonWidget(
-          this.width / 2 - 100,
-          90,
-          200,
-          20,
+      new ButtonWidget.Builder(
           TextBridge.translatable("message.mishanguc.copy_from_back"),
           button -> {
             final HungSignBlockEntity entity = this.entity;
@@ -94,7 +90,10 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
                   // 留意添加到的位置是列表末尾。
                   addTextField(textContextsEditing.size(), flip, false);
                 });
-          });
+          }).dimensions(this.width / 2 - 100,
+          90,
+          200,
+          20).build();
 
   @Override
   public void removeTextField(int index) {

@@ -31,7 +31,7 @@ public class ScreenMixin {
       method = "handleTextClick",
       at =
       @At(
-          target = "Lnet/minecraft/client/network/ClientPlayerEntity;sendCommand(Ljava/lang/String;)Z",
+          target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;sendCommand(Ljava/lang/String;)Z",
           shift = At.Shift.BEFORE,
           value = "INVOKE"),
       cancellable = true)

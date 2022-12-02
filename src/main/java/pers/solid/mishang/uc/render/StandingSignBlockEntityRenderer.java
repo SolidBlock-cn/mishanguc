@@ -7,7 +7,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.block.StandingSignBlock;
 import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
@@ -22,7 +22,7 @@ public record StandingSignBlockEntityRenderer<T extends StandingSignBlockEntity>
     matrices.translate(0.5, 0.75, 0.5);
     final BlockState state = entity.getCachedState();
     final int rotation = state.get(StandingSignBlock.ROTATION);
-    matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-rotation * 22.5f));
+    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-rotation * 22.5f));
     matrices.scale(1 / 16f, -1 / 16f, 1 / 16f);
 
     matrices.push();
@@ -33,7 +33,7 @@ public record StandingSignBlockEntityRenderer<T extends StandingSignBlockEntity>
     matrices.pop();
     matrices.push();
     matrices.translate(0, 0, -0.5125);
-    matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180));
+    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
     for (TextContext textContext : entity.backTexts) {
       textContext.draw(ctx.getTextRenderer(), matrices, vertexConsumers, light, 16, entity.getHeight());
     }

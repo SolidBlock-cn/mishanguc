@@ -20,6 +20,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.s2c.play.ExplosionS2CPacket;
 import net.minecraft.predicate.entity.EntityFlagsPredicate;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.screen.ScreenTexts;
@@ -29,7 +30,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.GameRules;
@@ -54,7 +54,9 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     if (raycast.getType() == HitResult.Type.MISS) {
       return TypedActionResult.fail(stack);
     }
-    if (world.isClient) return TypedActionResult.pass(stack);
+    if (world.isClient) {
+      return TypedActionResult.pass(stack);
+    }
     if (!world.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).get().hasAccess(user, true)) {
       return TypedActionResult.pass(super.use(world, user, hand).getValue());
     }
@@ -65,7 +67,20 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       // 创造模式下，将游戏规则临时设为不掉落。
       booleanRule.set(false, null);
     }
-    world.createExplosion(user, DamageSource.explosion(user.isSneaking() ? null : user), null, pos.x, pos.y, pos.z, power(stack), createFire(stack), destructionType(stack));
+    Explosion explosion = new Explosion(world, user, user.isSneaking() ? DamageSource.explosion(null) : null, null, pos.x, pos.y, pos.z, power(stack), createFire(stack), destructionType(stack));
+    explosion.collectBlocksAndDamageEntities();
+    explosion.affectWorld(true);
+
+    // 适用于 1.19.3，因为不是通过 world.createExplosion 实现的，没有向客户端发送消息，所以需要在这里手动发送
+    if (!explosion.shouldDestroy()) {
+      explosion.clearAffectedBlocks();
+    }
+    for (PlayerEntity playerEntity : world.getPlayers()) {
+      ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
+      if (serverPlayerEntity.squaredDistanceTo(pos.x, pos.y, pos.z) < 4096.0) {
+        serverPlayerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.x, pos.y, pos.z, power(stack), explosion.getAffectedBlocks(), explosion.getAffectedPlayers().get(serverPlayerEntity)));
+      }
+    }
     stack.damage((int) power(stack), user, e -> e.sendToolBreakStatus(hand));
     if (user.isCreative()) {
       booleanRule.set(backup, null);
@@ -84,9 +99,9 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
   public Explosion.DestructionType destructionType(ItemStack stack) {
     final String destructionType = stack.getOrCreateNbt().getString("destructionType");
     return switch (destructionType) {
-      case "none" -> Explosion.DestructionType.NONE;
-      case "destroy" -> Explosion.DestructionType.DESTROY;
-      default -> Explosion.DestructionType.BREAK;
+      case "none", "keep" -> Explosion.DestructionType.KEEP;
+      case "destroy_with_decay", "destroy" -> Explosion.DestructionType.DESTROY_WITH_DECAY;
+      default -> Explosion.DestructionType.DESTROY;
     };
   }
 
@@ -105,59 +120,56 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     return nbt.contains("power", NbtType.NUMBER) ? MathHelper.clamp(nbt.getFloat("power"), -128, 128) : 4;
   }
 
-  @Override
-  public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-    if (isIn(group)) {
-      stacks.add(new ItemStack(this));
-      {
-        ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putFloat("power", 8);
-        stacks.add(stack);
-      }
-      {
-        ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putFloat("power", 16);
-        stacks.add(stack);
-      }
-      {
-        ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putFloat("power", 32);
-        stacks.add(stack);
-      }
-      {
-        ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putBoolean("createFire", true);
-        stack.getOrCreateNbt().putFloat("power", 4);
-        stacks.add(stack);
-      }
-      {
-        ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putBoolean("createFire", true);
-        stack.getOrCreateNbt().putFloat("power", 8);
-        stacks.add(stack);
-      }
-      {
-        ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putBoolean("createFire", true);
-        stack.getOrCreateNbt().putFloat("power", 16);
-        stacks.add(stack);
-      }
-      {
-        ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putBoolean("createFire", true);
-        stack.getOrCreateNbt().putFloat("power", 32);
-        stacks.add(stack);
-      }
-
-      ItemStack stack4 = new ItemStack(this);
-      stack4.getOrCreateNbt().putString("destructionType", "none");
-      stack4.getOrCreateNbt().putFloat("power", 8);
-      stacks.add(stack4);
-
-      ItemStack stack5 = new ItemStack(this);
-      stack5.getOrCreateNbt().putString("destructionType", "destroy");
-      stacks.add(stack5);
+  public void appendToEntries(ItemGroup.Entries stacks) {
+    stacks.add(new ItemStack(this));
+    {
+      ItemStack stack = new ItemStack(this);
+      stack.getOrCreateNbt().putFloat("power", 8);
+      stacks.add(stack);
     }
+    {
+      ItemStack stack = new ItemStack(this);
+      stack.getOrCreateNbt().putFloat("power", 16);
+      stacks.add(stack);
+    }
+    {
+      ItemStack stack = new ItemStack(this);
+      stack.getOrCreateNbt().putFloat("power", 32);
+      stacks.add(stack);
+    }
+    {
+      ItemStack stack = new ItemStack(this);
+      stack.getOrCreateNbt().putBoolean("createFire", true);
+      stack.getOrCreateNbt().putFloat("power", 4);
+      stacks.add(stack);
+    }
+    {
+      ItemStack stack = new ItemStack(this);
+      stack.getOrCreateNbt().putBoolean("createFire", true);
+      stack.getOrCreateNbt().putFloat("power", 8);
+      stacks.add(stack);
+    }
+    {
+      ItemStack stack = new ItemStack(this);
+      stack.getOrCreateNbt().putBoolean("createFire", true);
+      stack.getOrCreateNbt().putFloat("power", 16);
+      stacks.add(stack);
+    }
+    {
+      ItemStack stack = new ItemStack(this);
+      stack.getOrCreateNbt().putBoolean("createFire", true);
+      stack.getOrCreateNbt().putFloat("power", 32);
+      stacks.add(stack);
+    }
+
+    ItemStack stack4 = new ItemStack(this);
+    stack4.getOrCreateNbt().putString("destructionType", "keep");
+    stack4.getOrCreateNbt().putFloat("power", 8);
+    stacks.add(stack4);
+
+    ItemStack stack5 = new ItemStack(this);
+    stack5.getOrCreateNbt().putString("destructionType", "destroy_with_decay");
+    stacks.add(stack5);
   }
 
   @Override
@@ -195,7 +207,18 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       ) {
         continue;
       }
-      world.createExplosion(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, power(stack), createFire(stack), destructionType(stack));
+      Explosion explosion = new Explosion(world, null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, power(stack), createFire(stack), destructionType(stack));
+      explosion.collectBlocksAndDamageEntities();
+      explosion.affectWorld(true);
+      // 适用于 1.19.3，因为不是通过 world.createExplosion 实现的，没有向客户端发送消息，所以需要在这里手动发送
+      if (!explosion.shouldDestroy()) {
+        explosion.clearAffectedBlocks();
+      }
+      for (ServerPlayerEntity playerEntity : world.getPlayers()) {
+        if (playerEntity.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) < 4096.0) {
+          playerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.getX(), pos.getY(), pos.getZ(), power(stack), explosion.getAffectedBlocks(), explosion.getAffectedPlayers().get(playerEntity)));
+        }
+      }
       if (stack.damage((int) power(stack), pointer.getWorld().getRandom(), null)) {
         stack.setCount(0);
       }

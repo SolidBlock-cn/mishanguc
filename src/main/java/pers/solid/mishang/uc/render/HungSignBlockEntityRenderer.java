@@ -7,7 +7,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.block.HungSignBlock;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
@@ -47,7 +47,7 @@ public class HungSignBlockEntityRenderer<T extends HungSignBlockEntity> implemen
         continue;
       }
       matrices.push();
-      matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-direction.asRotation()));
+      matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-direction.asRotation()));
       matrices.translate(0, 0, 1.0125 / 32f);
       matrices.scale(1 / 16f, -1 / 16f, 1 / 16f);
       for (TextContext textContext : textContexts) {

@@ -8,10 +8,10 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -119,7 +119,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
    */
   @Environment(EnvType.CLIENT)
   protected String getTexture() {
-    return texture == null ? Registry.BLOCK.getId(baseBlock).brrp_prepend("block/").toString() : texture;
+    return texture == null ? Registries.BLOCK.getId(baseBlock).brrp_prepend("block/").toString() : texture;
   }
 
   @Override

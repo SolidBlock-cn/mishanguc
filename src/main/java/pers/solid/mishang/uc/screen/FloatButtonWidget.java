@@ -6,13 +6,12 @@ import it.unimi.dsi.fastutil.objects.Object2FloatFunction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.util.TextBridge;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 用于处理浮点数的按钮。按下鼠标时增大，但是按住 shift 则会减小。滚动鼠标滚轮也会减小。
@@ -23,8 +22,6 @@ public class FloatButtonWidget extends ButtonWidget {
   private final Object2FloatFunction<FloatButtonWidget> valueGetter;
   private final FloatConsumer valueSetter;
 
-  @ApiStatus.AvailableSince("0.1.6")
-  private final AtomicReference<Text> textAtom;
   /**
    * 按钮的默认值。可以按鼠标中键或者按住 Alt + Shift 点击以恢复。
    */
@@ -51,8 +48,7 @@ public class FloatButtonWidget extends ButtonWidget {
       Float2ObjectFunction<Text> tooltipSupplier,
       Object2FloatFunction<FloatButtonWidget> valueGetter,
       FloatConsumer valueSetter,
-      PressAction onPress,
-      AtomicReference<Text> textAtom) {
+      PressAction onPress) {
     super(
         x,
         y,
@@ -60,12 +56,21 @@ public class FloatButtonWidget extends ButtonWidget {
         height,
         message,
         onPress,
-        (button, matrices, mouseX, mouseY) ->
-            textAtom.set(tooltipSupplier.get(((FloatButtonWidget) button).getValue())));
+        ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
     this.tooltipSupplier = tooltipSupplier;
     this.valueGetter = valueGetter;
     this.valueSetter = valueSetter;
-    this.textAtom = textAtom;
+    updateTooltip();
+  }
+
+  public void updateTooltip() {
+    setTooltip(Tooltip.of(this.tooltipSupplier.get(getValue())));
+  }
+
+  @Override
+  public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    if (this.isHovered()) updateTooltip();
+    super.render(matrices, mouseX, mouseY, delta);
   }
 
   public float getValue() {
@@ -94,7 +99,7 @@ public class FloatButtonWidget extends ButtonWidget {
       }
     }
     valueSetter.accept(value);
-    textAtom.set(tooltipSupplier.get(getValue()));
+    setTooltip(Tooltip.of(tooltipSupplier.get(getValue())));
   }
 
   @Override

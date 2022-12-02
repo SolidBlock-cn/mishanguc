@@ -28,6 +28,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -39,9 +41,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -82,15 +84,15 @@ public class CarryingToolItem extends BlockToolItem
     final NbtCompound holdingBlockStateNbt = stack.getSubNbt("holdingBlockState");
     if (holdingBlockStateNbt == null) return null;
     final Identifier identifier = Identifier.tryParse(holdingBlockStateNbt.getString("Name"));
-    return Registry.BLOCK.get(identifier);
+    return Registries.BLOCK.get(identifier);
   }
 
   @Contract(pure = true)
-  public static @Nullable BlockState getHoldingBlockState(@NotNull ItemStack stack) {
+  public static @Nullable BlockState getHoldingBlockState(@NotNull ItemStack stack, WorldView world) {
     final NbtCompound holdingBlockStateNbt = stack.getSubNbt("holdingBlockState");
     if (holdingBlockStateNbt != null) {
       try {
-        return NbtHelper.toBlockState(holdingBlockStateNbt);
+        return NbtHelper.toBlockState(world.createCommandRegistryWrapper(RegistryKeys.BLOCK), holdingBlockStateNbt);
       } catch (Exception e) {
         return null;
       }
@@ -112,7 +114,7 @@ public class CarryingToolItem extends BlockToolItem
       entity.saveSelfNbt(entityTag);
       final NbtCompound nbt = stack.getOrCreateNbt();
       nbt.put("EntityTag", entityTag);
-      nbt.putString("holdingEntityType", Registry.ENTITY_TYPE.getId(entity.getType()).toString());
+      nbt.putString("holdingEntityType", Registries.ENTITY_TYPE.getId(entity.getType()).toString());
       nbt.putString("holdingEntityName", Text.Serializer.toJson(entity.getName()));
       nbt.putFloat("holdingEntityWidth", entity.getWidth());
       nbt.putFloat("holdingEntityHeight", entity.getHeight());
@@ -145,12 +147,12 @@ public class CarryingToolItem extends BlockToolItem
     if (nbt != null) {
       final String holdingEntityType = nbt.getString("holdingEntityType");
       final Identifier entityTypeId = Identifier.tryParse(holdingEntityType);
-      if (entityTypeId == null || !Registry.ENTITY_TYPE.containsId(entityTypeId)) {
+      if (entityTypeId == null || !Registries.ENTITY_TYPE.containsId(entityTypeId)) {
         // 无效的 id，予以 null。
         return null;
       } else {
-        final EntityType<?> entityType = Registry.ENTITY_TYPE.get(entityTypeId);
-        return entityType.create(world, nbt, null, null, player.getBlockPos(), SpawnReason.EVENT, false, false);
+        final EntityType<?> entityType = Registries.ENTITY_TYPE.get(entityTypeId);
+        return entityType.create(world, nbt, null, player.getBlockPos(), SpawnReason.EVENT, false, false);
       }
     }
     return null;
@@ -163,7 +165,7 @@ public class CarryingToolItem extends BlockToolItem
       return Text.Serializer.fromJson(nbt.getString("holdingEntityName"));
     } else if (nbt.contains("holdingEntityType", NbtType.STRING)) {
       final Identifier holdingEntityType = Identifier.tryParse(nbt.getString("holdingEntityType"));
-      return Registry.ENTITY_TYPE.containsId(holdingEntityType) ? Registry.ENTITY_TYPE.get(holdingEntityType).getName().copy() : TextBridge.literal("" + holdingEntityType);
+      return Registries.ENTITY_TYPE.containsId(holdingEntityType) ? Registries.ENTITY_TYPE.get(holdingEntityType).getName().copy() : TextBridge.literal("" + holdingEntityType);
     } else {
       return Text.empty();
     }
@@ -322,7 +324,7 @@ public class CarryingToolItem extends BlockToolItem
       return use;
     }
     final ItemStack stack = user.getStackInHand(hand);
-    final BlockState holdingBlockState = getHoldingBlockState(stack);
+    final BlockState holdingBlockState = getHoldingBlockState(stack, world);
     if (holdingBlockState != null) {
       if (holdingBlockState.getBlock() instanceof OperatorBlock && !user.hasPermissionLevel(2)) {
         return TypedActionResult.fail(stack);

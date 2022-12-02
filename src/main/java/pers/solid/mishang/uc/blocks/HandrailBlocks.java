@@ -1,8 +1,13 @@
 package pers.solid.mishang.uc.blocks;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.mixin.object.builder.AbstractBlockAccessor;
+import net.fabricmc.fabric.mixin.object.builder.AbstractBlockSettingsAccessor;
 import net.minecraft.block.Blocks;
+import net.minecraft.resource.featuretoggle.FeatureFlags;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.Translucent;
@@ -176,6 +181,17 @@ public final class HandrailBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_WARPED_HANDRAIL = new SimpleHandrailBlock(Blocks.CRIMSON_STEM);
 
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
+  public static final SimpleHandrailBlock SIMPLE_BAMBOO_HANDRAIL = new SimpleHandrailBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).requires(FeatureFlags.UPDATE_1_20));
+
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
+  public static final SimpleHandrailBlock SIMPLE_BAMBOO_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.BAMBOO_PLANKS, FabricBlockSettings.copyOf(Blocks.BAMBOO_PLANKS).requires(FeatureFlags.UPDATE_1_20));
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
+  public static final SimpleHandrailBlock SIMPLE_BAMBOO_MOSAIC_HANDRAIL = new SimpleHandrailBlock(Blocks.BAMBOO_MOSAIC, FabricBlockSettings.copyOf(Blocks.BAMBOO_MOSAIC).requires(FeatureFlags.UPDATE_1_20));
+
   static {
     SIMPLE_OAK_HANDRAIL.texture = "block/oak_log";
     SIMPLE_SPRUCE_HANDRAIL.texture = "block/spruce_log";
@@ -186,6 +202,7 @@ public final class HandrailBlocks extends MishangucBlocks {
     SIMPLE_MANGROVE_HANDRAIL.texture = "block/mangrove_log";
     SIMPLE_CRIMSON_HANDRAIL.texture = "block/crimson_stem";
     SIMPLE_WARPED_HANDRAIL.texture = "block/warped_stem";
+    SIMPLE_BAMBOO_HANDRAIL.texture = "block/bamboo_block";
   }
 
   // 染色玻璃。
@@ -445,6 +462,11 @@ public final class HandrailBlocks extends MishangucBlocks {
   @RegisterIdentifier
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_MANGROVE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.MANGROVE_WOOD, FabricBlockSettings.copyOf(Blocks.MANGROVE_WOOD).strength(1.0f), "block/mangrove_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
+  @RegisterIdentifier
+  @Translucent
+  public static final GlassHandrailBlock GLASS_BAMBOO_HANDRAIL = new GlassHandrailBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).strength(1.0f).requires(FeatureFlags.UPDATE_1_20), "block/bamboo_block", "block/bamboo_mosaic");
+  
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent

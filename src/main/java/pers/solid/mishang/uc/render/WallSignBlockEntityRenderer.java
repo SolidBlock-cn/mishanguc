@@ -17,7 +17,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.block.WallSignBlock;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
@@ -78,12 +78,12 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
     final BlockState state = entity.getCachedState();
     final Direction facing = state.get(WallSignBlock.FACING);
     final WallMountLocation face = state.get(WallSignBlock.FACE);
-    matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-facing.asRotation()));
+    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-facing.asRotation()));
     matrices.multiply(
-        Vec3f.POSITIVE_X.getDegreesQuaternion(
+        RotationAxis.POSITIVE_X.rotationDegrees(
             face == WallMountLocation.CEILING ? 90 : face == WallMountLocation.FLOOR ? -90 : 0));
     if (face != WallMountLocation.WALL) {
-      matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180));
+      matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180));
     }
     matrices.scale(1 / 16f, -1 / 16f, 1 / 16f);
     matrices.translate(0, 0, (INVISIBLE_BLOCKS.contains(block) ? -8 : -7) + .0125);

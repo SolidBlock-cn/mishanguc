@@ -23,7 +23,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.collection.Int2ObjectBiMap;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -164,18 +163,15 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
     return stack;
   }
 
-  @Override
-  public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-    if (this.isIn(group)) {
-      stacks.add(createStack(16, BlockMatchingRule.SAME_STATE));
-      stacks.add(createStack(64, BlockMatchingRule.SAME_STATE));
-      stacks.add(createStack(16, BlockMatchingRule.SAME_BLOCK));
-      stacks.add(createStack(64, BlockMatchingRule.SAME_BLOCK));
-      stacks.add(createStack(16, BlockMatchingRule.SAME_MATERIAL));
-      stacks.add(createStack(64, BlockMatchingRule.SAME_MATERIAL));
-      stacks.add(createStack(16, BlockMatchingRule.ANY));
-      stacks.add(createStack(64, BlockMatchingRule.ANY));
-    }
+  public void appendToEntries(ItemGroup.Entries stacks) {
+    stacks.add(createStack(16, BlockMatchingRule.SAME_STATE));
+    stacks.add(createStack(64, BlockMatchingRule.SAME_STATE));
+    stacks.add(createStack(16, BlockMatchingRule.SAME_BLOCK));
+    stacks.add(createStack(64, BlockMatchingRule.SAME_BLOCK));
+    stacks.add(createStack(16, BlockMatchingRule.SAME_MATERIAL));
+    stacks.add(createStack(64, BlockMatchingRule.SAME_MATERIAL));
+    stacks.add(createStack(16, BlockMatchingRule.ANY));
+    stacks.add(createStack(64, BlockMatchingRule.ANY));
   }
 
   @Override

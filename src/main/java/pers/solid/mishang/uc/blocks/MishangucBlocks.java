@@ -7,11 +7,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.MapColor;
 import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import pers.solid.mishang.uc.Mishanguc;
-import pers.solid.mishang.uc.MishangucItemGroups;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.HungSignBlock;
@@ -80,7 +79,7 @@ public class MishangucBlocks {
    *
    * @see RegisterIdentifier
    */
-  private static <T> void registerAll(Class<T> cls, final ItemGroup group) {
+  private static <T> void registerAll(Class<T> cls) {
     for (Field field : cls.getFields()) {
       int modifier = field.getModifiers();
       final Class<?> fieldType = field.getType();
@@ -97,16 +96,16 @@ public class MishangucBlocks {
             if (path.isEmpty()) {
               path = field.getName().toLowerCase();
             }
-            Registry.register(Registry.BLOCK, new Identifier("mishanguc", path), value);
+            Registry.register(Registries.BLOCK, new Identifier("mishanguc", path), value);
             if (value instanceof HandrailBlock handrailBlock) {
               // 如果该方块为 HandrailBlock，则一并注册其 central 方块，应为该方块并没有作为字段存在。
               // 此类方块也没有对应的方块物品，其物品为对应的基础方块的物品。
-              Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_central"), handrailBlock.central());
-              Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_corner"), handrailBlock.corner());
-              Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_stair"), handrailBlock.stair());
-              Registry.register(Registry.BLOCK, new Identifier("mishanguc", path + "_outer"), handrailBlock.outer());
+              Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_central"), handrailBlock.central());
+              Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_corner"), handrailBlock.corner());
+              Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_stair"), handrailBlock.stair());
+              Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_outer"), handrailBlock.outer());
             }
-            final FabricItemSettings settings = new FabricItemSettings().group(group);
+            final FabricItemSettings settings = new FabricItemSettings();
             if (path.contains("netherite")) {
               settings.fireproof();
             }
@@ -118,7 +117,7 @@ public class MishangucBlocks {
                     : value instanceof StandingSignBlock
                     ? new StandingSignBlockItem(value, settings)
                     : new NamedBlockItem(value, settings);
-            Registry.register(Registry.ITEM, new Identifier("mishanguc", path), item);
+            Registry.register(Registries.ITEM, new Identifier("mishanguc", path), item);
           }
         } catch (IllegalAccessException e) {
           Mishanguc.MISHANG_LOGGER.error("Error when registering blocks:", e);
@@ -128,13 +127,13 @@ public class MishangucBlocks {
   }
 
   public static void init() {
-    registerAll(RoadBlocks.class, MishangucItemGroups.ROADS);
-    registerAll(RoadSlabBlocks.class, MishangucItemGroups.ROADS);
-    registerAll(LightBlocks.class, MishangucItemGroups.LIGHTS);
-    registerAll(HungSignBlocks.class, MishangucItemGroups.SIGNS);
-    registerAll(WallSignBlocks.class, MishangucItemGroups.SIGNS);
-    registerAll(StandingSignBlocks.class, MishangucItemGroups.SIGNS);
-    registerAll(HandrailBlocks.class, MishangucItemGroups.DECORATIONS);
-    registerAll(ColoredBlocks.class, MishangucItemGroups.COLORED_BLOCKS);
+    registerAll(RoadBlocks.class);
+    registerAll(RoadSlabBlocks.class);
+    registerAll(LightBlocks.class);
+    registerAll(HungSignBlocks.class);
+    registerAll(WallSignBlocks.class);
+    registerAll(StandingSignBlocks.class);
+    registerAll(HandrailBlocks.class);
+    registerAll(ColoredBlocks.class);
   }
 }

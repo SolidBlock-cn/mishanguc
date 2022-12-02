@@ -2,7 +2,7 @@ package pers.solid.mishang.uc.mixin;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.world.dimension.AreaHelper;
+import net.minecraft.world.dimension.NetherPortal;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import pers.solid.mishang.uc.blocks.ColoredBlocks;
 
-@Mixin(AreaHelper.class)
+@Mixin(NetherPortal.class)
 public abstract class AreaHelperMixin {
   @Inject(method = "validStateInsidePortal", at = @At("RETURN"), cancellable = true)
   private static void validColoredPortal(BlockState state, CallbackInfoReturnable<Boolean> cir) {

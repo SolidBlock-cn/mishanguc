@@ -108,7 +108,7 @@ public class CornerLightBlock extends HorizontalFacingBlock
       BlockPos pos,
       BlockPos neighborPos) {
     if (state.get(WATERLOGGED)) {
-      world.createAndScheduleFluidTick(pos, WATER, WATER.getTickRate(world));
+      world.scheduleFluidTick(pos, WATER, WATER.getTickRate(world));
     }
 
     return super.getStateForNeighborUpdate(

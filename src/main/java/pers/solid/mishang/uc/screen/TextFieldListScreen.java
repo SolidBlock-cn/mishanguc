@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * 文本框列表的屏幕。每个列表项都是一个文本框（实际上就是把 {@link TextFieldWidget} 包装成了 {@link Entry}。<p>
+ * 文本框列表的屏幕。每个列表项都是一个文本框（实际上就是把 {@link TextFieldWidget} 包装成了 {@link pers.solid.mishang.uc.screen.TextFieldListScreen.Entry}。<p>
  * 此类原本是 {@link AbstractSignBlockEditScreen} 的内部类，后面独立出来了。
  */
 @Environment(EnvType.CLIENT)
@@ -48,7 +48,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
    * 与 {@link EntryListWidget#moveSelectionIf(MoveDirection, Predicate)} 相比，把 {@link MathHelper#clamp} 改成了 {@link MathHelper#floorMod}。
    */
   @Override
-  protected boolean moveSelectionIf(MoveDirection direction, Predicate<Entry> predicate) {
+  protected boolean moveSelectionIf(MoveDirection direction, Predicate<pers.solid.mishang.uc.screen.TextFieldListScreen.Entry> predicate) {
     int i = direction == EntryListWidget.MoveDirection.UP ? -1 : 1;
     if (!this.children().isEmpty()) {
       int j = this.children().indexOf(this.getSelectedOrNull());
@@ -57,7 +57,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
         if (j == k) {
           break;
         }
-        Entry entry = this.children().get(k);
+        pers.solid.mishang.uc.screen.TextFieldListScreen.Entry entry = this.children().get(k);
         if (predicate.test(entry)) {
           this.setSelected(entry);
           this.ensureVisible(entry);
@@ -72,7 +72,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
   /**
    * 设置当前 TextFieldListScreen 的已选中的文本框。
    *
-   * @param entry 需要选中的 {@link Entry}。
+   * @param entry 需要选中的 {@link pers.solid.mishang.uc.screen.TextFieldListScreen.Entry}。
    * @see AbstractSignBlockEditScreen#setFocused(Element)
    * @see TextFieldListScreen.Entry#setFocused(Element)
    */
@@ -80,7 +80,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
   public void setSelected(@Nullable TextFieldListScreen.Entry entry) {
     super.setSelected(entry);
     setFocused(entry);
-    for (Entry child : children()) {
+    for (pers.solid.mishang.uc.screen.TextFieldListScreen.Entry child : children()) {
       child.textFieldWidget.setTextFieldFocused(child == entry);
     }
     if (entry != null) {
@@ -108,7 +108,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
     if (!this.isMouseOver(mouseX, mouseY)) {
       return false;
     }
-    Entry entry = this.getEntryAtPosition(mouseX, mouseY);
+    pers.solid.mishang.uc.screen.TextFieldListScreen.Entry entry = this.getEntryAtPosition(mouseX, mouseY);
     if (entry != null) {
       if (entry.mouseClicked(mouseX, mouseY, button)) {
         this.setSelected(entry);
@@ -138,7 +138,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
    * 的子类，所以对该类进行了包装。
    */
   @Environment(EnvType.CLIENT)
-  public class Entry extends EntryListWidget.Entry<Entry> {
+  public class Entry extends EntryListWidget.Entry<pers.solid.mishang.uc.screen.TextFieldListScreen.Entry> {
     public final @NotNull TextFieldWidget textFieldWidget;
 
 
@@ -149,7 +149,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;
-      if (!(o instanceof Entry entry)) return false;
+      if (!(o instanceof pers.solid.mishang.uc.screen.TextFieldListScreen.Entry entry)) return false;
 
       return textFieldWidget.equals(entry.textFieldWidget);
     }
@@ -171,7 +171,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
         int mouseY,
         boolean hovered,
         float tickDelta) {
-      textFieldWidget.y = y;
+      textFieldWidget.setY(y);
       textFieldWidget.render(matrices, mouseX, mouseY, tickDelta);
     }
 
@@ -194,7 +194,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
       switch (keyCode) {
         case GLFW.GLFW_KEY_ENTER -> {
-          final List<Entry> children = TextFieldListScreen.this.children();
+          final List<pers.solid.mishang.uc.screen.TextFieldListScreen.Entry> children = TextFieldListScreen.this.children();
           final int index = children.indexOf(getSelectedOrNull());
           if (index + 1 < children.size())
             TextFieldListScreen.this.setSelected(children.get(index + 1));
@@ -216,7 +216,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
             TextFieldListScreen.this.setSelected(children.get(children.size() - 1));
         }*/
         case GLFW.GLFW_KEY_BACKSPACE -> {
-          final Entry focused = TextFieldListScreen.this.getSelectedOrNull();
+          final pers.solid.mishang.uc.screen.TextFieldListScreen.Entry focused = TextFieldListScreen.this.getSelectedOrNull();
           if (focused != null && textFieldWidget.getText().isEmpty()) {
             final int index = TextFieldListScreen.this.children().indexOf(focused);
             if (index >= 0) {

@@ -28,7 +28,7 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
   protected void init() {
     super.init();
     entity.editedSide = isFront;
-    copyFromBackButton.x = width / 2 - 100;
+    copyFromBackButton.setX(width / 2 - 100);
   }
 
   @Override
@@ -56,7 +56,7 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
   }
 
 
-  public final ButtonWidget copyFromBackButton = new ButtonWidget(this.width / 2 - 100, 90, 200, 20, TextBridge.translatable("message.mishanguc.copy_from_back"), button -> {
+  public final ButtonWidget copyFromBackButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.copy_from_back"), button -> {
     final StandingSignBlockEntity entity = this.entity;
     if (entity.editedSide == null) {
       return;
@@ -69,7 +69,7 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
           // 留意添加到的位置是列表末尾。
           addTextField(textContextsEditing.size(), flip, false);
         });
-  });
+  }).dimensions(this.width / 2 - 100, 90, 200, 20).build();
 
   @Override
   public void removeTextField(int index) {

@@ -11,8 +11,8 @@ import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Matrix4f;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
 
 /**
  * 表示一个纹理的特殊文本内容，用于渲染其纹理，一般来说这个纹理的宽度和高度是和文本的大小相同的。

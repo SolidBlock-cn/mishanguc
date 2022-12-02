@@ -11,14 +11,14 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.state.StateManager;
-import net.minecraft.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
@@ -38,7 +38,7 @@ import java.util.function.Consumer;
 public interface Road extends BlockResourceGenerator {
 
   EntityAttributeModifier ROAD_SPEED_BOOST = new EntityAttributeModifier(UUID.fromString("693D7032-4767-5A57-A28F-401F8F485772"/* 根据网上的在线 UUID 生成器生成 */), "road_speed_boost", 1.75, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
-  TagKey<Block> ROADS = TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "roads"));
+  TagKey<Block> ROADS = TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "roads"));
 
   /**
    * 当玩家踩踏在道路方块上时，给予对应的速度倍率值。踩踏在其他方块上时，该倍率值被移除。特别注意，当玩家在道路方块之间上下楼梯的时候，会存在没有踩踏在道路方块上的短暂期间，这种情况下不应该移除其倍率值。<p>

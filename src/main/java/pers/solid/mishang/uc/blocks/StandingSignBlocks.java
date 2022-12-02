@@ -1,9 +1,15 @@
 package pers.solid.mishang.uc.blocks;
 
 import com.google.common.collect.ImmutableMap;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.mixin.object.builder.AbstractBlockAccessor;
+import net.fabricmc.fabric.mixin.object.builder.AbstractBlockSettingsAccessor;
 import net.minecraft.block.Blocks;
+import net.minecraft.resource.featuretoggle.FeatureFlags;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.SignType;
+import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.Translucent;
@@ -42,6 +48,16 @@ public final class StandingSignBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final StandingSignBlock MANGROVE_STANDING_SIGN = new StandingSignBlock(Blocks.MANGROVE_PLANKS);
 
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
+  public static final StandingSignBlock BAMBOO_STANDING_SIGN = new StandingSignBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).requires(FeatureFlags.UPDATE_1_20));
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
+  public static final StandingSignBlock BAMBOO_PLANK_STANDING_SIGN = new StandingSignBlock(Blocks.BAMBOO_PLANKS, FabricBlockSettings.copyOf(Blocks.BAMBOO_PLANKS).requires(FeatureFlags.UPDATE_1_20));
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
+  public static final StandingSignBlock BAMBOO_MOSAIC_STANDING_SIGN = new StandingSignBlock(Blocks.BAMBOO_MOSAIC, FabricBlockSettings.copyOf(Blocks.BAMBOO_MOSAIC).requires(FeatureFlags.UPDATE_1_20));
+
   static {
     OAK_STANDING_SIGN.barTexture = "block/oak_log";
     SPRUCE_STANDING_SIGN.barTexture = "block/spruce_log";
@@ -52,6 +68,7 @@ public final class StandingSignBlocks extends MishangucBlocks {
     CRIMSON_STANDING_SIGN.barTexture = "block/crimson_stem";
     WARPED_STANDING_SIGN.barTexture = "block/warped_stem";
     MANGROVE_STANDING_SIGN.barTexture = "block/mangrove_log";
+    BAMBOO_PLANK_STANDING_SIGN.barTexture = BAMBOO_MOSAIC_STANDING_SIGN.barTexture = "block/bamboo_block";
   }
 
   public static final ImmutableMap<SignType, StandingSignBlock> WOODEN_SIGNS = new ImmutableMap.Builder<SignType, StandingSignBlock>()

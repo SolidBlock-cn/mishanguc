@@ -13,8 +13,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.item.ClampedModelPredicateProvider;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.client.item.UnclampedModelPredicateProvider;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
@@ -79,7 +79,7 @@ public class MishangucClient implements ClientModInitializer {
     // 模型谓词提供器
     ModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL,
         new Identifier("mishanguc", "explosion_power"),
-        new UnclampedModelPredicateProvider() {
+        new ClampedModelPredicateProvider() {
           @Override
           public float unclampedCall(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity, int seed) {
             return MishangucItems.EXPLOSION_TOOL.power(stack);

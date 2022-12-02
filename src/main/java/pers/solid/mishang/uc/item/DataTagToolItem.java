@@ -25,6 +25,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -38,7 +39,6 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
@@ -87,7 +87,7 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
   public ActionResult getBlockDataOf(ServerPlayerEntity player, ServerWorld world, BlockPos blockPos) {
     final @Nullable BlockEntity blockEntity = world.getBlockEntity(blockPos);
     final PacketByteBuf buf = PacketByteBufs.create();
-    buf.writeIdentifier(Registry.BLOCK.getId(world.getBlockState(blockPos).getBlock()));
+    buf.writeIdentifier(Registries.BLOCK.getId(world.getBlockState(blockPos).getBlock()));
     buf.writeBlockPos(blockPos);
     if (blockEntity == null) {
       buf.writeBoolean(false);
@@ -160,7 +160,7 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
       final Identifier blockId = buf.readIdentifier();
       final BlockPos blockPos = buf.readBlockPos();
       final boolean hasData = buf.readBoolean();
-      final Block block = Registry.BLOCK.get(blockId);
+      final Block block = Registries.BLOCK.get(blockId);
       if (hasData) {
         // 由于此处仅限客户端执行，因此可以放心调用 Block#getName。
         final NbtCompound blockData = buf.readNbt();

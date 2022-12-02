@@ -219,7 +219,7 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
     state =
         super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     if (state.get(WATERLOGGED)) {
-      world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+      world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
     if (direction == Direction.DOWN) {
       final Block neighborBlock = neighborState.getBlock();

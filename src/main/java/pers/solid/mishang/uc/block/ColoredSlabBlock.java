@@ -10,7 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.data.server.BlockLootTableGenerator;
+import net.minecraft.data.server.loottable.VanillaBlockLootTableGenerator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -69,6 +69,6 @@ public class ColoredSlabBlock extends BRRPSlabBlock implements ColoredBlock {
 
   @Override
   public JLootTable getLootTable() {
-    return JLootTable.delegate(BlockLootTableGenerator.slabDrops(this).apply(COPY_COLOR_LOOT_FUNCTION).build());
+    return JLootTable.delegate(new VanillaBlockLootTableGenerator().slabDrops(this).apply(COPY_COLOR_LOOT_FUNCTION));
   }
 }

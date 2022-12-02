@@ -3,15 +3,15 @@ package pers.solid.mishang.uc.util;
 import com.google.common.collect.Sets;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.block.BlockState;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.SimpleRegistry;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.util.registry.SimpleRegistry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +26,7 @@ public abstract class BlockMatchingRule implements StringIdentifiable {
   protected static final RegistryKey<Registry<BlockMatchingRule>> REGISTRY_KEY =
       RegistryKey.ofRegistry(new Identifier("mishanguc", "block_matching_rule"));
   public static final SimpleRegistry<BlockMatchingRule> REGISTRY =
-      new SimpleRegistry<>(REGISTRY_KEY, Lifecycle.stable(), null);
+      new SimpleRegistry<>(REGISTRY_KEY, Lifecycle.stable());
   public static final BlockMatchingRule SAME_STATE =
       new BlockMatchingRule() {
         @Override

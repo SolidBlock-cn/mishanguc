@@ -3,14 +3,14 @@ package pers.solid.mishang.uc.screen;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.TextBridge;
 
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 /**
@@ -21,8 +21,6 @@ public class BooleanButtonWidget extends ButtonWidget {
   public final Function<@Nullable Boolean, Text> tooltipSupplier;
   public final boolean defaultValue = false;
 
-  @ApiStatus.AvailableSince("0.1.6")
-  private final AtomicReference<Text> textAtom;
   /**
    * 通常在没有选中对象时返回 null。
    */
@@ -42,8 +40,6 @@ public class BooleanButtonWidget extends ButtonWidget {
    * @param valueSetter     如何设置布尔值？
    * @param tooltipSupplier 根据布尔值返回其文本内容。该文本将会用于设置 {@code atom}。
    * @param onPress         按钮按下去的反应。通常为空。
-   * @param textAtom        一个可设置文本内容的原子。设置值时，会更新该原子的值。参见 {@link
-   *                        AbstractSignBlockEditScreen#descriptionAtom}，每次渲染时，都会获取该原子的值。
    */
   public BooleanButtonWidget(
       int x,
@@ -54,8 +50,7 @@ public class BooleanButtonWidget extends ButtonWidget {
       Function<BooleanButtonWidget, @Nullable Boolean> valueGetter,
       BooleanConsumer valueSetter,
       Function<@Nullable Boolean, Text> tooltipSupplier,
-      PressAction onPress,
-      AtomicReference<Text> textAtom) {
+      PressAction onPress) {
     super(
         x,
         y,
@@ -63,12 +58,21 @@ public class BooleanButtonWidget extends ButtonWidget {
         height,
         message,
         onPress,
-        (button, matrices, mouseX, mouseY) ->
-            textAtom.set(tooltipSupplier.apply(((BooleanButtonWidget) button).getValue())));
+        ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
     this.valueGetter = valueGetter;
     this.valueSetter = valueSetter;
     this.tooltipSupplier = tooltipSupplier;
-    this.textAtom = textAtom;
+    updateTooltip();
+  }
+
+  public void updateTooltip() {
+    setTooltip(Tooltip.of(tooltipSupplier.apply(getValue())));
+  }
+
+  @Override
+  public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    if (this.isHovered()) updateTooltip();
+    super.render(matrices, mouseX, mouseY, delta);
   }
 
   public @Nullable Boolean getValue() {
@@ -77,7 +81,7 @@ public class BooleanButtonWidget extends ButtonWidget {
 
   public void setValue(boolean value) {
     valueSetter.accept(value);
-    textAtom.set(tooltipSupplier.apply(getValue()));
+    updateTooltip();
   }
 
   @Override

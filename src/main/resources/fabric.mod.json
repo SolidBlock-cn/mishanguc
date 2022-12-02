@@ -36,9 +36,9 @@
     "minecraft": [
       ">=1.19.1"
     ],
-    "better_runtime_resource_pack": ">=0.6.2"
+    "better_runtime_resource_pack": ">=0.8.0"
   },
   "breaks": {
   },
-  "custom": {"branch": "1.19.2"}
+  "custom": {"branch": "1.19.3"}
 }

@@ -2,8 +2,14 @@ package pers.solid.mishang.uc.blocks;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.ImmutableMap;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.mixin.object.builder.AbstractBlockAccessor;
+import net.fabricmc.fabric.mixin.object.builder.AbstractBlockSettingsAccessor;
 import net.minecraft.block.Blocks;
+import net.minecraft.resource.featuretoggle.FeatureFlags;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.Translucent;
@@ -52,6 +58,16 @@ public final class HungSignBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBlock WARPED_HUNG_SIGN = new HungSignBlock(Blocks.WARPED_PLANKS);
 
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
+  public static final HungSignBlock BAMBOO_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).requires(FeatureFlags.UPDATE_1_20));
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
+  public static final HungSignBlock BAMBOO_PLANK_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_PLANKS, FabricBlockSettings.copyOf(Blocks.BAMBOO_PLANKS).requires(FeatureFlags.UPDATE_1_20));
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
+  public static final HungSignBlock BAMBOO_MOSAIC_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_MOSAIC, FabricBlockSettings.copyOf(Blocks.BAMBOO_MOSAIC).requires(FeatureFlags.UPDATE_1_20));
+
   // 木告示牌杆部分。
   @RegisterIdentifier
   @ApiStatus.AvailableSince("0.1.7")
@@ -81,6 +97,10 @@ public final class HungSignBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBarBlock WARPED_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.WARPED_HYPHAE);
 
+  @RegisterIdentifier
+  @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
+  public static final HungSignBarBlock BAMBOO_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).requires(FeatureFlags.UPDATE_1_20));
+
   static {
     OAK_HUNG_SIGN.barTexture = "block/oak_log";
     SPRUCE_HUNG_SIGN.barTexture = "block/spruce_log";
@@ -109,6 +129,7 @@ public final class HungSignBlocks extends MishangucBlocks {
     MANGROVE_HUNG_SIGN_BAR.texture = "block/mangrove_log";
     CRIMSON_HUNG_SIGN_BAR.texture = "block/crimson_stem";
     WARPED_HUNG_SIGN_BAR.texture = "block/warped_stem";
+    BAMBOO_HUNG_SIGN.barTexture = BAMBOO_HUNG_SIGN.textureTop = BAMBOO_PLANK_HUNG_SIGN.barTexture = BAMBOO_PLANK_HUNG_SIGN.textureTop = BAMBOO_MOSAIC_HUNG_SIGN.barTexture = BAMBOO_MOSAIC_HUNG_SIGN.textureTop = BAMBOO_HUNG_SIGN_BAR.texture = "block/bamboo_block";
   }
 
   // 混凝土告示牌部分

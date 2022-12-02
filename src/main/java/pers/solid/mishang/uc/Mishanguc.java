@@ -20,14 +20,15 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.GameRules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,6 +93,9 @@ public class Mishanguc implements ModInitializer {
         HungSignBlocks.ACACIA_HUNG_SIGN,
         HungSignBlocks.DARK_OAK_HUNG_SIGN,
         HungSignBlocks.MANGROVE_HUNG_SIGN,
+        HungSignBlocks.BAMBOO_HUNG_SIGN,
+        HungSignBlocks.BAMBOO_PLANK_HUNG_SIGN,
+        HungSignBlocks.BAMBOO_MOSAIC_HUNG_SIGN,
         HungSignBlocks.OAK_HUNG_SIGN_BAR,
         HungSignBlocks.SPRUCE_HUNG_SIGN_BAR,
         HungSignBlocks.BIRCH_HUNG_SIGN_BAR,
@@ -99,6 +103,7 @@ public class Mishanguc implements ModInitializer {
         HungSignBlocks.ACACIA_HUNG_SIGN_BAR,
         HungSignBlocks.DARK_OAK_HUNG_SIGN_BAR,
         HungSignBlocks.MANGROVE_HUNG_SIGN_BAR,
+        HungSignBlocks.BAMBOO_HUNG_SIGN_BAR,
         WallSignBlocks.OAK_WALL_SIGN,
         WallSignBlocks.SPRUCE_WALL_SIGN,
         WallSignBlocks.BIRCH_WALL_SIGN,
@@ -106,6 +111,9 @@ public class Mishanguc implements ModInitializer {
         WallSignBlocks.ACACIA_WALL_SIGN,
         WallSignBlocks.DARK_OAK_WALL_SIGN,
         WallSignBlocks.MANGROVE_WALL_SIGN,
+        WallSignBlocks.BAMBOO_WALL_SIGN,
+        WallSignBlocks.BAMBOO_PLANK_WALL_SIGN,
+        WallSignBlocks.BAMBOO_MOSAIC_WALL_SIGN,
         WallSignBlocks.COLORED_WOODEN_WALL_SIGN,
         StandingSignBlocks.OAK_STANDING_SIGN,
         StandingSignBlocks.SPRUCE_STANDING_SIGN,
@@ -116,6 +124,9 @@ public class Mishanguc implements ModInitializer {
         StandingSignBlocks.CRIMSON_STANDING_SIGN,
         StandingSignBlocks.WARPED_STANDING_SIGN,
         StandingSignBlocks.MANGROVE_STANDING_SIGN,
+        StandingSignBlocks.BAMBOO_STANDING_SIGN,
+        StandingSignBlocks.BAMBOO_PLANK_STANDING_SIGN,
+        StandingSignBlocks.BAMBOO_MOSAIC_STANDING_SIGN
     };
     for (Block block : woodenBlocks) {
       flammableBlockRegistry.add(block, 5, 20);
@@ -129,6 +140,9 @@ public class Mishanguc implements ModInitializer {
         HandrailBlocks.SIMPLE_ACACIA_HANDRAIL,
         HandrailBlocks.SIMPLE_DARK_OAK_HANDRAIL,
         HandrailBlocks.SIMPLE_MANGROVE_HANDRAIL,
+        HandrailBlocks.SIMPLE_BAMBOO_HANDRAIL,
+        HandrailBlocks.SIMPLE_BAMBOO_PLANK_HANDRAIL,
+        HandrailBlocks.SIMPLE_BAMBOO_MOSAIC_HANDRAIL,
         HandrailBlocks.GLASS_OAK_HANDRAIL,
         HandrailBlocks.GLASS_SPRUCE_HANDRAIL,
         HandrailBlocks.GLASS_BIRCH_HANDRAIL,
@@ -136,6 +150,7 @@ public class Mishanguc implements ModInitializer {
         HandrailBlocks.GLASS_ACACIA_HANDRAIL,
         HandrailBlocks.GLASS_DARK_OAK_HANDRAIL,
         HandrailBlocks.GLASS_MANGROVE_HANDRAIL,
+        HandrailBlocks.GLASS_BAMBOO_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_OAK_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_SPRUCE_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_BIRCH_HANDRAIL,
@@ -236,7 +251,7 @@ public class Mishanguc implements ModInitializer {
         (player, world, hand, hitResult) -> {
           final ItemStack stackInHand = player.getStackInHand(hand);
           final Item item = stackInHand.getItem();
-          if (!player.getAbilities().allowModifyWorld && !stackInHand.canPlaceOn(Registry.BLOCK, new CachedBlockPosition(world, hitResult.getBlockPos(), false))) {
+          if (!player.getAbilities().allowModifyWorld && !stackInHand.canPlaceOn(Registries.BLOCK, new CachedBlockPosition(world, hitResult.getBlockPos(), false))) {
             return ActionResult.PASS;
           }
           if (item instanceof final BlockToolItem blockToolItem) {
@@ -398,16 +413,16 @@ public class Mishanguc implements ModInitializer {
       blockMap.put(block.stair(), HandrailBlocks.COLORED_DECORATED_IRON_HANDRAIL.stair());
     }
 
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "concrete_hung_signs")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "glowing_concrete_hung_signs")), HungSignBlocks.COLORED_GLOWING_CONCRETE_HUNG_SIGN);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "concrete_hung_sign_bars")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN_BAR);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "terracotta_hung_signs")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "glowing_terracotta_hung_signs")), HungSignBlocks.COLORED_GLOWING_TERRACOTTA_HUNG_SIGN);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "terracotta_hung_sign_bars")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN_BAR);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "concrete_standing_signs")), StandingSignBlocks.COLORED_CONCRETE_STANDING_SIGN);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "terracotta_standing_signs")), StandingSignBlocks.COLORED_TERRACOTTA_STANDING_SIGN);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "glowing_concrete_standing_signs")), StandingSignBlocks.COLORED_GLOWING_CONCRETE_STANDING_SIGN);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "glowing_terracotta_standing_signs")), StandingSignBlocks.COLORED_GLOWING_TERRACOTTA_STANDING_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "concrete_hung_signs")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "glowing_concrete_hung_signs")), HungSignBlocks.COLORED_GLOWING_CONCRETE_HUNG_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "concrete_hung_sign_bars")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN_BAR);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "terracotta_hung_signs")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "glowing_terracotta_hung_signs")), HungSignBlocks.COLORED_GLOWING_TERRACOTTA_HUNG_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "terracotta_hung_sign_bars")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN_BAR);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "concrete_standing_signs")), StandingSignBlocks.COLORED_CONCRETE_STANDING_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "terracotta_standing_signs")), StandingSignBlocks.COLORED_TERRACOTTA_STANDING_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "glowing_concrete_standing_signs")), StandingSignBlocks.COLORED_GLOWING_CONCRETE_STANDING_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "glowing_terracotta_standing_signs")), StandingSignBlocks.COLORED_GLOWING_TERRACOTTA_STANDING_SIGN);
 
     blockMap.put(HungSignBlocks.STONE_HUNG_SIGN, HungSignBlocks.COLORED_STONE_HUNG_SIGN);
     blockMap.put(HungSignBlocks.GLOWING_STONE_HUNG_SIGN, HungSignBlocks.COLORED_GLOWING_STONE_HUNG_SIGN);
@@ -422,11 +437,11 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(HungSignBlocks.GLOWING_IRON_HUNG_SIGN, HungSignBlocks.COLORED_GLOWING_IRON_HUNG_SIGN);
     blockMap.put(HungSignBlocks.IRON_HUNG_SIGN_BAR, HungSignBlocks.COLORED_IRON_HUNG_SIGN_BAR);
 
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "wooden_wall_signs")), WallSignBlocks.COLORED_WOODEN_WALL_SIGN);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "concrete_wall_signs")), WallSignBlocks.COLORED_CONCRETE_WALL_SIGN);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "terracotta_wall_signs")), WallSignBlocks.COLORED_TERRACOTTA_WALL_SIGN);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "glowing_concrete_wall_signs")), WallSignBlocks.COLORED_GLOWING_CONCRETE_WALL_SIGN);
-    tagMap.put(TagKey.of(Registry.BLOCK_KEY, new Identifier("mishanguc", "glowing_terracotta_wall_signs")), WallSignBlocks.COLORED_GLOWING_TERRACOTTA_WALL_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "wooden_wall_signs")), WallSignBlocks.COLORED_WOODEN_WALL_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "concrete_wall_signs")), WallSignBlocks.COLORED_CONCRETE_WALL_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "terracotta_wall_signs")), WallSignBlocks.COLORED_TERRACOTTA_WALL_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "glowing_concrete_wall_signs")), WallSignBlocks.COLORED_GLOWING_CONCRETE_WALL_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "glowing_terracotta_wall_signs")), WallSignBlocks.COLORED_GLOWING_TERRACOTTA_WALL_SIGN);
 
     blockMap.put(WallSignBlocks.STONE_WALL_SIGN, WallSignBlocks.COLORED_STONE_WALL_SIGN);
     blockMap.put(WallSignBlocks.GLOWING_STONE_WALL_SIGN, WallSignBlocks.COLORED_GLOWING_STONE_WALL_SIGN);
@@ -454,6 +469,7 @@ public class Mishanguc implements ModInitializer {
     MishangucBlockEntities.init();
     final GameRules.Key<EnumRule<MishangucRules.ToolAccess>> ignore = MishangucRules.CARRYING_TOOL_ACCESS;
     SpecialDrawableTypes.init();
+    MishangucItemGroups.init();
 
     registerEvents();
     registerNetworkingReceiver();

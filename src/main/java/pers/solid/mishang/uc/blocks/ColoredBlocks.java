@@ -11,7 +11,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.server.BlockLootTableGenerator;
+import net.minecraft.data.server.loottable.VanillaBlockLootTableGenerator;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
@@ -117,7 +117,7 @@ public final class ColoredBlocks extends MishangucBlocks {
 
     @Override
     public JLootTable getLootTable() {
-      return JLootTable.delegate(BlockLootTableGenerator.drops(COLORED_STONE, COLORED_COBBLESTONE).apply(ColoredBlock.COPY_COLOR_LOOT_FUNCTION).build());
+      return JLootTable.delegate(new VanillaBlockLootTableGenerator().drops(COLORED_STONE, COLORED_COBBLESTONE).apply(ColoredBlock.COPY_COLOR_LOOT_FUNCTION));
     }
   };
   @RegisterIdentifier
@@ -216,25 +216,25 @@ public final class ColoredBlocks extends MishangucBlocks {
 
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
-  public static final ColoredLeavesBlock COLORED_OAK_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES), block -> BlockLootTableGenerator.oakLeavesDrop(block, Blocks.OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/oak_leaves");
+  public static final ColoredLeavesBlock COLORED_OAK_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES), block -> new VanillaBlockLootTableGenerator().oakLeavesDrops(block, Blocks.OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/oak_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
-  public static final ColoredLeavesBlock COLORED_DARK_OAK_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.DARK_OAK_LEAVES), block -> BlockLootTableGenerator.oakLeavesDrop(block, Blocks.DARK_OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/dark_oak_leaves");
+  public static final ColoredLeavesBlock COLORED_DARK_OAK_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.DARK_OAK_LEAVES), block -> new VanillaBlockLootTableGenerator().oakLeavesDrops(block, Blocks.DARK_OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/dark_oak_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
-  public static final ColoredLeavesBlock COLORED_BIRCH_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.BIRCH_LEAVES), block -> BlockLootTableGenerator.leavesDrop(block, Blocks.BIRCH_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/birch_leaves");
+  public static final ColoredLeavesBlock COLORED_BIRCH_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.BIRCH_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.BIRCH_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/birch_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
-  public static final ColoredLeavesBlock COLORED_ACACIA_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.ACACIA_LEAVES), block -> BlockLootTableGenerator.leavesDrop(block, Blocks.ACACIA_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/acacia_leaves");
+  public static final ColoredLeavesBlock COLORED_ACACIA_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.ACACIA_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.ACACIA_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/acacia_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
-  public static final ColoredLeavesBlock COLORED_JUNGLE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.JUNGLE_LEAVES), block -> BlockLootTableGenerator.leavesDrop(block, Blocks.JUNGLE_SAPLING, 0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F), "block/jungle_leaves");
+  public static final ColoredLeavesBlock COLORED_JUNGLE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.JUNGLE_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.JUNGLE_SAPLING, 0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F), "block/jungle_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
-  public static final ColoredLeavesBlock COLORED_SPRUCE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.SPRUCE_LEAVES), block -> BlockLootTableGenerator.leavesDrop(block, Blocks.SPRUCE_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/spruce_leaves");
+  public static final ColoredLeavesBlock COLORED_SPRUCE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.SPRUCE_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.SPRUCE_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/spruce_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
-  public static final ColoredLeavesBlock COLORED_MANGROVE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.MANGROVE_LEAVES), BlockLootTableGenerator::mangroveLeavesDrop, "block/mangrove_leaves");
+  public static final ColoredLeavesBlock COLORED_MANGROVE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.MANGROVE_LEAVES), new VanillaBlockLootTableGenerator()::mangroveLeavesDrops, "block/mangrove_leaves");
 
   @RegisterIdentifier
   public static final ColoredCubeBlock COLORED_PURE_BLOCK = ColoredCubeBlock.cubeAll(FabricBlockSettings.of(Material.STONE, DyeColor.WHITE).strength(0.2f), "mishanguc:block/white_pure");
