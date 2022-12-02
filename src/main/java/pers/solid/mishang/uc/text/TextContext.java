@@ -507,7 +507,9 @@ public class TextContext implements Cloneable {
     if (underline) text.formatted(Formatting.UNDERLINE);
     if (strikethrough) text.formatted(Formatting.STRIKETHROUGH);
     if (obfuscated) text.formatted(Formatting.OBFUSCATED);
-    text.styled(style -> style.withColor(color));
+    if (text.getStyle().getColor() == null) {
+      text.styled(style -> style.withColor(color));
+    }
     if (extra != null) {
       return extra.asStyledText();
     }
