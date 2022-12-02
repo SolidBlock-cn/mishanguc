@@ -355,7 +355,7 @@ public class TextContext implements Cloneable {
       return;
     }
     cachedText = text;
-    formattedText = text.copy();
+    formattedText = text.shallowCopy();
 
     if (bold) {
       formattedText.formatted(Formatting.BOLD);
@@ -501,13 +501,15 @@ public class TextContext implements Cloneable {
   }
 
   public @NotNull MutableText asStyledText() {
-    final MutableText text = this.text == null ? TextBridge.empty() : this.text.copy();
+    final MutableText text = this.text == null ? TextBridge.empty() : this.text.shallowCopy();
     if (bold) text.formatted(Formatting.BOLD);
     if (italic) text.formatted(Formatting.ITALIC);
     if (underline) text.formatted(Formatting.UNDERLINE);
     if (strikethrough) text.formatted(Formatting.STRIKETHROUGH);
     if (obfuscated) text.formatted(Formatting.OBFUSCATED);
-    text.styled(style -> style.withColor(color));
+    if (text.getStyle().getColor() == null) {
+      text.styled(style -> style.withColor(color));
+    }
     if (extra != null) {
       return extra.asStyledText();
     }
