@@ -179,7 +179,7 @@ public final class HandrailBlocks extends MishangucBlocks {
   @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_CRIMSON_HANDRAIL = new SimpleHandrailBlock(Blocks.CRIMSON_STEM);
   @RegisterIdentifier
-  public static final SimpleHandrailBlock SIMPLE_WARPED_HANDRAIL = new SimpleHandrailBlock(Blocks.CRIMSON_STEM);
+  public static final SimpleHandrailBlock SIMPLE_WARPED_HANDRAIL = new SimpleHandrailBlock(Blocks.WARPED_STEM);
 
   @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
@@ -466,7 +466,7 @@ public final class HandrailBlocks extends MishangucBlocks {
   @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock GLASS_BAMBOO_HANDRAIL = new GlassHandrailBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).strength(1.0f).requires(FeatureFlags.UPDATE_1_20), "block/bamboo_block", "block/bamboo_mosaic");
-  
+
   @ApiStatus.AvailableSince("0.2.4")
   @RegisterIdentifier
   @Translucent

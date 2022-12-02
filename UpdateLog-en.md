@@ -9,10 +9,12 @@ Updated following content:
 - Handrail blocks may connect to fences, fence gates, walls and glass panes.
 - Adjusted the display format of message of Text Copy Tool.
 - Slab tools can break down blocks into non-vanilla slabs.
+- Added blocks made of block of bamboo, bamboo planks, and bamboo mosaic, which require the 1.20 feature data packs of Minecraft to be enabled.
 
 Fixed following issues:
 
 - Some road blocks have wrong textures.
+- Simply warped stem handrail has a wrong name and block property.
 
 ### 1.0.3
 
