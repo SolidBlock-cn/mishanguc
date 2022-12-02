@@ -68,7 +68,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     } else if (connectsHandrailTo(direction, neighborState)) {
       return true;
     } else {
-      return neighborState.isIn(BlockTags.FENCES) || (neighborState.getBlock() instanceof FenceGateBlock && FenceGateBlock.canWallConnect(state, direction)) || neighborState.isIn(BlockTags.WALLS) || neighborState.getBlock() instanceof PaneBlock;
+      return neighborState.isIn(BlockTags.FENCES) || (neighborState.getBlock() instanceof FenceGateBlock && FenceGateBlock.canWallConnect(neighborState, direction)) || neighborState.isIn(BlockTags.WALLS) || neighborState.getBlock() instanceof PaneBlock;
     }
   }
 
