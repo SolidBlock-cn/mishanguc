@@ -40,6 +40,6 @@ public class ColoredStandingSignBlock extends StandingSignBlock implements Color
 
   @Override
   public JLootTable getLootTable() {
-    return JLootTable.delegate(BlockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION).build());
+    return JLootTable.delegate(BlockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION));
   }
 }
