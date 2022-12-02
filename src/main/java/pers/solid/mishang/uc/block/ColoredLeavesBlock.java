@@ -66,6 +66,6 @@ public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock, Blo
 
   @Override
   public JLootTable getLootTable() {
-    return JLootTable.delegate(lootBuilder.apply(this).apply(COPY_COLOR_LOOT_FUNCTION).build());
+    return JLootTable.delegate(lootBuilder.apply(this).apply(COPY_COLOR_LOOT_FUNCTION));
   }
 }
