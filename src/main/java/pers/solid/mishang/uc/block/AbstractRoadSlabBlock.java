@@ -103,6 +103,6 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
 
   @Override
   public @Nullable JLootTable getLootTable() {
-    return JLootTable.delegate(BlockLootTableGenerator.slabDrops(this).build());
+    return JLootTable.delegate(BlockLootTableGenerator.slabDrops(this));
   }
 }
