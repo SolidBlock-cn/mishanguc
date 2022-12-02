@@ -100,7 +100,7 @@ public final class ColoredBlocks extends MishangucBlocks {
 
     @Override
     public JLootTable getLootTable() {
-      return JLootTable.delegate(BlockLootTableGenerator.drops(COLORED_STONE, COLORED_COBBLESTONE).apply(ColoredBlock.COPY_COLOR_LOOT_FUNCTION).build());
+      return JLootTable.delegate(BlockLootTableGenerator.drops(COLORED_STONE, COLORED_COBBLESTONE).apply(ColoredBlock.COPY_COLOR_LOOT_FUNCTION));
     }
   };
   @RegisterIdentifier

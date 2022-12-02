@@ -117,7 +117,7 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
 
   @Override
   public JLootTable getLootTable() {
-    return JLootTable.delegate(BlockLootTableGenerator.drops(this, ConstantLootTableRange.create(2)).build());
+    return JLootTable.delegate(BlockLootTableGenerator.drops(this, ConstantLootTableRange.create(2)));
   }
 
   @SuppressWarnings("deprecation")
