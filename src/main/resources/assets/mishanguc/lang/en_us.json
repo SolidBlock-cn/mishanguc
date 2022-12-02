@@ -542,7 +542,7 @@
   "itemGroup.mishanguc.decorations": "Mishang Urban Construction | Decorations",
   "itemGroup.mishanguc.colored_blocks": "Mishang Urban Construction | Colored Blocks",
 
-  "notice.mishanguc.version_check": "Please note: The development of Mishang Urban Construction for Minecraft %s will be discontinued later. Please consider using %s. Operators can type command %s to suppress this notice for this level.",
+  "notice.mishanguc.version_check": "Please note: The development of Mishang Urban Construction for Minecraft %s has been discontinued. Please consider using %s. Operators can type command %s to suppress this notice for this level.",
   "modmenu.descriptionTranslation.mishanguc": "An amount of blocks and items that make a beautiful city! Currently not stable. Please do not use in your formal work!",
 
   "gamerule.mishanguc:warn_deprecated_version": "Warn Deprecated MC Version for Mod",
