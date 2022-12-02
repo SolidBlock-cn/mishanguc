@@ -2,9 +2,9 @@ package pers.solid.mishang.uc.arrp;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
-import net.devtech.arrp.api.RRPCallbackConditional;
 import net.devtech.arrp.api.RRPPreGenEntrypoint;
 import net.devtech.arrp.api.RuntimeResourcePack;
+import net.devtech.arrp.api.SidedRRPCallback;
 import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.devtech.arrp.generator.ItemResourceGenerator;
 import net.devtech.arrp.generator.ResourceGeneratorHelper;
@@ -875,7 +875,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   public void pregen() {
     final boolean dev = FabricLoader.getInstance().isDevelopmentEnvironment();
     if (!dev) generateResources(true, true);
-    RRPCallbackConditional.BEFORE_VANILLA.register((resourceType, builder) -> builder.add(dev ? generateResources(resourceType == ResourceType.CLIENT_RESOURCES, resourceType == ResourceType.SERVER_DATA) : PACK));
+    SidedRRPCallback.BEFORE_VANILLA.register((resourceType, builder) -> builder.add(dev ? generateResources(resourceType == ResourceType.CLIENT_RESOURCES, resourceType == ResourceType.SERVER_DATA) : PACK));
   }
 
   /**
