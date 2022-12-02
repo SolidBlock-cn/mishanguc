@@ -37,7 +37,7 @@
       ">=1.19-beta.5",
       ">=1.19"
     ],
-    "better_runtime_resource_pack": ">=0.6.2"
+    "better_runtime_resource_pack": ">=0.8.0"
   },
   "breaks": {
   },
