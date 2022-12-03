@@ -7,14 +7,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -59,7 +54,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
   public @Nullable String bottom;
 
   public SimpleHandrailBlock(@Nullable Block baseBlock, Settings settings) {
-    super(settings);
+    super(settings.nonOpaque());
     this.baseBlock = baseBlock;
     this.central = new CentralBlock(this);
     this.corner = new CornerBlock(this);
@@ -129,15 +124,9 @@ public class SimpleHandrailBlock extends HandrailBlock {
     } else return super.getName();
   }
 
-  @SuppressWarnings("deprecation")
-  @Override
-  public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
-    return VoxelShapes.empty();
-  }
-
   public static class CentralBlock extends HandrailCentralBlock<SimpleHandrailBlock> {
     public CentralBlock(@NotNull SimpleHandrailBlock baseBlock) {
-      super(baseBlock);
+      super(baseBlock, FabricBlockSettings.copyOf(baseBlock).nonOpaque());
     }
 
     @Environment(EnvType.CLIENT)
@@ -155,17 +144,11 @@ public class SimpleHandrailBlock extends HandrailBlock {
       final Block block = baseBlock();
       return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_central", block.getName());
     }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
-      return VoxelShapes.empty();
-    }
   }
 
   public static class CornerBlock extends HandrailCornerBlock<SimpleHandrailBlock> {
     public CornerBlock(@NotNull SimpleHandrailBlock baseHandrail) {
-      super(baseHandrail);
+      super(baseHandrail, FabricBlockSettings.copyOf(baseHandrail).nonOpaque());
     }
 
     @Environment(EnvType.CLIENT)
@@ -179,17 +162,11 @@ public class SimpleHandrailBlock extends HandrailBlock {
       final Block block = baseBlock();
       return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_corner", block.getName());
     }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
-      return VoxelShapes.empty();
-    }
   }
 
   public static class StairBlock extends HandrailStairBlock<SimpleHandrailBlock> {
     public StairBlock(@NotNull SimpleHandrailBlock baseRail) {
-      super(baseRail);
+      super(baseRail, FabricBlockSettings.copyOf(baseRail).nonOpaque());
     }
 
     @Environment(EnvType.CLIENT)
@@ -210,17 +187,11 @@ public class SimpleHandrailBlock extends HandrailBlock {
       final Block block = baseBlock();
       return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_stair", block.getName());
     }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
-      return VoxelShapes.empty();
-    }
   }
 
   public static class OuterBlock extends HandrailOuterBlock<SimpleHandrailBlock> {
     public OuterBlock(@NotNull SimpleHandrailBlock baseRail) {
-      super(baseRail);
+      super(baseRail, FabricBlockSettings.copyOf(baseRail).nonOpaque());
     }
 
     @Override
@@ -232,12 +203,6 @@ public class SimpleHandrailBlock extends HandrailBlock {
     public MutableText getName() {
       final Block block = baseBlock();
       return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_outer", block.getName());
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
-      return VoxelShapes.empty();
     }
   }
 }
