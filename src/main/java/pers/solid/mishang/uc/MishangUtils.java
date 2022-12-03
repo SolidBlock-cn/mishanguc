@@ -22,6 +22,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import org.jetbrains.annotations.*;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.MishangucItems;
+import pers.solid.mishang.uc.mixin.DyeColorAccessorFor1_16;
 import pers.solid.mishang.uc.text.PatternSpecialDrawable;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.LineColor;
