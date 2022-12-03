@@ -669,7 +669,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   @Override
   protected void init() {
     super.init();
-    textFieldListScreen = new TextFieldListScreen(this, client, width, height, 30, height - 80, 18);
+    textFieldListScreen = new TextFieldListScreen(this, client, width, height, 30, height - 65, 18);
     setFocused(textFieldListScreen);
     // 添加按钮
 
