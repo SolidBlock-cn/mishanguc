@@ -3,9 +3,18 @@
   "minVersion": "0.8",
   "package": "pers.solid.mishang.uc.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": ["AbstractBlockStateMixin", "AreaHelperMixin", "FenceBlockMixin", "ItemUsageContextInvoker", "NbtCompoundAccessor","NetherPortalBlockMixin", "PaneBlockMixin", "PlayerInventoryMixin",
-    "PointOfInterestTypesMixin", "SnowBlockMixin", "WallBlockMixin"],
-  "client": ["AbstractClientPlayerEntityMixin", "BetterClientPlayerInteractionManagerMixin", "GameRendererMixin", "ScreenMixin", "TextRendererAccessor", "WorldRendererInvoker"],
+  "mixins": [
+    "AbstractBlockStateMixin", "AreaHelperMixin", "DyeColorAccessorFor1_16",
+    "FenceBlockMixin", "ItemUsageContextInvoker", "NbtCompoundAccessor",
+    "NetherPortalBlockMixin", "PaneBlockMixin", "PlayerInventoryMixin",
+    "PointOfInterestTypesMixin", "SignBlockEntityAccessorFor1_16",
+    "SnowBlockMixin", "TextColorAccessorFor1_16", "WallBlockMixin"
+  ],
+  "client": [
+    "AbstractClientPlayerEntityMixin",
+    "BetterClientPlayerInteractionManagerMixin", "GameRendererMixin",
+    "ScreenMixin", "TextRendererAccessor", "WorldRendererInvoker"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

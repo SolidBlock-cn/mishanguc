@@ -42,6 +42,8 @@ import pers.solid.mishang.uc.block.StandingSignBlock;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
+import pers.solid.mishang.uc.mixin.SignBlockEntityAccessorFor1_16;
+import pers.solid.mishang.uc.mixin.TextColorAccessorFor1_16;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
 
@@ -74,7 +76,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         tooltip.add(TextBridge.translatable("item.mishanguc.text_copy_tool.tooltip.3").formatted(Formatting.GRAY));
         texts.stream().map(TextContext::fromNbt).map(TextContext::asStyledText).peek(text -> {
           final TextColor color = text.getStyle().getColor();
-          if (color != null && color.getRgb() == 0) {
+          if (color != null && ((TextColorAccessorFor1_16) (Object) color).getRgb() == 0) {
             // 考虑黑色的文本看不清楚，因此这种情况依然显示为灰色。
             text.formatted(Formatting.GRAY);
           }
@@ -234,7 +236,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
       final NbtList texts = new NbtList();
       for (int i = 0; i < 4; i++) {
         final TextContext textContext = new TextContext();
-        textContext.text = signBlockEntity.getTextOnRow(i).shallowCopy();
+        textContext.text = ((SignBlockEntityAccessorFor1_16) signBlockEntity).getTexts()[i].shallowCopy();
         if (TextBridge.isEmpty(textContext.text)) continue;
         textContext.color = signBlockEntity.getTextColor().getSignColor();
 
@@ -247,7 +249,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
           textContext.underline = style.isUnderlined();
           textContext.obfuscated = style.isObfuscated();
           if (style.getColor() != null) {
-            textContext.color = style.getColor().getRgb();
+            textContext.color = ((TextColorAccessorFor1_16) (Object) style.getColor()).getRgb();
           }
           textContext.text = TextBridge.literal(((LiteralText) textContext.text).getRawString());
         }
@@ -268,7 +270,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         texts.add(textContext.createNbt());
       }
       stack.putSubTag("texts", texts);
-      stack.putSubTag("fromVanillaSign", NbtByte.of(true));
+      stack.putSubTag("fromVanillaSign", NbtByte.of(false));
       player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.success.copy", texts.size()), true);
       return ActionResult.SUCCESS;
     } else {

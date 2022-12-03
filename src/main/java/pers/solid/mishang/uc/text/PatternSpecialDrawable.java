@@ -379,6 +379,6 @@ public final class PatternSpecialDrawable implements SpecialDrawable {
 
   @Override
   public @NotNull MutableText asStyledText() {
-    return SpecialDrawable.super.asStyledText().styled(style -> style.withColor(textContext.color));
+    return SpecialDrawable.super.asStyledText().styled(style -> style.withColor(TextColor.fromRgb(textContext.color)));
   }
 }

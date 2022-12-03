@@ -151,7 +151,7 @@ public class MishangUtils {
    */
   public static @Nullable DyeColor colorBySignColor(int signColor) {
     for (DyeColor color : DyeColor.values()) {
-      if (color.getSignColor() == signColor) {
+      if (((DyeColorAccessorFor1_16) (Enum<DyeColor>) color).getSignColor() == signColor) {
         return color;
       }
     }

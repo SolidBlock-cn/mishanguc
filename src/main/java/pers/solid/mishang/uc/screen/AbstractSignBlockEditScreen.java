@@ -357,7 +357,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
             changed = true;
             if (selectedTextContext != null) {
               final TextColor parsedColor = TextColor.parse(widget.getText());
-              if (parsedColor != null) selectedTextContext.color = parsedColor.getRgb();
+              if (parsedColor != null) selectedTextContext.color = ((TextColorAccessorFor1_16) (Object) parsedColor).getRgb();
             }
           }));
 
