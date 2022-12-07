@@ -14,6 +14,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -146,5 +147,15 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
   @Override
   public @NotNull JBlockStates getBlockStates() {
     return BRRPHelper.stateForHorizontalCornerFacingBlock(getBlockModelId(), true);
+  }
+
+  @Override
+  public Identifier getAdvancementIdForRecipe(Identifier recipeId, @Nullable RecipeCategory recipeCategory) {
+    return recipeId.brrp_prepend("recipes/handrails/");
+  }
+
+  @Override
+  public @Nullable RecipeCategory getRecipeCategory() {
+    return RecipeCategory.DECORATIONS;
   }
 }

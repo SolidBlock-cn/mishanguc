@@ -11,6 +11,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -181,5 +182,15 @@ public class CornerLightBlock extends HorizontalFacingBlock
     } catch (IndexOutOfBoundsException ignored) {
     }
     return new Identifier(identifier.getNamespace(), path).brrp_prepend("block/");
+  }
+
+  @Override
+  public Identifier getAdvancementIdForRecipe(Identifier recipeId, @Nullable RecipeCategory recipeCategory) {
+    return recipeId.brrp_prepend("recipes/lights/");
+  }
+
+  @Override
+  public @Nullable RecipeCategory getRecipeCategory() {
+    return RecipeCategory.DECORATIONS;
   }
 }

@@ -1,7 +1,9 @@
 package pers.solid.mishang.uc.item;
 
+import net.devtech.arrp.generator.ItemResourceGenerator;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.Item;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -118,6 +120,7 @@ public final class MishangucItems {
         try {
           // 注册物品。
           Item value = (Item) field.get(null);
+          ItemResourceGenerator.ITEM_TO_RECIPE_CATEGORY.put(value, RecipeCategory.TOOLS);
           if (field.isAnnotationPresent(RegisterIdentifier.class)) {
             final RegisterIdentifier annotation = field.getAnnotation(RegisterIdentifier.class);
             String path = annotation.value();

@@ -100,7 +100,8 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
   @Override
   public @Nullable JRecipe getCraftingRecipe() {
     return new JShapelessRecipe(this, Items.NETHERITE_AXE, Items.NETHERITE_HOE, Items.NETHERITE_SHOVEL, Items.NETHERITE_PICKAXE, Items.NETHERITE_SWORD, Items.BEDROCK, Items.COMMAND_BLOCK, Items.CHAIN_COMMAND_BLOCK, Items.REPEATING_COMMAND_BLOCK).addInventoryChangedCriterion("has_bedrock", Items.BEDROCK).addInventoryChangedCriterion("has_command_block", Items.COMMAND_BLOCK).addInventoryChangedCriterion("has_chain_command_block", Items.CHAIN_COMMAND_BLOCK)
-        .addInventoryChangedCriterion("has_repeating_command_block", Items.REPEATING_COMMAND_BLOCK);
+        .addInventoryChangedCriterion("has_repeating_command_block", Items.REPEATING_COMMAND_BLOCK)
+        .recipeCategory(getRecipeCategory());
   }
 
   @Override

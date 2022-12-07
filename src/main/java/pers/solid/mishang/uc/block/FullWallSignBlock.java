@@ -81,7 +81,8 @@ public class FullWallSignBlock extends WallSignBlock {
     final JShapedRecipe recipe = new JShapedRecipe(this)
         .pattern("-#-", "###", "-#-")
         .addKey("#", baseBlock).addKey("-", WallSignBlocks.INVISIBLE_WALL_SIGN)
-        .resultCount(4);
+        .resultCount(4)
+        .recipeCategory(getRecipeCategory());
     recipe.addInventoryChangedCriterion("has_base_block", baseBlock).addInventoryChangedCriterion("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
     return recipe;
   }

@@ -238,7 +238,8 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
         .pattern("TCT", " | ", " | ")
         .addKey("T", Items.TNT)
         .addKey("C", JIngredient.ofItems(Items.COMMAND_BLOCK, Items.CHAIN_COMMAND_BLOCK, Items.REPEATING_COMMAND_BLOCK))
-        .addKey("|", Items.STICK);
+        .addKey("|", Items.STICK)
+        .recipeCategory(getRecipeCategory());
     recipe.advancementBuilder.criterion("has_command_block", InventoryChangedCriterion.Conditions.items(Items.COMMAND_BLOCK, Items.CHAIN_COMMAND_BLOCK, Items.REPEATING_COMMAND_BLOCK));
     return recipe;
   }

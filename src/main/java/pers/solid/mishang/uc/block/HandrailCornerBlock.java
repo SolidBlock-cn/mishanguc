@@ -17,6 +17,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -154,5 +155,15 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
   public boolean connectsIn(@NotNull BlockState blockState, @NotNull Direction direction, @Nullable Direction offsetFacing) {
     final HorizontalCornerDirection facing = blockState.get(FACING);
     return offsetFacing != null && facing.hasDirection(direction) && facing.hasDirection(offsetFacing);
+  }
+
+  @Override
+  public Identifier getAdvancementIdForRecipe(Identifier recipeId, @Nullable RecipeCategory recipeCategory) {
+    return recipeId.brrp_prepend("recipes/handrails/");
+  }
+
+  @Override
+  public @Nullable RecipeCategory getRecipeCategory() {
+    return RecipeCategory.DECORATIONS;
   }
 }

@@ -50,7 +50,8 @@ public class GlowingStandingSignBlock extends StandingSignBlock {
     final JShapedRecipe recipe = new JShapedRecipe(this)
         .pattern("---", "###", " | ")
         .addKey("#", baseBlock).addKey("-", WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN).addKey("|", Items.STICK)
-        .resultCount(4);
+        .resultCount(4)
+        .recipeCategory(getRecipeCategory());
     recipe.addInventoryChangedCriterion("has_base_block", baseBlock).addInventoryChangedCriterion("has_sign", WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN);
     return recipe;
   }

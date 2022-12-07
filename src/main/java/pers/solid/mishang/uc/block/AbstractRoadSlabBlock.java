@@ -11,6 +11,7 @@ import net.minecraft.data.server.loottable.VanillaBlockLootTableGenerator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
@@ -104,5 +105,15 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
   @Override
   public @Nullable JLootTable getLootTable() {
     return JLootTable.delegate(new VanillaBlockLootTableGenerator().slabDrops(this));
+  }
+
+  @Override
+  public Identifier getAdvancementIdForRecipe(Identifier recipeId, @Nullable RecipeCategory recipeCategory) {
+    return recipeId.brrp_prepend("recipes/roads");
+  }
+
+  @Override
+  public @Nullable RecipeCategory getRecipeCategory() {
+    return RecipeCategory.BUILDING_BLOCKS;
   }
 }

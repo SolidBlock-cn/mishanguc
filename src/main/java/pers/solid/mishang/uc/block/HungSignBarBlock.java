@@ -20,6 +20,7 @@ import net.minecraft.data.client.TextureKey;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -313,5 +314,15 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
         new JModel(new Identifier("mishanguc", "block/hung_sign_bar_edge"))
             .textures(JTextures.of("texture", texture)),
         id.brrp_append("_edge"));
+  }
+
+  @Override
+  public Identifier getAdvancementIdForRecipe(Identifier recipeId, @Nullable RecipeCategory recipeCategory) {
+    return recipeId.brrp_prepend("recipes/signs/");
+  }
+
+  @Override
+  public @Nullable RecipeCategory getRecipeCategory() {
+    return RecipeCategory.DECORATIONS;
   }
 }

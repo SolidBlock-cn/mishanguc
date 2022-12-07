@@ -25,6 +25,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -276,14 +277,20 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     final JShapedRecipe recipe = new JShapedRecipe(this)
         .pattern("---", "###", " | ")
         .addKey("#", baseBlock).addKey("-", WallSignBlocks.INVISIBLE_WALL_SIGN).addKey("|", Items.STICK)
-        .resultCount(4);
+        .resultCount(4)
+        .recipeCategory(getRecipeCategory());
     recipe.addInventoryChangedCriterion("has_base_block", baseBlock).addInventoryChangedCriterion("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
     return recipe;
   }
 
   @Override
-  public Identifier getAdvancementIdForRecipe(Identifier recipeId) {
+  public Identifier getAdvancementIdForRecipe(Identifier recipeId, RecipeCategory recipeCategory) {
     return recipeId.brrp_prepend("recipes/signs/");
+  }
+
+  @Override
+  public @Nullable RecipeCategory getRecipeCategory() {
+    return RecipeCategory.DECORATIONS;
   }
 
   @SuppressWarnings("deprecation")
