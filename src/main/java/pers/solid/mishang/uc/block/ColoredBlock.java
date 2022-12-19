@@ -3,7 +3,6 @@ package pers.solid.mishang.uc.block;
 import com.mojang.datafixers.util.Function3;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -40,9 +39,9 @@ public interface ColoredBlock extends BlockEntityProvider {
    */
   static void appendColorTooltip(ItemStack stack, List<Text> tooltip) {
     final NbtCompound blockEntityTag = stack.getSubNbt("BlockEntityTag");
-    if (blockEntityTag != null && blockEntityTag.contains("color", NbtType.NUMBER)) {
+    if (blockEntityTag != null && blockEntityTag.contains("color")) {
       // 此时该对象已经定义了颜色。
-      final int color = blockEntityTag.getInt("color");
+      final int color = MishangUtils.readColorFromNbtElement(blockEntityTag.get("color"));
       Color colorObject = new Color(color);
       tooltip.add(TextBridge.translatable("block.mishanguc.colored_block.tooltip.color", MishangUtils.describeColor(color)).formatted(Formatting.GRAY));
       tooltip.add(TextBridge.translatable("block.mishanguc.colored_block.tooltip.color_components", colorObject.getRed(), colorObject.getGreen(), colorObject.getBlue(), colorObject.getAlpha()).formatted(Formatting.GRAY));

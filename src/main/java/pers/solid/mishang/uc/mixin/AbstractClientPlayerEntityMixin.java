@@ -40,17 +40,20 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity {
       } else {
         cachedHasAttribute = false;
       }
+    } else {
+      cachedHasAttribute = false;
     }
   }
 
   @Inject(method = "getSpeed", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;getAttributeValue(Lnet/minecraft/entity/attribute/EntityAttribute;)D", shift = At.Shift.AFTER))
   private void restoreAttributeAfterFOV(CallbackInfoReturnable<Float> cir) {
     final EntityAttributeInstance attributeInstance = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-    if (attributeInstance != null)
+    if (attributeInstance != null) {
       if (!attributeInstance.hasModifier(Road.ROAD_SPEED_BOOST) && cachedHasAttribute) {
         attributeInstance.addTemporaryModifier(Road.ROAD_SPEED_BOOST);
       } else if (!cachedHasAttribute) {
         attributeInstance.removeModifier(Road.ROAD_SPEED_BOOST);
       }
+    }
   }
 }

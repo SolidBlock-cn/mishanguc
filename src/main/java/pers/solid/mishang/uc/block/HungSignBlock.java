@@ -112,13 +112,11 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   public HungSignBlock(@Nullable Block baseBlock, Settings settings) {
     super(settings);
     this.baseBlock = baseBlock;
-    this.setDefaultState(
-        this.stateManager
-            .getDefaultState()
-            .with(WATERLOGGED, false)
-            .with(AXIS, Direction.Axis.X)
-            .with(LEFT, false)
-            .with(RIGHT, false));
+    this.setDefaultState(getDefaultState()
+        .with(WATERLOGGED, false)
+        .with(AXIS, Direction.Axis.X)
+        .with(LEFT, false)
+        .with(RIGHT, false));
   }
 
   @ApiStatus.AvailableSince("0.1.7")

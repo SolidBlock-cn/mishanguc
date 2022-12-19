@@ -20,6 +20,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.SlabBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
@@ -30,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.Mishanguc;
-import pers.solid.mishang.uc.annotations.RegisterIdentifier;
+import pers.solid.mishang.uc.annotations.CustomId;
 import pers.solid.mishang.uc.annotations.SimpleModel;
 import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.blocks.*;
@@ -74,7 +75,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
    */
   private static void writeBlockModelForCubeAllWithSlab(AbstractRoadBlock block, String all) {
     writeBlockModelForCubeAll(block, all);
-    writeBlockModelForSlabAll(RoadSlabBlocks.BLOCK_TO_SLABS.get(block), all);
+    writeBlockModelForSlabAll(block.getRoadSlab(), all);
   }
 
   /**
@@ -87,7 +88,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   private static void writeRoadBlockModelWithSlab(
       AbstractRoadBlock block, String parent, JTextures textures) {
     final Identifier id = block.getBlockModelId();
-    final AbstractRoadSlabBlock slab = RoadSlabBlocks.BLOCK_TO_SLABS.get(block);
+    final AbstractRoadSlabBlock slab = block.getRoadSlab();
     final Identifier slabId = slab == null ? null : slab.getBlockModelId();
     writeRoadBlockModelWithSlab(parent, textures, id, slabId);
   }
@@ -102,7 +103,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   private static void writeRoadBlockModelWithSlabWithMirrored(
       AbstractRoadBlock block, String parent, JTextures textures) {
     final Identifier id = block.getBlockModelId();
-    final AbstractRoadSlabBlock slab = RoadSlabBlocks.BLOCK_TO_SLABS.get(block);
+    final AbstractRoadSlabBlock slab = block.getRoadSlab();
     final Identifier slabId = slab == null ? null : slab.getBlockModelId();
     writeRoadBlockModelWithSlab(parent, textures, id, slabId);
     writeRoadBlockModelWithSlab(parent + "_mirrored", textures, id.brrp_append("_mirrored"), slabId == null ? null : slabId.brrp_append("_mirrored"));
@@ -139,20 +140,41 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     // 道路部分
     final IdentifiedTag roadBlocks = blockTag("road_blocks");
     final IdentifiedTag roadSlabs = blockTag("road_slabs");
+    final IdentifiedTag roadMarks = blockTag("road_marks");
 
     // 灯光部分
     final IdentifiedTag whiteStripWallLights = blockTag("white_strip_wall_lights");
     final IdentifiedTag whiteWallLights = blockTag("white_wall_lights");
     final IdentifiedTag whiteCornerLights = blockTag("white_corner_lights");
     final IdentifiedTag whiteLightDecorations = blockTag("white_light_decorations");
+    final IdentifiedTag whiteColumnLights = blockTag("white_column_lights");
     final IdentifiedTag yellowStripWallLights = blockTag("yellow_strip_wall_lights");
     final IdentifiedTag yellowWallLights = blockTag("yellow_wall_lights");
     final IdentifiedTag yellowCornerLights = blockTag("yellow_corner_lights");
     final IdentifiedTag yellowLightDecorations = blockTag("yellow_light_decorations");
+    final IdentifiedTag yellowColumnLights = blockTag("yellow_column_lights");
+    final IdentifiedTag orangeStripWallLights = blockTag("orange_strip_wall_lights");
+    final IdentifiedTag orangeWallLights = blockTag("orange_wall_lights");
+    final IdentifiedTag orangeCornerLights = blockTag("orange_corner_lights");
+    final IdentifiedTag orangeLightDecorations = blockTag("orange_light_decorations");
+    final IdentifiedTag orangeColumnLights = blockTag("orange_column_lights");
+    final IdentifiedTag greenStripWallLights = blockTag("green_strip_wall_lights");
+    final IdentifiedTag greenWallLights = blockTag("green_wall_lights");
+    final IdentifiedTag greenCornerLights = blockTag("green_corner_lights");
+    final IdentifiedTag greenLightDecorations = blockTag("green_light_decorations");
+    final IdentifiedTag greenColumnLights = blockTag("green_column_lights");
     final IdentifiedTag cyanStripWallLights = blockTag("cyan_strip_wall_lights");
     final IdentifiedTag cyanWallLights = blockTag("cyan_wall_lights");
     final IdentifiedTag cyanCornerLights = blockTag("cyan_corner_lights");
     final IdentifiedTag cyanLightDecorations = blockTag("cyan_light_decorations");
+    final IdentifiedTag cyanColumnLights = blockTag("cyan_column_lights");
+    final IdentifiedTag pinkStripWallLights = blockTag("pink_strip_wall_lights");
+    final IdentifiedTag pinkWallLights = blockTag("pink_wall_lights");
+    final IdentifiedTag pinkCornerLights = blockTag("pink_corner_lights");
+    final IdentifiedTag pinkLightDecorations = blockTag("pink_light_decorations");
+    final IdentifiedTag pinkColumnLights = blockTag("pink_column_lights");
+    final IdentifiedTag lightSlabs = blockTag("light_slabs");
+    final IdentifiedTag lightCovers = blockTag("light_covers");
 
     // 墙上的告示牌部分
     final IdentifiedTag woodenWallSigns = blockTag("wooden_wall_signs");
@@ -248,13 +270,14 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
           }
         }
     );
-    MishangUtils.instanceStream(RoadSlabBlocks.class, Block.class).forEach(
+    RoadSlabBlocks.SLABS.forEach(
         block -> {
-          if (block instanceof AbstractRoadSlabBlock) {
+          if (block != null) {
             roadSlabs.addBlock(block);
           }
         }
     );
+    MishangUtils.instanceStream(RoadMarkBlocks.class, Block.class).forEach(roadMarks::addBlock);
 
     // 灯光部分
     MishangUtils.instanceStream(LightBlocks.class, Block.class).forEach(
@@ -264,25 +287,51 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
               case "white" -> whiteStripWallLights.addBlock(block);
               case "yellow" -> yellowStripWallLights.addBlock(block);
               case "cyan" -> cyanStripWallLights.addBlock(block);
+              case "orange" -> orangeStripWallLights.addBlock(block);
+              case "green" -> greenStripWallLights.addBlock(block);
+              case "pink" -> pinkStripWallLights.addBlock(block);
             }
           } else if (block instanceof AutoConnectWallLightBlock) {
             switch (((AutoConnectWallLightBlock) block).lightColor) {
               case "white" -> whiteLightDecorations.addBlock(block);
               case "yellow" -> yellowLightDecorations.addBlock(block);
               case "cyan" -> cyanLightDecorations.addBlock(block);
+              case "orange" -> orangeLightDecorations.addBlock(block);
+              case "green" -> greenLightDecorations.addBlock(block);
+              case "pink" -> pinkLightDecorations.addBlock(block);
+            }
+          } else if (block instanceof ColumnLightBlock || block instanceof ColumnWallLightBlock) {
+            switch (block instanceof ColumnLightBlock ? ((ColumnLightBlock) block).lightColor : ((ColumnWallLightBlock) block).lightColor) {
+              case "white" -> whiteColumnLights.addBlock(block);
+              case "yellow" -> yellowColumnLights.addBlock(block);
+              case "cyan" -> cyanColumnLights.addBlock(block);
+              case "orange" -> orangeColumnLights.addBlock(block);
+              case "green" -> greenColumnLights.addBlock(block);
+              case "pink" -> pinkColumnLights.addBlock(block);
             }
           } else if (block instanceof WallLightBlock) {
             switch (((WallLightBlock) block).lightColor) {
               case "white" -> whiteWallLights.addBlock(block);
               case "yellow" -> yellowWallLights.addBlock(block);
               case "cyan" -> cyanWallLights.addBlock(block);
+              case "orange" -> orangeWallLights.addBlock(block);
+              case "green" -> greenWallLights.addBlock(block);
+              case "pink" -> pinkWallLights.addBlock(block);
             }
           } else if (block instanceof CornerLightBlock) {
             switch (((CornerLightBlock) block).lightColor) {
               case "white" -> whiteCornerLights.addBlock(block);
               case "yellow" -> yellowCornerLights.addBlock(block);
               case "cyan" -> cyanCornerLights.addBlock(block);
+              case "orange" -> orangeCornerLights.addBlock(block);
+              case "green" -> greenCornerLights.addBlock(block);
+              case "pink" -> pinkCornerLights.addBlock(block);
             }
+          }
+          if (block instanceof SlabBlock) {
+            lightSlabs.addBlock(block);
+          } else if (block instanceof LightCoverBlock) {
+            lightCovers.addBlock(block);
           }
         }
     );
@@ -505,18 +554,28 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     registerTagBlockOnly(needsStoneTool);
 
     // 道路部分
-    registerTags(roadBlocks, roadSlabs);
+    registerTag(roadBlocks, roadSlabs, roadMarks);
 
     // 灯光部分
     whiteWallLights.addTag(whiteStripWallLights);
     yellowWallLights.addTag(yellowStripWallLights);
     cyanWallLights.addTag(cyanStripWallLights);
+    orangeWallLights.addTag(orangeStripWallLights);
+    greenWallLights.addTag(greenStripWallLights);
+    pinkWallLights.addTag(pinkStripWallLights);
 
-    registerTags(
+    registerTag(
         whiteWallLights, whiteStripWallLights, whiteCornerLights, whiteLightDecorations,
         yellowWallLights, yellowStripWallLights, yellowCornerLights, yellowLightDecorations,
-        cyanWallLights, cyanStripWallLights, cyanCornerLights, cyanLightDecorations
+        cyanWallLights, cyanStripWallLights, cyanCornerLights, cyanLightDecorations,
+        orangeWallLights, orangeStripWallLights, orangeCornerLights, orangeLightDecorations,
+        greenWallLights, greenStripWallLights, greenCornerLights, greenLightDecorations,
+        pinkWallLights, pinkStripWallLights, pinkCornerLights, pinkLightDecorations,
+
+        whiteColumnLights, yellowColumnLights, cyanColumnLights, orangeColumnLights, pinkColumnLights, greenColumnLights
     );
+    registerTag(lightSlabs);
+    registerTag(lightCovers);
 
     // 墙上的告示牌部分
     wallSigns
@@ -609,11 +668,11 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     registerTag(concreteHungSignBars);
     registerTag(terracottaHungSignBars);
     registerTag(hungSignBars);
-    registerTags(woodenStandingSigns, concreteStandingSigns, terracottaStandingSigns, glowingConcreteStandingSigns, glowingTerracottaStandingSigns, standingSigns, glowingStandingSigns);
+    registerTag(woodenStandingSigns, concreteStandingSigns, terracottaStandingSigns, glowingConcreteStandingSigns, glowingTerracottaStandingSigns, standingSigns, glowingStandingSigns);
 
     // 染色方块部分
     final IdentifiedTag colored = blockTag("colored");
-    MishangUtils.blocks().values().stream().filter(Predicates.instanceOf(ColoredBlock.class)).forEach(colored::addBlock);
+    MishangUtils.blocks().stream().filter(Predicates.instanceOf(ColoredBlock.class)).forEach(colored::addBlock);
     registerTag(colored);
   }
 
@@ -622,7 +681,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     PACK.addTag(blockTag.identifier.brrp_prepend("items/"), blockTag);
   }
 
-  private static void registerTags(IdentifiedTag... tags) {
+  private static void registerTag(IdentifiedTag... tags) {
     for (IdentifiedTag tag : tags) {
       registerTag(tag);
     }
@@ -640,22 +699,25 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   private static void writeAllItemModels() {
     MishangUtils.fieldStream(MishangucItems.class)
         .filter(field -> Item.class.isAssignableFrom(field.getType())
-            && field.isAnnotationPresent(RegisterIdentifier.class)
             && field.isAnnotationPresent(SimpleModel.class))
         .forEach(field -> {
-          String name = field.getAnnotation(RegisterIdentifier.class).value();
           String parent = field.getAnnotation(SimpleModel.class).parent();
           String texture = field.getAnnotation(SimpleModel.class).texture();
-          if (name.isEmpty()) {
-            name = field.getName().toLowerCase();
+          String namespace, path;
+          if (field.isAnnotationPresent(CustomId.class)) {
+            namespace = field.getAnnotation(CustomId.class).nameSpace();
+            path = field.getAnnotation(CustomId.class).path();
+          } else {
+            namespace = "mishanguc";
+            path = field.getName().toLowerCase();
           }
           if (parent.isEmpty()) {
-            name = "item/generated";
+            parent = "item/generated";
           }
           PACK.addModel(
               new JModel(parent)
-                  .textures(new JTextures().layer0(texture.isEmpty() ? "mishanguc:item/" + name : texture)),
-              new Identifier("mishanguc", "item/" + name));
+                  .textures(new JTextures().layer0(texture.isEmpty() ? namespace + ":item/" + path : texture)),
+              new Identifier(namespace, "item/" + path));
         });
 
     writeExplosionToolItemModels();
@@ -674,201 +736,6 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     }) {
       PACK.addModel(new JModel("item/handheld").addTexture("layer0", "mishanguc:item/" + name), new Identifier("mishanguc", "item/" + name));
     }
-  }
-
-  @Environment(EnvType.CLIENT)
-  private static void writeAllBlockModels() {
-    // 道路部分
-    writeBlockModelForCubeAllWithSlab(RoadBlocks.ROAD_BLOCK, "asphalt");
-    writeBlockModelForCubeAllWithSlab(RoadBlocks.ROAD_FILLED_WITH_WHITE, "white_ink");
-    writeBlockModelForCubeAllWithSlab(RoadBlocks.ROAD_FILLED_WITH_YELLOW, "yellow_ink");
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WHITE_LINE,
-        "road_with_straight_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineTop("white_straight_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WHITE_RA_LINE,
-        "road_with_angle_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineTop("white_right_angle_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WHITE_BA_LINE,
-        "road_with_angle_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineTop("white_bevel_angle_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WHITE_BA_DOUBLE_LINE,
-        "road_with_angle_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_double_line").lineTop("white_bevel_angle_double_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WHITE_BA_THICK_LINE,
-        "road_with_angle_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_thick_line").lineTop("white_bevel_angle_thick_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_YELLOW_LINE,
-        "road_with_straight_line",
-        new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_straight_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_YELLOW_RA_LINE,
-        "road_with_angle_line",
-        new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_right_angle_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_YELLOW_BA_LINE,
-        "road_with_angle_line",
-        new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_bevel_angle_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_YELLOW_BA_DOUBLE_LINE,
-        "road_with_angle_line",
-        new FasterJTextures().base("asphalt").lineSide("yellow_straight_double_line").lineTop("yellow_bevel_angle_double_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_YELLOW_BA_THICK_LINE,
-        "road_with_angle_line",
-        new FasterJTextures().base("asphalt").lineSide("yellow_straight_thick_line").lineTop("yellow_bevel_angle_thick_line"));
-    writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_W_Y_RA_LINE,
-        "road_with_angle_line",
-        new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineSide2("white_straight_line").lineTop("white_and_yellow_right_angle_line"));
-    writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_WT_N_RA_LINE,
-        "road_with_angle_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("white_straight_thick_line").lineTop("white_thick_and_normal_right_angle_line"));
-    writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_WT_Y_RA_LINE,
-        "road_with_angle_line",
-        new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineSide2("white_straight_thick_line").lineTop("white_thick_and_yellow_right_angle_line"));
-    writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_W_YD_RA_LINE,
-        "road_with_angle_line",
-        new FasterJTextures().base("asphalt").lineSide("yellow_straight_double_line").lineSide2("white_straight_line").lineTop("white_and_yellow_double_right_angle_line"));
-    writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_WT_YD_RA_LINE,
-        "road_with_angle_line",
-        new FasterJTextures().base("asphalt").lineSide("yellow_straight_double_line").lineSide2("white_straight_thick_line").lineTop("white_thick_and_yellow_double_right_angle_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WHITE_TS_LINE,
-        "road_with_joint_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineTop("white_joint_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WHITE_CROSS_LINE,
-        "road_with_cross_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineTop("white_cross_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_YELLOW_TS_LINE,
-        "road_with_joint_line",
-        new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_joint_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_YELLOW_CROSS_LINE,
-        "road_with_cross_line",
-        new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineTop("yellow_cross_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WHITE_OFFSET_LINE,
-        "road_with_straight_line",
-        new FasterJTextures().base("asphalt").lineSide("white_offset_straight_line").lineTop("white_offset_straight_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WHITE_HALF_DOUBLE_LINE,
-        "road_with_straight_line",
-        new FasterJTextures().base("asphalt").lineSide("white_half_double_line").lineTop("white_half_double_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WHITE_DOUBLE_LINE,
-        "road_with_straight_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_double_line").lineTop("white_straight_double_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WHITE_THICK_LINE,
-        "road_with_straight_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_thick_line").lineTop("white_straight_thick_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_YELLOW_OFFSET_LINE,
-        "road_with_straight_line",
-        new FasterJTextures().base("asphalt").lineSide("yellow_offset_straight_line").lineTop("yellow_offset_straight_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_YELLOW_HALF_DOUBLE_LINE,
-        "road_with_straight_line",
-        new FasterJTextures().base("asphalt").lineSide("yellow_half_double_line").lineTop("yellow_half_double_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_YELLOW_DOUBLE_LINE,
-        "road_with_straight_line",
-        new FasterJTextures().base("asphalt").lineSide("yellow_straight_double_line").lineTop("yellow_straight_double_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_YELLOW_THICK_LINE,
-        "road_with_straight_line",
-        new FasterJTextures().base("asphalt").lineSide("yellow_straight_thick_line").lineTop("yellow_straight_thick_line"));
-    writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_WHITE_RA_LINE_OFFSET_OUT,
-        "road_with_angle_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("white_offset_straight_line").lineTop("white_right_angle_line_with_one_part_offset_out"));
-    writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_WHITE_RA_LINE_OFFSET_IN,
-        "road_with_angle_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("white_offset_straight_line2").lineTop("white_right_angle_line_with_one_part_offset_in"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WHITE_TS_DOUBLE_LINE,
-        "road_with_joint_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("white_straight_double_line").lineTop("white_joint_line_with_double_side"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WHITE_TS_THICK_LINE,
-        "road_with_joint_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("white_straight_thick_line").lineTop("white_joint_line_with_thick_side"));
-    writeRoadBlockModelWithSlabWithMirrored(
-        RoadBlocks.ROAD_WITH_WHITE_TS_OFFSET_LINE,
-        "road_with_joint_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("white_offset_straight_line").lineTop("white_joint_line_with_offset_side"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WHITE_THICK_TS_LINE,
-        "road_with_joint_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_thick_line").lineSide2("white_straight_line").lineTop("white_thick_joint_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WHITE_DOUBLE_TS_LINE,
-        "road_with_joint_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_double_line").lineSide2("white_straight_line").lineTop("white_double_joint_line"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_Y_TS_W_LINE,
-        "road_with_joint_line",
-        new FasterJTextures().base("asphalt").lineSide("yellow_straight_line").lineSide2("white_straight_line").lineTop("yellow_joint_line_with_white_side"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_W_TS_Y_LINE,
-        "road_with_joint_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("yellow_straight_line").lineTop("white_joint_line_with_yellow_side"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_W_TS_YD_LINE,
-        "road_with_joint_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_line").lineSide2("yellow_straight_double_line").lineTop("white_joint_line_with_yellow_double_side"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WT_TS_Y_LINE,
-        "road_with_joint_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_thick_line").lineSide2("yellow_straight_line").lineTop("white_thick_joint_line_with_yellow_side"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WT_TS_YD_LINE,
-        "road_with_joint_line",
-        new FasterJTextures().base("asphalt").lineSide("white_straight_thick_line").lineSide2("yellow_straight_double_line").lineTop("white_thick_joint_line_with_yellow_double_side"));
-
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WHITE_AUTO_BA_LINE,
-        "road_with_auto_line",
-        new FasterJTextures()
-            .base("asphalt")
-            .line("white_auto_bevel_angle_line")
-            .particle("asphalt"));
-    writeRoadBlockModelWithSlab(
-        RoadBlocks.ROAD_WITH_WHITE_AUTO_RA_LINE,
-        "road_with_auto_line",
-        new FasterJTextures()
-            .base("asphalt")
-            .line("white_auto_right_angle_line")
-            .particle("asphalt"));
-
-    // 光源部分
-
-    PACK.addModel(
-        new JModel(blockIdentifier("light"))
-            .textures(new JTextures().var("base", blockString("white_light"))),
-        blockIdentifier("white_light"));
-    PACK.addModel(
-        new JModel(blockIdentifier("light"))
-            .textures(new JTextures().var("base", blockString("yellow_light"))),
-        blockIdentifier("yellow_light"));
-    PACK.addModel(
-        new JModel(blockIdentifier("light"))
-            .textures(new JTextures().var("base", blockString("cyan_light"))),
-        blockIdentifier("cyan_light"));
-
   }
 
   @Override
@@ -890,14 +757,14 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     if (includesClient) {
       // 由于注解了 @Environment(CLIENT)，所以考虑到潜在漏洞，在这里进行防冲突检测。
       try {
-        writeAllBlockModels();
+        // 已不再使用： writeAllBlockModels();
         writeAllItemModels();
       } catch (NoSuchMethodError e) {
         Mishanguc.MISHANG_LOGGER.error("Not supported to load client resources in server environment.", e);
       }
     }
 
-    for (Block block : MishangUtils.blocks().values()) {
+    for (Block block : MishangUtils.blocks()) {
       if (block instanceof final BlockResourceGenerator generator) {
         if (includesClient) {
           generator.writeBlockModel(PACK);
@@ -910,7 +777,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         }
       }
     }
-    for (Item item : MishangUtils.items().values()) {
+    for (Item item : MishangUtils.items()) {
       if (item instanceof final ItemResourceGenerator generator) {
 
         if (includesClient) {

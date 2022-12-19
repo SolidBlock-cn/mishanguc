@@ -56,7 +56,7 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
 
   public HandrailCornerBlock(@NotNull T baseHandrail, Settings settings) {
     super(settings);
-    setDefaultState(stateManager.getDefaultState().with(WATERLOGGED, false).with(FACING, HorizontalCornerDirection.SOUTH_WEST));
+    setDefaultState(getDefaultState().with(WATERLOGGED, false).with(FACING, HorizontalCornerDirection.SOUTH_WEST));
     this.baseHandrail = baseHandrail;
   }
 

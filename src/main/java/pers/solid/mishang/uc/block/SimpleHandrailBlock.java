@@ -194,6 +194,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
       super(baseRail, FabricBlockSettings.copyOf(baseRail).nonOpaque());
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
       pack.addModel(new JModel("mishanguc:block/simple_handrail_outer").textures(baseHandrail.getTextures()), getBlockModelId());

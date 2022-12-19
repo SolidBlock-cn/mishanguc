@@ -11,6 +11,8 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.block.AbstractRoadBlock;
+import pers.solid.mishang.uc.block.AbstractRoadSlabBlock;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 
 import java.util.Map;
@@ -85,5 +87,25 @@ public final class BRRPHelper {
       pack.addModel(model.clone().parent(slabParent), slabModelId);
       pack.addModel(model.clone().parent(slabParent + "_top"), slabModelId.brrp_append("_top"));
     }
+  }
+
+  @ApiStatus.AvailableSince("1.1.0")
+  public static void addModelWithSlab(RuntimeResourcePack pack, AbstractRoadBlock block) {
+    final AbstractRoadSlabBlock roadSlab = block.getRoadSlab();
+    addModelWithSlab(pack, block.getBlockModel(), block.getBlockModelId(), roadSlab == null ? null : roadSlab.getBlockModelId());
+  }
+
+  @ApiStatus.AvailableSince("1.1.0")
+  public static void addModelWithSlabWithMirrored(RuntimeResourcePack pack, JModel model, Identifier id, @Nullable Identifier slabModelId) {
+    addModelWithSlab(pack, model, id, slabModelId);
+    if (slabModelId != null) {
+      addModelWithSlab(pack, model.clone().parent(model.parent + "_mirrored"), id.brrp_append("_mirrored"), slabModelId.brrp_append("_mirrored"));
+    }
+  }
+
+  @ApiStatus.AvailableSince("1.1.0")
+  public static void addModelWithSlabWithMirrored(RuntimeResourcePack pack, AbstractRoadBlock block) {
+    final AbstractRoadSlabBlock roadSlab = block.getRoadSlab();
+    addModelWithSlabWithMirrored(pack, block.getBlockModel(), block.getBlockModelId(), roadSlab == null ? null : roadSlab.getBlockModelId());
   }
 }

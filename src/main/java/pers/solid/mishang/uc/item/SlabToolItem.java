@@ -21,6 +21,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
@@ -34,6 +35,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -48,6 +50,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -117,7 +120,29 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
       state = toDoubleSlab(state, RoadSlabBlocks.BLOCK_TO_SLABS.get(block));
     } else {
       final Block slab = ExtShapeBridge.getExtShapeSlabBlock(block);
-      if (slab != null) state = toDoubleSlab(state, slab);
+      if (slab != null) {
+        state = toDoubleSlab(state, slab);
+      } else {
+        // 尝试根据方块的 id 来判断对应的台阶方块。
+        final Identifier id = Registry.BLOCK.getId(block);
+        final String idPath = id.getPath();
+        final Identifier slabId = new Identifier(id.getNamespace(), idPath + "_slab");
+        if (Registry.BLOCK.containsId(slabId)) {
+          state = toDoubleSlab(state, Registry.BLOCK.get(slabId));
+        } else {
+          final Identifier slabId2;
+          if (idPath.endsWith("_bricks") || idPath.endsWith("_tiles")) {
+            slabId2 = new Identifier(id.getNamespace(), idPath.substring(0, idPath.length() - 1) + "_slab");
+          } else if (idPath.endsWith("_planks")) {
+            slabId2 = new Identifier(id.getNamespace(), idPath.substring(0, idPath.length() - 7) + "_slab");
+          } else {
+            slabId2 = null;
+          }
+          if (slabId2 != null && Registry.BLOCK.containsId(slabId2)) {
+            state = toDoubleSlab(state, Registry.BLOCK.get(slabId2));
+          }
+        }
+      }
     }
     if (state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
       return state;
@@ -129,19 +154,27 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
   private static boolean performBreak(World world, BlockPos pos, PlayerEntity miner, boolean isTop) {
     BlockState state = world.getBlockState(pos);
     final Block block = state.getBlock();
-    if (BLOCK_TO_SLAB.containsKey(block)) {
-      state = toDoubleSlab(state, BLOCK_TO_SLAB.get(block));
-    } else if (block instanceof AbstractRoadBlock && RoadSlabBlocks.BLOCK_TO_SLABS.containsKey(block)) {
-      state = toDoubleSlab(state, RoadSlabBlocks.BLOCK_TO_SLABS.get(block));
-    } else {
-      final Block slab = ExtShapeBridge.getExtShapeSlabBlock(block);
-      if (slab != null) state = toDoubleSlab(state, slab);
+    final BlockState doubleSlabState = tryToDoubleSlab(state);
+    if (doubleSlabState != null) {
+      state = doubleSlabState;
     }
     if (state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
       final SlabType slabTypeToSet = isTop ? SlabType.BOTTOM : SlabType.TOP;
       final SlabType slabTypeBroken = isTop ? SlabType.TOP : SlabType.BOTTOM;
-      // 破坏上半砖的情况。
+      // 破坏方块
+      final BlockEntity blockEntity = world.getBlockEntity(pos);
+      final NbtCompound nbt;
+      if (blockEntity != null) {
+        nbt = blockEntity.writeNbt(new NbtCompound());
+        world.removeBlockEntity(pos);
+      } else {
+        nbt = null;
+      }
       final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, slabTypeToSet));
+      final BlockEntity newBlockEntity = world.getBlockEntity(pos);
+      if (newBlockEntity != null && nbt != null) {
+        newBlockEntity.readNbt(nbt);
+      }
       final BlockState brokenState = state.with(Properties.SLAB_TYPE, slabTypeBroken);
       block.onBreak(world, pos, brokenState, miner);
       if (bl1) {
@@ -300,10 +333,10 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
       Object extshape_slab_shape1 = null;
       Method extshape_getBlockOf_method1 = null;
       Class<?> extshape_BlockMappings_class1 = null;
-      Class<?> extshape_BlockShape_class = null;
+      Class<?> extshape_BlockShape_class;
 
       if (FabricLoader.getInstance().isModLoaded("extshape")) try {
-        extshape_BlockMappings_class1 = Class.forName("pers.solid.extshape.mappings.BlockMappings");
+        extshape_BlockMappings_class1 = Class.forName("pers.solid.extshape.util.BlockBiMaps");
         extshape_BlockShape_class = Class.forName("pers.solid.extshape.builder.BlockShape");
         extshape_getBlockOf_method1 = MethodUtils.getAccessibleMethod(extshape_BlockMappings_class1, "getBlockOf", extshape_BlockShape_class, Block.class);
         extshape_slab_shape1 = FieldUtils.getDeclaredField(extshape_BlockShape_class, "SLAB").get(null);
