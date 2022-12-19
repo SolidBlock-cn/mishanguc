@@ -15,7 +15,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.text.*;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Quaternion;
@@ -237,14 +236,8 @@ public class TextContext implements Cloneable {
     if (verticalAlign == null) {
       verticalAlign = VerticalAlign.MIDDLE;
     }
-    final NbtElement nbtColor = nbt.get("color");
-    if (nbtColor instanceof AbstractNbtNumber) {
-      color = ((AbstractNbtNumber) nbtColor).intValue();
-    } else if (nbtColor instanceof NbtString) {
-      final @Nullable DyeColor dyeColor = DyeColor.byName(nbtColor.asString(), null);
-      if (dyeColor != null) {
-        color = dyeColor.getSignColor();
-      }
+    if (nbt.contains("color")) {
+      color = MishangUtils.readColorFromNbtElement(nbt.get("color"));
     }
     shadow = nbt.getBoolean("shadow");
     seeThrough = nbt.getBoolean("seeThrough");

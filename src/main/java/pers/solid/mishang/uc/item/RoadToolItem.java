@@ -23,12 +23,12 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.block.AbstractRoadBlock;
 import pers.solid.mishang.uc.block.AbstractRoadSlabBlock;
 import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.block.RoadWithAutoLine;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
-import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
@@ -38,12 +38,14 @@ public class RoadToolItem extends BlockToolItem implements ItemResourceGenerator
   public RoadToolItem(Settings settings) {
     super(settings, Boolean.FALSE);
   }
+
   @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
     super.appendTooltip(stack, world, tooltip, context);
     tooltip.add(TextBridge.translatable("item.mishanguc.road_tool.tooltip.1", TextBridge.keybind("key.attack").styled(style -> style.withColor(TextColor.fromRgb(0xdddddd)))).formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.road_tool.tooltip.2", TextBridge.keybind("key.use").styled(style -> style.withColor(TextColor.fromRgb(0xdddddd)))).formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.road_tool.tooltip.3").formatted(Formatting.GRAY));
   }
 
   @Override
@@ -52,14 +54,14 @@ public class RoadToolItem extends BlockToolItem implements ItemResourceGenerator
     final BlockState blockState = world.getBlockState(blockPos);
     if (blockState.isOf(RoadBlocks.ROAD_BLOCK)) {
       if (!world.isClient) {
-        world.setBlockState(blockPos, MishangUtils.copyPropertiesFrom(RoadBlocks.ROAD_WITH_WHITE_AUTO_BA_LINE.getDefaultState(), blockState));
+        world.setBlockState(blockPos, MishangUtils.copyPropertiesFrom((player.isSneaking() ? RoadBlocks.ROAD_WITH_WHITE_AUTO_RA_LINE : RoadBlocks.ROAD_WITH_WHITE_AUTO_BA_LINE).getDefaultState(), blockState));
         player.getStackInHand(hand).damage(1, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
         player.sendMessage(TextBridge.translatable("item.mishanguc.road_tool.message.painted"), true);
       }
       return ActionResult.SUCCESS;
-    } else if (blockState.isOf(RoadSlabBlocks.ROAD_SLAB)) {
+    } else if (blockState.isOf(RoadBlocks.ROAD_BLOCK.getRoadSlab())) {
       if (!world.isClient) {
-        world.setBlockState(blockPos, MishangUtils.copyPropertiesFrom(RoadSlabBlocks.ROAD_SLAB_WITH_WHITE_AUTO_BA_LINE.getDefaultState(), blockState));
+        world.setBlockState(blockPos, MishangUtils.copyPropertiesFrom((player.isSneaking() ? RoadBlocks.ROAD_WITH_WHITE_AUTO_RA_LINE : RoadBlocks.ROAD_WITH_WHITE_AUTO_BA_LINE).getDefaultState(), blockState));
         player.getStackInHand(hand).damage(1, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
         player.sendMessage(TextBridge.translatable("item.mishanguc.road_tool.message.painted"), true);
       }
@@ -67,9 +69,14 @@ public class RoadToolItem extends BlockToolItem implements ItemResourceGenerator
     } else if (blockState.getBlock() instanceof RoadWithAutoLine) {
       final RoadWithAutoLine roadWithAutoLine = (RoadWithAutoLine) blockState.getBlock();
       if (!world.isClient) {
-        final BlockState newState = roadWithAutoLine.makeState(roadWithAutoLine.getConnectionStateMap(world, blockPos), blockState);
-        world.setBlockState(blockPos, newState);
-        player.sendMessage(TextBridge.translatable("item.mishanguc.road_tool.message.converted"), true);
+        try {
+          final BlockState newState = roadWithAutoLine.makeState(roadWithAutoLine.getConnectionStateMap(world, blockPos), blockState);
+          world.setBlockState(blockPos, newState);
+          player.sendMessage(TextBridge.translatable("item.mishanguc.road_tool.message.converted"), true);
+        } catch (Throwable throwable) {
+          Mishanguc.MISHANG_LOGGER.error("An error was found when converting block state at {}:", blockPos, throwable);
+          player.sendMessage(TextBridge.translatable("item.mishanguc.road_tool.message.error").formatted(Formatting.RED), true);
+        }
       }
       return ActionResult.SUCCESS;
     } else if (!(blockState.getBlock() instanceof Road)) {
@@ -96,7 +103,7 @@ public class RoadToolItem extends BlockToolItem implements ItemResourceGenerator
       return ActionResult.SUCCESS;
     } else if (block instanceof AbstractRoadSlabBlock) {
       if (!world.isClient) {
-        world.setBlockState(pos, MishangUtils.copyPropertiesFrom(RoadSlabBlocks.ROAD_SLAB.getDefaultState(), blockState));
+        world.setBlockState(pos, MishangUtils.copyPropertiesFrom(RoadBlocks.ROAD_BLOCK.getRoadSlab().getDefaultState(), blockState));
         player.sendMessage(TextBridge.translatable("item.mishanguc.road_tool.message.cleared"), true);
         player.getStackInHand(hand).damage(1, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
       }

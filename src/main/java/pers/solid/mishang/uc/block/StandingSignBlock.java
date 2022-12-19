@@ -87,7 +87,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   public StandingSignBlock(@Nullable Block baseBlock, Settings settings) {
     super(settings);
     this.baseBlock = baseBlock;
-    setDefaultState(stateManager.getDefaultState().with(WATERLOGGED, false).with(ROTATION, 0).with(DOWN, true));
+    setDefaultState(getDefaultState().with(WATERLOGGED, false).with(ROTATION, 0).with(DOWN, true));
   }
 
   public StandingSignBlock(@NotNull Block baseBlock) {

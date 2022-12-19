@@ -21,11 +21,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -67,7 +69,8 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockHitResult.getBlockPos(), player, player.getStackInHand(hand), blockHitResult, fluidIncluded);
     blockPlacementContext.playSound();
     // 放置方块。对客户端和服务器均生效。
-    blockPlacementContext.setBlockState(0b11010);
+    int flags = getFlags(stack);
+    blockPlacementContext.setBlockState(flags);
     blockPlacementContext.setBlockEntity();
     return ActionResult.success(world.isClient);
   }
@@ -84,9 +87,19 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     FluidState fluidState = blockState.getFluidState();
     // 在破坏时，直接先将其内容清除。
     world.removeBlockEntity(pos);
-    world.setBlockState(pos, fluidIncluded ? Blocks.AIR.getDefaultState() : fluidState.getBlockState(), 24);
+    int flags = getFlags(stack);
+    world.setBlockState(pos, fluidIncluded ? Blocks.AIR.getDefaultState() : fluidState.getBlockState(), flags);
     return ActionResult.success(world.isClient);
   }
+
+  private static int getFlags(ItemStack stack) {
+    int flags = 0b11010;
+    if (stack.getTag() != null && stack.getTag().getBoolean("suspendsLightUpdate")) {
+      flags |= 128;
+    }
+    return flags;
+  }
+
   @Environment(EnvType.CLIENT)
   @Override
   public void appendTooltip(
@@ -106,6 +119,10 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     tooltip.add(
         TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.3")
             .formatted(Formatting.GRAY));
+    if ((getFlags(stack) & 128) != 0) {
+      tooltip.add(TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.suspends_light")
+          .formatted(Formatting.YELLOW));
+    }
   }
 
   @Environment(EnvType.CLIENT)
@@ -230,6 +247,16 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       }
     }
     return ActionResult.SUCCESS;
+  }
+
+  @Override
+  public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
+    if (this.isIn(group)) {
+      stacks.add(new ItemStack(this));
+      final ItemStack newStack = getDefaultStack();
+      newStack.getOrCreateTag().putBoolean("suspendsLightUpdate", true);
+      stacks.add(newStack);
+    }
   }
 
   /**

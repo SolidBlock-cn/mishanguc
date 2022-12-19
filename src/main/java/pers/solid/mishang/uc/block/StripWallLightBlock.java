@@ -40,7 +40,7 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
       MishangUtils.createDirectionToShape(4, 0, 0, 12, 2, 16);
 
   public StripWallLightBlock(String lightColor, Settings settings) {
-    super(lightColor, settings);
+    super(lightColor, settings, false);
   }
 
   @Override
@@ -135,6 +135,12 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
           return this;
       }
     }
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
+    return stateFrom.isOf(this) && ((LightConnectable) stateFrom.getBlock()).isConnectedIn(stateFrom, state.get(FACING), direction.getOpposite()) || super.isSideInvisible(state, stateFrom, direction);
   }
 
   @Environment(EnvType.CLIENT)

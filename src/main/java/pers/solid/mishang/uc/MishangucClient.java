@@ -6,12 +6,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.fabricmc.fabric.api.util.NbtType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.render.RenderLayer;
@@ -22,13 +24,10 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.apache.commons.lang3.BooleanUtils;
-import pers.solid.mishang.uc.annotations.Cutout;
-import pers.solid.mishang.uc.annotations.Translucent;
-import pers.solid.mishang.uc.block.ColoredBlock;
-import pers.solid.mishang.uc.block.HandrailBlock;
-import pers.solid.mishang.uc.block.Road;
-import pers.solid.mishang.uc.block.StandingSignBlock;
+import org.apache.commons.lang3.Validate;
+import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.blockentity.*;
+import pers.solid.mishang.uc.blocks.MishangucBlocks;
 import pers.solid.mishang.uc.item.CarryingToolItem;
 import pers.solid.mishang.uc.item.DataTagToolItem;
 import pers.solid.mishang.uc.item.MishangucItems;
@@ -38,6 +37,7 @@ import pers.solid.mishang.uc.screen.StandingSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
 
 import java.awt.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
@@ -51,6 +51,10 @@ public class MishangucClient implements ClientModInitializer {
    * @see MishangucRules#CARRYING_TOOL_ACCESS
    */
   public static final AtomicReference<MishangucRules.ToolAccess> CLIENT_CARRYING_TOOL_ACCESS = new AtomicReference<>(MishangucRules.ToolAccess.ALL);
+  /**
+   * @see MishangucRules#SUSPENDS_BLOCK_LIGHT_UPDATE
+   */
+  public static final AtomicBoolean CLIENT_SUSPENDS_LIGHT_UPDATE = FabricLoader.getInstance().isDevelopmentEnvironment() ? new AtomicBoolean(false) : null;
 
   @Override
   public void onInitializeClient() {
@@ -68,6 +72,13 @@ public class MishangucClient implements ClientModInitializer {
     registerNetworking();
 
     registerModelPredicateProviders();
+
+    if (CLIENT_SUSPENDS_LIGHT_UPDATE != null) {
+      ClientPlayConnectionEvents.INIT.register((handler, client) -> {
+        CLIENT_SUSPENDS_LIGHT_UPDATE.set(false);
+        MishangucRules.currentRoadBoostSpeed = 1.75;
+      });
+    }
   }
 
   private static void registerModelPredicateProviders() {
@@ -117,7 +128,7 @@ public class MishangucClient implements ClientModInitializer {
 
   private static void registerBlockColors() {
     // 注册方块和颜色
-    final Block[] coloredBlocks = MishangUtils.blocks().values().stream().filter(Predicates.instanceOf(ColoredBlock.class))
+    final Block[] coloredBlocks = MishangUtils.blocks().stream().filter(Predicates.instanceOf(ColoredBlock.class))
         .flatMap(block -> block instanceof HandrailBlock ? Stream.of(((HandrailBlock) block), ((HandrailBlock) block).central(), ((HandrailBlock) block).corner(), ((HandrailBlock) block).stair(), ((HandrailBlock) block).outer()) : Stream.of(block))  // since 0.2.4 用于可着色的栏杆方块及其变种
         .toArray(Block[]::new);
     ColorProviderRegistry.BLOCK.register(
@@ -186,25 +197,14 @@ public class MishangucClient implements ClientModInitializer {
 
   private static void registerBlockLayers() {
     // 设置相应的 BlockLayer
-    MishangUtils.blocks().forEach((field, value) -> {
-      try {
-        if (field.isAnnotationPresent(Cutout.class)) {
-          BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout());
-          if (value instanceof HandrailBlock) {
-            HandrailBlock handrailBlock = (HandrailBlock) value;
-            BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer());
-          }
-        }
-        if (field.isAnnotationPresent(Translucent.class)) {
-          BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getTranslucent());
-          if (value instanceof HandrailBlock) {
-            HandrailBlock handrailBlock = (HandrailBlock) value;
-            BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer());
-          }
-        }
-      } catch (Throwable e) {
-        Mishanguc.MISHANG_LOGGER.warn("Error when setting BlockLayers:", e);
+    Validate.notEmpty(MishangucBlocks.translucentBlocks).forEach(block -> BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getTranslucent()));
+    Validate.notEmpty(MishangucBlocks.cutoutBlocks).forEach(block -> {
+      BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout());
+      if (block instanceof AbstractRoadBlock && ((AbstractRoadBlock) block).getRoadSlab() != null) {
+        BlockRenderLayerMap.INSTANCE.putBlock(((AbstractRoadBlock) block).getRoadSlab(), RenderLayer.getCutout());
       }
     });
+    MishangucBlocks.translucentBlocks = null;
+    MishangucBlocks.cutoutBlocks = null;
   }
 }

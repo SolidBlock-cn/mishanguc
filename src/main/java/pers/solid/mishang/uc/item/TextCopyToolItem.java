@@ -171,10 +171,10 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
           // 如果点击的方向不正确，则无法复制和粘贴文本。
           player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.wrong_side",
               // 无效的一侧：
-              new TranslatableText("direction." + hitSide.getName()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xeecc44))),
+              new TranslatableText("direction." + hitSide.getName()).styled(style -> style.withColor(TextColor.fromRgb(0xeecc44))),
               // 有效的两侧：
-              new TranslatableText("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xb3ee45))),
-              new TranslatableText("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xb3ee45)))
+              new TranslatableText("direction." + validDirections.next()).styled(style -> style.withColor(TextColor.fromRgb(0xb3ee45))),
+              new TranslatableText("direction." + validDirections.next()).styled(style -> style.withColor(TextColor.fromRgb(0xb3ee45)))
           ).formatted(Formatting.RED), true);
           return ActionResult.FAIL;
         }
@@ -283,10 +283,10 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
           // 如果点击的方向不正确，则无法复制和粘贴文本。
           player.sendMessage(new TranslatableText("item.mishanguc.text_copy_tool.message.fail.wrong_side",
               // 无效的一侧：
-              new TranslatableText("direction." + direction.getName()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xeecc44))),
+              new TranslatableText("direction." + direction.getName()).styled(style -> style.withColor(TextColor.fromRgb(0xeecc44))),
               // 有效的两侧：
-              new TranslatableText("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xb3ee45))),
-              new TranslatableText("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xb3ee45)))
+              new TranslatableText("direction." + validDirections.next()).styled(style -> style.withColor(TextColor.fromRgb(0xb3ee45))),
+              new TranslatableText("direction." + validDirections.next()).styled(style -> style.withColor(TextColor.fromRgb(0xb3ee45)))
           ).formatted(Formatting.RED), false);
           return ActionResult.FAIL;
         }

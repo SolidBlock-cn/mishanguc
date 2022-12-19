@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.blockentity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.item.NamedBlockItem;
 
 public class ColoredStandingSignBlockEntity extends StandingSignBlockEntity implements ColoredBlockEntity {
@@ -14,7 +15,7 @@ public class ColoredStandingSignBlockEntity extends StandingSignBlockEntity impl
   @Override
   public void fromTag(BlockState blockState, NbtCompound nbt) {
     super.fromTag(blockState, nbt);
-    color = nbt.getInt("color");
+    color = MishangUtils.readColorFromNbtElement(nbt.get("color"));
     if (world != null && world.isClient) {
       world.updateListeners(pos, this.getCachedState(), this.getCachedState(), 3);
     }

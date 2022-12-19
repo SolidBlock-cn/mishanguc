@@ -39,7 +39,7 @@ public class TpToolItem extends Item {
     final TypedActionResult<ItemStack> data = super.use(world, user, hand);
     if (world.isClient) return data;
     final Vec3d oldPos = user.getPos();
-    final HitResult raycast = user.raycast(64, 0, user.isSneaking());
+    final HitResult raycast = user.raycast(256, 0, user.isSneaking());
     if (raycast.getType() == HitResult.Type.MISS) {
       return TypedActionResult.fail(data.getValue());
     }

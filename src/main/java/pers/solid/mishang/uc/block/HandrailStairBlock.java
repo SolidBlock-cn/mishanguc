@@ -67,7 +67,7 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   protected HandrailStairBlock(@NotNull T baseHandrail, Settings settings) {
     super(settings);
     this.baseHandrail = baseHandrail;
-    setDefaultState(stateManager.getDefaultState()
+    setDefaultState(getDefaultState()
         .with(WATERLOGGED, false)
         .with(POSITION, Position.CENTER)
         .with(FACING, Direction.SOUTH)

@@ -49,16 +49,19 @@ public class GlassHandrailBlock extends HandrailBlock {
     outer = outerProvider.apply(this);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public @NotNull JModel getBlockModel() {
     return new JModel("mishanguc:block/glass_handrail").textures(getTextures());
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public @Nullable JModel getItemModel() {
     return new JModel().parent("mishanguc:block/glass_handrail_inventory").textures(getTextures());
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public @NotNull JTextures getTextures() {
     return new JTextures().var("frame", frameTexture).var("glass", "mishanguc:block/glass_unframed").var("decoration", decorationTexture);
@@ -122,8 +125,9 @@ public class GlassHandrailBlock extends HandrailBlock {
       super(baseRail, FabricBlockSettings.copyOf(baseRail).nonOpaque());
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
-    public @Nullable JModel getBlockModel() {
+    public @NotNull JModel getBlockModel() {
       return baseHandrail.getBlockModel().parent("mishanguc:block/glass_handrail_corner");
     }
   }
@@ -164,8 +168,9 @@ public class GlassHandrailBlock extends HandrailBlock {
       return TextBridge.translatable("block.mishanguc.handrail_outer", MishangUtils.getBlockName(baseHandrail));
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
-    public @Nullable JModel getBlockModel() {
+    public @NotNull JModel getBlockModel() {
       return baseHandrail.getBlockModel().parent("mishanguc:block/glass_handrail_outer");
     }
   }

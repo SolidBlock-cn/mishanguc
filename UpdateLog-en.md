@@ -2,6 +2,34 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.1.0
+
+Updated following content:
+
+- Added features related to block light.
+- Adjusted the order of light blocks。
+- Now same and connected strip light can have invisible face culled.
+- Adjusted the outline shape of large wall light and light tube to encompass the whole look.
+- Added thick stripped light; in former versions there were only stripp light tubes.
+- Added medium wall lights and light tubes.
+- Added column lights, column light tubes, light slabs, and light covers.
+- Tweaked the texture of three types of lights.
+- Added light round decorations for other colors; in former versions there was only one for white.
+- Wall lights can be placed on blocks with an empty side shape (such as with empty collision shape).
+- Added orange, green, and pink lights.
+- Added multiple road blocks, such as road with angle line with two parts offset, roads with T-shaped line with offset side, road with two bevel angle lines, and roads with different-color double lines.
+- The `color` field of NBT data of color tool, colored blocks, sign texts, now supports multiple formats, including:
+    - integers, such as `16777215`.
+    - texts indicating the text color, such as `"red"`.
+    - array, in the order of RGBA, such as `[0, 255, 0]`.
+    - objects, such as `{signColor: red}`, `{fireworkColor: red}`, and `{mapColor: red}`.
+- Optimized the code, including code related to data generation and block registration.
+- Roads with auto lines can more smartly handle offsets of line.
+- Roads with auto lines, when generating lines, can catch the exceptions if there are any thrown.
+- Changed the model of `mishanguc:block/road_with_angle_line`. Now the two sides on west and east use texture `#lineSide` and the south side uses `#lineSide2`.
+- Adjusted the distance limit of tp tool from 64 blocks to 256 blocks.
+- Added game rule `mishanguc:road_boost_speed` to adjust the speed when stepping on road blocks, which defaults to 1.75.
+
 ### 1.0.4
 
 Updated following content:

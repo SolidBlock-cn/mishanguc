@@ -31,7 +31,6 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
-import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
 import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
@@ -94,7 +93,7 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       this.lineColorSide = lineColorSide;
       this.lineTypeSide = lineTypeSide;
       if (hasBevelTopProperty) {
-        setDefaultState(stateManager.getDefaultState().with(BEVEL_TOP, false));
+        setDefaultState(getDefaultState().with(BEVEL_TOP, false));
       }
     }
 
@@ -196,11 +195,12 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       return JBlockStates.ofVariants(variants);
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public @NotNull JModel getBlockModel() {
       final JModel model = new JModel("mishanguc:block/road_with_straight_and_angle_line");
       final String lineTopStraight = MishangUtils.composeStraightLineTexture(lineColor, lineType);
-      final String lineTopAngle = MishangUtils.composeAngleLineTexture(lineColorSide, true);
+      final String lineTopAngle = MishangUtils.composeAngleLineTexture(lineColorSide, LineType.NORMAL, true);
       final String lineSide = lineTopStraight;
       final String lineSide2 = MishangUtils.composeStraightLineTexture(lineColorSide, lineTypeSide);
       model.textures(FasterJTextures.ofP(
@@ -212,12 +212,13 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       return model;
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
       // 此方法会同时写入 slab 的模型。
       final JModel model = getBlockModel();
       final Identifier blockModelId = getBlockModelId();
-      final AbstractRoadSlabBlock slabBlock = RoadSlabBlocks.BLOCK_TO_SLABS.get(this);
+      final AbstractRoadSlabBlock slabBlock = getRoadSlab();
       final Identifier slabModelId = slabBlock == null ? null : slabBlock.getBlockModelId();
       BRRPHelper.addModelWithSlab(pack, model, blockModelId, slabModelId);
       final JTextures textures = model.textures;

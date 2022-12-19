@@ -1,8 +1,10 @@
 package pers.solid.mishang.uc.block;
 
+import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.blockstate.JBlockModel;
 import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.blockstate.JVariants;
+import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -19,10 +21,10 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.util.HorizontalCornerDirection;
-import pers.solid.mishang.uc.util.LineColor;
-import pers.solid.mishang.uc.util.LineType;
-import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.arrp.BRRPHelper;
+import pers.solid.mishang.uc.arrp.FasterJTextures;
+import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
 
@@ -70,6 +72,16 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
   }
 
   @Override
+  default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
+    final RoadConnectionState connectionState = RoadWithAngleLine.super.getConnectionStateOf(state, direction);
+    if (connectionState.mayConnect() && direction.getAxis() != state.get(AXIS)) {
+      return connectionState.createWithOffset(LineOffset.of(state.get(FACING).getDirectionInAxis(direction.rotateYClockwise().getAxis()).getOpposite(), offsetOutwards()));
+    } else {
+      return connectionState;
+    }
+  }
+
+  @Override
   default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
     return RoadWithAngleLine.super
         .withPlacementState(state, ctx)
@@ -88,9 +100,21 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
             .formatted(Formatting.GRAY));
   }
 
+  int offsetOutwards();
+
   class Impl extends RoadWithAngleLine.Impl implements RoadWithAngleLineWithOnePartOffset {
-    public Impl(Settings settings, LineColor lineColor, boolean isBevel) {
-      super(settings, lineColor, LineType.NORMAL, isBevel);
+    private final String lineSide2;
+    private final int offsetOutwards;
+
+    public Impl(Settings settings, LineColor lineColor, boolean isBevel, String lineSide, String lineTop, int offsetOutwards) {
+      super(settings, lineColor, LineType.NORMAL, lineSide, isBevel, lineTop);
+      this.lineSide2 = MishangUtils.composeStraightLineTexture(lineColor, LineType.NORMAL);
+      this.offsetOutwards = offsetOutwards;
+    }
+
+    @Override
+    public int offsetOutwards() {
+      return offsetOutwards;
     }
 
     @Environment(EnvType.CLIENT)
@@ -119,6 +143,22 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
                 .y((int) (direction.asRotation())));
       }
       return JBlockStates.ofVariants(variant);
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public @NotNull JModel getBlockModel() {
+      return new JModel("mishanguc:block/road_with_angle_line")
+          .textures(new FasterJTextures().base("asphalt")
+              .lineSide(lineSide)
+              .lineSide2(lineSide2)
+              .lineTop(lineTop));
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public void writeBlockModel(RuntimeResourcePack pack) {
+      BRRPHelper.addModelWithSlabWithMirrored(pack, RoadWithAngleLineWithOnePartOffset.Impl.this);
     }
   }
 }

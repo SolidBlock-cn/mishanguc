@@ -1,10 +1,8 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.datafixers.util.Either;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -23,6 +21,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.Mishanguc;
+import pers.solid.mishang.uc.util.EightHorizontalDirection;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -38,8 +38,16 @@ public interface RoadWithAutoLine extends Road {
    * @param defaultState       默认方块状态。
    * @return 转换后的方块状态。
    */
-  BlockState makeState(
-      EnumMap<Direction, RoadConnectionState> connectionStateMap, BlockState defaultState);
+  BlockState makeState(EnumMap<Direction, RoadConnectionState> connectionStateMap, BlockState defaultState);
+
+  default BlockState tryMakeState(EnumMap<Direction, RoadConnectionState> connectionStateMap, BlockState defaultState, BlockPos pos) {
+    try {
+      return makeState(connectionStateMap, defaultState);
+    } catch (Throwable throwable) {
+      Mishanguc.MISHANG_LOGGER.error("An error was found when converting road block at {}:", pos, throwable);
+      return defaultState;
+    }
+  }
 
   /**
    * 获取附近的连接状态映射。
@@ -62,7 +70,7 @@ public interface RoadWithAutoLine extends Road {
           break;
         }
       }
-      connectionStateMap.put(direction, state == null ? RoadConnectionState.empty(Blocks.AIR.getDefaultState()) : state);
+      connectionStateMap.put(direction, state == null ? RoadConnectionState.empty() : state);
     }
     return connectionStateMap;
   }
@@ -71,7 +79,7 @@ public interface RoadWithAutoLine extends Road {
   default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
     return Road.super
         .getConnectionStateOf(state, direction)
-        .or(new RoadConnectionState(RoadConnectionState.WhetherConnected.MAY_CONNECT, getLineColor(state, direction), Either.left(direction), LineType.NORMAL, state));
+        .or(new RoadConnectionState(RoadConnectionState.WhetherConnected.MAY_CONNECT, getLineColor(state, direction), EightHorizontalDirection.of(direction), LineType.NORMAL));
   }
 
   @Override
@@ -94,7 +102,7 @@ public interface RoadWithAutoLine extends Road {
         && !Direction.Type.VERTICAL.test(hit.getSide())) {
       return ActionResult.PASS;
     }
-    world.setBlockState(pos, makeState(getConnectionStateMap(world, pos), state), 2);
+    world.setBlockState(pos, tryMakeState(getConnectionStateMap(world, pos), state, pos), 2);
     return ActionResult.SUCCESS;
   }
 
@@ -106,7 +114,7 @@ public interface RoadWithAutoLine extends Road {
         && !sourcePos.equals(pos.down())
         && !(world.getBlockState(sourcePos).getBlock() instanceof AirBlock)) {
       // flags设为2从而使得 <code>flags&1 !=0</code> 不成立，从而不递归更新邻居，参考 {@link World#setBlockState}。
-      world.setBlockState(pos, makeState(getConnectionStateMap(world, pos), state), 2);
+      world.setBlockState(pos, tryMakeState(getConnectionStateMap(world, pos), state, pos), 2);
     }
     Road.super.neighborRoadUpdate(state, world, pos, sourceBlock, sourcePos, notify);
   }

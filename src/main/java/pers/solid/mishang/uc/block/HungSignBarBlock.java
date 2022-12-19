@@ -78,7 +78,7 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
   public HungSignBarBlock(@Nullable Block baseBlock, Settings settings) {
     super(settings);
     this.baseBlock = baseBlock;
-    this.setDefaultState(this.stateManager.getDefaultState()
+    this.setDefaultState(getDefaultState()
         .with(WATERLOGGED, false)
         .with(AXIS, Direction.Axis.X)
         .with(LEFT, true)
