@@ -163,7 +163,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         if (!axis.test(hitSide)) {
           final Iterator<Direction> validDirections = Arrays.stream(Direction.values()).filter(axis).iterator();
           // 如果点击的方向不正确，则无法复制和粘贴文本。
-          player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.wrong_side", TextBridge.translatable("direction." + hitSide.getName()).setStyle(Style.EMPTY.withColor(0xeecc44)), TextBridge.translatable("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(0xb3ee45)), TextBridge.translatable("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(0xb3ee45))).formatted(Formatting.RED), true);
+          player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.wrong_side", TextBridge.translatable("direction." + hitSide.getName()).styled(style -> style.withColor(0xeecc44)), TextBridge.translatable("direction." + validDirections.next()).styled(style -> style.withColor(0xb3ee45)), TextBridge.translatable("direction." + validDirections.next()).styled(style -> style.withColor(0xb3ee45))).formatted(Formatting.RED), true);
           return ActionResult.FAIL;
         }
         final HashMap<@NotNull Direction, @Unmodifiable @NotNull List<@NotNull TextContext>> newTexts = new HashMap<>(hungSignBlockEntity.texts);
@@ -266,7 +266,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         if (!axis.test(direction)) {
           final Iterator<Direction> validDirections = Arrays.stream(Direction.values()).filter(axis).iterator();
           // 如果点击的方向不正确，则无法复制和粘贴文本。
-          player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.wrong_side", TextBridge.translatable("direction." + direction.getName()).setStyle(Style.EMPTY.withColor(0xeecc44)), TextBridge.translatable("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(0xb3ee45)), TextBridge.translatable("direction." + validDirections.next()).setStyle(Style.EMPTY.withColor(0xb3ee45))).formatted(Formatting.RED), true);
+          player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.wrong_side", TextBridge.translatable("direction." + direction.getName()).styled(style -> style.withColor(0xeecc44)), TextBridge.translatable("direction." + validDirections.next()).styled(style -> style.withColor(0xb3ee45)), TextBridge.translatable("direction." + validDirections.next()).styled(style -> style.withColor(0xb3ee45))).formatted(Formatting.RED), true);
           return ActionResult.FAIL;
         }
         final List<@NotNull TextContext> textContexts = hungSignBlockEntity.texts.getOrDefault(direction, ImmutableList.of());

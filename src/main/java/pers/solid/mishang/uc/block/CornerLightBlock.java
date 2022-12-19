@@ -49,11 +49,9 @@ public class CornerLightBlock extends HorizontalFacingBlock
   public CornerLightBlock(String lightColor, Settings settings) {
     super(settings);
     this.lightColor = lightColor;
-    this.setDefaultState(
-        this.stateManager
-            .getDefaultState()
-            .with(WATERLOGGED, false)
-            .with(BLOCK_HALF, BlockHalf.BOTTOM));
+    this.setDefaultState(getDefaultState()
+        .with(WATERLOGGED, false)
+        .with(BLOCK_HALF, BlockHalf.BOTTOM));
   }
 
   @Nullable
@@ -163,7 +161,7 @@ public class CornerLightBlock extends HorizontalFacingBlock
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JModel getBlockModel() {
+  public @NotNull JModel getBlockModel() {
     return new JModel(getModelParent())
         .textures(new FasterJTextures().varP("light", lightColor + "_light"));
   }

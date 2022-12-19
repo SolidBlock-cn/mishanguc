@@ -8,6 +8,7 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.item.NamedBlockItem;
 
 public class SimpleColoredBlockEntity extends BlockEntity implements ColoredBlockEntity {
@@ -31,7 +32,7 @@ public class SimpleColoredBlockEntity extends BlockEntity implements ColoredBloc
   @Override
   public void readNbt(NbtCompound nbt) {
     super.readNbt(nbt);
-    color = nbt.getInt("color");
+    color = MishangUtils.readColorFromNbtElement(nbt.get("color"));
     if (world != null && world.isClient) {
       world.updateListeners(pos, this.getCachedState(), this.getCachedState(), 3);
     }

@@ -5,7 +5,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -46,7 +45,12 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem {
           final RoadConnectionState connectionState =
               road.getConnectionStateOf(blockState, direction);
           playerEntity.sendMessage(
-              TextBridge.translatable("debug.mishanguc.roadConnectionState.brief", RoadConnectionState.text(direction), RoadConnectionState.text(connectionState.direction()).formatted(Formatting.WHITE), RoadConnectionState.text(connectionState.lineColor()), RoadConnectionState.text(connectionState.lineType()).formatted(Formatting.WHITE), RoadConnectionState.text(connectionState.whetherConnected())).setStyle(Style.EMPTY.withColor(0xcccccc)),
+              TextBridge.translatable("debug.mishanguc.roadConnectionState.brief",
+                  RoadConnectionState.text(direction),
+                  (connectionState.offsetLevel() == 0 ? RoadConnectionState.text(connectionState.direction()) : TextBridge.translatable("debug.mishanguc.roadConnectionState.offset", RoadConnectionState.text(direction), RoadConnectionState.text(connectionState.offsetDirection()), connectionState.offsetLevel())).formatted(Formatting.WHITE),
+                  RoadConnectionState.text(connectionState.lineColor()),
+                  RoadConnectionState.text(connectionState.lineType()).formatted(Formatting.WHITE),
+                  RoadConnectionState.text(connectionState.whetherConnected())).styled(style -> style.withColor(0xcccccc)),
               false);
         });
     return ActionResult.SUCCESS;
