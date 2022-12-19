@@ -36,7 +36,7 @@
     "minecraft": [
       ">=1.19.1"
     ],
-    "better_runtime_resource_pack": ">=0.8.0"
+    "better_runtime_resource_pack": ">=0.8.2"
   },
   "breaks": {
     "minecraft": ">=1.19.3"
