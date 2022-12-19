@@ -2,9 +2,11 @@
 
 Mishang Urban Construction is a mod related to building and decorations, which provides an array of useful blocks, including:
 
-- Road blocks: can be painted lines to appear realistic, and standing on road blocks can accelerate;
+- Road blocks: can be painted lines to appear realistic, and standing on road blocks can accelerate; The road lines have various combinations, and can be automatically generated in some situations.
+- Road marks: road marks that can be placed on the road, such as guide arrows; can also be placed on road slabs.
+- Light: have various shapes, and have different colors: white, yellow, orange, cyan, green, and pink. There are full light blocks, as well as decorations that can be placed on wall, floor, or the ceiling.
 - Sign blocks: have different styles, and compared to vanilla signs, signs in this mod can flexibly adjust parameters such as color, size and position.
-- Handrail blocks: have various connecting mode, and can be placed on stairs.
+- Handrail blocks: have various textures, outlook and connecting method, and can be placed on stairs.
 - Blocks with customizable colors.
 
 Moreover, the mod contains a series of useful tools, such as:

@@ -27,6 +27,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
@@ -53,16 +54,17 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
           });
   private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION =
       MishangUtils.createDirectionToShape(4, 0, 4, 12, 2, 12);
+  private static final Map<Direction, VoxelShape> LARGE_SHAPE_PER_DIRECTION = MishangUtils.createDirectionToShape(2, 0, 2, 14, 2, 14);
   public final String lightColor;
+  protected final boolean largeShape;
 
-  public WallLightBlock(String lightColor, Settings settings) {
+  public WallLightBlock(String lightColor, Settings settings, boolean largeShape) {
     super(settings);
     this.lightColor = lightColor;
-    this.setDefaultState(
-        this.stateManager
-            .getDefaultState()
-            .with(Properties.WATERLOGGED, false)
-            .with(FACING, Direction.UP));
+    this.largeShape = largeShape;
+    this.setDefaultState(getDefaultState()
+        .with(Properties.WATERLOGGED, false)
+        .with(FACING, Direction.UP));
   }
 
   @SuppressWarnings("deprecation")
@@ -70,9 +72,8 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
   public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
     Direction direction = state.get(FACING).getOpposite();
     BlockPos blockPos = pos.offset(direction);
-    return world
-        .getBlockState(blockPos)
-        .isSideSolid(world, blockPos, direction.getOpposite(), SideShapeType.CENTER);
+    final BlockState blockState = world.getBlockState(blockPos);
+    return !blockState.getSidesShape(world, pos).getFace(direction.getOpposite()).isEmpty() || !blockState.getOutlineShape(world, pos).getFace(direction.getOpposite()).isEmpty();
   }
 
   @Override
@@ -137,7 +138,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
   @SuppressWarnings({"deprecation"})
   public VoxelShape getOutlineShape(
       BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-    return SHAPE_PER_DIRECTION.get(state.get(FACING));
+    return (largeShape ? LARGE_SHAPE_PER_DIRECTION : SHAPE_PER_DIRECTION).get(state.get(FACING));
   }
 
   @SuppressWarnings("deprecation")
@@ -166,7 +167,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JModel getBlockModel() {
+  public @NotNull JModel getBlockModel() {
     return new JModel(getModelParent())
         .textures(new FasterJTextures().varP("light", lightColor + "_light"));
   }

@@ -2,6 +2,7 @@
   "values": [
     "#mishanguc:corner_lights",
     "#mishanguc:wall_lights",
+    "#mishanguc:column_lights",
     "#mishanguc:light_decorations"
   ]
 }

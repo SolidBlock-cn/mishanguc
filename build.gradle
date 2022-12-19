@@ -48,7 +48,7 @@ dependencies {
     def brrp_mc_version = project.hasProperty("brrp_mc_version") ? project.brrp_mc_version : project.minecraft_version
 
     // BRRP.
-    modImplementation("net.devtech:brrp-fabric:${project.brrp_version}-${brrp_mc_version}") {
+    modImplementation("pers.solid:brrp-fabric:${project.brrp_version}-${brrp_mc_version}") {
         exclude group: "net.fabricmc.fabric-api"
     }
 }

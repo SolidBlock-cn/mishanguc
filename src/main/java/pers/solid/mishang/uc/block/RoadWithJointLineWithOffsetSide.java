@@ -1,9 +1,12 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.datafixers.util.Either;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.blockstate.JBlockModel;
 import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.blockstate.JVariants;
+import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -26,6 +29,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
+import pers.solid.mishang.uc.arrp.BRRPHelper;
+import pers.solid.mishang.uc.arrp.FasterJTextures;
 import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
@@ -58,8 +63,9 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
     return RoadConnectionState.of(
         state.get(FACING).hasDirection(direction) || state.get(AXIS).test(direction),
         getLineColor(state, direction),
-        Either.left(direction.getOpposite()),
-        LineType.NORMAL, state);
+        EightHorizontalDirection.of(direction.getOpposite()),
+        getLineType(state, direction),
+        state.get(AXIS).test(direction) ? null : new LineOffset(state.get(FACING).getDirectionInAxis(state.get(AXIS)), offsetLevel()));
   }
 
   @Override
@@ -77,8 +83,7 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
 
   @Override
   default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
-    final HorizontalCornerDirection facing =
-        HorizontalCornerDirection.fromRotation(ctx.getPlayerYaw());
+    final HorizontalCornerDirection facing = HorizontalCornerDirection.fromRotation(ctx.getPlayerYaw());
     return state
         .with(
             FACING,
@@ -95,23 +100,44 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
     tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_joint_line_with_offset_side.3").formatted(Formatting.GRAY));
   }
 
+  int offsetLevel();
+
   class Impl extends AbstractRoadBlock implements RoadWithJointLineWithOffsetSide {
     private final LineColor lineColorSide;
     private final LineType lineTypeSide;
+    protected final String lineSide;
+    protected final String lineSide2;
+    protected final String lineTop;
+    private final int offsetLevel;
 
-    public Impl(Settings settings, LineColor lineColor, LineType lineType) {
-      this(settings, lineColor, lineColor, lineType, lineType);
+    /**
+     * 由不带偏移的 T 字形道路映射到带有偏移的 T 字形道路的映射。这里的偏移，是指的只有半边的那条线路的偏移。
+     */
+    public static final BiMap<RoadWithJointLine.Impl, RoadWithJointLineWithOffsetSide.Impl> OFFSET_ROADS = HashBiMap.create();
+
+    public Impl(Settings settings, RoadWithJointLine.Impl block, String lineTop, int offsetLevel) {
+      this(settings, block.lineColor, block.lineColorSide, block.lineType, block.lineTypeSide, lineTop, offsetLevel);
+      OFFSET_ROADS.put(block, this);
     }
 
-    public Impl(Settings settings, LineColor lineColor, LineColor lineColorSide, LineType lineType, LineType lineTypeSide) {
+    public Impl(Settings settings, LineColor lineColor, LineColor lineColorSide, LineType lineType, LineType lineTypeSide, String lineTop, int offsetLevel) {
       super(settings, lineColor, lineType);
       this.lineColorSide = lineColorSide;
       this.lineTypeSide = lineTypeSide;
+      this.lineTop = lineTop;
+      this.offsetLevel = offsetLevel;
+      lineSide = MishangUtils.composeStraightLineTexture(lineColor, lineType);
+      lineSide2 = lineColorSide.asString() + "_offset_straight_line";
+    }
+
+    @Override
+    public int offsetLevel() {
+      return offsetLevel;
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @Nullable JBlockStates getBlockStates() {
+    public @NotNull JBlockStates getBlockStates() {
       final Identifier id = getBlockModelId();
       JVariants variant = new JVariants();
       // 一侧的短线所朝向的方向。
@@ -156,6 +182,18 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
         return lineTypeSide;
       }
       return super.getLineType(state, direction);
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public @NotNull JModel getBlockModel() {
+      return new JModel("mishanguc:block/road_with_joint_line").textures(new FasterJTextures().base("asphalt").lineSide(lineSide).lineSide2(lineSide2).lineTop(lineTop));
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public void writeBlockModel(RuntimeResourcePack pack) {
+      BRRPHelper.addModelWithSlabWithMirrored(pack, Impl.this);
     }
   }
 }
