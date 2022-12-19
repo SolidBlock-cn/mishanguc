@@ -3,13 +3,16 @@ package pers.solid.mishang.uc;
 import com.google.common.base.Functions;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.*;
+import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.*;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Direction;
@@ -42,8 +45,8 @@ public class MishangUtils {
    * @since 0.2.0 该字段为一个不可变的映射。
    */
   public static final @Unmodifiable BiMap<DyeColor, Integer> COLOR_TO_OUTLINE_COLOR = Arrays.stream(DyeColor.values()).collect(ImmutableBiMap.toImmutableBiMap(Functions.identity(), MishangUtils::toSignOutlineColor));
-  private static final Supplier<ImmutableMap<Field, Block>> memoizedBlocks = Suppliers.memoize(MishangUtils::blocksInternal);
-  private static final Supplier<ImmutableMap<Field, Item>> memoizedItems = Suppliers.memoize(MishangUtils::itemsInternal);
+  private static final Supplier<ImmutableList<Block>> memoizedBlocks = Suppliers.memoize(MishangUtils::blocksInternal);
+  private static final Supplier<ImmutableList<Item>> memoizedItems = Suppliers.memoize(MishangUtils::itemsInternal);
 
   private static final ImmutableSet<Block> WOODS = ImmutableSet.of(Blocks.OAK_WOOD, Blocks.SPRUCE_WOOD, Blocks.BIRCH_WOOD, Blocks.JUNGLE_WOOD, Blocks.ACACIA_WOOD, Blocks.DARK_OAK_WOOD, Blocks.CRIMSON_HYPHAE, Blocks.WARPED_HYPHAE);
 
@@ -183,34 +186,22 @@ public class MishangUtils {
     return (0) << 24 | (l & 0xFF) << 16 | (k & 0xFF) << 8 | (j & 0xFF);
   }
 
-  /**
-   * @return 所有方块字段的流。使用反射。<br>
-   * 该方法可以在 {@link MishangucBlocks} 被加载之前执行，并不会尝试访问字段内容。
-   * @since 0.2.0 该方法由 blockStream 更名为 blockFieldStream。
-   */
-  public static Stream<Field> blockFieldStream() {
-    return Streams.concat(
-        fieldStream(RoadBlocks.class),
-        fieldStream(RoadSlabBlocks.class),
-        fieldStream(LightBlocks.class),
-        fieldStream(HungSignBlocks.class),
-        fieldStream(WallSignBlocks.class),
-        fieldStream(StandingSignBlocks.class),
-        fieldStream(HandrailBlocks.class),
-        fieldStream(ColoredBlocks.class)
-    );
-  }
-
-  public static Stream<Field> itemFieldStream() {
-    return fieldStream(MishangucItems.class);
-  }
-
   @ApiStatus.AvailableSince("0.2.0")
   @ApiStatus.Internal
-  private static @Unmodifiable ImmutableMap<Field, Block> blocksInternal() {
-    ImmutableMap.Builder<Field, Block> builder = new ImmutableMap.Builder<>();
-    instanceEntryStream(blockFieldStream(), Block.class).forEach(builder::put);
-    final ImmutableMap<Field, Block> build = builder.build();
+  private static @Unmodifiable ImmutableList<Block> blocksInternal() {
+    ImmutableList.Builder<Block> builder = new ImmutableList.Builder<>();
+    Streams.concat(
+        instanceStream(RoadBlocks.class, Block.class),
+        RoadSlabBlocks.SLABS.stream(),
+        instanceStream(RoadMarkBlocks.class, Block.class),
+        instanceStream(LightBlocks.class, Block.class),
+        instanceStream(HungSignBlocks.class, Block.class),
+        instanceStream(WallSignBlocks.class, Block.class),
+        instanceStream(StandingSignBlocks.class, Block.class),
+        instanceStream(HandrailBlocks.class, Block.class),
+        instanceStream(ColoredBlocks.class, Block.class)
+    ).forEach(builder::add);
+    final ImmutableList<Block> build = builder.build();
     if (build.isEmpty()) {
       throw new AssertionError("The collection returned is empty, which is not expected. You may have to report to the author of Mishang Urban Construction mod.");
     }
@@ -219,10 +210,10 @@ public class MishangUtils {
 
   @ApiStatus.AvailableSince("0.2.0")
   @ApiStatus.Internal
-  private static @Unmodifiable ImmutableMap<Field, Item> itemsInternal() {
-    ImmutableMap.Builder<Field, Item> builder = new ImmutableMap.Builder<>();
-    instanceEntryStream(itemFieldStream(), Item.class).forEach(builder::put);
-    final ImmutableMap<Field, Item> build = builder.build();
+  private static @Unmodifiable ImmutableList<Item> itemsInternal() {
+    ImmutableList.Builder<Item> builder = new ImmutableList.Builder<>();
+    instanceStream(MishangucItems.class, Item.class).forEach(builder::add);
+    final ImmutableList<Item> build = builder.build();
     if (build.isEmpty()) {
       throw new AssertionError("The collection returned is empty, which is not expected. You may have to report to the author of Mishang Urban Construction mod.");
     }
@@ -235,7 +226,7 @@ public class MishangUtils {
    * @return 由方块字段和值组成的不可变映射。第一次调用时会生成，此后的所有调用都会直接使用这个值。
    */
   @ApiStatus.AvailableSince("0.2.0")
-  public static @Unmodifiable ImmutableMap<Field, Block> blocks() {
+  public static @Unmodifiable ImmutableList<Block> blocks() {
     return memoizedBlocks.get();
   }
 
@@ -245,7 +236,7 @@ public class MishangUtils {
    * @return 由物品字段和值组成的不可变映射。第一次调用时会生成，此后的所有调用都会直接使用这个值。
    */
   @ApiStatus.AvailableSince("0.2.0")
-  public static @Unmodifiable ImmutableMap<Field, Item> items() {
+  public static @Unmodifiable ImmutableList<Item> items() {
     return memoizedItems.get();
   }
 
@@ -372,7 +363,39 @@ public class MishangUtils {
     }
   }
 
-  public static String composeAngleLineTexture(LineColor lineColor, boolean bevel) {
-    return lineColor.asString() + "_" + (bevel ? "bevel" : "right") + "_angle_line";
+  public static String composeAngleLineTexture(LineColor lineColor, LineType lineType, boolean bevel) {
+    return lineColor.asString() + "_" + (lineType == LineType.NORMAL ? "" : lineColor.asString() + "_") + (bevel ? "bevel" : "right") + "_angle_line";
+  }
+
+  public static int readColorFromNbtElement(NbtElement nbtColor) {
+    if (nbtColor instanceof final AbstractNbtNumber abstractNbtNumber) {
+      return abstractNbtNumber.intValue();
+    } else if (nbtColor instanceof NbtString) {
+      final TextColor parse = TextColor.parse(nbtColor.asString());
+      return parse == null ? 0 : parse.getRgb();
+    } else if (nbtColor instanceof AbstractNbtList<?> list) {
+      final int size = list.size();
+      NbtElement _red = size > 0 ? list.get(0) : null;
+      NbtElement _green = size > 1 ? list.get(1) : null;
+      NbtElement _blue = size > 2 ? list.get(2) : null;
+      NbtElement _alpha = size > 3 ? list.get(3) : null;
+      int red = _red instanceof AbstractNbtNumber ? ((AbstractNbtNumber) _red).intValue() & 0xff : 0;
+      int green = _green instanceof AbstractNbtNumber ? ((AbstractNbtNumber) _green).intValue() & 0xff : 0;
+      int blue = _blue instanceof AbstractNbtNumber ? ((AbstractNbtNumber) _blue).intValue() & 0xff : 0;
+      int alpha = _alpha instanceof AbstractNbtNumber ? ((AbstractNbtNumber) _alpha).intValue() & 0xff : 0;
+      return (red << 16) | (green << 8) | blue | (alpha << 24);
+    } else if (nbtColor instanceof final NbtCompound nbtCompound) {
+      if (nbtCompound.contains("signColor", NbtType.STRING)) {
+        return DyeColor.byName(nbtCompound.getString("signColor"), DyeColor.BLACK).getSignColor();
+      } else if (nbtCompound.contains("fireworkColor", NbtType.STRING)) {
+        return DyeColor.byName(nbtCompound.getString("fireworkColor"), DyeColor.BLACK).getFireworkColor();
+      } else if (nbtCompound.contains("mapColor", NbtType.STRING)) {
+        return DyeColor.byName(nbtCompound.getString("mapColor"), DyeColor.BLACK).getMapColor().color;
+      } else {
+        return 0;
+      }
+    } else {
+      return 0;
+    }
   }
 }

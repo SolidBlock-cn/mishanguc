@@ -94,12 +94,10 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   public WallSignBlock(@Nullable Block baseBlock, Settings settings) {
     super(settings);
     this.baseBlock = baseBlock;
-    setDefaultState(
-        stateManager
-            .getDefaultState()
-            .with(FACING, Direction.SOUTH)
-            .with(FACE, WallMountLocation.WALL)
-            .with(WATERLOGGED, false));
+    setDefaultState(getDefaultState()
+        .with(FACING, Direction.SOUTH)
+        .with(FACE, WallMountLocation.WALL)
+        .with(WATERLOGGED, false));
   }
 
   @ApiStatus.AvailableSince("0.1.7")
@@ -259,7 +257,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
 
   @Override
   @Environment(EnvType.CLIENT)
-  public @Nullable JModel getBlockModel() {
+  public @NotNull JModel getBlockModel() {
     return new JModel("mishanguc:block/wall_sign").textures(new JTextures().var("texture", getBaseTexture()));
   }
 

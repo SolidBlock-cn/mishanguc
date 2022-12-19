@@ -2,6 +2,7 @@ package pers.solid.mishang.uc;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -21,6 +22,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.ClickEvent;
@@ -77,6 +79,7 @@ public class Mishanguc implements ModInitializer {
               });
 
   private static void registerCommands() {
+    CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> MishangucCommands.registerUpdateLightCommand(dispatcher));
   }
 
   private static void registerFlammableAndFuels() {
@@ -281,9 +284,15 @@ public class Mishanguc implements ModInitializer {
       }
     });
     ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-      final GameRules gameRules = handler.player.world.getGameRules();
-      MishangucRules.sync(gameRules.get(MishangucRules.FORCE_PLACING_TOOL_ACCESS).get(), 0, handler.player);
-      MishangucRules.sync(gameRules.get(MishangucRules.CARRYING_TOOL_ACCESS).get(), 1, handler.player);
+      final ServerPlayerEntity player = handler.player;
+      final GameRules gameRules = player.world.getGameRules();
+      MishangucRules.sync(gameRules.get(MishangucRules.FORCE_PLACING_TOOL_ACCESS), 0, player);
+      MishangucRules.sync(gameRules.get(MishangucRules.CARRYING_TOOL_ACCESS), 1, player);
+      MishangucRules.sync(gameRules.get(MishangucRules.ROAD_BOOST_SPEED), 3, player);
+      MishangucRules.currentRoadBoostSpeed = gameRules.get(MishangucRules.ROAD_BOOST_SPEED).get();
+      if (MishangucRules.SUSPENDS_BLOCK_LIGHT_UPDATE != null) {
+        MishangucRules.sync(gameRules.get(MishangucRules.SUSPENDS_BLOCK_LIGHT_UPDATE), 2, player);
+      }
     });
   }
 

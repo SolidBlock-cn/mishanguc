@@ -2,6 +2,10 @@
   "values": [
     "#mishanguc:white_corner_lights",
     "#mishanguc:white_wall_lights",
-    "#mishanguc:white_light_decorations"
+    "#mishanguc:white_light_decorations",
+    "#mishanguc:white_column_lights",
+    "mishanguc:white_light",
+    "mishanguc:white_light_slab",
+    "mishanguc:white_light_cover"
   ]
 }

@@ -1,7 +1,8 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.datafixers.util.Either;
+import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.blockstate.JBlockStates;
+import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -10,10 +11,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
-import pers.solid.mishang.uc.util.LineColor;
-import pers.solid.mishang.uc.util.LineType;
-import pers.solid.mishang.uc.util.RoadConnectionState;
-import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.arrp.BRRPHelper;
+import pers.solid.mishang.uc.arrp.FasterJTextures;
+import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public interface RoadWithCrossLine extends Road {
   default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
     return Road.super
         .getConnectionStateOf(state, direction)
-        .or(new RoadConnectionState(RoadConnectionState.WhetherConnected.CONNECTED, getLineColor(state, direction), Either.left(direction), LineType.NORMAL, state));
+        .or(new RoadConnectionState(RoadConnectionState.WhetherConnected.CONNECTED, getLineColor(state, direction), EightHorizontalDirection.of(direction), LineType.NORMAL));
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithCrossLine {
@@ -39,6 +40,21 @@ public interface RoadWithCrossLine extends Road {
     @Override
     public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
       tooltip.add(TextBridge.translatable("lineType.cross.composed", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public @NotNull JModel getBlockModel() {
+      return new JModel("mishanguc:block/road_with_cross_line")
+          .textures(new FasterJTextures().base("asphalt")
+              .lineSide(MishangUtils.composeStraightLineTexture(lineColor, LineType.NORMAL))
+              .lineTop(lineColor.asString() + "_cross_line"));
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public void writeBlockModel(RuntimeResourcePack pack) {
+      BRRPHelper.addModelWithSlab(pack, Impl.this);
     }
   }
 }
