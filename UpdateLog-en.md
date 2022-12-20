@@ -13,9 +13,10 @@ Updated following content:
 - Added thick stripped light; in former versions there were only stripp light tubes.
 - Added medium wall lights and light tubes.
 - Added column lights, column light tubes, light slabs, and light covers.
-- Twaked the texture of three types of lights.
+- Tweaked the texture of three types of lights.
 - Added light round decorations for other colors; in former versions there was only one for white.
 - Wall lights can be placed on blocks with an empty side shape (such as with empty collision shape).
+- Added orange, green, and pink lights.
 
 ### 1.0.4
 

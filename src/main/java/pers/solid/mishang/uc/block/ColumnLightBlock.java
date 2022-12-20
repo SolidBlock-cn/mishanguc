@@ -36,12 +36,12 @@ import pers.solid.mishang.uc.arrp.FasterJTextures;
 public class ColumnLightBlock extends Block implements Waterloggable, BlockResourceGenerator {
   public static final EnumProperty<Direction.Axis> AXIS = Properties.AXIS;
   public final String lightColor;
-  private final boolean largeShape;
+  private final int sizeType;
 
-  public ColumnLightBlock(String lightColor, Settings settings, boolean largeShape) {
+  public ColumnLightBlock(String lightColor, Settings settings, int sizeType) {
     super(settings);
     this.lightColor = lightColor;
-    this.largeShape = largeShape;
+    this.sizeType = sizeType;
     setDefaultState(getDefaultState().with(AXIS, Direction.Axis.X));
   }
 
@@ -101,7 +101,13 @@ public class ColumnLightBlock extends Block implements Waterloggable, BlockResou
   @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-    return (largeShape ? ColumnWallLightBlock.LARGE_SHAPES : ColumnWallLightBlock.SMALL_SHAPES).get(state.get(AXIS));
+    return (sizeType >= 2 ? ColumnWallLightBlock.SHAPES4 : sizeType == 1 ? ColumnWallLightBlock.SHAPES5 : ColumnWallLightBlock.SHAPES6).get(state.get(AXIS));
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    return (sizeType >= 2 ? ColumnWallLightBlock.SHAPES5 : sizeType == 1 ? ColumnWallLightBlock.SHAPES6 : ColumnWallLightBlock.SHAPES7).get(state.get(AXIS));
   }
 
   @SuppressWarnings("deprecation")
