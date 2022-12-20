@@ -20,6 +20,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.SlabBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
@@ -145,14 +146,19 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     final IdentifiedTag whiteWallLights = blockTag("white_wall_lights");
     final IdentifiedTag whiteCornerLights = blockTag("white_corner_lights");
     final IdentifiedTag whiteLightDecorations = blockTag("white_light_decorations");
+    final IdentifiedTag whiteColumnLights = blockTag("white_column_lights");
     final IdentifiedTag yellowStripWallLights = blockTag("yellow_strip_wall_lights");
     final IdentifiedTag yellowWallLights = blockTag("yellow_wall_lights");
     final IdentifiedTag yellowCornerLights = blockTag("yellow_corner_lights");
     final IdentifiedTag yellowLightDecorations = blockTag("yellow_light_decorations");
+    final IdentifiedTag yellowColumnLights = blockTag("yellow_column_lights");
     final IdentifiedTag cyanStripWallLights = blockTag("cyan_strip_wall_lights");
     final IdentifiedTag cyanWallLights = blockTag("cyan_wall_lights");
     final IdentifiedTag cyanCornerLights = blockTag("cyan_corner_lights");
     final IdentifiedTag cyanLightDecorations = blockTag("cyan_light_decorations");
+    final IdentifiedTag cyanColumnLights = blockTag("cyan_column_lights");
+    final IdentifiedTag lightSlabs = blockTag("light_slabs");
+    final IdentifiedTag lightCovers = blockTag("light_covers");
 
     // 墙上的告示牌部分
     final IdentifiedTag woodenWallSigns = blockTag("wooden_wall_signs");
@@ -271,6 +277,12 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
               case "yellow" -> yellowLightDecorations.addBlock(block);
               case "cyan" -> cyanLightDecorations.addBlock(block);
             }
+          } else if (block instanceof ColumnLightBlock || block instanceof ColumnWallLightBlock) {
+            switch (block instanceof ColumnLightBlock ? ((ColumnLightBlock) block).lightColor : ((ColumnWallLightBlock) block).lightColor) {
+              case "white" -> whiteColumnLights.addBlock(block);
+              case "yellow" -> yellowColumnLights.addBlock(block);
+              case "cyan" -> cyanColumnLights.addBlock(block);
+            }
           } else if (block instanceof WallLightBlock) {
             switch (((WallLightBlock) block).lightColor) {
               case "white" -> whiteWallLights.addBlock(block);
@@ -283,6 +295,11 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
               case "yellow" -> yellowCornerLights.addBlock(block);
               case "cyan" -> cyanCornerLights.addBlock(block);
             }
+          }
+          if (block instanceof SlabBlock) {
+            lightSlabs.addBlock(block);
+          } else if (block instanceof LightCoverBlock) {
+            lightCovers.addBlock(block);
           }
         }
     );
@@ -515,8 +532,11 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     registerTags(
         whiteWallLights, whiteStripWallLights, whiteCornerLights, whiteLightDecorations,
         yellowWallLights, yellowStripWallLights, yellowCornerLights, yellowLightDecorations,
-        cyanWallLights, cyanStripWallLights, cyanCornerLights, cyanLightDecorations
+        cyanWallLights, cyanStripWallLights, cyanCornerLights, cyanLightDecorations,
+        whiteColumnLights, yellowColumnLights, cyanColumnLights
     );
+    registerTag(lightSlabs);
+    registerTag(lightCovers);
 
     // 墙上的告示牌部分
     wallSigns
@@ -853,22 +873,6 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
             .base("asphalt")
             .line("white_auto_right_angle_line")
             .particle("asphalt"));
-
-    // 光源部分
-
-    PACK.addModel(
-        new JModel(blockIdentifier("light"))
-            .textures(new JTextures().var("base", blockString("white_light"))),
-        blockIdentifier("white_light"));
-    PACK.addModel(
-        new JModel(blockIdentifier("light"))
-            .textures(new JTextures().var("base", blockString("yellow_light"))),
-        blockIdentifier("yellow_light"));
-    PACK.addModel(
-        new JModel(blockIdentifier("light"))
-            .textures(new JTextures().var("base", blockString("cyan_light"))),
-        blockIdentifier("cyan_light"));
-
   }
 
   @Override

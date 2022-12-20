@@ -54,7 +54,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
 
   public HandrailBlock(Settings settings) {
     super(settings);
-    setDefaultState(stateManager.getDefaultState().with(FACING, Direction.SOUTH).with(WATERLOGGED, false));
+    setDefaultState(getDefaultState().with(FACING, Direction.SOUTH).with(WATERLOGGED, false));
   }
 
   @Override

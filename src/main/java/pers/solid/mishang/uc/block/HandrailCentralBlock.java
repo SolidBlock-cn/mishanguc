@@ -43,7 +43,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
 
   protected HandrailCentralBlock(@NotNull T baseBlock, float radius1, float radius2, float boundingHeight1, float boundingHeight2, float collisionHeight, Settings settings) {
     super(radius1, radius2, boundingHeight1, boundingHeight2, collisionHeight, settings);
-    this.setDefaultState(stateManager.getDefaultState()
+    this.setDefaultState(getDefaultState()
         .with(WEST, true).with(EAST, true)
         .with(NORTH, false).with(SOUTH, false)
         .with(WATERLOGGED, false));

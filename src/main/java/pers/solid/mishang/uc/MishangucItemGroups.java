@@ -16,25 +16,25 @@ public class MishangucItemGroups {
   public static final ItemGroup ROADS =
       FabricItemGroup.builder(
           new Identifier("mishanguc", "roads")).icon(
-          () -> new ItemStack(RoadBlocks.ROAD_WITH_WHITE_RA_LINE)).entries((enabledFeatures, entries, operatorEnabled) -> {
+          () -> new ItemStack(RoadBlocks.ROAD_WITH_WHITE_DOUBLE_LINE)).entries((enabledFeatures, entries, operatorEnabled) -> {
         MishangUtils.instanceStream(RoadBlocks.class, ItemConvertible.class).forEach(entries::add);
         MishangUtils.instanceStream(RoadSlabBlocks.class, ItemConvertible.class).forEach(entries::add);
       }).build();
   public static final ItemGroup LIGHTS =
       FabricItemGroup.builder(
-          new Identifier("mishanguc", "lights")).icon(() -> new ItemStack(LightBlocks.YELLOW_LIGHT)).entries((enabledFeatures, entries, operatorEnabled) -> {
+          new Identifier("mishanguc", "lights")).icon(() -> new ItemStack(LightBlocks.WHITE_LARGE_WALL_LIGHT)).entries((enabledFeatures, entries, operatorEnabled) -> {
         MishangUtils.instanceStream(LightBlocks.class, ItemConvertible.class).forEach(entries::add);
       }).build();
   public static final ItemGroup SIGNS =
       FabricItemGroup.builder(
           new Identifier("mishanguc", "signs")).icon(
-          () -> new ItemStack(HungSignBlocks.GLOWING_BLACK_CONCRETE_HUNG_SIGN)).entries((enabledFeatures, entries, operatorEnabled) -> {
+          () -> new ItemStack(StandingSignBlocks.ACACIA_STANDING_SIGN)).entries((enabledFeatures, entries, operatorEnabled) -> {
         MishangUtils.instanceStream(HungSignBlocks.class, ItemConvertible.class).forEach(entries::add);
         MishangUtils.instanceStream(WallSignBlocks.class, ItemConvertible.class).forEach(entries::add);
         MishangUtils.instanceStream(StandingSignBlocks.class, ItemConvertible.class).forEach(entries::add);
       }).build();
   public static final ItemGroup TOOLS =
-      FabricItemGroup.builder(new Identifier("mishanguc", "tools")).icon(() -> new ItemStack(MishangucItems.ROAD_CONNECTION_STATE_DEBUGGING_TOOL)).entries((enabledFeatures, entries, operatorEnabled) -> {
+      FabricItemGroup.builder(new Identifier("mishanguc", "tools")).icon(() -> new ItemStack(MishangucItems.ROTATING_TOOL)).entries((enabledFeatures, entries, operatorEnabled) -> {
         MishangUtils.instanceStream(MishangucItems.class, ItemConvertible.class).forEach(item -> {
           if (item instanceof ExplosionToolItem explosionToolItem) {
             explosionToolItem.appendToEntries(entries);

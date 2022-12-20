@@ -71,19 +71,21 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
    * 该灯光装饰方块对应的形状。
    */
   public final String shape;
+  private boolean largeShape;
+  final Map<Direction, VoxelShape> LARGE_SHAPE_PER_DIRECTION =
+      MishangUtils.createDirectionToShape(0, 0, 0, 16, 1, 16);
 
-  public AutoConnectWallLightBlock(String lightColor, String shape, Settings settings) {
-    super(lightColor, settings);
+  public AutoConnectWallLightBlock(String lightColor, String shape, Settings settings, boolean largeShape) {
+    super(lightColor, settings, false);
     this.shape = shape;
-    this.setDefaultState(
-        this.stateManager
-            .getDefaultState()
-            .with(WEST, false)
-            .with(EAST, false)
-            .with(SOUTH, false)
-            .with(NORTH, false)
-            .with(UP, false)
-            .with(DOWN, false));
+    this.largeShape = largeShape;
+    this.setDefaultState(getDefaultState()
+        .with(WEST, false)
+        .with(EAST, false)
+        .with(SOUTH, false)
+        .with(NORTH, false)
+        .with(UP, false)
+        .with(DOWN, false));
   }
 
   @Override
@@ -164,6 +166,9 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
   public VoxelShape getOutlineShape(
       BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     final Direction facing = state.get(FACING);
+    if (largeShape) {
+      return LARGE_SHAPE_PER_DIRECTION.get(facing);
+    }
     final VoxelShape baseShape = BASE_SHAPE_PER_FACING.get(facing);
     final VoxelShape[] extraShapes;
     switch (facing) {
