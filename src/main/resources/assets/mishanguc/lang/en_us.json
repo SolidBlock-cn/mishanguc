@@ -369,6 +369,7 @@
   "item.mishanguc.force_placing_tool.tooltip.2": "Also used to break a block without triggering block update.",
   "item.mishanguc.force_placing_tool.tooltip.fluids": "Can be used to place and remove fluids.",
   "item.mishanguc.force_placing_tool.tooltip.3": "Kills a living entity instantly.",
+  "item.mishanguc.force_placing_tool.tooltip.suspends_light": "Suspends light update.",
   "item.mishanguc.data_tag_tool": "Data Tag Tool",
   "item.mishanguc.data_tag_tool.tooltip": "Can get the NBT data of blocks and entities.",
   "item.mishanguc.block_state_tool": "Block State Tool",
@@ -552,7 +553,7 @@
   "itemGroup.mishanguc.decorations": "Mishang Urban Construction | Decorations",
   "itemGroup.mishanguc.colored_blocks": "Mishang Urban Construction | Colored Blocks",
 
-  "notice.mishanguc.version_check": "Please note: The development of Mishang Urban Construction for Minecraft %s has been discontinued. Please consider using %s. Operators can type command %s to suppress this notice for this level.",
+  "notice.mishanguc.version_check": "Please note: The development of Mishang Urban Construction mod for Minecraft %s is stopped. For more features and updates of the mod, it is recommended to use other Minecraft versions, such as %s. Operators can type command %s to suppress this notice for this level.",
   "modmenu.descriptionTranslation.mishanguc": "An amount of blocks and items that make a beautiful city! Currently not stable. Please do not use in your formal work!",
 
   "gamerule.mishanguc:warn_deprecated_version": "Warn Deprecated MC Version for Mod",
@@ -563,6 +564,8 @@
   "gamerule.mishanguc:carrying_tool_access.description": "Determine which type of players are allowed to use carrying tool.",
   "gamerule.mishanguc:explosion_tool_access": "Explosion Tool Access",
   "gamerule.mishanguc:explosion_tool_access.description": "Determine which type of players are allowed to use explosion tool.",
+  "gamerule.mishanguc:suspends_block_light_update": "Suspends Block Light Update (DevEnv Only)",
+  "gamerule.mishanguc:suspends_block_light_update.description": "When placing and removing blocks, block light update will be ignored. This rule exists only in development environment.",
   "message.tool_access": "You cannot use this item because %s can use it.",
   "message.tool_access.all": "all players",
   "message.tool_access.creative_only": "only players in Creative Mode",
@@ -660,5 +663,23 @@
   "message.mishanguc.outline_color.none": "Not drawn",
   "message.mishanguc.outline_color.composed": "Outline color: %s",
   "message.mishanguc.outline_color.relate": "The %s that corresponds to %s",
-  "message.mishanguc.outline_color.relate.$1": "outline color"
+  "message.mishanguc.outline_color.relate.$1": "outline color",
+
+  "commands.mishanguc:update-light.success": "Updated the block light at %s %s %s",
+  "commands.mishanguc:update-light.success_range": "Updated the block light in a range centered on %s %s %s with the range %s blocks, including %s blocks in total",
+  "commands.mishanguc:update-light.success_box": "Updated the block light in the cuboid from %s %s %s to %s %s %s, including %s blocks in total",
+  "commands.mishanguc:update-light.warn_not_stable": "The light update command is not stable. It may cause differences between client and server. You can exit and re-join the world to confirm the light update.",
+  "commands.mishanguc:update-light.mass": "You are updating a large area of light, which may cause lag of server. If the server does not respond, please wait in patient. You will be informed when the process finished.",
+  "commands.mishanguc:update-light.to_big": "The range in which to update block light is to big (%2$s > %1$s)!",
+  "commands.mishanguc:update-light.description.title": "Usage description of %s command",
+  "commands.mishanguc:update-light.description.summary": "This command is used to update the block light for a single pos, or in a range of a cuboid. The syntax of the command is as follows:",
+  "commands.mishanguc:update-light.description.syntax1": "Update light for a single position. If the position is not provided, the execution position will be used.",
+  "commands.mishanguc:update-light.description.syntax2": "Update light for a range of a center within a specified range. The range cannot be larger than %1$s. Numbers of blocks affected will be (2 * %2$s + 1)³. If the center pos is not provided, the execution position will be used.",
+  "commands.mishanguc:update-light.description.syntax3": "Update light for a cuboid range determined by two positions. Numbers of blocks in this range cannot be larger than %1$s.",
+  "commands.mishanguc:update-light.argument.pos": "pos",
+  "commands.mishanguc:update-light.argument.centerPos": "centerPos",
+  "commands.mishanguc:update-light.argument.range": "range",
+  "commands.mishanguc:update-light.argument.fromPos": "fromPos",
+  "commands.mishanguc:update-light.argument.toPos": "toPos",
+  "commands.mishanguc:update-light.description.detail": "If the command contains a huge range, it may cause your server to lag, freeze, or even run out of memory. Therefore, to update light for a huge region, it is recommended to divide it into segments, and execute this command for them respectively. The command after execution will sync the updates to client, but it is not stable. You can quit and re-join the world to confirm the light update has been finished."
 }

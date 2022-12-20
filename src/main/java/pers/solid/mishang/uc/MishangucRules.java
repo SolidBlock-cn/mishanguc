@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,20 +32,29 @@ import pers.solid.mishang.uc.util.TextBridge;
 public final class MishangucRules {
   public static final GameRules.Key<GameRules.BooleanRule> WARN_DEPRECATED_VERSION = register("warn_deprecated_version", GameRuleFactory.createBooleanRule(true));
 
-  public static final GameRules.Key<EnumRule<ToolAccess>> FORCE_PLACING_TOOL_ACCESS = register("force_placing_tool_access", GameRuleFactory.createEnumRule(ToolAccess.CREATIVE_ONLY, (server, rule) -> sync(server, rule.get(), 0)));
+  public static final GameRules.Key<EnumRule<ToolAccess>> FORCE_PLACING_TOOL_ACCESS = register("force_placing_tool_access", GameRuleFactory.createEnumRule(ToolAccess.CREATIVE_ONLY, (server, rule) -> sync(server, rule, 0)));
 
-  public static final GameRules.Key<EnumRule<ToolAccess>> CARRYING_TOOL_ACCESS = register("carrying_tool_access", GameRuleFactory.createEnumRule(ToolAccess.ALL, (server, rule) -> sync(server, rule.get(), 1)));
+  public static final GameRules.Key<EnumRule<ToolAccess>> CARRYING_TOOL_ACCESS = register("carrying_tool_access", GameRuleFactory.createEnumRule(ToolAccess.ALL, (server, rule) -> sync(server, rule, 1)));
 
   public static final GameRules.Key<EnumRule<ToolAccess>> EXPLOSION_TOOL_ACCESS = register("explosion_tool_access", GameRuleFactory.createEnumRule(ToolAccess.ALL));
 
-  private static void sync(MinecraftServer server, ToolAccess toolAccess, int type) {
+  public static final GameRules.Key<GameRules.BooleanRule> SUSPENDS_BLOCK_LIGHT_UPDATE = FabricLoader.getInstance().isDevelopmentEnvironment() ? register("suspends_block_light_update", GameRuleFactory.createBooleanRule(false, (minecraftServer, booleanRule) -> sync(minecraftServer, booleanRule, 2))) : null;
+
+  private static void sync(MinecraftServer server, GameRules.Rule<?> rule, int type) {
     for (ServerPlayerEntity serverPlayerEntity : server.getPlayerManager().getPlayerList()) {
-      sync(toolAccess, type, serverPlayerEntity);
+      sync(rule, type, serverPlayerEntity);
     }
   }
 
-  static void sync(ToolAccess toolAccess, int type, ServerPlayerEntity serverPlayerEntity) {
-    ServerPlayNetworking.send(serverPlayerEntity, new Identifier("mishanguc", "rule_changed"), PacketByteBufs.create().writeEnumConstant(toolAccess).writeVarInt(type));
+  static void sync(GameRules.Rule<?> rule, int type, ServerPlayerEntity serverPlayerEntity) {
+    final PacketByteBuf buf = PacketByteBufs.create();
+    buf.writeShort(type);
+    if (rule instanceof EnumRule<?>) {
+      buf.writeEnumConstant(((EnumRule<?>) rule).get());
+    } else if (rule instanceof GameRules.BooleanRule) {
+      buf.writeBoolean(((GameRules.BooleanRule) rule).get());
+    }
+    ServerPlayNetworking.send(serverPlayerEntity, new Identifier("mishanguc", "rule_changed"), buf);
   }
 
   private static <T extends GameRules.Rule<T>> GameRules.Key<T> register(String name, GameRules.Type<T> ruleType) {
@@ -52,8 +62,9 @@ public final class MishangucRules {
   }
 
   static void handle(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
-    final ToolAccess value = buf.readEnumConstant(ToolAccess.class);
-    final int type = buf.readVarInt();
+    final short type = buf.readShort();
+    final ToolAccess value = type != 2 ? buf.readEnumConstant(ToolAccess.class) : null;
+    final boolean booleanValue = type == 2 && buf.readBoolean();
     client.execute(() -> {
       switch (type) {
         case 0:
@@ -62,6 +73,10 @@ public final class MishangucRules {
         case 1:
           MishangucClient.CLIENT_CARRYING_TOOL_ACCESS.set(value);
           break;
+        case 2:
+          if (MishangucClient.CLIENT_SUSPENDS_LIGHT_UPDATE != null) {
+            MishangucClient.CLIENT_SUSPENDS_LIGHT_UPDATE.set(booleanValue);
+          }
       }
     });
   }

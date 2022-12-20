@@ -2,6 +2,12 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.1.0
+
+Updated following content:
+
+- Added features related to block light.
+
 ### 1.0.4
 
 Updated following content:
