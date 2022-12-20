@@ -9,7 +9,9 @@ import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.block.HandrailBlock;
@@ -73,6 +75,18 @@ public class MishangucBlocks {
    */
   protected static final FabricBlockSettings CYAN_WALL_LIGHT_SETTINGS =
       FabricBlockSettings.copyOf(CYAN_LIGHT_SETTINGS).noCollision();
+  @ApiStatus.AvailableSince("1.1.0")
+  protected static final FabricBlockSettings ORANGE_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, DyeColor.ORANGE).luminance(15).strength(0.2f);
+  @ApiStatus.AvailableSince("1.1.0")
+  protected static final FabricBlockSettings ORANGE_WALL_LIGHT_SETTINGS = FabricBlockSettings.copyOf(ORANGE_LIGHT_SETTINGS).noCollision();
+  @ApiStatus.AvailableSince("1.1.0")
+  protected static final FabricBlockSettings GREEN_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, DyeColor.GREEN).luminance(15).strength(0.2f);
+  @ApiStatus.AvailableSince("1.1.0")
+  protected static final FabricBlockSettings GREEN_WALL_LIGHT_SETTINGS = FabricBlockSettings.copyOf(GREEN_LIGHT_SETTINGS).noCollision();
+  @ApiStatus.AvailableSince("1.1.0")
+  protected static final FabricBlockSettings PINK_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, DyeColor.PINK).luminance(15).strength(0.2f);
+  @ApiStatus.AvailableSince("1.1.0")
+  protected static final FabricBlockSettings PINK_WALL_LIGHT_SETTINGS = FabricBlockSettings.copyOf(PINK_LIGHT_SETTINGS).noCollision();
 
   /**
    * 自动注册一个类中的所有静态常量字段的方块，同时创建并注册对应的物品。

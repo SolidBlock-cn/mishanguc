@@ -152,11 +152,26 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     final IdentifiedTag yellowCornerLights = blockTag("yellow_corner_lights");
     final IdentifiedTag yellowLightDecorations = blockTag("yellow_light_decorations");
     final IdentifiedTag yellowColumnLights = blockTag("yellow_column_lights");
+    final IdentifiedTag orangeStripWallLights = blockTag("orange_strip_wall_lights");
+    final IdentifiedTag orangeWallLights = blockTag("orange_wall_lights");
+    final IdentifiedTag orangeCornerLights = blockTag("orange_corner_lights");
+    final IdentifiedTag orangeLightDecorations = blockTag("orange_light_decorations");
+    final IdentifiedTag orangeColumnLights = blockTag("orange_column_lights");
+    final IdentifiedTag greenStripWallLights = blockTag("green_strip_wall_lights");
+    final IdentifiedTag greenWallLights = blockTag("green_wall_lights");
+    final IdentifiedTag greenCornerLights = blockTag("green_corner_lights");
+    final IdentifiedTag greenLightDecorations = blockTag("green_light_decorations");
+    final IdentifiedTag greenColumnLights = blockTag("green_column_lights");
     final IdentifiedTag cyanStripWallLights = blockTag("cyan_strip_wall_lights");
     final IdentifiedTag cyanWallLights = blockTag("cyan_wall_lights");
     final IdentifiedTag cyanCornerLights = blockTag("cyan_corner_lights");
     final IdentifiedTag cyanLightDecorations = blockTag("cyan_light_decorations");
     final IdentifiedTag cyanColumnLights = blockTag("cyan_column_lights");
+    final IdentifiedTag pinkStripWallLights = blockTag("pink_strip_wall_lights");
+    final IdentifiedTag pinkWallLights = blockTag("pink_wall_lights");
+    final IdentifiedTag pinkCornerLights = blockTag("pink_corner_lights");
+    final IdentifiedTag pinkLightDecorations = blockTag("pink_light_decorations");
+    final IdentifiedTag pinkColumnLights = blockTag("pink_column_lights");
     final IdentifiedTag lightSlabs = blockTag("light_slabs");
     final IdentifiedTag lightCovers = blockTag("light_covers");
 
@@ -270,30 +285,45 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
               case "white" -> whiteStripWallLights.addBlock(block);
               case "yellow" -> yellowStripWallLights.addBlock(block);
               case "cyan" -> cyanStripWallLights.addBlock(block);
+              case "orange" -> orangeStripWallLights.addBlock(block);
+              case "green" -> greenStripWallLights.addBlock(block);
+              case "pink" -> pinkStripWallLights.addBlock(block);
             }
           } else if (block instanceof AutoConnectWallLightBlock) {
             switch (((AutoConnectWallLightBlock) block).lightColor) {
               case "white" -> whiteLightDecorations.addBlock(block);
               case "yellow" -> yellowLightDecorations.addBlock(block);
               case "cyan" -> cyanLightDecorations.addBlock(block);
+              case "orange" -> orangeLightDecorations.addBlock(block);
+              case "green" -> greenLightDecorations.addBlock(block);
+              case "pink" -> pinkLightDecorations.addBlock(block);
             }
           } else if (block instanceof ColumnLightBlock || block instanceof ColumnWallLightBlock) {
             switch (block instanceof ColumnLightBlock ? ((ColumnLightBlock) block).lightColor : ((ColumnWallLightBlock) block).lightColor) {
               case "white" -> whiteColumnLights.addBlock(block);
               case "yellow" -> yellowColumnLights.addBlock(block);
               case "cyan" -> cyanColumnLights.addBlock(block);
+              case "orange" -> orangeColumnLights.addBlock(block);
+              case "green" -> greenColumnLights.addBlock(block);
+              case "pink" -> pinkColumnLights.addBlock(block);
             }
           } else if (block instanceof WallLightBlock) {
             switch (((WallLightBlock) block).lightColor) {
               case "white" -> whiteWallLights.addBlock(block);
               case "yellow" -> yellowWallLights.addBlock(block);
               case "cyan" -> cyanWallLights.addBlock(block);
+              case "orange" -> orangeWallLights.addBlock(block);
+              case "green" -> greenWallLights.addBlock(block);
+              case "pink" -> pinkWallLights.addBlock(block);
             }
           } else if (block instanceof CornerLightBlock) {
             switch (((CornerLightBlock) block).lightColor) {
               case "white" -> whiteCornerLights.addBlock(block);
               case "yellow" -> yellowCornerLights.addBlock(block);
               case "cyan" -> cyanCornerLights.addBlock(block);
+              case "orange" -> orangeCornerLights.addBlock(block);
+              case "green" -> greenCornerLights.addBlock(block);
+              case "pink" -> pinkCornerLights.addBlock(block);
             }
           }
           if (block instanceof SlabBlock) {
@@ -528,11 +558,17 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     whiteWallLights.addTag(whiteStripWallLights);
     yellowWallLights.addTag(yellowStripWallLights);
     cyanWallLights.addTag(cyanStripWallLights);
+    orangeWallLights.addTag(orangeStripWallLights);
+    greenWallLights.addTag(greenStripWallLights);
+    pinkWallLights.addTag(pinkStripWallLights);
 
     registerTags(
         whiteWallLights, whiteStripWallLights, whiteCornerLights, whiteLightDecorations,
         yellowWallLights, yellowStripWallLights, yellowCornerLights, yellowLightDecorations,
         cyanWallLights, cyanStripWallLights, cyanCornerLights, cyanLightDecorations,
+        orangeWallLights, orangeStripWallLights, orangeCornerLights, orangeLightDecorations,
+        greenWallLights, greenStripWallLights, greenCornerLights, greenLightDecorations,
+        pinkWallLights, pinkStripWallLights, pinkCornerLights, pinkLightDecorations,
         whiteColumnLights, yellowColumnLights, cyanColumnLights
     );
     registerTag(lightSlabs);

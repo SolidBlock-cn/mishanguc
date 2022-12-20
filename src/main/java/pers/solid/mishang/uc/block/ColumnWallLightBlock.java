@@ -14,23 +14,33 @@ import java.util.Map;
  * 柱形灯块。
  */
 public class ColumnWallLightBlock extends WallLightBlock {
-  public static final Map<Direction.Axis, VoxelShape> SMALL_SHAPES = ImmutableMap.of(
-      Direction.Axis.X, createCuboidShape(0, 5, 5, 16, 11, 11),
-      Direction.Axis.Y, createCuboidShape(5, 0, 5, 11, 16, 11),
-      Direction.Axis.Z, createCuboidShape(5, 5, 0, 11, 11, 16)
-  );
-  public static final Map<Direction.Axis, VoxelShape> LARGE_SHAPES = ImmutableMap.of(
-      Direction.Axis.X, createCuboidShape(0, 4, 4, 16, 12, 12),
-      Direction.Axis.Y, createCuboidShape(4, 0, 4, 12, 16, 12),
-      Direction.Axis.Z, createCuboidShape(4, 4, 0, 12, 12, 16)
-  );
+  private final int sizeType;
+  public static final Map<Direction.Axis, VoxelShape> SHAPES7 = createColumnShapes(7);
+  public static final Map<Direction.Axis, VoxelShape> SHAPES6 = createColumnShapes(6);
+  public static final Map<Direction.Axis, VoxelShape> SHAPES5 = createColumnShapes(5);
+  public static final Map<Direction.Axis, VoxelShape> SHAPES4 = createColumnShapes(4);
 
-  public ColumnWallLightBlock(String lightColor, Settings settings, boolean largeShape) {
-    super(lightColor, settings, largeShape);
+  public ColumnWallLightBlock(String lightColor, Settings settings, int sizeType) {
+    super(lightColor, settings, sizeType == 2);
+    this.sizeType = sizeType;
   }
 
   @Override
   public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-    return (largeShape ? LARGE_SHAPES : SMALL_SHAPES).get(state.get(FACING).getAxis());
+    return (sizeType >= 2 ? SHAPES4 : sizeType == 1 ? SHAPES5 : SHAPES6).get(state.get(FACING).getAxis());
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    return (sizeType >= 2 ? SHAPES5 : sizeType == 1 ? SHAPES6 : SHAPES7).get(state.get(FACING).getAxis());
+  }
+
+  private static Map<Direction.Axis, VoxelShape> createColumnShapes(int min) {
+    return ImmutableMap.of(
+        Direction.Axis.X, createCuboidShape(0, min, min, 16, 16 - min, 16 - min),
+        Direction.Axis.Y, createCuboidShape(min, 0, min, 16 - min, 16, 16 - min),
+        Direction.Axis.Z, createCuboidShape(min, min, 0, 16 - min, 16 - min, 16)
+    );
   }
 }
