@@ -2,6 +2,10 @@
   "values": [
     "#mishanguc:cyan_corner_lights",
     "#mishanguc:cyan_wall_lights",
-    "#mishanguc:cyan_light_decorations"
+    "#mishanguc:cyan_light_decorations",
+    "#mishanguc:cyan_column_lights",
+    "mishanguc:cyan_light",
+    "mishanguc:cyan_light_slab",
+    "mishanguc:cyan_light_cover"
   ]
 }

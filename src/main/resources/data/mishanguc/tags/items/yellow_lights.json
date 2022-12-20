@@ -2,6 +2,10 @@
   "values": [
     "#mishanguc:yellow_corner_lights",
     "#mishanguc:yellow_wall_lights",
-    "#mishanguc:yellow_light_decorations"
+    "#mishanguc:yellow_light_decorations",
+    "#mishanguc:yellow_column_lights",
+    "mishanguc:yellow_light",
+    "mishanguc:yellow_light_slab",
+    "mishanguc:yellow_light_cover"
   ]
 }

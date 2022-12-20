@@ -94,7 +94,7 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       this.lineColorSide = lineColorSide;
       this.lineTypeSide = lineTypeSide;
       if (hasBevelTopProperty) {
-        setDefaultState(stateManager.getDefaultState().with(BEVEL_TOP, false));
+        setDefaultState(getDefaultState().with(BEVEL_TOP, false));
       }
     }
 

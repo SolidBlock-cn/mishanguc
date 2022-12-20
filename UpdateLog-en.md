@@ -7,6 +7,15 @@ Note: Not all versions in this update log are already published. Please refer to
 Updated following content:
 
 - Added features related to block light.
+- Adjusted the order of light blocks。
+- Now same and connected strip light can have invisible face culled.
+- Adjusted the outline shape of large wall light and light tube to encompass the whole look.
+- Added thick stripped light; in former versions there were only stripp light tubes.
+- Added medium wall lights and light tubes.
+- Added column lights, column light tubes, light slabs, and light covers.
+- Twaked the texture of three types of lights.
+- Added light round decorations for other colors; in former versions there was only one for white.
+- Wall lights can be placed on blocks with an empty side shape (such as with empty collision shape).
 
 ### 1.0.4
 
