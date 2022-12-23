@@ -16,7 +16,10 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -114,5 +117,11 @@ public abstract class AbstractRoadBlock extends Block implements Road {
   @Override
   public @Nullable RecipeCategory getRecipeCategory() {
     return RecipeCategory.BUILDING_BLOCKS;
+  }
+
+  @ApiStatus.AvailableSince("1.1.0")
+  @Contract(pure = true)
+  public final AbstractRoadSlabBlock getRoadSlab() {
+    return RoadSlabBlocks.BLOCK_TO_SLABS.get(this);
   }
 }

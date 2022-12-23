@@ -28,14 +28,11 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.annotations.Cutout;
-import pers.solid.mishang.uc.annotations.Translucent;
-import pers.solid.mishang.uc.block.ColoredBlock;
-import pers.solid.mishang.uc.block.HandrailBlock;
-import pers.solid.mishang.uc.block.Road;
-import pers.solid.mishang.uc.block.StandingSignBlock;
+import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.blockentity.*;
+import pers.solid.mishang.uc.blocks.MishangucBlocks;
 import pers.solid.mishang.uc.item.CarryingToolItem;
 import pers.solid.mishang.uc.item.DataTagToolItem;
 import pers.solid.mishang.uc.item.MishangucItems;
@@ -81,9 +78,9 @@ public class MishangucClient implements ClientModInitializer {
 
     registerModelPredicateProviders();
 
-    ClientPlayConnectionEvents.INIT.register((handler, client) -> {
-      CLIENT_SUSPENDS_LIGHT_UPDATE.set(false);
-    });
+    if (CLIENT_SUSPENDS_LIGHT_UPDATE != null) {
+      ClientPlayConnectionEvents.INIT.register((handler, client) -> CLIENT_SUSPENDS_LIGHT_UPDATE.set(false));
+    }
   }
 
   private static void registerModelPredicateProviders() {
@@ -143,7 +140,7 @@ public class MishangucClient implements ClientModInitializer {
 
   private static void registerBlockColors() {
     // 注册方块和颜色
-    final Block[] coloredBlocks = MishangUtils.blocks().values().stream().filter(Predicates.instanceOf(ColoredBlock.class))
+    final Block[] coloredBlocks = MishangUtils.blocks().stream().filter(Predicates.instanceOf(ColoredBlock.class))
         .flatMap(block -> block instanceof HandrailBlock handrailBlock ? Stream.of(handrailBlock, handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer()) : Stream.of(block))  // since 0.2.4 用于可着色的栏杆方块及其变种
         .toArray(Block[]::new);
     ColorProviderRegistry.BLOCK.register(
@@ -211,23 +208,14 @@ public class MishangucClient implements ClientModInitializer {
 
   private static void registerBlockLayers() {
     // 设置相应的 BlockLayer
-    MishangUtils.blocks().forEach((field, value) -> {
-      try {
-        if (field.isAnnotationPresent(Cutout.class)) {
-          BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout());
-          if (value instanceof final HandrailBlock handrailBlock) {
-            BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer());
-          }
-        }
-        if (field.isAnnotationPresent(Translucent.class)) {
-          BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getTranslucent());
-          if (value instanceof final HandrailBlock handrailBlock) {
-            BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer());
-          }
-        }
-      } catch (Throwable e) {
-        Mishanguc.MISHANG_LOGGER.warn("Error when setting BlockLayers:", e);
+    Validate.notEmpty(MishangucBlocks.translucentBlocks).forEach(block -> BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getTranslucent()));
+    Validate.notEmpty(MishangucBlocks.cutoutBlocks).forEach(block -> {
+      BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout());
+      if (block instanceof AbstractRoadBlock roadBlock && roadBlock.getRoadSlab() != null) {
+        BlockRenderLayerMap.INSTANCE.putBlock(roadBlock.getRoadSlab(), RenderLayer.getCutout());
       }
     });
+    MishangucBlocks.translucentBlocks = null;
+    MishangucBlocks.cutoutBlocks = null;
   }
 }

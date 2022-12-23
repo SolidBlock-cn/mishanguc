@@ -12,6 +12,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -48,9 +49,14 @@ public final class MishangucCommands {
         })
         .then(CommandManager.literal("help")
             .executes(context -> {
-              executeUpdateLightHelp(context.getSource());
+              executeUpdateLightHelp(context.getSource(), 0);
               return 1;
-            }))
+            })
+            .then(CommandManager.argument("page", IntegerArgumentType.integer(1, 2))
+                .executes(context -> {
+                  executeUpdateLightHelp(context.getSource(), IntegerArgumentType.getInteger(context, "page"));
+                  return 1;
+                })))
         .then(CommandManager.argument("range", IntegerArgumentType.integer(0, 64))
             .executes(context -> {
               final ServerCommandSource source = context.getSource();
@@ -190,9 +196,9 @@ public final class MishangucCommands {
     return blocksAffected;
   }
 
-  private static void executeUpdateLightHelp(ServerCommandSource source) {
+  private static void executeUpdateLightHelp(ServerCommandSource source, int page) {
     final MutableText lb = TextBridge.literal("\n");
-    source.sendFeedback(TextBridge.empty().formatted(Formatting.GRAY)
+    if (page < 1) source.sendFeedback(TextBridge.empty().formatted(Formatting.GRAY)
             .append(TextBridge.translatable("commands.mishanguc:update-light.description.title", "/mishanguc:update-light").formatted(Formatting.GREEN, Formatting.BOLD, Formatting.UNDERLINE))
             .append(lb)
             .append(TextBridge.translatable("commands.mishanguc:update-light.description.summary"))
@@ -207,6 +213,12 @@ public final class MishangucCommands {
                 .append("\n")
                 .append(TextBridge.translatable("commands.mishanguc:update-light.description.syntax2", 64, TextBridge.translatable("commands.mishanguc:update-light.argument.range"))))
             .append(lb)
+            .append(TextBridge.translatable("commands.mishanguc:update-light.continue")
+                .styled(style -> style
+                    .withColor(Formatting.WHITE).withUnderline(true)
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/mishanguc:update-light help 2")))),
+        false);
+    if (page >= 1) source.sendFeedback(TextBridge.empty().formatted(Formatting.GRAY)
             .append(TextBridge.literal("- ")
                 .append(TextBridge.literal("/mishanguc:update light <").formatted(Formatting.YELLOW).append(Text.translatable("commands.mishanguc:update-light.argument.fromPos")).append("> <").append(TextBridge.translatable("commands.mishanguc:update-light.argument.fromPos").append(">")))
                 .append("\n")

@@ -1,9 +1,10 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.datafixers.util.Either;
+import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.blockstate.JBlockModel;
 import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.blockstate.JVariants;
+import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -21,11 +22,12 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.util.LineColor;
-import pers.solid.mishang.uc.util.LineType;
-import pers.solid.mishang.uc.util.RoadConnectionState;
-import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.arrp.BRRPHelper;
+import pers.solid.mishang.uc.arrp.FasterJTextures;
+import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
 
@@ -45,8 +47,8 @@ public interface RoadWithJointLine extends Road {
         RoadConnectionState.of(
             state.get(FACING) != direction.getOpposite(),
             getLineColor(state, direction),
-            Either.left(direction),
-            getLineType(state, direction), state));
+            EightHorizontalDirection.of(direction),
+            getLineType(state, direction), null));
   }
 
   @Override
@@ -61,7 +63,7 @@ public interface RoadWithJointLine extends Road {
 
   @Override
   default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
-    final Direction rotation = Direction.fromRotation(ctx.getPlayerYaw());
+    final Direction rotation = ctx.getPlayerFacing();
     return Road.super
         .withPlacementState(state, ctx)
         .with(
@@ -86,16 +88,22 @@ public interface RoadWithJointLine extends Road {
   class Impl extends AbstractRoadBlock implements RoadWithJointLine {
     public final LineColor lineColorSide;
     public final LineType lineTypeSide;
+    private final String lineTop;
+    protected final String lineSide;
+    protected final String lineSide2;
 
     public Impl(
         Settings settings,
         LineColor lineColor,
         LineColor lineColorSide,
         LineType lineType,
-        LineType lineTypeSide) {
+        LineType lineTypeSide, String lineTop) {
       super(settings, lineColor, lineType);
       this.lineColorSide = lineColorSide;
       this.lineTypeSide = lineTypeSide;
+      this.lineTop = lineTop;
+      lineSide = MishangUtils.composeStraightLineTexture(this.lineColor, this.lineType);
+      lineSide2 = MishangUtils.composeStraightLineTexture(this.lineColorSide, this.lineTypeSide);
     }
 
     @Override
@@ -129,7 +137,7 @@ public interface RoadWithJointLine extends Road {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @Nullable JBlockStates getBlockStates() {
+    public @NotNull JBlockStates getBlockStates() {
       final Identifier id = getBlockModelId();
       JVariants variant = new JVariants();
       for (Direction direction : Direction.Type.HORIZONTAL) {
@@ -137,6 +145,19 @@ public interface RoadWithJointLine extends Road {
             new JBlockModel(id).y((int) direction.asRotation()));
       }
       return JBlockStates.ofVariants(variant);
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public @NotNull JModel getBlockModel() {
+      return new JModel("mishanguc:block/road_with_joint_line")
+          .textures(new FasterJTextures().base("asphalt").lineSide(lineSide).lineSide2(lineSide2).lineTop(lineTop));
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public void writeBlockModel(RuntimeResourcePack pack) {
+      BRRPHelper.addModelWithSlab(pack, this);
     }
   }
 }

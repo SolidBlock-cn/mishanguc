@@ -162,7 +162,7 @@ public class CornerLightBlock extends HorizontalFacingBlock
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JModel getBlockModel() {
+  public @NotNull JModel getBlockModel() {
     return new JModel(getModelParent())
         .textures(new FasterJTextures().varP("light", lightColor + "_light"));
   }

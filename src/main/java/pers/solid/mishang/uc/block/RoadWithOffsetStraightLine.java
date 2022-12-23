@@ -1,9 +1,10 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.datafixers.util.Either;
+import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.blockstate.JBlockModel;
 import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.blockstate.JVariants;
+import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -20,12 +21,12 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.util.LineColor;
-import pers.solid.mishang.uc.util.LineType;
-import pers.solid.mishang.uc.util.RoadConnectionState;
-import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.arrp.BRRPHelper;
+import pers.solid.mishang.uc.arrp.FasterJTextures;
+import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
 
@@ -51,8 +52,9 @@ public interface RoadWithOffsetStraightLine extends Road {
         RoadConnectionState.of(
             direction.getAxis() != state.get(FACING).getAxis(),
             getLineColor(state, direction),
-            Either.left(direction),
-            getLineType(state, direction), state));
+            EightHorizontalDirection.of(direction),
+            getLineType(state, direction),
+            new LineOffset(state.get(FACING).getOpposite(), offsetLevel())));
   }
 
   @Override
@@ -80,9 +82,16 @@ public interface RoadWithOffsetStraightLine extends Road {
   default void appendRoadTooltip(
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     Road.super.appendRoadTooltip(stack, world, tooltip, options);
-    tooltip.add(
-        TextBridge.translatable("block.mishanguc.tooltip.road_with_offset_straight_line")
-            .formatted(Formatting.GRAY));
+    final int offsetLevel = offsetLevel();
+    if (offsetLevel == 114514) {
+      tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_white_and_yellow_double_line.1").formatted(Formatting.GRAY));
+      tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_white_and_yellow_double_line.2").formatted(Formatting.GRAY));
+      tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_white_and_yellow_double_line.3").formatted(Formatting.GRAY));
+    } else {
+      tooltip.add(
+          TextBridge.translatable("block.mishanguc.tooltip.road_with_offset_straight_line")
+              .formatted(Formatting.GRAY));
+    }
   }
 
   @Environment(EnvType.CLIENT)
@@ -95,14 +104,44 @@ public interface RoadWithOffsetStraightLine extends Road {
     return JBlockStates.ofVariants(JVariants);
   }
 
+  @Contract(pure = true)
+  int offsetLevel();
+
   class Impl extends AbstractRoadBlock implements RoadWithOffsetStraightLine {
-    public Impl(Settings settings, LineColor lineColor, LineType lineType) {
+    private final String lineTexture;
+    private final int offsetLevel;
+
+    public Impl(Settings settings, LineColor lineColor, LineType lineType, String lineTexture, int offsetLevel) {
       super(settings, lineColor, lineType);
+      this.lineTexture = lineTexture;
+      this.offsetLevel = offsetLevel;
     }
 
     @Override
     public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
-      tooltip.add(TextBridge.translatable("lineType.offsetStraight.composed", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
+      if (offsetLevel == 0) {
+        tooltip.add(TextBridge.translatable("tbd")
+            .formatted(Formatting.BLUE));
+      } else {
+        tooltip.add(TextBridge.translatable("lineType.offsetStraight.composed", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
+      }
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public @NotNull JModel getBlockModel() {
+      return new JModel("mishanguc:block/road_with_straight_line").textures(new FasterJTextures().base("asphalt").lineSide(lineTexture).lineTop(lineTexture));
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public void writeBlockModel(RuntimeResourcePack pack) {
+      BRRPHelper.addModelWithSlab(pack, Impl.this);
+    }
+
+    @Override
+    public int offsetLevel() {
+      return offsetLevel;
     }
   }
 }

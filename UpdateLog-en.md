@@ -17,6 +17,16 @@ Updated following content:
 - Added light round decorations for other colors; in former versions there was only one for white.
 - Wall lights can be placed on blocks with an empty side shape (such as with empty collision shape).
 - Added orange, green, and pink lights.
+- Added multiple road blocks, such as road with angle line with two parts offset, roads with T-shaped line with offset side, road with two bevel angle lines, and roads with different-color double lines.
+- The `color` field of NBT data of color tool, colored blocks, sign texts, now supports multiple formats, including:
+    - integers, such as `16777215`.
+    - texts indicating the text color, such as `"red"`.
+    - array, in the order of RGBA, such as `[0, 255, 0]`.
+    - objects, such as `{signColor: red}`, `{fireworkColor: red}`, and `{mapColor: red}`.
+- Optimized the code, including code related to data generation and block registration.
+- Roads with auto lines can more smartly handle offsets of line.
+- Roads with auto lines, when generating lines, can catch the exceptions if there are any thrown.
+- Changed the model of `mishanguc:block/road_with_angle_line`. Now the two sides on west and east use texture `#lineSide` and the south side uses `#lineSide2`.
 
 ### 1.0.4
 

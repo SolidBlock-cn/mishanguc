@@ -24,8 +24,8 @@
       "faces": {
         "down": {"texture": "#line_bottom", "uv": [0, 16, 16, 0]},
         "up": {"texture": "#line_top", "cullface": "up"},
-        "west": {"texture": "#line_side2", "cullface": "west"},
-        "south": {"texture": "#line_side", "cullface": "south"}
+        "west": {"texture": "#line_side", "cullface": "west"},
+        "south": {"texture": "#line_side2", "cullface": "south"}
       }
     }
   ]
