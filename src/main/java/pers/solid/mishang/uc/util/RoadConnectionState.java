@@ -2,7 +2,6 @@ package pers.solid.mishang.uc.util;
 
 import com.mojang.datafixers.util.Either;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.StringIdentifiable;
@@ -10,7 +9,7 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import pers.solid.mishang.uc.block.SmartRoadSlabBlock;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 表示一个道路在一个方向上的连接状态。
@@ -19,25 +18,32 @@ import pers.solid.mishang.uc.block.SmartRoadSlabBlock;
  * @param lineColor        道路连线的颜色。
  * @param direction        道路连线的方向。通常来说是正对着的，但偶尔也有可能是斜的方向。
  * @param lineType         道路连接线的类型，一般是普通线，也有可能是粗线或双线。
- * @param blockState       该道路连接状态所拥有的方块状态。
+ * @param lineOffset       该道路连接状态的偏移。
  * @since 0.2.0-mc1.17+ 此类更改为记录；1.16.5 由于仍为 Java 8，因此仍使用普通类的形式。
  */
-public record RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, Either<Direction, HorizontalCornerDirection> direction, LineType lineType, BlockState blockState) implements Comparable<RoadConnectionState> {
+public record RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, EightHorizontalDirection direction, LineType lineType, @Nullable LineOffset lineOffset) implements Comparable<RoadConnectionState> {
 
-  @Contract("_ -> new")
-  public static RoadConnectionState empty(BlockState blockState) {
-    return new RoadConnectionState(WhetherConnected.NOT_CONNECTED, LineColor.NONE, null, LineType.NORMAL, blockState);
+  public RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, EightHorizontalDirection direction, LineType lineType) {
+    this(whetherConnected, lineColor, direction, lineType, null);
   }
 
-  public static RoadConnectionState of(boolean whetherConnected, LineColor lineColor, Either<Direction, HorizontalCornerDirection> direction, LineType lineType, BlockState blockState) {
-    return new RoadConnectionState(whetherConnected ? WhetherConnected.CONNECTED : WhetherConnected.NOT_CONNECTED, lineColor, direction, lineType, blockState);
+  @Contract(" -> new")
+  public static RoadConnectionState empty() {
+    return new RoadConnectionState(WhetherConnected.NOT_CONNECTED, LineColor.NONE, null, LineType.NORMAL, null);
+  }
+
+  public static RoadConnectionState of(boolean whetherConnected, LineColor lineColor, EightHorizontalDirection direction, LineType lineType, LineOffset lineOffset) {
+    return new RoadConnectionState(whetherConnected ? WhetherConnected.CONNECTED : WhetherConnected.NOT_CONNECTED, lineColor, direction, lineType, lineOffset);
   }
 
   public static RoadConnectionState or(RoadConnectionState state1, RoadConnectionState state2) {
     return state1.compareTo(state2) > 0 ? state1 : state2;
   }
 
-  public static MutableText text(Direction direction) {
+  public static MutableText text(@Nullable Direction direction) {
+    if (direction == null) {
+      return TextBridge.translatable("direction.none");
+    }
     return TextBridge.translatable("direction." + direction.asString());
   }
 
@@ -51,6 +57,10 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
     } else {
       return direction.map(RoadConnectionState::text, RoadConnectionState::text);
     }
+  }
+
+  public static MutableText text(EightHorizontalDirection direction) {
+    return text(direction.either);
   }
 
   public static MutableText text(WhetherConnected whetherConnected) {
@@ -93,17 +103,34 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
     return whetherConnected.compareTo(o.whetherConnected);
   }
 
-  @Contract(pure = true)
+  @Deprecated
+  @Contract("-> fail")
   public Block block() {
-    final Block block = blockState.getBlock();
-    return block instanceof SmartRoadSlabBlock<?> slab ? slab.baseBlock : block;
+//    final Block block = blockState.getBlock();
+//    return block instanceof SmartRoadSlabBlock<?> slab ? slab.baseBlock : block;
+    return null;
+  }
+
+  @Contract("_ -> new")
+  public RoadConnectionState createWithOffset(LineOffset lineOffset) {
+    return new RoadConnectionState(whetherConnected, lineColor, direction, lineType, lineOffset);
+  }
+
+  @Contract(pure = true)
+  @ApiStatus.AvailableSince("1.1.0")
+  public Direction offsetDirection() {
+    return lineOffset == null ? null : lineOffset.offsetDirection();
+  }
+
+  @Contract(pure = true)
+  @ApiStatus.AvailableSince("1.1.0")
+  public int offsetLevel() {
+    return lineOffset == null ? 0 : lineOffset.level();
   }
 
   public enum WhetherConnected implements StringIdentifiable {
     NOT_CONNECTED("not_connected"),
     MAY_CONNECT("may_connect"),
-    @Deprecated @ApiStatus.ScheduledForRemoval(inVersion = "0.2.5")
-    PROBABLY_CONNECTED("probably_connected"),
     CONNECTED("connected");
 
     private final String id;

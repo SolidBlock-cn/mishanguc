@@ -17,7 +17,6 @@ import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Quaternion;
@@ -246,23 +245,11 @@ public class TextContext implements Cloneable {
     if (verticalAlign == null) {
       verticalAlign = VerticalAlign.MIDDLE;
     }
-    final NbtElement nbtColor = nbt.get("color");
-    if (nbtColor instanceof final AbstractNbtNumber abstractNbtNumber) {
-      color = abstractNbtNumber.intValue();
-    } else if (nbtColor instanceof NbtString) {
-      final @Nullable DyeColor dyeColor = DyeColor.byName(nbtColor.asString(), null);
-      if (dyeColor != null) {
-        color = dyeColor.getSignColor();
-      }
+    if (nbt.contains("color")) {
+      color = MishangUtils.readColorFromNbtElement(nbt.get("color"));
     }
-    final NbtElement nbtOutlineColor = nbt.get("outlineColor");
-    if (nbtOutlineColor instanceof final AbstractNbtNumber abstractNbtNumber) {
-      outlineColor = abstractNbtNumber.intValue();
-    } else if (nbtOutlineColor instanceof NbtString) {
-      final @Nullable DyeColor dyeColor = DyeColor.byName(nbtOutlineColor.asString(), null);
-      if (dyeColor != null) {
-        outlineColor = MishangUtils.COLOR_TO_OUTLINE_COLOR.get(dyeColor);
-      }
+    if (nbt.contains("outlineColor")) {
+      outlineColor = MishangUtils.readColorFromNbtElement(nbt.get("outlineColor"));
     }
     shadow = nbt.getBoolean("shadow");
     seeThrough = nbt.getBoolean("seeThrough");

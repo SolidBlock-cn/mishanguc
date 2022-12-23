@@ -7,7 +7,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
-import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
 import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.EnumMap;
@@ -23,7 +22,8 @@ public class RoadSlabBlockWithAutoLine extends SmartRoadSlabBlock<RoadBlockWithA
   public @NotNull BlockState makeState(
       EnumMap<Direction, RoadConnectionState> connectionStateMap, BlockState defaultState) {
     final BlockState baseState = baseBlock.makeState(connectionStateMap, defaultState);
-    BlockState state = RoadSlabBlocks.BLOCK_TO_SLABS.get((AbstractRoadBlock) baseState.getBlock()).getDefaultState();
+    AbstractRoadBlock block = (AbstractRoadBlock) baseState.getBlock();
+    BlockState state = block.getRoadSlab().getDefaultState();
     for (Property<?> property : baseState.getProperties()) {
       if (state.contains(property)) {
         state = sendProperty(baseState, state, property);

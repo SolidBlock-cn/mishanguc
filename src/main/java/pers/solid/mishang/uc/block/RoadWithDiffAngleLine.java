@@ -1,8 +1,10 @@
 package pers.solid.mishang.uc.block;
 
+import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.blockstate.JBlockModel;
 import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.blockstate.JVariants;
+import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -20,6 +22,8 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.arrp.BRRPHelper;
+import pers.solid.mishang.uc.arrp.FasterJTextures;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
@@ -59,6 +63,7 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
   class Impl extends RoadWithAngleLine.Impl implements RoadWithDiffAngleLine {
     public final LineColor lineColor2;
     public final LineType lineType2;
+    private final String lineSide2;
 
     public Impl(
         Settings settings,
@@ -66,10 +71,11 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
         LineColor lineColor2,
         LineType lineType,
         LineType lineType2,
-        boolean isBevel) {
-      super(settings, lineColor, lineType, isBevel);
+        boolean isBevel, String lineSide2, String lineTop) {
+      super(settings, lineColor, lineType, isBevel, lineTop);
       this.lineColor2 = lineColor2;
       this.lineType2 = lineType2;
+      this.lineSide2 = lineSide2;
     }
 
     @Override
@@ -113,6 +119,18 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
                     .y((int) direction.asRotation()));
       }
       return JBlockStates.ofVariants(variant);
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public @NotNull JModel getBlockModel() {
+      return new JModel("mishanguc:block/road_with_angle_line").textures(new FasterJTextures().base("asphalt").lineSide(lineSide).lineSide2(lineSide2).lineTop(lineTop));
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public void writeBlockModel(RuntimeResourcePack pack) {
+      BRRPHelper.addModelWithSlabWithMirrored(pack, RoadWithDiffAngleLine.Impl.this);
     }
   }
 }

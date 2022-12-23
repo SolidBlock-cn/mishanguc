@@ -4,7 +4,6 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.DyeColor;
 import org.jetbrains.annotations.ApiStatus;
-import pers.solid.mishang.uc.annotations.RegisterIdentifier;
 import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.ColoredGlassHandrailBlock;
 import pers.solid.mishang.uc.block.GlassHandrailBlock;
@@ -23,37 +22,21 @@ public final class HandrailBlocks extends MishangucBlocks {
 
   // 简单的混凝土栏杆
 
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_WHITE_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.WHITE_CONCRETE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_ORANGE_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.ORANGE_CONCRETE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_MAGENTA_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.MAGENTA_CONCRETE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_LIGHT_BLUE_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.LIGHT_BLUE_CONCRETE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_YELLOW_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.YELLOW_CONCRETE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_LIME_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.LIME_CONCRETE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_PINK_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.PINK_CONCRETE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_GRAY_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.GRAY_CONCRETE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_LIGHT_GRAY_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.LIGHT_GRAY_CONCRETE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_CYAN_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.CYAN_CONCRETE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_PURPLE_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.PURPLE_CONCRETE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_BLUE_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.BLUE_CONCRETE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_BROWN_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.BROWN_CONCRETE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_GREEN_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.GREEN_CONCRETE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_RED_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.RED_CONCRETE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_BLACK_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.BLACK_CONCRETE);
 
   /**
@@ -83,37 +66,21 @@ public final class HandrailBlocks extends MishangucBlocks {
 
   // 简单的陶瓦栏杆
 
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_WHITE_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.WHITE_TERRACOTTA);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_ORANGE_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.ORANGE_TERRACOTTA);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_MAGENTA_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.MAGENTA_TERRACOTTA);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_LIGHT_BLUE_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.LIGHT_BLUE_TERRACOTTA);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_YELLOW_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.YELLOW_TERRACOTTA);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_LIME_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.LIME_TERRACOTTA);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_PINK_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.PINK_TERRACOTTA);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_GRAY_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.GRAY_TERRACOTTA);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_LIGHT_GRAY_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.LIGHT_GRAY_TERRACOTTA);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_CYAN_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.CYAN_TERRACOTTA);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_PURPLE_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.PURPLE_TERRACOTTA);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_BLUE_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.BLUE_TERRACOTTA);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_BROWN_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.BROWN_TERRACOTTA);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_GREEN_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.GREEN_TERRACOTTA);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_RED_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.RED_TERRACOTTA);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_BLACK_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.BLACK_TERRACOTTA);
 
   /**
@@ -142,13 +109,9 @@ public final class HandrailBlocks extends MishangucBlocks {
 
   // 冰雪。
   @Translucent
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_ICE_HANDRAIL = new SimpleHandrailBlock(Blocks.ICE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_PACKED_ICE_HANDRAIL = new SimpleHandrailBlock(Blocks.PACKED_ICE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_BLUE_ICE_HANDRAIL = new SimpleHandrailBlock(Blocks.BLUE_ICE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_SNOW_HANDRAIL = new SimpleHandrailBlock(Blocks.SNOW_BLOCK);
 
   static {
@@ -156,24 +119,15 @@ public final class HandrailBlocks extends MishangucBlocks {
   }
 
   // 木头
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_OAK_HANDRAIL = new SimpleHandrailBlock(Blocks.OAK_WOOD);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_SPRUCE_HANDRAIL = new SimpleHandrailBlock(Blocks.SPRUCE_WOOD);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_BIRCH_HANDRAIL = new SimpleHandrailBlock(Blocks.BIRCH_WOOD);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_JUNGLE_HANDRAIL = new SimpleHandrailBlock(Blocks.JUNGLE_WOOD);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_ACACIA_HANDRAIL = new SimpleHandrailBlock(Blocks.ACACIA_WOOD);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_DARK_OAK_HANDRAIL = new SimpleHandrailBlock(Blocks.DARK_OAK_WOOD);
-  @RegisterIdentifier
   @ApiStatus.AvailableSince("0.2.0-mc1.19")
   public static final SimpleHandrailBlock SIMPLE_MANGROVE_HANDRAIL = new SimpleHandrailBlock(Blocks.MANGROVE_WOOD);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_CRIMSON_HANDRAIL = new SimpleHandrailBlock(Blocks.CRIMSON_STEM);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_WARPED_HANDRAIL = new SimpleHandrailBlock(Blocks.WARPED_STEM);
 
   static {
@@ -190,62 +144,42 @@ public final class HandrailBlocks extends MishangucBlocks {
 
   // 染色玻璃。
 
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_DIRT_HANDRAIL = new SimpleHandrailBlock(Blocks.DIRT);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_STONE_HANDRAIL = new SimpleHandrailBlock(Blocks.STONE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_COBBLESTONE_HANDRAIL = new SimpleHandrailBlock(Blocks.COBBLESTONE);
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_MOSSY_COBBLESTONE_HANDRAIL = new SimpleHandrailBlock(Blocks.MOSSY_COBBLESTONE);
 
   @Translucent
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_WHITE_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.WHITE_STAINED_GLASS);
   @Translucent
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_ORANGE_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.ORANGE_STAINED_GLASS);
   @Translucent
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_MAGENTA_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.MAGENTA_STAINED_GLASS);
   @Translucent
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_LIGHT_BLUE_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.LIGHT_BLUE_STAINED_GLASS);
   @Translucent
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_YELLOW_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.YELLOW_STAINED_GLASS);
   @Translucent
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_LIME_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.LIME_STAINED_GLASS);
   @Translucent
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_PINK_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.PINK_STAINED_GLASS);
   @Translucent
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_GRAY_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.GRAY_STAINED_GLASS);
   @Translucent
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_LIGHT_GRAY_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.LIGHT_GRAY_STAINED_GLASS);
   @Translucent
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_CYAN_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.CYAN_STAINED_GLASS);
   @Translucent
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_PURPLE_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.PURPLE_STAINED_GLASS);
   @Translucent
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_BLUE_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.BLUE_STAINED_GLASS);
   @Translucent
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_BROWN_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.BROWN_STAINED_GLASS);
   @Translucent
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_GREEN_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.GREEN_STAINED_GLASS);
   @Translucent
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_RED_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.RED_STAINED_GLASS);
   @Translucent
-  @RegisterIdentifier
   public static final SimpleHandrailBlock SIMPLE_BLACK_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.BLACK_STAINED_GLASS);
 
   /**
@@ -273,67 +207,51 @@ public final class HandrailBlocks extends MishangucBlocks {
   }
 
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock WHITE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).strength(2.5f, 6f).mapColor(DyeColor.WHITE), "block/iron_block", "block/white_concrete");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock ORANGE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.ORANGE), "block/iron_block", "block/orange_concrete");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock MAGENTA_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.MAGENTA), "block/iron_block", "block/magenta_concrete");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock LIGHT_BLUE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.LIGHT_BLUE), "block/iron_block", "block/light_blue_concrete");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock YELLOW_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.YELLOW), "block/iron_block", "block/yellow_concrete");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock LIME_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.LIME), "block/iron_block", "block/lime_concrete");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock PINK_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.PINK), "block/iron_block", "block/pink_concrete");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock GRAY_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.GRAY), "block/iron_block", "block/gray_concrete");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock LIGHT_GRAY_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.LIGHT_GRAY), "block/iron_block", "block/light_gray_concrete");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock CYAN_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.CYAN), "block/iron_block", "block/cyan_concrete");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock PURPLE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.PURPLE), "block/iron_block", "block/purple_concrete");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock BLUE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.BLUE), "block/iron_block", "block/blue_concrete");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock BROWN_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.BROWN), "block/iron_block", "block/brown_concrete");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock GREEN_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.GREEN), "block/iron_block", "block/green_concrete");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock RED_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.RED), "block/iron_block", "block/red_concrete");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock BLACK_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.BLACK), "block/iron_block", "block/black_concrete");
 
@@ -362,7 +280,6 @@ public final class HandrailBlocks extends MishangucBlocks {
    * 可自定义染色的栏杆方块。
    */
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_IRON_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.IRON_BLOCK, FabricBlockSettings.copyOf(WHITE_DECORATED_IRON_HANDRAIL), "block/iron_block", "block/white_concrete");
 
@@ -370,87 +287,67 @@ public final class HandrailBlocks extends MishangucBlocks {
    * 可自定义染色的金栏杆方块。
    */
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_GOLD_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.GOLD_BLOCK, FabricBlockSettings.copyOf(Blocks.GOLD_BLOCK).strength(1.5f, 6f), "block/gold_block", "block/white_concrete");
 
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_EMERALD_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.EMERALD_BLOCK, FabricBlockSettings.copyOf(Blocks.EMERALD_BLOCK).strength(2.5f, 6f), "block/emerald_block", "block/white_concrete");
 
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_DIAMOND_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.DIAMOND_BLOCK, FabricBlockSettings.copyOf(Blocks.DIAMOND_BLOCK).strength(2.5f, 6f), "block/diamond_block", "block/white_concrete");
 
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_NETHERITE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.NETHERITE_BLOCK, FabricBlockSettings.copyOf(Blocks.NETHERITE_BLOCK).strength(25f, 1200f), "block/netherite_block", "block/white_concrete");
 
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock GLASS_OAK_HANDRAIL = new GlassHandrailBlock(Blocks.OAK_WOOD, FabricBlockSettings.copyOf(Blocks.OAK_WOOD).strength(1.0f), "block/oak_log", "block/oak_planks");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_OAK_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.OAK_WOOD, FabricBlockSettings.copyOf(Blocks.OAK_WOOD).strength(1.0f), "block/oak_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock GLASS_SPRUCE_HANDRAIL = new GlassHandrailBlock(Blocks.SPRUCE_WOOD, FabricBlockSettings.copyOf(Blocks.SPRUCE_WOOD).strength(1.0f), "block/spruce_log", "block/spruce_planks");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_SPRUCE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.SPRUCE_WOOD, FabricBlockSettings.copyOf(Blocks.SPRUCE_WOOD).strength(1.0f), "block/spruce_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock GLASS_BIRCH_HANDRAIL = new GlassHandrailBlock(Blocks.BIRCH_WOOD, FabricBlockSettings.copyOf(Blocks.BIRCH_WOOD).strength(1.0f), "block/birch_log", "block/birch_planks");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_BIRCH_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.BIRCH_WOOD, FabricBlockSettings.copyOf(Blocks.BIRCH_WOOD).strength(1.0f), "block/birch_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock GLASS_JUNGLE_HANDRAIL = new GlassHandrailBlock(Blocks.JUNGLE_WOOD, FabricBlockSettings.copyOf(Blocks.JUNGLE_WOOD).strength(1.0f), "block/jungle_log", "block/jungle_planks");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_JUNGLE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.JUNGLE_WOOD, FabricBlockSettings.copyOf(Blocks.JUNGLE_WOOD).strength(1.0f), "block/jungle_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock GLASS_ACACIA_HANDRAIL = new GlassHandrailBlock(Blocks.ACACIA_WOOD, FabricBlockSettings.copyOf(Blocks.ACACIA_WOOD).strength(1.0f), "block/acacia_log", "block/acacia_planks");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_ACACIA_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.ACACIA_WOOD, FabricBlockSettings.copyOf(Blocks.ACACIA_WOOD).strength(1.0f), "block/acacia_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock GLASS_DARK_OAK_HANDRAIL = new GlassHandrailBlock(Blocks.DARK_OAK_WOOD, FabricBlockSettings.copyOf(Blocks.DARK_OAK_WOOD).strength(1.0f), "block/dark_oak_log", "block/dark_oak_planks");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_DARK_OAK_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.DARK_OAK_WOOD, FabricBlockSettings.copyOf(Blocks.DARK_OAK_WOOD).strength(1.0f), "block/dark_oak_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock GLASS_MANGROVE_HANDRAIL = new GlassHandrailBlock(Blocks.MANGROVE_WOOD, FabricBlockSettings.copyOf(Blocks.MANGROVE_WOOD).strength(1.0f), "block/mangrove_log", "block/mangrove_planks");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_MANGROVE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.MANGROVE_WOOD, FabricBlockSettings.copyOf(Blocks.MANGROVE_WOOD).strength(1.0f), "block/mangrove_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_OBSIDIAN_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.OBSIDIAN, FabricBlockSettings.copyOf(Blocks.OBSIDIAN).strength(10, 1200), "block/obsidian", "block/white_concrete");
   @ApiStatus.AvailableSince("0.2.4")
-  @RegisterIdentifier
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_CRYING_OBSIDIAN_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.CRYING_OBSIDIAN, FabricBlockSettings.copyOf(Blocks.CRYING_OBSIDIAN).strength(10, 1200), "block/crying_obsidian", "block/white_concrete");
 }

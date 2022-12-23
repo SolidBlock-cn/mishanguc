@@ -27,6 +27,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
@@ -166,7 +167,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JModel getBlockModel() {
+  public @NotNull JModel getBlockModel() {
     return new JModel(getModelParent())
         .textures(new FasterJTextures().varP("light", lightColor + "_light"));
   }
