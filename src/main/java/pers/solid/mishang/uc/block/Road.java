@@ -10,6 +10,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.state.StateManager;
@@ -23,12 +24,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.util.EightHorizontalDirection;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -37,7 +40,27 @@ import java.util.function.Consumer;
  */
 public interface Road extends BlockResourceGenerator {
 
-  EntityAttributeModifier ROAD_SPEED_BOOST = new EntityAttributeModifier(UUID.fromString("693D7032-4767-5A57-A28F-401F8F485772"/* 根据网上的在线 UUID 生成器生成 */), "road_speed_boost", 1.75, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+  EntityAttributeModifier ROAD_SPEED_BOOST = new EntityAttributeModifier(UUID.fromString("693D7032-4767-5A57-A28F-401F8F485772"/* 根据网上的在线 UUID 生成器生成 */), "road_speed_boost", 1.75, EntityAttributeModifier.Operation.MULTIPLY_TOTAL) {
+    @Override
+    public double getValue() {
+      return MishangucRules.currentRoadBoostSpeed;
+    }
+
+    @Override
+    public NbtCompound toNbt() {
+      final NbtCompound nbt = super.toNbt();
+      nbt.putDouble("Amount", getValue());
+      return nbt;
+    }
+
+    /**
+     * 由于超类方法中要求是同一类别才能相等，匿名类的使用影响了相等的判断，故这里临时做出修改。
+     */
+    @Override
+    public boolean equals(Object o) {
+      return super.equals(o) || (o instanceof EntityAttributeModifier entityAttributeModifier && Objects.equals(entityAttributeModifier.getId(), this.getId()));
+    }
+  };
   TagKey<Block> ROADS = TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "roads"));
 
   /**
@@ -64,7 +87,9 @@ public interface Road extends BlockResourceGenerator {
           attributeInstance.addTemporaryModifier(ROAD_SPEED_BOOST);
         }
       } else if ((!stepState.getCollisionShape(world, stepPos).isEmpty() || !world.getBlockState(stepPosDown).isIn(ROADS)) && !stepState.isIn(ROADS)) {
-        attributeInstance.removeModifier(ROAD_SPEED_BOOST);
+        if (attributeInstance.hasModifier(ROAD_SPEED_BOOST)) {
+          attributeInstance.removeModifier(ROAD_SPEED_BOOST);
+        }
       }
     }
   };

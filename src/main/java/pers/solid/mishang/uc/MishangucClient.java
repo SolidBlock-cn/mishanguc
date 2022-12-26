@@ -79,7 +79,10 @@ public class MishangucClient implements ClientModInitializer {
     registerModelPredicateProviders();
 
     if (CLIENT_SUSPENDS_LIGHT_UPDATE != null) {
-      ClientPlayConnectionEvents.INIT.register((handler, client) -> CLIENT_SUSPENDS_LIGHT_UPDATE.set(false));
+      ClientPlayConnectionEvents.INIT.register((handler, client) -> {
+        CLIENT_SUSPENDS_LIGHT_UPDATE.set(false);
+        MishangucRules.currentRoadBoostSpeed = 1.75;
+      });
     }
   }
 

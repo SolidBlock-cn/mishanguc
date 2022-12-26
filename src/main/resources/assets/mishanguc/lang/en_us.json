@@ -768,6 +768,8 @@
   "gamerule.mishanguc:explosion_tool_access.description": "Determine which type of players are allowed to use explosion tool.",
   "gamerule.mishanguc:suspends_block_light_update": "Suspends Block Light Update (DevEnv Only)",
   "gamerule.mishanguc:suspends_block_light_update.description": "When placing and removing blocks, block light update will be ignored. This rule exists only in development environment.",
+  "gamerule.mishanguc:road_boost_speed": "Road Speed Boost",
+  "gamerule.mishanguc:road_boost_speed.description": "The speed boost when standing on road blocks.",
   "message.tool_access": "You cannot use this item because %s can use it.",
   "message.tool_access.all": "all players",
   "message.tool_access.creative_only": "only players in Creative Mode",
