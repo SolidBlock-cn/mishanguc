@@ -153,9 +153,10 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
             // - 其他情况：仅有白线
             if (type == RoadAutoLineType.RIGHT_ANGLE) {
               // 考虑带有偏移的直角的情况，注意这种情况下，双方的颜色应当一致。
-              if (connectionState.lineColor() == adjacentState.lineColor()) {
+              if (connectionState.lineColor() == adjacentState.lineColor() || adjacentState.lineColor() == LineColor.UNKNOWN) {
                 // 双方均有偏移，且偏移方向均为向外或者向内。
-                if (connectionState.offsetLevel() == adjacentState.offsetLevel() && (connectionState.offsetDirection() == adjacentDirection) == (adjacentState.offsetDirection() == direction)) {
+                if (connectionState.offsetLevel() == 2
+                    && (connectionState.offsetLevel() == adjacentState.offsetLevel() && (connectionState.offsetDirection() == adjacentDirection) == (adjacentState.offsetDirection() == direction) || !adjacentState.sureConnect())) {
                   return composeAngleLineWithTwoPartsOffset(connectionState.lineColor(), HorizontalCornerDirection.fromDirections(direction, adjacentDirection), connectionState.offsetDirection() == adjacentDirection, type);
                 } else if (connectionState.offsetLevel() == 2 && adjacentState.offsetLevel() != 2) {
                   return composeAngleLineWithOnePartOffset(connectionState.lineColor(), HorizontalCornerDirection.fromDirections(direction, adjacentDirection), adjacentDirection.getAxis(), connectionState.offsetDirection() == adjacentDirection);
@@ -213,8 +214,9 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
               // - 一侧有偏移，另一个的线路是不确定的。
               if (connectionState.offsetLevel() == 2) {
                 boolean isInwards = connectionState.offsetDirection() == adjacentDirection;
-                if (adjacentState.offsetLevel() == 2 && (adjacentState.offsetDirection() == adjacentDirection) == isInwards
-                    || !adjacentState.sureConnect()) {
+                if ((adjacentState.offsetLevel() == 2 &&
+                    (adjacentState.offsetDirection() == direction) == isInwards
+                    || !adjacentState.sureConnect())) {
                   return composeAngleLineWithTwoPartsOffset(connectionState.lineColor(), HorizontalCornerDirection.fromDirections(direction, adjacentDirection), isInwards, type);
                 }
               }

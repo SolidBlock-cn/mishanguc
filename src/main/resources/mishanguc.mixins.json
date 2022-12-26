@@ -13,6 +13,7 @@
   "client": [
     "AbstractClientPlayerEntityMixin",
     "BetterClientPlayerInteractionManagerMixin",
+    "ClientWorldMixin",
     "GameRendererMixin",
     "ScreenMixin",
     "TextRendererAccessor",

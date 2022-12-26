@@ -27,6 +27,8 @@ Updated following content:
 - Roads with auto lines can more smartly handle offsets of line.
 - Roads with auto lines, when generating lines, can catch the exceptions if there are any thrown.
 - Changed the model of `mishanguc:block/road_with_angle_line`. Now the two sides on west and east use texture `#lineSide` and the south side uses `#lineSide2`.
+- Adjusted the distance limit of tp tool from 64 blocks to 256 blocks.
+- Added game rule `mishanguc:road_boost_speed` to adjust the speed when stepping on road blocks, which defaults to 1.75.
 
 ### 1.0.4
 

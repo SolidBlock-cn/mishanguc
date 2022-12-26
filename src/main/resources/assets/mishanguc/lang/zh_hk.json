@@ -574,6 +574,8 @@
   "gamerule.mishanguc:explosion_tool_access.description": "決定哪類玩家可以使用爆炸工具。",
   "gamerule.mishanguc:force_placing_tool_access": "強制放置工具權限",
   "gamerule.mishanguc:force_placing_tool_access.description": "決定哪類玩家可以使用強制放置工具。",
+  "gamerule.mishanguc:road_boost_speed": "道路行走加速",
+  "gamerule.mishanguc:road_boost_speed.description": "站在道路方塊上時的加速效果。",
   "gamerule.mishanguc:suspends_block_light_update": "暫停方塊光照更新（僅限開發環境）",
   "gamerule.mishanguc:suspends_block_light_update.description": "放置和移除方塊時，忽略所有的方塊光照更新。此規則僅存在於開發環境中。",
   "gamerule.mishanguc:warn_deprecated_version": "報告過時嘅模組MC版本",
