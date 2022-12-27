@@ -69,7 +69,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
    * 该灯光装饰方块对应的形状。
    */
   public final String shape;
-  private boolean largeShape;
+  private final boolean largeShape;
   final Map<Direction, VoxelShape> LARGE_SHAPE_PER_DIRECTION =
       MishangUtils.createDirectionToShape(0, 0, 0, 16, 1, 16);
 

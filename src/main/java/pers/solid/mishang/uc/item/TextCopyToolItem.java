@@ -10,7 +10,6 @@ import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
@@ -20,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtByte;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.text.*;
 import net.minecraft.util.ActionResult;
@@ -67,8 +67,8 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
     tooltip.add(TextBridge.translatable("item.mishanguc.text_copy_tool.tooltip.1", TextBridge.keybind("key.attack").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.text_copy_tool.tooltip.2", TextBridge.keybind("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
     final NbtCompound tag = stack.getNbt();
-    if (tag != null && tag.contains("texts", NbtType.LIST)) {
-      final NbtList texts = tag.getList("texts", NbtType.COMPOUND);
+    if (tag != null && tag.contains("texts", NbtElement.LIST_TYPE)) {
+      final NbtList texts = tag.getList("texts", NbtElement.COMPOUND_TYPE);
       if (!texts.isEmpty()) {
         tooltip.add(TextBridge.translatable("item.mishanguc.text_copy_tool.tooltip.3").formatted(Formatting.GRAY));
         texts.stream().map(TextContext::fromNbt).map(TextContext::asStyledText).peek(text -> {
@@ -85,10 +85,10 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
   @Override
   public Text getName(ItemStack stack) {
     final NbtCompound nbt = stack.getNbt();
-    if (nbt == null || !nbt.contains("texts", NbtType.LIST)) return super.getName(stack);
+    if (nbt == null || !nbt.contains("texts", NbtElement.LIST_TYPE)) return super.getName(stack);
     final MutableText text = super.getName(stack).copy();
     final List<MutableText> texts = ImmutableList.copyOf(
-        nbt.getList("texts", NbtType.COMPOUND).stream()
+        nbt.getList("texts", NbtElement.COMPOUND_TYPE).stream()
             .map(TextContext::fromNbt)
             .map(TextContext::asStyledText)
             .iterator());
@@ -108,11 +108,11 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
     final BlockEntity blockEntity = world.getBlockEntity(blockPos);
     final NbtList texts;
     final NbtCompound tag = stack.getNbt();
-    if (tag == null || !tag.contains("texts", NbtType.LIST)) {
+    if (tag == null || !tag.contains("texts", NbtElement.LIST_TYPE)) {
       player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.null_tag", TextBridge.keybind("key.attack").fillStyle(Style.EMPTY.withColor(0xdeb305))).formatted(Formatting.RED), true);
       return ActionResult.FAIL;
     } else {
-      texts = tag.getList("texts", NbtType.COMPOUND);
+      texts = tag.getList("texts", NbtElement.COMPOUND_TYPE);
     }
     try {
       if (blockEntity instanceof SignBlockEntity signBlockEntity) {

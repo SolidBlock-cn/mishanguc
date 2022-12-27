@@ -176,7 +176,7 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
       if (state != null) {
         return state.with(AXIS, EightHorizontalDirection.fromRotation(ctx.getPlayerYaw()).axis);
       }
-      return state;
+      return null;
     }
 
     @Override
@@ -243,7 +243,7 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
       if (state != null) {
         return state.with(FACING, EightHorizontalDirection.fromRotation(ctx.getPlayerYaw()));
       }
-      return state;
+      return null;
     }
 
     @Override

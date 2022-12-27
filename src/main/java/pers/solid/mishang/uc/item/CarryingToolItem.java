@@ -9,7 +9,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
@@ -27,6 +26,7 @@ import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.MutableText;
@@ -74,7 +74,7 @@ public class CarryingToolItem extends BlockToolItem
   @Contract(pure = true)
   public static boolean hasHoldingEntity(@NotNull ItemStack stack) {
     final NbtCompound nbt = stack.getNbt();
-    return nbt != null && nbt.contains("holdingEntityType", NbtType.STRING);
+    return nbt != null && nbt.contains("holdingEntityType", NbtElement.STRING_TYPE);
   }
 
   @Contract(pure = true)
@@ -159,9 +159,9 @@ public class CarryingToolItem extends BlockToolItem
   private static MutableText getEntityName(@NotNull ItemStack stack) {
     final NbtCompound nbt = stack.getNbt();
     if (nbt == null) return TextBridge.empty();
-    if (nbt.contains("holdingEntityName", NbtType.STRING)) {
+    if (nbt.contains("holdingEntityName", NbtElement.STRING_TYPE)) {
       return Text.Serializer.fromJson(nbt.getString("holdingEntityName"));
-    } else if (nbt.contains("holdingEntityType", NbtType.STRING)) {
+    } else if (nbt.contains("holdingEntityType", NbtElement.STRING_TYPE)) {
       final Identifier holdingEntityType = Identifier.tryParse(nbt.getString("holdingEntityType"));
       return Registry.ENTITY_TYPE.containsId(holdingEntityType) ? Registry.ENTITY_TYPE.get(holdingEntityType).getName().copy() : TextBridge.literal("" + holdingEntityType);
     } else {

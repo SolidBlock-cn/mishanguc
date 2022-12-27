@@ -78,9 +78,7 @@ public class Mishanguc implements ModInitializer {
               });
 
   private static void registerCommands() {
-    CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-      MishangucCommands.registerUpdateLightCommand(dispatcher);
-    });
+    CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> MishangucCommands.registerUpdateLightCommand(dispatcher));
   }
 
   private static void registerFlammableAndFuels() {

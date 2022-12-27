@@ -70,7 +70,7 @@ public interface RoadWithTwoBevelAngleLines extends Road {
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull
+  @NotNull
   default JBlockStates getBlockStates() {
     return JBlockStates.simpleHorizontalFacing(getBlockModelId(), false);
   }
