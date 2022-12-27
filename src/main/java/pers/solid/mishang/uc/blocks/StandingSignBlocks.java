@@ -38,13 +38,10 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final StandingSignBlock WARPED_STANDING_SIGN = new StandingSignBlock(Blocks.WARPED_PLANKS);
   public static final StandingSignBlock MANGROVE_STANDING_SIGN = new StandingSignBlock(Blocks.MANGROVE_PLANKS);
 
-  @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   public static final StandingSignBlock BAMBOO_STANDING_SIGN = new StandingSignBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).requires(FeatureFlags.UPDATE_1_20));
-  @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   public static final StandingSignBlock BAMBOO_PLANK_STANDING_SIGN = new StandingSignBlock(Blocks.BAMBOO_PLANKS, FabricBlockSettings.copyOf(Blocks.BAMBOO_PLANKS).requires(FeatureFlags.UPDATE_1_20));
-  @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   public static final StandingSignBlock BAMBOO_MOSAIC_STANDING_SIGN = new StandingSignBlock(Blocks.BAMBOO_MOSAIC, FabricBlockSettings.copyOf(Blocks.BAMBOO_MOSAIC).requires(FeatureFlags.UPDATE_1_20));
 

@@ -27,7 +27,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -248,14 +247,11 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     return ActionResult.SUCCESS;
   }
 
-  @Override
-  public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-    if (this.isIn(group)) {
-      stacks.add(new ItemStack(this));
-      final ItemStack newStack = getDefaultStack();
-      newStack.getOrCreateNbt().putBoolean("suspendsLightUpdate", true);
-      stacks.add(newStack);
-    }
+  public void appendStacks(ItemGroup.Entries entries) {
+    entries.add(new ItemStack(this));
+    final ItemStack newStack = getDefaultStack();
+    newStack.getOrCreateNbt().putBoolean("suspendsLightUpdate", true);
+    entries.add(newStack);
   }
 
   /**

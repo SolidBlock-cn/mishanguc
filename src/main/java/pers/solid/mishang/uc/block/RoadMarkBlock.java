@@ -101,7 +101,7 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
   @Override
   public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
     if (state.get(Properties.WATERLOGGED)) {
-      world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+      world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
     if (direction == Direction.DOWN) {
       if (!this.canPlaceAt(state, world, pos)) {
@@ -176,7 +176,7 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
       if (state != null) {
         return state.with(AXIS, EightHorizontalDirection.fromRotation(ctx.getPlayerYaw()).axis);
       }
-      return state;
+      return null;
     }
 
     @Override
@@ -243,7 +243,7 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
       if (state != null) {
         return state.with(FACING, EightHorizontalDirection.fromRotation(ctx.getPlayerYaw()));
       }
-      return state;
+      return null;
     }
 
     @Override

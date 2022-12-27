@@ -135,14 +135,11 @@ public final class HandrailBlocks extends MishangucBlocks {
   public static final SimpleHandrailBlock SIMPLE_CRIMSON_HANDRAIL = new SimpleHandrailBlock(Blocks.CRIMSON_STEM);
   public static final SimpleHandrailBlock SIMPLE_WARPED_HANDRAIL = new SimpleHandrailBlock(Blocks.WARPED_STEM);
 
-  @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   public static final SimpleHandrailBlock SIMPLE_BAMBOO_HANDRAIL = new SimpleHandrailBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).requires(FeatureFlags.UPDATE_1_20));
 
-  @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   public static final SimpleHandrailBlock SIMPLE_BAMBOO_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.BAMBOO_PLANKS, FabricBlockSettings.copyOf(Blocks.BAMBOO_PLANKS).requires(FeatureFlags.UPDATE_1_20));
-  @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   public static final SimpleHandrailBlock SIMPLE_BAMBOO_MOSAIC_HANDRAIL = new SimpleHandrailBlock(Blocks.BAMBOO_MOSAIC, FabricBlockSettings.copyOf(Blocks.BAMBOO_MOSAIC).requires(FeatureFlags.UPDATE_1_20));
 
@@ -362,7 +359,6 @@ public final class HandrailBlocks extends MishangucBlocks {
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_MANGROVE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.MANGROVE_WOOD, FabricBlockSettings.copyOf(Blocks.MANGROVE_WOOD).strength(1.0f), "block/mangrove_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
-  @RegisterIdentifier
   @Translucent
   public static final GlassHandrailBlock GLASS_BAMBOO_HANDRAIL = new GlassHandrailBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).strength(1.0f).requires(FeatureFlags.UPDATE_1_20), "block/bamboo_block", "block/bamboo_mosaic");
 

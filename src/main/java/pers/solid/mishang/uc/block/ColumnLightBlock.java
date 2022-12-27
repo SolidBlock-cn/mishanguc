@@ -62,7 +62,7 @@ public class ColumnLightBlock extends Block implements Waterloggable, BlockResou
       BlockPos pos,
       BlockPos neighborPos) {
     if (state.get(Properties.WATERLOGGED)) {
-      world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+      world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
 
     return super.getStateForNeighborUpdate(

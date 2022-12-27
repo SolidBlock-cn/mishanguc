@@ -48,19 +48,15 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final WallSignBlock WARPED_WALL_SIGN =
       new WallSignBlock(Blocks.WARPED_PLANKS);
 
-  @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   public static final WallSignBlock BAMBOO_WALL_SIGN = new WallSignBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).requires(FeatureFlags.UPDATE_1_20));
 
-  @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   public static final WallSignBlock BAMBOO_PLANK_WALL_SIGN = new WallSignBlock(Blocks.BAMBOO_PLANKS, FabricBlockSettings.copyOf(Blocks.BAMBOO_PLANKS).requires(FeatureFlags.UPDATE_1_20));
 
-  @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   public static final WallSignBlock BAMBOO_MOSAIC_WALL_SIGN = new WallSignBlock(Blocks.BAMBOO_MOSAIC, FabricBlockSettings.copyOf(Blocks.BAMBOO_MOSAIC).requires(FeatureFlags.UPDATE_1_20));
 
-  @RegisterIdentifier
   @ApiStatus.AvailableSince("0.2.2")
   public static final ColoredWallSignBlock COLORED_WOODEN_WALL_SIGN = new ColoredWallSignBlock(ColoredBlocks.COLORED_PLANKS);
 

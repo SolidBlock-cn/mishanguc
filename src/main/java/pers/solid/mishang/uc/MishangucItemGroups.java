@@ -10,6 +10,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.ExplosionToolItem;
 import pers.solid.mishang.uc.item.FastBuildingToolItem;
+import pers.solid.mishang.uc.item.ForcePlacingToolItem;
 import pers.solid.mishang.uc.item.MishangucItems;
 
 public class MishangucItemGroups {
@@ -18,7 +19,7 @@ public class MishangucItemGroups {
           new Identifier("mishanguc", "roads")).icon(
           () -> new ItemStack(RoadBlocks.ROAD_WITH_WHITE_DOUBLE_LINE)).entries((enabledFeatures, entries, operatorEnabled) -> {
         MishangUtils.instanceStream(RoadBlocks.class, ItemConvertible.class).forEach(entries::add);
-        MishangUtils.instanceStream(RoadSlabBlocks.class, ItemConvertible.class).forEach(entries::add);
+        RoadSlabBlocks.SLABS.forEach(entries::add);
       }).build();
   public static final ItemGroup LIGHTS =
       FabricItemGroup.builder(
@@ -36,10 +37,12 @@ public class MishangucItemGroups {
   public static final ItemGroup TOOLS =
       FabricItemGroup.builder(new Identifier("mishanguc", "tools")).icon(() -> new ItemStack(MishangucItems.ROTATING_TOOL)).entries((enabledFeatures, entries, operatorEnabled) -> {
         MishangUtils.instanceStream(MishangucItems.class, ItemConvertible.class).forEach(item -> {
-          if (item instanceof ExplosionToolItem explosionToolItem) {
+          if (item instanceof final ExplosionToolItem explosionToolItem) {
             explosionToolItem.appendToEntries(entries);
-          } else if (item instanceof FastBuildingToolItem fastBuildingToolItem) {
+          } else if (item instanceof final FastBuildingToolItem fastBuildingToolItem) {
             fastBuildingToolItem.appendToEntries(entries);
+          } else if (item instanceof final ForcePlacingToolItem forcePlacingToolItem) {
+            forcePlacingToolItem.appendStacks(entries);
           } else {
             entries.add(item);
           }

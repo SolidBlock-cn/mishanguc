@@ -37,6 +37,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -50,7 +51,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -124,11 +124,11 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
         state = toDoubleSlab(state, slab);
       } else {
         // 尝试根据方块的 id 来判断对应的台阶方块。
-        final Identifier id = Registry.BLOCK.getId(block);
+        final Identifier id = Registries.BLOCK.getId(block);
         final String idPath = id.getPath();
         final Identifier slabId = new Identifier(id.getNamespace(), idPath + "_slab");
-        if (Registry.BLOCK.containsId(slabId)) {
-          state = toDoubleSlab(state, Registry.BLOCK.get(slabId));
+        if (Registries.BLOCK.containsId(slabId)) {
+          state = toDoubleSlab(state, Registries.BLOCK.get(slabId));
         } else {
           final Identifier slabId2;
           if (idPath.endsWith("_bricks") || idPath.endsWith("_tiles")) {
@@ -138,8 +138,8 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
           } else {
             slabId2 = null;
           }
-          if (slabId2 != null && Registry.BLOCK.containsId(slabId2)) {
-            state = toDoubleSlab(state, Registry.BLOCK.get(slabId2));
+          if (slabId2 != null && Registries.BLOCK.containsId(slabId2)) {
+            state = toDoubleSlab(state, Registries.BLOCK.get(slabId2));
           }
         }
       }

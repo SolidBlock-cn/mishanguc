@@ -3,11 +3,11 @@ package pers.solid.mishang.uc.blocks;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.apache.commons.lang3.StringUtils;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.MishangucItemGroups;
 import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.item.NamedBlockItem;
 
@@ -48,8 +48,8 @@ public final class RoadSlabBlocks extends MishangucBlocks {
       final String namespace = baseId.getNamespace();
       final String path = baseId.getPath();
       final Identifier slabId = new Identifier(namespace, StringUtils.replace(StringUtils.removeEnd(path, "_block"), "road", "road_slab", 1));
-      Registry.register(Registry.BLOCK, slabId, slab);
-      Registry.register(Registry.ITEM, slabId, new NamedBlockItem(slab, new FabricItemSettings().group(MishangucItemGroups.ROADS)));
+      Registry.register(Registries.BLOCK, slabId, slab);
+      Registry.register(Registries.ITEM, slabId, new NamedBlockItem(slab, new FabricItemSettings()));
     });
   }
 }

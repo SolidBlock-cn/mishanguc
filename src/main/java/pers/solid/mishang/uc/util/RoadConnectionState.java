@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.util;
 
 import com.mojang.datafixers.util.Either;
-import net.minecraft.block.Block;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.StringIdentifiable;
@@ -101,14 +100,6 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
   @Override
   public int compareTo(@NotNull RoadConnectionState o) {
     return whetherConnected.compareTo(o.whetherConnected);
-  }
-
-  @Deprecated
-  @Contract("-> fail")
-  public Block block() {
-//    final Block block = blockState.getBlock();
-//    return block instanceof SmartRoadSlabBlock<?> slab ? slab.baseBlock : block;
-    return null;
   }
 
   @Contract("_ -> new")

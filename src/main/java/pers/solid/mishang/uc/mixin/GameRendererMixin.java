@@ -17,7 +17,7 @@ import pers.solid.mishang.uc.item.BlockToolItem;
 public class GameRendererMixin {
   @Shadow
   @Final
-  private MinecraftClient client;
+  MinecraftClient client;
 
   @ModifyArg(
       method = "updateTargetedEntity(F)V",

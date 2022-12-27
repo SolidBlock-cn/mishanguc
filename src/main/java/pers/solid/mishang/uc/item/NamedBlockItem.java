@@ -1,13 +1,13 @@
 package pers.solid.mishang.uc.item;
 
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -39,7 +39,7 @@ public class NamedBlockItem extends BlockItem {
     try {
       if (getBlock() instanceof ColoredBlock) {
         final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
-        if (nbt != null && nbt.contains("color", NbtType.NUMBER)) {
+        if (nbt != null && nbt.contains("color", NbtElement.NUMBER_TYPE)) {
           final int color = nbt.getInt("color");
           return TextBridge.translatable("block.mishanguc.colored_block.color", block.getName(), MishangUtils.describeColor(color));
         } else {
@@ -60,7 +60,7 @@ public class NamedBlockItem extends BlockItem {
     final ItemStack stack = context.getStack();
     if (getBlock() instanceof ColoredBlock) {
       final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
-      if (nbt != null && nbt.contains("color", NbtType.NUMBER)) {
+      if (nbt != null && nbt.contains("color", NbtElement.NUMBER_TYPE)) {
         cachedColor = nbt.getInt("color");
       } else {
         final BlockPos blockPos = ((ItemUsageContextInvoker) context).invokeGetHitResult().getBlockPos();

@@ -7,7 +7,6 @@ import net.devtech.arrp.json.recipe.JRecipe;
 import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
@@ -20,6 +19,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.packet.s2c.play.ExplosionS2CPacket;
 import net.minecraft.predicate.entity.EntityFlagsPredicate;
 import net.minecraft.predicate.entity.EntityPredicates;
@@ -117,7 +117,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
    */
   public float power(ItemStack stack) {
     final NbtCompound nbt = stack.getOrCreateNbt();
-    return nbt.contains("power", NbtType.NUMBER) ? MathHelper.clamp(nbt.getFloat("power"), -128, 128) : 4;
+    return nbt.contains("power", NbtElement.NUMBER_TYPE) ? MathHelper.clamp(nbt.getFloat("power"), -128, 128) : 4;
   }
 
   public void appendToEntries(ItemGroup.Entries stacks) {

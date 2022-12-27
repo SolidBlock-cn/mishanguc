@@ -3,7 +3,6 @@ package pers.solid.mishang.uc;
 import com.google.common.base.Functions;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.*;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -385,11 +384,11 @@ public class MishangUtils {
       int alpha = _alpha instanceof AbstractNbtNumber ? ((AbstractNbtNumber) _alpha).intValue() & 0xff : 0;
       return (red << 16) | (green << 8) | blue | (alpha << 24);
     } else if (nbtColor instanceof final NbtCompound nbtCompound) {
-      if (nbtCompound.contains("signColor", NbtType.STRING)) {
+      if (nbtCompound.contains("signColor", NbtElement.STRING_TYPE)) {
         return DyeColor.byName(nbtCompound.getString("signColor"), DyeColor.BLACK).getSignColor();
-      } else if (nbtCompound.contains("fireworkColor", NbtType.STRING)) {
+      } else if (nbtCompound.contains("fireworkColor", NbtElement.STRING_TYPE)) {
         return DyeColor.byName(nbtCompound.getString("fireworkColor"), DyeColor.BLACK).getFireworkColor();
-      } else if (nbtCompound.contains("mapColor", NbtType.STRING)) {
+      } else if (nbtCompound.contains("mapColor", NbtElement.STRING_TYPE)) {
         return DyeColor.byName(nbtCompound.getString("mapColor"), DyeColor.BLACK).getMapColor().color;
       } else {
         return 0;

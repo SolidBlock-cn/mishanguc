@@ -48,13 +48,10 @@ public final class HungSignBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBlock WARPED_HUNG_SIGN = new HungSignBlock(Blocks.WARPED_PLANKS);
 
-  @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   public static final HungSignBlock BAMBOO_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).requires(FeatureFlags.UPDATE_1_20));
-  @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   public static final HungSignBlock BAMBOO_PLANK_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_PLANKS, FabricBlockSettings.copyOf(Blocks.BAMBOO_PLANKS).requires(FeatureFlags.UPDATE_1_20));
-  @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   public static final HungSignBlock BAMBOO_MOSAIC_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_MOSAIC, FabricBlockSettings.copyOf(Blocks.BAMBOO_MOSAIC).requires(FeatureFlags.UPDATE_1_20));
 
@@ -78,7 +75,6 @@ public final class HungSignBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBarBlock WARPED_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.WARPED_HYPHAE);
 
-  @RegisterIdentifier
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   public static final HungSignBarBlock BAMBOO_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).requires(FeatureFlags.UPDATE_1_20));
 
