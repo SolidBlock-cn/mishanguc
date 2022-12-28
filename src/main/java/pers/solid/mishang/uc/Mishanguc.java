@@ -269,7 +269,9 @@ public class Mishanguc implements ModInitializer {
     FabricLoader.getInstance().getModContainer("mishanguc").ifPresent(modContainer -> {
       final String version = modContainer.getMetadata().getCustomValue("branch").getAsString();
       final String preferred;
-      if (version.equals("1.18.1")) {
+      if (version.equals("1.16.5")) {
+        preferred = "1.17.1/1.18.2/1.19.2";
+      } else if (version.equals("1.18.1")) {
         preferred = "1.18.2";
       } else if (version.equals("1.19")) {
         preferred = "1.19.2";
