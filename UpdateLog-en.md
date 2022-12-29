@@ -2,6 +2,10 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.1.1
+
+Fixed the severe issue of failing to launch server.
+
 ### 1.1.0
 
 Updated following content:
