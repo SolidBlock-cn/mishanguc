@@ -27,6 +27,8 @@ import net.minecraft.item.Items;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
@@ -741,7 +743,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   @Override
   public void pregen() {
     final boolean dev = FabricLoader.getInstance().isDevelopmentEnvironment();
-    if (!dev) generateResources(true, true);
+    if (!dev) generateResources(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT, true);
     SidedRRPCallback.BEFORE_VANILLA.register((resourceType, builder) -> builder.add(dev ? generateResources(resourceType == ResourceType.CLIENT_RESOURCES, resourceType == ResourceType.SERVER_DATA) : PACK));
   }
 
@@ -750,6 +752,9 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
    */
   //  @CanIgnoreReturnValue
   private static RuntimeResourcePack generateResources(boolean includesClient, boolean includesServer) {
+    if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) {
+      Validate.isTrue(!includesClient, "The parameter 'includesClient' cannot be true when in dedicated server!", ArrayUtils.EMPTY_OBJECT_ARRAY);
+    }
     if (includesClient) PACK.clearResources(ResourceType.CLIENT_RESOURCES);
     if (includesServer) PACK.clearResources(ResourceType.SERVER_DATA);
 
