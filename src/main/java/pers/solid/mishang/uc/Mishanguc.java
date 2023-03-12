@@ -96,6 +96,7 @@ public class Mishanguc implements ModInitializer {
         HungSignBlocks.BIRCH_HUNG_SIGN,
         HungSignBlocks.JUNGLE_HUNG_SIGN,
         HungSignBlocks.ACACIA_HUNG_SIGN,
+        HungSignBlocks.CHERRY_HUNG_SIGN,
         HungSignBlocks.DARK_OAK_HUNG_SIGN,
         HungSignBlocks.MANGROVE_HUNG_SIGN,
         HungSignBlocks.BAMBOO_HUNG_SIGN,
@@ -106,6 +107,7 @@ public class Mishanguc implements ModInitializer {
         HungSignBlocks.BIRCH_HUNG_SIGN_BAR,
         HungSignBlocks.JUNGLE_HUNG_SIGN_BAR,
         HungSignBlocks.ACACIA_HUNG_SIGN_BAR,
+        HungSignBlocks.CHERRY_HUNG_SIGN_BAR,
         HungSignBlocks.DARK_OAK_HUNG_SIGN_BAR,
         HungSignBlocks.MANGROVE_HUNG_SIGN_BAR,
         HungSignBlocks.BAMBOO_HUNG_SIGN_BAR,
@@ -114,6 +116,7 @@ public class Mishanguc implements ModInitializer {
         WallSignBlocks.BIRCH_WALL_SIGN,
         WallSignBlocks.JUNGLE_WALL_SIGN,
         WallSignBlocks.ACACIA_WALL_SIGN,
+        WallSignBlocks.CHERRY_WALL_SIGN,
         WallSignBlocks.DARK_OAK_WALL_SIGN,
         WallSignBlocks.MANGROVE_WALL_SIGN,
         WallSignBlocks.BAMBOO_WALL_SIGN,
@@ -124,6 +127,7 @@ public class Mishanguc implements ModInitializer {
         StandingSignBlocks.SPRUCE_STANDING_SIGN,
         StandingSignBlocks.BIRCH_STANDING_SIGN,
         StandingSignBlocks.ACACIA_STANDING_SIGN,
+        StandingSignBlocks.CHERRY_STANDING_SIGN,
         StandingSignBlocks.JUNGLE_STANDING_SIGN,
         StandingSignBlocks.DARK_OAK_STANDING_SIGN,
         StandingSignBlocks.CRIMSON_STANDING_SIGN,
@@ -143,6 +147,7 @@ public class Mishanguc implements ModInitializer {
         HandrailBlocks.SIMPLE_BIRCH_HANDRAIL,
         HandrailBlocks.SIMPLE_JUNGLE_HANDRAIL,
         HandrailBlocks.SIMPLE_ACACIA_HANDRAIL,
+        HandrailBlocks.SIMPLE_CHERRY_HANDRAIL,
         HandrailBlocks.SIMPLE_DARK_OAK_HANDRAIL,
         HandrailBlocks.SIMPLE_MANGROVE_HANDRAIL,
         HandrailBlocks.SIMPLE_BAMBOO_HANDRAIL,
@@ -153,6 +158,7 @@ public class Mishanguc implements ModInitializer {
         HandrailBlocks.GLASS_BIRCH_HANDRAIL,
         HandrailBlocks.GLASS_JUNGLE_HANDRAIL,
         HandrailBlocks.GLASS_ACACIA_HANDRAIL,
+        HandrailBlocks.GLASS_CHERRY_HANDRAIL,
         HandrailBlocks.GLASS_DARK_OAK_HANDRAIL,
         HandrailBlocks.GLASS_MANGROVE_HANDRAIL,
         HandrailBlocks.GLASS_BAMBOO_HANDRAIL,
@@ -161,6 +167,7 @@ public class Mishanguc implements ModInitializer {
         HandrailBlocks.COLORED_DECORATED_BIRCH_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_JUNGLE_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_ACACIA_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_CHERRY_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_DARK_OAK_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_MANGROVE_HANDRAIL
     };
@@ -411,6 +418,7 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(Blocks.JUNGLE_LEAVES, ColoredBlocks.COLORED_JUNGLE_LEAVES);
     blockMap.put(Blocks.BIRCH_LEAVES, ColoredBlocks.COLORED_BIRCH_LEAVES);
     blockMap.put(Blocks.ACACIA_LEAVES, ColoredBlocks.COLORED_ACACIA_LEAVES);
+    blockMap.put(Blocks.CHERRY_LEAVES, ColoredBlocks.COLORED_CHERRY_LEAVES);
     blockMap.put(Blocks.MANGROVE_LEAVES, ColoredBlocks.COLORED_MANGROVE_LEAVES);
     blockMap.put(Blocks.BRICKS, ColoredBlocks.COLORED_BRICKS);
     blockMap.put(Blocks.BRICK_STAIRS, ColoredBlocks.COLORED_BRICK_STAIRS);

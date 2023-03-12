@@ -39,7 +39,7 @@ public class ColoredNetherPortalBlock extends NetherPortalBlock implements Color
   @Override
   public BlockState getPlacementState(ItemPlacementContext ctx) {
     final BlockState state = super.getPlacementState(ctx);
-    return state == null ? null : state.with(AXIS, ctx.getPlayerFacing().rotateYClockwise().getAxis());
+    return state == null ? null : state.with(AXIS, ctx.getHorizontalPlayerFacing().rotateYClockwise().getAxis());
   }
 
   @Override

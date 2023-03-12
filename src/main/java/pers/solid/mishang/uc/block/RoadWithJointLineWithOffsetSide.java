@@ -88,7 +88,7 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
         .with(
             FACING,
             ctx.getPlayer() != null && ctx.getPlayer().isSneaking() ? facing.getOpposite() : facing)
-        .with(AXIS, ctx.getPlayerFacing().getAxis());
+        .with(AXIS, ctx.getHorizontalPlayerFacing().getAxis());
   }
 
   @Override

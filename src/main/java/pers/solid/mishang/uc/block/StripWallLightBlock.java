@@ -84,7 +84,7 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
     return placementState.with(
         STRIP_TYPE,
         ctx.getSide().getAxis() == Direction.Axis.Y
-            ? (ctx.getPlayerFacing().getAxis() == Direction.Axis.X
+            ? (ctx.getHorizontalPlayerFacing().getAxis() == Direction.Axis.X
             ? StripType.HORIZONTAL
             : StripType.VERTICAL)
             : (player != null && player.isSneaking() ? StripType.VERTICAL : StripType.HORIZONTAL));

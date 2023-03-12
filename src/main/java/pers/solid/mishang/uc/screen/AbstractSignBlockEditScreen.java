@@ -32,6 +32,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import org.lwjgl.glfw.GLFW;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.text.PatternSpecialDrawable;
@@ -43,10 +44,7 @@ import pers.solid.mishang.uc.util.VerticalAlign;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -142,14 +140,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public final ButtonWidget placeHolder = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.add_first_text"), button -> {
     addTextField(0);
     setFocused(textFieldListScreen);
-    textFieldListScreen.setSelected(textFieldListScreen.children().get(0));
+    textFieldListScreen.setFocused(textFieldListScreen.children().get(0));
   }).dimensions(0, 35, 200, 20).build();
 
   @ApiStatus.AvailableSince("0.1.6")
   public final ButtonWidget applyDoubleLineTemplateButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.apply_double_line_template"), button -> {
     addTextField(0, AbstractSignBlockEditScreen.this.entity.createDefaultTextContext(), false);
     addTextField(1, Util.make(AbstractSignBlockEditScreen.this.entity.createDefaultTextContext(), textContext -> textContext.size /= 2), false);
-    textFieldListScreen.setSelected(textFieldListScreen.children().get(0));
+    textFieldListScreen.setFocused(textFieldListScreen.children().get(0));
     rearrange();
   }).dimensions(width / 2 - 50, 70, 120, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.apply_double_line_template.description"))).build();
 
@@ -171,7 +169,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     textContext2.horizontalAlign = HorizontalAlign.LEFT;
     textContext2.size /= 2;
     AbstractSignBlockEditScreen.this.addTextField(2, textContext2, false);
-    textFieldListScreen.setSelected(textFieldListScreen.children().get(1));
+    textFieldListScreen.setFocused(textFieldListScreen.children().get(1));
     rearrange();
   }).dimensions(width / 2 - 150, 70, 120, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.apply_left_arrow_template.description"))).build();
 
@@ -193,7 +191,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     textContext2.horizontalAlign = HorizontalAlign.RIGHT;
     textContext2.size /= 2;
     AbstractSignBlockEditScreen.this.addTextField(2, textContext2, false);
-    textFieldListScreen.setSelected(textFieldListScreen.children().get(1));
+    textFieldListScreen.setFocused(textFieldListScreen.children().get(1));
     rearrange();
   }).dimensions(width / 2 - 50, 70, 120, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.apply_right_arrow_template.description"))).build();
 
@@ -809,7 +807,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     final TextFieldListScreen.Entry newEntry = textFieldListScreen.new Entry(textFieldWidget);
     textFieldListScreen.children().add(index, newEntry);
     contextToWidgetBiMap.put(textContext, textFieldWidget);
-    textFieldListScreen.setSelected(newEntry);
+    textFieldListScreen.setFocused(newEntry);
     textFieldWidget.setChangedListener(
         s -> {
           final TextContext textContext1 = contextToWidgetBiMap.inverse().get(textFieldWidget);
@@ -865,7 +863,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
     for (ClickableWidget widget : toolbox1) {
       widget.visible = true;
-      widget.setPos(widget.getX() + width / 2 - belowToolboxWidth / 2, height - 65);
+      widget.setPosition(widget.getX() + width / 2 - belowToolboxWidth / 2, height - 65);
     }
     belowToolboxWidth = 0;
     for (ClickableWidget widget : toolbox2) {
@@ -875,7 +873,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
     for (ClickableWidget widget : toolbox2) {
       widget.visible = true;
-      widget.setPos(widget.getX() + (width / 2 - belowToolboxWidth / 2), height - 45);
+      widget.setPosition(widget.getX() + (width / 2 - belowToolboxWidth / 2), height - 45);
     }
   }
 
@@ -891,12 +889,12 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     final TextContext removedTextContext = contextToWidgetBiMap.inverse().get(removedWidget);
     if (textFieldListScreen.getSelectedOrNull() != null
         && removedWidget == textFieldListScreen.getSelectedOrNull().textFieldWidget) {
-      textFieldListScreen.setSelected(null);
+      textFieldListScreen.setFocused(null);
     }
     if (textFieldListScreen.children().size() > index) {
-      textFieldListScreen.setSelected(textFieldListScreen.children().get(index));
+      textFieldListScreen.setFocused(textFieldListScreen.children().get(index));
     } else if (textFieldListScreen.children().size() > index - 1 && index - 1 >= 0) {
-      textFieldListScreen.setSelected(textFieldListScreen.children().get(index - 1));
+      textFieldListScreen.setFocused(textFieldListScreen.children().get(index - 1));
     }
     textContextsEditing.remove(removedTextContext);
     contextToWidgetBiMap.remove(removedTextContext);
@@ -911,7 +909,11 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public boolean mouseClicked(double mouseX, double mouseY, int button) {
     for (Element element : this.children()) {
       if (!element.mouseClicked(mouseX, mouseY, button)) continue;
-      this.setFocused(element);
+      if (element == textFieldListScreen || element instanceof TextFieldWidget) {
+        this.setFocused(element);
+      } else {
+        setFocused(textFieldListScreen);
+      }
       if (button == 0) {
         this.setDragging(true);
       }
@@ -946,43 +948,73 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
   }
 
-  /**
-   * 这样是为了避免在调用 {@link #setFocused(Element)} 时，强制将 focused 设为了那个 {@link #textFieldListScreen}。
-   */
+  protected Element weakFocus = textFieldListScreen;
+
   @Override
-  public boolean changeFocus(boolean lookForwards) {
-    Element focused = this.getFocused();
-    boolean bl = focused != null;
-    if (!bl || !focused.changeFocus(lookForwards)) {
-      List<? extends Element> list = this.children();
-      int i = list.indexOf(focused);
-      int l;
-      if (bl && i >= 0) {
-        l = i + (lookForwards ? 1 : 0);
-      } else if (lookForwards) {
-        l = 0;
+  public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    if (keyCode == GLFW.GLFW_KEY_TAB) {
+      if (getFocused() == textFieldListScreen) {
+        // 当前焦点为文本时，按 tab 切换到按钮。
+
+        if (weakFocus == null || weakFocus == textFieldListScreen) {
+          // 还没有 weakFocus 的情况
+          setFocused(boldButton);
+          weakFocus = getFocused();
+        } else {
+          // 已经设置过 weakFocus 的情况
+          setFocused(weakFocus);
+          weakFocus = textFieldListScreen;
+        }
       } else {
-        l = list.size();
+        // 当前焦点为按钮时，按 tab 切换到文本。
+        weakFocus = getFocused();
+        setFocused(textFieldListScreen);
+        for (TextFieldListScreen.Entry child : textFieldListScreen.children()) {
+          child.textFieldWidget.setFocused(textFieldListScreen.isFocused() && child == textFieldListScreen.getFocused());
+        }
       }
 
-      ListIterator<? extends Element> listIterator = list.listIterator(l);
-      BooleanSupplier booleanSupplier =
-          lookForwards ? listIterator::hasNext : listIterator::hasPrevious;
-      Supplier<Element> supplier = lookForwards ? listIterator::next : listIterator::previous;
-
-      Element element2;
-      do {
-        if (!booleanSupplier.getAsBoolean()) {
-          this.setFocused(null);
-          return false;
+      return true;
+    } else {
+      if (hasControlDown() && !hasShiftDown() && !hasAltDown()) {
+        /*if (keyCode == GLFW.GLFW_KEY_B) {
+          boldButton.onPress();
+          return true;
+          Ctrl + B 与复述功能冲突。
+        } else */
+        if (keyCode == GLFW.GLFW_KEY_I) {
+          italicButton.onPress();
+          return true;
+        } else if (keyCode == GLFW.GLFW_KEY_U) {
+          underlineButton.onPress();
+          return true;
+        } else if (keyCode == GLFW.GLFW_KEY_S) {
+          strikethroughButton.onPress();
+          return true;
+        } else if (keyCode == GLFW.GLFW_KEY_O) {
+          obfuscatedButton.onPress();
+          return true;
+        } else if (keyCode == GLFW.GLFW_KEY_MINUS || keyCode == GLFW.GLFW_KEY_KP_SUBTRACT) {
+          removeTextButton.onPress();
+          return true;
+        } else if (keyCode == GLFW.GLFW_KEY_KP_ADD) {
+          addTextButton.onPress();
+          return true;
         }
-
-        element2 = supplier.get();
-      } while (!element2.changeFocus(lookForwards));
-      // 这里和 super 方法不同，这里直接调用的 super.setFocused 而非 this.setFocused
-      super.setFocused(element2);
+      } else if (hasControlDown() && hasShiftDown() && !hasAltDown()) {
+        if (keyCode == GLFW.GLFW_KEY_EQUAL) {
+          addTextButton.onPress();
+          return true;
+        } else if (keyCode == GLFW.GLFW_KEY_UP) {
+          moveUpButton.onPress();
+          return true;
+        } else if (keyCode == GLFW.GLFW_KEY_DOWN) {
+          moveDownButton.onPress();
+          return true;
+        }
+      }
+      return super.keyPressed(keyCode, scanCode, modifiers);
     }
-    return true;
   }
 
   private void finishEditing() {
@@ -1004,19 +1036,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * 设置整个 AbstractSignBlockEditScreen 的已选中的元素。这个元素可以是一个按钮、整个 {@link #textFieldListScreen} 或 {@link #customColorTextField}。
    *
    * @param focused 已选中的元素。
-   * @see TextFieldListScreen#setSelected(TextFieldListScreen.Entry)
+   * @see TextFieldListScreen#setFocused(Element)
    * @see TextFieldListScreen.Entry#setFocused(Element)
    */
   @Override
   public void setFocused(@Nullable Element focused) {
-    customColorTextField.setTextFieldFocused(focused == customColorTextField);
-    if (focused instanceof ButtonWidget) {
-      super.setFocused(textFieldListScreen);
-    } else {
-      super.setFocused(focused);
-      if (focused != textFieldListScreen && !(focused instanceof TextFieldWidget)) {
-        textFieldListScreen.setSelected(null);
-      }
+    if (getFocused() instanceof TextFieldListScreen != focused instanceof TextFieldListScreen) {
+      weakFocus = getFocused();
     }
+    super.setFocused(focused);
   }
 }

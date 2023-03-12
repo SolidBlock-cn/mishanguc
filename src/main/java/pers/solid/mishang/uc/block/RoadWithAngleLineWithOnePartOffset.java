@@ -79,7 +79,7 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
   default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
     return RoadWithAngleLine.super
         .withPlacementState(state, ctx)
-        .with(AXIS, ctx.getPlayerFacing().getAxis());
+        .with(AXIS, ctx.getHorizontalPlayerFacing().getAxis());
   }
 
   @Override

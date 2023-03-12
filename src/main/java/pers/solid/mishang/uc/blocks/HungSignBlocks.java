@@ -39,6 +39,8 @@ public final class HungSignBlocks extends MishangucBlocks {
   public static final HungSignBlock JUNGLE_HUNG_SIGN = new HungSignBlock(Blocks.JUNGLE_PLANKS);
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBlock ACACIA_HUNG_SIGN = new HungSignBlock(Blocks.ACACIA_PLANKS);
+  @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
+  public static final HungSignBlock CHERRY_HUNG_SIGN = new HungSignBlock(Blocks.CHERRY_PLANKS);
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBlock DARK_OAK_HUNG_SIGN = new HungSignBlock(Blocks.DARK_OAK_PLANKS);
   @ApiStatus.AvailableSince("0.2.0-mc1.19")
@@ -66,6 +68,8 @@ public final class HungSignBlocks extends MishangucBlocks {
   public static final HungSignBarBlock JUNGLE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.JUNGLE_WOOD);
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBarBlock ACACIA_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.ACACIA_WOOD);
+  @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
+  public static final HungSignBarBlock CHERRY_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.CHERRY_WOOD);
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBarBlock DARK_OAK_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.DARK_OAK_WOOD);
   @ApiStatus.AvailableSince("0.2.0-mc1.19")
@@ -84,6 +88,7 @@ public final class HungSignBlocks extends MishangucBlocks {
     BIRCH_HUNG_SIGN.barTexture = "block/birch_log";
     JUNGLE_HUNG_SIGN.barTexture = "block/jungle_log";
     ACACIA_HUNG_SIGN.barTexture = "block/acacia_log";
+    CHERRY_HUNG_SIGN.barTexture = "block/cherry_log";
     DARK_OAK_HUNG_SIGN.barTexture = "block/dark_oak_log";
     MANGROVE_HUNG_SIGN.barTexture = "block/mangrove_log";
     CRIMSON_HUNG_SIGN.barTexture = "block/crimson_stem";
@@ -93,6 +98,7 @@ public final class HungSignBlocks extends MishangucBlocks {
     BIRCH_HUNG_SIGN.textureTop = "block/birch_log";
     JUNGLE_HUNG_SIGN.textureTop = "block/jungle_log";
     ACACIA_HUNG_SIGN.textureTop = "block/acacia_log";
+    CHERRY_HUNG_SIGN.textureTop = "block/cherry_log";
     DARK_OAK_HUNG_SIGN.textureTop = "block/dark_oak_log";
     MANGROVE_HUNG_SIGN.textureTop = "block/mangrove_log";
     CRIMSON_HUNG_SIGN.textureTop = "block/crimson_stem";
@@ -102,6 +108,7 @@ public final class HungSignBlocks extends MishangucBlocks {
     BIRCH_HUNG_SIGN_BAR.texture = "block/birch_log";
     JUNGLE_HUNG_SIGN_BAR.texture = "block/jungle_log";
     ACACIA_HUNG_SIGN_BAR.texture = "block/acacia_log";
+    CHERRY_HUNG_SIGN_BAR.texture = "block/cherry_log";
     DARK_OAK_HUNG_SIGN_BAR.texture = "block/dark_oak_log";
     MANGROVE_HUNG_SIGN_BAR.texture = "block/mangrove_log";
     CRIMSON_HUNG_SIGN_BAR.texture = "block/crimson_stem";

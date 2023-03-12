@@ -146,7 +146,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
         .with(AXIS,
             blockState.getBlock() instanceof HungSignBlock && blockState.contains(AXIS)
                 ? blockState.get(AXIS)
-                : ctx.getPlayerFacing().getAxis())
+                : ctx.getHorizontalPlayerFacing().getAxis())
         .with(WATERLOGGED, world.getFluidState(blockPos).getFluid() == Fluids.WATER)
         .getStateForNeighborUpdate(
             Direction.UP, world.getBlockState(blockPos.up()), world, blockPos, blockPos.up());

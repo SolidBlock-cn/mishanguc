@@ -5,10 +5,10 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.mixin.object.builder.AbstractBlockAccessor;
 import net.fabricmc.fabric.mixin.object.builder.AbstractBlockSettingsAccessor;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.WoodType;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.SignType;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.Translucent;
@@ -32,6 +32,8 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final StandingSignBlock SPRUCE_STANDING_SIGN = new StandingSignBlock(Blocks.SPRUCE_PLANKS);
   public static final StandingSignBlock BIRCH_STANDING_SIGN = new StandingSignBlock(Blocks.BIRCH_PLANKS);
   public static final StandingSignBlock ACACIA_STANDING_SIGN = new StandingSignBlock(Blocks.ACACIA_PLANKS);
+  @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
+  public static final StandingSignBlock CHERRY_STANDING_SIGN = new StandingSignBlock(Blocks.CHERRY_PLANKS);
   public static final StandingSignBlock JUNGLE_STANDING_SIGN = new StandingSignBlock(Blocks.JUNGLE_PLANKS);
   public static final StandingSignBlock DARK_OAK_STANDING_SIGN = new StandingSignBlock(Blocks.DARK_OAK_PLANKS);
   public static final StandingSignBlock CRIMSON_STANDING_SIGN = new StandingSignBlock(Blocks.CRIMSON_PLANKS);
@@ -50,6 +52,7 @@ public final class StandingSignBlocks extends MishangucBlocks {
     SPRUCE_STANDING_SIGN.barTexture = "block/spruce_log";
     BIRCH_STANDING_SIGN.barTexture = "block/birch_log";
     ACACIA_STANDING_SIGN.barTexture = "block/acacia_log";
+    CHERRY_STANDING_SIGN.barTexture = "block/cherry_log";
     JUNGLE_STANDING_SIGN.barTexture = "block/jungle_log";
     DARK_OAK_STANDING_SIGN.barTexture = "block/dark_oak_log";
     CRIMSON_STANDING_SIGN.barTexture = "block/crimson_stem";
@@ -58,16 +61,17 @@ public final class StandingSignBlocks extends MishangucBlocks {
     BAMBOO_PLANK_STANDING_SIGN.barTexture = BAMBOO_MOSAIC_STANDING_SIGN.barTexture = "block/bamboo_block";
   }
 
-  public static final ImmutableMap<SignType, StandingSignBlock> WOODEN_SIGNS = new ImmutableMap.Builder<SignType, StandingSignBlock>()
-      .put(SignType.OAK, OAK_STANDING_SIGN)
-      .put(SignType.SPRUCE, SPRUCE_STANDING_SIGN)
-      .put(SignType.BIRCH, BIRCH_STANDING_SIGN)
-      .put(SignType.ACACIA, ACACIA_STANDING_SIGN)
-      .put(SignType.JUNGLE, JUNGLE_STANDING_SIGN)
-      .put(SignType.DARK_OAK, DARK_OAK_STANDING_SIGN)
-      .put(SignType.CRIMSON, CRIMSON_STANDING_SIGN)
-      .put(SignType.WARPED, WARPED_STANDING_SIGN)
-      .put(SignType.MANGROVE, MANGROVE_STANDING_SIGN)
+  public static final ImmutableMap<WoodType, StandingSignBlock> WOODEN_SIGNS = new ImmutableMap.Builder<WoodType, StandingSignBlock>()
+      .put(WoodType.OAK, OAK_STANDING_SIGN)
+      .put(WoodType.SPRUCE, SPRUCE_STANDING_SIGN)
+      .put(WoodType.BIRCH, BIRCH_STANDING_SIGN)
+      .put(WoodType.ACACIA, ACACIA_STANDING_SIGN)
+      .put(WoodType.CHERRY, CHERRY_STANDING_SIGN)
+      .put(WoodType.JUNGLE, JUNGLE_STANDING_SIGN)
+      .put(WoodType.DARK_OAK, DARK_OAK_STANDING_SIGN)
+      .put(WoodType.CRIMSON, CRIMSON_STANDING_SIGN)
+      .put(WoodType.WARPED, WARPED_STANDING_SIGN)
+      .put(WoodType.MANGROVE, MANGROVE_STANDING_SIGN)
       .build();
 
   public static final StandingSignBlock WHITE_CONCRETE_STANDING_SIGN = new StandingSignBlock(Blocks.WHITE_CONCRETE);

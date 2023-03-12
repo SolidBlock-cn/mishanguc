@@ -74,8 +74,8 @@ public interface RoadWithOffsetStraightLine extends Road {
         .with(
             FACING,
             ctx.getPlayer() != null && ctx.getPlayer().isSneaking()
-                ? ctx.getPlayerFacing().rotateYCounterclockwise()
-                : ctx.getPlayerFacing().rotateYClockwise());
+                ? ctx.getHorizontalPlayerFacing().rotateYCounterclockwise()
+                : ctx.getHorizontalPlayerFacing().rotateYClockwise());
   }
 
   @Override

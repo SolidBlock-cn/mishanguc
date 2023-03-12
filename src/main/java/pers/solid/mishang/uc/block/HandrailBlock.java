@@ -72,7 +72,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
     final BlockState stateToReplace = world.getBlockState(blockPos);
     final Direction facingToReplace = stateToReplace.getBlock() instanceof HandrailBlock ? stateToReplace.get(FACING) : null;
     if (state == null) return null;
-    final Direction playerFacing = ctx.getPlayerFacing();
+    final Direction playerFacing = ctx.getHorizontalPlayerFacing();
     final Vec3d hitPos = ctx.getHitPos();
     final Direction.Axis axis = playerFacing.getAxis();
     assert axis != Direction.Axis.Y;
@@ -159,7 +159,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
   public boolean canReplace(BlockState state, ItemPlacementContext context) {
     if (state.getBlock().asItem() != context.getStack().getItem()) return false;
     final Direction facing = state.get(FACING);
-    final Direction playerFacing = context.getPlayerFacing();
+    final Direction playerFacing = context.getHorizontalPlayerFacing();
     final Vec3d hitPos = context.getHitPos();
     final BlockPos blockPos = context.getBlockPos();
     final Direction.Axis axis = playerFacing.getAxis();

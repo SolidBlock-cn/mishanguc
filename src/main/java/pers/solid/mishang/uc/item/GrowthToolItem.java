@@ -67,7 +67,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity {
 
   public static void apply(World world, PlayerEntity player, Vec3d center, Hand hand, boolean isPositive) {
     int damage = 0;
-    for (BlockPos pos : BlockPos.iterateOutwards(new BlockPos(center), 4, 4, 4)) {
+    for (BlockPos pos : BlockPos.iterateOutwards(BlockPos.ofFloored(center), 4, 4, 4)) {
       final BlockState blockState = world.getBlockState(pos);
       if (blockState.getBlock().getStateManager().getProperty("age") instanceof IntProperty intProperty) {
         final Integer target = isPositive ? Collections.max(intProperty.getValues()) : Collections.min(intProperty.getValues());

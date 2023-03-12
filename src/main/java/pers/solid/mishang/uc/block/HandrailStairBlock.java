@@ -119,7 +119,7 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
         shape = Shape.TOP;
       }
     } else {
-      facing = ctx.getPlayerFacing();
+      facing = ctx.getHorizontalPlayerFacing();
       shape = Shape.BOTTOM;
     }
     final Vec3d hitPos = ctx.getHitPos();

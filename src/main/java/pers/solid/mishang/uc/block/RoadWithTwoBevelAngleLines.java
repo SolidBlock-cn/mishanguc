@@ -64,7 +64,7 @@ public interface RoadWithTwoBevelAngleLines extends Road {
 
   @Override
   default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
-    final Direction playerFacing = ctx.getPlayerFacing();
+    final Direction playerFacing = ctx.getHorizontalPlayerFacing();
     return Road.super.withPlacementState(state, ctx).with(FACING, ctx.getPlayer() != null && ctx.getPlayer().isSneaking() ? playerFacing.getOpposite() : playerFacing);
   }
 

@@ -41,7 +41,7 @@ public final class MishangucCommands {
     dispatcher.register(CommandManager.literal("mishanguc:update-light")
         .requires(source -> source.hasPermissionLevel(4))
         .executes(context -> {
-          final BlockPos pos = new BlockPos(context.getSource().getPosition());
+          final BlockPos pos = BlockPos.ofFloored(context.getSource().getPosition());
           executeUpdateLight(context.getSource().getWorld(), pos);
           context.getSource().sendFeedback(TextBridge.translatable("commands.mishanguc:update-light.success", pos.getX(), pos.getY(), pos.getZ()), true);
           context.getSource().sendFeedback(NOT_STABLE_WARN, false);
@@ -60,7 +60,7 @@ public final class MishangucCommands {
         .then(CommandManager.argument("range", IntegerArgumentType.integer(0, 64))
             .executes(context -> {
               final ServerCommandSource source = context.getSource();
-              final BlockPos pos = new BlockPos(source.getPosition());
+              final BlockPos pos = BlockPos.ofFloored(source.getPosition());
               final int range = IntegerArgumentType.getInteger(context, "range");
               return executeUpdateLightWithinRange(source.getWorld(), pos, range, source);
             }))

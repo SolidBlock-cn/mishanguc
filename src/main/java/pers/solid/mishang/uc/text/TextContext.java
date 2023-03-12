@@ -383,7 +383,7 @@ public class TextContext implements Cloneable {
   @Contract(pure = true)
   protected void drawText(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, OrderedText text, float x, float y) {
     if (outlineColor == -2) {
-      textRenderer.draw(text, x, y, color, shadow, matrixStack.peek().getPositionMatrix(), vertexConsumers, seeThrough, 0, light);
+      textRenderer.draw(text, x, y, color, shadow, matrixStack.peek().getPositionMatrix(), vertexConsumers, seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL, 0, light);
     } else {
       textRenderer.drawWithOutline(text, x, y, color, outlineColor == -1 ? MishangUtils.toSignOutlineColor(color) : outlineColor, matrixStack.peek().getPositionMatrix(), vertexConsumers, light);
     }

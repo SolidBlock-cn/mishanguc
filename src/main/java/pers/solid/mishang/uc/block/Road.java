@@ -77,7 +77,7 @@ public interface Road extends BlockResourceGenerator {
   Consumer<World> CHECK_MULTIPLIER = world -> {
     for (PlayerEntity player : world.getPlayers()) {
       final EntityAttributeInstance attributeInstance = player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-      final BlockPos stepPos = new BlockPos(player.getPos().x, player.getPos().y - 0.2, player.getPos().z);
+      final BlockPos stepPos = BlockPos.ofFloored(player.getPos().x, player.getPos().y - 0.2, player.getPos().z);
       final BlockPos stepPosDown = stepPos.down();
       if (attributeInstance == null) continue;
       final BlockState stepState = world.getBlockState(stepPos);

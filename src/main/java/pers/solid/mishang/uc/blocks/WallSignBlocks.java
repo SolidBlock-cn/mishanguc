@@ -35,6 +35,8 @@ public final class WallSignBlocks extends MishangucBlocks {
 
   public static final WallSignBlock ACACIA_WALL_SIGN =
       new WallSignBlock(Blocks.ACACIA_PLANKS);
+  @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
+  public static final WallSignBlock CHERRY_WALL_SIGN = new WallSignBlock(Blocks.CHERRY_PLANKS);
 
   public static final WallSignBlock DARK_OAK_WALL_SIGN =
       new WallSignBlock(Blocks.DARK_OAK_PLANKS);

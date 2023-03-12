@@ -120,7 +120,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
 
     if (placementState == null) return null;
 
-    final Direction playerFacing = ctx.getPlayerFacing();
+    final Direction playerFacing = ctx.getHorizontalPlayerFacing();
     final Direction.Axis playerFacingAxis = playerFacing.getAxis();
 
     // 初始化设置该 placementState 为玩家水平横向的方向。

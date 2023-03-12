@@ -12,7 +12,6 @@ import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -67,7 +66,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       // 创造模式下，将游戏规则临时设为不掉落。
       booleanRule.set(false, null);
     }
-    Explosion explosion = new Explosion(world, user, user.isSneaking() ? DamageSource.explosion(null) : null, null, pos.x, pos.y, pos.z, power(stack), createFire(stack), destructionType(stack));
+    Explosion explosion = new Explosion(world, user, user.isSneaking() ? world.getDamageSources().explosion(null) : null, null, pos.x, pos.y, pos.z, power(stack), createFire(stack), destructionType(stack));
     explosion.collectBlocksAndDamageEntities();
     explosion.affectWorld(true);
 

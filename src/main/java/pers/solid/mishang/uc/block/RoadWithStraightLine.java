@@ -70,7 +70,7 @@ public interface RoadWithStraightLine extends Road {
   @Override
   default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
     final PlayerEntity player = ctx.getPlayer();
-    final Direction playerFacing = ctx.getPlayerFacing();
+    final Direction playerFacing = ctx.getHorizontalPlayerFacing();
     return state.with(
         AXIS,
         (player != null && player.isSneaking() ? playerFacing.rotateYClockwise() : playerFacing)

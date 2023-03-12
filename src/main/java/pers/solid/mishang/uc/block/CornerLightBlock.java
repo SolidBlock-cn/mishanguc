@@ -72,7 +72,7 @@ public class CornerLightBlock extends HorizontalFacingBlock
                 : BlockHalf.BOTTOM)
         .with(
             FACING,
-            Direction.Type.HORIZONTAL.test(side) ? side : ctx.getPlayerFacing().getOpposite());
+            Direction.Type.HORIZONTAL.test(side) ? side : ctx.getHorizontalPlayerFacing().getOpposite());
   }
 
   @Override

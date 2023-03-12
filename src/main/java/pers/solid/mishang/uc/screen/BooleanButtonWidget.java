@@ -86,20 +86,20 @@ public class BooleanButtonWidget extends ButtonWidget {
 
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int button) {
-    final boolean b = super.mouseClicked(mouseX, mouseY, button);
-    if (this.active && this.visible && clicked(mouseX, mouseY)) {
-      if (button == 2) {
-        setValue(defaultValue);
-        return true;
-      } else {
-        final Boolean value = getValue();
-        if (value != null) {
-          setValue(!value);
-          return true;
-        }
-      }
+    if (this.active && this.visible && clicked(mouseX, mouseY) && button == 2) {
+      setValue(defaultValue);
+      return true;
+    } else {
+      return super.mouseClicked(mouseX, mouseY, button);
     }
-    return b;
+  }
+
+  @Override
+  public void onPress() {
+    final Boolean value = getValue();
+    if (value != null) {
+      setValue(!value);
+    }
   }
 
   @Override
