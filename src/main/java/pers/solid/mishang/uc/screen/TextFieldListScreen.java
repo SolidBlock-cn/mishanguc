@@ -72,10 +72,10 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
 
   @Override
   public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-    if (keyCode == GLFW.GLFW_KEY_UP) {
+    if (children().size() != 0 && keyCode == GLFW.GLFW_KEY_UP) {
       setFocused(children().get(MathHelper.floorMod(children().indexOf(getFocused()) - 1, children().size())));
       return true;
-    } else if (keyCode == GLFW.GLFW_KEY_DOWN) {
+    } else if (children().size() != 0 && keyCode == GLFW.GLFW_KEY_DOWN) {
       setFocused(children().get(MathHelper.floorMod(children().indexOf(getFocused()) + 1, children().size())));
       return true;
     } else {

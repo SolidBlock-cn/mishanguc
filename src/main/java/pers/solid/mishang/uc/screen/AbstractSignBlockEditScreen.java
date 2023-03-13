@@ -349,7 +349,18 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    *
    * @see #colorButton
    */
-  public final TextFieldWidget customColorTextField = Util.make(new TextFieldWidget(MinecraftClient.getInstance().textRenderer, 0, 0, 50, 20, TextBridge.translatable("message.mishanguc.custom_color")), widget ->
+  public final TextFieldWidget customColorTextField = Util.make(new TextFieldWidget(MinecraftClient.getInstance().textRenderer, 0, 0, 50, 20, TextBridge.translatable("message.mishanguc.custom_color")) {
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+      // 避免无法用方向左右键来离开此编辑框
+      if (keyCode == GLFW.GLFW_KEY_LEFT && getCursor() <= 0) {
+        return false;
+      } else if (keyCode == GLFW.GLFW_KEY_RIGHT && getCursor() >= getText().length()) {
+        return false;
+      }
+      return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+  }, widget ->
       widget.setChangedListener(
           s -> {
             changed = true;
@@ -965,7 +976,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           setFocused(weakFocus);
           weakFocus = textFieldListScreen;
         }
-      } else {
+      } else if (textFieldListScreen.children().size() != 0) {
         // 当前焦点为按钮时，按 tab 切换到文本。
         weakFocus = getFocused();
         setFocused(textFieldListScreen);

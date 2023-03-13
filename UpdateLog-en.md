@@ -4,7 +4,16 @@ Note: Not all versions in this update log are already published. Please refer to
 
 ### 1.1.1
 
-Fixed the severe issue of failing to launch server.
+- Fixed the severe issue of failing to launch server.
+- Realized the control of keyboard only to the sign edit screen.
+
+About the keyboard control added in 1.19.4: Minecraft added the keyboard-only control for the sign edit screen. When you are using only keyboard, you can edit the sign text via the following methods:
+
+- Press `Tab` to switch between text area and button area (including the text field to change custom color). Press direction keys to switch between text rows or between buttons.
+    - For example, you're editing the first row. Press `Tab` to select "Bold" button, press `Enter` to switch bold, then press `right` to select "Italic" button, press `Enter` to switch italic; then, press `Tab` again to go back to text area, type anything to modify the content of text, and press direction key to switch to another row of text.
+- Press `Ctrl + I/S/U/O` to fastly toggle the italic, strikethrough, underline and obfuscation. Note that pressing Ctrl + B cannot apply bold, because it conflicts with the hotkey of narrator.
+- Press `Ctrl + Shift + Equal` or `Ctrl + KP_Add` to add a row. Press `Ctrl + Minus` or `Ctrl + KP_Minus` to remove that row.
+- Press `Ctrl + Shift + Up/Down` to move the current line.
 
 ### 1.1.0
 
