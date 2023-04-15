@@ -1,13 +1,12 @@
 package pers.solid.mishang.uc.item;
 
-import net.devtech.arrp.generator.ItemResourceGenerator;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.model.Models;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -21,6 +20,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.generator.ItemResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.ColoredBlock;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
@@ -136,7 +137,7 @@ public class ColorToolItem extends BlockToolItem implements ItemResourceGenerato
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JModel getItemModel() {
-    return new JModel("item/handheld").addTexture("layer0", getTextureId());
+  public @NotNull ModelJsonBuilder getItemModel() {
+    return ModelJsonBuilder.create(Models.HANDHELD).addTexture("layer0", getTextureId());
   }
 }

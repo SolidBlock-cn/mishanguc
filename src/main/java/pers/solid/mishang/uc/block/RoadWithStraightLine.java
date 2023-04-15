@@ -1,15 +1,12 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.blockstate.JVariants;
-import net.devtech.arrp.json.models.JModel;
+import com.google.common.collect.ImmutableList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.model.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -25,6 +22,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
 import pers.solid.mishang.uc.util.*;
@@ -104,18 +103,17 @@ public interface RoadWithStraightLine extends Road {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JBlockStates getBlockStates() {
+    public @NotNull BlockStateSupplier getBlockStates() {
       final Identifier blockModelId = getBlockModelId();
-      return JBlockStates.ofVariants(new JVariants()
-          .addVariant("axis", "x", new JBlockModel(blockModelId).y(90), new JBlockModel(blockModelId).y(270))
-          .addVariant("axis", "z", new JBlockModel(blockModelId).y(0), new JBlockModel(blockModelId).y(180))
-      );
+      return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId)).coordinate(BlockStateVariantMap.create(AXIS)
+          .register(Direction.Axis.X, ImmutableList.of(BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R90), BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R270)))
+          .register(Direction.Axis.Z, ImmutableList.of(BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R0), BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R180))));
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JModel getBlockModel() {
-      return new JModel("mishanguc:block/road_with_straight_line").textures(new FasterJTextures().base("asphalt").lineSide(lineTexture).lineTop(lineTexture));
+    public @NotNull ModelJsonBuilder getBlockModel() {
+      return ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_straight_line")).setTextures(new FasterJTextures().base("asphalt").lineSide(lineTexture).lineTop(lineTexture));
     }
 
     @Environment(EnvType.CLIENT)

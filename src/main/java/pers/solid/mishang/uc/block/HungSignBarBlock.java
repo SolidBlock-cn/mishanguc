@@ -1,14 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.devtech.arrp.generator.ResourceGeneratorHelper;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.blockstate.JMultipart;
-import net.devtech.arrp.json.blockstate.JWhenProperties;
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -16,7 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
-import net.minecraft.data.client.model.TextureKey;
+import net.minecraft.data.client.model.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -38,6 +29,10 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.BRRPUtils;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.TextBridge;
 
@@ -70,7 +65,7 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
   /**
    * 告示牌杆的纹理。若为 {@code null}，则根据其 {@link #baseBlock} 的 id 来推断。
    */
-  public String texture;
+  public Identifier texture;
 
   public HungSignBarBlock(@Nullable Block baseBlock, Settings settings) {
     super(settings);
@@ -276,42 +271,42 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JBlockStates getBlockStates() {
+  public @Nullable BlockStateSupplier getBlockStates() {
     final Identifier id = getBlockModelId();
-    return JBlockStates.ofMultiparts(
-        new JMultipart(JWhenProperties.of("left", "true").add("right", "true"), new JBlockModel(id.brrp_append("_central")).uvlock()),
-        new JMultipart(JWhenProperties.of("axis", "z").add("left", "false").add("right", "true"), new JBlockModel(id).uvlock()),
-        new JMultipart(JWhenProperties.of("axis", "z").add("left", "true").add("right", "false"), new JBlockModel(id).uvlock().y(180)),
-        new JMultipart(JWhenProperties.of("axis", "x").add("left", "false").add("right", "true"), new JBlockModel(id).uvlock().y(-90)),
-        new JMultipart(JWhenProperties.of("axis", "x").add("left", "true").add("right", "false"), new JBlockModel(id).uvlock().y(90)),
-        new JMultipart(JWhenProperties.of("axis", "z").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_edge")).uvlock()),
-        new JMultipart(JWhenProperties.of("axis", "z").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_edge")).uvlock().y(180)),
-        new JMultipart(JWhenProperties.of("axis", "x").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_edge")).uvlock().y(90)),
-        new JMultipart(JWhenProperties.of("axis", "x").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_edge")).uvlock().y(270)));
+    return MultipartBlockStateSupplier.create(this)
+        .with(When.create().set(LEFT, true).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_central")).put(VariantSettings.UVLOCK, true))
+        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.UVLOCK, true))
+        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 180))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, -90))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 90))
+        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_edge")).put(VariantSettings.UVLOCK, true))
+        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_edge")).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 180))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_edge")).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 90))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_edge")).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 270));
   }
 
   @Environment(EnvType.CLIENT)
-  public String getBaseTexture() {
+  public Identifier getBaseTexture() {
     if (texture != null) return texture;
-    return ResourceGeneratorHelper.getTextureId(baseBlock == null ? this : baseBlock, TextureKey.ALL);
+    return BRRPUtils.getTextureId(baseBlock == null ? this : baseBlock, TextureKey.ALL);
   }
 
   @Environment(EnvType.CLIENT)
   @Override
   public void writeBlockModel(RuntimeResourcePack pack) {
     final Identifier id = getBlockModelId();
-    final String texture = getBaseTexture();
+    final Identifier texture = getBaseTexture();
     pack.addModel(
-        new JModel(new Identifier("mishanguc", "block/hung_sign_bar_central"))
-            .textures(JTextures.of("texture", texture)),
-        id.brrp_append("_central"));
+        id.brrp_suffixed("_central"),
+        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_bar_central"))
+            .addTexture(TextureKey.TEXTURE, texture));
     pack.addModel(
-        new JModel(new Identifier("mishanguc", "block/hung_sign_bar"))
-            .textures(JTextures.of("texture", texture)),
-        id);
+        id,
+        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_bar"))
+            .addTexture(TextureKey.TEXTURE, texture));
     pack.addModel(
-        new JModel(new Identifier("mishanguc", "block/hung_sign_bar_edge"))
-            .textures(JTextures.of("texture", texture)),
-        id.brrp_append("_edge"));
+        id.brrp_suffixed("_edge"),
+        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_bar_edge"))
+            .addTexture(TextureKey.TEXTURE, texture));
   }
 }

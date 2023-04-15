@@ -1,16 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.devtech.arrp.generator.ResourceGeneratorHelper;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.blockstate.JMultipart;
-import net.devtech.arrp.json.blockstate.JWhenProperties;
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.models.JTextures;
-import net.devtech.arrp.json.recipe.JRecipe;
-import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -20,7 +9,9 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.data.client.model.TextureKey;
+import net.minecraft.data.client.model.*;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonFactory;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -47,6 +38,10 @@ import net.minecraft.world.chunk.WorldChunk;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.BRRPUtils;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
@@ -55,6 +50,7 @@ import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,17 +93,17 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
    * 非 final，可直接进行修改。
    */
   @ApiStatus.AvailableSince("0.1.7")
-  public @Nullable String baseTexture;
+  public @Nullable Identifier baseTexture;
   /**
    * 告示牌杆的纹理。可能为 {@code null}。生成模型时，可直接作为 null 传入，转化为 json 时会被忽略。
    */
   @ApiStatus.AvailableSince("0.1.7")
-  public @Nullable String barTexture;
+  public @Nullable Identifier barTexture;
   /**
    * 告示牌顶部的纹理。可能为 {@code null}。生成模型时，可直接作为 null 传入，转化为 json 时会被忽略。
    */
   @ApiStatus.AvailableSince("0.1.7")
-  public @Nullable String textureTop;
+  public @Nullable Identifier textureTop;
 
   public HungSignBlock(@Nullable Block baseBlock, Settings settings) {
     super(settings);
@@ -392,58 +388,55 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   }
 
   @Environment(EnvType.CLIENT)
-  public String getBaseTexture() {
+  public Identifier getBaseTexture() {
     if (baseTexture != null) return baseTexture;
-    return ResourceGeneratorHelper.getTextureId(baseBlock == null ? this : baseBlock, TextureKey.ALL);
+    return BRRPUtils.getTextureId(baseBlock == null ? this : baseBlock, TextureKey.ALL);
   }
 
   @Environment(EnvType.CLIENT)
   @Override
   public void writeBlockModel(RuntimeResourcePack pack) {
-    final String texture = getBaseTexture();
+    final Identifier texture = getBaseTexture();
     final Identifier id = getBlockModelId();
-    final JTextures textures = new JTextures().var("texture", texture).var("bar", barTexture).var("texture_top", textureTop);
-    pack.addModel(new JModel(new Identifier("mishanguc", "block/hung_sign")).textures(textures),
-        id);
-    pack.addModel(new JModel(new Identifier("mishanguc", "block/hung_sign_body")).textures(textures),
-        id.brrp_append("_body"));
-    pack.addModel(new JModel(new Identifier("mishanguc", "block/hung_sign_top_bar")).textures(textures),
-        id.brrp_append("_top_bar"));
-    pack.addModel(new JModel(new Identifier("mishanguc", "block/hung_sign_top_bar_edge")).textures(textures),
-        id.brrp_append("_top_bar_edge"));
+    final HashMap<String, String> textures = new HashMap<>();
+
+    textures.put("texture", texture.toString());
+    if (barTexture != null) textures.put("bar", barTexture.toString());
+    if (textureTop != null) textures.put("texture_top", textureTop.toString());
+    pack.addModel(id,
+        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign")).setTextures(textures));
+    pack.addModel(id.brrp_suffixed("_body"),
+        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_body")).setTextures(textures));
+    pack.addModel(id.brrp_suffixed("_top_bar"),
+        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_top_bar")).setTextures(textures));
+    pack.addModel(id.brrp_suffixed("_top_bar_edge"),
+        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_top_bar_edge")).setTextures(textures));
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JBlockStates getBlockStates() {
+  public @NotNull BlockStateSupplier getBlockStates() {
     final Identifier id = getBlockModelId();
-    return JBlockStates.ofMultiparts(
-        new JMultipart(JWhenProperties.of("axis", "z"), new JBlockModel(id.brrp_append("_body")).uvlock()),
-        new JMultipart(JWhenProperties.of("axis", "x"), new JBlockModel(id.brrp_append("_body")).uvlock().y(90)),
-        new JMultipart(JWhenProperties.of("axis", "z").add("left", "false").add("right", "true"), new JBlockModel(id.brrp_append("_top_bar")).uvlock()),
-        new JMultipart(JWhenProperties.of("axis", "z").add("left", "true").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar")).uvlock().y(180)),
-        new JMultipart(JWhenProperties.of("axis", "x").add("left", "false").add("right", "true"), new JBlockModel(id.brrp_append("_top_bar")).uvlock().y(-90)),
-        new JMultipart(JWhenProperties.of("axis", "x").add("left", "true").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar")).uvlock().y(90)),
-        new JMultipart(JWhenProperties.of("axis", "z").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar_edge")).uvlock()),
-        new JMultipart(JWhenProperties.of("axis", "z").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar_edge")).uvlock().y(180)),
-        new JMultipart(JWhenProperties.of("axis", "x").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar_edge")).uvlock().y(90)),
-        new JMultipart(JWhenProperties.of("axis", "x").add("left", "false").add("right", "false"), new JBlockModel(id.brrp_append("_top_bar_edge")).uvlock().y(270)));
+    return MultipartBlockStateSupplier.create(this)
+        .with(When.create().set(AXIS, Direction.Axis.Z), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_body")).put(VariantSettings.UVLOCK, true))
+        .with(When.create().set(AXIS, Direction.Axis.X), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_body")).put(VariantSettings.UVLOCK, true).put(VariantSettings.Y, VariantSettings.Rotation.R90))
+        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_top_bar")).put(VariantSettings.UVLOCK, true))
+        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_top_bar")).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 180))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_top_bar")).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 90))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_top_bar")).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 90))
+        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_top_bar_edge")).put(VariantSettings.UVLOCK, true))
+        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_top_bar_edge")).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 180))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_top_bar_edge")).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 90))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_top_bar_edge")).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 270));
   }
 
   @Override
-  public @Nullable JRecipe getCraftingRecipe() {
+  public CraftingRecipeJsonFactory getCraftingRecipe() {
     if (baseBlock == null) return null;
-    final JShapedRecipe recipe = new JShapedRecipe(this)
-        .pattern("-#-", "-#-", "-#-")
-        .addKey("#", baseBlock).addKey("-", WallSignBlocks.INVISIBLE_WALL_SIGN)
-        .resultCount(6);
-    recipe.addInventoryChangedCriterion("has_base_block", baseBlock).addInventoryChangedCriterion("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
-    return recipe;
-  }
-
-  @Override
-  public Identifier getAdvancementIdForRecipe(Identifier recipeId) {
-    return recipeId.brrp_prepend("recipes/signs/");
+    return ShapedRecipeJsonFactory.create(this, 6)
+        .patterns("-#-", "-#-", "-#-")
+        .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .criterionFromItem("has_base_block", WallSignBlocks.INVISIBLE_WALL_SIGN);
   }
 
   @SuppressWarnings("deprecation")

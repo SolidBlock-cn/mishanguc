@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableBiMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.MapColor;
 import net.minecraft.block.Material;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.block.RoadMarkBlock;
@@ -57,11 +58,11 @@ public class RoadMarkBlocks extends MishangucBlocks {
   public static final RoadMarkBlock LANE_NON_VEHICLE_MARK = directional("lane_non_vehicle");
 
   private static RoadMarkBlock directional(String name) {
-    return RoadMarkBlock.createDirectionalFacing("mishanguc:block/" + name, ROAD_MARK_SETTINGS);
+    return RoadMarkBlock.createDirectionalFacing(new Identifier("mishanguc:block/" + name), ROAD_MARK_SETTINGS);
   }
 
   private static RoadMarkBlock axis(String name) {
-    return RoadMarkBlock.createAxisFacing("mishanguc:block/" + name, ROAD_MARK_SETTINGS);
+    return RoadMarkBlock.createAxisFacing(new Identifier("mishanguc:block/" + name), ROAD_MARK_SETTINGS);
   }
 
   /**

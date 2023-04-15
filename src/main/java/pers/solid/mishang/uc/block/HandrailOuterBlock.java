@@ -1,8 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.Maps;
-import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -10,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
+import net.minecraft.data.client.model.BlockStateSupplier;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -31,6 +30,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
@@ -144,7 +144,7 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JBlockStates getBlockStates() {
-    return BRRPHelper.stateForHorizontalCornerFacingBlock(getBlockModelId(), true);
+  public @NotNull BlockStateSupplier getBlockStates() {
+    return BRRPHelper.stateForHorizontalCornerFacingBlock(this, getBlockModelId(), true);
   }
 }
