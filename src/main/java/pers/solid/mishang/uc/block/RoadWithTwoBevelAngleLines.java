@@ -1,13 +1,12 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -17,11 +16,14 @@ import net.minecraft.text.Text;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
@@ -71,8 +73,8 @@ public interface RoadWithTwoBevelAngleLines extends Road {
   @Environment(EnvType.CLIENT)
   @Override
   @NotNull
-  default JBlockStates getBlockStates() {
-    return JBlockStates.simpleHorizontalFacing(getBlockModelId(), false);
+  default BlockStateSupplier getBlockStates() {
+    return BlockStateModelGenerator.createSingletonBlockState((Block) this, getBlockModelId()).coordinate(BlockStateModelGenerator.createSouthDefaultHorizontalRotationStates());
   }
 
   class ImplWithTwoLayerTexture extends AbstractRoadBlock implements RoadWithTwoBevelAngleLines {
@@ -84,9 +86,9 @@ public interface RoadWithTwoBevelAngleLines extends Road {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JModel getBlockModel() {
-      return new JModel("mishanguc:block/road_with_bi_angle_line")
-          .textures(new FasterJTextures()
+    public @NotNull ModelJsonBuilder getBlockModel() {
+      return ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_bi_angle_line"))
+          .setTextures(new FasterJTextures()
               .base("asphalt")
               .lineTop(MishangUtils.composeAngleLineTexture(lineColor, lineType, true))
               .lineSide(MishangUtils.composeStraightLineTexture(lineColor, lineType)));
@@ -124,9 +126,9 @@ public interface RoadWithTwoBevelAngleLines extends Road {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JModel getBlockModel() {
-      return new JModel("mishanguc:block/road_with_straight_and_bi_angle_line")
-          .textures(new FasterJTextures()
+    public @NotNull ModelJsonBuilder getBlockModel() {
+      return ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_straight_and_bi_angle_line"))
+          .setTextures(new FasterJTextures()
               .base("asphalt")
               .lineTop(MishangUtils.composeStraightLineTexture(lineColor, lineType))
               .lineSide(MishangUtils.composeStraightLineTexture(lineColor, lineType))

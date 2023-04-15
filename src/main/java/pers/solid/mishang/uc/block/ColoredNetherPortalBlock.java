@@ -1,9 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.loot.JLootTable;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -11,12 +7,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.data.client.BlockStateVariant;
-import net.minecraft.data.client.BlockStateVariantMap;
-import net.minecraft.data.client.VariantSettings;
-import net.minecraft.data.client.VariantsBlockStateSupplier;
+import net.minecraft.data.client.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootTable;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -25,6 +19,8 @@ import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -61,21 +57,21 @@ public class ColoredNetherPortalBlock extends NetherPortalBlock implements Color
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JBlockStates getBlockStates() {
-    return JBlockStates.delegate(VariantsBlockStateSupplier.create(Blocks.NETHER_PORTAL)
+  public @NotNull BlockStateSupplier getBlockStates() {
+    return VariantsBlockStateSupplier.create(Blocks.NETHER_PORTAL)
         .coordinate(
             BlockStateVariantMap.create(Properties.HORIZONTAL_AXIS)
-                .register(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.MODEL, getBlockModelId().brrp_append("_ns")))
-                .register(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, getBlockModelId().brrp_append("_ew")))));
+                .register(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.MODEL, getBlockModelId().brrp_suffixed("_ns")))
+                .register(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, getBlockModelId().brrp_suffixed("_ew"))));
   }
 
   @Override
-  public @Nullable JModel getItemModel() {
-    return new JModel(getBlockModelId().brrp_append("_ns"));
+  public ModelJsonBuilder getItemModel() {
+    return ModelJsonBuilder.create(getBlockModelId().brrp_suffixed("_ns"));
   }
 
   @Override
-  public JLootTable getLootTable() {
-    return new JLootTable("block");
+  public LootTable.Builder getLootTable() {
+    return LootTable.builder();
   }
 }

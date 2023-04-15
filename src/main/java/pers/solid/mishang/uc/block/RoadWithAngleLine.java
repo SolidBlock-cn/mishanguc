@@ -1,15 +1,11 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.blockstate.JVariants;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -23,6 +19,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
@@ -112,19 +110,17 @@ public interface RoadWithAngleLine extends Road {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @Nullable JBlockStates getBlockStates() {
+    public @Nullable BlockStateSupplier getBlockStates() {
       final Identifier id = getBlockModelId();
-      JVariants variant = new JVariants();
-      for (HorizontalCornerDirection direction : HorizontalCornerDirection.values()) {
-        variant.addVariant("facing=" + direction.asString(), new JBlockModel(id).y(direction.asRotation() - 45));
-      }
-      return JBlockStates.ofVariants(variant);
+      return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.MODEL, id)).coordinate(BlockStateVariantMap.create(FACING).register(direction -> {
+        return BlockStateVariant.create().put(MishangUtils.INT_Y_VARIANT, direction.asRotation()- 45);
+      }));
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JModel getBlockModel() {
-      return new JModel("mishanguc:block/road_with_angle_line").textures(new FasterJTextures().base("asphalt").lineSide(lineSide).lineTop(lineTop));
+    public @NotNull ModelJsonBuilder getBlockModel() {
+      return ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_angle_line")).setTextures(new FasterJTextures().base("asphalt").lineSide(lineSide).lineTop(lineTop));
     }
 
     @Override

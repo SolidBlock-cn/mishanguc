@@ -1,14 +1,10 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
+import net.minecraft.data.client.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -16,7 +12,6 @@ import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -26,6 +21,9 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
@@ -196,8 +194,8 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JBlockStates getBlockStates() {
-    return JBlockStates.simpleHorizontalFacing(getBlockModelId(), true);
+  public @NotNull BlockStateSupplier getBlockStates() {
+    return BlockStateModelGenerator.createSingletonBlockState(this, getBlockModelId()).coordinate(BlockStateVariantMap.create(Properties.HORIZONTAL_FACING).register(direction -> BlockStateVariant.create().put(MishangUtils.DIRECTION_Y_VARIANT, direction).put(VariantSettings.UVLOCK, true)));
   }
 
   @SuppressWarnings("deprecation")
@@ -208,7 +206,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
 
   @Environment(EnvType.CLIENT)
   @Override
-  public abstract @NotNull JModel getBlockModel();
+  public abstract @NotNull ModelJsonBuilder getBlockModel();
 
   @Environment(EnvType.CLIENT)
   @Override
@@ -245,7 +243,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
    * @return 该方块的纹理变量组合。
    */
   @Environment(EnvType.CLIENT)
-  public abstract @NotNull JTextures getTextures();
+  public abstract @NotNull TextureMap getTextures();
 
   /**
    * 该方块对应的中心版本。
@@ -285,11 +283,6 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
   @Override
   public boolean connectsIn(@NotNull BlockState blockState, @NotNull Direction direction, @Nullable Direction offsetFacing) {
     return offsetFacing != null && blockState.get(FACING) == offsetFacing && direction.getAxis() != offsetFacing.getAxis();
-  }
-
-  @Override
-  public Identifier getAdvancementIdForRecipe(Identifier recipeId, @Nullable RecipeCategory recipeCategory) {
-    return recipeId.brrp_prepend("recipes/handrails/");
   }
 
   @Override

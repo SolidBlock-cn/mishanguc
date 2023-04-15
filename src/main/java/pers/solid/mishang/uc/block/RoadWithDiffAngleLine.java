@@ -1,15 +1,11 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.blockstate.JVariants;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
@@ -21,6 +17,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
@@ -36,7 +34,7 @@ import java.util.List;
  */
 public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
   /**
-   * 直角上该坐标轴上的边视为第二个边，另一方向的边则视为第一个边。
+   * 直角上该坐标轴上的边视为第二个边，另一个方向的边则视为第一个边。
    */
   EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
 
@@ -96,9 +94,9 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @Nullable JBlockStates getBlockStates() {
+    public @Nullable BlockStateSupplier getBlockStates() {
       final Identifier id = getBlockModelId();
-      JVariants variant = new JVariants();
+      final BlockStateVariantMap.DoubleProperty<HorizontalCornerDirection, Direction.Axis> map = BlockStateVariantMap.create(FACING, AXIS);
       // 一侧的短线所朝向的方向。
       for (Direction direction : Direction.Type.HORIZONTAL) {
         final @NotNull Direction offsetDirection1 = direction.rotateYClockwise();
@@ -107,24 +105,22 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
         final @NotNull Direction offsetDirection2 = direction.rotateYCounterclockwise();
         // direction 的左偏方向
         final @NotNull HorizontalCornerDirection facing2 = HorizontalCornerDirection.fromDirections(direction, offsetDirection2);
-        variant
-            .addVariant(
-                String.format(
-                    "facing=%s,axis=%s", facing1.asString(), direction.getAxis().asString()),
-                new JBlockModel(id).y((int) direction.asRotation()))
-            .addVariant(
-                String.format(
-                    "facing=%s,axis=%s", facing2.asString(), direction.getAxis().asString()),
-                new JBlockModel(id.brrp_append("_mirrored"))
-                    .y((int) direction.asRotation()));
+        map
+            .register(
+                facing1, direction.getAxis(),
+                BlockStateVariant.create().put(VariantSettings.MODEL, id).put(MishangUtils.DIRECTION_Y_VARIANT, direction))
+            .register(
+                 facing2, direction.getAxis(),
+                BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_mirrored"))
+                    .put(MishangUtils.DIRECTION_Y_VARIANT, direction));
       }
-      return JBlockStates.ofVariants(variant);
+      return VariantsBlockStateSupplier.create(this).coordinate(map);
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JModel getBlockModel() {
-      return new JModel("mishanguc:block/road_with_angle_line").textures(new FasterJTextures().base("asphalt").lineSide(lineSide).lineSide2(lineSide2).lineTop(lineTop));
+    public @NotNull ModelJsonBuilder getBlockModel() {
+      return ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_angle_line")).setTextures(new FasterJTextures().base("asphalt").lineSide(lineSide).lineSide2(lineSide2).lineTop(lineTop));
     }
 
     @Environment(EnvType.CLIENT)

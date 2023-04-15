@@ -165,8 +165,8 @@ public class MishangucBlocks {
     RoadSlabBlocks.registerAll();
     registerAll(RoadMarkBlocks.class);
     registerAll(LightBlocks.class);
-    registerAll(HungSignBlocks.class);
     registerAll(WallSignBlocks.class);
+    registerAll(HungSignBlocks.class);
     registerAll(StandingSignBlocks.class);
     registerAll(HandrailBlocks.class);
     registerAll(ColoredBlocks.class);

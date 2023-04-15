@@ -1,14 +1,10 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.blockstate.JMultipart;
-import net.devtech.arrp.json.blockstate.JWhenProperties;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
+import net.minecraft.data.client.*;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
@@ -24,9 +20,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
+import pers.solid.mishang.uc.MishangUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -189,18 +185,18 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JBlockStates getBlockStates() {
-    final List<JMultipart> parts = new ArrayList<>(5);
+  public @NotNull BlockStateSupplier getBlockStates() {
     final Identifier modelId = getBlockModelId();
-    final Identifier postId = modelId.brrp_append("_post");
-    final Identifier postSideId = modelId.brrp_append("_post_side");
-    final Identifier sideId = modelId.brrp_append("_side");
-    parts.add(new JMultipart().addModel(new JBlockModel(postId)));
+    final Identifier postId = modelId.brrp_suffixed("_post");
+    final Identifier postSideId = modelId.brrp_suffixed("_post_side");
+    final Identifier sideId = modelId.brrp_suffixed("_side");
+    final MultipartBlockStateSupplier blockStateSupplier = MultipartBlockStateSupplier.create(this)
+        .with(BlockStateVariant.create().put(VariantSettings.MODEL, postId));
     FACING_PROPERTIES.forEach((facing, property) -> {
-      parts.add(new JMultipart(new JWhenProperties().add(property.getName(), "true"), new JBlockModel(sideId).y(((int) facing.asRotation())).uvlock()));
-      parts.add(new JMultipart(new JWhenProperties().add(property.getName(), "false"), new JBlockModel(postSideId).y((int) facing.asRotation()).uvlock()));
+      blockStateSupplier.with(When.create().set(property, true), BlockStateVariant.create().put(VariantSettings.MODEL, sideId).put(MishangUtils.DIRECTION_Y_VARIANT, facing).put(VariantSettings.UVLOCK, true));
+      blockStateSupplier.with(When.create().set(property, false), BlockStateVariant.create().put(VariantSettings.MODEL, postSideId).put(MishangUtils.DIRECTION_Y_VARIANT, facing).put(VariantSettings.UVLOCK, true));
     });
-    return JBlockStates.ofMultiparts(parts.toArray(new JMultipart[5]));
+    return blockStateSupplier;
   }
 
   @Override
@@ -211,11 +207,6 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   @Override
   public boolean connectsIn(@NotNull BlockState blockState, @NotNull Direction direction, @Nullable Direction offsetFacing) {
     return offsetFacing == null && blockState.get(FACING_PROPERTIES.get(direction));
-  }
-
-  @Override
-  public Identifier getAdvancementIdForRecipe(Identifier recipeId, @Nullable RecipeCategory recipeCategory) {
-    return recipeId.brrp_prepend("recipes/handrails/");
   }
 
   @Override

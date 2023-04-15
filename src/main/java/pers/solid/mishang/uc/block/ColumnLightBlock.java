@@ -1,16 +1,12 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.blockstate.JVariants;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
+import net.minecraft.data.client.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -28,6 +24,8 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
 
@@ -119,20 +117,16 @@ public class ColumnLightBlock extends Block implements Waterloggable, BlockResou
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JBlockStates getBlockStates() {
-    final JVariants variants = new JVariants();
+  public @Nullable BlockStateSupplier getBlockStates() {
     final Identifier id = getBlockModelId();
-    variants.addVariant(AXIS, Direction.Axis.Y, new JBlockModel(id));
-    variants.addVariant(AXIS, Direction.Axis.X, new JBlockModel(id).x(-90).y(90));
-    variants.addVariant(AXIS, Direction.Axis.Z, new JBlockModel(id).x(-90).y(0));
-    return JBlockStates.ofVariants(variants);
+    return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.MODEL, id)).coordinate(BlockStateVariantMap.create(AXIS).register(Direction.Axis.Y, BlockStateVariant.create()).register(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R270).put(VariantSettings.Y, VariantSettings.Rotation.R90)).register(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R270)));
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JModel getBlockModel() {
-    return new JModel(getModelParent())
-        .textures(new FasterJTextures().varP("light", lightColor + "_light"));
+  public @NotNull ModelJsonBuilder getBlockModel() {
+    return ModelJsonBuilder.create(getModelParent())
+        .setTextures(new FasterJTextures().varP("light", lightColor + "_light"));
   }
 
   @Environment(EnvType.CLIENT)
@@ -146,6 +140,6 @@ public class ColumnLightBlock extends Block implements Waterloggable, BlockResou
     } else {
       throw new AssertionError();
     }
-    return new Identifier(identifier.getNamespace(), path).brrp_prepend("block/");
+    return new Identifier(identifier.getNamespace(), path).brrp_prefixed("block/");
   }
 }

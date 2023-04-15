@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.json.loot.JLootTable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -11,6 +10,7 @@ import net.minecraft.data.server.loottable.vanilla.VanillaBlockLootTableGenerato
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootTable;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
@@ -103,13 +103,8 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
   }
 
   @Override
-  public @Nullable JLootTable getLootTable() {
-    return JLootTable.delegate(new VanillaBlockLootTableGenerator().slabDrops(this));
-  }
-
-  @Override
-  public Identifier getAdvancementIdForRecipe(Identifier recipeId, @Nullable RecipeCategory recipeCategory) {
-    return recipeId.brrp_prepend("recipes/roads");
+  public LootTable.Builder getLootTable() {
+    return new VanillaBlockLootTableGenerator().slabDrops(this);
   }
 
   @Override

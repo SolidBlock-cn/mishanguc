@@ -1,20 +1,26 @@
 package pers.solid.mishang.uc.arrp;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.blockstate.JVariants;
-import net.devtech.arrp.json.models.JModel;
+import com.google.common.collect.Lists;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
+import net.minecraft.data.client.*;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.block.AbstractRoadBlock;
 import pers.solid.mishang.uc.block.AbstractRoadSlabBlock;
-import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public final class BRRPHelper {
@@ -28,14 +34,10 @@ public final class BRRPHelper {
    */
   @Environment(EnvType.CLIENT)
   @NotNull
-  public static JBlockStates stateForHorizontalCornerFacingBlock(@NotNull Identifier modelIdentifier, boolean uvlock) {
-    JVariants variant = new JVariants();
-    for (HorizontalCornerDirection direction : HorizontalCornerDirection.values()) {
-      final JBlockModel model = new JBlockModel(modelIdentifier).y(direction.asRotation() - 45);
-      if (uvlock) model.uvlock();
-      variant.addVariant("facing", direction.asString(), model);
-    }
-    return JBlockStates.ofVariants(variant);
+  public static BlockStateSupplier stateForHorizontalCornerFacingBlock(@NotNull Block block, @NotNull Identifier modelIdentifier, boolean uvlock) {
+    return VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(MishangucProperties.HORIZONTAL_CORNER_FACING).register(direction -> {
+      return BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifier).put(MishangUtils.INT_Y_VARIANT, direction.asRotation() - 45).put(VariantSettings.UVLOCK, uvlock);
+    }));
   }
 
   public static String slabOf(String string) {
@@ -49,30 +51,49 @@ public final class BRRPHelper {
   }
 
   @Environment(EnvType.CLIENT)
-  public static JBlockStates composeStateForSlab(@NotNull JBlockStates stateForFull) {
-    final JVariants variants = stateForFull.variants;
-    final JVariants slabVariant = new JVariants();
-    for (Map.Entry<String, JBlockModel[]> entry : variants.entrySet()) {
+  public static BlockStateSupplier composeStateForSlab(@NotNull BlockStateSupplier stateForFull) {
+    final JsonObject variants = stateForFull.get().getAsJsonObject().getAsJsonObject("variants");
+    final JsonObject slabVariant = new JsonObject();
+    for (Map.Entry<String, JsonElement> entry : variants.entrySet()) {
       final String key = entry.getKey();
-      final JBlockModel[] value = entry.getValue();
-      for (JBlockModel blockModel : value) {
-        final Identifier modelId = blockModel.model;
-        slabVariant
-            .addVariant(
-                key.isEmpty() ? "type=bottom" : key + ",type=bottom",
-                blockModel.clone().modelId(
-                    new Identifier(modelId.getNamespace(), slabOf(modelId.getPath()))))
-            .addVariant(
-                key.isEmpty() ? "type=top" : key + ",type=top",
-                blockModel.clone().modelId(
-                    new Identifier(
-                        modelId.getNamespace(), slabOf(modelId.getPath()) + "_top")))
-            .addVariant(
-                key.isEmpty() ? "type=double" : key + ",type=double",
-                blockModel.clone().modelId(new Identifier(modelId.getNamespace(), (modelId.getPath()))));
+      final List<JsonObject> models;
+      if (entry.getValue() instanceof JsonArray jsonArray) {
+        models = Lists.transform(jsonArray.asList(), JsonElement::getAsJsonObject);
+      } else {
+        models = Collections.singletonList(entry.getValue().getAsJsonObject());
+      }
+      for (JsonObject blockModel : models) {
+        final Identifier modelId = new Identifier(blockModel.get("model").getAsString());
+        JsonObject bottomModel = blockModel.deepCopy();
+        bottomModel.addProperty("model", slabOf(modelId).toString());
+        slabVariant.add(
+            key.isEmpty() ? "type=bottom" : key + ",type=bottom",
+            bottomModel);
+        JsonObject topModel = blockModel.deepCopy();
+        topModel.addProperty("mode", slabOf(modelId).toString());
+        slabVariant.add(
+            key.isEmpty() ? "type=top" : key + ",type=top",
+            topModel);
+        JsonObject doubleModel = blockModel.deepCopy();
+        doubleModel.addProperty("model", modelId.toString());
+        slabVariant.add(
+            key.isEmpty() ? "type=double" : key + ",type=double",
+            doubleModel);
       }
     }
-    return JBlockStates.ofVariants(slabVariant);
+    return new BlockStateSupplier() {
+      @Override
+      public Block getBlock() {
+        return null;
+      }
+
+      @Override
+      public JsonElement get() {
+        final JsonObject jsonObject = new JsonObject();
+        jsonObject.add("variants", slabVariant);
+        return jsonObject;
+      }
+    };
   }
 
   public static Identifier slabOf(Identifier identifier) {
@@ -80,12 +101,12 @@ public final class BRRPHelper {
   }
 
   @ApiStatus.AvailableSince("0.2.4")
-  public static void addModelWithSlab(RuntimeResourcePack pack, JModel model, Identifier id, @Nullable Identifier slabModelId) {
-    pack.addModel(model, id);
+  public static void addModelWithSlab(RuntimeResourcePack pack, ModelJsonBuilder model, Identifier id, @Nullable Identifier slabModelId) {
+    pack.addModel(id, model);
     if (slabModelId != null) {
-      final String slabParent = slabOf(model.parent);
-      pack.addModel(model.clone().parent(slabParent), slabModelId);
-      pack.addModel(model.clone().parent(slabParent + "_top"), slabModelId.brrp_append("_top"));
+      final Identifier slabParent = slabOf(model.parentId);
+      pack.addModel(slabModelId, model.withParent(slabParent));
+      pack.addModel(slabModelId.brrp_suffixed("_top"), model.withParent(slabParent.brrp_suffixed("_top")));
     }
   }
 
@@ -96,10 +117,10 @@ public final class BRRPHelper {
   }
 
   @ApiStatus.AvailableSince("1.1.0")
-  public static void addModelWithSlabWithMirrored(RuntimeResourcePack pack, JModel model, Identifier id, @Nullable Identifier slabModelId) {
+  public static void addModelWithSlabWithMirrored(RuntimeResourcePack pack, ModelJsonBuilder model, Identifier id, @Nullable Identifier slabModelId) {
     addModelWithSlab(pack, model, id, slabModelId);
     if (slabModelId != null) {
-      addModelWithSlab(pack, model.clone().parent(model.parent + "_mirrored"), id.brrp_append("_mirrored"), slabModelId.brrp_append("_mirrored"));
+      addModelWithSlab(pack, model.withParent(model.parentId.brrp_suffixed("_mirrored")), id.brrp_suffixed("_mirrored"), slabModelId.brrp_suffixed("_mirrored"));
     }
   }
 

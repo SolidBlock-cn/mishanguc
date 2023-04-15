@@ -35,8 +35,8 @@ public class MishangucItemGroups {
       FabricItemGroup.builder(
           new Identifier("mishanguc", "signs")).icon(
           () -> new ItemStack(StandingSignBlocks.ACACIA_STANDING_SIGN)).entries((displayContext, entries) -> {
-        MishangUtils.instanceStream(HungSignBlocks.class, Block.class).forEach(addEntries(entries));
         MishangUtils.instanceStream(WallSignBlocks.class, Block.class).forEach(addEntries(entries));
+        MishangUtils.instanceStream(HungSignBlocks.class, Block.class).forEach(addEntries(entries));
         MishangUtils.instanceStream(StandingSignBlocks.class, Block.class).forEach(addEntries(entries));
       }).build();
   public static final ItemGroup TOOLS =

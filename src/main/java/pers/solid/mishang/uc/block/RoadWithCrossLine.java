@@ -1,16 +1,17 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
@@ -33,8 +34,8 @@ public interface RoadWithCrossLine extends Road {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JBlockStates getBlockStates() {
-      return JBlockStates.simpleRandomRotation(getBlockModelId());
+    public @NotNull BlockStateSupplier getBlockStates() {
+      return BlockStateModelGenerator.createBlockStateWithRandomHorizontalRotations(this, getBlockModelId());
     }
 
     @Override
@@ -44,9 +45,9 @@ public interface RoadWithCrossLine extends Road {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JModel getBlockModel() {
-      return new JModel("mishanguc:block/road_with_cross_line")
-          .textures(new FasterJTextures().base("asphalt")
+    public @NotNull ModelJsonBuilder getBlockModel() {
+      return ModelJsonBuilder.create("mishanguc","block/road_with_cross_line")
+          .setTextures(new FasterJTextures().base("asphalt")
               .lineSide(MishangUtils.composeStraightLineTexture(lineColor, LineType.NORMAL))
               .lineTop(lineColor.asString() + "_cross_line"));
     }

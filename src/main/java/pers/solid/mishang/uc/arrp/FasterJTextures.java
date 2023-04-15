@@ -1,10 +1,10 @@
 package pers.solid.mishang.uc.arrp;
 
-import net.devtech.arrp.json.models.JTextures;
+import java.util.HashMap;
 
-public class FasterJTextures extends JTextures implements Cloneable /* BRRP 存在没有让 JTextures 实现 Cloneable 的问题 */ {
+public class FasterJTextures extends HashMap<String, String> implements Cloneable /* BRRP 存在没有让 JTextures 实现 Cloneable 的问题 */ {
   public FasterJTextures varP(String name, String val) {
-    var(name, "mishanguc:block/" + val);
+    put(name, "mishanguc:block/" + val);
     return this;
   }
 

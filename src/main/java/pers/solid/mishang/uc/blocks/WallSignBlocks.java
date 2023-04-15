@@ -8,6 +8,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.Translucent;
@@ -18,6 +19,14 @@ import pers.solid.mishang.uc.block.*;
  * 包括一般的墙上告示牌和完整的墙上告示牌。二者对应不同的方块实体类型。
  */
 public final class WallSignBlocks extends MishangucBlocks {
+
+  /**
+   * 隐形的告示牌。
+   */
+  public static final FullWallSignBlock INVISIBLE_WALL_SIGN =
+      new FullWallSignBlock(null, FabricBlockSettings.copyOf(Blocks.BARRIER).noCollision());
+
+  public static final FullWallSignBlock INVISIBLE_GLOWING_WALL_SIGN = new FullWallSignBlock(null, FabricBlockSettings.copyOf(Blocks.BARRIER).noCollision().luminance(15));
 
   // 木质
 
@@ -444,10 +453,10 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final GlowingWallSignBlock GLOWING_POLISHED_BLACKSTONE_WALL_SIGN = new GlowingWallSignBlock(Blocks.POLISHED_BLACKSTONE);
 
   static {
-    GLOWING_NETHERRACK_WALL_SIGN.glowTexture = "block/lava_still";
-    GLOWING_NETHER_BRICK_WALL_SIGN.glowTexture = "block/lava_still";
-    GLOWING_BLACKSTONE_WALL_SIGN.glowTexture = "block/glowstone";
-    GLOWING_POLISHED_BLACKSTONE_WALL_SIGN.glowTexture = "block/glowstone";
+    GLOWING_NETHERRACK_WALL_SIGN.glowTexture = new Identifier("block/lava_still");
+    GLOWING_NETHER_BRICK_WALL_SIGN.glowTexture = new Identifier("block/lava_still");
+    GLOWING_BLACKSTONE_WALL_SIGN.glowTexture = new Identifier("block/glowstone");
+    GLOWING_POLISHED_BLACKSTONE_WALL_SIGN.glowTexture = new Identifier("block/glowstone");
   }
 
   // 雪
@@ -469,8 +478,8 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final GlowingWallSignBlock GLOWING_BLUE_ICE_WALL_SIGN = new GlowingWallSignBlock(Blocks.BLUE_ICE);
 
   static {
-    SNOW_WALL_SIGN.texture = "block/snow";
-    GLOWING_SNOW_WALL_SIGN.texture = "block/snow";
+    SNOW_WALL_SIGN.texture = new Identifier("block/snow");
+    GLOWING_SNOW_WALL_SIGN.texture = new Identifier("block/snow");
   }
 
   // 完整的混凝土
@@ -610,14 +619,6 @@ public final class WallSignBlocks extends MishangucBlocks {
       .put(DyeColor.RED, FULL_RED_TERRACOTTA_WALL_SIGN)
       .put(DyeColor.BLACK, FULL_BLACK_TERRACOTTA_WALL_SIGN)
       .build();
-
-  /**
-   * 隐形的告示牌。
-   */
-  public static final FullWallSignBlock INVISIBLE_WALL_SIGN =
-      new FullWallSignBlock(null, FabricBlockSettings.copyOf(Blocks.BARRIER).noCollision());
-
-  public static final FullWallSignBlock INVISIBLE_GLOWING_WALL_SIGN = new FullWallSignBlock(null, FabricBlockSettings.copyOf(Blocks.BARRIER).noCollision().luminance(15));
 
   private WallSignBlocks() {
   }

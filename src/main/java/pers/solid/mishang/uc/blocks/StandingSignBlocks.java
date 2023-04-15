@@ -9,6 +9,7 @@ import net.minecraft.block.WoodType;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.Translucent;
@@ -48,17 +49,17 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final StandingSignBlock BAMBOO_MOSAIC_STANDING_SIGN = new StandingSignBlock(Blocks.BAMBOO_MOSAIC, FabricBlockSettings.copyOf(Blocks.BAMBOO_MOSAIC).requires(FeatureFlags.UPDATE_1_20));
 
   static {
-    OAK_STANDING_SIGN.barTexture = "block/oak_log";
-    SPRUCE_STANDING_SIGN.barTexture = "block/spruce_log";
-    BIRCH_STANDING_SIGN.barTexture = "block/birch_log";
-    ACACIA_STANDING_SIGN.barTexture = "block/acacia_log";
-    CHERRY_STANDING_SIGN.barTexture = "block/cherry_log";
-    JUNGLE_STANDING_SIGN.barTexture = "block/jungle_log";
-    DARK_OAK_STANDING_SIGN.barTexture = "block/dark_oak_log";
-    CRIMSON_STANDING_SIGN.barTexture = "block/crimson_stem";
-    WARPED_STANDING_SIGN.barTexture = "block/warped_stem";
-    MANGROVE_STANDING_SIGN.barTexture = "block/mangrove_log";
-    BAMBOO_PLANK_STANDING_SIGN.barTexture = BAMBOO_MOSAIC_STANDING_SIGN.barTexture = "block/bamboo_block";
+    OAK_STANDING_SIGN.barTexture = new Identifier("block/oak_log");
+    SPRUCE_STANDING_SIGN.barTexture = new Identifier("block/spruce_log");
+    BIRCH_STANDING_SIGN.barTexture = new Identifier("block/birch_log");
+    ACACIA_STANDING_SIGN.barTexture = new Identifier("block/acacia_log");
+    CHERRY_STANDING_SIGN.barTexture = new Identifier("block/cherry_log");
+    JUNGLE_STANDING_SIGN.barTexture = new Identifier("block/jungle_log");
+    DARK_OAK_STANDING_SIGN.barTexture = new Identifier("block/dark_oak_log");
+    CRIMSON_STANDING_SIGN.barTexture = new Identifier("block/crimson_stem");
+    WARPED_STANDING_SIGN.barTexture = new Identifier("block/warped_stem");
+    MANGROVE_STANDING_SIGN.barTexture = new Identifier("block/mangrove_log");
+    BAMBOO_PLANK_STANDING_SIGN.barTexture = BAMBOO_MOSAIC_STANDING_SIGN.barTexture = new Identifier("block/bamboo_block");
   }
 
   public static final ImmutableMap<WoodType, StandingSignBlock> WOODEN_SIGNS = new ImmutableMap.Builder<WoodType, StandingSignBlock>()
@@ -300,10 +301,10 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final GlowingStandingSignBlock GLOWING_BLUE_ICE_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.BLUE_ICE);
 
   static {
-    SNOW_STANDING_SIGN.baseTexture = "block/snow";
-    SNOW_STANDING_SIGN.barTexture = "block/packed_ice";
-    GLOWING_SNOW_STANDING_SIGN.baseTexture = "block/snow";
-    GLOWING_SNOW_STANDING_SIGN.barTexture = "block/packed_ice";
-    ICE_STANDING_SIGN.barTexture = "block/blue_ice";
+    SNOW_STANDING_SIGN.baseTexture = new Identifier("block/snow");
+    SNOW_STANDING_SIGN.barTexture = new Identifier("block/packed_ice");
+    GLOWING_SNOW_STANDING_SIGN.baseTexture = new Identifier("block/snow");
+    GLOWING_SNOW_STANDING_SIGN.barTexture = new Identifier("block/packed_ice");
+    ICE_STANDING_SIGN.barTexture = new Identifier("block/blue_ice");
   }
 }
