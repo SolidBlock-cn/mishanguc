@@ -322,7 +322,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
 
   @Override
   public @NotNull CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this)
+    return ShapedRecipeJsonBuilder.create(this)
         .patterns(
             "SPS",
             " / ",
@@ -332,7 +332,6 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         .input('S', Items.SLIME_BALL)
         .input('/', Items.STICK)
         .criterionFromItem("has_paper", Items.PAPER)
-        .criterionFromItem("has_slime_ball", Items.SLIME_BALL)
-        .setCustomRecipeCategory("tools");
+        .criterionFromItem("has_slime_ball", Items.SLIME_BALL);
   }
 }

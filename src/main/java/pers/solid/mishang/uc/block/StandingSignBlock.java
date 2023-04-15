@@ -268,10 +268,9 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (baseBlock == null) return null;
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this, 4)
+    return ShapedRecipeJsonBuilder.create(this, 4)
         .patterns("---", "###", " | ")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN).input('|', Items.STICK)
-        .setCustomRecipeCategory("signs")
         .criterionFromItem("has_base_block", baseBlock).criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
   }
 

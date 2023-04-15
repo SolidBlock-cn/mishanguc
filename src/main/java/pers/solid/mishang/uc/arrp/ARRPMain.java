@@ -9,7 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.data.client.TextureMap;
-import net.minecraft.data.server.recipe.RecipeProvider;
+import net.minecraft.data.server.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
@@ -17,12 +17,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.tag.BlockTags;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
@@ -570,28 +569,28 @@ public class ARRPMain implements ModInitializer {
     registerTagBlockOnly(simpleConcreteStairHandrails);
     registerTagBlockOnly(simpleTerracottaHandrails);
     registerTagBlockOnly(simpleTerracottaNormalHandrails);
-    PACK.addTag(TagKey.of(RegistryKeys.ITEM, new Identifier("mishanguc", "simple_terracotta_handrails")), simpleTerracottaNormalHandrails);
+    PACK.addTag(TagKey.of(Registry.ITEM_KEY, new Identifier("mishanguc", "simple_terracotta_handrails")), simpleTerracottaNormalHandrails);
     registerTagBlockOnly(simpleTerracottaCentralHandrails);
     registerTagBlockOnly(simpleTerracottaCornerHandrails);
     registerTagBlockOnly(simpleTerracottaOuterHandrails);
     registerTagBlockOnly(simpleTerracottaStairHandrails);
     registerTagBlockOnly(simpleStainedGlassHandrails);
     registerTagBlockOnly(simpleStainedGlassNormalHandrails);
-    PACK.addTag(TagKey.of(RegistryKeys.ITEM, new Identifier("mishanguc", "simple_stained_glass_handrails")), simpleStainedGlassNormalHandrails);
+    PACK.addTag(TagKey.of(Registry.ITEM_KEY, new Identifier("mishanguc", "simple_stained_glass_handrails")), simpleStainedGlassNormalHandrails);
     registerTagBlockOnly(simpleStainedGlassCentralHandrails);
     registerTagBlockOnly(simpleStainedGlassCornerHandrails);
     registerTagBlockOnly(simpleStainedGlassOuterHandrails);
     registerTagBlockOnly(simpleStainedGlassStairHandrails);
     registerTagBlockOnly(simpleWoodenHandrails);
     registerTagBlockOnly(simpleWoodenNormalHandrails);
-    PACK.addTag(TagKey.of(RegistryKeys.ITEM, new Identifier("mishanguc", "simple_wooden_handrails")), simpleWoodenNormalHandrails);
+    PACK.addTag(TagKey.of(Registry.ITEM_KEY, new Identifier("mishanguc", "simple_wooden_handrails")), simpleWoodenNormalHandrails);
     registerTagBlockOnly(simpleWoodenCentralHandrails);
     registerTagBlockOnly(simpleWoodenCornerHandrails);
     registerTagBlockOnly(simpleWoodenOuterHandrails);
     registerTagBlockOnly(simpleWoodenStairHandrails);
     registerTagBlockOnly(glassHandrails);
     registerTagBlockOnly(glassNormalHandrails);
-    PACK.addTag(TagKey.of(RegistryKeys.ITEM, new Identifier("mishanguc", "glass_handrails")), glassNormalHandrails);
+    PACK.addTag(TagKey.of(Registry.ITEM_KEY, new Identifier("mishanguc", "glass_handrails")), glassNormalHandrails);
     registerTagBlockOnly(glassCentralHandrails);
     registerTagBlockOnly(glassCornerHandrails);
     registerTagBlockOnly(glassOuterHandrails);
@@ -706,25 +705,23 @@ public class ARRPMain implements ModInitializer {
   private static void addRecipesForWallSigns() {
     // 隐形告示牌是合成其他告示牌的基础。
     { // invisible wall sign
-      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WallSignBlocks.INVISIBLE_WALL_SIGN, 6)
+      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(WallSignBlocks.INVISIBLE_WALL_SIGN, 6)
           .pattern(".#.").pattern("#o#").pattern(".#.")
           .input('.', Items.IRON_NUGGET)
           .input('#', Items.FEATHER)
           .input('o', Items.GOLD_INGOT)
           .criterion("has_iron_nugget", RecipeProvider.conditionsFromItem(Items.IRON_NUGGET))
           .criterion("has_feather", RecipeProvider.conditionsFromItem(Items.FEATHER))
-          .criterion("has_gold_ingot", RecipeProvider.conditionsFromItem(Items.GOLD_INGOT))
-          .setCustomRecipeCategory("signs");
+          .criterion("has_gold_ingot", RecipeProvider.conditionsFromItem(Items.GOLD_INGOT));
       final Identifier id = BRRPUtils.getItemId(WallSignBlocks.INVISIBLE_WALL_SIGN);
       PACK.addRecipeAndAdvancement(id, recipe);  // recipeCategory should be "signs"
     }
     { // invisible glowing wall sign
-      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN, 3)
+      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create( WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN, 3)
           .pattern("---").pattern("###")
           .input('-', Items.GLOWSTONE_DUST)
           .input('#', WallSignBlocks.INVISIBLE_WALL_SIGN)
-          .criterion("has_base_block", RecipeProvider.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN))
-          .setCustomRecipeCategory("signs");
+          .criterion("has_base_block", RecipeProvider.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN));
       final Identifier id = BRRPUtils.getItemId(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN);
       PACK.addRecipeAndAdvancement(id, recipe);  // recipeCategory should be "signs"
     }
@@ -733,41 +730,38 @@ public class ARRPMain implements ModInitializer {
   private static void addRecipesForLights() {
     // 先是三个完整方块的合成表。
     { // white light
-      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, LightBlocks.WHITE_LIGHT, 8)
+      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(LightBlocks.WHITE_LIGHT, 8)
           .pattern("*#*").pattern("#C#").pattern("*#*")
           .input('*', Items.WHITE_DYE)
           .input('#', Items.GLOWSTONE)
           .input('C', Items.WHITE_CONCRETE)
           .criterion("has_dye", RecipeProvider.conditionsFromItem(Items.WHITE_DYE))
           .criterion("has_glowstone", RecipeProvider.conditionsFromItem(Items.GLOWSTONE))
-          .criterion("has_concrete", RecipeProvider.conditionsFromItem(Items.WHITE_CONCRETE))
-          .setCustomRecipeCategory("light");
+          .criterion("has_concrete", RecipeProvider.conditionsFromItem(Items.WHITE_CONCRETE));
       final Identifier id = BRRPUtils.getItemId(LightBlocks.WHITE_LIGHT);
       PACK.addRecipeAndAdvancement(id, recipe);
     }
     { // yellow light
-      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, LightBlocks.YELLOW_LIGHT, 8)
+      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(LightBlocks.YELLOW_LIGHT, 8)
           .pattern("*#*").pattern("#C#").pattern("*#*")
           .input('*', Items.YELLOW_DYE)
           .input('#', Items.GLOWSTONE)
           .input('C', Items.YELLOW_CONCRETE)
           .criterion("has_dye", RecipeProvider.conditionsFromItem(Items.YELLOW_DYE))
           .criterion("has_glowstone", RecipeProvider.conditionsFromItem(Items.GLOWSTONE))
-          .criterion("has_concrete", RecipeProvider.conditionsFromItem(Items.YELLOW_CONCRETE))
-          .setCustomRecipeCategory("light");
+          .criterion("has_concrete", RecipeProvider.conditionsFromItem(Items.YELLOW_CONCRETE));
       final Identifier id = BRRPUtils.getItemId(LightBlocks.YELLOW_LIGHT);
       PACK.addRecipeAndAdvancement(id, recipe);
     }
     { // cyan light
-      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, LightBlocks.CYAN_LIGHT, 8)
+      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(LightBlocks.CYAN_LIGHT, 8)
           .pattern("*#*").pattern("#C#").pattern("*#*")
           .input('*', Items.CYAN_DYE)
           .input('#', Items.GLOWSTONE)
           .input('C', Items.CYAN_CONCRETE)
           .criterion("has_dye", RecipeProvider.conditionsFromItem(Items.CYAN_DYE))
           .criterion("has_glowstone", RecipeProvider.conditionsFromItem(Items.GLOWSTONE))
-          .criterion("has_concrete", RecipeProvider.conditionsFromItem(Items.CYAN_CONCRETE))
-          .setCustomRecipeCategory("light");
+          .criterion("has_concrete", RecipeProvider.conditionsFromItem(Items.CYAN_CONCRETE));
       final Identifier id = BRRPUtils.getItemId(LightBlocks.CYAN_LIGHT);
       PACK.addRecipeAndAdvancement(id, recipe);  // the recipe category should be "light"
     }
@@ -839,11 +833,11 @@ public class ARRPMain implements ModInitializer {
   }
 
   private static void addStonecuttingRecipeForLight(ItemConvertible ingredient, ItemConvertible result, int count) {
-    PACK.addRecipeAndAdvancement(BRRPUtils.getRecipeId(result), SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(ingredient), RecipeCategory.DECORATIONS, result, count).criterionFromItem(ingredient).setCustomRecipeCategory("light"));
+    PACK.addRecipeAndAdvancement(BRRPUtils.getRecipeId(result), SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(ingredient), result, count).criterionFromItem(ingredient));
   }
 
   private static void addShapelessRecipeForLight(ItemConvertible result, int count, ItemConvertible... ingredients) {
-    final ShapelessRecipeJsonBuilder recipe = ShapelessRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, result, count).input(Ingredient.ofItems(ingredients)).setCustomRecipeCategory("light");
+    final ShapelessRecipeJsonBuilder recipe = ShapelessRecipeJsonBuilder.create(result, count).input(Ingredient.ofItems(ingredients));
     for (ItemConvertible ingredient : ImmutableSet.copyOf(ingredients)) {
       recipe.criterion("has_" + BRRPUtils.getItemId(ingredient).getPath(), RecipeProvider.conditionsFromItem(ingredient));
     }

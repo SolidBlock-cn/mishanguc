@@ -433,10 +433,9 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (baseBlock == null) return null;
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this, 6)
+    return ShapedRecipeJsonBuilder.create(this, 6)
         .patterns("-#-", "-#-", "-#-")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
-        .setCustomRecipeCategory("signs")
         .criterionFromItem("has_base_block", WallSignBlocks.INVISIBLE_WALL_SIGN);
   }
 

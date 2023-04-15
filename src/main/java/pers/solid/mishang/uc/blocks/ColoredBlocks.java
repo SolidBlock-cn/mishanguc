@@ -9,7 +9,6 @@ import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.BlockLootTableGenerator;
-import net.minecraft.data.server.loottable.VanillaBlockLootTableGenerator;
 import net.minecraft.loot.LootTable;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
@@ -91,7 +90,7 @@ public final class ColoredBlocks extends MishangucBlocks {
 
     @Override
     public LootTable.@NotNull Builder getLootTable() {
-      return new VanillaBlockLootTableGenerator().drops(COLORED_STONE, COLORED_COBBLESTONE).apply(ColoredBlock.COPY_COLOR_LOOT_FUNCTION);
+      return BlockLootTableGenerator.drops(COLORED_STONE, COLORED_COBBLESTONE).apply(ColoredBlock.COPY_COLOR_LOOT_FUNCTION);
     }
   };
   public static final ColoredStairsBlock COLORED_STONE_STAIRS = new ColoredStairsBlock(COLORED_STONE, FabricBlockSettings.copyOf(Blocks.STONE_STAIRS));

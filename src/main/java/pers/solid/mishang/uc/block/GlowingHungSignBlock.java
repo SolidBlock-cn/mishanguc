@@ -49,6 +49,7 @@ public class GlowingHungSignBlock extends HungSignBlock {
     final Identifier texture = getBaseTexture();
     final Map<String, String> textures = new HashMap<>(3);
     textures.put("texture", texture == null ? null : texture.toString());
+    textures.put("glow", glowTexture);
     textures.put("bar", barTexture == null ? null : barTexture.toString());
     textures.put("texture_top", textureTop == null ? null : textureTop.toString());
     pack.addModel(
@@ -75,7 +76,6 @@ public class GlowingHungSignBlock extends HungSignBlock {
     return ShapedRecipeJsonBuilder.create(this, 6)
         .patterns("-#-", "-#-", "-#-")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
-        .criterionFromItem("has_base_block", baseBlock).criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN)
-        .setCustomRecipeCategory("signs");
+        .criterionFromItem("has_base_block", baseBlock).criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
   }
 }

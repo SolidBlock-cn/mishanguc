@@ -50,7 +50,6 @@ public class GlowingStandingSignBlock extends StandingSignBlock {
         .patterns("---", "###", " | ")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN).input('|', Items.STICK)
         .criterionFromItem("has_base_block", baseBlock)
-        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
-        .setCustomRecipeCategory("signs");
+        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN);
   }
 }

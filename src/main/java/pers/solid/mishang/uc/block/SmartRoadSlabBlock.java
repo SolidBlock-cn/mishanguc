@@ -7,8 +7,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.server.RecipeProvider;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -144,6 +144,6 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ((ShapedRecipeJsonBuilder) RecipeProvider.createSlabRecipe(getRecipeCategory(), this, Ingredient.ofItems(baseBlock))).criterionFromItem(baseBlock).setCustomRecipeCategory("roads");
+    return ((ShapedRecipeJsonBuilder) RecipeProvider.createSlabRecipe(this, Ingredient.ofItems(baseBlock))).criterionFromItem(baseBlock);
   }
 }

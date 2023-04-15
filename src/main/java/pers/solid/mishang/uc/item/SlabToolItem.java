@@ -280,14 +280,13 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this)
+    return ShapedRecipeJsonBuilder.create(this)
         .patterns("SCS", " | ", " | ")
         .input('S', Items.SHEARS)
         .input('C', Items.STONE)
         .input('|', Items.STICK)
         .criterionFromItem("has_shears", Items.SHEARS)
-        .criterionFromItem("has_stone", Items.STONE)
-        .setCustomRecipeCategory("tools");
+        .criterionFromItem("has_stone", Items.STONE);
   }
 
   @ApiStatus.AvailableSince("1.0.3")

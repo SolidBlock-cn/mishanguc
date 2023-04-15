@@ -112,14 +112,13 @@ public class MirroringToolItem extends BlockToolItem implements ItemResourceGene
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this).patterns("CNL", " | ", " | ")
+    return ShapedRecipeJsonBuilder.create(this).patterns("CNL", " | ", " | ")
         .input('C', Items.CYAN_DYE)
         .input('N', Items.NETHERITE_INGOT)
         .input('L', Items.LIME_DYE)
         .input('|', Items.STICK)
         .criterionFromItem("has_cyan_dye", Items.CYAN_DYE)
         .criterionFromItem("has_netherite_ingot", Items.NETHERITE_INGOT)
-        .criterionFromItem("has_lime_dye", Items.LIME_DYE)
-        .setCustomRecipeCategory("tools");
+        .criterionFromItem("has_lime_dye", Items.LIME_DYE);
   }
 }

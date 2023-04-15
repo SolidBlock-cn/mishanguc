@@ -82,7 +82,6 @@ public class FullWallSignBlock extends WallSignBlock {
     return ShapedRecipeJsonBuilder.create(this, 4)
         .patterns("-#-", "###", "-#-")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
-        .setCustomRecipeCategory("signs")
         .criterionFromItem("has_base_block", baseBlock)
         .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
   }

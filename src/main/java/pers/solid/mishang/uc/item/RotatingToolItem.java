@@ -102,13 +102,12 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this)
+    return ShapedRecipeJsonBuilder.create(this)
         .patterns("DND", " | ", " | ")
         .input('D', Items.PINK_DYE)
         .input('N', Items.NETHERITE_INGOT)
         .input('|', Items.STICK)
         .criterionFromItem("has_pink_dye", Items.PINK_DYE)
-        .criterionFromItem("has_netherite_ingot", Items.NETHERITE_INGOT)
-        .setCustomRecipeCategory("tools");
+        .criterionFromItem("has_netherite_ingot", Items.NETHERITE_INGOT);
   }
 }

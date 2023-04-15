@@ -42,8 +42,7 @@ public class GlowingWallSignBlock extends WallSignBlock {
     return ShapedRecipeJsonBuilder.create(this, 6)
         .patterns("---", "###", "---")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
-        .criterionFromItem("has_base_block", baseBlock).criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
-        .setCustomRecipeCategory("signs");
+        .criterionFromItem("has_base_block", baseBlock).criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN);
   }
 
   @Override

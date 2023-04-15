@@ -9,7 +9,7 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.data.client.TextureMap;
-import net.minecraft.data.server.loottable.VanillaBlockLootTableGenerator;
+import net.minecraft.data.server.BlockLootTableGenerator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.text.Text;
@@ -71,6 +71,6 @@ public class ColoredPillarBlock extends PillarBlock implements ColoredBlock, Blo
 
   @Override
   public LootTable.@UnknownNullability Builder getLootTable() {
-    return new VanillaBlockLootTableGenerator().drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+    return BlockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 }

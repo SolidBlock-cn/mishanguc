@@ -264,7 +264,6 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     return ShapedRecipeJsonBuilder.create(this, 6)
         .patterns("---", "###", "---")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
-        .setCustomRecipeCategory("signs")
         .criterionFromItem("has_base_block", baseBlock)
         .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
   }

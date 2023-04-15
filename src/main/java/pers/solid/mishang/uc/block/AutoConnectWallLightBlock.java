@@ -12,7 +12,6 @@ import net.minecraft.data.client.MultipartBlockStateSupplier;
 import net.minecraft.data.client.When;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
@@ -24,7 +23,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
@@ -289,10 +287,5 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
         id.brrp_suffixed("_connection2"),
         ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/wall_light_%s_decoration_connection2", shape)))
             .setTextures(new FasterJTextures().varP("light", lightColor + "_light")));
-  }
-
-  @Override
-  public @Nullable RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
   }
 }

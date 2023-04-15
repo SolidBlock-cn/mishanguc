@@ -1,6 +1,6 @@
 package pers.solid.mishang.uc.arrp;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Iterables;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -20,7 +20,6 @@ import pers.solid.mishang.uc.block.AbstractRoadBlock;
 import pers.solid.mishang.uc.block.AbstractRoadSlabBlock;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 public final class BRRPHelper {
@@ -56,9 +55,9 @@ public final class BRRPHelper {
     final JsonObject slabVariant = new JsonObject();
     for (Map.Entry<String, JsonElement> entry : variants.entrySet()) {
       final String key = entry.getKey();
-      final List<JsonObject> models;
+      final Iterable<JsonObject> models;
       if (entry.getValue() instanceof JsonArray jsonArray) {
-        models = Lists.transform(jsonArray.asList(), JsonElement::getAsJsonObject);
+        models = Iterables.transform(jsonArray, JsonElement::getAsJsonObject);
       } else {
         models = Collections.singletonList(entry.getValue().getAsJsonObject());
       }
