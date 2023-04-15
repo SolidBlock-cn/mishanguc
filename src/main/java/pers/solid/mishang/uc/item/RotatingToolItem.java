@@ -1,14 +1,13 @@
 package pers.solid.mishang.uc.item;
 
-import net.devtech.arrp.generator.ItemResourceGenerator;
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.recipe.JRecipe;
-import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.model.Models;
+import net.minecraft.data.client.model.TextureKey;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -23,6 +22,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.generator.ItemResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.brrp.v1.util.RecipeJsonFactory;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.TextBridge;
 
@@ -99,17 +101,18 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JModel getItemModel() {
-    return null;
+  public ModelJsonBuilder getItemModel() {
+    return ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId());
   }
 
   @Override
-  public @NotNull JRecipe getCraftingRecipe() {
-    return new JShapedRecipe(this).pattern("DND", " | ", " | ")
-        .addKey("D", Items.PINK_DYE)
-        .addKey("N", Items.NETHERITE_INGOT)
-        .addKey("|", Items.STICK)
-        .addInventoryChangedCriterion("has_pink_dye", Items.PINK_DYE)
-        .addInventoryChangedCriterion("has_netherite_ingot", Items.NETHERITE_INGOT);
+  public RecipeJsonFactory getCraftingRecipe() {
+    return ShapedRecipeJsonFactory.create(this)
+        .patterns("DND", " | ", " | ")
+        .input('D', Items.PINK_DYE)
+        .input('N', Items.NETHERITE_INGOT)
+        .input('|', Items.STICK)
+        .criterionFromItem("has_pink_dye", Items.PINK_DYE)
+        .criterionFromItem("has_netherite_ingot", Items.NETHERITE_INGOT)::offerTo;
   }
 }

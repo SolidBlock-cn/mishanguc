@@ -2,10 +2,12 @@ package pers.solid.mishang.uc;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.*;
+import com.google.gson.JsonPrimitive;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.MappingResolver;
 import net.minecraft.block.*;
+import net.minecraft.data.client.model.VariantSetting;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.*;
 import net.minecraft.state.property.Property;
@@ -44,6 +46,9 @@ import java.util.stream.Stream;
 public class MishangUtils {
   private static final Supplier<ImmutableList<Block>> memoizedBlocks = Suppliers.memoize(MishangUtils::blocksInternal);
   private static final Supplier<ImmutableList<Item>> memoizedItems = Suppliers.memoize(MishangUtils::itemsInternal);
+  public static final VariantSetting<Integer> INT_X_VARIANT = new VariantSetting<>("x", JsonPrimitive::new);
+  public static final VariantSetting<Integer> INT_Y_VARIANT = new VariantSetting<>("y", JsonPrimitive::new);
+  public static final VariantSetting<Direction> DIRECTION_Y_VARIANT = new VariantSetting<>("y", direction -> new JsonPrimitive(direction.asRotation()));
 
   private static final ImmutableSet<Block> WOODS = ImmutableSet.of(Blocks.OAK_WOOD, Blocks.SPRUCE_WOOD, Blocks.BIRCH_WOOD, Blocks.JUNGLE_WOOD, Blocks.ACACIA_WOOD, Blocks.DARK_OAK_WOOD, Blocks.CRIMSON_HYPHAE, Blocks.WARPED_HYPHAE);
 
@@ -167,8 +172,8 @@ public class MishangUtils {
         RoadSlabBlocks.SLABS.stream(),
         instanceStream(RoadMarkBlocks.class, Block.class),
         instanceStream(LightBlocks.class, Block.class),
-        instanceStream(HungSignBlocks.class, Block.class),
         instanceStream(WallSignBlocks.class, Block.class),
+        instanceStream(HungSignBlocks.class, Block.class),
         instanceStream(StandingSignBlocks.class, Block.class),
         instanceStream(HandrailBlocks.class, Block.class),
         instanceStream(ColoredBlocks.class, Block.class)

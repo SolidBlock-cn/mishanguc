@@ -1,19 +1,20 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.model.BlockStateModelGenerator;
+import net.minecraft.data.client.model.BlockStateSupplier;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Direction;
 import org.apache.commons.lang3.ObjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
 import pers.solid.mishang.uc.util.*;
@@ -631,15 +632,15 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JBlockStates getBlockStates() {
-    return JBlockStates.simple(getBlockModelId());
+  public @NotNull BlockStateSupplier getBlockStates() {
+    return BlockStateModelGenerator.createSingletonBlockState(this, getBlockModelId());
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JModel getBlockModel() {
-    return new JModel("mishanguc:block/road_with_auto_line")
-        .textures(new FasterJTextures()
+  public @NotNull ModelJsonBuilder getBlockModel() {
+    return ModelJsonBuilder.create("mishanguc", "block/road_with_auto_line")
+        .setTextures(new FasterJTextures()
             .base("asphalt")
             .line(texture)
             .particle("asphalt"));

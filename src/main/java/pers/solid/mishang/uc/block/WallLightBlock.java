@@ -2,14 +2,10 @@ package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
-import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.blockstate.JVariants;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
+import net.minecraft.data.client.model.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -29,6 +25,8 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
 
@@ -154,22 +152,22 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JBlockStates getBlockStates() {
-    final JVariants variants = new JVariants();
+  public @Nullable BlockStateSupplier getBlockStates() {
     final Identifier id = getBlockModelId();
-    variants.addVariant("facing", "up", new JBlockModel(id));
-    variants.addVariant("facing", "down", new JBlockModel(id).x(180));
+    final BlockStateVariantMap.SingleProperty<Direction> map = BlockStateVariantMap.create(FACING);
+    map.register(Direction.UP, BlockStateVariant.create().put(VariantSettings.MODEL, id));
+    map.register(Direction.DOWN, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R180));
     for (Direction direction : Direction.Type.HORIZONTAL) {
-      variants.addVariant("facing", direction.asString(), new JBlockModel(id).x(-90).y((int) direction.asRotation()));
+      map.register(direction, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangUtils.DIRECTION_Y_VARIANT, direction));
     }
-    return JBlockStates.ofVariants(variants);
+    return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.UVLOCK, true)).coordinate(map);
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JModel getBlockModel() {
-    return new JModel(getModelParent())
-        .textures(new FasterJTextures().varP("light", lightColor + "_light"));
+  public @NotNull ModelJsonBuilder getBlockModel() {
+    return ModelJsonBuilder.create(getModelParent())
+        .setTextures(new FasterJTextures().varP("light", lightColor + "_light"));
   }
 
   @Environment(EnvType.CLIENT)
@@ -183,6 +181,6 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
     } else {
       throw new AssertionError();
     }
-    return new Identifier(identifier.getNamespace(), path).brrp_prepend("block/");
+    return new Identifier(identifier.getNamespace(), path).brrp_prefixed("block/");
   }
 }

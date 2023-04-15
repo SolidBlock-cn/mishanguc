@@ -2,277 +2,193 @@ package pers.solid.mishang.uc.arrp;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
-import net.devtech.arrp.api.RRPPreGenEntrypoint;
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.api.SidedRRPCallback;
-import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.devtech.arrp.generator.ItemResourceGenerator;
-import net.devtech.arrp.generator.ResourceGeneratorHelper;
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.models.JTextures;
-import net.devtech.arrp.json.recipe.JShapedRecipe;
-import net.devtech.arrp.json.recipe.JShapelessRecipe;
-import net.devtech.arrp.json.recipe.JStonecuttingRecipe;
-import net.devtech.arrp.json.tags.IdentifiedTag;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SlabBlock;
+import net.minecraft.data.server.RecipesProvider;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonFactory;
+import net.minecraft.data.server.recipe.ShapelessRecipeJsonFactory;
+import net.minecraft.data.server.recipe.SingleItemRecipeJsonFactory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Validate;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.BRRPUtils;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.fabric.api.SidedRRPCallback;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
+import pers.solid.brrp.v1.generator.ItemResourceGenerator;
+import pers.solid.brrp.v1.tag.IdentifiedTagBuilder;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.Mishanguc;
-import pers.solid.mishang.uc.annotations.CustomId;
-import pers.solid.mishang.uc.annotations.SimpleModel;
 import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.blocks.*;
-import pers.solid.mishang.uc.item.MishangucItems;
 
 /**
  * @since 0.1.7 本类应当在 onInitialize 的入口点中执行，而非 pregen 中。
  */
-public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
+public class ARRPMain implements ModInitializer {
   private static final RuntimeResourcePack PACK = RuntimeResourcePack.create(new Identifier("mishanguc", "pack"));
 
   private static Identifier blockIdentifier(String path) {
     return new Identifier("mishanguc", "block/" + path);
   }
 
-  private static String blockString(String path) {
-    return blockIdentifier(path).toString();
-  }
-
-  private static void writeBlockModelForCubeAll(BlockResourceGenerator block, String all) {
-    PACK.addModel(
-        new JModel("block/cube_all").textures(new FasterJTextures().varP("all", all)),
-        block.getBlockModelId());
-  }
-
-  private static void writeBlockModelForSlabAll(BlockResourceGenerator block, String all) {
-    PACK.addModel(
-        new JModel("block/slab")
-            .textures(
-                new FasterJTextures().top(all).side(all).bottom(all)),
-        block.getBlockModelId());
-    PACK.addModel(
-        new JModel("block/slab_top")
-            .textures(
-                new FasterJTextures().top(all).side(all).bottom(all)),
-        block.getBlockModelId().brrp_append("_top"));
-  }
-
-  /**
-   * 运行此方法需确保其楼梯名称正好为 path + "_slab"。
-   */
-  private static void writeBlockModelForCubeAllWithSlab(AbstractRoadBlock block, String all) {
-    writeBlockModelForCubeAll(block, all);
-    writeBlockModelForSlabAll(block.getRoadSlab(), all);
-  }
-
-  /**
-   * 添加一个方块以及其台阶方块的方块模型。仅用于此模组。
-   *
-   * @param block    方块。必须是道路方块，且在 {@link RoadSlabBlocks#BLOCK_TO_SLABS} 中有对应的台阶版本。
-   * @param parent   资源包的 parent。应当保证 parent、parent+"_slab" 和 parent+"_slab_top"都要存在。
-   * @param textures 纹理变量。三个 parent 都应该使用相同的纹理。
-   */
-  private static void writeRoadBlockModelWithSlab(
-      AbstractRoadBlock block, String parent, JTextures textures) {
-    final Identifier id = block.getBlockModelId();
-    final AbstractRoadSlabBlock slab = block.getRoadSlab();
-    final Identifier slabId = slab == null ? null : slab.getBlockModelId();
-    writeRoadBlockModelWithSlab(parent, textures, id, slabId);
-  }
-
-  /**
-   * 添加一个方块以及其台阶方块的方块模型，以及其对应的“mirrored”的方块模型。仅用于此模组。
-   *
-   * @param block    方块。必须是道路方块，且在 {@link RoadSlabBlocks#BLOCK_TO_SLABS} 中有对应的台阶版本。
-   * @param parent   资源包的 parent。应当保证 parent、parent+"_slab" 和 parent+"_slab_top"都要存在。
-   * @param textures 纹理变量。三个 parent 都应该使用相同的纹理。
-   */
-  private static void writeRoadBlockModelWithSlabWithMirrored(
-      AbstractRoadBlock block, String parent, JTextures textures) {
-    final Identifier id = block.getBlockModelId();
-    final AbstractRoadSlabBlock slab = block.getRoadSlab();
-    final Identifier slabId = slab == null ? null : slab.getBlockModelId();
-    writeRoadBlockModelWithSlab(parent, textures, id, slabId);
-    writeRoadBlockModelWithSlab(parent + "_mirrored", textures, id.brrp_append("_mirrored"), slabId == null ? null : slabId.brrp_append("_mirrored"));
-  }
-
-  /**
-   * 添加一个方块以及其台阶方块的方块模型。仅用于此模组。
-   *
-   * @param parent   资源包的 parent。应当保证 parent、parent+"_slab" 和 parent+"_slab_top"都要存在。
-   * @param textures 纹理变量。三个 parent 都应该使用相同的纹理。
-   * @param id       道路方块的完整id。
-   * @param slabId   该方块对应的台阶方块的完整id。
-   */
-  private static void writeRoadBlockModelWithSlab(String parent, JTextures textures, @NotNull Identifier id, @Nullable Identifier slabId) {
-    PACK.addModel(new JModel(blockIdentifier(parent)).textures(textures), id);
-    if (slabId != null) {
-      PACK.addModel(new JModel(BRRPHelper.slabOf(blockIdentifier(parent))).textures(textures), slabId);
-      PACK.addModel(new JModel(BRRPHelper.slabOf(blockIdentifier(parent)) + "_top").textures(textures), slabId.brrp_append("_top"));
-    }
-  }
-
-  private static IdentifiedTag blockTag(String path) {
-    return new IdentifiedTag("mishanguc", "blocks", path);
+  private static IdentifiedTagBuilder<Block> blockTag(String path) {
+    return IdentifiedTagBuilder.createBlock(new Identifier("mishanguc", path));
   }
 
   private static void addTags() {
 
     // 道路部分
-    final IdentifiedTag roadBlocks = blockTag("road_blocks");
-    final IdentifiedTag roadSlabs = blockTag("road_slabs");
-    final IdentifiedTag roadMarks = blockTag("road_marks");
+    final IdentifiedTagBuilder<Block> roadBlocks = blockTag("road_blocks");
+    final IdentifiedTagBuilder<Block> roadSlabs = blockTag("road_slabs");
+    final IdentifiedTagBuilder<Block> roadMarks = blockTag("road_marks");
 
     // 灯光部分
-    final IdentifiedTag whiteStripWallLights = blockTag("white_strip_wall_lights");
-    final IdentifiedTag whiteWallLights = blockTag("white_wall_lights");
-    final IdentifiedTag whiteCornerLights = blockTag("white_corner_lights");
-    final IdentifiedTag whiteLightDecorations = blockTag("white_light_decorations");
-    final IdentifiedTag whiteColumnLights = blockTag("white_column_lights");
-    final IdentifiedTag yellowStripWallLights = blockTag("yellow_strip_wall_lights");
-    final IdentifiedTag yellowWallLights = blockTag("yellow_wall_lights");
-    final IdentifiedTag yellowCornerLights = blockTag("yellow_corner_lights");
-    final IdentifiedTag yellowLightDecorations = blockTag("yellow_light_decorations");
-    final IdentifiedTag yellowColumnLights = blockTag("yellow_column_lights");
-    final IdentifiedTag orangeStripWallLights = blockTag("orange_strip_wall_lights");
-    final IdentifiedTag orangeWallLights = blockTag("orange_wall_lights");
-    final IdentifiedTag orangeCornerLights = blockTag("orange_corner_lights");
-    final IdentifiedTag orangeLightDecorations = blockTag("orange_light_decorations");
-    final IdentifiedTag orangeColumnLights = blockTag("orange_column_lights");
-    final IdentifiedTag greenStripWallLights = blockTag("green_strip_wall_lights");
-    final IdentifiedTag greenWallLights = blockTag("green_wall_lights");
-    final IdentifiedTag greenCornerLights = blockTag("green_corner_lights");
-    final IdentifiedTag greenLightDecorations = blockTag("green_light_decorations");
-    final IdentifiedTag greenColumnLights = blockTag("green_column_lights");
-    final IdentifiedTag cyanStripWallLights = blockTag("cyan_strip_wall_lights");
-    final IdentifiedTag cyanWallLights = blockTag("cyan_wall_lights");
-    final IdentifiedTag cyanCornerLights = blockTag("cyan_corner_lights");
-    final IdentifiedTag cyanLightDecorations = blockTag("cyan_light_decorations");
-    final IdentifiedTag cyanColumnLights = blockTag("cyan_column_lights");
-    final IdentifiedTag pinkStripWallLights = blockTag("pink_strip_wall_lights");
-    final IdentifiedTag pinkWallLights = blockTag("pink_wall_lights");
-    final IdentifiedTag pinkCornerLights = blockTag("pink_corner_lights");
-    final IdentifiedTag pinkLightDecorations = blockTag("pink_light_decorations");
-    final IdentifiedTag pinkColumnLights = blockTag("pink_column_lights");
-    final IdentifiedTag lightSlabs = blockTag("light_slabs");
-    final IdentifiedTag lightCovers = blockTag("light_covers");
+    final IdentifiedTagBuilder<Block> whiteStripWallLights = blockTag("white_strip_wall_lights");
+    final IdentifiedTagBuilder<Block> whiteWallLights = blockTag("white_wall_lights");
+    final IdentifiedTagBuilder<Block> whiteCornerLights = blockTag("white_corner_lights");
+    final IdentifiedTagBuilder<Block> whiteLightDecorations = blockTag("white_light_decorations");
+    final IdentifiedTagBuilder<Block> whiteColumnLights = blockTag("white_column_lights");
+    final IdentifiedTagBuilder<Block> yellowStripWallLights = blockTag("yellow_strip_wall_lights");
+    final IdentifiedTagBuilder<Block> yellowWallLights = blockTag("yellow_wall_lights");
+    final IdentifiedTagBuilder<Block> yellowCornerLights = blockTag("yellow_corner_lights");
+    final IdentifiedTagBuilder<Block> yellowLightDecorations = blockTag("yellow_light_decorations");
+    final IdentifiedTagBuilder<Block> yellowColumnLights = blockTag("yellow_column_lights");
+    final IdentifiedTagBuilder<Block> orangeStripWallLights = blockTag("orange_strip_wall_lights");
+    final IdentifiedTagBuilder<Block> orangeWallLights = blockTag("orange_wall_lights");
+    final IdentifiedTagBuilder<Block> orangeCornerLights = blockTag("orange_corner_lights");
+    final IdentifiedTagBuilder<Block> orangeLightDecorations = blockTag("orange_light_decorations");
+    final IdentifiedTagBuilder<Block> orangeColumnLights = blockTag("orange_column_lights");
+    final IdentifiedTagBuilder<Block> greenStripWallLights = blockTag("green_strip_wall_lights");
+    final IdentifiedTagBuilder<Block> greenWallLights = blockTag("green_wall_lights");
+    final IdentifiedTagBuilder<Block> greenCornerLights = blockTag("green_corner_lights");
+    final IdentifiedTagBuilder<Block> greenLightDecorations = blockTag("green_light_decorations");
+    final IdentifiedTagBuilder<Block> greenColumnLights = blockTag("green_column_lights");
+    final IdentifiedTagBuilder<Block> cyanStripWallLights = blockTag("cyan_strip_wall_lights");
+    final IdentifiedTagBuilder<Block> cyanWallLights = blockTag("cyan_wall_lights");
+    final IdentifiedTagBuilder<Block> cyanCornerLights = blockTag("cyan_corner_lights");
+    final IdentifiedTagBuilder<Block> cyanLightDecorations = blockTag("cyan_light_decorations");
+    final IdentifiedTagBuilder<Block> cyanColumnLights = blockTag("cyan_column_lights");
+    final IdentifiedTagBuilder<Block> pinkStripWallLights = blockTag("pink_strip_wall_lights");
+    final IdentifiedTagBuilder<Block> pinkWallLights = blockTag("pink_wall_lights");
+    final IdentifiedTagBuilder<Block> pinkCornerLights = blockTag("pink_corner_lights");
+    final IdentifiedTagBuilder<Block> pinkLightDecorations = blockTag("pink_light_decorations");
+    final IdentifiedTagBuilder<Block> pinkColumnLights = blockTag("pink_column_lights");
+    final IdentifiedTagBuilder<Block> lightSlabs = blockTag("light_slabs");
+    final IdentifiedTagBuilder<Block> lightCovers = blockTag("light_covers");
 
     // 墙上的告示牌部分
-    final IdentifiedTag woodenWallSigns = blockTag("wooden_wall_signs");
-    final IdentifiedTag concreteWallSigns = blockTag("concrete_wall_signs");
-    final IdentifiedTag terracottaWallSigns = blockTag("terracotta_wall_signs");
-    final IdentifiedTag wallSigns = blockTag("wall_signs");
-    final IdentifiedTag glowingConcreteWallSigns = blockTag("glowing_concrete_wall_signs");
-    final IdentifiedTag glowingTerracottaWallSigns = blockTag("glowing_terracotta_wall_signs");
-    final IdentifiedTag glowingWallSigns = blockTag("glowing_wall_signs");
-    final IdentifiedTag fullConcreteWallSigns = blockTag("full_concrete_wall_signs");
-    final IdentifiedTag fullTerracottaWallSigns = blockTag("full_terracotta_wall_signs");
-    final IdentifiedTag fullWallSigns = blockTag("full_wall_signs");
+    final IdentifiedTagBuilder<Block> woodenWallSigns = blockTag("wooden_wall_signs");
+    final IdentifiedTagBuilder<Block> concreteWallSigns = blockTag("concrete_wall_signs");
+    final IdentifiedTagBuilder<Block> terracottaWallSigns = blockTag("terracotta_wall_signs");
+    final IdentifiedTagBuilder<Block> wallSigns = blockTag("wall_signs");
+    final IdentifiedTagBuilder<Block> glowingConcreteWallSigns = blockTag("glowing_concrete_wall_signs");
+    final IdentifiedTagBuilder<Block> glowingTerracottaWallSigns = blockTag("glowing_terracotta_wall_signs");
+    final IdentifiedTagBuilder<Block> glowingWallSigns = blockTag("glowing_wall_signs");
+    final IdentifiedTagBuilder<Block> fullConcreteWallSigns = blockTag("full_concrete_wall_signs");
+    final IdentifiedTagBuilder<Block> fullTerracottaWallSigns = blockTag("full_terracotta_wall_signs");
+    final IdentifiedTagBuilder<Block> fullWallSigns = blockTag("full_wall_signs");
 
     // 悬挂的告示牌部分
-    final IdentifiedTag woodenHungSigns = blockTag("wooden_hung_signs");
-    final IdentifiedTag concreteHungSigns = blockTag("concrete_hung_signs");
-    final IdentifiedTag terracottaHungSigns = blockTag("terracotta_hung_signs");
-    final IdentifiedTag hungSigns = blockTag("hung_signs");
-    final IdentifiedTag glowingConcreteHungSigns = blockTag("glowing_concrete_hung_signs");
-    final IdentifiedTag glowingTerracottaHungSigns = blockTag("glowing_terracotta_hung_signs");
-    final IdentifiedTag glowingHungSigns = blockTag("glowing_hung_signs");
+    final IdentifiedTagBuilder<Block> woodenHungSigns = blockTag("wooden_hung_signs");
+    final IdentifiedTagBuilder<Block> concreteHungSigns = blockTag("concrete_hung_signs");
+    final IdentifiedTagBuilder<Block> terracottaHungSigns = blockTag("terracotta_hung_signs");
+    final IdentifiedTagBuilder<Block> hungSigns = blockTag("hung_signs");
+    final IdentifiedTagBuilder<Block> glowingConcreteHungSigns = blockTag("glowing_concrete_hung_signs");
+    final IdentifiedTagBuilder<Block> glowingTerracottaHungSigns = blockTag("glowing_terracotta_hung_signs");
+    final IdentifiedTagBuilder<Block> glowingHungSigns = blockTag("glowing_hung_signs");
 
     // 悬挂的告示牌部分
-    final IdentifiedTag woodenStandingSigns = blockTag("wooden_standing_signs");
-    final IdentifiedTag concreteStandingSigns = blockTag("concrete_standing_signs");
-    final IdentifiedTag terracottaStandingSigns = blockTag("terracotta_standing_signs");
-    final IdentifiedTag standingSigns = blockTag("standing_signs");
-    final IdentifiedTag glowingConcreteStandingSigns = blockTag("glowing_concrete_standing_signs");
-    final IdentifiedTag glowingTerracottaStandingSigns = blockTag("glowing_terracotta_standing_signs");
-    final IdentifiedTag glowingStandingSigns = blockTag("glowing_standing_signs");
+    final IdentifiedTagBuilder<Block> woodenStandingSigns = blockTag("wooden_standing_signs");
+    final IdentifiedTagBuilder<Block> concreteStandingSigns = blockTag("concrete_standing_signs");
+    final IdentifiedTagBuilder<Block> terracottaStandingSigns = blockTag("terracotta_standing_signs");
+    final IdentifiedTagBuilder<Block> standingSigns = blockTag("standing_signs");
+    final IdentifiedTagBuilder<Block> glowingConcreteStandingSigns = blockTag("glowing_concrete_standing_signs");
+    final IdentifiedTagBuilder<Block> glowingTerracottaStandingSigns = blockTag("glowing_terracotta_standing_signs");
+    final IdentifiedTagBuilder<Block> glowingStandingSigns = blockTag("glowing_standing_signs");
 
     // 悬挂的告示牌杆部分
-    final IdentifiedTag woodenHungSignBars = blockTag("wooden_hung_sign_bars");
-    final IdentifiedTag concreteHungSignBars = blockTag("concrete_hung_sign_bars");
-    final IdentifiedTag terracottaHungSignBars = blockTag("terracotta_hung_sign_bars");
-    final IdentifiedTag hungSignBars = blockTag("hung_sign_bars");
+    final IdentifiedTagBuilder<Block> woodenHungSignBars = blockTag("wooden_hung_sign_bars");
+    final IdentifiedTagBuilder<Block> concreteHungSignBars = blockTag("concrete_hung_sign_bars");
+    final IdentifiedTagBuilder<Block> terracottaHungSignBars = blockTag("terracotta_hung_sign_bars");
+    final IdentifiedTagBuilder<Block> hungSignBars = blockTag("hung_sign_bars");
 
     // 栏杆部分
-    final IdentifiedTag handrails = blockTag("handrails");
-    final IdentifiedTag handrailItems = new IdentifiedTag("mishanguc", "items", "handrails");
-    final IdentifiedTag normalHandrails = blockTag("normal_handrails");
-    final IdentifiedTag centralHandrails = blockTag("central_handrails");
-    final IdentifiedTag cornerHandrails = blockTag("corner_handrails");
-    final IdentifiedTag outerHandrails = blockTag("outer_handrails");
-    final IdentifiedTag stairHandrails = blockTag("stair_handrails");
+    final IdentifiedTagBuilder<Block> handrails = blockTag("handrails");
+    final IdentifiedTagBuilder<Item> handrailItems = IdentifiedTagBuilder.createItem(new Identifier("mishanguc", "handrails"));
+    final IdentifiedTagBuilder<Block> normalHandrails = blockTag("normal_handrails");
+    final IdentifiedTagBuilder<Block> centralHandrails = blockTag("central_handrails");
+    final IdentifiedTagBuilder<Block> cornerHandrails = blockTag("corner_handrails");
+    final IdentifiedTagBuilder<Block> outerHandrails = blockTag("outer_handrails");
+    final IdentifiedTagBuilder<Block> stairHandrails = blockTag("stair_handrails");
 
     // 混凝土栏杆部分
-    final IdentifiedTag simpleConcreteHandrails = blockTag("simple_concrete_handrails");
-    final IdentifiedTag simpleConcreteNormalHandrails = blockTag("simple_concrete_normal_handrails");
-    final IdentifiedTag simpleConcreteCentralHandrails = blockTag("simple_concrete_central_handrails");
-    final IdentifiedTag simpleConcreteCornerHandrails = blockTag("simple_concrete_corner_handrails");
-    final IdentifiedTag simpleConcreteOuterHandrails = blockTag("simple_concrete_outer_handrails");
-    final IdentifiedTag simpleConcreteStairHandrails = blockTag("simple_concrete_stair_handrails");
+    final IdentifiedTagBuilder<Block> simpleConcreteHandrails = blockTag("simple_concrete_handrails");
+    final IdentifiedTagBuilder<Block> simpleConcreteNormalHandrails = blockTag("simple_concrete_normal_handrails");
+    final IdentifiedTagBuilder<Block> simpleConcreteCentralHandrails = blockTag("simple_concrete_central_handrails");
+    final IdentifiedTagBuilder<Block> simpleConcreteCornerHandrails = blockTag("simple_concrete_corner_handrails");
+    final IdentifiedTagBuilder<Block> simpleConcreteOuterHandrails = blockTag("simple_concrete_outer_handrails");
+    final IdentifiedTagBuilder<Block> simpleConcreteStairHandrails = blockTag("simple_concrete_stair_handrails");
 
     // 陶瓦栏杆部分
-    final IdentifiedTag simpleTerracottaHandrails = blockTag("simple_terracotta_handrails");
-    final IdentifiedTag simpleTerracottaNormalHandrails = blockTag("simple_terracotta_normal_handrails");
-    final IdentifiedTag simpleTerracottaCentralHandrails = blockTag("simple_terracotta_central_handrails");
-    final IdentifiedTag simpleTerracottaCornerHandrails = blockTag("simple_terracotta_corner_handrails");
-    final IdentifiedTag simpleTerracottaOuterHandrails = blockTag("simple_terracotta_outer_handrails");
-    final IdentifiedTag simpleTerracottaStairHandrails = blockTag("simple_terracotta_stair_handrails");
+    final IdentifiedTagBuilder<Block> simpleTerracottaHandrails = blockTag("simple_terracotta_handrails");
+    final IdentifiedTagBuilder<Block> simpleTerracottaNormalHandrails = blockTag("simple_terracotta_normal_handrails");
+    final IdentifiedTagBuilder<Block> simpleTerracottaCentralHandrails = blockTag("simple_terracotta_central_handrails");
+    final IdentifiedTagBuilder<Block> simpleTerracottaCornerHandrails = blockTag("simple_terracotta_corner_handrails");
+    final IdentifiedTagBuilder<Block> simpleTerracottaOuterHandrails = blockTag("simple_terracotta_outer_handrails");
+    final IdentifiedTagBuilder<Block> simpleTerracottaStairHandrails = blockTag("simple_terracotta_stair_handrails");
 
     // 染色玻璃栏杆部分
-    final IdentifiedTag simpleStainedGlassHandrails = blockTag("simple_stained_glass_handrails");
-    final IdentifiedTag simpleStainedGlassNormalHandrails = blockTag("simple_stained_glass_normal_handrails");
-    final IdentifiedTag simpleStainedGlassCentralHandrails = blockTag("simple_stained_glass_central_handrails");
-    final IdentifiedTag simpleStainedGlassCornerHandrails = blockTag("simple_stained_glass_corner_handrails");
-    final IdentifiedTag simpleStainedGlassOuterHandrails = blockTag("simple_stained_glass_outer_handrails");
-    final IdentifiedTag simpleStainedGlassStairHandrails = blockTag("simple_stained_glass_stair_handrails");
+    final IdentifiedTagBuilder<Block> simpleStainedGlassHandrails = blockTag("simple_stained_glass_handrails");
+    final IdentifiedTagBuilder<Block> simpleStainedGlassNormalHandrails = blockTag("simple_stained_glass_normal_handrails");
+    final IdentifiedTagBuilder<Block> simpleStainedGlassCentralHandrails = blockTag("simple_stained_glass_central_handrails");
+    final IdentifiedTagBuilder<Block> simpleStainedGlassCornerHandrails = blockTag("simple_stained_glass_corner_handrails");
+    final IdentifiedTagBuilder<Block> simpleStainedGlassOuterHandrails = blockTag("simple_stained_glass_outer_handrails");
+    final IdentifiedTagBuilder<Block> simpleStainedGlassStairHandrails = blockTag("simple_stained_glass_stair_handrails");
 
     // 染色木头部分
-    final IdentifiedTag simpleWoodenHandrails = blockTag("simple_wooden_handrails");
-    final IdentifiedTag simpleWoodenNormalHandrails = blockTag("simple_wooden_normal_handrails");
-    final IdentifiedTag simpleWoodenCentralHandrails = blockTag("simple_wooden_central_handrails");
-    final IdentifiedTag simpleWoodenCornerHandrails = blockTag("simple_wooden_corner_handrails");
-    final IdentifiedTag simpleWoodenOuterHandrails = blockTag("simple_wooden_outer_handrails");
-    final IdentifiedTag simpleWoodenStairHandrails = blockTag("simple_wooden_stair_handrails");
+    final IdentifiedTagBuilder<Block> simpleWoodenHandrails = blockTag("simple_wooden_handrails");
+    final IdentifiedTagBuilder<Block> simpleWoodenNormalHandrails = blockTag("simple_wooden_normal_handrails");
+    final IdentifiedTagBuilder<Block> simpleWoodenCentralHandrails = blockTag("simple_wooden_central_handrails");
+    final IdentifiedTagBuilder<Block> simpleWoodenCornerHandrails = blockTag("simple_wooden_corner_handrails");
+    final IdentifiedTagBuilder<Block> simpleWoodenOuterHandrails = blockTag("simple_wooden_outer_handrails");
+    final IdentifiedTagBuilder<Block> simpleWoodenStairHandrails = blockTag("simple_wooden_stair_handrails");
 
     // 玻璃栏杆部分
-    final IdentifiedTag glassHandrails = blockTag("glass_handrails");
-    final IdentifiedTag glassNormalHandrails = blockTag("glass_normal_handrails");
-    final IdentifiedTag glassCentralHandrails = blockTag("glass_central_handrails");
-    final IdentifiedTag glassCornerHandrails = blockTag("glass_corner_handrails");
-    final IdentifiedTag glassOuterHandrails = blockTag("glass_outer_handrails");
-    final IdentifiedTag glassStairHandrails = blockTag("glass_stair_handrails");
+    final IdentifiedTagBuilder<Block> glassHandrails = blockTag("glass_handrails");
+    final IdentifiedTagBuilder<Block> glassNormalHandrails = blockTag("glass_normal_handrails");
+    final IdentifiedTagBuilder<Block> glassCentralHandrails = blockTag("glass_central_handrails");
+    final IdentifiedTagBuilder<Block> glassCornerHandrails = blockTag("glass_corner_handrails");
+    final IdentifiedTagBuilder<Block> glassOuterHandrails = blockTag("glass_outer_handrails");
+    final IdentifiedTagBuilder<Block> glassStairHandrails = blockTag("glass_stair_handrails");
 
 
     // 道路部分
     MishangUtils.instanceStream(RoadBlocks.class, Block.class).forEach(
         block -> {
           if (block instanceof AbstractRoadBlock) {
-            roadBlocks.addBlock(block);
+            roadBlocks.add(block);
           }
         }
     );
     RoadSlabBlocks.SLABS.forEach(
         block -> {
           if (block != null) {
-            roadSlabs.addBlock(block);
+            roadSlabs.add(block);
           }
         }
     );
-    MishangUtils.instanceStream(RoadMarkBlocks.class, Block.class).forEach(roadMarks::addBlock);
+    MishangUtils.instanceStream(RoadMarkBlocks.class, Block.class).forEach(roadMarks::add);
 
     // 灯光部分
     MishangUtils.instanceStream(LightBlocks.class, Block.class).forEach(
@@ -280,112 +196,112 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
           if (block instanceof StripWallLightBlock) {
             switch (((StripWallLightBlock) block).lightColor) {
               case "white":
-                whiteStripWallLights.addBlock(block);
+                whiteStripWallLights.add(block);
                 break;
               case "yellow":
-                yellowStripWallLights.addBlock(block);
+                yellowStripWallLights.add(block);
                 break;
               case "cyan":
-                cyanStripWallLights.addBlock(block);
+                cyanStripWallLights.add(block);
                 break;
               case "orange":
-                orangeStripWallLights.addBlock(block);
+                orangeStripWallLights.add(block);
                 break;
               case "green":
-                greenStripWallLights.addBlock(block);
+                greenStripWallLights.add(block);
                 break;
               case "pink":
-                pinkStripWallLights.addBlock(block);
+                pinkStripWallLights.add(block);
                 break;
             }
           } else if (block instanceof AutoConnectWallLightBlock) {
             switch (((AutoConnectWallLightBlock) block).lightColor) {
               case "white":
-                whiteLightDecorations.addBlock(block);
+                whiteLightDecorations.add(block);
                 break;
               case "yellow":
-                yellowLightDecorations.addBlock(block);
+                yellowLightDecorations.add(block);
                 break;
               case "cyan":
-                cyanLightDecorations.addBlock(block);
+                cyanLightDecorations.add(block);
                 break;
               case "orange":
-                orangeLightDecorations.addBlock(block);
+                orangeLightDecorations.add(block);
                 break;
               case "green":
-                greenLightDecorations.addBlock(block);
+                greenLightDecorations.add(block);
                 break;
               case "pink":
-                pinkLightDecorations.addBlock(block);
+                pinkLightDecorations.add(block);
                 break;
             }
           } else if (block instanceof ColumnLightBlock || block instanceof ColumnWallLightBlock) {
             switch (block instanceof ColumnLightBlock ? ((ColumnLightBlock) block).lightColor : ((ColumnWallLightBlock) block).lightColor) {
               case "white":
-                whiteColumnLights.addBlock(block);
+                whiteColumnLights.add(block);
                 break;
               case "yellow":
-                yellowColumnLights.addBlock(block);
+                yellowColumnLights.add(block);
                 break;
               case "cyan":
-                cyanColumnLights.addBlock(block);
+                cyanColumnLights.add(block);
                 break;
               case "orange":
-                orangeColumnLights.addBlock(block);
+                orangeColumnLights.add(block);
                 break;
               case "green":
-                greenColumnLights.addBlock(block);
+                greenColumnLights.add(block);
                 break;
               case "pink":
-                pinkColumnLights.addBlock(block);
+                pinkColumnLights.add(block);
                 break;
             }
           } else if (block instanceof WallLightBlock) {
             switch (((WallLightBlock) block).lightColor) {
               case "white":
-                whiteWallLights.addBlock(block);
+                whiteWallLights.add(block);
                 break;
               case "yellow":
-                yellowWallLights.addBlock(block);
+                yellowWallLights.add(block);
                 break;
               case "cyan":
-                cyanWallLights.addBlock(block);
+                cyanWallLights.add(block);
                 break;
               case "orange":
-                orangeWallLights.addBlock(block);
+                orangeWallLights.add(block);
                 break;
               case "green":
-                greenWallLights.addBlock(block);
+                greenWallLights.add(block);
                 break;
               case "pink":
-                pinkWallLights.addBlock(block);
+                pinkWallLights.add(block);
                 break;
             }
           } else if (block instanceof CornerLightBlock) {
             switch (((CornerLightBlock) block).lightColor) {
               case "white":
-                whiteCornerLights.addBlock(block);
+                whiteCornerLights.add(block);
                 break;
               case "yellow":
-                yellowCornerLights.addBlock(block);
+                yellowCornerLights.add(block);
                 break;
               case "cyan":
-                cyanCornerLights.addBlock(block);
+                cyanCornerLights.add(block);
               case "orange":
-                orangeCornerLights.addBlock(block);
+                orangeCornerLights.add(block);
                 break;
               case "green":
-                greenCornerLights.addBlock(block);
+                greenCornerLights.add(block);
                 break;
               case "pink":
-                pinkCornerLights.addBlock(block);
+                pinkCornerLights.add(block);
                 break;
             }
           }
           if (block instanceof SlabBlock) {
-            lightSlabs.addBlock(block);
+            lightSlabs.add(block);
           } else if (block instanceof LightCoverBlock) {
-            lightCovers.addBlock(block);
+            lightCovers.add(block);
           }
         }
     );
@@ -394,31 +310,31 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     MishangUtils.instanceStream(HungSignBlocks.class, Block.class).forEach(block -> {
       if (block instanceof GlowingHungSignBlock) {
         if (MishangUtils.isConcrete(((GlowingHungSignBlock) block).baseBlock)) {
-          glowingConcreteHungSigns.addBlock(block);
+          glowingConcreteHungSigns.add(block);
         } else if (MishangUtils.isTerracotta(((GlowingHungSignBlock) block).baseBlock)) {
-          glowingTerracottaHungSigns.addBlock(block);
+          glowingTerracottaHungSigns.add(block);
         } else {
-          glowingHungSigns.addBlock(block);
+          glowingHungSigns.add(block);
         }
       } else if (block instanceof HungSignBlock) {
         if (MishangUtils.isConcrete(((HungSignBlock) block).baseBlock)) {
-          concreteHungSigns.addBlock(block);
+          concreteHungSigns.add(block);
         } else if (MishangUtils.isTerracotta(((HungSignBlock) block).baseBlock)) {
-          terracottaHungSigns.addBlock(block);
+          terracottaHungSigns.add(block);
         } else if (MishangUtils.isPlanks(((HungSignBlock) block).baseBlock)) {
-          woodenHungSigns.addBlock(block);
+          woodenHungSigns.add(block);
         } else {
-          hungSigns.addBlock(block);
+          hungSigns.add(block);
         }
       } else if (block instanceof HungSignBarBlock) {
         if (MishangUtils.isConcrete(((HungSignBarBlock) block).baseBlock)) {
-          concreteHungSignBars.addBlock(block);
+          concreteHungSignBars.add(block);
         } else if (MishangUtils.isTerracotta(((HungSignBarBlock) block).baseBlock)) {
-          terracottaHungSignBars.addBlock(block);
+          terracottaHungSignBars.add(block);
         } else if (MishangUtils.isWood(((HungSignBarBlock) block).baseBlock)) {
-          woodenHungSignBars.addBlock(block);
+          woodenHungSignBars.add(block);
         } else {
-          hungSignBars.addBlock(block);
+          hungSignBars.add(block);
         }
       }
     });
@@ -427,29 +343,29 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     MishangUtils.instanceStream(WallSignBlocks.class, Block.class).forEach(block -> {
       if (block instanceof GlowingWallSignBlock) {
         if (MishangUtils.isConcrete(((GlowingWallSignBlock) block).baseBlock)) {
-          glowingConcreteWallSigns.addBlock(block);
+          glowingConcreteWallSigns.add(block);
         } else if (MishangUtils.isTerracotta(((GlowingWallSignBlock) block).baseBlock)) {
-          glowingTerracottaWallSigns.addBlock(block);
+          glowingTerracottaWallSigns.add(block);
         } else {
-          glowingWallSigns.addBlock(block);
+          glowingWallSigns.add(block);
         }
       } else if (block instanceof FullWallSignBlock) {
         if (MishangUtils.isConcrete(((FullWallSignBlock) block).baseBlock)) {
-          fullConcreteWallSigns.addBlock(block);
+          fullConcreteWallSigns.add(block);
         } else if (MishangUtils.isTerracotta(((FullWallSignBlock) block).baseBlock)) {
-          fullTerracottaWallSigns.addBlock(block);
+          fullTerracottaWallSigns.add(block);
         } else {
-          fullWallSigns.addBlock(block);
+          fullWallSigns.add(block);
         }
       } else if (block instanceof WallSignBlock) {
         if (MishangUtils.isConcrete(((WallSignBlock) block).baseBlock)) {
-          concreteWallSigns.addBlock(block);
+          concreteWallSigns.add(block);
         } else if (MishangUtils.isTerracotta(((WallSignBlock) block).baseBlock)) {
-          terracottaWallSigns.addBlock(block);
+          terracottaWallSigns.add(block);
         } else if (MishangUtils.isPlanks(((WallSignBlock) block).baseBlock)) {
-          woodenWallSigns.addBlock(block);
+          woodenWallSigns.add(block);
         } else {
-          wallSigns.addBlock(block);
+          wallSigns.add(block);
         }
       }
     });
@@ -457,21 +373,21 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     MishangUtils.instanceStream(StandingSignBlocks.class, Block.class).forEach(block -> {
       if (block instanceof GlowingStandingSignBlock) {
         if (MishangUtils.isConcrete(((GlowingStandingSignBlock) block).baseBlock)) {
-          glowingConcreteStandingSigns.addBlock(block);
+          glowingConcreteStandingSigns.add(block);
         } else if (MishangUtils.isTerracotta(((GlowingStandingSignBlock) block).baseBlock)) {
-          glowingTerracottaStandingSigns.addBlock(block);
+          glowingTerracottaStandingSigns.add(block);
         } else {
-          glowingStandingSigns.addBlock(block);
+          glowingStandingSigns.add(block);
         }
       } else if (block instanceof StandingSignBlock) {
         if (MishangUtils.isConcrete(((StandingSignBlock) block).baseBlock)) {
-          concreteStandingSigns.addBlock(block);
+          concreteStandingSigns.add(block);
         } else if (MishangUtils.isTerracotta(((StandingSignBlock) block).baseBlock)) {
-          terracottaStandingSigns.addBlock(block);
+          terracottaStandingSigns.add(block);
         } else if (MishangUtils.isPlanks(((StandingSignBlock) block).baseBlock)) {
-          woodenStandingSigns.addBlock(block);
+          woodenStandingSigns.add(block);
         } else {
-          standingSigns.addBlock(block);
+          standingSigns.add(block);
         }
       }
     });
@@ -481,46 +397,44 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
       if (block instanceof SimpleHandrailBlock) {
         final SimpleHandrailBlock simpleHandrailBlock = (SimpleHandrailBlock) block;
         if (MishangUtils.isStained_glass(((SimpleHandrailBlock) block).baseBlock)) {
-          simpleStainedGlassNormalHandrails.addBlock(simpleHandrailBlock);
-          simpleStainedGlassCentralHandrails.addBlock(simpleHandrailBlock.central);
-          simpleStainedGlassCornerHandrails.addBlock(simpleHandrailBlock.corner);
-          simpleStainedGlassOuterHandrails.addBlock(simpleHandrailBlock.outer);
-          simpleStainedGlassStairHandrails.addBlock(simpleHandrailBlock.stair);
+          simpleStainedGlassNormalHandrails.add(simpleHandrailBlock);
+          simpleStainedGlassCentralHandrails.add(simpleHandrailBlock.central);
+          simpleStainedGlassCornerHandrails.add(simpleHandrailBlock.corner);
+          simpleStainedGlassOuterHandrails.add(simpleHandrailBlock.outer);
+          simpleStainedGlassStairHandrails.add(simpleHandrailBlock.stair);
         } else if (MishangUtils.isConcrete(((SimpleHandrailBlock) block).baseBlock)) {
-          simpleConcreteNormalHandrails.addBlock(simpleHandrailBlock);
-          simpleConcreteCentralHandrails.addBlock(simpleHandrailBlock.central);
-          simpleConcreteCornerHandrails.addBlock(simpleHandrailBlock.corner);
-          simpleConcreteOuterHandrails.addBlock(simpleHandrailBlock.outer);
-          simpleConcreteStairHandrails.addBlock(simpleHandrailBlock.stair);
+          simpleConcreteNormalHandrails.add(simpleHandrailBlock);
+          simpleConcreteCentralHandrails.add(simpleHandrailBlock.central);
+          simpleConcreteCornerHandrails.add(simpleHandrailBlock.corner);
+          simpleConcreteOuterHandrails.add(simpleHandrailBlock.outer);
+          simpleConcreteStairHandrails.add(simpleHandrailBlock.stair);
         } else if (MishangUtils.isTerracotta(((SimpleHandrailBlock) block).baseBlock)) {
-          simpleTerracottaNormalHandrails.addBlock(simpleHandrailBlock);
-          simpleTerracottaCentralHandrails.addBlock(simpleHandrailBlock.central);
-          simpleTerracottaCornerHandrails.addBlock(simpleHandrailBlock.corner);
-          simpleTerracottaOuterHandrails.addBlock(simpleHandrailBlock.outer);
-          simpleTerracottaStairHandrails.addBlock(simpleHandrailBlock.stair);
+          simpleTerracottaNormalHandrails.add(simpleHandrailBlock);
+          simpleTerracottaCentralHandrails.add(simpleHandrailBlock.central);
+          simpleTerracottaCornerHandrails.add(simpleHandrailBlock.corner);
+          simpleTerracottaOuterHandrails.add(simpleHandrailBlock.outer);
+          simpleTerracottaStairHandrails.add(simpleHandrailBlock.stair);
         } else if (MishangUtils.isWood(((SimpleHandrailBlock) block).baseBlock)) {
-          simpleWoodenNormalHandrails.addBlock(simpleHandrailBlock);
-          simpleWoodenCentralHandrails.addBlock(simpleHandrailBlock.central);
-          simpleWoodenCornerHandrails.addBlock(simpleHandrailBlock.corner);
-          simpleWoodenOuterHandrails.addBlock(simpleHandrailBlock.outer);
-          simpleWoodenStairHandrails.addBlock(simpleHandrailBlock.stair);
+          simpleWoodenNormalHandrails.add(simpleHandrailBlock);
+          simpleWoodenCentralHandrails.add(simpleHandrailBlock.central);
+          simpleWoodenCornerHandrails.add(simpleHandrailBlock.corner);
+          simpleWoodenOuterHandrails.add(simpleHandrailBlock.outer);
+          simpleWoodenStairHandrails.add(simpleHandrailBlock.stair);
         } else {
-          handrailItems.addBlock(simpleHandrailBlock);
-          normalHandrails.addBlock(simpleHandrailBlock);
-          centralHandrails.addBlock(simpleHandrailBlock.central);
-          cornerHandrails.addBlock(simpleHandrailBlock.corner);
-          outerHandrails.addBlock(simpleHandrailBlock.outer);
-          stairHandrails.addBlock(simpleHandrailBlock.stair);
+          handrailItems.add(simpleHandrailBlock.asItem());
+          normalHandrails.add(simpleHandrailBlock);
+          centralHandrails.add(simpleHandrailBlock.central);
+          cornerHandrails.add(simpleHandrailBlock.corner);
+          outerHandrails.add(simpleHandrailBlock.outer);
+          stairHandrails.add(simpleHandrailBlock.stair);
         }
       } else if (block instanceof GlassHandrailBlock) {
         final GlassHandrailBlock glassHandrailBlock = (GlassHandrailBlock) block;
-        glassNormalHandrails.addBlock(glassHandrailBlock);
-        glassCentralHandrails.addBlock(glassHandrailBlock.central());
-        glassCornerHandrails.addBlock(glassHandrailBlock.corner());
-        glassOuterHandrails.addBlock(glassHandrailBlock.outer());
-        glassStairHandrails.addBlock(glassHandrailBlock.stair());
-        final Block[] blocks = glassHandrailBlock.selfAndVariants();
-        final Block baseBlock = glassHandrailBlock.baseBlock();
+        glassNormalHandrails.add(glassHandrailBlock);
+        glassCentralHandrails.add(glassHandrailBlock.central());
+        glassCornerHandrails.add(glassHandrailBlock.corner());
+        glassOuterHandrails.add(glassHandrailBlock.outer());
+        glassStairHandrails.add(glassHandrailBlock.stair());
       }
     });
     simpleStainedGlassHandrails
@@ -554,10 +468,10 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         .addTag(simpleConcreteNormalHandrails)
         .addTag(simpleWoodenNormalHandrails);
     handrailItems
-        .addTag(simpleStainedGlassHandrails)
-        .addTag(simpleTerracottaHandrails)
-        .addTag(simpleConcreteHandrails)
-        .addTag(simpleWoodenHandrails);
+        .addTag(simpleStainedGlassHandrails.identifier)
+        .addTag(simpleTerracottaHandrails.identifier)
+        .addTag(simpleConcreteHandrails.identifier)
+        .addTag(simpleWoodenHandrails.identifier);
     centralHandrails
         .addTag(glassCentralHandrails)
         .addTag(simpleStainedGlassCentralHandrails)
@@ -582,7 +496,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         .addTag(simpleTerracottaStairHandrails)
         .addTag(simpleConcreteStairHandrails)
         .addTag(simpleWoodenStairHandrails);
-    glassHandrails.addTags(glassNormalHandrails, glassCentralHandrails, glassCornerHandrails, glassOuterHandrails, glassStairHandrails);
+    glassHandrails.addTag(glassNormalHandrails, glassCentralHandrails, glassCornerHandrails, glassOuterHandrails, glassStairHandrails);
     handrails
         .addTag(normalHandrails)
         .addTag(centralHandrails)
@@ -639,7 +553,7 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
 
     registerTagBlockOnly(handrails);
     registerTagBlockOnly(normalHandrails);
-    handrailItems.write(PACK);
+    PACK.addTag(handrailItems);
     registerTagBlockOnly(centralHandrails);
     registerTagBlockOnly(cornerHandrails);
     registerTagBlockOnly(outerHandrails);
@@ -653,28 +567,28 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     registerTagBlockOnly(simpleConcreteStairHandrails);
     registerTagBlockOnly(simpleTerracottaHandrails);
     registerTagBlockOnly(simpleTerracottaNormalHandrails);
-    PACK.addTag(new Identifier("mishanguc", "items/simple_terracotta_handrails"), simpleTerracottaNormalHandrails);
+    PACK.addTag((Tag.Identified<Item>)TagRegistry.item(new Identifier("mishanguc", "simple_terracotta_handrails")), simpleTerracottaNormalHandrails, "items");
     registerTagBlockOnly(simpleTerracottaCentralHandrails);
     registerTagBlockOnly(simpleTerracottaCornerHandrails);
     registerTagBlockOnly(simpleTerracottaOuterHandrails);
     registerTagBlockOnly(simpleTerracottaStairHandrails);
     registerTagBlockOnly(simpleStainedGlassHandrails);
     registerTagBlockOnly(simpleStainedGlassNormalHandrails);
-    PACK.addTag(new Identifier("mishanguc", "items/simple_stained_glass_handrails"), simpleStainedGlassNormalHandrails);
+    PACK.addTag((Tag.Identified<Item>)TagRegistry.item(new Identifier("mishanguc", "simple_stained_glass_handrails")), simpleStainedGlassNormalHandrails, "items");
     registerTagBlockOnly(simpleStainedGlassCentralHandrails);
     registerTagBlockOnly(simpleStainedGlassCornerHandrails);
     registerTagBlockOnly(simpleStainedGlassOuterHandrails);
     registerTagBlockOnly(simpleStainedGlassStairHandrails);
     registerTagBlockOnly(simpleWoodenHandrails);
     registerTagBlockOnly(simpleWoodenNormalHandrails);
-    PACK.addTag(new Identifier("mishanguc", "items/simple_wooden_handrails"), simpleWoodenNormalHandrails);
+    PACK.addTag((Tag.Identified<Item>)TagRegistry.item(new Identifier("mishanguc", "simple_wooden_handrails")), simpleWoodenNormalHandrails, "items");
     registerTagBlockOnly(simpleWoodenCentralHandrails);
     registerTagBlockOnly(simpleWoodenCornerHandrails);
     registerTagBlockOnly(simpleWoodenOuterHandrails);
     registerTagBlockOnly(simpleWoodenStairHandrails);
     registerTagBlockOnly(glassHandrails);
     registerTagBlockOnly(glassNormalHandrails);
-    PACK.addTag(new Identifier("mishanguc", "item/glass_handrails"), glassNormalHandrails);
+    PACK.addTag((Tag.Identified<Item>)TagRegistry.item(new Identifier("mishanguc", "glass_handrails")), glassNormalHandrails, "items");
     registerTagBlockOnly(glassCentralHandrails);
     registerTagBlockOnly(glassCornerHandrails);
     registerTagBlockOnly(glassOuterHandrails);
@@ -692,8 +606,8 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
         .addTag(woodenHungSignBars)
         .addTag(concreteHungSignBars)
         .addTag(terracottaHungSignBars);
-    standingSigns.addTags(woodenStandingSigns, concreteStandingSigns, terracottaStandingSigns);
-    glowingStandingSigns.addTags(glowingConcreteStandingSigns, glowingTerracottaStandingSigns);
+    standingSigns.addTag(woodenStandingSigns, concreteStandingSigns, terracottaStandingSigns);
+    glowingStandingSigns.addTag(glowingConcreteStandingSigns, glowingTerracottaStandingSigns);
     registerTag(woodenHungSigns);
     registerTag(concreteHungSigns);
     registerTag(terracottaHungSigns);
@@ -708,101 +622,41 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     registerTag(woodenStandingSigns, concreteStandingSigns, terracottaStandingSigns, glowingConcreteStandingSigns, glowingTerracottaStandingSigns, standingSigns, glowingStandingSigns);
 
     // 染色方块部分
-    final IdentifiedTag colored = blockTag("colored");
-    MishangUtils.blocks().stream().filter(Predicates.instanceOf(ColoredBlock.class)).forEach(colored::addBlock);
+    final IdentifiedTagBuilder<Block> colored = blockTag("colored");
+    MishangUtils.blocks().stream().filter(Predicates.instanceOf(ColoredBlock.class)).forEach(colored::add);
     registerTag(colored);
   }
 
-  private static void registerTag(IdentifiedTag blockTag) {
-    blockTag.write(PACK);
-    PACK.addTag(blockTag.identifier.brrp_prepend("items/"), blockTag);
+  private static void registerTag(IdentifiedTagBuilder<Block> blockTag) {
+    PACK.addTag(blockTag);
+    PACK.addTag(blockTag.identifier.brrp_prefixed("items/"), blockTag);
   }
 
-  private static void registerTag(IdentifiedTag... tags) {
-    for (IdentifiedTag tag : tags) {
+  @SafeVarargs
+  private static void registerTag(IdentifiedTagBuilder<Block>... tags) {
+    for (IdentifiedTagBuilder<Block> tag : tags) {
       registerTag(tag);
     }
   }
 
-  private static void registerTagBlockOnly(IdentifiedTag tag) {
-    PACK.addTag(tag.identifier.brrp_prepend("blocks/"), tag);
+  private static void registerTagBlockOnly(IdentifiedTagBuilder<Block> tag) {
+    PACK.addTag(tag.identifier.brrp_prefixed("blocks/"), tag);
   }
 
-  private static void registerTagItemOnly(IdentifiedTag tag) {
-    PACK.addTag(tag.identifier.brrp_prepend("items/"), tag);
+  private static void registerTagItemOnly(IdentifiedTagBuilder<Block> tag) {
+    PACK.addTag(tag.identifier.brrp_prefixed("items/"), tag);
   }
 
-  @Environment(EnvType.CLIENT)
-  private static void writeAllItemModels() {
-    MishangUtils.fieldStream(MishangucItems.class)
-        .filter(field -> Item.class.isAssignableFrom(field.getType())
-            && field.isAnnotationPresent(SimpleModel.class))
-        .forEach(field -> {
-          String parent = field.getAnnotation(SimpleModel.class).parent();
-          String texture = field.getAnnotation(SimpleModel.class).texture();
-          String namespace, path;
-          if (field.isAnnotationPresent(CustomId.class)) {
-            namespace = field.getAnnotation(CustomId.class).nameSpace();
-            path = field.getAnnotation(CustomId.class).path();
-          } else {
-            namespace = "mishanguc";
-            path = field.getName().toLowerCase();
-          }
-          if (parent.isEmpty()) {
-            parent = "item/generated";
-          }
-          PACK.addModel(
-              new JModel(parent)
-                  .textures(new JTextures().layer0(texture.isEmpty() ? namespace + ":item/" + path : texture)),
-              new Identifier(namespace, "item/" + path));
-        });
-
-    writeExplosionToolItemModels();
-  }
-
-  @Environment(EnvType.CLIENT)
-  private static void writeExplosionToolItemModels() {
-    for (final String name : new String[]{
-        "explosion_tool_fire",
-        "explosion_tool_4", "explosion_tool_4_fire",
-        "explosion_tool_8", "explosion_tool_8_fire",
-        "explosion_tool_16", "explosion_tool_16_fire",
-        "explosion_tool_32", "explosion_tool_32_fire",
-        "explosion_tool_64", "explosion_tool_64_fire",
-        "explosion_tool_128", "explosion_tool_128_fire",
-    }) {
-      PACK.addModel(new JModel("item/handheld").addTexture("layer0", "mishanguc:item/" + name), new Identifier("mishanguc", "item/" + name));
-    }
-  }
-
-  @Override
-  public void pregen() {
-    final boolean dev = FabricLoader.getInstance().isDevelopmentEnvironment();
-    if (!dev) generateResources(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT, true);
-    SidedRRPCallback.BEFORE_VANILLA.register((resourceType, builder) -> builder.add(dev ? generateResources(resourceType == ResourceType.CLIENT_RESOURCES, resourceType == ResourceType.SERVER_DATA) : PACK));
-  }
 
   /**
    * 为运行时资源包生成资源。在开发环境中，每次加载资源就会重新生成一次。在非开发环境中，游戏开始时生成一次，此后不再生成。
    */
-  //  @CanIgnoreReturnValue
-  private static RuntimeResourcePack generateResources(boolean includesClient, boolean includesServer) {
+  private static void generateResources(boolean includesClient, boolean includesServer) {
     if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) {
       Validate.isTrue(!includesClient, "The parameter 'includesClient' cannot be true when in dedicated server!", ArrayUtils.EMPTY_OBJECT_ARRAY);
     }
     if (includesClient) PACK.clearResources(ResourceType.CLIENT_RESOURCES);
     if (includesServer) PACK.clearResources(ResourceType.SERVER_DATA);
-
-    // 客户端部分
-    if (includesClient) {
-      // 由于注解了 @Environment(CLIENT)，所以考虑到潜在漏洞，在这里进行防冲突检测。
-      try {
-        // 已不再使用： writeAllBlockModels();
-        writeAllItemModels();
-      } catch (NoSuchMethodError e) {
-        Mishanguc.MISHANG_LOGGER.error("Not supported to load client resources in server environment.", e);
-      }
-    }
 
     for (Block block : MishangUtils.blocks()) {
       if (block instanceof BlockResourceGenerator) {
@@ -838,11 +692,10 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
       addRecipes();
     }
 
-    return PACK;
   }
 
   /**
-   * 为本模组内的物品添加配方。该方法只会生成部分配方，还有很多配方是在 {@link net.devtech.arrp.generator.ItemResourceGenerator#writeRecipes(RuntimeResourcePack)} 的子方法中定义的。
+   * 为本模组内的物品添加配方。该方法只会生成部分配方，还有很多配方是在 {@link ItemResourceGenerator#writeRecipes(RuntimeResourcePack)} 的子方法中定义的。
    */
   private static void addRecipes() {
     addRecipesForWallSigns();
@@ -852,76 +705,65 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   private static void addRecipesForWallSigns() {
     // 隐形告示牌是合成其他告示牌的基础。
     { // invisible wall sign
-      final JShapedRecipe recipe = new JShapedRecipe(WallSignBlocks.INVISIBLE_WALL_SIGN)
-          .pattern(".#.", "#o#", ".#.")
-          .addKey(".", Items.IRON_NUGGET)
-          .addKey("#", Items.FEATHER)
-          .addKey("o", Items.GOLD_INGOT)
-          .resultCount(6);
-      recipe.addInventoryChangedCriterion("has_iron_nugget", Items.IRON_NUGGET).addInventoryChangedCriterion("has_feather", Items.FEATHER).addInventoryChangedCriterion("has_gold_ingot", Items.GOLD_INGOT);
-      final Identifier id = ResourceGeneratorHelper.getItemId(WallSignBlocks.INVISIBLE_WALL_SIGN);
-      PACK.addRecipe(id, recipe);
-      PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/signs/"), recipe);
+      final ShapedRecipeJsonFactory recipe = ShapedRecipeJsonFactory.create(WallSignBlocks.INVISIBLE_WALL_SIGN, 6)
+          .pattern(".#.").pattern("#o#").pattern(".#.")
+          .input('.', Items.IRON_NUGGET)
+          .input('#', Items.FEATHER)
+          .input('o', Items.GOLD_INGOT)
+          .criterion("has_iron_nugget", RecipesProvider.conditionsFromItem(Items.IRON_NUGGET))
+          .criterion("has_feather", RecipesProvider.conditionsFromItem(Items.FEATHER))
+          .criterion("has_gold_ingot", RecipesProvider.conditionsFromItem(Items.GOLD_INGOT));
+      final Identifier id = BRRPUtils.getItemId(WallSignBlocks.INVISIBLE_WALL_SIGN);
+      PACK.addRecipeAndAdvancement(id, recipe::offerTo);  // recipeCategory should be "signs"
     }
     { // invisible glowing wall sign
-      final JShapedRecipe recipe = new JShapedRecipe(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
-          .pattern("---", "###")
-          .addKey("-", Items.GLOWSTONE_DUST)
-          .addKey("#", WallSignBlocks.INVISIBLE_WALL_SIGN)
-          .resultCount(3);
-      recipe.addInventoryChangedCriterion("has_base_block", WallSignBlocks.INVISIBLE_WALL_SIGN);
-      final Identifier id = ResourceGeneratorHelper.getItemId(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN);
-      PACK.addRecipe(id, recipe);
-      PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/signs/"), recipe);
+      final ShapedRecipeJsonFactory recipe = ShapedRecipeJsonFactory.create(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN, 3)
+          .pattern("---").pattern("###")
+          .input('-', Items.GLOWSTONE_DUST)
+          .input('#', WallSignBlocks.INVISIBLE_WALL_SIGN)
+          .criterion("has_base_block", RecipesProvider.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN));
+      final Identifier id = BRRPUtils.getItemId(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN);
+      PACK.addRecipeAndAdvancement(id, recipe::offerTo);  // recipeCategory should be "signs"
     }
   }
 
   private static void addRecipesForLights() {
     // 先是三个完整方块的合成表。
     { // white light
-      final JShapedRecipe recipe = new JShapedRecipe(LightBlocks.WHITE_LIGHT)
-          .resultCount(8)
-          .pattern("*#*", "#C#", "*#*")
-          .addKey("*", Items.WHITE_DYE)
-          .addKey("#", Items.GLOWSTONE)
-          .addKey("C", Items.WHITE_CONCRETE);
-      recipe
-          .addInventoryChangedCriterion("has_dye", Items.WHITE_DYE)
-          .addInventoryChangedCriterion("has_glowstone", Items.GLOWSTONE)
-          .addInventoryChangedCriterion("has_concrete", Items.WHITE_CONCRETE);
-      final Identifier id = ResourceGeneratorHelper.getItemId(LightBlocks.WHITE_LIGHT);
-      PACK.addRecipe(id, recipe);
-      PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/light/"), recipe);
+      final ShapedRecipeJsonFactory recipe = ShapedRecipeJsonFactory.create(LightBlocks.WHITE_LIGHT, 8)
+          .pattern("*#*").pattern("#C#").pattern("*#*")
+          .input('*', Items.WHITE_DYE)
+          .input('#', Items.GLOWSTONE)
+          .input('C', Items.WHITE_CONCRETE)
+          .criterion("has_dye", RecipesProvider.conditionsFromItem(Items.WHITE_DYE))
+          .criterion("has_glowstone", RecipesProvider.conditionsFromItem(Items.GLOWSTONE))
+          .criterion("has_concrete", RecipesProvider.conditionsFromItem(Items.WHITE_CONCRETE));
+      final Identifier id = BRRPUtils.getItemId(LightBlocks.WHITE_LIGHT);
+      PACK.addRecipeAndAdvancement(id, recipe::offerTo);
     }
     { // yellow light
-      final JShapedRecipe recipe = new JShapedRecipe(LightBlocks.YELLOW_LIGHT)
-          .resultCount(8)
-          .pattern("*#*", "#C#", "*#*")
-          .addKey("*", Items.YELLOW_DYE)
-          .addKey("#", Items.GLOWSTONE)
-          .addKey("C", Items.YELLOW_CONCRETE);
-      recipe
-          .addInventoryChangedCriterion("has_dye", Items.YELLOW_DYE)
-          .addInventoryChangedCriterion("has_glowstone", Items.GLOWSTONE)
-          .addInventoryChangedCriterion("has_concrete", Items.YELLOW_CONCRETE);
-      final Identifier id = ResourceGeneratorHelper.getItemId(LightBlocks.YELLOW_LIGHT);
-      PACK.addRecipe(id, recipe);
-      PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/light/"), recipe);
+      final ShapedRecipeJsonFactory recipe = ShapedRecipeJsonFactory.create(LightBlocks.YELLOW_LIGHT, 8)
+          .pattern("*#*").pattern("#C#").pattern("*#*")
+          .input('*', Items.YELLOW_DYE)
+          .input('#', Items.GLOWSTONE)
+          .input('C', Items.YELLOW_CONCRETE)
+          .criterion("has_dye", RecipesProvider.conditionsFromItem(Items.YELLOW_DYE))
+          .criterion("has_glowstone", RecipesProvider.conditionsFromItem(Items.GLOWSTONE))
+          .criterion("has_concrete", RecipesProvider.conditionsFromItem(Items.YELLOW_CONCRETE));
+      final Identifier id = BRRPUtils.getItemId(LightBlocks.YELLOW_LIGHT);
+      PACK.addRecipeAndAdvancement(id, recipe::offerTo);
     }
     { // cyan light
-      final JShapedRecipe recipe = new JShapedRecipe(LightBlocks.CYAN_LIGHT)
-          .resultCount(8)
-          .pattern("*#*", "#C#", "*#*")
-          .addKey("*", Items.CYAN_DYE)
-          .addKey("#", Items.GLOWSTONE)
-          .addKey("C", Items.CYAN_CONCRETE);
-      recipe
-          .addInventoryChangedCriterion("has_dye", Items.CYAN_DYE)
-          .addInventoryChangedCriterion("has_glowstone", Items.GLOWSTONE)
-          .addInventoryChangedCriterion("has_concrete", Items.CYAN_CONCRETE);
-      final Identifier id = ResourceGeneratorHelper.getItemId(LightBlocks.CYAN_LIGHT);
-      PACK.addRecipe(id, recipe);
-      PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/light/"), recipe);
+      final ShapedRecipeJsonFactory recipe = ShapedRecipeJsonFactory.create(LightBlocks.CYAN_LIGHT, 8)
+          .pattern("*#*").pattern("#C#").pattern("*#*")
+          .input('*', Items.CYAN_DYE)
+          .input('#', Items.GLOWSTONE)
+          .input('C', Items.CYAN_CONCRETE)
+          .criterion("has_dye", RecipesProvider.conditionsFromItem(Items.CYAN_DYE))
+          .criterion("has_glowstone", RecipesProvider.conditionsFromItem(Items.GLOWSTONE))
+          .criterion("has_concrete", RecipesProvider.conditionsFromItem(Items.CYAN_CONCRETE));
+      final Identifier id = BRRPUtils.getItemId(LightBlocks.CYAN_LIGHT);
+      PACK.addRecipeAndAdvancement(id, recipe::offerTo);  // the recipe category should be "light"
     }
 
 
@@ -931,9 +773,9 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     addStonecuttingRecipeForLight(LightBlocks.WHITE_LIGHT, LightBlocks.WHITE_SMALL_WALL_LIGHT_TUBE, 16);
     addShapelessRecipeForLight(LightBlocks.WHITE_LARGE_WALL_LIGHT, 1, LightBlocks.WHITE_LARGE_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
     addStonecuttingRecipeForLight(LightBlocks.WHITE_LIGHT, LightBlocks.WHITE_LARGE_WALL_LIGHT_TUBE, 12);
-    addShapelessRecipeForLight(LightBlocks.WHITE_THIN_STRIP_WALL_LIGHT, 1, LightBlocks.WHITE_THICK_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addShapelessRecipeForLight(LightBlocks.WHITE_THIN_STRIP_WALL_LIGHT, 1, LightBlocks.WHITE_THIN_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
     addStonecuttingRecipeForLight(LightBlocks.WHITE_LIGHT, LightBlocks.WHITE_THIN_STRIP_WALL_LIGHT_TUBE, 12);
-    addShapelessRecipeForLight(LightBlocks.WHITE_THIN_STRIP_WALL_LIGHT, 1, LightBlocks.WHITE_THICK_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addShapelessRecipeForLight(LightBlocks.WHITE_THICK_STRIP_WALL_LIGHT, 1, LightBlocks.WHITE_THICK_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
     addStonecuttingRecipeForLight(LightBlocks.WHITE_LIGHT, LightBlocks.WHITE_THICK_STRIP_WALL_LIGHT_TUBE, 8);
     addStonecuttingRecipeForLight(LightBlocks.WHITE_LIGHT, LightBlocks.WHITE_DOUBLE_STRIP_WALL_LIGHT_TUBE, 10);
     // 角落灯管方块由两个普通灯管方块合成。
@@ -953,9 +795,9 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     addStonecuttingRecipeForLight(LightBlocks.YELLOW_LIGHT, LightBlocks.YELLOW_SMALL_WALL_LIGHT_TUBE, 16);
     addShapelessRecipeForLight(LightBlocks.YELLOW_LARGE_WALL_LIGHT, 1, LightBlocks.YELLOW_LARGE_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
     addStonecuttingRecipeForLight(LightBlocks.YELLOW_LIGHT, LightBlocks.YELLOW_LARGE_WALL_LIGHT_TUBE, 12);
-    addShapelessRecipeForLight(LightBlocks.YELLOW_THIN_STRIP_WALL_LIGHT, 1, LightBlocks.YELLOW_THICK_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addShapelessRecipeForLight(LightBlocks.YELLOW_THIN_STRIP_WALL_LIGHT, 1, LightBlocks.YELLOW_THIN_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
     addStonecuttingRecipeForLight(LightBlocks.YELLOW_LIGHT, LightBlocks.YELLOW_THIN_STRIP_WALL_LIGHT_TUBE, 12);
-    addShapelessRecipeForLight(LightBlocks.YELLOW_THIN_STRIP_WALL_LIGHT, 1, LightBlocks.YELLOW_THICK_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addShapelessRecipeForLight(LightBlocks.YELLOW_THICK_STRIP_WALL_LIGHT, 1, LightBlocks.YELLOW_THICK_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
     addStonecuttingRecipeForLight(LightBlocks.YELLOW_LIGHT, LightBlocks.YELLOW_THICK_STRIP_WALL_LIGHT_TUBE, 8);
     addStonecuttingRecipeForLight(LightBlocks.YELLOW_LIGHT, LightBlocks.YELLOW_DOUBLE_STRIP_WALL_LIGHT_TUBE, 10);
     // 角落灯管方块由两个普通灯管方块合成。
@@ -974,9 +816,9 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
     addStonecuttingRecipeForLight(LightBlocks.CYAN_LIGHT, LightBlocks.CYAN_SMALL_WALL_LIGHT_TUBE, 16);
     addShapelessRecipeForLight(LightBlocks.CYAN_LARGE_WALL_LIGHT, 1, LightBlocks.CYAN_LARGE_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
     addStonecuttingRecipeForLight(LightBlocks.CYAN_LIGHT, LightBlocks.CYAN_LARGE_WALL_LIGHT_TUBE, 12);
-    addShapelessRecipeForLight(LightBlocks.CYAN_THIN_STRIP_WALL_LIGHT, 1, LightBlocks.CYAN_THICK_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addShapelessRecipeForLight(LightBlocks.CYAN_THIN_STRIP_WALL_LIGHT, 1, LightBlocks.CYAN_THIN_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
     addStonecuttingRecipeForLight(LightBlocks.CYAN_LIGHT, LightBlocks.CYAN_THIN_STRIP_WALL_LIGHT_TUBE, 12);
-    addShapelessRecipeForLight(LightBlocks.CYAN_THIN_STRIP_WALL_LIGHT, 1, LightBlocks.CYAN_THICK_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
+    addShapelessRecipeForLight(LightBlocks.CYAN_THICK_STRIP_WALL_LIGHT, 1, LightBlocks.CYAN_THICK_STRIP_WALL_LIGHT_TUBE, Blocks.GRAY_CONCRETE);
     addStonecuttingRecipeForLight(LightBlocks.CYAN_LIGHT, LightBlocks.CYAN_THICK_STRIP_WALL_LIGHT_TUBE, 8);
     addStonecuttingRecipeForLight(LightBlocks.CYAN_LIGHT, LightBlocks.CYAN_DOUBLE_STRIP_WALL_LIGHT_TUBE, 10);
     // 角落灯管方块由两个普通灯管方块合成。
@@ -991,25 +833,23 @@ public class ARRPMain implements RRPPreGenEntrypoint, ModInitializer {
   }
 
   private static void addStonecuttingRecipeForLight(ItemConvertible ingredient, ItemConvertible result, int count) {
-    final JStonecuttingRecipe recipe = new JStonecuttingRecipe(ingredient, result, count);
-    recipe.addInventoryChangedCriterion("has_the_ingredient", ingredient);
-    final Identifier id = ResourceGeneratorHelper.getItemId(result);
-    PACK.addRecipe(id, recipe);
-    PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/light/"), recipe);
+    PACK.addRecipeAndAdvancement(BRRPUtils.getRecipeId(result), SingleItemRecipeJsonFactory.createStonecutting(Ingredient.ofItems(ingredient), result, count).criterionFromItem(ingredient)::offerTo);
   }
 
   private static void addShapelessRecipeForLight(ItemConvertible result, int count, ItemConvertible... ingredients) {
-    final JShapelessRecipe recipe = new JShapelessRecipe(result, ingredients).resultCount(count);
+    final ShapelessRecipeJsonFactory recipe = ShapelessRecipeJsonFactory.create(result, count).input(Ingredient.ofItems(ingredients));
     for (ItemConvertible ingredient : ImmutableSet.copyOf(ingredients)) {
-      recipe.addInventoryChangedCriterion("has_" + ResourceGeneratorHelper.getItemId(ingredient).getPath(), ingredient);
+      recipe.criterion("has_" + BRRPUtils.getItemId(ingredient).getPath(), RecipesProvider.conditionsFromItem(ingredient));
     }
-    final Identifier id = ResourceGeneratorHelper.getItemId(result);
-    PACK.addRecipe(id, recipe);
-    PACK.addRecipeAdvancement(id, id.brrp_prepend("recipes/light/"), recipe);
+    final Identifier id = BRRPUtils.getItemId(result);
+    PACK.addRecipeAndAdvancement(id, recipe::offerTo);
   }
 
   @Override
   public void onInitialize() {
-    pregen();
+    generateResources(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT, true);
+    PACK.setSidedRegenerationCallback(ResourceType.CLIENT_RESOURCES, () -> generateResources(true, false));
+    PACK.setSidedRegenerationCallback(ResourceType.SERVER_DATA, () -> generateResources(false, true));
+    SidedRRPCallback.BEFORE_VANILLA.register((resourceType, builder) -> builder.add(PACK));
   }
 }

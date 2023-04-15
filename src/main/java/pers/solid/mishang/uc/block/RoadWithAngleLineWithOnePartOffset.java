@@ -1,15 +1,11 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.blockstate.JVariants;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.model.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -21,6 +17,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
@@ -119,37 +117,31 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JBlockStates getBlockStates() {
+    public @NotNull BlockStateSupplier getBlockStates() {
       final Identifier id = getBlockModelId();
-      JVariants variant = new JVariants();
+      final BlockStateVariantMap.DoubleProperty<HorizontalCornerDirection, Direction.Axis> map = BlockStateVariantMap.create(FACING, AXIS);
       for (Direction direction : Direction.Type.HORIZONTAL) {
         // direction：正中线所朝的方向
         final Direction offsetDirection1 = direction.rotateYClockwise();
         final Direction offsetDirection2 = direction.rotateYCounterclockwise();
-        variant.addVariant(
-            String.format(
-                "facing=%s,axis=%s",
-                HorizontalCornerDirection.fromDirections(direction, offsetDirection1)
-                    .asString(),
-                direction.getAxis().asString()),
-            new JBlockModel(id).y((int) (direction.asRotation())));
-        variant.addVariant(
-            String.format(
-                "facing=%s,axis=%s",
-                HorizontalCornerDirection.fromDirections(direction, offsetDirection2)
-                    .asString(),
-                direction.getAxis().asString()),
-            new JBlockModel(id.brrp_append("_mirrored"))
-                .y((int) (direction.asRotation())));
+        map.register(
+            HorizontalCornerDirection.fromDirections(direction, offsetDirection1),
+            direction.getAxis(),
+            BlockStateVariant.create().put(VariantSettings.MODEL, id).put(MishangUtils.DIRECTION_Y_VARIANT, direction));
+        map.register(
+            HorizontalCornerDirection.fromDirections(direction, offsetDirection2),
+            direction.getAxis(),
+            BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_mirrored"))
+                .put(MishangUtils.DIRECTION_Y_VARIANT, direction));
       }
-      return JBlockStates.ofVariants(variant);
+      return VariantsBlockStateSupplier.create(this).coordinate(map);
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JModel getBlockModel() {
-      return new JModel("mishanguc:block/road_with_angle_line")
-          .textures(new FasterJTextures().base("asphalt")
+    public @NotNull ModelJsonBuilder getBlockModel() {
+      return ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_angle_line"))
+          .setTextures(new FasterJTextures().base("asphalt")
               .lineSide(lineSide)
               .lineSide2(lineSide2)
               .lineTop(lineTop));

@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.model.Models;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
@@ -22,13 +23,15 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.generator.ItemResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Collection;
 import java.util.List;
 
-public class BlockStateToolItem extends BlockToolItem {
+public class BlockStateToolItem extends BlockToolItem implements ItemResourceGenerator {
 
   public BlockStateToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
@@ -141,5 +144,11 @@ public class BlockStateToolItem extends BlockToolItem {
           TextBridge.translatable("item.mishanguc.block_state_tool.tooltip.includesFluid")
               .formatted(Formatting.GRAY));
     }
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public ModelJsonBuilder getItemModel() {
+    return ItemResourceGenerator.super.getItemModel().parent(Models.HANDHELD);
   }
 }

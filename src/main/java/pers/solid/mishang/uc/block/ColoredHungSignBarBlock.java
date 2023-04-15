@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.annotations.Beta;
-import net.devtech.arrp.json.loot.JLootTable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -12,6 +11,7 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.server.BlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootTable;
 import net.minecraft.state.StateManager;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.Text;
@@ -57,7 +57,7 @@ public class ColoredHungSignBarBlock extends HungSignBarBlock implements BlockEn
   }
 
   @Override
-  public JLootTable getLootTable() {
-    return JLootTable.delegate(BlockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION));
+  public LootTable.Builder getLootTable() {
+    return BlockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 }

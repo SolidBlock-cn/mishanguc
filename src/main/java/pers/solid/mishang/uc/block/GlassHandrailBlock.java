@@ -1,17 +1,18 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
+import net.minecraft.data.client.model.Texture;
+import net.minecraft.data.client.model.TextureKey;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.TextBridge;
 
@@ -19,19 +20,19 @@ import java.util.function.Function;
 
 @ApiStatus.AvailableSince("0.2.4")
 public class GlassHandrailBlock extends HandrailBlock {
-  public final String decorationTexture;
+  public final Identifier decorationTexture;
   private final CentralBlock central;
   private final CornerBlock corner;
   private final StairBlock stair;
   private final OuterBlock outer;
   private final Block baseBlock;
-  private final String frameTexture;
+  private final Identifier frameTexture;
 
   public GlassHandrailBlock(Block baseBlock, Settings settings, String frameTexture, String decorationTexture) {
     super(settings);
     this.baseBlock = baseBlock;
-    this.frameTexture = frameTexture;
-    this.decorationTexture = decorationTexture;
+    this.frameTexture = new Identifier(frameTexture);
+    this.decorationTexture = new Identifier(decorationTexture);
     this.central = new CentralBlock(this);
     this.corner = new CornerBlock(this);
     this.stair = new StairBlock(this);
@@ -41,8 +42,8 @@ public class GlassHandrailBlock extends HandrailBlock {
   protected GlassHandrailBlock(Block baseBlock, Settings settings, String frameTexture, String decorationTexture, Function<GlassHandrailBlock, CentralBlock> centralProvider, Function<GlassHandrailBlock, CornerBlock> cornerProvider, Function<GlassHandrailBlock, StairBlock> stairProvider, Function<GlassHandrailBlock, OuterBlock> outerProvider) {
     super(settings.nonOpaque());
     this.baseBlock = baseBlock;
-    this.frameTexture = frameTexture;
-    this.decorationTexture = decorationTexture;
+    this.frameTexture = new Identifier(frameTexture);
+    this.decorationTexture = new Identifier(decorationTexture);
     central = centralProvider.apply(this);
     corner = cornerProvider.apply(this);
     stair = stairProvider.apply(this);
@@ -51,20 +52,24 @@ public class GlassHandrailBlock extends HandrailBlock {
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JModel getBlockModel() {
-    return new JModel("mishanguc:block/glass_handrail").textures(getTextures());
+  public @NotNull ModelJsonBuilder getBlockModel() {
+    return ModelJsonBuilder.create(new Identifier("mishanguc:block/glass_handrail")).setTextures(getTextures());
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JModel getItemModel() {
-    return new JModel().parent("mishanguc:block/glass_handrail_inventory").textures(getTextures());
+  public @Nullable ModelJsonBuilder getItemModel() {
+    return ModelJsonBuilder.create(new Identifier("mishanguc:block/glass_handrail_inventory")).setTextures(getTextures());
   }
+
+  public static final TextureKey FRAME = TextureKey.method_27043("frame");
+  public static final TextureKey GLASS = TextureKey.method_27043("glass");
+  public static final TextureKey DECORATION = TextureKey.method_27043("decoration");
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JTextures getTextures() {
-    return new JTextures().var("frame", frameTexture).var("glass", "mishanguc:block/glass_unframed").var("decoration", decorationTexture);
+  public @NotNull Texture getTextures() {
+    return new Texture().put(FRAME, frameTexture).put(GLASS, new Identifier("mishanguc:block/glass_unframed")).put(DECORATION, decorationTexture);
   }
 
   @Override
@@ -106,11 +111,11 @@ public class GlassHandrailBlock extends HandrailBlock {
     @Environment(EnvType.CLIENT)
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
-      final JTextures textures = baseHandrail.getTextures();
+      final Texture textures = baseHandrail.getTextures();
       final Identifier modelId = getBlockModelId();
-      pack.addModel(new JModel(new Identifier("mishanguc", "block/glass_handrail_post")).textures(textures), modelId.brrp_append("_post"));
-      pack.addModel(new JModel(new Identifier("mishanguc", "block/glass_handrail_post_side")).textures(textures), modelId.brrp_append("_post_side"));
-      pack.addModel(new JModel(new Identifier("mishanguc", "block/glass_handrail_side")).textures(textures), modelId.brrp_append("_side"));
+      pack.addModel(modelId.brrp_suffixed("_post"), ModelJsonBuilder.create(new Identifier("mishanguc", "block/glass_handrail_post")).setTextures(textures));
+      pack.addModel(modelId.brrp_suffixed("_post_side"), ModelJsonBuilder.create(new Identifier("mishanguc", "block/glass_handrail_post_side")).setTextures(textures));
+      pack.addModel(modelId.brrp_suffixed("_side"), ModelJsonBuilder.create(new Identifier("mishanguc", "block/glass_handrail_side")).setTextures(textures));
     }
   }
 
@@ -127,8 +132,8 @@ public class GlassHandrailBlock extends HandrailBlock {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JModel getBlockModel() {
-      return baseHandrail.getBlockModel().parent("mishanguc:block/glass_handrail_corner");
+    public @NotNull ModelJsonBuilder getBlockModel() {
+      return baseHandrail.getBlockModel().parent(new Identifier("mishanguc:block/glass_handrail_corner"));
     }
   }
 
@@ -146,12 +151,12 @@ public class GlassHandrailBlock extends HandrailBlock {
     @Environment(EnvType.CLIENT)
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
-      final JTextures textures = baseHandrail.getTextures();
+      final Texture textures = baseHandrail.getTextures();
       final Identifier modelIdentifier = getBlockModelId();
-      pack.addModel(new JModel(new Identifier("mishanguc", "block/glass_handrail_stair_middle_center")).textures(textures), modelIdentifier);
+      pack.addModel(modelIdentifier, ModelJsonBuilder.create(new Identifier("mishanguc", "block/glass_handrail_stair_middle_center")).setTextures(textures));
       for (Shape shape : Shape.values()) {
         for (Position position : Position.values()) {
-          pack.addModel(new JModel(new Identifier("mishanguc", String.format("block/glass_handrail_stair_%s_%s", shape.asString(), position.asString()))).textures(textures), modelIdentifier.brrp_append("_" + shape.asString() + "_" + position.asString()));
+          pack.addModel(modelIdentifier.brrp_suffixed("_" + shape.asString() + "_" + position.asString()), ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/glass_handrail_stair_%s_%s", shape.asString(), position.asString()))).setTextures(textures));
         }
       }
     }
@@ -170,8 +175,8 @@ public class GlassHandrailBlock extends HandrailBlock {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JModel getBlockModel() {
-      return baseHandrail.getBlockModel().parent("mishanguc:block/glass_handrail_outer");
+    public @NotNull ModelJsonBuilder getBlockModel() {
+      return baseHandrail.getBlockModel().parent(new Identifier("mishanguc:block/glass_handrail_outer"));
     }
   }
 }

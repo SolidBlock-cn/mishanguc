@@ -3,10 +3,6 @@ package pers.solid.mishang.uc.item;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.devtech.arrp.generator.ItemResourceGenerator;
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.recipe.JRecipe;
-import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
@@ -15,6 +11,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.model.Models;
+import net.minecraft.data.client.model.TextureKey;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -36,6 +35,9 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import pers.solid.brrp.v1.generator.ItemResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.brrp.v1.util.RecipeJsonFactory;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.HungSignBlock;
 import pers.solid.mishang.uc.block.StandingSignBlock;
@@ -336,22 +338,22 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JModel getItemModel() {
-    return null;
+  public @Nullable ModelJsonBuilder getItemModel() {
+    return ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId());
   }
 
   @Override
-  public @Nullable JRecipe getCraftingRecipe() {
-    return new JShapedRecipe(this)
-        .pattern(
+  public @NotNull RecipeJsonFactory getCraftingRecipe() {
+    return ShapedRecipeJsonFactory.create(this)
+        .patterns(
             "SPS",
             " / ",
             " / "
         )
-        .addKey("P", Items.PAPER)
-        .addKey("S", Items.SLIME_BALL)
-        .addKey("/", Items.STICK)
-        .addInventoryChangedCriterion("has_paper", Items.PAPER)
-        .addInventoryChangedCriterion("has_slime_ball", Items.SLIME_BALL);
+        .input('P', Items.PAPER)
+        .input('S', Items.SLIME_BALL)
+        .input('/', Items.STICK)
+        .criterionFromItem("has_paper", Items.PAPER)
+        .criterionFromItem("has_slime_ball", Items.SLIME_BALL)::offerTo;
   }
 }

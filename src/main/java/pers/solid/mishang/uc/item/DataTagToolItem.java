@@ -20,6 +20,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.command.BlockDataObject;
 import net.minecraft.command.EntityDataObject;
+import net.minecraft.data.client.model.Models;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -44,6 +45,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.generator.ItemResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
@@ -53,7 +56,7 @@ import pers.solid.mishang.uc.util.TextBridge;
 import java.util.List;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
-public class DataTagToolItem extends BlockToolItem implements InteractsWithEntity, RendersBeforeOutline {
+public class DataTagToolItem extends BlockToolItem implements InteractsWithEntity, RendersBeforeOutline, ItemResourceGenerator {
   public DataTagToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
@@ -197,5 +200,11 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
           .formatted(Formatting.YELLOW));
       client.inGameHud.getChatHud().addMessage(NbtPrettyPrinter.serialize(entityNbt));
     }
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public ModelJsonBuilder getItemModel() {
+    return ItemResourceGenerator.super.getItemModel().parent(Models.HANDHELD);
   }
 }

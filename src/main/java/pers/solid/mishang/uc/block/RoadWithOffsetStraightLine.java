@@ -1,15 +1,11 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.blockstate.JVariants;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.model.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -19,11 +15,15 @@ import net.minecraft.text.Text;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
 import pers.solid.mishang.uc.util.*;
@@ -96,12 +96,8 @@ public interface RoadWithOffsetStraightLine extends Road {
 
   @Environment(EnvType.CLIENT)
   @Override
-  default @NotNull JBlockStates getBlockStates() {
-    final JVariants JVariants = new JVariants();
-    for (Direction direction : Direction.Type.HORIZONTAL) {
-      JVariants.addVariant(Properties.HORIZONTAL_FACING, direction, new JBlockModel(getBlockModelId()).uvlock(false).clone().y(((int) direction.rotateYClockwise().asRotation())));
-    }
-    return JBlockStates.ofVariants(JVariants);
+  default @NotNull BlockStateSupplier getBlockStates() {
+    return VariantsBlockStateSupplier.create((Block) this, BlockStateVariant.create().put(VariantSettings.MODEL, getBlockModelId()).put(VariantSettings.UVLOCK, false)).coordinate(BlockStateVariantMap.create(FACING).register(direction -> BlockStateVariant.create().put(MishangUtils.DIRECTION_Y_VARIANT, direction.rotateYClockwise())));
   }
 
   @Contract(pure = true)
@@ -129,8 +125,8 @@ public interface RoadWithOffsetStraightLine extends Road {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JModel getBlockModel() {
-      return new JModel("mishanguc:block/road_with_straight_line").textures(new FasterJTextures().base("asphalt").lineSide(lineTexture).lineTop(lineTexture));
+    public @NotNull ModelJsonBuilder getBlockModel() {
+      return ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_straight_line")).setTextures(new FasterJTextures().base("asphalt").lineSide(lineTexture).lineTop(lineTexture));
     }
 
     @Environment(EnvType.CLIENT)

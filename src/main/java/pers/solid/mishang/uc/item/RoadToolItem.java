@@ -1,13 +1,12 @@
 package pers.solid.mishang.uc.item;
 
-import net.devtech.arrp.generator.ItemResourceGenerator;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.model.Models;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -22,6 +21,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.generator.ItemResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.block.AbstractRoadBlock;
@@ -123,7 +124,7 @@ public class RoadToolItem extends BlockToolItem implements ItemResourceGenerator
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JModel getItemModel() {
-    return ItemResourceGenerator.super.getItemModel().parent("item/handheld");
+  public @NotNull ModelJsonBuilder getItemModel() {
+    return ItemResourceGenerator.super.getItemModel().parent(Models.HANDHELD);
   }
 }

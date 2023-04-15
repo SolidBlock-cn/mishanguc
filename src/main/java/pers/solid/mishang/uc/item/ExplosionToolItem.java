@@ -1,25 +1,20 @@
 package pers.solid.mishang.uc.item;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.generator.ItemResourceGenerator;
-import net.devtech.arrp.json.recipe.JIngredient;
-import net.devtech.arrp.json.recipe.JRecipe;
-import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
-import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.model.Models;
+import net.minecraft.data.client.model.TextureKey;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityFlagsPredicate;
 import net.minecraft.predicate.entity.EntityPredicates;
@@ -29,6 +24,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.HitResult;
@@ -37,6 +33,9 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.generator.ItemResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.util.TextBridge;
 
@@ -209,18 +208,28 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void writeItemModel(RuntimeResourcePack pack) {
-    // void
+  public ModelJsonBuilder getItemModel() {
+    // 此物品的模型由普通的资源包手动提供，不在运行时的资源包中。
+    return null;
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JRecipe getCraftingRecipe() {
-    final JShapedRecipe recipe = new JShapedRecipe(this)
-        .pattern("TCT", " | ", " | ")
-        .addKey("T", Items.TNT)
-        .addKey("C", JIngredient.ofItems(Items.COMMAND_BLOCK, Items.CHAIN_COMMAND_BLOCK, Items.REPEATING_COMMAND_BLOCK))
-        .addKey("|", Items.STICK);
-    recipe.advancementBuilder.criterion("has_command_block", InventoryChangedCriterion.Conditions.items(Items.COMMAND_BLOCK, Items.CHAIN_COMMAND_BLOCK, Items.REPEATING_COMMAND_BLOCK));
-    return recipe;
+  public void writeItemModel(RuntimeResourcePack pack) {
+    final ModelJsonBuilder itemModel = getItemModel();
+    final Identifier itemModelId = getItemModelId();
+    if (itemModel != null) pack.addModel(itemModelId, itemModel);
+    final Identifier textureId = getTextureId();
+    for (final String name : new String[]{
+        "_fire",
+        "_4", "_4_fire",
+        "_8", "_8_fire",
+        "_16", "_16_fire",
+        "_32", "_32_fire",
+        "_64", "_64_fire",
+        "_128", "_128_fire",
+    }) {
+      pack.addModel(itemModelId.brrp_suffixed(name), ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, textureId.brrp_suffixed(name)));
+    }
   }
 }

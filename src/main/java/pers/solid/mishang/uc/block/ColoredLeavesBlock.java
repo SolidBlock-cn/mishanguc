@@ -1,9 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.loot.JLootTable;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -11,6 +7,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.model.BlockStateModelGenerator;
+import net.minecraft.data.client.model.BlockStateSupplier;
+import net.minecraft.data.client.model.Models;
+import net.minecraft.data.client.model.TextureKey;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.text.Text;
@@ -19,6 +19,8 @@ import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -54,18 +56,18 @@ public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock, Blo
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JBlockStates getBlockStates() {
-    return JBlockStates.simple(getBlockModelId());
+  public @NotNull BlockStateSupplier getBlockStates() {
+    return BlockStateModelGenerator.createSingletonBlockState(this, getBlockModelId());
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JModel getBlockModel() {
-    return new JModel("block/leaves").addTexture("all", allTexture);
+  public @NotNull ModelJsonBuilder getBlockModel() {
+    return ModelJsonBuilder.create(Models.LEAVES).addTexture(TextureKey.ALL, allTexture);
   }
 
   @Override
-  public JLootTable getLootTable() {
-    return JLootTable.delegate(lootBuilder.apply(this).apply(COPY_COLOR_LOOT_FUNCTION));
+  public LootTable.Builder getLootTable() {
+    return (lootBuilder.apply(this).apply(COPY_COLOR_LOOT_FUNCTION));
   }
 }

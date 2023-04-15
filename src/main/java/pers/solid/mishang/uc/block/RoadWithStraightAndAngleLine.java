@@ -1,16 +1,11 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.blockstate.JVariants;
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.model.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -27,13 +22,17 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
 import pers.solid.mishang.uc.util.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWithStraightLine {
@@ -153,57 +152,54 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JBlockStates getBlockStates() {
-      final JVariants variants = new JVariants();
+    public @NotNull BlockStateSupplier getBlockStates() {
       final Identifier blockModelId = getBlockModelId();
-      final Identifier mirroredBlockModelId = blockModelId.brrp_append("_mirrored");
+      final Identifier mirroredBlockModelId = blockModelId.brrp_suffixed("_mirrored");
       final Identifier bevelTopBlockModelId, bevelTopMirroredBlockModelId;
       final boolean hasBevelTop = lineColor != lineColorSide;
       if (hasBevelTop) {
-        bevelTopBlockModelId = blockModelId.brrp_append("_bevel-top");
-        bevelTopMirroredBlockModelId = blockModelId.brrp_append("_bevel-top_mirrored");
+        bevelTopBlockModelId = blockModelId.brrp_suffixed("_bevel-top");
+        bevelTopMirroredBlockModelId = blockModelId.brrp_suffixed("_bevel-top_mirrored");
       } else {
         bevelTopBlockModelId = bevelTopMirroredBlockModelId = null;
       }
+      final BlockStateVariantMap.DoubleProperty<Direction.Axis, HorizontalCornerDirection> map1 = hasBevelTop ? null : BlockStateVariantMap.create(AXIS, FACING);
+      final BlockStateVariantMap.TripleProperty<Direction.Axis, HorizontalCornerDirection, Boolean> map2 = hasBevelTop ? BlockStateVariantMap.create(AXIS, FACING, BEVEL_TOP) : null;
       for (Direction direction : Direction.Type.HORIZONTAL) {
         final int rotation = (int) direction.asRotation();
-        final String axis = direction.getAxis().asString();
-        final String facing1 = HorizontalCornerDirection.fromDirections(direction, direction.rotateYClockwise()).asString();
-        final String facing2 = HorizontalCornerDirection.fromDirections(direction, direction.rotateYCounterclockwise()).asString();
+        final Direction.Axis axis = direction.getAxis();
+        final @NotNull HorizontalCornerDirection facing1 = HorizontalCornerDirection.fromDirections(direction, direction.rotateYClockwise());
+        final @NotNull HorizontalCornerDirection facing2 = HorizontalCornerDirection.fromDirections(direction, direction.rotateYCounterclockwise());
         if (hasBevelTop) {
-          variants.addVariant(
-              String.format("axis=%s,facing=%s,bevel_top=false", axis, facing1),
-              new JBlockModel(blockModelId).y(rotation));
-          variants.addVariant(
-              String.format("axis=%s,facing=%s,bevel_top=true", axis, facing1),
-              new JBlockModel(bevelTopBlockModelId).y(rotation));
-          variants.addVariant(
-              String.format("axis=%s,facing=%s,bevel_top=false", axis, facing2),
-              new JBlockModel(mirroredBlockModelId).y(rotation - 90));
-          variants.addVariant(
-              String.format("axis=%s,facing=%s,bevel_top=true", axis, facing2),
-              new JBlockModel(bevelTopMirroredBlockModelId).y(rotation - 90));
+          map2.register(axis, facing1, false,
+              BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId).put(MishangUtils.INT_Y_VARIANT, rotation));
+          map2.register(axis, facing1, true,
+              BlockStateVariant.create().put(VariantSettings.MODEL, bevelTopBlockModelId).put(MishangUtils.INT_Y_VARIANT, rotation));
+          map2.register(axis, facing2, false,
+              BlockStateVariant.create().put(VariantSettings.MODEL, mirroredBlockModelId).put(MishangUtils.INT_Y_VARIANT, rotation - 90));
+          map2.register(axis, facing2, true,
+              BlockStateVariant.create().put(VariantSettings.MODEL, bevelTopMirroredBlockModelId).put(MishangUtils.INT_Y_VARIANT, rotation - 90));
         } else {
-          variants.addVariant(
-              String.format("axis=%s,facing=%s", axis, facing1),
-              new JBlockModel(blockModelId).y(rotation));
-          variants.addVariant(
-              String.format("axis=%s,facing=%s", axis, facing2),
-              new JBlockModel(mirroredBlockModelId).y(rotation - 90));
+          map1.register(
+              axis, facing1,
+              BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId).put(MishangUtils.INT_Y_VARIANT, rotation));
+          map1.register(
+              axis, facing2,
+              BlockStateVariant.create().put(VariantSettings.MODEL, mirroredBlockModelId).put(MishangUtils.INT_Y_VARIANT, rotation - 90));
         }
       }
-      return JBlockStates.ofVariants(variants);
+      return VariantsBlockStateSupplier.create(this).coordinate(hasBevelTop ? map2 : map1);
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JModel getBlockModel() {
-      final JModel model = new JModel("mishanguc:block/road_with_straight_and_angle_line");
+    public @NotNull ModelJsonBuilder getBlockModel() {
+      final ModelJsonBuilder model = ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_straight_and_angle_line"));
       final String lineTopStraight = MishangUtils.composeStraightLineTexture(lineColor, lineType);
       final String lineTopAngle = MishangUtils.composeAngleLineTexture(lineColorSide, LineType.NORMAL, true);
       final String lineSide = lineTopStraight;
       final String lineSide2 = MishangUtils.composeStraightLineTexture(lineColorSide, lineTypeSide);
-      model.textures(FasterJTextures.ofP(
+      model.setTextures(FasterJTextures.ofP(
               "base", "asphalt",
               "line_top_layer1", lineTopAngle,
               "line_top_layer2", lineTopStraight)
@@ -216,24 +212,24 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
       // 此方法会同时写入 slab 的模型。
-      final JModel model = getBlockModel();
+      final ModelJsonBuilder model = getBlockModel();
       final Identifier blockModelId = getBlockModelId();
       final AbstractRoadSlabBlock slabBlock = getRoadSlab();
       final Identifier slabModelId = slabBlock == null ? null : slabBlock.getBlockModelId();
       BRRPHelper.addModelWithSlab(pack, model, blockModelId, slabModelId);
-      final JTextures textures = model.textures;
-      BRRPHelper.addModelWithSlab(pack, model.clone().parent(model.parent + "_mirrored"), blockModelId.brrp_append("_mirrored"), slabModelId == null ? null : slabModelId.brrp_append("_mirrored"));
+      final Map<String, String> textures = model.textures;
+      BRRPHelper.addModelWithSlab(pack, model.withParent(model.parentId.brrp_suffixed("_mirrored")), blockModelId.brrp_suffixed("_mirrored"), slabModelId == null ? null : slabModelId.brrp_suffixed("_mirrored"));
 
       if (stateManager.getProperties().contains(BEVEL_TOP)) {
-        JTextures textures2 = textures.clone();
+        Map<String, String> textures2 = new HashMap<>(textures);
         final String line_top_layer2 = textures.get("line_top_layer2");
         final String line_top_layer1 = textures.get("line_top_layer1");
         textures2.put("line_top_layer1", line_top_layer2);
         textures2.put("line_top_layer2", line_top_layer1);
         textures2.put("line_side3", textures.get("line_side2"));
 
-        BRRPHelper.addModelWithSlab(pack, model.clone().textures(textures2), blockModelId.brrp_append("_bevel-top"), slabModelId == null ? null : slabModelId.brrp_append("_bevel-top"));
-        BRRPHelper.addModelWithSlab(pack, model.clone().textures(textures2).parent(model.parent + "_mirrored"), blockModelId.brrp_append("_bevel-top_mirrored"), slabModelId == null ? null : slabModelId.brrp_append("_bevel-top_mirrored"));
+        BRRPHelper.addModelWithSlab(pack, model.clone().setTextures(textures2), blockModelId.brrp_suffixed("_bevel-top"), slabModelId == null ? null : slabModelId.brrp_suffixed("_bevel-top"));
+        BRRPHelper.addModelWithSlab(pack, model.clone().setTextures(textures2).parent(model.parentId.brrp_suffixed("_mirrored")), blockModelId.brrp_suffixed("_bevel-top_mirrored"), slabModelId == null ? null : slabModelId.brrp_suffixed("_bevel-top_mirrored"));
       }
     }
 

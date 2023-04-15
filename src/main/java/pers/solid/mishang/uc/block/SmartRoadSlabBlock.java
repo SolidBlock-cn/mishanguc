@@ -1,12 +1,15 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.model.BlockStateSupplier;
+import net.minecraft.data.server.RecipesProvider;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -16,10 +19,12 @@ import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.util.RecipeJsonFactory;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.util.LineColor;
@@ -134,8 +139,15 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JBlockStates getBlockStates() {
-    final JBlockStates baseStates = baseBlock.getBlockStates();
+  public @Nullable BlockStateSupplier getBlockStates() {
+    final BlockStateSupplier baseStates = baseBlock.getBlockStates();
     return baseStates == null ? null : BRRPHelper.composeStateForSlab(baseStates);
+  }
+
+  @Override
+  public RecipeJsonFactory getCraftingRecipe() {
+    return baseBlock == null ? null : ShapedRecipeJsonFactory.create(this, 6)
+        .input('#', baseBlock).pattern("###")
+        .criterion("has_" + Registry.ITEM.getId(baseBlock.asItem()).getPath(), RecipesProvider.conditionsFromItem(Blocks.SANDSTONE))::offerTo;
   }
 }

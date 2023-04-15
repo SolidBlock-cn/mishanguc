@@ -1,15 +1,9 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.blockstate.JVariants;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
-import net.minecraft.data.client.model.TextureKey;
+import net.minecraft.data.client.model.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -32,6 +26,9 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blocks.RoadMarkBlocks;
 import pers.solid.mishang.uc.util.EightHorizontalDirection;
@@ -47,11 +44,11 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
   public static final VoxelShape SHAPE_ON_SLAB_Z = createCuboidShape(2, -8, 0, 14, -7, 16);
   public static final BooleanProperty ON_SLAB = BooleanProperty.of("on_slab");
   private static final Identifier MODEL_PARENT = new Identifier("mishanguc", "block/road_mark");
-  private final String texture;
+  private final Identifier texture;
   private static final VoxelShape SHAPE_TOP_MASK = createCuboidShape(0, 15.5, 0, 16, 16, 16);
   private static final VoxelShape SHAPE_SLAB_TOP_MASK = createCuboidShape(0, 7.5, 0, 16, 8, 16);
 
-  public RoadMarkBlock(@NotNull String texture, Settings settings) {
+  public RoadMarkBlock(@NotNull Identifier texture, Settings settings) {
     super(settings);
     this.texture = texture;
     setDefaultState(getDefaultState()
@@ -123,44 +120,44 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JModel getBlockModel() {
-    return new JModel(MODEL_PARENT).addTexture("texture", getTextureId(TextureKey.TEXTURE));
+  public @NotNull ModelJsonBuilder getBlockModel() {
+    return ModelJsonBuilder.create(MODEL_PARENT).addTexture("texture", getTextureId(TextureKey.TEXTURE));
   }
 
   @Environment(EnvType.CLIENT)
   @Override
   public void writeBlockModel(RuntimeResourcePack pack) {
-    final JModel model = getBlockModel();
+    final ModelJsonBuilder model = getBlockModel();
     final Identifier blockModelId = getBlockModelId();
-    pack.addModel(model, blockModelId);
-    pack.addModel(model.clone().parent(model.parent + "_on_slab"), blockModelId.brrp_append("_on_slab"));
-    pack.addModel(model.clone().parent(model.parent + "_rotated"), blockModelId.brrp_append("_rotated"));
-    pack.addModel(model.clone().parent(model.parent + "_on_slab_rotated"), blockModelId.brrp_append("_on_slab_rotated"));
+    pack.addModel(blockModelId, model);
+    pack.addModel(blockModelId.brrp_suffixed("_on_slab"), model.withParent(model.parentId.brrp_suffixed("_on_slab")));
+    pack.addModel(blockModelId.brrp_suffixed("_rotated"), model.withParent(model.parentId.brrp_suffixed("_rotated")));
+    pack.addModel(blockModelId.brrp_suffixed("_on_slab_rotated"), model.withParent(model.parentId.brrp_suffixed("_on_slab_rotated")));
   }
 
   @Override
-  public @Nullable JModel getItemModel() {
-    return new JModel("item/handheld").addTexture("layer0", texture);
+  public @Nullable ModelJsonBuilder getItemModel() {
+    return ModelJsonBuilder.create(Models.HANDHELD).addTexture("layer0", texture);
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull String getTextureId(@NotNull TextureKey textureKey) {
+  public @NotNull Identifier getTextureId(@NotNull TextureKey textureKey) {
     return texture;
   }
 
-  public static RoadMarkBlock createAxisFacing(String texture, Settings settings) {
+  public static RoadMarkBlock createAxisFacing(Identifier texture, Settings settings) {
     return new AxisFacing(texture, settings);
   }
 
-  public static RoadMarkBlock createDirectionalFacing(String texture, Settings settings) {
+  public static RoadMarkBlock createDirectionalFacing(Identifier texture, Settings settings) {
     return new DirectionalFacing(texture, settings);
   }
 
   protected static class AxisFacing extends RoadMarkBlock {
     public static final EnumProperty<FourHorizontalAxis> AXIS = EnumProperty.of("axis", FourHorizontalAxis.class);
 
-    protected AxisFacing(String texture, Settings settings) {
+    protected AxisFacing(Identifier texture, Settings settings) {
       super(texture, settings);
       setDefaultState(getDefaultState().with(AXIS, FourHorizontalAxis.X));
     }
@@ -212,25 +209,25 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JBlockStates getBlockStates() {
+    public @NotNull BlockStateSupplier getBlockStates() {
       final Identifier blockModelId = getBlockModelId();
-      final JVariants variants = new JVariants()
-          .addVariant("on_slab=false,axis", FourHorizontalAxis.X, new JBlockModel(blockModelId).y(90))
-          .addVariant("on_slab=false,axis", FourHorizontalAxis.NW_SE, new JBlockModel(blockModelId.brrp_append("_rotated")).y(90))
-          .addVariant("on_slab=false,axis", FourHorizontalAxis.Z, new JBlockModel(blockModelId).y(0))
-          .addVariant("on_slab=false,axis", FourHorizontalAxis.NE_SW, new JBlockModel(blockModelId.brrp_append("_rotated")).y(0))
-          .addVariant("on_slab=true,axis", FourHorizontalAxis.X, new JBlockModel(blockModelId.brrp_append("_on_slab")).y(90))
-          .addVariant("on_slab=true,axis", FourHorizontalAxis.NW_SE, new JBlockModel(blockModelId.brrp_append("_on_slab_rotated")).y(90))
-          .addVariant("on_slab=true,axis", FourHorizontalAxis.Z, new JBlockModel(blockModelId.brrp_append("_on_slab")).y(0))
-          .addVariant("on_slab=true,axis", FourHorizontalAxis.NE_SW, new JBlockModel(blockModelId.brrp_append("_on_slab_rotated")).y(0));
-      return JBlockStates.ofVariants(variants);
+      final BlockStateVariantMap.DoubleProperty<Boolean, FourHorizontalAxis> map = BlockStateVariantMap.create(ON_SLAB, AXIS)
+          .register(false, FourHorizontalAxis.X, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId).put(MishangUtils.INT_Y_VARIANT, 90))
+          .register(false, FourHorizontalAxis.NW_SE, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_rotated")).put(MishangUtils.INT_Y_VARIANT, 90))
+          .register(false, FourHorizontalAxis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId).put(MishangUtils.INT_Y_VARIANT, 0))
+          .register(false, FourHorizontalAxis.NE_SW, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_rotated")).put(MishangUtils.INT_Y_VARIANT, 0))
+          .register(true, FourHorizontalAxis.X, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_on_slab")).put(MishangUtils.INT_Y_VARIANT, 90))
+          .register(true, FourHorizontalAxis.NW_SE, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_on_slab_rotated")).put(MishangUtils.INT_Y_VARIANT, 90))
+          .register(true, FourHorizontalAxis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_on_slab")).put(MishangUtils.INT_Y_VARIANT, 0))
+          .register(true, FourHorizontalAxis.NE_SW, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_on_slab_rotated")).put(MishangUtils.INT_Y_VARIANT, 0));
+      return VariantsBlockStateSupplier.create(this).coordinate(map);
     }
   }
 
   protected static class DirectionalFacing extends RoadMarkBlock {
     public static final EnumProperty<EightHorizontalDirection> FACING = EnumProperty.of("facing", EightHorizontalDirection.class);
 
-    public DirectionalFacing(String texture, Settings settings) {
+    public DirectionalFacing(Identifier texture, Settings settings) {
       super(texture, settings);
       setDefaultState(getDefaultState().with(FACING, EightHorizontalDirection.SOUTH));
     }
@@ -282,9 +279,9 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @Nullable JBlockStates getBlockStates() {
+    public @Nullable BlockStateSupplier getBlockStates() {
       final Identifier blockModelId = getBlockModelId();
-      final JVariants variants = new JVariants();
+      final BlockStateVariantMap.DoubleProperty<Boolean, EightHorizontalDirection> map = BlockStateVariantMap.create(ON_SLAB, FACING);
       for (EightHorizontalDirection direction : EightHorizontalDirection.VALUES) {
         int rotation = (int) direction.asRotation();
         Identifier id1 = blockModelId;
@@ -295,10 +292,10 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
         } else {
           append = "";
         }
-        variants.addVariant("on_slab=false,facing", direction, new JBlockModel(id1.brrp_append(append)).y(rotation));
-        variants.addVariant("on_slab=true,facing", direction, new JBlockModel(id1.brrp_append("_on_slab" + append)).y(rotation));
+        map.register(false, direction, BlockStateVariant.create().put(VariantSettings.MODEL, id1.brrp_suffixed(append)).put(MishangUtils.INT_Y_VARIANT, rotation));
+        map.register(true, direction, BlockStateVariant.create().put(VariantSettings.MODEL, id1.brrp_suffixed("_on_slab" + append)).put(MishangUtils.INT_Y_VARIANT, rotation));
       }
-      return JBlockStates.ofVariants(variants);
+      return VariantsBlockStateSupplier.create(this).coordinate(map);
     }
   }
 }
