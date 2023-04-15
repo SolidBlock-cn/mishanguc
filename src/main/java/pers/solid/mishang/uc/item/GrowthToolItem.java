@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.item;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.Models;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.PassiveEntity;
@@ -25,13 +26,15 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.generator.ItemResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Collections;
 import java.util.List;
 
 @ApiStatus.AvailableSince("0.2.4")
-public class GrowthToolItem extends Item implements InteractsWithEntity {
+public class GrowthToolItem extends Item implements InteractsWithEntity, ItemResourceGenerator {
   public GrowthToolItem(Settings settings) {
     super(settings);
   }
@@ -119,5 +122,10 @@ public class GrowthToolItem extends Item implements InteractsWithEntity {
       return ActionResult.SUCCESS;
     }
     return actionResult;
+  }
+
+  @Override
+  public ModelJsonBuilder getItemModel() {
+    return ItemResourceGenerator.super.getItemModel().parent(Models.HANDHELD);
   }
 }

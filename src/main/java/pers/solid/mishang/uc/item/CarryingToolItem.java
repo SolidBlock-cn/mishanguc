@@ -1,10 +1,5 @@
 package pers.solid.mishang.uc.item;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.generator.ItemResourceGenerator;
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.models.JOverride;
-import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
@@ -18,6 +13,9 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.data.client.Models;
+import net.minecraft.data.client.TextureKey;
+import net.minecraft.data.client.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.FallingBlockEntity;
@@ -48,6 +46,10 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.generator.ItemResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.brrp.v1.model.ModelOverrideBuilder;
 import pers.solid.mishang.uc.MishangucClient;
 import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
@@ -422,18 +424,18 @@ public class CarryingToolItem extends BlockToolItem
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JModel getItemModel() {
-    return new JModel("item/handheld").textures(JTextures.ofLayer0(getTextureId()))
-        .addOverride(new JOverride("mishanguc:is_holding_block", 1f, getTextureId() + "_with_block"))
-        .addOverride(new JOverride("mishanguc:is_holding_entity", 1f, getTextureId() + "_with_entity"));
+  public @NotNull ModelJsonBuilder getItemModel() {
+    return ModelJsonBuilder.create(Models.HANDHELD).setTextures(TextureMap.layer0(getTextureId()))  // TODO: 2023/4/15, 015 check
+        .addOverride(new ModelOverrideBuilder(getItemModelId().brrp_suffixed("_with_block")).addCondition(new Identifier("mishanguc:is_holding_block"), 1f))
+        .addOverride(new ModelOverrideBuilder(getItemModelId().brrp_suffixed("_with_entity")).addCondition(new Identifier("mishanguc:is_holding_entity"), 1f));
   }
 
   @Environment(EnvType.CLIENT)
   @Override
   public void writeItemModel(RuntimeResourcePack pack) {
     ItemResourceGenerator.super.writeItemModel(pack);
-    pack.addModel(new JModel("item/handheld").textures(JTextures.ofLayer0(getTextureId() + "_with_block")), getItemModelId().brrp_append("_with_block"));
-    pack.addModel(new JModel("item/handheld").textures(JTextures.ofLayer0(getTextureId() + "_with_entity")), getItemModelId().brrp_append("_with_entity"));
+    pack.addModel(getItemModelId().brrp_suffixed("_with_block"), ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId() + "_with_block"));
+    pack.addModel(getItemModelId().brrp_suffixed("_with_entity"), ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId() + "_with_entity"));
   }
 
   @Environment(EnvType.CLIENT)
@@ -469,7 +471,7 @@ public class CarryingToolItem extends BlockToolItem
             .getShape(blockPlacementContext.world, blockPlacementContext.posToPlace), blockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(), blockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(), blockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(), 0, 0.5f, 1, 0.5f);
       }
     }
-    if (hand == Hand.MAIN_HAND && ((!hasHoldingBlockState(itemStack) && !hasHoldingEntity(itemStack)) || player.isCreative())) {
+    if (hand == Hand.MAIN_HAND && (!hasHoldingBlockState(itemStack) && !hasHoldingEntity(itemStack) || player.isCreative())) {
       final BlockState hitState = worldRenderContext.world().getBlockState(pos);
       // 只有当主手持有此物品时，才绘制红色边框。
       WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, hitState.getOutlineShape(

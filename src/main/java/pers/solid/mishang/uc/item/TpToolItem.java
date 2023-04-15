@@ -1,6 +1,9 @@
 package pers.solid.mishang.uc.item;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.Models;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,11 +19,13 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.generator.ItemResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
-public class TpToolItem extends Item {
+public class TpToolItem extends Item implements ItemResourceGenerator {
   public TpToolItem(Settings settings) {
     super(settings);
   }
@@ -48,5 +53,11 @@ public class TpToolItem extends Item {
     world.playSound(null, pos.x, pos.y, pos.z, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
     data.getValue().damage((int) MathHelper.sqrt((float) (MathHelper.square(oldPos.x - pos.x) + MathHelper.square(oldPos.y - pos.y) + MathHelper.square(oldPos.z - pos.z))), user, playerEntity -> playerEntity.sendToolBreakStatus(hand));
     return TypedActionResult.success(data.getValue());
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public ModelJsonBuilder getItemModel() {
+    return ItemResourceGenerator.super.getItemModel().parent(Models.HANDHELD);
   }
 }

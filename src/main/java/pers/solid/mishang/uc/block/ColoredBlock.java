@@ -3,7 +3,6 @@ package pers.solid.mishang.uc.block;
 import com.mojang.datafixers.util.Function3;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.devtech.arrp.generator.BlockResourceGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -14,14 +13,12 @@ import net.minecraft.loot.function.CopyNbtLootFunction;
 import net.minecraft.loot.function.LootFunction;
 import net.minecraft.loot.provider.nbt.ContextLootNbtProvider;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
-import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -68,17 +65,6 @@ public interface ColoredBlock extends BlockEntityProvider, BlockResourceGenerato
       stack.getOrCreateSubNbt("BlockEntityTag").putInt("color", coloredBlockEntity.getColor());
     }
     return stack;
-  }
-
-  @Override
-  default Identifier getAdvancementIdForRecipe(Identifier recipeId, @Nullable RecipeCategory recipeCategory) {
-    return recipeId.brrp_prepend("recipes/colored_blocks/");
-  }
-
-  @Override
-  @Nullable
-  default RecipeCategory getRecipeCategory() {
-    return RecipeCategory.BUILDING_BLOCKS;
   }
 
   Object2ObjectMap<Block, Block> BASE_TO_COLORED = new Object2ObjectOpenHashMap<>();

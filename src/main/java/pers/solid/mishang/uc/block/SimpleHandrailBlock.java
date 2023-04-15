@@ -1,17 +1,18 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
+import net.minecraft.data.client.TextureKey;
+import net.minecraft.data.client.TextureMap;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.util.TextBridge;
 
 /**
@@ -43,15 +44,15 @@ public class SimpleHandrailBlock extends HandrailBlock {
   /**
    * 栏杆的纹理。若为 {@code null}，则默认根据 {@link #baseBlock} 推断纹理。
    */
-  public @Nullable String texture;
+  public @Nullable Identifier texture;
   /**
    * 栏杆顶部部分的纹理。
    */
-  public @Nullable String top;
+  public @Nullable Identifier top;
   /**
    * 栏杆底部部分的纹理。
    */
-  public @Nullable String bottom;
+  public @Nullable Identifier bottom;
 
   public SimpleHandrailBlock(@Nullable Block baseBlock, Settings settings) {
     super(settings.nonOpaque());
@@ -68,20 +69,20 @@ public class SimpleHandrailBlock extends HandrailBlock {
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JModel getBlockModel() {
-    return new JModel(new Identifier("mishanguc", "block/simple_handrail")).textures(getTextures());
+  public @NotNull ModelJsonBuilder getBlockModel() {
+    return ModelJsonBuilder.create(new Identifier("mishanguc", "block/simple_handrail")).setTextures(getTextures());
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JModel getItemModel() {
-    return new JModel().parent("mishanguc:block/simple_handrail_inventory").textures(getTextures());
+  public @NotNull ModelJsonBuilder getItemModel() {
+    return ModelJsonBuilder.create("mishanguc", "block/simple_handrail_inventory").setTextures(getTextures());
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JTextures getTextures() {
-    return new JTextures().var("texture", getTexture()).var("top", top).var("bottom", bottom);
+  public @NotNull TextureMap getTextures() {
+    return TextureMap.texture(getTexture()).put(TextureKey.TOP, top).put(TextureKey.BOTTOM, bottom);
   }
 
   @Override
@@ -113,8 +114,8 @@ public class SimpleHandrailBlock extends HandrailBlock {
    * @return 该方块的基础纹理变量。
    */
   @Environment(EnvType.CLIENT)
-  protected String getTexture() {
-    return texture == null ? Registries.BLOCK.getId(baseBlock).brrp_prepend("block/").toString() : texture;
+  protected Identifier getTexture() {
+    return texture == null ? Registries.BLOCK.getId(baseBlock).brrp_prefixed("block/") : texture;
   }
 
   @Override
@@ -132,11 +133,11 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Environment(EnvType.CLIENT)
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
-      final JTextures textures = baseHandrail.getTextures();
+      final TextureMap textures = baseHandrail.getTextures();
       final Identifier modelId = getBlockModelId();
-      pack.addModel(new JModel(new Identifier("mishanguc", "block/simple_handrail_post")).textures(textures), modelId.brrp_append("_post"));
-      pack.addModel(new JModel(new Identifier("mishanguc", "block/simple_handrail_post_side")).textures(textures), modelId.brrp_append("_post_side"));
-      pack.addModel(new JModel(new Identifier("mishanguc", "block/simple_handrail_side")).textures(textures), modelId.brrp_append("_side"));
+      pack.addModel(modelId.brrp_suffixed("_post"), ModelJsonBuilder.create(new Identifier("mishanguc", "block/simple_handrail_post")).setTextures(textures));
+      pack.addModel(modelId.brrp_suffixed("_post_side"), ModelJsonBuilder.create(new Identifier("mishanguc", "block/simple_handrail_post_side")).setTextures(textures));
+      pack.addModel(modelId.brrp_suffixed("_side"), ModelJsonBuilder.create(new Identifier("mishanguc", "block/simple_handrail_side")).setTextures(textures));
     }
 
     @Override
@@ -153,8 +154,8 @@ public class SimpleHandrailBlock extends HandrailBlock {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @Nullable JModel getBlockModel() {
-      return baseHandrail.getBlockModel().parent("mishanguc:block/simple_handrail_corner");
+    public @Nullable ModelJsonBuilder getBlockModel() {
+      return baseHandrail.getBlockModel().withParent(new Identifier("mishanguc:block/simple_handrail_corner"));
     }
 
     @Override
@@ -172,12 +173,12 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Environment(EnvType.CLIENT)
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
-      final JTextures textures = baseHandrail.getTextures();
+      final TextureMap textures = baseHandrail.getTextures();
       final Identifier modelIdentifier = getBlockModelId();
-      pack.addModel(new JModel(new Identifier("mishanguc", "block/simple_handrail_stair_middle_center")).textures(textures), modelIdentifier);
+      pack.addModel(modelIdentifier, ModelJsonBuilder.create(new Identifier("mishanguc", "block/simple_handrail_stair_middle_center")).setTextures(textures));
       for (Shape shape : Shape.values()) {
         for (Position position : Position.values()) {
-          pack.addModel(new JModel(new Identifier("mishanguc", String.format("block/simple_handrail_stair_%s_%s", shape.asString(), position.asString()))).textures(textures), modelIdentifier.brrp_append("_" + shape.asString() + "_" + position.asString()));
+          pack.addModel(modelIdentifier.brrp_suffixed("_" + shape.asString() + "_" + position.asString()), ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/simple_handrail_stair_%s_%s", shape.asString(), position.asString()))).setTextures(textures));
         }
       }
     }
@@ -197,7 +198,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Environment(EnvType.CLIENT)
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
-      pack.addModel(new JModel("mishanguc:block/simple_handrail_outer").textures(baseHandrail.getTextures()), getBlockModelId());
+      pack.addModel(getBlockModelId(), ModelJsonBuilder.create(new Identifier("mishanguc:block/simple_handrail_outer")).setTextures(baseHandrail.getTextures()));
     }
 
     @Override

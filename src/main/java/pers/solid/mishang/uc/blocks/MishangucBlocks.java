@@ -135,12 +135,12 @@ public class MishangucBlocks {
           if (value instanceof HandrailBlock handrailBlock) {
             // 如果该方块为 HandrailBlock，则一并注册其 central 方块，应为该方块并没有作为字段存在。
             // 此类方块也没有对应的方块物品，其物品为对应的基础方块的物品。
-              Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_central"), handrailBlock.central());
-              Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_corner"), handrailBlock.corner());
-              Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_stair"), handrailBlock.stair());
-              Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_outer"), handrailBlock.outer());
+            Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_central"), handrailBlock.central());
+            Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_corner"), handrailBlock.corner());
+            Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_stair"), handrailBlock.stair());
+            Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_outer"), handrailBlock.outer());
           }
-            final FabricItemSettings settings = new FabricItemSettings();
+          final FabricItemSettings settings = new FabricItemSettings();
           if (path.contains("netherite")) {
             settings.fireproof();
           }
@@ -165,8 +165,8 @@ public class MishangucBlocks {
     RoadSlabBlocks.registerAll();
     registerAll(RoadMarkBlocks.class);
     registerAll(LightBlocks.class);
-    registerAll(HungSignBlocks.class);
     registerAll(WallSignBlocks.class);
+    registerAll(HungSignBlocks.class);
     registerAll(StandingSignBlocks.class);
     registerAll(HandrailBlocks.class);
     registerAll(ColoredBlocks.class);

@@ -1,15 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.ImmutableMap;
-import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.devtech.arrp.generator.ResourceGeneratorHelper;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.blockstate.JVariants;
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.models.JTextures;
-import net.devtech.arrp.json.recipe.JRecipe;
-import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -19,7 +10,9 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.WallMountLocation;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.data.client.TextureKey;
+import net.minecraft.data.client.*;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -50,6 +43,9 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import pers.solid.brrp.v1.BRRPUtils;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
@@ -90,7 +86,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
    * 告示牌自身的纹理。默认为 {@code null}，可在后期修改。若为 {@code null}，则直接根据其基础方块 {@link #baseBlock} 推断纹理。
    */
   @ApiStatus.AvailableSince("0.1.7")
-  public @Nullable String texture;
+  public @Nullable Identifier texture;
 
   public WallSignBlock(@Nullable Block baseBlock, Settings settings) {
     super(settings);
@@ -237,52 +233,41 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
 
   @Override
   @Environment(EnvType.CLIENT)
-  public @Nullable JBlockStates getBlockStates() {
-    final JVariants variants = new JVariants();
-    final JBlockStates state = JBlockStates.ofVariants(variants);
-    for (WallMountLocation wallMountLocation : WallMountLocation.values()) {
+  public @NotNull BlockStateSupplier getBlockStates() {
+    return BlockStateModelGenerator.createSingletonBlockState(this, getBlockModelId()).coordinate(BlockStateVariantMap.create(FACE, FACING).register((wallMountLocation, direction) -> {
       final int x = switch (wallMountLocation) {
         case WALL -> 0;
         case FLOOR -> 90;
         default -> -90;
       };
-      for (Direction direction : Direction.Type.HORIZONTAL) {
-        float y = direction.asRotation();
-        variants.addVariant(
-            String.format("face=%s,facing=%s", wallMountLocation.asString(), direction.asString()),
-            new JBlockModel(getBlockModelId()).x(x).y((int) y).uvlock());
-      }
-    }
-    return state;
+      return BlockStateVariant.create().put(VariantSettings.MODEL, getBlockModelId())
+          .put(MishangUtils.INT_X_VARIANT, x)
+          .put(MishangUtils.DIRECTION_Y_VARIANT, direction)
+          .put(VariantSettings.UVLOCK, true);
+    }));
   }
 
   @Override
   @Environment(EnvType.CLIENT)
-  public @NotNull JModel getBlockModel() {
-    return new JModel("mishanguc:block/wall_sign").textures(new JTextures().var("texture", getBaseTexture()));
+  public ModelJsonBuilder getBlockModel() {
+    return ModelJsonBuilder.create(new Identifier("mishanguc:block/wall_sign")).addTexture(TextureKey.TEXTURE, getBaseTexture());
   }
 
   @Environment(EnvType.CLIENT)
-  public String getBaseTexture() {
+  public Identifier getBaseTexture() {
     if (texture != null) return texture;
-    return ResourceGeneratorHelper.getTextureId(baseBlock == null ? this : baseBlock, TextureKey.ALL);
+    return BRRPUtils.getTextureId(baseBlock == null ? this : baseBlock, TextureKey.ALL);
   }
 
   @Override
-  public @Nullable JRecipe getCraftingRecipe() {
+  public @Nullable CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (baseBlock == null) return null;
-    final JShapedRecipe recipe = new JShapedRecipe(this)
-        .pattern("---", "###", "---")
-        .addKey("#", baseBlock).addKey("-", WallSignBlocks.INVISIBLE_WALL_SIGN)
-        .resultCount(6)
-        .recipeCategory(getRecipeCategory());
-    recipe.addInventoryChangedCriterion("has_base_block", baseBlock).addInventoryChangedCriterion("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
-    return recipe;
-  }
-
-  @Override
-  public Identifier getAdvancementIdForRecipe(Identifier recipeId, RecipeCategory recipeCategory) {
-    return recipeId.brrp_prepend("recipes/signs/");
+    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this, 6)
+        .patterns("---", "###", "---")
+        .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .setCustomRecipeCategory("signs")
+        .criterionFromItem("has_base_block", baseBlock)
+        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
   }
 
   @Override

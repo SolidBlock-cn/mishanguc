@@ -1,9 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.generator.BRRPStairsBlock;
-import net.devtech.arrp.json.loot.JLootTable;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -12,12 +8,18 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.server.loottable.VanillaBlockLootTableGenerator;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootTable;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.generator.BRRPStairsBlock;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -50,22 +52,27 @@ public class ColoredStairsBlock extends BRRPStairsBlock implements ColoredBlock 
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JModel getBlockModel() {
+  public @UnknownNullability ModelJsonBuilder getBlockModel() {
     return super.getBlockModel().parent(new Identifier("mishanguc", "block/colored_stairs"));
   }
 
   @Environment(EnvType.CLIENT)
   @Override
   public void writeBlockModel(RuntimeResourcePack pack) {
-    final JModel blockModel = getBlockModel();
+    final ModelJsonBuilder blockModel = getBlockModel();
     final Identifier id = getBlockModelId();
-    pack.addModel(blockModel, id);
-    pack.addModel(blockModel.parent(new Identifier("mishanguc", "block/colored_inner_stairs")), id.brrp_append("_inner"));
-    pack.addModel(blockModel.parent(new Identifier("mishanguc", "block/colored_outer_stairs")), id.brrp_append("_outer"));
+    pack.addModel(id, blockModel);
+    pack.addModel(id.brrp_suffixed("_inner"), blockModel.parent(new Identifier("mishanguc", "block/colored_inner_stairs")));
+    pack.addModel(id.brrp_suffixed("_outer"), blockModel.parent(new Identifier("mishanguc", "block/colored_outer_stairs")));
   }
 
   @Override
-  public JLootTable getLootTable() {
-    return JLootTable.delegate(new VanillaBlockLootTableGenerator().drops(this).apply(COPY_COLOR_LOOT_FUNCTION));
+  public LootTable.@NotNull Builder getLootTable() {
+    return new VanillaBlockLootTableGenerator().drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  }
+
+  @Override
+  public RecipeCategory getRecipeCategory() {
+    return RecipeCategory.BUILDING_BLOCKS;
   }
 }

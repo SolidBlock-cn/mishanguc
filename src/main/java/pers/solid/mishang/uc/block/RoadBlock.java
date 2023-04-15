@@ -1,18 +1,16 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.*;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
@@ -34,33 +32,33 @@ public class RoadBlock extends AbstractRoadBlock {
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JBlockStates getBlockStates() {
+  public @NotNull BlockStateSupplier getBlockStates() {
     final Identifier blockModelId = getBlockModelId();
-    return JBlockStates.simpleRandomRotation(blockModelId);
+    return BlockStateModelGenerator.createBlockStateWithRandomHorizontalRotations(this, blockModelId);
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JModel getBlockModel() {
-    return new JModel("block/cube_all").addTexture("all", texture);
+  public ModelJsonBuilder getBlockModel() {
+    return ModelJsonBuilder.create(Models.CUBE_ALL).setTextures(TextureMap.all(new Identifier(texture)));
   }
 
   @Environment(EnvType.CLIENT)
   @Override
   public void writeBlockModel(RuntimeResourcePack pack) {
-    final JModel blockModel = getBlockModel();
+    final ModelJsonBuilder blockModel = getBlockModel();
     final Identifier blockModelId = getBlockModelId();
     final AbstractRoadSlabBlock slabBlock = getRoadSlab();
     final Identifier slabBlockModelId = slabBlock.getBlockModelId();
-    pack.addModel(blockModel, blockModelId);
-    final JModel slabModel = getSlabBlockModel();
-    pack.addModel(slabModel, slabBlockModelId);
-    pack.addModel(slabModel.parent("block/slab_top"), slabBlockModelId.brrp_append("_top"));
+    pack.addModel(blockModelId, blockModel);
+    final ModelJsonBuilder slabModel = getSlabBlockModel();
+    pack.addModel(slabBlockModelId, slabModel);
+    pack.addModel(slabBlockModelId.brrp_suffixed("_top"), slabModel.withParent(Models.SLAB_TOP));
   }
 
   @Environment(EnvType.CLIENT)
-  private JModel getSlabBlockModel() {
-    return new JModel("block/slab").textures(JTextures.ofSides(texture, texture, texture));
+  private ModelJsonBuilder getSlabBlockModel() {
+    return ModelJsonBuilder.create(Models.SLAB).setTextures(TextureMap.topBottom(new Identifier(texture), new Identifier(texture)).put(TextureKey.SIDE, new Identifier(texture)));
   }
 
   @Override

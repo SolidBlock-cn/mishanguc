@@ -31,12 +31,12 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.13.0",
+    "fabricloader": "*",
     "fabric": "*",
     "minecraft": [
-      ">=1.19.3-rc.2"
+      "~1.19.3"
     ],
-    "better_runtime_resource_pack": ">=0.8.1"
+    "brrp_v1": ">=1.0.0-build.7"
   },
   "breaks": {
   },

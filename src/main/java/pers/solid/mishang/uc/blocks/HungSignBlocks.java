@@ -9,6 +9,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.Translucent;
@@ -79,34 +80,34 @@ public final class HungSignBlocks extends MishangucBlocks {
   public static final HungSignBarBlock BAMBOO_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).requires(FeatureFlags.UPDATE_1_20));
 
   static {
-    OAK_HUNG_SIGN.barTexture = "block/oak_log";
-    SPRUCE_HUNG_SIGN.barTexture = "block/spruce_log";
-    BIRCH_HUNG_SIGN.barTexture = "block/birch_log";
-    JUNGLE_HUNG_SIGN.barTexture = "block/jungle_log";
-    ACACIA_HUNG_SIGN.barTexture = "block/acacia_log";
-    DARK_OAK_HUNG_SIGN.barTexture = "block/dark_oak_log";
-    MANGROVE_HUNG_SIGN.barTexture = "block/mangrove_log";
-    CRIMSON_HUNG_SIGN.barTexture = "block/crimson_stem";
-    WARPED_HUNG_SIGN.barTexture = "block/warped_stem";
-    OAK_HUNG_SIGN.textureTop = "block/oak_log";
-    SPRUCE_HUNG_SIGN.textureTop = "block/spruce_log";
-    BIRCH_HUNG_SIGN.textureTop = "block/birch_log";
-    JUNGLE_HUNG_SIGN.textureTop = "block/jungle_log";
-    ACACIA_HUNG_SIGN.textureTop = "block/acacia_log";
-    DARK_OAK_HUNG_SIGN.textureTop = "block/dark_oak_log";
-    MANGROVE_HUNG_SIGN.textureTop = "block/mangrove_log";
-    CRIMSON_HUNG_SIGN.textureTop = "block/crimson_stem";
-    WARPED_HUNG_SIGN.textureTop = "block/warped_stem";
-    OAK_HUNG_SIGN_BAR.texture = "block/oak_log";
-    SPRUCE_HUNG_SIGN_BAR.texture = "block/spruce_log";
-    BIRCH_HUNG_SIGN_BAR.texture = "block/birch_log";
-    JUNGLE_HUNG_SIGN_BAR.texture = "block/jungle_log";
-    ACACIA_HUNG_SIGN_BAR.texture = "block/acacia_log";
-    DARK_OAK_HUNG_SIGN_BAR.texture = "block/dark_oak_log";
-    MANGROVE_HUNG_SIGN_BAR.texture = "block/mangrove_log";
-    CRIMSON_HUNG_SIGN_BAR.texture = "block/crimson_stem";
-    WARPED_HUNG_SIGN_BAR.texture = "block/warped_stem";
-    BAMBOO_HUNG_SIGN.barTexture = BAMBOO_HUNG_SIGN.textureTop = BAMBOO_PLANK_HUNG_SIGN.barTexture = BAMBOO_PLANK_HUNG_SIGN.textureTop = BAMBOO_MOSAIC_HUNG_SIGN.barTexture = BAMBOO_MOSAIC_HUNG_SIGN.textureTop = BAMBOO_HUNG_SIGN_BAR.texture = "block/bamboo_block";
+    OAK_HUNG_SIGN.barTexture = new Identifier("block/oak_log");
+    SPRUCE_HUNG_SIGN.barTexture = new Identifier("block/spruce_log");
+    BIRCH_HUNG_SIGN.barTexture = new Identifier("block/birch_log");
+    JUNGLE_HUNG_SIGN.barTexture = new Identifier("block/jungle_log");
+    ACACIA_HUNG_SIGN.barTexture = new Identifier("block/acacia_log");
+    DARK_OAK_HUNG_SIGN.barTexture = new Identifier("block/dark_oak_log");
+    MANGROVE_HUNG_SIGN.barTexture = new Identifier("block/mangrove_log");
+    CRIMSON_HUNG_SIGN.barTexture = new Identifier("block/crimson_stem");
+    WARPED_HUNG_SIGN.barTexture = new Identifier("block/warped_stem");
+    OAK_HUNG_SIGN.textureTop = new Identifier("block/oak_log");
+    SPRUCE_HUNG_SIGN.textureTop = new Identifier("block/spruce_log");
+    BIRCH_HUNG_SIGN.textureTop = new Identifier("block/birch_log");
+    JUNGLE_HUNG_SIGN.textureTop = new Identifier("block/jungle_log");
+    ACACIA_HUNG_SIGN.textureTop = new Identifier("block/acacia_log");
+    DARK_OAK_HUNG_SIGN.textureTop = new Identifier("block/dark_oak_log");
+    MANGROVE_HUNG_SIGN.textureTop = new Identifier("block/mangrove_log");
+    CRIMSON_HUNG_SIGN.textureTop = new Identifier("block/crimson_stem");
+    WARPED_HUNG_SIGN.textureTop = new Identifier("block/warped_stem");
+    OAK_HUNG_SIGN_BAR.texture = new Identifier("block/oak_log");
+    SPRUCE_HUNG_SIGN_BAR.texture = new Identifier("block/spruce_log");
+    BIRCH_HUNG_SIGN_BAR.texture = new Identifier("block/birch_log");
+    JUNGLE_HUNG_SIGN_BAR.texture = new Identifier("block/jungle_log");
+    ACACIA_HUNG_SIGN_BAR.texture = new Identifier("block/acacia_log");
+    DARK_OAK_HUNG_SIGN_BAR.texture = new Identifier("block/dark_oak_log");
+    MANGROVE_HUNG_SIGN_BAR.texture = new Identifier("block/mangrove_log");
+    CRIMSON_HUNG_SIGN_BAR.texture = new Identifier("block/crimson_stem");
+    WARPED_HUNG_SIGN_BAR.texture = new Identifier("block/warped_stem");
+    BAMBOO_HUNG_SIGN.barTexture = BAMBOO_HUNG_SIGN.textureTop = BAMBOO_PLANK_HUNG_SIGN.barTexture = BAMBOO_PLANK_HUNG_SIGN.textureTop = BAMBOO_MOSAIC_HUNG_SIGN.barTexture = BAMBOO_MOSAIC_HUNG_SIGN.textureTop = BAMBOO_HUNG_SIGN_BAR.texture = new Identifier("block/bamboo_block");
   }
 
   // 混凝土告示牌部分
@@ -789,13 +790,13 @@ public final class HungSignBlocks extends MishangucBlocks {
   public static final HungSignBlock ICE_HUNG_SIGN = new HungSignBlock(Blocks.ICE);
 
   static {
-    SNOW_HUNG_SIGN.baseTexture = "block/snow";
-    SNOW_HUNG_SIGN.barTexture = "block/packed_ice";
-    SNOW_HUNG_SIGN.textureTop = "block/packed_ice";
-    GLOWING_SNOW_HUNG_SIGN.baseTexture = "block/snow";
-    GLOWING_SNOW_HUNG_SIGN.barTexture = "block/packed_ice";
-    GLOWING_SNOW_HUNG_SIGN.textureTop = "block/packed_ice";
-    ICE_HUNG_SIGN.textureTop = ICE_HUNG_SIGN.barTexture = "block/blue_ice";
+    SNOW_HUNG_SIGN.baseTexture = new Identifier("block/snow");
+    SNOW_HUNG_SIGN.barTexture = new Identifier("block/packed_ice");
+    SNOW_HUNG_SIGN.textureTop = new Identifier("block/packed_ice");
+    GLOWING_SNOW_HUNG_SIGN.baseTexture = new Identifier("block/snow");
+    GLOWING_SNOW_HUNG_SIGN.barTexture = new Identifier("block/packed_ice");
+    GLOWING_SNOW_HUNG_SIGN.textureTop = new Identifier("block/packed_ice");
+    ICE_HUNG_SIGN.textureTop = ICE_HUNG_SIGN.barTexture = new Identifier("block/blue_ice");
   }
 
   // 浮冰

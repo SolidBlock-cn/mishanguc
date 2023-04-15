@@ -9,64 +9,50 @@ import net.minecraft.util.Rarity;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.CustomId;
-import pers.solid.mishang.uc.annotations.SimpleModel;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 public final class MishangucItems {
-  @SimpleModel(parent = "item/handheld")
   public static final RoadConnectionStateDebuggingToolItem ROAD_CONNECTION_STATE_DEBUGGING_TOOL =
       new RoadConnectionStateDebuggingToolItem(
           new FabricItemSettings().maxCount(1), false);
 
-  @SimpleModel(parent = "item/handheld")
   public static final IdCheckerToolItem ID_CHECKER_TOOL =
       new IdCheckerToolItem(new FabricItemSettings().maxCount(1), null);
 
-  @SimpleModel(parent = "item/handheld")
   public static final IdCheckerToolItem FLUID_ID_CHECKER_TOOL =
       new IdCheckerToolItem(new FabricItemSettings().maxCount(1), true);
 
   public static final FastBuildingToolItem FAST_BUILDING_TOOL =
       new FastBuildingToolItem(new FabricItemSettings().maxCount(1), null);
 
-  @SimpleModel(parent = "item/handheld")
   public static final RotatingToolItem ROTATING_TOOL =
       new RotatingToolItem(new FabricItemSettings().maxDamage(512), null);
 
-  @SimpleModel(parent = "item/handheld")
   public static final MirroringToolItem MIRRORING_TOOL =
       new MirroringToolItem(new FabricItemSettings().maxDamage(512), null);
 
-  @SimpleModel(parent = "item/handheld")
   public static final SlabToolItem SLAB_TOOL =
       new SlabToolItem(new FabricItemSettings().maxDamage(1024));
 
-  @SimpleModel(parent = "item/handheld")
   public static final ForcePlacingToolItem FORCE_PLACING_TOOL =
       new ForcePlacingToolItem(new FabricItemSettings().maxCount(1), null);
 
-  @SimpleModel(parent = "item/handheld")
   public static final ForcePlacingToolItem FLUID_FORCE_PLACING_TOOL =
       new ForcePlacingToolItem(new FabricItemSettings().maxCount(1), true);
 
-  @SimpleModel(parent = "item/handheld")
   public static final BlockStateToolItem BLOCK_STATE_TOOL =
       new BlockStateToolItem(new FabricItemSettings().maxCount(1), null);
 
-  @SimpleModel(parent = "item/handheld")
   public static final BlockStateToolItem FLUID_STATE_TOOL =
       new BlockStateToolItem(new FabricItemSettings().maxCount(1), true);
 
-  @SimpleModel(parent = "item/handheld")
   public static final DataTagToolItem DATA_TAG_TOOL =
       new DataTagToolItem(new FabricItemSettings().maxCount(1), null);
 
-  @SimpleModel(parent = "item/handheld")
   public static final TextCopyToolItem TEXT_COPY_TOOL = new TextCopyToolItem(new FabricItemSettings().maxDamage(1024), null);
 
-  @SimpleModel(parent = "item/handheld")
   public static final OmnipotentToolItem OMNIPOTENT_TOOL = new OmnipotentToolItem(new FabricItemSettings().fireproof().rarity(Rarity.EPIC).maxCount(1));
 
   public static final ExplosionToolItem EXPLOSION_TOOL = new ExplosionToolItem(new FabricItemSettings().maxDamage(1024));
@@ -77,13 +63,10 @@ public final class MishangucItems {
   @ApiStatus.AvailableSince("0.2.4")
   public static final RoadToolItem ROAD_TOOL = new RoadToolItem(new FabricItemSettings().maxDamage(512));
   @ApiStatus.AvailableSince("0.2.4")
-  @SimpleModel(parent = "item/handheld")
   public static final TpToolItem TP_TOOL = new TpToolItem(new FabricItemSettings().maxDamage(2048));
   @ApiStatus.AvailableSince("0.2.4")
-  @SimpleModel(parent = "item/handheld")
   public static final GrowthToolItem GROWTH_TOOL = new GrowthToolItem(new FabricItemSettings().maxDamage(1024));
   @ApiStatus.AvailableSince("0.2.4")
-  @SimpleModel(parent = "item/generated", texture = "item/diamond")
   public static final CarryingToolItem CARRYING_TOOL = new CarryingToolItem(new FabricItemSettings().maxCount(1), null);
 
   private MishangucItems() {

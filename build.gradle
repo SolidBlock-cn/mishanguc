@@ -21,7 +21,7 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version + '-1.19.3'
+version = project.mod_version + '-' + project.minecraft_version
 group = project.maven_group
 
 repositories {
@@ -33,6 +33,7 @@ repositories {
 
     // BRRP. This is stored locally.
     mavenLocal()
+    maven { url "https://maven.terraformersmc.com/releases/" }
 }
 
 
