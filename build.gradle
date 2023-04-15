@@ -33,6 +33,7 @@ repositories {
 
     // BRRP. This is stored locally.
     mavenLocal()
+    maven { url "https://maven.terraformersmc.com/releases/" }
 }
 
 

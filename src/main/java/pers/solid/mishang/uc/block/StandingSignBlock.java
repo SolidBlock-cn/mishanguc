@@ -1,15 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.devtech.arrp.generator.ResourceGeneratorHelper;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.blockstate.JVariants;
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.models.JTextures;
-import net.devtech.arrp.json.recipe.JRecipe;
-import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -18,7 +8,9 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.data.client.TextureKey;
+import net.minecraft.data.client.*;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -48,6 +40,10 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.BRRPUtils;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
@@ -80,7 +76,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   protected static final VoxelShape CULLING_SHAPE = createCuboidShape(7.5, 0, 7.5, 8.5, 8, 8.5);
   protected static final VoxelShape BAR_SHAPE = createCuboidShape(6.5, 0, 6.5, 9.5, 8, 9.5);
   public final @Nullable Block baseBlock;
-  public @Nullable String baseTexture, barTexture;
+  public @Nullable Identifier baseTexture, barTexture;
 
   public StandingSignBlock(@Nullable Block baseBlock, Settings settings) {
     super(settings);
@@ -157,9 +153,9 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   }
 
   @Environment(EnvType.CLIENT)
-  public String getBaseTexture() {
+  public Identifier getBaseTexture() {
     if (baseTexture != null) return baseTexture;
-    return ResourceGeneratorHelper.getTextureId(baseBlock == null ? this : baseBlock, TextureKey.ALL);
+    return BRRPUtils.getTextureId(baseBlock == null ? this : baseBlock, TextureKey.ALL);
   }
 
   @Override
@@ -224,66 +220,59 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JModel getBlockModel() {
-    final String texture = getBaseTexture();
-    final JTextures textures = new JTextures().var("texture", texture).var("bar", barTexture);
-    return new JModel("mishanguc:block/standing_sign").textures(textures);
+  public @NotNull ModelJsonBuilder getBlockModel() {
+    final Identifier texture = getBaseTexture();
+    return ModelJsonBuilder.create(new Identifier("mishanguc:block/standing_sign")).addTexture("texture", texture).addTexture("bar", barTexture == null ? null : barTexture.toString());
   }
 
   @Environment(EnvType.CLIENT)
   @Override
   public void writeBlockModel(RuntimeResourcePack pack) {
-    final JModel model = getBlockModel();
+    final ModelJsonBuilder model = getBlockModel();
     final Identifier modelId = getBlockModelId();
-    pack.addModel(model, modelId);
-    pack.addModel(model.clone().parent(model.parent + "_1"), modelId.brrp_append("_1"));
-    pack.addModel(model.clone().parent(model.parent + "_2"), modelId.brrp_append("_2"));
-    pack.addModel(model.clone().parent(model.parent + "_3"), modelId.brrp_append("_3"));
-    pack.addModel(model.clone().parent(model.parent + "_barred"), modelId.brrp_append("_barred"));
-    pack.addModel(model.clone().parent(model.parent + "_barred_1"), modelId.brrp_append("_barred_1"));
-    pack.addModel(model.clone().parent(model.parent + "_barred_2"), modelId.brrp_append("_barred_2"));
-    pack.addModel(model.clone().parent(model.parent + "_barred_3"), modelId.brrp_append("_barred_3"));
+    pack.addModel(modelId, model);
+    pack.addModel(modelId.brrp_suffixed("_1"), model.withParent(model.parentId.brrp_suffixed("_1")));
+    pack.addModel(modelId.brrp_suffixed("_2"), model.withParent(model.parentId.brrp_suffixed("_2")));
+    pack.addModel(modelId.brrp_suffixed("_3"), model.withParent(model.parentId.brrp_suffixed("_3")));
+    pack.addModel(modelId.brrp_suffixed("_barred"), model.withParent(model.parentId.brrp_suffixed("_barred")));
+    pack.addModel(modelId.brrp_suffixed("_barred_1"), model.withParent(model.parentId.brrp_suffixed("_barred_1")));
+    pack.addModel(modelId.brrp_suffixed("_barred_2"), model.withParent(model.parentId.brrp_suffixed("_barred_2")));
+    pack.addModel(modelId.brrp_suffixed("_barred_3"), model.withParent(model.parentId.brrp_suffixed("_barred_3")));
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JBlockStates getBlockStates() {
+  public @Nullable BlockStateSupplier getBlockStates() {
     final Identifier modelId = getBlockModelId();
-    final JVariants variants = new JVariants();
+    final BlockStateVariantMap.DoubleProperty<Boolean, Integer> map = BlockStateVariantMap.create(DOWN, ROTATION);
     for (int i = 0; i < 16; i += 4) {
       final int y = i * 90 / 4;
-      variants.addVariant("down=false,rotation=" + i, new JBlockModel(modelId).y(y));
-      variants.addVariant("down=false,rotation=" + (i + 1), new JBlockModel(modelId.brrp_append("_1")).y(y));
-      variants.addVariant("down=false,rotation=" + (i + 2), new JBlockModel(modelId.brrp_append("_2")).y(y));
-      variants.addVariant("down=false,rotation=" + (i + 3), new JBlockModel(modelId.brrp_append("_3")).y(y + 90));
-      variants.addVariant("down=true,rotation=" + i, new JBlockModel(modelId.brrp_append("_barred")).y(y));
-      variants.addVariant("down=true,rotation=" + (i + 1), new JBlockModel(modelId.brrp_append("_barred_1")).y(y));
-      variants.addVariant("down=true,rotation=" + (i + 2), new JBlockModel(modelId.brrp_append("_barred_2")).y(y));
-      variants.addVariant("down=true,rotation=" + (i + 3), new JBlockModel(modelId.brrp_append("_barred_3")).y(y + 90));
+      map.register(false, i, BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangUtils.INT_Y_VARIANT, y));
+      map.register(false, (i + 1), BlockStateVariant.create().put(VariantSettings.MODEL, modelId.brrp_suffixed("_1")).put(MishangUtils.INT_Y_VARIANT, y));
+      map.register(false, (i + 2), BlockStateVariant.create().put(VariantSettings.MODEL, modelId.brrp_suffixed("_2")).put(MishangUtils.INT_Y_VARIANT, y));
+      map.register(false, (i + 3), BlockStateVariant.create().put(VariantSettings.MODEL, modelId.brrp_suffixed("_3")).put(MishangUtils.INT_Y_VARIANT, y + 90));
+      map.register(true, i, BlockStateVariant.create().put(VariantSettings.MODEL, modelId.brrp_suffixed("_barred")).put(MishangUtils.INT_Y_VARIANT, y));
+      map.register(true, (i + 1), BlockStateVariant.create().put(VariantSettings.MODEL, modelId.brrp_suffixed("_barred_1")).put(MishangUtils.INT_Y_VARIANT, y));
+      map.register(true, (i + 2), BlockStateVariant.create().put(VariantSettings.MODEL, modelId.brrp_suffixed("_barred_2")).put(MishangUtils.INT_Y_VARIANT, y));
+      map.register(true, (i + 3), BlockStateVariant.create().put(VariantSettings.MODEL, modelId.brrp_suffixed("_barred_3")).put(MishangUtils.INT_Y_VARIANT, y + 90));
     }
-    return JBlockStates.ofVariants(variants);
+    return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.UVLOCK, true)).coordinate(map);
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JModel getItemModel() {
-    return new JModel(getBlockModelId().brrp_append("_barred"));
+  public @Nullable ModelJsonBuilder getItemModel() {
+    return ModelJsonBuilder.create(getBlockModelId().brrp_suffixed("_barred"));
   }
 
   @Override
-  public @Nullable JRecipe getCraftingRecipe() {
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (baseBlock == null) return null;
-    final JShapedRecipe recipe = new JShapedRecipe(this)
-        .pattern("---", "###", " | ")
-        .addKey("#", baseBlock).addKey("-", WallSignBlocks.INVISIBLE_WALL_SIGN).addKey("|", Items.STICK)
-        .resultCount(4);
-    recipe.addInventoryChangedCriterion("has_base_block", baseBlock).addInventoryChangedCriterion("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
-    return recipe;
-  }
-
-  @Override
-  public Identifier getAdvancementIdForRecipe(Identifier recipeId) {
-    return recipeId.brrp_prepend("recipes/signs/");
+    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this, 4)
+        .patterns("---", "###", " | ")
+        .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN).input('|', Items.STICK)
+        .setCustomRecipeCategory("signs")
+        .criterionFromItem("has_base_block", baseBlock).criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
   }
 
   @SuppressWarnings("deprecation")

@@ -1,16 +1,16 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.json.loot.JLootTable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.data.server.BlockLootTableGenerator;
+import net.minecraft.data.server.loottable.VanillaBlockLootTableGenerator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootTable;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
@@ -102,7 +102,7 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
   }
 
   @Override
-  public @Nullable JLootTable getLootTable() {
-    return JLootTable.delegate(BlockLootTableGenerator.slabDrops(this));
+  public LootTable.Builder getLootTable() {
+    return new VanillaBlockLootTableGenerator().slabDrops(this);
   }
 }

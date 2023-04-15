@@ -1,11 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.loot.JLootTable;
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -13,21 +7,28 @@ import net.minecraft.block.PillarBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.server.BlockLootTableGenerator;
+import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.client.TextureMap;
+import net.minecraft.data.server.loottable.VanillaBlockLootTableGenerator;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootTable;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
 
 public class ColoredPillarBlock extends PillarBlock implements ColoredBlock, BlockResourceGenerator {
-  private final JTextures textures;
+  private final TextureMap textures;
 
-  public ColoredPillarBlock(Settings settings, JTextures textures) {
+  public ColoredPillarBlock(Settings settings, TextureMap textures) {
     super(settings);
     this.textures = textures;
   }
@@ -51,25 +52,25 @@ public class ColoredPillarBlock extends PillarBlock implements ColoredBlock, Blo
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JModel getBlockModel() {
-    return new JModel("mishanguc:block/colored_cube_column").textures(textures);
+  public @UnknownNullability ModelJsonBuilder getBlockModel() {
+    return ModelJsonBuilder.create(new Identifier("mishanguc:block/colored_cube_column")).setTextures(textures);
   }
 
   @Environment(EnvType.CLIENT)
   @Override
   public void writeBlockModel(RuntimeResourcePack pack) {
     BlockResourceGenerator.super.writeBlockModel(pack);
-    pack.addModel(getBlockModel().parent("mishanguc:block/colored_cube_column_horizontal"), getBlockModelId().brrp_append("_horizontal"));
+    pack.addModel(getBlockModelId().brrp_suffixed("_horizontal"), getBlockModel().withParent(new Identifier("mishanguc:block/colored_cube_column_horizontal")));
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JBlockStates getBlockStates() {
-    return JBlockStates.delegate(BlockStateModelGenerator.createAxisRotatedBlockState(this, getBlockModelId(), getBlockModelId().brrp_append("_horizontal")));
+  public @UnknownNullability BlockStateSupplier getBlockStates() {
+    return BlockStateModelGenerator.createAxisRotatedBlockState(this, getBlockModelId(), getBlockModelId().brrp_suffixed("_horizontal"));
   }
 
   @Override
-  public JLootTable getLootTable() {
-    return JLootTable.delegate(BlockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION));
+  public LootTable.@UnknownNullability Builder getLootTable() {
+    return new VanillaBlockLootTableGenerator().drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 }

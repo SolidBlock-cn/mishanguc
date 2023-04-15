@@ -5,10 +5,6 @@ import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.devtech.arrp.generator.ItemResourceGenerator;
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.recipe.JRecipe;
-import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
@@ -29,8 +25,12 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.data.client.Models;
+import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.family.BlockFamilies;
 import net.minecraft.data.family.BlockFamily;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -55,8 +55,9 @@ import net.minecraft.world.World;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.generator.ItemResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.block.AbstractRoadBlock;
 import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
@@ -273,19 +274,20 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JModel getItemModel() {
-    return null;
+  public ModelJsonBuilder getItemModel() {
+    return ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId());
   }
 
   @Override
-  public @NotNull JRecipe getCraftingRecipe() {
-    return new JShapedRecipe(this)
-        .pattern("SCS", " | ", " | ")
-        .addKey("S", Items.SHEARS)
-        .addKey("C", Items.STONE)
-        .addKey("|", Items.STICK)
-        .addInventoryChangedCriterion("has_shears", Items.SHEARS)
-        .addInventoryChangedCriterion("has_stone", Items.STONE);
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this)
+        .patterns("SCS", " | ", " | ")
+        .input('S', Items.SHEARS)
+        .input('C', Items.STONE)
+        .input('|', Items.STICK)
+        .criterionFromItem("has_shears", Items.SHEARS)
+        .criterionFromItem("has_stone", Items.STONE)
+        .setCustomRecipeCategory("tools");
   }
 
   @ApiStatus.AvailableSince("1.0.3")

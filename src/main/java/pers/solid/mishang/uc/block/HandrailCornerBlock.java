@@ -1,9 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.Maps;
-import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.loot.JLootTable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -11,11 +8,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
-import net.minecraft.data.server.BlockLootTableGenerator;
+import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.server.loottable.VanillaBlockLootTableGenerator;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.loot.LootTable;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -34,6 +33,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
@@ -105,8 +105,8 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JBlockStates getBlockStates() {
-    return BRRPHelper.stateForHorizontalCornerFacingBlock(getBlockModelId(), true);
+  public @NotNull BlockStateSupplier getBlockStates() {
+    return BRRPHelper.stateForHorizontalCornerFacingBlock(this, getBlockModelId(), true);
   }
 
   @SuppressWarnings("deprecation")
@@ -116,8 +116,8 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
   }
 
   @Override
-  public JLootTable getLootTable() {
-    return JLootTable.delegate(BlockLootTableGenerator.drops(this, ConstantLootNumberProvider.create(2)));
+  public LootTable.Builder getLootTable() {
+    return new VanillaBlockLootTableGenerator().drops(this, ConstantLootNumberProvider.create(2));
   }
 
   @SuppressWarnings("deprecation")

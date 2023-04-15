@@ -1,21 +1,23 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.models.JTextures;
-import net.devtech.arrp.json.recipe.JRecipe;
-import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.util.TextBridge;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class GlowingHungSignBlock extends HungSignBlock {
   @ApiStatus.AvailableSince("0.1.7")
@@ -44,34 +46,36 @@ public class GlowingHungSignBlock extends HungSignBlock {
   @Override
   public void writeBlockModel(RuntimeResourcePack pack) {
     final Identifier id = getBlockModelId();
-    final String texture = getBaseTexture();
-    final JTextures textures = new JTextures().var("texture", texture).var("glow", glowTexture).var("bar", barTexture).var("texture_top", textureTop);
+    final Identifier texture = getBaseTexture();
+    final Map<String, String> textures = new HashMap<>(3);
+    textures.put("texture", texture == null ? null : texture.toString());
+    textures.put("bar", barTexture == null ? null : barTexture.toString());
+    textures.put("texture_top", textureTop == null ? null : textureTop.toString());
     pack.addModel(
-        new JModel(new Identifier("mishanguc", "block/glowing_hung_sign"))
-            .textures(textures),
-        new Identifier(id.getNamespace(), id.getPath()));
+        id,
+        ModelJsonBuilder.create(new Identifier("mishanguc", "block/glowing_hung_sign"))
+            .setTextures(textures));
     pack.addModel(
-        new JModel(new Identifier("mishanguc", "block/glowing_hung_sign_body"))
-            .textures(textures),
-        id.brrp_append("_body"));
+        id.brrp_suffixed("_body"),
+        ModelJsonBuilder.create(new Identifier("mishanguc", "block/glowing_hung_sign_body"))
+            .setTextures(textures));
     pack.addModel(
-        new JModel(new Identifier("mishanguc", "block/hung_sign_top_bar"))
-            .textures(textures),
-        id.brrp_append("_top_bar"));
+        id.brrp_suffixed("_top_bar"),
+        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_top_bar"))
+            .setTextures(textures));
     pack.addModel(
-        new JModel(new Identifier("mishanguc", "block/hung_sign_top_bar_edge"))
-            .textures(textures),
-        id.brrp_append("_top_bar_edge"));
+        id.brrp_suffixed("_top_bar_edge"),
+        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_top_bar_edge"))
+            .setTextures(textures));
   }
 
   @Override
-  public @Nullable JRecipe getCraftingRecipe() {
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (baseBlock == null) return null;
-    final JShapedRecipe recipe = new JShapedRecipe(this)
-        .pattern("-#-", "-#-", "-#-")
-        .addKey("#", baseBlock).addKey("-", WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
-        .resultCount(6);
-    recipe.addInventoryChangedCriterion("has_base_block", baseBlock).addInventoryChangedCriterion("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
-    return recipe;
+    return ShapedRecipeJsonBuilder.create(this, 6)
+        .patterns("-#-", "-#-", "-#-")
+        .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
+        .criterionFromItem("has_base_block", baseBlock).criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .setCustomRecipeCategory("signs");
   }
 }

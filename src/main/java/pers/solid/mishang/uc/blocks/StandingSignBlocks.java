@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.blocks;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.SignType;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.Translucent;
@@ -33,15 +34,15 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final StandingSignBlock MANGROVE_STANDING_SIGN = new StandingSignBlock(Blocks.MANGROVE_PLANKS);
 
   static {
-    OAK_STANDING_SIGN.barTexture = "block/oak_log";
-    SPRUCE_STANDING_SIGN.barTexture = "block/spruce_log";
-    BIRCH_STANDING_SIGN.barTexture = "block/birch_log";
-    ACACIA_STANDING_SIGN.barTexture = "block/acacia_log";
-    JUNGLE_STANDING_SIGN.barTexture = "block/jungle_log";
-    DARK_OAK_STANDING_SIGN.barTexture = "block/dark_oak_log";
-    CRIMSON_STANDING_SIGN.barTexture = "block/crimson_stem";
-    WARPED_STANDING_SIGN.barTexture = "block/warped_stem";
-    MANGROVE_STANDING_SIGN.barTexture = "block/mangrove_log";
+    OAK_STANDING_SIGN.barTexture = new Identifier("block/oak_log");
+    SPRUCE_STANDING_SIGN.barTexture = new Identifier("block/spruce_log");
+    BIRCH_STANDING_SIGN.barTexture = new Identifier("block/birch_log");
+    ACACIA_STANDING_SIGN.barTexture = new Identifier("block/acacia_log");
+    JUNGLE_STANDING_SIGN.barTexture = new Identifier("block/jungle_log");
+    DARK_OAK_STANDING_SIGN.barTexture = new Identifier("block/dark_oak_log");
+    CRIMSON_STANDING_SIGN.barTexture = new Identifier("block/crimson_stem");
+    WARPED_STANDING_SIGN.barTexture = new Identifier("block/warped_stem");
+    MANGROVE_STANDING_SIGN.barTexture = new Identifier("block/mangrove_log");
   }
 
   public static final ImmutableMap<SignType, StandingSignBlock> WOODEN_SIGNS = new ImmutableMap.Builder<SignType, StandingSignBlock>()
@@ -282,10 +283,10 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final GlowingStandingSignBlock GLOWING_BLUE_ICE_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.BLUE_ICE);
 
   static {
-    SNOW_STANDING_SIGN.baseTexture = "block/snow";
-    SNOW_STANDING_SIGN.barTexture = "block/packed_ice";
-    GLOWING_SNOW_STANDING_SIGN.baseTexture = "block/snow";
-    GLOWING_SNOW_STANDING_SIGN.barTexture = "block/packed_ice";
-    ICE_STANDING_SIGN.barTexture = "block/blue_ice";
+    SNOW_STANDING_SIGN.baseTexture = new Identifier("block/snow");
+    SNOW_STANDING_SIGN.barTexture = new Identifier("block/packed_ice");
+    GLOWING_SNOW_STANDING_SIGN.baseTexture = new Identifier("block/snow");
+    GLOWING_SNOW_STANDING_SIGN.barTexture = new Identifier("block/packed_ice");
+    ICE_STANDING_SIGN.barTexture = new Identifier("block/blue_ice");
   }
 }
