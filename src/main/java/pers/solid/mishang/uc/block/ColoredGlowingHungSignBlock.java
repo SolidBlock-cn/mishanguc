@@ -1,12 +1,12 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.json.loot.JLootTable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.server.BlockLootTableGenerator;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootTable;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -38,7 +38,7 @@ public class ColoredGlowingHungSignBlock extends GlowingHungSignBlock implements
   }
 
   @Override
-  public JLootTable getLootTable() {
-    return JLootTable.delegate(BlockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION));
+  public LootTable.Builder getLootTable() {
+    return BlockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 }

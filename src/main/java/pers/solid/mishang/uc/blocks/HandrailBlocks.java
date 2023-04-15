@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.blocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.ColoredGlassHandrailBlock;
@@ -115,7 +116,7 @@ public final class HandrailBlocks extends MishangucBlocks {
   public static final SimpleHandrailBlock SIMPLE_SNOW_HANDRAIL = new SimpleHandrailBlock(Blocks.SNOW_BLOCK);
 
   static {
-    SIMPLE_SNOW_HANDRAIL.texture = "block/snow";
+    SIMPLE_SNOW_HANDRAIL.texture = new Identifier("block/snow");
   }
 
   // 木头
@@ -129,14 +130,14 @@ public final class HandrailBlocks extends MishangucBlocks {
   public static final SimpleHandrailBlock SIMPLE_WARPED_HANDRAIL = new SimpleHandrailBlock(Blocks.WARPED_STEM);
 
   static {
-    SIMPLE_OAK_HANDRAIL.texture = "block/oak_log";
-    SIMPLE_SPRUCE_HANDRAIL.texture = "block/spruce_log";
-    SIMPLE_BIRCH_HANDRAIL.texture = "block/birch_log";
-    SIMPLE_JUNGLE_HANDRAIL.texture = "block/jungle_log";
-    SIMPLE_ACACIA_HANDRAIL.texture = "block/acacia_log";
-    SIMPLE_DARK_OAK_HANDRAIL.texture = "block/dark_oak_log";
-    SIMPLE_CRIMSON_HANDRAIL.texture = "block/crimson_stem";
-    SIMPLE_WARPED_HANDRAIL.texture = "block/warped_stem";
+    SIMPLE_OAK_HANDRAIL.texture = new Identifier("block/oak_log");
+    SIMPLE_SPRUCE_HANDRAIL.texture = new Identifier("block/spruce_log");
+    SIMPLE_BIRCH_HANDRAIL.texture = new Identifier("block/birch_log");
+    SIMPLE_JUNGLE_HANDRAIL.texture = new Identifier("block/jungle_log");
+    SIMPLE_ACACIA_HANDRAIL.texture = new Identifier("block/acacia_log");
+    SIMPLE_DARK_OAK_HANDRAIL.texture = new Identifier("block/dark_oak_log");
+    SIMPLE_CRIMSON_HANDRAIL.texture = new Identifier("block/crimson_stem");
+    SIMPLE_WARPED_HANDRAIL.texture = new Identifier("block/warped_stem");
   }
 
   // 染色玻璃。

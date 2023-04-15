@@ -99,8 +99,6 @@ public class HungSignBlockEntity extends BlockEntityWithText {
     return nbt;
   }
 
-  // todo: 1.17 是不能对方块实体进行旋转和镜像了吗？
-
   //  @Override
   public void applyRotation(BlockRotation rotation) {
     //    super.applyRotation(rotation);

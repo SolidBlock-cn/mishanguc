@@ -2,15 +2,12 @@ package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
-import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.blockstate.JVariants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
+import net.minecraft.data.client.model.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -36,6 +33,8 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.util.TextBridge;
 
@@ -84,17 +83,11 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JBlockStates getBlockStates() {
-    final JVariants variant = new JVariants();
+  public @NotNull BlockStateSupplier getBlockStates() {
     final Identifier blockModelId = getBlockModelId();
-    for (Direction facing : Direction.Type.HORIZONTAL) {
-      for (Position position : Position.values()) {
-        for (Shape shape : Shape.values()) {
-          variant.put("facing=" + facing.asString() + ",position=" + position.asString() + ",shape=" + shape.asString(), new JBlockModel(blockModelId.brrp_append("_" + shape.asString() + "_" + position.asString())).y(((int) facing.getOpposite().asRotation())).uvlock());
-        }
-      }
-    }
-    return JBlockStates.ofVariants(variant);
+    return VariantsBlockStateSupplier.create(this).coordinate(BlockStateVariantMap.create(FACING, POSITION, SHAPE).register((facing, position, shape) -> {
+      return BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_" + shape.asString() + "_" + position.asString())).put(MishangUtils.DIRECTION_Y_VARIANT, facing.getOpposite()).put(VariantSettings.UVLOCK, true);
+    }));
   }
 
   @Nullable

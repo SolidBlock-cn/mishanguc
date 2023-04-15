@@ -1,13 +1,14 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
 import pers.solid.mishang.uc.util.LineColor;
@@ -48,9 +49,9 @@ public interface RoadWithAngleLineWithTwoPartsOffset extends RoadWithAngleLine {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull JModel getBlockModel() {
-      return new JModel("mishanguc:block/road_with_angle_line")
-          .textures(new FasterJTextures().base("asphalt")
+    public @NotNull ModelJsonBuilder getBlockModel() {
+      return ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_angle_line"))
+          .setTextures(new FasterJTextures().base("asphalt")
               .lineSide(lineSide)
               .lineSide2(lineSide2)
               .lineTop(lineTop));

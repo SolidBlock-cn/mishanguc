@@ -1,15 +1,11 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
-import net.devtech.arrp.json.blockstate.JBlockModel;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.blockstate.JVariants;
-import net.devtech.arrp.json.models.JModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.data.client.model.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -23,6 +19,8 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
 
@@ -133,32 +131,32 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JBlockStates getBlockStates() {
-    final JVariants variants = new JVariants();
+  public @Nullable BlockStateSupplier getBlockStates() {
+    final BlockStateVariantMap.DoubleProperty<Direction, StripType> map = BlockStateVariantMap.create(FACING, STRIP_TYPE);
     final Identifier id = getBlockModelId();
-    final Identifier idVertical = id.brrp_append("_vertical");
-    variants.addVariant("facing=up,strip_type=horizontal", new JBlockModel(id));
-    variants.addVariant("facing=up,strip_type=vertical", new JBlockModel(idVertical));
-    variants.addVariant("facing=down,strip_type=horizontal", new JBlockModel(id).x(180));
-    variants.addVariant("facing=down,strip_type=vertical", new JBlockModel(idVertical).x(180));
+    final Identifier idVertical = id.brrp_suffixed("_vertical");
+    map.register(Direction.UP, StripType.HORIZONTAL, BlockStateVariant.create().put(VariantSettings.MODEL, id));
+    map.register(Direction.UP, StripType.VERTICAL, BlockStateVariant.create().put(VariantSettings.MODEL, idVertical));
+    map.register(Direction.DOWN, StripType.HORIZONTAL, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R180));
+    map.register(Direction.DOWN, StripType.VERTICAL, BlockStateVariant.create().put(VariantSettings.MODEL, idVertical).put(VariantSettings.X, VariantSettings.Rotation.R180));
     for (Direction direction : Direction.Type.HORIZONTAL) {
-      variants.addVariant("strip_type=horizontal,facing", direction.asString(), new JBlockModel(id).x(-90).y(((int) direction.asRotation())));
-      variants.addVariant("strip_type=vertical,facing", direction.asString(), new JBlockModel(idVertical).x(-90).y(((int) direction.asRotation())));
+      map.register(direction, StripType.HORIZONTAL, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangUtils.DIRECTION_Y_VARIANT, direction));
+      map.register(direction, StripType.VERTICAL, BlockStateVariant.create().put(VariantSettings.MODEL, idVertical).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangUtils.DIRECTION_Y_VARIANT, direction));
     }
-    return JBlockStates.ofVariants(variants);
+    return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.UVLOCK, true)).coordinate(map);
   }
 
   @ApiStatus.AvailableSince("0.1.7")
   @Environment(EnvType.CLIENT)
-  public @Nullable JModel getBlockModelVertical() {
-    return new JModel(getModelParent().brrp_append("_vertical"))
-        .textures(new FasterJTextures().varP("light", lightColor + "_light"));
+  public ModelJsonBuilder getBlockModelVertical() {
+    return ModelJsonBuilder.create(getModelParent().brrp_suffixed("_vertical"))
+        .setTextures(new FasterJTextures().varP("light", lightColor + "_light"));
   }
 
   @Environment(EnvType.CLIENT)
   @Override
   public void writeBlockModel(RuntimeResourcePack pack) {
     super.writeBlockModel(pack);
-    pack.addModel(getBlockModelVertical(), getBlockModelId().brrp_append("_vertical"));
+    pack.addModel(getBlockModelId().brrp_suffixed("_vertical"), getBlockModelVertical());
   }
 }
