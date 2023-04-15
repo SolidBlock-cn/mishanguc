@@ -1,15 +1,19 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.server.RecipeProvider;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
@@ -133,8 +137,13 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable JBlockStates getBlockStates() {
-    final JBlockStates baseStates = baseBlock.getBlockStates();
+  public @Nullable BlockStateSupplier getBlockStates() {
+    final BlockStateSupplier baseStates = baseBlock.getBlockStates();
     return baseStates == null ? null : BRRPHelper.composeStateForSlab(baseStates);
+  }
+
+  @Override
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+    return ((ShapedRecipeJsonBuilder) RecipeProvider.createSlabRecipe(this, Ingredient.ofItems(baseBlock))).criterionFromItem(baseBlock);
   }
 }

@@ -3,10 +3,12 @@ package pers.solid.mishang.uc;
 import com.google.common.base.Functions;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.*;
+import com.google.gson.JsonPrimitive;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.data.client.VariantSetting;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.*;
 import net.minecraft.state.property.Property;
@@ -47,6 +49,9 @@ public class MishangUtils {
   public static final @Unmodifiable BiMap<DyeColor, Integer> COLOR_TO_OUTLINE_COLOR = Arrays.stream(DyeColor.values()).collect(ImmutableBiMap.toImmutableBiMap(Functions.identity(), MishangUtils::toSignOutlineColor));
   private static final Supplier<ImmutableList<Block>> memoizedBlocks = Suppliers.memoize(MishangUtils::blocksInternal);
   private static final Supplier<ImmutableList<Item>> memoizedItems = Suppliers.memoize(MishangUtils::itemsInternal);
+  public static final VariantSetting<Integer> INT_X_VARIANT = new VariantSetting<>("x", JsonPrimitive::new);
+  public static final VariantSetting<Integer> INT_Y_VARIANT = new VariantSetting<>("y", JsonPrimitive::new);
+  public static final VariantSetting<Direction> DIRECTION_Y_VARIANT = new VariantSetting<>("y", direction -> new JsonPrimitive(direction.asRotation()));
 
   private static final ImmutableSet<Block> WOODS = ImmutableSet.of(Blocks.OAK_WOOD, Blocks.SPRUCE_WOOD, Blocks.BIRCH_WOOD, Blocks.JUNGLE_WOOD, Blocks.ACACIA_WOOD, Blocks.DARK_OAK_WOOD, Blocks.CRIMSON_HYPHAE, Blocks.WARPED_HYPHAE);
 

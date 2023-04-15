@@ -1,31 +1,34 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.generator.BlockResourceGenerator;
-import net.devtech.arrp.json.blockstate.JBlockStates;
-import net.devtech.arrp.json.loot.JLootTable;
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.models.JTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IceBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.BlockLootTableGenerator;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootTable;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
+import pers.solid.brrp.v1.generator.BlockResourceGenerator;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
 
 public class ColoredIceBlock extends IceBlock implements ColoredBlock, BlockResourceGenerator {
-  private final JTextures textures;
+  private final TextureMap textures;
 
-  public ColoredIceBlock(Settings settings, JTextures textures) {
+  public ColoredIceBlock(Settings settings, TextureMap textures) {
     super(settings);
     this.textures = textures;
   }
@@ -49,18 +52,18 @@ public class ColoredIceBlock extends IceBlock implements ColoredBlock, BlockReso
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JModel getBlockModel() {
-    return new JModel("mishanguc:block/colored_cube_all").textures(textures);
+  public @NotNull ModelJsonBuilder getBlockModel() {
+    return ModelJsonBuilder.create(new Identifier("mishanguc:block/colored_cube_all")).setTextures(textures);
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JBlockStates getBlockStates() {
-    return JBlockStates.simple(getBlockModelId());
+  public @UnknownNullability BlockStateSupplier getBlockStates() {
+    return BlockStateModelGenerator.createSingletonBlockState(this, getBlockModelId());
   }
 
   @Override
-  public JLootTable getLootTable() {
-    return JLootTable.delegate(BlockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION));
+  public LootTable.@UnknownNullability Builder getLootTable() {
+    return BlockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 }

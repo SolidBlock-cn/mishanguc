@@ -1,17 +1,17 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.json.models.JModel;
-import net.devtech.arrp.json.models.JTextures;
-import net.devtech.arrp.json.recipe.JRecipe;
-import net.devtech.arrp.json.recipe.JShapedRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.text.MutableText;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.util.TextBridge;
 
@@ -38,20 +38,18 @@ public class GlowingStandingSignBlock extends StandingSignBlock {
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull JModel getBlockModel() {
-    final String texture = getBaseTexture();
-    final JTextures textures = new JTextures().var("texture", texture).var("bar", barTexture).var("glow", glowTexture);
-    return new JModel("mishanguc:block/glowing_standing_sign").textures(textures);
+  public @NotNull ModelJsonBuilder getBlockModel() {
+    final Identifier texture = getBaseTexture();
+    return ModelJsonBuilder.create(new Identifier("mishanguc:block/glowing_standing_sign")).addTexture("texture", texture).addTexture("bar", barTexture).addTexture("glow", glowTexture);
   }
 
   @Override
-  public @Nullable JRecipe getCraftingRecipe() {
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (baseBlock == null) return null;
-    final JShapedRecipe recipe = new JShapedRecipe(this)
-        .pattern("---", "###", " | ")
-        .addKey("#", baseBlock).addKey("-", WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN).addKey("|", Items.STICK)
-        .resultCount(4);
-    recipe.addInventoryChangedCriterion("has_base_block", baseBlock).addInventoryChangedCriterion("has_sign", WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN);
-    return recipe;
+    return ShapedRecipeJsonBuilder.create(this, 4)
+        .patterns("---", "###", " | ")
+        .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN).input('|', Items.STICK)
+        .criterionFromItem("has_base_block", baseBlock)
+        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN);
   }
 }
