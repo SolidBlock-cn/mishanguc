@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -20,7 +21,7 @@ import java.util.function.Predicate;
  * 此类原本是 {@link AbstractSignBlockEditScreen} 的内部类，后面独立出来了。
  */
 @Environment(EnvType.CLIENT)
-public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Entry> {
+public class TextFieldListScreen extends AlwaysSelectedEntryListWidget<TextFieldListScreen.Entry> {
 
   private final AbstractSignBlockEditScreen<?> signBlockEditScreen;
 
@@ -33,13 +34,11 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
     this.setRenderSelection(false);
   }
 
+  private boolean isFocused;
+
   @Override
   public boolean changeFocus(boolean lookForwards) {
-    final boolean changeFocus = super.changeFocus(lookForwards);
-    if (changeFocus) {
-      setSelected(getFocused());
-    }
-    return changeFocus;
+    return this.isFocused = super.changeFocus(lookForwards);
   }
 
   /**
@@ -66,6 +65,12 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
     }
   }
 
+  @Override
+  public boolean isFocused() {
+    // 防止此元素总被视为已经 focused
+    return isFocused;
+  }
+
   /**
    * 设置当前 TextFieldListScreen 的已选中的文本框。
    *
@@ -88,7 +93,8 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
       if (signBlockEditScreen.selectedTextContext != null) {
         signBlockEditScreen.customColorTextField.setText(String.format("#%06x", signBlockEditScreen.selectedTextContext.color));
       }
-    } else {
+    } else if (isFocused()) {
+      // 使用键盘导航至其他按钮的时候，不设为 null。
       signBlockEditScreen.selectedTextField = null;
       signBlockEditScreen.selectedTextContext = null;
     }
@@ -129,7 +135,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
    * 的子类，所以对该类进行了包装。
    */
   @Environment(EnvType.CLIENT)
-  public class Entry extends EntryListWidget.Entry<Entry> {
+  public class Entry extends AlwaysSelectedEntryListWidget.Entry<Entry> {
     public final @NotNull TextFieldWidget textFieldWidget;
 
 
@@ -162,6 +168,9 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
         int mouseY,
         boolean hovered,
         float tickDelta) {
+      if (getSelected() == this && textFieldWidget.isVisible()) {
+        fill(matrices, textFieldWidget.x - 2, y - 2, textFieldWidget.x + textFieldWidget.getWidth() + 2, y + textFieldWidget.getHeight() + 2, 0xfff0f0f0);
+      }
       textFieldWidget.y = y;
       textFieldWidget.render(matrices, mouseX, mouseY, tickDelta);
     }

@@ -36,9 +36,7 @@ public final class BRRPHelper {
   @Environment(EnvType.CLIENT)
   @NotNull
   public static BlockStateSupplier stateForHorizontalCornerFacingBlock(@NotNull Block block, @NotNull Identifier modelIdentifier, boolean uvlock) {
-    return VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(MishangucProperties.HORIZONTAL_CORNER_FACING).register(direction -> {
-      return BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifier).put(MishangUtils.INT_Y_VARIANT, direction.asRotation() - 45).put(VariantSettings.UVLOCK, uvlock);
-    }));
+    return VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(MishangucProperties.HORIZONTAL_CORNER_FACING).register(direction -> BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifier).put(MishangUtils.INT_Y_VARIANT, direction.asRotation() - 45).put(VariantSettings.UVLOCK, uvlock)));
   }
 
   public static String slabOf(String string) {

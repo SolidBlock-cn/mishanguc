@@ -169,7 +169,7 @@ public class CarryingToolItem extends BlockToolItem
       return Text.Serializer.fromJson(nbt.getString("holdingEntityName"));
     } else if (nbt.contains("holdingEntityType", NbtType.STRING)) {
       final Identifier holdingEntityType = Identifier.tryParse(nbt.getString("holdingEntityType"));
-      return Registry.ENTITY_TYPE.getOrEmpty(holdingEntityType).map(entityType -> entityType.getName().shallowCopy()).orElseGet(() -> TextBridge.literal("" + holdingEntityType));
+      return Registry.ENTITY_TYPE.getOrEmpty(holdingEntityType).map(entityType -> entityType.getName().shallowCopy()).orElseGet(() -> TextBridge.literal(String.valueOf(holdingEntityType)));
     } else {
       return TextBridge.empty();
     }

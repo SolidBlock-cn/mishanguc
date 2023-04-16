@@ -4,9 +4,10 @@ import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Style;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
+import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -116,8 +117,23 @@ public class BooleanButtonWidget extends ButtonWidget {
     final @Nullable Boolean value = getValue();
     return value == null
         ? message
-        : TextBridge.literal("")
+        : TextBridge.empty()
         .append(message)
-        .fillStyle(Style.EMPTY.withColor(TextColor.fromRgb(value ? 0xb2ff96 : 0xffac96)));
+        .styled(style -> style.withColor(TextColor.fromRgb(value ? 0xb2ff96 : 0xffac96)));
+  }
+
+  private boolean narrateTooltipAsMessage = false;
+
+  /**
+   * 像“B”、“I”之类的按钮，其名称不宜被直接复述，这种情况下，直接复述其提示。
+   */
+  public BooleanButtonWidget narrateTooltipAsMessage(boolean value) {
+    this.narrateTooltipAsMessage = value;
+    return this;
+  }
+
+  @Override
+  protected MutableText getNarrationMessage() {
+    return narrateTooltipAsMessage ? new TranslatableText("gui.narrate.button", tooltipSupplier.apply(null)) : super.getNarrationMessage();
   }
 }

@@ -31,7 +31,6 @@ import pers.solid.mishang.uc.util.TextBridge;
  */
 @ApiStatus.AvailableSince("1.0.0")
 public final class MishangucRules {
-  public static final GameRules.Key<GameRules.BooleanRule> WARN_DEPRECATED_VERSION = register("warn_deprecated_version", GameRuleFactory.createBooleanRule(true));
 
   public static final GameRules.Key<EnumRule<ToolAccess>> FORCE_PLACING_TOOL_ACCESS = register("force_placing_tool_access", GameRuleFactory.createEnumRule(ToolAccess.CREATIVE_ONLY, (server, rule) -> sync(server, rule, 0)));
 
