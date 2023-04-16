@@ -135,10 +135,10 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
     final BlockStateVariantMap.DoubleProperty<Direction, StripType> map = BlockStateVariantMap.create(FACING, STRIP_TYPE);
     final Identifier id = getBlockModelId();
     final Identifier idVertical = id.brrp_suffixed("_vertical");
-    map.register(Direction.UP,StripType.HORIZONTAL, BlockStateVariant.create().put(VariantSettings.MODEL, id));
-    map.register(Direction.UP,StripType.VERTICAL, BlockStateVariant.create().put(VariantSettings.MODEL, idVertical));
-    map.register(Direction.DOWN,StripType.HORIZONTAL, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R180));
-    map.register(Direction.DOWN,StripType.VERTICAL, BlockStateVariant.create().put(VariantSettings.MODEL, idVertical).put(VariantSettings.X, VariantSettings.Rotation.R180));
+    map.register(Direction.UP, StripType.HORIZONTAL, BlockStateVariant.create().put(VariantSettings.MODEL, id));
+    map.register(Direction.UP, StripType.VERTICAL, BlockStateVariant.create().put(VariantSettings.MODEL, idVertical));
+    map.register(Direction.DOWN, StripType.HORIZONTAL, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R180));
+    map.register(Direction.DOWN, StripType.VERTICAL, BlockStateVariant.create().put(VariantSettings.MODEL, idVertical).put(VariantSettings.X, VariantSettings.Rotation.R180));
     for (Direction direction : Direction.Type.HORIZONTAL) {
       map.register(direction, StripType.HORIZONTAL, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangUtils.DIRECTION_Y_VARIANT, direction));
       map.register(direction, StripType.VERTICAL, BlockStateVariant.create().put(VariantSettings.MODEL, idVertical).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangUtils.DIRECTION_Y_VARIANT, direction));

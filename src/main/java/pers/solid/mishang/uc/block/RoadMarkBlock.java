@@ -209,14 +209,14 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
     public @NotNull BlockStateSupplier getBlockStates() {
       final Identifier blockModelId = getBlockModelId();
       final BlockStateVariantMap.DoubleProperty<Boolean, FourHorizontalAxis> map = BlockStateVariantMap.create(ON_SLAB, AXIS)
-          .register(false,FourHorizontalAxis.X,BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId).put(MishangUtils.INT_Y_VARIANT, 90))
-          .register(false, FourHorizontalAxis.NW_SE,BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_rotated")).put(MishangUtils.INT_Y_VARIANT, 90))
-          .register(false,FourHorizontalAxis.Z,BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId).put(MishangUtils.INT_Y_VARIANT, 0))
-          .register(false, FourHorizontalAxis.NE_SW,BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_rotated")).put(MishangUtils.INT_Y_VARIANT, 0))
-          .register(true, FourHorizontalAxis.X,BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_on_slab")).put(MishangUtils.INT_Y_VARIANT, 90))
-          .register(true, FourHorizontalAxis.NW_SE,BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_on_slab_rotated")).put(MishangUtils.INT_Y_VARIANT, 90))
-          .register(true, FourHorizontalAxis.Z,BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_on_slab")).put(MishangUtils.INT_Y_VARIANT, 0))
-          .register(true, FourHorizontalAxis.NE_SW,BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_on_slab_rotated")).put(MishangUtils.INT_Y_VARIANT, 0));
+          .register(false, FourHorizontalAxis.X, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId).put(MishangUtils.INT_Y_VARIANT, 90))
+          .register(false, FourHorizontalAxis.NW_SE, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_rotated")).put(MishangUtils.INT_Y_VARIANT, 90))
+          .register(false, FourHorizontalAxis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId).put(MishangUtils.INT_Y_VARIANT, 0))
+          .register(false, FourHorizontalAxis.NE_SW, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_rotated")).put(MishangUtils.INT_Y_VARIANT, 0))
+          .register(true, FourHorizontalAxis.X, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_on_slab")).put(MishangUtils.INT_Y_VARIANT, 90))
+          .register(true, FourHorizontalAxis.NW_SE, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_on_slab_rotated")).put(MishangUtils.INT_Y_VARIANT, 90))
+          .register(true, FourHorizontalAxis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_on_slab")).put(MishangUtils.INT_Y_VARIANT, 0))
+          .register(true, FourHorizontalAxis.NE_SW, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_on_slab_rotated")).put(MishangUtils.INT_Y_VARIANT, 0));
       return VariantsBlockStateSupplier.create(this).coordinate(map);
     }
   }

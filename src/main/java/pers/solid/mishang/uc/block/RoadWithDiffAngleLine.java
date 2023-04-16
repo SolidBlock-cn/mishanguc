@@ -110,7 +110,7 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
                 facing1, direction.getAxis(),
                 BlockStateVariant.create().put(VariantSettings.MODEL, id).put(MishangUtils.DIRECTION_Y_VARIANT, direction))
             .register(
-                 facing2, direction.getAxis(),
+                facing2, direction.getAxis(),
                 BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_mirrored"))
                     .put(MishangUtils.DIRECTION_Y_VARIANT, direction));
       }

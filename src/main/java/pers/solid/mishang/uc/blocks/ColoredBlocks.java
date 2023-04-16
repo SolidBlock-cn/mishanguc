@@ -128,7 +128,7 @@ public final class ColoredBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4")
   public static final ColoredSlabBlock COLORED_IRON_SLAB = new ColoredSlabBlock(COLORED_IRON_BLOCK);
   public static final ColoredCubeBlock COLORED_PURPUR_BLOCK = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.PURPUR_BLOCK), "mishanguc:block/pale_purpur_block");
-  public static final ColoredPillarBlock COLORED_PURPUR_PILLAR = new ColoredPillarBlock(FabricBlockSettings.copyOf(Blocks.PURPUR_PILLAR), TextureMap.sideEnd(new Identifier("mishanguc:block/pale_purpur_pillar"),new Identifier("mishanguc:block/pale_purpur_pillar_top")));
+  public static final ColoredPillarBlock COLORED_PURPUR_PILLAR = new ColoredPillarBlock(FabricBlockSettings.copyOf(Blocks.PURPUR_PILLAR), TextureMap.sideEnd(new Identifier("mishanguc:block/pale_purpur_pillar"), new Identifier("mishanguc:block/pale_purpur_pillar_top")));
   @ApiStatus.AvailableSince("1.0.2")
   public static final ColoredCubeBlock COLORED_END_STONE = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.END_STONE), "mishanguc:block/pale_end_stone");
   @ApiStatus.AvailableSince("1.0.2")

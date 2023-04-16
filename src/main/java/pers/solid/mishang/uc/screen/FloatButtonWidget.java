@@ -9,10 +9,13 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.navigation.GuiNavigationType;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
@@ -37,6 +40,21 @@ public class FloatButtonWidget extends ButtonWidget {
    * 按钮的步长，默认为1。
    */
   public float step = 1;
+
+  /**
+   * 按下“右”方向键时，步长再乘以此值。
+   */
+  public float rightArrowStepMultiplier = 1;
+  /**
+   * 按下“上”或“下”方向键时，步长再乘以此值。
+   */
+  public float upArrowStepMultiplier = 1;
+
+  /**
+   * 滚动鼠标滚轮时，步长再乘以此值。
+   */
+  public float scrollMultiplier = 1;
+
   /**
    * 按钮当前的最小值。若低于最小值，则从最大值开始循环，但是如果没有最大值时除外。
    */
@@ -71,7 +89,8 @@ public class FloatButtonWidget extends ButtonWidget {
   }
 
   public void updateTooltip() {
-    setTooltip(Tooltip.of(this.tooltipSupplier.get(getValue())));
+    final float value = getValue();
+    setTooltip(Tooltip.of(this.tooltipSupplier.get(value), TextBridge.translatable("narration.mishanguc.button.current_value", value)));
   }
 
   @Override
@@ -106,7 +125,7 @@ public class FloatButtonWidget extends ButtonWidget {
       }
     }
     valueSetter.accept(value);
-    setTooltip(Tooltip.of(tooltipSupplier.get(getValue())));
+    updateTooltip();
   }
 
   @Override
@@ -149,9 +168,9 @@ public class FloatButtonWidget extends ButtonWidget {
   public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
     setValue((float) (getValue()
         + amount
-        * (Screen.hasShiftDown() ? 1 : -1)
+        * (Screen.hasShiftDown() ? -1 : 1)
         * (Screen.hasControlDown() ? 8 : 1)
-        * step
+        * step * scrollMultiplier
         * (Screen.hasAltDown() ? 0.125f : 1)));
     super.mouseScrolled(mouseX, mouseY, amount);
     return true;
@@ -172,11 +191,12 @@ public class FloatButtonWidget extends ButtonWidget {
           setValue(defaultValue);
           return true;
         } else if (decreases || keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_UP) {
+          final float multiplier = keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_LEFT ? rightArrowStepMultiplier : upArrowStepMultiplier;
           float sign = decreases ? -1.0F : 1.0F;
           this.setValue(getValue() + sign
-              * (Screen.hasShiftDown() ? 1 : -1)
+              * (Screen.hasShiftDown() ? -1 : 1)
               * (Screen.hasControlDown() ? 8 : 1)
-              * step
+              * step * multiplier
               * (Screen.hasAltDown() ? 0.125f : 1));
           return true;
         }
@@ -207,5 +227,20 @@ public class FloatButtonWidget extends ButtonWidget {
         this.sliderFocused = true;
       }
     }
+  }
+
+  @Override
+  protected MutableText getNarrationMessage() {
+    return getNarrationMessage(super.getMessage());
+  }
+
+  @Override
+  protected void appendDefaultNarrations(NarrationMessageBuilder builder) {
+    super.appendDefaultNarrations(builder);
+    final Float value = valueGetter.apply(this);
+    if (value != null) {
+      builder.put(NarrationPart.HINT, TextBridge.translatable("narration.mishanguc.button.current_value", value));
+    }
+    builder.put(NarrationPart.USAGE, TextBridge.translatable("narration.mishanguc.button.float_usage"));
   }
 }

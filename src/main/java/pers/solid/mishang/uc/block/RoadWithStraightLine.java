@@ -106,8 +106,8 @@ public interface RoadWithStraightLine extends Road {
     public @NotNull BlockStateSupplier getBlockStates() {
       final Identifier blockModelId = getBlockModelId();
       return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId)).coordinate(BlockStateVariantMap.create(AXIS)
-              .register(Direction.Axis.X, ImmutableList.of(BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R90), BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R270)))
-              .register(Direction.Axis.Z,ImmutableList.of(BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R0), BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R180))));
+          .register(Direction.Axis.X, ImmutableList.of(BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R90), BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R270)))
+          .register(Direction.Axis.Z, ImmutableList.of(BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R0), BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R180))));
     }
 
     @Environment(EnvType.CLIENT)

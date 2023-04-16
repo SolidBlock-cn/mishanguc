@@ -167,7 +167,7 @@ public class CarryingToolItem extends BlockToolItem
       return Text.Serializer.fromJson(nbt.getString("holdingEntityName"));
     } else if (nbt.contains("holdingEntityType", NbtElement.STRING_TYPE)) {
       final Identifier holdingEntityType = Identifier.tryParse(nbt.getString("holdingEntityType"));
-      return Registries.ENTITY_TYPE.containsId(holdingEntityType) ? Registries.ENTITY_TYPE.get(holdingEntityType).getName().copy() : TextBridge.literal("" + holdingEntityType);
+      return Registries.ENTITY_TYPE.containsId(holdingEntityType) ? Registries.ENTITY_TYPE.get(holdingEntityType).getName().copy() : TextBridge.literal(String.valueOf(holdingEntityType));
     } else {
       return Text.empty();
     }
@@ -427,15 +427,15 @@ public class CarryingToolItem extends BlockToolItem
   public @NotNull ModelJsonBuilder getItemModel() {
     return ModelJsonBuilder.create(Models.HANDHELD).setTextures(TextureMap.layer0(getTextureId()))  // TODO: 2023/4/15, 015 check
         .addOverride(new ModelOverrideBuilder(getItemModelId().brrp_suffixed("_with_block")).addCondition(new Identifier("mishanguc:is_holding_block"), 1f))
-        .addOverride(new ModelOverrideBuilder( getItemModelId().brrp_suffixed( "_with_entity")).addCondition(new Identifier("mishanguc:is_holding_entity"), 1f));
+        .addOverride(new ModelOverrideBuilder(getItemModelId().brrp_suffixed("_with_entity")).addCondition(new Identifier("mishanguc:is_holding_entity"), 1f));
   }
 
   @Environment(EnvType.CLIENT)
   @Override
   public void writeItemModel(RuntimeResourcePack pack) {
     ItemResourceGenerator.super.writeItemModel(pack);
-    pack.addModel(getItemModelId().brrp_suffixed("_with_block"), ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId()+ "_with_block"));
-    pack.addModel(getItemModelId().brrp_suffixed("_with_entity"), ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId()+ "_with_entity"));
+    pack.addModel(getItemModelId().brrp_suffixed("_with_block"), ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId() + "_with_block"));
+    pack.addModel(getItemModelId().brrp_suffixed("_with_entity"), ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId() + "_with_entity"));
   }
 
   @Environment(EnvType.CLIENT)

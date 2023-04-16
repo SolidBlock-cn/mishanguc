@@ -28,7 +28,7 @@ public class ColoredCubeBlock extends BRRPCubeBlock implements ColoredBlock {
   }
 
   public static ColoredCubeBlock cubeAll(Settings settings, String allTexture) {
-    return new ColoredCubeBlock(settings, new Identifier("mishanguc","block/colored_cube_all"), TextureMap.all(new Identifier(allTexture)));
+    return new ColoredCubeBlock(settings, new Identifier("mishanguc", "block/colored_cube_all"), TextureMap.all(new Identifier(allTexture)));
   }
 
   public static ColoredCubeBlock cubeBottomTop(Settings settings, String topTexture, String sideTexture, String bottomTexture) {

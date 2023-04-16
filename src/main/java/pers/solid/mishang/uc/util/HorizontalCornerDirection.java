@@ -62,7 +62,7 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
     }
     throw new IllegalArgumentException("There is no horizontal corner direction composed of " + dir1.asString() + " " + dir2.asString() + ".");
   }
-  
+
   @Contract(value = "_, _, !null -> !null", pure = true)
   public static @Nullable HorizontalCornerDirection fromDirections(@NotNull Direction dir1, @NotNull Direction dir2, @Nullable HorizontalCornerDirection defaultValue) {
     try {

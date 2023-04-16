@@ -271,16 +271,6 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     }
   }
 
-  @Override
-  public @NotNull ActionResult useEntityCallback(
-      PlayerEntity player,
-      World world,
-      Hand hand,
-      Entity entity,
-      @Nullable EntityHitResult hitResult) {
-    return ActionResult.PASS;
-  }
-
   @Environment(EnvType.CLIENT)
   @Override
   public void renderBeforeOutline(WorldRenderContext context, HitResult hitResult, ClientPlayerEntity player, Hand hand) {

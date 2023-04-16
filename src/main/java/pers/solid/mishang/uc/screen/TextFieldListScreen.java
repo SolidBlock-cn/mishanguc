@@ -4,15 +4,20 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.Narratable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -21,7 +26,7 @@ import java.util.List;
  * 此类原本是 {@link AbstractSignBlockEditScreen} 的内部类，后面独立出来了。
  */
 @Environment(EnvType.CLIENT)
-public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Entry> {
+public class TextFieldListScreen extends AlwaysSelectedEntryListWidget<TextFieldListScreen.Entry> {
 
   private final AbstractSignBlockEditScreen<?> signBlockEditScreen;
 
@@ -34,12 +39,21 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
     this.setRenderSelection(false);
   }
 
+  private boolean isFocused;
+
   @Override
   public void setFocused(boolean focused) {
     super.setFocused(focused);
+    isFocused = focused;
     if (getFocused() != null) {
       getFocused().textFieldWidget.setFocused(focused);
     }
+  }
+
+  @Override
+  public boolean isFocused() {
+    // 防止此元素总被视为已经 focused
+    return isFocused;
   }
 
   /**
@@ -64,7 +78,8 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
       if (signBlockEditScreen.selectedTextContext != null) {
         signBlockEditScreen.customColorTextField.setText(String.format("#%06x", signBlockEditScreen.selectedTextContext.color));
       }
-    } else {
+    } else if (!MinecraftClient.getInstance().getNavigationType().isKeyboard()) {
+      // 使用键盘导航至其他按钮的时候，不设为 null。
       signBlockEditScreen.selectedTextField = null;
       signBlockEditScreen.selectedTextContext = null;
     }
@@ -116,7 +131,9 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
   @ApiStatus.AvailableSince("mc1.17")
   @Override
   public void appendNarrations(NarrationMessageBuilder builder) {
-
+    builder.put(NarrationPart.TITLE, TextBridge.translatable("narration.mishanguc.text_field_list"));
+    builder.put(NarrationPart.USAGE, TextBridge.translatable("narration.mishanguc.text_field_list.usage"));
+    super.appendNarrations(builder);
   }
 
   /**
@@ -124,7 +141,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
    * 的子类，所以对该类进行了包装。
    */
   @Environment(EnvType.CLIENT)
-  public class Entry extends EntryListWidget.Entry<TextFieldListScreen.Entry> {
+  public class Entry extends AlwaysSelectedEntryListWidget.Entry<TextFieldListScreen.Entry> implements Narratable {
     public final @NotNull TextFieldWidget textFieldWidget;
 
 
@@ -158,7 +175,7 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
         boolean hovered,
         float tickDelta) {
       if (isFocused() && textFieldWidget.isVisible()) {
-        fill(matrices, textFieldWidget.getX() - 2, textFieldWidget.getY() - 2, textFieldWidget.getX() + textFieldWidget.getWidth() + 2, textFieldWidget.getY() + textFieldWidget.getHeight() + 2, 0xe0d0ffff);
+        fill(matrices, textFieldWidget.getX() - 2, y - 2, textFieldWidget.getX() + textFieldWidget.getWidth() + 2, y + textFieldWidget.getHeight() + 2, 0xfff0f0f0);
       }
       textFieldWidget.setY(y);
       textFieldWidget.render(matrices, mouseX, mouseY, tickDelta);
@@ -239,6 +256,16 @@ public class TextFieldListScreen extends EntryListWidget<TextFieldListScreen.Ent
     @Override
     public boolean charTyped(char chr, int modifiers) {
       return super.charTyped(chr, modifiers) || textFieldWidget.charTyped(chr, modifiers);
+    }
+
+    @Override
+    public Text getNarration() {
+      return textFieldWidget.getMessage();
+    }
+
+    @Override
+    public void appendNarrations(NarrationMessageBuilder builder) {
+      textFieldWidget.appendNarrations(builder);
     }
   }
 }

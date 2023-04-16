@@ -157,7 +157,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
     final Identifier id = getBlockModelId();
     final BlockStateVariantMap.SingleProperty<Direction> map = BlockStateVariantMap.create(FACING);
     map.register(Direction.UP, BlockStateVariant.create().put(VariantSettings.MODEL, id));
-    map.register(Direction.DOWN, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X  , VariantSettings.Rotation.R180));
+    map.register(Direction.DOWN, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R180));
     for (Direction direction : Direction.Type.HORIZONTAL) {
       map.register(direction, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangUtils.DIRECTION_Y_VARIANT, direction));
     }

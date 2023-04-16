@@ -76,7 +76,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
   @Environment(EnvType.CLIENT)
   @Override
   public @NotNull ModelJsonBuilder getItemModel() {
-    return ModelJsonBuilder.create("mishanguc","block/simple_handrail_inventory").setTextures(getTextures());
+    return ModelJsonBuilder.create("mishanguc", "block/simple_handrail_inventory").setTextures(getTextures());
   }
 
   @Environment(EnvType.CLIENT)

@@ -508,7 +508,7 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
   @Environment(EnvType.CLIENT)
   @Override
   public @NotNull ModelJsonBuilder getBlockModel() {
-    return ModelJsonBuilder.create("mishanguc","block/road_with_auto_line")
+    return ModelJsonBuilder.create("mishanguc", "block/road_with_auto_line")
         .setTextures(new FasterJTextures()
             .base("asphalt")
             .line(texture)

@@ -46,7 +46,7 @@ public interface RoadWithCrossLine extends Road {
     @Environment(EnvType.CLIENT)
     @Override
     public @NotNull ModelJsonBuilder getBlockModel() {
-      return ModelJsonBuilder.create("mishanguc","block/road_with_cross_line")
+      return ModelJsonBuilder.create("mishanguc", "block/road_with_cross_line")
           .setTextures(new FasterJTextures().base("asphalt")
               .lineSide(MishangUtils.composeStraightLineTexture(lineColor, LineType.NORMAL))
               .lineTop(lineColor.asString() + "_cross_line"));

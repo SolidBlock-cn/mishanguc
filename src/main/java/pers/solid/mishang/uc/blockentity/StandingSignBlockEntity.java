@@ -119,11 +119,6 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
     return BlockEntityUpdateS2CPacket.create(this);
   }
 
-  @Override
-  public NbtCompound toInitialChunkDataNbt() {
-    return this.createNbt();
-  }
-
   /**
    * 获取指定一侧的文本。
    *

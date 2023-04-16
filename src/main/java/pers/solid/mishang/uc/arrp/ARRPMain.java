@@ -80,7 +80,7 @@ public class ARRPMain implements ModInitializer {
   }
 
   private static IdentifiedTagBuilder<Block> blockTag(String path) {
-    return IdentifiedTagBuilder.createBlock(new Identifier("mishanguc",  path));
+    return IdentifiedTagBuilder.createBlock(new Identifier("mishanguc", path));
   }
 
   private static void addTags() {
@@ -428,7 +428,7 @@ public class ARRPMain implements ModInitializer {
           } else if (baseBlock == Blocks.OBSIDIAN || baseBlock == Blocks.CRYING_OBSIDIAN || baseBlock == Blocks.NETHERITE_BLOCK) {
             needsDiamondTool.add(blocks);
           } else if (baseBlock == Blocks.IRON_BLOCK || baseBlock == Blocks.LAPIS_BLOCK) {
-              needsStoneTool.add(blocks);
+            needsStoneTool.add(blocks);
           }
         }
       }
@@ -720,7 +720,7 @@ public class ARRPMain implements ModInitializer {
     }
     { // invisible glowing wall sign
       final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN, 3)
-          .pattern("---").pattern( "###")
+          .pattern("---").pattern("###")
           .input('-', Items.GLOWSTONE_DUST)
           .input('#', WallSignBlocks.INVISIBLE_WALL_SIGN)
           .criterion("has_base_block", RecipeProvider.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN))
@@ -734,7 +734,7 @@ public class ARRPMain implements ModInitializer {
     // 先是三个完整方块的合成表。
     { // white light
       final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, LightBlocks.WHITE_LIGHT, 8)
-          .pattern("*#*").pattern("#C#").pattern( "*#*")
+          .pattern("*#*").pattern("#C#").pattern("*#*")
           .input('*', Items.WHITE_DYE)
           .input('#', Items.GLOWSTONE)
           .input('C', Items.WHITE_CONCRETE)
