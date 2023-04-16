@@ -85,9 +85,7 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   @Override
   public @NotNull BlockStateSupplier getBlockStates() {
     final Identifier blockModelId = getBlockModelId();
-    return VariantsBlockStateSupplier.create(this).coordinate(BlockStateVariantMap.create(FACING, POSITION, SHAPE).register((facing, position, shape) -> {
-      return BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_" + shape.asString() + "_" + position.asString())).put(MishangUtils.DIRECTION_Y_VARIANT, facing.getOpposite()).put(VariantSettings.UVLOCK, true);
-    }));
+    return VariantsBlockStateSupplier.create(this).coordinate(BlockStateVariantMap.create(FACING, POSITION, SHAPE).register((facing, position, shape) -> BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_" + shape.asString() + "_" + position.asString())).put(MishangUtils.DIRECTION_Y_VARIANT, facing.getOpposite()).put(VariantSettings.UVLOCK, true)));
   }
 
   @Nullable
