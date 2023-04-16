@@ -166,6 +166,8 @@
   "block.mishanguc.road_slab_with_ys_and_bi_ba_line": "Road Slab with Yellow S & Bi-BA Line",
 
   "block.mishanguc.tooltip.road": "Speed up when walking on the road.",
+  "block.mishanguc.tooltip.road.rule.1": "Operators can modify game rule \"%s\" to change the speed.",
+  "block.mishanguc.tooltip.road.rule.2": "Setting to 0 to disable accelerating. By default %s.",
   "block.mishanguc.tooltip.road_with_straight_line.1": "Straight line is in the axis of player's looking.",
   "block.mishanguc.tooltip.road_with_straight_line.2": "Rotated 90 degree when sneaking.",
   "block.mishanguc.tooltip.road_with_angle_line.1": "Angle's inner is towards the player's looking.",
@@ -757,9 +759,8 @@
 
   "notice.mishanguc.version_check": "Please note: The development of Mishang Urban Construction mod for Minecraft %s is stopped. For more features and updates of the mod, it is recommended to use other Minecraft versions, such as %s. Operators can type command %s to suppress this notice for this level.",
   "modmenu.descriptionTranslation.mishanguc": "An amount of blocks and items that make a beautiful city! Currently not stable. Please do not use in your formal work!",
+  "modmenu.nameTranslation.mishanguc": "Mishang Urban Construction",
 
-  "gamerule.mishanguc:warn_deprecated_version": "Warn Deprecated MC Version for Mod",
-  "gamerule.mishanguc:warn_deprecated_version.description": "Send a message if you are using the Minecraft version that may be not supported of Mishang Urban Construction mod.",
   "gamerule.mishanguc:force_placing_tool_access": "Force Placing Tool Access",
   "gamerule.mishanguc:force_placing_tool_access.description": "Determine which type of players are allowed to use force placing tool.",
   "gamerule.mishanguc:carrying_tool_access": "Carrying Tool Access",
@@ -886,5 +887,11 @@
   "commands.mishanguc:update-light.argument.fromPos": "fromPos",
   "commands.mishanguc:update-light.argument.toPos": "toPos",
   "commands.mishanguc:update-light.description.detail": "If the command contains a huge range, it may cause your server to lag, freeze, or even run out of memory. Therefore, to update light for a huge region, it is recommended to divide it into segments, and execute this command for them respectively. The command after execution will sync the updates to client, but it is not stable. You can quit and re-join the world to confirm the light update has been finished.",
-  "commands.mishanguc:update-light.continue": "Click to continue"
+  "commands.mishanguc:update-light.continue": "Click to continue",
+
+  "narration.mishanguc.text_field_list": "Text list in the sign edit screen",
+  "narration.mishanguc.text_field_list.usage": "Type to edit the row. Use keyboard arrows to select other texts.",
+  "narration.mishanguc.button.current_value": "The current value is %s.",
+  "narration.mishanguc.button.boolean_usage": "Press this button or scroll the mouse wheel to switch value.",
+  "narration.mishanguc.button.float_usage": "Press the button or scroll the mouse wheel to change value. Press while holding Shift, or press with right-side mouse button to change in an inverted direction. Hold Ctrl to switch more quickly. Hold Alt to switch more precisely. Press while holding both Shift and Alt, or press the middle mouse button to restore to default value."
 }

@@ -10,7 +10,9 @@
   ],
   "contact": {
     "sources": "https://github.com/SolidBlock-cn/mishanguc",
-    "kaiheila": "https://kaihei.co/KlFS0n"
+    "kaiheila": "https://kaihei.co/KlFS0n",
+    "issues": "https://github.com/SolidBlock-cn/mishanguc/issues",
+    "homepage": "https://github.com/SolidBlock-cn/mishanguc"
   },
 
   "license": "LGPLv3",
@@ -36,7 +38,7 @@
     "minecraft": [
       "~1.19.3"
     ],
-    "brrp_v1": ">=1.0.0-build.7"
+    "brrp_v1": ">=1.0.0"
   },
   "breaks": {
   },

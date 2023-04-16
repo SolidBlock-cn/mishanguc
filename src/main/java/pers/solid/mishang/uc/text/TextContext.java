@@ -368,7 +368,7 @@ public class TextContext implements Cloneable {
    */
   private float getWidth(TextRenderer textRenderer, @Nullable OrderedText text) {
     final float width = text == null ? 0 : textRenderer.getWidth(text) * size / 8 * scaleX;
-    return extra != null ? Math.max(width, extra.width() * size) : width;
+    return extra != null ? Math.max(width, extra.width() * size * scaleX) : width;
   }
 
   public float getHeight() {

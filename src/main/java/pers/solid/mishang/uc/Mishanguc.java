@@ -15,7 +15,6 @@ import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.CachedBlockPosition;
@@ -25,9 +24,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.text.ClickEvent;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.world.GameRules;
@@ -43,7 +40,6 @@ import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.*;
 import pers.solid.mishang.uc.text.SpecialDrawableTypes;
 import pers.solid.mishang.uc.util.ColorfulBlockRegistry;
-import pers.solid.mishang.uc.util.TextBridge;
 
 public class Mishanguc implements ModInitializer {
   public static final Logger MISHANG_LOGGER = LoggerFactory.getLogger("Mishang Urban Construction");
@@ -80,9 +76,7 @@ public class Mishanguc implements ModInitializer {
               });
 
   private static void registerCommands() {
-    CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-      MishangucCommands.registerUpdateLightCommand(dispatcher);
-    });
+    CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> MishangucCommands.registerUpdateLightCommand(dispatcher));
   }
 
   private static void registerFlammableAndFuels() {
@@ -285,30 +279,6 @@ public class Mishanguc implements ModInitializer {
             return ActionResult.PASS;
           }
         });
-    FabricLoader.getInstance().getModContainer("mishanguc").ifPresent(modContainer -> {
-      final String version = modContainer.getMetadata().getCustomValue("branch").getAsString();
-      final String preferred;
-      if (version.equals("1.18.1")) {
-        preferred = "1.18.2";
-      } else if (version.equals("1.19")) {
-        preferred = "1.19.2";
-      } else {
-        preferred = null;
-      }
-      if (preferred != null) {
-        ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
-          if (!player.world.getGameRules().getBoolean(MishangucRules.WARN_DEPRECATED_VERSION)) return;
-          if (joined) {
-            player.sendMessage(
-                TextBridge.translatable("notice.mishanguc.version_check", version, preferred, TextBridge.literal(
-                            "/gamerule " + MishangucRules.WARN_DEPRECATED_VERSION.getName() + " false")
-                        .formatted(Formatting.YELLOW, Formatting.UNDERLINE)
-                        .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/gamerule " + MishangucRules.WARN_DEPRECATED_VERSION.getName() + " false"))))
-                    .styled(style -> style.withColor(0xdabf40)));
-          }
-        });
-      }
-    });
     ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
       if (joined) {
         final GameRules gameRules = player.world.getGameRules();

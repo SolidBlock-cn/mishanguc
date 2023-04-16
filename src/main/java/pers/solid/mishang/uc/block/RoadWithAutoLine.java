@@ -71,7 +71,7 @@ public interface RoadWithAutoLine extends Road {
           break;
         }
       }
-      connectionStateMap.put(direction, ObjectUtils.getIfNull(state, () -> RoadConnectionState.empty()));
+      connectionStateMap.put(direction, ObjectUtils.getIfNull(state, RoadConnectionState::empty));
     }
     return connectionStateMap;
   }

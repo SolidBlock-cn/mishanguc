@@ -209,7 +209,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     changed = true;
     if (selectedTextContext != null) selectedTextContext.bold = b;
   }, b -> b == null ? TextBridge.translatable("message.mishanguc.bold") : TextBridge.translatable("message.mishanguc.bold.composed", TextBridge.translatable(b ? "options.on" : "options.off")), button -> {
-  });
+  }).narrateTooltipAsMessage(true);
 
   /**
    * 下方第一行：斜体按钮。
@@ -218,7 +218,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     changed = true;
     if (selectedTextContext != null) selectedTextContext.italic = b;
   }, b -> b == null ? TextBridge.translatable("message.mishanguc.italic") : TextBridge.translatable("message.mishanguc.italic.composed", TextBridge.translatable(b ? "options.on" : "options.off")), button -> {
-  });
+  }).narrateTooltipAsMessage(true);
 
   /**
    * 下方第一行：下划线按钮。
@@ -227,7 +227,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     changed = true;
     if (selectedTextContext != null) selectedTextContext.underline = b;
   }, b -> b == null ? TextBridge.translatable("message.mishanguc.underline") : TextBridge.translatable("message.mishanguc.underline.composed", TextBridge.translatable(b ? "options.on" : "options.off")), button -> {
-  });
+  }).narrateTooltipAsMessage(true);
 
   /**
    * 下方第一行：删除线按钮。
@@ -236,7 +236,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     changed = true;
     if (selectedTextContext != null) selectedTextContext.strikethrough = b;
   }, b -> b == null ? TextBridge.translatable("message.mishanguc.strikethrough") : TextBridge.translatable("message.mishanguc.strikethrough.composed", TextBridge.translatable(b ? "options.on" : "options.off")), button -> {
-  });
+  }).narrateTooltipAsMessage(true);
 
   /**
    * 下方第一行：随机文字（obfuscated）按钮。
@@ -245,7 +245,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     changed = true;
     if (selectedTextContext != null) selectedTextContext.obfuscated = b;
   }, b -> b == null ? TextBridge.translatable("message.mishanguc.obfuscated") : TextBridge.translatable("message.mishanguc.obfuscated.composed", TextBridge.translatable(b ? "options.on" : "options.off")), button -> {
-  });
+  }).narrateTooltipAsMessage(true);
 
 
   /**
@@ -542,15 +542,18 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     rotationYButton.step = 15;
     rotationZButton.step = 15;
     offsetXButton.step = 0.5f;
-    offsetYButton.step = 0.5f;
-    scaleXButton.step = -0.125f;
+    offsetYButton.step = -0.5f;
+    offsetYButton.rightArrowStepMultiplier = -1f;
+    offsetYButton.scrollMultiplier = 1f;
+    scaleXButton.step = 0.125f;
     scaleXButton.defaultValue = 1;
-    scaleYButton.step = -0.125f;
+    scaleYButton.step = 0.125f;
     scaleYButton.defaultValue = 1;
     sizeButton.min = 0;
-    sizeButton.step = -0.5f;
+    sizeButton.step = 0.5f;
     horizontalAlignButton.defaultValue = 1;
     verticalAlignButton.defaultValue = 1;
+    verticalAlignButton.scrollMultiplier = -1;
   }
 
 
@@ -790,7 +793,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
             height / 4,
             width - 4,
             15,
-            TextBridge.translatable("message.mishanguc.text_field"));
+            TextBridge.empty());
     textFieldWidget.setMaxLength(Integer.MAX_VALUE);
     if (textContext.extra != null) {
       textFieldWidget.setText(String.format("-%s %s", textContext.extra.getId(), textContext.extra.asStringArgs()));
