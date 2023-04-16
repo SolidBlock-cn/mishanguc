@@ -112,9 +112,7 @@ public interface RoadWithAngleLine extends Road {
     @Override
     public @Nullable BlockStateSupplier getBlockStates() {
       final Identifier id = getBlockModelId();
-      return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.MODEL, id)).coordinate(BlockStateVariantMap.create(FACING).register(direction -> {
-        return BlockStateVariant.create().put(MishangUtils.INT_Y_VARIANT, direction.asRotation() - 45);
-      }));
+      return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.MODEL, id)).coordinate(BlockStateVariantMap.create(FACING).register(direction -> BlockStateVariant.create().put(MishangUtils.INT_Y_VARIANT, direction.asRotation() - 45)));
     }
 
     @Environment(EnvType.CLIENT)
