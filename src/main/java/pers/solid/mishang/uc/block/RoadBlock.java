@@ -5,15 +5,21 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -64,5 +70,12 @@ public class RoadBlock extends AbstractRoadBlock {
   @Override
   public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
 
+  }
+
+  @Override
+  public void appendRoadTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+    super.appendRoadTooltip(stack, world, tooltip, options);
+    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road.rule.1", MishangucRules.ROAD_BOOST_SPEED.getName()).formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road.rule.2", 1.75).formatted(Formatting.GRAY));
   }
 }
