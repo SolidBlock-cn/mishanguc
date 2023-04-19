@@ -147,12 +147,16 @@ public class BooleanButtonWidget extends ButtonWidget {
   @Override
   protected void appendDefaultNarrations(NarrationMessageBuilder builder) {
     super.appendDefaultNarrations(builder);
-    final Boolean value = valueGetter.apply(this);
-    if (value != null) {
-      builder.put(NarrationPart.HINT, TextBridge.translatable("narration.mishanguc.button.current_value", value ? ScreenTexts.ON : ScreenTexts.OFF));
+    if (getValue() == null) {
+      builder.put(NarrationPart.USAGE, TextBridge.translatable("narration.mishanguc.button.null"));
     } else {
-      builder.put(NarrationPart.HINT, TextBridge.empty());
+      builder.put(NarrationPart.USAGE, TextBridge.translatable("narration.mishanguc.button.boolean_usage"));
     }
-    builder.put(NarrationPart.USAGE, TextBridge.translatable("narration.mishanguc.button.boolean_usage"));
+  }
+
+  @Override
+  public void setFocused(boolean focused) {
+    super.setFocused(focused);
+    updateTooltip();
   }
 }

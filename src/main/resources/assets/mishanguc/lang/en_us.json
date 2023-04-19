@@ -896,5 +896,7 @@
   "narration.mishanguc.text_field_list.usage": "Type to edit the row. Use keyboard arrows to select other texts.",
   "narration.mishanguc.button.current_value": "The current value is %s.",
   "narration.mishanguc.button.boolean_usage": "Press this button or scroll the mouse wheel to switch value.",
-  "narration.mishanguc.button.float_usage": "Press the button or scroll the mouse wheel to change value. Press while holding Shift, or press with right-side mouse button to change in an inverted direction. Hold Ctrl to switch more quickly. Hold Alt to switch more precisely. Press while holding both Shift and Alt, or press the middle mouse button to restore to default value."
+  "narration.mishanguc.button.float_usage": "Press the button or scroll the mouse wheel to change value. If you want to change value via keyboard arrow keys, please press Enter or Space to activate the button. When using mouse buttons or mouse wheel to change value, you may press while holding Shift, or press with right-side mouse button to change in an inverted direction. Hold Ctrl to switch more quickly. Hold Alt to switch more precisely. Press with middle mouse button to restore to default value.",
+  "narration.mishanguc.button.float_usage.focused": "Use keyboard arrow keys to change value. Press Enter or Space to finish the change. Hold Ctrl to switch more quickly. Hold Alt to switch more precisely. Press both left arrow key and right arrow key to restore to default value.",
+  "narration.mishanguc.button.null": "Please add and select a row of text before using this button."
 }

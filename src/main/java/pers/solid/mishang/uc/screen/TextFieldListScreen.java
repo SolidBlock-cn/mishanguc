@@ -78,7 +78,7 @@ public class TextFieldListScreen extends AlwaysSelectedEntryListWidget<TextField
       if (signBlockEditScreen.selectedTextContext != null) {
         signBlockEditScreen.customColorTextField.setText(String.format("#%06x", signBlockEditScreen.selectedTextContext.color));
       }
-    } else if (!MinecraftClient.getInstance().getNavigationType().isKeyboard()) {
+    } else if (children().isEmpty() || !MinecraftClient.getInstance().getNavigationType().isKeyboard()) {
       // 使用键盘导航至其他按钮的时候，不设为 null。
       signBlockEditScreen.selectedTextField = null;
       signBlockEditScreen.selectedTextContext = null;
