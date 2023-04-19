@@ -57,9 +57,7 @@ public class ColorToolItem extends BlockToolItem implements ItemResourceGenerato
       final int color = MishangUtils.readColorFromNbtElement(nbt.get("color"));
       Color colorObject = new Color(color);
       tooltip.add(TextBridge.translatable("block.mishanguc.colored_block.tooltip.color",
-          TextBridge.empty()
-              .append(TextBridge.literal("■").styled(style -> style.withColor(color)))
-              .append(Integer.toHexString(color))
+          MishangUtils.describeColor(color)
       ).formatted(Formatting.GRAY));
       tooltip.add(TextBridge.translatable("block.mishanguc.colored_block.tooltip.color_components", colorObject.getRed(), colorObject.getGreen(), colorObject.getBlue(), colorObject.getAlpha()).formatted(Formatting.GRAY));
     }

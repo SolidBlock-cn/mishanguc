@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * 文本框列表的屏幕。每个列表项都是一个文本框（实际上就是把 {@link TextFieldWidget} 包装成了 {@link Entry}。<p>
+ * 文本框列表的屏幕。每个列表项都是一个文本框（实际上就是把 {@link TextFieldWidget} 包装成了 {@link TextFieldListScreen.Entry}。<p>
  * 此类原本是 {@link AbstractSignBlockEditScreen} 的内部类，后面独立出来了。
  */
 @Environment(EnvType.CLIENT)
@@ -40,7 +40,7 @@ public class TextFieldListScreen extends AlwaysSelectedEntryListWidget<TextField
     this.setRenderSelection(false);
   }
 
-  private boolean isFocused;
+  private boolean isFocused = true;
 
   @Override
   public boolean changeFocus(boolean lookForwards) {
@@ -100,7 +100,7 @@ public class TextFieldListScreen extends AlwaysSelectedEntryListWidget<TextField
       if (signBlockEditScreen.selectedTextContext != null) {
         signBlockEditScreen.customColorTextField.setText(String.format("#%06x", signBlockEditScreen.selectedTextContext.color));
       }
-    } else if (isFocused()) {
+    } else if (children().isEmpty() || isFocused()) {
       // 使用键盘导航至其他按钮的时候，不设为 null。
       signBlockEditScreen.selectedTextField = null;
       signBlockEditScreen.selectedTextContext = null;
@@ -215,21 +215,6 @@ public class TextFieldListScreen extends AlwaysSelectedEntryListWidget<TextField
             TextFieldListScreen.this.setSelected(children.get(index + 1));
           else if (children.size() > 0) signBlockEditScreen.addTextField(index + 1);
         }
-        /* 下列代码已经在 EntryListWidget#keyPressed 中实现了
-        case GLFW.GLFW_KEY_DOWN -> {
-          final List<Entry> children = TextFieldListScreen.this.children();
-          final int index = children.indexOf(getSelectedOrNull());
-          if (index + 1 < children.size())
-            TextFieldListScreen.this.setSelected(children.get(index + 1));
-          else if (children.size() > 0) TextFieldListScreen.this.setSelected(children.get(0));
-        }
-        case GLFW.GLFW_KEY_UP -> {
-          final List<Entry> children = TextFieldListScreen.this.children();
-          final int index = children.indexOf(getSelectedOrNull());
-          if (index - 1 >= 0) TextFieldListScreen.this.setSelected(children.get(index - 1));
-          else if (children.size() > 0 && index == 0)
-            TextFieldListScreen.this.setSelected(children.get(children.size() - 1));
-        }*/
         case GLFW.GLFW_KEY_BACKSPACE -> {
           final Entry focused = TextFieldListScreen.this.getSelectedOrNull();
           if (focused != null && textFieldWidget.getText().isEmpty()) {
