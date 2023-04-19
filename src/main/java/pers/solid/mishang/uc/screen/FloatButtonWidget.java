@@ -55,7 +55,7 @@ public class FloatButtonWidget extends ButtonWidget {
   /**
    * 滚动鼠标滚轮时，步长再乘以此值。
    */
-  public float scrollMultiplier = 1;
+  public float scrollMultiplier = -1;
 
   /**
    * 按钮当前的最小值。若低于最小值，则从最大值开始循环，但是如果没有最大值时除外。

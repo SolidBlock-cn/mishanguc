@@ -579,6 +579,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     horizontalAlignButton.defaultValue = 1;
     verticalAlignButton.defaultValue = 1;
     verticalAlignButton.scrollMultiplier = -1;
+    verticalAlignButton.upArrowStepMultiplier = -1;
   }
 
 

@@ -2,6 +2,18 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.2.0
+
+- Adapted to new version BRRP.
+- Added localized mod name in the display of Mod Menu (may not support old versions of Mod Menu).
+- Removed game rule `mishanguc:warn_deprecated_version`.
+- Added a tooltip for road blocks about the speed.
+- Fixed the issue that special texts are not correctly aligned when X-scale is set.
+- Adjusted the logics of buttons of the sign edit screen. Modifying the values using mouse buttons, mouse wheel or the keyboard will be more intuitive.
+- Added the narration in the sign edit screen.
+- In the inventory, sorted the invisible signs at the front.
+- Adjusted the display of tooltips of text outline settings.
+
 ### 1.1.1
 
 - Fixed the severe issue of failing to launch server.
