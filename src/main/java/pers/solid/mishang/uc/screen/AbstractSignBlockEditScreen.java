@@ -31,6 +31,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import org.lwjgl.glfw.GLFW;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.text.PatternSpecialDrawable;
@@ -101,7 +102,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public @Nullable TextFieldWidget selectedTextField = null;
 
   /**
-   * 正在被选中的 TextContent。会在 {@link #setFocused(Element)} 时更改。可能为 null。不是副本。
+   * 正在被选中的 TextContent。会在 {@link TextFieldListScreen#setFocused(Element)} 时更改。可能为 null。不是副本。
    */
   public @Nullable TextContext selectedTextContext = null;
 
@@ -259,7 +260,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第一行：文本大小按钮。
    */
-  public final FloatButtonWidget sizeButton = new FloatButtonWidget(this.width / 2 - 60, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.size"), x -> TextBridge.translatable("message.mishanguc.size.description", x), buttons -> selectedTextContext != null ? selectedTextContext.size : 0, value -> {
+  public final FloatButtonWidget sizeButton = new FloatButtonWidget(this.width / 2 - 60, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.size"), x -> x == null ? null : TextBridge.translatable("message.mishanguc.size.description", x), buttons -> selectedTextContext != null ? selectedTextContext.size : null, value -> {
     changed = true;
     if (selectedTextContext != null) {
       selectedTextContext.size = value;
@@ -270,7 +271,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第一行：X偏移。
    */
-  public final FloatButtonWidget offsetXButton = new FloatButtonWidget(this.width / 2 - 10, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.offsetX"), x -> TextBridge.translatable("message.mishanguc.offsetX.composed", x), button -> selectedTextContext != null ? selectedTextContext.offsetX : 0, value -> {
+  public final FloatButtonWidget offsetXButton = new FloatButtonWidget(this.width / 2 - 10, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.offsetX"), x -> x == null ? null : TextBridge.translatable("message.mishanguc.offsetX.composed", x), button -> selectedTextContext != null ? selectedTextContext.offsetX : null, value -> {
     changed = true;
     if (selectedTextContext != null) {
       selectedTextContext.offsetX = value;
@@ -281,7 +282,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第一行：Y偏移。
    */
-  public final FloatButtonWidget offsetYButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.offsetY"), x -> TextBridge.translatable("message.mishanguc.offsetY.composed", x), button -> selectedTextContext != null ? selectedTextContext.offsetY : 0, value -> {
+  public final FloatButtonWidget offsetYButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.offsetY"), x -> x == null ? null : TextBridge.translatable("message.mishanguc.offsetY.composed", x), button -> selectedTextContext != null ? selectedTextContext.offsetY : null, value -> {
     changed = true;
     if (selectedTextContext != null) {
       selectedTextContext.offsetY = value;
@@ -292,7 +293,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第一行：Z偏移。
    */
-  public final FloatButtonWidget offsetZButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.offsetZ"), x -> TextBridge.translatable("message.mishanguc.offsetZ.composed", x), button -> selectedTextContext != null ? selectedTextContext.offsetZ : 0, value -> {
+  public final FloatButtonWidget offsetZButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.offsetZ"), x -> x == null ? null : TextBridge.translatable("message.mishanguc.offsetZ.composed", x), button -> selectedTextContext != null ? selectedTextContext.offsetZ : null, value -> {
     changed = true;
     if (selectedTextContext != null) {
       selectedTextContext.offsetZ = value;
@@ -306,33 +307,28 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * @see #customColorTextField
    */
   public final FloatButtonWidget colorButton = new FloatButtonWidget(0, 0, 40, 20, TextBridge.translatable("message.mishanguc.color"), colorId -> {
-    if (colorId == -1) {
-      return TextBridge.translatable("message.mishanguc.color");
-    } else if (colorId == -2 && selectedTextContext != null) {
+    if (colorId == null) {
+      return null;
+    } else if (colorId == -2f && selectedTextContext != null) {
       return TextBridge.translatable("message.mishanguc.color.composed",
-          TextBridge.empty()
-              .append(TextBridge.literal("■").styled(style -> style.withColor(selectedTextContext.color)))
-              .append(TextBridge.literal(String.format("#%06x", selectedTextContext.color))));
+          MishangUtils.describeColor(selectedTextContext.color));
     }
-    final DyeColor dyeColor = DyeColor.byId((int) colorId);
+    final DyeColor dyeColor = DyeColor.byId(colorId.intValue());
     return TextBridge.translatable("message.mishanguc.color.composed",
-        TextBridge.empty()
-            .append(TextBridge.literal("■")
-                .styled(style -> style.withColor(dyeColor.getSignColor())))
-            .append(TextBridge.translatable("color.minecraft." + dyeColor.asString())));
+        MishangUtils.describeColor(dyeColor.getSignColor(), TextBridge.translatable("color.minecraft." + dyeColor.asString())));
   }, button -> {
     changed = true;
     if (selectedTextContext == null) {
-      ((FloatButtonWidget) button).active = false;
-      return -1;
+      button.active = false;
+      return null;
     }
     final DyeColor dyeColor = MishangUtils.colorBySignColor(selectedTextContext.color);
     if (dyeColor == null) {
-      ((FloatButtonWidget) button).active = false;
-      return -2;
+      button.active = false;
+      return -2f;
     } else {
-      ((FloatButtonWidget) button).active = true;
-      return dyeColor.getId();
+      button.active = true;
+      return (float) dyeColor.getId();
     }
   }, colorId -> {
     if (selectedTextContext != null) {
@@ -340,7 +336,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       this.customColorTextField.setText(String.format("#%06x", selectedTextContext.color));
     }
   }, button -> {
-  }, descriptionAtom);
+  }, descriptionAtom).narratesValueAs(colorId -> {
+    if (colorId == -2 && selectedTextContext != null) {
+      return MishangUtils.describeColor(selectedTextContext.color);
+    } else {
+      final DyeColor dyeColor = DyeColor.byId((int) colorId);
+      return MishangUtils.describeColor(dyeColor.getSignColor(), TextBridge.translatable("color.minecraft." + dyeColor.asString()));
+    }
+  });
 
   /**
    * 下方第一行：设置自定义颜色。<p>
@@ -368,50 +371,49 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     // colorId=-1：表示当前自动根据文本内容绘制描边。
     // colorId=-2：表示当前不绘制描边（默认）。
     // colorId=-3：表示是自定义的。
-    // colorId=-4：表示当前没有选中文本。
+    // colorId=null：表示当前没有选中文本。
     // colorId=0-15：标准颜色。
     // colorId=16-31：描边颜色
-    if (colorId == -1) {
+    if (colorId == null) {
+      return null;
+    } else if (colorId == -1) {
       return TextBridge.translatable("message.mishanguc.outline_color.auto");
     } else if (colorId == -2) {
       return TextBridge.translatable("message.mishanguc.outline_color.none");
     } else if (colorId == -3 && selectedTextContext != null) {
-      return TextBridge.translatable("message.mishanguc.outline_color.composed", String.format("#%06x", selectedTextContext.outlineColor)).styled(style -> style.withColor(selectedTextContext.color));
-    } else if (colorId == -4) {
-      return TextBridge.translatable("message.mishanguc.outline_color");
+      return TextBridge.translatable("message.mishanguc.outline_color.composed", MishangUtils.describeColor(selectedTextContext.color));
     } else if (colorId > 15) {
-      final DyeColor color = DyeColor.byId((int) colorId - 16);
-      return TextBridge.translatable("message.mishanguc.outline_color.composed", TextBridge.translatable("message.mishanguc.outline_color.relate", TextBridge.translatable("message.mishanguc.outline_color.relate.$1")
-          .styled(style -> style.withColor(MishangUtils.COLOR_TO_OUTLINE_COLOR.get(color))), TextBridge.translatable("color.minecraft." + color.asString()).styled(style -> style.withColor(color.getSignColor()))));
+      final DyeColor color = DyeColor.byId(colorId.intValue() - 16);
+      return TextBridge.translatable("message.mishanguc.outline_color.composed", TextBridge.translatable("message.mishanguc.outline_color.relate", MishangUtils.describeColor(MishangUtils.COLOR_TO_OUTLINE_COLOR.get(color), TextBridge.translatable("message.mishanguc.outline_color.relate.$1")), MishangUtils.describeColor(color.getSignColor(), TextBridge.translatable("color.minecraft." + color.asString()))));
     } else {
-      final DyeColor color = DyeColor.byId((int) colorId);
+      final DyeColor color = DyeColor.byId(colorId.intValue());
       if (color == null) return TextBridge.translatable("message.mishanguc.outline_color.none");
-      return TextBridge.translatable("message.mishanguc.outline_color.composed", TextBridge.translatable("color.minecraft." + color.asString()).styled(style -> style.withColor(color.getSignColor())));
+      return TextBridge.translatable("message.mishanguc.outline_color.composed", MishangUtils.describeColor(color.getSignColor(), TextBridge.translatable("color.minecraft." + color.asString())));
     }
   }, button -> {
     if (selectedTextContext == null) {
-      ((ClickableWidget) button).active = false;
-      return -4;
+      button.active = false;
+      return null;
     }
     if (selectedTextContext.outlineColor == -1) {
-      ((ClickableWidget) button).active = true;
-      return -1;
+      button.active = true;
+      return -1f;
     } else if (selectedTextContext.outlineColor == -2) {
-      ((ClickableWidget) button).active = true;
-      return -2;
+      button.active = true;
+      return -2f;
     }
     final DyeColor colorOutline = MishangUtils.COLOR_TO_OUTLINE_COLOR.inverse().get(selectedTextContext.outlineColor);
     if (colorOutline != null) {
-      ((ClickableWidget) button).active = true;
-      return colorOutline.getId() + 16;
+      button.active = true;
+      return colorOutline.getId() + 16f;
     }
     final DyeColor color = MishangUtils.colorBySignColor(selectedTextContext.outlineColor);
     if (color != null) {
-      ((ClickableWidget) button).active = true;
-      return color.getId();
+      button.active = true;
+      return (float) color.getId();
     } else {
-      ((ClickableWidget) button).active = false;
-      return -3;
+      button.active = false;
+      return -3f;
     }
   }, colorId -> {
     changed = true;
@@ -425,7 +427,22 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       }
     }
   }, button -> {
-  }, descriptionAtom);
+  }, descriptionAtom).narratesValueAs(colorId -> {
+    if (colorId == -1) {
+      return TextBridge.translatable("message.mishanguc.outline_color.auto");
+    } else if (colorId == -2) {
+      return TextBridge.translatable("message.mishanguc.outline_color.none");
+    } else if (colorId == -3 && selectedTextContext != null) {
+      return MishangUtils.describeColor(selectedTextContext.color);
+    } else if (colorId > 15) {
+      final DyeColor color = DyeColor.byId((int) colorId - 16);
+      return TextBridge.translatable("message.mishanguc.outline_color.relate", TextBridge.translatable("message.mishanguc.outline_color.relate.$1"), MishangUtils.describeColor(color.getSignColor(), TextBridge.translatable("color.minecraft." + color.asString())));
+    } else {
+      final DyeColor color = DyeColor.byId((int) colorId);
+      if (color == null) return TextBridge.translatable("message.mishanguc.outline_color.none");
+      return TextBridge.translatable("color.minecraft." + color.asString());
+    }
+  });
 
 
   /*
@@ -436,7 +453,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * 下方第二行：X旋转。
    */
   @ApiStatus.AvailableSince("0.1.6")
-  public final FloatButtonWidget rotationXButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.rotationX"), x -> TextBridge.translatable("message.mishanguc.rotationX.composed", x), button -> selectedTextContext != null ? selectedTextContext.rotationX : 0, value -> {
+  public final FloatButtonWidget rotationXButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.rotationX"), x -> x == null ? null : TextBridge.translatable("message.mishanguc.rotationX.composed", x), button -> selectedTextContext != null ? selectedTextContext.rotationX : null, value -> {
     changed = true;
     if (selectedTextContext != null) selectedTextContext.rotationX = value;
   }, button -> {
@@ -446,7 +463,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * 下方第二行：Y旋转。
    */
   @ApiStatus.AvailableSince("0.1.6")
-  public final FloatButtonWidget rotationYButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.rotationY"), x -> TextBridge.translatable("message.mishanguc.rotationY.composed", x), button -> selectedTextContext != null ? selectedTextContext.rotationY : 0, value -> {
+  public final FloatButtonWidget rotationYButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.rotationY"), x -> x == null ? null : TextBridge.translatable("message.mishanguc.rotationY.composed", x), button -> selectedTextContext != null ? selectedTextContext.rotationY : null, value -> {
     changed = true;
     if (selectedTextContext != null) selectedTextContext.rotationY = value;
   }, button -> {
@@ -456,7 +473,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * 下方第二行：Z旋转。
    */
   @ApiStatus.AvailableSince("0.1.6")
-  public final FloatButtonWidget rotationZButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.rotationZ"), x -> TextBridge.translatable("message.mishanguc.rotationZ.composed", x), button -> selectedTextContext != null ? selectedTextContext.rotationZ : 0, value -> {
+  public final FloatButtonWidget rotationZButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.rotationZ"), x -> x == null ? null : TextBridge.translatable("message.mishanguc.rotationZ.composed", x), button -> selectedTextContext != null ? selectedTextContext.rotationZ : null, value -> {
     changed = true;
     if (selectedTextContext != null) selectedTextContext.rotationZ = value;
   }, button -> {
@@ -465,7 +482,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第二行：X缩放。
    */
-  public final FloatButtonWidget scaleXButton = new FloatButtonWidget(this.width / 2 + 90, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.scaleX"), x -> TextBridge.translatable("message.mishanguc.scaleX.composed", x), button -> selectedTextContext != null ? selectedTextContext.scaleX : 1, value -> {
+  public final FloatButtonWidget scaleXButton = new FloatButtonWidget(this.width / 2 + 90, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.scaleX"), x -> x == null ? null : TextBridge.translatable("message.mishanguc.scaleX.composed", x), button -> selectedTextContext != null ? selectedTextContext.scaleX : null, value -> {
     changed = true;
     if (selectedTextContext != null) {
       selectedTextContext.scaleX = value;
@@ -476,7 +493,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第二行：Y缩放。
    */
-  public final FloatButtonWidget scaleYButton = new FloatButtonWidget(this.width / 2 + 140, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.scaleY"), x -> TextBridge.translatable("message.mishanguc.scaleY.composed", x), button -> selectedTextContext != null ? selectedTextContext.scaleY : 1, value -> {
+  public final FloatButtonWidget scaleYButton = new FloatButtonWidget(this.width / 2 + 140, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.scaleY"), x -> x == null ? null : TextBridge.translatable("message.mishanguc.scaleY.composed", x), button -> selectedTextContext != null ? selectedTextContext.scaleY : null, value -> {
     changed = true;
     if (selectedTextContext != null) {
       selectedTextContext.scaleY = value;
@@ -487,22 +504,22 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第二行：水平对齐方式。
    */
-  public final FloatButtonWidget horizontalAlignButton = new FloatButtonWidget(0, 0, 50, 20, TextBridge.translatable("message.mishanguc.horizontal_align"), f -> f != -1 ? TextBridge.translatable("message.mishanguc.horizontal_align.composed", HorizontalAlign.values()[(int) f].getName()) : TextBridge.translatable("message.mishanguc.horizontal_align"), b -> selectedTextContext != null ? selectedTextContext.horizontalAlign.ordinal() : -1, f -> {
+  public final FloatButtonWidget horizontalAlignButton = new FloatButtonWidget(0, 0, 50, 20, TextBridge.translatable("message.mishanguc.horizontal_align"), f -> f != null ? TextBridge.translatable("message.mishanguc.horizontal_align.composed", HorizontalAlign.values()[f.intValue()].getName()) : null, b -> selectedTextContext != null ? (float) selectedTextContext.horizontalAlign.ordinal() : null, f -> {
     if (selectedTextContext != null) {
       selectedTextContext.horizontalAlign = HorizontalAlign.values()[(int) f];
     }
   }, b -> {
-  }, descriptionAtom);
+  }, descriptionAtom).narratesValueAs(f -> HorizontalAlign.values()[(int) f].getName());
 
   /**
    * 下方第二行：垂直对齐方式。
    */
-  public final FloatButtonWidget verticalAlignButton = new FloatButtonWidget(0, 0, 50, 20, TextBridge.translatable("message.mishanguc.vertical_align"), f -> f != -1 ? TextBridge.translatable("message.mishanguc.vertical_align.composed", VerticalAlign.values()[(int) f].getName()) : TextBridge.translatable("message.mishanguc.vertical_align"), b -> selectedTextContext != null ? selectedTextContext.verticalAlign.ordinal() : -1, f -> {
+  public final FloatButtonWidget verticalAlignButton = new FloatButtonWidget(0, 0, 50, 20, TextBridge.translatable("message.mishanguc.vertical_align"), f -> f != null ? TextBridge.translatable("message.mishanguc.vertical_align.composed", VerticalAlign.values()[f.intValue()].getName()) : null, b -> selectedTextContext != null ? (float) selectedTextContext.verticalAlign.ordinal() : null, f -> {
     if (selectedTextContext != null) {
       selectedTextContext.verticalAlign = VerticalAlign.values()[(int) f];
     }
   }, b -> {
-  }, descriptionAtom);
+  }, descriptionAtom).narratesValueAs(f -> VerticalAlign.values()[(int) f].getName());
 
   /**
    * 下方第二行：切换文字是否可以看穿。
@@ -553,6 +570,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     horizontalAlignButton.defaultValue = 1;
     verticalAlignButton.defaultValue = 1;
     verticalAlignButton.scrollMultiplier = -1;
+    verticalAlignButton.upArrowStepMultiplier = -1;
   }
 
 
@@ -681,7 +699,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   protected void init() {
     super.init();
     textFieldListScreen = new TextFieldListScreen(this, client, width, height, 30, height - 80, 18);
-    setFocused(textFieldListScreen);
     // 添加按钮
 
     /// 上方第一行，先 addChild 再 addDrawable 以确保 tab 顺序正确，同时不被 textFieldListScreen 覆盖。
@@ -752,7 +769,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     descriptionAtom.set(TextBridge.empty());
     super.render(matrices, mouseX, mouseY, delta);
     final Text description = descriptionAtom.get();
-    final MultilineText multilineText = MultilineText.create(textRenderer, description, width);
+    final MultilineText multilineText = MultilineText.create(textRenderer, description == null ? TextBridge.empty() : description, width);
     multilineText.drawCenterWithShadow(
         matrices,
         width / 2,
@@ -821,6 +838,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     textFieldListScreen.children().add(index, newEntry);
     contextToWidgetBiMap.put(textContext, textFieldWidget);
     textFieldListScreen.setSelected(newEntry);
+    setFocused(textFieldListScreen);
     textFieldWidget.setChangedListener(
         s -> {
           final TextContext textContext1 = contextToWidgetBiMap.inverse().get(textFieldWidget);
@@ -914,6 +932,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     textContextsEditing.remove(removedTextContext);
     contextToWidgetBiMap.remove(removedTextContext);
     placeHolder.visible = textFieldListScreen.children().size() == 0;
+    if (placeHolder.visible && getFocused() == textFieldListScreen) {
+      setFocused(null);
+    }
     applyDoubleLineTemplateButton.visible = placeHolder.visible;
     applyLeftArrowTemplateButton.visible = placeHolder.visible;
     applyRightArrowTemplateButton.visible = placeHolder.visible;
@@ -998,6 +1019,48 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     return true;
   }
 
+  @Override
+  public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    if (hasControlDown() && !hasShiftDown() && !hasAltDown()) {
+      /*if (keyCode == GLFW.GLFW_KEY_B) {
+        boldButton.onPress();
+        return true;
+        Ctrl + B 与复述功能冲突。
+      } else */
+      if (keyCode == GLFW.GLFW_KEY_I) {
+        italicButton.onPress();
+        return true;
+      } else if (keyCode == GLFW.GLFW_KEY_U) {
+        underlineButton.onPress();
+        return true;
+      } else if (keyCode == GLFW.GLFW_KEY_S) {
+        strikethroughButton.onPress();
+        return true;
+      } else if (keyCode == GLFW.GLFW_KEY_O) {
+        obfuscatedButton.onPress();
+        return true;
+      } else if (keyCode == GLFW.GLFW_KEY_MINUS || keyCode == GLFW.GLFW_KEY_KP_SUBTRACT) {
+        removeTextButton.onPress();
+        return true;
+      } else if (keyCode == GLFW.GLFW_KEY_KP_ADD) {
+        addTextButton.onPress();
+        return true;
+      }
+    } else if (hasControlDown() && hasShiftDown() && !hasAltDown()) {
+      if (keyCode == GLFW.GLFW_KEY_EQUAL) {
+        addTextButton.onPress();
+        return true;
+      } else if (keyCode == GLFW.GLFW_KEY_UP) {
+        moveUpButton.onPress();
+        return true;
+      } else if (keyCode == GLFW.GLFW_KEY_DOWN) {
+        moveDownButton.onPress();
+        return true;
+      }
+    }
+    return super.keyPressed(keyCode, scanCode, modifiers);
+  }
+
   private void finishEditing() {
     this.entity.markDirty();
     if (this.client != null) {
@@ -1022,6 +1085,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    */
   @Override
   public void setFocused(@Nullable Element focused) {
+    if (this.getFocused() != focused && getFocused() instanceof ClickableWidget clickableWidget && clickableWidget.isFocused()) {
+      getFocused().changeFocus(false);
+    }
     customColorTextField.setTextFieldFocused(focused == customColorTextField);
     if (focused instanceof ButtonWidget) {
       super.setFocused(textFieldListScreen);
