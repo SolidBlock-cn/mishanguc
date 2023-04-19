@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
@@ -66,11 +67,23 @@ public class BooleanButtonWidget extends ButtonWidget {
         message,
         onPress,
         (button, matrices, mouseX, mouseY) ->
-            textAtom.set(tooltipSupplier.apply(((BooleanButtonWidget) button).getValue())));
+            ((BooleanButtonWidget) button).updateTooltip());
     this.valueGetter = valueGetter;
     this.valueSetter = valueSetter;
     this.tooltipSupplier = tooltipSupplier;
     this.textAtom = textAtom;
+  }
+
+  public void updateTooltip() {
+    final Boolean value = getValue();
+    final Text tooltip = tooltipSupplier.apply(value);
+    textAtom.set(tooltip);
+  }
+
+  @Override
+  public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    if (this.isHovered()) updateTooltip();
+    super.render(matrices, mouseX, mouseY, delta);
   }
 
   public @Nullable Boolean getValue() {
@@ -79,25 +92,25 @@ public class BooleanButtonWidget extends ButtonWidget {
 
   public void setValue(boolean value) {
     valueSetter.accept(value);
-    textAtom.set(tooltipSupplier.apply(getValue()));
+    updateTooltip();
   }
 
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int button) {
-    final boolean b = super.mouseClicked(mouseX, mouseY, button);
-    if (this.active && this.visible && clicked(mouseX, mouseY)) {
-      if (button == 2) {
-        setValue(defaultValue);
-        return true;
-      } else {
-        final Boolean value = getValue();
-        if (value != null) {
-          setValue(!value);
-          return true;
-        }
-      }
+    if (this.active && this.visible && clicked(mouseX, mouseY) && button == 2) {
+      setValue(defaultValue);
+      return true;
+    } else {
+      return super.mouseClicked(mouseX, mouseY, button);
     }
-    return b;
+  }
+
+  @Override
+  public void onPress() {
+    final Boolean value = getValue();
+    if (value != null) {
+      setValue(!value);
+    }
   }
 
   @Override
@@ -135,5 +148,13 @@ public class BooleanButtonWidget extends ButtonWidget {
   @Override
   protected MutableText getNarrationMessage() {
     return narrateTooltipAsMessage ? new TranslatableText("gui.narrate.button", tooltipSupplier.apply(null)) : super.getNarrationMessage();
+    }
+  }
+
+  @Override
+  public void appendNarrations(NarrationMessageBuilder builder) {
+    super.appendNarrations(builder);
+    final Boolean value = getValue();
+    builder.put(NarrationPart.HINT, value == null ? TextBridge.empty() : TextBridge.translatable("narration.mishanguc.button.current_value", value ? ScreenTexts.ON : ScreenTexts.OFF));
   }
 }
