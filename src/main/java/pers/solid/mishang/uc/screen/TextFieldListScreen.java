@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * 文本框列表的屏幕。每个列表项都是一个文本框（实际上就是把 {@link TextFieldWidget} 包装成了 {@link pers.solid.mishang.uc.screen.TextFieldListScreen.Entry}。<p>
+ * 文本框列表的屏幕。每个列表项都是一个文本框（实际上就是把 {@link TextFieldWidget} 包装成了 {@link TextFieldListScreen.Entry}。<p>
  * 此类原本是 {@link AbstractSignBlockEditScreen} 的内部类，后面独立出来了。
  */
 @Environment(EnvType.CLIENT)
@@ -40,7 +40,7 @@ public class TextFieldListScreen extends AlwaysSelectedEntryListWidget<TextField
     this.setRenderSelection(false);
   }
 
-  private boolean isFocused;
+  private boolean isFocused = true;
 
   @Override
   public boolean changeFocus(boolean lookForwards) {
@@ -51,7 +51,7 @@ public class TextFieldListScreen extends AlwaysSelectedEntryListWidget<TextField
    * 与 {@link EntryListWidget#moveSelectionIf(MoveDirection, Predicate)} 相比，把 {@link MathHelper#clamp} 改成了 {@link MathHelper#floorMod}。
    */
   @Override
-  protected boolean moveSelectionIf(MoveDirection direction, Predicate<pers.solid.mishang.uc.screen.TextFieldListScreen.Entry> predicate) {
+  protected boolean moveSelectionIf(MoveDirection direction, Predicate<TextFieldListScreen.Entry> predicate) {
     int i = direction == EntryListWidget.MoveDirection.UP ? -1 : 1;
     if (!this.children().isEmpty()) {
       int j = this.children().indexOf(this.getSelectedOrNull());
@@ -60,7 +60,7 @@ public class TextFieldListScreen extends AlwaysSelectedEntryListWidget<TextField
         if (j == k) {
           break;
         }
-        pers.solid.mishang.uc.screen.TextFieldListScreen.Entry entry = this.children().get(k);
+        TextFieldListScreen.Entry entry = this.children().get(k);
         if (predicate.test(entry)) {
           this.setSelected(entry);
           this.ensureVisible(entry);
@@ -81,7 +81,7 @@ public class TextFieldListScreen extends AlwaysSelectedEntryListWidget<TextField
   /**
    * 设置当前 TextFieldListScreen 的已选中的文本框。
    *
-   * @param entry 需要选中的 {@link pers.solid.mishang.uc.screen.TextFieldListScreen.Entry}。
+   * @param entry 需要选中的 {@link TextFieldListScreen.Entry}。
    * @see AbstractSignBlockEditScreen#setFocused(Element)
    * @see TextFieldListScreen.Entry#setFocused(Element)
    */
@@ -89,7 +89,7 @@ public class TextFieldListScreen extends AlwaysSelectedEntryListWidget<TextField
   public void setSelected(@Nullable TextFieldListScreen.Entry entry) {
     super.setSelected(entry);
     setFocused(entry);
-    for (pers.solid.mishang.uc.screen.TextFieldListScreen.Entry child : children()) {
+    for (TextFieldListScreen.Entry child : children()) {
       child.textFieldWidget.setTextFieldFocused(child == entry);
     }
     if (entry != null) {
@@ -100,7 +100,7 @@ public class TextFieldListScreen extends AlwaysSelectedEntryListWidget<TextField
       if (signBlockEditScreen.selectedTextContext != null) {
         signBlockEditScreen.customColorTextField.setText(String.format("#%06x", signBlockEditScreen.selectedTextContext.color));
       }
-    } else if (isFocused()) {
+    } else if (children().isEmpty() || isFocused()) {
       // 使用键盘导航至其他按钮的时候，不设为 null。
       signBlockEditScreen.selectedTextField = null;
       signBlockEditScreen.selectedTextContext = null;
@@ -118,7 +118,7 @@ public class TextFieldListScreen extends AlwaysSelectedEntryListWidget<TextField
     if (!this.isMouseOver(mouseX, mouseY)) {
       return false;
     }
-    pers.solid.mishang.uc.screen.TextFieldListScreen.Entry entry = this.getEntryAtPosition(mouseX, mouseY);
+    TextFieldListScreen.Entry entry = this.getEntryAtPosition(mouseX, mouseY);
     if (entry != null) {
       if (entry.mouseClicked(mouseX, mouseY, button)) {
         this.setSelected(entry);
@@ -150,7 +150,7 @@ public class TextFieldListScreen extends AlwaysSelectedEntryListWidget<TextField
    * 的子类，所以对该类进行了包装。
    */
   @Environment(EnvType.CLIENT)
-  public class Entry extends AlwaysSelectedEntryListWidget.Entry<pers.solid.mishang.uc.screen.TextFieldListScreen.Entry> implements Narratable {
+  public class Entry extends AlwaysSelectedEntryListWidget.Entry<TextFieldListScreen.Entry> implements Narratable {
     public final @NotNull TextFieldWidget textFieldWidget;
 
 
@@ -161,7 +161,7 @@ public class TextFieldListScreen extends AlwaysSelectedEntryListWidget<TextField
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;
-      if (!(o instanceof pers.solid.mishang.uc.screen.TextFieldListScreen.Entry entry)) return false;
+      if (!(o instanceof TextFieldListScreen.Entry entry)) return false;
 
       return textFieldWidget.equals(entry.textFieldWidget);
     }
@@ -209,29 +209,14 @@ public class TextFieldListScreen extends AlwaysSelectedEntryListWidget<TextField
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
       switch (keyCode) {
         case GLFW.GLFW_KEY_ENTER -> {
-          final List<pers.solid.mishang.uc.screen.TextFieldListScreen.Entry> children = TextFieldListScreen.this.children();
+          final List<TextFieldListScreen.Entry> children = TextFieldListScreen.this.children();
           final int index = children.indexOf(getSelectedOrNull());
           if (index + 1 < children.size())
             TextFieldListScreen.this.setSelected(children.get(index + 1));
           else if (children.size() > 0) signBlockEditScreen.addTextField(index + 1);
         }
-        /* 下列代码已经在 EntryListWidget#keyPressed 中实现了
-        case GLFW.GLFW_KEY_DOWN -> {
-          final List<Entry> children = TextFieldListScreen.this.children();
-          final int index = children.indexOf(getSelectedOrNull());
-          if (index + 1 < children.size())
-            TextFieldListScreen.this.setSelected(children.get(index + 1));
-          else if (children.size() > 0) TextFieldListScreen.this.setSelected(children.get(0));
-        }
-        case GLFW.GLFW_KEY_UP -> {
-          final List<Entry> children = TextFieldListScreen.this.children();
-          final int index = children.indexOf(getSelectedOrNull());
-          if (index - 1 >= 0) TextFieldListScreen.this.setSelected(children.get(index - 1));
-          else if (children.size() > 0 && index == 0)
-            TextFieldListScreen.this.setSelected(children.get(children.size() - 1));
-        }*/
         case GLFW.GLFW_KEY_BACKSPACE -> {
-          final pers.solid.mishang.uc.screen.TextFieldListScreen.Entry focused = TextFieldListScreen.this.getSelectedOrNull();
+          final TextFieldListScreen.Entry focused = TextFieldListScreen.this.getSelectedOrNull();
           if (focused != null && textFieldWidget.getText().isEmpty()) {
             final int index = TextFieldListScreen.this.children().indexOf(focused);
             if (index >= 0) {

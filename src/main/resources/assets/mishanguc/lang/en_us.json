@@ -801,9 +801,9 @@
   "message.mishanguc.shade.composed": "(Not recommended to turn on) Shade: %s",
   "message.mishanguc.size": "Size",
   "message.mishanguc.size.description": "Size: %s",
-  "message.mishanguc.offsetX": "X Off",
-  "message.mishanguc.offsetY": "Y Off",
-  "message.mishanguc.offsetZ": "Z Off",
+  "message.mishanguc.offsetX": "X Offset",
+  "message.mishanguc.offsetY": "Y Offset",
+  "message.mishanguc.offsetZ": "Z Offset",
   "message.mishanguc.offsetX.composed": "X Offset: %s",
   "message.mishanguc.offsetY.composed": "Y Offset: %s",
   "message.mishanguc.offsetZ.composed": "Z Offset: %s",
@@ -893,5 +893,6 @@
   "narration.mishanguc.text_field_list.usage": "Type to edit the row. Use keyboard arrows to select other texts.",
   "narration.mishanguc.button.current_value": "The current value is %s.",
   "narration.mishanguc.button.boolean_usage": "Press this button or scroll the mouse wheel to switch value.",
-  "narration.mishanguc.button.float_usage": "Press the button or scroll the mouse wheel to change value. Press while holding Shift, or press with right-side mouse button to change in an inverted direction. Hold Ctrl to switch more quickly. Hold Alt to switch more precisely. Press while holding both Shift and Alt, or press the middle mouse button to restore to default value."
+  "narration.mishanguc.button.float_usage": "Press the button, scroll the mouse wheel, or use keyboard arrows to change value. Press while holding Shift, or press with right-side mouse button to change in an inverted direction. Hold Ctrl to switch more quickly. Hold Alt to switch more precisely. Press with middle mouse button, or press both left and right arrow key to restore to default value.",
+  "narration.mishanguc.button.null": "Please add and select a row of text before using this button."
 }

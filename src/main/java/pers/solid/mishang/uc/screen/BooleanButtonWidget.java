@@ -91,21 +91,21 @@ public class BooleanButtonWidget extends ButtonWidget {
 
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int button) {
-    final boolean b = super.mouseClicked(mouseX, mouseY, button);
-    if (this.active && this.visible && clicked(mouseX, mouseY)) {
-      if (button == 2) {
+    if (this.active && this.visible && clicked(mouseX, mouseY) && button == 2) {
         setValue(defaultValue);
         return true;
       } else {
+      return super.mouseClicked(mouseX, mouseY, button);
+    }
+  }
+
+  @Override
+  public void onPress() {
         final Boolean value = getValue();
         if (value != null) {
           setValue(!value);
-          return true;
-        }
       }
     }
-    return b;
-  }
 
   @Override
   public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
@@ -147,12 +147,16 @@ public class BooleanButtonWidget extends ButtonWidget {
   @Override
   protected void appendDefaultNarrations(NarrationMessageBuilder builder) {
     super.appendDefaultNarrations(builder);
-    final Boolean value = valueGetter.apply(this);
-    if (value != null) {
-      builder.put(NarrationPart.HINT, TextBridge.translatable("narration.mishanguc.button.current_value", value ? ScreenTexts.ON : ScreenTexts.OFF));
+    if (getValue() == null) {
+      builder.put(NarrationPart.USAGE, TextBridge.translatable("narration.mishanguc.button.null"));
     } else {
-      builder.put(NarrationPart.HINT, TextBridge.empty());
+      builder.put(NarrationPart.USAGE, TextBridge.translatable("narration.mishanguc.button.boolean_usage"));
     }
-    builder.put(NarrationPart.USAGE, TextBridge.translatable("narration.mishanguc.button.boolean_usage"));
+  }
+
+  @Override
+  public void setFocused(boolean focused) {
+    super.setFocused(focused);
+    updateTooltip();
   }
 }
