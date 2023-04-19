@@ -14,6 +14,7 @@ import net.minecraft.nbt.*;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.DyeColor;
@@ -349,7 +350,11 @@ public class MishangUtils {
 
   @ApiStatus.AvailableSince("0.2.1")
   public static MutableText describeColor(int color) {
-    return TextBridge.empty().append(TextBridge.literal("■").styled(style -> style.withColor(color))).append(String.format("#%06x", color));
+    return describeColor(color, TextBridge.literal(String.format("#%06x", color)));
+  }
+
+  public static MutableText describeColor(int color, Text text) {
+    return TextBridge.empty().append(TextBridge.literal("■").styled(style -> style.withColor(color))).append(text);
   }
 
   @ApiStatus.AvailableSince("0.2.4")
