@@ -1002,7 +1002,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    */
   @Override
   public void setFocused(@Nullable Element focused) {
-    if (this.getFocused() != focused && getFocused() instanceof ClickableWidget clickableWidget && clickableWidget.isFocused()) {
+    if (this.getFocused() != focused && getFocused() instanceof ClickableWidget && ((ClickableWidget) getFocused()).isFocused()) {
       getFocused().changeFocus(false);
     }
     customColorTextField.setTextFieldFocused(focused == customColorTextField);

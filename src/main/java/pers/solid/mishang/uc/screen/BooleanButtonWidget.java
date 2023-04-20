@@ -148,13 +148,5 @@ public class BooleanButtonWidget extends ButtonWidget {
   @Override
   protected MutableText getNarrationMessage() {
     return narrateTooltipAsMessage ? new TranslatableText("gui.narrate.button", tooltipSupplier.apply(null)) : super.getNarrationMessage();
-    }
-  }
-
-  @Override
-  public void appendNarrations(NarrationMessageBuilder builder) {
-    super.appendNarrations(builder);
-    final Boolean value = getValue();
-    builder.put(NarrationPart.HINT, value == null ? TextBridge.empty() : TextBridge.translatable("narration.mishanguc.button.current_value", value ? ScreenTexts.ON : ScreenTexts.OFF));
   }
 }

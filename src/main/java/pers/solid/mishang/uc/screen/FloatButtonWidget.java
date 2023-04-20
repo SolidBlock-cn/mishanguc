@@ -132,22 +132,23 @@ public class FloatButtonWidget extends ButtonWidget {
   public boolean mouseClicked(double mouseX, double mouseY, int button) {
     final Float value = getValue();
     final boolean b = super.mouseClicked(mouseX, mouseY, button);
-    if (this.active && this.visible && clicked(mouseX, mouseY)&& value != null) {
+    if (this.active && this.visible && clicked(mouseX, mouseY) && value != null) {
       switch (button) {
         case 0: // 这种情况下直接采用了 onPress，所以直接略。
         case 1:
           setValue(
               value
-            + (Screen.hasShiftDown() || button == 1 ? -1 : 1)
-            * step
-            * (Screen.hasControlDown() ? 8 : 1)
-            * (Screen.hasAltDown() ? 0.125f : 1));
+                  + (Screen.hasShiftDown() || button == 1 ? -1 : 1)
+                  * step
+                  * (Screen.hasControlDown() ? 8 : 1)
+                  * (Screen.hasAltDown() ? 0.125f : 1));
           return true;
         case 2:
           setValue(defaultValue);
           return true;
         default:
       }
+    }
     return b;
   }
 
@@ -210,8 +211,8 @@ public class FloatButtonWidget extends ButtonWidget {
   @Override
   protected MutableText getNarrationMessage() {
     return new TranslatableText("gui.narrate.button", super.getMessage());
-    }
   }
+
 
   @Contract(value = "_ -> this", mutates = "this")
   protected FloatButtonWidget narratesValueAs(Float2ObjectFunction<MutableText> valueNarrator) {
