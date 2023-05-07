@@ -20,9 +20,9 @@ import org.jetbrains.annotations.Nullable;
  * @param lineOffset       该道路连接状态的偏移。
  * @since 0.2.0-mc1.17+ 此类更改为记录；1.16.5 由于仍为 Java 8，因此仍使用普通类的形式。
  */
-public record RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, EightHorizontalDirection direction, LineType lineType, @Nullable LineOffset lineOffset) implements Comparable<RoadConnectionState> {
+public record RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, @Nullable EightHorizontalDirection direction, LineType lineType, @Nullable LineOffset lineOffset) implements Comparable<RoadConnectionState> {
 
-  public RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, EightHorizontalDirection direction, LineType lineType) {
+  public RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, @Nullable EightHorizontalDirection direction, LineType lineType) {
     this(whetherConnected, lineColor, direction, lineType, null);
   }
 
@@ -46,11 +46,15 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
     return TextBridge.translatable("direction." + direction.asString());
   }
 
-  public static MutableText text(HorizontalCornerDirection direction) {
-    return TextBridge.translatable("direction." + direction.asString());
+  public static MutableText text(@Nullable HorizontalCornerDirection direction) {
+    if (direction == null) {
+      return TextBridge.translatable("direction.none");
+    } else {
+      return TextBridge.translatable("direction." + direction.asString());
+    }
   }
 
-  public static MutableText text(Either<Direction, HorizontalCornerDirection> direction) {
+  public static MutableText text(@Nullable Either<Direction, HorizontalCornerDirection> direction) {
     if (direction == null) {
       return TextBridge.translatable("direction.none");
     } else {
@@ -58,11 +62,11 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
     }
   }
 
-  public static MutableText text(EightHorizontalDirection direction) {
-    return text(direction.either);
+  public static MutableText text(@Nullable EightHorizontalDirection direction) {
+    return direction == null ? text((Direction) null) : text(direction.either);
   }
 
-  public static MutableText text(WhetherConnected whetherConnected) {
+  public static MutableText text(@NotNull WhetherConnected whetherConnected) {
     return TextBridge.translatable("roadConnectionState.whether." + whetherConnected.asString()).formatted(switch (whetherConnected) {
       case NOT_CONNECTED -> Formatting.RED;
       case CONNECTED -> Formatting.GREEN;
@@ -70,7 +74,7 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
     });
   }
 
-  public static MutableText text(LineColor lineColor) {
+  public static MutableText text(@NotNull LineColor lineColor) {
     return lineColor.getName().formatted(switch (lineColor) {
       case WHITE -> Formatting.WHITE;
       case YELLOW -> Formatting.YELLOW;
@@ -78,7 +82,7 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
     });
   }
 
-  public static MutableText text(LineType lineType) {
+  public static MutableText text(@NotNull LineType lineType) {
     return lineType.getName();
   }
 
