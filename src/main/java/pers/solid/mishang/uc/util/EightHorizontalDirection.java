@@ -47,11 +47,11 @@ public enum EightHorizontalDirection implements StringIdentifiable {
     this.axis = axis;
   }
 
-  public static EightHorizontalDirection of(Direction direction) {
+  public static @NotNull EightHorizontalDirection of(@NotNull Direction direction) {
     return DIRECTIONS.get(direction);
   }
 
-  public static EightHorizontalDirection of(HorizontalCornerDirection cornerDirection) {
+  public static @NotNull EightHorizontalDirection of(@NotNull HorizontalCornerDirection cornerDirection) {
     return CORNER_DIRECTIONS.get(cornerDirection);
   }
 

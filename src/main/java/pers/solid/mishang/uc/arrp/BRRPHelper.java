@@ -67,7 +67,7 @@ public final class BRRPHelper {
             key.isEmpty() ? "type=bottom" : key + ",type=bottom",
             bottomModel);
         JsonObject topModel = blockModel.deepCopy();
-        topModel.addProperty("mode", slabOf(modelId).toString());
+        topModel.addProperty("model", slabOf(modelId).brrp_suffixed("_top").toString());
         slabVariant.add(
             key.isEmpty() ? "type=top" : key + ",type=top",
             topModel);
