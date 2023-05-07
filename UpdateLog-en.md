@@ -2,6 +2,11 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.2.1
+- Fixed the wrong model of road slab blocks.
+- Fixed the issue that using road connection state debugging tool may cause crashes.
+- Added more links in the Mod Menu screen.
+
 ### 1.2.0
 
 - Adapted to new version BRRP.
