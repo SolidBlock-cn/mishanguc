@@ -44,5 +44,14 @@
   "breaks": {
     "minecraft": ">=1.19.3"
   },
-  "custom": {"branch": "1.19.2"}
+  "custom": {
+    "branch": "1.19.2",
+    "modmenu": {
+      "links": {
+        "mcmod.cn": "https://www.mcmod.cn/class/5743.html",
+        "modmenu.modrinth": "https://modrinth.com/mod/mishang-urban-construction",
+        "modmenu.curseforge": "https://www.curseforge.com/minecraft/mc-mods/mishang-urban-construction"
+      }
+    }
+  }
 }
