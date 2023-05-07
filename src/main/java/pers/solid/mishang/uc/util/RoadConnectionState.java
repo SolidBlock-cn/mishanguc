@@ -33,7 +33,7 @@ public final class RoadConnectionState implements Comparable<RoadConnectionState
    * @param lineOffset       该道路连接状态的偏移。
    * @since 0.2.0-mc1.17+ 此类更改为记录；1.16.5 由于仍为 Java 8，因此仍使用普通类的形式。
    */
-  public RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, EightHorizontalDirection direction, LineType lineType, LineOffset lineOffset) {
+  public RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, @Nullable EightHorizontalDirection direction, LineType lineType, LineOffset lineOffset) {
     this.whetherConnected = whetherConnected;
     this.lineColor = lineColor;
     this.direction = direction;
@@ -41,7 +41,7 @@ public final class RoadConnectionState implements Comparable<RoadConnectionState
     this.lineOffset = lineOffset;
   }
 
-  public RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, EightHorizontalDirection direction, LineType lineType) {
+  public RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, @Nullable EightHorizontalDirection direction, LineType lineType) {
     this(whetherConnected, lineColor, direction, lineType, null);
   }
 
@@ -97,11 +97,15 @@ public final class RoadConnectionState implements Comparable<RoadConnectionState
     return TextBridge.translatable("direction." + direction.asString());
   }
 
-  public static MutableText text(HorizontalCornerDirection direction) {
-    return TextBridge.translatable("direction." + direction.asString());
+  public static MutableText text(@Nullable HorizontalCornerDirection direction) {
+    if (direction == null) {
+      return TextBridge.translatable("direction.none");
+    } else {
+      return TextBridge.translatable("direction." + direction.asString());
+    }
   }
 
-  public static MutableText text(Either<Direction, HorizontalCornerDirection> direction) {
+  public static MutableText text(@Nullable Either<Direction, HorizontalCornerDirection> direction) {
     if (direction == null) {
       return TextBridge.translatable("direction.none");
     } else {
@@ -109,11 +113,11 @@ public final class RoadConnectionState implements Comparable<RoadConnectionState
     }
   }
 
-  public static MutableText text(EightHorizontalDirection direction) {
-    return text(direction.either);
+  public static MutableText text(@Nullable EightHorizontalDirection direction) {
+    return direction == null ? text((Direction) null) : text(direction.either);
   }
 
-  public static MutableText text(WhetherConnected whetherConnected) {
+  public static MutableText text(@NotNull WhetherConnected whetherConnected) {
     Formatting formatting;
     switch (whetherConnected) {
       case NOT_CONNECTED:
@@ -129,7 +133,7 @@ public final class RoadConnectionState implements Comparable<RoadConnectionState
     return new TranslatableText("roadConnectionState.whether." + whetherConnected.asString()).formatted(formatting);
   }
 
-  public static MutableText text(LineColor lineColor) {
+  public static MutableText text(@NotNull LineColor lineColor) {
     Formatting formatting;
     switch (lineColor) {
       case WHITE:
@@ -145,7 +149,7 @@ public final class RoadConnectionState implements Comparable<RoadConnectionState
     return lineColor.getName().formatted(formatting);
   }
 
-  public static MutableText text(LineType lineType) {
+  public static MutableText text(@NotNull LineType lineType) {
     return lineType.getName();
   }
 
