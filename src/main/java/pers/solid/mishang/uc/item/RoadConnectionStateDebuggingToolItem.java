@@ -45,19 +45,17 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem implemen
         TextBridge.translatable("debug.mishanguc.roadConnectionState.allDir", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
             .formatted(Formatting.YELLOW),
         false);
-    Direction.Type.HORIZONTAL.forEach(
-        direction -> {
-          final RoadConnectionState connectionState =
-              road.getConnectionStateOf(blockState, direction);
-          playerEntity.sendMessage(
-              TextBridge.translatable("debug.mishanguc.roadConnectionState.brief",
-                  RoadConnectionState.text(direction),
-                  (connectionState.offsetLevel() == 0 ? RoadConnectionState.text(connectionState.direction()) : TextBridge.translatable("debug.mishanguc.roadConnectionState.offset", RoadConnectionState.text(direction), RoadConnectionState.text(connectionState.offsetDirection()), connectionState.offsetLevel())).formatted(Formatting.WHITE),
-                  RoadConnectionState.text(connectionState.lineColor()),
-                  RoadConnectionState.text(connectionState.lineType()).formatted(Formatting.WHITE),
-                  RoadConnectionState.text(connectionState.whetherConnected())).styled(style -> style.withColor(0xcccccc)),
-              false);
-        });
+    for (Direction direction : Direction.Type.HORIZONTAL) {
+      final RoadConnectionState connectionState = road.getConnectionStateOf(blockState, direction);
+      playerEntity.sendMessage(
+          TextBridge.translatable("debug.mishanguc.roadConnectionState.brief",
+              RoadConnectionState.text(direction),
+              (connectionState.offsetLevel() == 0 ? RoadConnectionState.text(connectionState.direction()) : TextBridge.translatable("debug.mishanguc.roadConnectionState.offset", RoadConnectionState.text(direction), RoadConnectionState.text(connectionState.offsetDirection()), connectionState.offsetLevel())).formatted(Formatting.WHITE),
+              RoadConnectionState.text(connectionState.lineColor()),
+              RoadConnectionState.text(connectionState.lineType()).formatted(Formatting.WHITE),
+              RoadConnectionState.text(connectionState.whetherConnected())).styled(style -> style.withColor(0xcccccc)),
+          false);
+    }
     return ActionResult.SUCCESS;
   }
 
