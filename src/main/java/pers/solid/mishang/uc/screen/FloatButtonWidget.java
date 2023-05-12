@@ -6,13 +6,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -104,9 +104,9 @@ public class FloatButtonWidget extends ButtonWidget {
   }
 
   @Override
-  public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+  public void render(DrawContext context, int mouseX, int mouseY, float delta) {
     if (this.isHovered()) updateTooltip();
-    super.render(matrices, mouseX, mouseY, delta);
+    super.render(context, mouseX, mouseY, delta);
   }
 
   public @Nullable Float getValue() {
@@ -139,10 +139,10 @@ public class FloatButtonWidget extends ButtonWidget {
   }
 
   @Override
-  protected void drawScrollableText(MatrixStack matrices, TextRenderer textRenderer, int xMargin, int color) {
+  protected void drawScrollableText(DrawContext context, TextRenderer textRenderer, int xMargin, int color) {
     if (!sliderFocused || Util.getMeasuringTimeMs() % 1000 > 500) {
       // 在 sliderFocused 的情况下，文字应该闪烁
-      super.drawScrollableText(matrices, textRenderer, xMargin, color);
+      super.drawScrollableText(context, textRenderer, xMargin, color);
     }
   }
 

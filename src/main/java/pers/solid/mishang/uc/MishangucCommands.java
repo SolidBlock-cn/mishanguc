@@ -20,7 +20,6 @@ import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.LightType;
-import pers.solid.mishang.uc.mixin.ChunkHolderAccessor;
 import pers.solid.mishang.uc.mixin.ServerChunkManagerAccessor;
 import pers.solid.mishang.uc.util.TextBridge;
 
@@ -95,7 +94,6 @@ public final class MishangucCommands {
     world.getLightingProvider().checkBlock(pos);
     chunkHolder.markForLightUpdate(LightType.BLOCK, pos.getY());
     chunkHolder.markForLightUpdate(LightType.SKY, pos.getY());
-    ((ChunkHolderAccessor) chunkHolder).setNoLightingUpdates(true);
     chunkHolder.flushUpdates(chunkHolder.getWorldChunk());
   }
 
@@ -110,7 +108,6 @@ public final class MishangucCommands {
       chunkHolder.markForLightUpdate(LightType.BLOCK, i);
       chunkHolder.markForLightUpdate(LightType.SKY, i);
     }
-    ((ChunkHolderAccessor) chunkHolder).setNoLightingUpdates(true);
     chunkHolder.flushUpdates(chunkHolder.getWorldChunk());
   }
 

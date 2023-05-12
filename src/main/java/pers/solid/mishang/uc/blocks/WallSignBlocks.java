@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.mixin.object.builder.AbstractBlockAccessor;
 import net.fabricmc.fabric.mixin.object.builder.AbstractBlockSettingsAccessor;
 import net.minecraft.block.Blocks;
-import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
@@ -60,13 +59,13 @@ public final class WallSignBlocks extends MishangucBlocks {
       new WallSignBlock(Blocks.WARPED_PLANKS);
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
-  public static final WallSignBlock BAMBOO_WALL_SIGN = new WallSignBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).requires(FeatureFlags.UPDATE_1_20));
+  public static final WallSignBlock BAMBOO_WALL_SIGN = new WallSignBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))));
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
-  public static final WallSignBlock BAMBOO_PLANK_WALL_SIGN = new WallSignBlock(Blocks.BAMBOO_PLANKS, FabricBlockSettings.copyOf(Blocks.BAMBOO_PLANKS).requires(FeatureFlags.UPDATE_1_20));
+  public static final WallSignBlock BAMBOO_PLANK_WALL_SIGN = new WallSignBlock(Blocks.BAMBOO_PLANKS, FabricBlockSettings.copyOf(Blocks.BAMBOO_PLANKS));
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
-  public static final WallSignBlock BAMBOO_MOSAIC_WALL_SIGN = new WallSignBlock(Blocks.BAMBOO_MOSAIC, FabricBlockSettings.copyOf(Blocks.BAMBOO_MOSAIC).requires(FeatureFlags.UPDATE_1_20));
+  public static final WallSignBlock BAMBOO_MOSAIC_WALL_SIGN = new WallSignBlock(Blocks.BAMBOO_MOSAIC, FabricBlockSettings.copyOf(Blocks.BAMBOO_MOSAIC));
 
   @ApiStatus.AvailableSince("0.2.2")
   public static final ColoredWallSignBlock COLORED_WOODEN_WALL_SIGN = new ColoredWallSignBlock(ColoredBlocks.COLORED_PLANKS);

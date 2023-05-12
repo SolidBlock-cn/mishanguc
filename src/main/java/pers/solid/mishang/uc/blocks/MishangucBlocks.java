@@ -3,10 +3,8 @@ package pers.solid.mishang.uc.blocks;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.MapColor;
-import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -34,13 +32,11 @@ import java.lang.reflect.Modifier;
  */
 public class MishangucBlocks {
 
-  protected static final Material ROAD_MATERIAL = new FabricMaterialBuilder(MapColor.GRAY).build();
-
   /**
    * 绝大多数柏油路方块共用的方块设置。
    */
   protected static final FabricBlockSettings ROAD_SETTINGS =
-      FabricBlockSettings.of(ROAD_MATERIAL, MapColor.GRAY).strength(0.5F);
+      FabricBlockSettings.create().mapColor(MapColor.GRAY).strength(0.5F);
   /**
    * 具有白色标线的道路方块使用的方块设置。
    */
@@ -54,7 +50,7 @@ public class MishangucBlocks {
    * 绝大多数白色光方块共用的方块设置。
    */
   protected static final FabricBlockSettings WHITE_LIGHT_SETTINGS =
-      FabricBlockSettings.of(Material.REDSTONE_LAMP, MapColor.WHITE).luminance(15).strength(0.2f);
+      FabricBlockSettings.create().mapColor(MapColor.WHITE).luminance(15).strength(0.2f);
   /**
    * 墙上的白色灯等方块等用到的方块设置。与{@link #WHITE_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。
    */
@@ -63,7 +59,7 @@ public class MishangucBlocks {
   /**
    * 绝大多数黄色光方块共用的方块设置。
    */
-  protected static final FabricBlockSettings YELLOW_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, MapColor.YELLOW).luminance(15).strength(0.2f);
+  protected static final FabricBlockSettings YELLOW_LIGHT_SETTINGS = FabricBlockSettings.create().mapColor( MapColor.YELLOW).luminance(15).strength(0.2f);
   /**
    * 墙上的黄色灯等方块等用到的方块设置。与{@link #YELLOW_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。
    */
@@ -72,22 +68,22 @@ public class MishangucBlocks {
   /**
    * 绝大多数青色光方块共用的方块设置。
    */
-  protected static final FabricBlockSettings CYAN_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, MapColor.CYAN).luminance(15).strength(0.2f);
+  protected static final FabricBlockSettings CYAN_LIGHT_SETTINGS = FabricBlockSettings.create().mapColor( MapColor.CYAN).luminance(15).strength(0.2f);
   /**
    * 墙上的青色灯等方块等用到的方块设置。与{@link #YELLOW_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。
    */
   protected static final FabricBlockSettings CYAN_WALL_LIGHT_SETTINGS =
       FabricBlockSettings.copyOf(CYAN_LIGHT_SETTINGS).noCollision();
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final FabricBlockSettings ORANGE_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, DyeColor.ORANGE).luminance(15).strength(0.2f);
+  protected static final FabricBlockSettings ORANGE_LIGHT_SETTINGS = FabricBlockSettings.create().mapColor( DyeColor.ORANGE).luminance(15).strength(0.2f);
   @ApiStatus.AvailableSince("1.1.0")
   protected static final FabricBlockSettings ORANGE_WALL_LIGHT_SETTINGS = FabricBlockSettings.copyOf(ORANGE_LIGHT_SETTINGS).noCollision();
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final FabricBlockSettings GREEN_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, DyeColor.GREEN).luminance(15).strength(0.2f);
+  protected static final FabricBlockSettings GREEN_LIGHT_SETTINGS = FabricBlockSettings.create().mapColor( DyeColor.GREEN).luminance(15).strength(0.2f);
   @ApiStatus.AvailableSince("1.1.0")
   protected static final FabricBlockSettings GREEN_WALL_LIGHT_SETTINGS = FabricBlockSettings.copyOf(GREEN_LIGHT_SETTINGS).noCollision();
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final FabricBlockSettings PINK_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, DyeColor.PINK).luminance(15).strength(0.2f);
+  protected static final FabricBlockSettings PINK_LIGHT_SETTINGS = FabricBlockSettings.create().mapColor( DyeColor.PINK).luminance(15).strength(0.2f);
   @ApiStatus.AvailableSince("1.1.0")
   protected static final FabricBlockSettings PINK_WALL_LIGHT_SETTINGS = FabricBlockSettings.copyOf(PINK_LIGHT_SETTINGS).noCollision();
   @ApiStatus.Internal

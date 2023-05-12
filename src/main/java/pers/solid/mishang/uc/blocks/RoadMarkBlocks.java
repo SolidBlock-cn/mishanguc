@@ -4,7 +4,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.MapColor;
-import net.minecraft.block.Material;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.Cutout;
@@ -15,7 +14,7 @@ import pers.solid.mishang.uc.block.RoadMarkBlock;
  */
 @ApiStatus.AvailableSince("1.1.0")
 public class RoadMarkBlocks extends MishangucBlocks {
-  private static final FabricBlockSettings ROAD_MARK_SETTINGS = FabricBlockSettings.of(Material.STONE).strength(0.5f).mapColor(MapColor.WHITE).nonOpaque().collidable(false);
+  private static final FabricBlockSettings ROAD_MARK_SETTINGS = FabricBlockSettings.create().strength(0.5f).mapColor(MapColor.WHITE).nonOpaque().collidable(false);
   @Cutout
   public static final RoadMarkBlock ARROW_STRAIGHT_MARK = directional("arrow_straight");
   @Cutout

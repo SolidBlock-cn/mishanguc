@@ -288,7 +288,7 @@ public class Mishanguc implements ModInitializer {
         });
     ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
       if (joined) {
-        final GameRules gameRules = player.world.getGameRules();
+        final GameRules gameRules = player.getServerWorld().getGameRules();
         MishangucRules.sync(gameRules.get(MishangucRules.FORCE_PLACING_TOOL_ACCESS), 0, player);
         MishangucRules.sync(gameRules.get(MishangucRules.CARRYING_TOOL_ACCESS), 1, player);
         MishangucRules.sync(gameRules.get(MishangucRules.ROAD_BOOST_SPEED), 3, player);

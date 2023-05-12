@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.block.entity.SignText;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.Models;
 import net.minecraft.data.client.TextureKey;
@@ -119,19 +120,20 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
     try {
       if (blockEntity instanceof SignBlockEntity signBlockEntity) {
         if (world.isClient) return ActionResult.SUCCESS;
+        final SignText textFacing = signBlockEntity.getTextFacing(player);
+        final Text[] messagesUnfiltered = textFacing.getMessages(false);
         @Nullable DyeColor color = null;
         for (int i = 0; i < texts.size(); i++) {
           if (i < 4) {
             // 设置告示牌文字
             final TextContext textContext = TextContext.fromNbt(texts.get(i));
-            signBlockEntity.setTextOnRow(i, textContext.asStyledText());
+            messagesUnfiltered[i] = (textContext.asStyledText());
 
             // 设置告示牌颜色
             final DyeColor possibleColor = MishangUtils.colorBySignColor(textContext.color);
             if (possibleColor != null) {
               if (color == null) {
                 color = possibleColor;
-                signBlockEntity.setTextColor(possibleColor);
               }
             }
             if (color == null) {
@@ -142,6 +144,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
             player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.warn.outOfBound").formatted(Formatting.YELLOW), false);
           }
         }
+        signBlockEntity.setText(color == null ? textFacing : textFacing.withColor(color), signBlockEntity.isPlayerFacingFront(player));
         blockEntity.markDirty();
         world.updateListeners(blockPos, blockState, blockState, 3);
         player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.success.paste", Math.min(texts.size(), 4)), true);
@@ -222,11 +225,12 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
       if (world.isClient) return ActionResult.SUCCESS;
       // 原版的告示牌
       final NbtList texts = new NbtList();
+      final SignText textFacing = signBlockEntity.getTextFacing(player);
       for (int i = 0; i < 4; i++) {
         final TextContext textContext = new TextContext();
-        textContext.text = signBlockEntity.getTextOnRow(i, false).copy();
+        textContext.text = textFacing.getMessage(i, false).copy();
         if (TextBridge.isEmpty(textContext.text)) continue;
-        textContext.color = signBlockEntity.getTextColor().getSignColor();
+        textContext.color = textFacing.getColor().getSignColor();
 
         final Style style = textContext.text.getStyle();
         if (textContext.text.getContent() instanceof LiteralTextContent && textContext.text.getSiblings().isEmpty() && style.getClickEvent() == null && style.getHoverEvent() == null && style.getFont() == Style.DEFAULT_FONT_ID && style.getInsertion() == null) {

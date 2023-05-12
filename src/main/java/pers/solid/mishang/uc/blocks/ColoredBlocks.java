@@ -4,7 +4,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.data.client.TextureMap;
@@ -170,9 +169,9 @@ public final class ColoredBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4")
   public static final ColoredLeavesBlock COLORED_MANGROVE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.MANGROVE_LEAVES), new VanillaBlockLootTableGenerator()::mangroveLeavesDrops, "block/mangrove_leaves");
 
-  public static final ColoredCubeBlock COLORED_PURE_BLOCK = ColoredCubeBlock.cubeAll(FabricBlockSettings.of(Material.STONE, DyeColor.WHITE).strength(0.2f), "mishanguc:block/white_pure");
+  public static final ColoredCubeBlock COLORED_PURE_BLOCK = ColoredCubeBlock.cubeAll(FabricBlockSettings.create().mapColor(DyeColor.WHITE) .strength(0.2f), "mishanguc:block/white_pure");
   public static final ColoredCubeBlock COLORED_PURE_LIGHT = ColoredCubeBlock.cubeAll(WHITE_LIGHT_SETTINGS, "mishanguc:block/white_pure");
-  public static final ColoredCubeBlock COLORED_PURE_BLOCK_WITHOUT_SHADE = new ColoredCubeBlock(FabricBlockSettings.of(Material.STONE, DyeColor.WHITE).strength(0.2f), new Identifier("mishanguc:block/colored_cube_all_without_shade"), TextureMap.all(new Identifier("mishanguc:block/white_pure")));
+  public static final ColoredCubeBlock COLORED_PURE_BLOCK_WITHOUT_SHADE = new ColoredCubeBlock(FabricBlockSettings.create().mapColor(DyeColor.WHITE) .strength(0.2f), new Identifier("mishanguc:block/colored_cube_all_without_shade"), TextureMap.all(new Identifier("mishanguc:block/white_pure")));
   public static final ColoredCubeBlock COLORED_PURE_LIGHT_WITHOUT_SHADE = new ColoredCubeBlock(WHITE_LIGHT_SETTINGS, new Identifier("mishanguc:block/colored_cube_all_without_shade"), TextureMap.all(new Identifier("mishanguc:block/white_pure")));
 
   private ColoredBlocks() {

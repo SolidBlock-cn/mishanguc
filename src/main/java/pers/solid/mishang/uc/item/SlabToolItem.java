@@ -310,10 +310,10 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
         }
         final Runnable remove = SERVER_BLOCK_BREAKING_BRIDGE.remove(Pair.of(player.getWorld(), blockPos));
         if (remove == CAN_MINE_CALLED_FIRST) {
-          performBreak(player.world, blockPos, player, isTop);
-        } else if (tryToDoubleSlab(player.world.getBlockState(blockPos)) != null) {
+          performBreak(player.getWorld(), blockPos, player, isTop);
+        } else if (tryToDoubleSlab(player.getServerWorld().getBlockState(blockPos)) != null) {
           // 收到封包之后，送到 canMine 中执行。
-          SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of(player.getWorld(), blockPos), (PacketReceivedFirst) () -> performBreak(player.world, blockPos, player, isTop));
+          SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of(player.getServerWorld(), blockPos), (PacketReceivedFirst) () -> performBreak(player.getServerWorld(), blockPos, player, isTop));
         }
       });
     }

@@ -9,13 +9,13 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.MultilineText;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.ScreenTexts;
@@ -765,22 +765,22 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   }
 
   @Override
-  public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+  public void render(DrawContext context, int mouseX, int mouseY, float delta) {
     descriptionAtom.set(TextBridge.empty());
-    super.render(matrices, mouseX, mouseY, delta);
+    super.render(context, mouseX, mouseY, delta);
     final Text description = descriptionAtom.get();
     final MultilineText multilineText = MultilineText.create(textRenderer, description, width);
     multilineText.drawCenterWithShadow(
-        matrices,
+        context,
         width / 2,
         height - 75, 9,
         0xcccccc);
     if (placeHolder.visible) {
       final MutableText text0 = TextBridge.translatable("message.mishanguc.or");
-      textRenderer.drawWithShadow(
-          matrices,
+      context.drawTextWithShadow(
+          textRenderer,
           text0,
-          width / 2f - textRenderer.getWidth(text0) / 2f,
+          (int) (width / 2f - textRenderer.getWidth(text0) / 2f),
           60,
           0xdddddd);
     }

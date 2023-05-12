@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.1-SNAPSHOT'
+    id 'fabric-loom' version '1.2-SNAPSHOT'
     // Quiltflower 反编译器
     id 'io.github.juuxel.loom-quiltflower' version '1.7.1'
     id 'maven-publish'
@@ -131,7 +131,7 @@ curseforge {
         id = '583071'
         changelog = content
         changelogType = 'markdown'
-        releaseType = 'release'
+        releaseType = 'beta'
         mainArtifact remapJar
 
         for (final def v in (project.supported_versions.split(',') as String[])) {
@@ -156,7 +156,7 @@ modrinth {
 
     projectId = "rItLmRo4" // 迷上城建模组的 Modrinth ID
     versionNumber = project.mod_version + '-' + project.minecraft_version
-    versionType = 'release'
+    versionType = 'beta'  // until release of MC
     uploadFile = remapJar
     gameVersions = Arrays.asList(project.supported_versions.split(','))
 

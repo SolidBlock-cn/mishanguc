@@ -80,7 +80,7 @@ public abstract class BlockEntityWithText extends BlockEntity {
    */
   public void checkEditorValidity() {
     final PlayerEntity editor = getEditor();
-    if (editor != null && editor.isSpectator() && !editor.isLiving() && editor.world != world) {
+    if (editor != null && editor.isSpectator() && !editor.isLiving() && editor.getWorld() != world) {
       setEditor(null);
     }
   }
@@ -98,7 +98,7 @@ public abstract class BlockEntityWithText extends BlockEntity {
       server.execute(
           () -> {
             try {
-              final BlockEntityWithText entity = (BlockEntityWithText) player.world.getBlockEntity(blockPos);
+              final BlockEntityWithText entity = (BlockEntityWithText) player.getWorld().getBlockEntity(blockPos);
               if (entity == null) {
                 LOGGER.warn(
                     "The entity is null! Cannot write the block entity data at {} {} {}.",

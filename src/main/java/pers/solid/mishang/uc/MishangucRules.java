@@ -136,7 +136,7 @@ public final class MishangucRules {
 
     public boolean hasAccess(PlayerEntity player, boolean warn) {
       final boolean hasAccess = hasAccess(player);
-      if (warn && !hasAccess && !player.world.isClient) {
+      if (warn && !hasAccess && !player.getWorld().isClient) {
         player.sendMessage(createWarnText(), true);
       }
       return hasAccess;

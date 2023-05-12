@@ -36,14 +36,14 @@
     "fabricloader": "*",
     "fabric": "*",
     "minecraft": [
-      "~1.19.4"
+      "~1.20-beta.1"
     ],
-    "brrp_v1": ">=1.0.0"
+    "brrp_v1": ">=1.0.0-0"
   },
   "breaks": {
   },
   "custom": {
-    "branch": "1.19.4",
+    "branch": "1.20",
     "modmenu": {
       "links": {
         "mcmod.cn": "https://www.mcmod.cn/class/5743.html",
