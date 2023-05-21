@@ -2,7 +2,6 @@ package pers.solid.mishang.uc;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -76,7 +75,6 @@ public class Mishanguc implements ModInitializer {
               });
 
   private static void registerCommands() {
-    CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> MishangucCommands.registerUpdateLightCommand(dispatcher));
   }
 
   private static void registerFlammableAndFuels() {
@@ -471,7 +469,7 @@ public class Mishanguc implements ModInitializer {
     registerColorfulBlocks();
   }
 
-  private void registerColorfulBlocks() {
+  private static void registerColorfulBlocks() {
     ColorfulBlockRegistry.registerColorfulBlocks(HandrailBlocks.DECORATED_IRON_HANDRAILS);
     ColorfulBlockRegistry.registerColorfulBlocks(HandrailBlocks.SIMPLE_CONCRETE_HANDRAILS);
     ColorfulBlockRegistry.registerColorfulBlocks(HandrailBlocks.SIMPLE_TERRACOTTA_HANDRAILS);

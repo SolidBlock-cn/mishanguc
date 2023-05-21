@@ -2,6 +2,11 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.2.2
+- Fixed the issue that road mark blocks are not displayed in the creative inventory.
+- (For 1.20 only) Removed features related to light update, as well as relevant commands, because the former content does not apply to newer versions anymore.
+- (For 1.20 only) The speed effect works even if you stand on the edge of the road block (which is also modifiable via game rules).
+- 
 ### 1.2.1
 - Fixed the wrong model of road slab blocks.
 - Fixed the issue that using road connection state debugging tool may cause crashes.

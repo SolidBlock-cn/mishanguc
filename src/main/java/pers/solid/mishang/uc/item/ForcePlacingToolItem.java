@@ -23,7 +23,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -96,11 +95,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   }
 
   private static int getFlags(ItemStack stack) {
-    int flags = 0b11010;
-    if (stack.getNbt() != null && stack.getNbt().getBoolean("suspendsLightUpdate")) {
-      flags |= 128;
-    }
-    return flags;
+    return 0b11010;
   }
 
   @Override
@@ -249,13 +244,6 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       }
     }
     return ActionResult.SUCCESS;
-  }
-
-  public void appendStacks(ItemGroup.Entries entries) {
-    entries.add(new ItemStack(this));
-    final ItemStack newStack = getDefaultStack();
-    newStack.getOrCreateNbt().putBoolean("suspendsLightUpdate", true);
-    entries.add(newStack);
   }
 
   /**

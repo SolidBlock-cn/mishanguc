@@ -15,7 +15,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.ExplosionToolItem;
 import pers.solid.mishang.uc.item.FastBuildingToolItem;
-import pers.solid.mishang.uc.item.ForcePlacingToolItem;
 import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.util.ColorfulBlockRegistry;
 
@@ -49,8 +48,6 @@ public class MishangucItemGroups {
           explosionToolItem.appendToEntries(entries);
         } else if (item instanceof final FastBuildingToolItem fastBuildingToolItem) {
           fastBuildingToolItem.appendToEntries(entries);
-        } else if (item instanceof final ForcePlacingToolItem forcePlacingToolItem) {
-          forcePlacingToolItem.appendStacks(entries);
         } else {
           entries.add(item);
         }
