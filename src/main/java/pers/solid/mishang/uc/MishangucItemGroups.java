@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.ObjectUtils;
+import pers.solid.mishang.uc.block.RoadMarkBlock;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.ExplosionToolItem;
 import pers.solid.mishang.uc.item.FastBuildingToolItem;
@@ -27,6 +28,7 @@ public class MishangucItemGroups {
           () -> new ItemStack(RoadBlocks.ROAD_WITH_WHITE_DOUBLE_LINE)).entries((enabledFeatures, entries, operatorEnabled) -> {
         MishangUtils.instanceStream(RoadBlocks.class, Block.class).forEach(addEntries(entries));
         RoadSlabBlocks.SLABS.forEach(addEntries(entries));
+        MishangUtils.instanceStream(RoadMarkBlocks.class, RoadMarkBlock.class).forEach(addEntries(entries));
       }).build();
   public static final ItemGroup LIGHTS =
       FabricItemGroup.builder(

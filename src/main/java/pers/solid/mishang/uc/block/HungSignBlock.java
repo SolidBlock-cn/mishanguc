@@ -307,8 +307,8 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
    * 本方法在编写时，适当参照了 {@link net.minecraft.item.SignItem#postPlacement(BlockPos, World, PlayerEntity,
    * ItemStack, BlockState)}。<br>
    * 告示牌界面的打开逻辑又可以参考 {@link
-   * net.minecraft.client.network.ClientPlayerEntity#openEditSignScreen(SignBlockEntity)} 和 {@link
-   * net.minecraft.server.network.ServerPlayerEntity#openEditSignScreen(SignBlockEntity)}。
+   * net.minecraft.client.network.ClientPlayerEntity#openEditSignScreen(SignBlockEntity, boolean)} 和 {@link
+   * net.minecraft.server.network.ServerPlayerEntity#openEditSignScreen(SignBlockEntity, boolean)}。
    */
   @SuppressWarnings({"deprecation", "JavadocReference"})
   @Override

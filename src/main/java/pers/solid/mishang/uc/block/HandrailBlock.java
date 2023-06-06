@@ -77,7 +77,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
     final BlockState stateBelow = world.getBlockState(blockPos.down());
     final boolean waterlogged = world.getFluidState(blockPos).getFluid() == Fluids.WATER;
     // 如果底下是楼梯方块，则放置该楼梯扶手方块。
-    if (stateBelow.getBlock() instanceof StairsBlock && stateBelow.contains(StairsBlock.FACING)) {
+    if (stateBelow.getBlock() instanceof StairsBlock && stateBelow.contains(StairsBlock.FACING) && stateBelow.contains(StairsBlock.HALF) && stateBelow.get(StairsBlock.HALF) == BlockHalf.BOTTOM) {
       return stair().getPlacementState(ctx);
     }
 
@@ -100,9 +100,9 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
 
     // 检测毗邻位置会不会有楼梯方块。
     final BlockState stateInCW = world.getBlockState(blockPos.offset(facing.rotateYClockwise()));
-    final boolean isStairsInCW = stateInCW.getBlock() instanceof StairsBlock && stateInCW.contains(StairsBlock.FACING) && stateInCW.get(StairsBlock.FACING) == facing.rotateYClockwise() && stateInCW.get(StairsBlock.HALF) == BlockHalf.BOTTOM;
+    final boolean isStairsInCW = stateInCW.getBlock() instanceof StairsBlock && stateInCW.contains(StairsBlock.FACING) && stateInCW.get(StairsBlock.FACING) == facing.rotateYClockwise() && stateInCW.contains(StairsBlock.HALF) && stateInCW.get(StairsBlock.HALF) == BlockHalf.BOTTOM;
     final BlockState stateInCCW = world.getBlockState(blockPos.offset(facing.rotateYCounterclockwise()));
-    final boolean isStairsInCCW = stateInCCW.getBlock() instanceof StairsBlock && stateInCCW.contains(StairsBlock.FACING) && stateInCCW.get(StairsBlock.FACING) == facing.rotateYCounterclockwise() && stateInCCW.get(StairsBlock.HALF) == BlockHalf.BOTTOM;
+    final boolean isStairsInCCW = stateInCCW.getBlock() instanceof StairsBlock && stateInCCW.contains(StairsBlock.FACING) && stateInCCW.get(StairsBlock.FACING) == facing.rotateYCounterclockwise() && stateInCCW.contains(StairsBlock.HALF) && stateInCCW.get(StairsBlock.HALF) == BlockHalf.BOTTOM;
 
     // 检测放置时是否可以称为外部角落的版本。
     final BlockState stateInOpposite = world.getBlockState(blockPos.offset(facing, -1));

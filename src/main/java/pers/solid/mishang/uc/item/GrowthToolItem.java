@@ -1,10 +1,15 @@
 package pers.solid.mishang.uc.item;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.Models;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.SlimeEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -19,6 +24,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPointer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -34,9 +40,10 @@ import java.util.Collections;
 import java.util.List;
 
 @ApiStatus.AvailableSince("0.2.4")
-public class GrowthToolItem extends Item implements InteractsWithEntity, ItemResourceGenerator {
+public class GrowthToolItem extends Item implements InteractsWithEntity, ItemResourceGenerator, DispenserBehavior {
   public GrowthToolItem(Settings settings) {
     super(settings);
+    DispenserBlock.registerBehavior(this, this);
   }
 
   @Override
@@ -56,19 +63,21 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, ItemRes
       return TypedActionResult.fail(use.getValue());
     }
     final Vec3d center = raycast.getPos();
-    apply(world, user, center, hand, !user.isSneaking());
+    final int damage = apply(world, center, !user.isSneaking());
+    user.getStackInHand(hand).damage(damage, user, playerEntity -> playerEntity.sendToolBreakStatus(hand));
     return use;
   }
 
   @Override
   public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
     if (super.canMine(state, world, pos, miner) && !world.isClient) {
-      apply(world, miner, Vec3d.ofCenter(pos), Hand.MAIN_HAND, !miner.isSneaking());
+      final int damage = apply(world, Vec3d.ofCenter(pos), !miner.isSneaking());
+      miner.getStackInHand(Hand.MAIN_HAND).damage(damage, miner, playerEntity -> playerEntity.sendToolBreakStatus(Hand.MAIN_HAND));
     }
     return false;
   }
 
-  public static void apply(World world, PlayerEntity player, Vec3d center, Hand hand, boolean isPositive) {
+  public static int apply(World world, Vec3d center, boolean isPositive) {
     int damage = 0;
     for (BlockPos pos : BlockPos.iterateOutwards(new BlockPos(center), 4, 4, 4)) {
       final BlockState blockState = world.getBlockState(pos);
@@ -86,6 +95,15 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, ItemRes
         passiveEntity.setBreedingAge(isPositive ? 0 : PassiveEntity.BABY_AGE);
         createParticle(world, entity.getPos(), isPositive);
         damage += 1;
+      } else if (entity instanceof SlimeEntity slimeEntity) {
+        final int prevSize = slimeEntity.getSize();
+        if (isPositive) {
+          slimeEntity.setSize(Math.min(prevSize * 2, Math.max(prevSize, 16)), false);
+          createParticle(world, entity.getPos(), isPositive);
+        } else {
+          slimeEntity.setSize(prevSize / 2, false);
+        }
+        damage += 1;
       } else if (entity instanceof MobEntity mobEntity) {
         if (mobEntity.isBaby() == isPositive) {
           mobEntity.setBaby(!isPositive);
@@ -94,12 +112,12 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, ItemRes
         }
       }
     }
-    player.getStackInHand(hand).damage(damage, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
+    return damage;
   }
 
   public static void createParticle(World world, Vec3d pos, boolean isPositive) {
     if (world instanceof ServerWorld serverWorld) {
-      serverWorld.spawnParticles(isPositive ? ParticleTypes.HAPPY_VILLAGER : ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 8, 1, 1, 1, 0);
+      serverWorld.spawnParticles(isPositive ? ParticleTypes.HAPPY_VILLAGER : ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 16, 1, 1, 1, 0);
     }
   }
 
@@ -108,7 +126,8 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, ItemRes
   public @NotNull ActionResult useEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
     final ActionResult actionResult = InteractsWithEntity.super.useEntityCallback(player, world, hand, entity, hitResult);
     if (actionResult == ActionResult.PASS && !world.isClient) {
-      apply(world, player, hitResult == null ? entity.getPos() : hitResult.getPos(), hand, !player.isSneaking());
+      final int damage = apply(world, hitResult == null ? entity.getPos() : hitResult.getPos(), !player.isSneaking());
+      player.getStackInHand(hand).damage(damage, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
       return ActionResult.SUCCESS;
     }
     return actionResult;
@@ -118,14 +137,23 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, ItemRes
   public @NotNull ActionResult attackEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
     final ActionResult actionResult = InteractsWithEntity.super.attackEntityCallback(player, world, hand, entity, hitResult);
     if (actionResult == ActionResult.PASS && !world.isClient) {
-      apply(world, player, hitResult == null ? entity.getPos() : hitResult.getPos(), hand, !player.isSneaking());
+      final int damage = apply(world, hitResult == null ? entity.getPos() : hitResult.getPos(), !player.isSneaking());
+      player.getStackInHand(hand).damage(damage, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
       return ActionResult.SUCCESS;
     }
     return actionResult;
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public ModelJsonBuilder getItemModel() {
     return ItemResourceGenerator.super.getItemModel().parent(Models.HANDHELD);
+  }
+
+  @Override
+  public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
+    final int damage = apply(pointer.getWorld(), pointer.getPos().offset(pointer.getBlockState().get(DispenserBlock.FACING), 4).toCenterPos(), true);
+    stack.damage(damage, pointer.getWorld().random, null);
+    return stack;
   }
 }

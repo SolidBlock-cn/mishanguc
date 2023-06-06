@@ -17,6 +17,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -179,7 +180,7 @@ public class MishangUtils {
     int k = (int) ((double) (color >> 8 & 0xFF) * 0.4);
     int l = (int) ((double) (color >> 16 & 0xFF) * 0.4);
     if (color == 0) {
-      return 0xfff0ebcc;
+      return 0xf0ebcc;
     }
     return (0) << 24 | (l & 0xFF) << 16 | (k & 0xFF) << 8 | (j & 0xFF);
   }
@@ -349,11 +350,22 @@ public class MishangUtils {
 
   @ApiStatus.AvailableSince("0.2.1")
   public static MutableText describeColor(int color) {
-    return describeColor(color, TextBridge.literal(String.format("#%06x", color)));
+    return describeColor(color, TextBridge.literal(formatColorHex(color)));
   }
 
   public static MutableText describeColor(int color, Text text) {
     return TextBridge.empty().append(TextBridge.literal("■").styled(style -> style.withColor(color))).append(text);
+  }
+
+  /**
+   * 接收一个整数形式的颜色，考虑到 Minecraft 可能存在带有 alpha 通道的颜色，因此当检测到有 alpha 通道时，格式化为 #aarrggbb 的格式，否则格式化为 #rrggbb 的格式。
+   */
+  public static String formatColorHex(int color) {
+    return (color & 0xff000000) != 0 ? String.format("#%08x", color) : String.format("#%06x", color);
+  }
+
+  public static MutableText describeShortcut(Text shortcut) {
+    return TextBridge.translatable("message.mishanguc.keyboard_shortcut.composed", shortcut).formatted(Formatting.GRAY);
   }
 
   @ApiStatus.AvailableSince("0.2.4")
@@ -399,5 +411,13 @@ public class MishangUtils {
     } else {
       return 0;
     }
+  }
+
+  /**
+   * 将数字转换为字符串，如果这个符点数的值正好等于整数，那么转换为字符串时不显示小数部分。
+   */
+  public static String numberToString(float value) {
+    final int intValue = (int) value;
+    return value == intValue ? Integer.toString(intValue) : Float.toString(value);
   }
 }
