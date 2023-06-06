@@ -38,8 +38,6 @@ public final class MishangucRules {
 
   public static final GameRules.Key<EnumRule<ToolAccess>> EXPLOSION_TOOL_ACCESS = register("explosion_tool_access", GameRuleFactory.createEnumRule(ToolAccess.ALL));
 
-  public static final GameRules.Key<GameRules.BooleanRule> SUSPENDS_BLOCK_LIGHT_UPDATE = FabricLoader.getInstance().isDevelopmentEnvironment() ? register("suspends_block_light_update", GameRuleFactory.createBooleanRule(false, (minecraftServer, booleanRule) -> sync(minecraftServer, booleanRule, 2))) : null;
-
   public static final GameRules.Key<DoubleRule> ROAD_BOOST_SPEED = register("road_boost_speed", GameRuleFactory.createDoubleRule(1.75, FabricLoader.getInstance().isDevelopmentEnvironment() ? -2 : 0, FabricLoader.getInstance().isDevelopmentEnvironment() ? 50 : 10, (server, rule) -> {
     currentRoadBoostSpeed = rule.get();
     sync(server, rule, 3);
@@ -85,11 +83,6 @@ public final class MishangucRules {
           break;
         case 1:
           MishangucClient.CLIENT_CARRYING_TOOL_ACCESS.set(value);
-          break;
-        case 2:
-          if (MishangucClient.CLIENT_SUSPENDS_LIGHT_UPDATE != null) {
-            MishangucClient.CLIENT_SUSPENDS_LIGHT_UPDATE.set(booleanValue);
-          }
           break;
         case 3:
           if (!Double.isNaN(doubleValue)) MishangucRules.currentRoadBoostSpeed = doubleValue;

@@ -2,9 +2,8 @@
   "schemaVersion": 1,
   "id": "mishanguc",
   "version": "${version}",
-
   "name": "Mishang Urban Construction",
-  "description": "An amount of blocks and items that make a beautiful city!",
+  "description": "The mod provides an amount of blocks and items that make a beautiful city, which includes roads, signs, lights, handrails, colored blocks and some useful tools. Thank you for using this mod. I'm looking forward to your suggestions.",
   "authors": [
     "SolidBlock"
   ],
@@ -14,10 +13,8 @@
     "issues": "https://github.com/SolidBlock-cn/mishanguc/issues",
     "homepage": "https://github.com/SolidBlock-cn/mishanguc"
   },
-
   "license": "LGPLv3",
   "icon": "assets/mishanguc/icon.png",
-
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -26,20 +23,23 @@
     ],
     "client": [
       "pers.solid.mishang.uc.MishangucClient"
+    ],
+    "preLaunch": [
+      "pers.solid.mishang.uc.MishangucPreLaunch"
     ]
   },
   "mixins": [
     "mishanguc.mixins.json"
   ],
-
   "depends": {
-    "fabricloader": "*",
-    "fabric": ">=0.70.0",
+    "fabricloader": ">0.14.10",
+    "fabric": "*",
     "minecraft": [
       "~1.19.1",
       "~1.19.2"
     ],
-    "brrp_v1": ">=1.0.0"
+    "brrp_v1": ">=1.0.0",
+    "com_github_llamalad7_mixinextras": ">=0.2.0-beta.8"
   },
   "breaks": {
     "minecraft": ">=1.19.3"

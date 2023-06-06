@@ -108,54 +108,17 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
   public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
     if (isIn(group)) {
       stacks.add(new ItemStack(this));
-      {
-        ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putFloat("power", 8);
-        stacks.add(stack);
-      }
-      {
-        ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putFloat("power", 16);
-        stacks.add(stack);
-      }
-      {
-        ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putFloat("power", 32);
-        stacks.add(stack);
-      }
-      {
-        ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putBoolean("createFire", true);
-        stack.getOrCreateNbt().putFloat("power", 4);
-        stacks.add(stack);
-      }
-      {
-        ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putBoolean("createFire", true);
-        stack.getOrCreateNbt().putFloat("power", 8);
-        stacks.add(stack);
-      }
-      {
-        ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putBoolean("createFire", true);
-        stack.getOrCreateNbt().putFloat("power", 16);
-        stacks.add(stack);
-      }
-      {
-        ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putBoolean("createFire", true);
-        stack.getOrCreateNbt().putFloat("power", 32);
-        stacks.add(stack);
-      }
+      ItemStack stack = new ItemStack(this);
+      stack.getOrCreateNbt().putBoolean("createFire", true);
+      stacks.add(stack);
 
-      ItemStack stack4 = new ItemStack(this);
-      stack4.getOrCreateNbt().putString("destructionType", "none");
-      stack4.getOrCreateNbt().putFloat("power", 8);
-      stacks.add(stack4);
+      stack = new ItemStack(this);
+      stack.getOrCreateNbt().putString("destructionType", "keep");
+      stacks.add(stack);
 
-      ItemStack stack5 = new ItemStack(this);
-      stack5.getOrCreateNbt().putString("destructionType", "destroy");
-      stacks.add(stack5);
+      stack = new ItemStack(this);
+      stack.getOrCreateNbt().putString("destructionType", "destroy_with_decay");
+      stacks.add(stack);
     }
   }
 

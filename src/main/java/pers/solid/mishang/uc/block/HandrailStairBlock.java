@@ -99,7 +99,7 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
     final Shape shape;
     final BlockState stateBelow = world.getBlockState(blockPos.down());
     final Direction facing;
-    if (stateBelow.getBlock() instanceof StairsBlock && stateBelow.contains(StairsBlock.FACING) && stateBelow.get(StairsBlock.HALF) == BlockHalf.BOTTOM) {
+    if (stateBelow.getBlock() instanceof StairsBlock && stateBelow.contains(StairsBlock.FACING) && stateBelow.contains(StairsBlock.HALF) && stateBelow.get(StairsBlock.HALF) == BlockHalf.BOTTOM) {
       facing = stateBelow.get(StairsBlock.FACING);
       final BlockPos forwardPos = blockPos.offset(facing);
       final BlockState forwardState = world.getBlockState(forwardPos);

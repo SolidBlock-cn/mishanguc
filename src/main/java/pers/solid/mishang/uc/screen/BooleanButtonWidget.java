@@ -10,23 +10,18 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.TextBridge;
 
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 /**
  * 用于处理布尔值的按钮。按下鼠标时切换。
  */
 @Environment(EnvType.CLIENT)
-public class BooleanButtonWidget extends ButtonWidget {
-  public final Function<@Nullable Boolean, Text> tooltipSupplier;
+public class BooleanButtonWidget extends ButtonWidget implements TooltipUpdated {
   public final boolean defaultValue = false;
-
-  @ApiStatus.AvailableSince("0.1.6")
-  private final AtomicReference<Text> textAtom;
   /**
    * 通常在没有选中对象时返回 null。
    */
@@ -37,53 +32,80 @@ public class BooleanButtonWidget extends ButtonWidget {
   /**
    * 用于布尔值的按钮。
    *
-   * @param x               坐标的X值。
-   * @param y               坐标的Y值。
-   * @param width           按钮的宽度。
-   * @param height          按钮的高度。
-   * @param message         按钮上显示的文本。是固定的。
-   * @param valueGetter     如何获取布尔值？
-   * @param valueSetter     如何设置布尔值？
-   * @param tooltipSupplier 根据布尔值返回其文本内容。该文本将会用于设置 {@code atom}。
-   * @param onPress         按钮按下去的反应。通常为空。
-   * @param textAtom        一个可设置文本内容的原子。设置值时，会更新该原子的值。参见 {@link
-   *                        AbstractSignBlockEditScreen#descriptionAtom}，每次渲染时，都会获取该原子的值。
+   * @param x           坐标的X值。
+   * @param y           坐标的Y值。
+   * @param width       按钮的宽度。
+   * @param height      按钮的高度。
+   * @param message     按钮上显示的文本。是固定的。
+   * @param valueGetter 如何获取布尔值？
+   * @param valueSetter 如何设置布尔值？
+   * @param onPress     按钮按下去的反应。通常为空。
    */
-  public BooleanButtonWidget(
-      int x,
-      int y,
-      int width,
-      int height,
-      Text message,
-      Function<BooleanButtonWidget, @Nullable Boolean> valueGetter,
-      BooleanConsumer valueSetter,
-      Function<@Nullable Boolean, Text> tooltipSupplier,
-      PressAction onPress,
-      AtomicReference<Text> textAtom) {
-    super(
-        x,
-        y,
-        width,
-        height,
-        message,
-        onPress,
-        (button, matrices, mouseX, mouseY) ->
-            ((BooleanButtonWidget) button).updateTooltip());
+  public BooleanButtonWidget(int x, int y, int width, int height, Text message, Function<BooleanButtonWidget, @Nullable Boolean> valueGetter, BooleanConsumer valueSetter, PressAction onPress) {
+    super(x, y, width, height, message, onPress);
     this.valueGetter = valueGetter;
     this.valueSetter = valueSetter;
-    this.tooltipSupplier = tooltipSupplier;
-    this.textAtom = textAtom;
+    updateTooltip();
   }
 
+  public Function<@Nullable Boolean, Text> renderedNameSupplier = null;
+
+  public BooleanButtonWidget setRenderedNameSupplier(Function<@Nullable Boolean, Text> renderedNameSupplier) {
+    this.renderedNameSupplier = renderedNameSupplier;
+    return this;
+  }
+
+  public BooleanButtonWidget setRenderedName(Text renderedName) {
+    this.renderedNameSupplier = ignore -> renderedName;
+    return this;
+  }
+
+  public @Nullable Function<@Nullable Boolean, @Nullable Text> tooltipSupplier = null;
+
+  public BooleanButtonWidget setTooltipSupplier(Function<@Nullable Boolean, @Nullable Text> tooltipSupplier) {
+    this.tooltipSupplier = tooltipSupplier;
+    return this;
+  }
+
+  public BooleanButtonWidget setTooltip(Text tooltip) {
+    this.tooltipSupplier = ignore -> tooltip;
+    return this;
+  }
+
+  public @Nullable Text keyboardShortcut = null;
+
+  public BooleanButtonWidget setKeyboardShortcut(Text text) {
+    this.keyboardShortcut = text;
+    return this;
+  }
+
+  public Text getSummaryMessage() {
+    return super.getMessage(); // 忽略 renderMessage
+  }
+
+  @Override
   public void updateTooltip() {
     final Boolean value = getValue();
-    final Text tooltip = tooltipSupplier.apply(value);
-    textAtom.set(tooltip);
+    final Text tooltip = tooltipSupplier == null ? null : tooltipSupplier.apply(value);
+    final MutableText content = value == null ? TextBridge.empty().append(getSummaryMessage()) : ScreenTexts.composeToggleText(getSummaryMessage(), value);
+    if (tooltip != null) {
+      content.append(ScreenTexts.LINE_BREAK).append(tooltip);
+    }
+    if (keyboardShortcut != null) {
+      MutableText composed = MishangUtils.describeShortcut(keyboardShortcut);
+      content.append(ScreenTexts.LINE_BREAK).append(composed);
+    }
+    renderedTooltip = content;
+  }
+
+  private Text renderedTooltip;
+
+  public Text getRenderedTooltip() {
+    return renderedTooltip;
   }
 
   @Override
   public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-    if (this.isHovered()) updateTooltip();
     super.render(matrices, mouseX, mouseY, delta);
   }
 
@@ -127,28 +149,19 @@ public class BooleanButtonWidget extends ButtonWidget {
 
   @Override
   public Text getMessage() {
-    final Text message = super.getMessage();
+    final Text renderedName = renderedNameSupplier == null ? super.getMessage() : renderedNameSupplier.apply(getValue());
     final @Nullable Boolean value = getValue();
     return value == null
-        ? message
+        ? renderedName
         : TextBridge.empty()
-        .append(message)
+        .append(renderedName)
         .styled(style -> style.withColor(value ? 0xb2ff96 : 0xffac96));
-  }
-
-  private boolean narrateTooltipAsMessage = false;
-
-  /**
-   * 像“B”、“I”之类的按钮，其名称不宜被直接复述，这种情况下，直接复述其提示。
-   */
-  public BooleanButtonWidget narrateTooltipAsMessage(boolean value) {
-    this.narrateTooltipAsMessage = value;
-    return this;
   }
 
   @Override
   protected MutableText getNarrationMessage() {
-    return narrateTooltipAsMessage ? getNarrationMessage(tooltipSupplier.apply(null)) : super.getNarrationMessage();
+    // 考虑到部分按钮，比如加粗按钮，显示时只显示“B”，但是事实上复述功能应该复述“加粗”。
+    return getNarrationMessage(getSummaryMessage());
   }
 
   @Override

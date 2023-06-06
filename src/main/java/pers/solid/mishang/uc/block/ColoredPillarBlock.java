@@ -59,7 +59,7 @@ public class ColoredPillarBlock extends PillarBlock implements ColoredBlock, Blo
   @Environment(EnvType.CLIENT)
   @Override
   public void writeBlockModel(RuntimeResourcePack pack) {
-    BlockResourceGenerator.super.writeBlockModel(pack);
+    ColoredBlock.super.writeBlockModel(pack);
     pack.addModel(getBlockModelId().brrp_suffixed("_horizontal"), getBlockModel().withParent(new Identifier("mishanguc:block/colored_cube_column_horizontal")));
   }
 

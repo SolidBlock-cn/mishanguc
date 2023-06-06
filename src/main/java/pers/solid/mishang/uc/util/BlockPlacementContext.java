@@ -1,15 +1,11 @@
 package pers.solid.mishang.uc.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.OperatorBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.enums.SlabType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
@@ -19,11 +15,13 @@ import net.minecraft.state.property.Property;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.item.CarryingToolItem;
+import pers.solid.mishang.uc.mixin.BucketItemAccessor;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 
 import java.util.Objects;
@@ -142,9 +140,7 @@ public class BlockPlacementContext {
       if (stackInHand0.getItem() instanceof final BlockItem blockItem) {
         // 若手中持有方块物品，则 stateToPlace 为该物品
         /*
-          手中物品堆中的方块物品对应的方块。<br>
-          The block of the blockItem in the {@link #stackInHand}.
-          @since 0.2.4 替换为局部变量
+          手中物品堆中的方块物品对应的方块。
          */
         final @Nullable Block handBlock = blockItem.getBlock();
         placementContext1 = new ItemPlacementContext(player, hand1, stackInHand0, hit);
@@ -174,18 +170,27 @@ public class BlockPlacementContext {
         stackInHand1 = stackInHand0;
         hand = hand1;
         break;
+      } else if (stackInHand0.getItem() instanceof FlintAndSteelItem) {
+        stateToPlace1 = Blocks.FIRE.getDefaultState();
+      } else if (stackInHand0.getItem() instanceof BucketItem bucketItem) {
+        stateToPlace1 = ((BucketItemAccessor) bucketItem).getFluid().getDefaultState().getBlockState();
       }
     }
 
     stackInHand = stackInHand1;
     placementContext = placementContext1 == null ? new ItemPlacementContext(player, hand, hitState.getBlock().asItem().getDefaultStack(), hit) : placementContext1;
-    posToPlace = includesFluid ? blockPos.offset(hit.getSide()) : placementContext.getBlockPos();
+    final boolean tweakSlabPlacement;
+    if (placementContext.getStack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof SlabBlock) {
+      tweakSlabPlacement = !new BlockPos(hit.getPos().add(Vec3d.of(hit.getSide().getVector()).multiply(0.25f))).equals(hit.getBlockPos());
+    } else {
+      tweakSlabPlacement = false;
+    }
+    posToPlace = (includesFluid || tweakSlabPlacement) ? blockPos.offset(hit.getSide()) : placementContext.getBlockPos();
     stateToReplace = world.getBlockState(posToPlace);
     if (stateToPlace1 == null) {
       // 手中没有有效的方块物品，则使用 hitState。
-      stateToPlace1 = placementContext.canReplaceExisting() && !includesFluid
-          ? hitState.getBlock().getPlacementState(placementContext)
-          : null;
+      boolean canReplaceExisting = placementContext.canReplaceExisting() && !includesFluid;
+      stateToPlace1 = canReplaceExisting ? hitState.getBlock().getPlacementState(placementContext) : null;
     }
     if (stateToPlace1 == null) {
       stateToPlace1 = hitState;
@@ -193,8 +198,16 @@ public class BlockPlacementContext {
 
     // 尝试放置含水
     if (!includesFluid && stateToPlace1.getProperties().contains(Properties.WATERLOGGED)) {
-      stateToPlace1 = stateToPlace1.with(
-          Properties.WATERLOGGED, stateToReplace.getFluidState().getFluid() == Fluids.WATER);
+      stateToPlace1 = stateToPlace1.with(Properties.WATERLOGGED, stateToReplace.getFluidState().getFluid() == Fluids.WATER);
+    }
+
+    // 对台阶进行修改
+    if (tweakSlabPlacement && stateToPlace1.contains(SlabBlock.TYPE) && stateToPlace1.get(SlabBlock.TYPE) == SlabType.DOUBLE) {
+      if (hitState.getBlock() instanceof SlabBlock && hitState.contains(SlabBlock.TYPE)) {
+        stateToPlace1 = stateToPlace1.with(SlabBlock.TYPE, hitState.get(SlabBlock.TYPE));
+      } else {
+        stateToPlace1 = stateToPlace1.with(SlabBlock.TYPE, (placementContext.getHitPos().y - blockPos.getY() > 0.5) ? SlabType.TOP : SlabType.BOTTOM);
+      }
     }
 
     // 此时终于确定好了 stateToPlace

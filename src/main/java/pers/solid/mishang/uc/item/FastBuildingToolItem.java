@@ -15,6 +15,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
@@ -26,6 +27,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.collection.Int2ObjectBiMap;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -129,8 +131,8 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
   }
 
   public int getRange(ItemStack stack) {
-    final NbtCompound tag = stack.getOrCreateNbt();
-    return tag.contains("Range", 99) ? Integer.min(tag.getInt("Range"), 128) : 8;
+    final NbtCompound nbt = stack.getOrCreateNbt();
+    return nbt.contains("Range", NbtElement.NUMBER_TYPE) ? Integer.min(nbt.getInt("Range"), 128) : 8;
   }
 
   public @NotNull BlockMatchingRule getMatchingRule(ItemStack stack) {
@@ -149,10 +151,10 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
             .formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.2").formatted(Formatting.GRAY));
     tooltip.add(
-        TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.range", TextBridge.literal(Integer.toString(this.getRange(stack))).formatted(Formatting.GREEN))
+        TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.range", TextBridge.literal(Integer.toString(this.getRange(stack))).formatted(Formatting.YELLOW))
             .formatted(Formatting.GRAY));
     tooltip.add(
-        TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.matchingRule", this.getMatchingRule(stack).getName().formatted(Formatting.GREEN))
+        TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.matchingRule", this.getMatchingRule(stack).getName().formatted(Formatting.YELLOW))
             .formatted(Formatting.GRAY));
   }
 
@@ -167,23 +169,16 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
   @Override
   public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
     if (this.isIn(group)) {
-      stacks.add(createStack(16, BlockMatchingRule.SAME_STATE));
-      stacks.add(createStack(64, BlockMatchingRule.SAME_STATE));
+      stacks.add(createStack(1, BlockMatchingRule.SAME_BLOCK));
       stacks.add(createStack(16, BlockMatchingRule.SAME_BLOCK));
+    stacks.add(createStack(32, BlockMatchingRule.SAME_BLOCK));
       stacks.add(createStack(64, BlockMatchingRule.SAME_BLOCK));
-      stacks.add(createStack(16, BlockMatchingRule.SAME_MATERIAL));
-      stacks.add(createStack(64, BlockMatchingRule.SAME_MATERIAL));
-      stacks.add(createStack(16, BlockMatchingRule.ANY));
-      stacks.add(createStack(64, BlockMatchingRule.ANY));
     }
   }
 
   @Override
   public Text getName(ItemStack stack) {
-    return TextBridge.empty()
-        .append(super.getName(stack))
-        .append(" - ")
-        .append(getMatchingRule(stack).getName());
+    return TextBridge.translatable("item.mishanguc.fast_building_tool.format", getName(), Integer.toString(getRange(stack)), getMatchingRule(stack).getName());
   }
 
   @Environment(EnvType.CLIENT)
@@ -208,21 +203,14 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
     final BlockMatchingRule matchingRule = this.getMatchingRule(itemStack);
     final int range = this.getRange(itemStack);
     final BlockHitResult raycast;
-    try {
-      raycast = (BlockHitResult) client.crosshairTarget;
-      if (raycast == null) {
-        return true;
-      }
-    } catch (ClassCastException e) {
+    if (client.crosshairTarget instanceof BlockHitResult blockHitResult && blockHitResult.getType() == HitResult.Type.BLOCK) {
+      raycast = blockHitResult;
+    } else {
       return true;
     }
     final ClientWorld world = worldRenderContext.world();
-    final BlockPlacementContext blockPlacementContext =
-        new BlockPlacementContext(
-            world, blockOutlineContext.blockPos(), player, itemStack, raycast, includesFluid);
-    for (BlockPos pos :
-        matchingRule.getPlainValidBlockPoss(
-            world, raycast.getBlockPos(), raycast.getSide(), range)) {
+    final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockOutlineContext.blockPos(), player, itemStack, raycast, includesFluid);
+    for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, raycast.getBlockPos(), raycast.getSide(), range)) {
       final BlockState state = world.getBlockState(pos);
       final BlockPlacementContext offsetBlockPlacementContext = new BlockPlacementContext(blockPlacementContext, pos);
       if (offsetBlockPlacementContext.canPlace() && offsetBlockPlacementContext.canReplace()) {
