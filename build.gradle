@@ -21,7 +21,7 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version + '-' + project.minecraft_version
+version = project.mod_version + '-' + '1.20'// + project.minecraft_version
 group = project.maven_group
 
 repositories {
@@ -131,7 +131,7 @@ curseforge {
         id = '583071'
         changelog = content
         changelogType = 'markdown'
-        releaseType = 'beta'
+        releaseType = 'release'
         mainArtifact remapJar
 
         for (final def v in (project.supported_versions.split(',') as String[])) {
@@ -156,7 +156,7 @@ modrinth {
 
     projectId = "rItLmRo4" // 迷上城建模组的 Modrinth ID
     versionNumber = project.mod_version + '-' + project.minecraft_version
-    versionType = 'beta'  // until release of MC
+    versionType = 'release'  // until release of MC
     uploadFile = remapJar
     gameVersions = Arrays.asList(project.supported_versions.split(','))
 
