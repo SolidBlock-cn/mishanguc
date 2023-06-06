@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.1-SNAPSHOT'
+    id 'fabric-loom' version '1.2-SNAPSHOT'
     // Quiltflower 反编译器
     id 'io.github.juuxel.loom-quiltflower' version '1.7.1'
     id 'maven-publish'
@@ -50,6 +50,7 @@ dependencies {
 
     // BRRP.
     modImplementation "pers.solid:brrp-fabric:${project.brrp_version}-${brrp_mc_version}"
+    modImplementation "com.terraformersmc:modmenu:$project.mod_menu_version"
 }
 
 processResources {
