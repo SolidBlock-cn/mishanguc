@@ -27,6 +27,7 @@ repositories {
     // BRRP. This is stored locally.
     mavenLocal()
     maven { url "https://maven.terraformersmc.com/releases/" }
+    maven { url 'https://jitpack.io' }
 }
 
 
@@ -43,6 +44,9 @@ dependencies {
 
     // BRRP.
     modImplementation "pers.solid:brrp-fabric:${project.brrp_version}-${brrp_mc_version}"
+
+    // MixinExtra
+    include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:$project.mixin_extra_version")))
 }
 
 processResources {

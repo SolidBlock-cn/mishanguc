@@ -27,6 +27,8 @@ public final class MishangucItems {
   public static final FastBuildingToolItem FAST_BUILDING_TOOL =
       new FastBuildingToolItem(new FabricItemSettings().maxCount(1), null);
 
+  public static final ColumnBuildingTool COLUMN_BUILDING_TOOL = new ColumnBuildingTool(new FabricItemSettings().maxCount(1), null);
+
   public static final RotatingToolItem ROTATING_TOOL =
       new RotatingToolItem(new FabricItemSettings().maxDamage(512), null);
 
@@ -68,6 +70,7 @@ public final class MishangucItems {
   public static final GrowthToolItem GROWTH_TOOL = new GrowthToolItem(new FabricItemSettings().maxDamage(1024));
   @ApiStatus.AvailableSince("0.2.4")
   public static final CarryingToolItem CARRYING_TOOL = new CarryingToolItem(new FabricItemSettings().maxCount(1), null);
+  public static final IceSnowTool ICE_SNOW_TOOL = new IceSnowTool(new FabricItemSettings().maxDamage(128));
 
   private MishangucItems() {
   }

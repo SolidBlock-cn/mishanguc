@@ -72,10 +72,14 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     blockPlacementContext.playSound();
     // 放置方块。对客户端和服务器均生效。
     int flags = getFlags(stack);
+    suppressOnBlockAdded = true;
     blockPlacementContext.setBlockState(flags);
+    suppressOnBlockAdded = false;
     blockPlacementContext.setBlockEntity();
     return ActionResult.success(world.isClient);
   }
+
+  public static boolean suppressOnBlockAdded = false;
 
   @Override
   public ActionResult beginAttackBlock(

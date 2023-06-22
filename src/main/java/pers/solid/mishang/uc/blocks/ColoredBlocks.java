@@ -148,6 +148,9 @@ public final class ColoredBlocks extends MishangucBlocks {
   @Translucent
   public static final ColoredGlassBlock COLORED_GLASS = new ColoredGlassBlock(FabricBlockSettings.copyOf(Blocks.WHITE_STAINED_GLASS), TextureMap.all(new Identifier("block/white_stained_glass")));
   @Translucent
+  @ApiStatus.AvailableSince("1.2.3")
+  public static final ColoredGlassPaneBlock COLORED_GLASS_PANE = new ColoredGlassPaneBlock(new Identifier("block/white_stained_glass"), new Identifier("block/white_stained_glass_pane_top"), FabricBlockSettings.copyOf(Blocks.WHITE_STAINED_GLASS_PANE));
+  @Translucent
   public static final ColoredIceBlock COLORED_ICE = new ColoredIceBlock(FabricBlockSettings.copyOf(Blocks.ICE), TextureMap.all(new Identifier("mishanguc:block/pale_ice")));
   public static final ColoredCubeBlock COLORED_SNOW_BLOCK = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.SNOW_BLOCK), "block/snow");
   public static final ColoredCubeBlock COLORED_PACKED_ICE = ColoredCubeBlock.cubeAll(FabricBlockSettings.copyOf(Blocks.PACKED_ICE), "mishanguc:block/pale_packed_ice");
@@ -169,9 +172,9 @@ public final class ColoredBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4")
   public static final ColoredLeavesBlock COLORED_MANGROVE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.MANGROVE_LEAVES), new VanillaBlockLootTableGenerator()::mangroveLeavesDrops, "block/mangrove_leaves");
 
-  public static final ColoredCubeBlock COLORED_PURE_BLOCK = ColoredCubeBlock.cubeAll(FabricBlockSettings.create().mapColor(DyeColor.WHITE) .strength(0.2f), "mishanguc:block/white_pure");
+  public static final ColoredCubeBlock COLORED_PURE_BLOCK = ColoredCubeBlock.cubeAll(FabricBlockSettings.create().mapColor(DyeColor.WHITE).strength(0.2f), "mishanguc:block/white_pure");
   public static final ColoredCubeBlock COLORED_PURE_LIGHT = ColoredCubeBlock.cubeAll(WHITE_LIGHT_SETTINGS, "mishanguc:block/white_pure");
-  public static final ColoredCubeBlock COLORED_PURE_BLOCK_WITHOUT_SHADE = new ColoredCubeBlock(FabricBlockSettings.create().mapColor(DyeColor.WHITE) .strength(0.2f), new Identifier("mishanguc:block/colored_cube_all_without_shade"), TextureMap.all(new Identifier("mishanguc:block/white_pure")));
+  public static final ColoredCubeBlock COLORED_PURE_BLOCK_WITHOUT_SHADE = new ColoredCubeBlock(FabricBlockSettings.create().mapColor(DyeColor.WHITE).strength(0.2f), new Identifier("mishanguc:block/colored_cube_all_without_shade"), TextureMap.all(new Identifier("mishanguc:block/white_pure")));
   public static final ColoredCubeBlock COLORED_PURE_LIGHT_WITHOUT_SHADE = new ColoredCubeBlock(WHITE_LIGHT_SETTINGS, new Identifier("mishanguc:block/colored_cube_all_without_shade"), TextureMap.all(new Identifier("mishanguc:block/white_pure")));
 
   private ColoredBlocks() {

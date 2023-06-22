@@ -6,11 +6,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.ClampedModelPredicateProvider;
@@ -42,7 +40,6 @@ import pers.solid.mishang.uc.screen.StandingSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
 
 import java.awt.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
@@ -56,10 +53,6 @@ public class MishangucClient implements ClientModInitializer {
    * @see MishangucRules#CARRYING_TOOL_ACCESS
    */
   public static final AtomicReference<MishangucRules.ToolAccess> CLIENT_CARRYING_TOOL_ACCESS = new AtomicReference<>(MishangucRules.ToolAccess.ALL);
-  /**
-   * @see MishangucRules#SUSPENDS_BLOCK_LIGHT_UPDATE
-   */
-  public static final AtomicBoolean CLIENT_SUSPENDS_LIGHT_UPDATE = FabricLoader.getInstance().isDevelopmentEnvironment() ? new AtomicBoolean(false) : null;
 
   @Override
   public void onInitializeClient() {
@@ -77,13 +70,6 @@ public class MishangucClient implements ClientModInitializer {
     registerNetworking();
 
     registerModelPredicateProviders();
-
-    if (CLIENT_SUSPENDS_LIGHT_UPDATE != null) {
-      ClientPlayConnectionEvents.INIT.register((handler, client) -> {
-        CLIENT_SUSPENDS_LIGHT_UPDATE.set(false);
-        MishangucRules.currentRoadBoostSpeed = 1.75;
-      });
-    }
   }
 
   private static void registerModelPredicateProviders() {

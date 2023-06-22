@@ -45,7 +45,8 @@ public abstract class BlockMatchingRule implements StringIdentifiable {
       new BlockMatchingRule() {
         @Override
         public boolean match(@NotNull BlockState state1, @NotNull BlockState state2) {
-          return state1.getSoundGroup() == state2.getSoundGroup();
+          // 仅限于 1.20 的临时解决方案
+          return state1.getSoundGroup() == state2.getSoundGroup() && state1.isAir() == state2.isAir();
         }
       }.register("same_material");
   public static final BlockMatchingRule ANY =

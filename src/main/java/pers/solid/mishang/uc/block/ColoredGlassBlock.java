@@ -18,13 +18,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
 
-public class ColoredGlassBlock extends AbstractGlassBlock implements ColoredBlock, BlockResourceGenerator {
+public class ColoredGlassBlock extends AbstractGlassBlock implements ColoredBlock {
   private final TextureMap textures;
 
   public ColoredGlassBlock(Settings settings, TextureMap textures) {

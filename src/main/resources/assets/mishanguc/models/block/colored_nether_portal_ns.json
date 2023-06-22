@@ -1,15 +1,42 @@
 {
+  "parent": "block/block",
   "textures": {
     "particle": "mishanguc:block/pale_nether_portal",
     "portal": "mishanguc:block/pale_nether_portal"
   },
   "elements": [
     {
-      "from": [0, 0, 6],
-      "to": [16, 16, 10],
+      "from": [
+        0,
+        0,
+        6
+      ],
+      "to": [
+        16,
+        16,
+        10
+      ],
       "faces": {
-        "north": {"tintindex": 0, "uv": [0, 0, 16, 16], "texture": "#portal"},
-        "south": {"tintindex": 0, "uv": [0, 0, 16, 16], "texture": "#portal"}
+        "north": {
+          "tintindex": 0,
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#portal"
+        },
+        "south": {
+          "tintindex": 0,
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#portal"
+        }
       }
     }
   ]
