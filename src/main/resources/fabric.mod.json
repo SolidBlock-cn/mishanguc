@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "mishanguc",
   "version": "${version}",
-
   "name": "Mishang Urban Construction",
   "description": "An amount of blocks and items that make a beautiful city!",
   "authors": [
@@ -14,10 +13,8 @@
     "issues": "https://github.com/SolidBlock-cn/mishanguc/issues",
     "homepage": "https://github.com/SolidBlock-cn/mishanguc"
   },
-
   "license": "LGPLv3",
   "icon": "assets/mishanguc/icon.png",
-
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -26,19 +23,22 @@
     ],
     "client": [
       "pers.solid.mishang.uc.MishangucClient"
+    ],
+    "preLaunch": [
+      "pers.solid.mishang.uc.MishangucPreLaunch"
     ]
   },
   "mixins": [
     "mishanguc.mixins.json"
   ],
-
   "depends": {
-    "fabricloader": "*",
+    "fabricloader": ">0.14.10",
     "fabric": "*",
     "minecraft": [
       "~1.19.4"
     ],
-    "brrp_v1": ">=1.0.0"
+    "brrp_v1": ">=1.0.0",
+    "com_github_llamalad7_mixinextras": ">=0.2.0-beta.8"
   },
   "breaks": {
   },

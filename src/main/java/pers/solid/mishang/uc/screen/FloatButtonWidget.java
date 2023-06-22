@@ -13,6 +13,7 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -22,14 +23,14 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import pers.solid.mishang.uc.util.TextBridge;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
  * 用于处理浮点数的按钮。按下鼠标时增大，但是按住 shift 则会减小。滚动鼠标滚轮也会减小。
  */
 @Environment(EnvType.CLIENT)
-public class FloatButtonWidget extends ButtonWidget {
-  public final Function<@Nullable Float, @Nullable Text> tooltipSupplier;
+public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
   private final Function<FloatButtonWidget, @Nullable Float> valueGetter;
   private final FloatConsumer valueSetter;
   private boolean sliderFocused;
@@ -67,45 +68,29 @@ public class FloatButtonWidget extends ButtonWidget {
   public float max = Float.POSITIVE_INFINITY;
 
   public static final Float2ObjectFunction<MutableText> DEFAULT_VALUE_NARRATOR = value -> TextBridge.literal(Float.toString(value));
-  private Float2ObjectFunction<MutableText> valueNarrator = DEFAULT_VALUE_NARRATOR;
+  private Float2ObjectFunction<MutableText> valueToText = DEFAULT_VALUE_NARRATOR;
 
-  public FloatButtonWidget(
-      int x,
-      int y,
-      int width,
-      int height,
-      Text message,
-      Function<Float, Text> tooltipSupplier,
-      Function<FloatButtonWidget, Float> valueGetter,
-      FloatConsumer valueSetter,
-      PressAction onPress) {
-    super(
-        x,
-        y,
-        width,
-        height,
-        message,
-        onPress,
-        ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
-    this.tooltipSupplier = tooltipSupplier;
+  public FloatButtonWidget(int x, int y, int width, int height, Text message, Function<FloatButtonWidget, Float> valueGetter, FloatConsumer valueSetter, PressAction onPress) {
+    super(x, y, width, height, message, onPress, ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
     this.valueGetter = valueGetter;
     this.valueSetter = valueSetter;
     updateTooltip();
   }
 
+  @Override
   public void updateTooltip() {
     final Float value = getValue();
-    final Text tooltip = this.tooltipSupplier.apply(value);
     if (value != null) {
-      setTooltip(Tooltip.of(tooltip == null ? getMessage() : tooltip, TextBridge.translatable("narration.mishanguc.button.current_value", valueNarrator.get(value.floatValue()))));
+      final MutableText valueText = valueToText.get(value.floatValue());
+      setTooltip(Tooltip.of(ScreenTexts.composeGenericOptionText(getSummaryMessage(), valueText), TextBridge.translatable("narration.mishanguc.button.current_value", valueText)));
     } else {
-      setTooltip(Tooltip.of(tooltip == null ? getMessage() : tooltip, TextBridge.empty()));
+      setTooltip(Tooltip.of(getSummaryMessage(), TextBridge.empty()));
     }
   }
 
   @Override
   public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-    if (this.isHovered()) updateTooltip();
+//    if (this.isHovered()) updateTooltip();
     super.render(matrices, mouseX, mouseY, delta);
   }
 
@@ -222,8 +207,32 @@ public class FloatButtonWidget extends ButtonWidget {
   @Override
   public Text getMessage() {
     final Float value = getValue();
-    if (value == null || value == defaultValue) return super.getMessage();
-    else return TextBridge.empty().append(super.getMessage()).formatted(Formatting.ITALIC);
+    if (renderedNameSupplier != null) {
+      final Text apply = renderedNameSupplier.apply(value, valueToText.apply(value));
+      if (apply != null) return apply;
+    }
+    if (value == null || value == defaultValue) {
+      return super.getMessage();
+    } else {
+      return TextBridge.empty().append(super.getMessage()).formatted(Formatting.ITALIC);
+    }
+  }
+
+  public interface NameRenderer extends BiFunction<@Nullable Float, Text, @Nullable Text> {
+    @Override
+    @Nullable Text apply(@Nullable Float value, Text valueText);
+  }
+
+  public NameRenderer renderedNameSupplier = null;
+
+  public FloatButtonWidget setRenderedNameSupplier(NameRenderer renderedNameSupplier) {
+    this.renderedNameSupplier = renderedNameSupplier;
+    return this;
+  }
+
+
+  public Text getSummaryMessage() {
+    return super.getMessage();
   }
 
   /**
@@ -239,7 +248,7 @@ public class FloatButtonWidget extends ButtonWidget {
 
   @Override
   protected MutableText getNarrationMessage() {
-    return getNarrationMessage(super.getMessage());
+    return getNarrationMessage(getSummaryMessage());
   }
 
   @Override
@@ -255,8 +264,8 @@ public class FloatButtonWidget extends ButtonWidget {
   }
 
   @Contract(value = "_ -> this", mutates = "this")
-  protected FloatButtonWidget narratesValueAs(Float2ObjectFunction<MutableText> valueNarrator) {
-    this.valueNarrator = valueNarrator;
+  protected FloatButtonWidget nameValueAs(Float2ObjectFunction<MutableText> valueToText) {
+    this.valueToText = valueToText;
     return this;
   }
 }

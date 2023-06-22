@@ -293,9 +293,6 @@ public class Mishanguc implements ModInitializer {
         MishangucRules.sync(gameRules.get(MishangucRules.CARRYING_TOOL_ACCESS), 1, player);
         MishangucRules.sync(gameRules.get(MishangucRules.ROAD_BOOST_SPEED), 3, player);
         MishangucRules.currentRoadBoostSpeed = gameRules.get(MishangucRules.ROAD_BOOST_SPEED).get();
-        if (MishangucRules.SUSPENDS_BLOCK_LIGHT_UPDATE != null) {
-          MishangucRules.sync(gameRules.get(MishangucRules.SUSPENDS_BLOCK_LIGHT_UPDATE), 2, player);
-        }
       }
     });
   }
@@ -379,6 +376,23 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(Blocks.GREEN_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
     blockMap.put(Blocks.RED_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
     blockMap.put(Blocks.BLACK_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+    blockMap.put(Blocks.GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
+    blockMap.put(Blocks.WHITE_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
+    blockMap.put(Blocks.ORANGE_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
+    blockMap.put(Blocks.MAGENTA_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
+    blockMap.put(Blocks.LIGHT_BLUE_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
+    blockMap.put(Blocks.YELLOW_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
+    blockMap.put(Blocks.LIME_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
+    blockMap.put(Blocks.PINK_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
+    blockMap.put(Blocks.GRAY_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
+    blockMap.put(Blocks.LIGHT_GRAY_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
+    blockMap.put(Blocks.CYAN_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
+    blockMap.put(Blocks.PURPLE_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
+    blockMap.put(Blocks.BLUE_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
+    blockMap.put(Blocks.BROWN_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
+    blockMap.put(Blocks.GREEN_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
+    blockMap.put(Blocks.RED_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
+    blockMap.put(Blocks.BLACK_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
     blockMap.put(Blocks.ICE, ColoredBlocks.COLORED_ICE);
     blockMap.put(Blocks.SNOW_BLOCK, ColoredBlocks.COLORED_SNOW_BLOCK);
     blockMap.put(Blocks.PACKED_ICE, ColoredBlocks.COLORED_PACKED_ICE);
@@ -465,6 +479,7 @@ public class Mishanguc implements ModInitializer {
 
     // 玩家踩在道路方块上时，予以加速。
     ServerTickEvents.END_WORLD_TICK.register(Road.CHECK_MULTIPLIER::accept);
+    ColumnBuildingTool.registerTempMemoryEvents();
 
     registerCommands();
     registerColoredBlocks();
