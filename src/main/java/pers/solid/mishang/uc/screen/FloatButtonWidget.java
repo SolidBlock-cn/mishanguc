@@ -21,6 +21,7 @@ import net.minecraft.util.Util;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.function.BiFunction;
@@ -67,7 +68,7 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
    */
   public float max = Float.POSITIVE_INFINITY;
 
-  public static final Float2ObjectFunction<MutableText> DEFAULT_VALUE_NARRATOR = value -> TextBridge.literal(Float.toString(value));
+  public static final Float2ObjectFunction<MutableText> DEFAULT_VALUE_NARRATOR = value -> TextBridge.literal(MishangUtils.numberToString(value));
   private Float2ObjectFunction<MutableText> valueToText = DEFAULT_VALUE_NARRATOR;
 
   public FloatButtonWidget(int x, int y, int width, int height, Text message, Function<FloatButtonWidget, Float> valueGetter, FloatConsumer valueSetter, PressAction onPress) {

@@ -791,6 +791,7 @@
   "message.mishanguc.hide_gui.note": "Please note: You are currently editing the sign and the GUI is hidden. Press the \"Show\" button to make it visible, or press \"Esc\" to finish editing.",
   "message.mishanguc.set_custom_value": "Set custom value",
   "message.mishanguc.set_custom_value.description": "Click this button, and then click another button, and you can type the value for that.",
+  "message.mishanguc.set_custom_value.description.keyboard": "When using keyboard to operate, focus on a button and then press the shortcut to directly edit the value for the focused button.",
   "message.mishanguc.custom_value": "Custom value",
   "message.mishanguc.custom_value.tooltip": "Type in this text field to set the %s of the text.",
   "message.mishanguc.select_button_to_set_custom": "Click a button and then you can type the value for it.",
@@ -823,7 +824,6 @@
   "message.mishanguc.outline_color.composed": "%s outline",
   "message.mishanguc.outline_color.composed.auto": "Auto outline color",
   "message.mishanguc.outline_color.composed.none": "No outline",
-
   "commands.mishanguc:update-light.success": "Updated the block light at %s %s %s",
   "commands.mishanguc:update-light.success_range": "Updated the block light in a range centered on %s %s %s with the range %s blocks, including %s blocks in total",
   "commands.mishanguc:update-light.success_box": "Updated the block light in the cuboid from %s %s %s to %s %s %s, including %s blocks in total",
@@ -842,7 +842,6 @@
   "commands.mishanguc:update-light.argument.toPos": "toPos",
   "commands.mishanguc:update-light.description.detail": "If the command contains a huge range, it may cause your server to lag, freeze, or even run out of memory. Therefore, to update light for a huge region, it is recommended to divide it into segments, and execute this command for them respectively. The command after execution will sync the updates to client, but it is not stable. You can quit and re-join the world to confirm the light update has been finished.",
   "commands.mishanguc:update-light.continue": "Click to continue",
-
   "narration.mishanguc.text_field_list": "Text list in the sign edit screen",
   "narration.mishanguc.text_field_list.usage": "Type to edit the row. Use keyboard arrows to select other texts.",
   "narration.mishanguc.button.current_value": "The current value is %s.",

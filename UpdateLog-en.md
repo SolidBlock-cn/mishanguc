@@ -12,6 +12,7 @@ Note: Not all versions in this update log are already published. Please refer to
     - The tooltip of buttons contains shortcuts.
     - Supports hiding the GUI to preview changes on the sign.
     - When using mouse wheels to adjust text size, X scale or Y scale, mouse wheel scrolling up leads to sizing up or scaling up now, which conforms the user convention.
+    - Within the tooltip of the buttons, numbers that equal to integer values do not show decimal parts.
 - Adjusted the display of some items in the creative inventory. Some adjustable parameters are not added repetitively, saving more room.
 - Fast building tools now display its size of range in the name.
 - Growth tools affect the size of slimes (and magma cubes) now.

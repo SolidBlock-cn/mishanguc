@@ -49,9 +49,9 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
   /**
    * 记录放置柱的操作记录。当玩家放置了柱之后，可以对其进行撤销，其操作记录就是存储在这个里面的。
    */
-  private static final WeakHashMap<ServerPlayerEntity, Triple<ServerWorld, BlockState, BlockBox>> tempMemory = new WeakHashMap<>();
+  private static final WeakHashMap<ServerPlayerEntity, Triple<ServerWorld, Block, BlockBox>> tempMemory = new WeakHashMap<>();
   @Environment(EnvType.CLIENT)
-  private static @Nullable Triple<ClientWorld, BlockState, BlockBox> clientTempMemory = null;
+  private static @Nullable Triple<ClientWorld, Block, BlockBox> clientTempMemory = null;
 
   public static void registerTempMemoryEvents() {
     ServerPlayConnectionEvents.DISCONNECT.register(new Identifier("mishanguc", "remove_column_building_tool_memory"), (handler, server) -> tempMemory.remove(handler.player));
@@ -115,9 +115,9 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
     }
     if (soundPlayed) {
       if (!world.isClient) {
-        tempMemory.put(((ServerPlayerEntity) player), Triple.of(((ServerWorld) world), blockPlacementContext.stateToPlace, BlockBox.create(blockPlacementContext.posToPlace, posToPlace.toImmutable())));
+        tempMemory.put(((ServerPlayerEntity) player), Triple.of(((ServerWorld) world), blockPlacementContext.stateToPlace.getBlock(), BlockBox.create(blockPlacementContext.posToPlace, posToPlace.toImmutable())));
       } else if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-        clientTempMemory = Triple.of(((ClientWorld) world), blockPlacementContext.stateToPlace, BlockBox.create(blockPlacementContext.posToPlace, posToPlace.toImmutable()));
+        clientTempMemory = Triple.of(((ClientWorld) world), blockPlacementContext.stateToPlace.getBlock(), BlockBox.create(blockPlacementContext.posToPlace, posToPlace.toImmutable()));
       }
     }
     return ActionResult.SUCCESS;
@@ -131,28 +131,28 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
   @Override
   public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     @Nullable BlockBox lastPlacedBox = null;
-    @Nullable BlockState lastPlacedState = null;
+    @Nullable Block lastPlacedBlock = null;
 
     // 检查是否存在上次记录的区域。如果有，且点击的方块在该区域内，则直接删除这个区域的方块。
     // 注意：只要点击了，即使点击的位置不在该区域内，也会清除有关的记录。
     if (!world.isClient) {
-      final Triple<ServerWorld, BlockState, BlockBox> pair = tempMemory.get(((ServerPlayerEntity) player));
+      final Triple<ServerWorld, Block, BlockBox> pair = tempMemory.get(((ServerPlayerEntity) player));
       if (pair != null && pair.getLeft().equals(world) && pair.getRight().contains(pos)) {
         lastPlacedBox = pair.getRight();
-        lastPlacedState = pair.getMiddle();
+        lastPlacedBlock = pair.getMiddle();
       }
       tempMemory.remove(player);
     } else if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
       if (clientTempMemory != null && clientTempMemory.getLeft().equals(world) && clientTempMemory.getRight().contains(pos)) {
         lastPlacedBox = clientTempMemory.getRight();
-        lastPlacedState = clientTempMemory.getMiddle();
+        lastPlacedBlock = clientTempMemory.getMiddle();
       }
       clientTempMemory = null;
     }
-    if (lastPlacedBox != null && lastPlacedState != null && !world.isClient) {
+    if (lastPlacedBox != null && lastPlacedBlock != null && !world.isClient) {
       for (BlockPos posToRemove : BlockPos.iterate(lastPlacedBox.getMinX(), lastPlacedBox.getMinY(), lastPlacedBox.getMinZ(), lastPlacedBox.getMaxX(), lastPlacedBox.getMaxY(), lastPlacedBox.getMaxZ())) {
         final BlockState existingState = world.getBlockState(posToRemove);
-        if (lastPlacedState.equals(existingState) && !(existingState.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
+        if (lastPlacedBlock.equals(existingState.getBlock()) && !(existingState.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
           // 非管理员不应该破坏管理方块。
           if (fluidIncluded) {
             world.setBlockState(posToRemove, Blocks.AIR.getDefaultState());
@@ -246,10 +246,10 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
 
     if (hand == Hand.MAIN_HAND && clientTempMemory != null && clientTempMemory.getLeft().equals(world) && clientTempMemory.getRight().contains(blockHitResult.getBlockPos())) {
       final BlockBox lastPlacedBox = clientTempMemory.getRight();
-      final BlockState lastPlacedState = clientTempMemory.getMiddle();
+      final Block lastPlacedBlock = clientTempMemory.getMiddle();
       for (BlockPos posToRemove : BlockPos.iterate(lastPlacedBox.getMinX(), lastPlacedBox.getMinY(), lastPlacedBox.getMinZ(), lastPlacedBox.getMaxX(), lastPlacedBox.getMaxY(), lastPlacedBox.getMaxZ())) {
         final BlockState existingState = world.getBlockState(posToRemove);
-        if (lastPlacedState.equals(existingState) && !(existingState.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
+        if (lastPlacedBlock.equals(existingState.getBlock()) && !(existingState.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
           WorldRendererInvoker.drawCuboidShapeOutline(
               worldRenderContext.matrixStack(),
               vertexConsumer,
