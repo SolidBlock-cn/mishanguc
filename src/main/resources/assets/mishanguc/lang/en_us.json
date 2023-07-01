@@ -790,6 +790,7 @@
   "message.mishanguc.hide_gui.note": "Please note: You are currently editing the sign and the GUI is hidden. Press the \"Show\" button to make it visible, or press \"Esc\" to finish editing.",
   "message.mishanguc.set_custom_value": "Set custom value",
   "message.mishanguc.set_custom_value.description": "Click this button, and then click another button, and you can type the value for that.",
+  "message.mishanguc.set_custom_value.description.keyboard": "When using keyboard to operate, focus on a button and then press the shortcut to directly edit the value for the focused button.",
   "message.mishanguc.custom_value": "Custom value",
   "message.mishanguc.custom_value.tooltip": "Type in this text field to set the %s of the text.",
   "message.mishanguc.select_button_to_set_custom": "Click a button and then you can type the value for it.",

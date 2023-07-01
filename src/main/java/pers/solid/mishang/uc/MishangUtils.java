@@ -412,4 +412,12 @@ public class MishangUtils {
       return 0;
     }
   }
+
+  /**
+   * 将数字转换为字符串，如果这个符点数的值正好等于整数，那么转换为字符串时不显示小数部分。
+   */
+  public static String numberToString(float value) {
+    final int intValue = (int) value;
+    return value == intValue ? Integer.toString(intValue) : Float.toString(value);
+  }
 }

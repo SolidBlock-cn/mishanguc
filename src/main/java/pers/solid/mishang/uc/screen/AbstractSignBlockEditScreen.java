@@ -557,7 +557,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public final ButtonWidget setCustomValueButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.set_custom_value"), button -> {
     isSelectingButtonToSetCustom = !isSelectingButtonToSetCustom;
     clearAndInit();
-  }).dimensions(this.width / 2, this.height - 50, 80, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.set_custom_value.description"))).build();
+  }).dimensions(this.width / 2, this.height - 50, 80, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.set_custom_value.description").append(ScreenTexts.LINE_BREAK).append(TextBridge.translatable("message.mishanguc.set_custom_value.description.keyboard")).append(ScreenTexts.LINE_BREAK).append(MishangUtils.describeShortcut(TextBridge.literal("Ctrl + E"))))).build();
 
   /**
    * 自定义文本编辑框，仅在编辑自定义值时显示。
@@ -1024,7 +1024,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     } else {
       customValueBeforeChange = floatButtonWidget.getValue();
       if (customValueBeforeChange != null) {
-        customValueTextField.setText(customValueBeforeChange == customValueBeforeChange.intValue() ? Integer.toString(customValueBeforeChange.intValue()) : Float.toString(customValueBeforeChange));
+        customValueTextField.setText(MishangUtils.numberToString(customValueBeforeChange));
       } else {
         customValueTextField.setText(StringUtils.EMPTY);
       }
@@ -1109,6 +1109,13 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       } else if (keyCode == GLFW.GLFW_KEY_KP_ADD) {
         addTextButton.onPress();
         return true;
+      } else if (keyCode == GLFW.GLFW_KEY_E && !isAcceptingCustomValue) {
+        final Element focused = getFocused();
+        if (focused instanceof FloatButtonWidget floatButtonWidget && focused != horizontalAlignButton && focused != verticalAlignButton) {
+          customValueStartAccepting(floatButtonWidget);
+        } else {
+          setCustomValueButton.onPress();
+        }
       }
     } else if (hasControlDown() && hasShiftDown() && !hasAltDown()) {
       if (keyCode == GLFW.GLFW_KEY_EQUAL) {
