@@ -23,6 +23,8 @@ Note: Not all versions in this update log are already published. Please refer to
 - Colored glass, colored glass pane, colored ice and colored portals can now affect beacons (depending on block tag `mishanguc:tints_beacon_beams`).
 - Adjusted the placement of slab blocks to avoid in same caves when using fast building tools to place slabs, the operation is incorrectly considered to double the slab.
 - Added column building tool.
+- Modified the mod's description.
+- (For versions 1.19.4 and above) Fixed the issue that cherry leaves use the texture of acacia leaves.
 
 ### 1.2.2
 
