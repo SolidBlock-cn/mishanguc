@@ -165,7 +165,7 @@ public final class ColoredBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4")
   public static final ColoredLeavesBlock COLORED_ACACIA_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.ACACIA_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.ACACIA_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/acacia_leaves");
   @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
-  public static final ColoredLeavesBlock COLORED_CHERRY_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.CHERRY_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.CHERRY_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/acacia_leaves");
+  public static final ColoredLeavesBlock COLORED_CHERRY_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.CHERRY_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.CHERRY_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "mishanguc:block/pale_cherry_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   public static final ColoredLeavesBlock COLORED_JUNGLE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.JUNGLE_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.JUNGLE_SAPLING, 0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F), "block/jungle_leaves");
   @ApiStatus.AvailableSince("0.2.4")

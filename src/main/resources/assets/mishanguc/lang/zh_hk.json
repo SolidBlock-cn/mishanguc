@@ -832,7 +832,7 @@
   "message.tool_access.creative_only": "僅限創造模式玩家",
   "message.tool_access.creative_op_only": "僅限創造模式下嘅管理員",
   "message.tool_access.op_only": "僅限管理員",
-  "modmenu.descriptionTranslation.mishanguc": "一系列用於構築城市嘅方塊和物品！當前不穩定，請勿用於您嘅正式物品！",
+  "modmenu.descriptionTranslation.mishanguc": "一系列用於構築城市嘅方塊和物品，包括道路、告示牌、燈、欄杆、染色方塊和一系列有用的工具。感謝使用此模組，期待您的建議。",
   "modmenu.nameTranslation.mishanguc": "迷上城建",
   "narration.mishanguc.button.boolean_usage": "按下此按鈕或者滾動滑鼠滾輪以切換值。",
   "narration.mishanguc.button.current_value": "當前值為 %s。",
