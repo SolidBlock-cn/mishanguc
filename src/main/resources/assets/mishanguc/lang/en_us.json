@@ -719,7 +719,6 @@
   "itemGroup.mishanguc.tools": "Mishang Urban Construction | Tools",
   "itemGroup.mishanguc.decorations": "Mishang Urban Construction | Decorations",
   "itemGroup.mishanguc.colored_blocks": "Mishang Urban Construction | Colored Blocks",
-  "notice.mishanguc.version_check": "Please note: The development of Mishang Urban Construction mod for Minecraft %s is stopped. For more features and updates of the mod, it is recommended to use other Minecraft versions, such as %s. Operators can type command %s to suppress this notice for this level.",
   "modmenu.descriptionTranslation.mishanguc": "The mod provides an amount of blocks and items that make a beautiful city, which includes roads, signs, lights, handrails, colored blocks and some useful tools. Thank you for using this mod. I'm looking forward to your suggestions.",
   "modmenu.nameTranslation.mishanguc": "Mishang Urban Construction",
   "gamerule.mishanguc:force_placing_tool_access": "Force Placing Tool Access",
