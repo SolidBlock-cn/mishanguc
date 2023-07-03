@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.input.KeyCodes;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
@@ -89,12 +90,6 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
     }
   }
 
-  @Override
-  public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-//    if (this.isHovered()) updateTooltip();
-    super.render(context, mouseX, mouseY, delta);
-  }
-
   public @Nullable Float getValue() {
     return valueGetter.apply(this);
   }
@@ -133,28 +128,32 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
   }
 
   @Override
-  public boolean mouseClicked(double mouseX, double mouseY, int button) {
+  public void onPress() {
+    onPress(0);
+  }
+
+  public void onPress(int button) {
     final Float value = getValue();
-    final boolean b = super.mouseClicked(mouseX, mouseY, button);
-    if (this.active && this.visible && clicked(mouseX, mouseY) && value != null) {
+    if (value != null) {
       switch (button) { // 这种情况下直接采用了 onPress，所以直接略。
-        case 0, 1 -> {
-          setValue(value
-              + (Screen.hasShiftDown() || button == 1 ? -1 : 1)
-              * step
-              * (Screen.hasControlDown() ? 8 : 1)
-              * (Screen.hasAltDown() ? 0.125f : 1));
-          return true;
-        }
-        case 2 -> {
-          setValue(defaultValue);
-          return true;
-        }
-        default -> {
-        }
+        case 0, 1 -> setValue(value
+            + (Screen.hasShiftDown() || button == 1 ? -1 : 1)
+            * step
+            * (Screen.hasControlDown() ? 8 : 1)
+            * (Screen.hasAltDown() ? 0.125f : 1));
+        case 2 -> setValue(defaultValue);
       }
     }
-    return b;
+  }
+
+  @Override
+  public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    if (this.active && this.visible && clicked(mouseX, mouseY)) {
+      this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+      onPress(button);
+      return true;
+    }
+    return false;
   }
 
   @Override
@@ -178,7 +177,7 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
    */
   public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
     final Float value = getValue();
-    if (keyCode != GLFW.GLFW_KEY_SPACE && keyCode != GLFW.GLFW_KEY_ENTER && keyCode != GLFW.GLFW_KEY_KP_ENTER) {
+    if (!KeyCodes.isToggle(keyCode)) {
       if (this.sliderFocused) {
         boolean decreases = keyCode == GLFW.GLFW_KEY_LEFT || keyCode == GLFW.GLFW_KEY_DOWN;
         final var handle = MinecraftClient.getInstance().getWindow().getHandle();
@@ -201,7 +200,8 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
       return false;
     } else {
       this.sliderFocused = value != null && !this.sliderFocused;
-      return super.keyPressed(keyCode, scanCode, modifiers);
+      this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+      return true;
     }
   }
 
@@ -219,6 +219,7 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
     }
   }
 
+  @Environment(EnvType.CLIENT)
   public interface NameRenderer extends BiFunction<@Nullable Float, Text, @Nullable Text> {
     @Override
     @Nullable Text apply(@Nullable Float value, Text valueText);

@@ -53,8 +53,7 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
 
   @Override
   default BlockState mirrorRoad(BlockState state, BlockMirror mirror) {
-    return RoadWithStraightLine.super.mirrorRoad(
-        RoadWithAngleLine.super.mirrorRoad(state, mirror), mirror);
+    return RoadWithAngleLine.super.mirrorRoad(state, mirror);
   }
 
   @Override
