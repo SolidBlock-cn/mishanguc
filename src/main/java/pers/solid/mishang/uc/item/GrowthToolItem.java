@@ -34,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.generator.ItemResourceGenerator;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.mishang.uc.mixin.SlimeEntityAccessor;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Collections;
@@ -57,7 +58,8 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, ItemRes
   @Override
   public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
     final TypedActionResult<ItemStack> use = super.use(world, user, hand);
-    if (world.isClient) return use;
+    if (world.isClient)
+      return use;
     final HitResult raycast = user.raycast(64, 0, true);
     if (raycast.getType() == HitResult.Type.MISS) {
       return TypedActionResult.fail(use.getValue());
@@ -98,10 +100,10 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, ItemRes
       } else if (entity instanceof SlimeEntity slimeEntity) {
         final int prevSize = slimeEntity.getSize();
         if (isPositive) {
-          slimeEntity.setSize(Math.min(prevSize * 2, Math.max(prevSize, 16)), false);
+          ((SlimeEntityAccessor) slimeEntity).callSetSize(Math.min(prevSize * 2, Math.max(prevSize, 16)), false);
           createParticle(world, entity.getPos(), isPositive);
         } else {
-          slimeEntity.setSize(prevSize / 2, false);
+          ((SlimeEntityAccessor) slimeEntity).callSetSize(prevSize / 2, false);
         }
         damage += 1;
       } else if (entity instanceof MobEntity mobEntity) {

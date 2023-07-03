@@ -19,6 +19,7 @@
     "PlayerInventoryMixin",
     "PointOfInterestTypesMixin",
     "ServerChunkManagerAccessor",
+    "SlimeEntityAccessor",
     "WallBlockMixin",
     "WorldChunkMixin"
   ],

@@ -104,7 +104,8 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
               world.updateListeners(posToPlace, entityToPlace.getCachedState(), entityToPlace.getCachedState(), Block.NOTIFY_ALL);
             }
           }
-          if (!soundPlayed) blockPlacementContext.playSound();
+          if (!soundPlayed)
+            blockPlacementContext.playSound();
           soundPlayed = true;
         } else {
           posToPlace.move(side, -1);
@@ -190,7 +191,8 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
       return true;
     }
     final VertexConsumerProvider consumers = worldRenderContext.consumers();
-    if (consumers == null) return true;
+    if (consumers == null)
+      return true;
     final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.LINES);
     final boolean includesFluid = this.includesFluid(itemStack, player.isSneaking());
     final int length = getLength(itemStack);
@@ -210,7 +212,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
     if (blockPlacementContext.canPlace()) {
       for (int i = 0; i < length; i++) {
         if (world.getBlockState(posToPlace).canReplace(blockPlacementContext.placementContext)) {
-          WorldRendererInvoker.drawCuboidShapeOutline(
+          WorldRendererInvoker.drawShapeOutline(
               worldRenderContext.matrixStack(),
               vertexConsumer,
               blockPlacementContext.stateToPlace.getOutlineShape(world, posToPlace, ShapeContext.of(player)),
@@ -222,7 +224,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
               1,
               0.8f);
           if (includesFluid) {
-            WorldRendererInvoker.drawCuboidShapeOutline(
+            WorldRendererInvoker.drawShapeOutline(
                 worldRenderContext.matrixStack(),
                 vertexConsumer,
                 blockPlacementContext.stateToPlace.getFluidState().getShape(world, posToPlace),
@@ -250,7 +252,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
       for (BlockPos posToRemove : BlockPos.iterate(lastPlacedBox.getMinX(), lastPlacedBox.getMinY(), lastPlacedBox.getMinZ(), lastPlacedBox.getMaxX(), lastPlacedBox.getMaxY(), lastPlacedBox.getMaxZ())) {
         final BlockState existingState = world.getBlockState(posToRemove);
         if (lastPlacedBlock.equals(existingState.getBlock()) && !(existingState.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
-          WorldRendererInvoker.drawCuboidShapeOutline(
+          WorldRendererInvoker.drawShapeOutline(
               worldRenderContext.matrixStack(),
               vertexConsumer,
               existingState.getOutlineShape(world, posToRemove, ShapeContext.of(player)),
@@ -262,7 +264,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
               0,
               0.8f);
           if (includesFluid) {
-            WorldRendererInvoker.drawCuboidShapeOutline(
+            WorldRendererInvoker.drawShapeOutline(
                 worldRenderContext.matrixStack(),
                 vertexConsumer,
                 existingState.getFluidState().getShape(world, posToRemove),
