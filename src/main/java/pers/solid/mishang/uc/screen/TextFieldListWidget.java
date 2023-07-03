@@ -44,7 +44,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
   @Override
   public boolean changeFocus(boolean lookForwards) {
-    return this.isFocused = !isFocused;
+    return (this.isFocused = !isFocused) && !children().isEmpty();
   }
 
   /**
@@ -164,8 +164,10 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof TextFieldListWidget.Entry entry)) return false;
+      if (this == o)
+        return true;
+      if (!(o instanceof TextFieldListWidget.Entry entry))
+        return false;
 
       return textFieldWidget.equals(entry.textFieldWidget);
     }
@@ -217,7 +219,8 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
           final int index = children.indexOf(getSelectedOrNull());
           if (index + 1 < children.size())
             TextFieldListWidget.this.setSelected(children.get(index + 1));
-          else if (children.size() > 0) signBlockEditScreen.addTextField(index + 1);
+          else if (children.size() > 0)
+            signBlockEditScreen.addTextField(index + 1);
         }
         case GLFW.GLFW_KEY_BACKSPACE -> {
           final TextFieldListWidget.Entry focused = TextFieldListWidget.this.getSelectedOrNull();

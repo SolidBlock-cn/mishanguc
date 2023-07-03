@@ -101,10 +101,10 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, ItemRes
         final int prevSize = slimeEntity.getSize();
         if (isPositive) {
           ((SlimeEntityAccessor) slimeEntity).callSetSize(Math.min(prevSize * 2, Math.max(prevSize, 16)), false);
-          createParticle(world, entity.getPos(), isPositive);
         } else {
           ((SlimeEntityAccessor) slimeEntity).callSetSize(prevSize / 2, false);
         }
+        createParticle(world, entity.getPos(), isPositive);
         damage += 1;
       } else if (entity instanceof MobEntity mobEntity) {
         if (mobEntity.isBaby() == isPositive) {
