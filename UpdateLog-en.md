@@ -4,7 +4,7 @@ Note: Not all versions in this update log are already published. Please refer to
 
 ### 1.2.3
 
-- Fixed the issue that handrail blocks on upside-down stairs are also displayed in the format of stairs.
+- Fixed the issue that handrail blocks on upside-down stairs are also displayed in the form of stairs.
 - Adjusted the edit screen of signs. Optimized the content and display of tooltips of buttons.
     - The numbers now support custom values, including text color and outline color.
     - Adjusted the display of hex color values. When alpha channel exists, the hex color displays 8 digits instead of 6.
