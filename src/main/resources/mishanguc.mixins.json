@@ -20,6 +20,7 @@
     "PointOfInterestTypesMixin",
     "ServerChunkManagerAccessor",
     "SlimeEntityAccessor",
+    "SnowBlockMixin",
     "WallBlockMixin",
     "WorldChunkMixin"
   ],

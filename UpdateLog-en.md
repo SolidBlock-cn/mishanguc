@@ -25,7 +25,6 @@ Note: Not all versions in this update log are already published. Please refer to
 - Added column building tool.
 - Modified the mod's description.
 - (For versions 1.19.4 and above) Fixed the issue that cherry leaves use the texture of acacia leaves.
-- (For versions 1.19 and above) The block tag `#snow_layer_cannot_survive_on`, instead of mixins, is used to prevent snow placing on road blocks.
 
 ### 1.2.2
 
