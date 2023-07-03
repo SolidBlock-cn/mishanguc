@@ -822,7 +822,6 @@
   "narration.mishanguc.button.null": "请先添加并选择一行文本，再使用此按钮。",
   "narration.mishanguc.text_field_list": "告示牌文本编辑屏幕",
   "narration.mishanguc.text_field_list.usage": "输入文字以编辑这一行文本。使用键盘方向键以选择其他文本。",
-  "notice.mishanguc.version_check": "请注意：迷上城建模组适用于Minecraft %s的版本的开发已经停止，为体验本模组的更多更新和修复，建议使用其他的Minecraft版本，例如%s。管理员可以输入命令%s为当前世界禁止此提示。",
   "roadConnectionState.whether.connected": "已连接",
   "roadConnectionState.whether.may_connect": "可能连接",
   "roadConnectionState.whether.not_connected": "未连接",
