@@ -8,7 +8,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SlabBlock;
-import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
@@ -24,14 +23,11 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Validate;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.BRRPUtils;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.fabric.api.SidedRRPCallback;
 import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.brrp.v1.generator.ItemResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.brrp.v1.tag.IdentifiedTagBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.*;
@@ -42,41 +38,6 @@ import pers.solid.mishang.uc.blocks.*;
  */
 public class ARRPMain implements ModInitializer {
   private static final RuntimeResourcePack PACK = RuntimeResourcePack.create(new Identifier("mishanguc", "pack"));
-
-  private static Identifier blockIdentifier(String path) {
-    return new Identifier("mishanguc", "block/" + path);
-  }
-
-  /**
-   * 添加一个方块以及其台阶方块的方块模型。仅用于此模组。
-   *
-   * @param block    方块。必须是道路方块，且在 {@link RoadSlabBlocks#BLOCK_TO_SLABS} 中有对应的台阶版本。
-   * @param parent   资源包的 parent。应当保证 parent、parent+"_slab" 和 parent+"_slab_top"都要存在。
-   * @param textures 纹理变量。三个 parent 都应该使用相同的纹理。
-   */
-  private static void writeRoadBlockModelWithSlab(
-      AbstractRoadBlock block, String parent, TextureMap textures) {
-    final Identifier id = block.getBlockModelId();
-    final AbstractRoadSlabBlock slab = block.getRoadSlab();
-    final Identifier slabId = slab == null ? null : slab.getBlockModelId();
-    writeRoadBlockModelWithSlab(parent, textures, id, slabId);
-  }
-
-  /**
-   * 添加一个方块以及其台阶方块的方块模型。仅用于此模组。
-   *
-   * @param parent   资源包的 parent。应当保证 parent、parent+"_slab" 和 parent+"_slab_top"都要存在。
-   * @param textures 纹理变量。三个 parent 都应该使用相同的纹理。
-   * @param id       道路方块的完整id。
-   * @param slabId   该方块对应的台阶方块的完整id。
-   */
-  private static void writeRoadBlockModelWithSlab(String parent, TextureMap textures, @NotNull Identifier id, @Nullable Identifier slabId) {
-    PACK.addModel(id, ModelJsonBuilder.create(blockIdentifier(parent)).setTextures(textures));
-    if (slabId != null) {
-      PACK.addModel(slabId, ModelJsonBuilder.create(BRRPHelper.slabOf(blockIdentifier(parent))).setTextures(textures));
-      PACK.addModel(slabId.brrp_suffixed("_top"), ModelJsonBuilder.create(Identifier.tryParse(BRRPHelper.slabOf(blockIdentifier(parent)) + "_top")).setTextures(textures));
-    }
-  }
 
   private static IdentifiedTagBuilder<Block> blockTag(String path) {
     return IdentifiedTagBuilder.createBlock(new Identifier("mishanguc", path));
