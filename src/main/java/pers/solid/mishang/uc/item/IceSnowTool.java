@@ -82,7 +82,8 @@ public class IceSnowTool extends Item implements ItemResourceGenerator, Dispense
   public void applyIce(@NotNull ServerWorld world, @NotNull Vec3d pos, int strength) {
     final float probability = getProbability(strength);
     final int range = getRange(strength);
-    for (final BlockPos blockPos : BlockPos.iterateOutwards(new BlockPos(pos), range, 0, range)) {
+    final BlockPos centerBlockPos = new BlockPos(pos);
+    for (final BlockPos blockPos : BlockPos.iterateOutwards(centerBlockPos, range, 0, range)) {
       if (world.random.nextFloat() > probability) {
         continue;
       }
@@ -90,17 +91,18 @@ public class IceSnowTool extends Item implements ItemResourceGenerator, Dispense
       final BlockPos topBlockPos = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, blockPos);
 
       // 结冰
-      final boolean isInValidPos = pos.getY() >= world.getBottomY() && pos.getY() < world.getTopY();
-      final boolean isInsufficientBlockLight = isInValidPos && world.getLightLevel(LightType.BLOCK, topBlockPos) < 10;
+      final boolean isInsufficientBlockLight = world.getLightLevel(LightType.BLOCK, topBlockPos) < 10;
       final BlockPos waterBlockPos = topBlockPos.down();
-      final boolean isWater = isInsufficientBlockLight && world.getBlockState(waterBlockPos).getBlock() instanceof FluidBlock && world.getFluidState(waterBlockPos).getFluid() == Fluids.WATER;
+      final boolean isWaterInRange = centerBlockPos.getY() - range <= waterBlockPos.getY() && blockPos.getY() <= centerBlockPos.getY() + range;
+      final boolean isWater = isWaterInRange && isInsufficientBlockLight && world.getBlockState(waterBlockPos).getBlock() instanceof FluidBlock && world.getFluidState(waterBlockPos).getFluid() == Fluids.WATER;
       if (isWater) {
         world.setBlockState(waterBlockPos, Blocks.ICE.getDefaultState());
       }
 
       // 模拟降雪
+      final boolean isSnowInRange = centerBlockPos.getY() - range <= topBlockPos.getY() && topBlockPos.getY() <= centerBlockPos.getY() + range;
       final int snowAccumulationHeight = 1;
-      if (isInsufficientBlockLight && Blocks.SNOW.getDefaultState().canPlaceAt(world, topBlockPos)) {
+      if (isInsufficientBlockLight && isSnowInRange && Blocks.SNOW.getDefaultState().canPlaceAt(world, topBlockPos)) {
         final BlockState blockState = world.getBlockState(topBlockPos);
         if (blockState.isOf(Blocks.SNOW)) {
           int layers = blockState.get(SnowBlock.LAYERS);
