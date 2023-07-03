@@ -1080,8 +1080,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
   }
 
-  protected Element weakFocus = textFieldListWidget;
-
   @Override
   public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
     if (hasControlDown() && !hasShiftDown() && !hasAltDown()) {
@@ -1174,9 +1172,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    */
   @Override
   public void setFocused(@Nullable Element focused) {
-    if (getFocused() instanceof TextFieldListWidget != focused instanceof TextFieldListWidget) {
-      weakFocus = getFocused();
-    }
     textFieldListWidget.setFocused(focused == textFieldListWidget);
     super.setFocused(focused);
   }

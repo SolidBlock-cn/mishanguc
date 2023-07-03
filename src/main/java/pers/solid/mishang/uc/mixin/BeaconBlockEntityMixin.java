@@ -14,6 +14,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -25,6 +26,7 @@ import java.util.List;
 
 @Mixin(BeaconBlockEntity.class)
 public abstract class BeaconBlockEntityMixin {
+  @Unique
   private static final TagKey<Block> TINTS_BEACON_BEAMS = TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "tints_beacon_beams"));
 
   @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;getBlock()Lnet/minecraft/block/Block;", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)

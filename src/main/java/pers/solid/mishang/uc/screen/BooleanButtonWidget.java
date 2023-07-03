@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.screen;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -103,12 +104,6 @@ public class BooleanButtonWidget extends ButtonWidget implements TooltipUpdated 
     setTooltip(Tooltip.of(content, narration));
   }
 
-  @Override
-  public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-//    if (this.isHovered()) updateTooltip();
-    super.render(matrices, mouseX, mouseY, delta);
-  }
-
   public @Nullable Boolean getValue() {
     return valueGetter.apply(this);
   }
@@ -121,11 +116,17 @@ public class BooleanButtonWidget extends ButtonWidget implements TooltipUpdated 
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int button) {
     if (this.active && this.visible && clicked(mouseX, mouseY) && button == 2) {
+      this.playDownSound(MinecraftClient.getInstance().getSoundManager());
       setValue(defaultValue);
       return true;
     } else {
       return super.mouseClicked(mouseX, mouseY, button);
     }
+  }
+
+  @Override
+  protected boolean isValidClickButton(int button) {
+    return button == 0 || button == 1;
   }
 
   @Override
