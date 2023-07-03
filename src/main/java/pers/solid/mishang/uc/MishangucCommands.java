@@ -14,7 +14,6 @@ import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
@@ -31,7 +30,7 @@ public final class MishangucCommands {
   private static final MutableText NOT_STABLE_WARN = TextBridge.translatable("commands.mishanguc:update-light.warn_not_stable").formatted(Formatting.GRAY);
   private static final MutableText MASS_WARN = TextBridge.translatable("commands.mishanguc:update-light.mass").formatted(Formatting.YELLOW);
   private static final Dynamic2CommandExceptionType TOO_BIG_EXCEPTION = new Dynamic2CommandExceptionType(
-      (maxCount, count) -> Text.translatable("commands.mishanguc:update-light.to_big", maxCount, count)
+      (maxCount, count) -> TextBridge.translatable("commands.mishanguc:update-light.to_big", maxCount, count)
   );
 
   /**
@@ -140,7 +139,8 @@ public final class MishangucCommands {
               if (iterated % 16384 == 0) {
                 Mishanguc.MISHANG_LOGGER.info("Finished {} updates for {} positions.", iterated, blocksAffected);
               }
-            } else break;
+            } else
+              break;
           }
         }
         ticks = server.getTicks();
@@ -180,7 +180,8 @@ public final class MishangucCommands {
               if (iterated % 16384 == 0) {
                 Mishanguc.MISHANG_LOGGER.info("Finished {} updates for {} positions.", iterated, blocksAffected);
               }
-            } else break;
+            } else
+              break;
           }
         }
         ticks = server.getTicks();
@@ -198,33 +199,35 @@ public final class MishangucCommands {
 
   private static void executeUpdateLightHelp(ServerCommandSource source, int page) {
     final MutableText lb = TextBridge.literal("\n");
-    if (page < 1) source.sendFeedback(TextBridge.empty().formatted(Formatting.GRAY)
-            .append(TextBridge.translatable("commands.mishanguc:update-light.description.title", "/mishanguc:update-light").formatted(Formatting.GREEN, Formatting.BOLD, Formatting.UNDERLINE))
-            .append(lb)
-            .append(TextBridge.translatable("commands.mishanguc:update-light.description.summary"))
-            .append(lb)
-            .append(TextBridge.literal("- ")
-                .append(TextBridge.literal("/mishanguc:update-light [").formatted(Formatting.YELLOW).append(TextBridge.translatable("commands.mishanguc:update-light.argument.pos").append("]")))
-                .append("\n")
-                .append(TextBridge.translatable("commands.mishanguc:update-light.description.syntax1")))
-            .append(lb)
-            .append(TextBridge.literal("- ")
-                .append(TextBridge.literal("/mishanguc:update-light [").formatted(Formatting.YELLOW).append(TextBridge.translatable("commands.mishanguc:update-light.argument.centerPos")).append("] <").append(TextBridge.translatable("commands.mishanguc:update-light.argument.range")).append(">"))
-                .append("\n")
-                .append(TextBridge.translatable("commands.mishanguc:update-light.description.syntax2", 64, TextBridge.translatable("commands.mishanguc:update-light.argument.range"))))
-            .append(lb)
-            .append(TextBridge.translatable("commands.mishanguc:update-light.continue")
-                .styled(style -> style
-                    .withColor(Formatting.WHITE).withUnderline(true)
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/mishanguc:update-light help 2")))),
-        false);
-    if (page >= 1) source.sendFeedback(TextBridge.empty().formatted(Formatting.GRAY)
-            .append(TextBridge.literal("- ")
-                .append(TextBridge.literal("/mishanguc:update light <").formatted(Formatting.YELLOW).append(Text.translatable("commands.mishanguc:update-light.argument.fromPos")).append("> <").append(TextBridge.translatable("commands.mishanguc:update-light.argument.fromPos").append(">")))
-                .append("\n")
-                .append(TextBridge.translatable("commands.mishanguc:update-light.description.syntax3", 2097152)))
-            .append(lb).append(lb)
-            .append(TextBridge.translatable("commands.mishanguc:update-light.description.detail")),
-        false);
+    if (page < 1)
+      source.sendFeedback(TextBridge.empty().formatted(Formatting.GRAY)
+              .append(TextBridge.translatable("commands.mishanguc:update-light.description.title", "/mishanguc:update-light").formatted(Formatting.GREEN, Formatting.BOLD, Formatting.UNDERLINE))
+              .append(lb)
+              .append(TextBridge.translatable("commands.mishanguc:update-light.description.summary"))
+              .append(lb)
+              .append(TextBridge.literal("- ")
+                  .append(TextBridge.literal("/mishanguc:update-light [").formatted(Formatting.YELLOW).append(TextBridge.translatable("commands.mishanguc:update-light.argument.pos").append("]")))
+                  .append("\n")
+                  .append(TextBridge.translatable("commands.mishanguc:update-light.description.syntax1")))
+              .append(lb)
+              .append(TextBridge.literal("- ")
+                  .append(TextBridge.literal("/mishanguc:update-light [").formatted(Formatting.YELLOW).append(TextBridge.translatable("commands.mishanguc:update-light.argument.centerPos")).append("] <").append(TextBridge.translatable("commands.mishanguc:update-light.argument.range")).append(">"))
+                  .append("\n")
+                  .append(TextBridge.translatable("commands.mishanguc:update-light.description.syntax2", 64, TextBridge.translatable("commands.mishanguc:update-light.argument.range"))))
+              .append(lb)
+              .append(TextBridge.translatable("commands.mishanguc:update-light.continue")
+                  .styled(style -> style
+                      .withColor(Formatting.WHITE).withUnderline(true)
+                      .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/mishanguc:update-light help 2")))),
+          false);
+    if (page >= 1)
+      source.sendFeedback(TextBridge.empty().formatted(Formatting.GRAY)
+              .append(TextBridge.literal("- ")
+                  .append(TextBridge.literal("/mishanguc:update light <").formatted(Formatting.YELLOW).append(TextBridge.translatable("commands.mishanguc:update-light.argument.fromPos")).append("> <").append(TextBridge.translatable("commands.mishanguc:update-light.argument.fromPos").append(">")))
+                  .append("\n")
+                  .append(TextBridge.translatable("commands.mishanguc:update-light.description.syntax3", 2097152)))
+              .append(lb).append(lb)
+              .append(TextBridge.translatable("commands.mishanguc:update-light.description.detail")),
+          false);
   }
 }

@@ -84,7 +84,8 @@ public class CarryingToolItem extends BlockToolItem
   @Contract(pure = true)
   public static @Nullable Block getHoldingBlock(@NotNull ItemStack stack) {
     final NbtCompound holdingBlockStateNbt = stack.getSubNbt("holdingBlockState");
-    if (holdingBlockStateNbt == null) return null;
+    if (holdingBlockStateNbt == null)
+      return null;
     final Identifier identifier = Identifier.tryParse(holdingBlockStateNbt.getString("Name"));
     return Registries.BLOCK.get(identifier);
   }
@@ -95,7 +96,8 @@ public class CarryingToolItem extends BlockToolItem
     if (holdingBlockStateNbt != null) {
       try {
         return NbtHelper.toBlockState(world.createCommandRegistryWrapper(RegistryKeys.BLOCK), holdingBlockStateNbt);
-      } catch (Exception e) {
+      } catch (
+          Exception e) {
         return null;
       }
     } else {
@@ -162,14 +164,15 @@ public class CarryingToolItem extends BlockToolItem
 
   private static MutableText getEntityName(@NotNull ItemStack stack) {
     final NbtCompound nbt = stack.getNbt();
-    if (nbt == null) return TextBridge.empty();
+    if (nbt == null)
+      return TextBridge.empty();
     if (nbt.contains("holdingEntityName", NbtElement.STRING_TYPE)) {
       return Text.Serializer.fromJson(nbt.getString("holdingEntityName"));
     } else if (nbt.contains("holdingEntityType", NbtElement.STRING_TYPE)) {
       final Identifier holdingEntityType = Identifier.tryParse(nbt.getString("holdingEntityType"));
       return Registries.ENTITY_TYPE.containsId(holdingEntityType) ? Registries.ENTITY_TYPE.get(holdingEntityType).getName().copy() : TextBridge.literal(String.valueOf(holdingEntityType));
     } else {
-      return Text.empty();
+      return TextBridge.empty();
     }
   }
 
@@ -226,7 +229,8 @@ public class CarryingToolItem extends BlockToolItem
     } else if (hasHoldingEntity(stack)) {
       if (world instanceof ServerWorld serverWorld) {
         final Entity entity = createHoldingEntity(stack, serverWorld, player);
-        if (entity == null) return ActionResult.PASS;
+        if (entity == null)
+          return ActionResult.PASS;
         final Vec3d pos = blockHitResult.getPos();
         entity.updatePosition(pos.x, pos.y, pos.z);
         final boolean spawnEntity = world.spawnEntity(entity);
@@ -272,7 +276,8 @@ public class CarryingToolItem extends BlockToolItem
 
   @Override
   public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    if (!hasAccess(player, world, true)) return ActionResult.PASS;
+    if (!hasAccess(player, world, true))
+      return ActionResult.PASS;
     final Block alreadyHolding = getHoldingBlock(stack);
     if (alreadyHolding != null && !player.isCreative()) {
       if (!world.isClient) {
@@ -284,7 +289,8 @@ public class CarryingToolItem extends BlockToolItem
     }
     final boolean alreadyHoldingEntity = hasHoldingEntity(stack);
     if (alreadyHoldingEntity && !player.isCreative()) {
-      if (world.isClient) return ActionResult.CONSUME;
+      if (world.isClient)
+        return ActionResult.CONSUME;
       else {
         player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", getEntityName(stack)).formatted(Formatting.RED), true);
         return ActionResult.FAIL;
@@ -331,7 +337,8 @@ public class CarryingToolItem extends BlockToolItem
       if (holdingBlockState.getBlock() instanceof OperatorBlock && !user.hasPermissionLevel(2)) {
         return TypedActionResult.fail(stack);
       }
-      if (world.isClient) return TypedActionResult.success(use.getValue());
+      if (world.isClient)
+        return TypedActionResult.success(use.getValue());
       final FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(EntityType.FALLING_BLOCK, world);
       NbtCompound nbt = new NbtCompound();
       nbt.put("BlockState", stack.getSubNbt("holdingBlockState"));
@@ -356,7 +363,8 @@ public class CarryingToolItem extends BlockToolItem
     } else if (hasHoldingEntity(stack)) {
       if (world instanceof ServerWorld serverWorld) {
         final Entity entity = createHoldingEntity(stack, serverWorld, user);
-        if (entity == null) return use;
+        if (entity == null)
+          return use;
         final Vec3d pos = user.getPos();
         entity.updatePositionAndAngles(pos.x, pos.y, pos.z, user.getYaw(), user.getPitch());
         entity.setVelocity(Vec3d.fromPolar(user.getPitch(), user.getYaw()).multiply(2).add(user.getVelocity()));
@@ -382,7 +390,8 @@ public class CarryingToolItem extends BlockToolItem
 
   @Override
   public @NotNull ActionResult attackEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
-    if (!hasAccess(player, world, true) || player.isSpectator()) return ActionResult.PASS;
+    if (!hasAccess(player, world, true) || player.isSpectator())
+      return ActionResult.PASS;
     final ItemStack stack = player.getStackInHand(hand);
     if (entity instanceof PlayerEntity) {
       if (world.isClient) {
@@ -392,13 +401,15 @@ public class CarryingToolItem extends BlockToolItem
         return ActionResult.FAIL;
       }
     } else if (hasHoldingEntity(stack) && !player.isCreative()) {
-      if (world.isClient) return ActionResult.SUCCESS;
+      if (world.isClient)
+        return ActionResult.SUCCESS;
       else {
         player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", getEntityName(stack)).formatted(Formatting.RED), true);
         return ActionResult.FAIL;
       }
     } else if (hasHoldingBlockState(stack) && !player.isCreative()) {
-      if (world.isClient) return ActionResult.SUCCESS;
+      if (world.isClient)
+        return ActionResult.SUCCESS;
       else {
         player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.ofNullable(getHoldingBlock(stack)).map(Block::getName).orElse(TextBridge.empty())).formatted(Formatting.RED), true);
         return ActionResult.FAIL;
@@ -441,7 +452,8 @@ public class CarryingToolItem extends BlockToolItem
   @Environment(EnvType.CLIENT)
   @Override
   public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext worldRenderContext, WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
-    if (!hasAccess(player, worldRenderContext.world(), true)) return true;
+    if (!hasAccess(player, worldRenderContext.world(), true))
+      return true;
     final MinecraftClient client = MinecraftClient.getInstance();
     final VertexConsumerProvider consumers = worldRenderContext.consumers();
     if (consumers == null) {
@@ -487,12 +499,14 @@ public class CarryingToolItem extends BlockToolItem
   @Override
   public void renderBeforeOutline(WorldRenderContext context, HitResult hitResult, ClientPlayerEntity player, Hand hand) {
     // 只在使用主手且有权限时持有此物品时进行渲染。
-    if (hand != Hand.MAIN_HAND || player.isSpectator() || !hasAccess(player, context.world(), true)) return;
+    if (hand != Hand.MAIN_HAND || player.isSpectator() || !hasAccess(player, context.world(), true))
+      return;
     final ItemStack stack = player.getMainHandStack();
     final NbtCompound nbt = stack.getNbt();
     final VertexConsumerProvider consumers = context.consumers();
     final MatrixStack matrices = context.matrixStack();
-    if (consumers == null) return;
+    if (consumers == null)
+      return;
     final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.getLines());
     final Vec3d cameraPos = context.camera().getPos();
     if (hitResult.getType() == HitResult.Type.BLOCK && hasHoldingEntity(stack) && nbt != null) {
@@ -501,7 +515,8 @@ public class CarryingToolItem extends BlockToolItem
       final Vec3d pos = hitResult.getPos();
       WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(pos.x - width / 2, pos.y, pos.z - width / 2, pos.x + width / 2, pos.y + height, pos.z + width / 2), -cameraPos.x, -cameraPos.y, -cameraPos.z, 0, 1, 1, 0.8f);
     }
-    if (!player.isCreative() && (hasHoldingBlockState(stack) || hasHoldingEntity(stack))) return;
+    if (!player.isCreative() && (hasHoldingBlockState(stack) || hasHoldingEntity(stack)))
+      return;
     if (hitResult instanceof EntityHitResult entityHitResult) {
       final Entity entity = entityHitResult.getEntity();
       WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, 1.0f, 0f, 0f, 0.8f);

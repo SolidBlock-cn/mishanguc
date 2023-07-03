@@ -189,6 +189,7 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
       return false;
     } else {
       this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+      onPress();
       return true;
     }
   }
