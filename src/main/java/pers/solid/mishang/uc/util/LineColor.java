@@ -24,6 +24,6 @@ public enum LineColor implements StringIdentifiable {
   }
 
   public MutableText getName() {
-    return TextBridge.translatable("lineColor." + name);
+    return TextBridge.translatable("lineColor.mishanguc." + name);
   }
 }
