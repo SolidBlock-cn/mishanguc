@@ -132,11 +132,12 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
     final Float value = getValue();
     if (value != null) {
       switch (button) { // 这种情况下直接采用了 onPress，所以直接略。
-        case 0, 1 -> setValue(value
-            + (Screen.hasShiftDown() || button == 1 ? -1 : 1)
-            * step
-            * (Screen.hasControlDown() ? 8 : 1)
-            * (Screen.hasAltDown() ? 0.125f : 1));
+        case 0, 1 ->
+            setValue(value
+                + (Screen.hasShiftDown() || button == 1 ? -1 : 1)
+                * step
+                * (Screen.hasControlDown() ? 8 : 1)
+                * (Screen.hasAltDown() ? 0.125f : 1));
         case 2 ->
             setValue(defaultValue);
       }
