@@ -14,7 +14,6 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
-import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -59,11 +58,6 @@ public interface RoadWithStraightLine extends Road {
       default -> axis;
     };
     return state.with(AXIS, rotatedAxis);
-  }
-
-  @Override
-  default BlockState mirrorRoad(BlockState state, BlockMirror mirror) {
-    return state;
   }
 
   @Override

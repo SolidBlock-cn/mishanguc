@@ -20,8 +20,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtByte;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.text.*;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
@@ -45,6 +49,7 @@ import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
+import pers.solid.mishang.uc.util.RoadConnectionState;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Arrays;
@@ -87,7 +92,8 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
   @Override
   public Text getName(ItemStack stack) {
     final NbtCompound nbt = stack.getNbt();
-    if (nbt == null || !nbt.contains("texts", NbtType.LIST)) return super.getName(stack);
+    if (nbt == null || !nbt.contains("texts", NbtElement.LIST_TYPE))
+      return super.getName(stack);
     final MutableText text = super.getName(stack).copy();
     final List<MutableText> texts = ImmutableList.copyOf(
         nbt.getList("texts", NbtType.COMPOUND).stream()
@@ -118,7 +124,8 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
     }
     try {
       if (blockEntity instanceof SignBlockEntity signBlockEntity) {
-        if (world.isClient) return ActionResult.SUCCESS;
+        if (world.isClient)
+          return ActionResult.SUCCESS;
         @Nullable DyeColor color = null;
         for (int i = 0; i < texts.size(); i++) {
           if (i < 4) {
@@ -148,7 +155,8 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
         return ActionResult.SUCCESS;
       } else if (blockEntity instanceof WallSignBlockEntity wallSignBlockEntity) {
-        if (world.isClient) return ActionResult.SUCCESS;
+        if (world.isClient)
+          return ActionResult.SUCCESS;
         wallSignBlockEntity.textContexts = ImmutableList.copyOf(texts.stream().map(nbtElement -> TextContext.fromNbt(nbtElement, wallSignBlockEntity.createDefaultTextContext())).iterator());
         if (stack.getOrCreateNbt().getBoolean("fromVanillaSign")) {
           MishangUtils.rearrange(wallSignBlockEntity.textContexts);
@@ -159,13 +167,14 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
         return ActionResult.SUCCESS;
       } else if (blockEntity instanceof HungSignBlockEntity hungSignBlockEntity) {
-        if (world.isClient) return ActionResult.SUCCESS;
+        if (world.isClient)
+          return ActionResult.SUCCESS;
         final Direction hitSide = blockHitResult.getSide();
         final Direction.Axis axis = blockState.get(HungSignBlock.AXIS);
         if (!axis.test(hitSide)) {
           final Iterator<Direction> validDirections = Arrays.stream(Direction.values()).filter(axis).iterator();
           // 如果点击的方向不正确，则无法复制和粘贴文本。
-          player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.wrong_side", TextBridge.translatable("direction." + hitSide.getName()).styled(style -> style.withColor(0xeecc44)), TextBridge.translatable("direction." + validDirections.next()).styled(style -> style.withColor(0xb3ee45)), TextBridge.translatable("direction." + validDirections.next()).styled(style -> style.withColor(0xb3ee45))).formatted(Formatting.RED), true);
+          player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.wrong_side", RoadConnectionState.text(hitSide).styled(style -> style.withColor(0xeecc44)), RoadConnectionState.text(validDirections.next()).styled(style -> style.withColor(0xb3ee45)), RoadConnectionState.text(validDirections.next()).styled(style -> style.withColor(0xb3ee45))).formatted(Formatting.RED), true);
           return ActionResult.FAIL;
         }
         final HashMap<@NotNull Direction, @Unmodifiable @NotNull List<@NotNull TextContext>> newTexts = new HashMap<>(hungSignBlockEntity.texts);
@@ -185,7 +194,8 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
         return ActionResult.SUCCESS;
       } else if (blockEntity instanceof StandingSignBlockEntity standingSignBlockEntity) {
-        if (world.isClient) return ActionResult.SUCCESS;
+        if (world.isClient)
+          return ActionResult.SUCCESS;
         final Boolean isFront = StandingSignBlock.getHitSide(blockState, blockHitResult);
         if (isFront != null) {
           standingSignBlockEntity.setTextsOnSide(isFront, texts.stream().map(nbtElement -> TextContext.fromNbt(nbtElement, standingSignBlockEntity.createDefaultTextContext())).collect(ImmutableList.toImmutableList()));
@@ -199,12 +209,14 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
           return ActionResult.SUCCESS;
         }
       } else {
-        if (world.isClient) return ActionResult.PASS;
+        if (world.isClient)
+          return ActionResult.PASS;
         // 点击的方块不是可以识别的告示牌方块。
         player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.not_sign").formatted(Formatting.RED), true);
         return ActionResult.FAIL;
       }
-    } catch (Throwable throwable) {
+    } catch (
+        Throwable throwable) {
       player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.unexpected").formatted(Formatting.RED), true);
       LOGGER.error("Unexpected error found when pasting text", throwable);
     }
@@ -219,13 +231,15 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
     // 本方法仅限在服务器上使用。
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     if (blockEntity instanceof SignBlockEntity signBlockEntity) {
-      if (world.isClient) return ActionResult.SUCCESS;
+      if (world.isClient)
+        return ActionResult.SUCCESS;
       // 原版的告示牌
       final NbtList texts = new NbtList();
       for (int i = 0; i < 4; i++) {
         final TextContext textContext = new TextContext();
         textContext.text = signBlockEntity.getTextOnRow(i, false).shallowCopy();
-        if (TextBridge.isEmpty(textContext.text)) continue;
+        if (TextBridge.isEmpty(textContext.text))
+          continue;
         textContext.color = signBlockEntity.getTextColor().getSignColor();
 
         final Style style = textContext.text.getStyle();
@@ -250,7 +264,8 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
       player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.success.copy", texts.size()), true);
       return ActionResult.SUCCESS;
     } else if (blockEntity instanceof WallSignBlockEntity wallSignBlockEntity) {
-      if (world.isClient) return ActionResult.SUCCESS;
+      if (world.isClient)
+        return ActionResult.SUCCESS;
       // 迷上城建模组的墙上告示牌方块
       final NbtList texts = new NbtList();
       for (TextContext textContext : wallSignBlockEntity.textContexts) {
@@ -263,12 +278,13 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
     } else {
       final BlockState blockState = world.getBlockState(pos);
       if (blockEntity instanceof HungSignBlockEntity hungSignBlockEntity) {
-        if (world.isClient) return ActionResult.SUCCESS;
+        if (world.isClient)
+          return ActionResult.SUCCESS;
         final Direction.Axis axis = blockState.get(HungSignBlock.AXIS);
         if (!axis.test(direction)) {
           final Iterator<Direction> validDirections = Arrays.stream(Direction.values()).filter(axis).iterator();
           // 如果点击的方向不正确，则无法复制和粘贴文本。
-          player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.wrong_side", TextBridge.translatable("direction." + direction.getName()).styled(style -> style.withColor(0xeecc44)), TextBridge.translatable("direction." + validDirections.next()).styled(style -> style.withColor(0xb3ee45)), TextBridge.translatable("direction." + validDirections.next()).styled(style -> style.withColor(0xb3ee45))).formatted(Formatting.RED), true);
+          player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.wrong_side", RoadConnectionState.text(direction).styled(style -> style.withColor(0xeecc44)), RoadConnectionState.text(validDirections.next()).styled(style -> style.withColor(0xb3ee45)), RoadConnectionState.text(validDirections.next()).styled(style -> style.withColor(0xb3ee45))).formatted(Formatting.RED), true);
           return ActionResult.FAIL;
         }
         final List<@NotNull TextContext> textContexts = hungSignBlockEntity.texts.getOrDefault(direction, ImmutableList.of());
@@ -284,9 +300,11 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         Boolean hitSide = StandingSignBlock.getHitSide(blockState, direction);
         if (hitSide == null) {
           final HitResult raycast0 = player.raycast(4.5, 0, includesFluid(stack, false));
-          if (raycast0 instanceof BlockHitResult) hitSide = StandingSignBlock.getHitSide(blockState, (BlockHitResult) raycast0);
+          if (raycast0 instanceof BlockHitResult)
+            hitSide = StandingSignBlock.getHitSide(blockState, (BlockHitResult) raycast0);
         }
-        if (hitSide == null) return world.isClient ? ActionResult.PASS : ActionResult.FAIL;
+        if (hitSide == null)
+          return world.isClient ? ActionResult.PASS : ActionResult.FAIL;
         final List<TextContext> textContexts = standingSignBlockEntity.getTextsOnSide(hitSide);
         final NbtList texts = new NbtList();
         texts.addAll(Collections2.transform(textContexts, TextContext::createNbt));
@@ -295,7 +313,8 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.success.copy", texts.size()), true);
         return ActionResult.SUCCESS;
       } else {
-        if (world.isClient) return ActionResult.SUCCESS;
+        if (world.isClient)
+          return ActionResult.SUCCESS;
         // 点击的方块不是可以识别的告示牌方块。
         player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.not_sign").formatted(Formatting.RED), true);
         return ActionResult.FAIL;

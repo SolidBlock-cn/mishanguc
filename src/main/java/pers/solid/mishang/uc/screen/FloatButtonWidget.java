@@ -10,7 +10,6 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -95,11 +94,6 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
     return renderedTooltip;
   }
 
-  @Override
-  public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-    super.render(matrices, mouseX, mouseY, delta);
-  }
-
   public @Nullable Float getValue() {
     return valueGetter.apply(this);
   }
@@ -130,12 +124,8 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
   }
 
   @Override
-  public boolean mouseClicked(double mouseX, double mouseY, int button) {
-    final boolean b = super.mouseClicked(mouseX, mouseY, button);
-    if (this.active && this.visible && clicked(mouseX, mouseY)) {
-      onPress(button);
-    }
-    return b;
+  public void onPress() {
+    onPress(0);
   }
 
   public void onPress(int button) {
@@ -147,16 +137,20 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
             * step
             * (Screen.hasControlDown() ? 8 : 1)
             * (Screen.hasAltDown() ? 0.125f : 1));
-        case 2 -> setValue(defaultValue);
-        default -> {
-        }
+        case 2 ->
+            setValue(defaultValue);
       }
     }
   }
 
   @Override
-  public void onPress() {
-    this.onPress(0);
+  public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    if (this.active && this.visible && clicked(mouseX, mouseY)) {
+      this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+      onPress(button);
+      return true;
+    }
+    return false;
   }
 
   @Override
@@ -202,7 +196,8 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
       }
       return false;
     } else {
-      return super.keyPressed(keyCode, scanCode, modifiers);
+      this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+      return true;
     }
   }
 
@@ -211,7 +206,8 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
     final Float value = getValue();
     if (renderedNameSupplier != null) {
       final Text apply = renderedNameSupplier.apply(value, valueToText.apply(value));
-      if (apply != null) return apply;
+      if (apply != null)
+        return apply;
     }
     if (value == null || value == defaultValue) {
       return super.getMessage();
@@ -220,6 +216,7 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
     }
   }
 
+  @Environment(EnvType.CLIENT)
   public interface NameRenderer extends BiFunction<@Nullable Float, Text, @Nullable Text> {
     @Override
     @Nullable Text apply(@Nullable Float value, Text valueText);

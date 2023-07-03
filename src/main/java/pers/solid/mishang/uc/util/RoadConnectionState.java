@@ -10,6 +10,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * 表示一个道路在一个方向上的连接状态。
  *
@@ -21,6 +23,11 @@ import org.jetbrains.annotations.Nullable;
  * @since 0.2.0-mc1.17+ 此类更改为记录；1.16.5 由于仍为 Java 8，因此仍使用普通类的形式。
  */
 public record RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, @Nullable EightHorizontalDirection direction, LineType lineType, @Nullable LineOffset lineOffset) implements Comparable<RoadConnectionState> {
+  public RoadConnectionState {
+    if (whetherConnected.compareTo(WhetherConnected.MAY_CONNECT) >= 0) {
+      Objects.requireNonNull(direction, "direction");
+    }
+  }
 
   public RoadConnectionState(WhetherConnected whetherConnected, LineColor lineColor, @Nullable EightHorizontalDirection direction, LineType lineType) {
     this(whetherConnected, lineColor, direction, lineType, null);
@@ -41,22 +48,22 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
 
   public static MutableText text(@Nullable Direction direction) {
     if (direction == null) {
-      return TextBridge.translatable("direction.none");
+      return TextBridge.translatable("direction.mishanguc.none");
     }
-    return TextBridge.translatable("direction." + direction.asString());
+    return TextBridge.translatable("direction.mishanguc." + direction.asString());
   }
 
   public static MutableText text(@Nullable HorizontalCornerDirection direction) {
     if (direction == null) {
-      return TextBridge.translatable("direction.none");
+      return TextBridge.translatable("direction.mishanguc.none");
     } else {
-      return TextBridge.translatable("direction." + direction.asString());
+      return TextBridge.translatable("direction.mishanguc." + direction.asString());
     }
   }
 
   public static MutableText text(@Nullable Either<Direction, HorizontalCornerDirection> direction) {
     if (direction == null) {
-      return TextBridge.translatable("direction.none");
+      return TextBridge.translatable("direction.mishanguc.none");
     } else {
       return direction.map(RoadConnectionState::text, RoadConnectionState::text);
     }
@@ -68,17 +75,23 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
 
   public static MutableText text(@NotNull WhetherConnected whetherConnected) {
     return TextBridge.translatable("roadConnectionState.whether." + whetherConnected.asString()).formatted(switch (whetherConnected) {
-      case NOT_CONNECTED -> Formatting.RED;
-      case CONNECTED -> Formatting.GREEN;
-      default -> Formatting.YELLOW;
+      case NOT_CONNECTED ->
+          Formatting.RED;
+      case CONNECTED ->
+          Formatting.GREEN;
+      default ->
+          Formatting.YELLOW;
     });
   }
 
   public static MutableText text(@NotNull LineColor lineColor) {
     return lineColor.getName().formatted(switch (lineColor) {
-      case WHITE -> Formatting.WHITE;
-      case YELLOW -> Formatting.YELLOW;
-      default -> Formatting.GRAY;
+      case WHITE ->
+          Formatting.WHITE;
+      case YELLOW ->
+          Formatting.YELLOW;
+      default ->
+          Formatting.GRAY;
     });
   }
 

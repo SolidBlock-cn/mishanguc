@@ -118,7 +118,9 @@ public class MishangucClient implements ClientModInitializer {
                 client.execute(() -> client.setScreen(new StandingSignBlockEditScreen(standingSignBlockEntity, blockPos, isFront)));
               }
             }
-          } catch (NullPointerException | ClassCastException exception) {
+          } catch (
+              NullPointerException |
+              ClassCastException exception) {
             Mishanguc.MISHANG_LOGGER.error("Error when creating sign edit screen:", exception);
           }
         });
@@ -134,10 +136,12 @@ public class MishangucClient implements ClientModInitializer {
         .toArray(Block[]::new);
     ColorProviderRegistry.BLOCK.register(
         (state, world, pos, tintIndex) -> {
-          if (world == null || pos == null) return -1;
+          if (world == null || pos == null)
+            return -1;
           BlockEntity entity = world.getBlockEntity(pos);
           // 考虑到玩家掉落产生粒子时，坐标会向上偏离一格。
-          if (entity == null) entity = world.getBlockEntity(pos.down());
+          if (entity == null)
+            entity = world.getBlockEntity(pos.down());
           if (entity instanceof ColoredBlockEntity coloredBlockEntity) {
             return coloredBlockEntity.getColor();
           } else {
@@ -148,7 +152,8 @@ public class MishangucClient implements ClientModInitializer {
             int accumulatedGreen = 0;
             int accumulatedBlue = 0;
             for (BlockPos outPos : BlockPos.iterateOutwards(pos, 1, 1, 1)) {
-              if (outPos.equals(pos)) continue;
+              if (outPos.equals(pos))
+                continue;
               if (world.getBlockEntity(outPos) instanceof ColoredBlockEntity coloredBlockEntity) {
                 final int color = coloredBlockEntity.getColor();
                 accumulatedNum += 1;
