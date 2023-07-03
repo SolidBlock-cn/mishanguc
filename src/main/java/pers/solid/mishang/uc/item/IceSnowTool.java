@@ -60,9 +60,11 @@ public class IceSnowTool extends Item implements ItemResourceGenerator, Dispense
   @Override
   public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
     final ItemStack stack = user.getStackInHand(hand);
-    if (!(world instanceof ServerWorld serverWorld)) return TypedActionResult.success(stack);
+    if (!(world instanceof ServerWorld serverWorld))
+      return TypedActionResult.success(stack);
     final HitResult hitResult = user.raycast(64, 0, false);
-    if (hitResult.getType() == HitResult.Type.MISS) return TypedActionResult.fail(stack);
+    if (hitResult.getType() == HitResult.Type.MISS)
+      return TypedActionResult.fail(stack);
     final Vec3d pos = hitResult.getPos();
     final int strength = getStrength(stack);
     if (user.isSneaking()) {
@@ -81,33 +83,35 @@ public class IceSnowTool extends Item implements ItemResourceGenerator, Dispense
   public void applyIce(@NotNull ServerWorld world, @NotNull Vec3d pos, int strength) {
     final float probability = getProbability(strength);
     final int range = getRange(strength);
-    for (BlockPos blockPos : BlockPos.iterateOutwards(new BlockPos(pos), range, range, range)) {
+    for (final BlockPos blockPos : BlockPos.iterateOutwards(new BlockPos(pos), range, 0, range)) {
       if (world.random.nextFloat() > probability) {
         continue;
       }
 
+      final BlockPos topBlockPos = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, blockPos);
+
       // 结冰
-      final boolean isTopPosition = world.getTopY(Heightmap.Type.MOTION_BLOCKING, blockPos.getX(), blockPos.getZ()) == blockPos.getY();
-      final boolean isInValidPos = isTopPosition && pos.getY() >= world.getBottomY() && pos.getY() < world.getTopY();
-      final boolean isInsufficientBlockLight = isInValidPos && world.getLightLevel(LightType.BLOCK, blockPos) < 10;
-      final boolean isWater = isInsufficientBlockLight && world.getBlockState(blockPos).getBlock() instanceof FluidBlock && world.getFluidState(blockPos).getFluid() == Fluids.WATER;
+      final boolean isInValidPos = pos.getY() >= world.getBottomY() && pos.getY() < world.getTopY();
+      final boolean isInsufficientBlockLight = isInValidPos && world.getLightLevel(LightType.BLOCK, topBlockPos) < 10;
+      final BlockPos waterBlockPos = topBlockPos.down();
+      final boolean isWater = isInsufficientBlockLight && world.getBlockState(waterBlockPos).getBlock() instanceof FluidBlock && world.getFluidState(waterBlockPos).getFluid() == Fluids.WATER;
       if (isWater) {
-        world.setBlockState(blockPos, Blocks.ICE.getDefaultState());
+        world.setBlockState(waterBlockPos, Blocks.ICE.getDefaultState());
       }
 
       // 模拟降雪
       int snowAccumulationHeight = world.getGameRules().getInt(GameRules.SNOW_ACCUMULATION_HEIGHT);
-      if (snowAccumulationHeight > 0 && isInsufficientBlockLight && Blocks.SNOW.getDefaultState().canPlaceAt(world, blockPos)) {
-        BlockState blockState = world.getBlockState(blockPos);
+      if (snowAccumulationHeight > 0 && isInsufficientBlockLight && Blocks.SNOW.getDefaultState().canPlaceAt(world, topBlockPos)) {
+        final BlockState blockState = world.getBlockState(topBlockPos);
         if (blockState.isOf(Blocks.SNOW)) {
           int layers = blockState.get(SnowBlock.LAYERS);
           if (layers < Math.min(snowAccumulationHeight, 8)) {
             BlockState blockState2 = blockState.with(SnowBlock.LAYERS, layers + 1);
-            Block.pushEntitiesUpBeforeBlockChange(blockState, blockState2, world, blockPos);
-            world.setBlockState(blockPos, blockState2);
+            Block.pushEntitiesUpBeforeBlockChange(blockState, blockState2, world, topBlockPos);
+            world.setBlockState(topBlockPos, blockState2);
           }
-        } else {
-          world.setBlockState(blockPos, Blocks.SNOW.getDefaultState());
+        } else if (blockState.isAir()) {
+          world.setBlockState(topBlockPos, Blocks.SNOW.getDefaultState());
         }
       }
     }
