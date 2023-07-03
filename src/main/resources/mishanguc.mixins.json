@@ -19,7 +19,6 @@
     "PlayerInventoryMixin",
     "PointOfInterestTypesMixin",
     "ServerChunkManagerAccessor",
-    "SnowBlockMixin",
     "WallBlockMixin",
     "WorldChunkMixin"
   ],
