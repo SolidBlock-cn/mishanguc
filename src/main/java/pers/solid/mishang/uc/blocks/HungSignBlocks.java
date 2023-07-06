@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.mixin.object.builder.AbstractBlockAccessor;
 import net.fabricmc.fabric.mixin.object.builder.AbstractBlockSettingsAccessor;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.MapColor;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
@@ -30,6 +31,47 @@ import java.util.Map;
 public final class HungSignBlocks extends MishangucBlocks {
 
   // 木告示牌部分。仅有不发光的告示牌。
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBlock OAK_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.OAK_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBlock SPRUCE_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.SPRUCE_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBlock BIRCH_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.BIRCH_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBlock JUNGLE_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.JUNGLE_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBlock ACACIA_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.ACACIA_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBlock CHERRY_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.CHERRY_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBlock DARK_OAK_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.DARK_OAK_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBlock MANGROVE_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.MANGROVE_WOOD);
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBlock CRIMSON_HYPHAE_HUNG_SIGN = new HungSignBlock(Blocks.CRIMSON_HYPHAE);
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBlock WARPED_HYPHAE_HUNG_SIGN = new HungSignBlock(Blocks.WARPED_HYPHAE);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBlock STRIPPED_OAK_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_OAK_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBlock STRIPPED_SPRUCE_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_SPRUCE_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBlock STRIPPED_BIRCH_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_BIRCH_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBlock STRIPPED_JUNGLE_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_JUNGLE_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBlock STRIPPED_ACACIA_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_ACACIA_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBlock STRIPPED_CHERRY_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_CHERRY_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBlock STRIPPED_DARK_OAK_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_DARK_OAK_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBlock STRIPPED_MANGROVE_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_MANGROVE_WOOD, FabricBlockSettings.copyOf(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED));
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBlock STRIPPED_CRIMSON_HYPHAE_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_CRIMSON_HYPHAE);
+  @ApiStatus.AvailableSince("0.1.7")
+  public static final HungSignBlock STRIPPED_WARPED_HYPHAE_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_WARPED_HYPHAE);
+
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBlock OAK_HUNG_SIGN = new HungSignBlock(Blocks.OAK_PLANKS);
   @ApiStatus.AvailableSince("0.1.7")
@@ -79,21 +121,51 @@ public final class HungSignBlocks extends MishangucBlocks {
   public static final HungSignBarBlock CRIMSON_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.CRIMSON_HYPHAE);
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBarBlock WARPED_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.WARPED_HYPHAE);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBarBlock STRIPPED_OAK_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.OAK_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBarBlock STRIPPED_SPRUCE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_SPRUCE_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBarBlock STRIPPED_BIRCH_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_BIRCH_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBarBlock STRIPPED_JUNGLE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_JUNGLE_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBarBlock STRIPPED_ACACIA_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_ACACIA_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBarBlock STRIPPED_CHERRY_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_CHERRY_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBarBlock STRIPPED_DARK_OAK_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_DARK_OAK_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBarBlock STRIPPED_MANGROVE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_MANGROVE_WOOD, FabricBlockSettings.copyOf(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED));
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBarBlock STRIPPED_CRIMSON_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_CRIMSON_HYPHAE);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final HungSignBarBlock STRIPPED_WARPED_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_WARPED_HYPHAE);
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   public static final HungSignBarBlock BAMBOO_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).requires(FeatureFlags.UPDATE_1_20));
 
   static {
-    OAK_HUNG_SIGN.barTexture = new Identifier("block/oak_log");
-    SPRUCE_HUNG_SIGN.barTexture = new Identifier("block/spruce_log");
-    BIRCH_HUNG_SIGN.barTexture = new Identifier("block/birch_log");
-    JUNGLE_HUNG_SIGN.barTexture = new Identifier("block/jungle_log");
-    ACACIA_HUNG_SIGN.barTexture = new Identifier("block/acacia_log");
-    CHERRY_HUNG_SIGN.barTexture = new Identifier("block/cherry_log");
-    DARK_OAK_HUNG_SIGN.barTexture = new Identifier("block/dark_oak_log");
-    MANGROVE_HUNG_SIGN.barTexture = new Identifier("block/mangrove_log");
-    CRIMSON_HUNG_SIGN.barTexture = new Identifier("block/crimson_stem");
-    WARPED_HUNG_SIGN.barTexture = new Identifier("block/warped_stem");
+    OAK_WOOD_HUNG_SIGN.baseTexture = OAK_WOOD_HUNG_SIGN.barTexture = OAK_HUNG_SIGN.barTexture = new Identifier("block/oak_log");
+    SPRUCE_WOOD_HUNG_SIGN.baseTexture = SPRUCE_WOOD_HUNG_SIGN.barTexture = SPRUCE_HUNG_SIGN.barTexture = new Identifier("block/spruce_log");
+    BIRCH_WOOD_HUNG_SIGN.baseTexture = BIRCH_WOOD_HUNG_SIGN.barTexture = BIRCH_HUNG_SIGN.barTexture = new Identifier("block/birch_log");
+    JUNGLE_WOOD_HUNG_SIGN.baseTexture = JUNGLE_WOOD_HUNG_SIGN.barTexture = JUNGLE_HUNG_SIGN.barTexture = new Identifier("block/jungle_log");
+    ACACIA_WOOD_HUNG_SIGN.baseTexture = ACACIA_WOOD_HUNG_SIGN.barTexture = ACACIA_HUNG_SIGN.barTexture = new Identifier("block/acacia_log");
+    CHERRY_WOOD_HUNG_SIGN.baseTexture = CHERRY_WOOD_HUNG_SIGN.barTexture = CHERRY_HUNG_SIGN.barTexture = new Identifier("block/cherry_log");
+    DARK_OAK_WOOD_HUNG_SIGN.baseTexture = DARK_OAK_WOOD_HUNG_SIGN.barTexture = DARK_OAK_HUNG_SIGN.barTexture = new Identifier("block/dark_oak_log");
+    MANGROVE_WOOD_HUNG_SIGN.baseTexture = MANGROVE_WOOD_HUNG_SIGN.barTexture = MANGROVE_HUNG_SIGN.barTexture = new Identifier("block/mangrove_log");
+    CRIMSON_HYPHAE_HUNG_SIGN.baseTexture = CRIMSON_HYPHAE_HUNG_SIGN.barTexture = CRIMSON_HUNG_SIGN.barTexture = new Identifier("block/crimson_stem");
+    WARPED_HYPHAE_HUNG_SIGN.baseTexture = WARPED_HYPHAE_HUNG_SIGN.barTexture = WARPED_HUNG_SIGN.barTexture = new Identifier("block/warped_stem");
+    STRIPPED_OAK_WOOD_HUNG_SIGN.baseTexture = new Identifier("block/stripped_oak_log");
+    STRIPPED_SPRUCE_WOOD_HUNG_SIGN.baseTexture = new Identifier("block/stripped_spruce_log");
+    STRIPPED_BIRCH_WOOD_HUNG_SIGN.baseTexture = new Identifier("block/stripped_birch_log");
+    STRIPPED_JUNGLE_WOOD_HUNG_SIGN.baseTexture = new Identifier("block/stripped_jungle_log");
+    STRIPPED_ACACIA_WOOD_HUNG_SIGN.baseTexture = new Identifier("block/stripped_acacia_log");
+    STRIPPED_CHERRY_WOOD_HUNG_SIGN.baseTexture = new Identifier("block/stripped_cherry_log");
+    STRIPPED_DARK_OAK_WOOD_HUNG_SIGN.baseTexture = new Identifier("block/stripped_dark_oak_log");
+    STRIPPED_MANGROVE_WOOD_HUNG_SIGN.baseTexture = new Identifier("block/stripped_mangrove_log");
+    STRIPPED_CRIMSON_HYPHAE_HUNG_SIGN.baseTexture = new Identifier("block/stripped_crimson_stem");
+    STRIPPED_WARPED_HYPHAE_HUNG_SIGN.baseTexture = new Identifier("block/stripped_warped_stem");
     OAK_HUNG_SIGN.textureTop = new Identifier("block/oak_log");
     SPRUCE_HUNG_SIGN.textureTop = new Identifier("block/spruce_log");
     BIRCH_HUNG_SIGN.textureTop = new Identifier("block/birch_log");
@@ -114,6 +186,16 @@ public final class HungSignBlocks extends MishangucBlocks {
     MANGROVE_HUNG_SIGN_BAR.texture = new Identifier("block/mangrove_log");
     CRIMSON_HUNG_SIGN_BAR.texture = new Identifier("block/crimson_stem");
     WARPED_HUNG_SIGN_BAR.texture = new Identifier("block/warped_stem");
+    STRIPPED_OAK_HUNG_SIGN_BAR.texture = new Identifier("block/stripped_oak_log");
+    STRIPPED_SPRUCE_HUNG_SIGN_BAR.texture = new Identifier("block/stripped_spruce_log");
+    STRIPPED_BIRCH_HUNG_SIGN_BAR.texture = new Identifier("block/stripped_birch_log");
+    STRIPPED_JUNGLE_HUNG_SIGN_BAR.texture = new Identifier("block/stripped_jungle_log");
+    STRIPPED_ACACIA_HUNG_SIGN_BAR.texture = new Identifier("block/stripped_acacia_log");
+    STRIPPED_CHERRY_HUNG_SIGN_BAR.texture = new Identifier("block/stripped_cherry_log");
+    STRIPPED_DARK_OAK_HUNG_SIGN_BAR.texture = new Identifier("block/stripped_dark_oak_log");
+    STRIPPED_MANGROVE_HUNG_SIGN_BAR.texture = new Identifier("block/stripped_mangrove_log");
+    STRIPPED_CRIMSON_HUNG_SIGN_BAR.texture = new Identifier("block/stripped_crimson_stem");
+    STRIPPED_WARPED_HUNG_SIGN_BAR.texture = new Identifier("block/stripped_warped_stem");
     BAMBOO_HUNG_SIGN.barTexture = BAMBOO_HUNG_SIGN.textureTop = BAMBOO_PLANK_HUNG_SIGN.barTexture = BAMBOO_PLANK_HUNG_SIGN.textureTop = BAMBOO_MOSAIC_HUNG_SIGN.barTexture = BAMBOO_MOSAIC_HUNG_SIGN.textureTop = BAMBOO_HUNG_SIGN_BAR.texture = new Identifier("block/bamboo_block");
   }
 

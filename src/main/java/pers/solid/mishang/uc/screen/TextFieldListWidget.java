@@ -67,9 +67,6 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     if (entry != null) {
       super.setFocused(entry);
     }
-    for (TextFieldListWidget.Entry child : children()) {
-      child.textFieldWidget.setFocused(this.isFocused() && child == entry);
-    }
     if (entry instanceof TextFieldListWidget.Entry) {
       signBlockEditScreen.selectedTextField = ((Entry) entry).textFieldWidget;
       signBlockEditScreen.selectedTextContext = signBlockEditScreen.contextToWidgetBiMap.inverse().get(((Entry) entry).textFieldWidget);
@@ -89,40 +86,25 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
   @Override
   public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-    if (children().size() != 0 && keyCode == GLFW.GLFW_KEY_UP) {
-      setFocused(children().get(MathHelper.floorMod(children().indexOf(getFocused()) - 1, children().size())));
+    if (!children().isEmpty()) {
+      if (keyCode == GLFW.GLFW_KEY_UP) {
+        setFocused(children().get(MathHelper.floorMod(children().indexOf(getFocused()) - 1, children().size())));
+        return true;
+      } else if (keyCode == GLFW.GLFW_KEY_DOWN) {
+        setFocused(children().get(MathHelper.floorMod(children().indexOf(getFocused()) + 1, children().size())));
+        return true;
+      }
+    } else if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
+      // 此时，children().isEmpty() 为 true
+      signBlockEditScreen.addTextField(0);
       return true;
-    } else if (children().size() != 0 && keyCode == GLFW.GLFW_KEY_DOWN) {
-      setFocused(children().get(MathHelper.floorMod(children().indexOf(getFocused()) + 1, children().size())));
-      return true;
-    } else {
-      return super.keyPressed(keyCode, scanCode, modifiers);
     }
+    return super.keyPressed(keyCode, scanCode, modifiers);
   }
 
   @Override
   public int getRowWidth() {
     return width;
-  }
-
-  @Override
-  public boolean mouseClicked(double mouseX, double mouseY, int button) {
-    this.updateScrollingState(mouseX, mouseY, button);
-    if (!this.isMouseOver(mouseX, mouseY)) {
-      return false;
-    }
-    TextFieldListWidget.Entry entry = this.getEntryAtPosition(mouseX, mouseY);
-    if (entry != null) {
-      if (entry.mouseClicked(mouseX, mouseY, button)) {
-        this.setFocused(entry);
-        this.setDragging(true);
-        return true;
-      }
-    } else if (button == 0) {
-      this.clickedHeader((int) (mouseX - (double) (this.left + this.width / 2 - this.getRowWidth() / 2)), (int) (mouseY - (double) this.top) + (int) this.getScrollAmount() - 4);
-      return true;
-    }
-    return super.mouseClicked(-1, -1, button);
   }
 
   @Override
@@ -217,9 +199,6 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
             final int index = TextFieldListWidget.this.children().indexOf(focused);
             if (index >= 0) {
               signBlockEditScreen.removeTextField(index);
-              if (index - 1 >= 0 && index - 1 < TextFieldListWidget.this.children().size()) {
-                TextFieldListWidget.this.setFocused(TextFieldListWidget.this.children().get(index - 1));
-              }
             }
           }
         }
@@ -271,6 +250,12 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     @Override
     public void appendNarrations(NarrationMessageBuilder builder) {
       textFieldWidget.appendNarrations(builder);
+    }
+
+    @Override
+    public void setFocused(boolean focused) {
+      super.setFocused(focused);
+      textFieldWidget.setFocused(focused);
     }
   }
 }
