@@ -24,6 +24,57 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final FullWallSignBlock INVISIBLE_GLOWING_WALL_SIGN = new FullWallSignBlock(null, FabricBlockSettings.copyOf(Blocks.BARRIER).noCollision().luminance(15));
 
   // 木质
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final WallSignBlock OAK_WOOD_WALL_SIGN = new WallSignBlock(Blocks.OAK_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final WallSignBlock SPRUCE_WOOD_WALL_SIGN = new WallSignBlock(Blocks.SPRUCE_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final WallSignBlock BIRCH_WOOD_WALL_SIGN = new WallSignBlock(Blocks.BIRCH_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final WallSignBlock JUNGLE_WOOD_WALL_SIGN = new WallSignBlock(Blocks.JUNGLE_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final WallSignBlock ACACIA_WOOD_WALL_SIGN = new WallSignBlock(Blocks.ACACIA_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final WallSignBlock DARK_OAK_WOOD_WALL_SIGN = new WallSignBlock(Blocks.DARK_OAK_WOOD);
+
+  public static final WallSignBlock CRIMSON_HYPHAE_WALL_SIGN = new WallSignBlock(Blocks.CRIMSON_HYPHAE);
+
+  public static final WallSignBlock WARPED_HYPHAE_WALL_SIGN = new WallSignBlock(Blocks.WARPED_HYPHAE);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final WallSignBlock STRIPPED_OAK_WOOD_WALL_SIGN = new WallSignBlock(Blocks.STRIPPED_OAK_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final WallSignBlock STRIPPED_SPRUCE_WOOD_WALL_SIGN = new WallSignBlock(Blocks.STRIPPED_SPRUCE_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final WallSignBlock STRIPPED_BIRCH_WOOD_WALL_SIGN = new WallSignBlock(Blocks.STRIPPED_BIRCH_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final WallSignBlock STRIPPED_JUNGLE_WOOD_WALL_SIGN = new WallSignBlock(Blocks.STRIPPED_JUNGLE_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final WallSignBlock STRIPPED_ACACIA_WOOD_WALL_SIGN = new WallSignBlock(Blocks.STRIPPED_ACACIA_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final WallSignBlock STRIPPED_DARK_OAK_WOOD_WALL_SIGN = new WallSignBlock(Blocks.STRIPPED_DARK_OAK_WOOD);
+
+  public static final WallSignBlock STRIPPED_CRIMSON_HYPHAE_WALL_SIGN = new WallSignBlock(Blocks.STRIPPED_CRIMSON_HYPHAE);
+
+  public static final WallSignBlock STRIPPED_WARPED_HYPHAE_WALL_SIGN = new WallSignBlock(Blocks.STRIPPED_WARPED_HYPHAE);
+
+  static {
+    OAK_WOOD_WALL_SIGN.texture = new Identifier("block/oak_log");
+    SPRUCE_WOOD_WALL_SIGN.texture = new Identifier("block/spruce_log");
+    BIRCH_WOOD_WALL_SIGN.texture = new Identifier("block/birch_log");
+    JUNGLE_WOOD_WALL_SIGN.texture = new Identifier("block/jungle_log");
+    ACACIA_WOOD_WALL_SIGN.texture = new Identifier("block/acacia_log");
+    DARK_OAK_WOOD_WALL_SIGN.texture = new Identifier("block/dark_oak_log");
+    CRIMSON_HYPHAE_WALL_SIGN.texture = new Identifier("block/crimson_stem");
+    WARPED_HYPHAE_WALL_SIGN.texture = new Identifier("block/warped_stem");
+    STRIPPED_OAK_WOOD_WALL_SIGN.texture = new Identifier("block/stripped_oak_log");
+    STRIPPED_SPRUCE_WOOD_WALL_SIGN.texture = new Identifier("block/stripped_spruce_log");
+    STRIPPED_BIRCH_WOOD_WALL_SIGN.texture = new Identifier("block/stripped_birch_log");
+    STRIPPED_JUNGLE_WOOD_WALL_SIGN.texture = new Identifier("block/stripped_jungle_log");
+    STRIPPED_ACACIA_WOOD_WALL_SIGN.texture = new Identifier("block/stripped_acacia_log");
+    STRIPPED_DARK_OAK_WOOD_WALL_SIGN.texture = new Identifier("block/stripped_dark_oak_log");
+    STRIPPED_CRIMSON_HYPHAE_WALL_SIGN.texture = new Identifier("block/stripped_crimson_stem");
+    STRIPPED_WARPED_HYPHAE_WALL_SIGN.texture = new Identifier("block/stripped_warped_stem");
+  }
 
   public static final WallSignBlock OAK_WALL_SIGN =
       new WallSignBlock(Blocks.OAK_PLANKS);

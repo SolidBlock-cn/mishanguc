@@ -198,48 +198,78 @@ public class ARRPMain implements ModInitializer {
         block -> {
           if (block instanceof StripWallLightBlock) {
             switch (((StripWallLightBlock) block).lightColor) {
-              case "white" -> whiteStripWallLights.add(block);
-              case "yellow" -> yellowStripWallLights.add(block);
-              case "cyan" -> cyanStripWallLights.add(block);
-              case "orange" -> orangeStripWallLights.add(block);
-              case "green" -> greenStripWallLights.add(block);
-              case "pink" -> pinkStripWallLights.add(block);
+              case "white" ->
+                  whiteStripWallLights.add(block);
+              case "yellow" ->
+                  yellowStripWallLights.add(block);
+              case "cyan" ->
+                  cyanStripWallLights.add(block);
+              case "orange" ->
+                  orangeStripWallLights.add(block);
+              case "green" ->
+                  greenStripWallLights.add(block);
+              case "pink" ->
+                  pinkStripWallLights.add(block);
             }
           } else if (block instanceof AutoConnectWallLightBlock) {
             switch (((AutoConnectWallLightBlock) block).lightColor) {
-              case "white" -> whiteLightDecorations.add(block);
-              case "yellow" -> yellowLightDecorations.add(block);
-              case "cyan" -> cyanLightDecorations.add(block);
-              case "orange" -> orangeLightDecorations.add(block);
-              case "green" -> greenLightDecorations.add(block);
-              case "pink" -> pinkLightDecorations.add(block);
+              case "white" ->
+                  whiteLightDecorations.add(block);
+              case "yellow" ->
+                  yellowLightDecorations.add(block);
+              case "cyan" ->
+                  cyanLightDecorations.add(block);
+              case "orange" ->
+                  orangeLightDecorations.add(block);
+              case "green" ->
+                  greenLightDecorations.add(block);
+              case "pink" ->
+                  pinkLightDecorations.add(block);
             }
           } else if (block instanceof ColumnLightBlock || block instanceof ColumnWallLightBlock) {
             switch (block instanceof ColumnLightBlock ? ((ColumnLightBlock) block).lightColor : ((ColumnWallLightBlock) block).lightColor) {
-              case "white" -> whiteColumnLights.add(block);
-              case "yellow" -> yellowColumnLights.add(block);
-              case "cyan" -> cyanColumnLights.add(block);
-              case "orange" -> orangeColumnLights.add(block);
-              case "green" -> greenColumnLights.add(block);
-              case "pink" -> pinkColumnLights.add(block);
+              case "white" ->
+                  whiteColumnLights.add(block);
+              case "yellow" ->
+                  yellowColumnLights.add(block);
+              case "cyan" ->
+                  cyanColumnLights.add(block);
+              case "orange" ->
+                  orangeColumnLights.add(block);
+              case "green" ->
+                  greenColumnLights.add(block);
+              case "pink" ->
+                  pinkColumnLights.add(block);
             }
           } else if (block instanceof WallLightBlock) {
             switch (((WallLightBlock) block).lightColor) {
-              case "white" -> whiteWallLights.add(block);
-              case "yellow" -> yellowWallLights.add(block);
-              case "cyan" -> cyanWallLights.add(block);
-              case "orange" -> orangeWallLights.add(block);
-              case "green" -> greenWallLights.add(block);
-              case "pink" -> pinkWallLights.add(block);
+              case "white" ->
+                  whiteWallLights.add(block);
+              case "yellow" ->
+                  yellowWallLights.add(block);
+              case "cyan" ->
+                  cyanWallLights.add(block);
+              case "orange" ->
+                  orangeWallLights.add(block);
+              case "green" ->
+                  greenWallLights.add(block);
+              case "pink" ->
+                  pinkWallLights.add(block);
             }
           } else if (block instanceof CornerLightBlock) {
             switch (((CornerLightBlock) block).lightColor) {
-              case "white" -> whiteCornerLights.add(block);
-              case "yellow" -> yellowCornerLights.add(block);
-              case "cyan" -> cyanCornerLights.add(block);
-              case "orange" -> orangeCornerLights.add(block);
-              case "green" -> greenCornerLights.add(block);
-              case "pink" -> pinkCornerLights.add(block);
+              case "white" ->
+                  whiteCornerLights.add(block);
+              case "yellow" ->
+                  yellowCornerLights.add(block);
+              case "cyan" ->
+                  cyanCornerLights.add(block);
+              case "orange" ->
+                  orangeCornerLights.add(block);
+              case "green" ->
+                  greenCornerLights.add(block);
+              case "pink" ->
+                  pinkCornerLights.add(block);
             }
           }
           if (block instanceof SlabBlock) {
@@ -315,20 +345,20 @@ public class ARRPMain implements ModInitializer {
     });
 
     MishangUtils.instanceStream(StandingSignBlocks.class, Block.class).forEach(block -> {
-      if (block instanceof GlowingStandingSignBlock) {
-        if (MishangUtils.isConcrete(((GlowingStandingSignBlock) block).baseBlock)) {
+      if (block instanceof GlowingStandingSignBlock glowingStandingSignBlock) {
+        if (MishangUtils.isConcrete(glowingStandingSignBlock.baseBlock)) {
           glowingConcreteStandingSigns.add(block);
-        } else if (MishangUtils.isTerracotta(((GlowingStandingSignBlock) block).baseBlock)) {
+        } else if (MishangUtils.isTerracotta(glowingStandingSignBlock.baseBlock)) {
           glowingTerracottaStandingSigns.add(block);
         } else {
           glowingStandingSigns.add(block);
         }
-      } else if (block instanceof StandingSignBlock) {
-        if (MishangUtils.isConcrete(((StandingSignBlock) block).baseBlock)) {
+      } else if (block instanceof StandingSignBlock standingSignBlock) {
+        if (MishangUtils.isConcrete(standingSignBlock.baseBlock)) {
           concreteStandingSigns.add(block);
-        } else if (MishangUtils.isTerracotta(((StandingSignBlock) block).baseBlock)) {
+        } else if (MishangUtils.isTerracotta(standingSignBlock.baseBlock)) {
           terracottaStandingSigns.add(block);
-        } else if (MishangUtils.isPlanks(((StandingSignBlock) block).baseBlock)) {
+        } else if (MishangUtils.isPlanks(standingSignBlock.baseBlock) || MishangUtils.isWood(standingSignBlock.baseBlock)) {
           woodenStandingSigns.add(block);
         } else {
           standingSigns.add(block);
@@ -339,25 +369,25 @@ public class ARRPMain implements ModInitializer {
     // 栏杆部分
     MishangUtils.instanceStream(HandrailBlocks.class, Block.class).forEach(block -> {
       if (block instanceof SimpleHandrailBlock simpleHandrailBlock) {
-        if (MishangUtils.isStained_glass(((SimpleHandrailBlock) block).baseBlock)) {
+        if (MishangUtils.isStained_glass(simpleHandrailBlock.baseBlock)) {
           simpleStainedGlassNormalHandrails.add(simpleHandrailBlock);
           simpleStainedGlassCentralHandrails.add(simpleHandrailBlock.central);
           simpleStainedGlassCornerHandrails.add(simpleHandrailBlock.corner);
           simpleStainedGlassOuterHandrails.add(simpleHandrailBlock.outer);
           simpleStainedGlassStairHandrails.add(simpleHandrailBlock.stair);
-        } else if (MishangUtils.isConcrete(((SimpleHandrailBlock) block).baseBlock)) {
+        } else if (MishangUtils.isConcrete(simpleHandrailBlock.baseBlock)) {
           simpleConcreteNormalHandrails.add(simpleHandrailBlock);
           simpleConcreteCentralHandrails.add(simpleHandrailBlock.central);
           simpleConcreteCornerHandrails.add(simpleHandrailBlock.corner);
           simpleConcreteOuterHandrails.add(simpleHandrailBlock.outer);
           simpleConcreteStairHandrails.add(simpleHandrailBlock.stair);
-        } else if (MishangUtils.isTerracotta(((SimpleHandrailBlock) block).baseBlock)) {
+        } else if (MishangUtils.isTerracotta(simpleHandrailBlock.baseBlock)) {
           simpleTerracottaNormalHandrails.add(simpleHandrailBlock);
           simpleTerracottaCentralHandrails.add(simpleHandrailBlock.central);
           simpleTerracottaCornerHandrails.add(simpleHandrailBlock.corner);
           simpleTerracottaOuterHandrails.add(simpleHandrailBlock.outer);
           simpleTerracottaStairHandrails.add(simpleHandrailBlock.stair);
-        } else if (MishangUtils.isWood(((SimpleHandrailBlock) block).baseBlock)) {
+        } else if (MishangUtils.isWood(simpleHandrailBlock.baseBlock) || MishangUtils.isPlanks(simpleHandrailBlock.baseBlock)) {
           simpleWoodenNormalHandrails.add(simpleHandrailBlock);
           simpleWoodenCentralHandrails.add(simpleHandrailBlock.central);
           simpleWoodenCornerHandrails.add(simpleHandrailBlock.corner);
@@ -379,7 +409,7 @@ public class ARRPMain implements ModInitializer {
         glassStairHandrails.add(glassHandrailBlock.stair());
         final Block[] blocks = glassHandrailBlock.selfAndVariants();
         final Block baseBlock = glassHandrailBlock.baseBlock();
-        if (MishangUtils.isWood(baseBlock)) {
+        if (MishangUtils.isWood(baseBlock) || MishangUtils.isPlanks(baseBlock)) {
           axeMineable.add(blocks);
         } else {
           pickaxeMineable.add(blocks);
@@ -618,8 +648,10 @@ public class ARRPMain implements ModInitializer {
     if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) {
       Validate.isTrue(!includesClient, "The parameter 'includesClient' cannot be true when in dedicated server!", ArrayUtils.EMPTY_OBJECT_ARRAY);
     }
-    if (includesClient) PACK.clearResources(ResourceType.CLIENT_RESOURCES);
-    if (includesServer) PACK.clearResources(ResourceType.SERVER_DATA);
+    if (includesClient)
+      PACK.clearResources(ResourceType.CLIENT_RESOURCES);
+    if (includesServer)
+      PACK.clearResources(ResourceType.SERVER_DATA);
 
     for (Block block : MishangUtils.blocks()) {
       if (block instanceof final BlockResourceGenerator generator) {
