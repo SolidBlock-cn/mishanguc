@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.mixin.object.builder.AbstractBlockAccessor;
 import net.fabricmc.fabric.mixin.object.builder.AbstractBlockSettingsAccessor;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.MapColor;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
@@ -136,9 +137,21 @@ public final class HandrailBlocks extends MishangucBlocks {
   public static final SimpleHandrailBlock SIMPLE_MANGROVE_HANDRAIL = new SimpleHandrailBlock(Blocks.MANGROVE_WOOD);
   public static final SimpleHandrailBlock SIMPLE_CRIMSON_HANDRAIL = new SimpleHandrailBlock(Blocks.CRIMSON_STEM);
   public static final SimpleHandrailBlock SIMPLE_WARPED_HANDRAIL = new SimpleHandrailBlock(Blocks.WARPED_STEM);
+  public static final SimpleHandrailBlock SIMPLE_OAK_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.OAK_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_SPRUCE_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.SPRUCE_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_BIRCH_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.BIRCH_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_JUNGLE_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.JUNGLE_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_ACACIA_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.ACACIA_PLANKS);
+  @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
+  public static final SimpleHandrailBlock SIMPLE_CHERRY_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.CHERRY_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_DARK_OAK_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.DARK_OAK_PLANKS);
+  @ApiStatus.AvailableSince("0.2.0-mc1.19")
+  public static final SimpleHandrailBlock SIMPLE_MANGROVE_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.MANGROVE_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_CRIMSON_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.CRIMSON_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_WARPED_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.WARPED_PLANKS);
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
-  public static final SimpleHandrailBlock SIMPLE_BAMBOO_HANDRAIL = new SimpleHandrailBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))));
+  public static final SimpleHandrailBlock SIMPLE_BAMBOO_HANDRAIL = new SimpleHandrailBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(MapColor.DARK_GREEN));
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   public static final SimpleHandrailBlock SIMPLE_BAMBOO_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.BAMBOO_PLANKS, FabricBlockSettings.copyOf(Blocks.BAMBOO_PLANKS));
@@ -222,6 +235,16 @@ public final class HandrailBlocks extends MishangucBlocks {
     SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.RED, SIMPLE_RED_STAINED_GLASS_HANDRAIL);
     SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.BLACK, SIMPLE_BLACK_STAINED_GLASS_HANDRAIL);
   }
+
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STONE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STONE, FabricBlockSettings.copyOf(Blocks.STONE).strength(2.5f, 6f), "block/stone", "block/white_concrete");
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_COBBLESTONE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.COBBLESTONE, FabricBlockSettings.copyOf(Blocks.COBBLESTONE).strength(2.5f, 6f), "block/cobblestone", "block/white_concrete");
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_MOSSY_COBBLESTONE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.MOSSY_COBBLESTONE, FabricBlockSettings.copyOf(Blocks.COBBLESTONE).strength(2.5f, 6f), "block/mossy_cobblestone", "block/white_concrete");
 
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
@@ -318,6 +341,15 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_NETHERITE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.NETHERITE_BLOCK, FabricBlockSettings.copyOf(Blocks.NETHERITE_BLOCK).strength(25f, 1200f), "block/netherite_block", "block/white_concrete");
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_LAPIS_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.LAPIS_BLOCK, FabricBlockSettings.copyOf(Blocks.LAPIS_BLOCK).strength(2.5f, 6f), "block/lapis_block", "block/white_concrete");
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  public static final GlassHandrailBlock SNOW_DECORATED_PACKED_ICE_HANDRAIL = new GlassHandrailBlock(Blocks.PACKED_ICE, FabricBlockSettings.copyOf(Blocks.PACKED_ICE).strength(2.5f, 6f), "block/packed_ice", "block/snow");
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  public static final GlassHandrailBlock SNOW_DECORATED_BLUE_ICE_HANDRAIL = new GlassHandrailBlock(Blocks.BLUE_ICE, FabricBlockSettings.copyOf(Blocks.BLUE_ICE).strength(2.5f, 6f), "block/blue_ice", "block/snow");
 
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
@@ -367,13 +399,44 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_MANGROVE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.MANGROVE_WOOD, FabricBlockSettings.copyOf(Blocks.MANGROVE_WOOD).strength(1.0f), "block/mangrove_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  public static final GlassHandrailBlock GLASS_CRIMSON_HANDRAIL = new GlassHandrailBlock(Blocks.CRIMSON_STEM, FabricBlockSettings.copyOf(Blocks.CRIMSON_STEM).strength(1.0f), "block/crimson_stem", "block/crimson_planks");
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_CRIMSON_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.CRIMSON_STEM, FabricBlockSettings.copyOf(Blocks.CRIMSON_STEM).strength(1.0f), "block/crimson_stem", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  public static final GlassHandrailBlock GLASS_WARPED_HANDRAIL = new GlassHandrailBlock(Blocks.WARPED_STEM, FabricBlockSettings.copyOf(Blocks.WARPED_STEM).strength(1.0f), "block/warped_stem", "block/warped_planks");
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_WARPED_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.WARPED_STEM, FabricBlockSettings.copyOf(Blocks.WARPED_STEM).strength(1.0f), "block/warped_stem", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @Translucent
   public static final GlassHandrailBlock GLASS_BAMBOO_HANDRAIL = new GlassHandrailBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).strength(1.0f), "block/bamboo_block", "block/bamboo_mosaic");
 
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  public static final GlassHandrailBlock NETHERRACK_DECORATED_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.OBSIDIAN, FabricBlockSettings.copyOf(Blocks.OBSIDIAN).strength(10, 1200), "block/obsidian", "block/netherrack");
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  public static final GlassHandrailBlock SOUL_SOIL_DECORATED_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.OBSIDIAN, FabricBlockSettings.copyOf(Blocks.OBSIDIAN).strength(10, 1200), "block/obsidian", "block/soul_soil");
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  public static final GlassHandrailBlock MAGMA_DECORATED_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.OBSIDIAN, FabricBlockSettings.copyOf(Blocks.OBSIDIAN).strength(10, 1200).luminance(3), "block/obsidian", "block/magma");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_OBSIDIAN_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.OBSIDIAN, FabricBlockSettings.copyOf(Blocks.OBSIDIAN).strength(10, 1200), "block/obsidian", "block/white_concrete");
+
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  public static final GlassHandrailBlock NETHERRACK_DECORATED_CRYING_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.CRYING_OBSIDIAN, FabricBlockSettings.copyOf(Blocks.CRYING_OBSIDIAN).strength(10, 1200), "block/crying_obsidian", "block/netherrack");
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  public static final GlassHandrailBlock SOUL_SOIL_DECORATED_CRYING_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.CRYING_OBSIDIAN, FabricBlockSettings.copyOf(Blocks.CRYING_OBSIDIAN).strength(10, 1200), "block/crying_obsidian", "block/soul_soil");
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  public static final GlassHandrailBlock MAGMA_DECORATED_CRYING_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.CRYING_OBSIDIAN, FabricBlockSettings.copyOf(Blocks.CRYING_OBSIDIAN).strength(10, 1200).luminance(3), "block/crying_obsidian", "block/magma");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_CRYING_OBSIDIAN_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.CRYING_OBSIDIAN, FabricBlockSettings.copyOf(Blocks.CRYING_OBSIDIAN).strength(10, 1200), "block/crying_obsidian", "block/white_concrete");

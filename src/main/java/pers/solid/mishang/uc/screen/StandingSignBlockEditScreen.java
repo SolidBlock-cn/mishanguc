@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.screen;
 
 import com.google.common.collect.Lists;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.ApiStatus;
@@ -62,14 +63,15 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
       return;
     }
     final List<@NotNull TextContext> otherSide = entity.getTextsOnSide(!entity.editedSide);
-    if (otherSide == null) return;
+    if (otherSide == null)
+      return;
     otherSide.forEach(
         textContext -> {
           final TextContext flip = textContext.clone().flip();
           // 留意添加到的位置是列表末尾。
           addTextField(textContextsEditing.size(), flip, false);
         });
-  }).dimensions(this.width / 2 - 100, 90, 200, 20).build();
+  }).dimensions(this.width / 2 - 100, 90, 200, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.copy_from_back.description"))).build();
 
   @Override
   public void removeTextField(int index) {

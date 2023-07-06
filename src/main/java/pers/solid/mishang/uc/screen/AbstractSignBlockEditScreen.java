@@ -757,6 +757,11 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       addDrawableChild(customValueConfirmButton);
       addDrawableChild(customValueCancelButton);
     }
+    if (isAcceptingCustomValue || isSelectingButtonToSetCustom) {
+      setFocused(null);
+    } else {
+      setFocused(textFieldListWidget);
+    }
   }
 
   protected void initTextHolders() {
@@ -932,9 +937,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     textContextsEditing.remove(removedTextContext);
     contextToWidgetBiMap.remove(removedTextContext);
     placeHolder.visible = textFieldListWidget.children().size() == 0;
-    if (!placeHolder.visible && getFocused() == textFieldListWidget) {
-      setFocused(null);
-    }
     applyDoubleLineTemplateButton.visible = placeHolder.visible;
     applyLeftArrowTemplateButton.visible = placeHolder.visible;
     applyRightArrowTemplateButton.visible = placeHolder.visible;
@@ -1097,6 +1099,15 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   }
 
   @Override
+  protected void clearAndInit() {
+    final int previouslyFocusedTextIndex = textFieldListWidget.children().indexOf(textFieldListWidget.getFocused());
+    super.clearAndInit();
+    if (previouslyFocusedTextIndex >= 0 && textFieldListWidget.children().size() > previouslyFocusedTextIndex) {
+      textFieldListWidget.setFocused(textFieldListWidget.children().get(previouslyFocusedTextIndex));
+    }
+  }
+
+  @Override
   public boolean charTyped(char chr, int modifiers) {
     if (getFocused() instanceof TextFieldWidget || getFocused() instanceof TextFieldListWidget) {
       return getFocused().charTyped(chr, modifiers);
@@ -1197,7 +1208,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    */
   @Override
   public void setFocused(@Nullable Element focused) {
-    textFieldListWidget.setFocused(focused == textFieldListWidget);
     super.setFocused(focused);
   }
 }
