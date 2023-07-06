@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.mixin.object.builder.AbstractBlockAccessor;
 import net.fabricmc.fabric.mixin.object.builder.AbstractBlockSettingsAccessor;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.MapColor;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
@@ -29,15 +30,53 @@ public final class StandingSignBlocks extends MishangucBlocks {
   private StandingSignBlocks() {
   }
 
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock OAK_WOOD_STANDING_SIGN = new StandingSignBlock(Blocks.OAK_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock SPRUCE_WOOD_STANDING_SIGN = new StandingSignBlock(Blocks.SPRUCE_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock BIRCH_WOOD_STANDING_SIGN = new StandingSignBlock(Blocks.BIRCH_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock JUNGLE_WOOD_STANDING_SIGN = new StandingSignBlock(Blocks.JUNGLE_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock ACACIA_WOOD_STANDING_SIGN = new StandingSignBlock(Blocks.ACACIA_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock DARK_OAK_WOOD_STANDING_SIGN = new StandingSignBlock(Blocks.DARK_OAK_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock MANGROVE_WOOD_STANDING_SIGN = new StandingSignBlock(Blocks.MANGROVE_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock CRIMSON_HYPHAE_STANDING_SIGN = new StandingSignBlock(Blocks.CRIMSON_HYPHAE);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock WARPED_HYPHAE_STANDING_SIGN = new StandingSignBlock(Blocks.WARPED_HYPHAE);
+
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock STRIPPED_OAK_WOOD_STANDING_SIGN = new StandingSignBlock(Blocks.STRIPPED_OAK_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock STRIPPED_SPRUCE_WOOD_STANDING_SIGN = new StandingSignBlock(Blocks.STRIPPED_SPRUCE_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock STRIPPED_BIRCH_WOOD_STANDING_SIGN = new StandingSignBlock(Blocks.STRIPPED_BIRCH_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock STRIPPED_JUNGLE_WOOD_STANDING_SIGN = new StandingSignBlock(Blocks.STRIPPED_JUNGLE_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock STRIPPED_ACACIA_WOOD_STANDING_SIGN = new StandingSignBlock(Blocks.STRIPPED_ACACIA_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock STRIPPED_DARK_OAK_WOOD_STANDING_SIGN = new StandingSignBlock(Blocks.STRIPPED_DARK_OAK_WOOD);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock STRIPPED_MANGROVE_WOOD_STANDING_SIGN = new StandingSignBlock(Blocks.STRIPPED_MANGROVE_WOOD, FabricBlockSettings.copyOf(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED));
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock STRIPPED_CRIMSON_HYPHAE_STANDING_SIGN = new StandingSignBlock(Blocks.STRIPPED_CRIMSON_HYPHAE);
+  @ApiStatus.AvailableSince("1.2.4")
+  public static final StandingSignBlock STRIPPED_WARPED_HYPHAE_STANDING_SIGN = new StandingSignBlock(Blocks.STRIPPED_WARPED_HYPHAE);
+
   public static final StandingSignBlock OAK_STANDING_SIGN = new StandingSignBlock(Blocks.OAK_PLANKS);
   public static final StandingSignBlock SPRUCE_STANDING_SIGN = new StandingSignBlock(Blocks.SPRUCE_PLANKS);
   public static final StandingSignBlock BIRCH_STANDING_SIGN = new StandingSignBlock(Blocks.BIRCH_PLANKS);
-  public static final StandingSignBlock ACACIA_STANDING_SIGN = new StandingSignBlock(Blocks.ACACIA_PLANKS);
   public static final StandingSignBlock JUNGLE_STANDING_SIGN = new StandingSignBlock(Blocks.JUNGLE_PLANKS);
+  public static final StandingSignBlock ACACIA_STANDING_SIGN = new StandingSignBlock(Blocks.ACACIA_PLANKS);
   public static final StandingSignBlock DARK_OAK_STANDING_SIGN = new StandingSignBlock(Blocks.DARK_OAK_PLANKS);
+  public static final StandingSignBlock MANGROVE_STANDING_SIGN = new StandingSignBlock(Blocks.MANGROVE_PLANKS);
   public static final StandingSignBlock CRIMSON_STANDING_SIGN = new StandingSignBlock(Blocks.CRIMSON_PLANKS);
   public static final StandingSignBlock WARPED_STANDING_SIGN = new StandingSignBlock(Blocks.WARPED_PLANKS);
-  public static final StandingSignBlock MANGROVE_STANDING_SIGN = new StandingSignBlock(Blocks.MANGROVE_PLANKS);
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   public static final StandingSignBlock BAMBOO_STANDING_SIGN = new StandingSignBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).requires(FeatureFlags.UPDATE_1_20));
@@ -47,15 +86,24 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final StandingSignBlock BAMBOO_MOSAIC_STANDING_SIGN = new StandingSignBlock(Blocks.BAMBOO_MOSAIC, FabricBlockSettings.copyOf(Blocks.BAMBOO_MOSAIC).requires(FeatureFlags.UPDATE_1_20));
 
   static {
-    OAK_STANDING_SIGN.barTexture = new Identifier("block/oak_log");
-    SPRUCE_STANDING_SIGN.barTexture = new Identifier("block/spruce_log");
-    BIRCH_STANDING_SIGN.barTexture = new Identifier("block/birch_log");
-    ACACIA_STANDING_SIGN.barTexture = new Identifier("block/acacia_log");
-    JUNGLE_STANDING_SIGN.barTexture = new Identifier("block/jungle_log");
-    DARK_OAK_STANDING_SIGN.barTexture = new Identifier("block/dark_oak_log");
-    CRIMSON_STANDING_SIGN.barTexture = new Identifier("block/crimson_stem");
-    WARPED_STANDING_SIGN.barTexture = new Identifier("block/warped_stem");
-    MANGROVE_STANDING_SIGN.barTexture = new Identifier("block/mangrove_log");
+    OAK_WOOD_STANDING_SIGN.baseTexture = OAK_STANDING_SIGN.barTexture = new Identifier("block/oak_log");
+    SPRUCE_WOOD_STANDING_SIGN.baseTexture = SPRUCE_STANDING_SIGN.barTexture = new Identifier("block/spruce_log");
+    BIRCH_WOOD_STANDING_SIGN.baseTexture = BIRCH_STANDING_SIGN.barTexture = new Identifier("block/birch_log");
+    JUNGLE_WOOD_STANDING_SIGN.baseTexture = JUNGLE_STANDING_SIGN.barTexture = new Identifier("block/jungle_log");
+    ACACIA_WOOD_STANDING_SIGN.baseTexture = ACACIA_STANDING_SIGN.barTexture = new Identifier("block/acacia_log");
+    DARK_OAK_WOOD_STANDING_SIGN.baseTexture = DARK_OAK_STANDING_SIGN.barTexture = new Identifier("block/dark_oak_log");
+    MANGROVE_WOOD_STANDING_SIGN.baseTexture = MANGROVE_STANDING_SIGN.barTexture = new Identifier("block/mangrove_log");
+    CRIMSON_HYPHAE_STANDING_SIGN.baseTexture = CRIMSON_STANDING_SIGN.barTexture = new Identifier("block/crimson_stem");
+    WARPED_HYPHAE_STANDING_SIGN.baseTexture = WARPED_STANDING_SIGN.barTexture = new Identifier("block/warped_stem");
+    STRIPPED_OAK_WOOD_STANDING_SIGN.baseTexture = new Identifier("block/stripped_oak_log");
+    STRIPPED_SPRUCE_WOOD_STANDING_SIGN.baseTexture = new Identifier("block/stripped_spruce_log");
+    STRIPPED_BIRCH_WOOD_STANDING_SIGN.baseTexture = new Identifier("block/stripped_birch_log");
+    STRIPPED_JUNGLE_WOOD_STANDING_SIGN.baseTexture = new Identifier("block/stripped_jungle_log");
+    STRIPPED_ACACIA_WOOD_STANDING_SIGN.baseTexture = new Identifier("block/stripped_acacia_log");
+    STRIPPED_DARK_OAK_WOOD_STANDING_SIGN.baseTexture = new Identifier("block/stripped_dark_oak_log");
+    STRIPPED_MANGROVE_WOOD_STANDING_SIGN.baseTexture = new Identifier("block/stripped_mangrove_log");
+    STRIPPED_CRIMSON_HYPHAE_STANDING_SIGN.baseTexture = new Identifier("block/stripped_crimson_stem");
+    STRIPPED_WARPED_HYPHAE_STANDING_SIGN.baseTexture = new Identifier("block/stripped_warped_stem");
     BAMBOO_PLANK_STANDING_SIGN.barTexture = BAMBOO_MOSAIC_STANDING_SIGN.barTexture = new Identifier("block/bamboo_block");
   }
 

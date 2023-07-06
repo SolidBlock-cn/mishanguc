@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -83,7 +84,8 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
             }
             final List<@NotNull TextContext> otherSide =
                 entity.texts.get(entity.editedSide.getOpposite());
-            if (otherSide == null) return;
+            if (otherSide == null)
+              return;
             otherSide.forEach(
                 textContext -> {
                   final TextContext flip = textContext.clone().flip();
@@ -93,7 +95,7 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
           }).dimensions(this.width / 2 - 100,
           90,
           200,
-          20).build();
+          20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.copy_from_back.description"))).build();
 
   @Override
   public void removeTextField(int index) {

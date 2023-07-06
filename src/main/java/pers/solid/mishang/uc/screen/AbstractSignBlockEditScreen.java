@@ -29,6 +29,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -757,6 +758,11 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       addDrawableChild(customValueConfirmButton);
       addDrawableChild(customValueCancelButton);
     }
+    if (isAcceptingCustomValue || isSelectingButtonToSetCustom) {
+      setFocused(null);
+    } else {
+      setFocused(textFieldListWidget);
+    }
   }
 
   protected void initTextHolders() {
@@ -917,24 +923,19 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * @see #addTextField(int, TextContext, boolean)
    */
   public void removeTextField(int index) {
-    final TextFieldWidget removedWidget =
-        textFieldListWidget.children().remove(index).textFieldWidget;
+    final List<TextFieldListWidget.Entry> children = textFieldListWidget.children();
+    final TextFieldWidget removedWidget = children.remove(index).textFieldWidget;
     final TextContext removedTextContext = contextToWidgetBiMap.inverse().get(removedWidget);
     if (textFieldListWidget.getSelectedOrNull() != null
         && removedWidget == textFieldListWidget.getSelectedOrNull().textFieldWidget) {
       textFieldListWidget.setFocused(null);
     }
-    if (textFieldListWidget.children().size() > index) {
-      textFieldListWidget.setSelected(textFieldListWidget.children().get(index));
-    } else if (textFieldListWidget.children().size() > index - 1 && index - 1 >= 0) {
-      textFieldListWidget.setSelected(textFieldListWidget.children().get(index - 1));
+    if (children.size() > 0) {
+      textFieldListWidget.setSelected(children.get(MathHelper.clamp(index - 1, 0, children.size() - 1)));
     }
     textContextsEditing.remove(removedTextContext);
     contextToWidgetBiMap.remove(removedTextContext);
-    placeHolder.visible = textFieldListWidget.children().size() == 0;
-    if (placeHolder.visible && getFocused() == textFieldListWidget) {
-      setFocused(null);
-    }
+    placeHolder.visible = children.size() == 0;
     applyDoubleLineTemplateButton.visible = placeHolder.visible;
     applyLeftArrowTemplateButton.visible = placeHolder.visible;
     applyRightArrowTemplateButton.visible = placeHolder.visible;
@@ -1094,6 +1095,24 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
             .writeBlockPos(blockPos)
             .writeNbt(
                 changed ? Util.make(new NbtCompound(), nbt -> nbt.put("texts", list)) : null));
+  }
+
+  @Override
+  protected void clearAndInit() {
+    final int previouslyFocusedTextIndex = textFieldListWidget != null ? textFieldListWidget.children().indexOf(textFieldListWidget.getSelectedOrNull()) : -1;
+    super.clearAndInit();
+    if (previouslyFocusedTextIndex >= 0 && textFieldListWidget.children().size() > previouslyFocusedTextIndex) {
+      textFieldListWidget.setSelected(textFieldListWidget.children().get(previouslyFocusedTextIndex));
+    }
+  }
+
+  @Override
+  public boolean charTyped(char chr, int modifiers) {
+    if (getFocused() instanceof TextFieldWidget || getFocused() instanceof TextFieldListWidget) {
+      return getFocused().charTyped(chr, modifiers);
+    } else {
+      return textFieldListWidget.charTyped(chr, modifiers);
+    }
   }
 
   @Override
