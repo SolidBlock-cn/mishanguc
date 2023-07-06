@@ -2,6 +2,20 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.2.4
+
+- Fixed the issue that after deleting a row of text using Backspace in the sign edit screen, the no remaining text is selected.
+- Fixed the issue of impossibility in the sign edit screen to set custom values for properties of texts except the last line.
+- Modified the display name of glass handrail blocks.
+- Added three types of signs of various wood and stripped wood, and sign bars of stripped wood.
+- Fixed the issue that standing signs of nether woods are flammable.
+- Adjusted the sequence of some standing signs in the inventory to conform to the sequence of difference wood types in vanilla.
+- Added simple plank handrails.
+- Added nether wood framed glass handrails (including those with plank texture decoration and those with customizable colored decoration).
+- Added the obsidian framed and crying obsidian framed handrails with decorations in different textures.
+- Added glass handrails with frame of stone, cobblestone, mossy cobblestone, lapis, packed ice and blue ice.
+- In the sign edit screen, when there is no texts added, press Enter to add texts.
+
 ### 1.2.3
 
 - Fixed the issue that handrail blocks on upside-down stairs are also displayed in the form of stairs.

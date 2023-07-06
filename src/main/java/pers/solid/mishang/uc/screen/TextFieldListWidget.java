@@ -113,28 +113,26 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   }
 
   @Override
-  public int getRowWidth() {
-    return width;
+  public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    if (!children().isEmpty()) {
+      if (keyCode == GLFW.GLFW_KEY_UP) {
+        setSelected(children().get(MathHelper.floorMod(children().indexOf(getFocused()) - 1, children().size())));
+        return true;
+      } else if (keyCode == GLFW.GLFW_KEY_DOWN) {
+        setSelected(children().get(MathHelper.floorMod(children().indexOf(getFocused()) + 1, children().size())));
+        return true;
+      }
+    } else if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
+      // 此时，children().isEmpty() 为 true
+      signBlockEditScreen.addTextField(0);
+      return true;
+    }
+    return super.keyPressed(keyCode, scanCode, modifiers);
   }
 
   @Override
-  public boolean mouseClicked(double mouseX, double mouseY, int button) {
-    this.updateScrollingState(mouseX, mouseY, button);
-    if (!this.isMouseOver(mouseX, mouseY)) {
-      return false;
-    }
-    TextFieldListWidget.Entry entry = this.getEntryAtPosition(mouseX, mouseY);
-    if (entry != null) {
-      if (entry.mouseClicked(mouseX, mouseY, button)) {
-        this.setSelected(entry);
-        this.setDragging(true);
-        return true;
-      }
-    } else if (button == 0) {
-      this.clickedHeader((int) (mouseX - (double) (this.left + this.width / 2 - this.getRowWidth() / 2)), (int) (mouseY - (double) this.top) + (int) this.getScrollAmount() - 4);
-      return true;
-    }
-    return super.mouseClicked(-1, -1, button);
+  public int getRowWidth() {
+    return width;
   }
 
   @Override
@@ -199,6 +197,9 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+      if (button == 0) {
+        setSelected(this);
+      }
       return super.mouseClicked(mouseX, mouseY, button)
           || textFieldWidget.mouseClicked(mouseX, mouseY, button);
     }
@@ -229,9 +230,6 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
             final int index = TextFieldListWidget.this.children().indexOf(focused);
             if (index >= 0) {
               signBlockEditScreen.removeTextField(index);
-              if (index - 1 >= 0 && index - 1 < TextFieldListWidget.this.children().size()) {
-                TextFieldListWidget.this.setSelected(TextFieldListWidget.this.children().get(index - 1));
-              }
             }
           }
         }
