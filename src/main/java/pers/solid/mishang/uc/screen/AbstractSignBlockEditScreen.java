@@ -29,6 +29,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -921,21 +922,19 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * @see #addTextField(int, TextContext, boolean)
    */
   public void removeTextField(int index) {
-    final TextFieldWidget removedWidget =
-        textFieldListWidget.children().remove(index).textFieldWidget;
+    final List<TextFieldListWidget.Entry> children = textFieldListWidget.children();
+    final TextFieldWidget removedWidget = children.remove(index).textFieldWidget;
     final TextContext removedTextContext = contextToWidgetBiMap.inverse().get(removedWidget);
     if (textFieldListWidget.getSelectedOrNull() != null
         && removedWidget == textFieldListWidget.getSelectedOrNull().textFieldWidget) {
       textFieldListWidget.setFocused(null);
     }
-    if (textFieldListWidget.children().size() > index) {
-      textFieldListWidget.setFocused(textFieldListWidget.children().get(index));
-    } else if (textFieldListWidget.children().size() > index - 1 && index - 1 >= 0) {
-      textFieldListWidget.setFocused(textFieldListWidget.children().get(index - 1));
+    if (children.size() > 0) {
+      textFieldListWidget.setFocused(children.get(MathHelper.clamp(index - 1, 0, children.size() - 1)));
     }
     textContextsEditing.remove(removedTextContext);
     contextToWidgetBiMap.remove(removedTextContext);
-    placeHolder.visible = textFieldListWidget.children().size() == 0;
+    placeHolder.visible = children.size() == 0;
     applyDoubleLineTemplateButton.visible = placeHolder.visible;
     applyLeftArrowTemplateButton.visible = placeHolder.visible;
     applyRightArrowTemplateButton.visible = placeHolder.visible;

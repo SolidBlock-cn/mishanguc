@@ -14,6 +14,7 @@ Note: Not all versions in this update log are already published. Please refer to
 - Added nether wood framed glass handrails (including those with plank texture decoration and those with customizable colored decoration).
 - Added the obsidian framed and crying obsidian framed handrails with decorations in different textures.
 - Added glass handrails with frame of stone, cobblestone, mossy cobblestone, lapis, packed ice and blue ice.
+- In the sign edit screen, when there is no texts added, press Enter to add texts.
 
 ### 1.2.3
 
