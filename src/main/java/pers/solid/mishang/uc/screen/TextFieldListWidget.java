@@ -98,8 +98,8 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     if (entry != null) {
       signBlockEditScreen.selectedTextField = entry.textFieldWidget;
       signBlockEditScreen.selectedTextContext = signBlockEditScreen.contextToWidgetBiMap.inverse().get(entry.textFieldWidget);
+      ensureVisible(entry);
     } else if (children().isEmpty()) {
-      // 使用键盘导航至其他按钮的时候，不设为 null。
       signBlockEditScreen.selectedTextField = null;
       signBlockEditScreen.selectedTextContext = null;
     }
@@ -146,6 +146,15 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     builder.put(NarrationPart.TITLE, TextBridge.translatable("narration.mishanguc.text_field_list"));
     builder.put(NarrationPart.USAGE, TextBridge.translatable("narration.mishanguc.text_field_list.usage"));
     super.appendNarrations(builder);
+  }
+
+  @Override
+  public void setScrollAmount(double amount) {
+    super.setScrollAmount(amount);
+    int width = getMaxScroll() > 0 ? this.width - 10 : this.width - 4;
+    for (Entry child : children()) {
+      child.textFieldWidget.setWidth(width);
+    }
   }
 
   /**
@@ -252,6 +261,9 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     @Override
     public boolean mouseDragged(
         double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+      if (button == 0 && mouseX >= getScrollbarPositionX() && mouseX < getScrollbarPositionX() + 6) {
+        return false;
+      }
       return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
           || textFieldWidget.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }

@@ -15,6 +15,7 @@ Note: Not all versions in this update log are already published. Please refer to
 - Added the obsidian framed and crying obsidian framed handrails with decorations in different textures.
 - Added glass handrails with frame of stone, cobblestone, mossy cobblestone, lapis, packed ice and blue ice.
 - In the sign edit screen, when there is no texts added, press Enter to add texts.
+- Adjusted the display in the sign edit screen, avoiding scroll bars occupying the place of text fields, and fixing the issue that user cannot scroll by dragging the scrollbar.
 
 ### 1.2.3
 
