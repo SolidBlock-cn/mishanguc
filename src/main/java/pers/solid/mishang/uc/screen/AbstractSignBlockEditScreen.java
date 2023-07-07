@@ -759,7 +759,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
     if (isAcceptingCustomValue || isSelectingButtonToSetCustom) {
       setFocused(null);
-    } else {
+    } else if (!textFieldListWidget.children().isEmpty()) {
       setFocused(textFieldListWidget);
     }
   }
@@ -845,7 +845,10 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     textFieldListWidget.children().add(index, newEntry);
     contextToWidgetBiMap.put(textContext, textFieldWidget);
     textFieldListWidget.setFocused(newEntry);
-    setFocused(textFieldListWidget);
+    textFieldListWidget.setScrollAmount(textFieldListWidget.getScrollAmount());
+    if (!textFieldListWidget.children().isEmpty()) {
+      setFocused(textFieldListWidget);
+    }
     textFieldWidget.setChangedListener(s -> {
       final TextContext textContext1 = contextToWidgetBiMap.inverse().get(textFieldWidget);
       if (textContext1 != null) {
@@ -932,6 +935,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (children.size() > 0) {
       textFieldListWidget.setFocused(children.get(MathHelper.clamp(index - 1, 0, children.size() - 1)));
     }
+    // 删除一行元素后，对滚动数量进行一次 clamp，以避免出现过度滚动的情况。
+    textFieldListWidget.setScrollAmount(textFieldListWidget.getScrollAmount());
     textContextsEditing.remove(removedTextContext);
     contextToWidgetBiMap.remove(removedTextContext);
     placeHolder.visible = children.size() == 0;
@@ -1098,10 +1103,12 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
 
   @Override
   protected void clearAndInit() {
-    final int previouslyFocusedTextIndex = textFieldListWidget.children().indexOf(textFieldListWidget.getFocused());
+    final int previouslyFocusedTextIndex = textFieldListWidget == null ? -1 : textFieldListWidget.children().indexOf(textFieldListWidget.getFocused());
+    final double scrollAmountBeforeClear = textFieldListWidget == null ? -1 : textFieldListWidget.getScrollAmount();
     super.clearAndInit();
-    if (previouslyFocusedTextIndex >= 0 && textFieldListWidget.children().size() > previouslyFocusedTextIndex) {
+    if (textFieldListWidget != null && previouslyFocusedTextIndex >= 0 && textFieldListWidget.children().size() > previouslyFocusedTextIndex) {
       textFieldListWidget.setFocused(textFieldListWidget.children().get(previouslyFocusedTextIndex));
+      textFieldListWidget.setScrollAmount(scrollAmountBeforeClear);
     }
   }
 
@@ -1178,6 +1185,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           return true;
         }
       }
+    } else if (getFocused() == null && (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER)) {
+      addTextField(textFieldListWidget.children().size());
+      return true;
     }
     return super.keyPressed(keyCode, scanCode, modifiers);
   }
@@ -1195,17 +1205,5 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (entity.isRemoved()) {
       finishEditing();
     }
-  }
-
-  /**
-   * 设置整个 AbstractSignBlockEditScreen 的已选中的元素。
-   *
-   * @param focused 已选中的元素。
-   * @see TextFieldListWidget#setFocused(Element)
-   * @see TextFieldListWidget.Entry#setFocused(Element)
-   */
-  @Override
-  public void setFocused(@Nullable Element focused) {
-    super.setFocused(focused);
   }
 }

@@ -66,6 +66,10 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   public void setFocused(@Nullable Element entry) {
     if (entry != null) {
       super.setFocused(entry);
+      if (!this.client.getNavigationType().isKeyboard()) {
+        // 在 isKeyboard() 的情况下， super.setFocused 就已经调用了 ensureVisible，故不再看重复调用。
+        this.ensureVisible(getSelectedOrNull());
+      }
     }
     if (entry instanceof TextFieldListWidget.Entry) {
       signBlockEditScreen.selectedTextField = ((Entry) entry).textFieldWidget;
@@ -118,6 +122,15 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     builder.put(NarrationPart.TITLE, TextBridge.translatable("narration.mishanguc.text_field_list"));
     builder.put(NarrationPart.USAGE, TextBridge.translatable("narration.mishanguc.text_field_list.usage"));
     super.appendNarrations(builder);
+  }
+
+  @Override
+  public void setScrollAmount(double amount) {
+    super.setScrollAmount(amount);
+    int width = getMaxScroll() > 0 ? this.width - 10 : this.width - 4;
+    for (Entry child : children()) {
+      child.textFieldWidget.setWidth(width);
+    }
   }
 
   /**
@@ -221,6 +234,9 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     @Override
     public boolean mouseDragged(
         double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+      if (button == 0 && mouseX >= getScrollbarPositionX() && mouseX < getScrollbarPositionX() + 6) {
+        return false;
+      }
       return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
           || textFieldWidget.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
