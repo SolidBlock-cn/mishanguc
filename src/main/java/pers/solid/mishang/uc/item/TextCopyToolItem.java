@@ -272,7 +272,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         texts.add(textContext.createNbt());
       }
       stack.setSubNbt("texts", texts);
-      stack.setSubNbt("fromVanillaSign", NbtByte.of(true));
+      stack.setSubNbt("fromVanillaSign", NbtByte.of(false));
       player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.success.copy", texts.size()), true);
       return ActionResult.SUCCESS;
     } else {
