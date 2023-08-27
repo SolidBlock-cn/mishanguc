@@ -960,14 +960,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         && removedWidget == textFieldListWidget.getSelectedOrNull().textFieldWidget) {
       textFieldListWidget.setFocused(null);
     }
-    if (children.size() > 0) {
+    if (!children.isEmpty()) {
       textFieldListWidget.setSelected(children.get(MathHelper.clamp(index - 1, 0, children.size() - 1)));
     }
     // 删除一行元素后，对滚动数量进行一次 clamp，以避免出现过度滚动的情况。
     textFieldListWidget.setScrollAmount(textFieldListWidget.getScrollAmount());
     textContextsEditing.remove(removedTextContext);
     contextToWidgetBiMap.remove(removedTextContext);
-    placeHolder.visible = children.size() == 0;
+    placeHolder.visible = children.isEmpty();
     applyDoubleLineTemplateButton.visible = placeHolder.visible;
     applyLeftArrowTemplateButton.visible = placeHolder.visible;
     applyRightArrowTemplateButton.visible = placeHolder.visible;
