@@ -2,6 +2,11 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.2.5
+
+- Fixed the issue that text properties may be lost if they are copied from a wall sign with a text copy tool.
+- Fixed the issue that other players do not see changes after editing a sign.
+
 ### 1.2.4
 
 - Fixed the issue that after deleting a row of text using Backspace in the sign edit screen, the no remaining text is selected.
