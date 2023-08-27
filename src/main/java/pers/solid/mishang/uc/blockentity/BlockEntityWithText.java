@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -87,7 +88,7 @@ public abstract class BlockEntityWithText extends BlockEntity {
 
   public static final PacketHandler PACKET_HANDLER = new PacketHandler();
 
-  private static class PacketHandler implements ServerPlayNetworking.PlayChannelHandler {
+  public static class PacketHandler implements ServerPlayNetworking.PlayChannelHandler {
     protected static final Logger LOGGER = LoggerFactory.getLogger(PacketHandler.class);
 
     @Override
@@ -95,63 +96,66 @@ public abstract class BlockEntityWithText extends BlockEntity {
       LOGGER.info("Server side sign_edit_finish packet received!");
       final BlockPos blockPos = buf.readBlockPos();
       final NbtCompound nbt = buf.readNbt();
-      server.execute(
-          () -> {
-            try {
+      server.execute(() -> {
+        try {
               final BlockEntityWithText entity = (BlockEntityWithText) player.world.getBlockEntity(blockPos);
-              if (entity == null) {
-                LOGGER.warn(
-                    "The entity is null! Cannot write the block entity data at {} {} {}.",
-                    blockPos.getX(),
-                    blockPos.getY(),
-                    blockPos.getZ());
-                return;
+          if (entity == null) {
+            LOGGER.warn(
+                "The entity is null! Cannot write the block entity data at {} {} {}.",
+                blockPos.getX(),
+                blockPos.getY(),
+                blockPos.getZ());
+            return;
+          }
+          final PlayerEntity editorAllowed = entity.getEditor();
+          entity.setEditor(null);
+          final @Unmodifiable ImmutableList<TextContext> textContexts = nbt != null
+              ? nbt.getList("texts", 10).stream()
+              .map(e -> TextContext.fromNbt(e, entity.createDefaultTextContext()))
+              .collect(ImmutableList.toImmutableList())
+              : null;
+          if (editorAllowed != player) {
+            LOGGER.warn(
+                "The player editing the block entity {} {} {} is not the player allowed to edit.",
+                blockPos.getX(),
+                blockPos.getY(),
+                blockPos.getZ());
+            return;
+          }
+          if (entity instanceof final HungSignBlockEntity hungSignBlockEntity) {
+            final Direction editedSide = hungSignBlockEntity.editedSide;
+            hungSignBlockEntity.editedSide = null;
+            if (nbt == null)
+              return;
+            final HashMap<@NotNull Direction, @NotNull List<@NotNull TextContext>> builder =
+                new HashMap<>(hungSignBlockEntity.texts);
+            if (editedSide != null) {
+              if (!textContexts.isEmpty()) {
+                builder.put(editedSide, textContexts);
+              } else {
+                builder.remove(editedSide);
               }
-              final PlayerEntity editorAllowed = entity.getEditor();
-              entity.setEditor(null);
-              final @Unmodifiable ImmutableList<TextContext> textContexts = nbt != null
-                  ? nbt.getList("texts", 10).stream()
-                  .map(e -> TextContext.fromNbt(e, entity.createDefaultTextContext()))
-                  .collect(ImmutableList.toImmutableList())
-                  : null;
-              if (editorAllowed != player) {
-                LOGGER.warn(
-                    "The player editing the block entity {} {} {} is not the player allowed to edit.",
-                    blockPos.getX(),
-                    blockPos.getY(),
-                    blockPos.getZ());
-                return;
-              }
-              if (entity instanceof final HungSignBlockEntity hungSignBlockEntity) {
-                final Direction editedSide = hungSignBlockEntity.editedSide;
-                hungSignBlockEntity.editedSide = null;
-                if (nbt == null) return;
-                final HashMap<@NotNull Direction, @NotNull List<@NotNull TextContext>> builder =
-                    new HashMap<>(hungSignBlockEntity.texts);
-                if (editedSide != null) {
-                  if (!textContexts.isEmpty()) {
-                    builder.put(editedSide, textContexts);
-                  } else {
-                    builder.remove(editedSide);
-                  }
-                }
-                hungSignBlockEntity.texts = ImmutableMap.copyOf(builder);
-              } else if (entity instanceof final WallSignBlockEntity wallSignBlockEntity) {
-                if (nbt == null) return;
-                wallSignBlockEntity.textContexts = textContexts;
-              } else if (entity instanceof final StandingSignBlockEntity standingSignBlockEntity) {
-                final Boolean editedSite = standingSignBlockEntity.editedSide;
-                if (editedSite != null) {
-                  standingSignBlockEntity.setTextsOnSide(editedSite, textContexts);
-                }
-              }
-              responseSender.sendPacket(BlockEntityUpdateS2CPacket.create(entity));
-              entity.markDirty();
-            } catch (ClassCastException e) {
-              LOGGER.error("Error when trying to parse NBT received: ", e);
             }
-            // 编辑成功。
-          });
+            hungSignBlockEntity.texts = ImmutableMap.copyOf(builder);
+          } else if (entity instanceof final WallSignBlockEntity wallSignBlockEntity) {
+            if (nbt == null)
+              return;
+            wallSignBlockEntity.textContexts = textContexts;
+          } else if (entity instanceof final StandingSignBlockEntity standingSignBlockEntity) {
+            final Boolean editedSite = standingSignBlockEntity.editedSide;
+            if (editedSite != null) {
+              standingSignBlockEntity.setTextsOnSide(editedSite, textContexts);
+            }
+          }
+          if (entity.getWorld() != null) {
+            entity.getWorld().updateListeners(entity.pos, entity.getCachedState(), entity.getCachedState(), Block.NOTIFY_LISTENERS);
+          }
+          entity.markDirty();
+        } catch (ClassCastException e) {
+          LOGGER.error("Error when trying to parse NBT received: ", e);
+        }
+        // 编辑成功。
+      });
     }
   }
 }

@@ -21,12 +21,21 @@
 
 本模组的详细内容请参见 [GitHub](https://github.com/SolidBlock-cn/mishanguc/wiki) 或 [MC模组百科](https://www.mcmod.cn/class/5743.html)。
 
-本模组**依赖 Fabric API 和 [BRRP](https://github.com/SolidBlock-cn/BRRP)**（更好的运行时资源包，Better Runtime Resource Pack）模组。BRRP 是 [ARRP](https://github.com/Devan-Kerman/ARRP)（高级运行时资源包，Advanced Runtime Resource Pack）的一个分支。更新记录请查看[此处](UpdateLog.md)。
+本模组
+*
+*依赖
+Fabric
+API
+和 [BRRP](https://github.com/SolidBlock-cn/BRRP)
+**（更好的运行时资源包，Better Runtime Resource Pack）模组。BRRP 是 [ARRP](https://github.com/Devan-Kerman/ARRP)（高级运行时资源包，Advanced Runtime Resource Pack）的一个分支。更新记录请查看[此处](UpdateLog.md)。
 
 本模组只有 Fabric 版本，没有 Forge 版本。
 
 本模组是按照 LGPLv3 协议发布的，传播本模组时须遵守本协议。
 
-欢迎加入QQ群 **587928350** 或开黑啦频道邀请码 **KlFS0n** 进行交流。
+欢迎加入QQ群
+*
+*587928350
+** 进行交流。你也可以在 GitHub 中报告问题。
 
 For English version of the description, see [this file](README-en.md).
