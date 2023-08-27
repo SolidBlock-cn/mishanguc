@@ -44,7 +44,7 @@ public class WallSignBlockEntity extends BlockEntityWithText {
     final @Nullable NbtElement nbtText = nbt.get("text");
     if (nbtText instanceof NbtString || nbt.contains("textJson", NbtElement.STRING_TYPE)) {
       // 如果 text 是个字符串，则读取整个 nbt 作为 TextContext。
-      // 例如，整个 nbt 可以是 {text: "abc", color: "red", size: 5}、
+      // 例如，整个 nbt 可以是 {text: "abc", color: "red", size: 5}。
       textContexts = ImmutableList.of(TextContext.fromNbt(nbt, createDefaultTextContext()));
     } else if (nbtText instanceof NbtCompound) {
       // 如果 text 是个复合标签，则读取这个复合标签。
