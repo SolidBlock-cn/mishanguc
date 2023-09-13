@@ -137,8 +137,8 @@ public class BooleanButtonWidget extends ButtonWidget implements TooltipUpdated 
   }
 
   @Override
-  public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-    final boolean b = super.mouseScrolled(mouseX, mouseY, amount);
+  public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    final boolean b = super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     final Boolean value = getValue();
     if (value != null) {
       setValue(!value);

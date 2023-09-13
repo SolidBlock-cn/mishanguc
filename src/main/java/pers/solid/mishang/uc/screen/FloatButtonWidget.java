@@ -157,17 +157,17 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
   }
 
   @Override
-  public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+  public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
     final Float value = getValue();
     if (value != null) {
       setValue((float) (value
-          + amount
+          + verticalAmount
           * (Screen.hasShiftDown() ? -1 : 1)
           * (Screen.hasControlDown() ? 8 : 1)
           * step * scrollMultiplier
           * (Screen.hasAltDown() ? 0.125f : 1)));
     }
-    super.mouseScrolled(mouseX, mouseY, amount);
+    super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     return true;
   }
 

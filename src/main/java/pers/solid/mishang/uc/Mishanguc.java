@@ -4,8 +4,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -32,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.block.ColoredBlock;
 import pers.solid.mishang.uc.block.GlassHandrailBlock;
 import pers.solid.mishang.uc.block.HandrailBlock;
-import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blocks.*;
@@ -362,15 +359,6 @@ public class Mishanguc implements ModInitializer {
             return ActionResult.PASS;
           }
         });
-    ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
-      if (joined) {
-        final GameRules gameRules = player.getServerWorld().getGameRules();
-        MishangucRules.sync(gameRules.get(MishangucRules.FORCE_PLACING_TOOL_ACCESS), 0, player);
-        MishangucRules.sync(gameRules.get(MishangucRules.CARRYING_TOOL_ACCESS), 1, player);
-        MishangucRules.sync(gameRules.get(MishangucRules.ROAD_BOOST_SPEED), 3, player);
-        MishangucRules.currentRoadBoostSpeed = gameRules.get(MishangucRules.ROAD_BOOST_SPEED).get();
-      }
-    });
   }
 
   private static void registerColoredBlocks() {
@@ -554,7 +542,6 @@ public class Mishanguc implements ModInitializer {
     registerFlammableAndFuels();
 
     // 玩家踩在道路方块上时，予以加速。
-    ServerTickEvents.END_WORLD_TICK.register(Road.CHECK_MULTIPLIER::accept);
     ColumnBuildingTool.registerTempMemoryEvents();
 
     registerCommands();

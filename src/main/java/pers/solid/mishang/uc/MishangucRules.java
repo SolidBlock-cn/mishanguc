@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.player.PlayerEntity;
@@ -37,16 +36,6 @@ public final class MishangucRules {
   public static final GameRules.Key<EnumRule<ToolAccess>> CARRYING_TOOL_ACCESS = register("carrying_tool_access", GameRuleFactory.createEnumRule(ToolAccess.ALL, (server, rule) -> sync(server, rule, 1)));
 
   public static final GameRules.Key<EnumRule<ToolAccess>> EXPLOSION_TOOL_ACCESS = register("explosion_tool_access", GameRuleFactory.createEnumRule(ToolAccess.ALL));
-
-  public static final GameRules.Key<DoubleRule> ROAD_BOOST_SPEED = register("road_boost_speed", GameRuleFactory.createDoubleRule(1.75, FabricLoader.getInstance().isDevelopmentEnvironment() ? -2 : 0, FabricLoader.getInstance().isDevelopmentEnvironment() ? 50 : 10, (server, rule) -> {
-    currentRoadBoostSpeed = rule.get();
-    sync(server, rule, 3);
-  }));
-  /**
-   * 这个是需要在客户端与服务器之间进行同步的值。单人游戏中，客户端与服务器共用此字段。在加入专用服务器时，客户端和服务器需要对此字段进行同步。
-   */
-  @ApiStatus.Internal
-  public static double currentRoadBoostSpeed = 1.75;
 
   private static void sync(MinecraftServer server, GameRules.Rule<?> rule, int type) {
     for (ServerPlayerEntity serverPlayerEntity : server.getPlayerManager().getPlayerList()) {
@@ -78,15 +67,8 @@ public final class MishangucRules {
     final double doubleValue = type == 3 ? buf.readDouble() : Double.NaN;
     client.execute(() -> {
       switch (type) {
-        case 0:
-          MishangucClient.CLIENT_FORCE_PLACING_TOOL_ACCESS.set(value);
-          break;
-        case 1:
-          MishangucClient.CLIENT_CARRYING_TOOL_ACCESS.set(value);
-          break;
-        case 3:
-          if (!Double.isNaN(doubleValue)) MishangucRules.currentRoadBoostSpeed = doubleValue;
-          break;
+        case 0 -> MishangucClient.CLIENT_FORCE_PLACING_TOOL_ACCESS.set(value);
+        case 1 -> MishangucClient.CLIENT_CARRYING_TOOL_ACCESS.set(value);
       }
     });
   }

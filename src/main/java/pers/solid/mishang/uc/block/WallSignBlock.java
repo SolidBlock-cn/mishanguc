@@ -8,7 +8,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.enums.WallMountLocation;
+import net.minecraft.block.enums.BlockFace;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
@@ -72,14 +72,14 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   public static final Map<Direction, VoxelShape> SHAPES_WHEN_CEILING =
       MishangUtils.createHorizontalDirectionToShape(0, 15, 4, 16, 16, 12);
   @Unmodifiable
-  public static final Map<WallMountLocation, Map<Direction, VoxelShape>>
+  public static final Map<BlockFace, Map<Direction, VoxelShape>>
       SHAPE_PER_WALL_MOUNT_LOCATION =
       ImmutableMap.of(
-          WallMountLocation.CEILING,
+          BlockFace.CEILING,
           SHAPES_WHEN_CEILING,
-          WallMountLocation.FLOOR,
+          BlockFace.FLOOR,
           SHAPES_WHEN_FLOOR,
-          WallMountLocation.WALL,
+          BlockFace.WALL,
           SHAPES_WHEN_WALL);
   public final Block baseBlock;
   /**
@@ -93,7 +93,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     this.baseBlock = baseBlock;
     setDefaultState(getDefaultState()
         .with(FACING, Direction.SOUTH)
-        .with(FACE, WallMountLocation.WALL)
+        .with(FACE, BlockFace.WALL)
         .with(WATERLOGGED, false));
   }
 

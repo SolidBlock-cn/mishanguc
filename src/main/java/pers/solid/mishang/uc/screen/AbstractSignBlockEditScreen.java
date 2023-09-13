@@ -18,6 +18,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.input.KeyCodes;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.ScreenTexts;
@@ -702,10 +703,10 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   @Override
   protected void init() {
     super.init();
-    textFieldListWidget = new TextFieldListWidget(this, client, width, height, 25, height - 65, 18);
+    textFieldListWidget = new TextFieldListWidget(this, client, width, height, 25, height - 65, 16);
     // 添加按钮
 
-    /// 上方第一行，先 addChild 再 addDrawable 以确保 tab 顺序正确，同时不被 textFieldListScreen 覆盖。
+    /// 上方第一行，先 addChild 再 addDrawable 以确保 tab 顺序正确，同时不被 textFieldListWidget 覆盖。
     if (!isAcceptingCustomValue && !isSelectingButtonToSetCustom) {
       Arrays.stream(toolboxTop).forEach(this::addSelectableChild);
     }
@@ -826,7 +827,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       textContextsEditing.add(index, textContext);
       changed = true;
     }
-    final TextFieldWidget textFieldWidget = new TextFieldWidget(textRenderer, 2, height / 4, width - 4, 15, TextBridge.empty());
+    final TextFieldWidget textFieldWidget = new TextFieldWidget(textRenderer, 2, 0, width - 4, 15, TextBridge.empty());
     textFieldWidget.setMaxLength(Integer.MAX_VALUE);
     if (textContext.extra != null) {
       textFieldWidget.setText(String.format("-%s %s", textContext.extra.getId(), textContext.extra.asStringArgs()));
@@ -1206,5 +1207,15 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (entity.isRemoved()) {
       finishEditing();
     }
+  }
+
+  @Override
+  public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+    context.setShaderColor(0.25F, 0.25F, 0.25F, 1.0F);
+    context.drawTexture(OPTIONS_BACKGROUND_TEXTURE, 0, 0, 0, 0.0F, 0.0F, this.width, 25, 32, 32);
+    context.drawTexture(OPTIONS_BACKGROUND_TEXTURE, 0, height - 65, 0, 0.0F, 0.0F, this.width, 65, 32, 32);
+    context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    context.fillGradient(RenderLayer.getGuiOverlay(), 0, 25, width, 29, -16777216, 0, 0);
+    context.fillGradient(RenderLayer.getGuiOverlay(), 0, height - 69, width, height - 65, 0, -16777216, 0);
   }
 }

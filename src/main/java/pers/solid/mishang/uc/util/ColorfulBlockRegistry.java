@@ -14,7 +14,7 @@ public final class ColorfulBlockRegistry {
 
   public static void registerColorfulBlocks(Map<DyeColor, ? extends Block> blockMap) {
     Validate.notEmpty(blockMap);
-    final Block whiteBlock = Validate.notNull(blockMap.get(DyeColor.WHITE));
+    final Block whiteBlock = Objects.requireNonNull(blockMap.get(DyeColor.WHITE));
     WHITE_TO_COLORFUL_INTERNAL.put(whiteBlock, blockMap);
     COLORFUL_BLOCKS_INTERNAL.addAll(blockMap.values());
   }

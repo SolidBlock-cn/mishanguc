@@ -34,9 +34,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
                              MinecraftClient client, int width, int height, int top, int bottom, int itemHeight) {
     super(client, width, height, top, bottom, itemHeight);
     this.signBlockEditScreen = signBlockEditScreen;
-    this.setRenderBackground(false);
-    this.setRenderHeader(false, 0);
-    this.setRenderSelection(false);
+    setRenderBackground(false);
   }
 
   private boolean isFocused;
@@ -133,6 +131,11 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     }
   }
 
+  @Override
+  protected void drawSelectionHighlight(DrawContext context, int y, int entryWidth, int entryHeight, int borderColor, int fillColor) {
+    context.fill(1, y - 1, width - 1, y + entryHeight + 4, 0xfff0f0f0);
+  }
+
   /**
    * {@link TextFieldListWidget} 中的项。由于 {@link TextFieldWidget} 不是 {@link EntryListWidget.Entry}
    * 的子类，所以对该类进行了包装。
@@ -173,9 +176,6 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
         int mouseY,
         boolean hovered,
         float tickDelta) {
-      if (isFocused() && textFieldWidget.isVisible()) {
-        context.fill(textFieldWidget.getX() - 2, y - 2, textFieldWidget.getX() + textFieldWidget.getWidth() + 2, y + textFieldWidget.getHeight() + 2, 0xfff0f0f0);
-      }
       textFieldWidget.setY(y);
       textFieldWidget.render(context, mouseX, mouseY, tickDelta);
     }
@@ -203,7 +203,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
           final int index = children.indexOf(getSelectedOrNull());
           if (index + 1 < children.size())
             TextFieldListWidget.this.setFocused(children.get(index + 1));
-          else if (children.size() > 0)
+          else if (!children.isEmpty())
             signBlockEditScreen.addTextField(index + 1);
         }
         case GLFW.GLFW_KEY_BACKSPACE -> {
@@ -242,9 +242,9 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-      return super.mouseScrolled(mouseX, mouseY, amount)
-          || textFieldWidget.mouseScrolled(mouseX, mouseY, amount);
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+      return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount)
+          || textFieldWidget.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
 
     @Override

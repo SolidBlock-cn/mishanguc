@@ -6,7 +6,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.block.enums.WallMountLocation;
+import net.minecraft.block.enums.BlockFace;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
@@ -77,12 +77,12 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
     matrices.translate(0.5, 0.5, 0.5);
     final BlockState state = entity.getCachedState();
     final Direction facing = state.get(WallSignBlock.FACING);
-    final WallMountLocation face = state.get(WallSignBlock.FACE);
+    final BlockFace face = state.get(WallSignBlock.FACE);
     matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-facing.asRotation()));
     matrices.multiply(
         RotationAxis.POSITIVE_X.rotationDegrees(
-            face == WallMountLocation.CEILING ? 90 : face == WallMountLocation.FLOOR ? -90 : 0));
-    if (face != WallMountLocation.WALL) {
+            face == BlockFace.CEILING ? 90 : face == BlockFace.FLOOR ? -90 : 0));
+    if (face != BlockFace.WALL) {
       matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180));
     }
     matrices.scale(1 / 16f, -1 / 16f, 1 / 16f);

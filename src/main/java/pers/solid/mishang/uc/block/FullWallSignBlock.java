@@ -8,7 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.enums.WallMountLocation;
+import net.minecraft.block.enums.BlockFace;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
@@ -39,14 +39,14 @@ public class FullWallSignBlock extends WallSignBlock {
       MishangUtils.createHorizontalDirectionToShape(0, 15, 0, 16, 16, 16);
 
   @Unmodifiable
-  public static final Map<WallMountLocation, Map<Direction, VoxelShape>>
+  public static final Map<BlockFace, Map<Direction, VoxelShape>>
       SHAPE_PER_WALL_MOUNT_LOCATION =
       ImmutableMap.of(
-          WallMountLocation.CEILING,
+          BlockFace.CEILING,
           SHAPES_WHEN_CEILING,
-          WallMountLocation.FLOOR,
+          BlockFace.FLOOR,
           SHAPES_WHEN_FLOOR,
-          WallMountLocation.WALL,
+          BlockFace.WALL,
           SHAPES_WHEN_WALL);
 
   public FullWallSignBlock(@Nullable Block baseBlock, Settings settings) {
