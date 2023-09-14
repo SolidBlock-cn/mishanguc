@@ -127,12 +127,13 @@ curseforge {
         id = '583071'
         changelog = content
         changelogType = 'markdown'
-        releaseType = 'release'
+        releaseType = project.mod_version.contains('-') ? 'beta' : 'release'
         mainArtifact remapJar
 
-        for (final def v in (project.supported_minecraft_versions.split(','))) {
-            addGameVersion v
-        }
+        // for (final def v in (project.supported_minecraft_versions.split(','))) {
+        //     addGameVersion v
+        // }
+        addGameVersion '1.20.2-Snapshot' // todo complete after release
         addGameVersion 'Fabric'
 
         relations {
@@ -151,7 +152,7 @@ modrinth {
 
     projectId = "rItLmRo4" // 迷上城建模组的 Modrinth ID
     versionNumber = project.mod_version + '-' + project.minecraft_version
-    versionType = 'release'  // until release of MC
+    versionType = project.mod_version.contains('-') ? 'beta' : 'release'  // until release of MC
     uploadFile = remapJar
     gameVersions = Arrays.asList(project.supported_minecraft_versions.split(','))
 
