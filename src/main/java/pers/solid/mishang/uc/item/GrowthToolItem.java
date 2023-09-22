@@ -152,8 +152,8 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, ItemRes
 
   @Override
   public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
-    final int damage = apply(pointer.getWorld(), pointer.getPos().offset(pointer.getBlockState().get(DispenserBlock.FACING), 4).toCenterPos(), true);
-    stack.damage(damage, pointer.getWorld().random, null);
+    final int damage = apply(pointer.world(), pointer.pos().offset(pointer.state().get(DispenserBlock.FACING), 4).toCenterPos(), true);
+    stack.damage(damage, pointer.world().getRandom(), null);
     return stack;
   }
 }

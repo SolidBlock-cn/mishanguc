@@ -157,8 +157,8 @@ public class IceSnowTool extends Item implements ItemResourceGenerator, Dispense
   @Override
   public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
     final int strength = getStrength(stack);
-    applyIce(pointer.getWorld(), pointer.getPos().offset(pointer.getBlockState().get(DispenserBlock.FACING), getRange(strength)).toCenterPos(), strength);
-    if (stack.damage(strength + 1, pointer.getWorld().random, null)) {
+    applyIce(pointer.world(), pointer.pos().offset(pointer.state().get(DispenserBlock.FACING), getRange(strength)).toCenterPos(), strength);
+    if (stack.damage(strength + 1, pointer.world().getRandom(), null)) {
       stack.setCount(0);
     }
     return stack;

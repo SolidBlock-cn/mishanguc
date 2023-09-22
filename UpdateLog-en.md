@@ -6,6 +6,7 @@ Note: Not all versions in this update log are already published. Please refer to
 
 - Fixed the issue that text properties may be lost if they are copied from a wall sign with a text copy tool.
 - Fixed the issue that other players do not see changes after editing a sign.
+- (For 1.20.2) Removed the feature of walking accelerated on road blocks as well as relevant game rules.
 
 ### 1.2.4
 

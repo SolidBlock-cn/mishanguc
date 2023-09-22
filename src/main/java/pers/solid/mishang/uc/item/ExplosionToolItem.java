@@ -155,12 +155,12 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
 
   @Override
   public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
-    final ServerWorld world = pointer.getWorld();
+    final ServerWorld world = pointer.world();
     if (!world.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).get().hasAccess(null)) {
       return stack;
     }
-    final BlockPos basePos = pointer.getPos();
-    final Direction direction = pointer.getBlockState().get(DispenserBlock.FACING);
+    final BlockPos basePos = pointer.pos();
+    final Direction direction = pointer.state().get(DispenserBlock.FACING);
     for (int i = 1; i < 33; i++) {
       final BlockPos pos = basePos.offset(direction, i);
       if (world.getBlockState(pos).getCollisionShape(world, pos).isEmpty()
@@ -180,7 +180,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
           playerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.getX(), pos.getY(), pos.getZ(), power(stack), explosion.getAffectedBlocks(), explosion.getAffectedPlayers().get(playerEntity)));
         }
       }
-      if (stack.damage((int) power(stack), pointer.getWorld().getRandom(), null)) {
+      if (stack.damage((int) power(stack), pointer.world().getRandom(), null)) {
         stack.setCount(0);
       }
     }
