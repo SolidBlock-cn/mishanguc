@@ -50,7 +50,6 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
    * 记录放置柱的操作记录。当玩家放置了柱之后，可以对其进行撤销，其操作记录就是存储在这个里面的。
    */
   private static final WeakHashMap<ServerPlayerEntity, Triple<ServerWorld, Block, BlockBox>> tempMemory = new WeakHashMap<>();
-  @Environment(EnvType.CLIENT)
   private static @Nullable Triple<ClientWorld, Block, BlockBox> clientTempMemory = null;
 
   public static void registerTempMemoryEvents() {
