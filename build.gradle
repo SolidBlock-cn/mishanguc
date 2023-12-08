@@ -1,11 +1,10 @@
 plugins {
-    id 'fabric-loom' version '1.3-SNAPSHOT'
-    id 'io.github.juuxel.loom-vineflower' version '1.11.0'
+    id 'fabric-loom' version '1.4-SNAPSHOT'
     id 'maven-publish'
 
     id "com.modrinth.minotaur" version "2.+"
     id 'com.matthewprenger.cursegradle' version '1.4.0'
-    id "com.github.breadmoirai.github-release" version "2.4.1"
+    id "com.github.breadmoirai.github-release" version "2.5.2"
 }
 
 import com.modrinth.minotaur.dependencies.ModDependency
@@ -44,9 +43,6 @@ dependencies {
 
     // BRRP.
     modImplementation "pers.solid:brrp-fabric:${project.brrp_version}-${brrp_mc_version}"
-
-    // MixinExtra
-    include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:$project.mixin_extra_version")))
 }
 
 processResources {
@@ -130,10 +126,9 @@ curseforge {
         releaseType = project.mod_version.contains('-') ? 'beta' : 'release'
         mainArtifact remapJar
 
-        // for (final def v in (project.supported_minecraft_versions.split(','))) {
-        //     addGameVersion v
-        // }
-        addGameVersion '1.20.2-Snapshot' // todo complete after release
+        for (final def v in (project.supported_minecraft_versions.split(','))) {
+            addGameVersion v
+        }
         addGameVersion 'Fabric'
 
         relations {
@@ -169,17 +164,17 @@ modrinth {
 githubRelease {
     def getenv = System.getenv("GITHUB_TOKEN")
     println "GitHub 令牌: $getenv"
-    if (getenv) token getenv
-    owner "SolidBlock-cn"
-    repo "mishanguc"
-    tagName "v$project.mod_version"
-    targetCommitish "1.20.2"
-    body content
-    draft true
-    prerelease false
+    if (getenv) token = getenv
+    owner = "SolidBlock-cn"
+    repo = "mishanguc"
+    tagName = "v$project.mod_version"
+    targetCommitish = "1.20.2"
+    body = content
+    draft = true
+    prerelease = false
     releaseAssets remapJar, remapSourcesJar
-    allowUploadToExisting true
-    apiEndpoint "https://api.github.com"
+    allowUploadToExisting = true
+    apiEndpoint = "https://api.github.com"
 }
 
 publish {
