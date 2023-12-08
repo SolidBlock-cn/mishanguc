@@ -46,6 +46,6 @@ public interface TextBridge extends Text {
 
   static boolean isEmpty(Text text) {
     final TextContent content = text.getContent();
-    return content == TextContent.EMPTY || content instanceof final LiteralTextContent literalTextContent && literalTextContent.string().isEmpty();
+    return content == PlainTextContent.EMPTY || content instanceof final PlainTextContent plainTextContent && plainTextContent.string().isEmpty();
   }
 }

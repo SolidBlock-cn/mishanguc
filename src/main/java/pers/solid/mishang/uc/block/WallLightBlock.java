@@ -2,6 +2,9 @@ package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -34,6 +37,7 @@ import pers.solid.mishang.uc.arrp.FasterJTextures;
 import java.util.Map;
 
 public class WallLightBlock extends FacingBlock implements Waterloggable, BlockResourceGenerator {
+  public static final MapCodec<WallLightBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.STRING.fieldOf("light_color").forGetter(b -> b.lightColor), createSettingsCodec(), Codec.BOOL.fieldOf("large_shape").forGetter(b -> b.largeShape)).apply(instance, WallLightBlock::new));
   protected static final BooleanProperty WEST = Properties.WEST;
   protected static final BooleanProperty EAST = Properties.EAST;
   protected static final BooleanProperty SOUTH = Properties.SOUTH;
@@ -188,5 +192,10 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
   @Override
   public @Nullable RecipeCategory getRecipeCategory() {
     return RecipeCategory.DECORATIONS;
+  }
+
+  @Override
+  protected MapCodec<? extends WallLightBlock> getCodec() {
+    return CODEC;
   }
 }

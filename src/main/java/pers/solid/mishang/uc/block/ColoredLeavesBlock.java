@@ -16,6 +16,7 @@ import net.minecraft.loot.LootTable;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +39,7 @@ public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock, Blo
   }
 
   @Override
-  public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+  public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
     return getColoredPickStack(world, pos, state, super::getPickStack);
   }
 

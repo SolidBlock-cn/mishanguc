@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -14,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
@@ -37,6 +40,7 @@ import java.util.List;
  * @param <T> 基础方块类型。
  */
 public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoadSlabBlock {
+  public static final MapCodec<SmartRoadSlabBlock<?>> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(o -> o.baseBlock)).apply(instance, block -> new SmartRoadSlabBlock<>((AbstractRoadBlock) block)));
   private static Block cachedBaseBlock;
   public final T baseBlock;
 
@@ -145,5 +149,10 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     return ((ShapedRecipeJsonBuilder) RecipeProvider.createSlabRecipe(getRecipeCategory(), this, Ingredient.ofItems(baseBlock))).criterionFromItem(baseBlock).setCustomRecipeCategory("roads");
+  }
+
+  @Override
+  public MapCodec<? extends SmartRoadSlabBlock<?>> getCodec() {
+    return CODEC;
   }
 }

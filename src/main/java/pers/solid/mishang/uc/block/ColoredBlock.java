@@ -18,6 +18,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.WorldView;
 import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
@@ -54,11 +55,11 @@ public interface ColoredBlock extends BlockEntityProvider, BlockResourceGenerato
   }
 
   /**
-   * 子类在覆盖 {@link net.minecraft.block.Block#getPickStack(BlockView, BlockPos, BlockState)} 时，可以这么写（下列代码使用yarn映射）：
+   * 子类在覆盖 {@link net.minecraft.block.Block#getPickStack(WorldView, BlockPos, BlockState)} 时，可以这么写（下列代码使用yarn映射）：
    * <pre>{@code
    *     return getColoredPickStack(world, pos, state, super::getPickStack);}</pre>
    */
-  default ItemStack getColoredPickStack(BlockView world, BlockPos pos, BlockState state, Function3<BlockView, BlockPos, BlockState, ItemStack> superGetPickStack) {
+  default ItemStack getColoredPickStack(WorldView world, BlockPos pos, BlockState state, Function3<WorldView, BlockPos, BlockState, ItemStack> superGetPickStack) {
     final ItemStack stack = superGetPickStack.apply(world, pos, state);
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     if (blockEntity instanceof ColoredBlockEntity coloredBlockEntity) {

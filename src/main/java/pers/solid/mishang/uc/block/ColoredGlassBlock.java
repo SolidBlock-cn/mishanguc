@@ -1,9 +1,10 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.AbstractGlassBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.TransparentBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.BlockStateModelGenerator;
@@ -16,6 +17,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
@@ -23,7 +25,8 @@ import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
 
-public class ColoredGlassBlock extends AbstractGlassBlock implements ColoredBlock {
+public class ColoredGlassBlock extends TransparentBlock implements ColoredBlock {
+  public static final MapCodec<ColoredGlassBlock> CODEC = createCodec(settings1 -> new ColoredGlassBlock(settings1, new TextureMap()));
   private final TextureMap textures;
 
   public ColoredGlassBlock(Settings settings, TextureMap textures) {
@@ -32,7 +35,7 @@ public class ColoredGlassBlock extends AbstractGlassBlock implements ColoredBloc
   }
 
   @Override
-  public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+  public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
     return getColoredPickStack(world, pos, state, super::getPickStack);
   }
 
@@ -63,5 +66,10 @@ public class ColoredGlassBlock extends AbstractGlassBlock implements ColoredBloc
   @Override
   public LootTable.@NotNull Builder getLootTable() {
     return BlockLootTableGenerator.dropsWithSilkTouch(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  }
+
+  @Override
+  protected MapCodec<? extends ColoredGlassBlock> getCodec() {
+    return CODEC;
   }
 }

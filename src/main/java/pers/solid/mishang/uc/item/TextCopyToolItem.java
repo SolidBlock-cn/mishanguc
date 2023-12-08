@@ -123,7 +123,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
       if (blockEntity instanceof SignBlockEntity signBlockEntity) {
         if (world.isClient)
           return ActionResult.SUCCESS;
-        final SignText textFacing = signBlockEntity.getTextFacing(player);
+        final SignText textFacing = signBlockEntity.isPlayerFacingFront(player) ? signBlockEntity.getFrontText() : signBlockEntity.getBackText();
         final Text[] messagesUnfiltered = textFacing.getMessages(false);
         @Nullable DyeColor color = null;
         for (int i = 0; i < texts.size(); i++) {
@@ -234,7 +234,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         return ActionResult.SUCCESS;
       // 原版的告示牌
       final NbtList texts = new NbtList();
-      final SignText textFacing = signBlockEntity.getTextFacing(player);
+      final SignText textFacing = signBlockEntity.isPlayerFacingFront(player) ? signBlockEntity.getFrontText() : signBlockEntity.getBackText();
       for (int i = 0; i < 4; i++) {
         final TextContext textContext = new TextContext();
         textContext.text = textFacing.getMessage(i, false).copy();
@@ -243,7 +243,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         textContext.color = textFacing.getColor().getSignColor();
 
         final Style style = textContext.text.getStyle();
-        if (textContext.text.getContent() instanceof LiteralTextContent && textContext.text.getSiblings().isEmpty() && style.getClickEvent() == null && style.getHoverEvent() == null && style.getFont() == Style.DEFAULT_FONT_ID && style.getInsertion() == null) {
+        if (textContext.text.getContent() instanceof PlainTextContent && textContext.text.getSiblings().isEmpty() && style.getClickEvent() == null && style.getHoverEvent() == null && style.getFont() == Style.DEFAULT_FONT_ID && style.getInsertion() == null) {
           // 对于文本为 literalText 的情况，应该将其 style 对象中的属性转化为 textContent 中的属性，除非 style 中有无法转换的部分。
           textContext.bold = style.isBold();
           textContext.italic = style.isItalic();
@@ -253,7 +253,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
           if (style.getColor() != null) {
             textContext.color = style.getColor().getRgb();
           }
-          textContext.text = TextBridge.literal(((LiteralTextContent) textContext.text.getContent()).string());
+          textContext.text = TextBridge.literal(((PlainTextContent) textContext.text.getContent()).string());
         }
         final NbtCompound nbt0 = textContext.createNbt();
         nbt0.remove("size"); // 原版告示牌的文本没有 size

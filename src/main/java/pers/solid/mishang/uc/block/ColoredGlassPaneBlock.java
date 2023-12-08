@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -16,6 +17,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
@@ -25,6 +27,7 @@ import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import java.util.List;
 
 public class ColoredGlassPaneBlock extends PaneBlock implements ColoredBlock {
+  public static final MapCodec<ColoredGlassPaneBlock> CODEC = createCodec(settings1 -> new ColoredGlassPaneBlock(null, null, settings1));
   private final Identifier paneTexture;
   private final Identifier edgeTexture;
 
@@ -35,7 +38,7 @@ public class ColoredGlassPaneBlock extends PaneBlock implements ColoredBlock {
   }
 
   @Override
-  public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+  public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
     return getColoredPickStack(world, pos, state, super::getPickStack);
   }
 
@@ -82,5 +85,10 @@ public class ColoredGlassPaneBlock extends PaneBlock implements ColoredBlock {
   @Override
   public LootTable.@NotNull Builder getLootTable() {
     return BlockLootTableGenerator.dropsWithSilkTouch(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  }
+
+  @Override
+  public MapCodec<? extends ColoredGlassPaneBlock> getCodec() {
+    return CODEC;
   }
 }

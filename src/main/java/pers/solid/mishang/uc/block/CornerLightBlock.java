@@ -1,5 +1,8 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -33,6 +36,7 @@ import static net.minecraft.fluid.Fluids.WATER;
 
 public class CornerLightBlock extends HorizontalFacingBlock
     implements Waterloggable, LightConnectable, BlockResourceGenerator {
+  public static final MapCodec<CornerLightBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.STRING.fieldOf("light_color").forGetter(b -> b.lightColor), createSettingsCodec()).apply(instance, CornerLightBlock::new));
   private static final EnumProperty<BlockHalf> BLOCK_HALF = Properties.BLOCK_HALF;
   private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION_WHEN_BOTTOM =
@@ -184,5 +188,10 @@ public class CornerLightBlock extends HorizontalFacingBlock
   @Override
   public @Nullable RecipeCategory getRecipeCategory() {
     return RecipeCategory.DECORATIONS;
+  }
+
+  @Override
+  protected MapCodec<? extends CornerLightBlock> getCodec() {
+    return CODEC;
   }
 }

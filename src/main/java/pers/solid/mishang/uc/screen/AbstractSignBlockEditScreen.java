@@ -22,8 +22,8 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.PlainTextContent;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.DyeColor;
@@ -703,7 +703,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   @Override
   protected void init() {
     super.init();
-    textFieldListWidget = new TextFieldListWidget(this, client, width, height, 25, height - 65, 16);
+    textFieldListWidget = new TextFieldListWidget(this, client, width, height - 90, 25, 16);
     // 添加按钮
 
     /// 上方第一行，先 addChild 再 addDrawable 以确保 tab 顺序正确，同时不被 textFieldListWidget 覆盖。
@@ -832,15 +832,15 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (textContext.extra != null) {
       textFieldWidget.setText(String.format("-%s %s", textContext.extra.getId(), textContext.extra.asStringArgs()));
     } else if (textContext.text != null) {
-      if (textContext.text.getContent() instanceof LiteralTextContent literalTextContent && textContext.text.getSiblings().isEmpty() && textContext.text.getStyle().isEmpty()) {
-        final String text = literalTextContent.string();
+      if (textContext.text.getContent() instanceof PlainTextContent plainTextContent && textContext.text.getSiblings().isEmpty() && textContext.text.getStyle().isEmpty()) {
+        final String text = plainTextContent.string();
         if (Pattern.compile("^-(\\w+?) (.+)$").matcher(text).matches()) {
           textFieldWidget.setText("-literal " + text);
         } else {
           textFieldWidget.setText(text);
         }
       } else {
-        textFieldWidget.setText("-json " + Text.Serializer.toJson(textContext.text));
+        textFieldWidget.setText("-json " + Text.Serialization.toJsonString(textContext.text));
       }
     }
     final TextFieldListWidget.Entry newEntry = textFieldListWidget.new Entry(textFieldWidget);
@@ -864,7 +864,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
               break;
             case "json":
               try {
-                textContext1.text = Text.Serializer.fromLenientJson(value);
+                textContext1.text = Text.Serialization.fromLenientJson(value);
               } catch (
                   JsonParseException e) {
                 // 如果文本有问题，则不执行操作。
@@ -1003,7 +1003,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         } else {
           Arrays.stream(Formatting.values()).filter(Formatting::isColor).map(Formatting::asString).filter(name -> name.startsWith(text)).findAny().ifPresentOrElse(name -> customValueTextField.setSuggestion(name.substring(text.length())), () -> customValueTextField.setSuggestion(null));
         }
-        final TextColor parse = TextColor.parse(text);
+        final TextColor parse = TextColor.parse(text).result().orElse(null);
         if (parse == null) {
           customValueTextField.setEditableColor(16733525);
         } else {
@@ -1042,7 +1042,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           customValueTextField.setEditableColor(16777215);
           return;
         }
-        final TextColor parse = TextColor.parse(text);
+        final TextColor parse = TextColor.parse(text).result().orElse(null);
         if (parse == null) {
           customValueTextField.setEditableColor(16733525);
         } else {

@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.util;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.StringIdentifiable;
 import org.jetbrains.annotations.Contract;
@@ -23,6 +24,7 @@ public enum LineType implements StringIdentifiable {
   THICK;
 
   private final String name;
+  public static final Codec<LineType> CODEC = StringIdentifiable.createCodec(LineType::values);
 
   LineType() {
     name = name().toLowerCase();

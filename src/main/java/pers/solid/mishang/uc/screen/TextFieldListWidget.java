@@ -13,7 +13,6 @@ import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -31,8 +30,8 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   private final AbstractSignBlockEditScreen<?> signBlockEditScreen;
 
   public TextFieldListWidget(AbstractSignBlockEditScreen<?> signBlockEditScreen,
-                             MinecraftClient client, int width, int height, int top, int bottom, int itemHeight) {
-    super(client, width, height, top, bottom, itemHeight);
+                             MinecraftClient client, int width, int height, int y, int itemHeight) {
+    super(client, width, height, y, itemHeight);
     this.signBlockEditScreen = signBlockEditScreen;
     setRenderBackground(false);
   }
@@ -114,12 +113,11 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     return width - 6;
   }
 
-  @ApiStatus.AvailableSince("mc1.17")
   @Override
-  public void appendNarrations(NarrationMessageBuilder builder) {
+  public void appendClickableNarrations(NarrationMessageBuilder builder) {
     builder.put(NarrationPart.TITLE, TextBridge.translatable("narration.mishanguc.text_field_list"));
     builder.put(NarrationPart.USAGE, TextBridge.translatable("narration.mishanguc.text_field_list.usage"));
-    super.appendNarrations(builder);
+    super.appendClickableNarrations(builder);
   }
 
   @Override

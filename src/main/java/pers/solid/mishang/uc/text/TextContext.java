@@ -13,9 +13,9 @@ import net.minecraft.nbt.AbstractNbtNumber;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
+import net.minecraft.text.PlainTextContent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
@@ -66,7 +66,7 @@ public class TextContext implements Cloneable {
    * 文本内容。该字段对应 NBT 中的两种情况：<br>
    * <ul>
    *   <li>若 NBT 中存在字段 “textJson”，则将其作为原始 JSON 文本进行解析。</li>
-   *   <li>否则，直接使用 NBT 字段 “text”，并直接将其作为原始文本（{@link net.minecraft.text.LiteralTextContent}）使用。</li>
+   *   <li>否则，直接使用 NBT 字段 “text”，并直接将其作为原始文本（{@link net.minecraft.text.PlainTextContent}）使用。</li>
    * </ul>
    */
   public @Nullable MutableText text;
@@ -229,7 +229,7 @@ public class TextContext implements Cloneable {
     final String textJson = nbt.getString("textJson");
     if (!textJson.isEmpty()) {
       try {
-        text = Text.Serializer.fromLenientJson(textJson);
+        text = Text.Serialization.fromLenientJson(textJson);
       } catch (JsonParseException e) {
         text = TextBridge.translatable("message.mishanguc.invalid_json", e.getMessage());
       }
@@ -398,10 +398,10 @@ public class TextContext implements Cloneable {
   @Contract(mutates = "param1")
   public void writeNbt(@NotNull NbtCompound nbt) {
     if (text != null) {
-      if (text.getContent() instanceof LiteralTextContent literalTextContent && text.getSiblings().isEmpty() && text.getStyle().isEmpty()) {
-        nbt.putString("text", literalTextContent.string());
+      if (text.getContent() instanceof PlainTextContent plainTextContent && text.getSiblings().isEmpty() && text.getStyle().isEmpty()) {
+        nbt.putString("text", plainTextContent.string());
       } else {
-        nbt.putString("textJson", Text.Serializer.toJson(text));
+        nbt.putString("textJson", Text.Serialization.toJsonString(text));
       }
     } else {
       nbt.remove("text");
@@ -508,8 +508,8 @@ public class TextContext implements Cloneable {
   public TextContext flip() {
     offsetX = -offsetX;
     horizontalAlign = horizontalAlign.flip();
-    if (text != null && text.getContent() instanceof final LiteralTextContent literalTextContent) {
-      final String rawString = literalTextContent.string();
+    if (text != null && text.getContent() instanceof final PlainTextContent plainTextContent) {
+      final String rawString = plainTextContent.string();
       final StringBuilder stringBuilder = new StringBuilder(rawString);
       for (int i = 0; i < stringBuilder.length(); i++) {
         final char c = stringBuilder.charAt(i);

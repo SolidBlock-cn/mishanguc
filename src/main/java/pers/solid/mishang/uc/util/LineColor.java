@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.util;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.StringIdentifiable;
 
@@ -13,6 +14,7 @@ public enum LineColor implements StringIdentifiable {
   NONE;
 
   private final String name;
+  public static final Codec<LineColor> CODEC = StringIdentifiable.createCodec(LineColor::values);
 
   LineColor() {
     name = name().toLowerCase();

@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
@@ -12,6 +14,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -21,6 +24,7 @@ import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import java.util.List;
 
 public class ColoredCubeBlock extends BRRPCubeBlock implements ColoredBlock {
+  public static final MapCodec<ColoredCubeBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createSettingsCodec(), Identifier.CODEC.fieldOf("parent").forGetter(b -> b.parent)).apply(instance, (settings1, identifier) -> new ColoredCubeBlock(settings1, identifier, new TextureMap())));
 
   @ApiStatus.Internal
   public ColoredCubeBlock(Settings settings, Identifier parent, TextureMap textures) {
@@ -36,7 +40,7 @@ public class ColoredCubeBlock extends BRRPCubeBlock implements ColoredBlock {
   }
 
   @Override
-  public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+  public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
     return getColoredPickStack(world, pos, state, super::getPickStack);
   }
 
@@ -55,5 +59,10 @@ public class ColoredCubeBlock extends BRRPCubeBlock implements ColoredBlock {
   @Override
   public LootTable.@UnknownNullability Builder getLootTable() {
     return new VanillaBlockLootTableGenerator().drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  }
+
+  @Override
+  protected MapCodec<? extends ColoredCubeBlock> getCodec() {
+    return CODEC;
   }
 }

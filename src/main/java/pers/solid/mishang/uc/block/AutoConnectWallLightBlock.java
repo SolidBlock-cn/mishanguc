@@ -1,6 +1,9 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -34,7 +37,12 @@ import java.util.*;
 import static net.minecraft.data.client.VariantSettings.MODEL;
 
 public class AutoConnectWallLightBlock extends WallLightBlock implements LightConnectable {
-
+  public static final MapCodec<AutoConnectWallLightBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+      Codec.STRING.fieldOf("light_color").forGetter(b -> b.lightColor),
+      Codec.STRING.fieldOf("shape").forGetter(b -> b.shape),
+      createSettingsCodec(),
+      Codec.BOOL.fieldOf("large_shape").forGetter(b -> b.largeShape)
+  ).apply(instance, AutoConnectWallLightBlock::new));
   /**
    * 每个朝向中，中心基础碰撞箱。任何自动连接的灯都会有此碰撞箱，且不进行任何连接的灯仅使用此碰撞箱。键为灯的 {@link #FACING} 属性。
    */
@@ -287,5 +295,10 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
         id.brrp_suffixed("_connection2"),
         ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/wall_light_%s_decoration_connection2", shape)))
             .setTextures(new FasterJTextures().varP("light", lightColor + "_light")));
+  }
+
+  @Override
+  protected MapCodec<? extends AutoConnectWallLightBlock> getCodec() {
+    return CODEC;
   }
 }

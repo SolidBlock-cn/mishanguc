@@ -15,11 +15,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.packet.s2c.play.ExplosionS2CPacket;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityFlagsPredicate;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -65,7 +67,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       // 创造模式下，将游戏规则临时设为不掉落。
       booleanRule.set(false, null);
     }
-    Explosion explosion = new Explosion(world, user, user.isSneaking() ? world.getDamageSources().explosion(null) : null, null, pos.x, pos.y, pos.z, power(stack), createFire(stack), destructionType(stack));
+    Explosion explosion = new Explosion(world, user, user.isSneaking() ? world.getDamageSources().explosion(null) : null, null, pos.x, pos.y, pos.z, power(stack), createFire(stack), destructionType(stack), ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE);
     explosion.collectBlocksAndDamageEntities();
     explosion.affectWorld(true);
 
@@ -76,7 +78,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     for (PlayerEntity playerEntity : world.getPlayers()) {
       ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
       if (serverPlayerEntity.squaredDistanceTo(pos.x, pos.y, pos.z) < 4096.0) {
-        serverPlayerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.x, pos.y, pos.z, power(stack), explosion.getAffectedBlocks(), explosion.getAffectedPlayers().get(serverPlayerEntity)));
+        serverPlayerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.x, pos.y, pos.z, power(stack), explosion.getAffectedBlocks(), explosion.getAffectedPlayers().get(serverPlayerEntity), destructionType(stack), ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE));
       }
     }
     stack.damage((int) power(stack), user, e -> e.sendToolBreakStatus(hand));
@@ -177,7 +179,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       }
       for (ServerPlayerEntity playerEntity : world.getPlayers()) {
         if (playerEntity.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) < 4096.0) {
-          playerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.getX(), pos.getY(), pos.getZ(), power(stack), explosion.getAffectedBlocks(), explosion.getAffectedPlayers().get(playerEntity)));
+          playerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.getX(), pos.getY(), pos.getZ(), power(stack), explosion.getAffectedBlocks(), explosion.getAffectedPlayers().get(playerEntity), destructionType(stack), ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE));
         }
       }
       if (stack.damage((int) power(stack), pointer.world().getRandom(), null)) {

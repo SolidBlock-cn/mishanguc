@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -20,6 +22,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -64,6 +67,12 @@ import java.util.Map;
  * @see WallSignBlockEntityRenderer
  */
 public class WallSignBlock extends WallMountedBlock implements Waterloggable, BlockEntityProvider, BlockResourceGenerator {
+  protected static <B extends WallSignBlock> RecordCodecBuilder<B, Block> createBaseBlockCodec() {
+    return Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(b -> b.baseBlock);
+  }
+
+  public static final MapCodec<WallSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec(), createSettingsCodec()).apply(instance, WallSignBlock::new));
+
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   public static final Map<Direction, VoxelShape> SHAPES_WHEN_WALL =
       MishangUtils.createHorizontalDirectionToShape(0, 4, 0, 16, 12, 1);
@@ -291,5 +300,10 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     } else {
       return super.isSideInvisible(state, stateFrom, direction);
     }
+  }
+
+  @Override
+  protected MapCodec<? extends WallSignBlock> getCodec() {
+    return CODEC;
   }
 }

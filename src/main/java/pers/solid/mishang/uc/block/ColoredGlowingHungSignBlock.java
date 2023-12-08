@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -10,6 +12,7 @@ import net.minecraft.loot.LootTable;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.ColoredHungSignBlockEntity;
@@ -17,12 +20,14 @@ import pers.solid.mishang.uc.blockentity.ColoredHungSignBlockEntity;
 import java.util.List;
 
 public class ColoredGlowingHungSignBlock extends GlowingHungSignBlock implements ColoredBlock {
+  public static final MapCodec<ColoredGlowingHungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(BASE_BLOCK_CODEC).apply(instance, ColoredGlowingHungSignBlock::new));
+
   public ColoredGlowingHungSignBlock(@NotNull Block baseBlock) {
     super(baseBlock);
   }
 
   @Override
-  public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+  public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
     return getColoredPickStack(world, pos, state, super::getPickStack);
   }
 
@@ -40,5 +45,10 @@ public class ColoredGlowingHungSignBlock extends GlowingHungSignBlock implements
   @Override
   public LootTable.Builder getLootTable() {
     return new VanillaBlockLootTableGenerator().drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  }
+
+  @Override
+  protected MapCodec<? extends ColoredGlowingHungSignBlock> getCodec() {
+    return CODEC;
   }
 }

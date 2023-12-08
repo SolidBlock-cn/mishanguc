@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -30,6 +31,8 @@ import java.util.List;
 public abstract class AbstractRoadBlock extends Block implements Road {
   protected final LineColor lineColor;
   protected final LineType lineType;
+  protected final RecordCodecBuilder<AbstractRoadBlock, LineColor> LINE_COLOR_FIELD_CODEC = LineColor.CODEC.fieldOf("line_color").forGetter(b -> b.lineColor);
+  protected final RecordCodecBuilder<AbstractRoadBlock, LineType> LINE_TYPE_FIELD_CODEC = LineType.CODEC.fieldOf("line_type").forGetter(b -> b.lineType);
 
   public AbstractRoadBlock(Settings settings, LineColor lineColor, LineType lineType) {
     super(settings);

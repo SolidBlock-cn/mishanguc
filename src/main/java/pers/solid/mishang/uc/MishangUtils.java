@@ -11,8 +11,8 @@ import net.minecraft.data.client.VariantSetting;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.*;
 import net.minecraft.state.property.Property;
-import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.PlainTextContent;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.BlockRotation;
@@ -333,8 +333,8 @@ public class MishangUtils {
   @ApiStatus.AvailableSince("0.2.0")
   public static void replaceArrows(Collection<TextContext> textContexts) {
     for (TextContext textContext : textContexts) {
-      if (textContext.text.getContent() instanceof final LiteralTextContent literalTextContent) {
-        final String rawString = literalTextContent.string();
+      if (textContext.text.getContent() instanceof final PlainTextContent plainTextContent) {
+        final String rawString = plainTextContent.string();
         if (ARROW_TO_NAMES.containsKey(rawString)) {
           textContext.text = null;
           textContext.extra = PatternSpecialDrawable.fromName(textContext, ARROW_TO_NAMES.get(rawString));
@@ -385,7 +385,7 @@ public class MishangUtils {
     if (nbtColor instanceof final AbstractNbtNumber abstractNbtNumber) {
       return abstractNbtNumber.intValue();
     } else if (nbtColor instanceof NbtString) {
-      final TextColor parse = TextColor.parse(nbtColor.asString());
+      final TextColor parse = TextColor.parse(nbtColor.asString()).result().orElse(null);
       return parse == null ? 0 : parse.getRgb();
     } else if (nbtColor instanceof AbstractNbtList<?> list) {
       final int size = list.size();

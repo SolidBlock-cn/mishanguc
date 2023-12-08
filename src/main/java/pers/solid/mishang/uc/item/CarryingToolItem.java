@@ -119,7 +119,7 @@ public class CarryingToolItem extends BlockToolItem
       final NbtCompound nbt = stack.getOrCreateNbt();
       nbt.put("EntityTag", entityTag);
       nbt.putString("holdingEntityType", Registries.ENTITY_TYPE.getId(entity.getType()).toString());
-      nbt.putString("holdingEntityName", Text.Serializer.toJson(entity.getName()));
+      nbt.putString("holdingEntityName", Text.Serialization.toJsonString(entity.getName()));
       nbt.putFloat("holdingEntityWidth", entity.getWidth());
       nbt.putFloat("holdingEntityHeight", entity.getHeight());
     }
@@ -167,7 +167,7 @@ public class CarryingToolItem extends BlockToolItem
     if (nbt == null)
       return TextBridge.empty();
     if (nbt.contains("holdingEntityName", NbtElement.STRING_TYPE)) {
-      return Text.Serializer.fromJson(nbt.getString("holdingEntityName"));
+      return Text.Serialization.fromJson(nbt.getString("holdingEntityName"));
     } else if (nbt.contains("holdingEntityType", NbtElement.STRING_TYPE)) {
       final Identifier holdingEntityType = Identifier.tryParse(nbt.getString("holdingEntityType"));
       return Registries.ENTITY_TYPE.containsId(holdingEntityType) ? Registries.ENTITY_TYPE.get(holdingEntityType).getName().copy() : TextBridge.literal(String.valueOf(holdingEntityType));

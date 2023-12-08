@@ -29,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
-
   public AbstractRoadSlabBlock(Settings settings) {
     super(settings);
   }
