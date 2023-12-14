@@ -43,10 +43,9 @@ dependencies {
     def brrp_mc_version = project.hasProperty("brrp_mc_version") ? project.brrp_mc_version : project.minecraft_version
 
     // BRRP.
-    modImplementation "pers.solid:brrp-fabric:${project.brrp_version}-${brrp_mc_version}"
-
-    // MixinExtra
-    include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:$project.mixin_extra_version")))
+    modImplementation("pers.solid:brrp-fabric:${project.brrp_version}-${brrp_mc_version}") {
+        transitive false
+    }
 }
 
 processResources {
