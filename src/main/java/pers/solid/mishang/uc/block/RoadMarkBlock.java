@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -44,9 +46,11 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
   public static final VoxelShape SHAPE_ON_SLAB_Z = createCuboidShape(2, -8, 0, 14, -7, 16);
   public static final BooleanProperty ON_SLAB = BooleanProperty.of("on_slab");
   private static final Identifier MODEL_PARENT = new Identifier("mishanguc", "block/road_mark");
-  private final Identifier texture;
+  protected final Identifier texture;
   private static final VoxelShape SHAPE_TOP_MASK = createCuboidShape(0, 15.5, 0, 16, 16, 16);
   private static final VoxelShape SHAPE_SLAB_TOP_MASK = createCuboidShape(0, 7.5, 0, 16, 8, 16);
+
+  public static final MapCodec<RoadMarkBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(Identifier.CODEC.fieldOf("texture").forGetter(b -> b.texture), createSettingsCodec()).apply(i, RoadMarkBlock::new));
 
   public RoadMarkBlock(@NotNull Identifier texture, Settings settings) {
     super(settings);
@@ -154,7 +158,13 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
     return new DirectionalFacing(texture, settings);
   }
 
+  @Override
+  protected MapCodec<? extends RoadMarkBlock> getCodec() {
+    return CODEC;
+  }
+
   protected static class AxisFacing extends RoadMarkBlock {
+    public static final MapCodec<AxisFacing> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(Identifier.CODEC.fieldOf("texture").forGetter(b -> b.texture), createSettingsCodec()).apply(i, AxisFacing::new));
     public static final EnumProperty<FourHorizontalAxis> AXIS = EnumProperty.of("axis", FourHorizontalAxis.class);
 
     protected AxisFacing(Identifier texture, Settings settings) {
@@ -219,9 +229,15 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
           .register(true, FourHorizontalAxis.NE_SW, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_on_slab_rotated")).put(MishangUtils.INT_Y_VARIANT, 0));
       return VariantsBlockStateSupplier.create(this).coordinate(map);
     }
+
+    @Override
+    protected MapCodec<? extends AxisFacing> getCodec() {
+      return CODEC;
+    }
   }
 
   protected static class DirectionalFacing extends RoadMarkBlock {
+    public static final MapCodec<DirectionalFacing> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(Identifier.CODEC.fieldOf("texture").forGetter(b -> b.texture), createSettingsCodec()).apply(i, DirectionalFacing::new));
     public static final EnumProperty<EightHorizontalDirection> FACING = EnumProperty.of("facing", EightHorizontalDirection.class);
 
     public DirectionalFacing(Identifier texture, Settings settings) {
@@ -278,7 +294,6 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
       final BlockStateVariantMap.DoubleProperty<Boolean, EightHorizontalDirection> map = BlockStateVariantMap.create(ON_SLAB, FACING);
       for (EightHorizontalDirection direction : EightHorizontalDirection.VALUES) {
         int rotation = (int) direction.asRotation();
-        Identifier id1 = blockModelId;
         String append;
         if (direction.right().isPresent()) {
           rotation -= 45;
@@ -286,10 +301,15 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
         } else {
           append = "";
         }
-        map.register(false, direction, BlockStateVariant.create().put(VariantSettings.MODEL, id1.brrp_suffixed(append)).put(MishangUtils.INT_Y_VARIANT, rotation));
-        map.register(true, direction, BlockStateVariant.create().put(VariantSettings.MODEL, id1.brrp_suffixed("_on_slab" + append)).put(MishangUtils.INT_Y_VARIANT, rotation));
+        map.register(false, direction, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed(append)).put(MishangUtils.INT_Y_VARIANT, rotation));
+        map.register(true, direction, BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_on_slab" + append)).put(MishangUtils.INT_Y_VARIANT, rotation));
       }
       return VariantsBlockStateSupplier.create(this).coordinate(map);
+    }
+
+    @Override
+    protected MapCodec<? extends DirectionalFacing> getCodec() {
+      return CODEC;
     }
   }
 }

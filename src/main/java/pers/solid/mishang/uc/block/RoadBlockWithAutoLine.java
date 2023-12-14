@@ -1,5 +1,8 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -29,6 +32,7 @@ import static pers.solid.mishang.uc.blocks.RoadBlocks.*;
  * 具有自动连接功能的道路方块。关于本模组的所有道路方块，请参见 {@link pers.solid.mishang.uc.blocks.RoadBlocks}。
  */
 public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWithAutoLine {
+  public static final MapCodec<RoadBlockWithAutoLine> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), RoadAutoLineType.CODEC.fieldOf("type").forGetter(b -> b.type), Codec.STRING.fieldOf("texture").forGetter(b -> b.texture)).apply(i, RoadBlockWithAutoLine::new));
   /**
    * 该自动连接方块在一些特定情况下，应该产生直角还是斜线。
    */
@@ -317,8 +321,10 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
                 // - 两端黄色，前方白色 → 黄色+白色
                 if (stateLeft.lineColor() == LineColor.WHITE && facingState.lineColor() == LineColor.YELLOW) {
                   final RoadWithJointLine.Impl block = switch (stateLeft.lineType()) {
-                    case THICK -> (facingState.lineType() == LineType.DOUBLE ? ROAD_WITH_WT_TS_YD_LINE : ROAD_WITH_WT_TS_Y_LINE);
-                    default -> (facingState.lineType() == LineType.DOUBLE ? ROAD_WITH_W_TS_YD_LINE : ROAD_WITH_W_TS_Y_LINE);
+                    case THICK ->
+                        (facingState.lineType() == LineType.DOUBLE ? ROAD_WITH_WT_TS_YD_LINE : ROAD_WITH_WT_TS_Y_LINE);
+                    default ->
+                        (facingState.lineType() == LineType.DOUBLE ? ROAD_WITH_W_TS_YD_LINE : ROAD_WITH_W_TS_Y_LINE);
                   };
                   return composeJointLine(block, facingDirection, facingOffset);
                 }
@@ -474,7 +480,8 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
 
   private static BlockState composeOffsetStraightLine(Direction offsetDirection, int offsetLevel, LineColor color) {
     return switch (offsetLevel) {
-      case 114514 -> ROAD_WITH_WHITE_YELLOW_DOUBLE_LINE.getDefaultState().with(Properties.HORIZONTAL_FACING, offsetDirection.getOpposite());
+      case 114514 ->
+          ROAD_WITH_WHITE_YELLOW_DOUBLE_LINE.getDefaultState().with(Properties.HORIZONTAL_FACING, offsetDirection.getOpposite());
       case 2 -> {
         final Block block = switch (color) {
           case YELLOW -> ROAD_WITH_YELLOW_OFFSET_LINE;
@@ -523,5 +530,10 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
 
   @Override
   public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
+  }
+
+  @Override
+  protected MapCodec<? extends RoadBlockWithAutoLine> getCodec() {
+    return CODEC;
   }
 }

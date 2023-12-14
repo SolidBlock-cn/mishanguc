@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -19,6 +21,7 @@ import pers.solid.mishang.uc.util.TextBridge;
  * 发光的直立告示牌。
  */
 public class GlowingStandingSignBlock extends StandingSignBlock {
+  public static final MapCodec<GlowingStandingSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), createSettingsCodec()).apply(instance, GlowingStandingSignBlock::new));
   protected static final String DEFAULT_GLOW_TEXTURE = "mishanguc:block/white_light";
   public String glowTexture = DEFAULT_GLOW_TEXTURE;
 
@@ -52,5 +55,10 @@ public class GlowingStandingSignBlock extends StandingSignBlock {
         .criterionFromItem("has_base_block", baseBlock)
         .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
         .setCustomRecipeCategory("signs");
+  }
+
+  @Override
+  protected MapCodec<? extends GlowingStandingSignBlock> getCodec() {
+    return CODEC;
   }
 }

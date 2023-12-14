@@ -1,5 +1,8 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -33,6 +36,7 @@ import pers.solid.mishang.uc.arrp.FasterJTextures;
  * 柱形灯方块，且没有底座，因此没有朝向，而是直接根据的坐标轴。
  */
 public class ColumnLightBlock extends Block implements Waterloggable, BlockResourceGenerator {
+  public static final MapCodec<ColumnLightBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.STRING.fieldOf("light_color").forGetter(block -> block.lightColor), createSettingsCodec(), Codec.INT.fieldOf("size_type").forGetter(block -> block.sizeType)).apply(instance, ColumnLightBlock::new));
   public static final EnumProperty<Direction.Axis> AXIS = Properties.AXIS;
   public final String lightColor;
   private final int sizeType;
@@ -141,5 +145,10 @@ public class ColumnLightBlock extends Block implements Waterloggable, BlockResou
       throw new AssertionError();
     }
     return new Identifier(identifier.getNamespace(), path).brrp_prefixed("block/");
+  }
+
+  @Override
+  protected MapCodec<? extends ColumnLightBlock> getCodec() {
+    return CODEC;
   }
 }

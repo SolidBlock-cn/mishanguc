@@ -107,7 +107,7 @@ public class GlassHandrailBlock extends HandrailBlock {
   }
 
   protected static <B extends Block> MapCodec<B> createSubCodec(Function<B, GlassHandrailBlock> baseGetter, Function<GlassHandrailBlock, B> function) {
-    return RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_rail").flatXmap(block -> block instanceof GlassHandrailBlock glassHandrailBlock ? DataResult.success(glassHandrailBlock) : DataResult.error(() -> block + "not instance of GlassHandrailBlock"), DataResult::success).forGetter(baseGetter)).apply(instance, function));
+    return RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_rail").flatXmap(block -> block instanceof GlassHandrailBlock glassHandrailBlock ? DataResult.success(glassHandrailBlock) : DataResult.error(() -> block + " not instance of " + GlassHandrailBlock.class.getName()), DataResult::success).forGetter(baseGetter)).apply(instance, function));
   }
 
   public static class CentralBlock extends HandrailCentralBlock<GlassHandrailBlock> {

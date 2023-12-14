@@ -1,5 +1,8 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -18,6 +21,7 @@ import pers.solid.mishang.uc.util.RoadConnectionState;
 import java.util.List;
 
 public class RoadBlock extends AbstractRoadBlock {
+  public static final MapCodec<RoadBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), Codec.STRING.fieldOf("texture").forGetter(b -> b.texture)).apply(i, RoadBlock::new));
   private final String texture;
 
   public RoadBlock(Settings settings, String texture) {
@@ -64,5 +68,10 @@ public class RoadBlock extends AbstractRoadBlock {
   @Override
   public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
 
+  }
+
+  @Override
+  protected MapCodec<? extends RoadBlock> getCodec() {
+    return CODEC;
   }
 }

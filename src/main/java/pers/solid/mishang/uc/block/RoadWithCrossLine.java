@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -28,6 +30,8 @@ public interface RoadWithCrossLine extends Road {
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithCrossLine {
+    public static final MapCodec<Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), lineColorFieldCodec()).apply(i, Impl::new));
+
     public Impl(Settings settings, LineColor lineColor) {
       super(settings, lineColor, LineType.NORMAL);
     }
@@ -56,6 +60,11 @@ public interface RoadWithCrossLine extends Road {
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
       BRRPHelper.addModelWithSlab(pack, Impl.this);
+    }
+
+    @Override
+    protected MapCodec<? extends Impl> getCodec() {
+      return CODEC;
     }
   }
 }

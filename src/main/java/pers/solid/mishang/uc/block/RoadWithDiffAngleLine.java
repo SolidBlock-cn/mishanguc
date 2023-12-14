@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -59,6 +61,7 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
   }
 
   class Impl extends RoadWithAngleLine.Impl implements RoadWithDiffAngleLine {
+    public static final MapCodec<RoadWithDiffAngleLine.Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), lineColorFieldCodec(), LineColor.CODEC.fieldOf("line_color2").forGetter(b -> b.lineColor2), lineTypeFieldCodec(), LineType.CODEC.fieldOf("line_type2").forGetter(b -> b.lineType2), RoadWithAngleLine.isBevelCodec()).apply(i, (settings, lineColor, lineColor2, lineType, lineType2, isBevel) -> new RoadWithDiffAngleLine.Impl(settings, lineColor, lineColor2, lineType, lineType2, isBevel, null, null)));
     public final LineColor lineColor2;
     public final LineType lineType2;
     private final String lineSide2;
@@ -127,6 +130,11 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
       BRRPHelper.addModelWithSlabWithMirrored(pack, RoadWithDiffAngleLine.Impl.this);
+    }
+
+    @Override
+    protected MapCodec<? extends RoadWithDiffAngleLine.Impl> getCodec() {
+      return CODEC;
     }
   }
 }

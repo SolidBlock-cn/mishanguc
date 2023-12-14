@@ -139,6 +139,11 @@ public class SimpleHandrailBlock extends HandrailBlock {
     return RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_rail").flatXmap(block -> block instanceof SimpleHandrailBlock simpleHandrailBlock ? DataResult.success(simpleHandrailBlock) : DataResult.error(() -> block + "not instance of SimpleHandrailBlock"), DataResult::success).forGetter(baseGetter)).apply(instance, function));
   }
 
+  @Override
+  protected MapCodec<? extends SimpleHandrailBlock> getCodec() {
+    return CODEC;
+  }
+
   public static class CentralBlock extends HandrailCentralBlock<SimpleHandrailBlock> {
     public static final MapCodec<CentralBlock> CODEC = createSubCodec(b -> b.baseHandrail, CentralBlock::new);
 
@@ -248,10 +253,5 @@ public class SimpleHandrailBlock extends HandrailBlock {
     protected MapCodec<? extends OuterBlock> getCodec() {
       return CODEC;
     }
-  }
-
-  @Override
-  protected MapCodec<? extends SimpleHandrailBlock> getCodec() {
-    return CODEC;
   }
 }

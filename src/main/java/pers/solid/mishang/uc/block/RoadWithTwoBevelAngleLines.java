@@ -1,7 +1,11 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.datafixers.util.Function3;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -77,7 +81,12 @@ public interface RoadWithTwoBevelAngleLines extends Road {
     return BlockStateModelGenerator.createSingletonBlockState((Block) this, getBlockModelId()).coordinate(BlockStateModelGenerator.createSouthDefaultHorizontalRotationStates());
   }
 
+  static <B extends AbstractRoadBlock & RoadWithTwoBevelAngleLines> MapCodec<B> createCodec(RecordCodecBuilder<B, AbstractBlock.Settings> settingsCodec, Function3<AbstractBlock.Settings, LineColor, LineType, B> function) {
+    return RecordCodecBuilder.mapCodec(i -> i.group(settingsCodec, AbstractRoadBlock.lineColorFieldCodec(), AbstractRoadBlock.lineTypeFieldCodec()).apply(i, function));
+  }
+
   class ImplWithTwoLayerTexture extends AbstractRoadBlock implements RoadWithTwoBevelAngleLines {
+    public static final MapCodec<ImplWithTwoLayerTexture> CODEC = RoadWithTwoBevelAngleLines.createCodec(createSettingsCodec(), ImplWithTwoLayerTexture::new);
 
     public ImplWithTwoLayerTexture(Settings settings, LineColor lineColor, LineType lineType) {
       super(settings, lineColor, lineType);
@@ -115,9 +124,15 @@ public interface RoadWithTwoBevelAngleLines extends Road {
     public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
       tooltip.add(TextBridge.translatable("lineType.biBevelAngleLine", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
     }
+
+    @Override
+    protected MapCodec<? extends ImplWithTwoLayerTexture> getCodec() {
+      return CODEC;
+    }
   }
 
   class ImplWithThreeLayerTexture extends AbstractRoadBlock implements RoadWithTwoBevelAngleLines {
+    public static final MapCodec<ImplWithThreeLayerTexture> CODEC = RoadWithTwoBevelAngleLines.createCodec(createSettingsCodec(), ImplWithThreeLayerTexture::new);
 
     public ImplWithThreeLayerTexture(Settings settings, LineColor lineColor, LineType lineType) {
       super(settings, lineColor, lineType);
@@ -154,6 +169,11 @@ public interface RoadWithTwoBevelAngleLines extends Road {
     @Override
     public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
       tooltip.add(TextBridge.translatable("lineType.biBevelAngleLine", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
+    }
+
+    @Override
+    protected MapCodec<? extends ImplWithThreeLayerTexture> getCodec() {
+      return CODEC;
     }
   }
 }

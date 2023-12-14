@@ -1,5 +1,8 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -30,6 +33,7 @@ import java.util.Map;
  * 类似于墙上的灯方块，但是是条状的，因此具有多一个属性。
  */
 public class StripWallLightBlock extends WallLightBlock implements LightConnectable {
+  public static final MapCodec<StripWallLightBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(Codec.STRING.fieldOf("light_color").forGetter(b -> b.lightColor), createSettingsCodec()).apply(i, StripWallLightBlock::new));
   protected static final EnumProperty<StripType> STRIP_TYPE =
       EnumProperty.of("strip_type", StripType.class);
   private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION_WHEN_HORIZONTAL =
@@ -158,5 +162,10 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
   public void writeBlockModel(RuntimeResourcePack pack) {
     super.writeBlockModel(pack);
     pack.addModel(getBlockModelId().brrp_suffixed("_vertical"), getBlockModelVertical());
+  }
+
+  @Override
+  protected MapCodec<? extends StripWallLightBlock> getCodec() {
+    return CODEC;
   }
 }

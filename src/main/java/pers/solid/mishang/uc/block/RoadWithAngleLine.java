@@ -1,5 +1,8 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -86,7 +89,15 @@ public interface RoadWithAngleLine extends Road {
 
   boolean isBevel();
 
+  @NotNull
+  static <B extends RoadWithAngleLine> RecordCodecBuilder<B, Boolean> isBevelCodec() {
+    return Codec.BOOL.fieldOf("is_bevel").forGetter(RoadWithAngleLine::isBevel);
+  }
+
   class Impl extends AbstractRoadBlock implements RoadWithAngleLine {
+    public static final MapCodec<Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), lineColorFieldCodec(), lineTypeFieldCodec(), isBevelCodec()).apply(i, (settings, lineColor, lineType, isBevel) -> new Impl(settings, lineColor, lineType, null, isBevel, null)));
+
+
     private final boolean isBevel;
     protected final String lineSide;
     protected final String lineTop;
@@ -117,7 +128,8 @@ public interface RoadWithAngleLine extends Road {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull ModelJsonBuilder getBlockModel() {
+    public ModelJsonBuilder getBlockModel() {
+      if (lineSide == null || lineTop == null) return null;
       return ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_angle_line")).setTextures(new FasterJTextures().base("asphalt").lineSide(lineSide).lineTop(lineTop));
     }
 
@@ -134,6 +146,11 @@ public interface RoadWithAngleLine extends Road {
         tooltip.add(TextBridge.translatable("lineType.angle.right").formatted(Formatting.BLUE));
       }
       tooltip.add(TextBridge.translatable("lineType.angle.composed", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
+    }
+
+    @Override
+    protected MapCodec<? extends Impl> getCodec() {
+      return CODEC;
     }
   }
 }

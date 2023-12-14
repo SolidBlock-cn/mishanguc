@@ -31,8 +31,18 @@ import java.util.List;
 public abstract class AbstractRoadBlock extends Block implements Road {
   protected final LineColor lineColor;
   protected final LineType lineType;
-  protected final RecordCodecBuilder<AbstractRoadBlock, LineColor> LINE_COLOR_FIELD_CODEC = LineColor.CODEC.fieldOf("line_color").forGetter(b -> b.lineColor);
-  protected final RecordCodecBuilder<AbstractRoadBlock, LineType> LINE_TYPE_FIELD_CODEC = LineType.CODEC.fieldOf("line_type").forGetter(b -> b.lineType);
+  protected static final RecordCodecBuilder<AbstractRoadBlock, LineColor> LINE_COLOR_FIELD_CODEC = LineColor.CODEC.fieldOf("line_color").forGetter(b -> b.lineColor);
+  protected static final RecordCodecBuilder<AbstractRoadBlock, LineType> LINE_TYPE_FIELD_CODEC = LineType.CODEC.fieldOf("line_type").forGetter(b -> b.lineType);
+
+  @SuppressWarnings("unchecked")
+  protected static <B extends AbstractRoadBlock> RecordCodecBuilder<B, LineColor> lineColorFieldCodec() {
+    return (RecordCodecBuilder<B, LineColor>) LINE_COLOR_FIELD_CODEC;
+  }
+
+  @SuppressWarnings("unchecked")
+  protected static <B extends AbstractRoadBlock> RecordCodecBuilder<B, LineType> lineTypeFieldCodec() {
+    return (RecordCodecBuilder<B, LineType>) LINE_TYPE_FIELD_CODEC;
+  }
 
   public AbstractRoadBlock(Settings settings, LineColor lineColor, LineType lineType) {
     super(settings);

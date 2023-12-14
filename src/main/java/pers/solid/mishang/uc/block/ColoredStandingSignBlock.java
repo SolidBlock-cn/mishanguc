@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -18,6 +20,8 @@ import pers.solid.mishang.uc.blockentity.ColoredStandingSignBlockEntity;
 import java.util.List;
 
 public class ColoredStandingSignBlock extends StandingSignBlock implements ColoredBlock {
+  public static final MapCodec<ColoredStandingSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec()).apply(instance, ColoredStandingSignBlock::new));
+
   public ColoredStandingSignBlock(@NotNull Block baseBlock) {
     super(baseBlock);
   }
@@ -42,5 +46,10 @@ public class ColoredStandingSignBlock extends StandingSignBlock implements Color
   @Override
   public LootTable.Builder getLootTable() {
     return new VanillaBlockLootTableGenerator().drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  }
+
+  @Override
+  protected MapCodec<? extends ColoredStandingSignBlock> getCodec() {
+    return CODEC;
   }
 }

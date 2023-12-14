@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -143,6 +144,7 @@ public interface RoadWithAutoLine extends Road {
     /**
      * 45°的斜线
      */
-    BEVEL
+    BEVEL;
+    public static final Codec<RoadAutoLineType> CODEC = Codec.BOOL.xmap(b -> b ? BEVEL : RIGHT_ANGLE, e -> e == BEVEL);
   }
 }

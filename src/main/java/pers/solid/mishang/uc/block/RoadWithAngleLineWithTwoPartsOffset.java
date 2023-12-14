@@ -1,5 +1,8 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -35,6 +38,8 @@ public interface RoadWithAngleLineWithTwoPartsOffset extends RoadWithAngleLine {
     protected final String lineSide2;
     private final int offsetOutwards;
 
+    public static final MapCodec<RoadWithAngleLineWithTwoPartsOffset.Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), lineColorFieldCodec(), lineTypeFieldCodec(), RoadWithAngleLine.isBevelCodec(), Codec.INT.fieldOf("offset_outwards").forGetter(b -> b.offsetOutwards)).apply(i, (settings, lineColor, lineType, isBevel, offsetOutwards) -> new RoadWithAngleLineWithTwoPartsOffset.Impl(settings, lineColor, lineType, isBevel, null, null, null, offsetOutwards)));
+
     public Impl(Settings settings, LineColor lineColor, LineType lineType, boolean isBevel, String lineTop, String lineSide, String lineSide2, int offsetOutwards) {
       super(settings, lineColor, lineType, isBevel, lineTop);
       this.lineSide = lineSide;
@@ -61,6 +66,11 @@ public interface RoadWithAngleLineWithTwoPartsOffset extends RoadWithAngleLine {
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
       BRRPHelper.addModelWithSlabWithMirrored(pack, this);
+    }
+
+    @Override
+    protected MapCodec<? extends RoadWithAngleLineWithTwoPartsOffset.Impl> getCodec() {
+      return CODEC;
     }
   }
 }

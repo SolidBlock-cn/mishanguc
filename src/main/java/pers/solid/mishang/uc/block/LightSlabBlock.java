@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -9,12 +10,19 @@ import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import pers.solid.brrp.v1.BRRPUtils;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.generator.BRRPSlabBlock;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
 
 @ApiStatus.AvailableSince("1.1.0")
 public class LightSlabBlock extends BRRPSlabBlock {
+  public static final MapCodec<LightSlabBlock> CODEC = BRRPUtils.createCodecWithBaseBlock(createSettingsCodec(), LightSlabBlock::new);
+
+  public LightSlabBlock(@NotNull Block baseBlock, Settings settings) {
+    super(baseBlock, settings);
+  }
+
   public LightSlabBlock(@NotNull Block baseBlock) {
     super(baseBlock);
   }
@@ -42,5 +50,10 @@ public class LightSlabBlock extends BRRPSlabBlock {
   @Override
   public RecipeCategory getRecipeCategory() {
     return RecipeCategory.BUILDING_BLOCKS;
+  }
+
+  @Override
+  public MapCodec<? extends LightSlabBlock> getCodec() {
+    return CODEC;
   }
 }

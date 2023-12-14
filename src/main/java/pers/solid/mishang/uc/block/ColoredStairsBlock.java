@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -18,6 +19,7 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
+import pers.solid.brrp.v1.BRRPUtils;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.generator.BRRPStairsBlock;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
@@ -26,6 +28,8 @@ import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import java.util.List;
 
 public class ColoredStairsBlock extends BRRPStairsBlock implements ColoredBlock {
+  public static final MapCodec<ColoredStairsBlock> CODEC = BRRPUtils.createCodecWithBaseBlock(createSettingsCodec(), ColoredStairsBlock::new);
+
   public ColoredStairsBlock(Block baseBlock, Settings settings) {
     super(baseBlock, settings);
   }
@@ -75,5 +79,10 @@ public class ColoredStairsBlock extends BRRPStairsBlock implements ColoredBlock 
   @Override
   public RecipeCategory getRecipeCategory() {
     return RecipeCategory.BUILDING_BLOCKS;
+  }
+
+  @Override
+  public MapCodec<? extends ColoredStairsBlock> getCodec() {
+    return CODEC;
   }
 }

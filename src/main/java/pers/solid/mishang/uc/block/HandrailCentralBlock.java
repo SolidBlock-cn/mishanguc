@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -213,4 +214,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   public @Nullable RecipeCategory getRecipeCategory() {
     return RecipeCategory.DECORATIONS;
   }
+
+  @Override
+  protected abstract MapCodec<? extends HandrailCentralBlock<?>> getCodec();
 }

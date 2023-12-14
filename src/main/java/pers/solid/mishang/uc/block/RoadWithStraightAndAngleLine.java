@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -76,6 +78,7 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithStraightAndAngleLine {
+    public static final MapCodec<RoadWithStraightAndAngleLine.Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), lineColorFieldCodec(), LineColor.CODEC.fieldOf("line_color_side").forGetter(b -> b.lineColorSide), lineTypeFieldCodec(), LineType.CODEC.fieldOf("line_type_side").forGetter(b -> b.lineTypeSide)).apply(i, RoadWithStraightAndAngleLine.Impl::new));
     /**
      * 用于构造函数，道路是否拥有 {@link #BEVEL_TOP} 属性。在构造函数调用之前就应该被计算。
      */
@@ -256,6 +259,11 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
         tooltip.add(TextBridge.translatable("lineType.straightAndAngle.straight", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
         tooltip.add(TextBridge.translatable("lineType.straightAndAngle.bevel", lineColorSide.getName(), lineTypeSide.getName()).formatted(Formatting.BLUE));
       }
+    }
+
+    @Override
+    protected MapCodec<? extends RoadWithStraightAndAngleLine.Impl> getCodec() {
+      return CODEC;
     }
   }
 }

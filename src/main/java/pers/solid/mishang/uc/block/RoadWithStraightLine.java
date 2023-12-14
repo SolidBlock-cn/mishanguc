@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -83,6 +85,7 @@ public interface RoadWithStraightLine extends Road {
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithStraightLine {
+    public static final MapCodec<Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), lineColorFieldCodec(), lineTypeFieldCodec()).apply(i, (s, c, t) -> new Impl(s, c, t, null)));
     private final String lineTexture;
 
     public Impl(Settings settings, LineColor lineColor, LineType lineType, String lineTexture) {
@@ -107,6 +110,7 @@ public interface RoadWithStraightLine extends Road {
     @Environment(EnvType.CLIENT)
     @Override
     public @NotNull ModelJsonBuilder getBlockModel() {
+      if (lineTexture == null) return null;
       return ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_straight_line")).setTextures(new FasterJTextures().base("asphalt").lineSide(lineTexture).lineTop(lineTexture));
     }
 
@@ -114,6 +118,11 @@ public interface RoadWithStraightLine extends Road {
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
       BRRPHelper.addModelWithSlab(pack, Impl.this);
+    }
+
+    @Override
+    protected MapCodec<? extends Impl> getCodec() {
+      return CODEC;
     }
   }
 }

@@ -1,6 +1,9 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.util.math.BlockPos;
@@ -14,6 +17,7 @@ import java.util.Map;
  * 柱形灯块。
  */
 public class ColumnWallLightBlock extends WallLightBlock {
+  public static final MapCodec<ColumnWallLightBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.STRING.fieldOf("light_color").forGetter(b -> b.lightColor), createSettingsCodec(), Codec.INT.fieldOf("size_type").forGetter(block -> block.sizeType)).apply(instance, ColumnWallLightBlock::new));
   private final int sizeType;
   public static final Map<Direction.Axis, VoxelShape> SHAPES7 = createColumnShapes(7);
   public static final Map<Direction.Axis, VoxelShape> SHAPES6 = createColumnShapes(6);
@@ -42,5 +46,10 @@ public class ColumnWallLightBlock extends WallLightBlock {
         Direction.Axis.Y, createCuboidShape(min, 0, min, 16 - min, 16, 16 - min),
         Direction.Axis.Z, createCuboidShape(min, min, 0, 16 - min, 16 - min, 16)
     );
+  }
+
+  @Override
+  protected MapCodec<? extends ColumnWallLightBlock> getCodec() {
+    return CODEC;
   }
 }

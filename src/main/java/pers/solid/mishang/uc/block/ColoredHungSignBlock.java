@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.annotations.Beta;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -20,6 +22,8 @@ import java.util.List;
 
 @Beta
 public class ColoredHungSignBlock extends HungSignBlock implements ColoredBlock {
+  public static final MapCodec<ColoredHungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec()).apply(instance, ColoredHungSignBlock::new));
+
   public ColoredHungSignBlock(@NotNull Block baseBlock) {
     super(baseBlock);
   }

@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -90,6 +92,8 @@ public interface RoadWithJointLine extends Road {
     protected final String lineSide;
     protected final String lineSide2;
 
+    public static final MapCodec<Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), lineColorFieldCodec(), LineColor.CODEC.fieldOf("line_color_side").forGetter(b -> b.lineColorSide), lineTypeFieldCodec(), LineType.CODEC.fieldOf("line_type_side").forGetter(b -> b.lineTypeSide)).apply(i, (settings, lineColor, lineColorSide, lineType, lineTypeSide) -> new Impl(settings, lineColor, lineColorSide, lineType, lineTypeSide, null)));
+
     public Impl(
         Settings settings,
         LineColor lineColor,
@@ -151,6 +155,11 @@ public interface RoadWithJointLine extends Road {
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
       BRRPHelper.addModelWithSlab(pack, this);
+    }
+
+    @Override
+    protected MapCodec<? extends Impl> getCodec() {
+      return CODEC;
     }
   }
 }

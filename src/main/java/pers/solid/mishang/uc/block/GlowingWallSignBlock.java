@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -16,6 +18,7 @@ import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.util.TextBridge;
 
 public class GlowingWallSignBlock extends WallSignBlock {
+  public static final MapCodec<GlowingWallSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec(), createSettingsCodec()).apply(instance, GlowingWallSignBlock::new));
   @ApiStatus.AvailableSince("0.1.7")
   protected static final Identifier DEFAULT_GLOW_TEXTURE = new Identifier("mishanguc:block/white_light");
   /**
@@ -50,5 +53,10 @@ public class GlowingWallSignBlock extends WallSignBlock {
   @Environment(EnvType.CLIENT)
   public @NotNull ModelJsonBuilder getBlockModel() {
     return ModelJsonBuilder.create(new Identifier("mishanguc:block/glowing_wall_sign")).addTexture("texture", getBaseTexture()).addTexture("glow", glowTexture);
+  }
+
+  @Override
+  protected MapCodec<? extends GlowingWallSignBlock> getCodec() {
+    return CODEC;
   }
 }

@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -64,6 +65,7 @@ import java.util.List;
  */
 @ApiStatus.AvailableSince("1.0.2")
 public class StandingSignBlock extends Block implements BlockEntityProvider, Waterloggable, BlockResourceGenerator {
+  public static final MapCodec<StandingSignBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(baseBlockCodec(), createSettingsCodec()).apply(i, StandingSignBlock::new));
 
   public static final IntProperty ROTATION = Properties.ROTATION;
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -407,5 +409,10 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
         new Identifier("mishanguc", "edit_sign"),
         Util.make(PacketByteBufs.create(), packet -> packet.writeBlockPos(pos).writeBlockHitResult(hit)));
     return ActionResult.SUCCESS;
+  }
+
+  @Override
+  protected MapCodec<? extends StandingSignBlock> getCodec() {
+    return CODEC;
   }
 }

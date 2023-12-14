@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
+import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -265,9 +266,13 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
     return RecipeCategory.DECORATIONS;
   }
 
+  @Override
+  protected abstract MapCodec<? extends HandrailStairBlock<?>> getCodec();
+
   public enum Position implements StringIdentifiable {
     LEFT("left"), CENTER("center"), RIGHT("right");
-
+    @SuppressWarnings("deprecation")
+    public static final EnumCodec<Position> CODEC = StringIdentifiable.createCodec(Position::values);
     private final String name;
 
     Position(@NotNull String name) {
@@ -290,7 +295,8 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
 
   public enum Shape implements StringIdentifiable {
     BOTTOM("bottom"), MIDDLE("middle"), TOP("top");
-
+    @SuppressWarnings("deprecation")
+    public static final EnumCodec<Shape> CODEC = StringIdentifiable.createCodec(Shape::values);
     private final String name;
 
     Shape(String name) {

@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -12,6 +14,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -43,6 +46,11 @@ import java.util.Map;
  * 悬挂的告示牌上面的专用的悬挂物方块。其方块状态会与其下方的悬挂告示牌方块同步。
  */
 public class HungSignBarBlock extends Block implements Waterloggable, BlockResourceGenerator {
+  public static final MapCodec<ColoredHungSignBarBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec()).apply(instance, ColoredHungSignBarBlock::new));
+
+  protected static <B extends HungSignBarBlock> RecordCodecBuilder<B, Block> createBaseBlockCodec() {
+    return Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(b -> b.baseBlock);
+  }
 
   public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -314,5 +322,10 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
   @Override
   public @Nullable RecipeCategory getRecipeCategory() {
     return RecipeCategory.DECORATIONS;
+  }
+
+  @Override
+  protected MapCodec<? extends HungSignBarBlock> getCodec() {
+    return CODEC;
   }
 }

@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -89,7 +90,15 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       MishangUtils.createHorizontalDirectionToShape(7.5, 13, 13, 8.5, 16, 14);
   private static final VoxelShape SHAPE_WIDENED_X = createCuboidShape(6.5, 5, 0, 9.5, 16, 16);
   private static final VoxelShape SHAPE_WIDENED_Z = createCuboidShape(0, 5, 6.5, 16, 16, 9.5);
-  protected static final RecordCodecBuilder<ColoredGlowingHungSignBlock, Block> BASE_BLOCK_CODEC = Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(b -> b.baseBlock);
+  protected static final RecordCodecBuilder<HungSignBlock, Block> BASE_BLOCK_CODEC = Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(b -> b.baseBlock);
+
+  public static final MapCodec<HungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), createSettingsCodec()).apply(instance, HungSignBlock::new));
+
+  @SuppressWarnings("unchecked")
+  protected static <B extends HungSignBlock> RecordCodecBuilder<B, Block> baseBlockCodec() {
+    return (RecordCodecBuilder<B, Block>) BASE_BLOCK_CODEC;
+  }
+
   public final @Nullable Block baseBlock;
 
   /**
@@ -465,5 +474,10 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     } else {
       return super.isSideInvisible(state, stateFrom, direction);
     }
+  }
+
+  @Override
+  protected MapCodec<? extends HungSignBlock> getCodec() {
+    return CODEC;
   }
 }

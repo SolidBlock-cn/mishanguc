@@ -2,6 +2,9 @@ package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -107,6 +110,7 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
     protected final String lineSide2;
     protected final String lineTop;
     private final int offsetLevel;
+    public static final MapCodec<Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), lineColorFieldCodec(), LineColor.CODEC.fieldOf("line_color_side").forGetter(b -> b.lineColorSide), lineTypeFieldCodec(), LineType.CODEC.fieldOf("line_type_side").forGetter(b -> b.lineTypeSide), Codec.INT.fieldOf("offset_leve").forGetter(b -> b.offsetLevel)).apply(i, (settings, lineColor, lineColorSide, lineType, lineTypeSide, offsetLevel) -> new Impl(settings, lineColor, lineColorSide, lineType, lineTypeSide, null, offsetLevel)));
 
     /**
      * 由不带偏移的 T 字形道路映射到带有偏移的 T 字形道路的映射。这里的偏移，是指的只有半边的那条线路的偏移。
@@ -188,6 +192,11 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
       BRRPHelper.addModelWithSlabWithMirrored(pack, Impl.this);
+    }
+
+    @Override
+    protected MapCodec<? extends Impl> getCodec() {
+      return CODEC;
     }
   }
 }

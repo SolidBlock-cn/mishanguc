@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -289,4 +290,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
   public @Nullable RecipeCategory getRecipeCategory() {
     return RecipeCategory.DECORATIONS;
   }
+
+  @Override
+  protected abstract MapCodec<? extends HandrailBlock> getCodec();
 }

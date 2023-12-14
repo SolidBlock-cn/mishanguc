@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -20,12 +22,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GlowingHungSignBlock extends HungSignBlock {
+  public static final MapCodec<GlowingHungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), createSettingsCodec()).apply(instance, GlowingHungSignBlock::new));
   @ApiStatus.AvailableSince("0.1.7")
   protected static final String DEFAULT_GLOW_TEXTURE = "mishanguc:block/white_light";
   public String glowTexture;
 
-  public GlowingHungSignBlock(@Nullable Block baseBlock, FabricBlockSettings settings) {
-    super(baseBlock, settings.luminance(15));
+  public GlowingHungSignBlock(@Nullable Block baseBlock, Settings settings) {
+    super(baseBlock, settings.luminance(s -> 15));
     this.glowTexture = DEFAULT_GLOW_TEXTURE;
   }
 
@@ -78,5 +81,10 @@ public class GlowingHungSignBlock extends HungSignBlock {
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
         .criterionFromItem("has_base_block", baseBlock).criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN)
         .setCustomRecipeCategory("signs");
+  }
+
+  @Override
+  protected MapCodec<? extends GlowingHungSignBlock> getCodec() {
+    return CODEC;
   }
 }

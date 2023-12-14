@@ -1,5 +1,8 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -29,10 +32,12 @@ import java.util.function.Function;
 
 @ApiStatus.AvailableSince("0.2.4")
 public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock, BlockResourceGenerator {
-  private final Function<Block, LootTable.Builder> lootBuilder;
+  private final @Nullable Function<Block, LootTable.Builder> lootBuilder;
   private final String allTexture;
 
-  public ColoredLeavesBlock(Settings settings, Function<Block, LootTable.Builder> lootBuilder, String allTexture) {
+  public static final MapCodec<ColoredLeavesBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createSettingsCodec(), Codec.STRING.fieldOf("all_texture").forGetter(o -> o.allTexture)).apply(instance, (settings1, s) -> new ColoredLeavesBlock(settings1, null, s)));
+
+  public ColoredLeavesBlock(Settings settings, @Nullable Function<Block, LootTable.Builder> lootBuilder, String allTexture) {
     super(settings);
     this.lootBuilder = lootBuilder;
     this.allTexture = allTexture;
@@ -69,6 +74,12 @@ public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock, Blo
 
   @Override
   public LootTable.Builder getLootTable() {
+    if (lootBuilder == null) return null;
     return (lootBuilder.apply(this).apply(COPY_COLOR_LOOT_FUNCTION));
+  }
+
+  @Override
+  public MapCodec<? extends ColoredLeavesBlock> getCodec() {
+    return CODEC;
   }
 }

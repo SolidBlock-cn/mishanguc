@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -27,9 +28,10 @@ import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import java.util.List;
 
 public class ColoredPillarBlock extends PillarBlock implements ColoredBlock, BlockResourceGenerator {
-  private final TextureMap textures;
+  public static final MapCodec<ColoredPillarBlock> CODEC = createCodec(settings1 -> new ColoredPillarBlock(settings1, null));
+  private final @Nullable TextureMap textures;
 
-  public ColoredPillarBlock(Settings settings, TextureMap textures) {
+  public ColoredPillarBlock(Settings settings, @Nullable TextureMap textures) {
     super(settings);
     this.textures = textures;
   }
@@ -54,6 +56,7 @@ public class ColoredPillarBlock extends PillarBlock implements ColoredBlock, Blo
   @Environment(EnvType.CLIENT)
   @Override
   public @UnknownNullability ModelJsonBuilder getBlockModel() {
+    if (textures == null) return null;
     return ModelJsonBuilder.create(new Identifier("mishanguc:block/colored_cube_column")).setTextures(textures);
   }
 
@@ -73,5 +76,10 @@ public class ColoredPillarBlock extends PillarBlock implements ColoredBlock, Blo
   @Override
   public LootTable.@UnknownNullability Builder getLootTable() {
     return new VanillaBlockLootTableGenerator().drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  }
+
+  @Override
+  public MapCodec<? extends ColoredPillarBlock> getCodec() {
+    return CODEC;
   }
 }
