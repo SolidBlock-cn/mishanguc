@@ -39,7 +39,7 @@
       "~1.19.2"
     ],
     "brrp_v1": ">=1.0.0",
-    "com_github_llamalad7_mixinextras": ">=0.2.0-beta.8"
+    "com_github_llamalad7_mixinextras": ">=0.2.0"
   },
   "breaks": {
     "minecraft": ">=1.19.3"
