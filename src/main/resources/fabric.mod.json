@@ -37,7 +37,8 @@
       ">=1.19-beta.5",
       ">=1.19"
     ],
-    "better_runtime_resource_pack": ">=0.8.2"
+    "brrp_v1": ">=1.0.0",
+    "com_github_llamalad7_mixinextras": ">=0.2.0"
   },
   "breaks": {
     "minecraft": ">=1.19.1"

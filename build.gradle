@@ -49,7 +49,7 @@ dependencies {
 
     // BRRP.
     modImplementation("pers.solid:brrp-fabric:${project.brrp_version}-${brrp_mc_version}") {
-        exclude group: "net.fabricmc.fabric-api"
+        transitive false
     }
 }
 
