@@ -98,7 +98,7 @@ public abstract class BlockEntityWithText extends BlockEntity {
       final NbtCompound nbt = buf.readNbt();
       server.execute(() -> {
         try {
-              final BlockEntityWithText entity = (BlockEntityWithText) player.world.getBlockEntity(blockPos);
+          final BlockEntityWithText entity = (BlockEntityWithText) player.world.getBlockEntity(blockPos);
           if (entity == null) {
             LOGGER.warn(
                 "The entity is null! Cannot write the block entity data at {} {} {}.",
