@@ -434,6 +434,8 @@
   "block.mishanguc.standing_sign.tooltip.1": "兩側都可以寫文本。",
   "block.mishanguc.standing_sign.tooltip.2": "潛行時輕觸以切換柱子的顯示狀態。",
   "block.mishanguc.tooltip.hung_sign_block": "%s側的文本:",
+  "block.mishanguc.tooltip.road.rule.1": "當前加速速度：%s。",
+  "block.mishanguc.tooltip.road.rule.2": "可以透過設置遊戲規則來修改。",
   "block.mishanguc.tooltip.road_with_angle_line.1": "直角將會圍住玩家視角前方的方向。",
   "block.mishanguc.tooltip.road_with_angle_line.2": "潛行時相反。",
   "block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.1": "直角中與玩家視線方向更加平行的那一邊",

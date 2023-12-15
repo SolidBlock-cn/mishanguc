@@ -5,6 +5,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -27,10 +28,7 @@ import net.minecraft.util.math.Direction;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.block.AbstractRoadBlock;
-import pers.solid.mishang.uc.block.ColoredBlock;
-import pers.solid.mishang.uc.block.HandrailBlock;
-import pers.solid.mishang.uc.block.StandingSignBlock;
+import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.blockentity.*;
 import pers.solid.mishang.uc.blocks.MishangucBlocks;
 import pers.solid.mishang.uc.item.CarryingToolItem;
@@ -65,6 +63,9 @@ public class MishangucClient implements ClientModInitializer {
     registerBlockEntityRenderers();
 
     registerBlockColors();
+
+    // 玩家踩在道路方块上时加速
+    ClientTickEvents.END_WORLD_TICK.register(Road.CHECK_MULTIPLIER::accept);
 
     registerNetworking();
 

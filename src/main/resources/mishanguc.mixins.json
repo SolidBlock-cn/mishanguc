@@ -23,7 +23,9 @@
     "WorldChunkMixin"
   ],
   "client": [
+    "AbstractClientPlayerEntityMixin",
     "BetterClientPlayerInteractionManagerMixin",
+    "EntityAttributeInstanceMixin",
     "GameRendererMixin",
     "ScreenMixin",
     "TextRendererAccessor",
