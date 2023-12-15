@@ -75,23 +75,17 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
 
   public static MutableText text(@NotNull WhetherConnected whetherConnected) {
     return TextBridge.translatable("roadConnectionState.whether." + whetherConnected.asString()).formatted(switch (whetherConnected) {
-      case NOT_CONNECTED ->
-          Formatting.RED;
-      case CONNECTED ->
-          Formatting.GREEN;
-      default ->
-          Formatting.YELLOW;
+      case NOT_CONNECTED -> Formatting.RED;
+      case CONNECTED -> Formatting.GREEN;
+      default -> Formatting.YELLOW;
     });
   }
 
   public static MutableText text(@NotNull LineColor lineColor) {
     return lineColor.getName().formatted(switch (lineColor) {
-      case WHITE ->
-          Formatting.WHITE;
-      case YELLOW ->
-          Formatting.YELLOW;
-      default ->
-          Formatting.GRAY;
+      case WHITE -> Formatting.WHITE;
+      case YELLOW -> Formatting.YELLOW;
+      default -> Formatting.GRAY;
     });
   }
 

@@ -198,78 +198,48 @@ public class ARRPMain implements ModInitializer {
         block -> {
           if (block instanceof StripWallLightBlock) {
             switch (((StripWallLightBlock) block).lightColor) {
-              case "white" ->
-                  whiteStripWallLights.add(block);
-              case "yellow" ->
-                  yellowStripWallLights.add(block);
-              case "cyan" ->
-                  cyanStripWallLights.add(block);
-              case "orange" ->
-                  orangeStripWallLights.add(block);
-              case "green" ->
-                  greenStripWallLights.add(block);
-              case "pink" ->
-                  pinkStripWallLights.add(block);
+              case "white" -> whiteStripWallLights.add(block);
+              case "yellow" -> yellowStripWallLights.add(block);
+              case "cyan" -> cyanStripWallLights.add(block);
+              case "orange" -> orangeStripWallLights.add(block);
+              case "green" -> greenStripWallLights.add(block);
+              case "pink" -> pinkStripWallLights.add(block);
             }
           } else if (block instanceof AutoConnectWallLightBlock) {
             switch (((AutoConnectWallLightBlock) block).lightColor) {
-              case "white" ->
-                  whiteLightDecorations.add(block);
-              case "yellow" ->
-                  yellowLightDecorations.add(block);
-              case "cyan" ->
-                  cyanLightDecorations.add(block);
-              case "orange" ->
-                  orangeLightDecorations.add(block);
-              case "green" ->
-                  greenLightDecorations.add(block);
-              case "pink" ->
-                  pinkLightDecorations.add(block);
+              case "white" -> whiteLightDecorations.add(block);
+              case "yellow" -> yellowLightDecorations.add(block);
+              case "cyan" -> cyanLightDecorations.add(block);
+              case "orange" -> orangeLightDecorations.add(block);
+              case "green" -> greenLightDecorations.add(block);
+              case "pink" -> pinkLightDecorations.add(block);
             }
           } else if (block instanceof ColumnLightBlock || block instanceof ColumnWallLightBlock) {
             switch (block instanceof ColumnLightBlock ? ((ColumnLightBlock) block).lightColor : ((ColumnWallLightBlock) block).lightColor) {
-              case "white" ->
-                  whiteColumnLights.add(block);
-              case "yellow" ->
-                  yellowColumnLights.add(block);
-              case "cyan" ->
-                  cyanColumnLights.add(block);
-              case "orange" ->
-                  orangeColumnLights.add(block);
-              case "green" ->
-                  greenColumnLights.add(block);
-              case "pink" ->
-                  pinkColumnLights.add(block);
+              case "white" -> whiteColumnLights.add(block);
+              case "yellow" -> yellowColumnLights.add(block);
+              case "cyan" -> cyanColumnLights.add(block);
+              case "orange" -> orangeColumnLights.add(block);
+              case "green" -> greenColumnLights.add(block);
+              case "pink" -> pinkColumnLights.add(block);
             }
           } else if (block instanceof WallLightBlock) {
             switch (((WallLightBlock) block).lightColor) {
-              case "white" ->
-                  whiteWallLights.add(block);
-              case "yellow" ->
-                  yellowWallLights.add(block);
-              case "cyan" ->
-                  cyanWallLights.add(block);
-              case "orange" ->
-                  orangeWallLights.add(block);
-              case "green" ->
-                  greenWallLights.add(block);
-              case "pink" ->
-                  pinkWallLights.add(block);
+              case "white" -> whiteWallLights.add(block);
+              case "yellow" -> yellowWallLights.add(block);
+              case "cyan" -> cyanWallLights.add(block);
+              case "orange" -> orangeWallLights.add(block);
+              case "green" -> greenWallLights.add(block);
+              case "pink" -> pinkWallLights.add(block);
             }
           } else if (block instanceof CornerLightBlock) {
             switch (((CornerLightBlock) block).lightColor) {
-              case "white" ->
-                  whiteCornerLights.add(block);
-              case "yellow" ->
-                  yellowCornerLights.add(block);
-              case "cyan" ->
-                  cyanCornerLights.add(block);
-              case "orange" ->
-                  orangeCornerLights.add(block);
-              case "green" ->
-                  greenCornerLights.add(block);
-              case "pink" ->
-                  pinkCornerLights.add(block);
+              case "white" -> whiteCornerLights.add(block);
+              case "yellow" -> yellowCornerLights.add(block);
+              case "cyan" -> cyanCornerLights.add(block);
+              case "orange" -> orangeCornerLights.add(block);
+              case "green" -> greenCornerLights.add(block);
+              case "pink" -> pinkCornerLights.add(block);
             }
           }
           if (block instanceof SlabBlock) {
@@ -710,7 +680,7 @@ public class ARRPMain implements ModInitializer {
       PACK.addRecipeAndAdvancement(id, recipe);  // recipeCategory should be "signs"
     }
     { // invisible glowing wall sign
-      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create( WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN, 3)
+      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN, 3)
           .pattern("---").pattern("###")
           .input('-', Items.GLOWSTONE_DUST)
           .input('#', WallSignBlocks.INVISIBLE_WALL_SIGN)

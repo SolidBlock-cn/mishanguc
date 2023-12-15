@@ -19,7 +19,7 @@ public interface SpecialDrawableType<S extends SpecialDrawable> {
    * SpecialDrawableType 的注册表。
    */
   @SuppressWarnings("unchecked")
-  SimpleRegistry<SpecialDrawableType<? extends SpecialDrawable>> REGISTRY = FabricRegistryBuilder.createSimple((Class<SpecialDrawableType<? extends SpecialDrawable>>)(Class<?>)SpecialDrawableType.class,new Identifier("mishanguc", "special_drawable_type")).buildAndRegister();
+  SimpleRegistry<SpecialDrawableType<? extends SpecialDrawable>> REGISTRY = FabricRegistryBuilder.createSimple((Class<SpecialDrawableType<? extends SpecialDrawable>>) (Class<?>) SpecialDrawableType.class, new Identifier("mishanguc", "special_drawable_type")).buildAndRegister();
 
   /**
    * 根据已注册的 id 查询对象，如果不存在则返回 {@code null}。
