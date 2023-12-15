@@ -161,7 +161,24 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 上方第一行：重排按钮。
    */
-  public final ButtonWidget rearrangeButton = new ButtonWidget(this.width / 2 + 190, this.height - 50, 80, 20, TextBridge.translatable("message.mishanguc.rearrange"), button -> rearrange(), createTooltipSupplier(TextBridge.translatable("message.mishanguc.rearrange.tooltip")));
+  public final ButtonWidget clearButton = new ButtonWidget(this.width / 2 + 190, this.height - 50, 80, 20, BUTTON_CLEAR_MESSAGE, button -> {
+    if (button.getMessage() == BUTTON_CLEAR_CONFIRM_MESSAGE) {
+      for (int i = AbstractSignBlockEditScreen.this.textFieldListWidget.children().size() - 1; i >= 0; i--) {
+        removeTextField(i);
+      }
+      button.setMessage(BUTTON_CLEAR_MESSAGE);
+    } else {
+      // 要求用户再次点击一次按钮才能删除。
+      button.setMessage(BUTTON_CLEAR_CONFIRM_MESSAGE);
+    }
+  }, createTooltipSupplier(() -> {
+    final AbstractSignBlockEditScreen<T> thisScreen = this;
+    if (thisScreen.clearButton.getMessage() == BUTTON_CLEAR_CONFIRM_MESSAGE) {
+      return BUTTON_CLEAR_DESCRIPTION_MESSAGE;
+    } else {
+      return BUTTON_CLEAR_CONFIRM_DESCRIPTION_MESSAGE;
+    }
+  }));
 
 
 
@@ -633,24 +650,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第三行：清除所有文本的按钮。
    */
-  public final ButtonWidget clearButton = new ButtonWidget(this.width / 2, this.height - 50, 40, 20, BUTTON_CLEAR_MESSAGE, button -> {
-    if (button.getMessage() == BUTTON_CLEAR_CONFIRM_MESSAGE) {
-      for (int i = AbstractSignBlockEditScreen.this.textFieldListWidget.children().size() - 1; i >= 0; i--) {
-        removeTextField(i);
-      }
-      button.setMessage(BUTTON_CLEAR_MESSAGE);
-    } else {
-      // 要求用户再次点击一次按钮才能删除。
-      button.setMessage(BUTTON_CLEAR_CONFIRM_MESSAGE);
-    }
-  }, createTooltipSupplier(() -> {
-    final AbstractSignBlockEditScreen<T> thisScreen = this;
-    if (thisScreen.clearButton.getMessage() == BUTTON_CLEAR_CONFIRM_MESSAGE) {
-      return BUTTON_CLEAR_DESCRIPTION_MESSAGE;
-    } else {
-      return BUTTON_CLEAR_CONFIRM_DESCRIPTION_MESSAGE;
-    }
-  }));
+  public final ButtonWidget rearrangeButton = new ButtonWidget(this.width / 2, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.rearrange"), button -> rearrange(), createTooltipSupplier(TextBridge.translatable("message.mishanguc.rearrange.tooltip")));
 
   /**
    * 下方第三行：隐藏界面
@@ -659,10 +659,10 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       .setRenderedNameSupplier(value -> Boolean.TRUE.equals(value) ? TextBridge.translatable("message.mishanguc.hide_gui.show") : TextBridge.translatable("message.mishanguc.hide_gui.hide"))
       .setTooltipSupplier(value -> Boolean.TRUE.equals(value) ? null : TextBridge.translatable("message.mishanguc.hide_gui.tooltip"));
 
-  public final ClickableWidget[] toolboxTop = new ClickableWidget[]{addTextButton, removeTextButton, moveUpButton, moveDownButton, rearrangeButton};
+  public final ClickableWidget[] toolboxTop = new ClickableWidget[]{addTextButton, removeTextButton, moveUpButton, moveDownButton, clearButton};
   public final ClickableWidget[] toolbox1 = new ClickableWidget[]{boldButton, italicButton, underlineButton, strikethroughButton, obfuscatedButton, shadeButton, sizeButton, offsetXButton, offsetYButton, offsetZButton, colorButton, outlineColorButton};
   public final ClickableWidget[] toolbox2 = new ClickableWidget[]{rotationXButton, rotationYButton, rotationZButton, scaleXButton, scaleYButton, horizontalAlignButton, verticalAlignButton, seeThroughButton, absoluteButton};
-  public final ClickableWidget[] toolbox3 = new ClickableWidget[]{setCustomValueButton, flipButton, finishButton, cancelButton, clearButton, hideButton};
+  public final ClickableWidget[] toolbox3 = new ClickableWidget[]{setCustomValueButton, flipButton, finishButton, cancelButton, rearrangeButton, hideButton};
 
 
   public AbstractSignBlockEditScreen(T entity, BlockPos blockPos, List<TextContext> textContextsEditing) {

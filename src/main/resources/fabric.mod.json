@@ -23,9 +23,6 @@
     ],
     "client": [
       "pers.solid.mishang.uc.MishangucClient"
-    ],
-    "preLaunch": [
-      "pers.solid.mishang.uc.MishangucPreLaunch"
     ]
   },
   "mixins": [
