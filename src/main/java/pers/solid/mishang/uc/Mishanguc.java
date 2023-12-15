@@ -5,8 +5,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -15,7 +13,6 @@ import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.CachedBlockPosition;
@@ -23,9 +20,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.TagKey;
-import net.minecraft.text.ClickEvent;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.registry.Registry;
@@ -35,13 +30,11 @@ import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.block.ColoredBlock;
 import pers.solid.mishang.uc.block.GlassHandrailBlock;
 import pers.solid.mishang.uc.block.HandrailBlock;
-import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.*;
 import pers.solid.mishang.uc.text.SpecialDrawableTypes;
-import pers.solid.mishang.uc.util.TextBridge;
 
 public class Mishanguc implements ModInitializer {
   public static final Logger MISHANG_LOGGER = LoggerFactory.getLogger("Mishang Urban Construction");
@@ -267,42 +260,6 @@ public class Mishanguc implements ModInitializer {
             return ActionResult.PASS;
           }
         });
-    FabricLoader.getInstance().getModContainer("mishanguc").ifPresent(modContainer -> {
-      final String version = modContainer.getMetadata().getCustomValue("branch").getAsString();
-      final String preferred;
-      if (version.equals("1.18.1")) {
-        preferred = "1.18.2";
-      } else if (version.equals("1.19")) {
-        preferred = "1.19.2";
-      } else {
-        preferred = null;
-      }
-      if (preferred != null) {
-        ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
-          if (!player.world.getGameRules().getBoolean(MishangucRules.WARN_DEPRECATED_VERSION)) return;
-          if (joined) {
-            player.sendMessage(
-                TextBridge.translatable("notice.mishanguc.version_check", version, preferred, TextBridge.literal(
-                            "/gamerule " + MishangucRules.WARN_DEPRECATED_VERSION.getName() + " false")
-                        .formatted(Formatting.YELLOW, Formatting.UNDERLINE)
-                        .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/gamerule " + MishangucRules.WARN_DEPRECATED_VERSION.getName() + " false"))))
-                    .styled(style -> style.withColor(0xdabf40)));
-          }
-        });
-      }
-    });
-    ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
-      if (joined) {
-        final GameRules gameRules = player.world.getGameRules();
-        MishangucRules.sync(gameRules.get(MishangucRules.FORCE_PLACING_TOOL_ACCESS), 0, player);
-        MishangucRules.sync(gameRules.get(MishangucRules.CARRYING_TOOL_ACCESS), 1, player);
-        MishangucRules.sync(gameRules.get(MishangucRules.ROAD_BOOST_SPEED), 3, player);
-        MishangucRules.currentRoadBoostSpeed = gameRules.get(MishangucRules.ROAD_BOOST_SPEED).get();
-        if (MishangucRules.SUSPENDS_BLOCK_LIGHT_UPDATE != null) {
-          MishangucRules.sync(gameRules.get(MishangucRules.SUSPENDS_BLOCK_LIGHT_UPDATE), 2, player);
-        }
-      }
-    });
   }
 
   private static void registerColoredBlocks() {
@@ -467,7 +424,7 @@ public class Mishanguc implements ModInitializer {
     registerFlammableAndFuels();
 
     // 玩家踩在道路方块上时，予以加速。
-    ServerTickEvents.END_WORLD_TICK.register(Road.CHECK_MULTIPLIER::accept);
+    ColumnBuildingTool.registerTempMemoryEvents();
 
     registerCommands();
     registerColoredBlocks();

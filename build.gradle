@@ -1,12 +1,10 @@
 plugins {
-    id 'fabric-loom' version '1.0-SNAPSHOT'
-    // Quiltflower 反编译器
-    id 'io.github.juuxel.loom-quiltflower' version '1.7.1'
+    id 'fabric-loom' version '1.4-SNAPSHOT'
     id 'maven-publish'
 
     id "com.modrinth.minotaur" version "2.+"
     id 'net.darkhax.curseforgegradle' version '1.1.+'
-    id "com.github.breadmoirai.github-release" version "2.4.1"
+    id "com.github.breadmoirai.github-release" version "2.5.2"
 }
 
 import com.modrinth.minotaur.dependencies.ModDependency
@@ -144,7 +142,7 @@ modrinth {
 
     projectId = "rItLmRo4" // 迷上城建模组的 Modrinth ID
     versionNumber = project.mod_version + '-' + project.minecraft_version
-    versionType = 'release'
+    versionType = project.mod_version.contains('-') ? 'beta' : 'release'  // until release of MC
     uploadFile = remapJar
     gameVersions = Arrays.asList(project.supported_versions.split(','))
 
@@ -157,8 +155,20 @@ modrinth {
             new ModDependency('JnrDtPAE', 'required')
     ]
 
-    String text = rootProject.file('README-en.md').text.replaceAll("\\[(.*?)]\\(([^/]*?)\\)", '[$1](https://github.com/SolidBlock-cn/mishanguc/blob/1.19.2/$2)')
-    syncBodyFrom = text
+githubRelease {
+    def getenv = System.getenv("GITHUB_TOKEN")
+    println "GitHub 令牌: $getenv"
+    if (getenv) token = getenv
+    owner = "SolidBlock-cn"
+    repo = "mishanguc"
+    tagName = "v$project.mod_version"
+    targetCommitish = "1.20.2"
+    body = content
+    draft = true
+    prerelease = false
+    releaseAssets remapJar, remapSourcesJar
+    allowUploadToExisting = true
+    apiEndpoint = "https://api.github.com"
 }
 
 task publishToModSites {

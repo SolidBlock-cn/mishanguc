@@ -164,8 +164,6 @@
   "block.mishanguc.road_slab_filled_with_yellow": "Road Slab Filled with Yellow",
   "block.mishanguc.road_slab_with_ws_and_bi_ba_line": "Road Slab with White S & Bi-BA Line",
   "block.mishanguc.road_slab_with_ys_and_bi_ba_line": "Road Slab with Yellow S & Bi-BA Line",
-
-  "block.mishanguc.tooltip.road": "Speed up when walking on the road.",
   "block.mishanguc.tooltip.road_with_straight_line.1": "Straight line is in the axis of player's looking.",
   "block.mishanguc.tooltip.road_with_straight_line.2": "Rotated 90 degree when sneaking.",
   "block.mishanguc.tooltip.road_with_angle_line.1": "Angle's inner is towards the player's looking.",

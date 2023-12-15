@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.json.blockstate.JBlockStates;
 import net.devtech.arrp.json.models.JModel;
 import net.devtech.arrp.json.models.JTextures;
@@ -13,6 +12,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;

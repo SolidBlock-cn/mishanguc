@@ -2,6 +2,85 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.2.7
+
+- Fixed the issue of exceptions on dedicated server with Fabric Loader above 0.15.
+- Swapped the buttons on the sign edit screen of rearrange and clear.
+
+### 1.2.6
+
+- Fixed the issue that column building tool may crash the dedicated server.
+
+### 1.2.5
+
+- Fixed the issue that text properties may be lost if they are copied from a wall sign with a text copy tool.
+- Fixed the issue that other players do not see changes after editing a sign.
+- (For 1.20.2) Removed the feature of walking accelerated on road blocks as well as relevant game rules.
+
+### 1.2.4
+
+- Fixed the issue that after deleting a row of text using Backspace in the sign edit screen, the no remaining text is selected.
+- Fixed the issue of impossibility in the sign edit screen to set custom values for properties of texts except the last line.
+- Modified the display name of glass handrail blocks.
+- Added three types of signs of various wood and stripped wood, and sign bars of stripped wood.
+- Fixed the issue that standing signs of nether woods are flammable.
+- Adjusted the sequence of some standing signs in the inventory to conform to the sequence of difference wood types in vanilla.
+- Added simple plank handrails.
+- Added nether wood framed glass handrails (including those with plank texture decoration and those with customizable colored decoration).
+- Added the obsidian framed and crying obsidian framed handrails with decorations in different textures.
+- Added glass handrails with frame of stone, cobblestone, mossy cobblestone, lapis, packed ice and blue ice.
+- In the sign edit screen, when there is no texts added, press Enter to add texts.
+- Adjusted the display in the sign edit screen, avoiding scroll bars occupying the place of text fields, and fixing the issue that user cannot scroll by dragging the scrollbar.
+
+### 1.2.3
+
+- Fixed the issue that handrail blocks on upside-down stairs are also displayed in the form of stairs.
+- Adjusted the edit screen of signs. Optimized the content and display of tooltips of buttons.
+    - The numbers now support custom values, including text color and outline color.
+    - Adjusted the display of hex color values. When alpha channel exists, the hex color displays 8 digits instead of 6.
+    - When editing the text color and outline color, similar to the custom text color in previous versions, color names and hex colors are supported. Besides, for outline colors, now special keywords `auto` and `none` are supported. Text color names and the special keywords above now support displaying suggestions.
+    - The tooltip of buttons contains shortcuts.
+    - Supports hiding the GUI to preview changes on the sign.
+    - When using mouse wheels to adjust text size, X scale or Y scale, mouse wheel scrolling up leads to sizing up or scaling up now, which conforms the user convention.
+    - Within the tooltip of the buttons, numbers that equal to integer values do not show decimal parts.
+- Adjusted the display of some items in the creative inventory. Some adjustable parameters are not added repetitively, saving more room.
+- Fast building tools now display its size of range in the name.
+- Growth tools affect the size of slimes (and magma cubes) now.
+- Growth tools can be used in dispensers.
+- Force placing tools now suppress the `onBlockAdded` method. For example, you can directly place fluids without concerning it may flow.
+- Force placing tools and fast building tools can identify in off-hands flint and steel (to place fire) and bucket (to place fluid).
+- Added colored glass panes.
+- Colored glass, colored glass pane, colored ice and colored portals can now affect beacons (depending on block tag `mishanguc:tints_beacon_beams`).
+- Adjusted the placement of slab blocks to avoid in same caves when using fast building tools to place slabs, the operation is incorrectly considered to double the slab.
+- Added column building tool.
+- Modified the mod's description.
+- (For versions 1.19.4 and above) Fixed the issue that cherry leaves use the texture of acacia leaves.
+- (For versions 1.19 and above) The block tag `#snow_layer_cannot_survive_on`, instead of mixins, is used to prevent snow placing on road blocks.
+
+### 1.2.2
+
+- Fixed the issue that road mark blocks are not displayed in the creative inventory.
+- (For 1.20 only) Removed features related to light update, as well as relevant commands, because the former content does not apply to newer versions anymore.
+- (For 1.20 only) The speed effect works even if you stand on the edge of the road block (which is also modifiable via game rules).
+
+### 1.2.1
+
+- Fixed the wrong model of road slab blocks.
+- Fixed the issue that using road connection state debugging tool may cause crashes.
+- Added more links in the Mod Menu screen.
+
+### 1.2.0
+
+- Adapted to new version BRRP.
+- Added localized mod name in the display of Mod Menu (may not support old versions of Mod Menu).
+- Removed game rule `mishanguc:warn_deprecated_version`.
+- Added a tooltip for road blocks about the speed.
+- Fixed the issue that special texts are not correctly aligned when X-scale is set.
+- Adjusted the logics of buttons of the sign edit screen. Modifying the values using mouse buttons, mouse wheel or the keyboard will be more intuitive.
+- Added the narration in the sign edit screen.
+- In the inventory, sorted the invisible signs at the front.
+- Adjusted the display of tooltips of text outline settings.
+
 ### 1.1.1
 
 Fixed the severe issue of failing to launch server.
@@ -222,7 +301,24 @@ Updated following content:
 - Added handrails. Handrails have multiple styles.
 - For force placing tool and fast building tool, in non-water-including mode, if using on waterlogged blocks, then whether the placed block is waterlogged is decided on whether the block at that position before the placement is waterlogged. For example, duplicating a waterlogged block to a non-waterlogged place, the duplicated block is not waterlogged.
 - In bi-hand mode, when using force placing tool and fast building tool, the block placed may be influenced by tags `BlockStateTag` and `BlockEntityTag`, to specify the block state and block entity of the block after placing.
-- Renamed most road blocks, to solve the problem that names are too long. As old names are no longer recognized, **if you used road blocks previously, after updating this mod, previous road blocks will disappear!** After updating the mod before entering the world, remember to back up the world.
+- Renamed most road blocks, to solve the problem that names are too long. As old names are no longer recognized,
+    *
+  *if
+  you
+  used
+  road
+  blocks
+  previously,
+  after
+  updating
+  this
+  mod,
+  previous
+  road
+  blocks
+  will
+  disappear!
+  ** After updating the mod before entering the world, remember to back up the world.
 - Added yellow and cyan light blocks, and added stripped light blocks with a background.
 - Adjusted the models of light blocks in the inventory.
 - Optimized the process of runtime data generation (including resource pack and data pack). Now more data is generated on runtime. Some block states, due to limitations of ARRP mod, still stores json files in mod file.
