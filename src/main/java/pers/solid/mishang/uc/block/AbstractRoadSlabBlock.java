@@ -14,7 +14,10 @@ import net.minecraft.loot.LootTable;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -22,7 +25,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -98,7 +100,6 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
       ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
     super.appendTooltip(stack, world, tooltip, options);
     appendDescriptionTooltip(tooltip, options);
-    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road").formatted(Formatting.GRAY));
     appendRoadTooltip(stack, world, tooltip, options);
   }
 
