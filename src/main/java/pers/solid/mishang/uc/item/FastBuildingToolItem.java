@@ -171,7 +171,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
     if (this.isIn(group)) {
       stacks.add(createStack(1, BlockMatchingRule.SAME_BLOCK));
       stacks.add(createStack(16, BlockMatchingRule.SAME_BLOCK));
-    stacks.add(createStack(32, BlockMatchingRule.SAME_BLOCK));
+      stacks.add(createStack(32, BlockMatchingRule.SAME_BLOCK));
       stacks.add(createStack(64, BlockMatchingRule.SAME_BLOCK));
     }
   }
