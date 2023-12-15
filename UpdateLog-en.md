@@ -2,10 +2,20 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.2.7
+
+- Fixed the issue of exceptions on dedicated server with Fabric Loader above 0.15.
+- Swapped the buttons on the sign edit screen of rearrange and clear.
+
+### 1.2.6
+
+- Fixed the issue that column building tool may crash the dedicated server.
+
 ### 1.2.5
 
 - Fixed the issue that text properties may be lost if they are copied from a wall sign with a text copy tool.
 - Fixed the issue that other players do not see changes after editing a sign.
+- (For 1.20.2) Removed the feature of walking accelerated on road blocks as well as relevant game rules.
 
 ### 1.2.4
 
