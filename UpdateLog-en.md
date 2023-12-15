@@ -2,6 +2,11 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.2.7
+
+- Fixed the issue of exceptions on dedicated server with Fabric Loader above 0.15.
+- Swapped the buttons on the sign edit screen of rearrange and clear.
+
 ### 1.2.6
 
 - Fixed the issue that column building tool may crash the dedicated server.
