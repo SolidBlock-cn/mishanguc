@@ -4,16 +4,15 @@ plugins {
     id 'maven-publish'
 
     id "com.modrinth.minotaur" version "2.+"
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'net.darkhax.curseforgegradle' version '1.1.+'
     id "com.github.breadmoirai.github-release" version "2.4.1"
 }
 
 import com.modrinth.minotaur.dependencies.ModDependency
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
-archivesBaseName = project.archives_base_name
+base {
+    archivesName = project.archives_base_name
+}
 version = project.mod_version + '-' + project.minecraft_version
 group = project.maven_group
 
@@ -62,6 +61,9 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.
     // If you remove this line, sources will not be generated.
@@ -70,7 +72,7 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
+        rename { "${it}_${project.base.archivesName}" }
     }
 }
 
@@ -118,31 +120,22 @@ println "当前版本（${project.mod_version}）更新记录："
 final var content = getUpdateLog(project.mod_version)
 println content
 
-curseforge {
+tasks.register('curseforge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     def getenv = System.getenv("CURSEFORGE_TOKEN")
     println("CurseForge 令牌: $getenv")
-    if (getenv) apiKey = getenv
-    project {
-        id = '583071'
-        changelog = content
-        changelogType = 'markdown'
-        releaseType = 'release'
-        mainArtifact remapJar
+    if (getenv) apiToken = getenv
 
-        for (final def v in (project.supported_minecraft_versions.split(','))) {
-            addGameVersion v
-        }
-        addGameVersion 'Fabric'
+    def mainFile = upload('583071', remapJar)
+    mainFile.changelog = content
+    mainFile.changelogType = 'markdown'
+    mainFile.releaseType = project.mod_version.contains('-') ? 'beta' : 'release'
 
-        relations {
-            requiredDependency 'fabric-api'
-            requiredDependency 'better-runtime-resource-pack'
-        }
+    for (final def v in (project.supported_minecraft_versions.split(','))) {
+        mainFile.addGameVersion v
     }
 
-    options {
-        forgeGradleIntegration = false
-    }
+    mainFile.addRelations 'requiredDependency', 'fabric-api', 'better-runtime-resource-pack'
+    def sourcesFile = mainFile.withAdditionalFile(sourcesJar)
 }
 
 modrinth {
