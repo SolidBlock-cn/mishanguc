@@ -38,7 +38,7 @@
       ">=1.20.3"
     ],
     "brrp_v1": ">=1.0.0",
-    "com_github_llamalad7_mixinextras": ">=0.2.0"
+    "mixinextras": ">=0.2.0"
   },
   "breaks": {
   },
