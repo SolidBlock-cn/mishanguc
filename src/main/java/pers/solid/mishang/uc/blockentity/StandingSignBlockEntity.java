@@ -1,6 +1,9 @@
 package pers.solid.mishang.uc.blockentity;
 
 import com.google.common.collect.ImmutableList;
+import it.unimi.dsi.fastutil.booleans.BooleanArraySet;
+import it.unimi.dsi.fastutil.booleans.BooleanSet;
+import it.unimi.dsi.fastutil.booleans.BooleanSets;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -47,6 +50,9 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
    */
   public @Nullable Boolean editedSide;
 
+  public BooleanSet waxed = BooleanSets.emptySet();
+  public BooleanSet glowing = BooleanSets.emptySet();
+
   public StandingSignBlockEntity(BlockPos pos, BlockState state) {
     super(MishangucBlockEntities.STANDING_SIGN_BLOCK_ENTITY, pos, state);
   }
@@ -74,6 +80,24 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
     } else {
       backTexts = ImmutableList.of(TextContext.fromNbt(nbtBackTexts, createDefaultTextContext()));
     }
+    final boolean frontWaxed = nbt.getBoolean("frontWaxed");
+    final boolean backWaxed = nbt.getBoolean("backWaxed");
+    if (!frontWaxed && !backWaxed) {
+      waxed = BooleanSets.emptySet();
+    } else {
+      waxed = new BooleanArraySet(2);
+      if (frontWaxed) waxed.add(true);
+      if (backWaxed) waxed.add(false);
+    }
+    final boolean frontGlowing = nbt.getBoolean("frontGlowing");
+    final boolean backGlowing = nbt.getBoolean("backGlowing");
+    if (!frontGlowing && !backGlowing) {
+      glowing = BooleanSets.emptySet();
+    } else {
+      glowing = new BooleanArraySet(2);
+      if (frontGlowing) glowing.add(true);
+      if (backGlowing) glowing.add(false);
+    }
   }
 
   @Override
@@ -93,6 +117,10 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
       backTexts.forEach(textContext -> nbtList.add(textContext.createNbt()));
       nbt.put("backTexts", nbtList);
     }
+    nbt.putBoolean("frontWaxed", waxed.contains(true));
+    nbt.putBoolean("backWaxed", waxed.contains(false));
+    nbt.putBoolean("frontGlowing", glowing.contains(true));
+    nbt.putBoolean("backGlowing", glowing.contains(false));
   }
 
   @Override

@@ -2,6 +2,12 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.3.0
+
+- Honeycomb can be used to wax signs (those in this mod only). In Creative Mode, honeycomb can remove wax on sign. Wax cannot be removed under non-Creative Mode. Waxed signs cannot be edited, nor be made glow of remove glow.
+- Using glowing inc sac can make texts on signs glow. Inc sac can remove the glow on the texts. Glowing texts will be displayed on max luminance in any dim places, but outline of texts is not affected. When the texts are black or the sign is in bright places, glowing texts may not make obvious difference. Glowing texts also do not affect brightness level of blocks.
+- For hung sign and standing sign, text glowing and waxing are handled respectively on the two sides. Under non-Creative Mode, each success operation will consume one honeycomb, inc sac or glowing inc sac.
+
 ### 1.2.7
 
 - Fixed the issue of exceptions on dedicated server with Fabric Loader above 0.15.
