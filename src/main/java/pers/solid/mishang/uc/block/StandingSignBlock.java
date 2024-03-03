@@ -1,5 +1,8 @@
 package pers.solid.mishang.uc.block;
 
+import it.unimi.dsi.fastutil.booleans.BooleanArraySet;
+import it.unimi.dsi.fastutil.booleans.BooleanSet;
+import it.unimi.dsi.fastutil.booleans.BooleanSets;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -14,11 +17,14 @@ import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.HoneycombItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
@@ -36,7 +42,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.world.WorldEvents;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -46,6 +52,7 @@ import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
@@ -357,31 +364,54 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     else if (!player.getAbilities().allowModifyWorld) {
       // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
       return ActionResult.FAIL;
-    } else if (player.getMainHandStack().getItem() == Items.MAGMA_CREAM) {
-      // 玩家手持岩浆膏时，可快速进行重整。
-      MishangUtils.rearrange(entity.getTextsOnSide(isFront));
-      world.updateListeners(pos, state, state, Block.NOTIFY_ALL);
-      entity.markDirty();
-      return ActionResult.SUCCESS;
-    } else if (player.getMainHandStack().getItem() == Items.SLIME_BALL) {
-      // 玩家手持粘液球时，可快速进行替换箭头。
-      MishangUtils.replaceArrows(entity.getTextsOnSide(isFront));
-      world.updateListeners(pos, state, state, Block.NOTIFY_ALL);
-      entity.markDirty();
-      return ActionResult.SUCCESS;
-    } else if (player.getMainHandStack().getItem() == Items.SLIME_BLOCK) {
-      final WorldChunk worldChunk = world.getWorldChunk(pos);
-      for (BlockEntity value : worldChunk.getBlockEntities().values()) {
-        if (value instanceof StandingSignBlockEntity standingSignBlockEntity) {
-          MishangUtils.rearrange(standingSignBlockEntity.frontTexts);
-          MishangUtils.rearrange(standingSignBlockEntity.backTexts);
-          world.updateListeners(value.getPos(), value.getCachedState(), value.getCachedState(), Block.NOTIFY_ALL);
-          standingSignBlockEntity.markDirty();
-        }
-      }
-      return ActionResult.SUCCESS;
     } else if (world.isClient) {
       return ActionResult.SUCCESS;
+    } else {
+      final ItemStack stackInHand = player.getStackInHand(hand);
+      if (stackInHand.getItem() instanceof HoneycombItem) {
+        // 处理告示牌的涂蜡。
+        if (!entity.waxed.contains(isFront)) {
+          entity.waxed = addToSet(entity.waxed, isFront);
+          player.sendMessage(BlockEntityWithText.MESSAGE_WAX_ON, true);
+          world.syncWorldEvent(null, WorldEvents.BLOCK_WAXED, entity.getPos(), 0);
+          entity.markDirtyAndUpdate();
+          if (!player.isCreative()) stackInHand.decrement(1);
+          return ActionResult.SUCCESS;
+        } else if (player.isCreative()) {
+          entity.waxed = removeFromSet(entity.waxed, isFront);
+          player.sendMessage(BlockEntityWithText.MESSAGE_WAX_OFF, true);
+          world.syncWorldEvent(null, WorldEvents.WAX_REMOVED, entity.getPos(), 0);
+          entity.markDirtyAndUpdate();
+          return ActionResult.SUCCESS;
+        }
+      }
+      if (entity.waxed.contains(isFront)) {
+        // 涂蜡的告示牌不应该进行操作。
+        return ActionResult.PASS;
+      } else if (stackInHand.getItem() == Items.MAGMA_CREAM) {
+        // 玩家手持岩浆膏时，可快速进行重整。
+        MishangUtils.rearrange(entity.getTextsOnSide(isFront));
+        entity.markDirtyAndUpdate();
+        return ActionResult.SUCCESS;
+      } else if (stackInHand.isOf(Items.GLOW_INK_SAC)) {
+        if (!entity.glowing.contains(isFront)) {
+          entity.glowing = addToSet(entity.glowing, isFront);
+          player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_ON, true);
+          world.playSound(null, entity.getPos(), SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+          entity.markDirtyAndUpdate();
+          if (!player.isCreative()) stackInHand.decrement(1);
+          return ActionResult.SUCCESS;
+        }
+      } else if (stackInHand.isOf(Items.INK_SAC)) {
+        if (entity.glowing.contains(isFront)) {
+          entity.glowing = removeFromSet(entity.glowing, isFront);
+          player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_OFF, true);
+          world.playSound(null, entity.getPos(), SoundEvents.ITEM_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+          entity.markDirtyAndUpdate();
+          if (!player.isCreative()) stackInHand.decrement(1);
+          return ActionResult.SUCCESS;
+        }
+      }
     }
 
     entity.checkEditorValidity();
@@ -398,5 +428,27 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
         new Identifier("mishanguc", "edit_sign"),
         Util.make(PacketByteBufs.create(), packet -> packet.writeBlockPos(pos).writeBlockHitResult(hit)));
     return ActionResult.SUCCESS;
+  }
+
+  private static BooleanSet addToSet(BooleanSet set, boolean element) {
+    if (set.isEmpty()) {
+      final BooleanSet newSet = new BooleanArraySet(2);
+      newSet.add(element);
+      return newSet;
+    } else {
+      set.add(element);
+      return set;
+    }
+  }
+
+  private static BooleanSet removeFromSet(BooleanSet set, boolean element) {
+    if (set.isEmpty()) {
+      return set;
+    } else if (set.remove(element) && set.isEmpty()) {
+      return BooleanSets.emptySet();
+    } else {
+      set.remove(element);
+      return set;
+    }
   }
 }

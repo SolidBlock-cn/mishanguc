@@ -765,7 +765,7 @@
   "lineType.thick": "粗",
   "message.mishanguc.absolute": "絕對模式",
   "message.mishanguc.absolute.description": "在絕對模式下，調整文本位置時會忽略這一行。",
-  "message.mishanguc.accept_custom_value": "在文本框內輸入以設置 %s 的我自訂值。",
+  "message.mishanguc.accept_custom_value": "在文本框內輸入以設置 %s 的自訂值。",
   "message.mishanguc.add_first_text": "點擊此處添加第一行文本！",
   "message.mishanguc.add_text": "添加一行",
   "message.mishanguc.add_text.description": "在當前選中的一行文本之後添加一行文本。其他文本的位置並不會受到影響，除非點擊「調整位置」。",
@@ -789,7 +789,7 @@
   "message.mishanguc.custom_value.tooltip": "在此文本內輸入以設置 %s 的自訂值。",
   "message.mishanguc.finish.description": "應用更改。",
   "message.mishanguc.flip": "翻轉",
-  "message.mishanguc.flip.description": "左右翻轉當前文本的偏移和對齊。按住Ctrl可翻轉所有文本。",
+  "message.mishanguc.flip.description": "左右翻轉當前文本的偏移和對齊。按住 Ctrl 可翻轉所有文本。",
   "message.mishanguc.hide_gui": "隱藏界面",
   "message.mishanguc.hide_gui.hide": "隱藏",
   "message.mishanguc.hide_gui.note": "請注意：您當前正在編輯告示牌，且界面已隱藏。單擊「顯示」按鈕以顯示，或者按下「Esc」以完成編輯。",
@@ -861,5 +861,10 @@
   "roadConnectionState.whether.probably_connected": "應當連接",
   "vertical_align.mishanguc.bottom": "底部對齊",
   "vertical_align.mishanguc.middle": "垂直居中",
-  "vertical_align.mishanguc.top": "頂部對齊"
+  "vertical_align.mishanguc.top": "頂部對齊",
+
+  "message.mishanguc.sign.glow_on": "告示牌已發光，文本將在黑暗中明亮顯示",
+  "message.mishanguc.sign.glow_off": "告示牌已移除發光",
+  "message.mishanguc.sign.wax_on": "告示牌已塗蠟，將不可編輯",
+  "message.mishanguc.sign.wax_off": "告示牌已脫蠟，僅創造模式玩家能夠脫蠟"
 }

@@ -11,7 +11,6 @@ import net.minecraft.data.client.VariantSetting;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.*;
 import net.minecraft.state.property.Property;
-import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
@@ -27,7 +26,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.MishangucItems;
-import pers.solid.mishang.uc.text.PatternSpecialDrawable;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
@@ -325,27 +323,6 @@ public class MishangUtils {
 
   public static <T extends Comparable<T>> BlockState with(BlockState state, Property<T> property, String name) {
     return property.parse(name).map((value) -> state.with(property, value)).orElse(state);
-  }
-
-  /**
-   * 将一个告示牌中的 TextContext 中手动完成的箭头文字转化为 0.2.0 新加入的 PatternTextSpecial 格式。
-   */
-  @ApiStatus.AvailableSince("0.2.0")
-  public static void replaceArrows(Collection<TextContext> textContexts) {
-    for (TextContext textContext : textContexts) {
-      if (textContext.text.getContent() instanceof final LiteralTextContent literalTextContent) {
-        final String rawString = literalTextContent.string();
-        if (ARROW_TO_NAMES.containsKey(rawString)) {
-          textContext.text = null;
-          textContext.extra = PatternSpecialDrawable.fromName(textContext, ARROW_TO_NAMES.get(rawString));
-          if ("←".equals(rawString) || "→".equals(rawString) || "↑".equals(rawString) || "↓".equals(rawString)) {
-            textContext.size /= 1;
-          } else {
-            textContext.size /= 2;
-          }
-        }
-      }
-    }
   }
 
   @ApiStatus.AvailableSince("0.2.1")
