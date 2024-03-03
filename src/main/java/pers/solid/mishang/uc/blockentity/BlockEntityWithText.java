@@ -20,17 +20,24 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.text.TextContext;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.HashMap;
 import java.util.List;
 
 public abstract class BlockEntityWithText extends BlockEntity {
+
+  public static final Text MESSAGE_GLOW_ON = TextBridge.translatable("message.mishanguc.sign.glow_on");
+  public static final Text MESSAGE_GLOW_OFF = TextBridge.translatable("message.mishanguc.sign.glow_off");
+  public static final Text MESSAGE_WAX_ON = TextBridge.translatable("message.mishanguc.sign.wax_on");
+  public static final Text MESSAGE_WAX_OFF = TextBridge.translatable("message.mishanguc.sign.wax_off");
 
   public BlockEntityWithText(BlockEntityType<?> type, BlockPos pos, BlockState state) {
     super(type, pos, state);
@@ -84,6 +91,11 @@ public abstract class BlockEntityWithText extends BlockEntity {
     if (editor != null && editor.isSpectator() && !editor.isLiving() && editor.getWorld() != world) {
       setEditor(null);
     }
+  }
+
+  public void markDirtyAndUpdate() {
+    markDirty();
+    world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
   }
 
   public static final PacketHandler PACKET_HANDLER = new PacketHandler();

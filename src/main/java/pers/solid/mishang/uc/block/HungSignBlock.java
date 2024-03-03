@@ -17,12 +17,12 @@ import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -38,7 +38,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.world.WorldEvents;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,6 +47,7 @@ import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
@@ -54,9 +55,7 @@ import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @see HungSignBlockEntity
@@ -334,38 +333,66 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     final ActionResult actionResult = super.onUse(state, world, pos, player, hand, hit);
     if (actionResult != ActionResult.PASS) return actionResult;
     final BlockEntity blockEntity = world.getBlockEntity(pos);
+    final Direction side = hit.getSide();
     if (!(blockEntity instanceof final HungSignBlockEntity entity)) {
       return ActionResult.PASS;
-    } else if (!state.get(AXIS).test(hit.getSide())) {
+    } else if (!state.get(AXIS).test(side)) {
       // 若方块实体不对应，或者编辑的这一侧不可编辑，则在客户端和服务器均略过。
       // Skip if the block entity does not correspond, or the side is not editable.
       return ActionResult.PASS;
     } else if (!player.getAbilities().allowModifyWorld) {
       // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
       return ActionResult.FAIL;
-    } else if (player.getMainHandStack().getItem() == Items.MAGMA_CREAM) {
-      // 玩家手持岩浆膏时，可快速进行重整。
-      final List<@NotNull TextContext> textContexts = entity.texts.get(hit.getSide());
-      if (textContexts != null) MishangUtils.rearrange(textContexts);
-      entity.markDirty();
-      return ActionResult.SUCCESS;
-    } else if (player.getMainHandStack().getItem() == Items.SLIME_BALL) {
-      // 玩家手持粘液球时，可快速进行替换箭头。
-      final List<@NotNull TextContext> textContexts = entity.texts.get(hit.getSide());
-      if (textContexts != null) MishangUtils.replaceArrows(textContexts);
-      entity.markDirty();
-      return ActionResult.SUCCESS;
-    } else if (player.getMainHandStack().getItem() == Items.SLIME_BLOCK) {
-      final WorldChunk worldChunk = world.getWorldChunk(pos);
-      for (BlockEntity value : worldChunk.getBlockEntities().values()) {
-        if (value instanceof HungSignBlockEntity hungSignBlockEntity) {
-          hungSignBlockEntity.texts.values().forEach(MishangUtils::replaceArrows);
-          hungSignBlockEntity.markDirty();
-        }
-      }
-      return ActionResult.SUCCESS;
     } else if (world.isClient) {
       return ActionResult.SUCCESS;
+    } else {
+      final ItemStack stackInHand = player.getStackInHand(hand);
+      if (stackInHand.getItem() instanceof HoneycombItem) {
+        // 处理告示牌的涂蜡
+        if (!entity.waxed.contains(side)) {
+          entity.waxed = addToSet(entity.waxed, side);
+          player.sendMessage(BlockEntityWithText.MESSAGE_WAX_ON, true);
+          world.syncWorldEvent(null, WorldEvents.BLOCK_WAXED, entity.getPos(), 0);
+          entity.markDirtyAndUpdate();
+          if (!player.isCreative()) stackInHand.decrement(1);
+          return ActionResult.SUCCESS;
+        } else if (player.isCreative()) {
+          entity.waxed = removeFromSet(entity.waxed, side);
+          player.sendMessage(BlockEntityWithText.MESSAGE_WAX_OFF, true);
+          world.syncWorldEvent(null, WorldEvents.WAX_REMOVED, entity.getPos(), 0);
+          entity.markDirtyAndUpdate();
+          return ActionResult.SUCCESS;
+        }
+      }
+      if (entity.waxed.contains(side)) {
+        // 涂蜡的告示牌不应该进行操作。
+        world.playSound(null, entity.getPos(), SoundEvents.BLOCK_SIGN_WAXED_INTERACT_FAIL, SoundCategory.BLOCKS);
+        return ActionResult.PASS;
+      } else if (stackInHand.getItem() == Items.MAGMA_CREAM) {
+        // 玩家手持岩浆膏时，可快速进行重整。
+        final List<@NotNull TextContext> textContexts = entity.texts.get(side);
+        if (textContexts != null) MishangUtils.rearrange(textContexts);
+        entity.markDirtyAndUpdate();
+        return ActionResult.SUCCESS;
+      } else if (stackInHand.getItem() instanceof GlowInkSacItem) {
+        if (!entity.glowing.contains(side)) {
+          entity.glowing = addToSet(entity.glowing, side);
+          player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_ON, true);
+          world.playSound(null, entity.getPos(), SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+          entity.markDirtyAndUpdate();
+          if (!player.isCreative()) stackInHand.decrement(1);
+          return ActionResult.SUCCESS;
+        }
+      } else if (stackInHand.getItem() instanceof InkSacItem) {
+        if (entity.glowing.contains(side)) {
+          entity.glowing = removeFromSet(entity.glowing, side);
+          player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_OFF, true);
+          world.playSound(null, entity.getPos(), SoundEvents.ITEM_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+          entity.markDirtyAndUpdate();
+          if (!player.isCreative()) stackInHand.decrement(1);
+          return ActionResult.SUCCESS;
+        }
+      }
     }
 
     entity.checkEditorValidity();
@@ -376,12 +403,12 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       player.sendMessage(TextBridge.translatable("message.mishanguc.no_editing_permission.occupied", editor.getName()), false);
       return ActionResult.FAIL;
     }
-    entity.editedSide = hit.getSide();
+    entity.editedSide = side;
     entity.setEditor(player);
     ServerPlayNetworking.send(
         ((ServerPlayerEntity) player),
         new Identifier("mishanguc", "edit_sign"),
-        PacketByteBufs.create().writeBlockPos(pos).writeEnumConstant(hit.getSide()));
+        PacketByteBufs.create().writeBlockPos(pos).writeEnumConstant(side));
     return ActionResult.SUCCESS;
   }
 
@@ -479,5 +506,33 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   @Override
   protected MapCodec<? extends HungSignBlock> getCodec() {
     return CODEC;
+  }
+
+  /**
+   * 往集合中添加一个值，并返回添加后的集合（可能会是新集合）。这样做是为了避免使用空集时创建集合对象。
+   */
+  private static <T> Set<T> addToSet(Set<T> set, T element) {
+    if (set.isEmpty()) {
+      final HashSet<T> newSet = new HashSet<>(2);
+      newSet.add(element);
+      return newSet;
+    } else {
+      set.add(element);
+      return set;
+    }
+  }
+
+  /**
+   * 从集合中移除一个值，如果移除后的集合为空集合，则返回不可变的空集合，以避免产生不必要的对象。
+   */
+  private static <T> Set<T> removeFromSet(Set<T> set, T element) {
+    if (set.isEmpty()) {
+      return set;
+    } else if (set.remove(element) && set.isEmpty()) {
+      return Set.of();
+    } else {
+      set.remove(element);
+      return set;
+    }
   }
 }
