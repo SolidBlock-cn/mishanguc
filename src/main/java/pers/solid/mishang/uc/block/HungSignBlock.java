@@ -368,7 +368,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
         // 涂蜡的告示牌不应该进行操作。
         world.playSound(null, entity.getPos(), SoundEvents.BLOCK_SIGN_WAXED_INTERACT_FAIL, SoundCategory.BLOCKS);
         return ActionResult.PASS;
-      } else if (stackInHand.getItem() == Items.MAGMA_CREAM) {
+      } else if (stackInHand.isOf(Items.MAGMA_CREAM)) {
         // 玩家手持岩浆膏时，可快速进行重整。
         final List<@NotNull TextContext> textContexts = entity.texts.get(side);
         if (textContexts != null) MishangUtils.rearrange(textContexts);
