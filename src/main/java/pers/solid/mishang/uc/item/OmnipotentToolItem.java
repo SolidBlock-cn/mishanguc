@@ -2,8 +2,11 @@ package pers.solid.mishang.uc.item;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.UnbreakableComponent;
 import net.minecraft.data.client.Models;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.entity.Entity;
@@ -38,24 +41,14 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
   protected static final OmnipotentToolMaterial MATERIAL = new OmnipotentToolMaterial();
 
   public OmnipotentToolItem(Settings settings) {
-    super(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, MATERIAL, TagKey.of(RegistryKeys.BLOCK, new Identifier("minecraft", "mineable/pickaxe")), settings);
+    super(MATERIAL, TagKey.of(RegistryKeys.BLOCK, new Identifier("minecraft", "mineable/pickaxe")), settings); // todo check infinity speed
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-    super.appendTooltip(stack, world, tooltip, context);
+  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    super.appendTooltip(stack, context, tooltip, type);
     tooltip.add(TextBridge.translatable("item.mishanguc.omnipotent_tool.tooltip.1", TextBridge.keybind("key.attack").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.omnipotent_tool.tooltip.2", TextBridge.keybind("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
-  }
-
-  @Override
-  public boolean isSuitableFor(BlockState state) {
-    return true;
-  }
-
-  @Override
-  public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
-    return Float.POSITIVE_INFINITY;
   }
 
   @Override
@@ -97,7 +90,7 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
   @Override
   public ItemStack getDefaultStack() {
     final ItemStack defaultStack = super.getDefaultStack();
-    defaultStack.getOrCreateNbt().putBoolean("Unbreakable", true);
+    defaultStack.set(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(false));
     return defaultStack;
   }
 
@@ -121,8 +114,8 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
     }
 
     @Override
-    public int getMiningLevel() {
-      return Integer.MAX_VALUE;
+    public TagKey<Block> getInverseTag() {
+      return TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "unsuitable_for_omnipotent")); // todo check inverse tag
     }
 
     @Override

@@ -10,8 +10,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
@@ -20,7 +18,7 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -31,15 +29,13 @@ import net.minecraft.data.family.BlockFamilies;
 import net.minecraft.data.family.BlockFamily;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
@@ -50,7 +46,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -62,6 +57,7 @@ import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.block.AbstractRoadBlock;
 import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
+import pers.solid.mishang.uc.networking.SlabToolPayload;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 import pers.solid.mishang.uc.util.TextBridge;
 
@@ -166,7 +162,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
       final BlockEntity blockEntity = world.getBlockEntity(pos);
       final NbtCompound nbt;
       if (blockEntity != null) {
-        nbt = blockEntity.createNbt();
+        nbt = blockEntity.createNbt(world.getRegistryManager()); // todo check
         world.removeBlockEntity(pos);
       } else {
         nbt = null;
@@ -174,7 +170,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
       final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, slabTypeToSet));
       final BlockEntity newBlockEntity = world.getBlockEntity(pos);
       if (newBlockEntity != null && nbt != null) {
-        newBlockEntity.readNbt(nbt);
+        newBlockEntity.read(nbt, world.getRegistryManager()); // todo check
       }
       final BlockState brokenState = state.with(Properties.SLAB_TYPE, slabTypeBroken);
       block.onBreak(world, pos, brokenState, miner);
@@ -183,7 +179,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
         if (!miner.isCreative()) {
           block.afterBreak(world, miner, pos, brokenState, world.getBlockEntity(pos), miner.getMainHandStack().copy());
         }
-        miner.getStackInHand(Hand.MAIN_HAND).damage(1, miner, player -> player.sendToolBreakStatus(Hand.MAIN_HAND));
+        miner.getStackInHand(Hand.MAIN_HAND).damage(1, miner, EquipmentSlot.MAINHAND);
       }
       return bl1;
     }
@@ -191,9 +187,8 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
   }
 
   @Override
-  public void appendTooltip(
-      ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-    super.appendTooltip(stack, world, tooltip, context);
+  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    super.appendTooltip(stack, context, tooltip, type);
     tooltip.add(TextBridge.translatable("item.mishanguc.slab_tool.tooltip").formatted(Formatting.GRAY));
   }
 
@@ -210,10 +205,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
       if (!(raycast instanceof BlockHitResult) || raycast.getType() == HitResult.Type.MISS) return false;
       boolean isTop = raycast.getPos().y - (double) ((BlockHitResult) raycast).getBlockPos().getY() > 0.5D;
       final boolean bl1 = performBreak(world, pos, miner, isTop);
-      final PacketByteBuf buf = PacketByteBufs.create();
-      buf.writeBlockPos(pos);
-      buf.writeBoolean(isTop);
-      ClientPlayNetworking.send(new Identifier("mishanguc", "slab_tool"), buf);
+      ClientPlayNetworking.send(new SlabToolPayload(pos, isTop));
       return !bl1;
     } else {
       // 注意：需要考虑这样的情况：
@@ -291,20 +283,23 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
   }
 
   @ApiStatus.AvailableSince("1.0.3")
-  public enum Handler implements ServerPlayNetworking.PlayChannelHandler {
+  public enum Handler implements ServerPlayNetworking.PlayPayloadHandler<SlabToolPayload> {
     INSTANCE;
+
 
     /**
      * @see #canMine(BlockState, World, BlockPos, PlayerEntity)
      */
     @Override
-    public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
-      final BlockPos blockPos = buf.readBlockPos();
-      final boolean isTop = buf.readBoolean();
-      server.execute(() -> {
-        if (player.getEyePos().squaredDistanceTo(Vec3d.ofCenter(blockPos)) > ServerPlayNetworkHandler.MAX_BREAK_SQUARED_DISTANCE) {
-          return;
-        }
+    public void receive(SlabToolPayload payload, ServerPlayNetworking.Context context) {
+      final BlockPos blockPos = payload.blockPos();
+      final boolean isTop = payload.isTop();
+      final ServerPlayerEntity player = context.player();
+      player.server.execute(() -> {
+        // todo check what to substitute here
+//        if (player.getEyePos().squaredDistanceTo(Vec3d.ofCenter(blockPos)) > ServerPlayNetworkHandler.MAX_BREAK_SQUARED_DISTANCE) {
+//          return;
+//        }
         if (!(player.getMainHandStack().getItem() instanceof SlabToolItem) || !player.getAbilities().allowModifyWorld) {
           return;
         }

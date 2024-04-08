@@ -10,6 +10,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
@@ -64,8 +65,8 @@ public record TextureSpecialDrawable(@NotNull Identifier identifier, @NotNull Te
   }
 
   @Override
-  public void writeNbt(NbtCompound nbt) {
-    SpecialDrawable.super.writeNbt(nbt);
+  public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+    SpecialDrawable.super.writeNbt(nbt, registryLookup);
     nbt.putString("texture", identifier.toString());
   }
 

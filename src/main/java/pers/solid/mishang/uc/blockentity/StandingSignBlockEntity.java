@@ -11,6 +11,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.ApiStatus;
@@ -62,23 +63,23 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  public void readNbt(NbtCompound nbt) {
-    super.readNbt(nbt);
+  protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+    super.readNbt(nbt, registryLookup);
     final NbtElement nbtFrontTexts = nbt.get("frontTexts");
     if (nbtFrontTexts instanceof NbtList nbtList) {
       frontTexts = nbtList.stream()
-          .map(nbtElement -> TextContext.fromNbt(nbtElement, createDefaultTextContext()))
+          .map(nbtElement -> TextContext.fromNbt(nbtElement, createDefaultTextContext(), registryLookup))
           .collect(ImmutableList.toImmutableList());
     } else {
-      frontTexts = ImmutableList.of(TextContext.fromNbt(nbtFrontTexts, createDefaultTextContext()));
+      frontTexts = ImmutableList.of(TextContext.fromNbt(nbtFrontTexts, createDefaultTextContext(), registryLookup));
     }
     final NbtElement nbtBackTexts = nbt.get("backTexts");
     if (nbtBackTexts instanceof NbtList nbtList) {
       backTexts = nbtList.stream()
-          .map(nbtElement -> TextContext.fromNbt(nbtElement, createDefaultTextContext()))
+          .map(nbtElement -> TextContext.fromNbt(nbtElement, createDefaultTextContext(), registryLookup))
           .collect(ImmutableList.toImmutableList());
     } else {
-      backTexts = ImmutableList.of(TextContext.fromNbt(nbtBackTexts, createDefaultTextContext()));
+      backTexts = ImmutableList.of(TextContext.fromNbt(nbtBackTexts, createDefaultTextContext(), registryLookup));
     }
     final boolean frontWaxed = nbt.getBoolean("frontWaxed");
     final boolean backWaxed = nbt.getBoolean("backWaxed");
@@ -101,20 +102,20 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  protected void writeNbt(NbtCompound nbt) {
-    super.writeNbt(nbt);
+  protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+    super.writeNbt(nbt, registryLookup);
     if (frontTexts.size() == 1) {
-      nbt.put("frontTexts", frontTexts.get(0).createNbt());
+      nbt.put("frontTexts", frontTexts.get(0).createNbt(registryLookup));
     } else {
       final NbtList nbtList = new NbtList();
-      frontTexts.forEach(textContext -> nbtList.add(textContext.createNbt()));
+      frontTexts.forEach(textContext -> nbtList.add(textContext.createNbt(registryLookup)));
       nbt.put("frontTexts", nbtList);
     }
     if (backTexts.size() == 1) {
-      nbt.put("backTexts", backTexts.get(0).createNbt());
+      nbt.put("backTexts", backTexts.get(0).createNbt(registryLookup));
     } else {
       final NbtList nbtList = new NbtList();
-      backTexts.forEach(textContext -> nbtList.add(textContext.createNbt()));
+      backTexts.forEach(textContext -> nbtList.add(textContext.createNbt(registryLookup)));
       nbt.put("backTexts", nbtList);
     }
     nbt.putBoolean("frontWaxed", waxed.contains(true));

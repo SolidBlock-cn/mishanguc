@@ -7,17 +7,18 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.function.CopyNbtLootFunction;
+import net.minecraft.loot.function.CopyComponentsLootFunction;
 import net.minecraft.loot.function.LootFunction;
-import net.minecraft.loot.provider.nbt.ContextLootNbtProvider;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldView;
 import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.mishang.uc.MishangUtils;
@@ -33,18 +34,18 @@ import java.util.List;
  */
 public interface ColoredBlock extends BlockEntityProvider, BlockResourceGenerator {
 
-  LootFunction COPY_COLOR_LOOT_FUNCTION = CopyNbtLootFunction.builder(ContextLootNbtProvider.BLOCK_ENTITY).withOperation("color", "BlockEntityTag.color").build();
+  LootFunction COPY_COLOR_LOOT_FUNCTION = CopyComponentsLootFunction.builder(CopyComponentsLootFunction.Source.BLOCK_ENTITY).include(DataComponentTypes.BLOCK_ENTITY_DATA).build();
 
   /**
    * 给方块添加关于颜色的提示。
    *
-   * @see Block#appendTooltip(ItemStack, BlockView, List, TooltipContext)
+   * @see Block#appendTooltip(ItemStack, Item.TooltipContext, List, TooltipType)
    */
   static void appendColorTooltip(ItemStack stack, List<Text> tooltip) {
-    final NbtCompound blockEntityTag = stack.getSubNbt("BlockEntityTag");
+    final NbtComponent blockEntityTag = stack.get(DataComponentTypes.BLOCK_ENTITY_DATA);
     if (blockEntityTag != null && blockEntityTag.contains("color")) {
       // 此时该对象已经定义了颜色。
-      final int color = MishangUtils.readColorFromNbtElement(blockEntityTag.get("color"));
+      final int color = MishangUtils.readColorFromNbtElement(blockEntityTag.copyNbt().get("color"));
       Color colorObject = new Color(color);
       tooltip.add(TextBridge.translatable("block.mishanguc.colored_block.tooltip.color", MishangUtils.describeColor(color)).formatted(Formatting.GRAY));
       tooltip.add(TextBridge.translatable("block.mishanguc.colored_block.tooltip.color_components", colorObject.getRed(), colorObject.getGreen(), colorObject.getBlue(), colorObject.getAlpha()).formatted(Formatting.GRAY));
@@ -63,7 +64,9 @@ public interface ColoredBlock extends BlockEntityProvider, BlockResourceGenerato
     final ItemStack stack = superGetPickStack.apply(world, pos, state);
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     if (blockEntity instanceof ColoredBlockEntity coloredBlockEntity) {
-      stack.getOrCreateSubNbt("BlockEntityTag").putInt("color", coloredBlockEntity.getColor());
+      final NbtCompound nbt = new NbtCompound();
+      nbt.putInt("color", coloredBlockEntity.getColor());
+      stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(nbt));
     }
     return stack;
   }

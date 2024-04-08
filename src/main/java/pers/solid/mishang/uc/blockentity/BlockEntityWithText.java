@@ -2,7 +2,6 @@ package pers.solid.mishang.uc.blockentity;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -13,12 +12,10 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -26,6 +23,7 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pers.solid.mishang.uc.networking.SignEditFinishPayload;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
 
@@ -50,8 +48,8 @@ public abstract class BlockEntityWithText extends BlockEntity {
   }
 
   @Override
-  public NbtCompound toInitialChunkDataNbt() {
-    return createNbt();
+  public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+    return createNbt(registryLookup);
   }
 
   /**
@@ -100,15 +98,16 @@ public abstract class BlockEntityWithText extends BlockEntity {
 
   public static final PacketHandler PACKET_HANDLER = new PacketHandler();
 
-  public static class PacketHandler implements ServerPlayNetworking.PlayChannelHandler {
+  public static class PacketHandler implements ServerPlayNetworking.PlayPayloadHandler<SignEditFinishPayload> {
     protected static final Logger LOGGER = LoggerFactory.getLogger(PacketHandler.class);
 
     @Override
-    public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+    public void receive(SignEditFinishPayload payload, ServerPlayNetworking.Context context) {
       LOGGER.info("Server side sign_edit_finish packet received!");
-      final BlockPos blockPos = buf.readBlockPos();
-      final NbtCompound nbt = buf.readNbt();
-      server.execute(() -> {
+      final BlockPos blockPos = payload.blockPos();
+      final NbtCompound nbt = payload.nbt();
+      final ServerPlayerEntity player = context.player();
+      player.server.execute(() -> {
         try {
           final BlockEntityWithText entity = (BlockEntityWithText) player.getWorld().getBlockEntity(blockPos);
           if (entity == null) {
@@ -123,7 +122,7 @@ public abstract class BlockEntityWithText extends BlockEntity {
           entity.setEditor(null);
           final @Unmodifiable ImmutableList<TextContext> textContexts = nbt != null
               ? nbt.getList("texts", 10).stream()
-              .map(e -> TextContext.fromNbt(e, entity.createDefaultTextContext()))
+              .map(e -> TextContext.fromNbt(e, entity.createDefaultTextContext(), context.player().getRegistryManager()))
               .collect(ImmutableList.toImmutableList())
               : null;
           if (editorAllowed != player) {

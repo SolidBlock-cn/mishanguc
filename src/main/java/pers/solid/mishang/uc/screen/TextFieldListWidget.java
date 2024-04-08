@@ -33,7 +33,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
                              MinecraftClient client, int width, int height, int y, int itemHeight) {
     super(client, width, height, y, itemHeight);
     this.signBlockEditScreen = signBlockEditScreen;
-    setRenderBackground(false);
+    // todo should avoid background?
   }
 
   private boolean isFocused;
@@ -109,7 +109,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   }
 
   @Override
-  protected int getScrollbarPositionX() {
+  protected int getScrollbarX() {
     return width - 6;
   }
 
@@ -232,7 +232,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     @Override
     public boolean mouseDragged(
         double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-      if (button == 0 && mouseX >= getScrollbarPositionX() && mouseX < getScrollbarPositionX() + 6) {
+      if (button == 0 && mouseX >= getScrollbarX() && mouseX < getScrollbarX() + 6) {
         return false;
       }
       return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)

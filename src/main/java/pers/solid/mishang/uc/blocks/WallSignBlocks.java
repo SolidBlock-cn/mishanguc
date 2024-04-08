@@ -1,9 +1,9 @@
 package pers.solid.mishang.uc.blocks;
 
 import com.google.common.collect.ImmutableMap;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.mixin.object.builder.AbstractBlockAccessor;
 import net.fabricmc.fabric.mixin.object.builder.AbstractBlockSettingsAccessor;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
 import net.minecraft.state.property.Properties;
@@ -24,9 +24,9 @@ public final class WallSignBlocks extends MishangucBlocks {
    * 隐形的告示牌。
    */
   public static final FullWallSignBlock INVISIBLE_WALL_SIGN =
-      new FullWallSignBlock(null, FabricBlockSettings.copyOf(Blocks.BARRIER).noCollision());
+      new FullWallSignBlock(null, Block.Settings.copy(Blocks.BARRIER).noCollision());
 
-  public static final FullWallSignBlock INVISIBLE_GLOWING_WALL_SIGN = new FullWallSignBlock(null, FabricBlockSettings.copyOf(Blocks.BARRIER).noCollision().luminance(15));
+  public static final FullWallSignBlock INVISIBLE_GLOWING_WALL_SIGN = new FullWallSignBlock(null, Block.Settings.copy(Blocks.BARRIER).noCollision().luminance(x -> 15));
 
   // 木质
   @ApiStatus.AvailableSince("1.2.4")
@@ -66,7 +66,7 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final WallSignBlock STRIPPED_DARK_OAK_WOOD_WALL_SIGN = new WallSignBlock(Blocks.STRIPPED_DARK_OAK_WOOD);
 
   @ApiStatus.AvailableSince("1.2.4")
-  public static final WallSignBlock STRIPPED_MANGROVE_WOOD_WALL_SIGN = new WallSignBlock(Blocks.STRIPPED_MANGROVE_WOOD, FabricBlockSettings.copyOf(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED));
+  public static final WallSignBlock STRIPPED_MANGROVE_WOOD_WALL_SIGN = new WallSignBlock(Blocks.STRIPPED_MANGROVE_WOOD, Block.Settings.copy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED));
 
   public static final WallSignBlock STRIPPED_CRIMSON_HYPHAE_WALL_SIGN = new WallSignBlock(Blocks.STRIPPED_CRIMSON_HYPHAE);
 
@@ -125,13 +125,13 @@ public final class WallSignBlocks extends MishangucBlocks {
       new WallSignBlock(Blocks.WARPED_PLANKS);
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
-  public static final WallSignBlock BAMBOO_WALL_SIGN = new WallSignBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))));
+  public static final WallSignBlock BAMBOO_WALL_SIGN = new WallSignBlock(Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))));
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
-  public static final WallSignBlock BAMBOO_PLANK_WALL_SIGN = new WallSignBlock(Blocks.BAMBOO_PLANKS, FabricBlockSettings.copyOf(Blocks.BAMBOO_PLANKS));
+  public static final WallSignBlock BAMBOO_PLANK_WALL_SIGN = new WallSignBlock(Blocks.BAMBOO_PLANKS, Block.Settings.copy(Blocks.BAMBOO_PLANKS));
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
-  public static final WallSignBlock BAMBOO_MOSAIC_WALL_SIGN = new WallSignBlock(Blocks.BAMBOO_MOSAIC, FabricBlockSettings.copyOf(Blocks.BAMBOO_MOSAIC));
+  public static final WallSignBlock BAMBOO_MOSAIC_WALL_SIGN = new WallSignBlock(Blocks.BAMBOO_MOSAIC, Block.Settings.copy(Blocks.BAMBOO_MOSAIC));
 
   @ApiStatus.AvailableSince("0.2.2")
   public static final ColoredWallSignBlock COLORED_WOODEN_WALL_SIGN = new ColoredWallSignBlock(ColoredBlocks.COLORED_PLANKS);

@@ -3,18 +3,19 @@ package pers.solid.mishang.uc.item;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.Block;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
@@ -26,7 +27,7 @@ import java.util.Map;
 /**
  * 类似于一般的方块物品，但是会读取 BlockEntityTag 中的内容来显示文字。
  *
- * @see pers.solid.mishang.uc.blockentity.HungSignBlockEntity#readNbt(NbtCompound)
+ * @see pers.solid.mishang.uc.blockentity.HungSignBlockEntity#readNbt
  */
 public class HungSignBlockItem extends NamedBlockItem {
   public HungSignBlockItem(Block block, Settings settings) {
@@ -36,8 +37,7 @@ public class HungSignBlockItem extends NamedBlockItem {
   /**
    * 根据 nbt 数据返回对应的 {@code Map<}{@code Direction, List<}{@code TextContext>>}。
    */
-  protected static @Unmodifiable Map<Direction, @Unmodifiable List<TextContext>>
-  getTextContextMapFromNbt(@NotNull NbtCompound nbt) {
+  protected static @Unmodifiable Map<Direction, @Unmodifiable List<TextContext>> getTextContextMapFromNbt(@NotNull NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
     ImmutableMap.Builder<Direction, List<TextContext>> builder = new ImmutableMap.Builder<>();
     for (Direction direction : Direction.Type.HORIZONTAL) {
       final NbtElement element = nbt.get(direction.asString());
@@ -45,29 +45,27 @@ public class HungSignBlockItem extends NamedBlockItem {
       if (element instanceof NbtList) {
         ImmutableList.Builder<TextContext> listBuilder = new ImmutableList.Builder<>();
         for (NbtElement nbtElement : ((NbtList) element)) {
-          TextContext textContext = TextContext.fromNbt(nbtElement, HungSignBlockEntity.DEFAULT_TEXT_CONTEXT.clone());
+          TextContext textContext = TextContext.fromNbt(nbtElement, HungSignBlockEntity.DEFAULT_TEXT_CONTEXT.clone(), registryLookup);
           listBuilder.add(textContext);
         }
         final ImmutableList<TextContext> build = listBuilder.build();
         if (!build.isEmpty()) builder.put(direction, build);
       } else {
-        builder.put(
-            direction,
-            ImmutableList.of(
-                TextContext.fromNbt(element, HungSignBlockEntity.DEFAULT_TEXT_CONTEXT.clone())));
+        builder.put(direction, ImmutableList.of(TextContext.fromNbt(element, HungSignBlockEntity.DEFAULT_TEXT_CONTEXT.clone(), registryLookup)));
       }
     }
     return builder.build();
   }
 
   @Override
-  public void appendTooltip(
-      ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-    super.appendTooltip(stack, world, tooltip, context);
-    final NbtCompound nbt = stack.getNbt();
+  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    super.appendTooltip(stack, context, tooltip, type);
+    final NbtComponent nbtComponent = stack.get(DataComponentTypes.CUSTOM_DATA);
+    final NbtCompound nbt = nbtComponent == null ? null : nbtComponent.copyNbt();
+    // todo components
     if (nbt == null) return;
     final Map<Direction, List<TextContext>> map =
-        getTextContextMapFromNbt(nbt.getCompound("BlockEntityTag"));
+        getTextContextMapFromNbt(nbt.getCompound("BlockEntityTag"), context.getRegistryLookup());
     map.forEach(
         (direction, textContexts) -> {
           tooltip.add(
@@ -84,11 +82,11 @@ public class HungSignBlockItem extends NamedBlockItem {
   @Override
   public Text getName(ItemStack stack) {
     final MutableText text = super.getName(stack).copy();
-    final NbtCompound nbt = stack.getNbt();
+    final NbtComponent nbtComponent = stack.get(DataComponentTypes.CUSTOM_DATA);
+    final NbtCompound nbt = nbtComponent == null ? null : nbtComponent.copyNbt();
     if (nbt == null) return text;
     final ImmutableList.Builder<Text> appendable = new ImmutableList.Builder<>();
-    final Map<Direction, List<TextContext>> map =
-        getTextContextMapFromNbt(nbt.getCompound("BlockEntityTag"));
+    final Map<Direction, List<TextContext>> map = /*getTextContextMapFromNbt(nbt.getCompound("BlockEntityTag"), )*/ Map.of(); // todo use components
     map.forEach(
         (direction, textContexts) ->
             textContexts.forEach(

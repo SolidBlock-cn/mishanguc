@@ -3,7 +3,6 @@ package pers.solid.mishang.uc.block;
 import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.data.client.*;
 import net.minecraft.fluid.Fluids;
@@ -91,7 +90,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   }
 
   public HandrailCentralBlock(@NotNull T baseBlock) {
-    this(baseBlock, FabricBlockSettings.copyOf(baseBlock));
+    this(baseBlock, AbstractBlock.Settings.copy(baseBlock));
   }
 
   @Override

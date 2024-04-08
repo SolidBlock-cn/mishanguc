@@ -4,8 +4,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.dispenser.DispenserBehavior;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.data.client.Models;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -29,7 +32,6 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.generator.ItemResourceGenerator;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -48,8 +50,8 @@ public class IceSnowTool extends Item implements ItemResourceGenerator, Dispense
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-    super.appendTooltip(stack, world, tooltip, context);
+  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    super.appendTooltip(stack, context, tooltip, type);
     tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.1").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.2").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.3").formatted(Formatting.GRAY));
@@ -72,7 +74,7 @@ public class IceSnowTool extends Item implements ItemResourceGenerator, Dispense
     } else {
       applyIce(serverWorld, pos, strength);
     }
-    stack.damage(strength + 1, user, playerEntity -> playerEntity.sendToolBreakStatus(hand));
+    stack.damage(strength + 1, user, LivingEntity.getSlotForHand(hand));
     return TypedActionResult.success(stack);
   }
 
@@ -158,14 +160,13 @@ public class IceSnowTool extends Item implements ItemResourceGenerator, Dispense
   public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
     final int strength = getStrength(stack);
     applyIce(pointer.world(), pointer.pos().offset(pointer.state().get(DispenserBlock.FACING), getRange(strength)).toCenterPos(), strength);
-    if (stack.damage(strength + 1, pointer.world().getRandom(), null)) {
-      stack.setCount(0);
-    }
+    stack.damage(strength + 1, pointer.world().getRandom(), null, () -> {});
     return stack;
   }
 
   public static int getStrength(ItemStack stack) {
-    final NbtCompound nbt = stack.getNbt();
+    final NbtComponent nbtComponent = stack.get(DataComponentTypes.CUSTOM_DATA);
+    final NbtCompound nbt = nbtComponent == null ? null : nbtComponent.copyNbt();
     return nbt == null || !nbt.contains("strength", NbtElement.NUMBER_TYPE) ? 4 : MathHelper.clamp(nbt.getInt("strength"), 0, 10);
   }
 
@@ -181,6 +182,6 @@ public class IceSnowTool extends Item implements ItemResourceGenerator, Dispense
   public void onScroll(int selectedSlot, double scrollAmount, ServerPlayerEntity player, ItemStack stack) {
     final int strength = getStrength(stack);
     final int newStrength = MathHelper.floorMod(strength - (int) scrollAmount, 8);
-    stack.getOrCreateNbt().putInt("strength", newStrength);
+    NbtComponent.set(DataComponentTypes.CUSTOM_DATA, stack, nbtCompound -> nbtCompound.putInt("strength", newStrength));
   }
 }

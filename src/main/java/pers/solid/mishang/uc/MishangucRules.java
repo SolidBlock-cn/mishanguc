@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.gamerule.v1.rule.DoubleRule;
 import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,7 +14,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.world.GameRules;
 import org.jetbrains.annotations.ApiStatus;
@@ -53,7 +51,8 @@ public final class MishangucRules {
     } else if (rule instanceof DoubleRule) {
       buf.writeDouble(((DoubleRule) rule).get());
     }
-    ServerPlayNetworking.send(serverPlayerEntity, new Identifier("mishanguc", "rule_changed"), buf);
+    // todo complete packets
+//    ServerPlayNetworking.send(serverPlayerEntity, new Identifier("mishanguc", "rule_changed"), buf);
   }
 
   private static <T extends GameRules.Rule<T>> GameRules.Key<T> register(String name, GameRules.Type<T> ruleType) {

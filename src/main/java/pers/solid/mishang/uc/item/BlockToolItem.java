@@ -10,6 +10,8 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -28,6 +30,7 @@ import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBlockOutline.class)
 public abstract class BlockToolItem extends Item implements RendersBlockOutline {
@@ -115,7 +118,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
    * @return Whether it can detect fluid. May be {@code null}able, which means it depends.
    */
   public @Nullable Boolean includesFluid(ItemStack stack) {
-    final NbtCompound tag = stack.getNbt();
+    final NbtCompound tag = Optional.ofNullable(stack.get(DataComponentTypes.CUSTOM_DATA)).map(NbtComponent::getNbt).orElse(null); // todo components
     if (tag == null || !tag.contains("IncludesFluid")) {
       return this.includesFluid;
     } else {

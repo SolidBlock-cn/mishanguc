@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.blockentity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.item.NamedBlockItem;
@@ -14,8 +15,8 @@ public class ColoredStandingSignBlockEntity extends StandingSignBlockEntity impl
   }
 
   @Override
-  public void readNbt(NbtCompound nbt) {
-    super.readNbt(nbt);
+  protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+    super.readNbt(nbt, registryLookup);
     color = MishangUtils.readColorFromNbtElement(nbt.get("color"));
     if (world != null && world.isClient) {
       world.updateListeners(pos, this.getCachedState(), this.getCachedState(), 3);
@@ -23,8 +24,8 @@ public class ColoredStandingSignBlockEntity extends StandingSignBlockEntity impl
   }
 
   @Override
-  public void writeNbt(NbtCompound nbt) {
-    super.writeNbt(nbt);
+  public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+    super.writeNbt(nbt, registryLookup);
     nbt.putInt("color", color);
   }
 

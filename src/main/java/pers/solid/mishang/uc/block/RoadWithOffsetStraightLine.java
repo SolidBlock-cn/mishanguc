@@ -7,9 +7,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.*;
+import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -83,7 +83,7 @@ public interface RoadWithOffsetStraightLine extends Road {
   @Override
   default void appendRoadTooltip(
       ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
-    Road.super.appendRoadTooltip(stack, options, tooltip, options);
+    Road.super.appendRoadTooltip(stack, context, tooltip, options);
     final int offsetLevel = offsetLevel();
     if (offsetLevel == 114514) {
       tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_white_and_yellow_double_line.1").formatted(Formatting.GRAY));

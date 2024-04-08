@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.data.client.*;
@@ -74,7 +73,7 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   }
 
   public HandrailStairBlock(@NotNull T baseHandrail) {
-    this(baseHandrail, FabricBlockSettings.copyOf(baseHandrail));
+    this(baseHandrail, Block.Settings.copy(baseHandrail));
   }
 
   @Override

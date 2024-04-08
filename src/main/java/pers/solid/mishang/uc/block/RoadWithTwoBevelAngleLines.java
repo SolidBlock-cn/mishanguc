@@ -8,10 +8,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -51,7 +51,7 @@ public interface RoadWithTwoBevelAngleLines extends Road {
 
   @Override
   default void appendRoadTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
-    Road.super.appendRoadTooltip(stack, options, tooltip, options);
+    Road.super.appendRoadTooltip(stack, context, tooltip, options);
     tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_bi_bevel_angle_line.1").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_bi_bevel_angle_line.2").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_bi_bevel_angle_line.3").formatted(Formatting.GRAY));

@@ -4,10 +4,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -17,32 +18,21 @@ import net.minecraft.data.client.Models;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.FallingBlockEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,40 +48,40 @@ import pers.solid.mishang.uc.util.BlockPlacementContext;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
-@ApiStatus.AvailableSince("0.2.4")
 public class CarryingToolItem extends BlockToolItem
     implements ItemResourceGenerator, InteractsWithEntity, RendersBeforeOutline {
+  // todo try complete with components
   public CarryingToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
 
   @Contract(pure = true)
   public static boolean hasHoldingBlockState(@NotNull ItemStack stack) {
-    return stack.getSubNbt("holdingBlockState") != null;
+    return /*stack.getSubNbt("holdingBlockState") != null*/false;
   }
 
   @Contract(pure = true)
   public static boolean hasHoldingEntity(@NotNull ItemStack stack) {
-    final NbtCompound nbt = stack.getNbt();
-    return nbt != null && nbt.contains("holdingEntityType", NbtElement.STRING_TYPE);
+    /*final NbtCompound nbt = stack.getNbt();
+    return nbt != null && nbt.contains("holdingEntityType", NbtElement.STRING_TYPE);*/
+    return false;
   }
 
   @Contract(pure = true)
-  public static @Nullable Block getHoldingBlock(@NotNull ItemStack stack) {
+  public static @Nullable Block getHoldingBlock(@NotNull ItemStack stack) {/*
     final NbtCompound holdingBlockStateNbt = stack.getSubNbt("holdingBlockState");
     if (holdingBlockStateNbt == null)
       return null;
     final Identifier identifier = Identifier.tryParse(holdingBlockStateNbt.getString("Name"));
-    return Registries.BLOCK.get(identifier);
+    return Registries.BLOCK.get(identifier);*/
+    return null;
   }
 
   @Contract(pure = true)
-  public static @Nullable BlockState getHoldingBlockState(@NotNull ItemStack stack, WorldView world) {
+  public static @Nullable BlockState getHoldingBlockState(@NotNull ItemStack stack, WorldView world) {/*
     final NbtCompound holdingBlockStateNbt = stack.getSubNbt("holdingBlockState");
     if (holdingBlockStateNbt != null) {
       try {
@@ -102,12 +92,13 @@ public class CarryingToolItem extends BlockToolItem
       }
     } else {
       return null;
-    }
+    }*/
+    return null;
   }
 
   @Contract(mutates = "param1")
   public static void setHoldingEntity(@NotNull ItemStack stack, @Nullable Entity entity) {
-    if (entity == null) {
+    /*if (entity == null) {
       stack.removeSubNbt("holdingEntityType");
       stack.removeSubNbt("EntityTag");
       stack.removeSubNbt("holdingEntityName");
@@ -122,7 +113,7 @@ public class CarryingToolItem extends BlockToolItem
       nbt.putString("holdingEntityName", Text.Serialization.toJsonString(entity.getName()));
       nbt.putFloat("holdingEntityWidth", entity.getWidth());
       nbt.putFloat("holdingEntityHeight", entity.getHeight());
-    }
+    }*/
   }
 
   /**
@@ -130,24 +121,24 @@ public class CarryingToolItem extends BlockToolItem
    */
   @Contract(mutates = "param1")
   private static void setHoldingEntityUUID(ItemStack stack, UUID uuid) {
-    final NbtCompound entityTag = stack.getSubNbt("EntityTag");
+    /*final NbtCompound entityTag = stack.getSubNbt("EntityTag");
     if (entityTag != null) {
       entityTag.putUuid("UUID", uuid);
-    }
+    }*/
   }
 
   @Contract(mutates = "param1")
   public static void setHoldingBlockState(@NotNull ItemStack stack, @Nullable BlockState state) {
-    if (state == null) {
+    /*if (state == null) {
       stack.removeSubNbt("holdingBlockState");
     } else {
       stack.setSubNbt("holdingBlockState", NbtHelper.fromBlockState(state));
-    }
+    }*/
   }
 
   @Contract(pure = true)
   public static @Nullable Entity createHoldingEntity(@NotNull ItemStack stack, ServerWorld world, PlayerEntity player) {
-    final NbtCompound nbt = stack.getNbt();
+    /*final NbtCompound nbt = stack.getNbt();
     if (nbt != null) {
       final String holdingEntityType = nbt.getString("holdingEntityType");
       final Identifier entityTypeId = Identifier.tryParse(holdingEntityType);
@@ -158,12 +149,12 @@ public class CarryingToolItem extends BlockToolItem
         final EntityType<?> entityType = Registries.ENTITY_TYPE.get(entityTypeId);
         return entityType.create(world, nbt, null, player.getBlockPos(), SpawnReason.EVENT, false, false);
       }
-    }
+    }*/
     return null;
   }
 
   private static MutableText getEntityName(@NotNull ItemStack stack) {
-    final NbtCompound nbt = stack.getNbt();
+    /*final NbtCompound nbt = stack.getNbt();
     if (nbt == null)
       return TextBridge.empty();
     if (nbt.contains("holdingEntityName", NbtElement.STRING_TYPE)) {
@@ -173,7 +164,8 @@ public class CarryingToolItem extends BlockToolItem
       return Registries.ENTITY_TYPE.containsId(holdingEntityType) ? Registries.ENTITY_TYPE.get(holdingEntityType).getName().copy() : TextBridge.literal(String.valueOf(holdingEntityType));
     } else {
       return TextBridge.empty();
-    }
+    }*/
+    return Text.empty();
   }
 
   @Override
@@ -190,8 +182,8 @@ public class CarryingToolItem extends BlockToolItem
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-    super.appendTooltip(stack, world, tooltip, context);
+  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    super.appendTooltip(stack, context, tooltip, type);
     tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.1").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.2").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.3").formatted(Formatting.GRAY));
@@ -203,8 +195,9 @@ public class CarryingToolItem extends BlockToolItem
     }
   }
 
+
   @Override
-  public ActionResult useOnBlock(ItemStack stack, PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
+  public ActionResult useOnBlock(ItemStack stack, PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {/*
     if (!hasAccess(player, world, true)) {
       return ActionResult.PASS;
     }
@@ -251,7 +244,7 @@ public class CarryingToolItem extends BlockToolItem
       }
     } else {
       final BlockState blockState = world.getBlockState(blockHitResult.getBlockPos());
-      final ActionResult actionResult = blockState.onUse(world, player, hand, blockHitResult);
+      final ActionResult actionResult = blockState.onUse(world, player, blockHitResult);
       if (actionResult.isAccepted()) {
         return actionResult;
       } else {
@@ -262,8 +255,10 @@ public class CarryingToolItem extends BlockToolItem
           return ActionResult.FAIL;
         }
       }
-    }
+    }*/
+    return ActionResult.PASS;
   }
+
 
   private boolean hasAccess(PlayerEntity player, World world, boolean warn) {
     if (world.isClient) {
@@ -276,6 +271,7 @@ public class CarryingToolItem extends BlockToolItem
 
   @Override
   public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    /*
     if (!hasAccess(player, world, true))
       return ActionResult.PASS;
     final Block alreadyHolding = getHoldingBlock(stack);
@@ -321,9 +317,10 @@ public class CarryingToolItem extends BlockToolItem
         player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.picked_overriding", removed.getBlock().getName(), alreadyHolding.getName()), true);
       }
     }
-    setHoldingEntity(stack, null);
+    setHoldingEntity(stack, null);*/
     return ActionResult.SUCCESS;
   }
+/*
 
   @Override
   public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
@@ -432,6 +429,7 @@ public class CarryingToolItem extends BlockToolItem
     }
     return ActionResult.SUCCESS;
   }
+*/
 
   @Environment(EnvType.CLIENT)
   @Override
@@ -497,7 +495,7 @@ public class CarryingToolItem extends BlockToolItem
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void renderBeforeOutline(WorldRenderContext context, HitResult hitResult, ClientPlayerEntity player, Hand hand) {
+  public void renderBeforeOutline(WorldRenderContext context, HitResult hitResult, ClientPlayerEntity player, Hand hand) {/*
     // 只在使用主手且有权限时持有此物品时进行渲染。
     if (hand != Hand.MAIN_HAND || player.isSpectator() || !hasAccess(player, context.world(), true))
       return;
@@ -520,6 +518,6 @@ public class CarryingToolItem extends BlockToolItem
     if (hitResult instanceof EntityHitResult entityHitResult) {
       final Entity entity = entityHitResult.getEntity();
       WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, 1.0f, 0f, 0f, 0.8f);
-    }
+    }*/
   }
 }

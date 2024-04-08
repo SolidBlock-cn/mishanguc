@@ -2,9 +2,9 @@ package pers.solid.mishang.uc.blocks;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.ImmutableMap;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.mixin.object.builder.AbstractBlockAccessor;
 import net.fabricmc.fabric.mixin.object.builder.AbstractBlockSettingsAccessor;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
 import net.minecraft.state.property.Properties;
@@ -65,7 +65,7 @@ public final class HungSignBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("1.2.4")
   public static final HungSignBlock STRIPPED_DARK_OAK_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_DARK_OAK_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBlock STRIPPED_MANGROVE_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_MANGROVE_WOOD, FabricBlockSettings.copyOf(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED));
+  public static final HungSignBlock STRIPPED_MANGROVE_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_MANGROVE_WOOD, Block.Settings.copy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED));
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBlock STRIPPED_CRIMSON_HYPHAE_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_CRIMSON_HYPHAE);
   @ApiStatus.AvailableSince("0.1.7")
@@ -93,11 +93,11 @@ public final class HungSignBlocks extends MishangucBlocks {
   public static final HungSignBlock WARPED_HUNG_SIGN = new HungSignBlock(Blocks.WARPED_PLANKS);
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
-  public static final HungSignBlock BAMBOO_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))));
+  public static final HungSignBlock BAMBOO_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))));
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
-  public static final HungSignBlock BAMBOO_PLANK_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_PLANKS, FabricBlockSettings.copyOf(Blocks.BAMBOO_PLANKS));
+  public static final HungSignBlock BAMBOO_PLANK_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_PLANKS, Block.Settings.copy(Blocks.BAMBOO_PLANKS));
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
-  public static final HungSignBlock BAMBOO_MOSAIC_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_MOSAIC, FabricBlockSettings.copyOf(Blocks.BAMBOO_MOSAIC));
+  public static final HungSignBlock BAMBOO_MOSAIC_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_MOSAIC, Block.Settings.copy(Blocks.BAMBOO_MOSAIC));
 
   // 木告示牌杆部分。
   @ApiStatus.AvailableSince("0.1.7")
@@ -135,14 +135,14 @@ public final class HungSignBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("1.2.4")
   public static final HungSignBarBlock STRIPPED_DARK_OAK_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_DARK_OAK_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBarBlock STRIPPED_MANGROVE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_MANGROVE_WOOD, FabricBlockSettings.copyOf(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED));
+  public static final HungSignBarBlock STRIPPED_MANGROVE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_MANGROVE_WOOD, Block.Settings.copy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED));
   @ApiStatus.AvailableSince("1.2.4")
   public static final HungSignBarBlock STRIPPED_CRIMSON_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_CRIMSON_HYPHAE);
   @ApiStatus.AvailableSince("1.2.4")
   public static final HungSignBarBlock STRIPPED_WARPED_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_WARPED_HYPHAE);
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
-  public static final HungSignBarBlock BAMBOO_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))));
+  public static final HungSignBarBlock BAMBOO_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))));
 
   static {
     OAK_WOOD_HUNG_SIGN.baseTexture = OAK_WOOD_HUNG_SIGN.barTexture = OAK_HUNG_SIGN.barTexture = new Identifier("block/oak_log");

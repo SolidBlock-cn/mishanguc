@@ -10,11 +10,14 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.ClampedModelPredicateProvider;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -36,6 +39,9 @@ import pers.solid.mishang.uc.blocks.MishangucBlocks;
 import pers.solid.mishang.uc.item.CarryingToolItem;
 import pers.solid.mishang.uc.item.DataTagToolItem;
 import pers.solid.mishang.uc.item.MishangucItems;
+import pers.solid.mishang.uc.networking.EditSignPayload;
+import pers.solid.mishang.uc.networking.GetBlockDataPayload;
+import pers.solid.mishang.uc.networking.GetEntityDataPayload;
 import pers.solid.mishang.uc.render.*;
 import pers.solid.mishang.uc.screen.HungSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.StandingSignBlockEditScreen;
@@ -97,33 +103,29 @@ public class MishangucClient implements ClientModInitializer {
     // 网络通信
     // 客户端收到服务器发来的编辑告示牌的数据包时，打开编辑界面，允许用户编辑。
     ClientPlayNetworking.registerGlobalReceiver(
-        new Identifier("mishanguc", "edit_sign"),
-        (client, handler, buf, responseSender) -> {
-          try {
-            final BlockPos blockPos = buf.readBlockPos();
-            final BlockEntity blockEntity =
-                client.world != null ? client.world.getBlockEntity(blockPos) : null;
-            if (blockEntity instanceof final HungSignBlockEntity hungSignBlockEntity) {
-              final Direction direction = buf.readEnumConstant(Direction.class);
-              client.execute(() ->
-                  client.setScreen(new HungSignBlockEditScreen(hungSignBlockEntity, direction, blockPos)));
-            } else if (blockEntity instanceof final WallSignBlockEntity wallSignBlockEntity) {
-              client.execute(() ->
-                  client.setScreen(new WallSignBlockEditScreen(wallSignBlockEntity, blockPos)));
-            } else if (blockEntity instanceof final StandingSignBlockEntity standingSignBlockEntity) {
-              final BlockHitResult blockHitResult = buf.readBlockHitResult();
-              final Boolean isFront = StandingSignBlock.getHitSide(blockEntity.getCachedState(), blockHitResult);
-              if (isFront != null) {
-                client.execute(() -> client.setScreen(new StandingSignBlockEditScreen(standingSignBlockEntity, blockPos, isFront)));
-              }
+        EditSignPayload.ID,
+        (payload, context) -> {
+          final BlockPos blockPos = payload.blockPos();
+          final MinecraftClient client = context.client();
+          final BlockEntity blockEntity = client.world != null ? client.world.getBlockEntity(blockPos) : null;
+          if (blockEntity instanceof final HungSignBlockEntity hungSignBlockEntity) {
+            final Direction direction = payload.direction().orElseThrow();
+            client.execute(() ->
+                client.setScreen(new HungSignBlockEditScreen(hungSignBlockEntity, direction, blockPos)));
+          } else if (blockEntity instanceof final WallSignBlockEntity wallSignBlockEntity) {
+            client.execute(() ->
+                client.setScreen(new WallSignBlockEditScreen(wallSignBlockEntity, blockPos)));
+          } else if (blockEntity instanceof final StandingSignBlockEntity standingSignBlockEntity) {
+            final BlockHitResult blockHitResult = payload.blockHitResult().orElseThrow();
+            final Boolean isFront = StandingSignBlock.getHitSide(blockEntity.getCachedState(), blockHitResult);
+            if (isFront != null) {
+              client.execute(() -> client.setScreen(new StandingSignBlockEditScreen(standingSignBlockEntity, blockPos, isFront)));
             }
-          } catch (NullPointerException | ClassCastException exception) {
-            Mishanguc.MISHANG_LOGGER.error("Error when creating sign edit screen:", exception);
           }
         });
-    ClientPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "get_block_data"), new DataTagToolItem.BlockDataReceiver());
-    ClientPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "get_entity_data"), new DataTagToolItem.EntityDataReceiver());
-    ClientPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "rule_changed"), MishangucRules::handle);
+    ClientPlayNetworking.registerGlobalReceiver(GetBlockDataPayload.ID, new DataTagToolItem.BlockDataReceiver());
+    ClientPlayNetworking.registerGlobalReceiver(GetEntityDataPayload.ID, new DataTagToolItem.EntityDataReceiver());
+//    ClientPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "rule_changed"), MishangucRules::handle); todo complete rule changed
   }
 
   private static void registerBlockColors() {
@@ -167,7 +169,8 @@ public class MishangucClient implements ClientModInitializer {
     );
     ColorProviderRegistry.ITEM.register(
         (stack, tintIndex) -> {
-          final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
+          final NbtComponent nbtComponent = stack.get(DataComponentTypes.BLOCK_ENTITY_DATA);
+          final NbtCompound nbt = nbtComponent == null ? null : nbtComponent.copyNbt(); // todo check
           if (nbt != null && nbt.contains("color", NbtElement.NUMBER_TYPE)) {
             return nbt.getInt("color"); // 此处忽略 colorRemembered
           }

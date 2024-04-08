@@ -5,7 +5,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.client.TextureMap;
@@ -74,7 +73,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
   }
 
   public SimpleHandrailBlock(@NotNull Block baseBlock) {
-    this(baseBlock, FabricBlockSettings.copyOf(baseBlock));
+    this(baseBlock, Block.Settings.copy(baseBlock));
   }
 
   @Environment(EnvType.CLIENT)
@@ -148,7 +147,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     public static final MapCodec<CentralBlock> CODEC = createSubCodec(b -> b.baseHandrail, CentralBlock::new);
 
     public CentralBlock(@NotNull SimpleHandrailBlock baseBlock) {
-      super(baseBlock, FabricBlockSettings.copyOf(baseBlock).nonOpaque());
+      super(baseBlock, Block.Settings.copy(baseBlock).nonOpaque());
     }
 
     @Environment(EnvType.CLIENT)
@@ -177,7 +176,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     public static final MapCodec<CornerBlock> CODEC = createSubCodec(b -> b.baseHandrail, CornerBlock::new);
 
     public CornerBlock(@NotNull SimpleHandrailBlock baseHandrail) {
-      super(baseHandrail, FabricBlockSettings.copyOf(baseHandrail).nonOpaque());
+      super(baseHandrail, Block.Settings.copy(baseHandrail).nonOpaque());
     }
 
     @Environment(EnvType.CLIENT)
@@ -202,7 +201,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     public static final MapCodec<StairBlock> CODEC = createSubCodec(b -> b.baseHandrail, StairBlock::new);
 
     public StairBlock(@NotNull SimpleHandrailBlock baseRail) {
-      super(baseRail, FabricBlockSettings.copyOf(baseRail).nonOpaque());
+      super(baseRail, Block.Settings.copy(baseRail).nonOpaque());
     }
 
     @Environment(EnvType.CLIENT)
@@ -234,7 +233,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     public static final MapCodec<OuterBlock> CODEC = createSubCodec(b -> b.baseHandrail, OuterBlock::new);
 
     public OuterBlock(@NotNull SimpleHandrailBlock baseRail) {
-      super(baseRail, FabricBlockSettings.copyOf(baseRail).nonOpaque());
+      super(baseRail, Block.Settings.copy(baseRail).nonOpaque());
     }
 
     @Environment(EnvType.CLIENT)

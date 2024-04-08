@@ -136,5 +136,5 @@ public interface Road extends BlockResourceGenerator {
    * 给道路添加描述性内容，这部分文本通常是蓝色的。
    */
   @ApiStatus.AvailableSince("0.2.4")
-  void appendDescriptionTooltip(List<Text> tooltip, Item.TooltipContext options);
+  void appendDescriptionTooltip(List<Text> tooltip, Item.TooltipContext context);
 }

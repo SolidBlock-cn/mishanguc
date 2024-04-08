@@ -4,16 +4,16 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
@@ -47,7 +47,7 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
   public SmartRoadSlabBlock(T baseBlock) {
     super(Util.make(() -> {
       cachedBaseBlock = baseBlock;
-      return FabricBlockSettings.copyOf(baseBlock);
+      return AbstractBlock.Settings.copy(baseBlock);
     }));
     this.baseBlock = baseBlock;
   }
@@ -73,8 +73,8 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
   }
 
   @Override
-  public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
-    baseBlock.appendDescriptionTooltip(tooltip, options);
+  public void appendDescriptionTooltip(List<Text> tooltip, Item.TooltipContext context) {
+    baseBlock.appendDescriptionTooltip(tooltip, context);
   }
 
   @Nullable
@@ -100,20 +100,23 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
   }
 
   @Override
-  public ActionResult onUse(
-      BlockState state,
-      World world,
-      BlockPos pos,
-      PlayerEntity player,
-      Hand hand,
-      BlockHitResult hit) {
-    final ActionResult result = super.onUse(state, world, pos, player, hand, hit);
+  public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+    ActionResult result = super.onUse(state, world, pos, player, hit);
     if (result == ActionResult.FAIL) {
       return result;
-    } else {
-      return onUseRoad(state, world, pos, player, hand, hit);
     }
+    return onUseRoad(state, world, pos, player, hit);
   }
+
+  @Override
+  protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    final ItemActionResult result = super.onUseWithItem(stack, state, world, pos, player, hand, hit);
+    if (result == ItemActionResult.FAIL) {
+      return result;
+    }
+    return onUseRoadWithItem(stack, state, world, pos, player, hand, hit);
+  }
+
 
   @Override
   public void neighborUpdate(
@@ -129,9 +132,10 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
   }
 
   @Override
-  public void appendRoadTooltip(
-      ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
-    baseBlock.appendRoadTooltip(stack, options, tooltip, options);
+  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
+    super.appendTooltip(stack, context, tooltip, options);
+    appendDescriptionTooltip(tooltip, context);
+    appendRoadTooltip(stack, context, tooltip, options);
   }
 
   @Override

@@ -5,8 +5,9 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.Models;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -19,7 +20,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.generator.ItemResourceGenerator;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.Mishanguc;
@@ -39,8 +39,8 @@ public class RoadToolItem extends BlockToolItem implements ItemResourceGenerator
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-    super.appendTooltip(stack, world, tooltip, context);
+  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    super.appendTooltip(stack, context, tooltip, type);
     tooltip.add(TextBridge.translatable("item.mishanguc.road_tool.tooltip.1", TextBridge.keybind("key.attack").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.road_tool.tooltip.2", TextBridge.keybind("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.road_tool.tooltip.3").formatted(Formatting.GRAY));
@@ -53,14 +53,14 @@ public class RoadToolItem extends BlockToolItem implements ItemResourceGenerator
     if (blockState.isOf(RoadBlocks.ROAD_BLOCK)) {
       if (!world.isClient) {
         world.setBlockState(blockPos, (player.isSneaking() ? RoadBlocks.ROAD_WITH_WHITE_AUTO_RA_LINE : RoadBlocks.ROAD_WITH_WHITE_AUTO_BA_LINE).getStateWithProperties(blockState));
-        player.getStackInHand(hand).damage(1, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
+        player.getStackInHand(hand).damage(1, player, LivingEntity.getSlotForHand(hand));
         player.sendMessage(TextBridge.translatable("item.mishanguc.road_tool.message.painted"), true);
       }
       return ActionResult.SUCCESS;
     } else if (blockState.isOf(RoadBlocks.ROAD_BLOCK.getRoadSlab())) {
       if (!world.isClient) {
         world.setBlockState(blockPos, (player.isSneaking() ? RoadBlocks.ROAD_WITH_WHITE_AUTO_RA_LINE : RoadBlocks.ROAD_WITH_WHITE_AUTO_BA_LINE).getRoadSlab().getStateWithProperties(blockState));
-        player.getStackInHand(hand).damage(1, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
+        player.getStackInHand(hand).damage(1, player, LivingEntity.getSlotForHand(hand));
         player.sendMessage(TextBridge.translatable("item.mishanguc.road_tool.message.painted"), true);
       }
       return ActionResult.SUCCESS;
@@ -95,14 +95,14 @@ public class RoadToolItem extends BlockToolItem implements ItemResourceGenerator
       if (!world.isClient) {
         world.setBlockState(pos, RoadBlocks.ROAD_BLOCK.getStateWithProperties(blockState));
         player.sendMessage(TextBridge.translatable("item.mishanguc.road_tool.message.cleared"), true);
-        player.getStackInHand(hand).damage(1, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
+        player.getStackInHand(hand).damage(1, player, LivingEntity.getSlotForHand(hand));
       }
       return ActionResult.SUCCESS;
     } else if (block instanceof AbstractRoadSlabBlock) {
       if (!world.isClient) {
         world.setBlockState(pos, RoadBlocks.ROAD_BLOCK.getRoadSlab().getStateWithProperties(blockState));
         player.sendMessage(TextBridge.translatable("item.mishanguc.road_tool.message.cleared"), true);
-        player.getStackInHand(hand).damage(1, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
+        player.getStackInHand(hand).damage(1, player, LivingEntity.getSlotForHand(hand));
       }
       return ActionResult.SUCCESS;
     }

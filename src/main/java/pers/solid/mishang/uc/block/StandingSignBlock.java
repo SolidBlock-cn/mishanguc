@@ -7,12 +7,10 @@ import it.unimi.dsi.fastutil.booleans.BooleanSet;
 import it.unimi.dsi.fastutil.booleans.BooleanSets;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
@@ -56,9 +54,11 @@ import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
+import pers.solid.mishang.uc.networking.EditSignPayload;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 本模组中的直立告示牌方块。
@@ -101,7 +101,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   }
 
   public StandingSignBlock(@NotNull Block baseBlock) {
-    this(baseBlock, FabricBlockSettings.copyOf(baseBlock));
+    this(baseBlock, Block.Settings.copy(baseBlock));
   }
 
   /**
@@ -193,7 +193,6 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
         .with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
     if (state.get(WATERLOGGED)) {
@@ -203,19 +202,16 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     return direction == Direction.DOWN ? state1.with(DOWN, neighborState.isSideSolid(world, neighborPos, Direction.UP, SideShapeType.CENTER)) : state1;
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public FluidState getFluidState(BlockState state) {
     return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState rotate(BlockState state, BlockRotation rotation) {
     return state.with(ROTATION, rotation.rotate(state.get(ROTATION), 16));
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState mirror(BlockState state, BlockMirror mirror) {
     return state.with(ROTATION, mirror.mirror(state.get(ROTATION), 16));
@@ -228,8 +224,8 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
-    super.appendTooltip(stack, world, tooltip, options);
+  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
+    super.appendTooltip(stack, context, tooltip, options);
     tooltip.add(TextBridge.translatable("block.mishanguc.standing_sign.tooltip.1").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("block.mishanguc.standing_sign.tooltip.2").formatted(Formatting.GRAY));
   }
@@ -296,7 +292,6 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     return RecipeCategory.DECORATIONS;
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     final VoxelShape bodyShape = switch (state.get(ROTATION)) {
@@ -315,13 +310,11 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     return new StandingSignBlockEntity(pos, state);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
     return state.get(ROTATION) % 4 == 0 && state.get(DOWN) ? CULLING_SHAPE : VoxelShapes.empty();
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     return VoxelShapes.empty();
@@ -330,7 +323,6 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   /**
    * 鉴于其实际外观与碰撞形状不一致，告示牌使用手动的侧面隐形判断。
    */
-  @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
     if (direction.getAxis().isHorizontal() && stateFrom.getBlock() instanceof StandingSignBlock standingSignBlockFrom) {
@@ -353,18 +345,17 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     return super.isSideInvisible(state, stateFrom, direction);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
-  public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-    final ActionResult actionResult = super.onUse(state, world, pos, player, hand, hit);
+  protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+    final ActionResult actionResult = super.onUse(state, world, pos, player, hit);
     if (actionResult.isAccepted()) {
       return actionResult;
     }
-
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     final Boolean isFront = getHitSide(state, hit);
-    if (!(blockEntity instanceof StandingSignBlockEntity entity)) return ActionResult.PASS;
-    else if (player.isSneaking()) {
+    if (!(blockEntity instanceof StandingSignBlockEntity entity)) {
+      return ActionResult.PASS;
+    } else if (player.isSneaking()) {
       // 潜行时点击告示牌，可以切换底部杆子的显示。
       world.setBlockState(pos, state.with(DOWN, !state.get(DOWN)));
       return ActionResult.SUCCESS;
@@ -374,53 +365,6 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
       return ActionResult.FAIL;
     } else if (world.isClient) {
       return ActionResult.SUCCESS;
-    } else {
-      final ItemStack stackInHand = player.getStackInHand(hand);
-      if (stackInHand.getItem() instanceof HoneycombItem) {
-        // 处理告示牌的涂蜡。
-        if (!entity.waxed.contains(isFront)) {
-          entity.waxed = addToSet(entity.waxed, isFront);
-          player.sendMessage(BlockEntityWithText.MESSAGE_WAX_ON, true);
-          world.syncWorldEvent(null, WorldEvents.BLOCK_WAXED, entity.getPos(), 0);
-          entity.markDirtyAndUpdate();
-          if (!player.isCreative()) stackInHand.decrement(1);
-          return ActionResult.SUCCESS;
-        } else if (player.isCreative()) {
-          entity.waxed = removeFromSet(entity.waxed, isFront);
-          player.sendMessage(BlockEntityWithText.MESSAGE_WAX_OFF, true);
-          world.syncWorldEvent(null, WorldEvents.WAX_REMOVED, entity.getPos(), 0);
-          entity.markDirtyAndUpdate();
-          return ActionResult.SUCCESS;
-        }
-      }
-      if (entity.waxed.contains(isFront)) {
-        // 涂蜡的告示牌不应该进行操作。
-        world.playSound(null, entity.getPos(), SoundEvents.BLOCK_SIGN_WAXED_INTERACT_FAIL, SoundCategory.BLOCKS);
-        return ActionResult.PASS;
-      } else if (stackInHand.isOf(Items.MAGMA_CREAM)) {
-        // 玩家手持岩浆膏时，可快速进行重整。
-        MishangUtils.rearrange(entity.getTextsOnSide(isFront));
-        entity.markDirtyAndUpdate();
-        return ActionResult.SUCCESS;
-      } else if (stackInHand.getItem() instanceof GlowInkSacItem) {
-        if (!entity.glowing.contains(isFront)) {
-          entity.glowing = addToSet(entity.glowing, isFront);
-          player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_ON, true);
-          world.playSound(null, entity.getPos(), SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-          entity.markDirtyAndUpdate();
-          if (!player.isCreative()) stackInHand.decrement(1);
-          return ActionResult.SUCCESS;
-        }
-      } else if (stackInHand.getItem() instanceof InkSacItem) {
-        if (entity.glowing.contains(isFront)) {
-          entity.glowing = removeFromSet(entity.glowing, isFront);
-          player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_OFF, true);
-          world.playSound(null, entity.getPos(), SoundEvents.ITEM_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-          entity.markDirtyAndUpdate();
-          if (!player.isCreative()) stackInHand.decrement(1);
-          return ActionResult.SUCCESS;
-        }
-      }
     }
 
     entity.checkEditorValidity();
@@ -432,11 +376,76 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     }
     entity.editedSide = isFront;
     entity.setEditor(player);
-    ServerPlayNetworking.send(
-        ((ServerPlayerEntity) player),
-        new Identifier("mishanguc", "edit_sign"),
-        Util.make(PacketByteBufs.create(), packet -> packet.writeBlockPos(pos).writeBlockHitResult(hit)));
+    ServerPlayNetworking.send((ServerPlayerEntity) player, new EditSignPayload(pos, Optional.empty(), Optional.of(hit)));
     return ActionResult.SUCCESS;
+  }
+
+  @Override
+  protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    final BlockEntity blockEntity = world.getBlockEntity(pos);
+    final Boolean isFront = getHitSide(state, hit);
+    if (!(blockEntity instanceof StandingSignBlockEntity entity)) {
+      return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+    } else if (player.isSneaking()) {
+      // 潜行时点击告示牌，可以切换底部杆子的显示。
+      world.setBlockState(pos, state.with(DOWN, !state.get(DOWN)));
+      return ItemActionResult.SUCCESS;
+    } else if (isFront == null) {
+      return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    } else if (!player.getAbilities().allowModifyWorld) {
+      // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
+      return ItemActionResult.FAIL;
+    } else if (world.isClient) {
+      return ItemActionResult.SUCCESS;
+    } else {
+      final ItemStack stackInHand = player.getStackInHand(hand);
+      if (stackInHand.getItem() instanceof HoneycombItem) {
+        // 处理告示牌的涂蜡。
+        if (!entity.waxed.contains(isFront.booleanValue())) {
+          entity.waxed = addToSet(entity.waxed, isFront);
+          player.sendMessage(BlockEntityWithText.MESSAGE_WAX_ON, true);
+          world.syncWorldEvent(null, WorldEvents.BLOCK_WAXED, entity.getPos(), 0);
+          entity.markDirtyAndUpdate();
+          if (!player.isCreative()) stackInHand.decrement(1);
+          return ItemActionResult.SUCCESS;
+        } else if (player.isCreative()) {
+          entity.waxed = removeFromSet(entity.waxed, isFront);
+          player.sendMessage(BlockEntityWithText.MESSAGE_WAX_OFF, true);
+          world.syncWorldEvent(null, WorldEvents.WAX_REMOVED, entity.getPos(), 0);
+          entity.markDirtyAndUpdate();
+          return ItemActionResult.SUCCESS;
+        }
+      }
+      if (entity.waxed.contains(isFront.booleanValue())) {
+        // 涂蜡的告示牌不应该进行操作。
+        world.playSound(null, entity.getPos(), SoundEvents.BLOCK_SIGN_WAXED_INTERACT_FAIL, SoundCategory.BLOCKS);
+        return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+      } else if (stackInHand.isOf(Items.MAGMA_CREAM)) {
+        // 玩家手持岩浆膏时，可快速进行重整。
+        MishangUtils.rearrange(entity.getTextsOnSide(isFront));
+        entity.markDirtyAndUpdate();
+        return ItemActionResult.SUCCESS;
+      } else if (stackInHand.getItem() instanceof GlowInkSacItem) {
+        if (!entity.glowing.contains(isFront.booleanValue())) {
+          entity.glowing = addToSet(entity.glowing, isFront);
+          player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_ON, true);
+          world.playSound(null, entity.getPos(), SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+          entity.markDirtyAndUpdate();
+          if (!player.isCreative()) stackInHand.decrement(1);
+          return ItemActionResult.SUCCESS;
+        }
+      } else if (stackInHand.getItem() instanceof InkSacItem) {
+        if (entity.glowing.contains(isFront.booleanValue())) {
+          entity.glowing = removeFromSet(entity.glowing, isFront);
+          player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_OFF, true);
+          world.playSound(null, entity.getPos(), SoundEvents.ITEM_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+          entity.markDirtyAndUpdate();
+          if (!player.isCreative()) stackInHand.decrement(1);
+          return ItemActionResult.SUCCESS;
+        }
+      }
+    }
+    return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
   }
 
   @Override

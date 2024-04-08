@@ -5,9 +5,11 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.Models;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.SlimeEntity;
 import net.minecraft.entity.passive.PassiveEntity;
@@ -47,8 +49,8 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, ItemRes
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-    super.appendTooltip(stack, world, tooltip, context);
+  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    super.appendTooltip(stack, context, tooltip, type);
     tooltip.add(TextBridge.translatable("item.mishanguc.growth_tool.tooltip.1").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.growth_tool.tooltip.2").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.growth_tool.tooltip.3").formatted(Formatting.GRAY));
@@ -64,7 +66,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, ItemRes
     }
     final Vec3d center = raycast.getPos();
     final int damage = apply(world, center, !user.isSneaking());
-    user.getStackInHand(hand).damage(damage, user, playerEntity -> playerEntity.sendToolBreakStatus(hand));
+    user.getStackInHand(hand).damage(damage, user, LivingEntity.getSlotForHand(hand));
     return use;
   }
 
@@ -72,7 +74,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, ItemRes
   public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
     if (super.canMine(state, world, pos, miner) && !world.isClient) {
       final int damage = apply(world, Vec3d.ofCenter(pos), !miner.isSneaking());
-      miner.getStackInHand(Hand.MAIN_HAND).damage(damage, miner, playerEntity -> playerEntity.sendToolBreakStatus(Hand.MAIN_HAND));
+      miner.getStackInHand(Hand.MAIN_HAND).damage(damage, miner, EquipmentSlot.MAINHAND);
     }
     return false;
   }
@@ -127,7 +129,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, ItemRes
     final ActionResult actionResult = InteractsWithEntity.super.useEntityCallback(player, world, hand, entity, hitResult);
     if (actionResult == ActionResult.PASS && !world.isClient) {
       final int damage = apply(world, hitResult == null ? entity.getPos() : hitResult.getPos(), !player.isSneaking());
-      player.getStackInHand(hand).damage(damage, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
+      player.getStackInHand(hand).damage(damage, player, LivingEntity.getSlotForHand(hand));
       return ActionResult.SUCCESS;
     }
     return actionResult;
@@ -138,7 +140,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, ItemRes
     final ActionResult actionResult = InteractsWithEntity.super.attackEntityCallback(player, world, hand, entity, hitResult);
     if (actionResult == ActionResult.PASS && !world.isClient) {
       final int damage = apply(world, hitResult == null ? entity.getPos() : hitResult.getPos(), !player.isSneaking());
-      player.getStackInHand(hand).damage(damage, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
+      player.getStackInHand(hand).damage(damage, player, LivingEntity.getSlotForHand(hand));
       return ActionResult.SUCCESS;
     }
     return actionResult;
@@ -153,7 +155,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, ItemRes
   @Override
   public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
     final int damage = apply(pointer.world(), pointer.pos().offset(pointer.state().get(DispenserBlock.FACING), 4).toCenterPos(), true);
-    stack.damage(damage, pointer.world().getRandom(), null);
+    stack.damage(damage, pointer.world().getRandom(), null, () -> {});
     return stack;
   }
 }

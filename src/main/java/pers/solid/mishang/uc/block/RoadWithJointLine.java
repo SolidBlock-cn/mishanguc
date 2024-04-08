@@ -6,9 +6,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.*;
+import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -75,7 +75,7 @@ public interface RoadWithJointLine extends Road {
   @Override
   default void appendRoadTooltip(
       ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
-    Road.super.appendRoadTooltip(stack, options, tooltip, options);
+    Road.super.appendRoadTooltip(stack, context, tooltip, options);
     tooltip.add(
         TextBridge.translatable("block.mishanguc.tooltip.road_with_joint_line.1")
             .formatted(Formatting.GRAY));

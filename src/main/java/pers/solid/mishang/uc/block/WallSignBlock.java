@@ -5,13 +5,11 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.BlockFace;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
@@ -29,10 +27,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -49,11 +44,13 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
+import pers.solid.mishang.uc.networking.EditSignPayload;
 import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 与 Minecraft 原版的 {@link net.minecraft.block.WallSignBlock} 不同，这里的 {@code WallSignBlock}
@@ -105,7 +102,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
 
   @ApiStatus.AvailableSince("0.1.7")
   public WallSignBlock(@NotNull Block baseBlock) {
-    this(baseBlock, FabricBlockSettings.copyOf(baseBlock));
+    this(baseBlock, Block.Settings.copy(baseBlock));
   }
 
   @Override
@@ -129,14 +126,12 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     return true;
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getOutlineShape(
       BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     return SHAPE_PER_WALL_MOUNT_LOCATION.get(state.get(FACE)).get(state.get(FACING));
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public FluidState getFluidState(BlockState state) {
     return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
@@ -165,25 +160,15 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
-    super.appendTooltip(stack, world, tooltip, options);
+  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
+    super.appendTooltip(stack, context, tooltip, options);
     tooltip.add(TextBridge.translatable("block.mishanguc.wall_sign.tooltip.1").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("block.mishanguc.wall_sign.tooltip.2").formatted(Formatting.GRAY));
   }
 
-  /**
-   * 玩家点击该告示牌时，编辑告示牌。
-   */
-  @SuppressWarnings("deprecation")
   @Override
-  public ActionResult onUse(
-      BlockState state,
-      World world,
-      BlockPos pos,
-      PlayerEntity player,
-      Hand hand,
-      BlockHitResult hit) {
-    final ActionResult actionResult = super.onUse(state, world, pos, player, hand, hit);
+  protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+    final ActionResult actionResult = super.onUse(state, world, pos, player, hit);
     if (actionResult != ActionResult.PASS) return actionResult;
     // 在服务端触发打开告示牌编辑界面。Open the edit interface, triggered in the server side.
     final BlockEntity blockEntity = world.getBlockEntity(pos);
@@ -194,53 +179,6 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
       return ActionResult.FAIL;
     } else if (world.isClient) {
       return ActionResult.SUCCESS;
-    } else {
-      final ItemStack stackInHand = player.getStackInHand(hand);
-      if (stackInHand.getItem() instanceof HoneycombItem) {
-        // 处理告示牌的涂蜡。
-        if (!entity.waxed) {
-          entity.waxed = true;
-          player.sendMessage(BlockEntityWithText.MESSAGE_WAX_ON, true);
-          world.syncWorldEvent(null, WorldEvents.BLOCK_WAXED, entity.getPos(), 0);
-          entity.markDirtyAndUpdate();
-          if (!player.isCreative()) stackInHand.decrement(1);
-          return ActionResult.SUCCESS;
-        } else if (player.isCreative()) {
-          entity.waxed = false;
-          player.sendMessage(BlockEntityWithText.MESSAGE_WAX_OFF, true);
-          world.syncWorldEvent(null, WorldEvents.WAX_REMOVED, entity.getPos(), 0);
-          entity.markDirtyAndUpdate();
-          return ActionResult.SUCCESS;
-        }
-      }
-      if (entity.waxed) {
-        // 涂蜡的告示牌不应该进行操作。
-        world.playSound(null, entity.getPos(), SoundEvents.BLOCK_SIGN_WAXED_INTERACT_FAIL, SoundCategory.BLOCKS);
-        return ActionResult.PASS;
-      } else if (stackInHand.isOf(Items.MAGMA_CREAM)) {
-        MishangUtils.rearrange(entity.textContexts);
-        entity.markDirtyAndUpdate();
-        if (!player.isCreative()) stackInHand.decrement(1);
-        return ActionResult.SUCCESS;
-      } else if (stackInHand.getItem() instanceof GlowInkSacItem) {
-        if (!entity.glowing) {
-          entity.glowing = true;
-          player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_ON, true);
-          world.playSound(null, entity.getPos(), SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-          entity.markDirtyAndUpdate();
-          if (!player.isCreative()) stackInHand.decrement(1);
-          return ActionResult.SUCCESS;
-        }
-      } else if (stackInHand.getItem() instanceof InkSacItem) {
-        if (entity.glowing) {
-          entity.glowing = false;
-          player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_OFF, true);
-          world.playSound(null, entity.getPos(), SoundEvents.ITEM_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-          entity.markDirtyAndUpdate();
-          if (!player.isCreative()) stackInHand.decrement(1);
-          return ActionResult.SUCCESS;
-        }
-      }
     }
 
     entity.checkEditorValidity();
@@ -254,11 +192,70 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     }
     // 此时告示牌已被编辑。
     entity.setEditor(player);
-    ServerPlayNetworking.send(
-        ((ServerPlayerEntity) player),
-        new Identifier("mishanguc", "edit_sign"),
-        PacketByteBufs.create().writeBlockPos(pos).writeEnumConstant(hit.getSide()));
+    ServerPlayNetworking.send(((ServerPlayerEntity) player), new EditSignPayload(pos, Optional.of(hit.getSide()), Optional.empty()));
     return ActionResult.SUCCESS;
+  }
+
+  @Override
+  protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    // 在服务端触发打开告示牌编辑界面。
+    final BlockEntity blockEntity = world.getBlockEntity(pos);
+    if (!(blockEntity instanceof final WallSignBlockEntity entity)) {
+      return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+    } else if (!player.getAbilities().allowModifyWorld) {
+      // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
+      return ItemActionResult.FAIL;
+    } else if (world.isClient) {
+      return ItemActionResult.SUCCESS;
+    } else {
+      if (stack.getItem() instanceof HoneycombItem) {
+        // 处理告示牌的涂蜡。
+        if (!entity.waxed) {
+          entity.waxed = true;
+          player.sendMessage(BlockEntityWithText.MESSAGE_WAX_ON, true);
+          world.syncWorldEvent(null, WorldEvents.BLOCK_WAXED, entity.getPos(), 0);
+          entity.markDirtyAndUpdate();
+          if (!player.isCreative()) stack.decrement(1);
+          return ItemActionResult.SUCCESS;
+        } else if (player.isCreative()) {
+          entity.waxed = false;
+          player.sendMessage(BlockEntityWithText.MESSAGE_WAX_OFF, true);
+          world.syncWorldEvent(null, WorldEvents.WAX_REMOVED, entity.getPos(), 0);
+          entity.markDirtyAndUpdate();
+          return ItemActionResult.SUCCESS;
+        }
+      }
+      if (entity.waxed) {
+        // 涂蜡的告示牌不应该进行操作。
+        world.playSound(null, entity.getPos(), SoundEvents.BLOCK_SIGN_WAXED_INTERACT_FAIL, SoundCategory.BLOCKS);
+        return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+      } else if (stack.isOf(Items.MAGMA_CREAM)) {
+        MishangUtils.rearrange(entity.textContexts);
+        entity.markDirtyAndUpdate();
+        if (!player.isCreative()) stack.decrement(1);
+        return ItemActionResult.SUCCESS;
+      } else if (stack.getItem() instanceof GlowInkSacItem) {
+        if (!entity.glowing) {
+          entity.glowing = true;
+          player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_ON, true);
+          world.playSound(null, entity.getPos(), SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+          entity.markDirtyAndUpdate();
+          if (!player.isCreative()) stack.decrement(1);
+          return ItemActionResult.SUCCESS;
+        }
+      } else if (stack.getItem() instanceof InkSacItem) {
+        if (entity.glowing) {
+          entity.glowing = false;
+          player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_OFF, true);
+          world.playSound(null, entity.getPos(), SoundEvents.ITEM_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+          entity.markDirtyAndUpdate();
+          if (!player.isCreative()) stack.decrement(1);
+          return ItemActionResult.SUCCESS;
+        }
+      }
+    }
+
+    return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
   }
 
   @Nullable
@@ -311,7 +308,6 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     return RecipeCategory.DECORATIONS;
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
     if (direction.getAxis().isHorizontal() && state.getBlock() instanceof WallSignBlock && stateFrom.getBlock() instanceof WallSignBlock wallSignBlockFrom && state.get(FACING) == stateFrom.get(FACING) && direction.getAxis() != state.get(FACING).getAxis()) {

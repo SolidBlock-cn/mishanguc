@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -62,7 +61,7 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
   }
 
   public HandrailOuterBlock(@NotNull T baseHandrail) {
-    this(baseHandrail, FabricBlockSettings.copyOf(baseHandrail));
+    this(baseHandrail, Block.Settings.copy(baseHandrail));
   }
 
   @Override

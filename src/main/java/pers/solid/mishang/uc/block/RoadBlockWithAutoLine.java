@@ -7,9 +7,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Direction;
@@ -321,10 +321,8 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
                 // - 两端黄色，前方白色 → 黄色+白色
                 if (stateLeft.lineColor() == LineColor.WHITE && facingState.lineColor() == LineColor.YELLOW) {
                   final RoadWithJointLine.Impl block = switch (stateLeft.lineType()) {
-                    case THICK ->
-                        (facingState.lineType() == LineType.DOUBLE ? ROAD_WITH_WT_TS_YD_LINE : ROAD_WITH_WT_TS_Y_LINE);
-                    default ->
-                        (facingState.lineType() == LineType.DOUBLE ? ROAD_WITH_W_TS_YD_LINE : ROAD_WITH_W_TS_Y_LINE);
+                    case THICK -> (facingState.lineType() == LineType.DOUBLE ? ROAD_WITH_WT_TS_YD_LINE : ROAD_WITH_WT_TS_Y_LINE);
+                    default -> (facingState.lineType() == LineType.DOUBLE ? ROAD_WITH_W_TS_YD_LINE : ROAD_WITH_W_TS_Y_LINE);
                   };
                   return composeJointLine(block, facingDirection, facingOffset);
                 }
@@ -480,8 +478,7 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
 
   private static BlockState composeOffsetStraightLine(Direction offsetDirection, int offsetLevel, LineColor color) {
     return switch (offsetLevel) {
-      case 114514 ->
-          ROAD_WITH_WHITE_YELLOW_DOUBLE_LINE.getDefaultState().with(Properties.HORIZONTAL_FACING, offsetDirection.getOpposite());
+      case 114514 -> ROAD_WITH_WHITE_YELLOW_DOUBLE_LINE.getDefaultState().with(Properties.HORIZONTAL_FACING, offsetDirection.getOpposite());
       case 2 -> {
         final Block block = switch (color) {
           case YELLOW -> ROAD_WITH_YELLOW_OFFSET_LINE;

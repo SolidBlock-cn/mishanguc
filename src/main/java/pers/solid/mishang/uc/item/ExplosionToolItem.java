@@ -4,10 +4,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.data.client.Models;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -32,7 +35,6 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
-import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.generator.ItemResourceGenerator;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
@@ -81,7 +83,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
         serverPlayerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.x, pos.y, pos.z, power(stack), explosion.getAffectedBlocks(), explosion.getAffectedPlayers().get(serverPlayerEntity), destructionType(stack), ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE));
       }
     }
-    stack.damage((int) power(stack), user, e -> e.sendToolBreakStatus(hand));
+    stack.damage((int) power(stack), user, LivingEntity.getSlotForHand(hand));
     if (user.isCreative()) {
       booleanRule.set(backup, null);
     }
@@ -97,7 +99,9 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
    * @return 该物品产生的爆炸类型。
    */
   public Explosion.DestructionType destructionType(ItemStack stack) {
-    final String destructionType = stack.getOrCreateNbt().getString("destructionType");
+    final NbtComponent nbtComponent = stack.get(DataComponentTypes.CUSTOM_DATA);
+    final String destructionType = nbtComponent == null ? "" : nbtComponent.copyNbt().getString("destructionType");
+    // todo change with components
     return switch (destructionType) {
       case "none", "keep" -> Explosion.DestructionType.KEEP;
       case "destroy_with_decay", "destroy" -> Explosion.DestructionType.DESTROY_WITH_DECAY;
@@ -109,35 +113,38 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
    * @return 物品产生爆炸时，是否造成火焰。
    */
   public boolean createFire(ItemStack stack) {
-    return stack.getOrCreateNbt().getBoolean("createFire");
+    final NbtComponent nbtComponent = stack.get(DataComponentTypes.CUSTOM_DATA);
+    return nbtComponent != null && nbtComponent.copyNbt().getBoolean("createFire");
   }
 
   /**
    * @return 该物品的爆炸力量，用于在爆炸时使用。默认为 4。
    */
   public float power(ItemStack stack) {
-    final NbtCompound nbt = stack.getOrCreateNbt();
-    return nbt.contains("power", NbtElement.NUMBER_TYPE) ? MathHelper.clamp(nbt.getFloat("power"), -128, 128) : 4;
+    final NbtComponent nbtComponent = stack.get(DataComponentTypes.CUSTOM_DATA);
+    final NbtCompound nbt = nbtComponent == null ? null : nbtComponent.copyNbt();
+    // todo replace with components
+    return nbt != null && nbt.contains("power", NbtElement.NUMBER_TYPE) ? MathHelper.clamp(nbt.getFloat("power"), -128, 128) : 4;
   }
 
   public void appendToEntries(ItemGroup.Entries stacks) {
     stacks.add(new ItemStack(this));
     ItemStack stack = new ItemStack(this);
-    stack.getOrCreateNbt().putBoolean("createFire", true);
+    NbtComponent.set(DataComponentTypes.CUSTOM_DATA, stack, nbt -> nbt.putBoolean("createFire", true));
     stacks.add(stack);
 
     stack = new ItemStack(this);
-    stack.getOrCreateNbt().putString("destructionType", "keep");
+    NbtComponent.set(DataComponentTypes.CUSTOM_DATA, stack, nbt -> nbt.putString("destructionType", "keep"));
     stacks.add(stack);
 
     stack = new ItemStack(this);
-    stack.getOrCreateNbt().putString("destructionType", "destroy_with_decay");
+    NbtComponent.set(DataComponentTypes.CUSTOM_DATA, stack, nbt -> nbt.putString("destructionType", "destroy_with_decay"));
     stacks.add(stack);
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-    super.appendTooltip(stack, world, tooltip, context);
+  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    super.appendTooltip(stack, context, tooltip, type);
     tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.1", TextBridge.keybind("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.2").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.3").formatted(Formatting.GRAY));
@@ -152,7 +159,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
   public void onScroll(int selectedSlot, double scrollAmount, ServerPlayerEntity player, ItemStack stack) {
     final boolean creative = player.isCreative();
     final float power = MathHelper.clamp(power(stack) - (float) scrollAmount, creative ? -128 : 0, creative ? 128 : 64);
-    stack.getOrCreateNbt().putFloat("power", power);
+    NbtComponent.set(DataComponentTypes.CUSTOM_DATA, stack, nbt -> nbt.putFloat("power", power));
   }
 
   @Override
@@ -182,9 +189,8 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
           playerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.getX(), pos.getY(), pos.getZ(), power(stack), explosion.getAffectedBlocks(), explosion.getAffectedPlayers().get(playerEntity), destructionType(stack), ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE));
         }
       }
-      if (stack.damage((int) power(stack), pointer.world().getRandom(), null)) {
-        stack.setCount(0);
-      }
+      stack.damage((int) power(stack), world.getRandom(), null, () -> {});
+      // todo check if breakCallback is needed
     }
     return stack;
   }

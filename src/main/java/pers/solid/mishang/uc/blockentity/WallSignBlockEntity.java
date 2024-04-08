@@ -8,6 +8,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
@@ -47,21 +48,21 @@ public class WallSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  public void readNbt(NbtCompound nbt) {
-    super.readNbt(nbt);
+  protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+    super.readNbt(nbt, registryLookup);
     final @Nullable NbtElement nbtText = nbt.get("text");
     if (nbtText instanceof NbtString || nbt.contains("textJson", NbtElement.STRING_TYPE)) {
       // 如果 text 是个字符串，则读取整个 nbt 作为 TextContext。
       // 例如，整个 nbt 可以是 {text: "abc", color: "red", size: 5}。
-      textContexts = ImmutableList.of(TextContext.fromNbt(nbt, createDefaultTextContext()));
+      textContexts = ImmutableList.of(TextContext.fromNbt(nbt, createDefaultTextContext(), registryLookup));
     } else if (nbtText instanceof NbtCompound) {
       // 如果 text 是个复合标签，则读取这个复合标签。
       // 例如，整个 nbt 可以是 {text: {text: "abc", color: "red", size: 5}}。
-      textContexts = ImmutableList.of(TextContext.fromNbt(nbtText, createDefaultTextContext()));
+      textContexts = ImmutableList.of(TextContext.fromNbt(nbtText, createDefaultTextContext(), registryLookup));
     } else if (nbtText instanceof NbtList) {
       ImmutableList.Builder<TextContext> builder = new ImmutableList.Builder<>();
       for (NbtElement nbtElement : ((NbtList) nbtText)) {
-        builder.add(TextContext.fromNbt(nbtElement, createDefaultTextContext()));
+        builder.add(TextContext.fromNbt(nbtElement, createDefaultTextContext(), registryLookup));
       }
       textContexts = builder.build();
     }
@@ -71,16 +72,16 @@ public class WallSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  public void writeNbt(NbtCompound nbt) {
-    super.writeNbt(nbt);
+  public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+    super.writeNbt(nbt, registryLookup);
     if (textContexts.size() == 1) {
       final NbtCompound nbtCompound = new NbtCompound();
-      textContexts.get(0).writeNbt(nbtCompound);
+      textContexts.get(0).writeNbt(nbtCompound, registryLookup);
       nbt.put("text", nbtCompound);
     } else {
       final NbtList nbtList = new NbtList();
       for (TextContext textContext : textContexts) {
-        nbtList.add(textContext.createNbt());
+        nbtList.add(textContext.createNbt(registryLookup));
       }
       nbt.put("text", nbtList);
     }

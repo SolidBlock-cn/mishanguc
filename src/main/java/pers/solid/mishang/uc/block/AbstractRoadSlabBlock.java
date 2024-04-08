@@ -1,27 +1,22 @@
 package pers.solid.mishang.uc.block;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.server.loottable.vanilla.VanillaBlockLootTableGenerator;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
@@ -63,21 +58,22 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
     return mirrorRoad(super.mirror(state, mirror), mirror);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
-  public ActionResult onUse(
-      BlockState state,
-      World world,
-      BlockPos pos,
-      PlayerEntity player,
-      Hand hand,
-      BlockHitResult hit) {
-    ActionResult result = super.onUse(state, world, pos, player, hand, hit);
+  public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+    ActionResult result = super.onUse(state, world, pos, player, hit);
     if (result == ActionResult.FAIL) {
       return result;
-    } else {
-      return onUseRoad(state, world, pos, player, hand, hit);
     }
+    return onUseRoad(state, world, pos, player, hit);
+  }
+
+  @Override
+  protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    final ItemActionResult result = super.onUseWithItem(stack, state, world, pos, player, hand, hit);
+    if (result == ItemActionResult.FAIL) {
+      return result;
+    }
+    return onUseRoadWithItem(stack, state, world, pos, player, hand, hit);
   }
 
   @SuppressWarnings("deprecation")
@@ -93,13 +89,11 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
     return withStateForNeighborUpdate(super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos), direction, neighborState, world, pos, neighborPos);
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public void appendTooltip(
-      ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
-    super.appendTooltip(stack, world, tooltip, options);
-    appendDescriptionTooltip(tooltip, options);
-    appendRoadTooltip(stack, options, tooltip, world);
+  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
+    super.appendTooltip(stack, context, tooltip, options);
+    appendDescriptionTooltip(tooltip, context);
+    appendRoadTooltip(stack, context, tooltip, options);
   }
 
   @Override

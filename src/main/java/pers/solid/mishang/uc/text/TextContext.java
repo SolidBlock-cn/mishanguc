@@ -13,6 +13,7 @@ import net.minecraft.nbt.AbstractNbtNumber;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.PlainTextContent;
@@ -183,11 +184,12 @@ public class TextContext implements Cloneable {
   /**
    * 从一个 NBT 元素创建一个新的 TextContext 对象，并使用默认值。
    *
-   * @param nbt NBT 复合标签或者字符串。
+   * @param nbt            NBT 复合标签或者字符串。
+   * @param registryLookup
    * @return 新的 TextContext 对象。
    */
-  public static @NotNull TextContext fromNbt(NbtElement nbt) {
-    return fromNbt(nbt, new TextContext());
+  public static @NotNull TextContext fromNbt(NbtElement nbt, RegistryWrapper.WrapperLookup registryLookup) {
+    return fromNbt(nbt, new TextContext(), registryLookup);
   }
 
   /**
@@ -197,12 +199,12 @@ public class TextContext implements Cloneable {
    * @param defaults 一个默认的 TextContext 对象。该对象的值会直接修改。
    * @return 新的 TextContext 对象。
    */
-  @Contract(value = "_, _ -> param2", mutates = "param2")
-  public static @NotNull TextContext fromNbt(NbtElement nbt, TextContext defaults) {
+  @Contract(value = "_, _, _ -> param2", mutates = "param2")
+  public static @NotNull TextContext fromNbt(NbtElement nbt, TextContext defaults, RegistryWrapper.WrapperLookup registryLookup) {
     if (nbt instanceof NbtString || nbt instanceof AbstractNbtNumber) {
       defaults.text = TextBridge.literal(nbt.asString());
     } else if (nbt instanceof NbtCompound nbtCompound) {
-      defaults.readNbt(nbtCompound);
+      defaults.readNbt(nbtCompound, registryLookup);
     }
     return defaults;
   }
@@ -221,12 +223,12 @@ public class TextContext implements Cloneable {
    * @param nbt NBT 复合标签。
    */
   @Contract(mutates = "this")
-  public void readNbt(@NotNull NbtCompound nbt) {
+  public void readNbt(@NotNull NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
     final @Nullable NbtElement nbtText = nbt.get("text");
     final String textJson = nbt.getString("textJson");
     if (!textJson.isEmpty()) {
       try {
-        text = Text.Serialization.fromLenientJson(textJson);
+        text = Text.Serialization.fromLenientJson(textJson, registryLookup);
       } catch (JsonParseException e) {
         text = TextBridge.translatable("message.mishanguc.invalid_json", e.getMessage());
       }
@@ -393,12 +395,12 @@ public class TextContext implements Cloneable {
    *            <pre>{@code  new NbtCompound()}</pre>
    */
   @Contract(mutates = "param1")
-  public void writeNbt(@NotNull NbtCompound nbt) {
+  public void writeNbt(@NotNull NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
     if (text != null) {
       if (text.getContent() instanceof PlainTextContent plainTextContent && text.getSiblings().isEmpty() && text.getStyle().isEmpty()) {
         nbt.putString("text", plainTextContent.string());
       } else {
-        nbt.putString("textJson", Text.Serialization.toJsonString(text));
+        nbt.putString("textJson", Text.Serialization.toJsonString(text, registryLookup));
       }
     } else {
       nbt.remove("text");
@@ -463,14 +465,14 @@ public class TextContext implements Cloneable {
     if (extra == null) {
       nbt.remove("extra");
     } else {
-      nbt.put("extra", extra.createNbt());
+      nbt.put("extra", extra.createNbt(registryLookup));
     }
   }
 
-  @Contract("-> new")
-  public final NbtCompound createNbt() {
+  @Contract("_ -> new")
+  public final NbtCompound createNbt(RegistryWrapper.WrapperLookup registryLookup) {
     final NbtCompound nbtCompound = new NbtCompound();
-    writeNbt(nbtCompound);
+    writeNbt(nbtCompound, registryLookup);
     return nbtCompound;
   }
 

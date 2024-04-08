@@ -10,6 +10,7 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import org.jetbrains.annotations.ApiStatus;
@@ -306,8 +307,8 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
   }
 
   @Override
-  public void writeNbt(NbtCompound nbt) {
-    SpecialDrawable.super.writeNbt(nbt);
+  public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+    SpecialDrawable.super.writeNbt(nbt, registryLookup);
     nbt.putString("shapeName", shapeName);
   }
 

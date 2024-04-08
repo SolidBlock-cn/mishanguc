@@ -3,22 +3,21 @@ package pers.solid.mishang.uc.util;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.SlabType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.BlockStateComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.item.CarryingToolItem;
 import pers.solid.mishang.uc.mixin.BucketItemAccessor;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
@@ -150,15 +149,10 @@ public class BlockPlacementContext {
         }
 
         // 尝试 placeFromTag
-        final NbtCompound blockStateTag = stackInHand0.getSubNbt("BlockStateTag");
-        if (blockStateTag != null) {
+        final BlockStateComponent blockStateComponent = stackInHand0.get(DataComponentTypes.BLOCK_STATE);
+        if (blockStateComponent != null) {
           final StateManager<Block, BlockState> stateManager = handBlock.getStateManager();
-          for (String key : blockStateTag.getKeys()) {
-            final Property<?> property = stateManager.getProperty(key);
-            if (property != null) {
-              stateToPlace1 = MishangUtils.with(stateToPlace1, property, blockStateTag.getString(key));
-            }
-          }
+          stateToPlace1 = blockStateComponent.applyToState(stateToPlace1);
         }
         stackInHand1 = stackInHand0;
         hand = hand1;
@@ -228,7 +222,8 @@ public class BlockPlacementContext {
     if (stackInHand != null) {
       BlockItem.writeNbtToBlockEntity(world, player, posToPlace, stackInHand);
     } else if (hitEntity != null && entityToPlace != null) {
-      entityToPlace.readNbt(hitEntity.createNbt());
+//      entityToPlace.read(hitEntity.createNbt());
+      // todo implement this by addingRegistryLookup
       entityToPlace.markDirty();
       world.updateListeners(posToPlace, entityToPlace.getCachedState(), entityToPlace.getCachedState(), Block.NOTIFY_ALL);
     }

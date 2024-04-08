@@ -4,15 +4,15 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.pattern.CachedBlockPosition;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.Models;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRotation;
@@ -44,12 +44,12 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
       Hand hand,
       boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
-    if (!player.getAbilities().allowModifyWorld && !stack.canPlaceOn(Registries.BLOCK, new CachedBlockPosition(world, blockPos, false))) {
+    if (!player.getAbilities().allowModifyWorld && !stack.canPlaceOn(new CachedBlockPosition(world, blockPos, false))) {
       return ActionResult.PASS;
     }
     final ActionResult result = rotateBlock(player, world, blockPos);
     if (result == ActionResult.SUCCESS) {
-      stack.damage(1, player, player1 -> player1.sendToolBreakStatus(hand));
+      stack.damage(1, player, LivingEntity.getSlotForHand(hand));
     }
     return result;
   }
@@ -72,20 +72,19 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
   @Override
   public ActionResult beginAttackBlock(
       ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    if (!player.getAbilities().allowModifyWorld && !stack.canDestroy(Registries.BLOCK, new CachedBlockPosition(world, pos, false))) {
+    if (!player.getAbilities().allowModifyWorld && !stack.canBreak(new CachedBlockPosition(world, pos, false))) {
       return ActionResult.PASS;
     }
     final ActionResult result = rotateBlock(player, world, pos);
     if (result == ActionResult.SUCCESS) {
-      stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
+      stack.damage(1, player, LivingEntity.getSlotForHand(hand));
     }
     return result;
   }
 
   @Override
-  public void appendTooltip(
-      ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-    super.appendTooltip(stack, world, tooltip, context);
+  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    super.appendTooltip(stack, context, tooltip, type);
     tooltip.add(
         TextBridge.translatable("item.mishanguc.rotating_tool.tooltip.1")
             .formatted(Formatting.GRAY));

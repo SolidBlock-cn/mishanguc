@@ -9,6 +9,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Util;
@@ -65,22 +66,22 @@ public class HungSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  public void readNbt(NbtCompound nbt) {
-    super.readNbt(nbt);
+  protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+    super.readNbt(nbt, registryLookup);
     ImmutableMap.Builder<Direction, List<TextContext>> builder = new ImmutableMap.Builder<>();
     for (Direction direction : Direction.Type.HORIZONTAL) {
       final NbtElement element = nbt.get(direction.asString());
       if (element instanceof NbtList) {
         ImmutableList.Builder<TextContext> listBuilder = new ImmutableList.Builder<>();
         for (NbtElement nbtElement : ((NbtList) element)) {
-          TextContext textContext = TextContext.fromNbt(nbtElement);
+          TextContext textContext = TextContext.fromNbt(nbtElement, registryLookup);
           listBuilder.add(textContext);
         }
         final ImmutableList<TextContext> build = listBuilder.build();
         if (!build.isEmpty()) builder.put(direction, build);
       } else if (element != null) {
         builder.put(
-            direction, ImmutableList.of(TextContext.fromNbt(element, createDefaultTextContext())));
+            direction, ImmutableList.of(TextContext.fromNbt(element, createDefaultTextContext(), registryLookup)));
       }
     }
     texts = builder.build();
@@ -108,8 +109,8 @@ public class HungSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  public void writeNbt(NbtCompound nbt) {
-    super.writeNbt(nbt);
+  public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+    super.writeNbt(nbt, registryLookup);
     for (Direction direction : Direction.Type.HORIZONTAL) {
       final List<@NotNull TextContext> textContexts = texts.get(direction);
       if (textContexts == null || textContexts.isEmpty()) {
@@ -117,7 +118,7 @@ public class HungSignBlockEntity extends BlockEntityWithText {
       }
       final NbtList nbtList = new NbtList();
       for (TextContext textContext : textContexts) {
-        nbtList.add(textContext.createNbt());
+        nbtList.add(textContext.createNbt(registryLookup));
       }
       nbt.put(direction.asString(), nbtList);
     }

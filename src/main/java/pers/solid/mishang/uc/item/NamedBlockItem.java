@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.item;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -38,7 +40,8 @@ public class NamedBlockItem extends BlockItem {
     final Block block = getBlock();
     try {
       if (getBlock() instanceof ColoredBlock) {
-        final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
+        final NbtComponent nbtComponent = stack.get(DataComponentTypes.BLOCK_ENTITY_DATA);
+        final NbtCompound nbt = nbtComponent == null ? null : nbtComponent.copyNbt();
         if (nbt != null && nbt.contains("color", NbtElement.NUMBER_TYPE)) {
           final int color = nbt.getInt("color");
           return TextBridge.translatable("block.mishanguc.colored_block.color", block.getName(), MishangUtils.describeColor(color));
@@ -59,7 +62,8 @@ public class NamedBlockItem extends BlockItem {
   protected boolean place(ItemPlacementContext context, BlockState state) {
     final ItemStack stack = context.getStack();
     if (getBlock() instanceof ColoredBlock) {
-      final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
+      final NbtComponent nbtComponent = stack.get(DataComponentTypes.CUSTOM_DATA);
+      final NbtCompound nbt = nbtComponent == null ? null : nbtComponent.copyNbt();
       if (nbt != null && nbt.contains("color", NbtElement.NUMBER_TYPE)) {
         cachedColor = nbt.getInt("color");
       } else {

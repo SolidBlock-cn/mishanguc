@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
@@ -17,10 +18,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -34,6 +35,7 @@ import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.*;
+import pers.solid.mishang.uc.networking.*;
 import pers.solid.mishang.uc.text.SpecialDrawableTypes;
 import pers.solid.mishang.uc.util.ColorfulBlockRegistry;
 
@@ -263,19 +265,25 @@ public class Mishanguc implements ModInitializer {
 
   private static void registerNetworkingReceiver() {
     // 注册服务器接收
-    ServerPlayNetworking.registerGlobalReceiver(
-        new Identifier("mishanguc", "edit_sign_finish"), BlockEntityWithText.PACKET_HANDLER);
-    ServerPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "item_scroll"), (server, player, handler, buf, responseSender) -> {
-      final int selectedSlot = buf.readInt();
-      final double scrollAmount = buf.readDouble();
-      server.execute(() -> {
+    ServerPlayNetworking.registerGlobalReceiver(SignEditFinishPayload.ID, BlockEntityWithText.PACKET_HANDLER);
+    PayloadTypeRegistry.playC2S().register(SignEditFinishPayload.ID, SignEditFinishPayload.CODEC);
+    ServerPlayNetworking.registerGlobalReceiver(ItemScrollPayload.ID, (payload, context) -> {
+      final int selectedSlot = payload.selectedSlot();
+      final double scrollAmount = payload.scrollAmount();
+      final ServerPlayerEntity player = context.player();
+      player.server.execute(() -> {
         final ItemStack stack = player.getInventory().getStack(selectedSlot);
         if (stack.getItem() instanceof HotbarScrollInteraction interaction) {
           interaction.onScroll(selectedSlot, scrollAmount, player, stack);
         }
       });
     });
-    ServerPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "slab_tool"), SlabToolItem.Handler.INSTANCE);
+    PayloadTypeRegistry.playC2S().register(ItemScrollPayload.ID, ItemScrollPayload.CODEC);
+    ServerPlayNetworking.registerGlobalReceiver(SlabToolPayload.ID, SlabToolItem.Handler.INSTANCE);
+    PayloadTypeRegistry.playC2S().register(SlabToolPayload.ID, SlabToolPayload.CODEC);
+    PayloadTypeRegistry.playS2C().register(EditSignPayload.ID, EditSignPayload.CODEC);
+    PayloadTypeRegistry.playS2C().register(GetBlockDataPayload.ID, GetBlockDataPayload.CODEC);
+    PayloadTypeRegistry.playS2C().register(GetEntityDataPayload.ID, GetEntityDataPayload.CODEC);
   }
 
   private static void registerEvents() {
@@ -330,7 +338,7 @@ public class Mishanguc implements ModInitializer {
         (player, world, hand, hitResult) -> {
           final ItemStack stackInHand = player.getStackInHand(hand);
           final Item item = stackInHand.getItem();
-          if (!player.getAbilities().allowModifyWorld && !stackInHand.canPlaceOn(Registries.BLOCK, new CachedBlockPosition(world, hitResult.getBlockPos(), false))) {
+          if (!player.getAbilities().allowModifyWorld && !stackInHand.canPlaceOn(new CachedBlockPosition(world, hitResult.getBlockPos(), false))) {
             return ActionResult.PASS;
           }
           if (item instanceof final BlockToolItem blockToolItem) {

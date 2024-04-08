@@ -4,7 +4,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
@@ -34,7 +33,7 @@ public class GlowingHungSignBlock extends HungSignBlock {
 
   @ApiStatus.AvailableSince("0.1.7")
   public GlowingHungSignBlock(@NotNull Block baseBlock) {
-    this(baseBlock, FabricBlockSettings.copyOf(baseBlock).luminance(15));
+    this(baseBlock, Block.Settings.copy(baseBlock).luminance(x -> 15));
   }
 
   @Override

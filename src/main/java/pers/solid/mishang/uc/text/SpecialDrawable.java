@@ -6,6 +6,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
@@ -79,17 +80,17 @@ public interface SpecialDrawable extends Cloneable {
    */
   @Contract(pure = true)
   @ApiStatus.AvailableSince("0.2.4")
-  @NotNull SpecialDrawableType<? extends SpecialDrawable> getType();
+  @NotNull
+  SpecialDrawableType<? extends SpecialDrawable> getType();
 
   @Contract(mutates = "param1")
-  default void writeNbt(NbtCompound nbt) {
+  default void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
     nbt.putString("id", getId());
   }
 
-  @ApiStatus.AvailableSince("0.2.4")
-  default NbtCompound createNbt() {
+  default NbtCompound createNbt(RegistryWrapper.WrapperLookup registryLookup) {
     final NbtCompound nbt = new NbtCompound();
-    writeNbt(nbt);
+    writeNbt(nbt, registryLookup);
     return nbt;
   }
 

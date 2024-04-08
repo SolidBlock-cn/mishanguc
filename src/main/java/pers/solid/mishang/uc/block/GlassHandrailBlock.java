@@ -5,7 +5,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.client.TextureMap;
@@ -119,7 +118,7 @@ public class GlassHandrailBlock extends HandrailBlock {
     }
 
     protected CentralBlock(@NotNull GlassHandrailBlock baseRail) {
-      super(baseRail, FabricBlockSettings.copyOf(baseRail).nonOpaque());
+      super(baseRail, Block.Settings.copy(baseRail).nonOpaque());
     }
 
     @Environment(EnvType.CLIENT)
@@ -147,7 +146,7 @@ public class GlassHandrailBlock extends HandrailBlock {
     }
 
     protected CornerBlock(@NotNull GlassHandrailBlock baseRail) {
-      super(baseRail, FabricBlockSettings.copyOf(baseRail).nonOpaque());
+      super(baseRail, Block.Settings.copy(baseRail).nonOpaque());
     }
 
     @Environment(EnvType.CLIENT)
@@ -166,7 +165,7 @@ public class GlassHandrailBlock extends HandrailBlock {
     public static final MapCodec<StairBlock> CODEC = createSubCodec(b -> b.baseHandrail, StairBlock::new);
 
     protected StairBlock(@NotNull GlassHandrailBlock baseRail) {
-      super(baseRail, FabricBlockSettings.copyOf(baseRail).nonOpaque());
+      super(baseRail, Block.Settings.copy(baseRail).nonOpaque());
     }
 
     @Override
@@ -197,7 +196,7 @@ public class GlassHandrailBlock extends HandrailBlock {
     public static final MapCodec<OuterBlock> CODEC = createSubCodec(b -> b.baseHandrail, OuterBlock::new);
 
     protected OuterBlock(@NotNull GlassHandrailBlock baseRail) {
-      super(baseRail, FabricBlockSettings.copyOf(baseRail).nonOpaque());
+      super(baseRail, Block.Settings.copy(baseRail).nonOpaque());
     }
 
     @Override

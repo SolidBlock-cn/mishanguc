@@ -7,7 +7,6 @@ import com.google.gson.JsonParseException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.MultilineText;
 import net.minecraft.client.gui.DrawContext;
@@ -28,7 +27,6 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -39,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
+import pers.solid.mishang.uc.networking.SignEditFinishPayload;
 import pers.solid.mishang.uc.text.PatternSpecialDrawable;
 import pers.solid.mishang.uc.text.SpecialDrawable;
 import pers.solid.mishang.uc.text.TextContext;
@@ -840,7 +839,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           textFieldWidget.setText(text);
         }
       } else {
-        textFieldWidget.setText("-json " + Text.Serialization.toJsonString(textContext.text));
+        textFieldWidget.setText("-json <unsupported>"/* + Text.Serialization.toJsonString(textContext.text)*/); // todo change
       }
     }
     final TextFieldListWidget.Entry newEntry = textFieldListWidget.new Entry(textFieldWidget);
@@ -864,7 +863,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
               break;
             case "json":
               try {
-                textContext1.text = Text.Serialization.fromLenientJson(value);
+                textContext1.text = Text.empty();// todo check Text.Serialization.fromLenientJson(value);
               } catch (
                   JsonParseException e) {
                 // 如果文本有问题，则不执行操作。
@@ -1093,14 +1092,10 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     entity.setEditor(null);
     final NbtList list = new NbtList();
     for (TextContext textContext : textContextsEditing) {
-      list.add(textContext.createNbt());
+//      list.add(textContext.createNbt());
+      // todo change
     }
-    ClientPlayNetworking.send(
-        new Identifier("mishanguc", "edit_sign_finish"),
-        PacketByteBufs.create()
-            .writeBlockPos(blockPos)
-            .writeNbt(
-                changed ? Util.make(new NbtCompound(), nbt -> nbt.put("texts", list)) : null));
+    ClientPlayNetworking.send(new SignEditFinishPayload(blockPos, changed ? Util.make(new NbtCompound(), nbt -> nbt.put("texts", list)) : null));
   }
 
   @Override
@@ -1212,8 +1207,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   @Override
   public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
     context.setShaderColor(0.25F, 0.25F, 0.25F, 1.0F);
-    context.drawTexture(OPTIONS_BACKGROUND_TEXTURE, 0, 0, 0, 0.0F, 0.0F, this.width, 25, 32, 32);
-    context.drawTexture(OPTIONS_BACKGROUND_TEXTURE, 0, height - 65, 0, 0.0F, 0.0F, this.width, 65, 32, 32);
+//    context.drawTexture(OPTIONS_BACKGROUND_TEXTURE, 0, 0, 0, 0.0F, 0.0F, this.width, 25, 32, 32);
+//    context.drawTexture(OPTIONS_BACKGROUND_TEXTURE, 0, height - 65, 0, 0.0F, 0.0F, this.width, 65, 32, 32);
+    // todo draw background
     context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     context.fillGradient(RenderLayer.getGuiOverlay(), 0, 25, width, 29, -16777216, 0, 0);
     context.fillGradient(RenderLayer.getGuiOverlay(), 0, height - 69, width, height - 65, 0, -16777216, 0);

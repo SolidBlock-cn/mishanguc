@@ -5,18 +5,19 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtString;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -40,6 +41,7 @@ import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 该物品可以快速建造或者删除一个平面上的多个方块。
@@ -123,28 +125,28 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
   @Override
   public ItemStack getDefaultStack() {
     final ItemStack stack = super.getDefaultStack();
-    final NbtCompound tag = stack.getOrCreateNbt();
-    tag.putInt("Range", 5);
-    tag.putString("MatchingRule", "mishanguc:same_block");
+    NbtComponent.set(DataComponentTypes.CUSTOM_DATA, stack, nbtCompound -> {
+      nbtCompound.putInt("Range", 5);
+      nbtCompound.putString("MatchingRule", "mishanguc:same_block");
+    });
     return stack;
   }
 
   public int getRange(ItemStack stack) {
-    final NbtCompound nbt = stack.getOrCreateNbt();
+    final NbtCompound nbt = Optional.ofNullable(stack.get(DataComponentTypes.CUSTOM_DATA)).map(NbtComponent::getNbt).orElse(null);
     return nbt.contains("Range", NbtElement.NUMBER_TYPE) ? Integer.min(nbt.getInt("Range"), 128) : 8;
   }
 
   public @NotNull BlockMatchingRule getMatchingRule(ItemStack stack) {
-    final NbtCompound tag = stack.getOrCreateNbt();
+    final NbtCompound tag = Optional.ofNullable(stack.get(DataComponentTypes.CUSTOM_DATA)).map(NbtComponent::getNbt).orElse(null);
     final BlockMatchingRule matchingRule =
         BlockMatchingRule.fromString(tag.getString("MatchingRule"));
     return matchingRule == null ? BlockMatchingRule.SAME_BLOCK : matchingRule;
   }
 
   @Override
-  public void appendTooltip(
-      ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-    super.appendTooltip(stack, world, tooltip, context);
+  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    super.appendTooltip(stack, context, tooltip, type);
     tooltip.add(
         TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.1")
             .formatted(Formatting.GRAY));
@@ -159,9 +161,10 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
 
   protected ItemStack createStack(int range, BlockMatchingRule blockMatchingRule) {
     final ItemStack stack = new ItemStack(this);
-    final NbtCompound nbt = stack.getOrCreateNbt();
-    nbt.putInt("Range", range);
-    nbt.putString("MatchingRule", blockMatchingRule.asString());
+    NbtComponent.set(DataComponentTypes.CUSTOM_DATA, stack, nbt -> {
+      nbt.putInt("Range", range);
+      nbt.putString("MatchingRule", blockMatchingRule.asString());
+    });
     return stack;
   }
 
@@ -274,7 +277,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
     final int j = (int) MathHelper.floorMod(i - scrollAmount, RULES_TO_CYCLE.size());
     final BlockMatchingRule newRule = RULES_TO_CYCLE.get(j);
     if (newRule != null) {
-      stack.setSubNbt("MatchingRule", NbtString.of(newRule.getId().toString()));
+      NbtComponent.set(DataComponentTypes.CUSTOM_DATA, stack, nbt -> nbt.putString("MatchingRule", newRule.getId().toString()));
       final MutableText text = TextBridge.literal("[ ");
       for (Iterator<BlockMatchingRule> iterator = RULES_TO_CYCLE.iterator(); iterator.hasNext(); ) {
         BlockMatchingRule rule = iterator.next();
