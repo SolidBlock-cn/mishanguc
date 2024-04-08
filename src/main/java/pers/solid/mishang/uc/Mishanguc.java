@@ -265,8 +265,9 @@ public class Mishanguc implements ModInitializer {
 
   private static void registerNetworkingReceiver() {
     // 注册服务器接收
-    ServerPlayNetworking.registerGlobalReceiver(SignEditFinishPayload.ID, BlockEntityWithText.PACKET_HANDLER);
     PayloadTypeRegistry.playC2S().register(SignEditFinishPayload.ID, SignEditFinishPayload.CODEC);
+    ServerPlayNetworking.registerGlobalReceiver(SignEditFinishPayload.ID, BlockEntityWithText.PACKET_HANDLER);
+    PayloadTypeRegistry.playC2S().register(ItemScrollPayload.ID, ItemScrollPayload.CODEC);
     ServerPlayNetworking.registerGlobalReceiver(ItemScrollPayload.ID, (payload, context) -> {
       final int selectedSlot = payload.selectedSlot();
       final double scrollAmount = payload.scrollAmount();
@@ -278,9 +279,8 @@ public class Mishanguc implements ModInitializer {
         }
       });
     });
-    PayloadTypeRegistry.playC2S().register(ItemScrollPayload.ID, ItemScrollPayload.CODEC);
-    ServerPlayNetworking.registerGlobalReceiver(SlabToolPayload.ID, SlabToolItem.Handler.INSTANCE);
     PayloadTypeRegistry.playC2S().register(SlabToolPayload.ID, SlabToolPayload.CODEC);
+    ServerPlayNetworking.registerGlobalReceiver(SlabToolPayload.ID, SlabToolItem.Handler.INSTANCE);
     PayloadTypeRegistry.playS2C().register(EditSignPayload.ID, EditSignPayload.CODEC);
     PayloadTypeRegistry.playS2C().register(GetBlockDataPayload.ID, GetBlockDataPayload.CODEC);
     PayloadTypeRegistry.playS2C().register(GetEntityDataPayload.ID, GetEntityDataPayload.CODEC);

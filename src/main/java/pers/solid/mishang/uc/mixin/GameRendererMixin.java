@@ -20,7 +20,7 @@ public class GameRendererMixin {
   MinecraftClient client;
 
   @ModifyArg(
-      method = "updateTargetedEntity(F)V",
+      method = "findCrosshairTarget",
       at =
       @At(
           value = "INVOKE",
