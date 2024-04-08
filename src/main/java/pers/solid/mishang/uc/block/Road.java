@@ -2,24 +2,20 @@ package pers.solid.mishang.uc.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.mishang.uc.util.EightHorizontalDirection;
 import pers.solid.mishang.uc.util.LineColor;
@@ -97,24 +93,17 @@ public interface Road extends BlockResourceGenerator {
   }
 
   /**
-   * 对道路进行使用的操作。
-   *
-   * @param state  该道路方块的方块状态。
-   * @param world  所在的世界。
-   * @param pos    该道路所在的坐标。
-   * @param player 使用的玩家。
-   * @param hand   玩家使用道路时使用的手。
-   * @param hit    玩家使用道路时的碰撞结果。
-   * @return 行为结果。
+   * @see net.minecraft.block.AbstractBlock#onUse(BlockState, World, BlockPos, PlayerEntity, BlockHitResult)
    */
-  default ActionResult onUseRoad(
-      BlockState state,
-      World world,
-      BlockPos pos,
-      PlayerEntity player,
-      Hand hand,
-      BlockHitResult hit) {
+  default ActionResult onUseRoad(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
     return ActionResult.PASS;
+  }
+
+  /**
+   * @see AbstractRoadBlock#onUseRoadWithItem(ItemStack, BlockState, World, BlockPos, PlayerEntity, Hand, BlockHitResult)
+   */
+  default ItemActionResult onUseRoadWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
   }
 
   /**
@@ -131,26 +120,12 @@ public interface Road extends BlockResourceGenerator {
    * @see Block#neighborUpdate
    * @see BlockState#neighborUpdate
    */
-  @SuppressWarnings("deprecation")
   default void neighborRoadUpdate(
       BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
   }
 
-  /**
-   * 在物品栏中为该道路添加提示信息。<br>
-   * 对于 1.16.5 之前的版本，子类覆盖此方法时，必须注解为 {@code @Environment(EnvType.CLIENT)}。<br>
-   * 新版本中，由于 {@link Block#appendTooltip(ItemStack, BlockView, List, TooltipContext)} 没有再被注解，故此方法也无需再被注解。
-   *
-   * @param stack   物品堆。
-   * @param world   世界。
-   * @param tooltip 提示文字。
-   * @param options 提示选项。
-   * @see AbstractRoadBlock#appendRoadTooltip
-   * @see AbstractRoadSlabBlock#appendTooltip
-   * @see Block#appendTooltip
-   */
   default void appendRoadTooltip(
-      ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+      ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
   }
 
   LineColor getLineColor(BlockState blockState, Direction direction);
@@ -161,5 +136,5 @@ public interface Road extends BlockResourceGenerator {
    * 给道路添加描述性内容，这部分文本通常是蓝色的。
    */
   @ApiStatus.AvailableSince("0.2.4")
-  void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options);
+  void appendDescriptionTooltip(List<Text> tooltip, Item.TooltipContext options);
 }

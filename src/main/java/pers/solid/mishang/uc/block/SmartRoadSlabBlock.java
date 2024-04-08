@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeProvider;
@@ -23,7 +24,6 @@ import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
@@ -130,8 +130,8 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
 
   @Override
   public void appendRoadTooltip(
-      ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
-    baseBlock.appendRoadTooltip(stack, world, tooltip, options);
+      ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+    baseBlock.appendRoadTooltip(stack, options, tooltip, options);
   }
 
   @Override

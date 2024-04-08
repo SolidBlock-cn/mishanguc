@@ -1,11 +1,12 @@
 package pers.solid.mishang.uc.blocks;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.MapColor;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.DyeColor;
@@ -26,66 +27,68 @@ import pers.solid.mishang.uc.item.WallSignBlockItem;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.function.ToIntFunction;
 
 /**
  * 迷上城建模组的所有方块。
  */
 public class MishangucBlocks {
+  public static final ToIntFunction<BlockState> CONSTANT_15 = state -> 15;
 
   /**
    * 绝大多数柏油路方块共用的方块设置。
    */
-  protected static final FabricBlockSettings ROAD_SETTINGS =
-      FabricBlockSettings.create().mapColor(MapColor.GRAY).strength(0.5F);
+  protected static final AbstractBlock.Settings ROAD_SETTINGS =
+      AbstractBlock.Settings.create().mapColor(MapColor.GRAY).strength(0.5F);
   /**
    * 具有白色标线的道路方块使用的方块设置。
    */
-  protected static final FabricBlockSettings WHITE_ROAD_SETTINGS = FabricBlockSettings.copyOf(ROAD_SETTINGS).mapColor(MapColor.WHITE);
+  protected static final AbstractBlock.Settings WHITE_ROAD_SETTINGS = AbstractBlock.Settings.create().mapColor(MapColor.GRAY).strength(0.5F).mapColor(MapColor.WHITE);
   /**
    * 具有黄色标线的道路方块使用的方块设置。
    */
-  protected static final FabricBlockSettings YELLOW_ROAD_SETTINGS = FabricBlockSettings.copyOf(ROAD_SETTINGS).mapColor(MapColor.YELLOW);
+  protected static final AbstractBlock.Settings YELLOW_ROAD_SETTINGS = AbstractBlock.Settings.create().mapColor(MapColor.GRAY).strength(0.5F).mapColor(MapColor.YELLOW);
 
   /**
    * 绝大多数白色光方块共用的方块设置。
    */
-  protected static final FabricBlockSettings WHITE_LIGHT_SETTINGS =
-      FabricBlockSettings.create().mapColor(MapColor.WHITE).luminance(15).strength(0.2f);
+  protected static final AbstractBlock.Settings WHITE_LIGHT_SETTINGS =
+      AbstractBlock.Settings.create().mapColor(MapColor.WHITE).luminance(CONSTANT_15).strength(0.2f);
   /**
    * 墙上的白色灯等方块等用到的方块设置。与{@link #WHITE_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。
    */
-  protected static final FabricBlockSettings WHITE_WALL_LIGHT_SETTINGS =
-      FabricBlockSettings.copyOf(WHITE_LIGHT_SETTINGS).noCollision();
+  protected static final AbstractBlock.Settings WHITE_WALL_LIGHT_SETTINGS =
+      AbstractBlock.Settings.create().mapColor(MapColor.WHITE).luminance(CONSTANT_15).strength(0.2f).noCollision();
   /**
    * 绝大多数黄色光方块共用的方块设置。
    */
-  protected static final FabricBlockSettings YELLOW_LIGHT_SETTINGS = FabricBlockSettings.create().mapColor( MapColor.YELLOW).luminance(15).strength(0.2f);
+  protected static final AbstractBlock.Settings YELLOW_LIGHT_SETTINGS = AbstractBlock.Settings.create().mapColor(MapColor.YELLOW).luminance(CONSTANT_15).strength(0.2f);
   /**
    * 墙上的黄色灯等方块等用到的方块设置。与{@link #YELLOW_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。
    */
-  protected static final FabricBlockSettings YELLOW_WALL_LIGHT_SETTINGS =
-      FabricBlockSettings.copyOf(YELLOW_LIGHT_SETTINGS).noCollision();
+  protected static final AbstractBlock.Settings YELLOW_WALL_LIGHT_SETTINGS =
+      AbstractBlock.Settings.create().mapColor(MapColor.YELLOW).luminance(CONSTANT_15).strength(0.2f).noCollision();
   /**
    * 绝大多数青色光方块共用的方块设置。
    */
-  protected static final FabricBlockSettings CYAN_LIGHT_SETTINGS = FabricBlockSettings.create().mapColor( MapColor.CYAN).luminance(15).strength(0.2f);
+  protected static final AbstractBlock.Settings CYAN_LIGHT_SETTINGS = AbstractBlock.Settings.create().mapColor(MapColor.CYAN).luminance(CONSTANT_15).strength(0.2f);
   /**
    * 墙上的青色灯等方块等用到的方块设置。与{@link #YELLOW_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。
    */
-  protected static final FabricBlockSettings CYAN_WALL_LIGHT_SETTINGS =
-      FabricBlockSettings.copyOf(CYAN_LIGHT_SETTINGS).noCollision();
+  protected static final AbstractBlock.Settings CYAN_WALL_LIGHT_SETTINGS =
+      AbstractBlock.Settings.create().mapColor(MapColor.CYAN).luminance(CONSTANT_15).strength(0.2f).noCollision();
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final FabricBlockSettings ORANGE_LIGHT_SETTINGS = FabricBlockSettings.create().mapColor( DyeColor.ORANGE).luminance(15).strength(0.2f);
+  protected static final AbstractBlock.Settings ORANGE_LIGHT_SETTINGS = AbstractBlock.Settings.create().mapColor(DyeColor.ORANGE).luminance(CONSTANT_15).strength(0.2f);
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final FabricBlockSettings ORANGE_WALL_LIGHT_SETTINGS = FabricBlockSettings.copyOf(ORANGE_LIGHT_SETTINGS).noCollision();
+  protected static final AbstractBlock.Settings ORANGE_WALL_LIGHT_SETTINGS = AbstractBlock.Settings.create().mapColor(DyeColor.ORANGE).luminance(CONSTANT_15).strength(0.2f).noCollision();
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final FabricBlockSettings GREEN_LIGHT_SETTINGS = FabricBlockSettings.create().mapColor( DyeColor.GREEN).luminance(15).strength(0.2f);
+  protected static final AbstractBlock.Settings GREEN_LIGHT_SETTINGS = AbstractBlock.Settings.create().mapColor(DyeColor.GREEN).luminance(CONSTANT_15).strength(0.2f);
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final FabricBlockSettings GREEN_WALL_LIGHT_SETTINGS = FabricBlockSettings.copyOf(GREEN_LIGHT_SETTINGS).noCollision();
+  protected static final AbstractBlock.Settings GREEN_WALL_LIGHT_SETTINGS = AbstractBlock.Settings.create().mapColor(DyeColor.GREEN).luminance(CONSTANT_15).noCollision();
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final FabricBlockSettings PINK_LIGHT_SETTINGS = FabricBlockSettings.create().mapColor( DyeColor.PINK).luminance(15).strength(0.2f);
+  protected static final AbstractBlock.Settings PINK_LIGHT_SETTINGS = AbstractBlock.Settings.create().mapColor(DyeColor.PINK).luminance(CONSTANT_15).strength(0.2f);
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final FabricBlockSettings PINK_WALL_LIGHT_SETTINGS = FabricBlockSettings.copyOf(PINK_LIGHT_SETTINGS).noCollision();
+  protected static final AbstractBlock.Settings PINK_WALL_LIGHT_SETTINGS = AbstractBlock.Settings.create().mapColor(DyeColor.PINK).luminance(CONSTANT_15).noCollision();
   @ApiStatus.Internal
   public static ObjectArrayList<Block> translucentBlocks = new ObjectArrayList<>();
   @ApiStatus.Internal
@@ -136,7 +139,7 @@ public class MishangucBlocks {
             Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_stair"), handrailBlock.stair());
             Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_outer"), handrailBlock.outer());
           }
-          final FabricItemSettings settings = new FabricItemSettings();
+          final Item.Settings settings = new Item.Settings();
           if (path.contains("netherite")) {
             settings.fireproof();
           }

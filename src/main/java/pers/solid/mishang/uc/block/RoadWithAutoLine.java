@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -14,15 +14,14 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.apache.commons.lang3.ObjectUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.util.EightHorizontalDirection;
 import pers.solid.mishang.uc.util.LineType;
@@ -90,22 +89,20 @@ public interface RoadWithAutoLine extends Road {
   }
 
   @Override
-  default ActionResult onUseRoad(
-      BlockState state,
-      World world,
-      BlockPos pos,
-      PlayerEntity player,
-      Hand hand,
-      BlockHitResult hit) {
-    Road.super.onUseRoad(state, world, pos, player, hand, hit);
+  default ActionResult onUseRoad(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+    world.setBlockState(pos, tryMakeState(getConnectionStateMap(world, pos), state, pos), 2);
+    return ActionResult.SUCCESS;
+  }
+
+  @Override
+  default ItemActionResult onUseRoadWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
     final Item item = player.getStackInHand(hand).getItem();
     if (item instanceof final BlockItem blockItem
         && blockItem.getBlock() instanceof RoadWithAutoLine
         && !Direction.Type.VERTICAL.test(hit.getSide())) {
-      return ActionResult.PASS;
+      return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
     }
-    world.setBlockState(pos, tryMakeState(getConnectionStateMap(world, pos), state, pos), 2);
-    return ActionResult.SUCCESS;
+    return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
   }
 
   @Override
@@ -123,8 +120,8 @@ public interface RoadWithAutoLine extends Road {
 
   @Override
   default void appendRoadTooltip(
-      ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
-    Road.super.appendRoadTooltip(stack, world, tooltip, options);
+      ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
+    Road.super.appendRoadTooltip(stack, context, tooltip, options);
     tooltip.add(
         TextBridge.translatable("block.mishanguc.tooltip.road_with_auto_line.1")
             .formatted(Formatting.GRAY));

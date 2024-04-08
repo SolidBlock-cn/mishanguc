@@ -2,7 +2,7 @@ package pers.solid.mishang.uc.blocks;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -49,7 +49,7 @@ public final class RoadSlabBlocks extends MishangucBlocks {
       final String path = baseId.getPath();
       final Identifier slabId = new Identifier(namespace, StringUtils.replace(StringUtils.removeEnd(path, "_block"), "road", "road_slab", 1));
       Registry.register(Registries.BLOCK, slabId, slab);
-      Registry.register(Registries.ITEM, slabId, new NamedBlockItem(slab, new FabricItemSettings()));
+      Registry.register(Registries.ITEM, slabId, new NamedBlockItem(slab, new Item.Settings()));
     });
   }
 }

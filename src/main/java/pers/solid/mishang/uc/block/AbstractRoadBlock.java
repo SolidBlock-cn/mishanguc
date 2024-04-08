@@ -3,20 +3,17 @@ package pers.solid.mishang.uc.block;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.ApiStatus;
@@ -67,35 +64,39 @@ public abstract class AbstractRoadBlock extends Block implements Road {
     return withPlacementState(super.getPlacementState(ctx), ctx);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState mirror(BlockState state, BlockMirror mirror) {
     return mirrorRoad(super.mirror(state, mirror), mirror);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState rotate(BlockState state, BlockRotation rotation) {
     return rotateRoad(super.rotate(state, rotation), rotation);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public ActionResult onUse(
       BlockState state,
       World world,
       BlockPos pos,
       PlayerEntity player,
-      Hand hand,
       BlockHitResult hit) {
-    ActionResult result = super.onUse(state, world, pos, player, hand, hit);
+    ActionResult result = super.onUse(state, world, pos, player, hit);
     if (result == ActionResult.FAIL) {
       return result;
     }
-    return onUseRoad(state, world, pos, player, hand, hit);
+    return onUseRoad(state, world, pos, player, hit);
   }
 
-  @SuppressWarnings("deprecation")
+  @Override
+  protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    final ItemActionResult result = super.onUseWithItem(stack, state, world, pos, player, hand, hit);
+    if (result == ItemActionResult.FAIL) {
+      return result;
+    }
+    return onUseRoadWithItem(stack, state, world, pos, player, hand, hit);
+  }
+
   @Override
   public void neighborUpdate(
       BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
@@ -103,7 +104,6 @@ public abstract class AbstractRoadBlock extends Block implements Road {
     neighborRoadUpdate(state, world, pos, sourceBlock, sourcePos, notify);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
     return withStateForNeighborUpdate(super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos), direction, neighborState, world, pos, neighborPos);
@@ -115,11 +115,10 @@ public abstract class AbstractRoadBlock extends Block implements Road {
   }
 
   @Override
-  public void appendTooltip(
-      ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
-    super.appendTooltip(stack, world, tooltip, options);
-    appendDescriptionTooltip(tooltip, options);
-    appendRoadTooltip(stack, world, tooltip, options);
+  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
+    super.appendTooltip(stack, context, tooltip, options);
+    appendDescriptionTooltip(tooltip, context);
+    appendRoadTooltip(stack, context, tooltip, options);
   }
 
   @ApiStatus.AvailableSince("1.1.0")

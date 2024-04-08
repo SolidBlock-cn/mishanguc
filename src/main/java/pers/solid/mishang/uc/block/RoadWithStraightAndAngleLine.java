@@ -7,6 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -19,7 +20,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
@@ -72,9 +72,9 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
 
   @Override
   default void appendRoadTooltip(
-      ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
-    RoadWithAngleLine.super.appendRoadTooltip(stack, world, tooltip, options);
-    RoadWithStraightLine.super.appendRoadTooltip(stack, world, tooltip, options);
+      ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+    RoadWithAngleLine.super.appendRoadTooltip(stack, options, tooltip, options);
+    RoadWithStraightLine.super.appendRoadTooltip(stack, options, tooltip, options);
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithStraightAndAngleLine {

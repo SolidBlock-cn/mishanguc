@@ -8,6 +8,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -17,9 +18,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
@@ -85,8 +84,8 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
 
   @Override
   default void appendRoadTooltip(
-      ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
-    RoadWithAngleLine.super.appendRoadTooltip(stack, world, tooltip, options);
+      ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+    RoadWithAngleLine.super.appendRoadTooltip(stack, options, tooltip, options);
     tooltip.add(
         TextBridge.translatable("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.1")
             .formatted(Formatting.GRAY));
