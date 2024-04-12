@@ -632,7 +632,7 @@ public class ARRPMain implements ModInitializer {
           generator.writeItemModel(PACK);
         }
         if (includesServer) {
-//          generator.writeLootTable(PACK); todo
+          generator.writeLootTable(PACK);
           generator.writeRecipes(PACK);
         }
       }

@@ -5,8 +5,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.client.item.TooltipType;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
 import net.minecraft.data.client.Models;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.entity.Entity;
@@ -15,13 +13,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.packet.s2c.play.ExplosionS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityFlagsPredicate;
 import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
@@ -39,13 +34,15 @@ import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.generator.ItemResourceGenerator;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangucRules;
+import pers.solid.mishang.uc.components.ExplosionToolComponent;
+import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
 public class ExplosionToolItem extends Item implements HotbarScrollInteraction, DispenserBehavior, ItemResourceGenerator {
   public ExplosionToolItem(Settings settings) {
-    super(settings);
+    super(settings.component(MishangucComponents.EXPLOSION_TOOL, ExplosionToolComponent.DEFAULT));
     DispenserBlock.registerBehavior(this, this);
   }
 
@@ -69,7 +66,8 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       // 创造模式下，将游戏规则临时设为不掉落。
       booleanRule.set(false, null);
     }
-    Explosion explosion = new Explosion(world, user, user.isSneaking() ? world.getDamageSources().explosion(null) : null, null, pos.x, pos.y, pos.z, power(stack), createFire(stack), destructionType(stack), ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE);
+    final ExplosionToolComponent component = stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL, ExplosionToolComponent.DEFAULT);
+    Explosion explosion = new Explosion(world, user, user.isSneaking() ? world.getDamageSources().explosion(null) : null, null, pos.x, pos.y, pos.z, component.power(), component.createFire(), component.destructionType(), ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE);
     explosion.collectBlocksAndDamageEntities();
     explosion.affectWorld(true);
 
@@ -80,10 +78,10 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     for (PlayerEntity playerEntity : world.getPlayers()) {
       ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
       if (serverPlayerEntity.squaredDistanceTo(pos.x, pos.y, pos.z) < 4096.0) {
-        serverPlayerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.x, pos.y, pos.z, power(stack), explosion.getAffectedBlocks(), explosion.getAffectedPlayers().get(serverPlayerEntity), destructionType(stack), ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE));
+        serverPlayerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.x, pos.y, pos.z, component.power(), explosion.getAffectedBlocks(), explosion.getAffectedPlayers().get(serverPlayerEntity), component.destructionType(), ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE));
       }
     }
-    stack.damage((int) power(stack), user, LivingEntity.getSlotForHand(hand));
+    stack.damage((int) component.power(), user, LivingEntity.getSlotForHand(hand));
     if (user.isCreative()) {
       booleanRule.set(backup, null);
     }
@@ -92,53 +90,26 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
 
   @Override
   public Text getName(ItemStack stack) {
-    return TextBridge.translatable(getTranslationKey(stack) + ".formatted", power(stack), TextBridge.translatable("item.mishanguc.explosion_tool.createFire." + createFire(stack)), TextBridge.translatable("item.mishanguc.explosion_tool.destructionType." + destructionType(stack).name().toLowerCase()));
-  }
-
-  /**
-   * @return 该物品产生的爆炸类型。
-   */
-  public Explosion.DestructionType destructionType(ItemStack stack) {
-    final NbtComponent nbtComponent = stack.get(DataComponentTypes.CUSTOM_DATA);
-    final String destructionType = nbtComponent == null ? "" : nbtComponent.copyNbt().getString("destructionType");
-    // todo change with components
-    return switch (destructionType) {
-      case "none", "keep" -> Explosion.DestructionType.KEEP;
-      case "destroy_with_decay", "destroy" -> Explosion.DestructionType.DESTROY_WITH_DECAY;
-      default -> Explosion.DestructionType.DESTROY;
-    };
-  }
-
-  /**
-   * @return 物品产生爆炸时，是否造成火焰。
-   */
-  public boolean createFire(ItemStack stack) {
-    final NbtComponent nbtComponent = stack.get(DataComponentTypes.CUSTOM_DATA);
-    return nbtComponent != null && nbtComponent.copyNbt().getBoolean("createFire");
-  }
-
-  /**
-   * @return 该物品的爆炸力量，用于在爆炸时使用。默认为 4。
-   */
-  public float power(ItemStack stack) {
-    final NbtComponent nbtComponent = stack.get(DataComponentTypes.CUSTOM_DATA);
-    final NbtCompound nbt = nbtComponent == null ? null : nbtComponent.copyNbt();
-    // todo replace with components
-    return nbt != null && nbt.contains("power", NbtElement.NUMBER_TYPE) ? MathHelper.clamp(nbt.getFloat("power"), -128, 128) : 4;
+    final ExplosionToolComponent component = stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL, ExplosionToolComponent.DEFAULT);
+    return TextBridge.translatable(getTranslationKey(stack) + ".formatted", component.power(), TextBridge.translatable("item.mishanguc.explosion_tool.createFire." + component.createFire()), TextBridge.translatable("item.mishanguc.explosion_tool.destructionType." + component.destructionType().name().toLowerCase()));
   }
 
   public void appendToEntries(ItemGroup.Entries stacks) {
     stacks.add(new ItemStack(this));
     ItemStack stack = new ItemStack(this);
-    NbtComponent.set(DataComponentTypes.CUSTOM_DATA, stack, nbt -> nbt.putBoolean("createFire", true));
+    stack.set(MishangucComponents.EXPLOSION_TOOL, new ExplosionToolComponent(4, true, Explosion.DestructionType.DESTROY));
     stacks.add(stack);
 
     stack = new ItemStack(this);
-    NbtComponent.set(DataComponentTypes.CUSTOM_DATA, stack, nbt -> nbt.putString("destructionType", "keep"));
+    stack.set(MishangucComponents.EXPLOSION_TOOL, new ExplosionToolComponent(4, false, Explosion.DestructionType.KEEP));
     stacks.add(stack);
 
     stack = new ItemStack(this);
-    NbtComponent.set(DataComponentTypes.CUSTOM_DATA, stack, nbt -> nbt.putString("destructionType", "destroy_with_decay"));
+    stack.set(MishangucComponents.EXPLOSION_TOOL, new ExplosionToolComponent(4, false, Explosion.DestructionType.DESTROY_WITH_DECAY));
+    stacks.add(stack);
+
+    stack = new ItemStack(this);
+    stack.set(MishangucComponents.EXPLOSION_TOOL, new ExplosionToolComponent(4, false, Explosion.DestructionType.TRIGGER_BLOCK));
     stacks.add(stack);
   }
 
@@ -150,16 +121,18 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.3").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.4").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.5").formatted(Formatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.power", TextBridge.literal(String.valueOf(power(stack))).formatted(Formatting.YELLOW)).formatted(Formatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.createFire", createFire(stack) ? ScreenTexts.YES.copy().formatted(Formatting.GREEN) : ScreenTexts.NO.copy().formatted(Formatting.RED)).formatted(Formatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.destructionType", TextBridge.translatable("item.mishanguc.explosion_tool.destructionType." + destructionType(stack).name().toLowerCase()).styled(style -> style.withColor(0x779999))).formatted(Formatting.GRAY));
+
+    final ExplosionToolComponent component = stack.get(MishangucComponents.EXPLOSION_TOOL);
+    if (component != null) {
+      component.appendTooltip(context, tooltip::add, type);
+    }
   }
 
   @Override
   public void onScroll(int selectedSlot, double scrollAmount, ServerPlayerEntity player, ItemStack stack) {
     final boolean creative = player.isCreative();
-    final float power = MathHelper.clamp(power(stack) - (float) scrollAmount, creative ? -128 : 0, creative ? 128 : 64);
-    NbtComponent.set(DataComponentTypes.CUSTOM_DATA, stack, nbt -> nbt.putFloat("power", power));
+    final float power = MathHelper.clamp(stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL, ExplosionToolComponent.DEFAULT).power() - (float) scrollAmount, creative ? -128 : 0, creative ? 128 : 64);
+    stack.apply(MishangucComponents.EXPLOSION_TOOL, ExplosionToolComponent.DEFAULT, c -> c.withPower(power));
   }
 
   @Override
@@ -170,6 +143,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     }
     final BlockPos basePos = pointer.pos();
     final Direction direction = pointer.state().get(DispenserBlock.FACING);
+    final ExplosionToolComponent component = stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL, ExplosionToolComponent.DEFAULT);
     for (int i = 1; i < 33; i++) {
       final BlockPos pos = basePos.offset(direction, i);
       if (world.getBlockState(pos).getCollisionShape(world, pos).isEmpty()
@@ -177,7 +151,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       ) {
         continue;
       }
-      Explosion explosion = new Explosion(world, null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, power(stack), createFire(stack), destructionType(stack));
+      Explosion explosion = new Explosion(world, null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, component.power(), component.createFire(), component.destructionType());
       explosion.collectBlocksAndDamageEntities();
       explosion.affectWorld(true);
       // 适用于 1.19.3，因为不是通过 world.createExplosion 实现的，没有向客户端发送消息，所以需要在这里手动发送
@@ -186,11 +160,10 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       }
       for (ServerPlayerEntity playerEntity : world.getPlayers()) {
         if (playerEntity.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) < 4096.0) {
-          playerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.getX(), pos.getY(), pos.getZ(), power(stack), explosion.getAffectedBlocks(), explosion.getAffectedPlayers().get(playerEntity), destructionType(stack), ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE));
+          playerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.getX(), pos.getY(), pos.getZ(), component.power(), explosion.getAffectedBlocks(), explosion.getAffectedPlayers().get(playerEntity), component.destructionType(), ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE));
         }
       }
-      stack.damage((int) power(stack), world.getRandom(), null, () -> {});
-      // todo check if breakCallback is needed
+      stack.damage((int) component.power(), world.getRandom(), null, () -> {});
     }
     return stack;
   }

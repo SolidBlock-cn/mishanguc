@@ -592,6 +592,7 @@
   "item.mishanguc.explosion_tool.destructionType.keep": "keep",
   "item.mishanguc.explosion_tool.destructionType.destroy": "destroy all",
   "item.mishanguc.explosion_tool.destructionType.destroy_with_decay": "destroy with decay",
+  "item.mishanguc.explosion_tool.destructionType.trigger_block": "trigger block",
   "item.mishanguc.emotion_tool": "Emotion Tool",
   "item.mishanguc.emotion_tool.1": "Click %s on an entity to irritate it,",
   "item.mishanguc.emotion_tool.2": "or undo the tame of a tamable entity,",

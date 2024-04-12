@@ -36,6 +36,8 @@ import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.StandingSignBlock;
 import pers.solid.mishang.uc.blockentity.*;
 import pers.solid.mishang.uc.blocks.MishangucBlocks;
+import pers.solid.mishang.uc.components.ExplosionToolComponent;
+import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.item.CarryingToolItem;
 import pers.solid.mishang.uc.item.DataTagToolItem;
 import pers.solid.mishang.uc.item.MishangucItems;
@@ -84,7 +86,7 @@ public class MishangucClient implements ClientModInitializer {
         new ClampedModelPredicateProvider() {
           @Override
           public float unclampedCall(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity, int seed) {
-            return MishangucItems.EXPLOSION_TOOL.power(stack);
+            return stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL, ExplosionToolComponent.DEFAULT).power();
           }
 
           @SuppressWarnings("deprecation")
@@ -93,7 +95,7 @@ public class MishangucClient implements ClientModInitializer {
             return unclampedCall(itemStack, clientWorld, livingEntity, i);
           }
         });
-    ModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL, new Identifier("mishanguc", "explosion_create_fire"), (stack, world, entity, seed) -> MishangucItems.EXPLOSION_TOOL.createFire(stack) ? 1 : 0);
+    ModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL, new Identifier("mishanguc", "explosion_create_fire"), (stack, world, entity, seed) -> stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL, ExplosionToolComponent.DEFAULT).createFire() ? 1 : 0);
     ModelPredicateProviderRegistry.register(MishangucItems.FAST_BUILDING_TOOL, new Identifier("mishanguc", "fast_building_range"), (stack, world, entity, seed) -> MishangucItems.FAST_BUILDING_TOOL.getRange(stack) / 64f);
     ModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, new Identifier("mishanguc", "is_holding_block"), (stack, world, entity, seed) -> BooleanUtils.toInteger(CarryingToolItem.hasHoldingBlockState(stack)));
     ModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, new Identifier("mishanguc", "is_holding_entity"), (stack, world, entity, seed) -> BooleanUtils.toInteger(CarryingToolItem.hasHoldingEntity(stack)));
