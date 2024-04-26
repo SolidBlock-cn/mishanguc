@@ -42,7 +42,7 @@ import java.util.List;
 
 public class ExplosionToolItem extends Item implements HotbarScrollInteraction, DispenserBehavior, ItemResourceGenerator {
   public ExplosionToolItem(Settings settings) {
-    super(settings.component(MishangucComponents.EXPLOSION_TOOL, ExplosionToolComponent.DEFAULT));
+    super(settings.component(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT));
     DispenserBlock.registerBehavior(this, this);
   }
 
@@ -66,7 +66,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       // 创造模式下，将游戏规则临时设为不掉落。
       booleanRule.set(false, null);
     }
-    final ExplosionToolComponent component = stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL, ExplosionToolComponent.DEFAULT);
+    final ExplosionToolComponent component = stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT);
     Explosion explosion = new Explosion(world, user, user.isSneaking() ? world.getDamageSources().explosion(null) : null, null, pos.x, pos.y, pos.z, component.power(), component.createFire(), component.destructionType(), ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE);
     explosion.collectBlocksAndDamageEntities();
     explosion.affectWorld(true);
@@ -90,26 +90,26 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
 
   @Override
   public Text getName(ItemStack stack) {
-    final ExplosionToolComponent component = stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL, ExplosionToolComponent.DEFAULT);
+    final ExplosionToolComponent component = stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT);
     return TextBridge.translatable(getTranslationKey(stack) + ".formatted", component.power(), TextBridge.translatable("item.mishanguc.explosion_tool.createFire." + component.createFire()), TextBridge.translatable("item.mishanguc.explosion_tool.destructionType." + component.destructionType().name().toLowerCase()));
   }
 
   public void appendToEntries(ItemGroup.Entries stacks) {
     stacks.add(new ItemStack(this));
     ItemStack stack = new ItemStack(this);
-    stack.set(MishangucComponents.EXPLOSION_TOOL, new ExplosionToolComponent(4, true, Explosion.DestructionType.DESTROY));
+    stack.set(MishangucComponents.EXPLOSION_TOOL_DATA, new ExplosionToolComponent(4, true, Explosion.DestructionType.DESTROY));
     stacks.add(stack);
 
     stack = new ItemStack(this);
-    stack.set(MishangucComponents.EXPLOSION_TOOL, new ExplosionToolComponent(4, false, Explosion.DestructionType.KEEP));
+    stack.set(MishangucComponents.EXPLOSION_TOOL_DATA, new ExplosionToolComponent(4, false, Explosion.DestructionType.KEEP));
     stacks.add(stack);
 
     stack = new ItemStack(this);
-    stack.set(MishangucComponents.EXPLOSION_TOOL, new ExplosionToolComponent(4, false, Explosion.DestructionType.DESTROY_WITH_DECAY));
+    stack.set(MishangucComponents.EXPLOSION_TOOL_DATA, new ExplosionToolComponent(4, false, Explosion.DestructionType.DESTROY_WITH_DECAY));
     stacks.add(stack);
 
     stack = new ItemStack(this);
-    stack.set(MishangucComponents.EXPLOSION_TOOL, new ExplosionToolComponent(4, false, Explosion.DestructionType.TRIGGER_BLOCK));
+    stack.set(MishangucComponents.EXPLOSION_TOOL_DATA, new ExplosionToolComponent(4, false, Explosion.DestructionType.TRIGGER_BLOCK));
     stacks.add(stack);
   }
 
@@ -122,7 +122,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.4").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.5").formatted(Formatting.GRAY));
 
-    final ExplosionToolComponent component = stack.get(MishangucComponents.EXPLOSION_TOOL);
+    final ExplosionToolComponent component = stack.get(MishangucComponents.EXPLOSION_TOOL_DATA);
     if (component != null) {
       component.appendTooltip(context, tooltip::add, type);
     }
@@ -131,8 +131,8 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
   @Override
   public void onScroll(int selectedSlot, double scrollAmount, ServerPlayerEntity player, ItemStack stack) {
     final boolean creative = player.isCreative();
-    final float power = MathHelper.clamp(stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL, ExplosionToolComponent.DEFAULT).power() - (float) scrollAmount, creative ? -128 : 0, creative ? 128 : 64);
-    stack.apply(MishangucComponents.EXPLOSION_TOOL, ExplosionToolComponent.DEFAULT, c -> c.withPower(power));
+    final float power = MathHelper.clamp(stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT).power() - (float) scrollAmount, creative ? -128 : 0, creative ? 128 : 64);
+    stack.apply(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT, c -> c.withPower(power));
   }
 
   @Override
@@ -143,7 +143,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     }
     final BlockPos basePos = pointer.pos();
     final Direction direction = pointer.state().get(DispenserBlock.FACING);
-    final ExplosionToolComponent component = stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL, ExplosionToolComponent.DEFAULT);
+    final ExplosionToolComponent component = stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT);
     for (int i = 1; i < 33; i++) {
       final BlockPos pos = basePos.offset(direction, i);
       if (world.getBlockState(pos).getCollisionShape(world, pos).isEmpty()

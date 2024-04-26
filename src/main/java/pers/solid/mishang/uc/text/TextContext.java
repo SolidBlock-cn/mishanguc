@@ -1,7 +1,12 @@
 package pers.solid.mishang.uc.text;
 
 import com.google.common.collect.ImmutableBiMap;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.chars.Char2CharArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2CharMap;
 import net.fabricmc.api.EnvType;
@@ -13,11 +18,10 @@ import net.minecraft.nbt.AbstractNbtNumber;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.PlainTextContent;
-import net.minecraft.text.Text;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
@@ -28,6 +32,7 @@ import pers.solid.mishang.uc.util.HorizontalAlign;
 import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -35,6 +40,9 @@ import java.util.Collection;
  * 对 {@link net.minecraft.text.Text} 的简单包装与扩展，允许设置对齐属性、尺寸等参数，以便渲染时使用。同时还提供对象与 NBT、JSON 之间的转换。
  */
 public class TextContext implements Cloneable {
+  public static final Codec<TextContext> CODEC = NbtCompound.CODEC.xmap(nbtCompound -> TextContext.fromNbt(nbtCompound, null), textContext -> textContext.createNbt(null));
+  public static final PacketCodec<RegistryByteBuf, TextContext> PACKET_CODEC = PacketCodec.of((value, buf) -> buf.writeNbt(value.createNbt(buf.getRegistryManager())), buf -> TextContext.fromNbt(buf.readNbt(), buf.getRegistryManager()));
+
   /**
    * 用于 {@link #flip()} 方法中，左右替换字符串。
    */
@@ -184,8 +192,7 @@ public class TextContext implements Cloneable {
   /**
    * 从一个 NBT 元素创建一个新的 TextContext 对象，并使用默认值。
    *
-   * @param nbt            NBT 复合标签或者字符串。
-   * @param registryLookup
+   * @param nbt NBT 复合标签或者字符串。
    * @return 新的 TextContext 对象。
    */
   public static @NotNull TextContext fromNbt(NbtElement nbt, RegistryWrapper.WrapperLookup registryLookup) {
@@ -223,12 +230,19 @@ public class TextContext implements Cloneable {
    * @param nbt NBT 复合标签。
    */
   @Contract(mutates = "this")
-  public void readNbt(@NotNull NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+  public void readNbt(@NotNull NbtCompound nbt, RegistryWrapper.@Nullable WrapperLookup registryLookup) {
     final @Nullable NbtElement nbtText = nbt.get("text");
     final String textJson = nbt.getString("textJson");
     if (!textJson.isEmpty()) {
       try {
-        text = Text.Serialization.fromLenientJson(textJson, registryLookup);
+        if (registryLookup == null) {
+          JsonReader jsonReader = new JsonReader(new StringReader(textJson));
+          jsonReader.setLenient(true);
+          JsonElement jsonElement = JsonParser.parseReader(jsonReader);
+          text = (MutableText) TextCodecs.CODEC.parse(JsonOps.INSTANCE, jsonElement).getOrThrow();
+        } else {
+          text = Text.Serialization.fromLenientJson(textJson, registryLookup);
+        }
       } catch (JsonParseException e) {
         text = TextBridge.translatable("message.mishanguc.invalid_json", e.getMessage());
       }

@@ -5,16 +5,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.client.item.TooltipType;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
 import net.minecraft.data.client.Models;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -34,13 +30,14 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.brrp.v1.generator.ItemResourceGenerator;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
 public class IceSnowTool extends Item implements ItemResourceGenerator, DispenserBehavior, HotbarScrollInteraction {
   public IceSnowTool(Settings settings) {
-    super(settings);
+    super(settings.component(MishangucComponents.STRENGTH, 4));
     DispenserBlock.registerBehavior(this, this);
   }
 
@@ -165,9 +162,7 @@ public class IceSnowTool extends Item implements ItemResourceGenerator, Dispense
   }
 
   public static int getStrength(ItemStack stack) {
-    final NbtComponent nbtComponent = stack.get(DataComponentTypes.CUSTOM_DATA);
-    final NbtCompound nbt = nbtComponent == null ? null : nbtComponent.copyNbt();
-    return nbt == null || !nbt.contains("strength", NbtElement.NUMBER_TYPE) ? 4 : MathHelper.clamp(nbt.getInt("strength"), 0, 10);
+    return stack.getOrDefault(MishangucComponents.STRENGTH, 4);
   }
 
   public static float getProbability(int strength) {
@@ -182,6 +177,6 @@ public class IceSnowTool extends Item implements ItemResourceGenerator, Dispense
   public void onScroll(int selectedSlot, double scrollAmount, ServerPlayerEntity player, ItemStack stack) {
     final int strength = getStrength(stack);
     final int newStrength = MathHelper.floorMod(strength - (int) scrollAmount, 8);
-    NbtComponent.set(DataComponentTypes.CUSTOM_DATA, stack, nbtCompound -> nbtCompound.putInt("strength", newStrength));
+    stack.set(MishangucComponents.STRENGTH, newStrength);
   }
 }

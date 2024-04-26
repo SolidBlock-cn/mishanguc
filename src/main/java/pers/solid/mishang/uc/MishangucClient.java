@@ -16,12 +16,8 @@ import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.hit.BlockHitResult;
@@ -36,14 +32,16 @@ import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.StandingSignBlock;
 import pers.solid.mishang.uc.blockentity.*;
 import pers.solid.mishang.uc.blocks.MishangucBlocks;
+import pers.solid.mishang.uc.components.CarryingToolData;
 import pers.solid.mishang.uc.components.ExplosionToolComponent;
+import pers.solid.mishang.uc.components.FastBuildingToolData;
 import pers.solid.mishang.uc.components.MishangucComponents;
-import pers.solid.mishang.uc.item.CarryingToolItem;
 import pers.solid.mishang.uc.item.DataTagToolItem;
 import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.networking.EditSignPayload;
 import pers.solid.mishang.uc.networking.GetBlockDataPayload;
 import pers.solid.mishang.uc.networking.GetEntityDataPayload;
+import pers.solid.mishang.uc.networking.RuleChangedPayload;
 import pers.solid.mishang.uc.render.*;
 import pers.solid.mishang.uc.screen.HungSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.StandingSignBlockEditScreen;
@@ -86,7 +84,7 @@ public class MishangucClient implements ClientModInitializer {
         new ClampedModelPredicateProvider() {
           @Override
           public float unclampedCall(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity, int seed) {
-            return stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL, ExplosionToolComponent.DEFAULT).power();
+            return stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT).power();
           }
 
           @SuppressWarnings("deprecation")
@@ -95,10 +93,10 @@ public class MishangucClient implements ClientModInitializer {
             return unclampedCall(itemStack, clientWorld, livingEntity, i);
           }
         });
-    ModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL, new Identifier("mishanguc", "explosion_create_fire"), (stack, world, entity, seed) -> stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL, ExplosionToolComponent.DEFAULT).createFire() ? 1 : 0);
-    ModelPredicateProviderRegistry.register(MishangucItems.FAST_BUILDING_TOOL, new Identifier("mishanguc", "fast_building_range"), (stack, world, entity, seed) -> MishangucItems.FAST_BUILDING_TOOL.getRange(stack) / 64f);
-    ModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, new Identifier("mishanguc", "is_holding_block"), (stack, world, entity, seed) -> BooleanUtils.toInteger(CarryingToolItem.hasHoldingBlockState(stack)));
-    ModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, new Identifier("mishanguc", "is_holding_entity"), (stack, world, entity, seed) -> BooleanUtils.toInteger(CarryingToolItem.hasHoldingEntity(stack)));
+    ModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL, new Identifier("mishanguc", "explosion_create_fire"), (stack, world, entity, seed) -> stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT).createFire() ? 1 : 0);
+    ModelPredicateProviderRegistry.register(MishangucItems.FAST_BUILDING_TOOL, new Identifier("mishanguc", "fast_building_range"), (stack, world, entity, seed) -> stack.getOrDefault(MishangucComponents.FAST_BUILDING_TOOL_DATA, FastBuildingToolData.DEFAULT).range() / 64f);
+    ModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, new Identifier("mishanguc", "is_holding_block"), (stack, world, entity, seed) -> BooleanUtils.toInteger(stack.get(MishangucComponents.CARRYING_TOOL_DATA) instanceof CarryingToolData.HoldingBlockState));
+    ModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, new Identifier("mishanguc", "is_holding_entity"), (stack, world, entity, seed) -> BooleanUtils.toInteger(stack.get(MishangucComponents.CARRYING_TOOL_DATA) instanceof CarryingToolData.HoldingEntity));
   }
 
   private static void registerNetworking() {
@@ -113,21 +111,21 @@ public class MishangucClient implements ClientModInitializer {
           if (blockEntity instanceof final HungSignBlockEntity hungSignBlockEntity) {
             final Direction direction = payload.direction().orElseThrow();
             client.execute(() ->
-                client.setScreen(new HungSignBlockEditScreen(hungSignBlockEntity, direction, blockPos)));
+                client.setScreen(new HungSignBlockEditScreen(client.world.getRegistryManager(), blockPos, direction, hungSignBlockEntity)));
           } else if (blockEntity instanceof final WallSignBlockEntity wallSignBlockEntity) {
             client.execute(() ->
-                client.setScreen(new WallSignBlockEditScreen(wallSignBlockEntity, blockPos)));
+                client.setScreen(new WallSignBlockEditScreen(client.world.getRegistryManager(), wallSignBlockEntity, blockPos)));
           } else if (blockEntity instanceof final StandingSignBlockEntity standingSignBlockEntity) {
             final BlockHitResult blockHitResult = payload.blockHitResult().orElseThrow();
             final Boolean isFront = StandingSignBlock.getHitSide(blockEntity.getCachedState(), blockHitResult);
             if (isFront != null) {
-              client.execute(() -> client.setScreen(new StandingSignBlockEditScreen(standingSignBlockEntity, blockPos, isFront)));
+              client.execute(() -> client.setScreen(new StandingSignBlockEditScreen(client.world.getRegistryManager(), standingSignBlockEntity, blockPos, isFront)));
             }
           }
         });
     ClientPlayNetworking.registerGlobalReceiver(GetBlockDataPayload.ID, new DataTagToolItem.BlockDataReceiver());
     ClientPlayNetworking.registerGlobalReceiver(GetEntityDataPayload.ID, new DataTagToolItem.EntityDataReceiver());
-//    ClientPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "rule_changed"), MishangucRules::handle); todo complete rule changed
+    ClientPlayNetworking.registerGlobalReceiver(RuleChangedPayload.ID, MishangucRules::handle);
   }
 
   private static void registerBlockColors() {
@@ -171,10 +169,9 @@ public class MishangucClient implements ClientModInitializer {
     );
     ColorProviderRegistry.ITEM.register(
         (stack, tintIndex) -> {
-          final NbtComponent nbtComponent = stack.get(DataComponentTypes.BLOCK_ENTITY_DATA);
-          final NbtCompound nbt = nbtComponent == null ? null : nbtComponent.copyNbt(); // todo check
-          if (nbt != null && nbt.contains("color", NbtElement.NUMBER_TYPE)) {
-            return nbt.getInt("color"); // 此处忽略 colorRemembered
+          final Integer color = stack.get(MishangucComponents.COLOR);
+          if (color != null) {
+            return color; // 此处忽略 colorRemembered
           }
           return Color.HSBtoRGB(Util.getMeasuringTimeMs() / 4096f + (stack.getItem().hashCode() >> 16) / 64f, 0.5f, 0.95f);
         },

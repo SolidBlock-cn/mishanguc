@@ -23,7 +23,7 @@ import java.util.Set;
  * 一个方块匹配规则，根据该规则来匹配两个方块是否匹配。
  */
 public abstract class BlockMatchingRule implements StringIdentifiable {
-  protected static final RegistryKey<Registry<BlockMatchingRule>> REGISTRY_KEY =
+  public static final RegistryKey<Registry<BlockMatchingRule>> REGISTRY_KEY =
       RegistryKey.ofRegistry(new Identifier("mishanguc", "block_matching_rule"));
   public static final SimpleRegistry<BlockMatchingRule> REGISTRY =
       new SimpleRegistry<>(REGISTRY_KEY, Lifecycle.stable());

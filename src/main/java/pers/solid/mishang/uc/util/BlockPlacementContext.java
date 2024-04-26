@@ -222,8 +222,7 @@ public class BlockPlacementContext {
     if (stackInHand != null) {
       BlockItem.writeNbtToBlockEntity(world, player, posToPlace, stackInHand);
     } else if (hitEntity != null && entityToPlace != null) {
-//      entityToPlace.read(hitEntity.createNbt());
-      // todo implement this by addingRegistryLookup
+      entityToPlace.read(hitEntity.createNbt(world.getRegistryManager()), world.getRegistryManager());
       entityToPlace.markDirty();
       world.updateListeners(posToPlace, entityToPlace.getCachedState(), entityToPlace.getCachedState(), Block.NOTIFY_ALL);
     }

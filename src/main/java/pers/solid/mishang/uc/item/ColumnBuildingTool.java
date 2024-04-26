@@ -14,14 +14,10 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
 import net.minecraft.data.client.Models;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -40,6 +36,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.generator.ItemResourceGenerator;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -62,7 +59,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
   }
 
   public ColumnBuildingTool(Settings settings, @Nullable Boolean includesFluid) {
-    super(settings, includesFluid);
+    super(settings.component(MishangucComponents.LENGTH, 8), includesFluid);
   }
 
   @Override
@@ -101,7 +98,6 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
               BlockItem.writeNbtToBlockEntity(world, player, posToPlace, blockPlacementContext.stackInHand);
             } else if (blockPlacementContext.hitEntity != null && entityToPlace != null) {
               entityToPlace.read(blockPlacementContext.hitEntity.createNbt(world.getRegistryManager()), world.getRegistryManager());
-              // todo check if world.getRegistryManager() is a suitable WrapperLookup
               entityToPlace.markDirty();
               world.updateListeners(posToPlace, entityToPlace.getCachedState(), entityToPlace.getCachedState(), Block.NOTIFY_ALL);
             }
@@ -126,10 +122,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
   }
 
   public int getLength(ItemStack stack) {
-    // todo try change with components
-    final NbtComponent nbtComponent = stack.get(DataComponentTypes.CUSTOM_DATA);
-    final NbtCompound nbt = nbtComponent == null ? null : nbtComponent.copyNbt();
-    return nbt != null && nbt.contains("Length", NbtElement.NUMBER_TYPE) ? MathHelper.clamp(1, nbt.getInt("Length"), 64) : 8;
+    return stack.getOrDefault(MishangucComponents.LENGTH, 8);
   }
 
   @Override
@@ -173,7 +166,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
   @Override
   public void onScroll(int selectedSlot, double scrollAmount, ServerPlayerEntity player, ItemStack stack) {
     final int length = MathHelper.clamp(getLength(stack) - (int) scrollAmount, 1, 64);
-    NbtComponent.set(DataComponentTypes.CUSTOM_DATA, stack, nbt -> nbt.putInt("Length", length));
+    stack.set(MishangucComponents.LENGTH, length);
   }
 
   @Environment(EnvType.CLIENT)

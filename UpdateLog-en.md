@@ -2,6 +2,10 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.3.1-alpha.1
+
+This update is limited for 1.20.5. Changed the data structure to fit into item component forms. There are many contents undone in this version.
+
 ### 1.3.0
 
 - Honeycomb can be used to wax signs (those in this mod only). In Creative Mode, honeycomb can remove wax on sign. Wax cannot be removed under non-Creative Mode. Waxed signs cannot be edited, nor be made glow of remove glow.

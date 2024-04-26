@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.blockentity;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.component.ComponentMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -11,8 +12,10 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
 import pers.solid.mishang.uc.text.TextContext;
 
@@ -29,6 +32,7 @@ public class WallSignBlockEntity extends BlockEntityWithText {
    */
   public @Nullable PlayerEntity editor;
 
+  @NotNull
   public @Unmodifiable List<TextContext> textContexts = ImmutableList.of();
   /**
    * 告示牌的文本是否正在发光，不影响文本的颜色和描边，只影响文本显示时的所使用的亮度。
@@ -87,6 +91,24 @@ public class WallSignBlockEntity extends BlockEntityWithText {
     }
     nbt.putBoolean("glowing", glowing);
     nbt.putBoolean("waxed", waxed);
+  }
+
+  @Override
+  protected void readComponents(ComponentsAccess components) {
+    super.readComponents(components);
+    textContexts = components.getOrDefault(MishangucComponents.TEXTS, ImmutableList.of());
+  }
+
+  @Override
+  protected void addComponents(ComponentMap.Builder componentMapBuilder) {
+    super.addComponents(componentMapBuilder);
+    componentMapBuilder.add(MishangucComponents.TEXTS, textContexts);
+  }
+
+  @Override
+  public void removeFromCopiedStackNbt(NbtCompound nbt) {
+    super.removeFromCopiedStackNbt(nbt);
+    nbt.remove("text");
   }
 
   @Override

@@ -4,12 +4,19 @@ import com.google.common.base.Functions;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.*;
 import com.google.gson.JsonPrimitive;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.Decoder;
+import com.mojang.serialization.DynamicOps;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.client.VariantSetting;
 import net.minecraft.item.Item;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -358,36 +365,52 @@ public class MishangUtils {
     return lineColor.asString() + "_" + (lineType == LineType.NORMAL ? "" : lineColor.asString() + "_") + (bevel ? "bevel" : "right") + "_angle_line";
   }
 
-  public static int readColorFromNbtElement(NbtElement nbtColor) {
-    if (nbtColor instanceof final AbstractNbtNumber abstractNbtNumber) {
-      return abstractNbtNumber.intValue();
-    } else if (nbtColor instanceof NbtString) {
-      final TextColor parse = TextColor.parse(nbtColor.asString()).result().orElse(null);
-      return parse == null ? 0 : parse.getRgb();
-    } else if (nbtColor instanceof AbstractNbtList<?> list) {
-      final int size = list.size();
-      NbtElement _red = size > 0 ? list.get(0) : null;
-      NbtElement _green = size > 1 ? list.get(1) : null;
-      NbtElement _blue = size > 2 ? list.get(2) : null;
-      NbtElement _alpha = size > 3 ? list.get(3) : null;
-      int red = _red instanceof AbstractNbtNumber ? ((AbstractNbtNumber) _red).intValue() & 0xff : 0;
-      int green = _green instanceof AbstractNbtNumber ? ((AbstractNbtNumber) _green).intValue() & 0xff : 0;
-      int blue = _blue instanceof AbstractNbtNumber ? ((AbstractNbtNumber) _blue).intValue() & 0xff : 0;
-      int alpha = _alpha instanceof AbstractNbtNumber ? ((AbstractNbtNumber) _alpha).intValue() & 0xff : 0;
-      return (red << 16) | (green << 8) | blue | (alpha << 24);
-    } else if (nbtColor instanceof final NbtCompound nbtCompound) {
-      if (nbtCompound.contains("signColor", NbtElement.STRING_TYPE)) {
-        return DyeColor.byName(nbtCompound.getString("signColor"), DyeColor.BLACK).getSignColor();
-      } else if (nbtCompound.contains("fireworkColor", NbtElement.STRING_TYPE)) {
-        return DyeColor.byName(nbtCompound.getString("fireworkColor"), DyeColor.BLACK).getFireworkColor();
-      } else if (nbtCompound.contains("mapColor", NbtElement.STRING_TYPE)) {
-        return DyeColor.byName(nbtCompound.getString("mapColor"), DyeColor.BLACK).getMapColor().color;
-      } else {
-        return 0;
+  public static final Codec<Integer> COLOR_CODEC = Codec.INT.mapResult(new Codec.ResultFunction<>() {
+    public static final Decoder<Integer> COLOR_CODEC_STRING = Codec.STRING.flatMap(s -> TextColor.parse(s).map(TextColor::getRgb));
+    public static final Codec<Integer> COLOR_CODEC_LIST = Codec.list(Codec.INT).flatXmap(integers -> {
+      if (integers.size() < 3 || integers.size() > 4) {
+        return DataResult.<Integer>error(() -> "The length of the list that indicates a color should be 3 or 4, but got " + integers.size());
       }
-    } else {
-      return 0;
+      int red = integers.get(0) & 0xff;
+      int green = integers.get(1) & 0xff;
+      int blue = integers.get(2) & 0xff;
+      int alpha = integers.size() > 3 ? integers.get(3) & 0xff : 0xff;
+      return DataResult.success((red << 16) | (green << 8) | blue | (alpha << 24));
+    }, integer -> DataResult.success(IntList.of(integer >> 16 & 0xff, integer >> 8 & 0xff, integer & 0xff, integer >> 24 & 0xff)));
+
+    @Override
+    public <T> DataResult<Pair<Integer, T>> apply(DynamicOps<T> ops, T input, DataResult<Pair<Integer, T>> a) {
+      if (a.isSuccess()) {
+        return a;
+      } else {
+        if (ops.getStringValue(input).isSuccess()) {
+          return COLOR_CODEC_STRING.decode(ops, input);
+        }
+        if (ops.getList(input).isSuccess()) {
+          return COLOR_CODEC_LIST.decode(ops, input);
+        }
+        if (ops.getMapValues(input).isSuccess()) {
+          final DataResult<T> signResult = ops.get(input, "signColor");
+          if (signResult.isSuccess()) return signResult.flatMap(t -> DyeColor.CODEC.map(DyeColor::getSignColor).decode(ops, t));
+          final DataResult<T> fireworkResult = ops.get(input, "fireworkColor");
+          if (fireworkResult.isSuccess()) return fireworkResult.flatMap(t -> DyeColor.CODEC.map(DyeColor::getFireworkColor).decode(ops, t));
+          final DataResult<T> mapResult = ops.get(input, "mapColor");
+          if (mapResult.isSuccess()) return mapResult.flatMap(t -> DyeColor.CODEC.map(dyeColor -> dyeColor.getMapColor().color).decode(ops, t));
+          return DataResult.error(() -> "Missing field: singColor, fireworkColor or mapColor");
+        }
+
+        return DataResult.error(() -> "Cannot parse color");
+      }
     }
+
+    @Override
+    public <T> DataResult<T> coApply(DynamicOps<T> ops, Integer input, DataResult<T> t) {
+      return t;
+    }
+  });
+
+  public static int readColorFromNbtElement(NbtElement nbtColor) {
+    return COLOR_CODEC.decode(NbtOps.INSTANCE, nbtColor).result().map(Pair::getFirst).orElse(0);
   }
 
   /**

@@ -20,6 +20,7 @@ import net.minecraft.client.input.KeyCodes;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.PlainTextContent;
@@ -81,6 +82,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   private static final ButtonWidget.PressAction EMPTY_PRESS_ACTION = button -> {
   };
 
+  private final RegistryWrapper.WrapperLookup registryLookup;
   public final T entity;
 
   protected final BiMap<@NotNull TextContext, @NotNull TextFieldWidget> contextToWidgetBiMap =
@@ -658,8 +660,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public final ClickableWidget[] toolbox3 = new ClickableWidget[]{setCustomValueButton, flipButton, finishButton, cancelButton, rearrangeButton, hideButton};
 
 
-  public AbstractSignBlockEditScreen(T entity, BlockPos blockPos, List<TextContext> textContextsEditing) {
+  public AbstractSignBlockEditScreen(RegistryWrapper.WrapperLookup registryLookup, T entity, BlockPos blockPos, List<TextContext> textContextsEditing) {
     super(TextBridge.translatable("message.mishanguc.sign_edit"));
+    this.registryLookup = registryLookup;
     this.entity = entity;
     this.blockPos = blockPos;
     this.textContextsEditing = textContextsEditing;
@@ -839,7 +842,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           textFieldWidget.setText(text);
         }
       } else {
-        textFieldWidget.setText("-json <unsupported>"/* + Text.Serialization.toJsonString(textContext.text)*/); // todo change
+        textFieldWidget.setText("-json" + Text.Serialization.toJsonString(textContext.text, registryLookup));
       }
     }
     final TextFieldListWidget.Entry newEntry = textFieldListWidget.new Entry(textFieldWidget);
@@ -863,7 +866,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
               break;
             case "json":
               try {
-                textContext1.text = Text.empty();// todo check Text.Serialization.fromLenientJson(value);
+                textContext1.text = Text.Serialization.fromLenientJson(value, registryLookup);
               } catch (
                   JsonParseException e) {
                 // 如果文本有问题，则不执行操作。
@@ -1092,8 +1095,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     entity.setEditor(null);
     final NbtList list = new NbtList();
     for (TextContext textContext : textContextsEditing) {
-//      list.add(textContext.createNbt());
-      // todo change
+      list.add(textContext.createNbt(registryLookup));
     }
     ClientPlayNetworking.send(new SignEditFinishPayload(blockPos, changed ? Util.make(new NbtCompound(), nbt -> nbt.put("texts", list)) : null));
   }

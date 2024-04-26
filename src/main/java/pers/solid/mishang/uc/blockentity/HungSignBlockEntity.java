@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.component.ComponentMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -18,6 +19,7 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.text.TextContext;
 
@@ -124,6 +126,26 @@ public class HungSignBlockEntity extends BlockEntityWithText {
     }
     nbt.put("waxed", waxed.stream().map(Direction::asString).map(NbtString::of).collect(Collectors.toCollection(NbtList::new)));
     nbt.put("glowing", glowing.stream().map(Direction::asString).map(NbtString::of).collect(Collectors.toCollection(NbtList::new)));
+  }
+
+  @Override
+  protected void readComponents(ComponentsAccess components) {
+    super.readComponents(components);
+    texts = components.getOrDefault(MishangucComponents.TEXT_MAP, ImmutableMap.of());
+  }
+
+  @Override
+  protected void addComponents(ComponentMap.Builder componentMapBuilder) {
+    super.addComponents(componentMapBuilder);
+    componentMapBuilder.add(MishangucComponents.TEXT_MAP, texts);
+  }
+
+  @Override
+  public void removeFromCopiedStackNbt(NbtCompound nbt) {
+    super.removeFromCopiedStackNbt(nbt);
+    for (Direction direction : Direction.Type.HORIZONTAL) {
+      nbt.remove(direction.asString());
+    }
   }
 
   //  @Override

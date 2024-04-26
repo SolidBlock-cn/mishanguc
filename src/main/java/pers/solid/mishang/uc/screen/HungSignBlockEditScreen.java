@@ -6,6 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
@@ -29,8 +30,8 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
   protected final @Unmodifiable Map<Direction, List<TextContext>> backedUpTexts;
 
   public HungSignBlockEditScreen(
-      HungSignBlockEntity entity, Direction direction, BlockPos blockPos) {
-    super(entity, blockPos, Optional.ofNullable(entity.texts.get(direction)).map(textContexts -> textContexts.stream().map(TextContext::clone).collect(Collectors.toList())).orElseGet(ArrayList::new));
+      RegistryWrapper.WrapperLookup registryLookup, BlockPos blockPos, Direction direction, HungSignBlockEntity entity) {
+    super(registryLookup, entity, blockPos, Optional.ofNullable(entity.texts.get(direction)).map(textContexts -> textContexts.stream().map(TextContext::clone).collect(Collectors.toList())).orElseGet(ArrayList::new));
     this.backedUpTexts = entity.texts;
     this.direction = direction;
     // 此时的 entity.texts 是可修改的，忽略 @Unmodifiable 注解。

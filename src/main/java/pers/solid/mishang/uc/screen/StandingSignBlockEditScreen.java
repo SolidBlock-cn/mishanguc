@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.screen;
 import com.google.common.collect.Lists;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +19,8 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
   private final boolean isFront;
   private final List<TextContext> backedUpTexts;
 
-  public StandingSignBlockEditScreen(StandingSignBlockEntity entity, BlockPos blockPos, boolean isFront) {
-    super(entity, blockPos, Lists.newArrayList(entity.getTextsOnSide(isFront).stream().map(TextContext::clone).iterator()));
+  public StandingSignBlockEditScreen(RegistryWrapper.WrapperLookup registryLookup, StandingSignBlockEntity entity, BlockPos blockPos, boolean isFront) {
+    super(registryLookup, entity, blockPos, Lists.newArrayList(entity.getTextsOnSide(isFront).stream().map(TextContext::clone).iterator()));
     this.isFront = isFront;
     this.backedUpTexts = entity.getTextsOnSide(isFront);
     entity.setTextsOnSide(isFront, textContextsEditing);

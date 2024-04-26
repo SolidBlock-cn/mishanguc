@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipType;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ToolComponent;
 import net.minecraft.component.type.UnbreakableComponent;
 import net.minecraft.data.client.Models;
 import net.minecraft.data.client.TextureKey;
@@ -18,14 +19,13 @@ import net.minecraft.item.MiningToolItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -41,7 +41,7 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
   protected static final OmnipotentToolMaterial MATERIAL = new OmnipotentToolMaterial();
 
   public OmnipotentToolItem(Settings settings) {
-    super(MATERIAL, TagKey.of(RegistryKeys.BLOCK, new Identifier("minecraft", "mineable/pickaxe")), settings); // todo check infinity speed
+    super(MATERIAL, BlockTags.PICKAXE_MINEABLE, settings.component(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(false)));
   }
 
   @Override
@@ -94,7 +94,7 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
     return defaultStack;
   }
 
-  private static class OmnipotentToolMaterial implements ToolMaterial {
+  protected static class OmnipotentToolMaterial implements ToolMaterial {
     private OmnipotentToolMaterial() {
     }
 
@@ -105,6 +105,7 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
 
     @Override
     public float getMiningSpeedMultiplier() {
+      // todo 攻击实体应该要一击必杀
       return Float.POSITIVE_INFINITY;
     }
 
@@ -115,7 +116,7 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
 
     @Override
     public TagKey<Block> getInverseTag() {
-      return TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "unsuitable_for_omnipotent")); // todo check inverse tag
+      return BlockTags.INCORRECT_FOR_NETHERITE_TOOL;
     }
 
     @Override
@@ -126,6 +127,11 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
     @Override
     public Ingredient getRepairIngredient() {
       return Ingredient.ofItems(Items.BEDROCK);
+    }
+
+    @Override
+    public ToolComponent createComponent(TagKey<Block> tag) {
+      return new ToolComponent(List.of(), Float.POSITIVE_INFINITY, 0);
     }
   }
 }

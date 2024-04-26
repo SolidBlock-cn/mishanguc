@@ -284,6 +284,7 @@ public class Mishanguc implements ModInitializer {
     PayloadTypeRegistry.playS2C().register(EditSignPayload.ID, EditSignPayload.CODEC);
     PayloadTypeRegistry.playS2C().register(GetBlockDataPayload.ID, GetBlockDataPayload.CODEC);
     PayloadTypeRegistry.playS2C().register(GetEntityDataPayload.ID, GetEntityDataPayload.CODEC);
+    PayloadTypeRegistry.playS2C().register(RuleChangedPayload.ID, RuleChangedPayload.CODEC);
   }
 
   private static void registerEvents() {

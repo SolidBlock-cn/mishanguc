@@ -30,6 +30,7 @@ import net.minecraft.data.family.BlockFamily;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -46,6 +47,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -162,7 +165,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
       final BlockEntity blockEntity = world.getBlockEntity(pos);
       final NbtCompound nbt;
       if (blockEntity != null) {
-        nbt = blockEntity.createNbt(world.getRegistryManager()); // todo check
+        nbt = blockEntity.createNbt(world.getRegistryManager());
         world.removeBlockEntity(pos);
       } else {
         nbt = null;
@@ -170,7 +173,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
       final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, slabTypeToSet));
       final BlockEntity newBlockEntity = world.getBlockEntity(pos);
       if (newBlockEntity != null && nbt != null) {
-        newBlockEntity.read(nbt, world.getRegistryManager()); // todo check
+        newBlockEntity.read(nbt, world.getRegistryManager());
       }
       final BlockState brokenState = state.with(Properties.SLAB_TYPE, slabTypeBroken);
       block.onBreak(world, pos, brokenState, miner);
@@ -296,10 +299,10 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
       final boolean isTop = payload.isTop();
       final ServerPlayerEntity player = context.player();
       player.server.execute(() -> {
-        // todo check what to substitute here
-//        if (player.getEyePos().squaredDistanceTo(Vec3d.ofCenter(blockPos)) > ServerPlayNetworkHandler.MAX_BREAK_SQUARED_DISTANCE) {
-//          return;
-//        }
+        // todo check if this is correctly written
+        if (player.getEyePos().squaredDistanceTo(Vec3d.ofCenter(blockPos)) > MathHelper.square(player.getAttributeValue(EntityAttributes.PLAYER_BLOCK_INTERACTION_RANGE))) {
+          return;
+        }
         if (!(player.getMainHandStack().getItem() instanceof SlabToolItem) || !player.getAbilities().allowModifyWorld) {
           return;
         }

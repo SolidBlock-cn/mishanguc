@@ -10,13 +10,11 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
+import net.minecraft.component.ComponentMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -26,11 +24,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
+import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBlockOutline.class)
 public abstract class BlockToolItem extends Item implements RendersBlockOutline {
@@ -111,18 +109,17 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
   }
 
   /**
-   * 如果物品堆的物品标签包含 IncludesFluid 标签，则返回其值，否则返回物品对象中的 {@link #includesFluid}。 Returns the value of tag
-   * IncludesFluid if it exists, otherwise returns {@link #includesFluid}.
+   * 如果物品堆的物品标签包含 {@link MishangucComponents#INCLUDES_FIELD} 物品组件，则返回其值，否则返回物品对象中的 {@link #includesFluid}。
    *
    * @param stack The item stack.
    * @return Whether it can detect fluid. May be {@code null}able, which means it depends.
    */
   public @Nullable Boolean includesFluid(ItemStack stack) {
-    final NbtCompound tag = Optional.ofNullable(stack.get(DataComponentTypes.CUSTOM_DATA)).map(NbtComponent::getNbt).orElse(null); // todo components
-    if (tag == null || !tag.contains("IncludesFluid")) {
+    final ComponentMap components = stack.getComponents();
+    if (!components.contains(MishangucComponents.INCLUDES_FIELD)) {
       return this.includesFluid;
     } else {
-      return tag.getBoolean("IncludesFluid");
+      return components.get(MishangucComponents.INCLUDES_FIELD);
     }
   }
 

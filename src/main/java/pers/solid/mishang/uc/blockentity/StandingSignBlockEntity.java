@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.booleans.BooleanSet;
 import it.unimi.dsi.fastutil.booleans.BooleanSets;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.component.ComponentMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -18,6 +19,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.List;
@@ -122,6 +124,27 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
     nbt.putBoolean("backWaxed", waxed.contains(false));
     nbt.putBoolean("frontGlowing", glowing.contains(true));
     nbt.putBoolean("backGlowing", glowing.contains(false));
+  }
+
+  @Override
+  protected void readComponents(ComponentsAccess components) {
+    super.readComponents(components);
+    frontTexts = components.getOrDefault(MishangucComponents.FRONT_TEXTS, ImmutableList.of());
+    backTexts = components.getOrDefault(MishangucComponents.BACK_TEXTS, ImmutableList.of());
+  }
+
+  @Override
+  protected void addComponents(ComponentMap.Builder componentMapBuilder) {
+    super.addComponents(componentMapBuilder);
+    componentMapBuilder.add(MishangucComponents.FRONT_TEXTS, frontTexts);
+    componentMapBuilder.add(MishangucComponents.BACK_TEXTS, backTexts);
+  }
+
+  @Override
+  public void removeFromCopiedStackNbt(NbtCompound nbt) {
+    super.removeFromCopiedStackNbt(nbt);
+    nbt.remove("frontTexts");
+    nbt.remove("backTexts");
   }
 
   @Override

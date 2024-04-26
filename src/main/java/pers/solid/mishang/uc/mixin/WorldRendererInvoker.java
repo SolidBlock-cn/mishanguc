@@ -6,6 +6,7 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.shape.VoxelShape;
+import org.jetbrains.annotations.Contract;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
@@ -17,6 +18,7 @@ public interface WorldRendererInvoker {
    *
    * @see WorldRenderer
    */
+  @Contract
   @Invoker("drawCuboidShapeOutline")
   static void drawCuboidShapeOutline(
       MatrixStack matrices,
