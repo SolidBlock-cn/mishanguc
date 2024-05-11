@@ -33,7 +33,6 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
                              MinecraftClient client, int width, int height, int y, int itemHeight) {
     super(client, width, height, y, itemHeight);
     this.signBlockEditScreen = signBlockEditScreen;
-    // todo should avoid background?
   }
 
   private boolean isFocused;
@@ -132,6 +131,11 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   @Override
   protected void drawSelectionHighlight(DrawContext context, int y, int entryWidth, int entryHeight, int borderColor, int fillColor) {
     context.fill(1, y - 1, width - 1, y + entryHeight + 4, 0xfff0f0f0);
+  }
+
+  @Override
+  protected void drawMenuListBackground(DrawContext context) {
+    // 不绘制任何背景（仅限 1.20.5 以上版本，旧版本可以直接调用方法来取消背景绘制）
   }
 
   /**

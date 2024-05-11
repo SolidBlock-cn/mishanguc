@@ -30,7 +30,6 @@ import net.minecraft.data.family.BlockFamily;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -47,8 +46,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -299,8 +296,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
       final boolean isTop = payload.isTop();
       final ServerPlayerEntity player = context.player();
       player.server.execute(() -> {
-        // todo check if this is correctly written
-        if (player.getEyePos().squaredDistanceTo(Vec3d.ofCenter(blockPos)) > MathHelper.square(player.getAttributeValue(EntityAttributes.PLAYER_BLOCK_INTERACTION_RANGE))) {
+        if (!player.canInteractWithBlockAt(blockPos, 0)) {
           return;
         }
         if (!(player.getMainHandStack().getItem() instanceof SlabToolItem) || !player.getAbilities().allowModifyWorld) {

@@ -2,6 +2,10 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.3.1-beta.1
+
+Updated to fit 1.20.5 and 1.20.6.
+
 ### 1.3.1-alpha.1
 
 This update is limited for 1.20.5. Changed the data structure to fit into item component forms. There are many contents undone in this version.

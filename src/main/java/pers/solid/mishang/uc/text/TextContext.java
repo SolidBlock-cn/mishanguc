@@ -414,7 +414,7 @@ public class TextContext implements Cloneable {
       if (text.getContent() instanceof PlainTextContent plainTextContent && text.getSiblings().isEmpty() && text.getStyle().isEmpty()) {
         nbt.putString("text", plainTextContent.string());
       } else {
-        nbt.putString("textJson", Text.Serialization.toJsonString(text, registryLookup));
+        nbt.putString("textJson", TextCodecs.CODEC.encodeStart(JsonOps.INSTANCE, text).getOrThrow(JsonParseException::new).toString());
       }
     } else {
       nbt.remove("text");

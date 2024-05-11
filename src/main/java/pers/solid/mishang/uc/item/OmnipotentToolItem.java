@@ -41,7 +41,7 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
   protected static final OmnipotentToolMaterial MATERIAL = new OmnipotentToolMaterial();
 
   public OmnipotentToolItem(Settings settings) {
-    super(MATERIAL, BlockTags.PICKAXE_MINEABLE, settings.component(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(false)));
+    super(MATERIAL, BlockTags.PICKAXE_MINEABLE, settings.component(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(false)).attributeModifiers(MiningToolItem.createAttributeModifiers(MATERIAL, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)));
   }
 
   @Override
@@ -105,7 +105,6 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
 
     @Override
     public float getMiningSpeedMultiplier() {
-      // todo 攻击实体应该要一击必杀
       return Float.POSITIVE_INFINITY;
     }
 

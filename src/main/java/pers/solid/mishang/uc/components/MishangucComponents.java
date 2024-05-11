@@ -29,6 +29,7 @@ public final class MishangucComponents {
   public static final DataComponentType<Boolean> INCLUDES_FIELD = register("includes_field", Codec.BOOL, PacketCodecs.BOOL);
   public static final DataComponentType<Integer> LENGTH = register("length", Codec.intRange(1, 64), PacketCodecs.INTEGER);
   public static final DataComponentType<Integer> STRENGTH = register("strength", Codec.intRange(0, 10), PacketCodecs.INTEGER);
+  public static final DataComponentType<TextCopyToolComponent> TEXT_COPY_TOOL_PROPERTIES = register("text_copy_tool_properties", TextCopyToolComponent.CODEC, TextCopyToolComponent.PACKET_CODEC);
   public static final DataComponentType<List<TextContext>> TEXTS = register("texts", Codec.list(TextContext.CODEC), PacketCodecs.collection(ArrayList::new, TextContext.PACKET_CODEC));
   public static final DataComponentType<List<TextContext>> FRONT_TEXTS = register("front_texts", Codec.list(TextContext.CODEC), PacketCodecs.collection(ArrayList::new, TextContext.PACKET_CODEC));
   public static final DataComponentType<List<TextContext>> BACK_TEXTS = register("back_texts", Codec.list(TextContext.CODEC), PacketCodecs.collection(ArrayList::new, TextContext.PACKET_CODEC));

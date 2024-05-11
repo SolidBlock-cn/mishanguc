@@ -1,7 +1,7 @@
 package pers.solid.mishang.uc.util;
 
 import com.google.common.collect.Sets;
-import com.mojang.serialization.Lifecycle;
+import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -25,8 +25,7 @@ import java.util.Set;
 public abstract class BlockMatchingRule implements StringIdentifiable {
   public static final RegistryKey<Registry<BlockMatchingRule>> REGISTRY_KEY =
       RegistryKey.ofRegistry(new Identifier("mishanguc", "block_matching_rule"));
-  public static final SimpleRegistry<BlockMatchingRule> REGISTRY =
-      new SimpleRegistry<>(REGISTRY_KEY, Lifecycle.stable());
+  public static final SimpleRegistry<BlockMatchingRule> REGISTRY = FabricRegistryBuilder.createSimple(REGISTRY_KEY).buildAndRegister();
   public static final BlockMatchingRule SAME_STATE =
       new BlockMatchingRule() {
         @Override

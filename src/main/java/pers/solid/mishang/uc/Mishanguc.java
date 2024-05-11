@@ -26,6 +26,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.world.GameRules;
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.block.ColoredBlock;
@@ -37,6 +38,7 @@ import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.*;
 import pers.solid.mishang.uc.networking.*;
 import pers.solid.mishang.uc.text.SpecialDrawableTypes;
+import pers.solid.mishang.uc.util.BlockMatchingRule;
 import pers.solid.mishang.uc.util.ColorfulBlockRegistry;
 
 public class Mishanguc implements ModInitializer {
@@ -545,6 +547,7 @@ public class Mishanguc implements ModInitializer {
     final GameRules.Key<EnumRule<MishangucRules.ToolAccess>> ignore = MishangucRules.CARRYING_TOOL_ACCESS;
     SpecialDrawableTypes.init();
     MishangucItemGroups.init();
+    Validate.validState(!BlockMatchingRule.REGISTRY.isEmpty());
 
     registerEvents();
     registerNetworkingReceiver();

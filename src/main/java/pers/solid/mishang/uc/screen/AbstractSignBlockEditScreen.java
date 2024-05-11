@@ -17,7 +17,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.input.KeyCodes;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.RegistryWrapper;
@@ -708,22 +707,17 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     textFieldListWidget = new TextFieldListWidget(this, client, width, height - 90, 25, 16);
     // 添加按钮
 
-    /// 上方第一行，先 addChild 再 addDrawable 以确保 tab 顺序正确，同时不被 textFieldListWidget 覆盖。
     if (!isAcceptingCustomValue && !isSelectingButtonToSetCustom) {
-      Arrays.stream(toolboxTop).forEach(this::addSelectableChild);
+      Arrays.stream(toolboxTop).forEach(this::addDrawableChild);
     }
 
     /// 文本列表屏幕以及占位符
-    initTextHolders();
     if (!isAcceptingCustomValue && !isSelectingButtonToSetCustom) {
       this.addDrawableChild(textFieldListWidget);
     } else {
       this.addDrawable(textFieldListWidget);
     }
-
-    if (!isAcceptingCustomValue && !isSelectingButtonToSetCustom) {
-      Arrays.stream(toolboxTop).forEach(this::addDrawable);
-    }
+    initTextHolders();
 
     /// 下方第三行
     final Stream<ClickableWidget> stream = Streams.concat(Arrays.stream(toolbox1), Arrays.stream(toolbox2), Arrays.stream(toolbox3));
@@ -1208,12 +1202,5 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
 
   @Override
   public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-    context.setShaderColor(0.25F, 0.25F, 0.25F, 1.0F);
-//    context.drawTexture(OPTIONS_BACKGROUND_TEXTURE, 0, 0, 0, 0.0F, 0.0F, this.width, 25, 32, 32);
-//    context.drawTexture(OPTIONS_BACKGROUND_TEXTURE, 0, height - 65, 0, 0.0F, 0.0F, this.width, 65, 32, 32);
-    // todo draw background
-    context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-    context.fillGradient(RenderLayer.getGuiOverlay(), 0, 25, width, 29, -16777216, 0, 0);
-    context.fillGradient(RenderLayer.getGuiOverlay(), 0, height - 69, width, height - 65, 0, -16777216, 0);
   }
 }
