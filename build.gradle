@@ -1,7 +1,6 @@
 plugins {
     id 'fabric-loom' version '1.5-SNAPSHOT'
     id 'maven-publish'
-
     id "com.modrinth.minotaur" version "2.+"
     id 'net.darkhax.curseforgegradle' version '1.1.+'
     id "com.github.breadmoirai.github-release" version "2.5.2"
@@ -23,9 +22,16 @@ repositories {
     // for more information about repositories.
 
     // BRRP. This is stored locally.
-    mavenLocal()
+    mavenCentral()
     maven { url "https://maven.terraformersmc.com/releases/" }
     maven { url 'https://jitpack.io' }
+     maven {
+        url 'https://raw.githubusercontent.com/SolidBlock-cn/mvn-repo/main'
+
+        // 如果上面的网址连接不成功，可以尝试使用镜像站，例如：
+        // url 'https://raw.nuaa.cf/SolidBlock-cn/mvn-repo/main'
+        // 注：不确保镜像站能稳定连接且内容不被篡改，上述镜像站地址亦只是示例。
+    }
 }
 
 
@@ -111,67 +117,4 @@ String getUpdateLog(String modVersion = project.mod_version) {
         return
     }
     return builder.toString().trim()
-}
-
-// 模组发布部分
-
-println "当前版本（${project.mod_version}）更新记录："
-final var content = getUpdateLog(project.mod_version)
-println content
-
-tasks.register('curseforge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
-    def getenv = System.getenv("CURSEFORGE_TOKEN")
-    println("CurseForge 令牌: $getenv")
-    if (getenv) apiToken = getenv
-
-    def mainFile = upload('583071', remapJar)
-    mainFile.changelog = content
-    mainFile.changelogType = 'markdown'
-    mainFile.releaseType = project.mod_version.contains('-') ? 'beta' : 'release'
-
-    for (final def v in (project.supported_minecraft_versions.split(','))) {
-        mainFile.addGameVersion v
-    }
-
-    mainFile.addRelations 'requiredDependency', 'fabric-api', 'better-runtime-resource-pack'
-    def sourcesFile = mainFile.withAdditionalFile(sourcesJar)
-}
-
-modrinth {
-    println "Modrinth 令牌：${token.get()}"
-
-    projectId = "rItLmRo4" // 迷上城建模组的 Modrinth ID
-    versionNumber = project.mod_version + '-' + project.minecraft_version
-    versionType = project.mod_version.contains('-') ? 'beta' : 'release'  // until release of MC
-    uploadFile = remapJar
-    gameVersions = Arrays.asList(project.supported_minecraft_versions.split(','))
-
-    changelog = content
-
-    loaders = ['fabric']
-
-    dependencies = [
-            new ModDependency('P7dR8mSH', 'required'), // Fabric API
-            new ModDependency('JnrDtPAE', 'required')
-    ]
-}
-
-githubRelease {
-    def getenv = System.getenv("GITHUB_TOKEN")
-    println "GitHub 令牌: $getenv"
-    if (getenv) token = getenv
-    owner = "SolidBlock-cn"
-    repo = "mishanguc"
-    tagName = "v$project.mod_version"
-    targetCommitish = "1.20.2"
-    body = content
-    draft = true
-    prerelease = false
-    releaseAssets remapJar, remapSourcesJar
-    allowUploadToExisting = true
-    apiEndpoint = "https://api.github.com"
-}
-
-publish {
-    dependsOn tasks.curseforge, tasks.modrinth, tasks.githubRelease
 }
