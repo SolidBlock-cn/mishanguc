@@ -25,6 +25,13 @@ repositories {
     mavenCentral()
     maven { url "https://maven.terraformersmc.com/releases/" }
     maven { url 'https://jitpack.io' }
+     maven {
+        url 'https://raw.githubusercontent.com/SolidBlock-cn/mvn-repo/main'
+
+        // 如果上面的网址连接不成功，可以尝试使用镜像站，例如：
+        // url 'https://raw.nuaa.cf/SolidBlock-cn/mvn-repo/main'
+        // 注：不确保镜像站能稳定连接且内容不被篡改，上述镜像站地址亦只是示例。
+    }
 }
 
 
