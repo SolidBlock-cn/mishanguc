@@ -1,7 +1,6 @@
 plugins {
     id 'fabric-loom' version '1.5-SNAPSHOT'
     id 'maven-publish'
-
     id "com.modrinth.minotaur" version "2.+"
     id 'net.darkhax.curseforgegradle' version '1.1.+'
     id "com.github.breadmoirai.github-release" version "2.5.2"
@@ -23,7 +22,7 @@ repositories {
     // for more information about repositories.
 
     // BRRP. This is stored locally.
-    mavenLocal()
+    mavenCentral()
     maven { url "https://maven.terraformersmc.com/releases/" }
     maven { url 'https://jitpack.io' }
 }
