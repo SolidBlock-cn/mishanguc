@@ -96,7 +96,7 @@ public class FullWallSignBlock extends WallSignBlock {
     if (this == WallSignBlocks.INVISIBLE_WALL_SIGN || this == WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN) {
       return null;
     }
-    return ModelJsonBuilder.create(new Identifier("mishanguc:block/full_wall_sign")).addTexture(TextureKey.TEXTURE, getBaseTexture());
+    return ModelJsonBuilder.create(Identifier.of("mishanguc:block/full_wall_sign")).addTexture(TextureKey.TEXTURE, getBaseTexture());
   }
 
   @Environment(EnvType.CLIENT)

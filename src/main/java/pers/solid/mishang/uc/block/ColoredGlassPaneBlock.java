@@ -7,11 +7,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PaneBlock;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.*;
-import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.loot.LootTable;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
@@ -21,6 +20,7 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.mishang.uc.arrp.ARRPMain;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -59,7 +59,7 @@ public class ColoredGlassPaneBlock extends PaneBlock implements ColoredBlock {
     ImmutableList<String> suffixes = ImmutableList.of("_post", "_side", "_side_alt", "_noside", "_noside_alt");
     TextureMap textureMap = TextureMap.of(TextureKey.PANE, paneTexture).put(TextureKey.EDGE, edgeTexture);
     for (String suffix : suffixes) {
-      pack.addModel(getBlockModelId().brrp_suffixed(suffix), ModelJsonBuilder.create(new Identifier("mishanguc", "block/template_colored_glass_pane" + suffix)).setTextures(textureMap));
+      pack.addModel(getBlockModelId().brrp_suffixed(suffix), ModelJsonBuilder.create(Identifier.of("mishanguc", "block/template_colored_glass_pane" + suffix)).setTextures(textureMap));
     }
   }
 
@@ -83,7 +83,7 @@ public class ColoredGlassPaneBlock extends PaneBlock implements ColoredBlock {
 
   @Override
   public LootTable.@NotNull Builder getLootTable() {
-    return BlockLootTableGenerator.dropsWithSilkTouch(this).apply(COPY_COLOR_LOOT_FUNCTION);
+    return ARRPMain.LOOT_TABLE_GENERATOR.dropsWithSilkTouch(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override

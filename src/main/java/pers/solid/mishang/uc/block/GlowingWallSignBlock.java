@@ -19,7 +19,7 @@ import pers.solid.mishang.uc.util.TextBridge;
 public class GlowingWallSignBlock extends WallSignBlock {
   public static final MapCodec<GlowingWallSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec(), createSettingsCodec()).apply(instance, GlowingWallSignBlock::new));
   @ApiStatus.AvailableSince("0.1.7")
-  protected static final Identifier DEFAULT_GLOW_TEXTURE = new Identifier("mishanguc:block/white_light");
+  protected static final Identifier DEFAULT_GLOW_TEXTURE = Identifier.of("mishanguc:block/white_light");
   /**
    * 告示牌发光部分的纹理。默认为 {@link #DEFAULT_GLOW_TEXTURE}。
    */
@@ -51,7 +51,7 @@ public class GlowingWallSignBlock extends WallSignBlock {
   @Override
   @Environment(EnvType.CLIENT)
   public @NotNull ModelJsonBuilder getBlockModel() {
-    return ModelJsonBuilder.create(new Identifier("mishanguc:block/glowing_wall_sign")).addTexture("texture", getBaseTexture()).addTexture("glow", glowTexture);
+    return ModelJsonBuilder.create(Identifier.of("mishanguc:block/glowing_wall_sign")).addTexture("texture", getBaseTexture()).addTexture("glow", glowTexture);
   }
 
   @Override

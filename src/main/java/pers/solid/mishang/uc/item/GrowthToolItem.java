@@ -5,7 +5,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.Models;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -16,6 +15,7 @@ import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.IntProperty;
@@ -155,7 +155,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, ItemRes
   @Override
   public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
     final int damage = apply(pointer.world(), pointer.pos().offset(pointer.state().get(DispenserBlock.FACING), 4).toCenterPos(), true);
-    stack.damage(damage, pointer.world().getRandom(), null, () -> {});
+    stack.damage(damage, pointer.world(), null, item -> {});
     return stack;
   }
 }

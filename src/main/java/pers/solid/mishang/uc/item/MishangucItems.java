@@ -93,7 +93,7 @@ public final class MishangucItems {
               namespace = "mishanguc";
               path = field.getName().toLowerCase();
             }
-            Registry.register(Registries.ITEM, new Identifier(namespace, path), value);
+            Registry.register(Registries.ITEM, Identifier.of(namespace, path), value);
           }
         } catch (IllegalAccessException e) {
           Mishanguc.MISHANG_LOGGER.error("Error when registering items:", e);

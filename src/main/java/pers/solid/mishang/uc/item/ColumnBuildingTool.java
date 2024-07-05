@@ -9,7 +9,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -18,6 +17,7 @@ import net.minecraft.data.client.Models;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -52,9 +52,9 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
   private static @Nullable Triple<ClientWorld, Block, BlockBox> clientTempMemory = null;
 
   public static void registerTempMemoryEvents() {
-    ServerPlayConnectionEvents.DISCONNECT.register(new Identifier("mishanguc", "remove_column_building_tool_memory"), (handler, server) -> tempMemory.remove(handler.player));
+    ServerPlayConnectionEvents.DISCONNECT.register(Identifier.of("mishanguc", "remove_column_building_tool_memory"), (handler, server) -> tempMemory.remove(handler.player));
     if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-      ClientPlayConnectionEvents.DISCONNECT.register(new Identifier("mishanguc", "remove_column_building_tool_memory"), (handler, client) -> clientTempMemory = null);
+      ClientPlayConnectionEvents.DISCONNECT.register(Identifier.of("mishanguc", "remove_column_building_tool_memory"), (handler, client) -> clientTempMemory = null);
     }
   }
 

@@ -6,10 +6,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.item.TooltipType;
-import net.minecraft.data.server.loottable.vanilla.VanillaBlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.loot.LootTable;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.text.Text;
@@ -23,6 +22,7 @@ import pers.solid.brrp.v1.BRRPUtils;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.generator.BRRPSlabBlock;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.mishang.uc.arrp.ARRPMain;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -58,7 +58,7 @@ public class ColoredSlabBlock extends BRRPSlabBlock implements ColoredBlock {
   @Environment(EnvType.CLIENT)
   @Override
   public @UnknownNullability ModelJsonBuilder getBlockModel() {
-    return super.getBlockModel().parent(new Identifier("mishanguc", "block/colored_slab"));
+    return super.getBlockModel().parent(Identifier.of("mishanguc", "block/colored_slab"));
   }
 
 
@@ -68,15 +68,15 @@ public class ColoredSlabBlock extends BRRPSlabBlock implements ColoredBlock {
     final ModelJsonBuilder model = getBlockModel();
     final Identifier id = getBlockModelId();
     pack.addModel(id, model);
-    pack.addModel(id.brrp_suffixed("_top"), model.withParent(new Identifier("mishanguc", "block/colored_slab_top")));
+    pack.addModel(id.brrp_suffixed("_top"), model.withParent(Identifier.of("mishanguc", "block/colored_slab_top")));
     if (baseBlock == null) {
-      pack.addModel(id.brrp_suffixed("_double"), model.withParent(new Identifier("mishanguc", "block/colored_cube_bottom_up")));
+      pack.addModel(id.brrp_suffixed("_double"), model.withParent(Identifier.of("mishanguc", "block/colored_cube_bottom_up")));
     }
   }
 
   @Override
   public LootTable.@NotNull Builder getLootTable() {
-    return new VanillaBlockLootTableGenerator().slabDrops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+    return ARRPMain.LOOT_TABLE_GENERATOR.slabDrops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override

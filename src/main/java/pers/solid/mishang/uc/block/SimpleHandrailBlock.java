@@ -79,7 +79,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
   @Environment(EnvType.CLIENT)
   @Override
   public @NotNull ModelJsonBuilder getBlockModel() {
-    return ModelJsonBuilder.create(new Identifier("mishanguc", "block/simple_handrail")).setTextures(getTextures());
+    return ModelJsonBuilder.create(Identifier.of("mishanguc", "block/simple_handrail")).setTextures(getTextures());
   }
 
   @Environment(EnvType.CLIENT)
@@ -155,9 +155,9 @@ public class SimpleHandrailBlock extends HandrailBlock {
     public void writeBlockModel(RuntimeResourcePack pack) {
       final TextureMap textures = baseHandrail.getTextures();
       final Identifier modelId = getBlockModelId();
-      pack.addModel(modelId.brrp_suffixed("_post"), ModelJsonBuilder.create(new Identifier("mishanguc", "block/simple_handrail_post")).setTextures(textures));
-      pack.addModel(modelId.brrp_suffixed("_post_side"), ModelJsonBuilder.create(new Identifier("mishanguc", "block/simple_handrail_post_side")).setTextures(textures));
-      pack.addModel(modelId.brrp_suffixed("_side"), ModelJsonBuilder.create(new Identifier("mishanguc", "block/simple_handrail_side")).setTextures(textures));
+      pack.addModel(modelId.brrp_suffixed("_post"), ModelJsonBuilder.create(Identifier.of("mishanguc", "block/simple_handrail_post")).setTextures(textures));
+      pack.addModel(modelId.brrp_suffixed("_post_side"), ModelJsonBuilder.create(Identifier.of("mishanguc", "block/simple_handrail_post_side")).setTextures(textures));
+      pack.addModel(modelId.brrp_suffixed("_side"), ModelJsonBuilder.create(Identifier.of("mishanguc", "block/simple_handrail_side")).setTextures(textures));
     }
 
     @Override
@@ -182,7 +182,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Environment(EnvType.CLIENT)
     @Override
     public @Nullable ModelJsonBuilder getBlockModel() {
-      return baseHandrail.getBlockModel().withParent(new Identifier("mishanguc:block/simple_handrail_corner"));
+      return baseHandrail.getBlockModel().withParent(Identifier.of("mishanguc:block/simple_handrail_corner"));
     }
 
     @Override
@@ -209,10 +209,10 @@ public class SimpleHandrailBlock extends HandrailBlock {
     public void writeBlockModel(RuntimeResourcePack pack) {
       final TextureMap textures = baseHandrail.getTextures();
       final Identifier modelIdentifier = getBlockModelId();
-      pack.addModel(modelIdentifier, ModelJsonBuilder.create(new Identifier("mishanguc", "block/simple_handrail_stair_middle_center")).setTextures(textures));
+      pack.addModel(modelIdentifier, ModelJsonBuilder.create(Identifier.of("mishanguc", "block/simple_handrail_stair_middle_center")).setTextures(textures));
       for (Shape shape : Shape.values()) {
         for (Position position : Position.values()) {
-          pack.addModel(modelIdentifier.brrp_suffixed("_" + shape.asString() + "_" + position.asString()), ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/simple_handrail_stair_%s_%s", shape.asString(), position.asString()))).setTextures(textures));
+          pack.addModel(modelIdentifier.brrp_suffixed("_" + shape.asString() + "_" + position.asString()), ModelJsonBuilder.create(Identifier.of("mishanguc", String.format("block/simple_handrail_stair_%s_%s", shape.asString(), position.asString()))).setTextures(textures));
         }
       }
     }
@@ -239,7 +239,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Environment(EnvType.CLIENT)
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
-      pack.addModel(getBlockModelId(), ModelJsonBuilder.create(new Identifier("mishanguc:block/simple_handrail_outer")).setTextures(baseHandrail.getTextures()));
+      pack.addModel(getBlockModelId(), ModelJsonBuilder.create(Identifier.of("mishanguc:block/simple_handrail_outer")).setTextures(baseHandrail.getTextures()));
     }
 
     @Override

@@ -73,26 +73,26 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final WallSignBlock STRIPPED_WARPED_HYPHAE_WALL_SIGN = new WallSignBlock(Blocks.STRIPPED_WARPED_HYPHAE);
 
   static {
-    OAK_WOOD_WALL_SIGN.texture = new Identifier("block/oak_log");
-    SPRUCE_WOOD_WALL_SIGN.texture = new Identifier("block/spruce_log");
-    BIRCH_WOOD_WALL_SIGN.texture = new Identifier("block/birch_log");
-    JUNGLE_WOOD_WALL_SIGN.texture = new Identifier("block/jungle_log");
-    ACACIA_WOOD_WALL_SIGN.texture = new Identifier("block/acacia_log");
-    CHERRY_WOOD_WALL_SIGN.texture = new Identifier("block/cherry_log");
-    DARK_OAK_WOOD_WALL_SIGN.texture = new Identifier("block/dark_oak_log");
-    MANGROVE_WOOD_WALL_SIGN.texture = new Identifier("block/mangrove_log");
-    CRIMSON_HYPHAE_WALL_SIGN.texture = new Identifier("block/crimson_stem");
-    WARPED_HYPHAE_WALL_SIGN.texture = new Identifier("block/warped_stem");
-    STRIPPED_OAK_WOOD_WALL_SIGN.texture = new Identifier("block/stripped_oak_log");
-    STRIPPED_SPRUCE_WOOD_WALL_SIGN.texture = new Identifier("block/stripped_spruce_log");
-    STRIPPED_BIRCH_WOOD_WALL_SIGN.texture = new Identifier("block/stripped_birch_log");
-    STRIPPED_JUNGLE_WOOD_WALL_SIGN.texture = new Identifier("block/stripped_jungle_log");
-    STRIPPED_ACACIA_WOOD_WALL_SIGN.texture = new Identifier("block/stripped_acacia_log");
-    STRIPPED_CHERRY_WOOD_WALL_SIGN.texture = new Identifier("block/stripped_cherry_log");
-    STRIPPED_DARK_OAK_WOOD_WALL_SIGN.texture = new Identifier("block/stripped_dark_oak_log");
-    STRIPPED_MANGROVE_WOOD_WALL_SIGN.texture = new Identifier("block/stripped_mangrove_log");
-    STRIPPED_CRIMSON_HYPHAE_WALL_SIGN.texture = new Identifier("block/stripped_crimson_stem");
-    STRIPPED_WARPED_HYPHAE_WALL_SIGN.texture = new Identifier("block/stripped_warped_stem");
+    OAK_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/oak_log");
+    SPRUCE_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/spruce_log");
+    BIRCH_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/birch_log");
+    JUNGLE_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/jungle_log");
+    ACACIA_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/acacia_log");
+    CHERRY_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/cherry_log");
+    DARK_OAK_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/dark_oak_log");
+    MANGROVE_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/mangrove_log");
+    CRIMSON_HYPHAE_WALL_SIGN.texture = Identifier.ofVanilla("block/crimson_stem");
+    WARPED_HYPHAE_WALL_SIGN.texture = Identifier.ofVanilla("block/warped_stem");
+    STRIPPED_OAK_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_oak_log");
+    STRIPPED_SPRUCE_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_spruce_log");
+    STRIPPED_BIRCH_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_birch_log");
+    STRIPPED_JUNGLE_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_jungle_log");
+    STRIPPED_ACACIA_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_acacia_log");
+    STRIPPED_CHERRY_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_cherry_log");
+    STRIPPED_DARK_OAK_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_dark_oak_log");
+    STRIPPED_MANGROVE_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_mangrove_log");
+    STRIPPED_CRIMSON_HYPHAE_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_crimson_stem");
+    STRIPPED_WARPED_HYPHAE_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_warped_stem");
   }
 
   public static final WallSignBlock OAK_WALL_SIGN =
@@ -518,10 +518,10 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final GlowingWallSignBlock GLOWING_POLISHED_BLACKSTONE_WALL_SIGN = new GlowingWallSignBlock(Blocks.POLISHED_BLACKSTONE);
 
   static {
-    GLOWING_NETHERRACK_WALL_SIGN.glowTexture = new Identifier("block/lava_still");
-    GLOWING_NETHER_BRICK_WALL_SIGN.glowTexture = new Identifier("block/lava_still");
-    GLOWING_BLACKSTONE_WALL_SIGN.glowTexture = new Identifier("block/glowstone");
-    GLOWING_POLISHED_BLACKSTONE_WALL_SIGN.glowTexture = new Identifier("block/glowstone");
+    GLOWING_NETHERRACK_WALL_SIGN.glowTexture = Identifier.ofVanilla("block/lava_still");
+    GLOWING_NETHER_BRICK_WALL_SIGN.glowTexture = Identifier.ofVanilla("block/lava_still");
+    GLOWING_BLACKSTONE_WALL_SIGN.glowTexture = Identifier.ofVanilla("block/glowstone");
+    GLOWING_POLISHED_BLACKSTONE_WALL_SIGN.glowTexture = Identifier.ofVanilla("block/glowstone");
   }
 
   // 雪
@@ -543,8 +543,8 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final GlowingWallSignBlock GLOWING_BLUE_ICE_WALL_SIGN = new GlowingWallSignBlock(Blocks.BLUE_ICE);
 
   static {
-    SNOW_WALL_SIGN.texture = new Identifier("block/snow");
-    GLOWING_SNOW_WALL_SIGN.texture = new Identifier("block/snow");
+    SNOW_WALL_SIGN.texture = Identifier.ofVanilla("block/snow");
+    GLOWING_SNOW_WALL_SIGN.texture = Identifier.ofVanilla("block/snow");
   }
 
   // 完整的混凝土

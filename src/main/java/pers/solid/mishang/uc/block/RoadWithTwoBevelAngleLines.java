@@ -8,12 +8,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
@@ -95,7 +95,7 @@ public interface RoadWithTwoBevelAngleLines extends Road {
     @Environment(EnvType.CLIENT)
     @Override
     public @NotNull ModelJsonBuilder getBlockModel() {
-      return ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_bi_angle_line"))
+      return ModelJsonBuilder.create(Identifier.of("mishanguc:block/road_with_bi_angle_line"))
           .setTextures(new FasterJTextures()
               .base("asphalt")
               .lineTop(MishangUtils.composeAngleLineTexture(lineColor, lineType, true))
@@ -141,7 +141,7 @@ public interface RoadWithTwoBevelAngleLines extends Road {
     @Environment(EnvType.CLIENT)
     @Override
     public @NotNull ModelJsonBuilder getBlockModel() {
-      return ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_straight_and_bi_angle_line"))
+      return ModelJsonBuilder.create(Identifier.of("mishanguc:block/road_with_straight_and_bi_angle_line"))
           .setTextures(new FasterJTextures()
               .base("asphalt")
               .lineTop(MishangUtils.composeStraightLineTexture(lineColor, lineType))

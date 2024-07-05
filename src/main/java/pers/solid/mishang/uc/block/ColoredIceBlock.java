@@ -6,13 +6,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IceBlock;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.data.client.TextureMap;
-import net.minecraft.data.server.loottable.vanilla.VanillaBlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.loot.LootTable;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -23,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.mishang.uc.arrp.ARRPMain;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -58,7 +58,7 @@ public class ColoredIceBlock extends IceBlock implements ColoredBlock, BlockReso
   @Override
   public ModelJsonBuilder getBlockModel() {
     if (textures == null) return null;
-    return ModelJsonBuilder.create(new Identifier("mishanguc:block/colored_cube_all")).setTextures(textures);
+    return ModelJsonBuilder.create(Identifier.of("mishanguc:block/colored_cube_all")).setTextures(textures);
   }
 
   @Environment(EnvType.CLIENT)
@@ -69,7 +69,7 @@ public class ColoredIceBlock extends IceBlock implements ColoredBlock, BlockReso
 
   @Override
   public LootTable.@UnknownNullability Builder getLootTable() {
-    return new VanillaBlockLootTableGenerator().drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+    return ARRPMain.LOOT_TABLE_GENERATOR.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override

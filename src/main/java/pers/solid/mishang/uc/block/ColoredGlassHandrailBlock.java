@@ -5,10 +5,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.item.TooltipType;
-import net.minecraft.data.server.loottable.vanilla.VanillaBlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.loot.LootTable;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
@@ -16,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.arrp.ARRPMain;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -46,7 +46,7 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
 
   @Override
   public LootTable.Builder getLootTable() {
-    return (new VanillaBlockLootTableGenerator().drops(this).apply(COPY_COLOR_LOOT_FUNCTION));
+    return (ARRPMain.LOOT_TABLE_GENERATOR.drops(this).apply(COPY_COLOR_LOOT_FUNCTION));
   }
 
   @Override
@@ -80,7 +80,7 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
 
     @Override
     public LootTable.Builder getLootTable() {
-      return (new VanillaBlockLootTableGenerator().drops(this).apply(COPY_COLOR_LOOT_FUNCTION));
+      return (ARRPMain.LOOT_TABLE_GENERATOR.drops(this).apply(COPY_COLOR_LOOT_FUNCTION));
     }
 
     @Override
@@ -115,7 +115,7 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
 
     @Override
     public LootTable.Builder getLootTable() {
-      return (new VanillaBlockLootTableGenerator().drops(this).apply(COPY_COLOR_LOOT_FUNCTION));
+      return (ARRPMain.LOOT_TABLE_GENERATOR.drops(this).apply(COPY_COLOR_LOOT_FUNCTION));
     }
 
     @Override
@@ -150,7 +150,7 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
 
     @Override
     public LootTable.Builder getLootTable() {
-      return (new VanillaBlockLootTableGenerator().drops(this).apply(COPY_COLOR_LOOT_FUNCTION));
+      return (ARRPMain.LOOT_TABLE_GENERATOR.drops(this).apply(COPY_COLOR_LOOT_FUNCTION));
     }
 
     @Override
@@ -185,7 +185,7 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
 
     @Override
     public LootTable.Builder getLootTable() {
-      return (new VanillaBlockLootTableGenerator().drops(this).apply(COPY_COLOR_LOOT_FUNCTION));
+      return (ARRPMain.LOOT_TABLE_GENERATOR.drops(this).apply(COPY_COLOR_LOOT_FUNCTION));
     }
 
     @Override

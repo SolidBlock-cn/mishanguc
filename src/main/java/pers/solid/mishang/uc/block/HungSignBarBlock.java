@@ -306,15 +306,15 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
     final Identifier texture = getBaseTexture();
     pack.addModel(
         id.brrp_suffixed("_central"),
-        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_bar_central"))
+        ModelJsonBuilder.create(Identifier.of("mishanguc", "block/hung_sign_bar_central"))
             .addTexture(TextureKey.TEXTURE, texture));
     pack.addModel(
         id,
-        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_bar"))
+        ModelJsonBuilder.create(Identifier.of("mishanguc", "block/hung_sign_bar"))
             .addTexture(TextureKey.TEXTURE, texture));
     pack.addModel(
         id.brrp_suffixed("_edge"),
-        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_bar_edge"))
+        ModelJsonBuilder.create(Identifier.of("mishanguc", "block/hung_sign_bar_edge"))
             .addTexture(TextureKey.TEXTURE, texture));
   }
 

@@ -10,7 +10,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
@@ -18,6 +17,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -234,7 +234,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   @Override
   public @NotNull ModelJsonBuilder getBlockModel() {
     final Identifier texture = getBaseTexture();
-    return ModelJsonBuilder.create(new Identifier("mishanguc:block/standing_sign")).addTexture("texture", texture).addTexture("bar", barTexture == null ? null : barTexture.toString());
+    return ModelJsonBuilder.create(Identifier.of("mishanguc:block/standing_sign")).addTexture("texture", texture).addTexture("bar", barTexture == null ? null : barTexture.toString());
   }
 
   @Environment(EnvType.CLIENT)

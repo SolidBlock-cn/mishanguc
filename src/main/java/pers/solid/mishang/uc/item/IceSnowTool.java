@@ -4,13 +4,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.dispenser.DispenserBehavior;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.Models;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -157,7 +157,7 @@ public class IceSnowTool extends Item implements ItemResourceGenerator, Dispense
   public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
     final int strength = getStrength(stack);
     applyIce(pointer.world(), pointer.pos().offset(pointer.state().get(DispenserBlock.FACING), getRange(strength)).toCenterPos(), strength);
-    stack.damage(strength + 1, pointer.world().getRandom(), null, () -> {});
+    stack.damage(strength + 1, pointer.world(), null, item -> {});
     return stack;
   }
 

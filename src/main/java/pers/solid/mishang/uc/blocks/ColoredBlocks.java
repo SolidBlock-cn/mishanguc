@@ -8,7 +8,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.data.client.TextureMap;
-import net.minecraft.data.server.loottable.vanilla.VanillaBlockLootTableGenerator;
 import net.minecraft.loot.LootTable;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
@@ -18,6 +17,7 @@ import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.Translucent;
+import pers.solid.mishang.uc.arrp.ARRPMain;
 import pers.solid.mishang.uc.block.*;
 
 /**
@@ -71,14 +71,14 @@ public final class ColoredBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4, mc1.17")
   public static final ColoredSlabBlock COLORED_TUFF_SLAB = new ColoredSlabBlock(COLORED_TUFF);
 
-  public static final ColoredCubeBlock COLORED_STONE = new ColoredCubeBlock(Block.Settings.copy(Blocks.STONE), new Identifier("mishanguc:block/colored_cube_all"), TextureMap.all(new Identifier("mishanguc:block/pale_stone"))) {
+  public static final ColoredCubeBlock COLORED_STONE = new ColoredCubeBlock(Block.Settings.copy(Blocks.STONE), Identifier.of("mishanguc:block/colored_cube_all"), TextureMap.all(Identifier.of("mishanguc:block/pale_stone"))) {
     @Environment(EnvType.CLIENT)
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
       final ModelJsonBuilder model = getBlockModel();
       final Identifier blockModelId = getBlockModelId();
       pack.addModel(blockModelId, model);
-      pack.addModel(blockModelId.brrp_suffixed("_mirrored"), model.withParent(new Identifier("mishanguc:block/colored_cube_mirrored_all")));
+      pack.addModel(blockModelId.brrp_suffixed("_mirrored"), model.withParent(Identifier.of("mishanguc:block/colored_cube_mirrored_all")));
     }
 
     @Environment(EnvType.CLIENT)
@@ -90,7 +90,7 @@ public final class ColoredBlocks extends MishangucBlocks {
 
     @Override
     public LootTable.@NotNull Builder getLootTable() {
-      return new VanillaBlockLootTableGenerator().drops(COLORED_STONE, COLORED_COBBLESTONE).apply(ColoredBlock.COPY_COLOR_LOOT_FUNCTION);
+      return ARRPMain.LOOT_TABLE_GENERATOR.drops(COLORED_STONE, COLORED_COBBLESTONE).apply(ColoredBlock.COPY_COLOR_LOOT_FUNCTION);
     }
   };
   public static final ColoredStairsBlock COLORED_STONE_STAIRS = new ColoredStairsBlock(COLORED_STONE, Block.Settings.copy(Blocks.STONE_STAIRS));
@@ -120,7 +120,7 @@ public final class ColoredBlocks extends MishangucBlocks {
   public static final ColoredCubeBlock COLORED_SMOOTH_QUARTZ = ColoredCubeBlock.cubeAll(Block.Settings.copy(Blocks.SMOOTH_QUARTZ), "block/quartz_block_bottom");
   public static final ColoredStairsBlock COLORED_SMOOTH_QUARTZ_STAIRS = new ColoredStairsBlock(COLORED_SMOOTH_QUARTZ);
   public static final ColoredSlabBlock COLORED_SMOOTH_QUARTZ_SLAB = new ColoredSlabBlock(COLORED_SMOOTH_QUARTZ);
-  public static final ColoredPillarBlock COLORED_QUARTZ_PILLAR = new ColoredPillarBlock(Block.Settings.copy(Blocks.QUARTZ_PILLAR), TextureMap.sideEnd(new Identifier("block/quartz_pillar"), new Identifier("block/quartz_pillar_top")));
+  public static final ColoredPillarBlock COLORED_QUARTZ_PILLAR = new ColoredPillarBlock(Block.Settings.copy(Blocks.QUARTZ_PILLAR), TextureMap.sideEnd(Identifier.ofVanilla("block/quartz_pillar"), Identifier.ofVanilla("block/quartz_pillar_top")));
   @ApiStatus.AvailableSince("0.2.4")
   public static final ColoredCubeBlock COLORED_IRON_BLOCK = ColoredCubeBlock.cubeAll(Block.Settings.copy(Blocks.IRON_BLOCK), "block/iron_block");
   @ApiStatus.AvailableSince("0.2.4")
@@ -128,7 +128,7 @@ public final class ColoredBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4")
   public static final ColoredSlabBlock COLORED_IRON_SLAB = new ColoredSlabBlock(COLORED_IRON_BLOCK);
   public static final ColoredCubeBlock COLORED_PURPUR_BLOCK = ColoredCubeBlock.cubeAll(Block.Settings.copy(Blocks.PURPUR_BLOCK), "mishanguc:block/pale_purpur_block");
-  public static final ColoredPillarBlock COLORED_PURPUR_PILLAR = new ColoredPillarBlock(Block.Settings.copy(Blocks.PURPUR_PILLAR), TextureMap.sideEnd(new Identifier("mishanguc:block/pale_purpur_pillar"), new Identifier("mishanguc:block/pale_purpur_pillar_top")));
+  public static final ColoredPillarBlock COLORED_PURPUR_PILLAR = new ColoredPillarBlock(Block.Settings.copy(Blocks.PURPUR_PILLAR), TextureMap.sideEnd(Identifier.of("mishanguc:block/pale_purpur_pillar"), Identifier.of("mishanguc:block/pale_purpur_pillar_top")));
   @ApiStatus.AvailableSince("1.0.2")
   public static final ColoredCubeBlock COLORED_END_STONE = ColoredCubeBlock.cubeAll(Block.Settings.copy(Blocks.END_STONE), "mishanguc:block/pale_end_stone");
   @ApiStatus.AvailableSince("1.0.2")
@@ -145,38 +145,38 @@ public final class ColoredBlocks extends MishangucBlocks {
   @Translucent
   public static final ColoredNetherPortalBlock COLORED_NETHER_PORTAL = new ColoredNetherPortalBlock(Block.Settings.copy(Blocks.NETHER_PORTAL));
 
-  public static final ColoredCubeBlock COLORED_LIGHT = new ColoredCubeBlock(WHITE_LIGHT_SETTINGS, new Identifier("mishanguc:block/colored_cube_all_without_shade"), TextureMap.all(new Identifier("mishanguc:block/white_light")));
+  public static final ColoredCubeBlock COLORED_LIGHT = new ColoredCubeBlock(WHITE_LIGHT_SETTINGS, Identifier.of("mishanguc:block/colored_cube_all_without_shade"), TextureMap.all(Identifier.of("mishanguc:block/white_light")));
   @Translucent
-  public static final ColoredGlassBlock COLORED_GLASS = new ColoredGlassBlock(Block.Settings.copy(Blocks.WHITE_STAINED_GLASS), TextureMap.all(new Identifier("block/white_stained_glass")));
+  public static final ColoredGlassBlock COLORED_GLASS = new ColoredGlassBlock(Block.Settings.copy(Blocks.WHITE_STAINED_GLASS), TextureMap.all(Identifier.ofVanilla("block/white_stained_glass")));
   @Translucent
   @ApiStatus.AvailableSince("1.2.3")
-  public static final ColoredGlassPaneBlock COLORED_GLASS_PANE = new ColoredGlassPaneBlock(new Identifier("block/white_stained_glass"), new Identifier("block/white_stained_glass_pane_top"), Block.Settings.copy(Blocks.WHITE_STAINED_GLASS_PANE));
+  public static final ColoredGlassPaneBlock COLORED_GLASS_PANE = new ColoredGlassPaneBlock(Identifier.ofVanilla("block/white_stained_glass"), Identifier.ofVanilla("block/white_stained_glass_pane_top"), Block.Settings.copy(Blocks.WHITE_STAINED_GLASS_PANE));
   @Translucent
-  public static final ColoredIceBlock COLORED_ICE = new ColoredIceBlock(Block.Settings.copy(Blocks.ICE), TextureMap.all(new Identifier("mishanguc:block/pale_ice")));
+  public static final ColoredIceBlock COLORED_ICE = new ColoredIceBlock(Block.Settings.copy(Blocks.ICE), TextureMap.all(Identifier.of("mishanguc:block/pale_ice")));
   public static final ColoredCubeBlock COLORED_SNOW_BLOCK = ColoredCubeBlock.cubeAll(Block.Settings.copy(Blocks.SNOW_BLOCK), "block/snow");
   public static final ColoredCubeBlock COLORED_PACKED_ICE = ColoredCubeBlock.cubeAll(Block.Settings.copy(Blocks.PACKED_ICE), "mishanguc:block/pale_packed_ice");
 
   @ApiStatus.AvailableSince("0.2.4")
-  public static final ColoredLeavesBlock COLORED_OAK_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.OAK_LEAVES), block -> new VanillaBlockLootTableGenerator().oakLeavesDrops(block, Blocks.OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/oak_leaves");
+  public static final ColoredLeavesBlock COLORED_OAK_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.OAK_LEAVES), block -> ARRPMain.LOOT_TABLE_GENERATOR.oakLeavesDrops(block, Blocks.OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/oak_leaves");
   @ApiStatus.AvailableSince("0.2.4")
-  public static final ColoredLeavesBlock COLORED_DARK_OAK_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.DARK_OAK_LEAVES), block -> new VanillaBlockLootTableGenerator().oakLeavesDrops(block, Blocks.DARK_OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/dark_oak_leaves");
+  public static final ColoredLeavesBlock COLORED_DARK_OAK_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.DARK_OAK_LEAVES), block -> ARRPMain.LOOT_TABLE_GENERATOR.oakLeavesDrops(block, Blocks.DARK_OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/dark_oak_leaves");
   @ApiStatus.AvailableSince("0.2.4")
-  public static final ColoredLeavesBlock COLORED_BIRCH_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.BIRCH_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.BIRCH_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/birch_leaves");
+  public static final ColoredLeavesBlock COLORED_BIRCH_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.BIRCH_LEAVES), block -> ARRPMain.LOOT_TABLE_GENERATOR.leavesDrops(block, Blocks.BIRCH_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/birch_leaves");
   @ApiStatus.AvailableSince("0.2.4")
-  public static final ColoredLeavesBlock COLORED_ACACIA_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.ACACIA_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.ACACIA_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/acacia_leaves");
+  public static final ColoredLeavesBlock COLORED_ACACIA_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.ACACIA_LEAVES), block -> ARRPMain.LOOT_TABLE_GENERATOR.leavesDrops(block, Blocks.ACACIA_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/acacia_leaves");
   @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
-  public static final ColoredLeavesBlock COLORED_CHERRY_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.CHERRY_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.CHERRY_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "mishanguc:block/pale_cherry_leaves");
+  public static final ColoredLeavesBlock COLORED_CHERRY_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.CHERRY_LEAVES), block -> ARRPMain.LOOT_TABLE_GENERATOR.leavesDrops(block, Blocks.CHERRY_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "mishanguc:block/pale_cherry_leaves");
   @ApiStatus.AvailableSince("0.2.4")
-  public static final ColoredLeavesBlock COLORED_JUNGLE_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.JUNGLE_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.JUNGLE_SAPLING, 0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F), "block/jungle_leaves");
+  public static final ColoredLeavesBlock COLORED_JUNGLE_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.JUNGLE_LEAVES), block -> ARRPMain.LOOT_TABLE_GENERATOR.leavesDrops(block, Blocks.JUNGLE_SAPLING, 0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F), "block/jungle_leaves");
   @ApiStatus.AvailableSince("0.2.4")
-  public static final ColoredLeavesBlock COLORED_SPRUCE_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.SPRUCE_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.SPRUCE_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/spruce_leaves");
+  public static final ColoredLeavesBlock COLORED_SPRUCE_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.SPRUCE_LEAVES), block -> ARRPMain.LOOT_TABLE_GENERATOR.leavesDrops(block, Blocks.SPRUCE_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/spruce_leaves");
   @ApiStatus.AvailableSince("0.2.4")
-  public static final ColoredLeavesBlock COLORED_MANGROVE_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.MANGROVE_LEAVES), new VanillaBlockLootTableGenerator()::mangroveLeavesDrops, "block/mangrove_leaves");
+  public static final ColoredLeavesBlock COLORED_MANGROVE_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.MANGROVE_LEAVES), leaves -> /* do not replace it with method references, as we should not initialize the class too early! */ ARRPMain.LOOT_TABLE_GENERATOR.mangroveLeavesDrops(leaves), "block/mangrove_leaves");
 
   public static final ColoredCubeBlock COLORED_PURE_BLOCK = ColoredCubeBlock.cubeAll(AbstractBlock.Settings.create().mapColor(DyeColor.WHITE).strength(0.2f), "mishanguc:block/white_pure");
   public static final ColoredCubeBlock COLORED_PURE_LIGHT = ColoredCubeBlock.cubeAll(WHITE_LIGHT_SETTINGS, "mishanguc:block/white_pure");
-  public static final ColoredCubeBlock COLORED_PURE_BLOCK_WITHOUT_SHADE = new ColoredCubeBlock(AbstractBlock.Settings.create().mapColor(DyeColor.WHITE).strength(0.2f), new Identifier("mishanguc:block/colored_cube_all_without_shade"), TextureMap.all(new Identifier("mishanguc:block/white_pure")));
-  public static final ColoredCubeBlock COLORED_PURE_LIGHT_WITHOUT_SHADE = new ColoredCubeBlock(WHITE_LIGHT_SETTINGS, new Identifier("mishanguc:block/colored_cube_all_without_shade"), TextureMap.all(new Identifier("mishanguc:block/white_pure")));
+  public static final ColoredCubeBlock COLORED_PURE_BLOCK_WITHOUT_SHADE = new ColoredCubeBlock(AbstractBlock.Settings.create().mapColor(DyeColor.WHITE).strength(0.2f), Identifier.of("mishanguc:block/colored_cube_all_without_shade"), TextureMap.all(Identifier.of("mishanguc:block/white_pure")));
+  public static final ColoredCubeBlock COLORED_PURE_LIGHT_WITHOUT_SHADE = new ColoredCubeBlock(WHITE_LIGHT_SETTINGS, Identifier.of("mishanguc:block/colored_cube_all_without_shade"), TextureMap.all(Identifier.of("mishanguc:block/white_pure")));
 
   private ColoredBlocks() {
   }

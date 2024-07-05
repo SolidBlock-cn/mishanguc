@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.BlockFace;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
@@ -17,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -283,7 +283,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   @Override
   @Environment(EnvType.CLIENT)
   public ModelJsonBuilder getBlockModel() {
-    return ModelJsonBuilder.create(new Identifier("mishanguc:block/wall_sign")).addTexture(TextureKey.TEXTURE, getBaseTexture());
+    return ModelJsonBuilder.create(Identifier.of("mishanguc:block/wall_sign")).addTexture(TextureKey.TEXTURE, getBaseTexture());
   }
 
   @Environment(EnvType.CLIENT)

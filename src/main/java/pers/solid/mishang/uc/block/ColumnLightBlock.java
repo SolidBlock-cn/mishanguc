@@ -144,7 +144,7 @@ public class ColumnLightBlock extends Block implements Waterloggable, BlockResou
     } else {
       throw new AssertionError();
     }
-    return new Identifier(identifier.getNamespace(), path).brrp_prefixed("block/");
+    return Identifier.of(identifier.getNamespace(), path).brrp_prefixed("block/");
   }
 
   @Override

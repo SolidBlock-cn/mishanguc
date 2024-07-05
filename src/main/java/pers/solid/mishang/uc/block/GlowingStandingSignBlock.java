@@ -42,7 +42,7 @@ public class GlowingStandingSignBlock extends StandingSignBlock {
   @Override
   public @NotNull ModelJsonBuilder getBlockModel() {
     final Identifier texture = getBaseTexture();
-    return ModelJsonBuilder.create(new Identifier("mishanguc:block/glowing_standing_sign")).addTexture("texture", texture).addTexture("bar", barTexture).addTexture("glow", glowTexture);
+    return ModelJsonBuilder.create(Identifier.of("mishanguc:block/glowing_standing_sign")).addTexture("texture", texture).addTexture("bar", barTexture).addTexture("glow", glowTexture);
   }
 
   @Override

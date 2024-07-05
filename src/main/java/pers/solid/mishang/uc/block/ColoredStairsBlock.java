@@ -6,10 +6,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.item.TooltipType;
-import net.minecraft.data.server.loottable.vanilla.VanillaBlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.loot.LootTable;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.text.Text;
@@ -22,6 +21,7 @@ import pers.solid.brrp.v1.BRRPUtils;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.generator.BRRPStairsBlock;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.mishang.uc.arrp.ARRPMain;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -57,7 +57,7 @@ public class ColoredStairsBlock extends BRRPStairsBlock implements ColoredBlock 
   @Environment(EnvType.CLIENT)
   @Override
   public @UnknownNullability ModelJsonBuilder getBlockModel() {
-    return super.getBlockModel().parent(new Identifier("mishanguc", "block/colored_stairs"));
+    return super.getBlockModel().parent(Identifier.of("mishanguc", "block/colored_stairs"));
   }
 
   @Environment(EnvType.CLIENT)
@@ -66,13 +66,13 @@ public class ColoredStairsBlock extends BRRPStairsBlock implements ColoredBlock 
     final ModelJsonBuilder blockModel = getBlockModel();
     final Identifier id = getBlockModelId();
     pack.addModel(id, blockModel);
-    pack.addModel(id.brrp_suffixed("_inner"), blockModel.parent(new Identifier("mishanguc", "block/colored_inner_stairs")));
-    pack.addModel(id.brrp_suffixed("_outer"), blockModel.parent(new Identifier("mishanguc", "block/colored_outer_stairs")));
+    pack.addModel(id.brrp_suffixed("_inner"), blockModel.parent(Identifier.of("mishanguc", "block/colored_inner_stairs")));
+    pack.addModel(id.brrp_suffixed("_outer"), blockModel.parent(Identifier.of("mishanguc", "block/colored_outer_stairs")));
   }
 
   @Override
   public LootTable.@NotNull Builder getLootTable() {
-    return new VanillaBlockLootTableGenerator().drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+    return ARRPMain.LOOT_TABLE_GENERATOR.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override

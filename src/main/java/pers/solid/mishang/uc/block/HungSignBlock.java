@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
@@ -16,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -444,13 +444,13 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     if (barTexture != null) textures.put("bar", barTexture.toString());
     if (textureTop != null) textures.put("texture_top", textureTop.toString());
     pack.addModel(id,
-        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign")).setTextures(textures));
+        ModelJsonBuilder.create(Identifier.of("mishanguc", "block/hung_sign")).setTextures(textures));
     pack.addModel(id.brrp_suffixed("_body"),
-        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_body")).setTextures(textures));
+        ModelJsonBuilder.create(Identifier.of("mishanguc", "block/hung_sign_body")).setTextures(textures));
     pack.addModel(id.brrp_suffixed("_top_bar"),
-        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_top_bar")).setTextures(textures));
+        ModelJsonBuilder.create(Identifier.of("mishanguc", "block/hung_sign_top_bar")).setTextures(textures));
     pack.addModel(id.brrp_suffixed("_top_bar_edge"),
-        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_top_bar_edge")).setTextures(textures));
+        ModelJsonBuilder.create(Identifier.of("mishanguc", "block/hung_sign_top_bar_edge")).setTextures(textures));
   }
 
   @Environment(EnvType.CLIENT)

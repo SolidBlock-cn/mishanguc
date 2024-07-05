@@ -281,19 +281,19 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
     final Identifier id = getBlockModelId();
     pack.addModel(
         id,
-        ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/wall_light_%s_decoration", shape)))
+        ModelJsonBuilder.create(Identifier.of("mishanguc", String.format("block/wall_light_%s_decoration", shape)))
             .setTextures(new FasterJTextures().varP("light", lightColor + "_light")));
     pack.addModel(
         id.brrp_suffixed("_center"),
-        ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/wall_light_%s_decoration_center", shape)))
+        ModelJsonBuilder.create(Identifier.of("mishanguc", String.format("block/wall_light_%s_decoration_center", shape)))
             .setTextures(new FasterJTextures().varP("light", lightColor + "_light")));
     pack.addModel(
         id.brrp_suffixed("_connection"),
-        ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/wall_light_%s_decoration_connection", shape)))
+        ModelJsonBuilder.create(Identifier.of("mishanguc", String.format("block/wall_light_%s_decoration_connection", shape)))
             .setTextures(new FasterJTextures().varP("light", lightColor + "_light")));
     pack.addModel(
         id.brrp_suffixed("_connection2"),
-        ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/wall_light_%s_decoration_connection2", shape)))
+        ModelJsonBuilder.create(Identifier.of("mishanguc", String.format("block/wall_light_%s_decoration_connection2", shape)))
             .setTextures(new FasterJTextures().varP("light", lightColor + "_light")));
   }
 

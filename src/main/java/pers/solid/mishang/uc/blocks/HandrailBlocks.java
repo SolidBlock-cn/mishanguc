@@ -121,7 +121,7 @@ public final class HandrailBlocks extends MishangucBlocks {
   public static final SimpleHandrailBlock SIMPLE_SNOW_HANDRAIL = new SimpleHandrailBlock(Blocks.SNOW_BLOCK);
 
   static {
-    SIMPLE_SNOW_HANDRAIL.texture = new Identifier("block/snow");
+    SIMPLE_SNOW_HANDRAIL.texture = Identifier.ofVanilla("block/snow");
   }
 
   // 木头
@@ -159,17 +159,17 @@ public final class HandrailBlocks extends MishangucBlocks {
   public static final SimpleHandrailBlock SIMPLE_BAMBOO_MOSAIC_HANDRAIL = new SimpleHandrailBlock(Blocks.BAMBOO_MOSAIC, Block.Settings.copy(Blocks.BAMBOO_MOSAIC));
 
   static {
-    SIMPLE_OAK_HANDRAIL.texture = new Identifier("block/oak_log");
-    SIMPLE_SPRUCE_HANDRAIL.texture = new Identifier("block/spruce_log");
-    SIMPLE_BIRCH_HANDRAIL.texture = new Identifier("block/birch_log");
-    SIMPLE_JUNGLE_HANDRAIL.texture = new Identifier("block/jungle_log");
-    SIMPLE_ACACIA_HANDRAIL.texture = new Identifier("block/acacia_log");
-    SIMPLE_CHERRY_HANDRAIL.texture = new Identifier("block/cherry_log");
-    SIMPLE_DARK_OAK_HANDRAIL.texture = new Identifier("block/dark_oak_log");
-    SIMPLE_MANGROVE_HANDRAIL.texture = new Identifier("block/mangrove_log");
-    SIMPLE_CRIMSON_HANDRAIL.texture = new Identifier("block/crimson_stem");
-    SIMPLE_WARPED_HANDRAIL.texture = new Identifier("block/warped_stem");
-    SIMPLE_BAMBOO_HANDRAIL.texture = new Identifier("block/bamboo_block");
+    SIMPLE_OAK_HANDRAIL.texture = Identifier.ofVanilla("block/oak_log");
+    SIMPLE_SPRUCE_HANDRAIL.texture = Identifier.ofVanilla("block/spruce_log");
+    SIMPLE_BIRCH_HANDRAIL.texture = Identifier.ofVanilla("block/birch_log");
+    SIMPLE_JUNGLE_HANDRAIL.texture = Identifier.ofVanilla("block/jungle_log");
+    SIMPLE_ACACIA_HANDRAIL.texture = Identifier.ofVanilla("block/acacia_log");
+    SIMPLE_CHERRY_HANDRAIL.texture = Identifier.ofVanilla("block/cherry_log");
+    SIMPLE_DARK_OAK_HANDRAIL.texture = Identifier.ofVanilla("block/dark_oak_log");
+    SIMPLE_MANGROVE_HANDRAIL.texture = Identifier.ofVanilla("block/mangrove_log");
+    SIMPLE_CRIMSON_HANDRAIL.texture = Identifier.ofVanilla("block/crimson_stem");
+    SIMPLE_WARPED_HANDRAIL.texture = Identifier.ofVanilla("block/warped_stem");
+    SIMPLE_BAMBOO_HANDRAIL.texture = Identifier.ofVanilla("block/bamboo_block");
   }
 
   // 染色玻璃。

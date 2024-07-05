@@ -91,27 +91,27 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final StandingSignBlock BAMBOO_MOSAIC_STANDING_SIGN = new StandingSignBlock(Blocks.BAMBOO_MOSAIC, Block.Settings.copy(Blocks.BAMBOO_MOSAIC));
 
   static {
-    OAK_WOOD_STANDING_SIGN.baseTexture = OAK_STANDING_SIGN.barTexture = new Identifier("block/oak_log");
-    SPRUCE_WOOD_STANDING_SIGN.baseTexture = SPRUCE_STANDING_SIGN.barTexture = new Identifier("block/spruce_log");
-    BIRCH_WOOD_STANDING_SIGN.baseTexture = BIRCH_STANDING_SIGN.barTexture = new Identifier("block/birch_log");
-    JUNGLE_WOOD_STANDING_SIGN.baseTexture = JUNGLE_STANDING_SIGN.barTexture = new Identifier("block/jungle_log");
-    ACACIA_WOOD_STANDING_SIGN.baseTexture = ACACIA_STANDING_SIGN.barTexture = new Identifier("block/acacia_log");
-    CHERRY_WOOD_STANDING_SIGN.baseTexture = CHERRY_STANDING_SIGN.barTexture = new Identifier("block/cherry_log");
-    DARK_OAK_WOOD_STANDING_SIGN.baseTexture = DARK_OAK_STANDING_SIGN.barTexture = new Identifier("block/dark_oak_log");
-    MANGROVE_WOOD_STANDING_SIGN.baseTexture = MANGROVE_STANDING_SIGN.barTexture = new Identifier("block/mangrove_log");
-    CRIMSON_HYPHAE_STANDING_SIGN.baseTexture = CRIMSON_STANDING_SIGN.barTexture = new Identifier("block/crimson_stem");
-    WARPED_HYPHAE_STANDING_SIGN.baseTexture = WARPED_STANDING_SIGN.barTexture = new Identifier("block/warped_stem");
-    STRIPPED_OAK_WOOD_STANDING_SIGN.baseTexture = new Identifier("block/stripped_oak_log");
-    STRIPPED_SPRUCE_WOOD_STANDING_SIGN.baseTexture = new Identifier("block/stripped_spruce_log");
-    STRIPPED_BIRCH_WOOD_STANDING_SIGN.baseTexture = new Identifier("block/stripped_birch_log");
-    STRIPPED_JUNGLE_WOOD_STANDING_SIGN.baseTexture = new Identifier("block/stripped_jungle_log");
-    STRIPPED_ACACIA_WOOD_STANDING_SIGN.baseTexture = new Identifier("block/stripped_acacia_log");
-    STRIPPED_CHERRY_WOOD_STANDING_SIGN.baseTexture = new Identifier("block/stripped_cherry_log");
-    STRIPPED_DARK_OAK_WOOD_STANDING_SIGN.baseTexture = new Identifier("block/stripped_dark_oak_log");
-    STRIPPED_MANGROVE_WOOD_STANDING_SIGN.baseTexture = new Identifier("block/stripped_mangrove_log");
-    STRIPPED_CRIMSON_HYPHAE_STANDING_SIGN.baseTexture = new Identifier("block/stripped_crimson_stem");
-    STRIPPED_WARPED_HYPHAE_STANDING_SIGN.baseTexture = new Identifier("block/stripped_warped_stem");
-    BAMBOO_PLANK_STANDING_SIGN.barTexture = BAMBOO_MOSAIC_STANDING_SIGN.barTexture = new Identifier("block/bamboo_block");
+    OAK_WOOD_STANDING_SIGN.baseTexture = OAK_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/oak_log");
+    SPRUCE_WOOD_STANDING_SIGN.baseTexture = SPRUCE_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/spruce_log");
+    BIRCH_WOOD_STANDING_SIGN.baseTexture = BIRCH_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/birch_log");
+    JUNGLE_WOOD_STANDING_SIGN.baseTexture = JUNGLE_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/jungle_log");
+    ACACIA_WOOD_STANDING_SIGN.baseTexture = ACACIA_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/acacia_log");
+    CHERRY_WOOD_STANDING_SIGN.baseTexture = CHERRY_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/cherry_log");
+    DARK_OAK_WOOD_STANDING_SIGN.baseTexture = DARK_OAK_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/dark_oak_log");
+    MANGROVE_WOOD_STANDING_SIGN.baseTexture = MANGROVE_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/mangrove_log");
+    CRIMSON_HYPHAE_STANDING_SIGN.baseTexture = CRIMSON_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/crimson_stem");
+    WARPED_HYPHAE_STANDING_SIGN.baseTexture = WARPED_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/warped_stem");
+    STRIPPED_OAK_WOOD_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_oak_log");
+    STRIPPED_SPRUCE_WOOD_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_spruce_log");
+    STRIPPED_BIRCH_WOOD_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_birch_log");
+    STRIPPED_JUNGLE_WOOD_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_jungle_log");
+    STRIPPED_ACACIA_WOOD_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_acacia_log");
+    STRIPPED_CHERRY_WOOD_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_cherry_log");
+    STRIPPED_DARK_OAK_WOOD_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_dark_oak_log");
+    STRIPPED_MANGROVE_WOOD_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_mangrove_log");
+    STRIPPED_CRIMSON_HYPHAE_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_crimson_stem");
+    STRIPPED_WARPED_HYPHAE_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_warped_stem");
+    BAMBOO_PLANK_STANDING_SIGN.barTexture = BAMBOO_MOSAIC_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/bamboo_block");
   }
 
   public static final ImmutableMap<WoodType, StandingSignBlock> WOODEN_SIGNS = new ImmutableMap.Builder<WoodType, StandingSignBlock>()
@@ -353,10 +353,10 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final GlowingStandingSignBlock GLOWING_BLUE_ICE_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.BLUE_ICE);
 
   static {
-    SNOW_STANDING_SIGN.baseTexture = new Identifier("block/snow");
-    SNOW_STANDING_SIGN.barTexture = new Identifier("block/packed_ice");
-    GLOWING_SNOW_STANDING_SIGN.baseTexture = new Identifier("block/snow");
-    GLOWING_SNOW_STANDING_SIGN.barTexture = new Identifier("block/packed_ice");
-    ICE_STANDING_SIGN.barTexture = new Identifier("block/blue_ice");
+    SNOW_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/snow");
+    SNOW_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/packed_ice");
+    GLOWING_SNOW_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/snow");
+    GLOWING_SNOW_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/packed_ice");
+    ICE_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/blue_ice");
   }
 }

@@ -45,7 +45,7 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
   public static final VoxelShape SHAPE_ON_SLAB_X = createCuboidShape(0, -8, 2, 16, -7, 14);
   public static final VoxelShape SHAPE_ON_SLAB_Z = createCuboidShape(2, -8, 0, 14, -7, 16);
   public static final BooleanProperty ON_SLAB = BooleanProperty.of("on_slab");
-  private static final Identifier MODEL_PARENT = new Identifier("mishanguc", "block/road_mark");
+  private static final Identifier MODEL_PARENT = Identifier.of("mishanguc", "block/road_mark");
   protected final Identifier texture;
   private static final VoxelShape SHAPE_TOP_MASK = createCuboidShape(0, 15.5, 0, 16, 16, 16);
   private static final VoxelShape SHAPE_SLAB_TOP_MASK = createCuboidShape(0, 7.5, 0, 16, 8, 16);

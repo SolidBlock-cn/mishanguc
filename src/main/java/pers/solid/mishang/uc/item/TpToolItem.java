@@ -2,12 +2,12 @@ package pers.solid.mishang.uc.item;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.Models;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -47,7 +47,7 @@ public class TpToolItem extends Item implements ItemResourceGenerator {
     }
     final Vec3d pos = raycast.getPos();
     user.fallDistance = 0;
-    user.teleport(pos.x, pos.y, pos.z);
+    user.teleport(pos.x, pos.y, pos.z, true);
     world.emitGameEvent(GameEvent.TELEPORT, pos, GameEvent.Emitter.of(user));
     world.sendEntityStatus(user, (byte) 46);
     world.playSound(null, pos.x, pos.y, pos.z, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);

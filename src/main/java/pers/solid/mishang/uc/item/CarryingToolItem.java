@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -23,6 +22,7 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.world.ServerWorld;
@@ -360,8 +360,8 @@ public class CarryingToolItem extends BlockToolItem
   @Override
   public @NotNull ModelJsonBuilder getItemModel() {
     return ModelJsonBuilder.create(Models.HANDHELD).setTextures(TextureMap.layer0(getTextureId()))
-        .addOverride(new ModelOverrideBuilder(getItemModelId().brrp_suffixed("_with_block")).addCondition(new Identifier("mishanguc:is_holding_block"), 1f))
-        .addOverride(new ModelOverrideBuilder(getItemModelId().brrp_suffixed("_with_entity")).addCondition(new Identifier("mishanguc:is_holding_entity"), 1f));
+        .addOverride(new ModelOverrideBuilder(getItemModelId().brrp_suffixed("_with_block")).addCondition(Identifier.of("mishanguc:is_holding_block"), 1f))
+        .addOverride(new ModelOverrideBuilder(getItemModelId().brrp_suffixed("_with_entity")).addCondition(Identifier.of("mishanguc:is_holding_entity"), 1f));
   }
 
   @Environment(EnvType.CLIENT)

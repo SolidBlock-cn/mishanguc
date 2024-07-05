@@ -6,11 +6,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.*;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
@@ -146,7 +146,7 @@ public interface RoadWithJointLine extends Road {
     @Environment(EnvType.CLIENT)
     @Override
     public @NotNull ModelJsonBuilder getBlockModel() {
-      return ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_joint_line"))
+      return ModelJsonBuilder.create(Identifier.of("mishanguc:block/road_with_joint_line"))
           .setTextures(new FasterJTextures().base("asphalt").lineSide(lineSide).lineSide2(lineSide2).lineTop(lineTop));
     }
 

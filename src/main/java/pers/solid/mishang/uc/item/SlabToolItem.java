@@ -18,7 +18,6 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -34,6 +33,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -123,15 +123,15 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
         // 尝试根据方块的 id 来判断对应的台阶方块。
         final Identifier id = Registries.BLOCK.getId(block);
         final String idPath = id.getPath();
-        final Identifier slabId = new Identifier(id.getNamespace(), idPath + "_slab");
+        final Identifier slabId = Identifier.of(id.getNamespace(), idPath + "_slab");
         if (Registries.BLOCK.containsId(slabId)) {
           state = toDoubleSlab(state, Registries.BLOCK.get(slabId));
         } else {
           final Identifier slabId2;
           if (idPath.endsWith("_bricks") || idPath.endsWith("_tiles")) {
-            slabId2 = new Identifier(id.getNamespace(), idPath.substring(0, idPath.length() - 1) + "_slab");
+            slabId2 = Identifier.of(id.getNamespace(), idPath.substring(0, idPath.length() - 1) + "_slab");
           } else if (idPath.endsWith("_planks")) {
-            slabId2 = new Identifier(id.getNamespace(), idPath.substring(0, idPath.length() - 7) + "_slab");
+            slabId2 = Identifier.of(id.getNamespace(), idPath.substring(0, idPath.length() - 7) + "_slab");
           } else {
             slabId2 = null;
           }

@@ -44,7 +44,7 @@ public class RoadBlock extends AbstractRoadBlock {
   @Environment(EnvType.CLIENT)
   @Override
   public ModelJsonBuilder getBlockModel() {
-    return ModelJsonBuilder.create(Models.CUBE_ALL).setTextures(TextureMap.all(new Identifier(texture)));
+    return ModelJsonBuilder.create(Models.CUBE_ALL).setTextures(TextureMap.all(Identifier.of(texture)));
   }
 
   @Environment(EnvType.CLIENT)
@@ -62,7 +62,7 @@ public class RoadBlock extends AbstractRoadBlock {
 
   @Environment(EnvType.CLIENT)
   private ModelJsonBuilder getSlabBlockModel() {
-    return ModelJsonBuilder.create(Models.SLAB).setTextures(TextureMap.topBottom(new Identifier(texture), new Identifier(texture)).put(TextureKey.SIDE, new Identifier(texture)));
+    return ModelJsonBuilder.create(Models.SLAB).setTextures(TextureMap.topBottom(Identifier.of(texture), Identifier.of(texture)).put(TextureKey.SIDE, Identifier.of(texture)));
   }
 
   @Override

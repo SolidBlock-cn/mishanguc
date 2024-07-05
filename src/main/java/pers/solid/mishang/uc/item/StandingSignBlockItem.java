@@ -2,8 +2,8 @@ package pers.solid.mishang.uc.item;
 
 import com.google.common.collect.Collections2;
 import net.minecraft.block.Block;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;

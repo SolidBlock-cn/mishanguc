@@ -8,10 +8,11 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SlabBlock;
+import net.minecraft.data.server.loottable.vanilla.VanillaBlockLootTableGenerator;
 import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
@@ -38,10 +39,11 @@ import pers.solid.mishang.uc.blocks.*;
  * @since 0.1.7 本类应当在 onInitialize 的入口点中执行，而非 pregen 中。
  */
 public class ARRPMain implements ModInitializer {
-  private static final RuntimeResourcePack PACK = RuntimeResourcePack.create(new Identifier("mishanguc", "pack"));
+  private static final RuntimeResourcePack PACK = RuntimeResourcePack.create(Identifier.of("mishanguc", "pack"));
+  public static final VanillaBlockLootTableGenerator LOOT_TABLE_GENERATOR = new VanillaBlockLootTableGenerator(PACK.getRegistryLookup());
 
   private static IdentifiedTagBuilder<Block> blockTag(String path) {
-    return IdentifiedTagBuilder.createBlock(new Identifier("mishanguc", path));
+    return IdentifiedTagBuilder.createBlock(Identifier.of("mishanguc", path));
   }
 
   private static void addTags() {
@@ -129,7 +131,7 @@ public class ARRPMain implements ModInitializer {
 
     // 栏杆部分
     final IdentifiedTagBuilder<Block> handrails = blockTag("handrails");
-    final IdentifiedTagBuilder<Item> handrailItems = IdentifiedTagBuilder.createItem(new Identifier("mishanguc", "handrails"));
+    final IdentifiedTagBuilder<Item> handrailItems = IdentifiedTagBuilder.createItem(Identifier.of("mishanguc", "handrails"));
     final IdentifiedTagBuilder<Block> normalHandrails = blockTag("normal_handrails");
     final IdentifiedTagBuilder<Block> centralHandrails = blockTag("central_handrails");
     final IdentifiedTagBuilder<Block> cornerHandrails = blockTag("corner_handrails");
@@ -524,35 +526,35 @@ public class ARRPMain implements ModInitializer {
     registerTagBlockOnly(stairHandrails);
     registerTagBlockOnly(simpleConcreteHandrails);
     registerTagBlockOnly(simpleConcreteNormalHandrails);
-    PACK.addTag(new Identifier("mishanguc", "items/simple_concrete_handrails"), simpleConcreteNormalHandrails);
+    PACK.addTag(Identifier.of("mishanguc", "items/simple_concrete_handrails"), simpleConcreteNormalHandrails);
     registerTagBlockOnly(simpleConcreteCentralHandrails);
     registerTagBlockOnly(simpleConcreteCornerHandrails);
     registerTagBlockOnly(simpleConcreteOuterHandrails);
     registerTagBlockOnly(simpleConcreteStairHandrails);
     registerTagBlockOnly(simpleTerracottaHandrails);
     registerTagBlockOnly(simpleTerracottaNormalHandrails);
-    PACK.addTag(TagKey.of(RegistryKeys.ITEM, new Identifier("mishanguc", "simple_terracotta_handrails")), simpleTerracottaNormalHandrails);
+    PACK.addTag(TagKey.of(RegistryKeys.ITEM, Identifier.of("mishanguc", "simple_terracotta_handrails")), simpleTerracottaNormalHandrails);
     registerTagBlockOnly(simpleTerracottaCentralHandrails);
     registerTagBlockOnly(simpleTerracottaCornerHandrails);
     registerTagBlockOnly(simpleTerracottaOuterHandrails);
     registerTagBlockOnly(simpleTerracottaStairHandrails);
     registerTagBlockOnly(simpleStainedGlassHandrails);
     registerTagBlockOnly(simpleStainedGlassNormalHandrails);
-    PACK.addTag(TagKey.of(RegistryKeys.ITEM, new Identifier("mishanguc", "simple_stained_glass_handrails")), simpleStainedGlassNormalHandrails);
+    PACK.addTag(TagKey.of(RegistryKeys.ITEM, Identifier.of("mishanguc", "simple_stained_glass_handrails")), simpleStainedGlassNormalHandrails);
     registerTagBlockOnly(simpleStainedGlassCentralHandrails);
     registerTagBlockOnly(simpleStainedGlassCornerHandrails);
     registerTagBlockOnly(simpleStainedGlassOuterHandrails);
     registerTagBlockOnly(simpleStainedGlassStairHandrails);
     registerTagBlockOnly(simpleWoodenHandrails);
     registerTagBlockOnly(simpleWoodenNormalHandrails);
-    PACK.addTag(TagKey.of(RegistryKeys.ITEM, new Identifier("mishanguc", "simple_wooden_handrails")), simpleWoodenNormalHandrails);
+    PACK.addTag(TagKey.of(RegistryKeys.ITEM, Identifier.of("mishanguc", "simple_wooden_handrails")), simpleWoodenNormalHandrails);
     registerTagBlockOnly(simpleWoodenCentralHandrails);
     registerTagBlockOnly(simpleWoodenCornerHandrails);
     registerTagBlockOnly(simpleWoodenOuterHandrails);
     registerTagBlockOnly(simpleWoodenStairHandrails);
     registerTagBlockOnly(glassHandrails);
     registerTagBlockOnly(glassNormalHandrails);
-    PACK.addTag(TagKey.of(RegistryKeys.ITEM, new Identifier("mishanguc", "glass_handrails")), glassNormalHandrails);
+    PACK.addTag(TagKey.of(RegistryKeys.ITEM, Identifier.of("mishanguc", "glass_handrails")), glassNormalHandrails);
     registerTagBlockOnly(glassCentralHandrails);
     registerTagBlockOnly(glassCornerHandrails);
     registerTagBlockOnly(glassOuterHandrails);
@@ -604,11 +606,11 @@ public class ARRPMain implements ModInitializer {
   }
 
   private static void registerTagBlockOnly(IdentifiedTagBuilder<Block> tag) {
-    PACK.addTag(tag.identifier.brrp_prefixed("blocks/"), tag);
+    PACK.addTag(tag.identifier.brrp_prefixed("block/"), tag);
   }
 
   private static void registerTagItemOnly(IdentifiedTagBuilder<Block> tag) {
-    PACK.addTag(tag.identifier.brrp_prefixed("items/"), tag);
+    PACK.addTag(tag.identifier.brrp_prefixed("item/"), tag);
   }
 
 
@@ -802,7 +804,7 @@ public class ARRPMain implements ModInitializer {
   }
 
   private static void addStonecuttingRecipeForLight(ItemConvertible ingredient, ItemConvertible result, int count) {
-    PACK.addRecipeAndAdvancement(BRRPUtils.getRecipeId(result), SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(ingredient), RecipeCategory.DECORATIONS, result, count).criterionFromItem(ingredient).setCustomRecipeCategory("light"));
+    PACK.addRecipeAndAdvancement(BRRPUtils.getRecipeId(result), StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(ingredient), RecipeCategory.DECORATIONS, result, count).criterionFromItem(ingredient).setCustomRecipeCategory("light"));
   }
 
   private static void addShapelessRecipeForLight(ItemConvertible result, int count, ItemConvertible... ingredients) {

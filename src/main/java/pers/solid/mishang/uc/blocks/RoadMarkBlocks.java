@@ -58,11 +58,11 @@ public class RoadMarkBlocks extends MishangucBlocks {
   public static final RoadMarkBlock LANE_NON_VEHICLE_MARK = directional("lane_non_vehicle");
 
   private static RoadMarkBlock directional(String name) {
-    return RoadMarkBlock.createDirectionalFacing(new Identifier("mishanguc:block/" + name), ROAD_MARK_SETTINGS);
+    return RoadMarkBlock.createDirectionalFacing(Identifier.of("mishanguc:block/" + name), ROAD_MARK_SETTINGS);
   }
 
   private static RoadMarkBlock axis(String name) {
-    return RoadMarkBlock.createAxisFacing(new Identifier("mishanguc:block/" + name), ROAD_MARK_SETTINGS);
+    return RoadMarkBlock.createAxisFacing(Identifier.of("mishanguc:block/" + name), ROAD_MARK_SETTINGS);
   }
 
   /**

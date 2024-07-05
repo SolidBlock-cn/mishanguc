@@ -32,18 +32,16 @@
     "mishanguc.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">0.14.10",
+    "fabricloader": "*",
     "fabric": "*",
-    "minecraft": [
-      ">=1.20.5"
-    ],
+    "minecraft": "~1.21",
     "brrp_v1": ">=1.0.0",
     "mixinextras": ">=0.2.0"
   },
   "breaks": {
   },
   "custom": {
-    "branch": "1.20.6",
+    "branch": "1.21",
     "modmenu": {
       "links": {
         "mcmod.cn": "https://www.mcmod.cn/class/5743.html",

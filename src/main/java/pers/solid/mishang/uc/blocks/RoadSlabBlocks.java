@@ -47,7 +47,7 @@ public final class RoadSlabBlocks extends MishangucBlocks {
       final Identifier baseId = slab.baseBlock.getBlockId();
       final String namespace = baseId.getNamespace();
       final String path = baseId.getPath();
-      final Identifier slabId = new Identifier(namespace, StringUtils.replace(StringUtils.removeEnd(path, "_block"), "road", "road_slab", 1));
+      final Identifier slabId = Identifier.of(namespace, StringUtils.replace(StringUtils.removeEnd(path, "_block"), "road", "road_slab", 1));
       Registry.register(Registries.BLOCK, slabId, slab);
       Registry.register(Registries.ITEM, slabId, new NamedBlockItem(slab, new Item.Settings()));
     });

@@ -55,7 +55,7 @@ public final class SpecialDrawableTypes {
   private static final SpecialDrawableType<TextureSpecialDrawable> TEXTURE_BETA = register("texture_beta", TEXTURE::fromNbt, TEXTURE::fromStringArgs);
 
   private static <T extends SpecialDrawableType<? extends SpecialDrawable>> T register(String namePath, T specialDrawable) {
-    return Registry.register(SpecialDrawableType.REGISTRY, new Identifier("mishanguc", namePath), specialDrawable);
+    return Registry.register(SpecialDrawableType.REGISTRY, Identifier.of("mishanguc", namePath), specialDrawable);
   }
 
   private static <S extends SpecialDrawable> SpecialDrawableType<S> register(String namePath, BiFunction<TextContext, NbtCompound, S> fromNbt, BiFunction<TextContext, String, S> fromStringArgs) {

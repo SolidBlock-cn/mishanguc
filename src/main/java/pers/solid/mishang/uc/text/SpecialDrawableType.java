@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @ApiStatus.AvailableSince("0.2.4")
 public interface SpecialDrawableType<S extends SpecialDrawable> {
-  RegistryKey<Registry<SpecialDrawableType<? extends SpecialDrawable>>> REGISTRY_KEY = RegistryKey.ofRegistry(new Identifier("mishanguc", "special_drawable_type"));
+  RegistryKey<Registry<SpecialDrawableType<? extends SpecialDrawable>>> REGISTRY_KEY = RegistryKey.ofRegistry(Identifier.of("mishanguc", "special_drawable_type"));
   /**
    * SpecialDrawableType 的注册表。
    */
@@ -40,10 +40,10 @@ public interface SpecialDrawableType<S extends SpecialDrawable> {
     int i = id.indexOf(':');
     if (i >= 0) {
       // id 中有冒号的情况，使用指定的命名空间。
-      return fromId(new Identifier(id));
+      return fromId(Identifier.of(id));
     } else {
       // id 中没有冒号的情况，使用默认命名空间。
-      return fromId(new Identifier("mishanguc", id));
+      return fromId(Identifier.of("mishanguc", id));
     }
   }
 

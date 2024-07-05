@@ -6,11 +6,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.*;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.Text;
@@ -196,7 +196,7 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
     @Environment(EnvType.CLIENT)
     @Override
     public @NotNull ModelJsonBuilder getBlockModel() {
-      final ModelJsonBuilder model = ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_straight_and_angle_line"));
+      final ModelJsonBuilder model = ModelJsonBuilder.create(Identifier.of("mishanguc:block/road_with_straight_and_angle_line"));
       final String lineTopStraight = MishangUtils.composeStraightLineTexture(lineColor, lineType);
       final String lineTopAngle = MishangUtils.composeAngleLineTexture(lineColorSide, LineType.NORMAL, true);
       final String lineSide = lineTopStraight;

@@ -56,19 +56,19 @@ public class GlowingHungSignBlock extends HungSignBlock {
     textures.put("texture_top", textureTop == null ? null : textureTop.toString());
     pack.addModel(
         id,
-        ModelJsonBuilder.create(new Identifier("mishanguc", "block/glowing_hung_sign"))
+        ModelJsonBuilder.create(Identifier.of("mishanguc", "block/glowing_hung_sign"))
             .setTextures(textures));
     pack.addModel(
         id.brrp_suffixed("_body"),
-        ModelJsonBuilder.create(new Identifier("mishanguc", "block/glowing_hung_sign_body"))
+        ModelJsonBuilder.create(Identifier.of("mishanguc", "block/glowing_hung_sign_body"))
             .setTextures(textures));
     pack.addModel(
         id.brrp_suffixed("_top_bar"),
-        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_top_bar"))
+        ModelJsonBuilder.create(Identifier.of("mishanguc", "block/hung_sign_top_bar"))
             .setTextures(textures));
     pack.addModel(
         id.brrp_suffixed("_top_bar_edge"),
-        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_top_bar_edge"))
+        ModelJsonBuilder.create(Identifier.of("mishanguc", "block/hung_sign_top_bar_edge"))
             .setTextures(textures));
   }
 

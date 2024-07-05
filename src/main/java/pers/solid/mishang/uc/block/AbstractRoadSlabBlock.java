@@ -3,12 +3,11 @@ package pers.solid.mishang.uc.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
-import net.minecraft.client.item.TooltipType;
-import net.minecraft.data.server.loottable.vanilla.VanillaBlockLootTableGenerator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.loot.LootTable;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
@@ -20,6 +19,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.arrp.ARRPMain;
 
 import java.util.List;
 
@@ -98,7 +98,7 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
 
   @Override
   public LootTable.Builder getLootTable() {
-    return new VanillaBlockLootTableGenerator().slabDrops(this);
+    return ARRPMain.LOOT_TABLE_GENERATOR.slabDrops(this);
   }
 
   @Override

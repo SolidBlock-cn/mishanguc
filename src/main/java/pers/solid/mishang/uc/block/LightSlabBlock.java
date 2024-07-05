@@ -30,7 +30,7 @@ public class LightSlabBlock extends BRRPSlabBlock {
   @Environment(EnvType.CLIENT)
   @Override
   public @NotNull ModelJsonBuilder getBlockModel() {
-    return super.getBlockModel().parent(new Identifier("mishanguc", "block/light_slab"));
+    return super.getBlockModel().parent(Identifier.of("mishanguc", "block/light_slab"));
   }
 
   @Environment(EnvType.CLIENT)
@@ -39,7 +39,7 @@ public class LightSlabBlock extends BRRPSlabBlock {
     final ModelJsonBuilder model = getBlockModel();
     final Identifier id = getBlockModelId();
     pack.addModel(id, model);
-    pack.addModel(id.brrp_suffixed("_top"), model.withParent(new Identifier("mishanguc", "block/light_slab_top")));
+    pack.addModel(id.brrp_suffixed("_top"), model.withParent(Identifier.of("mishanguc", "block/light_slab_top")));
   }
 
   @Override

@@ -6,13 +6,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TransparentBlock;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.data.client.TextureMap;
-import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.loot.LootTable;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -20,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.mishang.uc.arrp.ARRPMain;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class ColoredGlassBlock extends TransparentBlock implements ColoredBlock 
   @Environment(EnvType.CLIENT)
   @Override
   public @NotNull ModelJsonBuilder getBlockModel() {
-    return ModelJsonBuilder.create(new Identifier("mishanguc:block/colored_cube_all")).setTextures(textures);
+    return ModelJsonBuilder.create(Identifier.of("mishanguc:block/colored_cube_all")).setTextures(textures);
   }
 
   @Environment(EnvType.CLIENT)
@@ -64,7 +64,7 @@ public class ColoredGlassBlock extends TransparentBlock implements ColoredBlock 
 
   @Override
   public LootTable.@NotNull Builder getLootTable() {
-    return BlockLootTableGenerator.dropsWithSilkTouch(this).apply(COPY_COLOR_LOOT_FUNCTION);
+    return ARRPMain.LOOT_TABLE_GENERATOR.dropsWithSilkTouch(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override

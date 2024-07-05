@@ -21,13 +21,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Mixin(BeaconBlockEntity.class)
 public abstract class BeaconBlockEntityMixin {
   @Unique
-  private static final TagKey<Block> TINTS_BEACON_BEAMS = TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "tints_beacon_beams"));
+  private static final TagKey<Block> TINTS_BEACON_BEAMS = TagKey.of(RegistryKeys.BLOCK, Identifier.of("mishanguc", "tints_beacon_beams"));
 
   @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;getBlock()Lnet/minecraft/block/Block;", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
   private static void acceptColoredBlocksInTick(World world, BlockPos pos, BlockState state, BeaconBlockEntity blockEntity, CallbackInfo ci, int i, int j, int k, BlockPos blockPos, BeaconBlockEntity.BeamSegment beamSegment, int l, int m, BlockState blockState, @Share("is_colored") LocalBooleanRef localBooleanRef, @Local LocalRef<BeaconBlockEntity.BeamSegment> beamSegmentLocalRef) {
@@ -35,17 +34,25 @@ public abstract class BeaconBlockEntityMixin {
     if (world.getBlockEntity(blockPos) instanceof ColoredBlockEntity coloredBlockEntity && blockState.isIn(TINTS_BEACON_BEAMS)) {
       localBooleanRef.set(true);
       int color = coloredBlockEntity.getColor();
-      float[] fs = {(color >> 16 & 255) / 255f, (color >> 8 & 255) / 255f, (color & 255) / 255f};
       if (checkingBeamSegments.size() <= 1) {
-        beamSegment = new BeaconBlockEntity.BeamSegment(fs);
+        beamSegment = new BeaconBlockEntity.BeamSegment(color);
         beamSegmentLocalRef.set(beamSegment);
         checkingBeamSegments.add(beamSegment);
       } else if (beamSegment != null) {
-        final float[] beamSegmentColor = beamSegment.getColor();
-        if (Arrays.equals(fs, beamSegmentColor)) {
+        final int beamSegmentColor = beamSegment.getColor();
+        if (color == beamSegmentColor) {
           ((BeaconBlockEntityAccessor.BeamSegmentAccessor) beamSegment).invokeIncreaseHeight();
         } else {
-          beamSegment = new BeaconBlockEntity.BeamSegment(new float[]{(beamSegmentColor[0] + fs[0]) / 2.0F, (beamSegmentColor[1] + fs[1]) / 2.0F, (beamSegmentColor[2] + fs[2]) / 2.0F});
+          final int r1 = (beamSegmentColor >> 4) & 0xff;
+          final int g1 = (beamSegmentColor >> 2) & 0xff;
+          final int b1 = (beamSegmentColor) & 0xff;
+          final int r2 = (color >> 4) & 0xff;
+          final int g2 = (color >> 2) & 0xff;
+          final int b2 = (color) & 0xff;
+          final int r = (r1 + r2) / 2;
+          final int g = (g1 + g2) / 2;
+          final int b = (b1 + b2) / 2;
+          beamSegment = new BeaconBlockEntity.BeamSegment((r << 4) + (g << 2) + b);
           beamSegmentLocalRef.set(beamSegment);
           checkingBeamSegments.add(beamSegment);
         }

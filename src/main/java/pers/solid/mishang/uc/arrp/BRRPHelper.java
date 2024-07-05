@@ -61,7 +61,7 @@ public final class BRRPHelper {
         models = Collections.singletonList(entry.getValue().getAsJsonObject());
       }
       for (JsonObject blockModel : models) {
-        final Identifier modelId = new Identifier(blockModel.get("model").getAsString());
+        final Identifier modelId = Identifier.of(blockModel.get("model").getAsString());
         JsonObject bottomModel = blockModel.deepCopy();
         bottomModel.addProperty("model", slabOf(modelId).toString());
         slabVariant.add(
@@ -95,7 +95,7 @@ public final class BRRPHelper {
   }
 
   public static Identifier slabOf(Identifier identifier) {
-    return new Identifier(identifier.getNamespace(), slabOf(identifier.getPath()));
+    return Identifier.of(identifier.getNamespace(), slabOf(identifier.getPath()));
   }
 
   @ApiStatus.AvailableSince("0.2.4")
