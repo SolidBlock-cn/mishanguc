@@ -76,14 +76,23 @@ public class FullWallSignBlock extends WallSignBlock {
     return new FullWallSignBlockEntity(pos, state);
   }
 
+  private @Nullable String getRecipeGroup() {
+    if (baseBlock instanceof ColoredBlock) return null;
+    if (MishangUtils.isConcrete(baseBlock)) return "mishanguc:full_concrete_wall_sign";
+    if (MishangUtils.isTerracotta(baseBlock)) return "mishanguc:full_terracotta_wall_sign";
+    return null;
+  }
+
   @Override
   public @Nullable CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (baseBlock == null) return null;
     return ShapedRecipeJsonBuilder.create(this, 4)
         .patterns("-#-", "###", "-#-")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .setCustomRecipeCategory("signs")
         .criterionFromItem("has_base_block", baseBlock)
-        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
+        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .group(getRecipeGroup());
   }
 
   @Override

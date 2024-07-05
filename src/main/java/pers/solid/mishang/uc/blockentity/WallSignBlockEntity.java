@@ -30,6 +30,14 @@ public class WallSignBlockEntity extends BlockEntityWithText {
   public @Nullable PlayerEntity editor;
 
   public @Unmodifiable List<TextContext> textContexts = ImmutableList.of();
+  /**
+   * 告示牌的文本是否正在发光，不影响文本的颜色和描边，只影响文本显示时的所使用的亮度。
+   */
+  public boolean glowing;
+  /**
+   * 告示牌是否已经被涂蜡。
+   */
+  public boolean waxed;
 
   public WallSignBlockEntity(BlockPos pos, BlockState state) {
     super(MishangucBlockEntities.WALL_SIGN_BLOCK_ENTITY, pos, state);
@@ -58,6 +66,9 @@ public class WallSignBlockEntity extends BlockEntityWithText {
       }
       textContexts = builder.build();
     }
+
+    glowing = nbt.getBoolean("glowing");
+    waxed = nbt.getBoolean("waxed");
   }
 
   @Override
@@ -74,6 +85,8 @@ public class WallSignBlockEntity extends BlockEntityWithText {
       }
       nbt.put("text", nbtList);
     }
+    nbt.putBoolean("glowing", glowing);
+    nbt.putBoolean("waxed", waxed);
   }
 
   @Override

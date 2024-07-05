@@ -78,13 +78,11 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
     return placementState.with(FACING, HorizontalCornerDirection.fromRotation(ctx.getPlayerYaw())).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public FluidState getFluidState(BlockState state) {
     return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
     if (state.get(WATERLOGGED)) {
@@ -109,7 +107,6 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
     return BRRPHelper.stateForHorizontalCornerFacingBlock(this, getBlockModelId(), true);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     return SHAPES.get(state.get(FACING));
@@ -120,21 +117,18 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
     return BlockLootTableGenerator.drops(this, ConstantLootNumberProvider.create(2));
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState rotate(BlockState state, BlockRotation rotation) {
     return super.rotate(state, rotation)
         .with(FACING, state.get(FACING).rotate(rotation));
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState mirror(BlockState state, BlockMirror mirror) {
     return super.mirror(state, mirror)
         .with(FACING, state.get(FACING).mirror(mirror));
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
     final Block block = stateFrom.getBlock();

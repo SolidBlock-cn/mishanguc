@@ -348,6 +348,7 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         .input('S', Items.SLIME_BALL)
         .input('/', Items.STICK)
         .criterionFromItem("has_paper", Items.PAPER)
-        .criterionFromItem("has_slime_ball", Items.SLIME_BALL);
+        .criterionFromItem("has_slime_ball", Items.SLIME_BALL)
+        .setCustomRecipeCategory("tools");
   }
 }

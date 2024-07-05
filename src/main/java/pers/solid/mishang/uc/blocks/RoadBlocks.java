@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.blocks;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.util.LineColor;
@@ -12,7 +13,7 @@ import pers.solid.mishang.uc.util.LineType;
  * 最基本的普通路块。
  */
 public final class RoadBlocks extends MishangucBlocks {
-  public static final RoadBlock ROAD_BLOCK = new RoadBlock(ROAD_SETTINGS, "mishanguc:block/asphalt");
+  public static final RoadBlock ROAD_BLOCK = new RoadBlock(ROAD_SETTINGS, "mishanguc:block/asphalt", LineColor.NONE);
   /**
    * <h2>单一的直线道路</h2>
    * <p>
@@ -34,7 +35,7 @@ public final class RoadBlocks extends MishangucBlocks {
    * 黄色直线
    */
   @Cutout
-  public static final RoadWithStraightLine.Impl ROAD_WITH_YELLOW_LINE = new RoadWithStraightLine.Impl(WHITE_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL, "yellow_straight_line");
+  public static final RoadWithStraightLine.Impl ROAD_WITH_YELLOW_LINE = new RoadWithStraightLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL, "yellow_straight_line");
   /**
    * 双黄线
    */
@@ -47,11 +48,11 @@ public final class RoadBlocks extends MishangucBlocks {
   public static final RoadWithStraightLine.Impl ROAD_WITH_YELLOW_THICK_LINE = new RoadWithStraightLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.THICK, "yellow_straight_thick_line");
   /**
    * <h3>混色双线</h3>
-   * 白色和黄色混合的粗直线道路。
+   * 白色和黄色混合的双直线道路。
    */
   @Cutout
   @ApiStatus.AvailableSince("1.1.0")
-  public static final RoadWithOffsetStraightLine.Impl ROAD_WITH_WHITE_YELLOW_DOUBLE_LINE = new RoadWithOffsetStraightLine.Impl(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.DOUBLE, "white_yellow_double_straight_line", 114514);
+  public static final RoadWithOffsetStraightLine.Impl ROAD_WITH_WHITE_YELLOW_DOUBLE_LINE = new RoadWithOffsetStraightLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.WHITE, LineType.DOUBLE, "white_yellow_double_straight_line", 114514);
   /**
    * <h3>偏移的直线</h3>
    * 白色偏移的直线。
@@ -87,7 +88,7 @@ public final class RoadBlocks extends MishangucBlocks {
    * 黄色直角
    */
   @Cutout
-  public static final RoadWithAngleLine.Impl ROAD_WITH_YELLOW_RA_LINE = new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL, false, "yellow_right_angle_line");
+  public static final RoadWithAngleLine.Impl ROAD_WITH_YELLOW_RA_LINE = new RoadWithAngleLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL, false, "yellow_right_angle_line");
   /**
    * 白色加黄色直角
    */
@@ -135,19 +136,19 @@ public final class RoadBlocks extends MishangucBlocks {
    * 黄色斜线。
    */
   @Cutout
-  public static final RoadWithAngleLine.Impl ROAD_WITH_YELLOW_BA_LINE = new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL, true, "yellow_bevel_angle_line");
+  public static final RoadWithAngleLine.Impl ROAD_WITH_YELLOW_BA_LINE = new RoadWithAngleLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL, true, "yellow_bevel_angle_line");
   /**
    * 黄色双斜线。
    */
   @ApiStatus.AvailableSince("1.0.2")
   @Cutout
-  public static final RoadWithAngleLine.Impl ROAD_WITH_YELLOW_BA_DOUBLE_LINE = new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.YELLOW, LineType.DOUBLE, true, "yellow_bevel_angle_double_line");
+  public static final RoadWithAngleLine.Impl ROAD_WITH_YELLOW_BA_DOUBLE_LINE = new RoadWithAngleLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.DOUBLE, true, "yellow_bevel_angle_double_line");
   /**
    * 黄色粗斜线。
    */
   @ApiStatus.AvailableSince("1.0.2")
   @Cutout
-  public static final RoadWithAngleLine.Impl ROAD_WITH_YELLOW_BA_THICK_LINE = new RoadWithAngleLine.Impl(WHITE_ROAD_SETTINGS, LineColor.YELLOW, LineType.THICK, true, "yellow_bevel_angle_thick_line");
+  public static final RoadWithAngleLine.Impl ROAD_WITH_YELLOW_BA_THICK_LINE = new RoadWithAngleLine.Impl(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.THICK, true, "yellow_bevel_angle_thick_line");
   /**
    * <h3>有偏移的直角</h3>
    * 白色一侧向外偏移的直角。
@@ -333,13 +334,13 @@ public final class RoadBlocks extends MishangucBlocks {
   public static final RoadWithTwoBevelAngleLines.ImplWithTwoLayerTexture ROAD_WITH_WHITE_BI_BA_LINE = new RoadWithTwoBevelAngleLines.ImplWithTwoLayerTexture(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL);
   @ApiStatus.AvailableSince("1.1.0")
   @Cutout
-  public static final RoadWithTwoBevelAngleLines.ImplWithTwoLayerTexture ROAD_WITH_YELLOW_BI_BA_LINE = new RoadWithTwoBevelAngleLines.ImplWithTwoLayerTexture(WHITE_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL);
+  public static final RoadWithTwoBevelAngleLines.ImplWithTwoLayerTexture ROAD_WITH_YELLOW_BI_BA_LINE = new RoadWithTwoBevelAngleLines.ImplWithTwoLayerTexture(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL);
   @ApiStatus.AvailableSince("1.1.0")
   @Cutout
   public static final RoadWithTwoBevelAngleLines.ImplWithThreeLayerTexture ROAD_WITH_WS_AND_BI_BA_LINE = new RoadWithTwoBevelAngleLines.ImplWithThreeLayerTexture(WHITE_ROAD_SETTINGS, LineColor.WHITE, LineType.NORMAL);
   @ApiStatus.AvailableSince("1.1.0")
   @Cutout
-  public static final RoadWithTwoBevelAngleLines.ImplWithThreeLayerTexture ROAD_WITH_YS_AND_BI_BA_LINE = new RoadWithTwoBevelAngleLines.ImplWithThreeLayerTexture(WHITE_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL);
+  public static final RoadWithTwoBevelAngleLines.ImplWithThreeLayerTexture ROAD_WITH_YS_AND_BI_BA_LINE = new RoadWithTwoBevelAngleLines.ImplWithThreeLayerTexture(YELLOW_ROAD_SETTINGS, LineColor.YELLOW, LineType.NORMAL);
 
   /**
    * <h2>直斜混合</h2>
@@ -422,7 +423,23 @@ public final class RoadBlocks extends MishangucBlocks {
    * <p>
    * 填满的路块。
    */
-  public static final RoadBlock ROAD_FILLED_WITH_WHITE = new RoadBlock(WHITE_ROAD_SETTINGS, "mishanguc:block/white_ink");
+  public static final RoadBlock ROAD_FILLED_WITH_WHITE = new RoadBlock(WHITE_ROAD_SETTINGS, "mishanguc:block/white_ink", LineColor.WHITE);
 
-  public static final RoadBlock ROAD_FILLED_WITH_YELLOW = new RoadBlock(YELLOW_ROAD_SETTINGS, "mishanguc:block/yellow_ink");
+  public static final RoadBlock ROAD_FILLED_WITH_YELLOW = new RoadBlock(YELLOW_ROAD_SETTINGS, "mishanguc:block/yellow_ink", LineColor.YELLOW);
+
+  public static @NotNull AbstractRoadBlock getRoadBlockWithLine(LineColor lineColor, LineType lineType) {
+    return switch (lineColor) {
+      case WHITE -> switch (lineType) {
+        case NORMAL -> ROAD_WITH_WHITE_LINE;
+        case DOUBLE -> ROAD_WITH_WHITE_DOUBLE_LINE;
+        case THICK -> ROAD_WITH_WHITE_THICK_LINE;
+      };
+      case YELLOW -> switch (lineType) {
+        case NORMAL -> ROAD_WITH_YELLOW_LINE;
+        case DOUBLE -> ROAD_WITH_YELLOW_DOUBLE_LINE;
+        case THICK -> ROAD_WITH_YELLOW_THICK_LINE;
+      };
+      default -> throw new UnsupportedOperationException(String.format("Cannot determine base block with [color=%s, type=%s]", lineColor.asString(), lineType.asString()));
+    };
+  }
 }

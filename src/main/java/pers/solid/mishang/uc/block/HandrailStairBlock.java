@@ -150,7 +150,6 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
     return equivalentFacing(state.get(FACING), state.get(POSITION));
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     final Direction facing = state.get(FACING);
@@ -218,7 +217,6 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
         || blockState.get(FACING) == direction.getOpposite() && blockState.get(SHAPE) == Shape.BOTTOM);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
     final Block block = stateFrom.getBlock();
@@ -229,13 +227,11 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
     return super.isSideInvisible(state, stateFrom, direction);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public FluidState getFluidState(BlockState state) {
     return (state.get(WATERLOGGED)) ? Fluids.WATER.getStill(false) : Fluids.EMPTY.getDefaultState();
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
     if (state.get(WATERLOGGED)) {

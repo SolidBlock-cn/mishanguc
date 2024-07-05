@@ -3,6 +3,10 @@ package pers.solid.mishang.uc.block;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -29,5 +33,22 @@ public class LightSlabBlock extends BRRPSlabBlock {
     final Identifier id = getBlockModelId();
     pack.addModel(id, model);
     pack.addModel(id.brrp_suffixed("_top"), model.withParent(new Identifier("mishanguc", "block/light_slab_top")));
+  }
+
+  @Override
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+    return ((ShapedRecipeJsonBuilder) super.getCraftingRecipe()).setCustomRecipeCategory("light");
+  }
+
+  @Override
+  public boolean shouldWriteStonecuttingRecipe() {
+    return true;
+  }
+
+  @Override
+  public SingleItemRecipeJsonBuilder getStonecuttingRecipe() {
+    return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), this, 2)
+        .criterionFromItem(baseBlock)
+        .setCustomRecipeCategory("lights");
   }
 }

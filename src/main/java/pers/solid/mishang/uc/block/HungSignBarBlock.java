@@ -3,14 +3,14 @@ package pers.solid.mishang.uc.block;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.Waterloggable;
+import net.minecraft.block.*;
 import net.minecraft.data.client.*;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -112,13 +112,11 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
         .with(WATERLOGGED, world.getFluidState(blockPos).getFluid() == Fluids.WATER);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public FluidState getFluidState(BlockState state) {
     return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getOutlineShape(
       BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
@@ -155,13 +153,11 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
     }
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos) {
     return getOutlineShape(state, world, pos, ShapeContext.absent());
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     final Direction.Axis axis = state.get(AXIS);
@@ -196,13 +192,11 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
     }
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
     return getCollisionShape(state, world, pos, ShapeContext.absent());
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState getStateForNeighborUpdate(
       BlockState state,
@@ -231,7 +225,6 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
   /**
    * 和 {@link HungSignBlock#rotate} 一致。
    */
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState rotate(BlockState state, BlockRotation rotation) {
     final Direction.Axis oldAxis = state.get(AXIS);
@@ -250,7 +243,6 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
     return state;
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState mirror(BlockState state, BlockMirror mirror) {
     state = super.mirror(state, mirror);
@@ -308,5 +300,28 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
         id.brrp_suffixed("_edge"),
         ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_bar_edge"))
             .addTexture(TextureKey.TEXTURE, texture));
+  }
+
+  private @Nullable String getRecipeGroup() {
+    if (baseBlock instanceof ColoredBlock) return null;
+    if (MishangUtils.isWood(baseBlock)) return "mishanguc:wood_hung_sign_bar";
+    if (MishangUtils.isStrippedWood(baseBlock)) return "mishanguc:stripped_wood_hung_sign_bar";
+    if (MishangUtils.isConcrete(baseBlock)) return "mishanguc:concrete_hung_sign_bar";
+    if (MishangUtils.isTerracotta(baseBlock)) return "mishanguc:terracotta_hung_sign_bar";
+    if (baseBlock == Blocks.ICE || baseBlock == Blocks.PACKED_ICE || baseBlock == Blocks.BLUE_ICE) {
+      return "mishanguc:ice_hung_sign_bar";
+    }
+    return null;
+  }
+
+  @Override
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+    return SingleItemRecipeJsonBuilder.createStonecutting(
+            Ingredient.ofItems(baseBlock),
+            this,
+            20)
+        .criterionFromItem("has_base_block", baseBlock)
+        .setCustomRecipeCategory("signs")
+        .group(getRecipeGroup());
   }
 }

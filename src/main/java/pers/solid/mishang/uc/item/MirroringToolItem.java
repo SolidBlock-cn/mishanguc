@@ -119,6 +119,7 @@ public class MirroringToolItem extends BlockToolItem implements ItemResourceGene
         .input('|', Items.STICK)
         .criterionFromItem("has_cyan_dye", Items.CYAN_DYE)
         .criterionFromItem("has_netherite_ingot", Items.NETHERITE_INGOT)
-        .criterionFromItem("has_lime_dye", Items.LIME_DYE);
+        .criterionFromItem("has_lime_dye", Items.LIME_DYE)
+        .setCustomRecipeCategory("tools");
   }
 }

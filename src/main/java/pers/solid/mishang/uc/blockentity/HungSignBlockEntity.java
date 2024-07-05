@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Util;
@@ -19,8 +20,8 @@ import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.text.TextContext;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @see pers.solid.mishang.uc.block.HungSignBlock
@@ -45,6 +46,15 @@ public class HungSignBlockEntity extends BlockEntityWithText {
    */
   @Nullable
   private PlayerEntity editor;
+
+  /**
+   * 涂蜡的侧面。为了节省内容，如果为空集，则直接使用不可变的 {@link Set#of()}，其他情况则为 {@link HashSet}。
+   */
+  public @Unmodifiable Set<@NotNull Direction> waxed = Collections.emptySet();
+  /**
+   * 发光的侧面。为了节省内容，如果为空集，则直接使用不可变的 {@link Set#of()}，其他情况则为 {@link HashSet}。
+   */
+  public @Unmodifiable Set<@NotNull Direction> glowing = Collections.emptySet();
 
   public HungSignBlockEntity(BlockPos pos, BlockState state) {
     super(MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY, pos, state);
@@ -74,6 +84,26 @@ public class HungSignBlockEntity extends BlockEntityWithText {
       }
     }
     texts = builder.build();
+    if (nbt.contains("waxed", NbtElement.LIST_TYPE)) {
+      final NbtList list = nbt.getList("waxed", NbtElement.STRING_TYPE);
+      if (list.isEmpty()) {
+        waxed = Set.of();
+      } else {
+        waxed = list.stream().map(nbtElement -> Direction.byName(nbtElement.asString())).filter(Objects::nonNull).collect(Collectors.toCollection(() -> new HashSet<>(2)));
+      }
+    } else {
+      waxed = Set.of();
+    }
+    if (nbt.contains("glowing", NbtElement.LIST_TYPE)) {
+      final NbtList list = nbt.getList("glowing", NbtElement.STRING_TYPE);
+      if (list.isEmpty()) {
+        glowing = Set.of();
+      } else {
+        glowing = list.stream().map(nbtElement -> Direction.byName(nbtElement.asString())).filter(Objects::nonNull).collect(Collectors.toCollection(() -> new HashSet<>(2)));
+      }
+    } else {
+      glowing = Set.of();
+    }
   }
 
   @Override
@@ -90,12 +120,8 @@ public class HungSignBlockEntity extends BlockEntityWithText {
       }
       nbt.put(direction.asString(), nbtList);
     }
-    if (nbt.isEmpty()) {
-      // 表示该 nbt 是空的，但游戏不会认为是空的。因为如果 nbt 真的是空的，生成 packet 的时候会直接将其忽略，因此即使告示牌没有文本，也不能让其 nbt 真的为空。
-      nbt.putBoolean("empty", true);
-    } else {
-      nbt.remove("empty");
-    }
+    nbt.put("waxed", waxed.stream().map(Direction::asString).map(NbtString::of).collect(Collectors.toCollection(NbtList::new)));
+    nbt.put("glowing", glowing.stream().map(Direction::asString).map(NbtString::of).collect(Collectors.toCollection(NbtList::new)));
   }
 
   //  @Override

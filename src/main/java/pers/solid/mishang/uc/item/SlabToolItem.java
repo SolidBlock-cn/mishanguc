@@ -286,7 +286,8 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
         .input('C', Items.STONE)
         .input('|', Items.STICK)
         .criterionFromItem("has_shears", Items.SHEARS)
-        .criterionFromItem("has_stone", Items.STONE);
+        .criterionFromItem("has_stone", Items.STONE)
+        .setCustomRecipeCategory("tools");
   }
 
   @ApiStatus.AvailableSince("1.0.3")

@@ -6,6 +6,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.*;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
@@ -127,6 +129,60 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
       BRRPHelper.addModelWithSlabWithMirrored(pack, RoadWithDiffAngleLine.Impl.this);
+    }
+
+    private static final String[] NORMAL_PATTERN = {
+        " a ",
+        "bXX",
+        " X "
+    };
+    private static final String[] HALF_THICK_PATTERN = {
+        "aaa",
+        "bXX",
+        " X "
+    };
+    private static final String[] HALF_DOUBLE_PATTERN = {
+        "ba ",
+        " XX",
+        "bX "
+    };
+    private static final String[] THICK_AND_DOUBLE_PATTERN = {
+        "baa",
+        "aXX",
+        "bX "
+    };
+
+    private static String[] composePattern(LineType lineType, LineType lineType2) {
+      if (lineType == LineType.THICK) {
+        if (lineType2 == LineType.DOUBLE) {
+          return THICK_AND_DOUBLE_PATTERN;
+        } else if (lineType2 == LineType.NORMAL) {
+          return HALF_THICK_PATTERN;
+        }
+      } else if (lineType == LineType.NORMAL) {
+        if (lineType2 == LineType.DOUBLE) {
+          return HALF_DOUBLE_PATTERN;
+        } else if (lineType2 == LineType.NORMAL) {
+          return NORMAL_PATTERN;
+        }
+      }
+      throw new IllegalArgumentException(String.format("Cannot determine patterns for [%s, %s]", lineType.asString(), lineType2.asString()));
+    }
+
+    @Override
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(self, 3)
+          .patterns(composePattern(lineType, lineType2))
+          .input('a', lineColor.getIngredient())
+          .input('b', lineColor2.getIngredient())
+          .input('X', base)
+          .setCustomRecipeCategory("roads")
+          .criterionFromItemTag("has_" + lineColor.asString() + "_paint", lineColor.getIngredient())
+          .criterionFromItem(base);
+      if (lineColor != lineColor2) {
+        recipe.criterionFromItemTag("has_" + lineColor2.asString() + "_paint", lineColor2.getIngredient());
+      }
+      return recipe;
     }
   }
 }
