@@ -123,7 +123,6 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
     }
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
     return stateFrom.isOf(this) && ((LightConnectable) stateFrom.getBlock()).isConnectedIn(stateFrom, state.get(FACING), direction.getOpposite()) || super.isSideInvisible(state, stateFrom, direction);

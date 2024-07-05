@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.item.Item;
@@ -24,12 +25,14 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.block.ColoredBlock;
 import pers.solid.mishang.uc.block.GlassHandrailBlock;
 import pers.solid.mishang.uc.block.HandrailBlock;
+import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blocks.*;
@@ -328,6 +331,7 @@ public class Mishanguc implements ModInitializer {
         });
     UseBlockCallback.EVENT.register(
         (player, world, hand, hitResult) -> {
+          if (player.isSpectator()) return ActionResult.PASS;
           final ItemStack stackInHand = player.getStackInHand(hand);
           final Item item = stackInHand.getItem();
           if (!player.getAbilities().allowModifyWorld && !stackInHand.canPlaceOn(Registries.BLOCK, new CachedBlockPosition(world, hitResult.getBlockPos(), false))) {
@@ -341,6 +345,7 @@ public class Mishanguc implements ModInitializer {
         });
     AttackEntityCallback.EVENT.register(
         (player, world, hand, entity, hitResult) -> {
+          if (player.isSpectator()) return ActionResult.PASS;
           final ItemStack stackInHand = player.getStackInHand(hand);
           final Item item = stackInHand.getItem();
           if (item instanceof final InteractsWithEntity interactsWithEntity) {
@@ -351,6 +356,7 @@ public class Mishanguc implements ModInitializer {
         });
     UseEntityCallback.EVENT.register(
         (player, world, hand, entity, hitResult) -> {
+          if (player.isSpectator()) return ActionResult.PASS;
           final ItemStack stackInHand = player.getStackInHand(hand);
           final Item item = stackInHand.getItem();
           if (item instanceof final InteractsWithEntity interactsWithEntity) {
@@ -359,6 +365,17 @@ public class Mishanguc implements ModInitializer {
             return ActionResult.PASS;
           }
         });
+
+    UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+      if (player.isSpectator()) return ActionResult.PASS;
+      final ItemStack stack = player.getStackInHand(hand);
+      final BlockPos blockPos = hitResult.getBlockPos();
+      final BlockState blockState = world.getBlockState(blockPos);
+      if (!blockState.isOf(Blocks.WATER_CAULDRON)) {
+        return ActionResult.PASS;
+      }
+      return Road.CLEAN_ROAD_BLOCK.interact(blockState, world, blockPos, player, hand, stack);
+    });
   }
 
   private static void registerColoredBlocks() {

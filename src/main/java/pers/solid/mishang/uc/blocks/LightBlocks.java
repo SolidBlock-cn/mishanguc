@@ -1,6 +1,6 @@
 package pers.solid.mishang.uc.blocks;
 
-import net.minecraft.data.client.TextureMap;
+import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.brrp.v1.generator.BRRPCubeBlock;
@@ -8,7 +8,9 @@ import pers.solid.mishang.uc.block.*;
 
 public final class LightBlocks extends MishangucBlocks {
 
-  public static final BRRPCubeBlock WHITE_LIGHT = new BRRPCubeBlock(WHITE_LIGHT_SETTINGS, new Identifier("mishanguc:block/light"), TextureMap.all(new Identifier("mishanguc:block/white_light")));
+  // 白色灯部分
+
+  public static final BRRPCubeBlock WHITE_LIGHT = new FullLightBlock(WHITE_LIGHT_SETTINGS, new Identifier("mishanguc", "block/white_light"), Items.WHITE_DYE, Items.WHITE_CONCRETE);
   @ApiStatus.AvailableSince("1.1.0")
   public static final LightSlabBlock WHITE_LIGHT_SLAB = new LightSlabBlock(WHITE_LIGHT);
   @ApiStatus.AvailableSince("1.1.0")
@@ -78,7 +80,10 @@ public final class LightBlocks extends MishangucBlocks {
       new AutoConnectWallLightBlock("white", "hash", WHITE_WALL_LIGHT_SETTINGS, false);
 
   public static final AutoConnectWallLightBlock WHITE_WALL_LIGHT_ROUND_DECORATION = new AutoConnectWallLightBlock("white", "round", WHITE_WALL_LIGHT_SETTINGS, true);
-  public static final BRRPCubeBlock YELLOW_LIGHT = new BRRPCubeBlock(YELLOW_LIGHT_SETTINGS, new Identifier("mishanguc:block/light"), TextureMap.all(new Identifier("mishanguc:block/yellow_light")));
+
+  // 黄色灯部分
+
+  public static final BRRPCubeBlock YELLOW_LIGHT = new FullLightBlock(YELLOW_LIGHT_SETTINGS, new Identifier("mishanguc", "block/yellow_light"), Items.YELLOW_DYE, Items.YELLOW_CONCRETE);
   @ApiStatus.AvailableSince("1.1.0")
   public static final LightSlabBlock YELLOW_LIGHT_SLAB = new LightSlabBlock(YELLOW_LIGHT);
   @ApiStatus.AvailableSince("1.1.0")
@@ -150,7 +155,10 @@ public final class LightBlocks extends MishangucBlocks {
   public static final AutoConnectWallLightBlock YELLOW_WALL_LIGHT_HASH_DECORATION =
       new AutoConnectWallLightBlock("yellow", "hash", YELLOW_WALL_LIGHT_SETTINGS, false);
   public static final AutoConnectWallLightBlock YELLOW_WALL_LIGHT_ROUND_DECORATION = new AutoConnectWallLightBlock("yellow", "round", YELLOW_WALL_LIGHT_SETTINGS, true);
-  public static final BRRPCubeBlock ORANGE_LIGHT = new BRRPCubeBlock(ORANGE_LIGHT_SETTINGS, new Identifier("mishanguc:block/light"), TextureMap.all(new Identifier("mishanguc:block/orange_light")));
+
+  // 橙色灯部分
+
+  public static final BRRPCubeBlock ORANGE_LIGHT = new FullLightBlock(ORANGE_LIGHT_SETTINGS, new Identifier("mishanguc", "block/orange_light"), Items.ORANGE_DYE, Items.ORANGE_CONCRETE);
   public static final LightSlabBlock ORANGE_LIGHT_SLAB = new LightSlabBlock(ORANGE_LIGHT);
   public static final LightCoverBlock ORANGE_LIGHT_COVER = new LightCoverBlock("orange", ORANGE_LIGHT_SETTINGS);
 
@@ -211,7 +219,10 @@ public final class LightBlocks extends MishangucBlocks {
   public static final AutoConnectWallLightBlock ORANGE_WALL_LIGHT_HASH_DECORATION =
       new AutoConnectWallLightBlock("orange", "hash", ORANGE_WALL_LIGHT_SETTINGS, false);
   public static final AutoConnectWallLightBlock ORANGE_WALL_LIGHT_ROUND_DECORATION = new AutoConnectWallLightBlock("orange", "round", ORANGE_WALL_LIGHT_SETTINGS, true);
-  public static final BRRPCubeBlock GREEN_LIGHT = new BRRPCubeBlock(GREEN_LIGHT_SETTINGS, new Identifier("mishanguc:block/light"), TextureMap.all(new Identifier("mishanguc:block/green_light")));
+
+  // 绿色灯部分
+
+  public static final BRRPCubeBlock GREEN_LIGHT = new FullLightBlock(GREEN_LIGHT_SETTINGS, new Identifier("mishanguc", "block/green_light"), Items.LIME_DYE, Items.LIME_CONCRETE);
   public static final LightSlabBlock GREEN_LIGHT_SLAB = new LightSlabBlock(GREEN_LIGHT);
   public static final LightCoverBlock GREEN_LIGHT_COVER = new LightCoverBlock("green", GREEN_LIGHT_SETTINGS);
 
@@ -273,7 +284,9 @@ public final class LightBlocks extends MishangucBlocks {
       new AutoConnectWallLightBlock("green", "hash", GREEN_WALL_LIGHT_SETTINGS, false);
   public static final AutoConnectWallLightBlock GREEN_WALL_LIGHT_ROUND_DECORATION = new AutoConnectWallLightBlock("green", "round", GREEN_WALL_LIGHT_SETTINGS, true);
 
-  public static final BRRPCubeBlock CYAN_LIGHT = new BRRPCubeBlock(CYAN_LIGHT_SETTINGS, new Identifier("mishanguc:block/light"), TextureMap.all(new Identifier("mishanguc:block/cyan_light")));
+  // 青色灯部分
+
+  public static final BRRPCubeBlock CYAN_LIGHT = new FullLightBlock(CYAN_LIGHT_SETTINGS, new Identifier("mishanguc", "block/cyan_light"), Items.CYAN_DYE, Items.CYAN_CONCRETE);
   @ApiStatus.AvailableSince("1.1.0")
   public static final LightSlabBlock CYAN_LIGHT_SLAB = new LightSlabBlock(CYAN_LIGHT);
   @ApiStatus.AvailableSince("1.1.0")
@@ -345,7 +358,10 @@ public final class LightBlocks extends MishangucBlocks {
   public static final AutoConnectWallLightBlock CYAN_WALL_LIGHT_HASH_DECORATION =
       new AutoConnectWallLightBlock("cyan", "hash", CYAN_WALL_LIGHT_SETTINGS, false);
   public static final AutoConnectWallLightBlock CYAN_WALL_LIGHT_ROUND_DECORATION = new AutoConnectWallLightBlock("cyan", "round", CYAN_WALL_LIGHT_SETTINGS, true);
-  public static final BRRPCubeBlock PINK_LIGHT = new BRRPCubeBlock(PINK_LIGHT_SETTINGS, new Identifier("mishanguc:block/light"), TextureMap.all(new Identifier("mishanguc:block/pink_light")));
+
+  // 粉色灯部分
+
+  public static final BRRPCubeBlock PINK_LIGHT = new FullLightBlock(PINK_LIGHT_SETTINGS, new Identifier("mishanguc", "block/pink_light"), Items.PINK_DYE, Items.PINK_CONCRETE);
   public static final LightSlabBlock PINK_LIGHT_SLAB = new LightSlabBlock(PINK_LIGHT);
   public static final LightCoverBlock PINK_LIGHT_COVER = new LightCoverBlock("pink", PINK_LIGHT_SETTINGS);
 
