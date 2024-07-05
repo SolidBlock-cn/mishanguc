@@ -2,6 +2,11 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.3.1-beta.2
+
+- Fixed the issue that the colors displayed on maps of some road blocks are incorrect.
+- Fixed the issue that invisible signs cannot be broken in Survival Mode while they can be crafted and placed.
+
 ### 1.3.1-beta.1
 
 Updated to fit 1.20.5 and 1.20.6.
