@@ -6,6 +6,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.*;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -107,7 +109,6 @@ public interface RoadWithAngleLine extends Road {
       return isBevel;
     }
 
-
     @Environment(EnvType.CLIENT)
     @Override
     public @Nullable BlockStateSupplier getBlockStates() {
@@ -134,6 +135,43 @@ public interface RoadWithAngleLine extends Road {
         tooltip.add(TextBridge.translatable("lineType.angle.right").formatted(Formatting.BLUE));
       }
       tooltip.add(TextBridge.translatable("lineType.angle.composed", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
+    }
+
+    private static final String[] NORMAL_BEVEL_PATTERN = {
+        " *X",
+        "*X ",
+        "X  "
+    };
+    private static final String[] DOUBLE_BEVEL_PATTERN = {
+        " *X",
+        "*X*",
+        "X* "
+    };
+    private static final String[] THICK_BEVEL_PATTERN = {
+        "**X",
+        "*X*",
+        "X**"
+    };
+    private static final String[] NORMAL_RIGHT_ANGLE_PATTERN = {
+        " * ",
+        "*XX",
+        " X "
+    };
+
+    @Override
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+      final String[] patterns = isBevel ? switch (lineType) {
+        case NORMAL -> NORMAL_BEVEL_PATTERN;
+        case DOUBLE -> DOUBLE_BEVEL_PATTERN;
+        case THICK -> THICK_BEVEL_PATTERN;
+      } : NORMAL_RIGHT_ANGLE_PATTERN;
+      return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
+          .patterns(patterns)
+          .input('*', lineColor.getIngredient())
+          .input('X', base)
+          .criterionFromItemTag("*", lineColor.getIngredient())
+          .criterionFromItem(base)
+          .setCustomRecipeCategory("roads");
     }
   }
 }

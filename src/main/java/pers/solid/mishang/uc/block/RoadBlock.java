@@ -2,9 +2,17 @@ package pers.solid.mishang.uc.block;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.*;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.item.Items;
+import net.minecraft.predicate.item.ItemPredicate;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
@@ -20,8 +28,8 @@ import java.util.List;
 public class RoadBlock extends AbstractRoadBlock {
   private final String texture;
 
-  public RoadBlock(Settings settings, String texture) {
-    super(settings, LineColor.NONE, LineType.NORMAL);
+  public RoadBlock(Settings settings, String texture, LineColor lineColor) {
+    super(settings, lineColor, LineType.NORMAL);
     this.texture = texture;
   }
 
@@ -64,5 +72,34 @@ public class RoadBlock extends AbstractRoadBlock {
   @Override
   public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
 
+  }
+
+  @Override
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+    if (lineColor != LineColor.NONE) return null;
+    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this, 9)
+        .pattern("***")
+        .pattern("|X|")
+        .pattern("***")
+        .input('*', ItemTags.COALS)
+        .input('|', Items.FLINT)
+        .input('X', Ingredient.ofItems(Items.WHITE_CONCRETE, Items.GRAY_CONCRETE, Items.LIGHT_GRAY_CONCRETE, Items.BLACK_CONCRETE))
+        .criterionFromItemTag("has_coal", ItemTags.COALS)
+        .criterionFromItem(Items.FLINT)
+        .criterion("has_proper_concrete", RecipeProvider.conditionsFromItemPredicates(ItemPredicate.Builder.create().items(Items.WHITE_CONCRETE, Items.GRAY_CONCRETE, Items.LIGHT_GRAY_CONCRETE, Items.BLACK_CONCRETE).build()))
+        .setCustomRecipeCategory("roads");
+  }
+
+  @Override
+  public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+    if (lineColor == LineColor.NONE) return null;
+    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self)
+        .pattern("***")
+        .pattern(" X ")
+        .input('*', lineColor.getIngredient())
+        .input('X', base)
+        .criterionFromItemTag("has_paint", lineColor.getIngredient())
+        .criterionFromItem(base)
+        .setCustomRecipeCategory("roads");
   }
 }

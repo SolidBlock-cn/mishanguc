@@ -2,10 +2,13 @@ package pers.solid.mishang.uc.block;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
@@ -56,6 +59,19 @@ public interface RoadWithCrossLine extends Road {
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
       BRRPHelper.addModelWithSlab(pack, Impl.this);
+    }
+
+    @Override
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+      return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 4)
+          .pattern("*X*")
+          .pattern("X*X")
+          .pattern("*X*")
+          .input('*', lineColor.getIngredient())
+          .input('X', base)
+          .criterionFromItemTag("has_ingredient", lineColor.getIngredient())
+          .criterionFromItem(base)
+          .setCustomRecipeCategory("roads");
     }
   }
 }

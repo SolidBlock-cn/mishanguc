@@ -14,6 +14,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.Translucent;
+import pers.solid.mishang.uc.arrp.MiningLevel;
 import pers.solid.mishang.uc.block.ColoredGlowingStandingSignBlock;
 import pers.solid.mishang.uc.block.ColoredStandingSignBlock;
 import pers.solid.mishang.uc.block.GlowingStandingSignBlock;
@@ -85,10 +86,13 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final StandingSignBlock WARPED_STANDING_SIGN = new StandingSignBlock(Blocks.WARPED_PLANKS);
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
+  @MiningLevel(MiningLevel.Tool.AXE)
   public static final StandingSignBlock BAMBOO_STANDING_SIGN = new StandingSignBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).requires(FeatureFlags.UPDATE_1_20));
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
+  @MiningLevel(MiningLevel.Tool.AXE)
   public static final StandingSignBlock BAMBOO_PLANK_STANDING_SIGN = new StandingSignBlock(Blocks.BAMBOO_PLANKS, FabricBlockSettings.copyOf(Blocks.BAMBOO_PLANKS).requires(FeatureFlags.UPDATE_1_20));
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
+  @MiningLevel(MiningLevel.Tool.AXE)
   public static final StandingSignBlock BAMBOO_MOSAIC_STANDING_SIGN = new StandingSignBlock(Blocks.BAMBOO_MOSAIC, FabricBlockSettings.copyOf(Blocks.BAMBOO_MOSAIC).requires(FeatureFlags.UPDATE_1_20));
 
   static {
@@ -294,32 +298,49 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final ColoredStandingSignBlock COLORED_STONE_BRICK_STANDING_SIGN = new ColoredStandingSignBlock(ColoredBlocks.COLORED_STONE_BRICKS);
   public static final ColoredGlowingStandingSignBlock COLORED_GLOWING_STONE_BRICK_STANDING_SIGN = new ColoredGlowingStandingSignBlock(ColoredBlocks.COLORED_STONE_BRICKS);
   /// 铁块
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final StandingSignBlock IRON_STANDING_SIGN = new StandingSignBlock(Blocks.IRON_BLOCK);
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final GlowingStandingSignBlock GLOWING_IRON_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.IRON_BLOCK);
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final ColoredStandingSignBlock COLORED_IRON_STANDING_SIGN = new ColoredStandingSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final ColoredGlowingStandingSignBlock COLORED_GLOWING_IRON_STANDING_SIGN = new ColoredGlowingStandingSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
   /// 金块
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final StandingSignBlock GOLD_STANDING_SIGN = new StandingSignBlock(Blocks.GOLD_BLOCK);
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final GlowingStandingSignBlock GLOWING_GOLD_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.GOLD_BLOCK);
   /// 钻石块
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final StandingSignBlock DIAMOND_STANDING_SIGN = new StandingSignBlock(Blocks.DIAMOND_BLOCK);
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final GlowingStandingSignBlock GLOWING_DIAMOND_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.DIAMOND_BLOCK);
 
-
   // 绿宝石块
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final StandingSignBlock EMERALD_STANDING_SIGN = new StandingSignBlock(Blocks.EMERALD_BLOCK);
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final GlowingStandingSignBlock GLOWING_EMERALD_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.EMERALD_BLOCK);
   // 青金石块
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final StandingSignBlock LAPIS_STANDING_SIGN = new StandingSignBlock(Blocks.LAPIS_BLOCK);
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final GlowingStandingSignBlock GLOWING_LAPIS_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.LAPIS_BLOCK);
   // 下界合金块
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final StandingSignBlock NETHERITE_STANDING_SIGN = new StandingSignBlock(Blocks.NETHERITE_BLOCK);
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final GlowingStandingSignBlock GLOWING_NETHERITE_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.NETHERITE_BLOCK);
   // 黑曜石
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final StandingSignBlock OBSIDIAN_STANDING_SIGN = new StandingSignBlock(Blocks.OBSIDIAN);
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final GlowingStandingSignBlock GLOWING_OBSIDIAN_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.OBSIDIAN);
   // 哭泣的黑曜石
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final StandingSignBlock CRYING_OBSIDIAN_STANDING_SIGN = new StandingSignBlock(Blocks.CRYING_OBSIDIAN);
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final GlowingStandingSignBlock GLOWING_CRYING_OBSIDIAN_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.CRYING_OBSIDIAN);
   // 下界岩
   public static final StandingSignBlock NETHERRACK_STANDING_SIGN = new StandingSignBlock(Blocks.NETHERRACK);
@@ -343,7 +364,9 @@ public final class StandingSignBlocks extends MishangucBlocks {
 
 
   // 雪
+  @MiningLevel(MiningLevel.Tool.SHOVEL)
   public static final StandingSignBlock SNOW_STANDING_SIGN = new StandingSignBlock(Blocks.SNOW_BLOCK);
+  @MiningLevel(MiningLevel.Tool.SHOVEL)
   public static final GlowingStandingSignBlock GLOWING_SNOW_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.SNOW_BLOCK);
   // 冰
   @Translucent

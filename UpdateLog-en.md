@@ -2,6 +2,53 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.3.2
+
+- Fixed the issue that road blocks cannot be used normally under circumstances other than water cauldron.
+- Fixed the issue that some tools can be used normally in Spectator Mode.
+
+### 1.3.1
+
+- Fixed the issue that the colors displayed on maps of some road blocks are incorrect.
+- Fixed the issue that invisible signs cannot be broken in Survival Mode while they can be crafted and placed.
+- Adjusted recipes.
+    - The output count of invisible signs has been changed from 6 to 9.
+    - The output count of light cover block has been changed from 6 to 8.
+    - The output count of small light tube has been changed from 16 to 64.
+    - The output count of medium light tube is 32.
+    - The output count of large light tube has been changed from 12 to 16.
+    - The output count of thin strip light tube has been changed from 12 to 16.
+    - The output count of double strip light tube has been changed from 10 to 18.
+    - The output count of thick strip light tube has been changed from 8 to 12.
+    - The output count of thin column light tube is 32.
+    - The output count of medium light tube is 16.
+    - The output count of thin light tube is 8.
+    - The output count of light decoration block has been adjusted to: 18 for points, 15 for simple, 12 for rhombus of hash shape, 9 for round.
+    - Now you can craft road blocks and road slab blocks with line painted into road blocks and road slab blocks without line painted via a stonecutter.
+    - Now you can craft hun sign bars in a stonecutter, one base block for 20 pieces.
+    - Now you can craft road blocks and light blocks into slabs in a stonecutter.
+    - All road blocks and slabs with marks can be crafted in a crafting table from base road blocks or slabs and corresponding dyes (supporting dye tags in Fabric Conventional Tags).
+    - In the crafting recipe of slab tool, stone has been adjusted to item tag `#c:stones` from Fabric Conventional Tags.
+    - Added recipes for handrail blocks. Simple handrails can be crafted from the base block in the stonecutter (including non-stone blocks). Glass handrails needs to be crafted in the crafting table.
+    - Now you can craft a road mark block from a white dye in a stonecutter.
+- Adjusted and fixed tags.
+    - Fixed the issue that block tag `#mishanguc:lights` lacks some light blocks.
+    - Added `mishanguc:colored_light` into `#mishanguc:lights`.
+    - Fixed the issue that tags such as `#mishanguc:simple_handrails` lack some blocks.
+    - Fixed some missing mineable block tags.
+    - Added some blocks to tags of Fabric Conventional Tags, such as some tags for dyed blocks.
+- Now you can wash out the lines of a road block or slab in a cauldron (consuming one level water).
+- Fixed the issue that when breaking with an omnipotent tool the block may not be dropped.
+- Now some of the items of this mod can be enchanted directly.
+
+### 1.3.1-beta.1
+
+Updated to fit 1.20.5 and 1.20.6.
+
+### 1.3.1-alpha.1
+
+This update is limited for 1.20.5. Changed the data structure to fit into item component forms. There are many contents undone in this version.
+
 ### 1.3.0
 
 - Honeycomb can be used to wax signs (those in this mod only). In Creative Mode, honeycomb can remove wax on sign. Wax cannot be removed under non-Creative Mode. Waxed signs cannot be edited, nor be made glow of remove glow.

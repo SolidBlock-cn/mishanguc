@@ -101,7 +101,7 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
     return defaultStack;
   }
 
-  private static class OmnipotentToolMaterial implements ToolMaterial {
+  protected static class OmnipotentToolMaterial implements ToolMaterial {
     private OmnipotentToolMaterial() {
     }
 
