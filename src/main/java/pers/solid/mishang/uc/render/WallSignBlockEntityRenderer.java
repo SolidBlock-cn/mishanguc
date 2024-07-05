@@ -74,6 +74,9 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
       }
     }
 
+    if (entity.glowing) {
+      light = 15728880;
+    }
     matrices.translate(0.5, 0.5, 0.5);
     final BlockState state = entity.getCachedState();
     final Direction facing = state.get(WallSignBlock.FACING);

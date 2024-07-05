@@ -7,6 +7,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.*;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -114,6 +116,34 @@ public interface RoadWithStraightLine extends Road {
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
       BRRPHelper.addModelWithSlab(pack, Impl.this);
+    }
+
+    @Override
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+      final String[] patterns = switch (lineType) {
+        case NORMAL -> new String[]{
+            " * ",
+            "XXX",
+            " * "
+        };
+        case DOUBLE -> new String[]{
+            "* *",
+            "XXX",
+            "* *"
+        };
+        case THICK -> new String[]{
+            "***",
+            "XXX",
+            "***"
+        };
+      };
+      return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
+          .patterns(patterns)
+          .input('*', lineColor.getIngredient())
+          .input('X', base)
+          .criterionFromItemTag("has_paint", lineColor.getIngredient())
+          .criterionFromItem(base)
+          .setCustomRecipeCategory("roads");
     }
   }
 }

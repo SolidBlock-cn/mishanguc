@@ -857,5 +857,10 @@
   "narration.mishanguc.button.current_value": "The current value is %s.",
   "narration.mishanguc.button.boolean_usage": "Press this button or scroll the mouse wheel to switch value.",
   "narration.mishanguc.button.float_usage": "Press the button, scroll the mouse wheel, or use keyboard arrows to change value. Press while holding Shift, or press with right-side mouse button to change in an inverted direction. Hold Ctrl to switch more quickly. Hold Alt to switch more precisely. Press with middle mouse button, or press both left and right arrow key to restore to default value.",
-  "narration.mishanguc.button.null": "Please add and select a row of text before using this button."
+  "narration.mishanguc.button.null": "Please add and select a row of text before using this button.",
+
+  "message.mishanguc.sign.glow_on": "The sign has been made glow, text will render brightly in darkness",
+  "message.mishanguc.sign.glow_off": "The sign has been removed glow",
+  "message.mishanguc.sign.wax_on": "The sign has been waxed and will be not editable",
+  "message.mishanguc.sign.wax_off": "The sign has been removed wax; only Creative Mode players can remove wax"
 }

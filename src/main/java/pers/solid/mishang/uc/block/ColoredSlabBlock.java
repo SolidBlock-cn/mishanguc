@@ -7,6 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.server.loottable.VanillaBlockLootTableGenerator;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.recipe.book.RecipeCategory;
@@ -20,6 +21,7 @@ import org.jetbrains.annotations.UnknownNullability;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.generator.BRRPSlabBlock;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.brrp.v1.recipe.RecipeJsonBuilderExtension;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -77,5 +79,12 @@ public class ColoredSlabBlock extends BRRPSlabBlock implements ColoredBlock {
   @Override
   public RecipeCategory getRecipeCategory() {
     return RecipeCategory.BUILDING_BLOCKS;
+  }
+
+  @Override
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+    final CraftingRecipeJsonBuilder recipe = super.getCraftingRecipe();
+    if (recipe instanceof RecipeJsonBuilderExtension<?> s) s.setCustomRecipeCategory("colored_blocks");
+    return recipe;
   }
 }
