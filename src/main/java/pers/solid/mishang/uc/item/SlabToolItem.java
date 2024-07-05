@@ -37,6 +37,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -279,6 +280,11 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
   }
 
   @Override
+  public RecipeCategory getRecipeCategory() {
+    return RecipeCategory.TOOLS;
+  }
+
+  @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this)
         .patterns("SCS", " | ", " | ")
@@ -286,8 +292,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
         .input('C', Items.STONE)
         .input('|', Items.STICK)
         .criterionFromItem("has_shears", Items.SHEARS)
-        .criterionFromItem("has_stone", Items.STONE)
-        .setCustomRecipeCategory("tools");
+        .criterionFromItem("has_stone", Items.STONE);
   }
 
   @ApiStatus.AvailableSince("1.0.3")

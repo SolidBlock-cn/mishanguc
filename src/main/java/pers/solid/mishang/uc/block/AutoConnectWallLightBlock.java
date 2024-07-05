@@ -10,8 +10,13 @@ import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.data.client.BlockStateVariant;
 import net.minecraft.data.client.MultipartBlockStateSupplier;
 import net.minecraft.data.client.When;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
@@ -56,8 +61,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
    * 对应的关系（用数字表示），第二个键为 facing。<br>
    * 这样安排是为了方便。
    */
-  private static final List<Map<Direction, VoxelShape>>
-      SHAPE_PER_DIRECTION_PER_FACING_WHEN_FACING_HORIZONTALLY =
+  private static final List<Map<Direction, VoxelShape>> SHAPE_PER_DIRECTION_PER_FACING_WHEN_FACING_HORIZONTALLY =
       ImmutableList.of(
           // 第一个元素为“上”。
           MishangUtils.createHorizontalDirectionToShape(4, 12, 0, 12, 16, 1),
@@ -123,10 +127,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
     final BlockState neighborState2 = world.getBlockState(neighborPos2);
     final Block neighborBlock2 = neighborState2.getBlock();
     if (neighborBlock2 instanceof final LightConnectable lightConnectable) {
-      connect =
-          connect
-              || lightConnectable
-              .isConnectedIn(neighborState2, direction, facing);
+      connect = connect || lightConnectable.isConnectedIn(neighborState2, direction, facing);
     }
     return newState.with(DIRECTION_TO_PROPERTY.get(direction), connect);
   }
@@ -145,14 +146,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
       final BlockPos blockPos = ctx.getBlockPos();
       final World world = ctx.getWorld();
       final BlockPos offsetBlockPos = blockPos.offset(direction);
-      placementState =
-          getStateForNeighborUpdate(
-              placementState,
-              direction,
-              world.getBlockState(offsetBlockPos),
-              world,
-              blockPos,
-              offsetBlockPos);
+      placementState = getStateForNeighborUpdate(placementState, direction, world.getBlockState(offsetBlockPos), world, blockPos, offsetBlockPos);
     }
     return placementState;
   }
@@ -172,35 +166,29 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
     final VoxelShape baseShape = BASE_SHAPE_PER_FACING.get(facing);
     final VoxelShape[] extraShapes;
     switch (facing) {
-      case UP -> extraShapes =
-          Arrays.stream(Direction.values())
-              .filter(direction -> state.get(DIRECTION_TO_PROPERTY.get(direction)))
-              .map(SHAPE_PER_DIRECTION_WHEN_FACING_UP::get)
-              .filter(Objects::nonNull)
-              .toArray(VoxelShape[]::new);
-      case DOWN -> extraShapes =
-          Arrays.stream(Direction.values())
-              .filter(direction -> state.get(DIRECTION_TO_PROPERTY.get(direction)))
-              .map(SHAPE_PER_DIRECTION_WHEN_FACING_DOWN::get)
-              .filter(Objects::nonNull)
-              .toArray(VoxelShape[]::new);
+      case UP -> extraShapes = Arrays.stream(Direction.values())
+          .filter(direction -> state.get(DIRECTION_TO_PROPERTY.get(direction)))
+          .map(SHAPE_PER_DIRECTION_WHEN_FACING_UP::get)
+          .filter(Objects::nonNull)
+          .toArray(VoxelShape[]::new);
+      case DOWN -> extraShapes = Arrays.stream(Direction.values())
+          .filter(direction -> state.get(DIRECTION_TO_PROPERTY.get(direction)))
+          .map(SHAPE_PER_DIRECTION_WHEN_FACING_DOWN::get)
+          .filter(Objects::nonNull)
+          .toArray(VoxelShape[]::new);
       default -> {
         final List<VoxelShape> voxelShapeList = new ArrayList<>();
         if (state.get(UP)) {
-          voxelShapeList.add(
-              SHAPE_PER_DIRECTION_PER_FACING_WHEN_FACING_HORIZONTALLY.get(0).get(facing));
+          voxelShapeList.add(SHAPE_PER_DIRECTION_PER_FACING_WHEN_FACING_HORIZONTALLY.get(0).get(facing));
         }
         if (state.get(DOWN)) {
-          voxelShapeList.add(
-              SHAPE_PER_DIRECTION_PER_FACING_WHEN_FACING_HORIZONTALLY.get(1).get(facing));
+          voxelShapeList.add(SHAPE_PER_DIRECTION_PER_FACING_WHEN_FACING_HORIZONTALLY.get(1).get(facing));
         }
         if (state.get(DIRECTION_TO_PROPERTY.get(facing.rotateYCounterclockwise()))) {
-          voxelShapeList.add(
-              SHAPE_PER_DIRECTION_PER_FACING_WHEN_FACING_HORIZONTALLY.get(2).get(facing));
+          voxelShapeList.add(SHAPE_PER_DIRECTION_PER_FACING_WHEN_FACING_HORIZONTALLY.get(2).get(facing));
         }
         if (state.get(DIRECTION_TO_PROPERTY.get(facing.rotateYClockwise()))) {
-          voxelShapeList.add(
-              SHAPE_PER_DIRECTION_PER_FACING_WHEN_FACING_HORIZONTALLY.get(3).get(facing));
+          voxelShapeList.add(SHAPE_PER_DIRECTION_PER_FACING_WHEN_FACING_HORIZONTALLY.get(3).get(facing));
         }
         extraShapes = voxelShapeList.toArray(new VoxelShape[]{});
       }
@@ -255,10 +243,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
           x = 180;
           y = (int) facing.asRotation() + 180;
         } else {
-          Mishanguc.MISHANG_LOGGER.error(
-              String.format(
-                  "Unknown state to generate models: facing=%s,direction=%s",
-                  facing.asString(), direction.asString()));
+          Mishanguc.MISHANG_LOGGER.error(String.format("Unknown state to generate models: facing=%s,direction=%s", facing.asString(), direction.asString()));
           continue;
         }
         blockStateSupplier.with(When.create().set(FACING, facing).set(DIRECTION_TO_PROPERTY.get(direction), true), BlockStateVariant.create().put(MODEL, modelName).put(MishangUtils.INT_X_VARIANT, x).put(MishangUtils.INT_Y_VARIANT, y));
@@ -271,21 +256,37 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
   @Override
   public void writeBlockModel(RuntimeResourcePack pack) {
     final Identifier id = getBlockModelId();
-    pack.addModel(
-        id,
+    pack.addModel(id,
         ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/wall_light_%s_decoration", shape)))
             .setTextures(new FasterJTextures().varP("light", lightColor + "_light")));
-    pack.addModel(
-        id.brrp_suffixed("_center"),
+    pack.addModel(id.brrp_suffixed("_center"),
         ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/wall_light_%s_decoration_center", shape)))
             .setTextures(new FasterJTextures().varP("light", lightColor + "_light")));
-    pack.addModel(
-        id.brrp_suffixed("_connection"),
+    pack.addModel(id.brrp_suffixed("_connection"),
         ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/wall_light_%s_decoration_connection", shape)))
             .setTextures(new FasterJTextures().varP("light", lightColor + "_light")));
-    pack.addModel(
-        id.brrp_suffixed("_connection2"),
+    pack.addModel(id.brrp_suffixed("_connection2"),
         ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/wall_light_%s_decoration_connection2", shape)))
             .setTextures(new FasterJTextures().varP("light", lightColor + "_light")));
+  }
+
+  @Override
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+    final Identifier itemId = getItemId();
+    final @NotNull Item fullLight = WallLightBlock.getBaseLight(itemId.getNamespace(), lightColor, this);
+    final int outputCount;
+    final String path = itemId.getPath();
+    if (path.contains("_round_")) {
+      outputCount = 9;
+    } else if (path.contains("_point_")) {
+      outputCount = 18;
+    } else if (path.contains("_simple_")) {
+      outputCount = 15;
+    } else {
+      outputCount = 12;
+    }
+    return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), RecipeCategory.DECORATIONS, this, outputCount)
+        .criterionFromItem(fullLight)
+        .setCustomRecipeCategory("light");
   }
 }
