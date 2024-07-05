@@ -12,6 +12,7 @@ import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -101,6 +102,11 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
   }
 
   @Override
+  public RecipeCategory getRecipeCategory() {
+    return RecipeCategory.TOOLS;
+  }
+
+  @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this)
         .patterns("DND", " | ", " | ")
@@ -108,7 +114,6 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
         .input('N', Items.NETHERITE_INGOT)
         .input('|', Items.STICK)
         .criterionFromItem("has_pink_dye", Items.PINK_DYE)
-        .criterionFromItem("has_netherite_ingot", Items.NETHERITE_INGOT)
-        .setCustomRecipeCategory("tools");
+        .criterionFromItem("has_netherite_ingot", Items.NETHERITE_INGOT);
   }
 }

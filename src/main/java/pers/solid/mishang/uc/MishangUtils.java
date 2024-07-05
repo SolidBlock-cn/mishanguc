@@ -51,8 +51,9 @@ public class MishangUtils {
   public static final VariantSetting<Direction> DIRECTION_Y_VARIANT = new VariantSetting<>("y", direction -> new JsonPrimitive((int) direction.asRotation()));
   private static final Supplier<ImmutableList<Block>> memoizedBlocks = Suppliers.memoize(MishangUtils::blocksInternal);
   private static final Supplier<ImmutableList<Item>> memoizedItems = Suppliers.memoize(MishangUtils::itemsInternal);
-  private static final ImmutableSet<Block> WOODS = ImmutableSet.of(Blocks.OAK_WOOD, Blocks.SPRUCE_WOOD, Blocks.BIRCH_WOOD, Blocks.JUNGLE_WOOD, Blocks.ACACIA_WOOD, Blocks.DARK_OAK_WOOD, Blocks.MANGROVE_WOOD, Blocks.CRIMSON_HYPHAE, Blocks.WARPED_HYPHAE);
-  private static final ImmutableSet<Block> PLANKS = ImmutableSet.of(Blocks.OAK_PLANKS, Blocks.SPRUCE_PLANKS, Blocks.BIRCH_PLANKS, Blocks.JUNGLE_PLANKS, Blocks.ACACIA_PLANKS, Blocks.DARK_OAK_PLANKS, Blocks.MANGROVE_PLANKS, Blocks.WARPED_PLANKS, Blocks.CRIMSON_PLANKS);
+  private static final ImmutableSet<Block> WOODS = ImmutableSet.of(Blocks.OAK_WOOD, Blocks.SPRUCE_WOOD, Blocks.BIRCH_WOOD, Blocks.JUNGLE_WOOD, Blocks.ACACIA_WOOD, Blocks.DARK_OAK_WOOD, Blocks.MANGROVE_WOOD, Blocks.CRIMSON_HYPHAE, Blocks.WARPED_HYPHAE, Blocks.CHERRY_WOOD);
+  private static final ImmutableSet<Block> STRIPPED_WOODS = ImmutableSet.of(Blocks.STRIPPED_OAK_WOOD, Blocks.STRIPPED_SPRUCE_WOOD, Blocks.STRIPPED_BIRCH_WOOD, Blocks.STRIPPED_JUNGLE_WOOD, Blocks.STRIPPED_ACACIA_WOOD, Blocks.STRIPPED_DARK_OAK_WOOD, Blocks.STRIPPED_MANGROVE_WOOD, Blocks.STRIPPED_CRIMSON_HYPHAE, Blocks.STRIPPED_WARPED_HYPHAE, Blocks.STRIPPED_CHERRY_WOOD);
+  private static final ImmutableSet<Block> PLANKS = ImmutableSet.of(Blocks.OAK_PLANKS, Blocks.SPRUCE_PLANKS, Blocks.BIRCH_PLANKS, Blocks.JUNGLE_PLANKS, Blocks.ACACIA_PLANKS, Blocks.DARK_OAK_PLANKS, Blocks.MANGROVE_PLANKS, Blocks.WARPED_PLANKS, Blocks.CRIMSON_PLANKS, Blocks.CHERRY_PLANKS, Blocks.BAMBOO_PLANKS);
   private static final ImmutableSet<Block> CONCRETES = ImmutableSet.of(Blocks.WHITE_CONCRETE, Blocks.ORANGE_CONCRETE, Blocks.MAGENTA_CONCRETE, Blocks.LIGHT_BLUE_CONCRETE, Blocks.YELLOW_CONCRETE, Blocks.LIME_CONCRETE, Blocks.PINK_CONCRETE, Blocks.GRAY_CONCRETE, Blocks.LIGHT_GRAY_CONCRETE, Blocks.CYAN_CONCRETE, Blocks.PURPLE_CONCRETE, Blocks.BLUE_CONCRETE, Blocks.BROWN_CONCRETE, Blocks.GREEN_CONCRETE, Blocks.RED_CONCRETE, Blocks.BLACK_CONCRETE);
   private static final ImmutableSet<Block> TERRACOTTAS = ImmutableSet.of(Blocks.WHITE_TERRACOTTA, Blocks.ORANGE_TERRACOTTA, Blocks.MAGENTA_TERRACOTTA, Blocks.LIGHT_BLUE_TERRACOTTA, Blocks.YELLOW_TERRACOTTA, Blocks.LIME_TERRACOTTA, Blocks.PINK_TERRACOTTA, Blocks.GRAY_TERRACOTTA, Blocks.LIGHT_GRAY_TERRACOTTA, Blocks.CYAN_TERRACOTTA, Blocks.PURPLE_TERRACOTTA, Blocks.BLUE_TERRACOTTA, Blocks.BROWN_TERRACOTTA, Blocks.GREEN_TERRACOTTA, Blocks.RED_TERRACOTTA, Blocks.BLACK_TERRACOTTA);
   private static final ImmutableSet<Block> WOOLS = ImmutableSet.of(Blocks.WHITE_WOOL, Blocks.ORANGE_WOOL, Blocks.MAGENTA_WOOL, Blocks.LIGHT_BLUE_WOOL, Blocks.YELLOW_WOOL, Blocks.LIME_WOOL, Blocks.PINK_WOOL, Blocks.GRAY_WOOL, Blocks.LIGHT_GRAY_WOOL, Blocks.CYAN_WOOL, Blocks.PURPLE_WOOL, Blocks.BLUE_WOOL, Blocks.BROWN_WOOL, Blocks.GREEN_WOOL, Blocks.RED_WOOL, Blocks.BLACK_WOOL);
@@ -68,8 +69,16 @@ public class MishangUtils {
       .put("↘", "arb")
       .build();
 
+  public static boolean isWooden(Block block) {
+    return isWood(block) || isStrippedWood(block) || isPlanks(block);
+  }
+
   public static boolean isWood(Block block) {
     return WOODS.contains(block);
+  }
+
+  public static boolean isStrippedWood(Block block) {
+    return STRIPPED_WOODS.contains(block);
   }
 
   public static boolean isPlanks(Block block) {
@@ -185,9 +194,8 @@ public class MishangUtils {
 
   @ApiStatus.AvailableSince("0.2.0")
   @ApiStatus.Internal
-  private static @Unmodifiable ImmutableList<Block> blocksInternal() {
-    ImmutableList.Builder<Block> builder = new ImmutableList.Builder<>();
-    Streams.concat(
+  private static @Unmodifiable ImmutableList<@NotNull Block> blocksInternal() {
+    final ImmutableList<@NotNull Block> build = Streams.concat(
         instanceStream(RoadBlocks.class, Block.class),
         RoadSlabBlocks.SLABS.stream(),
         instanceStream(RoadMarkBlocks.class, Block.class),
@@ -197,8 +205,7 @@ public class MishangUtils {
         instanceStream(StandingSignBlocks.class, Block.class),
         instanceStream(HandrailBlocks.class, Block.class),
         instanceStream(ColoredBlocks.class, Block.class)
-    ).forEach(builder::add);
-    final ImmutableList<Block> build = builder.build();
+    ).collect(ImmutableList.toImmutableList());
     if (build.isEmpty()) {
       throw new AssertionError("The collection returned is empty, which is not expected. You may have to report to the author of Mishang Urban Construction mod.");
     }
@@ -207,10 +214,8 @@ public class MishangUtils {
 
   @ApiStatus.AvailableSince("0.2.0")
   @ApiStatus.Internal
-  private static @Unmodifiable ImmutableList<Item> itemsInternal() {
-    ImmutableList.Builder<Item> builder = new ImmutableList.Builder<>();
-    instanceStream(MishangucItems.class, Item.class).forEach(builder::add);
-    final ImmutableList<Item> build = builder.build();
+  private static @Unmodifiable ImmutableList<@NotNull Item> itemsInternal() {
+    final ImmutableList<@NotNull Item> build = instanceStream(MishangucItems.class, Item.class).collect(ImmutableList.toImmutableList());
     if (build.isEmpty()) {
       throw new AssertionError("The collection returned is empty, which is not expected. You may have to report to the author of Mishang Urban Construction mod.");
     }
@@ -258,6 +263,7 @@ public class MishangUtils {
     return fieldStream.map(field -> {
       final Object o;
       try {
+        field.setAccessible(true);
         o = field.get(null);
       } catch (IllegalAccessException e) {
         throw new InternalError("Cannot access value of the field in Mishang Urban Construction mod.", e);

@@ -9,6 +9,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.*;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -154,6 +156,22 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
     @Override
     protected MapCodec<? extends RoadWithAngleLineWithOnePartOffset.Impl> getCodec() {
       return CODEC;
+    }
+
+    @Override
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+      if (isBevel()) {
+        throw new UnsupportedOperationException("Recipes for bevel line with one part offset is not supported!");
+      }
+      return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
+          .pattern("  *")
+          .pattern("*XX")
+          .pattern(" X ")
+          .input('*', lineColor.getIngredient())
+          .input('X', base)
+          .criterionFromItemTag("has_paint", lineColor.getIngredient())
+          .criterionFromItem(base)
+          .setCustomRecipeCategory("roads");
     }
   }
 }

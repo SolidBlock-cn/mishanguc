@@ -9,6 +9,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.*;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -137,6 +139,44 @@ public interface RoadWithOffsetStraightLine extends Road {
     @Override
     public void writeBlockModel(RuntimeResourcePack pack) {
       BRRPHelper.addModelWithSlab(pack, Impl.this);
+    }
+
+    @Override
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+      if (offsetLevel == 114514) {
+        return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
+            .pattern("w y")
+            .pattern("XXX")
+            .pattern("w y")
+            .input('w', LineColor.WHITE.getIngredient())
+            .input('y', LineColor.YELLOW.getIngredient())
+            .input('X', base)
+            .criterionFromItemTag("has_white_paint", LineColor.WHITE.getIngredient())
+            .criterionFromItemTag("has_yellow_paint", LineColor.YELLOW.getIngredient())
+            .criterionFromItem(base)
+            .setCustomRecipeCategory("roads");
+      } else {
+        final String[] patterns = switch (offsetLevel) {
+          case 2 -> new String[]{
+              "*  ",
+              "XXX",
+              "*  "
+          };
+          case 1 -> new String[]{
+              "*  ",
+              "XXX",
+              " * "
+          };
+          default -> throw new IllegalStateException("Unexpected value: " + offsetLevel);
+        };
+        return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
+            .patterns(patterns)
+            .input('*', lineColor.getIngredient())
+            .input('X', base)
+            .criterionFromItemTag("has_paint", lineColor.getIngredient())
+            .criterionFromItem(base)
+            .setCustomRecipeCategory("roads");
+      }
     }
 
     @Override

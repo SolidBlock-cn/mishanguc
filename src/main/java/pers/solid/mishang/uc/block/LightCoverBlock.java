@@ -5,10 +5,16 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
+import net.minecraft.item.Item;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.MishangUtils;
 
 import java.util.Map;
@@ -30,5 +36,14 @@ public class LightCoverBlock extends WallLightBlock {
   @Override
   protected MapCodec<? extends LightCoverBlock> getCodec() {
     return CODEC;
+  }
+
+  @Override
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+    final Identifier itemId = getItemId();
+    final @NotNull Item fullLight = getBaseLight(itemId.getNamespace(), lightColor, this);
+    return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), getRecipeCategory(), this, 8)
+        .criterionFromItem(fullLight)
+        .setCustomRecipeCategory("light");
   }
 }

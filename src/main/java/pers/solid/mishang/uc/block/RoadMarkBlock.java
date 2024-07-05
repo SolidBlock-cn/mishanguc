@@ -4,11 +4,16 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.block.*;
 import net.minecraft.data.client.*;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -66,7 +71,6 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
     builder.add(Properties.WATERLOGGED, ON_SLAB);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
     final BlockPos downPos = pos.down();
@@ -93,13 +97,11 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
     return state;
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public FluidState getFluidState(BlockState state) {
     return state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
     if (state.get(Properties.WATERLOGGED)) {
@@ -116,7 +118,6 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
     return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     return state.get(ON_SLAB) ? SHAPE_ON_SLAB : SHAPE;
@@ -163,6 +164,18 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
     return CODEC;
   }
 
+  @Override
+  public RecipeCategory getRecipeCategory() {
+    return RecipeCategory.DECORATIONS;
+  }
+
+  @Override
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+    return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.fromTag(ConventionalItemTags.WHITE_DYES), getRecipeCategory(), this)
+        .criterionFromItemTag("has_white_dye", ConventionalItemTags.WHITE_DYES)
+        .setCustomRecipeCategory("road_marks");
+  }
+
   protected static class AxisFacing extends RoadMarkBlock {
     public static final MapCodec<AxisFacing> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(Identifier.CODEC.fieldOf("texture").forGetter(b -> b.texture), createSettingsCodec()).apply(i, AxisFacing::new));
     public static final EnumProperty<FourHorizontalAxis> AXIS = EnumProperty.of("axis", FourHorizontalAxis.class);
@@ -196,13 +209,11 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
       };
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
       return super.rotate(state, rotation).with(AXIS, state.get(AXIS).rotate(rotation));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
       BlockState mirror1 = super.mirror(state, mirror);
@@ -269,13 +280,11 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
       };
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
       return super.rotate(state, rotation).with(FACING, state.get(FACING).rotate(rotation));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
       BlockState mirror1 = super.mirror(state, mirror);
