@@ -7,6 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.server.BlockLootTableGenerator;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.text.Text;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.UnknownNullability;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.generator.BRRPStairsBlock;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.brrp.v1.recipe.RecipeJsonBuilderExtension;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -68,5 +70,12 @@ public class ColoredStairsBlock extends BRRPStairsBlock implements ColoredBlock 
   @Override
   public LootTable.@NotNull Builder getLootTable() {
     return BlockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  }
+
+  @Override
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+    final CraftingRecipeJsonBuilder recipe = super.getCraftingRecipe();
+    if (recipe instanceof RecipeJsonBuilderExtension<?> s) s.setCustomRecipeCategory("colored_blocks");
+    return recipe;
   }
 }

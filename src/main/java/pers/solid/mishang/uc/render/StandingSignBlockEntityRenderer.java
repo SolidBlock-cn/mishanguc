@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.render;
 
+import it.unimi.dsi.fastutil.booleans.BooleanSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -19,6 +20,7 @@ public record StandingSignBlockEntityRenderer<T extends StandingSignBlockEntity>
 
   @Override
   public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    final BooleanSet glowing = entity.glowing;
     matrices.translate(0.5, 0.75, 0.5);
     final BlockState state = entity.getCachedState();
     final int rotation = state.get(StandingSignBlock.ROTATION);
@@ -28,14 +30,14 @@ public record StandingSignBlockEntityRenderer<T extends StandingSignBlockEntity>
     matrices.push();
     matrices.translate(0, 0, 0.5125);
     for (TextContext textContext : entity.frontTexts) {
-      textContext.draw(ctx.getTextRenderer(), matrices, vertexConsumers, light, 16, entity.getHeight());
+      textContext.draw(ctx.getTextRenderer(), matrices, vertexConsumers, glowing.contains(true) ? 15728880 : light, 16, entity.getHeight());
     }
     matrices.pop();
     matrices.push();
     matrices.translate(0, 0, -0.5125);
     matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180));
     for (TextContext textContext : entity.backTexts) {
-      textContext.draw(ctx.getTextRenderer(), matrices, vertexConsumers, light, 16, entity.getHeight());
+      textContext.draw(ctx.getTextRenderer(), matrices, vertexConsumers, glowing.contains(false) ? 15728880 : light, 16, entity.getHeight());
     }
     matrices.pop();
   }

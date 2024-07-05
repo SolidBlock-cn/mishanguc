@@ -856,5 +856,10 @@
   "roadConnectionState.whether.probably_connected": "應當連接",
   "vertical_align.mishanguc.bottom": "底部對齊",
   "vertical_align.mishanguc.middle": "垂直居中",
-  "vertical_align.mishanguc.top": "頂部對齊"
+  "vertical_align.mishanguc.top": "頂部對齊",
+
+  "message.mishanguc.sign.glow_on": "告示牌已發光，文本將在黑暗中明亮顯示",
+  "message.mishanguc.sign.glow_off": "告示牌已移除發光",
+  "message.mishanguc.sign.wax_on": "告示牌已塗蠟，將不可編輯",
+  "message.mishanguc.sign.wax_off": "告示牌已脫蠟，僅創造模式玩家能夠脫蠟"
 }

@@ -16,10 +16,13 @@ import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.HoneycombItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -33,11 +36,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.world.*;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,6 +45,7 @@ import pers.solid.brrp.v1.BRRPUtils;
 import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
@@ -185,25 +185,54 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     } else if (!player.getAbilities().allowModifyWorld) {
       // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
       return ActionResult.FAIL;
-    } else if (player.getMainHandStack().getItem() == Items.MAGMA_CREAM) {
-      MishangUtils.rearrange(entity.textContexts);
-      entity.markDirty();
-      return ActionResult.SUCCESS;
-    } else if (player.getMainHandStack().getItem() == Items.SLIME_BALL) {
-      MishangUtils.replaceArrows(entity.textContexts);
-      entity.markDirty();
-      return ActionResult.SUCCESS;
-    } else if (player.getMainHandStack().getItem() == Items.SLIME_BLOCK) {
-      final WorldChunk worldChunk = world.getWorldChunk(pos);
-      for (BlockEntity value : worldChunk.getBlockEntities().values()) {
-        if (value instanceof WallSignBlockEntity wallSignBlockEntity) {
-          MishangUtils.replaceArrows(wallSignBlockEntity.textContexts);
-          wallSignBlockEntity.markDirty();
-        }
-      }
-      return ActionResult.SUCCESS;
     } else if (world.isClient) {
       return ActionResult.SUCCESS;
+    } else {
+      final ItemStack stackInHand = player.getStackInHand(hand);
+      if (stackInHand.getItem() instanceof HoneycombItem) {
+        // 处理告示牌的涂蜡。
+        if (!entity.waxed) {
+          entity.waxed = true;
+          player.sendMessage(BlockEntityWithText.MESSAGE_WAX_ON, true);
+          world.syncWorldEvent(null, WorldEvents.BLOCK_WAXED, entity.getPos(), 0);
+          entity.markDirtyAndUpdate();
+          if (!player.isCreative()) stackInHand.decrement(1);
+          return ActionResult.SUCCESS;
+        } else if (player.isCreative()) {
+          entity.waxed = false;
+          player.sendMessage(BlockEntityWithText.MESSAGE_WAX_OFF, true);
+          world.syncWorldEvent(null, WorldEvents.WAX_REMOVED, entity.getPos(), 0);
+          entity.markDirtyAndUpdate();
+          return ActionResult.SUCCESS;
+        }
+      }
+      if (entity.waxed) {
+        // 涂蜡的告示牌不应该进行操作。
+        return ActionResult.PASS;
+      } else if (stackInHand.getItem() == Items.MAGMA_CREAM) {
+        MishangUtils.rearrange(entity.textContexts);
+        entity.markDirtyAndUpdate();
+        if (!player.isCreative()) stackInHand.decrement(1);
+        return ActionResult.SUCCESS;
+      } else if (stackInHand.isOf(Items.GLOW_INK_SAC)) {
+        if (!entity.glowing) {
+          entity.glowing = true;
+          player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_ON, true);
+          world.playSound(null, entity.getPos(), SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+          entity.markDirtyAndUpdate();
+          if (!player.isCreative()) stackInHand.decrement(1);
+          return ActionResult.SUCCESS;
+        }
+      } else if (stackInHand.isOf(Items.INK_SAC)) {
+        if (entity.glowing) {
+          entity.glowing = false;
+          player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_OFF, true);
+          world.playSound(null, entity.getPos(), SoundEvents.ITEM_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+          entity.markDirtyAndUpdate();
+          if (!player.isCreative()) stackInHand.decrement(1);
+          return ActionResult.SUCCESS;
+        }
+      }
     }
 
     entity.checkEditorValidity();
@@ -258,14 +287,29 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     return BRRPUtils.getTextureId(baseBlock == null ? this : baseBlock, TextureKey.ALL);
   }
 
+  private @Nullable String getRecipeGroup() {
+    if (baseBlock instanceof ColoredBlock) return null;
+    if (MishangUtils.isWood(baseBlock)) return "mishanguc:wood_wall_sign";
+    if (MishangUtils.isStrippedWood(baseBlock)) return "mishanguc:stripped_wood_wall_sign";
+    if (MishangUtils.isPlanks(baseBlock)) return "mishanguc:plank_wall_sign";
+    if (MishangUtils.isConcrete(baseBlock)) return "mishanguc:concrete_wall_sign";
+    if (MishangUtils.isTerracotta(baseBlock)) return "mishanguc:terracotta_wall_sign";
+    if (baseBlock == Blocks.ICE || baseBlock == Blocks.PACKED_ICE || baseBlock == Blocks.BLUE_ICE) {
+      return "mishanguc:ice_wall_sign";
+    }
+    return null;
+  }
+
   @Override
   public @Nullable CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (baseBlock == null) return null;
     return ShapedRecipeJsonBuilder.create(this, 6)
         .patterns("---", "###", "---")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .setCustomRecipeCategory("signs")
         .criterionFromItem("has_base_block", baseBlock)
-        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
+        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .group(getRecipeGroup());
   }
 
   @SuppressWarnings("deprecation")

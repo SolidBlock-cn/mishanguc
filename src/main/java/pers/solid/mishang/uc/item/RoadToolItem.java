@@ -7,8 +7,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.Models;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -28,6 +31,7 @@ import pers.solid.mishang.uc.block.AbstractRoadSlabBlock;
 import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.block.RoadWithAutoLine;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
+import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
@@ -122,5 +126,17 @@ public class RoadToolItem extends BlockToolItem implements ItemResourceGenerator
   @Override
   public @NotNull ModelJsonBuilder getItemModel() {
     return ItemResourceGenerator.super.getItemModel().parent(Models.HANDHELD);
+  }
+
+  @Override
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+    return ShapedRecipeJsonBuilder.create(this)
+        .patterns("aba", "bXb", "aba")
+        .input('a', LineColor.WHITE.getIngredient())
+        .input('b', LineColor.YELLOW.getIngredient())
+        .input('X', Items.STICK)
+        .criterionFromItemTag("has_white_dye", LineColor.WHITE.getIngredient())
+        .criterionFromItemTag("has_yellow_dye", LineColor.YELLOW.getIngredient())
+        .setCustomRecipeCategory("tools");
   }
 }

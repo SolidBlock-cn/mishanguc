@@ -4,10 +4,12 @@ import com.google.common.collect.ImmutableMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
+import net.minecraft.block.Material;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.Translucent;
+import pers.solid.mishang.uc.arrp.MiningLevel;
 import pers.solid.mishang.uc.block.*;
 
 /**
@@ -19,10 +21,11 @@ public final class WallSignBlocks extends MishangucBlocks {
   /**
    * 隐形的告示牌。
    */
-  public static final FullWallSignBlock INVISIBLE_WALL_SIGN =
-      new FullWallSignBlock(null, FabricBlockSettings.copyOf(Blocks.BARRIER).noCollision());
+  @MiningLevel(MiningLevel.Tool.NONE)
+  public static final FullWallSignBlock INVISIBLE_WALL_SIGN = new FullWallSignBlock(null, FabricBlockSettings.of(Material.BARRIER).mapColor(MapColor.CLEAR).noCollision().strength(0, 1f));
 
-  public static final FullWallSignBlock INVISIBLE_GLOWING_WALL_SIGN = new FullWallSignBlock(null, FabricBlockSettings.copyOf(Blocks.BARRIER).noCollision().luminance(15));
+  @MiningLevel(MiningLevel.Tool.NONE)
+  public static final FullWallSignBlock INVISIBLE_GLOWING_WALL_SIGN = new FullWallSignBlock(null, FabricBlockSettings.of(Material.BARRIER).mapColor(MapColor.CLEAR).noCollision().luminance(15).strength(0, 1f));
 
   // 木质
   @ApiStatus.AvailableSince("1.2.4")
@@ -433,47 +436,65 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final ColoredGlowingWallSignBlock COLORED_GLOWING_STONE_BRICK_WALL_SIGN = new ColoredGlowingWallSignBlock(ColoredBlocks.COLORED_STONE_BRICKS);
   // 铁块
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final WallSignBlock IRON_WALL_SIGN = new WallSignBlock(Blocks.IRON_BLOCK);
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final GlowingWallSignBlock GLOWING_IRON_WALL_SIGN = new GlowingWallSignBlock(Blocks.IRON_BLOCK);
   @ApiStatus.AvailableSince("1.0.2")
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final ColoredWallSignBlock COLORED_IRON_WALL_SIGN = new ColoredWallSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
   @ApiStatus.AvailableSince("1.0.2")
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final ColoredGlowingWallSignBlock COLORED_GLOWING_IRON_WALL_SIGN = new ColoredGlowingWallSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
   // 金块
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final WallSignBlock GOLD_WALL_SIGN = new WallSignBlock(Blocks.GOLD_BLOCK);
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final GlowingWallSignBlock GLOWING_GOLD_WALL_SIGN = new GlowingWallSignBlock(Blocks.GOLD_BLOCK);
   // 钻石块
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final WallSignBlock DIAMOND_WALL_SIGN = new WallSignBlock(Blocks.DIAMOND_BLOCK);
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final GlowingWallSignBlock GLOWING_DIAMOND_WALL_SIGN = new GlowingWallSignBlock(Blocks.DIAMOND_BLOCK);
   // 绿宝石块
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final WallSignBlock EMERALD_WALL_SIGN = new WallSignBlock(Blocks.EMERALD_BLOCK);
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final GlowingWallSignBlock GLOWING_EMERALD_WALL_SIGN = new GlowingWallSignBlock(Blocks.EMERALD_BLOCK);
   // 青金石块
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final WallSignBlock LAPIS_WALL_SIGN = new WallSignBlock(Blocks.LAPIS_BLOCK);
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final GlowingWallSignBlock GLOWING_LAPIS_WALL_SIGN = new GlowingWallSignBlock(Blocks.LAPIS_BLOCK);
   // 下界合金块
   @ApiStatus.AvailableSince("0.2.4")
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final WallSignBlock NETHERITE_WALL_SIGN = new WallSignBlock(Blocks.NETHERITE_BLOCK);
   @ApiStatus.AvailableSince("0.2.4")
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final GlowingWallSignBlock GLOWING_NETHERITE_WALL_SIGN = new GlowingWallSignBlock(Blocks.NETHERITE_BLOCK);
   // 黑曜石
   @ApiStatus.AvailableSince("0.2.4")
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final WallSignBlock OBSIDIAN_WALL_SIGN = new WallSignBlock(Blocks.OBSIDIAN);
   @ApiStatus.AvailableSince("0.2.4")
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final GlowingWallSignBlock GLOWING_OBSIDIAN_WALL_SIGN = new GlowingWallSignBlock(Blocks.OBSIDIAN);
   // 哭泣的黑曜石
   @ApiStatus.AvailableSince("0.2.4")
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final WallSignBlock CRYING_OBSIDIAN_WALL_SIGN = new WallSignBlock(Blocks.CRYING_OBSIDIAN);
   @ApiStatus.AvailableSince("0.2.4")
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final GlowingWallSignBlock GLOWING_CRYING_OBSIDIAN_WALL_SIGN = new GlowingWallSignBlock(Blocks.CRYING_OBSIDIAN);
   // 下界岩
   @ApiStatus.AvailableSince("0.1.7")
@@ -505,8 +526,10 @@ public final class WallSignBlocks extends MishangucBlocks {
 
   // 雪
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(MiningLevel.Tool.SHOVEL)
   public static final WallSignBlock SNOW_WALL_SIGN = new WallSignBlock(Blocks.SNOW_BLOCK);
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(MiningLevel.Tool.SHOVEL)
   public static final GlowingWallSignBlock GLOWING_SNOW_WALL_SIGN = new GlowingWallSignBlock(Blocks.SNOW_BLOCK);
   // 冰
   @ApiStatus.AvailableSince("0.1.7")

@@ -9,6 +9,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.Translucent;
+import pers.solid.mishang.uc.arrp.MiningLevel;
 import pers.solid.mishang.uc.block.*;
 
 import java.util.Map;
@@ -689,98 +690,125 @@ public final class HungSignBlocks extends MishangucBlocks {
   // 铁块
 
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final HungSignBlock IRON_HUNG_SIGN = new HungSignBlock(Blocks.IRON_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final HungSignBlock GLOWING_IRON_HUNG_SIGN = new GlowingHungSignBlock(Blocks.IRON_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final HungSignBarBlock IRON_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.IRON_BLOCK);
 
   @ApiStatus.AvailableSince("1.0.2")
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final ColoredHungSignBlock COLORED_IRON_HUNG_SIGN = new ColoredHungSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
 
   @ApiStatus.AvailableSince("1.0.2")
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final ColoredGlowingHungSignBlock COLORED_GLOWING_IRON_HUNG_SIGN = new ColoredGlowingHungSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
 
   @ApiStatus.AvailableSince("1.0.2")
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final ColoredHungSignBarBlock COLORED_IRON_HUNG_SIGN_BAR = new ColoredHungSignBarBlock(ColoredBlocks.COLORED_IRON_BLOCK);
 
   // 金块
 
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final HungSignBlock GOLD_HUNG_SIGN = new HungSignBlock(Blocks.GOLD_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final GlowingHungSignBlock GLOWING_GOLD_HUNG_SIGN = new GlowingHungSignBlock(Blocks.GOLD_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final HungSignBarBlock GOLD_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.GOLD_BLOCK);
 
   // 钻石块
 
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final HungSignBlock DIAMOND_HUNG_SIGN = new HungSignBlock(Blocks.DIAMOND_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final GlowingHungSignBlock GLOWING_DIAMOND_HUNG_SIGN = new GlowingHungSignBlock(Blocks.DIAMOND_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final HungSignBarBlock DIAMOND_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.DIAMOND_BLOCK);
 
   // 绿宝石块
 
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final HungSignBlock EMERALD_HUNG_SIGN = new HungSignBlock(Blocks.EMERALD_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final GlowingHungSignBlock GLOWING_EMERALD_HUNG_SIGN = new GlowingHungSignBlock(Blocks.EMERALD_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.IRON)
   public static final HungSignBarBlock EMERALD_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.EMERALD_BLOCK);
 
   // 青金石块
 
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final HungSignBlock LAPIS_HUNG_SIGN = new HungSignBlock(Blocks.LAPIS_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final GlowingHungSignBlock GLOWING_LAPIS_HUNG_SIGN = new GlowingHungSignBlock(Blocks.LAPIS_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(level = MiningLevel.Level.STONE)
   public static final HungSignBarBlock LAPIS_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.LAPIS_BLOCK);
 
   // 下界合金
 
   @ApiStatus.AvailableSince("0.2.4")
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final HungSignBlock NETHERITE_HUNG_SIGN = new HungSignBlock(Blocks.NETHERITE_BLOCK);
 
   @ApiStatus.AvailableSince("0.2.4")
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final GlowingHungSignBlock GLOWING_NETHERITE_HUNG_SIGN = new GlowingHungSignBlock(Blocks.NETHERITE_BLOCK);
 
   @ApiStatus.AvailableSince("0.2.4")
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final HungSignBarBlock NETHERITE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.NETHERITE_BLOCK);
 
   // 黑曜石
 
   @ApiStatus.AvailableSince("0.2.4")
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final HungSignBlock OBSIDIAN_HUNG_SIGN = new HungSignBlock(Blocks.OBSIDIAN);
 
   @ApiStatus.AvailableSince("0.2.4")
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final GlowingHungSignBlock GLOWING_OBSIDIAN_HUNG_SIGN = new GlowingHungSignBlock(Blocks.OBSIDIAN);
 
   @ApiStatus.AvailableSince("0.2.4")
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final HungSignBarBlock OBSIDIAN_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.OBSIDIAN);
 
   // 哭泣的黑曜石
 
   @ApiStatus.AvailableSince("0.2.4")
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final HungSignBlock CRYING_OBSIDIAN_HUNG_SIGN = new HungSignBlock(Blocks.CRYING_OBSIDIAN);
 
   @ApiStatus.AvailableSince("0.2.4")
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final GlowingHungSignBlock GLOWING_CRYING_OBSIDIAN_HUNG_SIGN = new GlowingHungSignBlock(Blocks.CRYING_OBSIDIAN);
 
   @ApiStatus.AvailableSince("0.2.4")
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final HungSignBarBlock CRYING_OBSIDIAN_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.CRYING_OBSIDIAN);
 
   // 下界岩
@@ -837,8 +865,10 @@ public final class HungSignBlocks extends MishangucBlocks {
   // 雪块
 
   @ApiStatus.AvailableSince("0.1.7")
+  @MiningLevel(MiningLevel.Tool.SHOVEL)
   public static final HungSignBlock SNOW_HUNG_SIGN = new HungSignBlock(Blocks.SNOW_BLOCK);
 
+  @MiningLevel(MiningLevel.Tool.SHOVEL)
   public static final GlowingHungSignBlock GLOWING_SNOW_HUNG_SIGN = new GlowingHungSignBlock(Blocks.SNOW_BLOCK);
 
   // 冰

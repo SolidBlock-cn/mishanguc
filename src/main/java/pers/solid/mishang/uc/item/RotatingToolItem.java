@@ -108,6 +108,7 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
         .input('N', Items.NETHERITE_INGOT)
         .input('|', Items.STICK)
         .criterionFromItem("has_pink_dye", Items.PINK_DYE)
-        .criterionFromItem("has_netherite_ingot", Items.NETHERITE_INGOT);
+        .criterionFromItem("has_netherite_ingot", Items.NETHERITE_INGOT)
+        .setCustomRecipeCategory("tools");
   }
 }

@@ -46,12 +46,13 @@ public class HungSignBlockEntityRenderer<T extends HungSignBlockEntity> implemen
       if (direction.getAxis() != axis) {
         continue;
       }
+      final boolean glowing = entity.glowing.contains(direction);
       matrices.push();
       matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-direction.asRotation()));
       matrices.translate(0, 0, 1.0125 / 32f);
       matrices.scale(1 / 16f, -1 / 16f, 1 / 16f);
       for (TextContext textContext : textContexts) {
-        textContext.draw(ctx.getTextRenderer(), matrices, vertexConsumers, light, 16, entity.getHeight());
+        textContext.draw(ctx.getTextRenderer(), matrices, vertexConsumers, glowing ? 15728880 : light, 16, entity.getHeight());
       }
       matrices.pop();
     }

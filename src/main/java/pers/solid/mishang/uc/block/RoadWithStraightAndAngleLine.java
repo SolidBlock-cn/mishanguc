@@ -4,8 +4,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SlabBlock;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.*;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
@@ -28,6 +31,7 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
+import pers.solid.mishang.uc.blocks.RoadBlocks;
 import pers.solid.mishang.uc.util.*;
 
 import java.util.HashMap;
@@ -256,6 +260,26 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
         tooltip.add(TextBridge.translatable("lineType.straightAndAngle.straight", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
         tooltip.add(TextBridge.translatable("lineType.straightAndAngle.bevel", lineColorSide.getName(), lineTypeSide.getName()).formatted(Formatting.BLUE));
       }
+    }
+
+    @Override
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+      if (lineTypeSide != LineType.NORMAL) {
+        throw new UnsupportedOperationException();
+      }
+      Block base2 = RoadBlocks.getRoadBlockWithLine(lineColor, lineType);
+      if (base instanceof SlabBlock) {
+        base2 = ((AbstractRoadBlock) base2).getRoadSlab();
+      }
+      return ShapedRecipeJsonBuilder.create(self, 3)
+          .pattern(" *X")
+          .pattern("*X ")
+          .pattern("X  ")
+          .input('*', lineColorSide.getIngredient())
+          .input('X', base2)
+          .criterionFromItemTag("has_paint", lineColorSide.getIngredient())
+          .criterionFromItem(base2)
+          .setCustomRecipeCategory("roads");
     }
   }
 }

@@ -2,25 +2,28 @@ package pers.solid.mishang.uc.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.LeveledCauldronBlock;
+import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.generator.BlockResourceGenerator;
+import pers.solid.mishang.uc.blocks.RoadBlocks;
 import pers.solid.mishang.uc.util.EightHorizontalDirection;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
@@ -107,13 +110,7 @@ public interface Road extends BlockResourceGenerator {
    * @param hit    玩家使用道路时的碰撞结果。
    * @return 行为结果。
    */
-  default ActionResult onUseRoad(
-      BlockState state,
-      World world,
-      BlockPos pos,
-      PlayerEntity player,
-      Hand hand,
-      BlockHitResult hit) {
+  default ActionResult onUseRoad(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
     return ActionResult.PASS;
   }
 
@@ -162,4 +159,41 @@ public interface Road extends BlockResourceGenerator {
    */
   @ApiStatus.AvailableSince("0.2.4")
   void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options);
+
+  default CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+    return null;
+  }
+
+  default Identifier getPaintingRecipeId() {
+    return getRecipeId().brrp_suffixed("_from_painting");
+  }
+
+  default @Nullable String getRecipeGroup() {
+    final Identifier itemId = getItemId();
+    return itemId.getNamespace() + ":" + StringUtils.replaceEach(itemId.getPath(), new String[]{"_white_", "_yellow_", "_w_", "_y_"}, new String[]{"_", "_", "_", "_"});
+  }
+
+  CauldronBehavior CLEAN_ROAD_BLOCK = (state, world, pos, player, hand, stack) -> {
+    if (stack.getItem() instanceof BlockItem blockItem) {
+      final Block block = blockItem.getBlock();
+      if ((block instanceof AbstractRoadBlock || block instanceof AbstractRoadSlabBlock) && block != RoadBlocks.ROAD_BLOCK && block != RoadBlocks.ROAD_BLOCK.getRoadSlab()) {
+        if (!world.isClient) {
+          if (!player.getAbilities().creativeMode) {
+            stack.decrement(1);
+          }
+          final ItemStack itemStack = block instanceof AbstractRoadSlabBlock ? new ItemStack(RoadBlocks.ROAD_BLOCK.getRoadSlab()) : new ItemStack(RoadBlocks.ROAD_BLOCK);
+          if (stack.isEmpty()) {
+            player.setStackInHand(hand, itemStack);
+          } else if (player.getInventory().insertStack(itemStack)) {
+            player.playerScreenHandler.syncState();
+          } else {
+            player.dropItem(itemStack, false);
+          }
+          LeveledCauldronBlock.decrementFluidLevel(state, world, pos);
+        }
+        return ActionResult.success(world.isClient);
+      }
+    }
+    return ActionResult.PASS;
+  };
 }
