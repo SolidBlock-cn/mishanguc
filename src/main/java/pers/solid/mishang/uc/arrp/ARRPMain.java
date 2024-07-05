@@ -287,6 +287,7 @@ public class ARRPMain implements ModInitializer {
     });
 
     // 墙上的告示牌部分
+    // todo 部分 mineable 方块还未完成
     MishangUtils.instanceStream(WallSignBlocks.class, Block.class).forEach(block -> {
       if (block instanceof GlowingWallSignBlock) {
         if (MishangUtils.isConcrete(((GlowingWallSignBlock) block).baseBlock)) {
@@ -526,7 +527,7 @@ public class ARRPMain implements ModInitializer {
     registerTagBlockOnly(stairHandrails);
     registerTagBlockOnly(simpleConcreteHandrails);
     registerTagBlockOnly(simpleConcreteNormalHandrails);
-    PACK.addTag(Identifier.of("mishanguc", "items/simple_concrete_handrails"), simpleConcreteNormalHandrails);
+    PACK.addTag(Identifier.of("mishanguc", "item/simple_concrete_handrails"), simpleConcreteNormalHandrails);
     registerTagBlockOnly(simpleConcreteCentralHandrails);
     registerTagBlockOnly(simpleConcreteCornerHandrails);
     registerTagBlockOnly(simpleConcreteOuterHandrails);
@@ -595,7 +596,7 @@ public class ARRPMain implements ModInitializer {
 
   private static void registerTag(IdentifiedTagBuilder<Block> blockTag) {
     PACK.addTag(blockTag);
-    PACK.addTag(blockTag.identifier.brrp_prefixed("items/"), blockTag);
+    PACK.addTag(blockTag.identifier.brrp_prefixed("item/"), blockTag);
   }
 
   @SafeVarargs
