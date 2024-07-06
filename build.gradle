@@ -1,26 +1,17 @@
 plugins {
-    id 'fabric-loom' version '1.1-SNAPSHOT'
-    // Quiltflower 反编译器
-    id 'io.github.juuxel.loom-quiltflower' version '1.7.1'
+    id 'fabric-loom' version '1.7-SNAPSHOT'
     id 'maven-publish'
 
-    // Modrinth
     id "com.modrinth.minotaur" version "2.+"
-    // CurseGradle
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'net.darkhax.curseforgegradle' version '1.1.+'
+    id "com.github.breadmoirai.github-release" version "2.5.2"
 }
-
-quiltflower {
-    quiltflowerVersion = '1.8.1'
-}
-
 
 import com.modrinth.minotaur.dependencies.ModDependency
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
-
-archivesBaseName = project.archives_base_name
+base {
+    archivesName = project.archives_base_name
+}
 version = project.mod_version + '-' + project.minecraft_version
 group = project.maven_group
 
@@ -34,6 +25,7 @@ repositories {
     // BRRP. This is stored locally.
     mavenLocal()
     maven { url "https://maven.terraformersmc.com/releases/" }
+    maven { url 'https://jitpack.io' }
 }
 
 
@@ -44,12 +36,14 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
     def brrp_mc_version = project.hasProperty("brrp_mc_version") ? project.brrp_mc_version : project.minecraft_version
 
     // BRRP.
-    modImplementation "pers.solid:brrp-fabric:${project.brrp_version}-${brrp_mc_version}"
+    modImplementation("pers.solid:brrp-fabric:${project.brrp_version}-${brrp_mc_version}") {
+        transitive false
+    }
 }
 
 processResources {
@@ -77,6 +71,9 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.
     // If you remove this line, sources will not be generated.
@@ -85,14 +82,15 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
+        rename { "${it}_${project.base.archivesName}" }
     }
 }
 
 // configure the maven publication
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        create("mavenJava", MavenPublication) {
+            artifactId = project.archives_base_name
             from components.java
         }
     }
@@ -127,49 +125,38 @@ String getUpdateLog(String modVersion = project.mod_version) {
     return builder.toString().trim()
 }
 
+// 模组发布部分
+
 println "当前版本（${project.mod_version}）更新记录："
 final var content = getUpdateLog(project.mod_version)
 println content
 
-curseforge {
-    try {
-        apiKey = new File('apiKey.txt').text
-    } catch (IOException ignore) {
-        apiKey = ' '
-    }
-    println "CurseForge 令牌：【${apiKey}】"
-    project {
-        id = '583071'
-        changelog = content
-        changelogType = 'markdown'
-        releaseType = 'release'
-        mainArtifact remapJar
+tasks.register('curseforge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    def getenv = System.getenv("CURSEFORGE_TOKEN")
+    println("CurseForge 令牌: $getenv")
+    if (getenv) apiToken = getenv
 
-        for (final def v in (project.supported_versions.split(',') as String[])) {
-            addGameVersion v
-        }
+    def mainFile = upload('583071', remapJar)
+    mainFile.changelog = content
+    mainFile.changelogType = 'markdown'
+    mainFile.releaseType = project.mod_version.contains('-') ? 'beta' : 'release'
 
-        relations {
-            requiredDependency 'fabric-api'
-            requiredDependency 'better-runtime-resource-pack'
-        }
+    for (final def v in (project.supported_minecraft_versions.split(','))) {
+        mainFile.addGameVersion v
     }
 
-    options {
-        forgeGradleIntegration = false
-    }
+    mainFile.addRelations 'requiredDependency', 'fabric-api', 'better-runtime-resource-pack'
+    def sourcesFile = mainFile.withAdditionalFile(sourcesJar)
 }
 
-// 将模组发布至 Modrinth
-
 modrinth {
-    println "Modrinth 令牌：【${token.get()}】"
+    println "Modrinth 令牌：${token.get()}"
 
     projectId = "rItLmRo4" // 迷上城建模组的 Modrinth ID
     versionNumber = project.mod_version + '-' + project.minecraft_version
-    versionType = 'release'
+    versionType = project.mod_version.contains('-') ? 'beta' : 'release'  // until release of MC
     uploadFile = remapJar
-    gameVersions = Arrays.asList(project.supported_versions.split(','))
+    gameVersions = Arrays.asList(project.supported_minecraft_versions.split(','))
 
     changelog = content
 
@@ -179,12 +166,24 @@ modrinth {
             new ModDependency('P7dR8mSH', 'required'), // Fabric API
             new ModDependency('JnrDtPAE', 'required')
     ]
-
-    String text = rootProject.file('README-en.md').text.replaceAll("\\[(.*?)]\\(([^/]*?)\\)", '[$1](https://github.com/SolidBlock-cn/mishanguc/blob/1.19.2/$2)')
-    syncBodyFrom = text
 }
 
-task publishToModSites {
-    publishToModSites.dependsOn modrinth
-    publishToModSites.dependsOn curseforge
+githubRelease {
+    def getenv = System.getenv("GITHUB_TOKEN")
+    println "GitHub 令牌: $getenv"
+    if (getenv) token = getenv
+    owner = "SolidBlock-cn"
+    repo = "mishanguc"
+    tagName = "v$project.mod_version"
+    targetCommitish = "1.16.5"
+    body = content
+    draft = true
+    prerelease = false
+    releaseAssets remapJar, remapSourcesJar
+    allowUploadToExisting = true
+    apiEndpoint = "https://api.github.com"
+}
+
+publish {
+    dependsOn tasks.curseforge, tasks.modrinth, tasks.githubRelease
 }
