@@ -1,7 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.1-SNAPSHOT'
-    // Quiltflower 反编译器
-    id 'io.github.juuxel.loom-quiltflower' version '1.7.1'
+    id 'fabric-loom' version '1.7-SNAPSHOT'
     id 'maven-publish'
 
     // Modrinth
@@ -81,7 +79,8 @@ jar {
 // configure the maven publication
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        create("mavenJava", MavenPublication) {
+            artifactId = project.archives_base_name
             from components.java
         }
     }
