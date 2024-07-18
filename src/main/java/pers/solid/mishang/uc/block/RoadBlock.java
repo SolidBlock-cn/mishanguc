@@ -85,7 +85,7 @@ public class RoadBlock extends AbstractRoadBlock {
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    if (lineColor != null) return null;
+    if (lineColor != LineColor.NONE) return null;
     return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this, 9)
         .pattern("***")
         .pattern("|X|")
