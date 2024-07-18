@@ -22,6 +22,8 @@ Note: Not all versions in this update log are already published. Please refer to
     - Now you can craft road blocks and road slab blocks with line painted into road blocks and road slab blocks without line painted via a stonecutter.
     - Now you can craft hun sign bars in a stonecutter, one base block for 20 pieces.
     - Now you can craft road slabs for blocks in a stonecutter.
+    - All road blocks and slabs with marks can be crafted in a crafting table from base road blocks or slabs and corresponding dyes (supporting dye tags in Fabric Conventional Tags).
+    - In the crafting recipe of slab tool, stone has been adjusted to item tag `#c:stones` from Fabric Conventional Tags.
 - Adjusted and fixed tags.
     - Fixed the issue that block tag `#mishanguc:lights` lacks some light blocks.
     - Added `mishanguc:colored_light` into `#mishanguc:lights`.

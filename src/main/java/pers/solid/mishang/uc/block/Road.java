@@ -3,10 +3,12 @@ package pers.solid.mishang.uc.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipType;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
@@ -137,4 +139,17 @@ public interface Road extends BlockResourceGenerator {
    */
   @ApiStatus.AvailableSince("0.2.4")
   void appendDescriptionTooltip(List<Text> tooltip, Item.TooltipContext context);
+
+  @Override
+  default RecipeCategory getRecipeCategory() {
+    return RecipeCategory.BUILDING_BLOCKS;
+  }
+
+  default CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+    return null;
+  }
+
+  default Identifier getPaintingRecipeId() {
+    return getRecipeId().brrp_suffixed("_from_painting");
+  }
 }

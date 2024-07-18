@@ -4,6 +4,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipType;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
@@ -19,6 +20,8 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
+import pers.solid.mishang.uc.blocks.RoadBlocks;
 import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
@@ -120,5 +123,14 @@ public abstract class AbstractRoadBlock extends Block implements Road {
   @Contract(pure = true)
   public final AbstractRoadSlabBlock getRoadSlab() {
     return RoadSlabBlocks.BLOCK_TO_SLABS.get(this);
+  }
+
+  @Override
+  public void writeRecipes(RuntimeResourcePack pack) {
+    Road.super.writeRecipes(pack);
+    final CraftingRecipeJsonBuilder paintingRecipe = getPaintingRecipe(RoadBlocks.ROAD_BLOCK, this);
+    if (paintingRecipe != null) {
+      pack.addRecipeAndAdvancement(getPaintingRecipeId(), paintingRecipe);
+    }
   }
 }

@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.blocks;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.util.LineColor;
@@ -425,4 +426,20 @@ public final class RoadBlocks extends MishangucBlocks {
   public static final RoadBlock ROAD_FILLED_WITH_WHITE = new RoadBlock(WHITE_ROAD_SETTINGS, "mishanguc:block/white_ink");
 
   public static final RoadBlock ROAD_FILLED_WITH_YELLOW = new RoadBlock(YELLOW_ROAD_SETTINGS, "mishanguc:block/yellow_ink");
+
+  public static @NotNull AbstractRoadBlock getRoadBlockWithLine(LineColor lineColor, LineType lineType) {
+    return switch (lineColor) {
+      case WHITE -> switch (lineType) {
+        case NORMAL -> ROAD_WITH_WHITE_LINE;
+        case DOUBLE -> ROAD_WITH_WHITE_DOUBLE_LINE;
+        case THICK -> ROAD_WITH_WHITE_THICK_LINE;
+      };
+      case YELLOW -> switch (lineType) {
+        case NORMAL -> ROAD_WITH_YELLOW_LINE;
+        case DOUBLE -> ROAD_WITH_YELLOW_DOUBLE_LINE;
+        case THICK -> ROAD_WITH_YELLOW_THICK_LINE;
+      };
+      default -> throw new UnsupportedOperationException(String.format("Cannot determine base block with [color=%s, type=%s]", lineColor.asString(), lineType.asString()));
+    };
+  }
 }

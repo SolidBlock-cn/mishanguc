@@ -11,6 +11,7 @@ import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -35,6 +36,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -271,15 +273,19 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
   }
 
   @Override
+  public RecipeCategory getRecipeCategory() {
+    return RecipeCategory.TOOLS;
+  }
+
+  @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this)
         .patterns("SCS", " | ", " | ")
         .input('S', Items.SHEARS)
-        .input('C', Items.STONE)
+        .input('C', ConventionalItemTags.STONES)
         .input('|', Items.STICK)
         .criterionFromItem("has_shears", Items.SHEARS)
-        .criterionFromItem("has_stone", Items.STONE)
-        .setCustomRecipeCategory("tools");
+        .criterionFromItem("has_stone", Items.STONE);
   }
 
   @ApiStatus.AvailableSince("1.0.3")

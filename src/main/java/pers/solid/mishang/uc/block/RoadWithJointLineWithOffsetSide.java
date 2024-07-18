@@ -9,8 +9,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SlabBlock;
 import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.*;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -31,6 +34,7 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
+import pers.solid.mishang.uc.blocks.RoadBlocks;
 import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
@@ -196,6 +200,29 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
     @Override
     protected MapCodec<? extends Impl> getCodec() {
       return CODEC;
+    }
+
+    @Override
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+      if (lineTypeSide != LineType.NORMAL) {
+        throw new UnsupportedOperationException(String.format("Recipe for the block [lineTypeSide=%s] is not supported", lineTypeSide.asString()));
+      }
+      Block base2 = RoadBlocks.getRoadBlockWithLine(lineColor, lineType);
+      if (base instanceof SlabBlock) {
+        base2 = ((AbstractRoadBlock) base2).getRoadSlab();
+      }
+      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
+          .pattern("a  ")
+          .pattern("XXX")
+          .input('a', lineColorSide.getIngredient())
+          .input('X', base2)
+          .criterionFromItemTag("has_" + lineColorSide.asString() + "_paint", lineColorSide.getIngredient())
+          .criterionFromItem(base2)
+          .setCustomRecipeCategory("roads");
+      if (lineColorSide != lineColor) {
+        recipe.criterionFromItemTag("has_" + lineColor.asString() + "_paint", lineColor.getIngredient());
+      }
+      return recipe;
     }
   }
 }

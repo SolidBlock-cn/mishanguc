@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipType;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
@@ -17,7 +18,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.generator.BRRPSlabBlock;
+import pers.solid.mishang.uc.blocks.RoadBlocks;
 
 import java.util.List;
 
@@ -94,5 +97,14 @@ public abstract class AbstractRoadSlabBlock extends BRRPSlabBlock implements Roa
   @Override
   public @Nullable RecipeCategory getRecipeCategory() {
     return RecipeCategory.BUILDING_BLOCKS;
+  }
+
+  @Override
+  public void writeRecipes(RuntimeResourcePack pack) {
+    super.writeRecipes(pack);
+    final CraftingRecipeJsonBuilder paintingRecipe = getPaintingRecipe(RoadBlocks.ROAD_BLOCK.getRoadSlab(), this);
+    if (paintingRecipe != null) {
+      pack.addRecipeAndAdvancement(getPaintingRecipeId(), paintingRecipe);
+    }
   }
 }

@@ -5,7 +5,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
@@ -71,6 +74,44 @@ public interface RoadWithAngleLineWithTwoPartsOffset extends RoadWithAngleLine {
     @Override
     protected MapCodec<? extends RoadWithAngleLineWithTwoPartsOffset.Impl> getCodec() {
       return CODEC;
+    }
+
+
+    private static final String[] OUTER_OFFSET_BEVEL_PATTERN = {
+        "**X",
+        "*X ",
+        " X "
+    };
+    private static final String[] INNER_OFFSET_BEVEL_PATTERN = {
+        " *X",
+        " X ",
+        " X "
+    };
+    private static final String[] OUTER_OFFSET_RIGHT_ANGLE_PATTERN = {
+        "** ",
+        "*XX",
+        "X  "
+    };
+    private static final String[] INNER_OFFSET_RIGHT_ANGLE_PATTERN = {
+        " * ",
+        "*XX",
+        "X  "
+    };
+
+    @Override
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+      final String[] patterns = switch (offsetOutwards) {
+        case 2 -> isBevel() ? OUTER_OFFSET_BEVEL_PATTERN : OUTER_OFFSET_RIGHT_ANGLE_PATTERN;
+        case -2 -> isBevel() ? INNER_OFFSET_BEVEL_PATTERN : INNER_OFFSET_RIGHT_ANGLE_PATTERN;
+        default -> throw new IllegalStateException("Unexpected value: " + offsetOutwards);
+      };
+      return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
+          .patterns(patterns)
+          .input('*', lineColor.getIngredient())
+          .input('X', base)
+          .criterionFromItemTag("has_paint", lineColor.getIngredient())
+          .criterionFromItem(base)
+          .setCustomRecipeCategory("roads");
     }
   }
 }

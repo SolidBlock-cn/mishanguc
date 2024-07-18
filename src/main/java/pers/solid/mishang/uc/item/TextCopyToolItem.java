@@ -18,6 +18,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.text.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
@@ -323,6 +324,11 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
   }
 
   @Override
+  public RecipeCategory getRecipeCategory() {
+    return RecipeCategory.TOOLS;
+  }
+
+  @Override
   public @NotNull CraftingRecipeJsonBuilder getCraftingRecipe() {
     return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this)
         .patterns(
@@ -334,7 +340,6 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
         .input('S', Items.SLIME_BALL)
         .input('/', Items.STICK)
         .criterionFromItem("has_paper", Items.PAPER)
-        .criterionFromItem("has_slime_ball", Items.SLIME_BALL)
-        .setCustomRecipeCategory("tools");
+        .criterionFromItem("has_slime_ball", Items.SLIME_BALL);
   }
 }

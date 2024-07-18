@@ -8,9 +8,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SlabBlock;
 import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -30,6 +33,7 @@ import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.arrp.FasterJTextures;
+import pers.solid.mishang.uc.blocks.RoadBlocks;
 import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
@@ -128,6 +132,19 @@ public interface RoadWithTwoBevelAngleLines extends Road {
     protected MapCodec<? extends ImplWithTwoLayerTexture> getCodec() {
       return CODEC;
     }
+
+    @Override
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+      return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
+          .pattern(" **")
+          .pattern("** ")
+          .pattern("XXX")
+          .input('*', lineColor.getIngredient())
+          .input('X', base)
+          .criterionFromItemTag("has_paint", lineColor.getIngredient())
+          .criterionFromItem(base)
+          .setCustomRecipeCategory("roads");
+    }
   }
 
   class ImplWithThreeLayerTexture extends AbstractRoadBlock implements RoadWithTwoBevelAngleLines {
@@ -173,6 +190,23 @@ public interface RoadWithTwoBevelAngleLines extends Road {
     @Override
     protected MapCodec<? extends ImplWithThreeLayerTexture> getCodec() {
       return CODEC;
+    }
+
+    @Override
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+      Block base2 = RoadBlocks.getRoadBlockWithLine(lineColor, lineType);
+      if (base instanceof SlabBlock) {
+        base2 = ((AbstractRoadBlock) base2).getRoadSlab();
+      }
+      return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
+          .pattern(" *X")
+          .pattern("*X*")
+          .pattern("X* ")
+          .input('*', lineColor.getIngredient())
+          .input('X', base2)
+          .criterionFromItemTag("has_paint", lineColor.getIngredient())
+          .criterionFromItem(base2)
+          .setCustomRecipeCategory("roads");
     }
   }
 }

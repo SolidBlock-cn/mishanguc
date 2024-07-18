@@ -178,4 +178,9 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
   public MapCodec<? extends SmartRoadSlabBlock<?>> getCodec() {
     return CODEC;
   }
+
+  @Override
+  public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+    return baseBlock.getPaintingRecipe(base, this);
+  }
 }
