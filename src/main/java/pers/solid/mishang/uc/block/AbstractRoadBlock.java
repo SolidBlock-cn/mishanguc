@@ -130,7 +130,7 @@ public abstract class AbstractRoadBlock extends Block implements Road {
     Road.super.writeRecipes(pack);
     final CraftingRecipeJsonBuilder paintingRecipe = getPaintingRecipe(RoadBlocks.ROAD_BLOCK, this);
     if (paintingRecipe != null) {
-      pack.addRecipeAndAdvancement(getPaintingRecipeId(), paintingRecipe);
+      pack.addRecipeAndAdvancement(getPaintingRecipeId(), paintingRecipe.group(getRecipeGroup()));
     }
   }
 }

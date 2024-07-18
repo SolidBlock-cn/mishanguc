@@ -4,10 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.Waterloggable;
+import net.minecraft.block.*;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
@@ -313,6 +310,18 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
             .addTexture(TextureKey.TEXTURE, texture));
   }
 
+  private @Nullable String getRecipeGroup() {
+    if (baseBlock instanceof ColoredBlock) return null;
+    if (MishangUtils.isWood(baseBlock)) return "mishanguc:wood_hung_sign_bar";
+    if (MishangUtils.isStrippedWood(baseBlock)) return "mishanguc:stripped_wood_hung_sign_bar";
+    if (MishangUtils.isConcrete(baseBlock)) return "mishanguc:concrete_hung_sign_bar";
+    if (MishangUtils.isTerracotta(baseBlock)) return "mishanguc:terracotta_hung_sign_bar";
+    if (baseBlock == Blocks.ICE || baseBlock == Blocks.PACKED_ICE || baseBlock == Blocks.BLUE_ICE) {
+      return "mishanguc:ice_hung_sign_bar";
+    }
+    return null;
+  }
+
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     return SingleItemRecipeJsonBuilder.createStonecutting(
@@ -321,7 +330,8 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
             this,
             20)
         .criterionFromItem("has_base_block", baseBlock)
-        .setCustomRecipeCategory("signs");
+        .setCustomRecipeCategory("signs")
+        .group(getRecipeGroup());
   }
 
   @Override

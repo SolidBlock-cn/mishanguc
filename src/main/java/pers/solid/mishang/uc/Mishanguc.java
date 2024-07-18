@@ -24,7 +24,9 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -32,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.block.ColoredBlock;
 import pers.solid.mishang.uc.block.GlassHandrailBlock;
 import pers.solid.mishang.uc.block.HandrailBlock;
+import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blocks.*;
@@ -370,6 +373,14 @@ public class Mishanguc implements ModInitializer {
             return ActionResult.PASS;
           }
         });
+
+    UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+      if (player.isSpectator()) return ActionResult.PASS;
+      final ItemStack stack = player.getStackInHand(hand);
+      final BlockPos blockPos = hitResult.getBlockPos();
+      final ItemActionResult result = Road.CLEAN_ROAD_BLOCK.interact(world.getBlockState(blockPos), world, blockPos, player, hand, stack);
+      return result.toActionResult();
+    });
   }
 
   private static void registerColoredBlocks() {

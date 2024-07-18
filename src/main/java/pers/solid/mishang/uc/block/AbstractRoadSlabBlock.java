@@ -104,7 +104,7 @@ public abstract class AbstractRoadSlabBlock extends BRRPSlabBlock implements Roa
     super.writeRecipes(pack);
     final CraftingRecipeJsonBuilder paintingRecipe = getPaintingRecipe(RoadBlocks.ROAD_BLOCK.getRoadSlab(), this);
     if (paintingRecipe != null) {
-      pack.addRecipeAndAdvancement(getPaintingRecipeId(), paintingRecipe);
+      pack.addRecipeAndAdvancement(getPaintingRecipeId(), paintingRecipe.group(getRecipeGroup()));
     }
   }
 }

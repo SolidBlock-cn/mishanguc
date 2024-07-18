@@ -137,8 +137,8 @@ public final class HandrailBlocks extends MishangucBlocks {
   public static final SimpleHandrailBlock SIMPLE_DARK_OAK_HANDRAIL = new SimpleHandrailBlock(Blocks.DARK_OAK_WOOD);
   @ApiStatus.AvailableSince("0.2.0-mc1.19")
   public static final SimpleHandrailBlock SIMPLE_MANGROVE_HANDRAIL = new SimpleHandrailBlock(Blocks.MANGROVE_WOOD);
-  public static final SimpleHandrailBlock SIMPLE_CRIMSON_HANDRAIL = new SimpleHandrailBlock(Blocks.CRIMSON_STEM);
-  public static final SimpleHandrailBlock SIMPLE_WARPED_HANDRAIL = new SimpleHandrailBlock(Blocks.WARPED_STEM);
+  public static final SimpleHandrailBlock SIMPLE_CRIMSON_HANDRAIL = new SimpleHandrailBlock(Blocks.CRIMSON_HYPHAE);
+  public static final SimpleHandrailBlock SIMPLE_WARPED_HANDRAIL = new SimpleHandrailBlock(Blocks.WARPED_HYPHAE);
   public static final SimpleHandrailBlock SIMPLE_OAK_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.OAK_PLANKS);
   public static final SimpleHandrailBlock SIMPLE_SPRUCE_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.SPRUCE_PLANKS);
   public static final SimpleHandrailBlock SIMPLE_BIRCH_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.BIRCH_PLANKS);
@@ -446,19 +446,19 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final GlassHandrailBlock GLASS_CRIMSON_HANDRAIL = new GlassHandrailBlock(Blocks.CRIMSON_STEM, Block.Settings.copy(Blocks.CRIMSON_STEM).strength(1.0f), "block/crimson_stem", "block/crimson_planks");
+  public static final GlassHandrailBlock GLASS_CRIMSON_HANDRAIL = new GlassHandrailBlock(Blocks.CRIMSON_HYPHAE, Block.Settings.copy(Blocks.CRIMSON_HYPHAE).strength(1.0f), "block/crimson_stem", "block/crimson_planks");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_CRIMSON_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.CRIMSON_STEM, Block.Settings.copy(Blocks.CRIMSON_STEM).strength(1.0f), "block/crimson_stem", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_CRIMSON_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.CRIMSON_HYPHAE, Block.Settings.copy(Blocks.CRIMSON_HYPHAE).strength(1.0f), "block/crimson_stem", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final GlassHandrailBlock GLASS_WARPED_HANDRAIL = new GlassHandrailBlock(Blocks.WARPED_STEM, Block.Settings.copy(Blocks.WARPED_STEM).strength(1.0f), "block/warped_stem", "block/warped_planks");
+  public static final GlassHandrailBlock GLASS_WARPED_HANDRAIL = new GlassHandrailBlock(Blocks.WARPED_HYPHAE, Block.Settings.copy(Blocks.WARPED_HYPHAE).strength(1.0f), "block/warped_stem", "block/warped_planks");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_WARPED_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.WARPED_STEM, Block.Settings.copy(Blocks.WARPED_STEM).strength(1.0f), "block/warped_stem", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_WARPED_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.WARPED_HYPHAE, Block.Settings.copy(Blocks.WARPED_HYPHAE).strength(1.0f), "block/warped_stem", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)

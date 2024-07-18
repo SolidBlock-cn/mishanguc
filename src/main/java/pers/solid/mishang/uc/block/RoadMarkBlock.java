@@ -4,11 +4,16 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.block.*;
 import net.minecraft.data.client.*;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -157,6 +162,18 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
   @Override
   protected MapCodec<? extends RoadMarkBlock> getCodec() {
     return CODEC;
+  }
+
+  @Override
+  public RecipeCategory getRecipeCategory() {
+    return RecipeCategory.DECORATIONS;
+  }
+
+  @Override
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+    return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.fromTag(ConventionalItemTags.WHITE_DYES), getRecipeCategory(), this)
+        .criterionFromItemTag("has_white_dye", ConventionalItemTags.WHITE_DYES)
+        .setCustomRecipeCategory("road_marks");
   }
 
   protected static class AxisFacing extends RoadMarkBlock {

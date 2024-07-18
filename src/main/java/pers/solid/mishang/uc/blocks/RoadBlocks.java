@@ -13,7 +13,7 @@ import pers.solid.mishang.uc.util.LineType;
  * 最基本的普通路块。
  */
 public final class RoadBlocks extends MishangucBlocks {
-  public static final RoadBlock ROAD_BLOCK = new RoadBlock(ROAD_SETTINGS, "mishanguc:block/asphalt");
+  public static final RoadBlock ROAD_BLOCK = new RoadBlock(ROAD_SETTINGS, "mishanguc:block/asphalt", LineColor.NONE);
   /**
    * <h2>单一的直线道路</h2>
    * <p>
@@ -423,9 +423,9 @@ public final class RoadBlocks extends MishangucBlocks {
    * <p>
    * 填满的路块。
    */
-  public static final RoadBlock ROAD_FILLED_WITH_WHITE = new RoadBlock(WHITE_ROAD_SETTINGS, "mishanguc:block/white_ink");
+  public static final RoadBlock ROAD_FILLED_WITH_WHITE = new RoadBlock(WHITE_ROAD_SETTINGS, "mishanguc:block/white_ink", LineColor.WHITE);
 
-  public static final RoadBlock ROAD_FILLED_WITH_YELLOW = new RoadBlock(YELLOW_ROAD_SETTINGS, "mishanguc:block/yellow_ink");
+  public static final RoadBlock ROAD_FILLED_WITH_YELLOW = new RoadBlock(YELLOW_ROAD_SETTINGS, "mishanguc:block/yellow_ink", LineColor.YELLOW);
 
   public static @NotNull AbstractRoadBlock getRoadBlockWithLine(LineColor lineColor, LineType lineType) {
     return switch (lineColor) {

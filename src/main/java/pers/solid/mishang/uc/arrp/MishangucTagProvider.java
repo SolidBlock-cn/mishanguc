@@ -10,6 +10,7 @@ import net.minecraft.block.SlabBlock;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
@@ -19,6 +20,7 @@ import pers.solid.brrp.v1.tag.IdentifiedTagBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.blocks.*;
+import pers.solid.mishang.uc.item.MishangucItems;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -634,12 +636,23 @@ public class MishangucTagProvider {
     });
   }
 
+  protected void tools() {
+    itemTag(ItemTags.PICKAXES).add(MishangucItems.OMNIPOTENT_TOOL);
+    itemTag(ItemTags.AXES).add(MishangucItems.OMNIPOTENT_TOOL);
+    itemTag(ItemTags.SHOVELS).add(MishangucItems.OMNIPOTENT_TOOL);
+    itemTag(ItemTags.HOES).add(MishangucItems.OMNIPOTENT_TOOL);
+    itemTag(ItemTags.SWORDS).add(MishangucItems.OMNIPOTENT_TOOL);
+
+    itemTag(ItemTags.DURABILITY_ENCHANTABLE).add(MishangucItems.ROTATING_TOOL, MishangucItems.MIRRORING_TOOL, MishangucItems.SLAB_TOOL, MishangucItems.TEXT_COPY_TOOL, MishangucItems.EXPLOSION_TOOL, MishangucItems.COLOR_TOOL, MishangucItems.ROAD_TOOL, MishangucItems.TP_TOOL, MishangucItems.GROWTH_TOOL, MishangucItems.ICE_SNOW_TOOL);
+  }
+
   protected void prepareTags() {
     roads();
     signs();
     lights();
     handrails();
     coloredBlocks();
+    tools();
   }
 
   protected void export(RuntimeResourcePack pack) {
