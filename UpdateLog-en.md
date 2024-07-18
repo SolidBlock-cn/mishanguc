@@ -2,7 +2,7 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
-### 1.3.1-beta.2
+### 1.3.1
 
 - Fixed the issue that the colors displayed on maps of some road blocks are incorrect.
 - Fixed the issue that invisible signs cannot be broken in Survival Mode while they can be crafted and placed.
@@ -24,12 +24,17 @@ Note: Not all versions in this update log are already published. Please refer to
     - Now you can craft road slabs for blocks in a stonecutter.
     - All road blocks and slabs with marks can be crafted in a crafting table from base road blocks or slabs and corresponding dyes (supporting dye tags in Fabric Conventional Tags).
     - In the crafting recipe of slab tool, stone has been adjusted to item tag `#c:stones` from Fabric Conventional Tags.
+    - Added recipes for handrail blocks. Simple handrails can be crafted from the base block in the stonecutter (including non-stone blocks). Glass handrails needs to be crafted in the crafting table.
+    - Now you can craft a road mark block from a white dye in a stonecutter.
 - Adjusted and fixed tags.
     - Fixed the issue that block tag `#mishanguc:lights` lacks some light blocks.
     - Added `mishanguc:colored_light` into `#mishanguc:lights`.
     - Fixed the issue that tags such as `#mishanguc:simple_handrails` lack some blocks.
     - Fixed some missing mineable block tags.
     - Added some blocks to tags of Fabric Conventional Tags, such as some tags for dyed blocks.
+- Now you can wash out the lines of a road block or slab in a cauldron (consuming one level water).
+- Fixed the issue that when breaking with an omnipotent tool the block may not be dropped.
+- Now some of the items of this mod can be enchanted directly.
 
 ### 1.3.1-beta.1
 

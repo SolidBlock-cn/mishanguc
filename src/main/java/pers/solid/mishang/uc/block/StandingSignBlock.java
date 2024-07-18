@@ -277,6 +277,20 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     return ModelJsonBuilder.create(getBlockModelId().brrp_suffixed("_barred"));
   }
 
+
+  private @Nullable String getRecipeGroup() {
+    if (baseBlock instanceof ColoredBlock) return null;
+    if (MishangUtils.isWood(baseBlock)) return "mishanguc:wood_standing_sign";
+    if (MishangUtils.isStrippedWood(baseBlock)) return "mishanguc:stripped_wood_standing_sign";
+    if (MishangUtils.isPlanks(baseBlock)) return "mishanguc:plank_standing_sign";
+    if (MishangUtils.isConcrete(baseBlock)) return "mishanguc:concrete_standing_sign";
+    if (MishangUtils.isTerracotta(baseBlock)) return "mishanguc:terracotta_standing_sign";
+    if (baseBlock == Blocks.ICE || baseBlock == Blocks.PACKED_ICE || baseBlock == Blocks.BLUE_ICE) {
+      return "mishanguc:ice_standing_sign";
+    }
+    return null;
+  }
+
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (baseBlock == null) return null;
@@ -284,7 +298,9 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
         .patterns("---", "###", " | ")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN).input('|', Items.STICK)
         .setCustomRecipeCategory("signs")
-        .criterionFromItem("has_base_block", baseBlock).criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
+        .criterionFromItem("has_base_block", baseBlock)
+        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .group(getRecipeGroup());
   }
 
   @Override

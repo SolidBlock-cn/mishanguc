@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
@@ -14,7 +15,6 @@ import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.Items;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -22,7 +22,6 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
-import pers.solid.mishang.uc.blocks.RoadBlocks;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
@@ -30,11 +29,11 @@ import pers.solid.mishang.uc.util.RoadConnectionState;
 import java.util.List;
 
 public class RoadBlock extends AbstractRoadBlock {
-  public static final MapCodec<RoadBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), Codec.STRING.fieldOf("texture").forGetter(b -> b.texture)).apply(i, RoadBlock::new));
+  public static final MapCodec<RoadBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), Codec.STRING.fieldOf("texture").forGetter(b -> b.texture), lineColorFieldCodec()).apply(i, RoadBlock::new));
   private final String texture;
 
-  public RoadBlock(Settings settings, String texture) {
-    super(settings, LineColor.NONE, LineType.NORMAL);
+  public RoadBlock(Settings settings, String texture, LineColor lineColor) {
+    super(settings, lineColor, LineType.NORMAL);
     this.texture = texture;
   }
 
@@ -86,7 +85,8 @@ public class RoadBlock extends AbstractRoadBlock {
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, RoadBlocks.ROAD_BLOCK, 9)
+    if (lineColor != null) return null;
+    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this, 9)
         .pattern("***")
         .pattern("|X|")
         .pattern("***")
@@ -96,6 +96,19 @@ public class RoadBlock extends AbstractRoadBlock {
         .criterionFromItemTag("has_coal", ItemTags.COALS)
         .criterionFromItem(Items.FLINT)
         .criterion("has_proper_concrete", RecipeProvider.conditionsFromItemPredicates(ItemPredicate.Builder.create().items(Items.WHITE_CONCRETE, Items.GRAY_CONCRETE, Items.LIGHT_GRAY_CONCRETE, Items.BLACK_CONCRETE).build()))
+        .setCustomRecipeCategory("roads");
+  }
+
+  @Override
+  public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+    if (lineColor == LineColor.NONE) return null;
+    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self)
+        .pattern("***")
+        .pattern(" X ")
+        .input('*', lineColor.getIngredient())
+        .input('X', base)
+        .criterionFromItemTag("has_paint", lineColor.getIngredient())
+        .criterionFromItem(base)
         .setCustomRecipeCategory("roads");
   }
 }

@@ -41,7 +41,9 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
   protected static final OmnipotentToolMaterial MATERIAL = new OmnipotentToolMaterial();
 
   public OmnipotentToolItem(Settings settings) {
-    super(MATERIAL, BlockTags.PICKAXE_MINEABLE, settings.component(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(false)).attributeModifiers(MiningToolItem.createAttributeModifiers(MATERIAL, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)));
+    super(MATERIAL, BlockTags.PICKAXE_MINEABLE, settings
+        .component(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(false))
+        .attributeModifiers(MiningToolItem.createAttributeModifiers(MATERIAL, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)));
   }
 
   @Override
@@ -92,6 +94,16 @@ public class OmnipotentToolItem extends MiningToolItem implements ItemResourceGe
     final ItemStack defaultStack = super.getDefaultStack();
     defaultStack.set(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(false));
     return defaultStack;
+  }
+
+  @Override
+  public float getMiningSpeed(ItemStack stack, BlockState state) {
+    return Float.POSITIVE_INFINITY;
+  }
+
+  @Override
+  public boolean isCorrectForDrops(ItemStack stack, BlockState state) {
+    return true;
   }
 
   protected static class OmnipotentToolMaterial implements ToolMaterial {

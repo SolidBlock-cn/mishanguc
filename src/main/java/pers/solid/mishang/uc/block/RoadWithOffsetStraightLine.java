@@ -152,7 +152,8 @@ public interface RoadWithOffsetStraightLine extends Road {
             .input('X', base)
             .criterionFromItemTag("has_white_paint", LineColor.WHITE.getIngredient())
             .criterionFromItemTag("has_yellow_paint", LineColor.YELLOW.getIngredient())
-            .criterionFromItem(base);
+            .criterionFromItem(base)
+            .setCustomRecipeCategory("roads");
       } else {
         final String[] patterns = switch (offsetLevel) {
           case 2 -> new String[]{

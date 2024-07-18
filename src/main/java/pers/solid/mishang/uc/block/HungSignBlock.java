@@ -470,6 +470,19 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
         .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_top_bar_edge")).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 270));
   }
 
+  private @Nullable String getRecipeGroup() {
+    if (baseBlock instanceof ColoredBlock) return null;
+    if (MishangUtils.isWood(baseBlock)) return "mishanguc:wood_hung_sign";
+    if (MishangUtils.isStrippedWood(baseBlock)) return "mishanguc:stripped_wood_hung_sign";
+    if (MishangUtils.isPlanks(baseBlock)) return "mishanguc:plank_wood_hung_sign";
+    if (MishangUtils.isConcrete(baseBlock)) return "mishanguc:concrete_hung_sign";
+    if (MishangUtils.isTerracotta(baseBlock)) return "mishanguc:terracotta_hung_sign";
+    if (baseBlock == Blocks.ICE || baseBlock == Blocks.PACKED_ICE || baseBlock == Blocks.BLUE_ICE) {
+      return "mishanguc:ice_hung_sign";
+    }
+    return null;
+  }
+
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (baseBlock == null) return null;
@@ -479,7 +492,8 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
         .input('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
         .setCustomRecipeCategory("signs")
         .criterionFromItem("has_base_block", baseBlock)
-        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
+        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .group(getRecipeGroup());
   }
 
   @Override

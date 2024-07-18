@@ -292,6 +292,19 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     return BRRPUtils.getTextureId(baseBlock == null ? this : baseBlock, TextureKey.ALL);
   }
 
+  private @Nullable String getRecipeGroup() {
+    if (baseBlock instanceof ColoredBlock) return null;
+    if (MishangUtils.isWood(baseBlock)) return "mishanguc:wood_wall_sign";
+    if (MishangUtils.isStrippedWood(baseBlock)) return "mishanguc:stripped_wood_wall_sign";
+    if (MishangUtils.isPlanks(baseBlock)) return "mishanguc:plank_wall_sign";
+    if (MishangUtils.isConcrete(baseBlock)) return "mishanguc:concrete_wall_sign";
+    if (MishangUtils.isTerracotta(baseBlock)) return "mishanguc:terracotta_wall_sign";
+    if (baseBlock == Blocks.ICE || baseBlock == Blocks.PACKED_ICE || baseBlock == Blocks.BLUE_ICE) {
+      return "mishanguc:ice_wall_sign";
+    }
+    return null;
+  }
+
   @Override
   public @Nullable CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (baseBlock == null) return null;
@@ -300,7 +313,8 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
         .setCustomRecipeCategory("signs")
         .criterionFromItem("has_base_block", baseBlock)
-        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN);
+        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .group(getRecipeGroup());
   }
 
   @Override
