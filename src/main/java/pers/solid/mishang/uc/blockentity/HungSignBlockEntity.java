@@ -103,7 +103,6 @@ public class HungSignBlockEntity extends BlockEntityWithText {
         glowing = Set.of();
       } else {
         glowing = list.stream().map(nbtElement -> Direction.byName(nbtElement.asString())).filter(Objects::nonNull).collect(Collectors.toCollection(() -> new HashSet<>(2)));
-        ;
       }
     } else {
       glowing = Set.of();
