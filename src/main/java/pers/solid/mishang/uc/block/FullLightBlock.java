@@ -11,7 +11,6 @@ import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import pers.solid.brrp.v1.generator.BRRPCubeBlock;
-import pers.solid.mishang.uc.blocks.LightBlocks;
 
 public class FullLightBlock extends BRRPCubeBlock {
   public static final MapCodec<FullLightBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
@@ -35,7 +34,7 @@ public class FullLightBlock extends BRRPCubeBlock {
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), LightBlocks.YELLOW_LIGHT, 8)
+    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this, 8)
         .pattern("*#*")
         .pattern("#C#")
         .pattern("*#*")

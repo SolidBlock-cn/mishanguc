@@ -84,6 +84,10 @@ public class ARRPMain implements ModInitializer {
   }
 
   private static void addGlassHandrailsRecipes() {
+    addRecipeForGlassHandrail(HandrailBlocks.COLORED_DECORATED_STONE_HANDRAIL, Items.STONE, ColoredBlocks.COLORED_CONCRETE, Items.STONE, 6, null);
+    addRecipeForGlassHandrail(HandrailBlocks.COLORED_DECORATED_COBBLESTONE_HANDRAIL, Items.COBBLESTONE, ColoredBlocks.COLORED_CONCRETE, Items.COBBLESTONE, 6, null);
+    addRecipeForGlassHandrail(HandrailBlocks.COLORED_DECORATED_MOSSY_COBBLESTONE_HANDRAIL, Items.MOSSY_COBBLESTONE, ColoredBlocks.COLORED_CONCRETE, Items.MOSSY_COBBLESTONE, 6, null);
+
     HandrailBlocks.DECORATED_IRON_HANDRAILS.forEach((dyeColor, glassHandrailBlock) -> {
       final TagKey<Item> dyeKey = TagKey.of(RegistryKeys.ITEM, new Identifier(TagUtil.C_TAG_NAMESPACE, "dyes/" + dyeColor.asString()));
       PACK.addRecipeAndAdvancement(glassHandrailBlock.getRecipeId(), ShapedRecipeJsonBuilder.create(glassHandrailBlock.getRecipeCategory(), glassHandrailBlock, 4)
