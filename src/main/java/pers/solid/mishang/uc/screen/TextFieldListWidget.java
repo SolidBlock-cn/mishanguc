@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.screen;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -108,6 +110,11 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   }
 
   @Override
+  protected int getRowTop(int index) {
+    return super.getRowTop(index) - 2;
+  }
+
+  @Override
   protected int getScrollbarX() {
     return width - 6;
   }
@@ -133,9 +140,15 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     context.fill(1, y - 1, width - 1, y + entryHeight + 4, 0xfff0f0f0);
   }
 
+  private static final Identifier background = new Identifier("textures/gui/inworld_menu_background.png");
+
   @Override
   protected void drawMenuListBackground(DrawContext context) {
-    // 不绘制任何背景（仅限 1.20.5 以上版本，旧版本可以直接调用方法来取消背景绘制）
+    RenderSystem.enableBlend();
+    Identifier identifier = background;
+    context.drawTexture(identifier, this.getX(), 0, 0, 0, this.getWidth(), this.getY(), 32, 32);
+    context.drawTexture(identifier, this.getX(), this.getBottom(), 0, 0, this.getWidth(), this.getHeight(), 32, 32);
+    RenderSystem.disableBlend();
   }
 
   /**
