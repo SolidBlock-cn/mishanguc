@@ -707,15 +707,15 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     textFieldListWidget = new TextFieldListWidget(this, client, width, height - 90, 25, 16);
     // 添加按钮
 
+    this.addDrawableChild(textFieldListWidget);
+
     if (!isAcceptingCustomValue && !isSelectingButtonToSetCustom) {
       Arrays.stream(toolboxTop).forEach(this::addDrawableChild);
     }
 
     /// 文本列表屏幕以及占位符
     if (!isAcceptingCustomValue && !isSelectingButtonToSetCustom) {
-      this.addDrawableChild(textFieldListWidget);
-    } else {
-      this.addDrawable(textFieldListWidget);
+      this.addSelectableChild(textFieldListWidget);
     }
     initTextHolders();
 
@@ -894,10 +894,10 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    */
   private void arrangeToolboxButtons() {
     // 调整按钮位置
-    arrangeToolboxButtons(toolboxTop, 5);
-    arrangeToolboxButtons(toolbox1, height - 65);
-    arrangeToolboxButtons(toolbox2, height - 45);
-    arrangeToolboxButtons(toolbox3, height - 25);
+    arrangeToolboxButtons(toolboxTop, 3);
+    arrangeToolboxButtons(toolbox1, height - 63);
+    arrangeToolboxButtons(toolbox2, height - 43);
+    arrangeToolboxButtons(toolbox3, height - 23);
   }
 
   /**
