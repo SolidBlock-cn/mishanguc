@@ -78,7 +78,8 @@ public class GlowingHungSignBlock extends HungSignBlock {
     return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this, 6)
         .patterns("-#-", "-#-", "-#-")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
-        .criterionFromItem("has_base_block", baseBlock).criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .criterionFromItem("has_base_block", baseBlock)
+        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
         .setCustomRecipeCategory("signs");
   }
 

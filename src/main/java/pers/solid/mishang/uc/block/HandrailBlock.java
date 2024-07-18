@@ -153,7 +153,6 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
     return state.with(FACING, facing).with(WATERLOGGED, waterlogged);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public boolean canReplace(BlockState state, ItemPlacementContext context) {
     if (state.getBlock().asItem() != context.getStack().getItem()) return false;
@@ -176,7 +175,6 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
     return possibleNewFacing != null && facing.getAxis() != possibleNewFacing.getAxis();
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
     final Block block = stateFrom.getBlock();
@@ -187,7 +185,6 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
     return super.isSideInvisible(state, stateFrom, direction);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public FluidState getFluidState(BlockState state) {
     return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
@@ -199,7 +196,6 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
     return BlockStateModelGenerator.createSingletonBlockState(this, getBlockModelId()).coordinate(BlockStateVariantMap.create(Properties.HORIZONTAL_FACING).register(direction -> BlockStateVariant.create().put(MishangUtils.DIRECTION_Y_VARIANT, direction).put(VariantSettings.UVLOCK, true)));
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     return SHAPES.get(state.get(FACING));

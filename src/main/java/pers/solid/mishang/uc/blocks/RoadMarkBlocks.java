@@ -68,7 +68,6 @@ public class RoadMarkBlocks extends MishangucBlocks {
   /**
    * 用于 {@link RoadMarkBlock.AxisFacing#mirror}，对方块进行翻转时，需要考虑。
    */
-  @SuppressWarnings("JavadocReference")
   public static final BiMap<RoadMarkBlock, RoadMarkBlock> LEFT_TO_RIGHT = ImmutableBiMap.<RoadMarkBlock, RoadMarkBlock>builder()
       .put(ARROW_LEFT_MARK, ARROW_RIGHT_MARK)
       .put(ARROW_STRAIGHT_LEFT_MARK, ARROW_STRAIGHT_RIGHT_MARK)

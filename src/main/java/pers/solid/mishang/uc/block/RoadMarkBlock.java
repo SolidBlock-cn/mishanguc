@@ -66,7 +66,6 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
     builder.add(Properties.WATERLOGGED, ON_SLAB);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
     final BlockPos downPos = pos.down();
@@ -93,13 +92,11 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
     return state;
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public FluidState getFluidState(BlockState state) {
     return state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
     if (state.get(Properties.WATERLOGGED)) {
@@ -116,7 +113,6 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
     return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     return state.get(ON_SLAB) ? SHAPE_ON_SLAB : SHAPE;
@@ -196,13 +192,11 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
       };
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
       return super.rotate(state, rotation).with(AXIS, state.get(AXIS).rotate(rotation));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
       BlockState mirror1 = super.mirror(state, mirror);
@@ -269,13 +263,11 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
       };
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
       return super.rotate(state, rotation).with(FACING, state.get(FACING).rotate(rotation));
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
       BlockState mirror1 = super.mirror(state, mirror);

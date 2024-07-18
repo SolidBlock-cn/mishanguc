@@ -2,14 +2,11 @@ package pers.solid.mishang.uc.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.SlabBlock;
 import net.minecraft.client.item.TooltipType;
-import net.minecraft.data.server.loottable.vanilla.VanillaBlockLootTableGenerator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootTable;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
@@ -20,12 +17,13 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.generator.BRRPSlabBlock;
 
 import java.util.List;
 
-public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
-  public AbstractRoadSlabBlock(Settings settings) {
-    super(settings);
+public abstract class AbstractRoadSlabBlock extends BRRPSlabBlock implements Road {
+  public AbstractRoadSlabBlock(Block baseBlock, Settings settings) {
+    super(baseBlock, settings);
   }
 
   @Override
@@ -46,13 +44,11 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
     }
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState rotate(BlockState state, BlockRotation rotation) {
     return rotateRoad(super.rotate(state, rotation), rotation);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState mirror(BlockState state, BlockMirror mirror) {
     return mirrorRoad(super.mirror(state, mirror), mirror);
@@ -76,7 +72,6 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
     return onUseRoadWithItem(stack, state, world, pos, player, hand, hit);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public void neighborUpdate(
       BlockState state, World world, BlockPos pos, Block block, BlockPos sourcePos, boolean notify) {
@@ -94,11 +89,6 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
     super.appendTooltip(stack, context, tooltip, options);
     appendDescriptionTooltip(tooltip, context);
     appendRoadTooltip(stack, context, tooltip, options);
-  }
-
-  @Override
-  public LootTable.Builder getLootTable() {
-    return new VanillaBlockLootTableGenerator().slabDrops(this);
   }
 
   @Override
