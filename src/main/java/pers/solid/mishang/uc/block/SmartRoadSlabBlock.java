@@ -11,6 +11,7 @@ import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
@@ -27,6 +28,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
@@ -45,7 +47,7 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
   public final T baseBlock;
 
   public SmartRoadSlabBlock(T baseBlock) {
-    super(Util.make(() -> {
+    super(baseBlock, Util.make(() -> {
       cachedBaseBlock = baseBlock;
       return AbstractBlock.Settings.copy(baseBlock);
     }));
@@ -151,8 +153,25 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
   }
 
   @Override
+  public void writeBlockModel(RuntimeResourcePack pack) {
+    // 道路台阶方块的模型由其主方块代为完成，故这里什么也不做。
+  }
+
+  @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     return ((ShapedRecipeJsonBuilder) RecipeProvider.createSlabRecipe(getRecipeCategory(), this, Ingredient.ofItems(baseBlock))).criterionFromItem(baseBlock).setCustomRecipeCategory("roads");
+  }
+
+  @Override
+  public boolean shouldWriteStonecuttingRecipe() {
+    return true;
+  }
+
+  @Override
+  public SingleItemRecipeJsonBuilder getStonecuttingRecipe() {
+    return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), getRecipeCategory(), this, 2)
+        .criterionFromItem(baseBlock)
+        .setCustomRecipeCategory("roads");
   }
 
   @Override

@@ -7,6 +7,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.item.NamedBlockItem;
@@ -23,12 +24,11 @@ public final class RoadSlabBlocks extends MishangucBlocks {
   /**
    * 方块到台阶方块的双向映射表。
    */
-  public static final BiMap<AbstractRoadBlock, AbstractRoadSlabBlock> BLOCK_TO_SLABS = HashBiMap.create();
-  public static final List<SmartRoadSlabBlock<AbstractRoadBlock>> SLABS = MishangUtils.instanceStream(RoadBlocks.class, AbstractRoadBlock.class).map(RoadSlabBlocks::of).toList();
+  public static final BiMap<@NotNull AbstractRoadBlock, @NotNull AbstractRoadSlabBlock> BLOCK_TO_SLABS = HashBiMap.create();
+  public static final List<@NotNull SmartRoadSlabBlock<AbstractRoadBlock>> SLABS = MishangUtils.instanceStream(RoadBlocks.class, AbstractRoadBlock.class).map(RoadSlabBlocks::of).toList();
 
   @SuppressWarnings("unchecked")
-  private static <T extends AbstractRoadBlock & Road> SmartRoadSlabBlock<T> of(
-      T baseBlock) {
+  private static <T extends AbstractRoadBlock & Road> SmartRoadSlabBlock<T> of(T baseBlock) {
     final SmartRoadSlabBlock<T> slab;
     if (baseBlock instanceof RoadBlockWithAutoLine) {
       slab = (SmartRoadSlabBlock<T>) new RoadSlabBlockWithAutoLine((RoadBlockWithAutoLine) baseBlock);

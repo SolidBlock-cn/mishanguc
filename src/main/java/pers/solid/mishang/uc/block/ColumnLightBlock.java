@@ -10,9 +10,17 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.data.client.*;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.Items;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
@@ -54,15 +62,8 @@ public class ColumnLightBlock extends Block implements Waterloggable, BlockResou
     builder.add(AXIS, Properties.WATERLOGGED);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
-  public BlockState getStateForNeighborUpdate(
-      BlockState state,
-      Direction direction,
-      BlockState neighborState,
-      WorldAccess world,
-      BlockPos pos,
-      BlockPos neighborPos) {
+  public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
     if (state.get(Properties.WATERLOGGED)) {
       world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
@@ -71,7 +72,6 @@ public class ColumnLightBlock extends Block implements Waterloggable, BlockResou
         state, direction, neighborState, world, pos, neighborPos);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState rotate(BlockState state, BlockRotation rotation) {
     return super.rotate(state, rotation).with(AXIS, MishangUtils.rotateAxis(rotation, state.get(AXIS)));
@@ -88,12 +88,9 @@ public class ColumnLightBlock extends Block implements Waterloggable, BlockResou
     }
     return this.getDefaultState()
         .with(AXIS, direction.getAxis())
-        .with(Properties.WATERLOGGED,
-            world.getBlockState(blockPos).getFluidState().getFluid()
-                == Fluids.WATER);
+        .with(Properties.WATERLOGGED, world.getBlockState(blockPos).getFluidState().getFluid() == Fluids.WATER);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public FluidState getFluidState(BlockState state) {
     return state.get(Properties.WATERLOGGED)
@@ -101,19 +98,16 @@ public class ColumnLightBlock extends Block implements Waterloggable, BlockResou
         : super.getFluidState(state);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     return (sizeType >= 2 ? ColumnWallLightBlock.SHAPES4 : sizeType == 1 ? ColumnWallLightBlock.SHAPES5 : ColumnWallLightBlock.SHAPES6).get(state.get(AXIS));
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     return (sizeType >= 2 ? ColumnWallLightBlock.SHAPES5 : sizeType == 1 ? ColumnWallLightBlock.SHAPES6 : ColumnWallLightBlock.SHAPES7).get(state.get(AXIS));
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
     return stateFrom.isOf(this) && state.get(AXIS).test(direction) && stateFrom.get(AXIS).test(direction) || super.isSideInvisible(state, stateFrom, direction);
@@ -145,6 +139,41 @@ public class ColumnLightBlock extends Block implements Waterloggable, BlockResou
       throw new AssertionError();
     }
     return Identifier.of(identifier.getNamespace(), path).brrp_prefixed("block/");
+  }
+
+  @Override
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+    final Identifier itemId = getItemId();
+    final String itemPath = itemId.getPath();
+    if (itemPath.endsWith("_tube")) {
+      final @NotNull Item fullLight = WallLightBlock.getBaseLight(itemId.getNamespace(), lightColor, this);
+      final int outputCount;
+      if (itemPath.contains("_thin_")) {
+        outputCount = 32;
+      } else if (itemPath.contains("_medium_")) {
+        outputCount = 16;
+      } else if (itemPath.contains("thick")) {
+        outputCount = 8;
+      } else {
+        throw new IllegalStateException(String.format("Can't generate recipes: Cannot determine the type of %s according to its id", this));
+      }
+      return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), getRecipeCategory(), this, outputCount)
+          .criterionFromItem(fullLight)
+          .setCustomRecipeCategory("light");
+    } else {
+      final Identifier tubeId = itemId.brrp_suffixed("_tube");
+      final @NotNull Item tube = Registries.ITEM.getOrEmpty(tubeId).orElseThrow(() -> new IllegalArgumentException(String.format("Can't generate recipes: %s does not have a corresponding tube block (with id [%s])", this, tubeId)));
+      return ShapelessRecipeJsonBuilder.create(getRecipeCategory(), this, 1)
+          .input(tube)
+          .input(Items.GRAY_CONCRETE)
+          .criterionFromItem(tube)
+          .setCustomRecipeCategory("light");
+    }
+  }
+
+  @Override
+  public RecipeCategory getRecipeCategory() {
+    return RecipeCategory.DECORATIONS;
   }
 
   @Override

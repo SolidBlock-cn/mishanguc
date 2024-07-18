@@ -9,9 +9,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.data.client.*;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
@@ -120,13 +123,11 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
         .with(WATERLOGGED, world.getFluidState(blockPos).getFluid() == Fluids.WATER);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public FluidState getFluidState(BlockState state) {
     return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getOutlineShape(
       BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
@@ -163,13 +164,11 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
     }
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getSidesShape(BlockState state, BlockView world, BlockPos pos) {
     return getOutlineShape(state, world, pos, ShapeContext.absent());
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     final Direction.Axis axis = state.get(AXIS);
@@ -204,13 +203,11 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
     }
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
     return getCollisionShape(state, world, pos, ShapeContext.absent());
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState getStateForNeighborUpdate(
       BlockState state,
@@ -239,7 +236,6 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
   /**
    * 和 {@link HungSignBlock#rotate} 一致。
    */
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState rotate(BlockState state, BlockRotation rotation) {
     final Direction.Axis oldAxis = state.get(AXIS);
@@ -258,7 +254,6 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
     return state;
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public BlockState mirror(BlockState state, BlockMirror mirror) {
     state = super.mirror(state, mirror);
@@ -316,6 +311,17 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
         id.brrp_suffixed("_edge"),
         ModelJsonBuilder.create(Identifier.of("mishanguc", "block/hung_sign_bar_edge"))
             .addTexture(TextureKey.TEXTURE, texture));
+  }
+
+  @Override
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+    return SingleItemRecipeJsonBuilder.createStonecutting(
+            Ingredient.ofItems(baseBlock),
+            getRecipeCategory(),
+            this,
+            20)
+        .criterionFromItem("has_base_block", baseBlock)
+        .setCustomRecipeCategory("signs");
   }
 
   @Override

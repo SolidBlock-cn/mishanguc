@@ -6,6 +6,28 @@ Note: Not all versions in this update log are already published. Please refer to
 
 - Fixed the issue that the colors displayed on maps of some road blocks are incorrect.
 - Fixed the issue that invisible signs cannot be broken in Survival Mode while they can be crafted and placed.
+- Adjusted recipes.
+    - The output count of invisible signs has been changed from 6 to 9.
+    - The output count of light cover block has been changed from 6 to 8.
+    - The output count of small light tube has been changed from 16 to 64.
+    - The output count of medium light tube is 32.
+    - The output count of large light tube has been changed from 12 to 16.
+    - The output count of thin strip light tube has been changed from 12 to 16.
+    - The output count of double strip light tube has been changed from 10 to 18.
+    - The output count of thick strip light tube has been changed from 8 to 12.
+    - The output count of thin column light tube is 32.
+    - The output count of medium light tube is 16.
+    - The output count of thin light tube is 8.
+    - The output count of light decoration block has been adjusted to: 18 for points, 15 for simple, 12 for rhombus of hash shape, 9 for round.
+    - Now you can craft road blocks and road slab blocks with line painted into road blocks and road slab blocks without line painted via a stonecutter.
+    - Now you can craft hun sign bars in a stonecutter, one base block for 20 pieces.
+    - Now you can craft road slabs for blocks in a stonecutter.
+- Adjusted and fixed tags.
+    - Fixed the issue that block tag `#mishanguc:lights` lacks some light blocks.
+    - Added `mishanguc:colored_light` into `#mishanguc:lights`.
+    - Fixed the issue that tags such as `#mishanguc:simple_handrails` lack some blocks.
+    - Fixed some missing mineable block tags.
+    - Added some blocks to tags of Fabric Conventional Tags, such as some tags for dyed blocks.
 
 ### 1.3.1-beta.1
 
