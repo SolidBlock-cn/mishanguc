@@ -2,6 +2,11 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.3.2
+
+- Fixed the issue that road blocks cannot be used normally under circumstances other than water cauldron.
+- Fixed the issue that some tools can be used normally in Spectator Mode.
+
 ### 1.3.1
 
 - Fixed the issue that the colors displayed on maps of some road blocks are incorrect.
