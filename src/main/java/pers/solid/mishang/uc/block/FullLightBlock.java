@@ -18,7 +18,7 @@ public class FullLightBlock extends BRRPCubeBlock {
       Registries.ITEM.getCodec().fieldOf("dye_ingredient").forGetter(b -> b.dyeIngredient),
       Registries.ITEM.getCodec().fieldOf("concrete_ingredient").forGetter(b -> b.concreteIngredient)
   ).apply(i, (settings1, item1, item2) -> new FullLightBlock(settings1, new TextureMap(), item1, item2)));
-  private static final Identifier MODEL_PARENT_ID = new Identifier("mishanguc", "block/light");
+  private static final Identifier MODEL_PARENT_ID = Identifier.of("mishanguc", "block/light");
   private final Item dyeIngredient;
   private final Item concreteIngredient;
 

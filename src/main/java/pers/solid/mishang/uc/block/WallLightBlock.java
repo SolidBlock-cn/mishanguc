@@ -11,7 +11,7 @@ import net.minecraft.block.*;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -197,7 +197,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
       } else {
         throw new IllegalStateException(String.format("Can't generate recipes: Cannot determine the type of %s according to its id", this));
       }
-      return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), getRecipeCategory(), this, outputCount)
+      return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), getRecipeCategory(), this, outputCount)
           .criterionFromItem(fullLight)
           .setCustomRecipeCategory("light");
     } else {
@@ -223,7 +223,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
   }
 
   public static @NotNull Item getBaseLight(String namespace, String lightColor, Block self) {
-    final Identifier fullLightId = new Identifier(namespace, lightColor + "_light");
+    final Identifier fullLightId = Identifier.of(namespace, lightColor + "_light");
     return Registries.ITEM.getOrEmpty(fullLightId).orElseThrow(() -> new IllegalArgumentException(String.format("Can't generate recipes: %s does not have a corresponding base light block (with id [%s])", self, fullLightId)));
   }
 }

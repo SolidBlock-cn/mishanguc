@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.util.Identifier;
@@ -42,7 +42,7 @@ public class LightCoverBlock extends WallLightBlock {
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     final Identifier itemId = getItemId();
     final @NotNull Item fullLight = getBaseLight(itemId.getNamespace(), lightColor, this);
-    return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), getRecipeCategory(), this, 8)
+    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), getRecipeCategory(), this, 8)
         .criterionFromItem(fullLight)
         .setCustomRecipeCategory("light");
   }

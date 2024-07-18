@@ -7,7 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -324,7 +324,7 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return SingleItemRecipeJsonBuilder.createStonecutting(
+    return StonecuttingRecipeJsonBuilder.createStonecutting(
             Ingredient.ofItems(baseBlock),
             getRecipeCategory(),
             this,

@@ -11,7 +11,7 @@ import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
@@ -168,8 +168,8 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
   }
 
   @Override
-  public SingleItemRecipeJsonBuilder getStonecuttingRecipe() {
-    return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), getRecipeCategory(), this, 2)
+  public StonecuttingRecipeJsonBuilder getStonecuttingRecipe() {
+    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), getRecipeCategory(), this, 2)
         .criterionFromItem(baseBlock)
         .setCustomRecipeCategory("roads");
   }

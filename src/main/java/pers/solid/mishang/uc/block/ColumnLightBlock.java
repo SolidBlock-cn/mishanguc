@@ -12,7 +12,7 @@ import net.minecraft.block.Waterloggable;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -157,7 +157,7 @@ public class ColumnLightBlock extends Block implements Waterloggable, BlockResou
       } else {
         throw new IllegalStateException(String.format("Can't generate recipes: Cannot determine the type of %s according to its id", this));
       }
-      return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), getRecipeCategory(), this, outputCount)
+      return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), getRecipeCategory(), this, outputCount)
           .criterionFromItem(fullLight)
           .setCustomRecipeCategory("light");
     } else {

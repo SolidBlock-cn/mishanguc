@@ -14,7 +14,7 @@ import net.minecraft.data.client.BlockStateVariant;
 import net.minecraft.data.client.MultipartBlockStateSupplier;
 import net.minecraft.data.client.When;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
@@ -298,7 +298,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
     } else {
       outputCount = 12;
     }
-    return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), RecipeCategory.DECORATIONS, this, outputCount)
+    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), RecipeCategory.DECORATIONS, this, outputCount)
         .criterionFromItem(fullLight)
         .setCustomRecipeCategory("light");
   }

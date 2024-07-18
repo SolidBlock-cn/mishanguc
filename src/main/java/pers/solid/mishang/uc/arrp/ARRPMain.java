@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.data.server.loottable.vanilla.VanillaBlockLootTableGenerator;
 import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
@@ -89,7 +90,7 @@ public class ARRPMain implements ModInitializer {
     addRecipeForGlassHandrail(HandrailBlocks.COLORED_DECORATED_MOSSY_COBBLESTONE_HANDRAIL, Items.MOSSY_COBBLESTONE, ColoredBlocks.COLORED_CONCRETE, Items.MOSSY_COBBLESTONE, 6, null);
 
     HandrailBlocks.DECORATED_IRON_HANDRAILS.forEach((dyeColor, glassHandrailBlock) -> {
-      final TagKey<Item> dyeKey = TagKey.of(RegistryKeys.ITEM, new Identifier(TagUtil.C_TAG_NAMESPACE, "dyes/" + dyeColor.asString()));
+      final TagKey<Item> dyeKey = TagKey.of(RegistryKeys.ITEM, Identifier.of(TagUtil.C_TAG_NAMESPACE, "dyes/" + dyeColor.asString()));
       PACK.addRecipeAndAdvancement(glassHandrailBlock.getRecipeId(), ShapedRecipeJsonBuilder.create(glassHandrailBlock.getRecipeCategory(), glassHandrailBlock, 4)
           .pattern("XXX")
           .pattern("oMo")
@@ -230,13 +231,13 @@ public class ARRPMain implements ModInitializer {
 
   private static void addRoadPalingRecipes() {
     // 将带有标线的道路重置为不带标线的道路。
-    final TagKey<Item> roadBlocks = TagKey.of(RegistryKeys.ITEM, new Identifier("mishanguc", "road_blocks"));
-    PACK.addRecipeAndAdvancement(RoadBlocks.ROAD_BLOCK.getRecipeId().brrp_suffixed("_from_paling"), SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.fromTag(roadBlocks), RecipeCategory.BUILDING_BLOCKS, RoadBlocks.ROAD_BLOCK)
+    final TagKey<Item> roadBlocks = TagKey.of(RegistryKeys.ITEM, Identifier.of("mishanguc", "road_blocks"));
+    PACK.addRecipeAndAdvancement(RoadBlocks.ROAD_BLOCK.getRecipeId().brrp_suffixed("_from_paling"), StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.fromTag(roadBlocks), RecipeCategory.BUILDING_BLOCKS, RoadBlocks.ROAD_BLOCK)
         .criterionFromItemTag("has_road_block", roadBlocks)
         .setCustomRecipeCategory("roads"));
-    final TagKey<Item> roadSlabs = TagKey.of(RegistryKeys.ITEM, new Identifier("mishanguc", "road_slabs"));
+    final TagKey<Item> roadSlabs = TagKey.of(RegistryKeys.ITEM, Identifier.of("mishanguc", "road_slabs"));
     final AbstractRoadSlabBlock roadSlabBlock = RoadSlabBlocks.BLOCK_TO_SLABS.get(RoadBlocks.ROAD_BLOCK);
-    PACK.addRecipeAndAdvancement(roadSlabBlock.getRecipeId().brrp_suffixed("_from_paling"), SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.fromTag(roadSlabs), RecipeCategory.BUILDING_BLOCKS, roadSlabBlock)
+    PACK.addRecipeAndAdvancement(roadSlabBlock.getRecipeId().brrp_suffixed("_from_paling"), StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.fromTag(roadSlabs), RecipeCategory.BUILDING_BLOCKS, roadSlabBlock)
         .criterionFromItemTag("has_road_slab", roadSlabs)
         .setCustomRecipeCategory("roads"));
   }

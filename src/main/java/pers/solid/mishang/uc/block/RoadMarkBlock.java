@@ -8,7 +8,7 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.block.*;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -171,7 +171,7 @@ public class RoadMarkBlock extends Block implements Waterloggable, BlockResource
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.fromTag(ConventionalItemTags.WHITE_DYES), getRecipeCategory(), this)
+    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.fromTag(ConventionalItemTags.WHITE_DYES), getRecipeCategory(), this)
         .criterionFromItemTag("has_white_dye", ConventionalItemTags.WHITE_DYES)
         .setCustomRecipeCategory("road_marks");
   }

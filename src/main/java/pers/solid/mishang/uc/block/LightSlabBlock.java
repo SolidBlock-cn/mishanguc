@@ -6,7 +6,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
@@ -55,8 +55,8 @@ public class LightSlabBlock extends BRRPSlabBlock {
   }
 
   @Override
-  public SingleItemRecipeJsonBuilder getStonecuttingRecipe() {
-    return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), getRecipeCategory(), this, 2)
+  public StonecuttingRecipeJsonBuilder getStonecuttingRecipe() {
+    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), getRecipeCategory(), this, 2)
         .criterionFromItem(baseBlock)
         .setCustomRecipeCategory("lights");
   }

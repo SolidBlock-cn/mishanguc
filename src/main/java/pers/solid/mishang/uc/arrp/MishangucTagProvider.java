@@ -86,7 +86,7 @@ public class MishangucTagProvider {
   }
 
   protected IdentifiedTagBuilder<Block> blockTagOnly(String path) {
-    final var tag = IdentifiedTagBuilder.createBlock(new Identifier("mishanguc", path));
+    final var tag = IdentifiedTagBuilder.createBlock(Identifier.of("mishanguc", path));
     blockTags.add(tag);
     return tag;
   }
@@ -100,7 +100,7 @@ public class MishangucTagProvider {
   }
 
   protected IdentifiedTagBuilder<Block> blockTagWithItem(String path) {
-    final var tag = IdentifiedTagBuilder.createBlock(new Identifier("mishanguc", path));
+    final var tag = IdentifiedTagBuilder.createBlock(Identifier.of("mishanguc", path));
     blockTags.add(tag);
     blockTagsWithItem.add(tag);
     return tag;
@@ -113,7 +113,7 @@ public class MishangucTagProvider {
   }
 
   protected IdentifiedTagBuilder<Item> itemTag(String path) {
-    final var tag = IdentifiedTagBuilder.createItem(new Identifier("mishanguc", path));
+    final var tag = IdentifiedTagBuilder.createItem(Identifier.of("mishanguc", path));
     itemTags.add(tag);
     return tag;
   }

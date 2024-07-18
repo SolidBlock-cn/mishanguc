@@ -174,7 +174,7 @@ public class CornerLightBlock extends HorizontalFacingBlock
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     final Identifier itemId = getItemId();
-    final Identifier wallId = new Identifier(itemId.getNamespace(), itemId.getPath().replace("_corner_", "_wall_"));
+    final Identifier wallId = Identifier.of(itemId.getNamespace(), itemId.getPath().replace("_corner_", "_wall_"));
     if (wallId.equals(itemId)) {
       throw new IllegalStateException("Can't generate recipes: can't find the id of corresponding wall light block for " + this);
     }
