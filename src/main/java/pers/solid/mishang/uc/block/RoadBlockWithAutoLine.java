@@ -9,6 +9,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
@@ -532,5 +534,20 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
   @Override
   protected MapCodec<? extends RoadBlockWithAutoLine> getCodec() {
     return CODEC;
+  }
+
+  @Override
+  public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 1)
+        .pattern("aba")
+        .pattern("bXb")
+        .pattern("aba")
+        .input('a', type == RoadAutoLineType.RIGHT_ANGLE ? LineColor.WHITE.getIngredient() : LineColor.YELLOW.getIngredient())
+        .input('b', type != RoadAutoLineType.RIGHT_ANGLE ? LineColor.WHITE.getIngredient() : LineColor.YELLOW.getIngredient())
+        .input('X', base)
+        .criterionFromItem(base)
+        .criterionFromItemTag("has_white_dye", LineColor.WHITE.getIngredient())
+        .criterionFromItemTag("has_yellow_dye", LineColor.YELLOW.getIngredient())
+        .setCustomRecipeCategory("roads");
   }
 }

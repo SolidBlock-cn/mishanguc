@@ -4,9 +4,12 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -65,6 +68,19 @@ public interface RoadWithCrossLine extends Road {
     @Override
     protected MapCodec<? extends Impl> getCodec() {
       return CODEC;
+    }
+
+    @Override
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+      return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 4)
+          .pattern("*X*")
+          .pattern("X*X")
+          .pattern("*X*")
+          .input('*', lineColor.getIngredient())
+          .input('X', base)
+          .criterionFromItemTag("has_ingredient", lineColor.getIngredient())
+          .criterionFromItem(base)
+          .setCustomRecipeCategory("roads");
     }
   }
 }
