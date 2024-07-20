@@ -187,7 +187,7 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
           .setCustomRecipeCategory("roads")
           .criterionFromItemTag("has_" + lineColor.asString() + "_paint", lineColor.getIngredient())
           .criterionFromItem(base);
-      if (lineType != lineType2) {
+      if (lineColor != lineColor2) {
         recipe.criterionFromItemTag("has_" + lineColor2.asString() + "_paint", lineColor2.getIngredient());
       }
       return recipe;
