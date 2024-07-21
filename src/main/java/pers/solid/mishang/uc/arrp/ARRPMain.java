@@ -13,7 +13,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
@@ -209,7 +208,7 @@ public class ARRPMain implements ModInitializer {
   private static void addRecipesForInvisibleSigns() {
     // 隐形告示牌是合成其他告示牌的基础。
     PACK.addRecipeAndAdvancement(BRRPUtils.getRecipeId(WallSignBlocks.INVISIBLE_WALL_SIGN),
-        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WallSignBlocks.INVISIBLE_WALL_SIGN, 9)
+        ShapedRecipeJsonBuilder.create(WallSignBlocks.INVISIBLE_WALL_SIGN.getRecipeCategory(), WallSignBlocks.INVISIBLE_WALL_SIGN, 9)
             .pattern(".#.")
             .pattern("#o#")
             .pattern(".#.")
@@ -221,7 +220,7 @@ public class ARRPMain implements ModInitializer {
             .criterion("has_gold_ingot", RecipeProvider.conditionsFromItem(Items.GOLD_INGOT))
             .setCustomRecipeCategory("signs"));
     PACK.addRecipeAndAdvancement(BRRPUtils.getRecipeId(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN),
-        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN, 3)
+        ShapedRecipeJsonBuilder.create(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN.getRecipeCategory(), WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN, 3)
             .pattern("---")
             .pattern("###")
             .input('-', Items.GLOWSTONE_DUST)
@@ -233,12 +232,12 @@ public class ARRPMain implements ModInitializer {
   private static void addRoadPalingRecipes() {
     // 将带有标线的道路重置为不带标线的道路。
     final TagKey<Item> roadBlocks = TagKey.of(RegistryKeys.ITEM, new Identifier("mishanguc", "road_blocks"));
-    PACK.addRecipeAndAdvancement(RoadBlocks.ROAD_BLOCK.getRecipeId().brrp_suffixed("_from_paling"), SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.fromTag(roadBlocks), RecipeCategory.BUILDING_BLOCKS, RoadBlocks.ROAD_BLOCK)
+    PACK.addRecipeAndAdvancement(RoadBlocks.ROAD_BLOCK.getRecipeId().brrp_suffixed("_from_paling"), SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.fromTag(roadBlocks), RoadBlocks.ROAD_BLOCK.getRecipeCategory(), RoadBlocks.ROAD_BLOCK)
         .criterionFromItemTag("has_road_block", roadBlocks)
         .setCustomRecipeCategory("roads"));
     final TagKey<Item> roadSlabs = TagKey.of(RegistryKeys.ITEM, new Identifier("mishanguc", "road_slabs"));
     final AbstractRoadSlabBlock roadSlabBlock = RoadSlabBlocks.BLOCK_TO_SLABS.get(RoadBlocks.ROAD_BLOCK);
-    PACK.addRecipeAndAdvancement(roadSlabBlock.getRecipeId().brrp_suffixed("_from_paling"), SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.fromTag(roadSlabs), RecipeCategory.BUILDING_BLOCKS, roadSlabBlock)
+    PACK.addRecipeAndAdvancement(roadSlabBlock.getRecipeId().brrp_suffixed("_from_paling"), SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.fromTag(roadSlabs), roadSlabBlock.getRecipeCategory(), roadSlabBlock)
         .criterionFromItemTag("has_road_slab", roadSlabs)
         .setCustomRecipeCategory("roads"));
   }
