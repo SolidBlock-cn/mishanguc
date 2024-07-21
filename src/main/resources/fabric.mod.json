@@ -36,10 +36,7 @@
     "com_github_llamalad7_mixinextras": ">=0.2.0"
   },
   "breaks": {
-    "minecraft": [
-      "~1.19",
-      ">=1.19"
-    ]
+    "minecraft": ">=1.19-0"
   },
   "custom": {
     "branch": "1.18.2",
