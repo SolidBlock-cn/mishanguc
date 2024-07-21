@@ -200,7 +200,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
       // 非灯管方块，采用与混凝土的合成。
       final Identifier tubeId = itemId.brrp_suffixed("_tube");
       final @NotNull Item tube = Registries.ITEM.getOrEmpty(tubeId).orElseThrow(() -> new IllegalArgumentException(String.format("Can't generate recipes: %s does not have a corresponding tube block (with id [%s])", this, tubeId)));
-      return ShapelessRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this, 1)
+      return ShapelessRecipeJsonBuilder.create(getRecipeCategory(), this, 1)
           .input(tube)
           .input(Items.GRAY_CONCRETE)
           .criterionFromItem(tube)
