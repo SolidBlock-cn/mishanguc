@@ -9,6 +9,7 @@ Note: Not all versions in this update log are already published. Please refer to
 - When holding invisible signs, the outlines of placed ordinary invisible signs will be drawn in cyan, while those of glowing invisible signs are still yellow.
 - Removed the usage of deprecated `-texture_beta`.
 - Fixed potential `NullPointerException` on editing standing signs.
+- Fixed the issue that the Tab key cannot correctly select buttons in the sign edit screen.
 
 ### 1.3.2
 
