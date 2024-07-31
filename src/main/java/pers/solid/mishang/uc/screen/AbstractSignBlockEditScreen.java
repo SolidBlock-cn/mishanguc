@@ -157,7 +157,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   }).dimensions(this.width - 20, 5, 80, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.moveDown.description").append(ScreenTexts.LINE_BREAK).append(MishangUtils.describeShortcut(TextBridge.literal("Ctrl + Shift + ").append(TextBridge.translatable("key.keyboard.down")))))).build();
 
   /**
-   * 上方第一行：重排按钮。
+   * 上方第一行：清除按钮。
    */
   public final ButtonWidget clearButton = new ButtonWidget.Builder(BUTTON_CLEAR_MESSAGE, button -> {
     if (button.getMessage() == BUTTON_CLEAR_CONFIRM_MESSAGE) {
@@ -171,7 +171,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       button.setMessage(BUTTON_CLEAR_CONFIRM_MESSAGE);
       button.setTooltip(Tooltip.of(BUTTON_CLEAR_CONFIRM_DESCRIPTION_MESSAGE));
     }
-  }).dimensions(this.width / 2 + 190, this.height - 50, 80, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.rearrange.tooltip"))).build();
+  }).dimensions(this.width / 2 + 190, this.height - 50, 80, 20).tooltip(Tooltip.of(BUTTON_CLEAR_CONFIRM_DESCRIPTION_MESSAGE)).build();
 
 
 
@@ -641,9 +641,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public final ButtonWidget cancelButton = new ButtonWidget.Builder(ScreenTexts.CANCEL, button -> this.cancelEditing()).dimensions(this.width / 2, height - 30, 40, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.cancel.description"))).build();
 
   /**
-   * 下方第三行：清除所有文本的按钮。
+   * 下方第三行：重排按钮。
    */
-  public final ButtonWidget rearrangeButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.rearrange"), button -> rearrange()).dimensions(this.width / 2, this.height - 50, 40, 20).tooltip(Tooltip.of(BUTTON_CLEAR_CONFIRM_DESCRIPTION_MESSAGE)).build();
+  public final ButtonWidget rearrangeButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.rearrange"), button -> rearrange()).dimensions(this.width / 2, this.height - 50, 40, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.rearrange.tooltip"))).build();
 
   /**
    * 下方第三行：隐藏界面
