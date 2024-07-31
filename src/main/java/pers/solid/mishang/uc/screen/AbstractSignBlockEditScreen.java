@@ -159,7 +159,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   }, createTooltipSupplier(TextBridge.translatable("message.mishanguc.moveDown.description").append(ScreenTexts.LINE_BREAK).append(MishangUtils.describeShortcut(TextBridge.literal("Ctrl + Shift + ").append(TextBridge.translatable("key.keyboard.down"))))));
 
   /**
-   * 上方第一行：重排按钮。
+   * 上方第一行：清除按钮。
    */
   public final ButtonWidget clearButton = new ButtonWidget(this.width / 2 + 190, this.height - 50, 80, 20, BUTTON_CLEAR_MESSAGE, button -> {
     if (button.getMessage() == BUTTON_CLEAR_CONFIRM_MESSAGE) {
@@ -648,7 +648,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public final ButtonWidget cancelButton = new ButtonWidget(this.width / 2, height - 30, 40, 20, ScreenTexts.CANCEL, button -> this.cancelEditing(), createTooltipSupplier(TextBridge.translatable("message.mishanguc.cancel.description")));
 
   /**
-   * 下方第三行：清除所有文本的按钮。
+   * 下方第三行：重排按钮。
    */
   public final ButtonWidget rearrangeButton = new ButtonWidget(this.width / 2, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.rearrange"), button -> rearrange(), createTooltipSupplier(TextBridge.translatable("message.mishanguc.rearrange.tooltip")));
 
