@@ -165,31 +165,19 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     }
 
     @Override
-    public void render(
-        DrawContext context,
-        int index,
-        int y,
-        int x,
-        int entryWidth,
-        int entryHeight,
-        int mouseX,
-        int mouseY,
-        boolean hovered,
-        float tickDelta) {
+    public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
       textFieldWidget.setY(y);
       textFieldWidget.render(context, mouseX, mouseY, tickDelta);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-      return super.mouseClicked(mouseX, mouseY, button)
-          || textFieldWidget.mouseClicked(mouseX, mouseY, button);
+      return textFieldWidget.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-      return super.mouseReleased(mouseX, mouseY, button)
-          || textFieldWidget.mouseReleased(mouseX, mouseY, button);
+      return textFieldWidget.mouseReleased(mouseX, mouseY, button);
     }
 
     /**
