@@ -707,7 +707,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     textFieldListWidget = new TextFieldListWidget(this, client, width, height - 90, 25, 16);
     // 添加按钮
 
-    this.addDrawableChild(textFieldListWidget);
+    this.addDrawable(textFieldListWidget);
 
     if (!isAcceptingCustomValue && !isSelectingButtonToSetCustom) {
       Arrays.stream(toolboxTop).forEach(this::addDrawableChild);
