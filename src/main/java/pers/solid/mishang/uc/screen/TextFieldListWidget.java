@@ -186,17 +186,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     }
 
     @Override
-    public void render(
-        MatrixStack matrices,
-        int index,
-        int y,
-        int x,
-        int entryWidth,
-        int entryHeight,
-        int mouseX,
-        int mouseY,
-        boolean hovered,
-        float tickDelta) {
+    public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
       if (getSelectedOrNull() == this && textFieldWidget.isVisible() && isFocused()) {
         fill(matrices, textFieldWidget.x - 2, y - 2, textFieldWidget.x + textFieldWidget.getWidth() + 2, y + textFieldWidget.getHeight() + 2, 0xfff0f0f0);
       }
@@ -209,14 +199,12 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
       if (button == 0) {
         setSelected(this);
       }
-      return super.mouseClicked(mouseX, mouseY, button)
-          || textFieldWidget.mouseClicked(mouseX, mouseY, button);
+      return textFieldWidget.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-      return super.mouseReleased(mouseX, mouseY, button)
-          || textFieldWidget.mouseReleased(mouseX, mouseY, button);
+      return textFieldWidget.mouseReleased(mouseX, mouseY, button);
     }
 
     /**

@@ -43,13 +43,7 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
   }
 
   @Override
-  public void render(
-      T entity,
-      float tickDelta,
-      MatrixStack matrices,
-      VertexConsumerProvider vertexConsumers,
-      int light,
-      int overlay) {
+  public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
     final Block block = entity.getCachedState().getBlock();
     // 若方块为隐形方块，且玩家手中拿着该方块，则显示该方块轮廓。
     final ClientPlayerEntity player = MinecraftClient.getInstance().player;
@@ -57,19 +51,17 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
       final Item mainHandStackItem = player.getMainHandStack().getItem();
       if (mainHandStackItem instanceof final BlockItem blockItem
           && INVISIBLE_BLOCKS.contains(blockItem.getBlock())) {
+        boolean glowing = entity.getCachedState().isOf(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN);
         WorldRendererInvoker.drawCuboidShapeOutline(
             matrices,
             vertexConsumers.getBuffer(RenderLayer.LINES),
-            entity
-                .getCachedState()
-                .getOutlineShape(
-                    ctx.getRenderDispatcher().world, entity.getPos(), ShapeContext.of(player)),
+            entity.getCachedState().getOutlineShape(ctx.getRenderDispatcher().world, entity.getPos(), ShapeContext.of(player)),
             0,
             0,
             0,
-            0.9f,
+            glowing ? 0.9f : 0.3f,
             0.8f,
-            0.3f,
+            glowing ? 0.3f : 0.9f,
             0.9f);
       }
     }
