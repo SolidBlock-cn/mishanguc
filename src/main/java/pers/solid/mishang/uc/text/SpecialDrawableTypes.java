@@ -48,12 +48,6 @@ public final class SpecialDrawableTypes {
     return null;
   });
 
-  /**
-   * @deprecated 仅为兼容性而保留。完成反序列化之后，其类型应该是 {@link #TEXTURE}。
-   */
-  @Deprecated
-  private static final SpecialDrawableType<TextureSpecialDrawable> TEXTURE_BETA = register("texture_beta", TEXTURE::fromNbt, TEXTURE::fromStringArgs);
-
   private static <T extends SpecialDrawableType<? extends SpecialDrawable>> T register(String namePath, T specialDrawable) {
     return Registry.register(SpecialDrawableType.REGISTRY, new Identifier("mishanguc", namePath), specialDrawable);
   }
