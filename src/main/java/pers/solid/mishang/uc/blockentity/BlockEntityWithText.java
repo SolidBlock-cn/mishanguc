@@ -137,10 +137,8 @@ public abstract class BlockEntityWithText extends BlockEntity {
           if (entity instanceof final HungSignBlockEntity hungSignBlockEntity) {
             final Direction editedSide = hungSignBlockEntity.editedSide;
             hungSignBlockEntity.editedSide = null;
-            if (nbt == null)
-              return;
-            final HashMap<@NotNull Direction, @NotNull List<@NotNull TextContext>> builder =
-                new HashMap<>(hungSignBlockEntity.texts);
+            if (nbt == null) return;
+            final HashMap<@NotNull Direction, @NotNull List<@NotNull TextContext>> builder = new HashMap<>(hungSignBlockEntity.texts);
             if (editedSide != null) {
               if (!textContexts.isEmpty()) {
                 builder.put(editedSide, textContexts);
@@ -150,12 +148,11 @@ public abstract class BlockEntityWithText extends BlockEntity {
             }
             hungSignBlockEntity.texts = ImmutableMap.copyOf(builder);
           } else if (entity instanceof final WallSignBlockEntity wallSignBlockEntity) {
-            if (nbt == null)
-              return;
+            if (nbt == null) return;
             wallSignBlockEntity.textContexts = textContexts;
           } else if (entity instanceof final StandingSignBlockEntity standingSignBlockEntity) {
             final Boolean editedSite = standingSignBlockEntity.editedSide;
-            if (editedSite != null) {
+            if (editedSite != null && nbt != null) {
               standingSignBlockEntity.setTextsOnSide(editedSite, textContexts);
             }
           }
