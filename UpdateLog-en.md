@@ -7,6 +7,7 @@ Note: Not all versions in this update log are already published. Please refer to
 - Fixed the issue that the tooltip of 'rearrange' button and 'clear' button in the sign edit screen is incorrect.
 - Fixed the issue that text cannot be correctly selected in the sign edit screen.
 - When holding invisible signs, the outlines of placed ordinary invisible signs will be drawn in cyan, while those of glowing invisible signs are still yellow.
+- Removed the usage of deprecated `-texture_beta`.
 
 ### 1.3.2
 
