@@ -13,10 +13,7 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Range;
+import org.jetbrains.annotations.*;
 import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.List;
@@ -35,12 +32,12 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
    * 前面的文字，也就是放置时朝着玩家的这一面。
    * 通常情况下，是不可变的。当客户端正在进行编辑时，客户端的该字段是可变的。
    */
-  public List<TextContext> frontTexts = ImmutableList.of();
+  public @NotNull List<TextContext> frontTexts = ImmutableList.of();
   /**
    * 后面的文字，也就是放置时背对玩家的这一面。
    * 通常情况下，是不可变的。当客户端正在进行编辑时，客户端的该字段是可变的。
    */
-  public List<TextContext> backTexts = ImmutableList.of();
+  public @NotNull List<TextContext> backTexts = ImmutableList.of();
   /**
    * 正在编辑该告示牌的玩家。
    */
@@ -164,7 +161,7 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
    * @param texts   文本列表，将直接用作字段。
    */
   @Contract(mutates = "this")
-  public void setTextsOnSide(boolean isFront, List<TextContext> texts) {
+  public void setTextsOnSide(boolean isFront, @NotNull List<TextContext> texts) {
     if (isFront) frontTexts = texts;
     else backTexts = texts;
   }
