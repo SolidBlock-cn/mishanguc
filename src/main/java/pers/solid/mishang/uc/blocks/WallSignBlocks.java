@@ -28,7 +28,7 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final FullWallSignBlock INVISIBLE_WALL_SIGN = new FullWallSignBlock(null, Block.Settings.create().mapColor(MapColor.CLEAR).noCollision().strength(0, 1f));
 
   @MiningLevel(MiningLevel.Tool.NONE)
-  public static final FullWallSignBlock INVISIBLE_GLOWING_WALL_SIGN = new FullWallSignBlock(null, Block.Settings.copy(Blocks.BARRIER).noCollision().luminance(x -> 15).strength(0, 1f));
+  public static final FullWallSignBlock INVISIBLE_GLOWING_WALL_SIGN = new FullWallSignBlock(null, Block.Settings.create().mapColor(MapColor.CLEAR).noCollision().luminance(x -> 15).strength(0, 1f));
 
   // 木质
   @ApiStatus.AvailableSince("1.2.4")
