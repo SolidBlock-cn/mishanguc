@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "mishanguc:block/green_thin_column_light_tube",
+      "x": 270,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "mishanguc:block/green_thin_column_light_tube"
+    },
+    "axis=z": {
+      "model": "mishanguc:block/green_thin_column_light_tube",
+      "x": 270
+    }
+  }
+}

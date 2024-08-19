@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/standing_sign_3",
+  "textures": {
+    "bar": "minecraft:block/blue_ice",
+    "texture": "minecraft:block/blue_ice"
+  }
+}

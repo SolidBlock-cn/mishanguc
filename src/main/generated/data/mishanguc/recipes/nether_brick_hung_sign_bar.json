@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 20,
+  "ingredient": {
+    "item": "minecraft:nether_bricks"
+  },
+  "result": "mishanguc:nether_brick_hung_sign_bar"
+}

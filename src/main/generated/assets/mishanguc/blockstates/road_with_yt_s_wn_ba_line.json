@@ -1,0 +1,68 @@
+{
+  "variants": {
+    "axis=x,bevel_top=false,facing=north_east": {
+      "model": "mishanguc:block/road_with_yt_s_wn_ba_line_mirrored",
+      "y": 180
+    },
+    "axis=x,bevel_top=false,facing=north_west": {
+      "model": "mishanguc:block/road_with_yt_s_wn_ba_line",
+      "y": 90
+    },
+    "axis=x,bevel_top=false,facing=south_east": {
+      "model": "mishanguc:block/road_with_yt_s_wn_ba_line",
+      "y": 270
+    },
+    "axis=x,bevel_top=false,facing=south_west": {
+      "model": "mishanguc:block/road_with_yt_s_wn_ba_line_mirrored",
+      "y": 0
+    },
+    "axis=x,bevel_top=true,facing=north_east": {
+      "model": "mishanguc:block/road_with_yt_s_wn_ba_line_bevel_top_mirrored",
+      "y": 180
+    },
+    "axis=x,bevel_top=true,facing=north_west": {
+      "model": "mishanguc:block/road_with_yt_s_wn_ba_line_bevel_top",
+      "y": 90
+    },
+    "axis=x,bevel_top=true,facing=south_east": {
+      "model": "mishanguc:block/road_with_yt_s_wn_ba_line_bevel_top",
+      "y": 270
+    },
+    "axis=x,bevel_top=true,facing=south_west": {
+      "model": "mishanguc:block/road_with_yt_s_wn_ba_line_bevel_top_mirrored",
+      "y": 0
+    },
+    "axis=z,bevel_top=false,facing=north_east": {
+      "model": "mishanguc:block/road_with_yt_s_wn_ba_line",
+      "y": 180
+    },
+    "axis=z,bevel_top=false,facing=north_west": {
+      "model": "mishanguc:block/road_with_yt_s_wn_ba_line_mirrored",
+      "y": 90
+    },
+    "axis=z,bevel_top=false,facing=south_east": {
+      "model": "mishanguc:block/road_with_yt_s_wn_ba_line_mirrored",
+      "y": -90
+    },
+    "axis=z,bevel_top=false,facing=south_west": {
+      "model": "mishanguc:block/road_with_yt_s_wn_ba_line",
+      "y": 0
+    },
+    "axis=z,bevel_top=true,facing=north_east": {
+      "model": "mishanguc:block/road_with_yt_s_wn_ba_line_bevel_top",
+      "y": 180
+    },
+    "axis=z,bevel_top=true,facing=north_west": {
+      "model": "mishanguc:block/road_with_yt_s_wn_ba_line_bevel_top_mirrored",
+      "y": 90
+    },
+    "axis=z,bevel_top=true,facing=south_east": {
+      "model": "mishanguc:block/road_with_yt_s_wn_ba_line_bevel_top_mirrored",
+      "y": -90
+    },
+    "axis=z,bevel_top=true,facing=south_west": {
+      "model": "mishanguc:block/road_with_yt_s_wn_ba_line_bevel_top",
+      "y": 0
+    }
+  }
+}

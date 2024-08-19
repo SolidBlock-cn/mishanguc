@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/template_colored_glass_pane_noside_alt",
+  "textures": {
+    "edge": "minecraft:block/white_stained_glass_pane_top",
+    "pane": "minecraft:block/white_stained_glass"
+  }
+}

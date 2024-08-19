@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 1,
+  "ingredient": {
+    "tag": "mishanguc:road_slabs"
+  },
+  "result": "mishanguc:road_slab"
+}

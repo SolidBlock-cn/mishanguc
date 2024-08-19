@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:arrow_straight_uturn_left_mark"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_white_dye": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "c:white_dyes"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_white_dye"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:arrow_straight_uturn_left_mark"
+    ]
+  }
+}

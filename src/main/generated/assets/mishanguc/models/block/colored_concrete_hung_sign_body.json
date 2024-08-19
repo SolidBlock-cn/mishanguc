@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/hung_sign_body",
+  "textures": {
+    "bar": "minecraft:block/white_concrete",
+    "texture": "minecraft:block/white_concrete"
+  }
+}

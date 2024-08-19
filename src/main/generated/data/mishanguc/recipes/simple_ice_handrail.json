@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 5,
+  "group": "mishanguc:simple_ice_handrail",
+  "ingredient": {
+    "item": "minecraft:ice"
+  },
+  "result": "mishanguc:simple_ice_handrail"
+}

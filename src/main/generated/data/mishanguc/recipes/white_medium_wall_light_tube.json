@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 32,
+  "ingredient": {
+    "item": "mishanguc:white_light"
+  },
+  "result": "mishanguc:white_medium_wall_light_tube"
+}

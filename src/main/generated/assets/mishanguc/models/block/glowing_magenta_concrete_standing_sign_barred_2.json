@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/glowing_standing_sign_barred_2",
+  "textures": {
+    "bar": "minecraft:block/magenta_concrete",
+    "glow": "mishanguc:block/white_light",
+    "texture": "minecraft:block/magenta_concrete"
+  }
+}

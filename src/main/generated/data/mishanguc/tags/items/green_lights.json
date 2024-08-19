@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "#mishanguc:green_wall_lights",
+    "#mishanguc:green_column_lights",
+    "#mishanguc:green_column_lights",
+    "#mishanguc:green_column_lights",
+    "mishanguc:green_light",
+    "mishanguc:green_light_slab",
+    "mishanguc:green_light_cover"
+  ]
+}

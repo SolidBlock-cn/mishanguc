@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/standing_sign_barred_2",
+  "textures": {
+    "bar": "mishanguc:block/pale_stone_bricks",
+    "texture": "mishanguc:block/pale_stone_bricks"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "mishanguc:item/carrying_tool_with_entity"
+  }
+}

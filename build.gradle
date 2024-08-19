@@ -22,8 +22,6 @@ repositories {
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
 
-    // BRRP. This is stored locally.
-    mavenLocal()
     maven { url "https://maven.terraformersmc.com/releases/" }
     maven { url 'https://jitpack.io' }
 }
@@ -37,13 +35,6 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-
-    def brrp_mc_version = project.hasProperty("brrp_mc_version") ? project.brrp_mc_version : project.minecraft_version
-
-    // BRRP.
-    modImplementation("pers.solid:brrp-fabric:${project.brrp_version}-${brrp_mc_version}") {
-        transitive false
-    }
 }
 
 processResources {
@@ -134,7 +125,7 @@ tasks.register('curseforge', net.darkhax.curseforgegradle.TaskPublishCurseForge)
         mainFile.addGameVersion v
     }
 
-    mainFile.addRelations 'requiredDependency', 'fabric-api', 'better-runtime-resource-pack'
+    mainFile.addRelations 'requiredDependency', 'fabric-api'
     def sourcesFile = mainFile.withAdditionalFile(sourcesJar)
 }
 
@@ -153,7 +144,6 @@ modrinth {
 
     dependencies = [
             new ModDependency('P7dR8mSH', 'required'), // Fabric API
-            new ModDependency('JnrDtPAE', 'required')
     ]
 }
 
@@ -175,4 +165,8 @@ githubRelease {
 
 publish {
     dependsOn tasks.curseforge, tasks.modrinth, tasks.githubRelease
+}
+
+fabricApi {
+    configureDataGeneration()
 }

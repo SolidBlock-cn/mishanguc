@@ -1,23 +1,20 @@
 package pers.solid.mishang.uc.block;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.client.TextureKey;
-import net.minecraft.data.client.TextureMap;
+import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.Registries;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.util.TextBridge;
 
 /**
@@ -72,22 +69,17 @@ public class SimpleHandrailBlock extends HandrailBlock {
     this(baseBlock, FabricBlockSettings.copyOf(baseBlock));
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull ModelJsonBuilder getBlockModel() {
-    return ModelJsonBuilder.create(new Identifier("mishanguc", "block/simple_handrail")).setTextures(getTextures());
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final TextureMap textures = getTextures();
+    final Identifier modelId = MishangucModels.SIMPLE_HANDRAIL.upload(this, textures, blockStateModelGenerator.modelCollector);
+    MishangucModels.SIMPLE_HANDRAIL_INVENTORY.upload(ModelIds.getItemModelId(asItem()), textures, blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId));
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull ModelJsonBuilder getItemModel() {
-    return ModelJsonBuilder.create("mishanguc", "block/simple_handrail_inventory").setTextures(getTextures());
-  }
-
-  @Environment(EnvType.CLIENT)
   @Override
   public @NotNull TextureMap getTextures() {
-    return TextureMap.texture(getTexture()).put(TextureKey.TOP, top).put(TextureKey.BOTTOM, bottom);
+    return TextureMap.all(getTexture()).put(TextureKey.TOP, top).put(TextureKey.BOTTOM, bottom);
   }
 
   @Override
@@ -118,9 +110,8 @@ public class SimpleHandrailBlock extends HandrailBlock {
   /**
    * @return 该方块的基础纹理变量。
    */
-  @Environment(EnvType.CLIENT)
   protected Identifier getTexture() {
-    return texture == null ? Registries.BLOCK.getId(baseBlock).brrp_prefixed("block/") : texture;
+    return texture == null ? TextureMap.getId(baseBlock) : texture;
   }
 
   @Override
@@ -135,14 +126,12 @@ public class SimpleHandrailBlock extends HandrailBlock {
       super(baseBlock, FabricBlockSettings.copyOf(baseBlock).nonOpaque());
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public void writeBlockModel(RuntimeResourcePack pack) {
-      final TextureMap textures = baseHandrail.getTextures();
-      final Identifier modelId = getBlockModelId();
-      pack.addModel(modelId.brrp_suffixed("_post"), ModelJsonBuilder.create(new Identifier("mishanguc", "block/simple_handrail_post")).setTextures(textures));
-      pack.addModel(modelId.brrp_suffixed("_post_side"), ModelJsonBuilder.create(new Identifier("mishanguc", "block/simple_handrail_post_side")).setTextures(textures));
-      pack.addModel(modelId.brrp_suffixed("_side"), ModelJsonBuilder.create(new Identifier("mishanguc", "block/simple_handrail_side")).setTextures(textures));
+    public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+      final Identifier postModelId = MishangucModels.SIMPLE_HANDRAIL_POST.upload(this, baseHandrail.getTextures(), blockStateModelGenerator.modelCollector);
+      final Identifier sideModelId = MishangucModels.SIMPLE_HANDRAIL_SIDE.upload(this, baseHandrail.getTextures(), blockStateModelGenerator.modelCollector);
+      final Identifier postSideModelId = MishangucModels.SIMPLE_HANDRAIL_POST_SIDE.upload(this, baseHandrail.getTextures(), blockStateModelGenerator.modelCollector);
+      blockStateModelGenerator.blockStateCollector.accept(createBlockStates(postModelId, postSideModelId, sideModelId));
     }
 
     @Override
@@ -157,10 +146,10 @@ public class SimpleHandrailBlock extends HandrailBlock {
       super(baseHandrail, FabricBlockSettings.copyOf(baseHandrail).nonOpaque());
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public @Nullable ModelJsonBuilder getBlockModel() {
-      return baseHandrail.getBlockModel().withParent(new Identifier("mishanguc:block/simple_handrail_corner"));
+    public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+      final Identifier modelId = MishangucModels.SIMPLE_HANDRAIL_CORNER.upload(this, baseHandrail.getTextures(), blockStateModelGenerator.modelCollector);
+      blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId));
     }
 
     @Override
@@ -175,17 +164,16 @@ public class SimpleHandrailBlock extends HandrailBlock {
       super(baseRail, FabricBlockSettings.copyOf(baseRail).nonOpaque());
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public void writeBlockModel(RuntimeResourcePack pack) {
+    public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
       final TextureMap textures = baseHandrail.getTextures();
-      final Identifier modelIdentifier = getBlockModelId();
-      pack.addModel(modelIdentifier, ModelJsonBuilder.create(new Identifier("mishanguc", "block/simple_handrail_stair_middle_center")).setTextures(textures));
+      final Identifier baseModelId = MishangucModels.createBlock("simple_handrail_stair_middle_center", TextureKey.TEXTURE, TextureKey.TOP, TextureKey.BOTTOM).upload(this, textures, blockStateModelGenerator.modelCollector);
       for (Shape shape : Shape.values()) {
         for (Position position : Position.values()) {
-          pack.addModel(modelIdentifier.brrp_suffixed("_" + shape.asString() + "_" + position.asString()), ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/simple_handrail_stair_%s_%s", shape.asString(), position.asString()))).setTextures(textures));
+          MishangucModels.createBlock(String.format("simple_handrail_stair_%s_%s", shape.asString(), position.asString()), "_" + shape.asString() + "_" + position.asString(), TextureKey.TEXTURE, TextureKey.TOP, TextureKey.BOTTOM).upload(this, textures, blockStateModelGenerator.modelCollector);
         }
       }
+      blockStateModelGenerator.blockStateCollector.accept(createBlockStates(baseModelId));
     }
 
     @Override
@@ -200,10 +188,10 @@ public class SimpleHandrailBlock extends HandrailBlock {
       super(baseRail, FabricBlockSettings.copyOf(baseRail).nonOpaque());
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public void writeBlockModel(RuntimeResourcePack pack) {
-      pack.addModel(getBlockModelId(), ModelJsonBuilder.create(new Identifier("mishanguc:block/simple_handrail_outer")).setTextures(baseHandrail.getTextures()));
+    public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+      final Identifier modelId = MishangucModels.SIMPLE_HANDRAIL_OUTER.upload(this, baseHandrail.getTextures(), blockStateModelGenerator.modelCollector);
+      blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId));
     }
 
     @Override
@@ -228,9 +216,8 @@ public class SimpleHandrailBlock extends HandrailBlock {
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), getRecipeCategory(), this, 5)
-        .criterionFromItem(baseBlock)
-        .setCustomRecipeCategory("handrails")
+    return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), RecipeCategory.DECORATIONS, this, 5)
+        .criterion(RecipeProvider.hasItem(baseBlock), RecipeProvider.conditionsFromItem(baseBlock))
         .group(getRecipeGroup());
   }
 }

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 20,
+  "group": "mishanguc:wood_hung_sign_bar",
+  "ingredient": {
+    "item": "minecraft:acacia_wood"
+  },
+  "result": "mishanguc:acacia_hung_sign_bar"
+}

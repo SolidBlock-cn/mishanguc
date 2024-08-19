@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 20,
+  "group": "mishanguc:stripped_wood_hung_sign_bar",
+  "ingredient": {
+    "item": "minecraft:stripped_spruce_wood"
+  },
+  "result": "mishanguc:stripped_spruce_hung_sign_bar"
+}

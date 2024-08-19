@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "#mishanguc:white_strip_wall_lights",
+    "mishanguc:white_light_cover",
+    "mishanguc:white_small_wall_light_tube",
+    "mishanguc:white_medium_wall_light_tube",
+    "mishanguc:white_large_wall_light_tube",
+    "mishanguc:white_small_wall_light",
+    "mishanguc:white_medium_wall_light",
+    "mishanguc:white_large_wall_light"
+  ]
+}

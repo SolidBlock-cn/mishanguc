@@ -1,17 +1,21 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.ImmutableMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.TransparentBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.BlockFace;
-import net.minecraft.data.client.TextureKey;
+import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.client.ModelIds;
+import net.minecraft.data.client.ModelProvider;
+import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -22,10 +26,11 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.FullWallSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
+import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Map;
@@ -86,30 +91,41 @@ public class FullWallSignBlock extends WallSignBlock {
   @Override
   public @Nullable CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (baseBlock == null) return null;
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this, 4)
-        .patterns("-#-", "###", "-#-")
+    return ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this, 4)
+        .pattern("-#-")
+        .pattern("###")
+        .pattern("-#-")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
-        .setCustomRecipeCategory("signs")
-        .criterionFromItem("has_base_block", baseBlock)
-        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .criterion("has_base_block", RecipeProvider.conditionsFromItem(baseBlock))
+        .criterion("has_sign", RecipeProvider.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN))
         .group(getRecipeGroup());
   }
 
   @Override
-  @Environment(EnvType.CLIENT)
-  public @Nullable ModelJsonBuilder getBlockModel() {
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     if (this == WallSignBlocks.INVISIBLE_WALL_SIGN || this == WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN) {
-      return null;
+      blockStateModelGenerator.blockStateCollector.accept(createBlockStates(ModelIds.getBlockModelId(this)));
+      return;
     }
-    return ModelJsonBuilder.create(new Identifier("mishanguc:block/full_wall_sign")).addTexture(TextureKey.TEXTURE, getBaseTexture());
+    final TextureMap textures = TextureMap.texture(ModelHelper.getTextureOf(baseBlock));
+    final Identifier modelId = MishangucModels.FULL_WALL_SIGN.upload(this, textures, blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId));
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public ModelJsonBuilder getItemModel() {
-    if (this == WallSignBlocks.INVISIBLE_WALL_SIGN || this == WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN) {
-      return null;
+  public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
+    if (direction.getAxis().isHorizontal() && state.getBlock() instanceof FullWallSignBlock && stateFrom.getBlock() instanceof FullWallSignBlock wallSignBlockFrom && state.get(FACING) == stateFrom.get(FACING) && direction.getAxis() != state.get(FACING).getAxis()) {
+      if (wallSignBlockFrom.baseBlock instanceof TransparentBlock) {
+        if (baseBlock instanceof TransparentBlock) {
+          // 自身和相邻方块都为透明方块，则双方均为同一方块时隐藏。
+          return baseBlock == wallSignBlockFrom.baseBlock;
+        } else {
+          return false;
+        }
+      }
+      return true;
+    } else {
+      return false;
     }
-    return super.getItemModel();
   }
 }

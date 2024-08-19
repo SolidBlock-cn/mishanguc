@@ -18,28 +18,23 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "pers.solid.mishang.uc.Mishanguc",
-      "pers.solid.mishang.uc.arrp.ARRPMain"
+      "pers.solid.mishang.uc.Mishanguc"
     ],
     "client": [
       "pers.solid.mishang.uc.MishangucClient"
     ],
-    "preLaunch": [
-      "pers.solid.mishang.uc.MishangucPreLaunch"
+    "fabric-datagen": [
+      "pers.solid.mishang.uc.data.MishangucDataGeneration"
     ]
   },
   "mixins": [
     "mishanguc.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">0.14.10",
+    "fabricloader": "*",
     "fabric": "*",
-    "minecraft": ">=1.20.2",
-    "brrp_v1": ">=1.0.0",
+    "minecraft": ">=1.20.2 <1.20.3",
     "mixinextras": ">=0.2.0"
-  },
-  "breaks": {
-    "minecraft": ">=1.20.3"
   },
   "custom": {
     "branch": "1.20.2",

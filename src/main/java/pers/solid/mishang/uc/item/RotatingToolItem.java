@@ -1,13 +1,10 @@
 package pers.solid.mishang.uc.item;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.data.client.Models;
-import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -25,13 +22,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.ItemResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
-public class RotatingToolItem extends BlockToolItem implements ItemResourceGenerator {
+public class RotatingToolItem extends BlockToolItem implements MishangucItem {
 
   public RotatingToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
@@ -45,9 +40,6 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
       Hand hand,
       boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
-    if (!player.getAbilities().allowModifyWorld && !stack.canPlaceOn(Registries.BLOCK, new CachedBlockPosition(world, blockPos, false))) {
-      return ActionResult.PASS;
-    }
     final ActionResult result = rotateBlock(player, world, blockPos);
     if (result == ActionResult.SUCCESS) {
       stack.damage(1, player, player1 -> player1.sendToolBreakStatus(hand));
@@ -95,25 +87,16 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
             .formatted(Formatting.GRAY));
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public ModelJsonBuilder getItemModel() {
-    return ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId());
-  }
-
-  @Override
-  public RecipeCategory getRecipeCategory() {
-    return RecipeCategory.TOOLS;
-  }
-
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this)
-        .patterns("DND", " | ", " | ")
+    return ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, this)
+        .pattern("DND")
+        .pattern(" | ")
+        .pattern(" | ")
         .input('D', Items.PINK_DYE)
         .input('N', Items.NETHERITE_INGOT)
         .input('|', Items.STICK)
-        .criterionFromItem("has_pink_dye", Items.PINK_DYE)
-        .criterionFromItem("has_netherite_ingot", Items.NETHERITE_INGOT);
+        .criterion("has_pink_dye", RecipeProvider.conditionsFromItem(Items.PINK_DYE))
+        .criterion("has_netherite_ingot", RecipeProvider.conditionsFromItem(Items.NETHERITE_INGOT));
   }
 }

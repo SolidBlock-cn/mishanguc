@@ -1,0 +1,24 @@
+{
+  "variants": {
+    "facing=north_east": {
+      "model": "mishanguc:block/colored_decorated_oak_handrail_corner",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=north_west": {
+      "model": "mishanguc:block/colored_decorated_oak_handrail_corner",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=south_east": {
+      "model": "mishanguc:block/colored_decorated_oak_handrail_corner",
+      "uvlock": true,
+      "y": -90
+    },
+    "facing=south_west": {
+      "model": "mishanguc:block/colored_decorated_oak_handrail_corner",
+      "uvlock": true,
+      "y": 0
+    }
+  }
+}

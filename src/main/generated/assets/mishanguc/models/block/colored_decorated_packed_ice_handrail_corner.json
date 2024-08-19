@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/glass_handrail_corner",
+  "textures": {
+    "decoration": "minecraft:block/snow",
+    "frame": "minecraft:block/packed_ice",
+    "glass": "mishanguc:block/glass_unframed"
+  }
+}

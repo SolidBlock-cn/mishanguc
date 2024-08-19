@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/standing_sign",
+  "textures": {
+    "bar": "minecraft:block/obsidian",
+    "texture": "minecraft:block/obsidian"
+  }
+}

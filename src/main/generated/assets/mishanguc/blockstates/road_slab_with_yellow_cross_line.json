@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "mishanguc:block/road_slab_with_yellow_cross_line",
+      "y": 270
+    },
+    "type=double": {
+      "model": "mishanguc:block/road_with_yellow_cross_line",
+      "y": 270
+    },
+    "type=top": {
+      "model": "mishanguc:block/road_slab_with_yellow_cross_line_top",
+      "y": 270
+    }
+  }
+}

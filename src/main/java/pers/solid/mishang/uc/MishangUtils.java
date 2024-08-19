@@ -4,12 +4,14 @@ import com.google.common.base.Functions;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.*;
 import com.google.gson.JsonPrimitive;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.client.VariantSetting;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.*;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -403,4 +405,23 @@ public class MishangUtils {
     final int intValue = (int) value;
     return value == intValue ? Integer.toString(intValue) : Float.toString(value);
   }
+
+  public static final Supplier<ImmutableMap<DyeColor, TagKey<Item>>> DYE_ITEM_TAGS = Suppliers.memoize(() -> ImmutableMap.<DyeColor, TagKey<Item>>builder()
+      .put(DyeColor.BLACK, ConventionalItemTags.BLACK_DYES)
+      .put(DyeColor.BLUE, ConventionalItemTags.BLUE_DYES)
+      .put(DyeColor.BROWN, ConventionalItemTags.BROWN_DYES)
+      .put(DyeColor.CYAN, ConventionalItemTags.CYAN_DYES)
+      .put(DyeColor.GRAY, ConventionalItemTags.GRAY_DYES)
+      .put(DyeColor.GREEN, ConventionalItemTags.GREEN_DYES)
+      .put(DyeColor.LIGHT_BLUE, ConventionalItemTags.LIGHT_BLUE_DYES)
+      .put(DyeColor.LIGHT_GRAY, ConventionalItemTags.LIGHT_GRAY_DYES)
+      .put(DyeColor.LIME, ConventionalItemTags.LIME_DYES)
+      .put(DyeColor.MAGENTA, ConventionalItemTags.MAGENTA_DYES)
+      .put(DyeColor.ORANGE, ConventionalItemTags.ORANGE_DYES)
+      .put(DyeColor.PINK, ConventionalItemTags.PINK_DYES)
+      .put(DyeColor.PURPLE, ConventionalItemTags.PURPLE_DYES)
+      .put(DyeColor.RED, ConventionalItemTags.RED_DYES)
+      .put(DyeColor.WHITE, ConventionalItemTags.WHITE_DYES)
+      .put(DyeColor.YELLOW, ConventionalItemTags.YELLOW_DYES)
+      .build());
 }

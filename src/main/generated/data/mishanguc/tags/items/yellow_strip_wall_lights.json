@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "mishanguc:yellow_thin_strip_wall_light_tube",
+    "mishanguc:yellow_thick_strip_wall_light_tube",
+    "mishanguc:yellow_double_strip_wall_light_tube",
+    "mishanguc:yellow_thin_strip_wall_light",
+    "mishanguc:yellow_thick_strip_wall_light"
+  ]
+}

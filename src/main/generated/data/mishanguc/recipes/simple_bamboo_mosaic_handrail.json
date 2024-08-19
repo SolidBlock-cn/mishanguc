@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 5,
+  "ingredient": {
+    "item": "minecraft:bamboo_mosaic"
+  },
+  "result": "mishanguc:simple_bamboo_mosaic_handrail"
+}

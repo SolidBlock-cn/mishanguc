@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 20,
+  "ingredient": {
+    "item": "minecraft:bamboo_block"
+  },
+  "result": "mishanguc:bamboo_hung_sign_bar"
+}

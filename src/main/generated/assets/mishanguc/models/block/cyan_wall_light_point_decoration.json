@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/wall_light_point_decoration",
+  "textures": {
+    "light": "mishanguc:block/cyan_light"
+  }
+}

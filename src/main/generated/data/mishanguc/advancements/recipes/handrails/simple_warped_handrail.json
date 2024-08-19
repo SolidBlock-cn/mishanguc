@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:simple_warped_handrail"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_warped_hyphae": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:warped_hyphae"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_warped_hyphae"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:simple_warped_handrail"
+    ]
+  }
+}

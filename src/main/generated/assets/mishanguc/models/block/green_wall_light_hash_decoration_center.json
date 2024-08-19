@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/wall_light_hash_decoration_center",
+  "textures": {
+    "light": "mishanguc:block/green_light"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    "mishanguc:glowing_white_concrete_wall_sign",
+    "mishanguc:glowing_orange_concrete_wall_sign",
+    "mishanguc:glowing_magenta_concrete_wall_sign",
+    "mishanguc:glowing_light_blue_concrete_wall_sign",
+    "mishanguc:glowing_yellow_concrete_wall_sign",
+    "mishanguc:glowing_lime_concrete_wall_sign",
+    "mishanguc:glowing_pink_concrete_wall_sign",
+    "mishanguc:glowing_gray_concrete_wall_sign",
+    "mishanguc:glowing_light_gray_concrete_wall_sign",
+    "mishanguc:glowing_cyan_concrete_wall_sign",
+    "mishanguc:glowing_purple_concrete_wall_sign",
+    "mishanguc:glowing_blue_concrete_wall_sign",
+    "mishanguc:glowing_brown_concrete_wall_sign",
+    "mishanguc:glowing_green_concrete_wall_sign",
+    "mishanguc:glowing_red_concrete_wall_sign",
+    "mishanguc:glowing_black_concrete_wall_sign",
+    "mishanguc:colored_glowing_concrete_wall_sign"
+  ]
+}

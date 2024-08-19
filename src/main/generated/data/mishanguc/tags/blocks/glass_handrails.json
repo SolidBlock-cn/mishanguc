@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#mishanguc:glass_normal_handrails",
+    "#mishanguc:glass_central_handrails",
+    "#mishanguc:glass_corner_handrails",
+    "#mishanguc:glass_outer_handrails",
+    "#mishanguc:glass_stair_handrails"
+  ]
+}

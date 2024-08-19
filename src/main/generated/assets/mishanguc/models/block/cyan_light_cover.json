@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/light_cover",
+  "textures": {
+    "light": "mishanguc:block/cyan_light"
+  }
+}

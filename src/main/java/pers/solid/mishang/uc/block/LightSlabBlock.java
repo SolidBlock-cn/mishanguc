@@ -1,9 +1,13 @@
 package pers.solid.mishang.uc.block;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
+import net.minecraft.block.SlabBlock;
+import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.client.ModelIds;
+import net.minecraft.data.client.ModelProvider;
+import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
 import net.minecraft.recipe.Ingredient;
@@ -11,34 +15,34 @@ import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.generator.BRRPSlabBlock;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.mishang.uc.data.MishangucModels;
 
 @ApiStatus.AvailableSince("1.1.0")
-public class LightSlabBlock extends BRRPSlabBlock {
+public class LightSlabBlock extends SlabBlock implements MishangucBlock {
+  public final Block baseBlock;
+
+  public LightSlabBlock(@NotNull Block baseBlock, Settings settings) {
+    super(settings);
+    this.baseBlock = baseBlock;
+  }
+
   public LightSlabBlock(@NotNull Block baseBlock) {
-    super(baseBlock);
+    super(Settings.copy(baseBlock));
+    this.baseBlock = baseBlock;
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull ModelJsonBuilder getBlockModel() {
-    return super.getBlockModel().parent(new Identifier("mishanguc", "block/light_slab"));
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public void writeBlockModel(RuntimeResourcePack pack) {
-    final ModelJsonBuilder model = getBlockModel();
-    final Identifier id = getBlockModelId();
-    pack.addModel(id, model);
-    pack.addModel(id.brrp_suffixed("_top"), model.withParent(new Identifier("mishanguc", "block/light_slab_top")));
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final Identifier bottomModelId = MishangucModels.LIGHT_SLAB.upload(this, TextureMap.all(baseBlock), blockStateModelGenerator.modelCollector);
+    final Identifier topModelId = MishangucModels.LIGHT_SLAB_TOP.upload(this, TextureMap.all(baseBlock), blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSlabBlockState(this, bottomModelId, topModelId, ModelIds.getBlockModelId(baseBlock)));
+    blockStateModelGenerator.registerParentedItemModel(this, bottomModelId);
   }
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ((ShapedRecipeJsonBuilder) super.getCraftingRecipe()).setCustomRecipeCategory("light");
+    return ((ShapedRecipeJsonBuilder) RecipeProvider.createSlabRecipe(RecipeCategory.BUILDING_BLOCKS, this, Ingredient.ofItems(baseBlock)))
+        .criterion(RecipeProvider.hasItem(baseBlock), RecipeProvider.conditionsFromItem(baseBlock));
   }
 
   @Override
@@ -48,13 +52,12 @@ public class LightSlabBlock extends BRRPSlabBlock {
 
   @Override
   public SingleItemRecipeJsonBuilder getStonecuttingRecipe() {
-    return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), getRecipeCategory(), this, 2)
-        .criterionFromItem(baseBlock)
-        .setCustomRecipeCategory("lights");
+    return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), RecipeCategory.DECORATIONS, this, 2)
+        .criterion(RecipeProvider.hasItem(baseBlock), RecipeProvider.conditionsFromItem(baseBlock));
   }
 
   @Override
-  public RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
+  public String customRecipeCategory() {
+    return "light";
   }
 }
