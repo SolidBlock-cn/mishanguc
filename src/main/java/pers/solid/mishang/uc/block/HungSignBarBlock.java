@@ -332,6 +332,8 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
         .criterionFromItem("has_base_block", baseBlock)
         .setCustomRecipeCategory("signs")
         .group(getRecipeGroup());
+
+    return recipe;
   }
 
   @Override
