@@ -222,7 +222,8 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
   @Environment(EnvType.CLIENT)
   public interface NameRenderer extends BiFunction<@Nullable Float, Text, @Nullable Text> {
     @Override
-    @Nullable Text apply(@Nullable Float value, Text valueText);
+    @Nullable
+    Text apply(@Nullable Float value, Text valueText);
   }
 
   public NameRenderer renderedNameSupplier = null;

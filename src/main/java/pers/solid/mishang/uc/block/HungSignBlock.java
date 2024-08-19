@@ -76,7 +76,8 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
    * "east" if "axis=z".
    */
   public static final BooleanProperty RIGHT = BooleanProperty.of("right");
-
+  protected static final RecordCodecBuilder<HungSignBlock, Block> BASE_BLOCK_CODEC = Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(b -> b.baseBlock);
+  public static final MapCodec<HungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), createSettingsCodec()).apply(instance, HungSignBlock::new));
   private static final VoxelShape SHAPE_X =
       VoxelShapes.union(
           createCuboidShape(7.5, 5, 0, 8.5, 14, 16), createCuboidShape(7.25, 12, 0, 8.75, 13, 16));
@@ -89,17 +90,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       MishangUtils.createHorizontalDirectionToShape(7.5, 13, 13, 8.5, 16, 14);
   private static final VoxelShape SHAPE_WIDENED_X = createCuboidShape(6.5, 5, 0, 9.5, 16, 16);
   private static final VoxelShape SHAPE_WIDENED_Z = createCuboidShape(0, 5, 6.5, 16, 16, 9.5);
-  protected static final RecordCodecBuilder<HungSignBlock, Block> BASE_BLOCK_CODEC = Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(b -> b.baseBlock);
-
-  public static final MapCodec<HungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), createSettingsCodec()).apply(instance, HungSignBlock::new));
-
-  @SuppressWarnings("unchecked")
-  protected static <B extends HungSignBlock> RecordCodecBuilder<B, Block> baseBlockCodec() {
-    return (RecordCodecBuilder<B, Block>) BASE_BLOCK_CODEC;
-  }
-
   public final @Nullable Block baseBlock;
-
   /**
    * 基础方块的纹理。{@link #getBaseTexture()} 会使用到此值。如果此值为 {@code null}，则根据 {@link #baseBlock} 来推断纹理。<br>
    * 非 final，可直接进行修改。
@@ -130,6 +121,39 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   @ApiStatus.AvailableSince("0.1.7")
   public HungSignBlock(@NotNull Block baseBlock) {
     this(baseBlock, FabricBlockSettings.copyOf(baseBlock));
+  }
+
+  @SuppressWarnings("unchecked")
+  protected static <B extends HungSignBlock> RecordCodecBuilder<B, Block> baseBlockCodec() {
+    return (RecordCodecBuilder<B, Block>) BASE_BLOCK_CODEC;
+  }
+
+  /**
+   * 往集合中添加一个值，并返回添加后的集合（可能会是新集合）。这样做是为了避免使用空集时创建集合对象。
+   */
+  private static <T> Set<T> addToSet(Set<T> set, T element) {
+    if (set.isEmpty()) {
+      final HashSet<T> newSet = new HashSet<>(2);
+      newSet.add(element);
+      return newSet;
+    } else {
+      set.add(element);
+      return set;
+    }
+  }
+
+  /**
+   * 从集合中移除一个值，如果移除后的集合为空集合，则返回不可变的空集合，以避免产生不必要的对象。
+   */
+  private static <T> Set<T> removeFromSet(Set<T> set, T element) {
+    if (set.isEmpty()) {
+      return set;
+    } else if (set.remove(element) && set.isEmpty()) {
+      return Set.of();
+    } else {
+      set.remove(element);
+      return set;
+    }
   }
 
   @Override
@@ -321,7 +345,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
    * net.minecraft.client.network.ClientPlayerEntity#openEditSignScreen(SignBlockEntity, boolean)} 和 {@link
    * net.minecraft.server.network.ServerPlayerEntity#openEditSignScreen(SignBlockEntity, boolean)}。
    */
-  @SuppressWarnings({"deprecation", "JavadocReference"})
+  @SuppressWarnings("deprecation")
   @Override
   public ActionResult onUse(
       BlockState state,
@@ -522,33 +546,5 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   @Override
   protected MapCodec<? extends HungSignBlock> getCodec() {
     return CODEC;
-  }
-
-  /**
-   * 往集合中添加一个值，并返回添加后的集合（可能会是新集合）。这样做是为了避免使用空集时创建集合对象。
-   */
-  private static <T> Set<T> addToSet(Set<T> set, T element) {
-    if (set.isEmpty()) {
-      final HashSet<T> newSet = new HashSet<>(2);
-      newSet.add(element);
-      return newSet;
-    } else {
-      set.add(element);
-      return set;
-    }
-  }
-
-  /**
-   * 从集合中移除一个值，如果移除后的集合为空集合，则返回不可变的空集合，以避免产生不必要的对象。
-   */
-  private static <T> Set<T> removeFromSet(Set<T> set, T element) {
-    if (set.isEmpty()) {
-      return set;
-    } else if (set.remove(element) && set.isEmpty()) {
-      return Set.of();
-    } else {
-      set.remove(element);
-      return set;
-    }
   }
 }

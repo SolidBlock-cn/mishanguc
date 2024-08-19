@@ -15,7 +15,8 @@ public interface Handrails {
    * @return 该楼梯方块的基础方块。如有需要可以为 {@code null}。注意该方法通常直接返回一个字段的值。
    */
   @Contract(pure = true)
-  @Nullable Block baseBlock();
+  @Nullable
+  Block baseBlock();
 
   /**
    * 该方块状态是否能在特定方向上以特定偏移的方式水平连接。通常用于渲染。
