@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 2,
+  "ingredient": {
+    "item": "mishanguc:road_with_yellow_ra_line_offset_out"
+  },
+  "result": "mishanguc:road_slab_with_yellow_ra_line_offset_out"
+}

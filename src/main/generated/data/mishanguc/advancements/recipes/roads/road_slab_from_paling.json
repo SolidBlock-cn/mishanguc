@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_road_slab": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "mishanguc:road_slabs"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:road_slab_from_paling"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_road_slab"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:road_slab_from_paling"
+    ]
+  }
+}

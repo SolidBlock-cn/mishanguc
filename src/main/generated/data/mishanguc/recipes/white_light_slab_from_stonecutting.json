@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 2,
+  "ingredient": {
+    "item": "mishanguc:white_light"
+  },
+  "result": "mishanguc:white_light_slab"
+}

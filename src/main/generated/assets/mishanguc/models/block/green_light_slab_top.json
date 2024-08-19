@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/light_slab_top",
+  "textures": {
+    "bottom": "mishanguc:block/green_light",
+    "side": "mishanguc:block/green_light",
+    "top": "mishanguc:block/green_light"
+  }
+}

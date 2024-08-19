@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "#mishanguc:white_corner_lights",
+    "#mishanguc:yellow_corner_lights",
+    "#mishanguc:cyan_corner_lights",
+    "#mishanguc:green_corner_lights",
+    "#mishanguc:orange_corner_lights",
+    "#mishanguc:pink_corner_lights"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/road_mark_on_slab",
+  "textures": {
+    "texture": "mishanguc:block/lane_disabled"
+  }
+}

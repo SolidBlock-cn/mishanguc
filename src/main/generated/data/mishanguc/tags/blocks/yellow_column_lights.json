@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "mishanguc:yellow_thin_column_light_tube",
+    "mishanguc:yellow_medium_column_light_tube",
+    "mishanguc:yellow_thick_column_light_tube",
+    "mishanguc:yellow_thin_column_light",
+    "mishanguc:yellow_medium_column_light",
+    "mishanguc:yellow_thick_column_light"
+  ]
+}

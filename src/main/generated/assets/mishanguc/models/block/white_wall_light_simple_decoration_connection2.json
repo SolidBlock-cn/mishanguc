@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/wall_light_simple_decoration_connection2",
+  "textures": {
+    "light": "mishanguc:block/white_light"
+  }
+}

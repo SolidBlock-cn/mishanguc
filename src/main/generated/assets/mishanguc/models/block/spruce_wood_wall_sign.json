@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/wall_sign",
+  "textures": {
+    "texture": "minecraft:block/spruce_log"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/glass_handrail_inventory",
+  "textures": {
+    "decoration": "minecraft:block/soul_soil",
+    "frame": "minecraft:block/obsidian",
+    "glass": "mishanguc:block/glass_unframed"
+  }
+}

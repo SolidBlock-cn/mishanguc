@@ -1,40 +1,41 @@
 package pers.solid.mishang.uc.block;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.client.ModelProvider;
 import net.minecraft.data.client.Models;
-import net.minecraft.data.client.TextureKey;
+import net.minecraft.data.client.TextureMap;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 @ApiStatus.AvailableSince("0.2.4")
-public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock, BlockResourceGenerator {
-  private final Function<Block, LootTable.Builder> lootBuilder;
-  private final String allTexture;
+public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock {
+  private final BiFunction<Block, BlockLootTableGenerator, LootTable.Builder> lootBuilder;
+  private final Identifier texture;
 
-  public ColoredLeavesBlock(Settings settings, Function<Block, LootTable.Builder> lootBuilder, String allTexture) {
+  public ColoredLeavesBlock(Settings settings, @Nullable BiFunction<Block, BlockLootTableGenerator, LootTable.Builder> lootBuilder, Identifier texture) {
     super(settings);
     this.lootBuilder = lootBuilder;
-    this.allTexture = allTexture;
+    this.texture = texture;
+  }
+
+  public ColoredLeavesBlock(Settings settings, @Nullable BiFunction<Block, BlockLootTableGenerator, LootTable.Builder> lootBuilder, String texture) {
+    this(settings, lootBuilder, new Identifier(texture));
   }
 
   @Override
@@ -54,20 +55,17 @@ public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock, Blo
     return new SimpleColoredBlockEntity(pos, state);
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull BlockStateSupplier getBlockStates() {
-    return BlockStateModelGenerator.createSingletonBlockState(this, getBlockModelId());
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final Identifier modelId = Models.LEAVES.upload(this, TextureMap.all(texture), blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(this, modelId));
+    blockStateModelGenerator.registerParentedItemModel(this, modelId);
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull ModelJsonBuilder getBlockModel() {
-    return ModelJsonBuilder.create(Models.LEAVES).addTexture(TextureKey.ALL, allTexture);
-  }
 
   @Override
-  public LootTable.Builder getLootTable() {
-    return (lootBuilder.apply(this).apply(COPY_COLOR_LOOT_FUNCTION));
+  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    if (lootBuilder == null) return null;
+    return (lootBuilder.apply(this, blockLootTableGenerator).apply(COPY_COLOR_LOOT_FUNCTION));
   }
 }

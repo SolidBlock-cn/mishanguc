@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "glass_wooden_handrail",
+  "key": {
+    "M": {
+      "item": "minecraft:cherry_planks"
+    },
+    "X": {
+      "item": "minecraft:cherry_wood"
+    },
+    "n": {
+      "item": "minecraft:stick"
+    },
+    "o": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "oMo",
+    "nnn"
+  ],
+  "result": {
+    "count": 6,
+    "item": "mishanguc:glass_cherry_handrail"
+  }
+}

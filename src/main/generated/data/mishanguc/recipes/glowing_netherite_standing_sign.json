@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "minecraft:netherite_block"
+    },
+    "-": {
+      "item": "mishanguc:invisible_glowing_wall_sign"
+    },
+    "|": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "---",
+    "###",
+    " | "
+  ],
+  "result": {
+    "count": 4,
+    "item": "mishanguc:glowing_netherite_standing_sign"
+  }
+}

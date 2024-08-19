@@ -17,7 +17,6 @@ public enum LineColor implements StringIdentifiable {
 
   private final String name;
   private final TagKey<Item> ingredient;
-  public static final Codec<LineColor> CODEC = StringIdentifiable.createCodec(LineColor::values);
 
   LineColor(String name, TagKey<Item> ingredient) {
     this.name = name;

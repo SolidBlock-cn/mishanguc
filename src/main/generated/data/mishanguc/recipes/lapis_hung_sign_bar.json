@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 20,
+  "ingredient": {
+    "item": "minecraft:lapis_block"
+  },
+  "result": "mishanguc:lapis_hung_sign_bar"
+}

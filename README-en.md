@@ -21,7 +21,7 @@ Moreover, the mod contains a series of useful tools, such as:
 
 Detailed information of this mod can be seen in [GitHub](https://github.com/SolidBlock-cn/mishanguc/wiki) or [MC模组百科](https://www.mcmod.cn/class/5743.html).
 
-This mod **relies on Fabric API and [BRRP](https://github.com/SolidBlock-cn/BRRP)** (Better Runtime Resource Pack) mod. Please do make sure that BRRP is installed when installing this mod, or the game will not start. BRRP is a branch of [ARRP](https://github.com/Devan-Kerman/ARRP) (Advanced Runtime Resource Pack).
+This mod **depends on Fabric API**, and since mod version 1.4.0, **no longer** depends on [BRRP](https://github.com/SolidBlock-cn/BRRP)** (Better Runtime Resource Pack) mod.
 
 Only Fabric version. There's no Forge version of this mod. The update log can be seen [here](UpdateLog-en.md)
 
@@ -29,4 +29,4 @@ This mod is published under the LGPLv3 license, which you must follow when propa
 
 Welcome to join Tencent QQ group **587928350** to communicate. You can also report issues in GitHub.
 
-中文版请见[此文件](README.md)。
+中文用户可阅读[中文版](README.md)。

@@ -10,12 +10,13 @@ import org.jetbrains.annotations.Nullable;
 /**
  * 所有栏杆方块共用的接口。
  */
-public interface Handrails {
+public interface Handrails extends MishangucBlock {
   /**
    * @return 该楼梯方块的基础方块。如有需要可以为 {@code null}。注意该方法通常直接返回一个字段的值。
    */
   @Contract(pure = true)
-  @Nullable Block baseBlock();
+  @Nullable
+  Block baseBlock();
 
   /**
    * 该方块状态是否能在特定方向上以特定偏移的方式水平连接。通常用于渲染。
@@ -26,4 +27,9 @@ public interface Handrails {
    * @return 该方块是否能往旁边连接。
    */
   boolean connectsIn(@NotNull BlockState blockState, @NotNull Direction direction, @Nullable Direction offsetFacing);
+
+  @Override
+  default String customRecipeCategory() {
+    return "handrails";
+  }
 }

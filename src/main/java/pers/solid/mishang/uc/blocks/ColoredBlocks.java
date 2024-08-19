@@ -1,24 +1,19 @@
 package pers.solid.mishang.uc.blocks;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.client.ModelProvider;
 import net.minecraft.data.client.TextureMap;
-import net.minecraft.data.server.loottable.vanilla.VanillaBlockLootTableGenerator;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.loot.LootTable;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.Mishanguc;
+import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.annotations.Translucent;
-import pers.solid.mishang.uc.arrp.MiningLevel;
 import pers.solid.mishang.uc.block.*;
 
 /**
@@ -77,26 +72,18 @@ public final class ColoredBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4, mc1.17")
   public static final ColoredSlabBlock COLORED_TUFF_SLAB = new ColoredSlabBlock(COLORED_TUFF);
 
-  public static final ColoredCubeBlock COLORED_STONE = new ColoredCubeBlock(FabricBlockSettings.copyOf(Blocks.STONE), new Identifier("mishanguc:block/colored_cube_all"), TextureMap.all(new Identifier("mishanguc:block/pale_stone"))) {
-    @Environment(EnvType.CLIENT)
+  public static final ColoredCubeBlock COLORED_STONE = new ColoredCubeBlock(FabricBlockSettings.copyOf(Blocks.STONE), ColoredCubeBlock.COLORED_CUBE_ALL, TextureMap.all(new Identifier("mishanguc:block/pale_stone"))) {
     @Override
-    public void writeBlockModel(RuntimeResourcePack pack) {
-      final ModelJsonBuilder model = getBlockModel();
-      final Identifier blockModelId = getBlockModelId();
-      pack.addModel(blockModelId, model);
-      pack.addModel(blockModelId.brrp_suffixed("_mirrored"), model.withParent(new Identifier("mishanguc:block/colored_cube_mirrored_all")));
-    }
+    public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+      final Identifier modelId = ColoredCubeBlock.COLORED_CUBE_ALL.upload(this, textures, blockStateModelGenerator.modelCollector);
+      final Identifier mirroredModelId = ColoredCubeBlock.COLORED_CUBE_MIRRORED_ALL.upload(this, textures, blockStateModelGenerator.modelCollector);
 
-    @Environment(EnvType.CLIENT)
-    @Override
-    public @NotNull BlockStateSupplier getBlockStates() {
-      final Identifier blockModelId = getBlockModelId();
-      return BlockStateModelGenerator.createBlockStateWithTwoModelAndRandomInversion(this, blockModelId, blockModelId.brrp_suffixed("_mirrored"));
+      blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createBlockStateWithTwoModelAndRandomInversion(this, modelId, mirroredModelId));
     }
 
     @Override
-    public LootTable.@NotNull Builder getLootTable() {
-      return new VanillaBlockLootTableGenerator().drops(COLORED_STONE, COLORED_COBBLESTONE).apply(ColoredBlock.COPY_COLOR_LOOT_FUNCTION);
+    public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+      return blockLootTableGenerator.drops(COLORED_STONE, COLORED_COBBLESTONE).apply(ColoredBlock.COPY_COLOR_LOOT_FUNCTION);
     }
   };
   public static final ColoredStairsBlock COLORED_STONE_STAIRS = new ColoredStairsBlock(COLORED_STONE, FabricBlockSettings.copyOf(Blocks.STONE_STAIRS));
@@ -156,7 +143,7 @@ public final class ColoredBlocks extends MishangucBlocks {
   public static final ColoredNetherPortalBlock COLORED_NETHER_PORTAL = new ColoredNetherPortalBlock(FabricBlockSettings.copyOf(Blocks.NETHER_PORTAL));
 
   @MiningLevel(MiningLevel.Tool.NONE)
-  public static final ColoredCubeBlock COLORED_LIGHT = new ColoredCubeBlock(WHITE_LIGHT_SETTINGS, new Identifier("mishanguc:block/colored_cube_all_without_shade"), TextureMap.all(new Identifier("mishanguc:block/white_light")));
+  public static final ColoredCubeBlock COLORED_LIGHT = new ColoredCubeBlock(WHITE_LIGHT_SETTINGS, ColoredCubeBlock.COLORED_CUBE_ALL_WITHOUT_SHADE, TextureMap.all(new Identifier("mishanguc:block/white_light")));
   @Translucent
   @MiningLevel(MiningLevel.Tool.NONE)
   public static final ColoredGlassBlock COLORED_GLASS = new ColoredGlassBlock(FabricBlockSettings.copyOf(Blocks.WHITE_STAINED_GLASS), TextureMap.all(new Identifier("block/white_stained_glass")));
@@ -172,37 +159,37 @@ public final class ColoredBlocks extends MishangucBlocks {
 
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_OAK_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES), block -> new VanillaBlockLootTableGenerator().oakLeavesDrops(block, Blocks.OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/oak_leaves");
+  public static final ColoredLeavesBlock COLORED_OAK_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES), (block, blockLootTableGenerator) -> blockLootTableGenerator.oakLeavesDrops(block, Blocks.OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/oak_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_DARK_OAK_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.DARK_OAK_LEAVES), block -> new VanillaBlockLootTableGenerator().oakLeavesDrops(block, Blocks.DARK_OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/dark_oak_leaves");
+  public static final ColoredLeavesBlock COLORED_DARK_OAK_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.DARK_OAK_LEAVES), (block, blockLootTableGenerator) -> blockLootTableGenerator.oakLeavesDrops(block, Blocks.DARK_OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/dark_oak_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_BIRCH_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.BIRCH_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.BIRCH_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/birch_leaves");
+  public static final ColoredLeavesBlock COLORED_BIRCH_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.BIRCH_LEAVES), (block, blockLootTableGenerator) -> blockLootTableGenerator.leavesDrops(block, Blocks.BIRCH_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/birch_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_ACACIA_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.ACACIA_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.ACACIA_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/acacia_leaves");
+  public static final ColoredLeavesBlock COLORED_ACACIA_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.ACACIA_LEAVES), (block, blockLootTableGenerator) -> blockLootTableGenerator.leavesDrops(block, Blocks.ACACIA_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/acacia_leaves");
   @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_CHERRY_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.CHERRY_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.CHERRY_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "mishanguc:block/pale_cherry_leaves");
+  public static final ColoredLeavesBlock COLORED_CHERRY_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.CHERRY_LEAVES), (block, blockLootTableGenerator) -> blockLootTableGenerator.leavesDrops(block, Blocks.CHERRY_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "mishanguc:block/pale_cherry_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_JUNGLE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.JUNGLE_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.JUNGLE_SAPLING, 0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F), "block/jungle_leaves");
+  public static final ColoredLeavesBlock COLORED_JUNGLE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.JUNGLE_LEAVES), (block, blockLootTableGenerator) -> blockLootTableGenerator.leavesDrops(block, Blocks.JUNGLE_SAPLING, 0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F), "block/jungle_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_SPRUCE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.SPRUCE_LEAVES), block -> new VanillaBlockLootTableGenerator().leavesDrops(block, Blocks.SPRUCE_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/spruce_leaves");
+  public static final ColoredLeavesBlock COLORED_SPRUCE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.SPRUCE_LEAVES), (block, blockLootTableGenerator) -> blockLootTableGenerator.leavesDrops(block, Blocks.SPRUCE_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/spruce_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_MANGROVE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.MANGROVE_LEAVES), new VanillaBlockLootTableGenerator()::mangroveLeavesDrops, "block/mangrove_leaves");
+  public static final ColoredLeavesBlock COLORED_MANGROVE_LEAVES = new ColoredLeavesBlock(FabricBlockSettings.copyOf(Blocks.MANGROVE_LEAVES), (leaves, blockLootTableGenerator) -> blockLootTableGenerator.mangroveLeavesDrops(leaves), "block/mangrove_leaves");
 
   @MiningLevel(MiningLevel.Tool.NONE)
   public static final ColoredCubeBlock COLORED_PURE_BLOCK = ColoredCubeBlock.cubeAll(FabricBlockSettings.of(Material.STONE, DyeColor.WHITE).strength(0.2f), "mishanguc:block/white_pure");
   @MiningLevel(MiningLevel.Tool.NONE)
   public static final ColoredCubeBlock COLORED_PURE_LIGHT = ColoredCubeBlock.cubeAll(WHITE_LIGHT_SETTINGS, "mishanguc:block/white_pure");
   @MiningLevel(MiningLevel.Tool.NONE)
-  public static final ColoredCubeBlock COLORED_PURE_BLOCK_WITHOUT_SHADE = new ColoredCubeBlock(FabricBlockSettings.of(Material.STONE, DyeColor.WHITE).strength(0.2f), new Identifier("mishanguc:block/colored_cube_all_without_shade"), TextureMap.all(new Identifier("mishanguc:block/white_pure")));
+  public static final ColoredCubeBlock COLORED_PURE_BLOCK_WITHOUT_SHADE = new ColoredCubeBlock(FabricBlockSettings.of(Material.STONE, DyeColor.WHITE).strength(0.2f), ColoredCubeBlock.COLORED_CUBE_ALL_WITHOUT_SHADE, TextureMap.all(new Identifier("mishanguc:block/white_pure")));
   @MiningLevel(MiningLevel.Tool.NONE)
-  public static final ColoredCubeBlock COLORED_PURE_LIGHT_WITHOUT_SHADE = new ColoredCubeBlock(WHITE_LIGHT_SETTINGS, new Identifier("mishanguc:block/colored_cube_all_without_shade"), TextureMap.all(new Identifier("mishanguc:block/white_pure")));
+  public static final ColoredCubeBlock COLORED_PURE_LIGHT_WITHOUT_SHADE = new ColoredCubeBlock(WHITE_LIGHT_SETTINGS, ColoredCubeBlock.COLORED_CUBE_ALL_WITHOUT_SHADE, TextureMap.all(new Identifier("mishanguc:block/white_pure")));
 
   private ColoredBlocks() {
   }

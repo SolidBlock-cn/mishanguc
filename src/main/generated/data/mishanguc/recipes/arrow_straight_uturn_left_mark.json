@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 1,
+  "ingredient": {
+    "tag": "c:white_dyes"
+  },
+  "result": "mishanguc:arrow_straight_uturn_left_mark"
+}

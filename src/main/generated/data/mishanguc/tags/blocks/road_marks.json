@@ -1,0 +1,25 @@
+{
+  "replace": false,
+  "values": [
+    "mishanguc:arrow_straight_mark",
+    "mishanguc:arrow_left_mark",
+    "mishanguc:arrow_right_mark",
+    "mishanguc:arrow_straight_left_mark",
+    "mishanguc:arrow_straight_right_mark",
+    "mishanguc:arrow_uturn_left_mark",
+    "mishanguc:arrow_uturn_right_mark",
+    "mishanguc:arrow_left_right_mark",
+    "mishanguc:arrow_straight_left_right_mark",
+    "mishanguc:arrow_left_merge_mark",
+    "mishanguc:arrow_right_merge_mark",
+    "mishanguc:arrow_left_uturn_mark",
+    "mishanguc:arrow_right_uturn_mark",
+    "mishanguc:arrow_straight_uturn_left_mark",
+    "mishanguc:arrow_straight_uturn_right_mark",
+    "mishanguc:deceleration_double_line_mark",
+    "mishanguc:deceleration_triple_line_mark",
+    "mishanguc:deceleration_crossroads_mark",
+    "mishanguc:lane_disabled_mark",
+    "mishanguc:lane_non_vehicle_mark"
+  ]
+}

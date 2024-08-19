@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 20,
+  "group": "mishanguc:terracotta_hung_sign_bar",
+  "ingredient": {
+    "item": "minecraft:blue_terracotta"
+  },
+  "result": "mishanguc:blue_terracotta_hung_sign_bar"
+}

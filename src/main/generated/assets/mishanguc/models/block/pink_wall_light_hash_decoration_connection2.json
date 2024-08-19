@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/wall_light_hash_decoration_connection2",
+  "textures": {
+    "light": "mishanguc:block/pink_light"
+  }
+}

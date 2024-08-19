@@ -4,13 +4,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.item.NamedBlockItem;
 
 /**
  * 染色的悬挂告示牌方块。
  */
 public class ColoredHungSignBlockEntity extends HungSignBlockEntity implements ColoredBlockEntity {
-  public int color = NamedBlockItem.cachedColor;
+  public int color = 0;
 
   public ColoredHungSignBlockEntity(BlockPos pos, BlockState state) {
     super(MishangucBlockEntities.COLORED_HUNG_SIGN_BLOCK_ENTITY, pos, state);

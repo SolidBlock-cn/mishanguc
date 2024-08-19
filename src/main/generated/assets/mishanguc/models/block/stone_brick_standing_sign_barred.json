@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/standing_sign_barred",
+  "textures": {
+    "bar": "minecraft:block/stone_bricks",
+    "texture": "minecraft:block/stone_bricks"
+  }
+}

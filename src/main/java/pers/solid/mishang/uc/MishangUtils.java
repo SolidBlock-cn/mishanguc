@@ -4,12 +4,14 @@ import com.google.common.base.Functions;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.*;
 import com.google.gson.JsonPrimitive;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.client.VariantSetting;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.*;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -58,16 +60,6 @@ public class MishangUtils {
   private static final ImmutableSet<Block> TERRACOTTAS = ImmutableSet.of(Blocks.WHITE_TERRACOTTA, Blocks.ORANGE_TERRACOTTA, Blocks.MAGENTA_TERRACOTTA, Blocks.LIGHT_BLUE_TERRACOTTA, Blocks.YELLOW_TERRACOTTA, Blocks.LIME_TERRACOTTA, Blocks.PINK_TERRACOTTA, Blocks.GRAY_TERRACOTTA, Blocks.LIGHT_GRAY_TERRACOTTA, Blocks.CYAN_TERRACOTTA, Blocks.PURPLE_TERRACOTTA, Blocks.BLUE_TERRACOTTA, Blocks.BROWN_TERRACOTTA, Blocks.GREEN_TERRACOTTA, Blocks.RED_TERRACOTTA, Blocks.BLACK_TERRACOTTA);
   private static final ImmutableSet<Block> WOOLS = ImmutableSet.of(Blocks.WHITE_WOOL, Blocks.ORANGE_WOOL, Blocks.MAGENTA_WOOL, Blocks.LIGHT_BLUE_WOOL, Blocks.YELLOW_WOOL, Blocks.LIME_WOOL, Blocks.PINK_WOOL, Blocks.GRAY_WOOL, Blocks.LIGHT_GRAY_WOOL, Blocks.CYAN_WOOL, Blocks.PURPLE_WOOL, Blocks.BLUE_WOOL, Blocks.BROWN_WOOL, Blocks.GREEN_WOOL, Blocks.RED_WOOL, Blocks.BLACK_WOOL);
   private static final ImmutableSet<Block> STAINED_GLASSES = ImmutableSet.of(Blocks.WHITE_STAINED_GLASS, Blocks.ORANGE_STAINED_GLASS, Blocks.MAGENTA_STAINED_GLASS, Blocks.LIGHT_BLUE_STAINED_GLASS, Blocks.YELLOW_STAINED_GLASS, Blocks.LIME_STAINED_GLASS, Blocks.PINK_STAINED_GLASS, Blocks.GRAY_STAINED_GLASS, Blocks.LIGHT_GRAY_STAINED_GLASS, Blocks.CYAN_STAINED_GLASS, Blocks.PURPLE_STAINED_GLASS, Blocks.BLUE_STAINED_GLASS, Blocks.BROWN_STAINED_GLASS, Blocks.GREEN_STAINED_GLASS, Blocks.RED_STAINED_GLASS, Blocks.BLACK_STAINED_GLASS);
-  private static final @Unmodifiable Map<String, String> ARROW_TO_NAMES = new ImmutableMap.Builder<String, String>()
-      .put("←", "al")
-      .put("→", "ar")
-      .put("↑", "at")
-      .put("↓", "ab")
-      .put("↖", "alt")
-      .put("↗", "art")
-      .put("↙", "alb")
-      .put("↘", "arb")
-      .build();
 
   public static boolean isWooden(Block block) {
     return isWood(block) || isStrippedWood(block) || isPlanks(block);
@@ -403,4 +395,23 @@ public class MishangUtils {
     final int intValue = (int) value;
     return value == intValue ? Integer.toString(intValue) : Float.toString(value);
   }
+
+  public static final Supplier<ImmutableMap<DyeColor, TagKey<Item>>> DYE_ITEM_TAGS = Suppliers.memoize(() -> ImmutableMap.<DyeColor, TagKey<Item>>builder()
+      .put(DyeColor.BLACK, ConventionalItemTags.BLACK_DYES)
+      .put(DyeColor.BLUE, ConventionalItemTags.BLUE_DYES)
+      .put(DyeColor.BROWN, ConventionalItemTags.BROWN_DYES)
+      .put(DyeColor.CYAN, ConventionalItemTags.CYAN_DYES)
+      .put(DyeColor.GRAY, ConventionalItemTags.GRAY_DYES)
+      .put(DyeColor.GREEN, ConventionalItemTags.GREEN_DYES)
+      .put(DyeColor.LIGHT_BLUE, ConventionalItemTags.LIGHT_BLUE_DYES)
+      .put(DyeColor.LIGHT_GRAY, ConventionalItemTags.LIGHT_GRAY_DYES)
+      .put(DyeColor.LIME, ConventionalItemTags.LIME_DYES)
+      .put(DyeColor.MAGENTA, ConventionalItemTags.MAGENTA_DYES)
+      .put(DyeColor.ORANGE, ConventionalItemTags.ORANGE_DYES)
+      .put(DyeColor.PINK, ConventionalItemTags.PINK_DYES)
+      .put(DyeColor.PURPLE, ConventionalItemTags.PURPLE_DYES)
+      .put(DyeColor.RED, ConventionalItemTags.RED_DYES)
+      .put(DyeColor.WHITE, ConventionalItemTags.WHITE_DYES)
+      .put(DyeColor.YELLOW, ConventionalItemTags.YELLOW_DYES)
+      .build());
 }

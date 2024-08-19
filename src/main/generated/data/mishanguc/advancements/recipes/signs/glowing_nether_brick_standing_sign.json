@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_base_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:nether_bricks"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_sign": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mishanguc:invisible_glowing_wall_sign"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:glowing_nether_brick_standing_sign"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_base_block",
+      "has_sign"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:glowing_nether_brick_standing_sign"
+    ]
+  }
+}

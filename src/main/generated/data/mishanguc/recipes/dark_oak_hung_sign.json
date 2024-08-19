@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "mishanguc:plank_wood_hung_sign",
+  "key": {
+    "#": {
+      "item": "minecraft:dark_oak_planks"
+    },
+    "-": {
+      "item": "mishanguc:invisible_wall_sign"
+    }
+  },
+  "pattern": [
+    "-#-",
+    "-#-",
+    "-#-"
+  ],
+  "result": {
+    "count": 6,
+    "item": "mishanguc:dark_oak_hung_sign"
+  }
+}

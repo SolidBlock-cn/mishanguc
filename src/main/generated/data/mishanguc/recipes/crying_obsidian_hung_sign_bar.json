@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 20,
+  "ingredient": {
+    "item": "minecraft:crying_obsidian"
+  },
+  "result": "mishanguc:crying_obsidian_hung_sign_bar"
+}

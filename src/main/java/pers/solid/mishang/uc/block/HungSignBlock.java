@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -11,6 +9,7 @@ import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -42,26 +41,28 @@ import net.minecraft.world.WorldEvents;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.BRRPUtils;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
+import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.data.MishangucTextureKeys;
+import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @see HungSignBlockEntity
  * @see HungSignBlockEntityRenderer
  */
-public class HungSignBlock extends Block implements Waterloggable, BlockEntityProvider, BlockResourceGenerator {
+public class HungSignBlock extends Block implements Waterloggable, BlockEntityProvider, MishangucBlock {
   public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   /**
@@ -89,8 +90,8 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       MishangUtils.createHorizontalDirectionToShape(7.5, 13, 13, 8.5, 16, 14);
   private static final VoxelShape SHAPE_WIDENED_X = createCuboidShape(6.5, 5, 0, 9.5, 16, 16);
   private static final VoxelShape SHAPE_WIDENED_Z = createCuboidShape(0, 5, 6.5, 16, 16, 9.5);
-  public final @Nullable Block baseBlock;
 
+  public final @Nullable Block baseBlock;
   /**
    * 基础方块的纹理。{@link #getBaseTexture()} 会使用到此值。如果此值为 {@code null}，则根据 {@link #baseBlock} 来推断纹理。<br>
    * 非 final，可直接进行修改。
@@ -312,7 +313,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
    * net.minecraft.client.network.ClientPlayerEntity#openEditSignScreen(SignBlockEntity, boolean)} 和 {@link
    * net.minecraft.server.network.ServerPlayerEntity#openEditSignScreen(SignBlockEntity, boolean)}。
    */
-  @SuppressWarnings({"deprecation", "JavadocReference"})
+  @SuppressWarnings("deprecation")
   @Override
   public ActionResult onUse(
       BlockState state,
@@ -332,7 +333,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       // Skip if the block entity does not correspond, or the side is not editable.
       return ActionResult.PASS;
     } else if (!player.getAbilities().allowModifyWorld) {
-      // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
+      // 冒险模式玩家无权编辑。Adventure players have no permission to edit.
       return ActionResult.FAIL;
     } else if (world.isClient) {
       return ActionResult.SUCCESS;
@@ -417,47 +418,39 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     tooltip.add(TextBridge.translatable("block.mishanguc.hung_sign.tooltip.2").formatted(Formatting.GRAY));
   }
 
-  @Environment(EnvType.CLIENT)
   public Identifier getBaseTexture() {
     if (baseTexture != null) return baseTexture;
-    return BRRPUtils.getTextureId(baseBlock == null ? this : baseBlock, TextureKey.ALL);
+    return ModelHelper.getTextureOf(baseBlock == null ? this : baseBlock);
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public void writeBlockModel(RuntimeResourcePack pack) {
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final Identifier texture = getBaseTexture();
-    final Identifier id = getBlockModelId();
-    final HashMap<String, String> textures = new HashMap<>();
+    final TextureMap textures = TextureMap.texture(texture);
+    if (barTexture != null) textures.put(MishangucTextureKeys.BAR, barTexture);
+    if (textureTop != null) textures.put(MishangucTextureKeys.TEXTURE_TOP, textureTop);
 
-    textures.put("texture", texture.toString());
-    if (barTexture != null) textures.put("bar", barTexture.toString());
-    if (textureTop != null) textures.put("texture_top", textureTop.toString());
-    pack.addModel(id,
-        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign")).setTextures(textures));
-    pack.addModel(id.brrp_suffixed("_body"),
-        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_body")).setTextures(textures));
-    pack.addModel(id.brrp_suffixed("_top_bar"),
-        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_top_bar")).setTextures(textures));
-    pack.addModel(id.brrp_suffixed("_top_bar_edge"),
-        ModelJsonBuilder.create(new Identifier("mishanguc", "block/hung_sign_top_bar_edge")).setTextures(textures));
+    final Identifier id = MishangucModels.HUNG_SIGN.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier bodyId = MishangucModels.HUNG_SIGN_BODY.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier topBarId = MishangucModels.HUNG_SIGN_TOP_BAR.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier topBarEdgeId = MishangucModels.HUNG_SIGN_TOP_BAR_EDGE.upload(this, textures, blockStateModelGenerator.modelCollector);
+
+    blockStateModelGenerator.blockStateCollector.accept(createBlockStates(bodyId, topBarId, topBarEdgeId));
+    blockStateModelGenerator.registerParentedItemModel(this, id);
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull BlockStateSupplier getBlockStates() {
-    final Identifier id = getBlockModelId();
+  public @NotNull BlockStateSupplier createBlockStates(Identifier bodyId, Identifier topBarId, Identifier topBarEdgeId) {
     return MultipartBlockStateSupplier.create(this)
-        .with(When.create().set(AXIS, Direction.Axis.Z), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_body")).put(VariantSettings.UVLOCK, true))
-        .with(When.create().set(AXIS, Direction.Axis.X), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_body")).put(VariantSettings.UVLOCK, true).put(VariantSettings.Y, VariantSettings.Rotation.R90))
-        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_top_bar")).put(VariantSettings.UVLOCK, true))
-        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_top_bar")).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 180))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_top_bar")).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, -90))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_top_bar")).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 90))
-        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_top_bar_edge")).put(VariantSettings.UVLOCK, true))
-        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_top_bar_edge")).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 180))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_top_bar_edge")).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 90))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_top_bar_edge")).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 270));
+        .with(When.create().set(AXIS, Direction.Axis.Z), BlockStateVariant.create().put(VariantSettings.MODEL, bodyId).put(VariantSettings.UVLOCK, true))
+        .with(When.create().set(AXIS, Direction.Axis.X), BlockStateVariant.create().put(VariantSettings.MODEL, bodyId).put(VariantSettings.UVLOCK, true).put(VariantSettings.Y, VariantSettings.Rotation.R90))
+        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, topBarId).put(VariantSettings.UVLOCK, true))
+        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 180))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, topBarId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, -90))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 90))
+        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarEdgeId).put(VariantSettings.UVLOCK, true))
+        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarEdgeId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 180))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarEdgeId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 90))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarEdgeId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 270));
   }
 
   private @Nullable String getRecipeGroup() {
@@ -476,19 +469,15 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (baseBlock == null) return null;
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this, 6)
-        .patterns("-#-", "-#-", "-#-")
+    return ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this, 6)
+        .pattern("-#-")
+        .pattern("-#-")
+        .pattern("-#-")
         .input('#', baseBlock)
         .input('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
-        .setCustomRecipeCategory("signs")
-        .criterionFromItem("has_base_block", baseBlock)
-        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .criterion("has_base_block", RecipeProvider.conditionsFromItem(baseBlock))
+        .criterion("has_sign", RecipeProvider.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN))
         .group(getRecipeGroup());
-  }
-
-  @Override
-  public @Nullable RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
   }
 
   @SuppressWarnings("deprecation")
@@ -535,5 +524,10 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
       set.remove(element);
       return set;
     }
+  }
+
+  @Override
+  public String customRecipeCategory() {
+    return "signs";
   }
 }

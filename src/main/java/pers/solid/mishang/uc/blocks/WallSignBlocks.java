@@ -13,8 +13,8 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
+import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.annotations.Translucent;
-import pers.solid.mishang.uc.arrp.MiningLevel;
 import pers.solid.mishang.uc.block.*;
 
 /**

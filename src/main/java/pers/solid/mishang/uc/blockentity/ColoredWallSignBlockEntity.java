@@ -4,10 +4,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.item.NamedBlockItem;
 
 public class ColoredWallSignBlockEntity extends WallSignBlockEntity implements ColoredBlockEntity {
-  public int color = NamedBlockItem.cachedColor;
+  public int color = 0;
 
   public ColoredWallSignBlockEntity(BlockPos pos, BlockState state) {
     super(MishangucBlockEntities.COLORED_WALL_SIGN_BLOCK_ENTITY, pos, state);

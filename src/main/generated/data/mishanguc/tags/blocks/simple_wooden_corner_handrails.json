@@ -1,0 +1,26 @@
+{
+  "replace": false,
+  "values": [
+    "mishanguc:simple_oak_handrail_corner",
+    "mishanguc:simple_spruce_handrail_corner",
+    "mishanguc:simple_birch_handrail_corner",
+    "mishanguc:simple_jungle_handrail_corner",
+    "mishanguc:simple_acacia_handrail_corner",
+    "mishanguc:simple_cherry_handrail_corner",
+    "mishanguc:simple_dark_oak_handrail_corner",
+    "mishanguc:simple_mangrove_handrail_corner",
+    "mishanguc:simple_crimson_handrail_corner",
+    "mishanguc:simple_warped_handrail_corner",
+    "mishanguc:simple_oak_plank_handrail_corner",
+    "mishanguc:simple_spruce_plank_handrail_corner",
+    "mishanguc:simple_birch_plank_handrail_corner",
+    "mishanguc:simple_jungle_plank_handrail_corner",
+    "mishanguc:simple_acacia_plank_handrail_corner",
+    "mishanguc:simple_cherry_plank_handrail_corner",
+    "mishanguc:simple_dark_oak_plank_handrail_corner",
+    "mishanguc:simple_mangrove_plank_handrail_corner",
+    "mishanguc:simple_crimson_plank_handrail_corner",
+    "mishanguc:simple_warped_plank_handrail_corner",
+    "mishanguc:simple_bamboo_plank_handrail_corner"
+  ]
+}

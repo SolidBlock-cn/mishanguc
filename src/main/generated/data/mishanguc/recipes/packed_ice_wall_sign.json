@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "mishanguc:ice_wall_sign",
+  "key": {
+    "#": {
+      "item": "minecraft:packed_ice"
+    },
+    "-": {
+      "item": "mishanguc:invisible_wall_sign"
+    }
+  },
+  "pattern": [
+    "---",
+    "###",
+    "---"
+  ],
+  "result": {
+    "count": 6,
+    "item": "mishanguc:packed_ice_wall_sign"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "mishanguc:terracotta_hung_sign",
+  "key": {
+    "#": {
+      "item": "minecraft:lime_terracotta"
+    },
+    "-": {
+      "item": "mishanguc:invisible_wall_sign"
+    }
+  },
+  "pattern": [
+    "-#-",
+    "-#-",
+    "-#-"
+  ],
+  "result": {
+    "count": 6,
+    "item": "mishanguc:lime_terracotta_hung_sign"
+  }
+}

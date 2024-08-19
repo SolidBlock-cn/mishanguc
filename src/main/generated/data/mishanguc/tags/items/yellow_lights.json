@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "#mishanguc:yellow_wall_lights",
+    "#mishanguc:yellow_column_lights",
+    "#mishanguc:yellow_column_lights",
+    "#mishanguc:yellow_column_lights",
+    "mishanguc:yellow_light",
+    "mishanguc:yellow_light_slab",
+    "mishanguc:yellow_light_cover"
+  ]
+}

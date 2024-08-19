@@ -13,9 +13,10 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
+import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.annotations.Translucent;
-import pers.solid.mishang.uc.arrp.MiningLevel;
 import pers.solid.mishang.uc.block.*;
+import pers.solid.mishang.uc.data.MishangucRecipeProvider;
 
 import java.util.Map;
 
@@ -23,7 +24,7 @@ import java.util.Map;
  * <h1>告示牌类方块</h1>
  * 具有多种不同颜色和纹理。每一种告示牌都有对应的告示牌杆，且部分的告示牌都有对应的发光告示牌方块。<br>
  * 每个告示牌都要在 {@link pers.solid.mishang.uc.blockentity.MishangucBlockEntities#HUNG_SIGN_BLOCK_ENTITY} 中能够识别，因此添加新的告示牌需要在该字段的相关参数中添加。<br>
- * 同时，还需要注意在 {@link pers.solid.mishang.uc.arrp.ARRPMain} 中添加此方块。
+ * 同时，还需要注意在 {@link MishangucRecipeProvider} 中添加此方块。
  *
  * @see HungSignBlock
  * @see HungSignBarBlock
@@ -891,10 +892,10 @@ public final class HungSignBlocks extends MishangucBlocks {
       new HungSignBarBlock(Blocks.POLISHED_BLACKSTONE);
 
   static {
-    GLOWING_NETHERRACK_HUNG_SIGN.glowTexture = "block/lava_still";
-    GLOWING_NETHER_BRICK_HUNG_SIGN.glowTexture = "block/lava_still";
-    GLOWING_BLACKSTONE_HUNG_SIGN.glowTexture = "block/glowstone";
-    GLOWING_POLISHED_BLACKSTONE_HUNG_SIGN.glowTexture = "block/glowstone";
+    GLOWING_NETHERRACK_HUNG_SIGN.glowTexture = new Identifier("block/lava_still");
+    GLOWING_NETHER_BRICK_HUNG_SIGN.glowTexture = new Identifier("block/lava_still");
+    GLOWING_BLACKSTONE_HUNG_SIGN.glowTexture = new Identifier("block/glowstone");
+    GLOWING_POLISHED_BLACKSTONE_HUNG_SIGN.glowTexture = new Identifier("block/glowstone");
   }
 
   // 雪块
