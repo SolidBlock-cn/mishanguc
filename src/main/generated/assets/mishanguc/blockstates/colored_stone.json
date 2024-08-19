@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "mishanguc:block/colored_stone"
+      },
+      {
+        "model": "mishanguc:block/colored_stone_mirrored"
+      },
+      {
+        "model": "mishanguc:block/colored_stone",
+        "y": 180
+      },
+      {
+        "model": "mishanguc:block/colored_stone_mirrored",
+        "y": 180
+      }
+    ]
+  }
+}

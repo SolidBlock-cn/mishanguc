@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 18,
+  "ingredient": {
+    "item": "mishanguc:yellow_light"
+  },
+  "result": "mishanguc:yellow_wall_light_point_decoration"
+}

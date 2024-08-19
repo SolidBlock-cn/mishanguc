@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "mishanguc:block/pink_light_slab"
+    },
+    "type=double": {
+      "model": "mishanguc:block/pink_light"
+    },
+    "type=top": {
+      "model": "mishanguc:block/pink_light_slab_top"
+    }
+  }
+}

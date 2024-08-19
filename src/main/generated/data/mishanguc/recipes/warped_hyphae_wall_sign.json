@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "mishanguc:wood_wall_sign",
+  "key": {
+    "#": {
+      "item": "minecraft:warped_hyphae"
+    },
+    "-": {
+      "item": "mishanguc:invisible_wall_sign"
+    }
+  },
+  "pattern": [
+    "---",
+    "###",
+    "---"
+  ],
+  "result": {
+    "count": 6,
+    "item": "mishanguc:warped_hyphae_wall_sign"
+  }
+}

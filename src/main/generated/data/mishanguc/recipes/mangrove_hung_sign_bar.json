@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 20,
+  "group": "mishanguc:wood_hung_sign_bar",
+  "ingredient": {
+    "item": "minecraft:mangrove_wood"
+  },
+  "result": "mishanguc:mangrove_hung_sign_bar"
+}

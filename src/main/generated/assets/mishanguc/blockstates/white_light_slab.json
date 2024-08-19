@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "mishanguc:block/white_light_slab"
+    },
+    "type=double": {
+      "model": "mishanguc:block/white_light"
+    },
+    "type=top": {
+      "model": "mishanguc:block/white_light_slab_top"
+    }
+  }
+}

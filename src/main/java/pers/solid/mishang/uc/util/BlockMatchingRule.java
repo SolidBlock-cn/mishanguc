@@ -15,6 +15,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.Mishanguc;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -24,7 +25,7 @@ import java.util.Set;
  */
 public abstract class BlockMatchingRule implements StringIdentifiable {
   protected static final RegistryKey<Registry<BlockMatchingRule>> REGISTRY_KEY =
-      RegistryKey.ofRegistry(new Identifier("mishanguc", "block_matching_rule"));
+      RegistryKey.ofRegistry(Mishanguc.id("block_matching_rule"));
   public static final SimpleRegistry<BlockMatchingRule> REGISTRY =
       new SimpleRegistry<>(REGISTRY_KEY, Lifecycle.stable());
   public static final BlockMatchingRule SAME_STATE =
@@ -77,7 +78,7 @@ public abstract class BlockMatchingRule implements StringIdentifiable {
    * 将其注册到注册表，并使用本模组的命名空间。
    */
   protected BlockMatchingRule register(String string) {
-    return register(new Identifier("mishanguc", string));
+    return register(Mishanguc.id(string));
   }
 
   /**

@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "#mishanguc:yellow_strip_wall_lights",
+    "mishanguc:yellow_light_cover",
+    "mishanguc:yellow_small_wall_light_tube",
+    "mishanguc:yellow_medium_wall_light_tube",
+    "mishanguc:yellow_large_wall_light_tube",
+    "mishanguc:yellow_small_wall_light",
+    "mishanguc:yellow_medium_wall_light",
+    "mishanguc:yellow_large_wall_light"
+  ]
+}

@@ -1,15 +1,15 @@
 package pers.solid.mishang.uc.block;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.text.Text;
@@ -19,14 +19,11 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
-import pers.solid.mishang.uc.arrp.BRRPHelper;
-import pers.solid.mishang.uc.arrp.FasterJTextures;
+import pers.solid.mishang.uc.data.FasterTextureMap;
+import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
@@ -109,22 +106,11 @@ public interface RoadWithAngleLine extends Road {
       return isBevel;
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public @Nullable BlockStateSupplier getBlockStates() {
-      final Identifier id = getBlockModelId();
-      return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.MODEL, id)).coordinate(BlockStateVariantMap.create(FACING).register(direction -> BlockStateVariant.create().put(MishangUtils.INT_Y_VARIANT, direction.asRotation() - 45)));
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public @NotNull ModelJsonBuilder getBlockModel() {
-      return ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_angle_line")).setTextures(new FasterJTextures().base("asphalt").lineSide(lineSide).lineTop(lineTop));
-    }
-
-    @Override
-    public void writeBlockModel(RuntimeResourcePack pack) {
-      BRRPHelper.addModelWithSlab(pack, Impl.this);
+    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
+      final FasterTextureMap textures = new FasterTextureMap().base("asphalt").lineSide(lineSide).lineTop(lineTop);
+      final Identifier modelId = road.uploadModel("_with_angle_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_TOP);
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockStateSupplier.create(road, BlockStateVariant.create().put(VariantSettings.MODEL, modelId)).coordinate(BlockStateVariantMap.create(FACING).register(direction -> BlockStateVariant.create().put(MishangUtils.INT_Y_VARIANT, direction.asRotation() - 45)))));
     }
 
     @Override
@@ -165,13 +151,14 @@ public interface RoadWithAngleLine extends Road {
         case DOUBLE -> DOUBLE_BEVEL_PATTERN;
         case THICK -> THICK_BEVEL_PATTERN;
       } : NORMAL_RIGHT_ANGLE_PATTERN;
-      return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
-          .patterns(patterns)
+      return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
+          .pattern(patterns[0])
+          .pattern(patterns[1])
+          .pattern(patterns[2])
           .input('*', lineColor.getIngredient())
           .input('X', base)
-          .criterionFromItemTag("*", lineColor.getIngredient())
-          .criterionFromItem(base)
-          .setCustomRecipeCategory("roads");
+          .criterion("*", RecipeProvider.conditionsFromTag(lineColor.getIngredient()))
+          .criterion(RecipeProvider.hasItem(base), RecipeProvider.conditionsFromItem(base));
     }
   }
 }

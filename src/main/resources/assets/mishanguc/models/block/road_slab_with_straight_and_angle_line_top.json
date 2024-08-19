@@ -2,8 +2,8 @@
   "parent": "mishanguc:block/road_with_line",
   "textures": {
     "particle": "#base",
-    "line_bottom_layer1": "#line_top_layer1",
-    "line_bottom_layer2": "#line_top_layer2",
+    "line_bottom": "#line_top",
+    "line_bottom2": "#line_top2",
     "line_side2": "#line_side",
     "line_side3": "#line_side"
   },
@@ -12,31 +12,68 @@
       "from": [0, 8, 0],
       "to": [16, 16, 16],
       "faces": {
-        "down": {"texture": "#base"},
-        "up": {"texture": "#base", "cullface": "up"},
-        "north": {"texture": "#base", "cullface": "north"},
-        "south": {"texture": "#base", "cullface": "south"},
-        "west": {"texture": "#base", "cullface": "west"},
-        "east": {"texture": "#base", "cullface": "east"}
+        "down": {
+          "texture": "#base"
+        },
+        "up": {
+          "texture": "#base",
+          "cullface": "up"
+        },
+        "north": {
+          "texture": "#base",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#base",
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#base",
+          "cullface": "west"
+        },
+        "east": {
+          "texture": "#base",
+          "cullface": "east"
+        }
       }
     },
     {
       "from": [0, 8, 0],
       "to": [16, 16, 16],
       "faces": {
-        "down": {"texture": "#line_bottom_layer1", "uv": [0, 16, 16, 0]},
-        "up": {"texture": "#line_top_layer1", "cullface": "up"},
-        "south": {"texture": "#line_side3", "cullface": "south"},
-        "north": {"texture": "#line_side", "cullface": "north"}
+        "down": {
+          "texture": "#line_bottom",
+          "uv": [0, 16, 16, 0]
+        },
+        "up": {
+          "texture": "#line_top",
+          "cullface": "up"
+        },
+        "south": {
+          "texture": "#line_side3",
+          "cullface": "south"
+        },
+        "north": {
+          "texture": "#line_side",
+          "cullface": "north"
+        }
       }
     },
     {
       "from": [0, 0, 0],
       "to": [16, 16, 16],
       "faces": {
-        "down": {"texture": "#line_bottom_layer2"},
-        "up": {"texture": "#line_top_layer2", "cullface": "up"},
-        "west": {"texture": "#line_side2", "cullface": "west"}
+        "down": {
+          "texture": "#line_bottom2"
+        },
+        "up": {
+          "texture": "#line_top2",
+          "cullface": "up"
+        },
+        "west": {
+          "texture": "#line_side2",
+          "cullface": "west"
+        }
       }
     }
   ]

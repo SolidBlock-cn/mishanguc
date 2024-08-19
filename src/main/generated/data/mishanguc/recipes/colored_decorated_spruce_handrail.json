@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "colored_decorated_wooden_handrail",
+  "key": {
+    "M": {
+      "item": "mishanguc:colored_planks"
+    },
+    "X": {
+      "item": "minecraft:spruce_wood"
+    },
+    "n": {
+      "item": "minecraft:stick"
+    },
+    "o": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "oMo",
+    "nnn"
+  ],
+  "result": {
+    "count": 6,
+    "item": "mishanguc:colored_decorated_spruce_handrail"
+  }
+}

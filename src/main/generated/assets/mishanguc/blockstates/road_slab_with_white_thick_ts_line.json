@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "facing=east,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_white_thick_ts_line",
+      "y": 270
+    },
+    "facing=east,type=double": {
+      "model": "mishanguc:block/road_with_white_thick_ts_line",
+      "y": 270
+    },
+    "facing=east,type=top": {
+      "model": "mishanguc:block/road_slab_with_white_thick_ts_line_top",
+      "y": 270
+    },
+    "facing=north,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_white_thick_ts_line",
+      "y": 180
+    },
+    "facing=north,type=double": {
+      "model": "mishanguc:block/road_with_white_thick_ts_line",
+      "y": 180
+    },
+    "facing=north,type=top": {
+      "model": "mishanguc:block/road_slab_with_white_thick_ts_line_top",
+      "y": 180
+    },
+    "facing=south,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_white_thick_ts_line",
+      "y": 0
+    },
+    "facing=south,type=double": {
+      "model": "mishanguc:block/road_with_white_thick_ts_line",
+      "y": 0
+    },
+    "facing=south,type=top": {
+      "model": "mishanguc:block/road_slab_with_white_thick_ts_line_top",
+      "y": 0
+    },
+    "facing=west,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_white_thick_ts_line",
+      "y": 90
+    },
+    "facing=west,type=double": {
+      "model": "mishanguc:block/road_with_white_thick_ts_line",
+      "y": 90
+    },
+    "facing=west,type=top": {
+      "model": "mishanguc:block/road_slab_with_white_thick_ts_line_top",
+      "y": 90
+    }
+  }
+}

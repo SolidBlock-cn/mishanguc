@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "mishanguc:stripped_wood_hung_sign",
+  "key": {
+    "#": {
+      "item": "minecraft:stripped_birch_wood"
+    },
+    "-": {
+      "item": "mishanguc:invisible_wall_sign"
+    }
+  },
+  "pattern": [
+    "-#-",
+    "-#-",
+    "-#-"
+  ],
+  "result": {
+    "count": 6,
+    "item": "mishanguc:stripped_birch_wood_hung_sign"
+  }
+}

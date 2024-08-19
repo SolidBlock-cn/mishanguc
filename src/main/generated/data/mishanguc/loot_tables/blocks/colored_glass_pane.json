@@ -1,0 +1,43 @@
+{
+  "type": "minecraft:block",
+  "functions": [
+    {
+      "function": "minecraft:copy_nbt",
+      "ops": [
+        {
+          "op": "replace",
+          "source": "color",
+          "target": "BlockEntityTag.color"
+        }
+      ],
+      "source": "block_entity"
+    }
+  ],
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:match_tool",
+          "predicate": {
+            "enchantments": [
+              {
+                "enchantment": "minecraft:silk_touch",
+                "levels": {
+                  "min": 1
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "mishanguc:colored_glass_pane"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

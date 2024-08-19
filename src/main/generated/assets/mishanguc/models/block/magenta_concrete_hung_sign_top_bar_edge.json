@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/hung_sign_top_bar_edge",
+  "textures": {
+    "bar": "minecraft:block/magenta_concrete",
+    "texture": "minecraft:block/magenta_concrete"
+  }
+}

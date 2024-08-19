@@ -1,12 +1,11 @@
 package pers.solid.mishang.uc.block;
 
-import com.google.common.annotations.Beta;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.data.server.loottable.vanilla.VanillaBlockLootTableGenerator;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.state.StateManager;
@@ -19,7 +18,6 @@ import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
 
-@Beta
 public class ColoredHungSignBarBlock extends HungSignBarBlock implements BlockEntityProvider, ColoredBlock {
   public ColoredHungSignBarBlock(@NotNull Block baseBlock) {
     super(baseBlock);
@@ -48,7 +46,7 @@ public class ColoredHungSignBarBlock extends HungSignBarBlock implements BlockEn
   }
 
   @Override
-  public LootTable.Builder getLootTable() {
-    return new VanillaBlockLootTableGenerator().drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 }

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#mishanguc:simple_concrete_normal_handrails",
+    "#mishanguc:simple_concrete_central_handrails",
+    "#mishanguc:simple_concrete_corner_handrails",
+    "#mishanguc:simple_concrete_outer_handrails",
+    "#mishanguc:simple_concrete_stair_handrails"
+  ]
+}

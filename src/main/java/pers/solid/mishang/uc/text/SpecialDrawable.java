@@ -79,7 +79,8 @@ public interface SpecialDrawable extends Cloneable {
    */
   @Contract(pure = true)
   @ApiStatus.AvailableSince("0.2.4")
-  @NotNull SpecialDrawableType<? extends SpecialDrawable> getType();
+  @NotNull
+  SpecialDrawableType<? extends SpecialDrawable> getType();
 
   @Contract(mutates = "param1")
   default void writeNbt(NbtCompound nbt) {

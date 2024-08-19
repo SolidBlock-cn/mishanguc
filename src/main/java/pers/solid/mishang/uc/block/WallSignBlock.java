@@ -1,8 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.ImmutableMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -12,6 +10,7 @@ import net.minecraft.block.enums.WallMountLocation;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -39,13 +38,12 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
-import pers.solid.brrp.v1.BRRPUtils;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
+import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
 import pers.solid.mishang.uc.util.TextBridge;
 
@@ -60,7 +58,7 @@ import java.util.Map;
  * @see WallSignBlockEntity
  * @see WallSignBlockEntityRenderer
  */
-public class WallSignBlock extends WallMountedBlock implements Waterloggable, BlockEntityProvider, BlockResourceGenerator {
+public class WallSignBlock extends WallMountedBlock implements Waterloggable, BlockEntityProvider, MishangucBlock {
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   public static final Map<Direction, VoxelShape> SHAPES_WHEN_WALL =
       MishangUtils.createHorizontalDirectionToShape(0, 4, 0, 16, 12, 1);
@@ -181,7 +179,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     if (!(blockEntity instanceof final WallSignBlockEntity entity)) {
       return ActionResult.PASS;
     } else if (!player.getAbilities().allowModifyWorld) {
-      // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
+      // 冒险模式玩家无权编辑。Adventure players have no permission to edit.
       return ActionResult.FAIL;
     } else if (world.isClient) {
       return ActionResult.SUCCESS;
@@ -238,7 +236,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     PlayerEntity editor = entity.getEditor();
     if (editor != null && editor != player) {
       // 这种情况下，告示牌被占用，玩家无权编辑。
-      // In this case, the sign is occupied, and the players has not editing
+      // In this case, the sign is occupied, and the players have no editing
       // permission.
       player.sendMessage(TextBridge.translatable("message.mishanguc.no_editing_permission.occupied", editor.getName()), false);
       return ActionResult.FAIL;
@@ -259,31 +257,29 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   }
 
   @Override
-  @Environment(EnvType.CLIENT)
-  public @NotNull BlockStateSupplier getBlockStates() {
-    return BlockStateModelGenerator.createSingletonBlockState(this, getBlockModelId()).coordinate(BlockStateVariantMap.create(FACE, FACING).register((wallMountLocation, direction) -> {
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final TextureMap textures = TextureMap.texture(getBaseTexture());
+    final Identifier modelId = MishangucModels.WALL_SIGN.upload(this, textures, blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId));
+  }
+
+  public VariantsBlockStateSupplier createBlockStates(Identifier modelId) {
+    return BlockStateModelGenerator.createSingletonBlockState(this, modelId).coordinate(BlockStateVariantMap.create(FACE, FACING).register((wallMountLocation, direction) -> {
       final int x = switch (wallMountLocation) {
         case WALL -> 0;
         case FLOOR -> 90;
         default -> -90;
       };
-      return BlockStateVariant.create().put(VariantSettings.MODEL, getBlockModelId())
+      return BlockStateVariant.create().put(VariantSettings.MODEL, modelId)
           .put(MishangUtils.INT_X_VARIANT, x)
           .put(MishangUtils.DIRECTION_Y_VARIANT, direction)
           .put(VariantSettings.UVLOCK, true);
     }));
   }
 
-  @Override
-  @Environment(EnvType.CLIENT)
-  public ModelJsonBuilder getBlockModel() {
-    return ModelJsonBuilder.create(new Identifier("mishanguc:block/wall_sign")).addTexture(TextureKey.TEXTURE, getBaseTexture());
-  }
-
-  @Environment(EnvType.CLIENT)
   public Identifier getBaseTexture() {
     if (texture != null) return texture;
-    return BRRPUtils.getTextureId(baseBlock == null ? this : baseBlock, TextureKey.ALL);
+    return ModelHelper.getTextureOf(baseBlock == null ? this : baseBlock);
   }
 
   private @Nullable String getRecipeGroup() {
@@ -302,18 +298,14 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   @Override
   public @Nullable CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (baseBlock == null) return null;
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this, 6)
-        .patterns("---", "###", "---")
+    return ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this, 6)
+        .pattern("---")
+        .pattern("###")
+        .pattern("---")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
-        .setCustomRecipeCategory("signs")
-        .criterionFromItem("has_base_block", baseBlock)
-        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .criterion("has_base_block", RecipeProvider.conditionsFromItem(baseBlock))
+        .criterion("has_sign", RecipeProvider.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN))
         .group(getRecipeGroup());
-  }
-
-  @Override
-  public @Nullable RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
   }
 
   @SuppressWarnings("deprecation")
@@ -332,5 +324,10 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     } else {
       return super.isSideInvisible(state, stateFrom, direction);
     }
+  }
+
+  @Override
+  public String customRecipeCategory() {
+    return "wall_signs";
   }
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/thin_strip_wall_light_tube",
+  "textures": {
+    "light": "mishanguc:block/pink_light"
+  }
+}

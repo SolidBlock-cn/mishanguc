@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/medium_column_light_tube",
+  "textures": {
+    "light": "mishanguc:block/white_light"
+  }
+}

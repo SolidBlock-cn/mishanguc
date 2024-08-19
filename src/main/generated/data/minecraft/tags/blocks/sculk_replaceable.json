@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "mishanguc:colored_dirt",
+    "mishanguc:colored_terracotta",
+    "mishanguc:colored_end_stone",
+    "mishanguc:colored_end_stone_stairs",
+    "mishanguc:colored_end_stone_slab"
+  ]
+}

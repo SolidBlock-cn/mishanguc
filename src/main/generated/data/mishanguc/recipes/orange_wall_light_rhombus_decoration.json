@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 12,
+  "ingredient": {
+    "item": "mishanguc:orange_light"
+  },
+  "result": "mishanguc:orange_wall_light_rhombus_decoration"
+}

@@ -1,0 +1,60 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_colored_concrete": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mishanguc:colored_concrete"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_glass_pane": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:glass_pane"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_mossy_cobblestone": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:mossy_cobblestone"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:colored_decorated_mossy_cobblestone_handrail"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_mossy_cobblestone",
+      "has_glass_pane",
+      "has_colored_concrete"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:colored_decorated_mossy_cobblestone_handrail"
+    ]
+  }
+}

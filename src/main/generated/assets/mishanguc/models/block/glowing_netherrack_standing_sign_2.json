@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/glowing_standing_sign_2",
+  "textures": {
+    "bar": "minecraft:block/netherrack",
+    "glow": "minecraft:block/lava_still",
+    "texture": "minecraft:block/netherrack"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "mishanguc:pink_double_strip_wall_light_tube"
+    },
+    {
+      "item": "mishanguc:pink_double_strip_wall_light_tube"
+    }
+  ],
+  "result": {
+    "item": "mishanguc:pink_double_strip_corner_light_tube"
+  }
+}

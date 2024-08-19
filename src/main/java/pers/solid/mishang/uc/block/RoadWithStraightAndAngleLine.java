@@ -1,16 +1,16 @@
 package pers.solid.mishang.uc.block;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.Text;
@@ -25,18 +25,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
-import pers.solid.mishang.uc.arrp.BRRPHelper;
-import pers.solid.mishang.uc.arrp.FasterJTextures;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
+import pers.solid.mishang.uc.data.FasterTextureMap;
+import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWithStraightLine {
@@ -153,19 +149,38 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       return stateForNeighborUpdate;
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull BlockStateSupplier getBlockStates() {
-      final Identifier blockModelId = getBlockModelId();
-      final Identifier mirroredBlockModelId = blockModelId.brrp_suffixed("_mirrored");
-      final Identifier bevelTopBlockModelId, bevelTopMirroredBlockModelId;
-      final boolean hasBevelTop = lineColor != lineColorSide;
-      if (hasBevelTop) {
-        bevelTopBlockModelId = blockModelId.brrp_suffixed("_bevel-top");
-        bevelTopMirroredBlockModelId = blockModelId.brrp_suffixed("_bevel-top_mirrored");
+    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
+      final String lineTopStraight = MishangUtils.composeStraightLineTexture(lineColor, lineType);
+      final String lineTopAngle = MishangUtils.composeAngleLineTexture(lineColorSide, LineType.NORMAL, true);
+      final String lineSide = lineTopStraight;
+      final String lineSide2 = MishangUtils.composeStraightLineTexture(lineColorSide, lineTypeSide);
+      final FasterTextureMap textures = new FasterTextureMap()
+          .base("asphalt")
+          .lineTop(lineTopAngle)
+          .lineTop2(lineTopStraight)
+          .lineSide(lineSide)
+          .lineSide2(lineSide2);
+      final Identifier modelId = road.uploadModel("_with_straight_and_angle_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_TOP, MishangucTextureKeys.LINE_TOP2, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_SIDE2);
+      final Identifier mirroredModelId = road.uploadModel("_with_straight_and_angle_line_mirrored", "_mirrored", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_TOP, MishangucTextureKeys.LINE_TOP2, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_SIDE2);
+
+      final Identifier beveledTopModelId, beveledTopMirroredModelId;
+      if (stateManager.getProperties().contains(BEVEL_TOP)) {
+        TextureMap textures2 = new FasterTextureMap()
+            .base("asphalt")
+            .lineTop(lineTopStraight)
+            .lineTop2(lineTopAngle)
+            .lineSide(lineSide)
+            .lineSide2(lineSide2)
+            .varP(MishangucTextureKeys.LINE_SIDE3, lineSide2);
+
+        beveledTopModelId = road.uploadModel("_with_straight_and_angle_line", "_bevel_top", textures2, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_TOP, MishangucTextureKeys.LINE_TOP2, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_SIDE2, MishangucTextureKeys.LINE_SIDE3);
+        beveledTopMirroredModelId = road.uploadModel("_with_straight_and_angle_line_mirrored", "_bevel_top_mirrored", textures2, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_TOP, MishangucTextureKeys.LINE_TOP2, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_SIDE2, MishangucTextureKeys.LINE_SIDE3);
       } else {
-        bevelTopBlockModelId = bevelTopMirroredBlockModelId = null;
+        beveledTopModelId = beveledTopMirroredModelId = null;
       }
+
+      final boolean hasBevelTop = lineColor != lineColorSide;
       final BlockStateVariantMap.DoubleProperty<Direction.Axis, HorizontalCornerDirection> map1 = hasBevelTop ? null : BlockStateVariantMap.create(AXIS, FACING);
       final BlockStateVariantMap.TripleProperty<Direction.Axis, HorizontalCornerDirection, Boolean> map2 = hasBevelTop ? BlockStateVariantMap.create(AXIS, FACING, BEVEL_TOP) : null;
       for (Direction direction : Direction.Type.HORIZONTAL) {
@@ -175,65 +190,23 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
         final @NotNull HorizontalCornerDirection facing2 = HorizontalCornerDirection.fromDirections(direction, direction.rotateYCounterclockwise());
         if (hasBevelTop) {
           map2.register(axis, facing1, false,
-              BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId).put(MishangUtils.INT_Y_VARIANT, rotation));
+              BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangUtils.INT_Y_VARIANT, rotation));
           map2.register(axis, facing1, true,
-              BlockStateVariant.create().put(VariantSettings.MODEL, bevelTopBlockModelId).put(MishangUtils.INT_Y_VARIANT, rotation));
+              BlockStateVariant.create().put(VariantSettings.MODEL, beveledTopModelId).put(MishangUtils.INT_Y_VARIANT, rotation));
           map2.register(axis, facing2, false,
-              BlockStateVariant.create().put(VariantSettings.MODEL, mirroredBlockModelId).put(MishangUtils.INT_Y_VARIANT, rotation - 90));
+              BlockStateVariant.create().put(VariantSettings.MODEL, mirroredModelId).put(MishangUtils.INT_Y_VARIANT, rotation - 90));
           map2.register(axis, facing2, true,
-              BlockStateVariant.create().put(VariantSettings.MODEL, bevelTopMirroredBlockModelId).put(MishangUtils.INT_Y_VARIANT, rotation - 90));
+              BlockStateVariant.create().put(VariantSettings.MODEL, beveledTopMirroredModelId).put(MishangUtils.INT_Y_VARIANT, rotation - 90));
         } else {
           map1.register(
               axis, facing1,
-              BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId).put(MishangUtils.INT_Y_VARIANT, rotation));
+              BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangUtils.INT_Y_VARIANT, rotation));
           map1.register(
               axis, facing2,
-              BlockStateVariant.create().put(VariantSettings.MODEL, mirroredBlockModelId).put(MishangUtils.INT_Y_VARIANT, rotation - 90));
+              BlockStateVariant.create().put(VariantSettings.MODEL, mirroredModelId).put(MishangUtils.INT_Y_VARIANT, rotation - 90));
         }
       }
-      return VariantsBlockStateSupplier.create(this).coordinate(hasBevelTop ? map2 : map1);
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public @NotNull ModelJsonBuilder getBlockModel() {
-      final ModelJsonBuilder model = ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_straight_and_angle_line"));
-      final String lineTopStraight = MishangUtils.composeStraightLineTexture(lineColor, lineType);
-      final String lineTopAngle = MishangUtils.composeAngleLineTexture(lineColorSide, LineType.NORMAL, true);
-      final String lineSide = lineTopStraight;
-      final String lineSide2 = MishangUtils.composeStraightLineTexture(lineColorSide, lineTypeSide);
-      model.setTextures(FasterJTextures.ofP(
-              "base", "asphalt",
-              "line_top_layer1", lineTopAngle,
-              "line_top_layer2", lineTopStraight)
-          .lineSide(lineSide)
-          .lineSide2(lineSide2));
-      return model;
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public void writeBlockModel(RuntimeResourcePack pack) {
-      // 此方法会同时写入 slab 的模型。
-      final ModelJsonBuilder model = getBlockModel();
-      final Identifier blockModelId = getBlockModelId();
-      final AbstractRoadSlabBlock slabBlock = getRoadSlab();
-      final Identifier slabModelId = slabBlock == null ? null : slabBlock.getBlockModelId();
-      BRRPHelper.addModelWithSlab(pack, model, blockModelId, slabModelId);
-      final Map<String, String> textures = model.textures;
-      BRRPHelper.addModelWithSlab(pack, model.withParent(model.parentId.brrp_suffixed("_mirrored")), blockModelId.brrp_suffixed("_mirrored"), slabModelId == null ? null : slabModelId.brrp_suffixed("_mirrored"));
-
-      if (stateManager.getProperties().contains(BEVEL_TOP)) {
-        Map<String, String> textures2 = new HashMap<>(textures);
-        final String line_top_layer2 = textures.get("line_top_layer2");
-        final String line_top_layer1 = textures.get("line_top_layer1");
-        textures2.put("line_top_layer1", line_top_layer2);
-        textures2.put("line_top_layer2", line_top_layer1);
-        textures2.put("line_side3", textures.get("line_side2"));
-
-        BRRPHelper.addModelWithSlab(pack, model.clone().setTextures(textures2), blockModelId.brrp_suffixed("_bevel-top"), slabModelId == null ? null : slabModelId.brrp_suffixed("_bevel-top"));
-        BRRPHelper.addModelWithSlab(pack, model.clone().setTextures(textures2).parent(model.parentId.brrp_suffixed("_mirrored")), blockModelId.brrp_suffixed("_bevel-top_mirrored"), slabModelId == null ? null : slabModelId.brrp_suffixed("_bevel-top_mirrored"));
-      }
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockStateSupplier.create(road).coordinate(hasBevelTop ? map2 : map1)));
     }
 
     @Override
@@ -271,15 +244,14 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       if (base instanceof SlabBlock) {
         base2 = ((AbstractRoadBlock) base2).getRoadSlab();
       }
-      return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
+      return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern(" *X")
           .pattern("*X ")
           .pattern("X  ")
           .input('*', lineColorSide.getIngredient())
           .input('X', base2)
-          .criterionFromItemTag("has_paint", lineColorSide.getIngredient())
-          .criterionFromItem(base2)
-          .setCustomRecipeCategory("roads");
+          .criterion("has_paint", RecipeProvider.conditionsFromTag(lineColorSide.getIngredient()))
+          .criterion(RecipeProvider.hasItem(base2), RecipeProvider.conditionsFromItem(base2));
     }
   }
 }

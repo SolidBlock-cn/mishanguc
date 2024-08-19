@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.ColoredBlock;
+import pers.solid.mishang.uc.block.ColoredGlassHandrailBlock;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -42,6 +43,8 @@ public class NamedBlockItem extends BlockItem {
         if (nbt != null && nbt.contains("color", NbtElement.NUMBER_TYPE)) {
           final int color = nbt.getInt("color");
           return TextBridge.translatable("block.mishanguc.colored_block.color", block.getName(), MishangUtils.describeColor(color));
+        } else if (getBlock() instanceof ColoredGlassHandrailBlock) {
+          return TextBridge.translatable("block.mishanguc.colored_block.auto_color_decoration", block.getName());
         } else {
           return TextBridge.translatable("block.mishanguc.colored_block.auto_color", block.getName());
         }

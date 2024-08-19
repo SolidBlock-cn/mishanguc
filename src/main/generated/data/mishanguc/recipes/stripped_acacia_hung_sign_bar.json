@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 20,
+  "group": "mishanguc:stripped_wood_hung_sign_bar",
+  "ingredient": {
+    "item": "minecraft:stripped_acacia_wood"
+  },
+  "result": "mishanguc:stripped_acacia_hung_sign_bar"
+}

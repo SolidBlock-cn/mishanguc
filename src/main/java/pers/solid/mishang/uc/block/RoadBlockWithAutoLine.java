@@ -1,24 +1,23 @@
 package pers.solid.mishang.uc.block;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.apache.commons.lang3.ObjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
-import pers.solid.mishang.uc.arrp.BRRPHelper;
-import pers.solid.mishang.uc.arrp.FasterJTextures;
+import pers.solid.mishang.uc.data.FasterTextureMap;
+import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.*;
 
 import java.util.EnumMap;
@@ -501,26 +500,14 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
     };
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull BlockStateSupplier getBlockStates() {
-    return BlockStateModelGenerator.createSingletonBlockState(this, getBlockModelId());
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull ModelJsonBuilder getBlockModel() {
-    return ModelJsonBuilder.create("mishanguc", "block/road_with_auto_line")
-        .setTextures(new FasterJTextures()
-            .base("asphalt")
-            .line(texture)
-            .particle("asphalt"));
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public void writeBlockModel(RuntimeResourcePack pack) {
-    BRRPHelper.addModelWithSlab(pack, this);
+  protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
+    final FasterTextureMap textures = new FasterTextureMap()
+        .base("asphalt")
+        .line(texture)
+        .particle("asphalt");
+    final Identifier modelId = road.uploadModel("_with_auto_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE, TextureKey.PARTICLE);
+    blockStateModelGenerator.blockStateCollector.accept(road.composeState(BlockStateModelGenerator.createSingletonBlockState(road, modelId)));
   }
 
   @Override
@@ -529,16 +516,15 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
 
   @Override
   public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 1)
+    return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 1)
         .pattern("aba")
         .pattern("bXb")
         .pattern("aba")
         .input('a', type == RoadAutoLineType.RIGHT_ANGLE ? LineColor.WHITE.getIngredient() : LineColor.YELLOW.getIngredient())
         .input('b', type != RoadAutoLineType.RIGHT_ANGLE ? LineColor.WHITE.getIngredient() : LineColor.YELLOW.getIngredient())
         .input('X', base)
-        .criterionFromItem(base)
-        .criterionFromItemTag("has_white_dye", LineColor.WHITE.getIngredient())
-        .criterionFromItemTag("has_yellow_dye", LineColor.YELLOW.getIngredient())
-        .setCustomRecipeCategory("roads");
+        .criterion(RecipeProvider.hasItem(base), RecipeProvider.conditionsFromItem(base))
+        .criterion("has_white_dye", RecipeProvider.conditionsFromTag(LineColor.WHITE.getIngredient()))
+        .criterion("has_yellow_dye", RecipeProvider.conditionsFromTag(LineColor.YELLOW.getIngredient()));
   }
 }

@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 20,
+  "ingredient": {
+    "item": "minecraft:netherrack"
+  },
+  "result": "mishanguc:netherrack_hung_sign_bar"
+}

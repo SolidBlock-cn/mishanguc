@@ -2,6 +2,55 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.4.0-beta.6
+
+- No longer depends on Better Runtime Resource Pack mod.
+- Fixed the issue of crash when on-stair handrail blocks are above handrail blocks.
+- Added full light blocks, light stairs, etc, into block and item tag `#mishanguc:lights`.
+- Added all stairs into block and item tag `#minecraft:stairs`.
+- When determining shape upon placing handrail blocks, only stairs of bottom half (regular direction) will affect the handrail's shape, position and direction, and stairs of top half (upside-down direction) will not affect anymore.
+- Added more handrail blocks.
+    - Added glowing variants for glass handrails of iron, gold, emerald, diamond, netherite and lapiz, which requires a colored light block when dyeing. (At present, there are no such blocks without custom coloring. You can color them in white.)
+    - Added glass bamboo handrails with custom coloring, and various handrails of stripped wood and stripped bamboo. These handrails support custom coloring.
+    - Added packed ice and blue ice handrails with custom coloring, which requires colored snow blocks when crafting. Non-custom-colored blocks require ordinary snow blocks when crafting.
+- The Color of custom-colored blocks can be changed through dyes.
+- When modifying block colors with color tools or dye, sounds will be played.
+- Fixed the issue that when a wall sign block is next to a full wall sign block, some sides are accidentally invisible.
+- (For 1.20.5 and above) Added more color tools, which have different opacity or mixture type.
+    - Opacity is controlled by component `mishanguc:opacity`, where the type is float. Provided in the creative inventory are tools with opacity 0.5, 0.25 and 0.1.
+    - Mixture type is controlled by component `mishanguc:color_mixture_type`, and supports the following values:
+        - `normal` (default): Normally changes block color.
+        - `random`: Randomly sets block color.
+        - `invert`: Sets block color to an opposite color.
+        - `hue`: Set the hue of block color to the hue of a specified color, and saturation and luminosity remains.
+        - `hue_and_saturation`: Set the hue and saturation of block color to hue and saturation of a specified color, and luminosity remains.
+        - `hue_rotate`: Rotates the hue of block color. When using while holding Shift, the rotation will be in an opposite direction.
+        - `saturation_change`: Increases the saturation of block color. When using while holding Shift, the saturation will be decreased.
+        - `brightness_change`: Increases the luminosity of block color. When using while holding Shift, the luminosity will be decreased.
+        - In the inventory, except for `normal` which provides multiple tools with different opacity, each of the above provides one tool.
+    - Amount of modification applied to color is controlled by component `mishanguc:color_change_amount`, where the type is float, and is used to specify the amount of modification to hue, saturation or luminosity. In the items in creative inventory, hue rotation amount is 1/24 by default, and saturation and luminosity's modification amount is 0.1 by default.
+    - Note: Non-custom-colored blocks which can be converted to custom-colored blocks, when converting custom-colored blocks, takes the *map color* of the original block as an initial color, so it is normal its color differs from the color presented in custom-colored blocks.
+    - Note: If you decrease the saturation to 0 (gray) with color tool that modifies saturation, or change the luminosity to 0 (black) or 1 (white) with color tool that modifies luminosity, then the color's hue will be 0 or 1 (red), and saturation will be 0. For example, if you decrease the saturation to 0, and then increase it, it will only be red. If you change luminosity to 0 or 1 and then increase or decrease it, it will be only gray.
+- Now you can select multiple lines when editing signs.
+    - Select text box while holding Ctrl to multi-select. Select selected text box while holding Ctrl to deselect it.
+    - Select text box while holding Shift to select continuous multiple text boxes at once.
+    - It is supported to operate multiple lines at ones, including adding, deleting, modifying styles or inputting text. If you increase or decrease their size, position coordinate, rotation, the modification is applied relatively to multiple lines. For properties such as color, or setting custom values, multiple lines will be set the same value.
+    - The Tab-key behavior when selecting multiple lines may be unstable.
+- Fixed the issue that players in Adventure Mode using slab tools with `CanDestroy` NBT tag (or component) cannot destroy blocks correctly.
+
+### 1.3.5-beta.2
+
+- Fixed the issue that modification caused by color tool modifying a block color may not be saved.
+
+### 1.3.5-beta.1
+
+- Fixed the potential block entity issue that results from colored glass handrail blocks.
+
+### 1.3.4
+
+- Fixed the issue that tp tools may fail to teleport.
+- Fixed the issue that some tools cannot operate blocks at a far distance after modifying attributes.
+
 ### 1.3.3
 
 - Fixed the issue that the tooltip of 'rearrange' button and 'clear' button in the sign edit screen is incorrect.

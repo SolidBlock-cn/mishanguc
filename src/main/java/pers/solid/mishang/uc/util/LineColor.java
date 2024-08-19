@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.util;
 
-import com.mojang.serialization.Codec;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.item.Item;
 import net.minecraft.registry.tag.TagKey;
@@ -18,7 +17,6 @@ public enum LineColor implements StringIdentifiable {
 
   private final String name;
   private final TagKey<Item> ingredient;
-  public static final Codec<LineColor> CODEC = StringIdentifiable.createCodec(LineColor::values);
 
   LineColor(String name, TagKey<Item> ingredient) {
     this.name = name;

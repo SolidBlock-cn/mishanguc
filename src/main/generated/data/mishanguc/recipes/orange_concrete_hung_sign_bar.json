@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 20,
+  "group": "mishanguc:concrete_hung_sign_bar",
+  "ingredient": {
+    "item": "minecraft:orange_concrete"
+  },
+  "result": "mishanguc:orange_concrete_hung_sign_bar"
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 5,
+  "group": "mishanguc:simple_wood_handrail",
+  "ingredient": {
+    "item": "minecraft:dark_oak_wood"
+  },
+  "result": "mishanguc:simple_dark_oak_handrail"
+}

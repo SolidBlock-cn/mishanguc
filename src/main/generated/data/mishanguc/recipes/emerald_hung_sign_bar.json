@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 20,
+  "ingredient": {
+    "item": "minecraft:emerald_block"
+  },
+  "result": "mishanguc:emerald_hung_sign_bar"
+}

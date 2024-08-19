@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 5,
+  "ingredient": {
+    "item": "minecraft:cobblestone"
+  },
+  "result": "mishanguc:simple_cobblestone_handrail"
+}

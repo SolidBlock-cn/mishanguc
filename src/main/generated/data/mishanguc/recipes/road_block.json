@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "*": {
+      "tag": "minecraft:coals"
+    },
+    "X": [
+      {
+        "item": "minecraft:white_concrete"
+      },
+      {
+        "item": "minecraft:gray_concrete"
+      },
+      {
+        "item": "minecraft:light_gray_concrete"
+      },
+      {
+        "item": "minecraft:black_concrete"
+      }
+    ],
+    "|": {
+      "item": "minecraft:flint"
+    }
+  },
+  "pattern": [
+    "***",
+    "|X|",
+    "***"
+  ],
+  "result": {
+    "count": 9,
+    "item": "mishanguc:road_block"
+  }
+}

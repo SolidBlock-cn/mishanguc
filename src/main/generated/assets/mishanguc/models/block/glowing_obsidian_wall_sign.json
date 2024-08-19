@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/glowing_wall_sign",
+  "textures": {
+    "glow": "mishanguc:block/white_light",
+    "texture": "minecraft:block/obsidian"
+  }
+}

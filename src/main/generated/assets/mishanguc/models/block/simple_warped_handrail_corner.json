@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/simple_handrail_corner",
+  "textures": {
+    "bottom": "minecraft:block/warped_stem",
+    "texture": "minecraft:block/warped_stem",
+    "top": "minecraft:block/warped_stem"
+  }
+}

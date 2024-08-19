@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 5,
+  "group": "mishanguc:simple_plank_handrail",
+  "ingredient": {
+    "item": "minecraft:mangrove_planks"
+  },
+  "result": "mishanguc:simple_mangrove_plank_handrail"
+}

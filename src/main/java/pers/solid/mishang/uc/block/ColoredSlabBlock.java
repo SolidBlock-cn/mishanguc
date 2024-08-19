@@ -1,15 +1,21 @@
 package pers.solid.mishang.uc.block;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SlabBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.data.server.loottable.vanilla.VanillaBlockLootTableGenerator;
+import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.client.ModelIds;
+import net.minecraft.data.client.ModelProvider;
+import net.minecraft.data.client.TextureMap;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -17,22 +23,22 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.generator.BRRPSlabBlock;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
-import pers.solid.brrp.v1.recipe.RecipeJsonBuilderExtension;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
+import pers.solid.mishang.uc.data.MishangucModels;
 
 import java.util.List;
 
-public class ColoredSlabBlock extends BRRPSlabBlock implements ColoredBlock {
+public class ColoredSlabBlock extends SlabBlock implements ColoredBlock {
+  public final Block baseBlock;
+
   public ColoredSlabBlock(@Nullable Block baseBlock, Settings settings) {
-    super(baseBlock, settings);
+    super(settings);
+    this.baseBlock = baseBlock;
   }
 
   public ColoredSlabBlock(@NotNull Block baseBlock) {
-    super(baseBlock);
+    super(Settings.copy(baseBlock));
+    this.baseBlock = baseBlock;
   }
 
   @Override
@@ -52,39 +58,30 @@ public class ColoredSlabBlock extends BRRPSlabBlock implements ColoredBlock {
     return new SimpleColoredBlockEntity(pos, state);
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public @UnknownNullability ModelJsonBuilder getBlockModel() {
-    return super.getBlockModel().parent(new Identifier("mishanguc", "block/colored_slab"));
-  }
-
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public void writeBlockModel(RuntimeResourcePack pack) {
-    final ModelJsonBuilder model = getBlockModel();
-    final Identifier id = getBlockModelId();
-    pack.addModel(id, model);
-    pack.addModel(id.brrp_suffixed("_top"), model.withParent(new Identifier("mishanguc", "block/colored_slab_top")));
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final TextureMap textures = baseBlock instanceof ColoredCubeBlock coloredCubeBlock ? coloredCubeBlock.textures : TextureMap.all(this);
+    final Identifier bottomModelId = MishangucModels.COLORED_SLAB.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier topModelId = MishangucModels.COLORED_SLAB_TOP.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier fullModelId;
     if (baseBlock == null) {
-      pack.addModel(id.brrp_suffixed("_double"), model.withParent(new Identifier("mishanguc", "block/colored_cube_bottom_up")));
+      fullModelId = MishangucModels.COLORED_CUBE_BOTTOM_UP.upload(this, textures, blockStateModelGenerator.modelCollector);
+    } else {
+      fullModelId = ModelIds.getBlockModelId(baseBlock);
     }
+
+    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSlabBlockState(this, bottomModelId, topModelId, fullModelId));
+    blockStateModelGenerator.registerParentedItemModel(this, bottomModelId);
   }
 
   @Override
-  public LootTable.@NotNull Builder getLootTable() {
-    return new VanillaBlockLootTableGenerator().slabDrops(this).apply(COPY_COLOR_LOOT_FUNCTION);
-  }
-
-  @Override
-  public RecipeCategory getRecipeCategory() {
-    return RecipeCategory.BUILDING_BLOCKS;
+  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    return blockLootTableGenerator.slabDrops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    final CraftingRecipeJsonBuilder recipe = super.getCraftingRecipe();
-    if (recipe instanceof RecipeJsonBuilderExtension<?> s) s.setCustomRecipeCategory("colored_blocks");
-    return recipe;
+    return ((ShapedRecipeJsonBuilder) RecipeProvider.createSlabRecipe(RecipeCategory.BUILDING_BLOCKS, this, Ingredient.ofItems(baseBlock)))
+        .criterion(RecipeProvider.hasItem(this.baseBlock), RecipeProvider.conditionsFromItem(this.baseBlock));
   }
 }

@@ -1,0 +1,9 @@
+{
+  "parent": "mishanguc:block/road_slab_with_joint_line_top",
+  "textures": {
+    "base": "mishanguc:block/asphalt",
+    "line_side": "mishanguc:block/white_straight_line",
+    "line_side2": "mishanguc:block/yellow_offset_straight_line",
+    "line_top": "mishanguc:block/white_joint_line_with_offset_yellow_side"
+  }
+}

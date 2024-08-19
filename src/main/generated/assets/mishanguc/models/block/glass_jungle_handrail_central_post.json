@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/glass_handrail_post",
+  "textures": {
+    "decoration": "minecraft:block/jungle_planks",
+    "frame": "minecraft:block/jungle_log",
+    "glass": "mishanguc:block/glass_unframed"
+  }
+}

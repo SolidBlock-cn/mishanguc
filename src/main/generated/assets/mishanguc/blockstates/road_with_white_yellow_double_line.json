@@ -1,0 +1,24 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "mishanguc:block/road_with_white_yellow_double_line",
+      "uvlock": false,
+      "y": 0
+    },
+    "facing=north": {
+      "model": "mishanguc:block/road_with_white_yellow_double_line",
+      "uvlock": false,
+      "y": 270
+    },
+    "facing=south": {
+      "model": "mishanguc:block/road_with_white_yellow_double_line",
+      "uvlock": false,
+      "y": 90
+    },
+    "facing=west": {
+      "model": "mishanguc:block/road_with_white_yellow_double_line",
+      "uvlock": false,
+      "y": 180
+    }
+  }
+}

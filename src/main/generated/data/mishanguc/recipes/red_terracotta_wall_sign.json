@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "mishanguc:terracotta_wall_sign",
+  "key": {
+    "#": {
+      "item": "minecraft:red_terracotta"
+    },
+    "-": {
+      "item": "mishanguc:invisible_wall_sign"
+    }
+  },
+  "pattern": [
+    "---",
+    "###",
+    "---"
+  ],
+  "result": {
+    "count": 6,
+    "item": "mishanguc:red_terracotta_wall_sign"
+  }
+}

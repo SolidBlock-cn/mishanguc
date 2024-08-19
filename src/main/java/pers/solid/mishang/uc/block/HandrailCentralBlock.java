@@ -1,15 +1,12 @@
 package pers.solid.mishang.uc.block;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
+import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.data.client.*;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -20,7 +17,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.mishang.uc.MishangUtils;
 
 import java.util.Map;
@@ -31,7 +27,7 @@ import java.util.Map;
  *
  * @param <T> 其基础栏杆方块的类型。
  */
-public abstract class HandrailCentralBlock<T extends HandrailBlock> extends HorizontalConnectingBlock implements BlockResourceGenerator, Handrails {
+public abstract class HandrailCentralBlock<T extends HandrailBlock> extends HorizontalConnectingBlock implements MishangucBlock, Handrails {
   /**
    * 该方块的基础的栏杆方块。
    */
@@ -46,6 +42,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     this.baseHandrail = baseBlock;
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
     if (state.get(WATERLOGGED)) {
@@ -73,6 +70,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     return neighborState.getBlock() instanceof HandrailStairBlock && neighborState.get(HandrailStairBlock.POSITION) == HandrailStairBlock.Position.CENTER && neighborState.get(HandrailStairBlock.FACING).getAxis() == direction.getAxis() || neighborState.getBlock() instanceof HandrailCentralBlock;
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
     final Block block = stateFrom.getBlock();
@@ -96,10 +94,6 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     return baseHandrail.asItem();
   }
 
-  @Override
-  public Identifier getItemId() {
-    return Registries.ITEM.getId(asItem());
-  }
 
   @Override
   protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
@@ -135,9 +129,9 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
         // 确保此时该方块有且只有单轴连接。
 
         final BlockState stateInCW = world.getBlockState(blockPos.offset(facing.rotateYClockwise()));
-        final boolean isStairsInCW = stateInCW.getBlock() instanceof StairsBlock && stateInCW.contains(StairsBlock.FACING) && stateInCW.get(StairsBlock.FACING) == facing.rotateYClockwise();
+        final boolean isStairsInCW = stateInCW.getBlock() instanceof StairsBlock && stateInCW.contains(StairsBlock.FACING) && stateInCW.get(StairsBlock.FACING) == facing.rotateYClockwise() && stateInCW.contains(StairsBlock.HALF) && stateInCW.get(StairsBlock.HALF) == BlockHalf.BOTTOM;
         final BlockState stateInCCW = world.getBlockState(blockPos.offset(facing.rotateYCounterclockwise()));
-        final boolean isStairsInCCW = stateInCCW.getBlock() instanceof StairsBlock && stateInCCW.contains(StairsBlock.FACING) && stateInCCW.get(StairsBlock.FACING) == facing.rotateYCounterclockwise();
+        final boolean isStairsInCCW = stateInCCW.getBlock() instanceof StairsBlock && stateInCCW.contains(StairsBlock.FACING) && stateInCCW.get(StairsBlock.FACING) == facing.rotateYCounterclockwise() && stateInCCW.contains(StairsBlock.HALF) && stateInCCW.get(StairsBlock.HALF) == BlockHalf.BOTTOM;
         if (isStairsInCW != isStairsInCCW) {
           final BlockState stairState = baseHandrail.stair().getDefaultState();
           return stairState
@@ -181,16 +175,11 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     return state;
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull BlockStateSupplier getBlockStates() {
-    final Identifier modelId = getBlockModelId();
-    final Identifier postId = modelId.brrp_suffixed("_post");
-    final Identifier postSideId = modelId.brrp_suffixed("_post_side");
-    final Identifier sideId = modelId.brrp_suffixed("_side");
+  public @NotNull BlockStateSupplier createBlockStates(Identifier postId, Identifier postSideId, Identifier sideId) {
     final MultipartBlockStateSupplier blockStateSupplier = MultipartBlockStateSupplier.create(this)
         .with(BlockStateVariant.create().put(VariantSettings.MODEL, postId));
-    FACING_PROPERTIES.forEach((facing, property) -> {
+    Direction.Type.HORIZONTAL.forEach(facing -> {
+      final BooleanProperty property = FACING_PROPERTIES.get(facing);
       blockStateSupplier.with(When.create().set(property, true), BlockStateVariant.create().put(VariantSettings.MODEL, sideId).put(MishangUtils.DIRECTION_Y_VARIANT, facing).put(VariantSettings.UVLOCK, true));
       blockStateSupplier.with(When.create().set(property, false), BlockStateVariant.create().put(VariantSettings.MODEL, postSideId).put(MishangUtils.DIRECTION_Y_VARIANT, facing).put(VariantSettings.UVLOCK, true));
     });
@@ -204,11 +193,6 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
 
   @Override
   public boolean connectsIn(@NotNull BlockState blockState, @NotNull Direction direction, @Nullable Direction offsetFacing) {
-    return offsetFacing == null && blockState.get(FACING_PROPERTIES.get(direction));
-  }
-
-  @Override
-  public @Nullable RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
+    return offsetFacing == null && direction.getAxis().isHorizontal() && blockState.get(FACING_PROPERTIES.get(direction));
   }
 }

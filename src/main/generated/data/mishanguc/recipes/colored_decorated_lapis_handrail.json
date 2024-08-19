@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "item": "mishanguc:colored_concrete"
+    },
+    "X": {
+      "tag": "c:lapis"
+    },
+    "o": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "oMo",
+    "XXX"
+  ],
+  "result": {
+    "count": 4,
+    "item": "mishanguc:colored_decorated_lapis_handrail"
+  }
+}

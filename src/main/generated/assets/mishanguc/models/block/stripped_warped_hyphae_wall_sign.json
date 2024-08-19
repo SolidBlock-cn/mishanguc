@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/wall_sign",
+  "textures": {
+    "texture": "minecraft:block/stripped_warped_stem"
+  }
+}
