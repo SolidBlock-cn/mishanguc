@@ -9,6 +9,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.data.client.TextureMap;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
@@ -22,7 +23,6 @@ import org.jetbrains.annotations.UnknownNullability;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
-import pers.solid.mishang.uc.arrp.ARRPMain;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -74,8 +74,8 @@ public class ColoredPillarBlock extends PillarBlock implements ColoredBlock, Blo
   }
 
   @Override
-  public LootTable.@UnknownNullability Builder getLootTable() {
-    return ARRPMain.LOOT_TABLE_GENERATOR.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override

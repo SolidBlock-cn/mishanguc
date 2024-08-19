@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -36,7 +37,6 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
-import pers.solid.mishang.uc.arrp.ARRPMain;
 import pers.solid.mishang.uc.arrp.BRRPHelper;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 
@@ -114,8 +114,8 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
   }
 
   @Override
-  public LootTable.Builder getLootTable() {
-    return ARRPMain.LOOT_TABLE_GENERATOR.drops(this, ConstantLootNumberProvider.create(2));
+  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    return blockLootTableGenerator.drops(this, ConstantLootNumberProvider.create(2));
   }
 
   @Override

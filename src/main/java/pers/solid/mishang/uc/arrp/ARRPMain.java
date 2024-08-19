@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.fabricmc.fabric.api.tag.convention.v2.TagUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
-import net.minecraft.data.server.loottable.vanilla.VanillaBlockLootTableGenerator;
 import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
@@ -38,7 +37,6 @@ import java.util.List;
  */
 public class ARRPMain implements ModInitializer {
   private static final RuntimeResourcePack PACK = RuntimeResourcePack.create(Identifier.of("mishanguc", "pack"));
-  public static final VanillaBlockLootTableGenerator LOOT_TABLE_GENERATOR = new VanillaBlockLootTableGenerator(PACK.getRegistryLookup());
 
   private static void addTags() {
     MishangucTagProvider.run(PACK);

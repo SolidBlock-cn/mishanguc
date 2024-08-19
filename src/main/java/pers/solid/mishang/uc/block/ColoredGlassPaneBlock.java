@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.PaneBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.data.client.*;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
@@ -20,7 +21,6 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
-import pers.solid.mishang.uc.arrp.ARRPMain;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -82,8 +82,8 @@ public class ColoredGlassPaneBlock extends PaneBlock implements ColoredBlock {
   }
 
   @Override
-  public LootTable.@NotNull Builder getLootTable() {
-    return ARRPMain.LOOT_TABLE_GENERATOR.dropsWithSilkTouch(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  public LootTable.@NotNull Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    return blockLootTableGenerator.dropsWithSilkTouch(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override

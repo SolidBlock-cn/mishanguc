@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.client.TextureMap;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
@@ -16,9 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
 import pers.solid.brrp.v1.generator.BRRPCubeBlock;
-import pers.solid.mishang.uc.arrp.ARRPMain;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -57,8 +56,8 @@ public class ColoredCubeBlock extends BRRPCubeBlock implements ColoredBlock {
   }
 
   @Override
-  public LootTable.@UnknownNullability Builder getLootTable() {
-    return ARRPMain.LOOT_TABLE_GENERATOR.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override

@@ -35,7 +35,7 @@
     "fabricloader": "*",
     "fabric": "*",
     "minecraft": "~1.21",
-    "brrp_v1": ">=1.0.0",
+    "brrp_v1": ">=1.0.4",
     "mixinextras": ">=0.2.0"
   },
   "breaks": {

@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
@@ -17,7 +18,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.arrp.ARRPMain;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -53,8 +53,8 @@ public class ColoredHungSignBarBlock extends HungSignBarBlock implements BlockEn
   }
 
   @Override
-  public LootTable.Builder getLootTable() {
-    return ARRPMain.LOOT_TABLE_GENERATOR.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override

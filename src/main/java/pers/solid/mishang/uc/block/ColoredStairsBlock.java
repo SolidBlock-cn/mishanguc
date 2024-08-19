@@ -6,6 +6,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,7 +24,6 @@ import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.generator.BRRPStairsBlock;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.brrp.v1.recipe.RecipeJsonBuilderExtension;
-import pers.solid.mishang.uc.arrp.ARRPMain;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -73,8 +73,8 @@ public class ColoredStairsBlock extends BRRPStairsBlock implements ColoredBlock 
   }
 
   @Override
-  public LootTable.@NotNull Builder getLootTable() {
-    return ARRPMain.LOOT_TABLE_GENERATOR.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override

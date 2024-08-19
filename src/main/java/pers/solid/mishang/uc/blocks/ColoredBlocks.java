@@ -8,6 +8,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.data.client.TextureMap;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.loot.LootTable;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
@@ -17,7 +18,6 @@ import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.Translucent;
-import pers.solid.mishang.uc.arrp.ARRPMain;
 import pers.solid.mishang.uc.arrp.MiningLevel;
 import pers.solid.mishang.uc.block.*;
 
@@ -95,8 +95,8 @@ public final class ColoredBlocks extends MishangucBlocks {
     }
 
     @Override
-    public LootTable.@NotNull Builder getLootTable() {
-      return ARRPMain.LOOT_TABLE_GENERATOR.drops(COLORED_STONE, COLORED_COBBLESTONE).apply(ColoredBlock.COPY_COLOR_LOOT_FUNCTION);
+    public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+      return blockLootTableGenerator.drops(COLORED_STONE, COLORED_COBBLESTONE).apply(ColoredBlock.COPY_COLOR_LOOT_FUNCTION);
     }
   };
   public static final ColoredStairsBlock COLORED_STONE_STAIRS = new ColoredStairsBlock(COLORED_STONE, Block.Settings.copy(Blocks.STONE_STAIRS));
@@ -172,28 +172,28 @@ public final class ColoredBlocks extends MishangucBlocks {
 
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_OAK_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.OAK_LEAVES), block -> ARRPMain.LOOT_TABLE_GENERATOR.oakLeavesDrops(block, Blocks.OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/oak_leaves");
+  public static final ColoredLeavesBlock COLORED_OAK_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.OAK_LEAVES), (block, blockLootTableGenerator) -> blockLootTableGenerator.oakLeavesDrops(block, Blocks.OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/oak_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_DARK_OAK_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.DARK_OAK_LEAVES), block -> ARRPMain.LOOT_TABLE_GENERATOR.oakLeavesDrops(block, Blocks.DARK_OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/dark_oak_leaves");
+  public static final ColoredLeavesBlock COLORED_DARK_OAK_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.DARK_OAK_LEAVES), (block, blockLootTableGenerator) -> blockLootTableGenerator.oakLeavesDrops(block, Blocks.DARK_OAK_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/dark_oak_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_BIRCH_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.BIRCH_LEAVES), block -> ARRPMain.LOOT_TABLE_GENERATOR.leavesDrops(block, Blocks.BIRCH_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/birch_leaves");
+  public static final ColoredLeavesBlock COLORED_BIRCH_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.BIRCH_LEAVES), (block, blockLootTableGenerator) -> blockLootTableGenerator.leavesDrops(block, Blocks.BIRCH_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/birch_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_ACACIA_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.ACACIA_LEAVES), block -> ARRPMain.LOOT_TABLE_GENERATOR.leavesDrops(block, Blocks.ACACIA_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/acacia_leaves");
+  public static final ColoredLeavesBlock COLORED_ACACIA_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.ACACIA_LEAVES), (block, blockLootTableGenerator) -> blockLootTableGenerator.leavesDrops(block, Blocks.ACACIA_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/acacia_leaves");
   @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_CHERRY_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.CHERRY_LEAVES), block -> ARRPMain.LOOT_TABLE_GENERATOR.leavesDrops(block, Blocks.CHERRY_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "mishanguc:block/pale_cherry_leaves");
+  public static final ColoredLeavesBlock COLORED_CHERRY_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.CHERRY_LEAVES), (block, blockLootTableGenerator) -> blockLootTableGenerator.leavesDrops(block, Blocks.CHERRY_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "mishanguc:block/pale_cherry_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_JUNGLE_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.JUNGLE_LEAVES), block -> ARRPMain.LOOT_TABLE_GENERATOR.leavesDrops(block, Blocks.JUNGLE_SAPLING, 0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F), "block/jungle_leaves");
+  public static final ColoredLeavesBlock COLORED_JUNGLE_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.JUNGLE_LEAVES), (block, blockLootTableGenerator) -> blockLootTableGenerator.leavesDrops(block, Blocks.JUNGLE_SAPLING, 0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F), "block/jungle_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_SPRUCE_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.SPRUCE_LEAVES), block -> ARRPMain.LOOT_TABLE_GENERATOR.leavesDrops(block, Blocks.SPRUCE_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/spruce_leaves");
+  public static final ColoredLeavesBlock COLORED_SPRUCE_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.SPRUCE_LEAVES), (block, blockLootTableGenerator) -> blockLootTableGenerator.leavesDrops(block, Blocks.SPRUCE_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/spruce_leaves");
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_MANGROVE_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.MANGROVE_LEAVES), leaves -> /* do not replace it with method references, as we should not initialize the class too early! */ ARRPMain.LOOT_TABLE_GENERATOR.mangroveLeavesDrops(leaves), "block/mangrove_leaves");
+  public static final ColoredLeavesBlock COLORED_MANGROVE_LEAVES = new ColoredLeavesBlock(Block.Settings.copy(Blocks.MANGROVE_LEAVES), (leaves, blockLootTableGenerator) -> blockLootTableGenerator.mangroveLeavesDrops(leaves), "block/mangrove_leaves");
 
   @MiningLevel(MiningLevel.Tool.NONE)
   public static final ColoredCubeBlock COLORED_PURE_BLOCK = ColoredCubeBlock.cubeAll(AbstractBlock.Settings.create().mapColor(DyeColor.WHITE).strength(0.2f), "mishanguc:block/white_pure");

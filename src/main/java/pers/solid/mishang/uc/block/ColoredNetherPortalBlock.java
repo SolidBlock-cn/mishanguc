@@ -8,6 +8,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.data.client.*;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -75,7 +76,7 @@ public class ColoredNetherPortalBlock extends NetherPortalBlock implements Color
   }
 
   @Override
-  public LootTable.Builder getLootTable() {
+  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
     return LootTable.builder();
   }
 
