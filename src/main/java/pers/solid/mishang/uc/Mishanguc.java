@@ -292,8 +292,7 @@ public class Mishanguc implements ModInitializer {
           final ItemStack stack = player.getMainHandStack();
           final Item item = stack.getItem();
           if (item instanceof final BlockToolItem blockToolItem) {
-            final BlockHitResult hitResult = (BlockHitResult) player.raycast(5, 0, blockToolItem.includesFluid(stack, player.isSneaking()));
-            return blockToolItem.beginAttackBlock(stack, player, world, hand, hitResult.getBlockPos(), hitResult.getSide(), blockToolItem.includesFluid(stack, player.isSneaking()));
+            return blockToolItem.beginAttackBlock(stack, player, world, hand, pos, direction, blockToolItem.includesFluid(stack, player.isSneaking()));
           } else {
             return ActionResult.PASS;
           }
@@ -323,8 +322,7 @@ public class Mishanguc implements ModInitializer {
           final ItemStack stack = player.getStackInHand(hand);
           final Item item = stack.getItem();
           if (item instanceof final BlockToolItem blockToolItem) {
-            final BlockHitResult hitResult = (BlockHitResult) player.raycast(5, 0, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
-            return blockToolItem.beginAttackBlock(stack, player, world, hand, hitResult.getBlockPos(), hitResult.getSide(), ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
+            return blockToolItem.beginAttackBlock(stack, player, world, hand, pos, direction, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
           } else {
             return ActionResult.PASS;
           }

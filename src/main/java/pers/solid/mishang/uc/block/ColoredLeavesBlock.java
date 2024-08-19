@@ -14,6 +14,7 @@ import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.data.client.Models;
 import net.minecraft.data.client.TextureKey;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.text.Text;
@@ -24,20 +25,21 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.generator.BlockResourceGenerator;
+import pers.solid.brrp.v1.impl.BRRPBlockLootTableGenerator;
 import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 @ApiStatus.AvailableSince("0.2.4")
 public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock, BlockResourceGenerator {
-  private final @Nullable Function<Block, LootTable.Builder> lootBuilder;
+  private final @Nullable BiFunction<Block, BlockLootTableGenerator, LootTable.Builder> lootBuilder;
   private final String allTexture;
 
   public static final MapCodec<ColoredLeavesBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createSettingsCodec(), Codec.STRING.fieldOf("all_texture").forGetter(o -> o.allTexture)).apply(instance, (settings1, s) -> new ColoredLeavesBlock(settings1, null, s)));
 
-  public ColoredLeavesBlock(Settings settings, @Nullable Function<Block, LootTable.Builder> lootBuilder, String allTexture) {
+  public ColoredLeavesBlock(Settings settings, @Nullable BiFunction<Block, BlockLootTableGenerator, LootTable.Builder> lootBuilder, String allTexture) {
     super(settings);
     this.lootBuilder = lootBuilder;
     this.allTexture = allTexture;
@@ -75,7 +77,7 @@ public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock, Blo
   @Override
   public LootTable.Builder getLootTable() {
     if (lootBuilder == null) return null;
-    return (lootBuilder.apply(this).apply(COPY_COLOR_LOOT_FUNCTION));
+    return lootBuilder.apply(this, BRRPBlockLootTableGenerator.INSTANCE).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override

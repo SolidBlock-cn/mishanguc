@@ -2,6 +2,11 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.3.4
+
+- Fixed the issue that tp tools may fail to teleport.
+- Fixed the issue that some tools cannot operate blocks at a far distance after modifying attributes.
+
 ### 1.3.3
 
 - Fixed the issue that the tooltip of 'rearrange' button and 'clear' button in the sign edit screen is incorrect.
