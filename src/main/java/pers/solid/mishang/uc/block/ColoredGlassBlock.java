@@ -63,7 +63,7 @@ public class ColoredGlassBlock extends TransparentBlock implements ColoredBlock 
   }
 
   @Override
-  public LootTable.@NotNull Builder getLootTable() {
+  public LootTable.Builder getLootTable() {
     return BlockLootTableGenerator.dropsWithSilkTouch(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
