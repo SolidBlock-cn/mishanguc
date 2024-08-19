@@ -324,7 +324,7 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return StonecuttingRecipeJsonBuilder.createStonecutting(
+    final StonecuttingRecipeJsonBuilder recipe = StonecuttingRecipeJsonBuilder.createStonecutting(
             Ingredient.ofItems(baseBlock),
             getRecipeCategory(),
             this,
@@ -332,6 +332,8 @@ public class HungSignBarBlock extends Block implements Waterloggable, BlockResou
         .criterionFromItem("has_base_block", baseBlock)
         .setCustomRecipeCategory("signs")
         .group(getRecipeGroup());
+
+    return recipe;
   }
 
   @Override
