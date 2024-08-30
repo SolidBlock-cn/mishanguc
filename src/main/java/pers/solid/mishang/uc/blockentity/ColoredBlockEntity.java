@@ -1,8 +1,10 @@
 package pers.solid.mishang.uc.blockentity;
 
+import net.fabricmc.fabric.api.blockview.v2.RenderDataBlockEntity;
 import net.minecraft.block.MapColor;
+import org.jetbrains.annotations.Nullable;
 
-public interface ColoredBlockEntity {
+public interface ColoredBlockEntity extends RenderDataBlockEntity {
 
   default MapColor getNearestMapColor() {
     final int color = getColor();
@@ -24,4 +26,10 @@ public interface ColoredBlockEntity {
   int getColor();
 
   void setColor(int color);
+
+  @Override
+  @Nullable
+  default Object getRenderData() {
+    return getColor();
+  }
 }

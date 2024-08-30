@@ -100,6 +100,7 @@ public class ColorToolItem extends BlockToolItem implements ItemResourceGenerato
     }
     if (blockEntity instanceof ColoredBlockEntity coloredBlockEntity) {
       coloredBlockEntity.setColor(color);
+      blockEntity.markDirty();
       world.updateListeners(blockPos, blockEntity.getCachedState(), blockEntity.getCachedState(), Block.NOTIFY_LISTENERS);
       if (!world.isClient) {
         player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.success_set", MishangUtils.describeColor(color)), true);
