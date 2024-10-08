@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "mishanguc:green_light"
+  },
+  "result": {
+    "count": 2,
+    "id": "mishanguc:green_light_slab"
+  }
+}

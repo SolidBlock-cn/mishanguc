@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "mishanguc:orange_large_wall_light_tube"
+    },
+    {
+      "item": "minecraft:gray_concrete"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "mishanguc:orange_large_wall_light"
+  }
+}

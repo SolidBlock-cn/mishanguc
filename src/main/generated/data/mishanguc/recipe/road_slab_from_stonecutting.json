@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "mishanguc:road_block"
+  },
+  "result": {
+    "count": 2,
+    "id": "mishanguc:road_slab"
+  }
+}

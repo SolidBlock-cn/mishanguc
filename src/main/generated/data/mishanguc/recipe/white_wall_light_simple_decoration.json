@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "mishanguc:white_light"
+  },
+  "result": {
+    "count": 15,
+    "id": "mishanguc:white_wall_light_simple_decoration"
+  }
+}

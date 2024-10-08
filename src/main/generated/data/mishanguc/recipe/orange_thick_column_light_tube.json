@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "mishanguc:orange_light"
+  },
+  "result": {
+    "count": 8,
+    "id": "mishanguc:orange_thick_column_light_tube"
+  }
+}

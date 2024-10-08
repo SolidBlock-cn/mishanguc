@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "mishanguc:orange_light"
+  },
+  "result": {
+    "count": 64,
+    "id": "mishanguc:orange_small_wall_light_tube"
+  }
+}

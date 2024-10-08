@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "mishanguc:colored_iron_block"
+    },
+    "-": {
+      "item": "mishanguc:invisible_glowing_wall_sign"
+    }
+  },
+  "pattern": [
+    "---",
+    "###",
+    "---"
+  ],
+  "result": {
+    "count": 6,
+    "id": "mishanguc:colored_glowing_iron_wall_sign"
+  }
+}

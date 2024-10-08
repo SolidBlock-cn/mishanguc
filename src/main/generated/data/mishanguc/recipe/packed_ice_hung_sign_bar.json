@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:stonecutting",
+  "group": "mishanguc:ice_hung_sign_bar",
+  "ingredient": {
+    "item": "minecraft:packed_ice"
+  },
+  "result": {
+    "count": 20,
+    "id": "mishanguc:packed_ice_hung_sign_bar"
+  }
+}

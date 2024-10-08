@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "mishanguc:cyan_light"
+  },
+  "result": {
+    "count": 16,
+    "id": "mishanguc:cyan_medium_column_light_tube"
+  }
+}

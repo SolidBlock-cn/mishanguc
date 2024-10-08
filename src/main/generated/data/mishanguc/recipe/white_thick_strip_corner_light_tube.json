@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "mishanguc:white_thick_strip_wall_light_tube"
+    },
+    {
+      "item": "mishanguc:white_thick_strip_wall_light_tube"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "mishanguc:white_thick_strip_corner_light_tube"
+  }
+}

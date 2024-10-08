@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_road_filled_with_yellow": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mishanguc:road_filled_with_yellow"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:road_slab_filled_with_yellow_from_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_road_filled_with_yellow"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:road_slab_filled_with_yellow_from_stonecutting"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "mishanguc:full_concrete_wall_sign",
+  "key": {
+    "#": {
+      "item": "minecraft:red_concrete"
+    },
+    "-": {
+      "item": "mishanguc:invisible_wall_sign"
+    }
+  },
+  "pattern": [
+    "-#-",
+    "###",
+    "-#-"
+  ],
+  "result": {
+    "count": 4,
+    "id": "mishanguc:full_red_concrete_wall_sign"
+  }
+}

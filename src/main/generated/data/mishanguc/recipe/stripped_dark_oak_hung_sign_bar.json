@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:stonecutting",
+  "group": "mishanguc:stripped_wood_hung_sign_bar",
+  "ingredient": {
+    "item": "minecraft:stripped_dark_oak_wood"
+  },
+  "result": {
+    "count": 20,
+    "id": "mishanguc:stripped_dark_oak_hung_sign_bar"
+  }
+}
