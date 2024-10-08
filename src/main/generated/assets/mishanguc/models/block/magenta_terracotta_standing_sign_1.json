@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/standing_sign_1",
+  "textures": {
+    "bar": "minecraft:block/magenta_terracotta",
+    "texture": "minecraft:block/magenta_terracotta"
+  }
+}

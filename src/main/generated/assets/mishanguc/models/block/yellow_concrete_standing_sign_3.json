@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/standing_sign_3",
+  "textures": {
+    "bar": "minecraft:block/yellow_concrete",
+    "texture": "minecraft:block/yellow_concrete"
+  }
+}

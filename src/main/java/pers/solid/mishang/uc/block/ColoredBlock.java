@@ -19,7 +19,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldView;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -31,7 +30,7 @@ import java.util.List;
  * <p>所有带有颜色的方块应有的接口。其对应的方块实体应该实现 {@link pers.solid.mishang.uc.blockentity.ColoredBlockEntity}。
  * <p>在 {@link pers.solid.mishang.uc.MishangucClient} 中，本模组中所有实现该接口的方块都会为其自身以及方块物品注册颜色提供器。
  */
-public interface ColoredBlock extends BlockEntityProvider, BlockResourceGenerator {
+public interface ColoredBlock extends BlockEntityProvider, MishangucBlock {
 
   LootFunction COPY_COLOR_LOOT_FUNCTION = CopyNbtLootFunction.builder(ContextLootNbtProvider.BLOCK_ENTITY).withOperation("color", "BlockEntityTag.color").build();
 
@@ -70,4 +69,9 @@ public interface ColoredBlock extends BlockEntityProvider, BlockResourceGenerato
 
   Object2ObjectMap<Block, Block> BASE_TO_COLORED = new Object2ObjectOpenHashMap<>();
   Object2ObjectMap<TagKey<Block>, Block> BASE_TAG_TO_COLORED = new Object2ObjectOpenHashMap<>();
+
+  @Override
+  default String customRecipeCategory() {
+    return "colored_blocks";
+  }
 }

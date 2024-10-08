@@ -1,0 +1,108 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "mishanguc:block/colored_stone_brick_hung_sign_bar_central",
+        "uvlock": true
+      },
+      "when": {
+        "left": "true",
+        "right": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/colored_stone_brick_hung_sign_bar",
+        "uvlock": true
+      },
+      "when": {
+        "axis": "z",
+        "left": "false",
+        "right": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/colored_stone_brick_hung_sign_bar",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "axis": "z",
+        "left": "true",
+        "right": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/colored_stone_brick_hung_sign_bar",
+        "uvlock": true,
+        "y": -90
+      },
+      "when": {
+        "axis": "x",
+        "left": "false",
+        "right": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/colored_stone_brick_hung_sign_bar",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "axis": "x",
+        "left": "true",
+        "right": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/colored_stone_brick_hung_sign_bar_edge",
+        "uvlock": true
+      },
+      "when": {
+        "axis": "z",
+        "left": "false",
+        "right": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/colored_stone_brick_hung_sign_bar_edge",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "axis": "z",
+        "left": "false",
+        "right": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/colored_stone_brick_hung_sign_bar_edge",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "axis": "x",
+        "left": "false",
+        "right": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/colored_stone_brick_hung_sign_bar_edge",
+        "uvlock": true,
+        "y": 270
+      },
+      "when": {
+        "axis": "x",
+        "left": "false",
+        "right": "false"
+      }
+    }
+  ]
+}

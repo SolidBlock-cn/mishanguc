@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 2,
+  "ingredient": {
+    "item": "mishanguc:road_filled_with_yellow"
+  },
+  "result": "mishanguc:road_slab_filled_with_yellow"
+}

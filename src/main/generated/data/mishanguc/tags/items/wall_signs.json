@@ -1,0 +1,33 @@
+{
+  "replace": false,
+  "values": [
+    "#mishanguc:wooden_wall_signs",
+    "#mishanguc:concrete_wall_signs",
+    "#mishanguc:terracotta_wall_signs",
+    "mishanguc:bamboo_wall_sign",
+    "mishanguc:bamboo_mosaic_wall_sign",
+    "mishanguc:stone_wall_sign",
+    "mishanguc:colored_stone_wall_sign",
+    "mishanguc:cobblestone_wall_sign",
+    "mishanguc:colored_cobblestone_wall_sign",
+    "mishanguc:stone_brick_wall_sign",
+    "mishanguc:colored_stone_brick_wall_sign",
+    "mishanguc:iron_wall_sign",
+    "mishanguc:colored_iron_wall_sign",
+    "mishanguc:gold_wall_sign",
+    "mishanguc:diamond_wall_sign",
+    "mishanguc:emerald_wall_sign",
+    "mishanguc:lapis_wall_sign",
+    "mishanguc:netherite_wall_sign",
+    "mishanguc:obsidian_wall_sign",
+    "mishanguc:crying_obsidian_wall_sign",
+    "mishanguc:netherrack_wall_sign",
+    "mishanguc:nether_brick_wall_sign",
+    "mishanguc:blackstone_wall_sign",
+    "mishanguc:polished_blackstone_wall_sign",
+    "mishanguc:snow_wall_sign",
+    "mishanguc:ice_wall_sign",
+    "mishanguc:packed_ice_wall_sign",
+    "mishanguc:blue_ice_wall_sign"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "#mishanguc:white_wall_lights",
+    "#mishanguc:white_column_lights",
+    "#mishanguc:white_column_lights",
+    "#mishanguc:white_column_lights",
+    "mishanguc:white_light",
+    "mishanguc:white_light_slab",
+    "mishanguc:white_light_cover"
+  ]
+}

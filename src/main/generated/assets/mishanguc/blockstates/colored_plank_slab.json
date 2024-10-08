@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "mishanguc:block/colored_plank_slab"
+    },
+    "type=double": {
+      "model": "mishanguc:block/colored_planks"
+    },
+    "type=top": {
+      "model": "mishanguc:block/colored_plank_slab_top"
+    }
+  }
+}

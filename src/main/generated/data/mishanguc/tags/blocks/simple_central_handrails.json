@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "#mishanguc:simple_concrete_central_handrails",
+    "#mishanguc:simple_terracotta_central_handrails",
+    "#mishanguc:simple_stained_glass_central_handrails",
+    "#mishanguc:simple_wooden_central_handrails",
+    "mishanguc:simple_ice_handrail_central",
+    "mishanguc:simple_packed_ice_handrail_central",
+    "mishanguc:simple_blue_ice_handrail_central",
+    "mishanguc:simple_snow_handrail_central",
+    "mishanguc:simple_bamboo_handrail_central",
+    "mishanguc:simple_bamboo_mosaic_handrail_central",
+    "mishanguc:simple_dirt_handrail_central",
+    "mishanguc:simple_stone_handrail_central",
+    "mishanguc:simple_cobblestone_handrail_central",
+    "mishanguc:simple_mossy_cobblestone_handrail_central"
+  ]
+}

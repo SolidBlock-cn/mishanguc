@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "C": {
+      "item": "minecraft:cyan_dye"
+    },
+    "L": {
+      "item": "minecraft:lime_dye"
+    },
+    "N": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "|": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "CNL",
+    " | ",
+    " | "
+  ],
+  "result": {
+    "item": "mishanguc:mirroring_tool"
+  }
+}

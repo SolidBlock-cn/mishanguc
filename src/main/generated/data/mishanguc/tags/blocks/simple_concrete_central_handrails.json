@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "mishanguc:simple_white_concrete_handrail_central",
+    "mishanguc:simple_orange_concrete_handrail_central",
+    "mishanguc:simple_magenta_concrete_handrail_central",
+    "mishanguc:simple_light_blue_concrete_handrail_central",
+    "mishanguc:simple_yellow_concrete_handrail_central",
+    "mishanguc:simple_lime_concrete_handrail_central",
+    "mishanguc:simple_pink_concrete_handrail_central",
+    "mishanguc:simple_gray_concrete_handrail_central",
+    "mishanguc:simple_light_gray_concrete_handrail_central",
+    "mishanguc:simple_cyan_concrete_handrail_central",
+    "mishanguc:simple_purple_concrete_handrail_central",
+    "mishanguc:simple_blue_concrete_handrail_central",
+    "mishanguc:simple_brown_concrete_handrail_central",
+    "mishanguc:simple_green_concrete_handrail_central",
+    "mishanguc:simple_red_concrete_handrail_central",
+    "mishanguc:simple_black_concrete_handrail_central"
+  ]
+}

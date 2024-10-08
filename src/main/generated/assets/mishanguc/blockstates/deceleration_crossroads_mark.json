@@ -1,0 +1,36 @@
+{
+  "variants": {
+    "axis=ne_sw,on_slab=false": {
+      "model": "mishanguc:block/deceleration_crossroads_mark_rotated",
+      "y": 0
+    },
+    "axis=ne_sw,on_slab=true": {
+      "model": "mishanguc:block/deceleration_crossroads_mark_on_slab_rotated",
+      "y": 0
+    },
+    "axis=nw_se,on_slab=false": {
+      "model": "mishanguc:block/deceleration_crossroads_mark_rotated",
+      "y": 90
+    },
+    "axis=nw_se,on_slab=true": {
+      "model": "mishanguc:block/deceleration_crossroads_mark_on_slab_rotated",
+      "y": 90
+    },
+    "axis=x,on_slab=false": {
+      "model": "mishanguc:block/deceleration_crossroads_mark",
+      "y": 90
+    },
+    "axis=x,on_slab=true": {
+      "model": "mishanguc:block/deceleration_crossroads_mark_on_slab",
+      "y": 90
+    },
+    "axis=z,on_slab=false": {
+      "model": "mishanguc:block/deceleration_crossroads_mark",
+      "y": 0
+    },
+    "axis=z,on_slab=true": {
+      "model": "mishanguc:block/deceleration_crossroads_mark_on_slab",
+      "y": 0
+    }
+  }
+}

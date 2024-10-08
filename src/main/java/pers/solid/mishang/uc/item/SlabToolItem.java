@@ -25,11 +25,10 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.data.client.Models;
-import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.family.BlockFamilies;
 import net.minecraft.data.family.BlockFamily;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -57,8 +56,6 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.ItemResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.block.AbstractRoadBlock;
 import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
@@ -76,7 +73,7 @@ import java.util.Objects;
  * 用于处理台阶的工具。
  */
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBlockOutline.class)
-public class SlabToolItem extends Item implements RendersBlockOutline, ItemResourceGenerator {
+public class SlabToolItem extends Item implements RendersBlockOutline, MishangucItem {
   /**
    * 从原版的 {@link BlockFamilies} 提取的方块至台阶方块的映射。
    */
@@ -273,26 +270,17 @@ public class SlabToolItem extends Item implements RendersBlockOutline, ItemResou
     return true;
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public ModelJsonBuilder getItemModel() {
-    return ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId());
-  }
-
-  @Override
-  public RecipeCategory getRecipeCategory() {
-    return RecipeCategory.TOOLS;
-  }
-
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this)
-        .patterns("SCS", " | ", " | ")
+    return ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, this)
+        .pattern("SCS")
+        .pattern(" | ")
+        .pattern(" | ")
         .input('S', Items.SHEARS)
         .input('C', Items.STONE)
         .input('|', Items.STICK)
-        .criterionFromItem("has_shears", Items.SHEARS)
-        .criterionFromItem("has_stone", Items.STONE);
+        .criterion("has_shears", RecipeProvider.conditionsFromItem(Items.SHEARS))
+        .criterion("has_stone", RecipeProvider.conditionsFromItem(Items.STONE));
   }
 
   @ApiStatus.AvailableSince("1.0.3")

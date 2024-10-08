@@ -9,7 +9,7 @@ import net.minecraft.world.WorldAccess;
 /**
  * 适用于墙上的（包括角落的）灯方块的接口，以判断该方块在某个面上的特定方向是否存在连接。
  */
-public interface LightConnectable {
+public interface LightConnectable extends MishangucBlock {
   /**
    * 判断灯方块在 {@code side} 侧是否往 {@code direction} 方向已有连接，以用于临近方块判断。
    *
@@ -56,5 +56,10 @@ public interface LightConnectable {
         }
       }
     }
+  }
+
+  @Override
+  default String customRecipeCategory() {
+    return "light";
   }
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/colored_cube_all",
+  "textures": {
+    "all": "minecraft:block/quartz_bricks"
+  }
+}

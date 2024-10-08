@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "mishanguc:block/colored_cobblestone_slab"
+    },
+    "type=double": {
+      "model": "mishanguc:block/colored_cobblestone"
+    },
+    "type=top": {
+      "model": "mishanguc:block/colored_cobblestone_slab_top"
+    }
+  }
+}

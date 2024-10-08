@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "mishanguc:concrete_wall_sign",
+  "key": {
+    "#": {
+      "item": "minecraft:lime_concrete"
+    },
+    "-": {
+      "item": "mishanguc:invisible_wall_sign"
+    }
+  },
+  "pattern": [
+    "---",
+    "###",
+    "---"
+  ],
+  "result": {
+    "count": 6,
+    "item": "mishanguc:lime_concrete_wall_sign"
+  }
+}

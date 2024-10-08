@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "mishanguc:full_concrete_wall_sign",
+  "key": {
+    "#": {
+      "item": "minecraft:magenta_concrete"
+    },
+    "-": {
+      "item": "mishanguc:invisible_wall_sign"
+    }
+  },
+  "pattern": [
+    "-#-",
+    "###",
+    "-#-"
+  ],
+  "result": {
+    "count": 4,
+    "item": "mishanguc:full_magenta_concrete_wall_sign"
+  }
+}

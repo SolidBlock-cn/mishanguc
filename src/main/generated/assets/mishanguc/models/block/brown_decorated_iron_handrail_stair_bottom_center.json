@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/glass_handrail_stair_bottom_center",
+  "textures": {
+    "decoration": "minecraft:block/brown_concrete",
+    "frame": "minecraft:block/iron_block",
+    "glass": "mishanguc:block/glass_unframed"
+  }
+}

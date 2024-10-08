@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.text.Text;
@@ -14,7 +15,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.impl.BRRPBlockLootTableGenerator;
 import pers.solid.mishang.uc.blockentity.ColoredWallSignBlockEntity;
 
 import java.util.List;
@@ -44,8 +44,8 @@ public class ColoredWallSignBlock extends WallSignBlock implements ColoredBlock 
   }
 
   @Override
-  public LootTable.Builder getLootTable() {
-    return BRRPBlockLootTableGenerator.INSTANCE.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override

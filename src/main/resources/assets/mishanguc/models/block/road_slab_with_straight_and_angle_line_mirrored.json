@@ -2,8 +2,8 @@
   "parent": "mishanguc:block/road_with_line",
   "textures": {
     "particle": "#base",
-    "line_bottom_layer1": "#line_top_layer1",
-    "line_bottom_layer2": "#line_top_layer2",
+    "line_bottom": "#line_top",
+    "line_bottom2": "#line_top2",
     "line_side2": "#line_side",
     "line_side3": "#line_side"
   },
@@ -12,12 +12,29 @@
       "from": [0, 0, 0],
       "to": [16, 8, 16],
       "faces": {
-        "down": {"texture": "#base", "cullface": "down"},
-        "up": {"texture": "#base"},
-        "north": {"texture": "#base", "cullface": "north"},
-        "south": {"texture": "#base", "cullface": "south"},
-        "west": {"texture": "#base", "cullface": "west"},
-        "east": {"texture": "#base", "cullface": "east"}
+        "down": {
+          "texture": "#base",
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#base"
+        },
+        "north": {
+          "texture": "#base",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#base",
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#base",
+          "cullface": "west"
+        },
+        "east": {
+          "texture": "#base",
+          "cullface": "east"
+        }
       }
     },
     {
@@ -25,18 +42,24 @@
       "to": [16, 8, 16],
       "faces": {
         "down": {
-          "texture": "#line_bottom_layer1",
+          "texture": "#line_bottom",
           "cullface": "down",
           "rotation": 270,
           "uv": [16, 16, 0, 0]
         },
         "up": {
-          "texture": "#line_top_layer1",
+          "texture": "#line_top",
           "rotation": 90,
           "uv": [16, 0, 0, 16]
         },
-        "east": {"texture": "#line_side", "cullface": "east"},
-        "west": {"texture": "#line_side3", "cullface": "west"}
+        "east": {
+          "texture": "#line_side",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#line_side3",
+          "cullface": "west"
+        }
       }
     },
     {
@@ -44,17 +67,20 @@
       "to": [16, 8, 16],
       "faces": {
         "down": {
-          "texture": "#line_bottom_layer2",
+          "texture": "#line_bottom2",
           "cullface": "down",
           "rotation": 270,
           "uv": [16, 16, 0, 0]
         },
         "up": {
-          "texture": "#line_top_layer2",
+          "texture": "#line_top2",
           "rotation": 90,
           "uv": [16, 0, 0, 16]
         },
-        "south": {"texture": "#line_side2", "cullface": "south"}
+        "south": {
+          "texture": "#line_side2",
+          "cullface": "south"
+        }
       }
     }
   ]

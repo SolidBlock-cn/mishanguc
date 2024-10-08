@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/glowing_standing_sign_barred",
+  "textures": {
+    "bar": "minecraft:block/emerald_block",
+    "glow": "mishanguc:block/white_light",
+    "texture": "minecraft:block/emerald_block"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/colored_cube_bottom_top",
+  "textures": {
+    "bottom": "minecraft:block/chiseled_quartz_block_top",
+    "side": "minecraft:block/chiseled_quartz_block",
+    "top": "minecraft:block/chiseled_quartz_block_top"
+  }
+}

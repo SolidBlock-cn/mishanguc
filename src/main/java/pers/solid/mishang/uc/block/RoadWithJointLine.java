@@ -2,17 +2,17 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
@@ -23,14 +23,11 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.arrp.BRRPHelper;
-import pers.solid.mishang.uc.arrp.FasterJTextures;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
+import pers.solid.mishang.uc.data.FasterTextureMap;
+import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
@@ -141,24 +138,11 @@ public interface RoadWithJointLine extends Road {
       }
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull BlockStateSupplier getBlockStates() {
-      final Identifier id = getBlockModelId();
-      return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.MODEL, id)).coordinate(BlockStateVariantMap.create(FACING).register(direction -> BlockStateVariant.create().put(MishangUtils.DIRECTION_Y_VARIANT, direction)));
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public @NotNull ModelJsonBuilder getBlockModel() {
-      return ModelJsonBuilder.create(new Identifier("mishanguc:block/road_with_joint_line"))
-          .setTextures(new FasterJTextures().base("asphalt").lineSide(lineSide).lineSide2(lineSide2).lineTop(lineTop));
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public void writeBlockModel(RuntimeResourcePack pack) {
-      BRRPHelper.addModelWithSlab(pack, this);
+    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
+      final FasterTextureMap textures = new FasterTextureMap().base("asphalt").lineSide(lineSide).lineSide2(lineSide2).lineTop(lineTop);
+      final Identifier modelId = road.uploadModel("_with_joint_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_TOP);
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockStateSupplier.create(road, BlockStateVariant.create().put(VariantSettings.MODEL, modelId)).coordinate(BlockStateVariantMap.create(FACING).register(direction -> BlockStateVariant.create().put(MishangUtils.DIRECTION_Y_VARIANT, direction)))));
     }
 
     @Override
@@ -177,16 +161,15 @@ public interface RoadWithJointLine extends Road {
       if (base instanceof SlabBlock) {
         base2 = ((AbstractRoadBlock) base2).getRoadSlab();
       }
-      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
+      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern(pattern1)
           .pattern("XXX")
           .input('a', lineColorSide.getIngredient())
           .input('X', base2)
-          .criterionFromItemTag("has_" + lineColorSide.asString() + "_paint", lineColorSide.getIngredient())
-          .criterionFromItem(base2)
-          .setCustomRecipeCategory("roads");
+          .criterion("has_" + lineColorSide.asString() + "_paint", RecipeProvider.conditionsFromTag(lineColorSide.getIngredient()))
+          .criterion(RecipeProvider.hasItem(base2), RecipeProvider.conditionsFromItem(base2));
       if (lineColorSide != lineColor) {
-        recipe.criterionFromItemTag("has_" + lineColor.asString() + "_paint", lineColor.getIngredient());
+        recipe.criterion("has_" + lineColor.asString() + "_paint", RecipeProvider.conditionsFromTag(lineColor.getIngredient()));
       }
       return recipe;
     }

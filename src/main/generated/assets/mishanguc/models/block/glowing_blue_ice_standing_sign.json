@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/glowing_standing_sign",
+  "textures": {
+    "bar": "minecraft:block/blue_ice",
+    "glow": "mishanguc:block/white_light",
+    "texture": "minecraft:block/blue_ice"
+  }
+}

@@ -13,9 +13,6 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.data.client.Models;
-import net.minecraft.data.client.TextureKey;
-import net.minecraft.data.client.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.FallingBlockEntity;
@@ -46,10 +43,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.generator.ItemResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
-import pers.solid.brrp.v1.model.ModelOverrideBuilder;
 import pers.solid.mishang.uc.MishangucClient;
 import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
@@ -65,7 +58,7 @@ import java.util.UUID;
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
 @ApiStatus.AvailableSince("0.2.4")
 public class CarryingToolItem extends BlockToolItem
-    implements ItemResourceGenerator, InteractsWithEntity, RendersBeforeOutline {
+    implements MishangucItem, InteractsWithEntity, RendersBeforeOutline {
   public CarryingToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
@@ -431,22 +424,6 @@ public class CarryingToolItem extends BlockToolItem
       }
     }
     return ActionResult.SUCCESS;
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull ModelJsonBuilder getItemModel() {
-    return ModelJsonBuilder.create(Models.HANDHELD).setTextures(TextureMap.layer0(getTextureId()))  // TODO: 2023/4/15, 015 check
-        .addOverride(new ModelOverrideBuilder(getItemModelId().brrp_suffixed("_with_block")).addCondition(new Identifier("mishanguc:is_holding_block"), 1f))
-        .addOverride(new ModelOverrideBuilder(getItemModelId().brrp_suffixed("_with_entity")).addCondition(new Identifier("mishanguc:is_holding_entity"), 1f));
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public void writeItemModel(RuntimeResourcePack pack) {
-    ItemResourceGenerator.super.writeItemModel(pack);
-    pack.addModel(getItemModelId().brrp_suffixed("_with_block"), ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId() + "_with_block"));
-    pack.addModel(getItemModelId().brrp_suffixed("_with_entity"), ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId() + "_with_entity"));
   }
 
   @Environment(EnvType.CLIENT)

@@ -27,6 +27,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.block.ColoredBlock;
@@ -73,6 +74,17 @@ public class Mishanguc implements ModInitializer {
                 }
                 return ActionResult.PASS;
               });
+
+  private static final @NotNull Identifier EXAMPLE_ID = new Identifier("mishanguc", "");
+
+  /**
+   * 创建使用本模组命名空间（{@code mishanguc}）的 ID。此方法可以提高不同版本之间的兼容性，同时在部分版本中避免命名空间的冗余校验。
+   *
+   * @return 使用本模组命名空间（{@code mishanguc}）的 ID。
+   */
+  public static @NotNull Identifier id(@NotNull String path) {
+    return EXAMPLE_ID.withPath(path);
+  }
 
   private static void registerCommands() {
   }
@@ -494,16 +506,16 @@ public class Mishanguc implements ModInitializer {
       blockMap.put(block.stair(), HandrailBlocks.COLORED_DECORATED_IRON_HANDRAIL.stair());
     }
 
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "concrete_hung_signs")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "glowing_concrete_hung_signs")), HungSignBlocks.COLORED_GLOWING_CONCRETE_HUNG_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "concrete_hung_sign_bars")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN_BAR);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "terracotta_hung_signs")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "glowing_terracotta_hung_signs")), HungSignBlocks.COLORED_GLOWING_TERRACOTTA_HUNG_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "terracotta_hung_sign_bars")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN_BAR);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "concrete_standing_signs")), StandingSignBlocks.COLORED_CONCRETE_STANDING_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "terracotta_standing_signs")), StandingSignBlocks.COLORED_TERRACOTTA_STANDING_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "glowing_concrete_standing_signs")), StandingSignBlocks.COLORED_GLOWING_CONCRETE_STANDING_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "glowing_terracotta_standing_signs")), StandingSignBlocks.COLORED_GLOWING_TERRACOTTA_STANDING_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("concrete_hung_signs")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("glowing_concrete_hung_signs")), HungSignBlocks.COLORED_GLOWING_CONCRETE_HUNG_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("concrete_hung_sign_bars")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN_BAR);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("terracotta_hung_signs")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("glowing_terracotta_hung_signs")), HungSignBlocks.COLORED_GLOWING_TERRACOTTA_HUNG_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("terracotta_hung_sign_bars")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN_BAR);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("concrete_standing_signs")), StandingSignBlocks.COLORED_CONCRETE_STANDING_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("terracotta_standing_signs")), StandingSignBlocks.COLORED_TERRACOTTA_STANDING_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("glowing_concrete_standing_signs")), StandingSignBlocks.COLORED_GLOWING_CONCRETE_STANDING_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("glowing_terracotta_standing_signs")), StandingSignBlocks.COLORED_GLOWING_TERRACOTTA_STANDING_SIGN);
 
     blockMap.put(HungSignBlocks.STONE_HUNG_SIGN, HungSignBlocks.COLORED_STONE_HUNG_SIGN);
     blockMap.put(HungSignBlocks.GLOWING_STONE_HUNG_SIGN, HungSignBlocks.COLORED_GLOWING_STONE_HUNG_SIGN);
@@ -518,11 +530,11 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(HungSignBlocks.GLOWING_IRON_HUNG_SIGN, HungSignBlocks.COLORED_GLOWING_IRON_HUNG_SIGN);
     blockMap.put(HungSignBlocks.IRON_HUNG_SIGN_BAR, HungSignBlocks.COLORED_IRON_HUNG_SIGN_BAR);
 
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "wooden_wall_signs")), WallSignBlocks.COLORED_WOODEN_WALL_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "concrete_wall_signs")), WallSignBlocks.COLORED_CONCRETE_WALL_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "terracotta_wall_signs")), WallSignBlocks.COLORED_TERRACOTTA_WALL_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "glowing_concrete_wall_signs")), WallSignBlocks.COLORED_GLOWING_CONCRETE_WALL_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "glowing_terracotta_wall_signs")), WallSignBlocks.COLORED_GLOWING_TERRACOTTA_WALL_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("wooden_wall_signs")), WallSignBlocks.COLORED_WOODEN_WALL_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("concrete_wall_signs")), WallSignBlocks.COLORED_CONCRETE_WALL_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("terracotta_wall_signs")), WallSignBlocks.COLORED_TERRACOTTA_WALL_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("glowing_concrete_wall_signs")), WallSignBlocks.COLORED_GLOWING_CONCRETE_WALL_SIGN);
+    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("glowing_terracotta_wall_signs")), WallSignBlocks.COLORED_GLOWING_TERRACOTTA_WALL_SIGN);
 
     blockMap.put(WallSignBlocks.STONE_WALL_SIGN, WallSignBlocks.COLORED_STONE_WALL_SIGN);
     blockMap.put(WallSignBlocks.GLOWING_STONE_WALL_SIGN, WallSignBlocks.COLORED_GLOWING_STONE_WALL_SIGN);

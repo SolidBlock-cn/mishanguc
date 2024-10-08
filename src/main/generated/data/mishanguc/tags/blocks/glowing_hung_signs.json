@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    "#mishanguc:glowing_concrete_hung_signs",
+    "#mishanguc:glowing_terracotta_hung_signs",
+    "mishanguc:glowing_stone_hung_sign",
+    "mishanguc:colored_glowing_stone_hung_sign",
+    "mishanguc:glowing_cobblestone_hung_sign",
+    "mishanguc:colored_glowing_cobblestone_hung_sign",
+    "mishanguc:glowing_stone_brick_hung_sign",
+    "mishanguc:colored_glowing_stone_brick_hung_sign",
+    "mishanguc:glowing_iron_hung_sign",
+    "mishanguc:colored_glowing_iron_hung_sign",
+    "mishanguc:glowing_gold_hung_sign",
+    "mishanguc:glowing_diamond_hung_sign",
+    "mishanguc:glowing_emerald_hung_sign",
+    "mishanguc:glowing_lapis_hung_sign",
+    "mishanguc:glowing_netherite_hung_sign",
+    "mishanguc:glowing_obsidian_hung_sign",
+    "mishanguc:glowing_crying_obsidian_hung_sign",
+    "mishanguc:glowing_netherrack_hung_sign",
+    "mishanguc:glowing_nether_brick_hung_sign",
+    "mishanguc:glowing_blackstone_hung_sign",
+    "mishanguc:glowing_polished_blackstone_hung_sign",
+    "mishanguc:glowing_snow_hung_sign",
+    "mishanguc:glowing_packed_ice_hung_sign",
+    "mishanguc:glowing_blue_ice_hung_sign"
+  ]
+}

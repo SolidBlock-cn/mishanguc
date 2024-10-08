@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "#mishanguc:orange_wall_lights",
+    "#mishanguc:orange_column_lights",
+    "#mishanguc:orange_column_lights",
+    "#mishanguc:orange_column_lights",
+    "mishanguc:orange_light",
+    "mishanguc:orange_light_slab",
+    "mishanguc:orange_light_cover"
+  ]
+}

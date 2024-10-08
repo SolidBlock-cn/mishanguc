@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 5,
+  "group": "mishanguc:simple_wood_handrail",
+  "ingredient": {
+    "item": "minecraft:warped_hyphae"
+  },
+  "result": "mishanguc:simple_warped_handrail"
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "D": {
+      "item": "minecraft:pink_dye"
+    },
+    "N": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "|": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "DND",
+    " | ",
+    " | "
+  ],
+  "result": {
+    "item": "mishanguc:rotating_tool"
+  }
+}

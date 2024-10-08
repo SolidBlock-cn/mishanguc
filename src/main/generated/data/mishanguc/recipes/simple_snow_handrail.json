@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 5,
+  "ingredient": {
+    "item": "minecraft:snow_block"
+  },
+  "result": "mishanguc:simple_snow_handrail"
+}

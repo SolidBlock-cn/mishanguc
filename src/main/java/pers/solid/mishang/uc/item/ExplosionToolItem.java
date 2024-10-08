@@ -1,12 +1,8 @@
 package pers.solid.mishang.uc.item;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.data.client.Models;
-import net.minecraft.data.client.TextureKey;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -25,7 +21,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
@@ -33,15 +28,12 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.generator.ItemResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
-public class ExplosionToolItem extends Item implements HotbarScrollInteraction, DispenserBehavior, ItemResourceGenerator {
+public class ExplosionToolItem extends Item implements HotbarScrollInteraction, DispenserBehavior {
   public ExplosionToolItem(Settings settings) {
     super(settings);
     DispenserBlock.registerBehavior(this, this);
@@ -187,32 +179,5 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       }
     }
     return stack;
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public ModelJsonBuilder getItemModel() {
-    // 此物品的模型由普通的资源包手动提供，不在运行时的资源包中。
-    return null;
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public void writeItemModel(RuntimeResourcePack pack) {
-    final ModelJsonBuilder itemModel = getItemModel();
-    final Identifier itemModelId = getItemModelId();
-    if (itemModel != null) pack.addModel(itemModelId, itemModel);
-    final Identifier textureId = getTextureId();
-    for (final String name : new String[]{
-        "_fire",
-        "_4", "_4_fire",
-        "_8", "_8_fire",
-        "_16", "_16_fire",
-        "_32", "_32_fire",
-        "_64", "_64_fire",
-        "_128", "_128_fire",
-    }) {
-      pack.addModel(itemModelId.brrp_suffixed(name), ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, textureId.brrp_suffixed(name)));
-    }
   }
 }

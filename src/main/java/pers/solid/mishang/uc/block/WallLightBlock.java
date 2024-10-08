@@ -5,11 +5,10 @@ import com.google.common.collect.ImmutableBiMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
@@ -32,17 +31,14 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.arrp.FasterJTextures;
+import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.data.MishangucTextureKeys;
 
 import java.util.Map;
 
-public class WallLightBlock extends FacingBlock implements Waterloggable, BlockResourceGenerator {
+public class WallLightBlock extends FacingBlock implements Waterloggable, MishangucBlock {
   public static final MapCodec<WallLightBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.STRING.fieldOf("light_color").forGetter(b -> b.lightColor), createSettingsCodec(), Codec.BOOL.fieldOf("large_shape").forGetter(b -> b.largeShape)).apply(instance, WallLightBlock::new));
   protected static final BooleanProperty WEST = Properties.WEST;
   protected static final BooleanProperty EAST = Properties.EAST;
@@ -72,6 +68,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
         .with(FACING, Direction.UP));
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
     Direction direction = state.get(FACING).getOpposite();
@@ -85,6 +82,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
     builder.add(FACING, Properties.WATERLOGGED);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
     if (state.get(Properties.WATERLOGGED)) {
@@ -94,11 +92,13 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
     return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public BlockState rotate(BlockState state, BlockRotation rotation) {
     return state.with(FACING, rotation.rotate(state.get(FACING)));
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public BlockState mirror(BlockState state, BlockMirror mirror) {
     return state.with(FACING, mirror.apply(state.get(FACING)));
@@ -119,6 +119,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
                 == Fluids.WATER);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public FluidState getFluidState(BlockState state) {
     return state.get(Properties.WATERLOGGED)
@@ -126,11 +127,13 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
         : super.getFluidState(state);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     return (largeShape ? LARGE_SHAPE_PER_DIRECTION : SHAPE_PER_DIRECTION).get(state.get(FACING));
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public void prepare(BlockState state, WorldAccess world, BlockPos pos, int flags, int maxUpdateDepth) {
     super.prepare(state, world, pos, flags, maxUpdateDepth);
@@ -140,43 +143,42 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
     }
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable BlockStateSupplier getBlockStates() {
-    final Identifier id = getBlockModelId();
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final Identifier id = getModelType().upload(this, getTextureMap(), blockStateModelGenerator.modelCollector);
     final BlockStateVariantMap.SingleProperty<Direction> map = BlockStateVariantMap.create(FACING);
     map.register(Direction.UP, BlockStateVariant.create().put(VariantSettings.MODEL, id));
     map.register(Direction.DOWN, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R180));
     for (Direction direction : Direction.Type.HORIZONTAL) {
       map.register(direction, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangUtils.DIRECTION_Y_VARIANT, direction));
     }
-    return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.UVLOCK, true)).coordinate(map);
+    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.UVLOCK, true)).coordinate(map));
+    blockStateModelGenerator.registerParentedItemModel(this, id);
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull ModelJsonBuilder getBlockModel() {
-    return ModelJsonBuilder.create(getModelParent())
-        .setTextures(new FasterJTextures().varP("light", lightColor + "_light"));
+  protected TextureMap getTextureMap() {
+    return TextureMap.of(MishangucTextureKeys.LIGHT, MishangucModels.texture(lightColor + "_light"));
   }
 
-  @Environment(EnvType.CLIENT)
-  @ApiStatus.AvailableSince("0.1.7")
-  public Identifier getModelParent() {
-    final Identifier identifier = getBlockId();
-    String path = identifier.getPath();
+  public Model getModelType() {
+    return getModelType("");
+  }
+
+  public Model getModelType(String suffix) {
+    final Identifier identifier = Registries.BLOCK.getId(this);
+    String path = identifier.getPath() + suffix;
     final int i = lightColor.length();
     if (path.startsWith(lightColor) && path.charAt(i) == '_') {
       path = path.substring(i + 1);
     } else {
       throw new AssertionError();
     }
-    return new Identifier(identifier.getNamespace(), path).brrp_prefixed("block/");
+    return MishangucModels.createBlock(path, suffix, MishangucTextureKeys.LIGHT);
   }
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    final Identifier itemId = getItemId();
+    final Identifier itemId = Registries.ITEM.getId(asItem());
     final String itemPath = itemId.getPath();
     if (itemPath.endsWith("_tube")) {
       // 灯管方式采用切石的方式合成，这里直接作为主要的合成方式。
@@ -197,24 +199,17 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
       } else {
         throw new IllegalStateException(String.format("Can't generate recipes: Cannot determine the type of %s according to its id", this));
       }
-      return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), getRecipeCategory(), this, outputCount)
-          .criterionFromItem(fullLight)
-          .setCustomRecipeCategory("light");
+      return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), RecipeCategory.DECORATIONS, this, outputCount)
+          .criterion(RecipeProvider.hasItem(fullLight), RecipeProvider.conditionsFromItem(fullLight));
     } else {
       // 非灯管方块，采用与混凝土的合成。
-      final Identifier tubeId = itemId.brrp_suffixed("_tube");
+      final Identifier tubeId = itemId.withSuffixedPath("_tube");
       final @NotNull Item tube = Registries.ITEM.getOrEmpty(tubeId).orElseThrow(() -> new IllegalArgumentException(String.format("Can't generate recipes: %s does not have a corresponding tube block (with id [%s])", this, tubeId)));
-      return ShapelessRecipeJsonBuilder.create(getRecipeCategory(), this, 1)
+      return ShapelessRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this, 1)
           .input(tube)
           .input(Items.GRAY_CONCRETE)
-          .criterionFromItem(tube)
-          .setCustomRecipeCategory("light");
+          .criterion(RecipeProvider.hasItem(tube), RecipeProvider.conditionsFromItem(tube));
     }
-  }
-
-  @Override
-  public @Nullable RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
   }
 
   @Override
@@ -225,5 +220,10 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, BlockR
   public static @NotNull Item getBaseLight(String namespace, String lightColor, Block self) {
     final Identifier fullLightId = new Identifier(namespace, lightColor + "_light");
     return Registries.ITEM.getOrEmpty(fullLightId).orElseThrow(() -> new IllegalArgumentException(String.format("Can't generate recipes: %s does not have a corresponding base light block (with id [%s])", self, fullLightId)));
+  }
+
+  @Override
+  public String customRecipeCategory() {
+    return "light";
   }
 }

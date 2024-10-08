@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/light",
+  "textures": {
+    "all": "mishanguc:block/cyan_light"
+  }
+}

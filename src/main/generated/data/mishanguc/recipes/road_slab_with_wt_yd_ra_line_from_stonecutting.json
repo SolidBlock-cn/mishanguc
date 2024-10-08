@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 2,
+  "ingredient": {
+    "item": "mishanguc:road_with_wt_yd_ra_line"
+  },
+  "result": "mishanguc:road_slab_with_wt_yd_ra_line"
+}

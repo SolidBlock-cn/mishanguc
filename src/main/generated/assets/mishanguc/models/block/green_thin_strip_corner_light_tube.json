@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/thin_strip_corner_light_tube",
+  "textures": {
+    "light": "mishanguc:block/green_light"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "replace": false,
+  "values": [
+    "#mishanguc:wooden_standing_signs",
+    "#mishanguc:concrete_standing_signs",
+    "#mishanguc:terracotta_standing_signs",
+    "mishanguc:bamboo_standing_sign",
+    "mishanguc:bamboo_mosaic_standing_sign",
+    "mishanguc:stone_standing_sign",
+    "mishanguc:colored_stone_standing_sign",
+    "mishanguc:cobblestone_standing_sign",
+    "mishanguc:colored_cobblestone_standing_sign",
+    "mishanguc:stone_brick_standing_sign",
+    "mishanguc:colored_stone_brick_standing_sign",
+    "mishanguc:iron_standing_sign",
+    "mishanguc:colored_iron_standing_sign",
+    "mishanguc:gold_standing_sign",
+    "mishanguc:diamond_standing_sign",
+    "mishanguc:emerald_standing_sign",
+    "mishanguc:lapis_standing_sign",
+    "mishanguc:netherite_standing_sign",
+    "mishanguc:obsidian_standing_sign",
+    "mishanguc:crying_obsidian_standing_sign",
+    "mishanguc:netherrack_standing_sign",
+    "mishanguc:nether_brick_standing_sign",
+    "mishanguc:blackstone_standing_sign",
+    "mishanguc:polished_blackstone_standing_sign",
+    "mishanguc:snow_standing_sign",
+    "mishanguc:ice_standing_sign",
+    "mishanguc:packed_ice_standing_sign",
+    "mishanguc:blue_ice_standing_sign"
+  ]
+}

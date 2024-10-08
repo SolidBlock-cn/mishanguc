@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/colored_cube_column_horizontal",
+  "textures": {
+    "end": "minecraft:block/quartz_pillar_top",
+    "side": "minecraft:block/quartz_pillar"
+  }
+}

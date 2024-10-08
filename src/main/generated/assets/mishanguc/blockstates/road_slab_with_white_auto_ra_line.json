@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "mishanguc:block/road_slab_with_white_auto_ra_line"
+    },
+    "type=double": {
+      "model": "mishanguc:block/road_with_white_auto_ra_line"
+    },
+    "type=top": {
+      "model": "mishanguc:block/road_slab_with_white_auto_ra_line_top"
+    }
+  }
+}

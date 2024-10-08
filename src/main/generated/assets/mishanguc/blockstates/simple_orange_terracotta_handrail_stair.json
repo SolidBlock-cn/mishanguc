@@ -1,0 +1,184 @@
+{
+  "variants": {
+    "facing=east,position=center,shape=bottom": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_bottom_center",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=east,position=center,shape=middle": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_middle_center",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=east,position=center,shape=top": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_top_center",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=east,position=left,shape=bottom": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_bottom_left",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=east,position=left,shape=middle": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_middle_left",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=east,position=left,shape=top": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_top_left",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=east,position=right,shape=bottom": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_bottom_right",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=east,position=right,shape=middle": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_middle_right",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=east,position=right,shape=top": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_top_right",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=north,position=center,shape=bottom": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_bottom_center",
+      "uvlock": true,
+      "y": 0
+    },
+    "facing=north,position=center,shape=middle": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_middle_center",
+      "uvlock": true,
+      "y": 0
+    },
+    "facing=north,position=center,shape=top": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_top_center",
+      "uvlock": true,
+      "y": 0
+    },
+    "facing=north,position=left,shape=bottom": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_bottom_left",
+      "uvlock": true,
+      "y": 0
+    },
+    "facing=north,position=left,shape=middle": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_middle_left",
+      "uvlock": true,
+      "y": 0
+    },
+    "facing=north,position=left,shape=top": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_top_left",
+      "uvlock": true,
+      "y": 0
+    },
+    "facing=north,position=right,shape=bottom": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_bottom_right",
+      "uvlock": true,
+      "y": 0
+    },
+    "facing=north,position=right,shape=middle": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_middle_right",
+      "uvlock": true,
+      "y": 0
+    },
+    "facing=north,position=right,shape=top": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_top_right",
+      "uvlock": true,
+      "y": 0
+    },
+    "facing=south,position=center,shape=bottom": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_bottom_center",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=south,position=center,shape=middle": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_middle_center",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=south,position=center,shape=top": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_top_center",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=south,position=left,shape=bottom": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_bottom_left",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=south,position=left,shape=middle": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_middle_left",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=south,position=left,shape=top": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_top_left",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=south,position=right,shape=bottom": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_bottom_right",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=south,position=right,shape=middle": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_middle_right",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=south,position=right,shape=top": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_top_right",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=west,position=center,shape=bottom": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_bottom_center",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=west,position=center,shape=middle": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_middle_center",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=west,position=center,shape=top": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_top_center",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=west,position=left,shape=bottom": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_bottom_left",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=west,position=left,shape=middle": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_middle_left",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=west,position=left,shape=top": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_top_left",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=west,position=right,shape=bottom": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_bottom_right",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=west,position=right,shape=middle": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_middle_right",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=west,position=right,shape=top": {
+      "model": "mishanguc:block/simple_orange_terracotta_handrail_stair_top_right",
+      "uvlock": true,
+      "y": 270
+    }
+  }
+}

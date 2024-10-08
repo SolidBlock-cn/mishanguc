@@ -34,6 +34,7 @@ public class ColumnWallLightBlock extends WallLightBlock {
     return (sizeType >= 2 ? SHAPES4 : sizeType == 1 ? SHAPES5 : SHAPES6).get(state.get(FACING).getAxis());
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     return (sizeType >= 2 ? SHAPES5 : sizeType == 1 ? SHAPES6 : SHAPES7).get(state.get(FACING).getAxis());

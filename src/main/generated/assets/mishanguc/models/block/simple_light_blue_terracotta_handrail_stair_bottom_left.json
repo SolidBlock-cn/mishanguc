@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/simple_handrail_stair_bottom_left",
+  "textures": {
+    "bottom": "minecraft:block/light_blue_terracotta",
+    "texture": "minecraft:block/light_blue_terracotta",
+    "top": "minecraft:block/light_blue_terracotta"
+  }
+}

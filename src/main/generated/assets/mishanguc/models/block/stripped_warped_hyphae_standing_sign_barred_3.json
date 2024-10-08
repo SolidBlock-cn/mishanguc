@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/standing_sign_barred_3",
+  "textures": {
+    "bar": "minecraft:block/stripped_warped_stem",
+    "texture": "minecraft:block/stripped_warped_stem"
+  }
+}

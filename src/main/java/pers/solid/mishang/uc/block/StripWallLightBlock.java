@@ -3,8 +3,6 @@ package pers.solid.mishang.uc.block;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -20,12 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.arrp.FasterJTextures;
 
 import java.util.Map;
 
@@ -127,17 +120,21 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
     }
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
     return stateFrom.isOf(this) && ((LightConnectable) stateFrom.getBlock()).isConnectedIn(stateFrom, state.get(FACING), direction.getOpposite()) || super.isSideInvisible(state, stateFrom, direction);
   }
 
-  @Environment(EnvType.CLIENT)
+
   @Override
-  public @Nullable BlockStateSupplier getBlockStates() {
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final BlockStateVariantMap.DoubleProperty<Direction, StripType> map = BlockStateVariantMap.create(FACING, STRIP_TYPE);
-    final Identifier id = getBlockModelId();
-    final Identifier idVertical = id.brrp_suffixed("_vertical");
+
+    final TextureMap textureMap = getTextureMap();
+    final Identifier id = getModelType().upload(this, textureMap, blockStateModelGenerator.modelCollector);
+    final Identifier idVertical = getModelType("_vertical").upload(this, textureMap, blockStateModelGenerator.modelCollector);
+
     map.register(Direction.UP, StripType.HORIZONTAL, BlockStateVariant.create().put(VariantSettings.MODEL, id));
     map.register(Direction.UP, StripType.VERTICAL, BlockStateVariant.create().put(VariantSettings.MODEL, idVertical));
     map.register(Direction.DOWN, StripType.HORIZONTAL, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R180));
@@ -146,21 +143,7 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
       map.register(direction, StripType.HORIZONTAL, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangUtils.DIRECTION_Y_VARIANT, direction));
       map.register(direction, StripType.VERTICAL, BlockStateVariant.create().put(VariantSettings.MODEL, idVertical).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangUtils.DIRECTION_Y_VARIANT, direction));
     }
-    return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.UVLOCK, true)).coordinate(map);
-  }
-
-  @ApiStatus.AvailableSince("0.1.7")
-  @Environment(EnvType.CLIENT)
-  public ModelJsonBuilder getBlockModelVertical() {
-    return ModelJsonBuilder.create(getModelParent().brrp_suffixed("_vertical"))
-        .setTextures(new FasterJTextures().varP("light", lightColor + "_light"));
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public void writeBlockModel(RuntimeResourcePack pack) {
-    super.writeBlockModel(pack);
-    pack.addModel(getBlockModelId().brrp_suffixed("_vertical"), getBlockModelVertical());
+    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.UVLOCK, true)).coordinate(map));
   }
 
   @Override

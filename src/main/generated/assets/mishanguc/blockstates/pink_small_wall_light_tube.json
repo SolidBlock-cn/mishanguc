@@ -1,0 +1,37 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "mishanguc:block/pink_small_wall_light_tube",
+      "uvlock": true,
+      "x": 180
+    },
+    "facing=east": {
+      "model": "mishanguc:block/pink_small_wall_light_tube",
+      "uvlock": true,
+      "x": 270,
+      "y": 270
+    },
+    "facing=north": {
+      "model": "mishanguc:block/pink_small_wall_light_tube",
+      "uvlock": true,
+      "x": 270,
+      "y": 180
+    },
+    "facing=south": {
+      "model": "mishanguc:block/pink_small_wall_light_tube",
+      "uvlock": true,
+      "x": 270,
+      "y": 0
+    },
+    "facing=up": {
+      "model": "mishanguc:block/pink_small_wall_light_tube",
+      "uvlock": true
+    },
+    "facing=west": {
+      "model": "mishanguc:block/pink_small_wall_light_tube",
+      "uvlock": true,
+      "x": 270,
+      "y": 90
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "mishanguc:glowing_concrete_standing_sign",
+  "key": {
+    "#": {
+      "item": "minecraft:light_gray_concrete"
+    },
+    "-": {
+      "item": "mishanguc:invisible_glowing_wall_sign"
+    },
+    "|": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "---",
+    "###",
+    " | "
+  ],
+  "result": {
+    "count": 4,
+    "item": "mishanguc:glowing_light_gray_concrete_standing_sign"
+  }
+}

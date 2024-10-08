@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "mishanguc:block/white_ink",
+    "side": "mishanguc:block/white_ink",
+    "top": "mishanguc:block/white_ink"
+  }
+}

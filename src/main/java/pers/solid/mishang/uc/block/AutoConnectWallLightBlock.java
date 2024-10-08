@@ -4,21 +4,19 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.data.client.BlockStateSupplier;
-import net.minecraft.data.client.BlockStateVariant;
-import net.minecraft.data.client.MultipartBlockStateSupplier;
-import net.minecraft.data.client.When;
+import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
@@ -30,11 +28,10 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.Mishanguc;
-import pers.solid.mishang.uc.arrp.FasterJTextures;
+import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.data.MishangucTextureKeys;
 
 import java.util.*;
 
@@ -203,14 +200,19 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
     return VoxelShapes.union(baseShape, extraShapes);
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull BlockStateSupplier getBlockStates() {
-    final Identifier id = getBlockModelId();
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final TextureMap textureMap = TextureMap.of(MishangucTextureKeys.LIGHT, MishangucModels.texture(lightColor + "_light"));
+    final Identifier modelId = MishangucModels.createBlock("wall_light_%s_decoration".formatted(shape), MishangucTextureKeys.LIGHT).upload(this, textureMap, blockStateModelGenerator.modelCollector);
+    final Identifier centerModelId = MishangucModels.createBlock("wall_light_%s_decoration_center".formatted(shape), "_center", MishangucTextureKeys.LIGHT).upload(this, textureMap, blockStateModelGenerator.modelCollector);
+    final Identifier connectionModelId = MishangucModels.createBlock("wall_light_%s_decoration_connection".formatted(shape), "_connection", MishangucTextureKeys.LIGHT).upload(this, textureMap, blockStateModelGenerator.modelCollector);
+    final Identifier connection2ModelId = MishangucModels.createBlock("wall_light_%s_decoration_connection2".formatted(shape), "_connection2", MishangucTextureKeys.LIGHT).upload(this, textureMap, blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.registerParentedItemModel(this, modelId);
+
     final MultipartBlockStateSupplier blockStateSupplier = MultipartBlockStateSupplier.create(this);
     for (Direction facing : Direction.values()) {
       // 中心装饰物
-      BlockStateVariant central = BlockStateVariant.create().put(MODEL, id.brrp_suffixed("_center"))
+      BlockStateVariant central = BlockStateVariant.create().put(MODEL, centerModelId)
           .put(MishangUtils.INT_Y_VARIANT, facing.getAxis() == Direction.Axis.Y ? 0 : (int) (facing.asRotation() + 180))
           .put(MishangUtils.INT_X_VARIANT, facing == Direction.DOWN ? 180 : facing == Direction.UP ? 0 : 90);
       blockStateSupplier.with(When.create().set(FACING, facing), central);
@@ -226,27 +228,27 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
           continue;
         }
         if (facing == Direction.UP) {
-          modelName = id.brrp_suffixed("_connection");
+          modelName = connectionModelId;
           x = 0;
           y = (int) direction.asRotation();
         } else if (facing == Direction.DOWN) {
-          modelName = id.brrp_suffixed("_connection");
+          modelName = connectionModelId;
           x = 180;
           y = (int) direction.asRotation() + 180;
         } else if (direction == Direction.UP) {
-          modelName = id.brrp_suffixed("_connection");
+          modelName = connectionModelId;
           x = 90;
           y = (int) facing.asRotation() + 180;
         } else if (direction == Direction.DOWN) {
-          modelName = id.brrp_suffixed("_connection");
+          modelName = connectionModelId;
           x = -90;
           y = (int) facing.asRotation();
         } else if (direction == facing.rotateYCounterclockwise()) {
-          modelName = id.brrp_suffixed("_connection2");
+          modelName = connection2ModelId;
           x = 0;
           y = (int) facing.asRotation();
         } else if (direction == facing.rotateYClockwise()) {
-          modelName = id.brrp_suffixed("_connection2");
+          modelName = connection2ModelId;
           x = 180;
           y = (int) facing.asRotation() + 180;
         } else {
@@ -256,25 +258,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
         blockStateSupplier.with(When.create().set(FACING, facing).set(DIRECTION_TO_PROPERTY.get(direction), true), BlockStateVariant.create().put(MODEL, modelName).put(MishangUtils.INT_X_VARIANT, x).put(MishangUtils.INT_Y_VARIANT, y));
       }
     }
-    return blockStateSupplier;
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public void writeBlockModel(RuntimeResourcePack pack) {
-    final Identifier id = getBlockModelId();
-    pack.addModel(id,
-        ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/wall_light_%s_decoration", shape)))
-            .setTextures(new FasterJTextures().varP("light", lightColor + "_light")));
-    pack.addModel(id.brrp_suffixed("_center"),
-        ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/wall_light_%s_decoration_center", shape)))
-            .setTextures(new FasterJTextures().varP("light", lightColor + "_light")));
-    pack.addModel(id.brrp_suffixed("_connection"),
-        ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/wall_light_%s_decoration_connection", shape)))
-            .setTextures(new FasterJTextures().varP("light", lightColor + "_light")));
-    pack.addModel(id.brrp_suffixed("_connection2"),
-        ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/wall_light_%s_decoration_connection2", shape)))
-            .setTextures(new FasterJTextures().varP("light", lightColor + "_light")));
+    blockStateModelGenerator.blockStateCollector.accept(blockStateSupplier);
   }
 
   @Override
@@ -284,7 +268,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    final Identifier itemId = getItemId();
+    final Identifier itemId = Registries.ITEM.getId(asItem());
     final @NotNull Item fullLight = WallLightBlock.getBaseLight(itemId.getNamespace(), lightColor, this);
     final int outputCount;
     final String path = itemId.getPath();
@@ -297,8 +281,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
     } else {
       outputCount = 12;
     }
-    return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), getRecipeCategory(), this, outputCount)
-        .criterionFromItem(fullLight)
-        .setCustomRecipeCategory("light");
+    return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), RecipeCategory.DECORATIONS, this, outputCount)
+        .criterion(RecipeProvider.hasItem(fullLight), RecipeProvider.conditionsFromItem(fullLight));
   }
 }

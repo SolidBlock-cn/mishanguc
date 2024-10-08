@@ -131,10 +131,10 @@ public class MishangucBlocks {
           if (value instanceof HandrailBlock handrailBlock) {
             // 如果该方块为 HandrailBlock，则一并注册其 central 方块，应为该方块并没有作为字段存在。
             // 此类方块也没有对应的方块物品，其物品为对应的基础方块的物品。
-            Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_central"), handrailBlock.central());
-            Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_corner"), handrailBlock.corner());
-            Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_stair"), handrailBlock.stair());
-            Registry.register(Registries.BLOCK, new Identifier("mishanguc", path + "_outer"), handrailBlock.outer());
+            Registry.register(Registries.BLOCK, Mishanguc.id(path + "_central"), handrailBlock.central());
+            Registry.register(Registries.BLOCK, Mishanguc.id(path + "_corner"), handrailBlock.corner());
+            Registry.register(Registries.BLOCK, Mishanguc.id(path + "_stair"), handrailBlock.stair());
+            Registry.register(Registries.BLOCK, Mishanguc.id(path + "_outer"), handrailBlock.outer());
           }
           final FabricItemSettings settings = new FabricItemSettings();
           if (path.contains("netherite")) {
@@ -148,7 +148,7 @@ public class MishangucBlocks {
                   : value instanceof StandingSignBlock
                   ? new StandingSignBlockItem(value, settings)
                   : new NamedBlockItem(value, settings);
-          Registry.register(Registries.ITEM, new Identifier("mishanguc", path), item);
+          Registry.register(Registries.ITEM, Mishanguc.id(path), item);
         } catch (IllegalAccessException e) {
           Mishanguc.MISHANG_LOGGER.error("Error when registering blocks:", e);
         }

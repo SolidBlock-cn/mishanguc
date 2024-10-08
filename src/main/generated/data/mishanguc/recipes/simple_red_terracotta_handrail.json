@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 5,
+  "group": "mishanguc:simple_terracotta_handrail",
+  "ingredient": {
+    "item": "minecraft:red_terracotta"
+  },
+  "result": "mishanguc:simple_red_terracotta_handrail"
+}
