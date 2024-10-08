@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "mishanguc:wood_wall_sign",
+  "key": {
+    "#": {
+      "item": "minecraft:spruce_wood"
+    },
+    "-": {
+      "item": "mishanguc:invisible_wall_sign"
+    }
+  },
+  "pattern": [
+    "---",
+    "###",
+    "---"
+  ],
+  "result": {
+    "count": 6,
+    "id": "mishanguc:spruce_wood_wall_sign"
+  }
+}

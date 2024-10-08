@@ -1,0 +1,9 @@
+{
+  "parent": "mishanguc:block/road_with_angle_line",
+  "textures": {
+    "base": "mishanguc:block/asphalt",
+    "line_side": "mishanguc:block/white_offset_straight_line2",
+    "line_side2": "mishanguc:block/white_offset_straight_line",
+    "line_top": "mishanguc:block/white_offset_in_right_angle_line"
+  }
+}

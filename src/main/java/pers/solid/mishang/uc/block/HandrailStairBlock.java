@@ -3,8 +3,6 @@ package pers.solid.mishang.uc.block;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
 import com.mojang.serialization.MapCodec;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.data.client.*;
@@ -12,8 +10,6 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -34,7 +30,6 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -43,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class HandrailStairBlock<T extends HandrailBlock> extends HorizontalFacingBlock implements Waterloggable, BlockResourceGenerator, Handrails {
+public abstract class HandrailStairBlock<T extends HandrailBlock> extends HorizontalFacingBlock implements Waterloggable, MishangucBlock, Handrails {
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   public static final EnumProperty<Position> POSITION = MishangucProperties.HANDRAIL_STAIR_POSITION;
   public static final EnumProperty<Shape> SHAPE = MishangucProperties.HANDRAIL_STAIR_SHAPE;
@@ -82,11 +77,16 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
     builder.add(WATERLOGGED, POSITION, FACING, SHAPE);
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull BlockStateSupplier getBlockStates() {
-    final Identifier blockModelId = getBlockModelId();
-    return VariantsBlockStateSupplier.create(this).coordinate(BlockStateVariantMap.create(FACING, POSITION, SHAPE).register((facing, position, shape) -> BlockStateVariant.create().put(VariantSettings.MODEL, blockModelId.brrp_suffixed("_" + shape.asString() + "_" + position.asString())).put(MishangUtils.DIRECTION_Y_VARIANT, facing.getOpposite()).put(VariantSettings.UVLOCK, true)));
+  /**
+   * @param modelId 不含形状和位置信息的模型 ID
+   */
+  public @NotNull BlockStateSupplier createBlockStates(Identifier modelId) {
+    return VariantsBlockStateSupplier.create(this)
+        .coordinate(BlockStateVariantMap.create(FACING, POSITION, SHAPE)
+            .register((facing, position, shape) -> BlockStateVariant.create()
+                .put(VariantSettings.MODEL, modelId.withSuffixedPath("_" + shape.asString() + "_" + position.asString()))
+                .put(MishangUtils.DIRECTION_Y_VARIANT, facing.getOpposite())
+                .put(VariantSettings.UVLOCK, true)));
   }
 
   @Nullable
@@ -202,11 +202,6 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   }
 
   @Override
-  public Identifier getItemId() {
-    return Registries.ITEM.getId(asItem());
-  }
-
-  @Override
   public @Nullable Block baseBlock() {
     return baseHandrail.baseBlock();
   }
@@ -254,11 +249,6 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   public MutableText getName() {
     final Block block = baseBlock();
     return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.handrail_stair", block.getName());
-  }
-
-  @Override
-  public @Nullable RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
   }
 
   @Override

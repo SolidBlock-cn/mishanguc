@@ -2,21 +2,18 @@ package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.Maps;
 import com.mojang.serialization.MapCodec;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -33,16 +30,14 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
-import pers.solid.brrp.v1.impl.BRRPBlockLootTableGenerator;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
-import pers.solid.mishang.uc.arrp.BRRPHelper;
+import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 
 import java.util.Map;
 
-public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block implements Waterloggable, BlockResourceGenerator, Handrails {
+public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block implements Waterloggable, MishangucBlock, Handrails {
   /**
    * 该方块的基础的栏杆方块。
    */
@@ -97,15 +92,8 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
     return baseHandrail.asItem();
   }
 
-  @Override
-  public Identifier getItemId() {
-    return Registries.ITEM.getId(asItem());
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull BlockStateSupplier getBlockStates() {
-    return BRRPHelper.stateForHorizontalCornerFacingBlock(this, getBlockModelId(), true);
+  public @NotNull BlockStateSupplier createBlockStates(Identifier modelId) {
+    return ModelHelper.stateForHorizontalCornerFacingBlock(this, modelId, true);
   }
 
   @Override
@@ -114,8 +102,8 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
   }
 
   @Override
-  public LootTable.Builder getLootTable() {
-    return BRRPBlockLootTableGenerator.INSTANCE.drops(this, ConstantLootNumberProvider.create(2));
+  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    return blockLootTableGenerator.drops(this, ConstantLootNumberProvider.create(2));
   }
 
   @Override
@@ -149,11 +137,6 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
   public boolean connectsIn(@NotNull BlockState blockState, @NotNull Direction direction, @Nullable Direction offsetFacing) {
     final HorizontalCornerDirection facing = blockState.get(FACING);
     return offsetFacing != null && facing.hasDirection(direction) && facing.hasDirection(offsetFacing);
-  }
-
-  @Override
-  public @Nullable RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
   }
 
   @Override

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "mishanguc:orange_light"
+  },
+  "result": {
+    "count": 18,
+    "id": "mishanguc:orange_wall_light_point_decoration"
+  }
+}

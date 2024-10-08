@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "mishanguc:colored_terracotta"
+    },
+    "-": {
+      "item": "mishanguc:invisible_glowing_wall_sign"
+    },
+    "|": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "---",
+    "###",
+    " | "
+  ],
+  "result": {
+    "count": 4,
+    "id": "mishanguc:colored_glowing_terracotta_standing_sign"
+  }
+}

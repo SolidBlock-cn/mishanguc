@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "mishanguc:wood_standing_sign",
+  "key": {
+    "#": {
+      "item": "minecraft:birch_wood"
+    },
+    "-": {
+      "item": "mishanguc:invisible_wall_sign"
+    },
+    "|": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "---",
+    "###",
+    " | "
+  ],
+  "result": {
+    "count": 4,
+    "id": "mishanguc:birch_wood_standing_sign"
+  }
+}

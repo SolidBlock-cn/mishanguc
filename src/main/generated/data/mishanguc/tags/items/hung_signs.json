@@ -1,0 +1,32 @@
+{
+  "values": [
+    "#mishanguc:wooden_hung_signs",
+    "#mishanguc:concrete_hung_signs",
+    "#mishanguc:terracotta_hung_signs",
+    "mishanguc:bamboo_hung_sign",
+    "mishanguc:bamboo_mosaic_hung_sign",
+    "mishanguc:stone_hung_sign",
+    "mishanguc:colored_stone_hung_sign",
+    "mishanguc:cobblestone_hung_sign",
+    "mishanguc:colored_cobblestone_hung_sign",
+    "mishanguc:stone_brick_hung_sign",
+    "mishanguc:colored_stone_brick_hung_sign",
+    "mishanguc:iron_hung_sign",
+    "mishanguc:colored_iron_hung_sign",
+    "mishanguc:gold_hung_sign",
+    "mishanguc:diamond_hung_sign",
+    "mishanguc:emerald_hung_sign",
+    "mishanguc:lapis_hung_sign",
+    "mishanguc:netherite_hung_sign",
+    "mishanguc:obsidian_hung_sign",
+    "mishanguc:crying_obsidian_hung_sign",
+    "mishanguc:netherrack_hung_sign",
+    "mishanguc:nether_brick_hung_sign",
+    "mishanguc:blackstone_hung_sign",
+    "mishanguc:polished_blackstone_hung_sign",
+    "mishanguc:snow_hung_sign",
+    "mishanguc:ice_hung_sign",
+    "mishanguc:packed_ice_hung_sign",
+    "mishanguc:blue_ice_hung_sign"
+  ]
+}

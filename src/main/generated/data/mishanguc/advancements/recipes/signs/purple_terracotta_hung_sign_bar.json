@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_base_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:purple_terracotta"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:purple_terracotta_hung_sign_bar"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_base_block"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:purple_terracotta_hung_sign_bar"
+    ]
+  }
+}

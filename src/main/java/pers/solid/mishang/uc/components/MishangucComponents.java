@@ -2,15 +2,14 @@ package pers.solid.mishang.uc.components;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.component.DataComponentType;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @see DataComponentTypes
+ * @see net.minecraft.component.DataComponentTypes
  */
 public final class MishangucComponents {
   public static final DataComponentType<CarryingToolData> CARRYING_TOOL_DATA = register("carrying_tool_data", CarryingToolData.CODEC, CarryingToolData.PACKET_CODEC);
@@ -39,6 +38,6 @@ public final class MishangucComponents {
   }
 
   private static <T> DataComponentType<T> register(String id, Codec<T> codec, PacketCodec<? super RegistryByteBuf, T> packetCodec) {
-    return Registry.register(Registries.DATA_COMPONENT_TYPE, new Identifier("mishanguc", id), DataComponentType.<T>builder().codec(codec).packetCodec(packetCodec).build());
+    return Registry.register(Registries.DATA_COMPONENT_TYPE, Mishanguc.id(id), DataComponentType.<T>builder().codec(codec).packetCodec(packetCodec).build());
   }
 }

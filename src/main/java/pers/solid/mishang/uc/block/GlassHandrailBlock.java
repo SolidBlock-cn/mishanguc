@@ -3,19 +3,16 @@ package pers.solid.mishang.uc.block;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
-import net.minecraft.data.client.TextureKey;
-import net.minecraft.data.client.TextureMap;
+import net.minecraft.data.client.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.mishang.uc.Mishanguc;
+import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.function.Function;
@@ -53,26 +50,21 @@ public class GlassHandrailBlock extends HandrailBlock {
     outer = outerProvider.apply(this);
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull ModelJsonBuilder getBlockModel() {
-    return ModelJsonBuilder.create(new Identifier("mishanguc:block/glass_handrail")).setTextures(getTextures());
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @Nullable ModelJsonBuilder getItemModel() {
-    return ModelJsonBuilder.create(new Identifier("mishanguc:block/glass_handrail_inventory")).setTextures(getTextures());
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final TextureMap textures = getTextures();
+    final Identifier modelId = MishangucModels.GLASS_HANDRAIL.upload(this, textures, blockStateModelGenerator.modelCollector);
+    MishangucModels.GLASS_HANDRAIL_INVENTORY.upload(ModelIds.getItemModelId(asItem()), textures, blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId));
   }
 
   public static final TextureKey FRAME = TextureKey.of("frame");
   public static final TextureKey GLASS = TextureKey.of("glass");
   public static final TextureKey DECORATION = TextureKey.of("decoration");
 
-  @Environment(EnvType.CLIENT)
   @Override
   public @NotNull TextureMap getTextures() {
-    return new TextureMap().put(FRAME, frameTexture).put(GLASS, new Identifier("mishanguc:block/glass_unframed")).put(DECORATION, decorationTexture);
+    return new TextureMap().put(FRAME, frameTexture).put(GLASS, Mishanguc.id("block/glass_unframed")).put(DECORATION, decorationTexture);
   }
 
   @Override
@@ -121,14 +113,13 @@ public class GlassHandrailBlock extends HandrailBlock {
       super(baseRail, Block.Settings.copy(baseRail).nonOpaque());
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public void writeBlockModel(RuntimeResourcePack pack) {
+    public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
       final TextureMap textures = baseHandrail.getTextures();
-      final Identifier modelId = getBlockModelId();
-      pack.addModel(modelId.brrp_suffixed("_post"), ModelJsonBuilder.create(new Identifier("mishanguc", "block/glass_handrail_post")).setTextures(textures));
-      pack.addModel(modelId.brrp_suffixed("_post_side"), ModelJsonBuilder.create(new Identifier("mishanguc", "block/glass_handrail_post_side")).setTextures(textures));
-      pack.addModel(modelId.brrp_suffixed("_side"), ModelJsonBuilder.create(new Identifier("mishanguc", "block/glass_handrail_side")).setTextures(textures));
+      final Identifier postModelId = MishangucModels.GLASS_HANDRAIL_POST.upload(this, textures, blockStateModelGenerator.modelCollector);
+      final Identifier sideModelId = MishangucModels.GLASS_HANDRAIL_SIDE.upload(this, textures, blockStateModelGenerator.modelCollector);
+      final Identifier postSideModelId = MishangucModels.GLASS_HANDRAIL_POST_SIDE.upload(this, textures, blockStateModelGenerator.modelCollector);
+      blockStateModelGenerator.blockStateCollector.accept(createBlockStates(postModelId, postSideModelId, sideModelId));
     }
 
     @Override
@@ -149,10 +140,10 @@ public class GlassHandrailBlock extends HandrailBlock {
       super(baseRail, Block.Settings.copy(baseRail).nonOpaque());
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull ModelJsonBuilder getBlockModel() {
-      return baseHandrail.getBlockModel().parent(new Identifier("mishanguc:block/glass_handrail_corner"));
+    public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+      final Identifier modelId = MishangucModels.GLASS_HANDRAIL_CORNER.upload(this, baseHandrail.getTextures(), blockStateModelGenerator.modelCollector);
+      blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId));
     }
 
     @Override
@@ -173,17 +164,16 @@ public class GlassHandrailBlock extends HandrailBlock {
       return TextBridge.translatable("block.mishanguc.handrail_stair", baseHandrail.getName());
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public void writeBlockModel(RuntimeResourcePack pack) {
+    public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
       final TextureMap textures = baseHandrail.getTextures();
-      final Identifier modelIdentifier = getBlockModelId();
-      pack.addModel(modelIdentifier, ModelJsonBuilder.create(new Identifier("mishanguc", "block/glass_handrail_stair_middle_center")).setTextures(textures));
+      final Identifier baseModelId = MishangucModels.createBlock("glass_handrail_stair_middle_center", FRAME, GLASS, DECORATION).upload(this, textures, blockStateModelGenerator.modelCollector);
       for (Shape shape : Shape.values()) {
         for (Position position : Position.values()) {
-          pack.addModel(modelIdentifier.brrp_suffixed("_" + shape.asString() + "_" + position.asString()), ModelJsonBuilder.create(new Identifier("mishanguc", String.format("block/glass_handrail_stair_%s_%s", shape.asString(), position.asString()))).setTextures(textures));
+          MishangucModels.createBlock(String.format("glass_handrail_stair_%s_%s", shape.asString(), position.asString()), "_" + shape.asString() + "_" + position.asString(), FRAME, GLASS, DECORATION).upload(this, textures, blockStateModelGenerator.modelCollector);
         }
       }
+      blockStateModelGenerator.blockStateCollector.accept(createBlockStates(baseModelId));
     }
 
     @Override
@@ -204,10 +194,10 @@ public class GlassHandrailBlock extends HandrailBlock {
       return TextBridge.translatable("block.mishanguc.handrail_outer", baseHandrail.getName());
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull ModelJsonBuilder getBlockModel() {
-      return baseHandrail.getBlockModel().parent(new Identifier("mishanguc:block/glass_handrail_outer"));
+    public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+      final Identifier modelId = MishangucModels.GLASS_HANDRAIL_OUTER.upload(this, baseHandrail.getTextures(), blockStateModelGenerator.modelCollector);
+      blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId));
     }
 
     @Override

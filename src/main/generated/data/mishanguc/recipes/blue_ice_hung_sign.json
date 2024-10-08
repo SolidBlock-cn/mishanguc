@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "mishanguc:ice_hung_sign",
+  "key": {
+    "#": {
+      "item": "minecraft:blue_ice"
+    },
+    "-": {
+      "item": "mishanguc:invisible_wall_sign"
+    }
+  },
+  "pattern": [
+    "-#-",
+    "-#-",
+    "-#-"
+  ],
+  "result": {
+    "count": 6,
+    "id": "mishanguc:blue_ice_hung_sign"
+  }
+}

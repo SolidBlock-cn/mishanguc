@@ -3,10 +3,11 @@ package pers.solid.mishang.uc.networking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.MishangucRules;
 
 public record RuleChangedPayload(short type, MishangucRules.ToolAccess toolAccess) implements CustomPayload {
-  public static final Id<RuleChangedPayload> ID = CustomPayload.id("mishanguc:rule_changed");
+  public static final Id<RuleChangedPayload> ID = new CustomPayload.Id<>(Mishanguc.id("rule_changed"));
 
   @Override
   public Id<RuleChangedPayload> getId() {

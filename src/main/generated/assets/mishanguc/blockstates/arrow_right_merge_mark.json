@@ -1,0 +1,68 @@
+{
+  "variants": {
+    "facing=east,on_slab=false": {
+      "model": "mishanguc:block/arrow_right_merge_mark",
+      "y": 270
+    },
+    "facing=east,on_slab=true": {
+      "model": "mishanguc:block/arrow_right_merge_mark_on_slab",
+      "y": 270
+    },
+    "facing=north,on_slab=false": {
+      "model": "mishanguc:block/arrow_right_merge_mark",
+      "y": 180
+    },
+    "facing=north,on_slab=true": {
+      "model": "mishanguc:block/arrow_right_merge_mark_on_slab",
+      "y": 180
+    },
+    "facing=north_east,on_slab=false": {
+      "model": "mishanguc:block/arrow_right_merge_mark_rotated",
+      "y": 180
+    },
+    "facing=north_east,on_slab=true": {
+      "model": "mishanguc:block/arrow_right_merge_mark_on_slab_rotated",
+      "y": 180
+    },
+    "facing=north_west,on_slab=false": {
+      "model": "mishanguc:block/arrow_right_merge_mark_rotated",
+      "y": 90
+    },
+    "facing=north_west,on_slab=true": {
+      "model": "mishanguc:block/arrow_right_merge_mark_on_slab_rotated",
+      "y": 90
+    },
+    "facing=south,on_slab=false": {
+      "model": "mishanguc:block/arrow_right_merge_mark",
+      "y": 0
+    },
+    "facing=south,on_slab=true": {
+      "model": "mishanguc:block/arrow_right_merge_mark_on_slab",
+      "y": 0
+    },
+    "facing=south_east,on_slab=false": {
+      "model": "mishanguc:block/arrow_right_merge_mark_rotated",
+      "y": -90
+    },
+    "facing=south_east,on_slab=true": {
+      "model": "mishanguc:block/arrow_right_merge_mark_on_slab_rotated",
+      "y": -90
+    },
+    "facing=south_west,on_slab=false": {
+      "model": "mishanguc:block/arrow_right_merge_mark_rotated",
+      "y": 0
+    },
+    "facing=south_west,on_slab=true": {
+      "model": "mishanguc:block/arrow_right_merge_mark_on_slab_rotated",
+      "y": 0
+    },
+    "facing=west,on_slab=false": {
+      "model": "mishanguc:block/arrow_right_merge_mark",
+      "y": 90
+    },
+    "facing=west,on_slab=true": {
+      "model": "mishanguc:block/arrow_right_merge_mark_on_slab",
+      "y": 90
+    }
+  }
+}

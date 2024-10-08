@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/glowing_wall_sign",
+  "textures": {
+    "glow": "minecraft:block/lava_still",
+    "texture": "minecraft:block/netherrack"
+  }
+}

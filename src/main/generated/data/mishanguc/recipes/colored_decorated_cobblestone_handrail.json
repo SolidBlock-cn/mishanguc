@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "item": "mishanguc:colored_concrete"
+    },
+    "X": {
+      "item": "minecraft:cobblestone"
+    },
+    "n": {
+      "item": "minecraft:cobblestone"
+    },
+    "o": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "oMo",
+    "nnn"
+  ],
+  "result": {
+    "count": 6,
+    "id": "mishanguc:colored_decorated_cobblestone_handrail"
+  }
+}

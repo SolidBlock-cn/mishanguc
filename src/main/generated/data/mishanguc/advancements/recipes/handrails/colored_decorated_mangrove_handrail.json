@@ -1,0 +1,65 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_colored_planks": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mishanguc:colored_planks"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_glass_pane": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:glass_pane"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_mangrove_wood": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:mangrove_wood"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_stick": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:stick"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:colored_decorated_mangrove_handrail"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_mangrove_wood",
+      "has_glass_pane",
+      "has_colored_planks",
+      "has_stick"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:colored_decorated_mangrove_handrail"
+    ]
+  }
+}

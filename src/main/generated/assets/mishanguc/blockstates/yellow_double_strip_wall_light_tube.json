@@ -1,0 +1,70 @@
+{
+  "variants": {
+    "facing=down,strip_type=horizontal": {
+      "model": "mishanguc:block/yellow_double_strip_wall_light_tube",
+      "uvlock": true,
+      "x": 180
+    },
+    "facing=down,strip_type=vertical": {
+      "model": "mishanguc:block/yellow_double_strip_wall_light_tube_vertical",
+      "uvlock": true,
+      "x": 180
+    },
+    "facing=east,strip_type=horizontal": {
+      "model": "mishanguc:block/yellow_double_strip_wall_light_tube",
+      "uvlock": true,
+      "x": 270,
+      "y": 270
+    },
+    "facing=east,strip_type=vertical": {
+      "model": "mishanguc:block/yellow_double_strip_wall_light_tube_vertical",
+      "uvlock": true,
+      "x": 270,
+      "y": 270
+    },
+    "facing=north,strip_type=horizontal": {
+      "model": "mishanguc:block/yellow_double_strip_wall_light_tube",
+      "uvlock": true,
+      "x": 270,
+      "y": 180
+    },
+    "facing=north,strip_type=vertical": {
+      "model": "mishanguc:block/yellow_double_strip_wall_light_tube_vertical",
+      "uvlock": true,
+      "x": 270,
+      "y": 180
+    },
+    "facing=south,strip_type=horizontal": {
+      "model": "mishanguc:block/yellow_double_strip_wall_light_tube",
+      "uvlock": true,
+      "x": 270,
+      "y": 0
+    },
+    "facing=south,strip_type=vertical": {
+      "model": "mishanguc:block/yellow_double_strip_wall_light_tube_vertical",
+      "uvlock": true,
+      "x": 270,
+      "y": 0
+    },
+    "facing=up,strip_type=horizontal": {
+      "model": "mishanguc:block/yellow_double_strip_wall_light_tube",
+      "uvlock": true
+    },
+    "facing=up,strip_type=vertical": {
+      "model": "mishanguc:block/yellow_double_strip_wall_light_tube_vertical",
+      "uvlock": true
+    },
+    "facing=west,strip_type=horizontal": {
+      "model": "mishanguc:block/yellow_double_strip_wall_light_tube",
+      "uvlock": true,
+      "x": 270,
+      "y": 90
+    },
+    "facing=west,strip_type=vertical": {
+      "model": "mishanguc:block/yellow_double_strip_wall_light_tube_vertical",
+      "uvlock": true,
+      "x": 270,
+      "y": 90
+    }
+  }
+}

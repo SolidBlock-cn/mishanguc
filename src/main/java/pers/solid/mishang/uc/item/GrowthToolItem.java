@@ -1,12 +1,9 @@
 package pers.solid.mishang.uc.item;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.client.item.TooltipType;
-import net.minecraft.data.client.Models;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -34,15 +31,13 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.ItemResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Collections;
 import java.util.List;
 
 @ApiStatus.AvailableSince("0.2.4")
-public class GrowthToolItem extends Item implements InteractsWithEntity, ItemResourceGenerator, DispenserBehavior {
+public class GrowthToolItem extends Item implements InteractsWithEntity, MishangucItem, DispenserBehavior {
   public GrowthToolItem(Settings settings) {
     super(settings);
     DispenserBlock.registerBehavior(this, this);
@@ -144,12 +139,6 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, ItemRes
       return ActionResult.SUCCESS;
     }
     return actionResult;
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public ModelJsonBuilder getItemModel() {
-    return ItemResourceGenerator.super.getItemModel().parent(Models.HANDHELD);
   }
 
   @Override

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/leaves",
+  "textures": {
+    "all": "mishanguc:block/pale_cherry_leaves"
+  }
+}

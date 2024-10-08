@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "mishanguc:yellow_light"
+  },
+  "result": {
+    "count": 8,
+    "id": "mishanguc:yellow_light_cover"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/double_strip_corner_light_tube",
+  "textures": {
+    "light": "mishanguc:block/yellow_light"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/thin_column_light_tube",
+  "textures": {
+    "light": "mishanguc:block/green_light"
+  }
+}

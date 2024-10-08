@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_colored_cobblestone": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mishanguc:colored_cobblestone"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:colored_cobblestone_stairs"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_colored_cobblestone"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:colored_cobblestone_stairs"
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "mishanguc:decorated_iron_handrail",
+  "key": {
+    "M": {
+      "tag": "c:dyes/lime"
+    },
+    "X": {
+      "tag": "c:ingots/iron"
+    },
+    "n": {
+      "item": "minecraft:iron_nugget"
+    },
+    "o": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "oMo",
+    "nnn"
+  ],
+  "result": {
+    "count": 4,
+    "id": "mishanguc:lime_decorated_iron_handrail"
+  }
+}

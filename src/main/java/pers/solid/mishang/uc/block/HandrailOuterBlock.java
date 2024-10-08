@@ -2,8 +2,6 @@ package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.Maps;
 import com.mojang.serialization.MapCodec;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -13,8 +11,6 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -31,10 +27,9 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
-import pers.solid.mishang.uc.arrp.BRRPHelper;
+import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 
 import java.util.Map;
@@ -43,7 +38,7 @@ import java.util.Map;
  * 栏杆外部角落的方块。当两个栏杆方块靠边直角围起来的时候，可以设置一个这样的外部角落方块，以填补两个栏杆之间的空隙。<br>
  * 同 {@link HandrailCornerBlock} 一样，本方块也是水平角落朝向的，默认朝向为西南方。
  */
-public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block implements Waterloggable, BlockResourceGenerator, Handrails {
+public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block implements Waterloggable, MishangucBlock, Handrails {
   public static final EnumProperty<HorizontalCornerDirection> FACING = MishangucProperties.HORIZONTAL_CORNER_FACING;
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   public static final Map<HorizontalCornerDirection, VoxelShape> SHAPES = Util.make(() -> {
@@ -132,20 +127,8 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
     return baseHandrail.asItem();
   }
 
-  @Override
-  public Identifier getItemId() {
-    return Registries.ITEM.getId(asItem());
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull BlockStateSupplier getBlockStates() {
-    return BRRPHelper.stateForHorizontalCornerFacingBlock(this, getBlockModelId(), true);
-  }
-
-  @Override
-  public @Nullable RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
+  public @NotNull BlockStateSupplier createBlockStates(Identifier modeId) {
+    return ModelHelper.stateForHorizontalCornerFacingBlock(this, modeId, true);
   }
 
   @Override

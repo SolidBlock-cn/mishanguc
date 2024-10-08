@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/small_wall_light",
+  "textures": {
+    "light": "mishanguc:block/yellow_light"
+  }
+}

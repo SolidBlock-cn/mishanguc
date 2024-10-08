@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_orange_light": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mishanguc:orange_light"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:orange_thick_column_light_tube"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_orange_light"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:orange_thick_column_light_tube"
+    ]
+  }
+}

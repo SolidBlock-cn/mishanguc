@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "tag": "c:dyes/white"
+  },
+  "result": {
+    "count": 1,
+    "id": "mishanguc:deceleration_triple_line_mark"
+  }
+}

@@ -12,7 +12,6 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.data.client.Models;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -33,8 +32,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.ItemResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -42,7 +39,7 @@ import pers.solid.mishang.uc.util.TextBridge;
 import java.util.List;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
-public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEntity, RendersBeforeOutline, ItemResourceGenerator {
+public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEntity, RendersBeforeOutline {
   public IdCheckerToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
@@ -183,11 +180,5 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
       final Vec3d cameraPos = context.camera().getPos();
       WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, 0f, 1f, 0f, 0.8f);
     }
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public ModelJsonBuilder getItemModel() {
-    return ItemResourceGenerator.super.getItemModel().parent(Models.HANDHELD);
   }
 }

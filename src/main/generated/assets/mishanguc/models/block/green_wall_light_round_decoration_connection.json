@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/wall_light_round_decoration_connection",
+  "textures": {
+    "light": "mishanguc:block/green_light"
+  }
+}

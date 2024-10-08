@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "item": "minecraft:netherrack"
+    },
+    "X": {
+      "item": "minecraft:crying_obsidian"
+    },
+    "n": {
+      "item": "minecraft:crying_obsidian"
+    },
+    "o": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "oMo",
+    "nnn"
+  ],
+  "result": {
+    "count": 8,
+    "id": "mishanguc:netherrack_decorated_crying_obsidian_handrail"
+  }
+}

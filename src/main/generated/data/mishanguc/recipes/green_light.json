@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "minecraft:glowstone"
+    },
+    "*": {
+      "item": "minecraft:lime_dye"
+    },
+    "C": {
+      "item": "minecraft:lime_concrete"
+    }
+  },
+  "pattern": [
+    "*#*",
+    "#C#",
+    "*#*"
+  ],
+  "result": {
+    "count": 8,
+    "id": "mishanguc:green_light"
+  }
+}

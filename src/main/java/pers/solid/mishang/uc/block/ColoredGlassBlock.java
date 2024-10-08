@@ -1,14 +1,12 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TransparentBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipType;
 import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.client.ModelProvider;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.item.Item;
@@ -19,7 +17,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -50,21 +47,16 @@ public class ColoredGlassBlock extends TransparentBlock implements ColoredBlock 
     return new SimpleColoredBlockEntity(pos, state);
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull ModelJsonBuilder getBlockModel() {
-    return ModelJsonBuilder.create(new Identifier("mishanguc:block/colored_cube_all")).setTextures(textures);
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull BlockStateSupplier getBlockStates() {
-    return BlockStateModelGenerator.createSingletonBlockState(this, getBlockModelId());
-  }
-
-  @Override
-  public LootTable.Builder getLootTable() {
+  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
     return BlockLootTableGenerator.dropsWithSilkTouch(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  }
+
+  @Override
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final Identifier modelId = ColoredCubeBlock.COLORED_CUBE_ALL.upload(this, textures, blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(this, modelId));
+    blockStateModelGenerator.registerParentedItemModel(this, modelId);
   }
 
   @Override

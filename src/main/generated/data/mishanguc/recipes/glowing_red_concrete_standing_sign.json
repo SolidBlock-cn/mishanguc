@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "mishanguc:glowing_concrete_standing_sign",
+  "key": {
+    "#": {
+      "item": "minecraft:red_concrete"
+    },
+    "-": {
+      "item": "mishanguc:invisible_glowing_wall_sign"
+    },
+    "|": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "---",
+    "###",
+    " | "
+  ],
+  "result": {
+    "count": 4,
+    "id": "mishanguc:glowing_red_concrete_standing_sign"
+  }
+}

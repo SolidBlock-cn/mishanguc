@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/colored_cube_all_without_shade",
+  "textures": {
+    "all": "mishanguc:block/white_pure"
+  }
+}

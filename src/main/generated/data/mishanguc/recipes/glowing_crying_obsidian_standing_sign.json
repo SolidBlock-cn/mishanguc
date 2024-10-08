@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "minecraft:crying_obsidian"
+    },
+    "-": {
+      "item": "mishanguc:invisible_glowing_wall_sign"
+    },
+    "|": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "---",
+    "###",
+    " | "
+  ],
+  "result": {
+    "count": 4,
+    "id": "mishanguc:glowing_crying_obsidian_standing_sign"
+  }
+}

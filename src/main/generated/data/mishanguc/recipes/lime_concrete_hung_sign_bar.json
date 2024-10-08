@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:stonecutting",
+  "group": "mishanguc:concrete_hung_sign_bar",
+  "ingredient": {
+    "item": "minecraft:lime_concrete"
+  },
+  "result": {
+    "count": 20,
+    "id": "mishanguc:lime_concrete_hung_sign_bar"
+  }
+}

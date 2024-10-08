@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_green_medium_wall_light_tube": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mishanguc:green_medium_wall_light_tube"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:green_medium_wall_light"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_green_medium_wall_light_tube"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:green_medium_wall_light"
+    ]
+  }
+}

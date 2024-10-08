@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:white_thick_strip_wall_light"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_white_thick_strip_wall_light_tube": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mishanguc:white_thick_strip_wall_light_tube"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_white_thick_strip_wall_light_tube"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:white_thick_strip_wall_light"
+    ]
+  }
+}

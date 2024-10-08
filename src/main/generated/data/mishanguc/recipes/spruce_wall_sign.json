@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "mishanguc:plank_wall_sign",
+  "key": {
+    "#": {
+      "item": "minecraft:spruce_planks"
+    },
+    "-": {
+      "item": "mishanguc:invisible_wall_sign"
+    }
+  },
+  "pattern": [
+    "---",
+    "###",
+    "---"
+  ],
+  "result": {
+    "count": 6,
+    "id": "mishanguc:spruce_wall_sign"
+  }
+}

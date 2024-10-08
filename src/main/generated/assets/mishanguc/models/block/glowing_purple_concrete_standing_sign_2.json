@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/glowing_standing_sign_2",
+  "textures": {
+    "bar": "minecraft:block/purple_concrete",
+    "glow": "mishanguc:block/white_light",
+    "texture": "minecraft:block/purple_concrete"
+  }
+}

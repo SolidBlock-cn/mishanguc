@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "item": "minecraft:soul_soil"
+    },
+    "X": {
+      "item": "minecraft:obsidian"
+    },
+    "n": {
+      "item": "minecraft:obsidian"
+    },
+    "o": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "oMo",
+    "nnn"
+  ],
+  "result": {
+    "count": 8,
+    "id": "mishanguc:soul_soil_decorated_obsidian_handrail"
+  }
+}

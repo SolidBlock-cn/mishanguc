@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "mishanguc:glowing_terracotta_wall_sign",
+  "key": {
+    "#": {
+      "item": "minecraft:brown_terracotta"
+    },
+    "-": {
+      "item": "mishanguc:invisible_glowing_wall_sign"
+    }
+  },
+  "pattern": [
+    "---",
+    "###",
+    "---"
+  ],
+  "result": {
+    "count": 6,
+    "id": "mishanguc:glowing_brown_terracotta_wall_sign"
+  }
+}

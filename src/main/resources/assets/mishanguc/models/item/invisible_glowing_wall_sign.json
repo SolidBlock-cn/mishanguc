@@ -1,6 +1,0 @@
-{
-  "parent": "item/handheld",
-  "textures": {
-    "layer0": "mishanguc:item/invisible_glowing_wall_sign"
-  }
-}

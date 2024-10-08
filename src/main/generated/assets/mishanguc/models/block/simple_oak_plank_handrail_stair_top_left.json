@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/simple_handrail_stair_top_left",
+  "textures": {
+    "bottom": "minecraft:block/oak_planks",
+    "texture": "minecraft:block/oak_planks",
+    "top": "minecraft:block/oak_planks"
+  }
+}

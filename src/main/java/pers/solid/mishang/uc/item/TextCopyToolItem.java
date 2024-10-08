@@ -10,9 +10,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
 import net.minecraft.client.item.TooltipType;
-import net.minecraft.data.client.Models;
-import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,8 +33,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pers.solid.brrp.v1.generator.ItemResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.HungSignBlock;
 import pers.solid.mishang.uc.block.StandingSignBlock;
@@ -53,7 +50,7 @@ import java.util.*;
 /**
  * 用于复制粘贴文本的工具。持有该工具，“攻击”（默认左键）告示牌（含原版告示牌、悬挂告示牌和墙上的告示牌）可以将文本复制到物品中，"使用"（默认右键）告示牌可将文本粘贴上去。
  */
-public class TextCopyToolItem extends BlockToolItem implements ItemResourceGenerator {
+public class TextCopyToolItem extends BlockToolItem implements MishangucItem {
   // 1.18.1 之前用 apache 的 Logger，自 1.18.2 用 slf4j 的 Logger。
   public static final Logger LOGGER = LoggerFactory.getLogger(TextCopyToolItem.class);
 
@@ -317,29 +314,16 @@ public class TextCopyToolItem extends BlockToolItem implements ItemResourceGener
     }
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @Nullable ModelJsonBuilder getItemModel() {
-    return ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId());
-  }
-
-  @Override
-  public RecipeCategory getRecipeCategory() {
-    return RecipeCategory.TOOLS;
-  }
-
   @Override
   public @NotNull CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this)
-        .patterns(
-            "SPS",
-            " / ",
-            " / "
-        )
+    return ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, this)
+        .pattern("SPS")
+        .pattern(" / ")
+        .pattern(" / ")
         .input('P', Items.PAPER)
         .input('S', Items.SLIME_BALL)
         .input('/', Items.STICK)
-        .criterionFromItem("has_paper", Items.PAPER)
-        .criterionFromItem("has_slime_ball", Items.SLIME_BALL);
+        .criterion("has_paper", RecipeProvider.conditionsFromItem(Items.PAPER))
+        .criterion("has_slime_ball", RecipeProvider.conditionsFromItem(Items.SLIME_BALL));
   }
 }

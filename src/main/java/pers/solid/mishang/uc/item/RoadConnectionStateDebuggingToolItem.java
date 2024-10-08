@@ -1,11 +1,8 @@
 package pers.solid.mishang.uc.item;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipType;
-import net.minecraft.data.client.Models;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -17,15 +14,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.ItemResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.util.RoadConnectionState;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
-public class RoadConnectionStateDebuggingToolItem extends BlockToolItem implements ItemResourceGenerator {
+public class RoadConnectionStateDebuggingToolItem extends BlockToolItem implements MishangucItem {
 
   public RoadConnectionStateDebuggingToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
@@ -84,11 +79,5 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem implemen
     super.appendTooltip(stack, context, tooltip, type);
     tooltip.add(TextBridge.translatable("item.mishanguc.road_connection_state_debugging_tool.tooltip.1").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.road_connection_state_debugging_tool.tooltip.2").formatted(Formatting.GRAY));
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public ModelJsonBuilder getItemModel() {
-    return ItemResourceGenerator.super.getItemModel().parent(Models.HANDHELD);
   }
 }

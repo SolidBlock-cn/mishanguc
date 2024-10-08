@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/standing_sign",
+  "textures": {
+    "bar": "minecraft:block/crimson_stem",
+    "texture": "minecraft:block/crimson_planks"
+  }
+}

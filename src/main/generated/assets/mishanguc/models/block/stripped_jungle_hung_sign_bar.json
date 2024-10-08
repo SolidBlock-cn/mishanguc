@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/hung_sign_bar",
+  "textures": {
+    "texture": "minecraft:block/stripped_jungle_log"
+  }
+}

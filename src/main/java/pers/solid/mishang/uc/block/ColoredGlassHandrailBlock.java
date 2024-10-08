@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipType;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
@@ -15,7 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.impl.BRRPBlockLootTableGenerator;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
@@ -45,13 +45,18 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
   }
 
   @Override
-  public LootTable.Builder getLootTable() {
-    return BRRPBlockLootTableGenerator.INSTANCE.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override
   protected MapCodec<? extends ColoredGlassHandrailBlock> getCodec() {
     return CODEC;
+  }
+
+  @Override
+  public String customRecipeCategory() {
+    return "handrails";
   }
 
   public static class ColoredCentral extends CentralBlock implements ColoredBlock {
@@ -79,13 +84,18 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
     }
 
     @Override
-    public LootTable.Builder getLootTable() {
-      return BRRPBlockLootTableGenerator.INSTANCE.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+    public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+      return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
     }
 
     @Override
     protected MapCodec<? extends ColoredCentral> getCodec() {
       return CODEC;
+    }
+
+    @Override
+    public String customRecipeCategory() {
+      return "handrails";
     }
   }
 
@@ -114,13 +124,18 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
     }
 
     @Override
-    public LootTable.Builder getLootTable() {
-      return BRRPBlockLootTableGenerator.INSTANCE.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+    public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+      return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
     }
 
     @Override
     protected MapCodec<? extends ColoredCorner> getCodec() {
       return CODEC;
+    }
+
+    @Override
+    public String customRecipeCategory() {
+      return "handrails";
     }
   }
 
@@ -149,13 +164,18 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
     }
 
     @Override
-    public LootTable.Builder getLootTable() {
-      return BRRPBlockLootTableGenerator.INSTANCE.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+    public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+      return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
     }
 
     @Override
     protected MapCodec<? extends ColoredOuter> getCodec() {
       return CODEC;
+    }
+
+    @Override
+    public String customRecipeCategory() {
+      return "handrails";
     }
   }
 
@@ -184,13 +204,18 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
     }
 
     @Override
-    public LootTable.Builder getLootTable() {
-      return BRRPBlockLootTableGenerator.INSTANCE.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+    public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+      return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
     }
 
     @Override
     protected MapCodec<? extends ColoredStair> getCodec() {
       return CODEC;
+    }
+
+    @Override
+    public String customRecipeCategory() {
+      return "handrails";
     }
   }
 }

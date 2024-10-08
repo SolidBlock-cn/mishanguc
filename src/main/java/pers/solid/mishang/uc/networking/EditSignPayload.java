@@ -6,11 +6,12 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import pers.solid.mishang.uc.Mishanguc;
 
 import java.util.Optional;
 
 public record EditSignPayload(BlockPos blockPos, Optional<Direction> direction, Optional<BlockHitResult> blockHitResult) implements CustomPayload {
-  public static final Id<EditSignPayload> ID = CustomPayload.id("mishanguc:edit_sign");
+  public static final Id<EditSignPayload> ID = new CustomPayload.Id<>(Mishanguc.id("edit_sign"));
 
   public static final PacketCodec<PacketByteBuf, EditSignPayload> CODEC = PacketCodec.of((value, buf) -> {
     buf.writeBlockPos(value.blockPos);

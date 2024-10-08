@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/standing_sign_barred_3",
+  "textures": {
+    "bar": "minecraft:block/jungle_log",
+    "texture": "minecraft:block/jungle_planks"
+  }
+}

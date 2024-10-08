@@ -2,6 +2,21 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.4.0-beta.4
+
+- No longer depends on Better Runtime Resource Pack mod.
+- Fixed the issue of crash when on-stair handrail blocks are above handrail blocks.
+- Added full light blocks, light stairs, etc, into block and item tag `#mishanguc:lights`.
+- Added all stairs into block and item tag `#minecraft:stairs`.
+
+### 1.3.5-beta.2
+
+- Fixed the issue that modification caused by color tool modifying a block color may not be saved.
+
+### 1.3.5-beta.1
+
+- Fixed the potential block entity issue that results from colored glass handrail blocks.
+
 ### 1.3.4
 
 - Fixed the issue that tp tools may fail to teleport.

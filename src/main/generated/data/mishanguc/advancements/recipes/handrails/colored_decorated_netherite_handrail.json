@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_colored_concrete": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mishanguc:colored_concrete"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_glass_pane": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:glass_pane"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_netherite_ingot": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:ingots/netherite"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:colored_decorated_netherite_handrail"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_netherite_ingot",
+      "has_glass_pane",
+      "has_colored_concrete"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:colored_decorated_netherite_handrail"
+    ]
+  }
+}

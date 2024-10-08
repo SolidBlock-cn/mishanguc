@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_oak_wood": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:oak_wood"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:simple_oak_handrail"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_oak_wood"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:simple_oak_handrail"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/colored_inner_stairs",
+  "textures": {
+    "bottom": "mishanguc:block/pale_end_stone_bricks",
+    "side": "mishanguc:block/pale_end_stone_bricks",
+    "top": "mishanguc:block/pale_end_stone_bricks"
+  }
+}

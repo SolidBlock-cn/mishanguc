@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:simple_yellow_stained_glass_handrail"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_yellow_stained_glass": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:yellow_stained_glass"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_yellow_stained_glass"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:simple_yellow_stained_glass_handrail"
+    ]
+  }
+}

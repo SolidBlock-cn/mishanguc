@@ -13,9 +13,6 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.data.client.Models;
-import net.minecraft.data.client.TextureKey;
-import net.minecraft.data.client.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.FallingBlockEntity;
@@ -27,7 +24,10 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -41,10 +41,6 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.generator.ItemResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
-import pers.solid.brrp.v1.model.ModelOverrideBuilder;
 import pers.solid.mishang.uc.MishangucClient;
 import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.components.CarryingToolData;
@@ -60,7 +56,7 @@ import java.util.UUID;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
 public class CarryingToolItem extends BlockToolItem
-    implements ItemResourceGenerator, InteractsWithEntity, RendersBeforeOutline {
+    implements MishangucItem, InteractsWithEntity, RendersBeforeOutline {
   public CarryingToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
@@ -355,23 +351,6 @@ public class CarryingToolItem extends BlockToolItem
     return ActionResult.SUCCESS;
   }
 
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull ModelJsonBuilder getItemModel() {
-    return ModelJsonBuilder.create(Models.HANDHELD).setTextures(TextureMap.layer0(getTextureId()))
-        .addOverride(new ModelOverrideBuilder(getItemModelId().brrp_suffixed("_with_block")).addCondition(new Identifier("mishanguc:is_holding_block"), 1f))
-        .addOverride(new ModelOverrideBuilder(getItemModelId().brrp_suffixed("_with_entity")).addCondition(new Identifier("mishanguc:is_holding_entity"), 1f));
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public void writeItemModel(RuntimeResourcePack pack) {
-    ItemResourceGenerator.super.writeItemModel(pack);
-    pack.addModel(getItemModelId().brrp_suffixed("_with_block"), ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId() + "_with_block"));
-    pack.addModel(getItemModelId().brrp_suffixed("_with_entity"), ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId() + "_with_entity"));
-  }
-
   @Environment(EnvType.CLIENT)
   @Override
   public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext worldRenderContext, WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
@@ -396,7 +375,7 @@ public class CarryingToolItem extends BlockToolItem
     final BlockPos pos = blockOutlineContext.blockPos();
 
     final CarryingToolData carryingToolData = itemStack.get(MishangucComponents.CARRYING_TOOL_DATA);
-    if (carryingToolData instanceof CarryingToolData.HoldingBlockState state) {
+    if (carryingToolData instanceof CarryingToolData.HoldingBlockState) {
       final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(worldRenderContext.world(), pos, player, itemStack, blockHitResult, includesFluid);
       if (blockPlacementContext.canPlace()) {
         WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, blockPlacementContext.stateToPlace.getOutlineShape(

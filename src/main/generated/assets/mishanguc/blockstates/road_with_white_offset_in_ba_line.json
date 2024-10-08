@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north_east": {
+      "model": "mishanguc:block/road_with_white_offset_in_ba_line",
+      "y": 180
+    },
+    "facing=north_west": {
+      "model": "mishanguc:block/road_with_white_offset_in_ba_line",
+      "y": 90
+    },
+    "facing=south_east": {
+      "model": "mishanguc:block/road_with_white_offset_in_ba_line",
+      "y": -90
+    },
+    "facing=south_west": {
+      "model": "mishanguc:block/road_with_white_offset_in_ba_line",
+      "y": 0
+    }
+  }
+}
