@@ -24,8 +24,8 @@
     "client": [
       "pers.solid.mishang.uc.MishangucClient"
     ],
-    "preLaunch": [
-      "pers.solid.mishang.uc.MishangucPreLaunch"
+    "fabric-datagen": [
+      "pers.solid.mishang.uc.data.MishangucDataGeneration"
     ]
   },
   "mixins": [
