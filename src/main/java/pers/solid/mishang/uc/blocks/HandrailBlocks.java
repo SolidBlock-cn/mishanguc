@@ -1,14 +1,10 @@
 package pers.solid.mishang.uc.blocks;
 
-import net.fabricmc.fabric.mixin.object.builder.AbstractBlockAccessor;
-import net.fabricmc.fabric.mixin.object.builder.AbstractBlockSettingsAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.annotations.Translucent;
@@ -372,12 +368,46 @@ public final class HandrailBlocks extends MishangucBlocks {
   @Translucent
   @MiningLevel(level = MiningLevel.Level.IRON)
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_LAPIS_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.LAPIS_BLOCK, Block.Settings.copy(Blocks.LAPIS_BLOCK).strength(2.5f, 6f), "block/lapis_block", "block/white_concrete");
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  @MiningLevel(level = MiningLevel.Level.STONE)
+  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_IRON_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).luminance(x -> 15), "block/iron_block", "mishanguc:block/white_light");
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  @MiningLevel(level = MiningLevel.Level.IRON)
+  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_GOLD_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.GOLD_BLOCK, Block.Settings.copy(Blocks.GOLD_BLOCK).strength(1.5f, 6f).luminance(x -> 15), "block/gold_block", "mishanguc:block/white_light");
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  @MiningLevel(level = MiningLevel.Level.IRON)
+  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_EMERALD_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.EMERALD_BLOCK, Block.Settings.copy(Blocks.EMERALD_BLOCK).strength(2.5f, 6f).luminance(x -> 15), "block/emerald_block", "mishanguc:block/white_light");
+
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  @MiningLevel(level = MiningLevel.Level.IRON)
+  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_DIAMOND_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.DIAMOND_BLOCK, Block.Settings.copy(Blocks.DIAMOND_BLOCK).strength(2.5f, 6f).luminance(x -> 15), "block/diamond_block", "mishanguc:block/white_light");
+
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
+  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_NETHERITE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.NETHERITE_BLOCK, Block.Settings.copy(Blocks.NETHERITE_BLOCK).strength(25f, 1200f).luminance(x -> 15), "block/netherite_block", "mishanguc:block/white_light");
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  @MiningLevel(level = MiningLevel.Level.IRON)
+  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_LAPIS_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.LAPIS_BLOCK, Block.Settings.copy(Blocks.LAPIS_BLOCK).strength(2.5f, 6f).luminance(x -> 15), "block/lapis_block", "mishanguc:block/white_light");
+
+
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   public static final GlassHandrailBlock SNOW_DECORATED_PACKED_ICE_HANDRAIL = new GlassHandrailBlock(Blocks.PACKED_ICE, Block.Settings.copy(Blocks.PACKED_ICE).strength(2.5f, 6f), "block/packed_ice", "block/snow");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   public static final GlassHandrailBlock SNOW_DECORATED_BLUE_ICE_HANDRAIL = new GlassHandrailBlock(Blocks.BLUE_ICE, Block.Settings.copy(Blocks.BLUE_ICE).strength(2.5f, 6f), "block/blue_ice", "block/snow");
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_PACKED_ICE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.PACKED_ICE, Block.Settings.copy(Blocks.PACKED_ICE).strength(2.5f, 6f), "block/packed_ice", "block/snow");
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_BLUE_ICE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.BLUE_ICE, Block.Settings.copy(Blocks.BLUE_ICE).strength(2.5f, 6f), "block/blue_ice", "block/snow");
 
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
@@ -386,15 +416,7 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_OAK_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.OAK_WOOD, Block.Settings.copy(Blocks.OAK_WOOD).strength(1.0f), "block/oak_log", "mishanguc:block/pale_planks");
-  @ApiStatus.AvailableSince("0.2.4")
-  @Translucent
-  @MiningLevel(MiningLevel.Tool.AXE)
   public static final GlassHandrailBlock GLASS_SPRUCE_HANDRAIL = new GlassHandrailBlock(Blocks.SPRUCE_WOOD, Block.Settings.copy(Blocks.SPRUCE_WOOD).strength(1.0f), "block/spruce_log", "block/spruce_planks");
-  @ApiStatus.AvailableSince("0.2.4")
-  @Translucent
-  @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_SPRUCE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.SPRUCE_WOOD, Block.Settings.copy(Blocks.SPRUCE_WOOD).strength(1.0f), "block/spruce_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
@@ -402,31 +424,15 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_BIRCH_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.BIRCH_WOOD, Block.Settings.copy(Blocks.BIRCH_WOOD).strength(1.0f), "block/birch_log", "mishanguc:block/pale_planks");
-  @ApiStatus.AvailableSince("0.2.4")
-  @Translucent
-  @MiningLevel(MiningLevel.Tool.AXE)
   public static final GlassHandrailBlock GLASS_JUNGLE_HANDRAIL = new GlassHandrailBlock(Blocks.JUNGLE_WOOD, Block.Settings.copy(Blocks.JUNGLE_WOOD).strength(1.0f), "block/jungle_log", "block/jungle_planks");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_JUNGLE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.JUNGLE_WOOD, Block.Settings.copy(Blocks.JUNGLE_WOOD).strength(1.0f), "block/jungle_log", "mishanguc:block/pale_planks");
-  @ApiStatus.AvailableSince("0.2.4")
-  @Translucent
-  @MiningLevel(MiningLevel.Tool.AXE)
   public static final GlassHandrailBlock GLASS_ACACIA_HANDRAIL = new GlassHandrailBlock(Blocks.ACACIA_WOOD, Block.Settings.copy(Blocks.ACACIA_WOOD).strength(1.0f), "block/acacia_log", "block/acacia_planks");
-  @ApiStatus.AvailableSince("0.2.4")
-  @Translucent
-  @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_ACACIA_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.ACACIA_WOOD, Block.Settings.copy(Blocks.ACACIA_WOOD).strength(1.0f), "block/acacia_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
   public static final GlassHandrailBlock GLASS_CHERRY_HANDRAIL = new GlassHandrailBlock(Blocks.CHERRY_WOOD, Block.Settings.copy(Blocks.CHERRY_WOOD).strength(1.0f), "block/cherry_log", "block/cherry_planks");
-  @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
-  @Translucent
-  @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_CHERRY_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.CHERRY_WOOD, Block.Settings.copy(Blocks.CHERRY_WOOD).strength(1.0f), "block/cherry_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
@@ -434,15 +440,7 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_DARK_OAK_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.DARK_OAK_WOOD, Block.Settings.copy(Blocks.DARK_OAK_WOOD).strength(1.0f), "block/dark_oak_log", "mishanguc:block/pale_planks");
-  @ApiStatus.AvailableSince("0.2.4")
-  @Translucent
-  @MiningLevel(MiningLevel.Tool.AXE)
   public static final GlassHandrailBlock GLASS_MANGROVE_HANDRAIL = new GlassHandrailBlock(Blocks.MANGROVE_WOOD, Block.Settings.copy(Blocks.MANGROVE_WOOD).strength(1.0f), "block/mangrove_log", "block/mangrove_planks");
-  @ApiStatus.AvailableSince("0.2.4")
-  @Translucent
-  @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_MANGROVE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.MANGROVE_WOOD, Block.Settings.copy(Blocks.MANGROVE_WOOD).strength(1.0f), "block/mangrove_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
@@ -450,19 +448,99 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
+  public static final GlassHandrailBlock GLASS_WARPED_HANDRAIL = new GlassHandrailBlock(Blocks.WARPED_HYPHAE, Block.Settings.copy(Blocks.WARPED_HYPHAE).strength(1.0f), "block/warped_stem", "block/warped_planks");
+  @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final GlassHandrailBlock GLASS_BAMBOO_HANDRAIL = new GlassHandrailBlock(Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(MapColor.DARK_GREEN).strength(1.0f), "block/bamboo_block", "block/bamboo_mosaic");
+  @ApiStatus.AvailableSince("0.2.4")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_OAK_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.OAK_WOOD, Block.Settings.copy(Blocks.OAK_WOOD).strength(1.0f), "block/oak_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("0.2.4")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_SPRUCE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.SPRUCE_WOOD, Block.Settings.copy(Blocks.SPRUCE_WOOD).strength(1.0f), "block/spruce_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("0.2.4")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_BIRCH_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.BIRCH_WOOD, Block.Settings.copy(Blocks.BIRCH_WOOD).strength(1.0f), "block/birch_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("0.2.4")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_JUNGLE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.JUNGLE_WOOD, Block.Settings.copy(Blocks.JUNGLE_WOOD).strength(1.0f), "block/jungle_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("0.2.4")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_ACACIA_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.ACACIA_WOOD, Block.Settings.copy(Blocks.ACACIA_WOOD).strength(1.0f), "block/acacia_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_CHERRY_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.CHERRY_WOOD, Block.Settings.copy(Blocks.CHERRY_WOOD).strength(1.0f), "block/cherry_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("0.2.4")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_DARK_OAK_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.DARK_OAK_WOOD, Block.Settings.copy(Blocks.DARK_OAK_WOOD).strength(1.0f), "block/dark_oak_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("0.2.4")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_MANGROVE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.MANGROVE_WOOD, Block.Settings.copy(Blocks.MANGROVE_WOOD).strength(1.0f), "block/mangrove_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_CRIMSON_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.CRIMSON_HYPHAE, Block.Settings.copy(Blocks.CRIMSON_HYPHAE).strength(1.0f), "block/crimson_stem", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final GlassHandrailBlock GLASS_WARPED_HANDRAIL = new GlassHandrailBlock(Blocks.WARPED_HYPHAE, Block.Settings.copy(Blocks.WARPED_HYPHAE).strength(1.0f), "block/warped_stem", "block/warped_planks");
-  @ApiStatus.AvailableSince("1.2.4")
-  @Translucent
-  @MiningLevel(MiningLevel.Tool.AXE)
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_WARPED_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.WARPED_HYPHAE, Block.Settings.copy(Blocks.WARPED_HYPHAE).strength(1.0f), "block/warped_stem", "mishanguc:block/pale_planks");
-  @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
+  @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final GlassHandrailBlock GLASS_BAMBOO_HANDRAIL = new GlassHandrailBlock(Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))).strength(1.0f), "block/bamboo_block", "block/bamboo_mosaic");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_BAMBOO_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(MapColor.DARK_GREEN).strength(1.0f), "block/bamboo_block", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_OAK_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_OAK_WOOD, Block.Settings.copy(Blocks.STRIPPED_OAK_WOOD).strength(1.0f), "block/stripped_oak_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_SPRUCE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_SPRUCE_WOOD, Block.Settings.copy(Blocks.STRIPPED_SPRUCE_WOOD).strength(1.0f), "block/stripped_spruce_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_BIRCH_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_BIRCH_WOOD, Block.Settings.copy(Blocks.STRIPPED_BIRCH_WOOD).strength(1.0f), "block/stripped_birch_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_JUNGLE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_JUNGLE_WOOD, Block.Settings.copy(Blocks.STRIPPED_JUNGLE_WOOD).strength(1.0f), "block/stripped_jungle_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_ACACIA_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_ACACIA_WOOD, Block.Settings.copy(Blocks.STRIPPED_ACACIA_WOOD).strength(1.0f), "block/stripped_acacia_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_CHERRY_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_CHERRY_WOOD, Block.Settings.copy(Blocks.STRIPPED_CHERRY_WOOD).strength(1.0f), "block/stripped_cherry_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_DARK_OAK_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_DARK_OAK_WOOD, Block.Settings.copy(Blocks.STRIPPED_DARK_OAK_WOOD).strength(1.0f), "block/stripped_dark_oak_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_MANGROVE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_MANGROVE_WOOD, Block.Settings.copy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED).strength(1.0f), "block/stripped_mangrove_log", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_CRIMSON_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_CRIMSON_HYPHAE, Block.Settings.copy(Blocks.STRIPPED_CRIMSON_HYPHAE).strength(1.0f), "block/stripped_crimson_stem", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_WARPED_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_WARPED_HYPHAE, Block.Settings.copy(Blocks.STRIPPED_WARPED_HYPHAE).strength(1.0f), "block/stripped_warped_stem", "mishanguc:block/pale_planks");
+  @ApiStatus.AvailableSince("1.4.0")
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_BAMBOO_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_BAMBOO_BLOCK, Block.Settings.copy(Blocks.STRIPPED_BAMBOO_BLOCK).mapColor(MapColor.YELLOW).strength(1.0f), "block/bamboo_block", "mishanguc:block/pale_planks");
 
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
@@ -471,20 +549,11 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final GlassHandrailBlock SOUL_SOIL_DECORATED_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.OBSIDIAN, Block.Settings.copy(Blocks.OBSIDIAN).strength(10, 1200), "block/obsidian", "block/soul_soil");
-  @ApiStatus.AvailableSince("1.2.4")
-  @Translucent
-  @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final GlassHandrailBlock MAGMA_DECORATED_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.OBSIDIAN, Block.Settings.copy(Blocks.OBSIDIAN).strength(10, 1200).luminance(x -> 3), "block/obsidian", "block/magma");
-  @ApiStatus.AvailableSince("0.2.4")
-  @Translucent
-  @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_OBSIDIAN_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.OBSIDIAN, Block.Settings.copy(Blocks.OBSIDIAN).strength(10, 1200), "block/obsidian", "block/white_concrete");
-
-  @ApiStatus.AvailableSince("1.2.4")
-  @Translucent
-  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final GlassHandrailBlock NETHERRACK_DECORATED_CRYING_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.CRYING_OBSIDIAN, Block.Settings.copy(Blocks.CRYING_OBSIDIAN).strength(10, 1200), "block/crying_obsidian", "block/netherrack");
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
+  public static final GlassHandrailBlock SOUL_SOIL_DECORATED_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.OBSIDIAN, Block.Settings.copy(Blocks.OBSIDIAN).strength(10, 1200), "block/obsidian", "block/soul_soil");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
@@ -492,7 +561,16 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
+  public static final GlassHandrailBlock MAGMA_DECORATED_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.OBSIDIAN, Block.Settings.copy(Blocks.OBSIDIAN).strength(10, 1200).luminance(x -> 3), "block/obsidian", "block/magma");
+
+  @ApiStatus.AvailableSince("1.2.4")
+  @Translucent
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
   public static final GlassHandrailBlock MAGMA_DECORATED_CRYING_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.CRYING_OBSIDIAN, Block.Settings.copy(Blocks.CRYING_OBSIDIAN).strength(10, 1200).luminance(x -> 3), "block/crying_obsidian", "block/magma");
+  @ApiStatus.AvailableSince("0.2.4")
+  @Translucent
+  @MiningLevel(level = MiningLevel.Level.DIAMOND)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_OBSIDIAN_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.OBSIDIAN, Block.Settings.copy(Blocks.OBSIDIAN).strength(10, 1200), "block/obsidian", "block/white_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.DIAMOND)

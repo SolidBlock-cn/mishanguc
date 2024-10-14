@@ -1,11 +1,13 @@
 package pers.solid.mishang.uc.data;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.fabricmc.fabric.api.tag.convention.v2.TagUtil;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -111,8 +113,17 @@ public class MishangucRecipeProvider extends FabricRecipeProvider {
     addRecipeForGlassHandrail(exporter, HandrailBlocks.COLORED_DECORATED_NETHERITE_HANDRAIL, ConventionalItemTags.NETHERITE_INGOTS, "has_netherite_ingot", ColoredBlocks.COLORED_CONCRETE, 4);
     addRecipeForGlassHandrail(exporter, HandrailBlocks.COLORED_DECORATED_LAPIS_HANDRAIL, ConventionalItemTags.LAPIS_GEMS, "has_lapis", ColoredBlocks.COLORED_CONCRETE, 4);
 
-    addRecipeForGlassHandrail(exporter, HandrailBlocks.SNOW_DECORATED_PACKED_ICE_HANDRAIL, Items.PACKED_ICE, ColoredBlocks.COLORED_SNOW_BLOCK, Items.PACKED_ICE, 6, null);
-    addRecipeForGlassHandrail(exporter, HandrailBlocks.SNOW_DECORATED_BLUE_ICE_HANDRAIL, Items.PACKED_ICE, ColoredBlocks.COLORED_SNOW_BLOCK, Items.BLUE_ICE, 6, null);
+    addRecipeForGlassHandrail(exporter, HandrailBlocks.GLOWING_COLORED_DECORATED_IRON_HANDRAIL, ConventionalItemTags.IRON_INGOTS, "has_iron_ingot", ColoredBlocks.COLORED_LIGHT, Items.IRON_NUGGET, 4);
+    addRecipeForGlassHandrail(exporter, HandrailBlocks.GLOWING_COLORED_DECORATED_GOLD_HANDRAIL, ConventionalItemTags.GOLD_INGOTS, "has_gold_ingot", ColoredBlocks.COLORED_LIGHT, Items.GOLD_NUGGET, 4);
+    addRecipeForGlassHandrail(exporter, HandrailBlocks.GLOWING_COLORED_DECORATED_EMERALD_HANDRAIL, ConventionalItemTags.EMERALD_GEMS, "has_emerald", ColoredBlocks.COLORED_LIGHT, 4);
+    addRecipeForGlassHandrail(exporter, HandrailBlocks.GLOWING_COLORED_DECORATED_DIAMOND_HANDRAIL, ConventionalItemTags.DIAMOND_GEMS, "has_diamond", ColoredBlocks.COLORED_LIGHT, 4);
+    addRecipeForGlassHandrail(exporter, HandrailBlocks.GLOWING_COLORED_DECORATED_NETHERITE_HANDRAIL, ConventionalItemTags.NETHERITE_INGOTS, "has_netherite_ingot", ColoredBlocks.COLORED_LIGHT, 4);
+    addRecipeForGlassHandrail(exporter, HandrailBlocks.GLOWING_COLORED_DECORATED_LAPIS_HANDRAIL, ConventionalItemTags.LAPIS_GEMS, "has_lapis", ColoredBlocks.COLORED_LIGHT, 4);
+
+    addRecipeForGlassHandrail(exporter, HandrailBlocks.SNOW_DECORATED_PACKED_ICE_HANDRAIL, Items.PACKED_ICE, Blocks.SNOW_BLOCK, Items.PACKED_ICE, 6, null);
+    addRecipeForGlassHandrail(exporter, HandrailBlocks.SNOW_DECORATED_BLUE_ICE_HANDRAIL, Items.PACKED_ICE, Blocks.SNOW_BLOCK, Items.BLUE_ICE, 6, null);
+    addRecipeForGlassHandrail(exporter, HandrailBlocks.COLORED_DECORATED_PACKED_ICE_HANDRAIL, Items.PACKED_ICE, ColoredBlocks.COLORED_SNOW_BLOCK, Items.PACKED_ICE, 6, null);
+    addRecipeForGlassHandrail(exporter, HandrailBlocks.COLORED_DECORATED_BLUE_ICE_HANDRAIL, Items.PACKED_ICE, ColoredBlocks.COLORED_SNOW_BLOCK, Items.BLUE_ICE, 6, null);
 
     for (GlassHandrailBlock output : List.of(
         HandrailBlocks.GLASS_OAK_HANDRAIL,
@@ -131,7 +142,7 @@ public class MishangucRecipeProvider extends FabricRecipeProvider {
       Preconditions.checkState(wood != planks);
       addRecipeForGlassHandrail(exporter, output, wood, planks, Items.STICK, 6, "glass_wooden_handrail");
     }
-    for (GlassHandrailBlock output : List.of(
+    for (GlassHandrailBlock output : ImmutableSet.of(
         HandrailBlocks.COLORED_DECORATED_OAK_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_SPRUCE_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_BIRCH_HANDRAIL,
@@ -141,18 +152,33 @@ public class MishangucRecipeProvider extends FabricRecipeProvider {
         HandrailBlocks.COLORED_DECORATED_DARK_OAK_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_MANGROVE_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_CRIMSON_HANDRAIL,
-        HandrailBlocks.COLORED_DECORATED_WARPED_HANDRAIL
+        HandrailBlocks.COLORED_DECORATED_WARPED_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_BAMBOO_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_OAK_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_SPRUCE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_BIRCH_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_JUNGLE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_ACACIA_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_CHERRY_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_DARK_OAK_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_MANGROVE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_CRIMSON_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_WARPED_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_BAMBOO_HANDRAIL
     )) {
       addRecipeForGlassHandrail(exporter, output, output.baseBlock(), ColoredBlocks.COLORED_PLANKS, Items.STICK, 6, "colored_decorated_wooden_handrail");
     }
 
     addRecipeForGlassHandrail(exporter, HandrailBlocks.GLASS_BAMBOO_HANDRAIL, Items.BAMBOO_BLOCK, Items.BAMBOO_PLANKS, Items.BAMBOO, 6, null);
+
     addRecipeForGlassHandrail(exporter, HandrailBlocks.NETHERRACK_DECORATED_OBSIDIAN_HANDRAIL, Items.OBSIDIAN, Items.NETHERRACK, Items.OBSIDIAN, 8, null);
-    addRecipeForGlassHandrail(exporter, HandrailBlocks.SOUL_SOIL_DECORATED_OBSIDIAN_HANDRAIL, Items.OBSIDIAN, Items.SOUL_SOIL, Items.OBSIDIAN, 8, null);
-    addRecipeForGlassHandrail(exporter, HandrailBlocks.MAGMA_DECORATED_OBSIDIAN_HANDRAIL, Items.OBSIDIAN, Items.MAGMA_BLOCK, Items.OBSIDIAN, 8, null);
     addRecipeForGlassHandrail(exporter, HandrailBlocks.NETHERRACK_DECORATED_CRYING_OBSIDIAN_HANDRAIL, Items.CRYING_OBSIDIAN, Items.NETHERRACK, Items.CRYING_OBSIDIAN, 8, null);
+    addRecipeForGlassHandrail(exporter, HandrailBlocks.SOUL_SOIL_DECORATED_OBSIDIAN_HANDRAIL, Items.OBSIDIAN, Items.SOUL_SOIL, Items.OBSIDIAN, 8, null);
     addRecipeForGlassHandrail(exporter, HandrailBlocks.SOUL_SOIL_DECORATED_CRYING_OBSIDIAN_HANDRAIL, Items.CRYING_OBSIDIAN, Items.SOUL_SOIL, Items.CRYING_OBSIDIAN, 8, null);
+    addRecipeForGlassHandrail(exporter, HandrailBlocks.MAGMA_DECORATED_OBSIDIAN_HANDRAIL, Items.OBSIDIAN, Items.MAGMA_BLOCK, Items.OBSIDIAN, 8, null);
     addRecipeForGlassHandrail(exporter, HandrailBlocks.MAGMA_DECORATED_CRYING_OBSIDIAN_HANDRAIL, Items.CRYING_OBSIDIAN, Items.MAGMA_BLOCK, Items.CRYING_OBSIDIAN, 8, null);
+    addRecipeForGlassHandrail(exporter, HandrailBlocks.COLORED_DECORATED_OBSIDIAN_HANDRAIL, Items.OBSIDIAN, ColoredBlocks.COLORED_CONCRETE, Items.OBSIDIAN, 8, null);
+    addRecipeForGlassHandrail(exporter, HandrailBlocks.COLORED_DECORATED_CRYING_OBSIDIAN_HANDRAIL, Items.CRYING_OBSIDIAN, ColoredBlocks.COLORED_CONCRETE, Items.CRYING_OBSIDIAN, 8, null);
   }
 
   private static void addRecipeForGlassHandrail(RecipeExporter exporter, GlassHandrailBlock output, ItemConvertible frame, ItemConvertible decoration, ItemConvertible base, int outputCount, @Nullable String group) {

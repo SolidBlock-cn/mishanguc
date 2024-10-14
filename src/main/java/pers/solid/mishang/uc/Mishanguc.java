@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc;
 
+import com.google.common.collect.ImmutableSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.Event;
@@ -16,6 +17,7 @@ import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,10 +25,14 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import org.apache.commons.lang3.Validate;
@@ -38,6 +44,7 @@ import pers.solid.mishang.uc.block.GlassHandrailBlock;
 import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
+import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.*;
@@ -45,6 +52,9 @@ import pers.solid.mishang.uc.networking.*;
 import pers.solid.mishang.uc.text.SpecialDrawableTypes;
 import pers.solid.mishang.uc.util.BlockMatchingRule;
 import pers.solid.mishang.uc.util.ColorfulBlockRegistry;
+
+import java.util.Collection;
+import java.util.Map;
 
 public class Mishanguc implements ModInitializer {
   public static final Logger MISHANG_LOGGER = LoggerFactory.getLogger("Mishang Urban Construction");
@@ -220,7 +230,7 @@ public class Mishanguc implements ModInitializer {
       flammableBlockRegistry.add(block, 5, 20);
       fuelRegistry.add(block, 100);
     }
-    final HandrailBlock[] woodenHandrails = {
+    final Collection<HandrailBlock> woodenHandrails = ImmutableSet.of(
         HandrailBlocks.SIMPLE_OAK_HANDRAIL,
         HandrailBlocks.SIMPLE_SPRUCE_HANDRAIL,
         HandrailBlocks.SIMPLE_BIRCH_HANDRAIL,
@@ -256,8 +266,18 @@ public class Mishanguc implements ModInitializer {
         HandrailBlocks.COLORED_DECORATED_ACACIA_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_CHERRY_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_DARK_OAK_HANDRAIL,
-        HandrailBlocks.COLORED_DECORATED_MANGROVE_HANDRAIL
-    };
+        HandrailBlocks.COLORED_DECORATED_MANGROVE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_BAMBOO_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_OAK_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_SPRUCE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_BIRCH_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_JUNGLE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_ACACIA_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_CHERRY_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_DARK_OAK_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_MANGROVE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_BAMBOO_HANDRAIL
+    );
     for (HandrailBlock handrail : woodenHandrails) {
       flammableBlockRegistry.add(handrail, 5, 20);
       flammableBlockRegistry.add(handrail.central(), 5, 20);
@@ -398,6 +418,30 @@ public class Mishanguc implements ModInitializer {
       }
       final ItemActionResult result = Road.CLEAN_ROAD_BLOCK.interact(blockState, world, blockPos, player, hand, stack);
       return result.toActionResult();
+    });
+
+    UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+      if (player.isSpectator() || !player.canModifyBlocks()) {
+        return ActionResult.PASS;
+      }
+      if (hitResult.getType() == HitResult.Type.BLOCK && hitResult instanceof BlockHitResult blockHitResult) {
+        final BlockPos blockPos = blockHitResult.getBlockPos();
+        final BlockEntity blockEntity = world.getBlockEntity(blockPos);
+        if (blockEntity instanceof ColoredBlockEntity coloredBlockEntity) {
+          for (Map.Entry<DyeColor, TagKey<Item>> entry : MishangUtils.DYE_ITEM_TAGS.get().entrySet()) {
+            final ItemStack stack = player.getStackInHand(hand);
+            if (stack.isIn(entry.getValue())) {
+              coloredBlockEntity.setColor(entry.getKey().getEntityColor());
+              blockEntity.markDirty();
+              world.updateListeners(blockPos, blockEntity.getCachedState(), blockEntity.getCachedState(), Block.NOTIFY_LISTENERS);
+              stack.decrementUnlessCreative(1, player);
+              world.playSound(null, blockPos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+              return ActionResult.SUCCESS;
+            }
+          }
+        }
+      }
+      return ActionResult.PASS;
     });
   }
 
