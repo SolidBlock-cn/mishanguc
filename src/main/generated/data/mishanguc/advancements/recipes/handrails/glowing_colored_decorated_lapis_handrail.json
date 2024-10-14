@@ -1,0 +1,58 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_colored_light": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mishanguc:colored_light"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_glass_pane": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:glass_pane"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_lapis": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "c:lapis"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:glowing_colored_decorated_lapis_handrail"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_lapis",
+      "has_glass_pane",
+      "has_colored_light"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:glowing_colored_decorated_lapis_handrail"
+    ]
+  }
+}

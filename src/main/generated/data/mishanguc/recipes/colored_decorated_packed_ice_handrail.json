@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "item": "mishanguc:colored_snow_block"
+    },
+    "X": {
+      "item": "minecraft:packed_ice"
+    },
+    "n": {
+      "item": "minecraft:packed_ice"
+    },
+    "o": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "oMo",
+    "nnn"
+  ],
+  "result": {
+    "count": 6,
+    "item": "mishanguc:colored_decorated_packed_ice_handrail"
+  }
+}

@@ -9,40 +9,20 @@
       "apply": {
         "model": "mishanguc:block/glass_bamboo_handrail_central_side",
         "uvlock": true,
-        "y": 270
+        "y": 90
       },
       "when": {
-        "east": "true"
+        "west": "true"
       }
     },
     {
       "apply": {
         "model": "mishanguc:block/glass_bamboo_handrail_central_post_side",
         "uvlock": true,
-        "y": 270
+        "y": 90
       },
       "when": {
-        "east": "false"
-      }
-    },
-    {
-      "apply": {
-        "model": "mishanguc:block/glass_bamboo_handrail_central_side",
-        "uvlock": true,
-        "y": 180
-      },
-      "when": {
-        "north": "true"
-      }
-    },
-    {
-      "apply": {
-        "model": "mishanguc:block/glass_bamboo_handrail_central_post_side",
-        "uvlock": true,
-        "y": 180
-      },
-      "when": {
-        "north": "false"
+        "west": "false"
       }
     },
     {
@@ -69,20 +49,40 @@
       "apply": {
         "model": "mishanguc:block/glass_bamboo_handrail_central_side",
         "uvlock": true,
-        "y": 90
+        "y": 180
       },
       "when": {
-        "west": "true"
+        "north": "true"
       }
     },
     {
       "apply": {
         "model": "mishanguc:block/glass_bamboo_handrail_central_post_side",
         "uvlock": true,
-        "y": 90
+        "y": 180
       },
       "when": {
-        "west": "false"
+        "north": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/glass_bamboo_handrail_central_side",
+        "uvlock": true,
+        "y": 270
+      },
+      "when": {
+        "east": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/glass_bamboo_handrail_central_post_side",
+        "uvlock": true,
+        "y": 270
+      },
+      "when": {
+        "east": "false"
       }
     }
   ]

@@ -50,6 +50,7 @@ public interface ColoredBlock extends BlockEntityProvider, MishangucBlock {
     } else {
       // 没有定义颜色的情况。
       tooltip.add(TextBridge.translatable("block.mishanguc.colored_block.tooltip.auto_color").formatted(Formatting.GRAY));
+      tooltip.add(TextBridge.translatable("block.mishanguc.colored_block.tooltip.auto_color2").formatted(Formatting.GRAY));
     }
   }
 

@@ -43,7 +43,7 @@ public final class MishangucModels {
 
   public static final Model COLORED_STAIRS = createBlock("colored_stairs", TextureKey.BOTTOM, TextureKey.TOP, TextureKey.SIDE);
   public static final Model COLORED_INNER_STAIRS = createBlock("colored_inner_stairs", "_inner", TextureKey.BOTTOM, TextureKey.TOP, TextureKey.SIDE);
-  public static final Model COLORED_OUTER_STAIRS = createBlock("colored_stairs", "_outer", TextureKey.BOTTOM, TextureKey.TOP, TextureKey.SIDE);
+  public static final Model COLORED_OUTER_STAIRS = createBlock("colored_outer_stairs", "_outer", TextureKey.BOTTOM, TextureKey.TOP, TextureKey.SIDE);
 
   public static final Model ROAD_MARK = createBlock("road_mark", TextureKey.TEXTURE);
   public static final Model ROAD_MARK_ON_SLAB = createBlock("road_mark_on_slab", "_on_slab", TextureKey.TEXTURE);

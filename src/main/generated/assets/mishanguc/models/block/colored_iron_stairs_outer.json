@@ -1,5 +1,5 @@
 {
-  "parent": "mishanguc:block/colored_stairs",
+  "parent": "mishanguc:block/colored_outer_stairs",
   "textures": {
     "bottom": "minecraft:block/iron_block",
     "side": "minecraft:block/iron_block",
