@@ -10,6 +10,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -44,12 +45,12 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
+import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 import pers.solid.mishang.uc.networking.EditSignPayload;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -273,18 +274,14 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (baseBlock == null) return null;
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this, 4)
-        .patterns("---", "###", " | ")
+    return ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this, 4)
+        .pattern("---")
+        .pattern("###")
+        .pattern(" | ")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN).input('|', Items.STICK)
-        .setCustomRecipeCategory("signs")
-        .criterionFromItem("has_base_block", baseBlock)
-        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .criterion("has_base_block", RecipeProvider.conditionsFromItem(baseBlock))
+        .criterion("has_sign", RecipeProvider.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN))
         .group(getRecipeGroup());
-  }
-
-  @Override
-  public @Nullable RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
   }
 
   @Override
@@ -468,5 +465,10 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
       set.remove(element);
       return set;
     }
+  }
+
+  @Override
+  public String customRecipeCategory() {
+    return "signs";
   }
 }

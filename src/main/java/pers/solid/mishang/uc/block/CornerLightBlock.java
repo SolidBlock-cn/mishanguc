@@ -7,6 +7,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
@@ -147,7 +148,7 @@ public class CornerLightBlock extends HorizontalFacingBlock
   }
 
   public Model getModelType() {
-    final Identifier identifier = getBlockId();
+    final Identifier identifier = Registries.BLOCK.getId(this);
     String path = identifier.getPath();
     final int i = lightColor.length();
     try {
@@ -161,22 +162,16 @@ public class CornerLightBlock extends HorizontalFacingBlock
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    final Identifier itemId = getItemId();
+    final Identifier itemId = Registries.ITEM.getId(asItem());
     final Identifier wallId = Identifier.of(itemId.getNamespace(), itemId.getPath().replace("_corner_", "_wall_"));
     if (wallId.equals(itemId)) {
       throw new IllegalStateException("Can't generate recipes: can't find the id of corresponding wall light block for " + this);
     }
     final @NotNull Item wall = Registries.ITEM.getOrEmpty(wallId).orElseThrow(() -> new IllegalArgumentException(String.format("Can't generate recipes: can't find the corresponding wall light block with id [%s] for [%s]", wallId, itemId)));
-    return ShapelessRecipeJsonBuilder.create(getRecipeCategory(), this, 1)
+    return ShapelessRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this, 1)
         .input(wall)
         .input(wall)
-        .criterionFromItem(wall)
-        .setCustomRecipeCategory("light");
-  }
-
-  @Override
-  public @Nullable RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
+        .criterion(RecipeProvider.hasItem(wall), RecipeProvider.conditionsFromItem(wall));
   }
 
   @Override

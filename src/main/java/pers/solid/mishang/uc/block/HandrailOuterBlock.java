@@ -11,8 +11,6 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -129,18 +127,8 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
     return baseHandrail.asItem();
   }
 
-  @Override
-  public Identifier getItemId() {
-    return Registries.ITEM.getId(asItem());
-  }
-
   public @NotNull BlockStateSupplier createBlockStates(Identifier modeId) {
     return ModelHelper.stateForHorizontalCornerFacingBlock(this, modeId, true);
-  }
-
-  @Override
-  public @Nullable RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
   }
 
   @Override

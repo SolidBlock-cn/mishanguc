@@ -9,11 +9,14 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
@@ -265,7 +268,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    final Identifier itemId = getItemId();
+    final Identifier itemId = Registries.ITEM.getId(asItem());
     final @NotNull Item fullLight = WallLightBlock.getBaseLight(itemId.getNamespace(), lightColor, this);
     final int outputCount;
     final String path = itemId.getPath();
@@ -278,8 +281,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
     } else {
       outputCount = 12;
     }
-    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), getRecipeCategory(), this, outputCount)
-        .criterionFromItem(fullLight)
-        .setCustomRecipeCategory("light");
+    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), RecipeCategory.DECORATIONS, this, outputCount)
+        .criterion(RecipeProvider.hasItem(fullLight), RecipeProvider.conditionsFromItem(fullLight));
   }
 }

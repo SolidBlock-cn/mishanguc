@@ -7,11 +7,13 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
@@ -22,8 +24,8 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.data.FasterTextureMap;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
+import pers.solid.mishang.uc.data.FasterTextureMap;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.*;
 
@@ -158,16 +160,15 @@ public interface RoadWithJointLine extends Road {
       if (base instanceof SlabBlock) {
         base2 = ((AbstractRoadBlock) base2).getRoadSlab();
       }
-      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
+      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern(pattern1)
           .pattern("XXX")
           .input('a', lineColorSide.getIngredient())
           .input('X', base2)
-          .criterionFromItemTag("has_" + lineColorSide.asString() + "_paint", lineColorSide.getIngredient())
-          .criterionFromItem(base2)
-          .setCustomRecipeCategory("roads");
+          .criterion("has_" + lineColorSide.asString() + "_paint", RecipeProvider.conditionsFromTag(lineColorSide.getIngredient()))
+          .criterion(RecipeProvider.hasItem(base2), RecipeProvider.conditionsFromItem(base2));
       if (lineColorSide != lineColor) {
-        recipe.criterionFromItemTag("has_" + lineColor.asString() + "_paint", lineColor.getIngredient());
+        recipe.criterion("has_" + lineColor.asString() + "_paint", RecipeProvider.conditionsFromTag(lineColor.getIngredient()));
       }
       return recipe;
     }

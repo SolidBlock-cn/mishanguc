@@ -9,26 +9,6 @@
       "apply": {
         "model": "mishanguc:block/netherrack_decorated_obsidian_handrail_central_side",
         "uvlock": true,
-        "y": 270
-      },
-      "when": {
-        "east": "true"
-      }
-    },
-    {
-      "apply": {
-        "model": "mishanguc:block/netherrack_decorated_obsidian_handrail_central_post_side",
-        "uvlock": true,
-        "y": 270
-      },
-      "when": {
-        "east": "false"
-      }
-    },
-    {
-      "apply": {
-        "model": "mishanguc:block/netherrack_decorated_obsidian_handrail_central_side",
-        "uvlock": true,
         "y": 90
       },
       "when": {
@@ -43,6 +23,26 @@
       },
       "when": {
         "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/netherrack_decorated_obsidian_handrail_central_side",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/netherrack_decorated_obsidian_handrail_central_post_side",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "north": "false"
       }
     },
     {
@@ -69,20 +69,20 @@
       "apply": {
         "model": "mishanguc:block/netherrack_decorated_obsidian_handrail_central_side",
         "uvlock": true,
-        "y": 180
+        "y": 270
       },
       "when": {
-        "north": "true"
+        "east": "true"
       }
     },
     {
       "apply": {
         "model": "mishanguc:block/netherrack_decorated_obsidian_handrail_central_post_side",
         "uvlock": true,
-        "y": 180
+        "y": 270
       },
       "when": {
-        "north": "false"
+        "east": "false"
       }
     }
   ]

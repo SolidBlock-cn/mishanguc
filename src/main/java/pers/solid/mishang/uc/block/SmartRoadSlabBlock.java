@@ -8,7 +8,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -16,6 +15,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
@@ -144,20 +144,14 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ((ShapedRecipeJsonBuilder) RecipeProvider.createSlabRecipe(getRecipeCategory(), this, Ingredient.ofItems(baseBlock))).criterionFromItem(baseBlock).setCustomRecipeCategory("roads");
-  }
-
-  @Override
   public boolean shouldWriteStonecuttingRecipe() {
     return true;
   }
 
   @Override
   public StonecuttingRecipeJsonBuilder getStonecuttingRecipe() {
-    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), getRecipeCategory(), this, 2)
-        .criterionFromItem(baseBlock)
-        .setCustomRecipeCategory("roads");
+    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), RecipeCategory.BUILDING_BLOCKS, this, 2)
+        .criterion(RecipeProvider.hasItem(baseBlock), RecipeProvider.conditionsFromItem(baseBlock));
   }
 
   @Override

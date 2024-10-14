@@ -6,8 +6,6 @@ import net.minecraft.data.client.*;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -93,10 +91,6 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     return baseHandrail.asItem();
   }
 
-  @Override
-  public Identifier getItemId() {
-    return Registries.ITEM.getId(asItem());
-  }
 
   @Override
   protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
@@ -196,11 +190,6 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   @Override
   public boolean connectsIn(@NotNull BlockState blockState, @NotNull Direction direction, @Nullable Direction offsetFacing) {
     return offsetFacing == null && direction.getAxis().isHorizontal() && blockState.get(FACING_PROPERTIES.get(direction));
-  }
-
-  @Override
-  public @Nullable RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
   }
 
   @Override

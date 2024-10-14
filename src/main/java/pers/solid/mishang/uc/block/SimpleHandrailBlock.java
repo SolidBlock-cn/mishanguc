@@ -7,8 +7,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
@@ -261,9 +263,8 @@ public class SimpleHandrailBlock extends HandrailBlock {
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), getRecipeCategory(), this, 5)
-        .criterionFromItem(baseBlock)
-        .setCustomRecipeCategory("handrails")
+    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), RecipeCategory.DECORATIONS, this, 5)
+        .criterion(RecipeProvider.hasItem(baseBlock), RecipeProvider.conditionsFromItem(baseBlock))
         .group(getRecipeGroup());
   }
 }

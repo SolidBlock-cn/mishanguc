@@ -50,9 +50,8 @@ public class LightSlabBlock extends SlabBlock implements MishangucBlock {
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ((ShapedRecipeJsonBuilder) RecipeProvider.createSlabRecipe(getRecipeCategory(), this, Ingredient.ofItems(baseBlock)))
-        .criterion(RecipeProvider.hasItem(baseBlock), RecipeProvider.conditionsFromItem(baseBlock))
-        .setCustomRecipeCategory("light");
+    return ((ShapedRecipeJsonBuilder) RecipeProvider.createSlabRecipe(RecipeCategory.BUILDING_BLOCKS, this, Ingredient.ofItems(baseBlock)))
+        .criterion(RecipeProvider.hasItem(baseBlock), RecipeProvider.conditionsFromItem(baseBlock));
   }
 
   @Override
@@ -62,18 +61,17 @@ public class LightSlabBlock extends SlabBlock implements MishangucBlock {
 
   @Override
   public StonecuttingRecipeJsonBuilder getStonecuttingRecipe() {
-    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), getRecipeCategory(), this, 2)
-        .criterionFromItem(baseBlock)
-        .setCustomRecipeCategory("lights");
-  }
-
-  @Override
-  public RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
+    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), RecipeCategory.DECORATIONS, this, 2)
+        .criterion(RecipeProvider.hasItem(baseBlock), RecipeProvider.conditionsFromItem(baseBlock));
   }
 
   @Override
   public MapCodec<? extends LightSlabBlock> getCodec() {
     return CODEC;
+  }
+
+  @Override
+  public String customRecipeCategory() {
+    return "light";
   }
 }

@@ -15,6 +15,7 @@ import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.Items;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -65,29 +66,27 @@ public class RoadBlock extends AbstractRoadBlock {
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (lineColor != LineColor.NONE) return null;
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this, 9)
+    return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, this, 9)
         .pattern("***")
         .pattern("|X|")
         .pattern("***")
         .input('*', ItemTags.COALS)
         .input('|', Items.FLINT)
         .input('X', Ingredient.ofItems(Items.WHITE_CONCRETE, Items.GRAY_CONCRETE, Items.LIGHT_GRAY_CONCRETE, Items.BLACK_CONCRETE))
-        .criterionFromItemTag("has_coal", ItemTags.COALS)
-        .criterionFromItem(Items.FLINT)
-        .criterion("has_proper_concrete", RecipeProvider.conditionsFromItemPredicates(ItemPredicate.Builder.create().items(Items.WHITE_CONCRETE, Items.GRAY_CONCRETE, Items.LIGHT_GRAY_CONCRETE, Items.BLACK_CONCRETE).build()))
-        .setCustomRecipeCategory("roads");
+        .criterion("has_coal", RecipeProvider.conditionsFromTag(ItemTags.COALS))
+        .criterion(RecipeProvider.hasItem(Items.FLINT), RecipeProvider.conditionsFromItem(Items.FLINT))
+        .criterion("has_proper_concrete", RecipeProvider.conditionsFromItemPredicates(ItemPredicate.Builder.create().items(Items.WHITE_CONCRETE, Items.GRAY_CONCRETE, Items.LIGHT_GRAY_CONCRETE, Items.BLACK_CONCRETE).build()));
   }
 
   @Override
   public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
     if (lineColor == LineColor.NONE) return null;
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self)
+    return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self)
         .pattern("***")
         .pattern(" X ")
         .input('*', lineColor.getIngredient())
         .input('X', base)
-        .criterionFromItemTag("has_paint", lineColor.getIngredient())
-        .criterionFromItem(base)
-        .setCustomRecipeCategory("roads");
+        .criterion("has_paint", RecipeProvider.conditionsFromTag(lineColor.getIngredient()))
+        .criterion(RecipeProvider.hasItem(base), RecipeProvider.conditionsFromItem(base));
   }
 }

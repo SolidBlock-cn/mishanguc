@@ -6,9 +6,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
@@ -163,16 +165,18 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
 
     @Override
     public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
-      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
-          .patterns(composePattern(lineType, lineType2))
+      final String[] composePattern = composePattern(lineType, lineType2);
+      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
+          .pattern(composePattern[0])
+          .pattern(composePattern[1])
+          .pattern(composePattern[2])
           .input('a', lineColor.getIngredient())
           .input('b', lineColor2.getIngredient())
           .input('X', base)
-          .setCustomRecipeCategory("roads")
-          .criterionFromItemTag("has_" + lineColor.asString() + "_paint", lineColor.getIngredient())
-          .criterionFromItem(base);
+          .criterion("has_" + lineColor.asString() + "_paint", RecipeProvider.conditionsFromTag(lineColor.getIngredient()))
+          .criterion(RecipeProvider.hasItem(base), RecipeProvider.conditionsFromItem(base));
       if (lineColor != lineColor2) {
-        recipe.criterionFromItemTag("has_" + lineColor2.asString() + "_paint", lineColor2.getIngredient());
+        recipe.criterion("has_" + lineColor2.asString() + "_paint", RecipeProvider.conditionsFromTag(lineColor2.getIngredient()));
       }
       return recipe;
     }

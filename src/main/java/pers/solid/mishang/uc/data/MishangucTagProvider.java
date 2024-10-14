@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.SlabBlock;
+import net.minecraft.block.StairsBlock;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
@@ -133,6 +134,10 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
     MishangUtils.instanceStream(RoadBlocks.class, Block.class).forEach(roadBlocks::add);
     RoadSlabBlocks.SLABS.forEach(roadSlabs::add);
     MishangUtils.instanceStream(RoadMarkBlocks.class, Block.class).forEach(roadMarks::add);
+
+    final var roads = blockTagWithItem("roads").addTag(roadBlocks, roadSlabs);
+    pickaxeMineable.addTag(roads);
+    blockTagOnly(BlockTags.SNOW_LAYER_CANNOT_SURVIVE_ON).addTag(roads);
   }
 
   protected void handrails() {
@@ -295,6 +300,10 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
     configureColoredTags(HandrailBlocks.SIMPLE_TERRACOTTA_HANDRAILS);
     configureColoredTags(HandrailBlocks.SIMPLE_STAINED_GLASS_HANDRAILS);
     configureColoredTags(HandrailBlocks.DECORATED_IRON_HANDRAILS);
+
+    axeMineable.addTag(simpleWoodenHandrails);
+    pickaxeMineable.addTag(simpleConcreteHandrails);
+    pickaxeMineable.addTag(simpleTerracottaHandrails);
   }
 
   protected void coloredBlocks() {
@@ -304,6 +313,21 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
 
     blockTagWithItem(ConventionalBlockTags.GLASS_BLOCKS, ConventionalItemTags.GLASS_BLOCKS).add(ColoredBlocks.COLORED_GLASS);
     blockTagWithItem(ConventionalBlockTags.GLASS_PANES, ConventionalItemTags.GLASS_PANES).add(ColoredBlocks.COLORED_GLASS_PANE);
+
+    blockTagOnly(BlockTags.AZALEA_ROOT_REPLACEABLE).add(ColoredBlocks.COLORED_SNOW_BLOCK);
+    blockTagOnly(BlockTags.BEACON_BASE_BLOCKS).add(ColoredBlocks.COLORED_IRON_BLOCK);
+    blockTagOnly(BlockTags.DRAGON_IMMUNE).add(ColoredBlocks.COLORED_END_STONE, ColoredBlocks.COLORED_END_STONE_STAIRS, ColoredBlocks.COLORED_END_STONE_SLAB);
+    blockTagOnly(BlockTags.GOATS_SPAWNABLE_ON).add(ColoredBlocks.COLORED_STONE);
+    blockTagOnly(BlockTags.HOGLIN_REPELLENTS).add(ColoredBlocks.COLORED_NETHER_PORTAL);
+    blockTagWithItem(BlockTags.LEAVES, ItemTags.LEAVES).add(MishangUtils.instanceStream(ColoredBlocks.class, ColoredLeavesBlock.class).toArray(Block[]::new));
+    blockTagOnly(BlockTags.PORTALS).add(ColoredBlocks.COLORED_NETHER_PORTAL);
+    blockTagOnly(BlockTags.SCULK_REPLACEABLE).add(ColoredBlocks.COLORED_DIRT, ColoredBlocks.COLORED_TERRACOTTA, ColoredBlocks.COLORED_END_STONE, ColoredBlocks.COLORED_END_STONE_STAIRS, ColoredBlocks.COLORED_END_STONE_SLAB);
+    blockTagOnly(BlockTags.SNAPS_GOAT_HORN).add(ColoredBlocks.COLORED_STONE);
+    blockTagOnly(BlockTags.TERRACOTTA).add(ColoredBlocks.COLORED_TERRACOTTA);
+    blockTagOnly(ConventionalBlockTags.CONCRETES).add(ColoredBlocks.COLORED_CONCRETE);
+    blockTagOnly(BlockTags.WOOL).add(ColoredBlocks.COLORED_WOOL);
+
+    blockTagOnly("tints_beacon_beams").add(ColoredBlocks.COLORED_GLASS, ColoredBlocks.COLORED_GLASS_PANE, ColoredBlocks.COLORED_ICE, ColoredBlocks.COLORED_NETHER_PORTAL);
   }
 
   protected void lights() {
@@ -312,40 +336,53 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
     final var whiteCornerLights = blockTagWithItem("white_corner_lights");
     final var whiteLightDecorations = blockTagWithItem("white_light_decorations");
     final var whiteColumnLights = blockTagWithItem("white_column_lights");
+    final var whiteLight = blockTagWithItem("white_lights").addTag(whiteWallLights, whiteColumnLights, whiteColumnLights, whiteColumnLights).add(LightBlocks.WHITE_LIGHT, LightBlocks.WHITE_LIGHT_SLAB, LightBlocks.WHITE_LIGHT_COVER);
 
     final var yellowStripWallLights = blockTagWithItem("yellow_strip_wall_lights");
     final var yellowWallLights = blockTagWithItem("yellow_wall_lights").addTag(yellowStripWallLights);
     final var yellowCornerLights = blockTagWithItem("yellow_corner_lights");
     final var yellowLightDecorations = blockTagWithItem("yellow_light_decorations");
     final var yellowColumnLights = blockTagWithItem("yellow_column_lights");
+    final var yellowLight = blockTagWithItem("yellow_lights").addTag(yellowWallLights, yellowColumnLights, yellowColumnLights, yellowColumnLights).add(LightBlocks.YELLOW_LIGHT, LightBlocks.YELLOW_LIGHT_SLAB, LightBlocks.YELLOW_LIGHT_COVER);
 
     final var orangeStripWallLights = blockTagWithItem("orange_strip_wall_lights");
     final var orangeWallLights = blockTagWithItem("orange_wall_lights").addTag(orangeStripWallLights);
     final var orangeCornerLights = blockTagWithItem("orange_corner_lights");
     final var orangeLightDecorations = blockTagWithItem("orange_light_decorations");
     final var orangeColumnLights = blockTagWithItem("orange_column_lights");
+    final var orangeLight = blockTagWithItem("orange_lights").addTag(orangeWallLights, orangeColumnLights, orangeColumnLights, orangeColumnLights).add(LightBlocks.ORANGE_LIGHT, LightBlocks.ORANGE_LIGHT_SLAB, LightBlocks.ORANGE_LIGHT_COVER);
 
     final var greenStripWallLights = blockTagWithItem("green_strip_wall_lights");
     final var greenWallLights = blockTagWithItem("green_wall_lights").addTag(greenStripWallLights);
     final var greenCornerLights = blockTagWithItem("green_corner_lights");
     final var greenLightDecorations = blockTagWithItem("green_light_decorations");
     final var greenColumnLights = blockTagWithItem("green_column_lights");
+    final var greenLight = blockTagWithItem("green_lights").addTag(greenWallLights, greenColumnLights, greenColumnLights, greenColumnLights).add(LightBlocks.GREEN_LIGHT, LightBlocks.GREEN_LIGHT_SLAB, LightBlocks.GREEN_LIGHT_COVER);
 
     final var cyanStripWallLights = blockTagWithItem("cyan_strip_wall_lights");
     final var cyanWallLights = blockTagWithItem("cyan_wall_lights").addTag(cyanStripWallLights);
     final var cyanCornerLights = blockTagWithItem("cyan_corner_lights");
     final var cyanLightDecorations = blockTagWithItem("cyan_light_decorations");
     final var cyanColumnLights = blockTagWithItem("cyan_column_lights");
+    final var cyanLight = blockTagWithItem("cyan_lights").addTag(cyanWallLights, cyanColumnLights, cyanColumnLights, cyanColumnLights).add(LightBlocks.CYAN_LIGHT, LightBlocks.CYAN_LIGHT_SLAB, LightBlocks.CYAN_LIGHT_COVER);
 
     final var pinkStripWallLights = blockTagWithItem("pink_strip_wall_lights");
     final var pinkWallLights = blockTagWithItem("pink_wall_lights").addTag(pinkStripWallLights);
     final var pinkCornerLights = blockTagWithItem("pink_corner_lights");
     final var pinkLightDecorations = blockTagWithItem("pink_light_decorations");
     final var pinkColumnLights = blockTagWithItem("pink_column_lights");
+    final var pinkLight = blockTagWithItem("pink_lights").addTag(pinkWallLights, pinkColumnLights, pinkColumnLights, pinkColumnLights).add(LightBlocks.PINK_LIGHT, LightBlocks.PINK_LIGHT_SLAB, LightBlocks.PINK_LIGHT_COVER);
 
     // 通过数据包手动加入到 #slabs 中
     final var lightSlabs = blockTagWithItem("light_slabs");
     final var lightCovers = blockTagWithItem("light_covers");
+
+    // 其他的灯标签
+    blockTagWithItem("wall_lights").addTag(whiteWallLights, yellowWallLights, cyanWallLights, greenWallLights, orangeWallLights, pinkWallLights);
+    blockTagWithItem("column_lights").addTag(whiteColumnLights, yellowColumnLights, cyanColumnLights, greenColumnLights, orangeColumnLights, pinkColumnLights);
+    blockTagWithItem("corner_lights").addTag(whiteCornerLights, yellowCornerLights, cyanCornerLights, greenCornerLights, orangeCornerLights, pinkCornerLights);
+    blockTagWithItem("light_decorations").addTag(whiteLightDecorations, yellowLightDecorations, cyanLightDecorations, greenLightDecorations, orangeLightDecorations, pinkLightDecorations);
+    blockTagWithItem("lights").addTag(whiteLight, yellowLight, cyanLight, greenLight, orangeLight, pinkLight);
 
     // 只指定颜色的标签，只指定形状的标签，以及不指定颜色和形状的标签，均在数据包中
 
@@ -457,6 +494,9 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
     configureColoredTags(StandingSignBlocks.TERRACOTTA_STANDING_SIGNS);
     configureColoredTags(StandingSignBlocks.GLOWING_CONCRETE_STANDING_SIGNS);
     configureColoredTags(StandingSignBlocks.GLOWING_TERRACOTTA_STANDING_SIGNS);
+
+    axeMineable.addTag(woodenStandingSigns);
+    pickaxeMineable.addTag(concreteStandingSigns, glowingConcreteStandingSigns, terracottaStandingSigns, glowingTerracottaStandingSigns);
   }
 
   private void hungSignsAndBars() {
@@ -525,6 +565,9 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
     configureColoredTags(HungSignBlocks.TERRACOTTA_HUNG_SIGN_BARS);
     configureColoredTags(HungSignBlocks.GLOWING_TERRACOTTA_HUNG_SIGNS);
     configureColoredTags(HungSignBlocks.TERRACOTTA_HUNG_SIGN_BARS);
+
+    axeMineable.addTag(woodenHungSigns, woodenHungSignBars);
+    pickaxeMineable.addTag(concreteHungSigns, concreteHungSignBars, glowingConcreteHungSigns, terracottaHungSigns, terracottaHungSignBars, glowingTerracottaHungSigns);
   }
 
   private void wallSigns() {
@@ -587,6 +630,9 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
     configureColoredTags(WallSignBlocks.TERRACOTTA_WALL_SIGNS);
     configureColoredTags(WallSignBlocks.GLOWING_TERRACOTTA_WALL_SIGNS);
     configureColoredTags(WallSignBlocks.FULL_TERRACOTTA_WALL_SIGNS);
+
+    axeMineable.addTag(woodenWallSigns);
+    pickaxeMineable.addTag(concreteWallSigns, fullConcreteWallSigns, glowingConcreteWallSigns, terracottaWallSigns, fullTerracottaWallSigns, glowingTerracottaWallSigns);
   }
 
   protected void configureMineableTags(Field field, Block block) {
@@ -660,6 +706,9 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
     handrails();
     coloredBlocks();
     tools();
+
+    blockTagWithItem(BlockTags.STAIRS, ItemTags.STAIRS).add(blocks().stream().filter(block -> block instanceof StairsBlock).toArray(Block[]::new));
+    blockTagWithItem(BlockTags.SLABS, ItemTags.SLABS).add(blocks().stream().filter(block -> block instanceof SlabBlock).toArray(Block[]::new));
   }
 
   public class MishangucItemTagProvider extends FabricTagProvider.ItemTagProvider {

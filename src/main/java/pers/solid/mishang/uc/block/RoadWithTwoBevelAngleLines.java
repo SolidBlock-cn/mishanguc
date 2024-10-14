@@ -10,11 +10,13 @@ import net.minecraft.block.SlabBlock;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
@@ -26,8 +28,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.data.FasterTextureMap;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
+import pers.solid.mishang.uc.data.FasterTextureMap;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.*;
 
@@ -117,15 +119,14 @@ public interface RoadWithTwoBevelAngleLines extends Road {
 
     @Override
     public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
-      return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
+      return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern(" **")
           .pattern("** ")
           .pattern("XXX")
           .input('*', lineColor.getIngredient())
           .input('X', base)
-          .criterionFromItemTag("has_paint", lineColor.getIngredient())
-          .criterionFromItem(base)
-          .setCustomRecipeCategory("roads");
+          .criterion("has_paint", RecipeProvider.conditionsFromTag(lineColor.getIngredient()))
+          .criterion(RecipeProvider.hasItem(base), RecipeProvider.conditionsFromItem(base));
     }
   }
 
@@ -174,15 +175,14 @@ public interface RoadWithTwoBevelAngleLines extends Road {
       if (base instanceof SlabBlock) {
         base2 = ((AbstractRoadBlock) base2).getRoadSlab();
       }
-      return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
+      return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern(" *X")
           .pattern("*X*")
           .pattern("X* ")
           .input('*', lineColor.getIngredient())
           .input('X', base2)
-          .criterionFromItemTag("has_paint", lineColor.getIngredient())
-          .criterionFromItem(base2)
-          .setCustomRecipeCategory("roads");
+          .criterion("has_paint", RecipeProvider.conditionsFromTag(lineColor.getIngredient()))
+          .criterion(RecipeProvider.hasItem(base2), RecipeProvider.conditionsFromItem(base2));
     }
   }
 }

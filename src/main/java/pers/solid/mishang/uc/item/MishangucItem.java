@@ -1,13 +1,13 @@
 package pers.solid.mishang.uc.item;
 
-import pers.solid.brrp.v1.generator.ItemResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 
-public interface MishangucItem extends ItemResourceGenerator {
+public interface MishangucItem {
+  default CraftingRecipeJsonBuilder getCraftingRecipe() {
+    return null;
+  }
 
-  @Deprecated(forRemoval = true)
-  @Override
-  default ModelJsonBuilder getItemModel() {
-    return ItemResourceGenerator.super.getItemModel();
+  default String customRecipeCategory() {
+    return null;
   }
 }

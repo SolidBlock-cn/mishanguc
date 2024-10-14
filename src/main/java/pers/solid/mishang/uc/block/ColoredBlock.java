@@ -67,4 +67,9 @@ public interface ColoredBlock extends BlockEntityProvider, MishangucBlock {
 
   Object2ObjectMap<Block, Block> BASE_TO_COLORED = new Object2ObjectOpenHashMap<>();
   Object2ObjectMap<TagKey<Block>, Block> BASE_TAG_TO_COLORED = new Object2ObjectOpenHashMap<>();
+
+  @Override
+  default String customRecipeCategory() {
+    return "colored_blocks";
+  }
 }

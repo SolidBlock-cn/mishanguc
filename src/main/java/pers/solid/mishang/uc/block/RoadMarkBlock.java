@@ -2,12 +2,11 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.block.*;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -120,12 +119,6 @@ public class RoadMarkBlock extends Block implements Waterloggable, MishangucBloc
     return state.get(ON_SLAB) ? SHAPE_ON_SLAB : SHAPE;
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull Identifier getTextureId(@NotNull TextureKey textureKey) {
-    return texture;
-  }
-
   public static RoadMarkBlock createAxisFacing(Identifier texture, Settings settings) {
     return new AxisFacing(texture, settings);
   }
@@ -140,15 +133,9 @@ public class RoadMarkBlock extends Block implements Waterloggable, MishangucBloc
   }
 
   @Override
-  public RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
-  }
-
-  @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.fromTag(ConventionalItemTags.WHITE_DYES), getRecipeCategory(), this)
-        .criterionFromItemTag("has_white_dye", ConventionalItemTags.WHITE_DYES)
-        .setCustomRecipeCategory("road_marks");
+    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.fromTag(ConventionalItemTags.WHITE_DYES), RecipeCategory.DECORATIONS, this)
+        .criterion("has_white_dye", RecipeProvider.conditionsFromTag(ConventionalItemTags.WHITE_DYES));
   }
 
   @Override
@@ -161,6 +148,11 @@ public class RoadMarkBlock extends Block implements Waterloggable, MishangucBloc
             .register(false, new BlockStateVariant().put(VariantSettings.MODEL, modelId))
             .register(true, new BlockStateVariant().put(VariantSettings.MODEL, onSlabModelId))));
     Models.HANDHELD.upload(ModelIds.getItemModelId(asItem()), TextureMap.layer0(texture), blockStateModelGenerator.modelCollector);
+  }
+
+  @Override
+  public String customRecipeCategory() {
+    return "road_marks";
   }
 
   protected static class AxisFacing extends RoadMarkBlock {

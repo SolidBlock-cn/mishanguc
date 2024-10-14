@@ -13,7 +13,9 @@ import net.minecraft.data.client.ModelIds;
 import net.minecraft.data.client.ModelProvider;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -25,10 +27,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.blockentity.FullWallSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Map;
@@ -91,12 +93,13 @@ public class FullWallSignBlock extends WallSignBlock {
   @Override
   public @Nullable CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (baseBlock == null) return null;
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this, 4)
-        .patterns("-#-", "###", "-#-")
+    return ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this, 4)
+        .pattern("-#-")
+        .pattern("###")
+        .pattern("-#-")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
-        .setCustomRecipeCategory("signs")
-        .criterionFromItem("has_base_block", baseBlock)
-        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .criterion("has_base_block", RecipeProvider.conditionsFromItem(baseBlock))
+        .criterion("has_sign", RecipeProvider.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN))
         .group(getRecipeGroup());
   }
 

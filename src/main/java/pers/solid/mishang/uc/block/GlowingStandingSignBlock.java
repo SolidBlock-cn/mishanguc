@@ -8,8 +8,10 @@ import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ModelProvider;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Items;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -71,12 +73,13 @@ public class GlowingStandingSignBlock extends StandingSignBlock {
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (baseBlock == null) return null;
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this, 4)
-        .patterns("---", "###", " | ")
+    return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, this, 4)
+        .pattern("---")
+        .pattern("###")
+        .pattern(" | ")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN).input('|', Items.STICK)
-        .criterionFromItem("has_base_block", baseBlock)
-        .criterionFromItem("has_sign", WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
-        .setCustomRecipeCategory("signs")
+        .criterion("has_base_block", RecipeProvider.conditionsFromItem(baseBlock))
+        .criterion("has_sign", RecipeProvider.conditionsFromItem(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN))
         .group(getRecipeGroup());
   }
 

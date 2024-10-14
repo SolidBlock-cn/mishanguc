@@ -7,11 +7,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
@@ -145,15 +147,14 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
       if (isBevel()) {
         throw new UnsupportedOperationException("Recipes for bevel line with one part offset is not supported!");
       }
-      return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
+      return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern("  *")
           .pattern("*XX")
           .pattern(" X ")
           .input('*', lineColor.getIngredient())
           .input('X', base)
-          .criterionFromItemTag("has_paint", lineColor.getIngredient())
-          .criterionFromItem(base)
-          .setCustomRecipeCategory("roads");
+          .criterion("has_paint", RecipeProvider.conditionsFromTag(lineColor.getIngredient()))
+          .criterion(RecipeProvider.hasItem(base), RecipeProvider.conditionsFromItem(base));
     }
   }
 }

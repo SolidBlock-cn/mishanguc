@@ -7,6 +7,7 @@ import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ModelProvider;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -39,26 +40,25 @@ public class FullLightBlock extends Block implements MishangucBlock {
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this, 8)
+    return ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this, 8)
         .pattern("*#*")
         .pattern("#C#")
         .pattern("*#*")
         .input('*', dyeIngredient)
         .input('#', Items.GLOWSTONE)
         .input('C', concreteIngredient)
-        .criterionFromItem(dyeIngredient)
-        .criterionFromItem(Items.GLOWSTONE)
-        .criterionFromItem(concreteIngredient)
-        .setCustomRecipeCategory("light");
-  }
-
-  @Override
-  public RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
+        .criterion(RecipeProvider.hasItem(dyeIngredient), RecipeProvider.conditionsFromItem(dyeIngredient))
+        .criterion(RecipeProvider.hasItem(Items.GLOWSTONE), RecipeProvider.conditionsFromItem(Items.GLOWSTONE))
+        .criterion(RecipeProvider.hasItem(concreteIngredient), RecipeProvider.conditionsFromItem(concreteIngredient));
   }
 
   @Override
   protected MapCodec<? extends FullLightBlock> getCodec() {
     return CODEC;
+  }
+
+  @Override
+  public String customRecipeCategory() {
+    return "light";
   }
 }

@@ -10,12 +10,9 @@ import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
@@ -150,21 +147,16 @@ public interface Road extends MishangucBlock {
   @ApiStatus.AvailableSince("0.2.4")
   void appendDescriptionTooltip(List<Text> tooltip, Item.TooltipContext context);
 
-  @Override
-  default RecipeCategory getRecipeCategory() {
-    return RecipeCategory.BUILDING_BLOCKS;
-  }
-
   default CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
     return null;
   }
 
   default Identifier getPaintingRecipeId() {
-    return getRecipeId().withSuffixedPath("_from_painting");
+    return CraftingRecipeJsonBuilder.getItemId((ItemConvertible) this).withSuffixedPath("_from_painting");
   }
 
   default @Nullable String getRecipeGroup() {
-    final Identifier itemId = getItemId();
+    final Identifier itemId = Registries.ITEM.getId((Item) this);
     return itemId.getNamespace() + ":" + StringUtils.replaceEach(itemId.getPath(), new String[]{"_white_", "_yellow_", "_w_", "_y_"}, new String[]{"_", "_", "_", "_"});
   }
 
@@ -213,4 +205,9 @@ public interface Road extends MishangucBlock {
    * 对于道路方块，直接返回 {@code stateForFull}。对于道路台阶方块，会将其转化为台阶的方块状态再返回。
    */
   BlockStateSupplier composeState(@NotNull BlockStateSupplier stateForFull);
+
+  @Override
+  default String customRecipeCategory() {
+    return "roads";
+  }
 }

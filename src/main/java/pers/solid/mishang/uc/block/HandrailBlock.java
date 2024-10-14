@@ -9,7 +9,6 @@ import net.minecraft.data.client.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -23,7 +22,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
@@ -198,15 +196,6 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
     return SHAPES.get(state.get(FACING));
   }
 
-  @Override
-  public void writeLootTable(RuntimeResourcePack pack) {
-    MishangucBlock.super.writeLootTable(pack);
-    central().writeLootTable(pack);
-    corner().writeLootTable(pack);
-    stair().writeLootTable(pack);
-    outer().writeLootTable(pack);
-  }
-
   /**
    * 该方块的纹理变量，即模型中的 {@code "textures"} 字段。重写此方法时，务必注解为 {@code @Environment(EnvType.CLIENT)}。通常来说，其衍生的几个方块（如楼梯、角落等）均会使用此系列的纹理。
    *
@@ -253,11 +242,6 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
   @Override
   public boolean connectsIn(@NotNull BlockState blockState, @NotNull Direction direction, @Nullable Direction offsetFacing) {
     return offsetFacing != null && blockState.get(FACING) == offsetFacing && direction.getAxis() != offsetFacing.getAxis();
-  }
-
-  @Override
-  public @Nullable RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
   }
 
   @Override

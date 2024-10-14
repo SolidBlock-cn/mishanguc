@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cyan_dye": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:cyan_dye"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_lime_dye": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:lime_dye"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_netherite_ingot": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:netherite_ingot"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:mirroring_tool"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_cyan_dye",
+      "has_netherite_ingot",
+      "has_lime_dye"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:mirroring_tool"
+    ]
+  }
+}

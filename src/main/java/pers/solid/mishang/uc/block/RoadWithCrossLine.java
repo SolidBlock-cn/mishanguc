@@ -6,8 +6,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item.TooltipContext;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -56,15 +58,14 @@ public interface RoadWithCrossLine extends Road {
 
     @Override
     public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
-      return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 4)
+      return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 4)
           .pattern("*X*")
           .pattern("X*X")
           .pattern("*X*")
           .input('*', lineColor.getIngredient())
           .input('X', base)
-          .criterionFromItemTag("has_ingredient", lineColor.getIngredient())
-          .criterionFromItem(base)
-          .setCustomRecipeCategory("roads");
+          .criterion("has_ingredient", RecipeProvider.conditionsFromTag(lineColor.getIngredient()))
+          .criterion(RecipeProvider.hasItem(base), RecipeProvider.conditionsFromItem(base));
     }
   }
 }

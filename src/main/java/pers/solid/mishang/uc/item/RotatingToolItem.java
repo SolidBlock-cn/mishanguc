@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.item;
 import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -89,18 +90,15 @@ public class RotatingToolItem extends BlockToolItem implements MishangucItem {
   }
 
   @Override
-  public RecipeCategory getRecipeCategory() {
-    return RecipeCategory.TOOLS;
-  }
-
-  @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ShapedRecipeJsonBuilder.create(getRecipeCategory(), this)
-        .patterns("DND", " | ", " | ")
+    return ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, this)
+        .pattern("DND")
+        .pattern(" | ")
+        .pattern(" | ")
         .input('D', Items.PINK_DYE)
         .input('N', Items.NETHERITE_INGOT)
         .input('|', Items.STICK)
-        .criterionFromItem("has_pink_dye", Items.PINK_DYE)
-        .criterionFromItem("has_netherite_ingot", Items.NETHERITE_INGOT);
+        .criterion("has_pink_dye", RecipeProvider.conditionsFromItem(Items.PINK_DYE))
+        .criterion("has_netherite_ingot", RecipeProvider.conditionsFromItem(Items.NETHERITE_INGOT));
   }
 }

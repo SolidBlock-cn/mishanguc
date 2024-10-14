@@ -18,12 +18,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
 
-public class ColoredIceBlock extends IceBlock implements ColoredBlock, BlockResourceGenerator {
+public class ColoredIceBlock extends IceBlock implements ColoredBlock {
   public static final MapCodec<ColoredIceBlock> CODEC = createCodec(settings1 -> new ColoredIceBlock(settings1, null));
 
   private final @Nullable TextureMap textures;
@@ -56,7 +55,7 @@ public class ColoredIceBlock extends IceBlock implements ColoredBlock, BlockReso
     blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(this, modelId));
     blockStateModelGenerator.registerParentedItemModel(this, modelId);
   }
-  
+
   @Override
   public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
     return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);

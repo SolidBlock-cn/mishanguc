@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.StairsBlock;
@@ -17,20 +18,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.loot.LootTable;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
-import pers.solid.brrp.v1.BRRPUtils;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import pers.solid.mishang.uc.data.MishangucModels;
 
 import java.util.List;
 
 public class ColoredStairsBlock extends StairsBlock implements ColoredBlock {
-  public static final MapCodec<ColoredStairsBlock> CODEC = BRRPUtils.createCodecWithBaseBlock(createSettingsCodec(), ColoredStairsBlock::new);
+  public static final MapCodec<ColoredStairsBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
+      Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(o -> o.baseBlock),
+      createSettingsCodec()
+  ).apply(i, ColoredStairsBlock::new));
   public final @NotNull Block baseBlock;
 
   public ColoredStairsBlock(@NotNull Block baseBlock, Settings settings) {
@@ -75,15 +78,9 @@ public class ColoredStairsBlock extends StairsBlock implements ColoredBlock {
   }
 
   @Override
-  public RecipeCategory getRecipeCategory() {
-    return RecipeCategory.BUILDING_BLOCKS;
-  }
-
-  @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     return ((ShapedRecipeJsonBuilder) RecipeProvider.createStairsRecipe(this, Ingredient.ofItems(baseBlock)))
-        .criterion(RecipeProvider.hasItem(baseBlock), RecipeProvider.conditionsFromItem(baseBlock))
-        .setCustomRecipeCategory("colored_blocks");
+        .criterion(RecipeProvider.hasItem(baseBlock), RecipeProvider.conditionsFromItem(baseBlock));
   }
 
   @Override

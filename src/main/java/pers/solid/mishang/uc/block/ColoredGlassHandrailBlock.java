@@ -54,6 +54,11 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
     return CODEC;
   }
 
+  @Override
+  public String customRecipeCategory() {
+    return "handrails";
+  }
+
   public static class ColoredCentral extends CentralBlock implements ColoredBlock {
     public static final MapCodec<ColoredCentral> CODEC = createSubCodec(b -> b.baseHandrail, ColoredCentral::new);
 
@@ -86,6 +91,11 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
     @Override
     protected MapCodec<? extends ColoredCentral> getCodec() {
       return CODEC;
+    }
+
+    @Override
+    public String customRecipeCategory() {
+      return "handrails";
     }
   }
 
@@ -122,6 +132,11 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
     protected MapCodec<? extends ColoredCorner> getCodec() {
       return CODEC;
     }
+
+    @Override
+    public String customRecipeCategory() {
+      return "handrails";
+    }
   }
 
   public static class ColoredOuter extends OuterBlock implements ColoredBlock {
@@ -157,6 +172,11 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
     protected MapCodec<? extends ColoredOuter> getCodec() {
       return CODEC;
     }
+
+    @Override
+    public String customRecipeCategory() {
+      return "handrails";
+    }
   }
 
   public static class ColoredStair extends StairBlock implements ColoredBlock {
@@ -191,6 +211,11 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
     @Override
     protected MapCodec<? extends ColoredStair> getCodec() {
       return CODEC;
+    }
+
+    @Override
+    public String customRecipeCategory() {
+      return "handrails";
     }
   }
 }

@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_shears": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:shears"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_stone": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:stones"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:slab_tool"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_shears",
+      "has_stone"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:slab_tool"
+    ]
+  }
+}

@@ -8,6 +8,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.*;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
@@ -31,7 +32,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
@@ -158,7 +158,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, Mishan
   }
 
   public Model getModelType(String suffix) {
-    final Identifier identifier = getBlockId();
+    final Identifier identifier = Registries.BLOCK.getId(this);
     String path = identifier.getPath() + suffix;
     final int i = lightColor.length();
     if (path.startsWith(lightColor) && path.charAt(i) == '_') {
@@ -171,7 +171,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, Mishan
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    final Identifier itemId = getItemId();
+    final Identifier itemId = Registries.ITEM.getId(asItem());
     final String itemPath = itemId.getPath();
     if (itemPath.endsWith("_tube")) {
       // 灯管方式采用切石的方式合成，这里直接作为主要的合成方式。
@@ -192,24 +192,17 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, Mishan
       } else {
         throw new IllegalStateException(String.format("Can't generate recipes: Cannot determine the type of %s according to its id", this));
       }
-      return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), getRecipeCategory(), this, outputCount)
-          .criterionFromItem(fullLight)
-          .setCustomRecipeCategory("light");
+      return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), RecipeCategory.DECORATIONS, this, outputCount)
+          .criterion(RecipeProvider.hasItem(fullLight), RecipeProvider.conditionsFromItem(fullLight));
     } else {
       // 非灯管方块，采用与混凝土的合成。
       final Identifier tubeId = itemId.withSuffixedPath("_tube");
       final @NotNull Item tube = Registries.ITEM.getOrEmpty(tubeId).orElseThrow(() -> new IllegalArgumentException(String.format("Can't generate recipes: %s does not have a corresponding tube block (with id [%s])", this, tubeId)));
-      return ShapelessRecipeJsonBuilder.create(getRecipeCategory(), this, 1)
+      return ShapelessRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this, 1)
           .input(tube)
           .input(Items.GRAY_CONCRETE)
-          .criterionFromItem(tube)
-          .setCustomRecipeCategory("light");
+          .criterion(RecipeProvider.hasItem(tube), RecipeProvider.conditionsFromItem(tube));
     }
-  }
-
-  @Override
-  public @Nullable RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
   }
 
   @Override
@@ -220,5 +213,10 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, Mishan
   public static @NotNull Item getBaseLight(String namespace, String lightColor, Block self) {
     final Identifier fullLightId = Identifier.of(namespace, lightColor + "_light");
     return Registries.ITEM.getOrEmpty(fullLightId).orElseThrow(() -> new IllegalArgumentException(String.format("Can't generate recipes: %s does not have a corresponding base light block (with id [%s])", self, fullLightId)));
+  }
+
+  @Override
+  public String customRecipeCategory() {
+    return "light";
   }
 }

@@ -7,12 +7,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
@@ -123,13 +125,14 @@ public interface RoadWithStraightLine extends Road {
             "***"
         };
       };
-      return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
-          .patterns(patterns)
+      return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
+          .pattern(patterns[0])
+          .pattern(patterns[1])
+          .pattern(patterns[2])
           .input('*', lineColor.getIngredient())
           .input('X', base)
-          .criterionFromItemTag("has_paint", lineColor.getIngredient())
-          .criterionFromItem(base)
-          .setCustomRecipeCategory("roads");
+          .criterion("has_paint", RecipeProvider.conditionsFromTag(lineColor.getIngredient()))
+          .criterion(RecipeProvider.hasItem(base), RecipeProvider.conditionsFromItem(base));
     }
 
     @Override

@@ -7,11 +7,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
@@ -132,17 +134,16 @@ public interface RoadWithOffsetStraightLine extends Road {
     @Override
     public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
       if (offsetLevel == 114514) {
-        return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
+        return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
             .pattern("w y")
             .pattern("XXX")
             .pattern("w y")
             .input('w', LineColor.WHITE.getIngredient())
             .input('y', LineColor.YELLOW.getIngredient())
             .input('X', base)
-            .criterionFromItemTag("has_white_paint", LineColor.WHITE.getIngredient())
-            .criterionFromItemTag("has_yellow_paint", LineColor.YELLOW.getIngredient())
-            .criterionFromItem(base)
-            .setCustomRecipeCategory("roads");
+            .criterion("has_white_paint", RecipeProvider.conditionsFromTag(LineColor.WHITE.getIngredient()))
+            .criterion("has_yellow_paint", RecipeProvider.conditionsFromTag(LineColor.YELLOW.getIngredient()))
+            .criterion(RecipeProvider.hasItem(base), RecipeProvider.conditionsFromItem(base));
       } else {
         final String[] patterns = switch (offsetLevel) {
           case 2 -> new String[]{
@@ -157,13 +158,14 @@ public interface RoadWithOffsetStraightLine extends Road {
           };
           default -> throw new IllegalStateException("Unexpected value: " + offsetLevel);
         };
-        return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
-            .patterns(patterns)
+        return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
+            .pattern(patterns[0])
+            .pattern(patterns[1])
+            .pattern(patterns[2])
             .input('*', lineColor.getIngredient())
             .input('X', base)
-            .criterionFromItemTag("has_paint", lineColor.getIngredient())
-            .criterionFromItem(base)
-            .setCustomRecipeCategory("roads");
+            .criterion("has_paint", RecipeProvider.conditionsFromTag(lineColor.getIngredient()))
+            .criterion(RecipeProvider.hasItem(base), RecipeProvider.conditionsFromItem(base));
       }
     }
 

@@ -10,8 +10,6 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -204,11 +202,6 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   }
 
   @Override
-  public Identifier getItemId() {
-    return Registries.ITEM.getId(asItem());
-  }
-
-  @Override
   public @Nullable Block baseBlock() {
     return baseHandrail.baseBlock();
   }
@@ -256,11 +249,6 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   public MutableText getName() {
     final Block block = baseBlock();
     return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.handrail_stair", block.getName());
-  }
-
-  @Override
-  public @Nullable RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
   }
 
   @Override

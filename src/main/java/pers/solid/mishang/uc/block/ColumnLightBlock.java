@@ -9,6 +9,7 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
@@ -126,7 +127,7 @@ public class ColumnLightBlock extends Block implements Waterloggable, MishangucB
   }
 
   public Model getModelType() {
-    final Identifier identifier = getBlockId();
+    final Identifier identifier = Registries.BLOCK.getId(this);
     String path = identifier.getPath();
     final int i = lightColor.length();
     if (path.startsWith(lightColor) && path.charAt(i) == '_') {
@@ -139,7 +140,7 @@ public class ColumnLightBlock extends Block implements Waterloggable, MishangucB
 
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    final Identifier itemId = getItemId();
+    final Identifier itemId = Registries.ITEM.getId(asItem());
     final String itemPath = itemId.getPath();
     if (itemPath.endsWith("_tube")) {
       final @NotNull Item fullLight = WallLightBlock.getBaseLight(itemId.getNamespace(), lightColor, this);
@@ -153,27 +154,25 @@ public class ColumnLightBlock extends Block implements Waterloggable, MishangucB
       } else {
         throw new IllegalStateException(String.format("Can't generate recipes: Cannot determine the type of %s according to its id", this));
       }
-      return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), getRecipeCategory(), this, outputCount)
-          .criterionFromItem(fullLight)
-          .setCustomRecipeCategory("light");
+      return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), RecipeCategory.DECORATIONS, this, outputCount)
+          .criterion(RecipeProvider.hasItem(fullLight), RecipeProvider.conditionsFromItem(fullLight));
     } else {
       final Identifier tubeId = itemId.withSuffixedPath("_tube");
       final @NotNull Item tube = Registries.ITEM.getOrEmpty(tubeId).orElseThrow(() -> new IllegalArgumentException(String.format("Can't generate recipes: %s does not have a corresponding tube block (with id [%s])", this, tubeId)));
-      return ShapelessRecipeJsonBuilder.create(getRecipeCategory(), this, 1)
+      return ShapelessRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this, 1)
           .input(tube)
           .input(Items.GRAY_CONCRETE)
-          .criterionFromItem(tube)
-          .setCustomRecipeCategory("light");
+          .criterion(RecipeProvider.hasItem(tube), RecipeProvider.conditionsFromItem(tube));
     }
-  }
-
-  @Override
-  public RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
   }
 
   @Override
   protected MapCodec<? extends ColumnLightBlock> getCodec() {
     return CODEC;
+  }
+
+  @Override
+  public String customRecipeCategory() {
+    return "light";
   }
 }

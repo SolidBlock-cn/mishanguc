@@ -7,11 +7,13 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.Text;
@@ -27,8 +29,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
-import pers.solid.mishang.uc.data.FasterTextureMap;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
+import pers.solid.mishang.uc.data.FasterTextureMap;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.*;
 
@@ -250,15 +252,14 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       if (base instanceof SlabBlock) {
         base2 = ((AbstractRoadBlock) base2).getRoadSlab();
       }
-      return ShapedRecipeJsonBuilder.create(getRecipeCategory(), self, 3)
+      return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern(" *X")
           .pattern("*X ")
           .pattern("X  ")
           .input('*', lineColorSide.getIngredient())
           .input('X', base2)
-          .criterionFromItemTag("has_paint", lineColorSide.getIngredient())
-          .criterionFromItem(base2)
-          .setCustomRecipeCategory("roads");
+          .criterion("has_paint", RecipeProvider.conditionsFromTag(lineColorSide.getIngredient()))
+          .criterion(RecipeProvider.hasItem(base2), RecipeProvider.conditionsFromItem(base2));
     }
   }
 }

@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
@@ -19,20 +20,23 @@ import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.loot.LootTable;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.BRRPUtils;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import pers.solid.mishang.uc.data.MishangucModels;
 
 import java.util.List;
 
 public class ColoredSlabBlock extends SlabBlock implements ColoredBlock {
-  public static final MapCodec<ColoredSlabBlock> CODEC = BRRPUtils.createCodecWithBaseBlock(createSettingsCodec(), ColoredSlabBlock::new);
+  public static final MapCodec<ColoredSlabBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
+      Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(o -> o.baseBlock),
+      createSettingsCodec()
+  ).apply(i, ColoredSlabBlock::new));
 
   public final Block baseBlock;
 
@@ -85,15 +89,9 @@ public class ColoredSlabBlock extends SlabBlock implements ColoredBlock {
   }
 
   @Override
-  public RecipeCategory getRecipeCategory() {
-    return RecipeCategory.BUILDING_BLOCKS;
-  }
-
-  @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ((ShapedRecipeJsonBuilder) RecipeProvider.createSlabRecipe(getRecipeCategory(), this, Ingredient.ofItems(baseBlock)))
-        .criterion(RecipeProvider.hasItem(this.baseBlock), RecipeProvider.conditionsFromItem(this.baseBlock))
-        .setCustomRecipeCategory("colored_blocks");
+    return ((ShapedRecipeJsonBuilder) RecipeProvider.createSlabRecipe(RecipeCategory.BUILDING_BLOCKS, this, Ingredient.ofItems(baseBlock)))
+        .criterion(RecipeProvider.hasItem(this.baseBlock), RecipeProvider.conditionsFromItem(this.baseBlock));
   }
 
   @Override

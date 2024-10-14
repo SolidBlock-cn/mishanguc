@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.*;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -31,8 +32,8 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Map;
@@ -310,21 +311,20 @@ public class HungSignBarBlock extends Block implements Waterloggable, MishangucB
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     return StonecuttingRecipeJsonBuilder.createStonecutting(
             Ingredient.ofItems(baseBlock),
-            getRecipeCategory(),
+            RecipeCategory.DECORATIONS,
             this,
             20)
-        .criterionFromItem("has_base_block", baseBlock)
-        .setCustomRecipeCategory("signs")
+        .criterion("has_base_block", RecipeProvider.conditionsFromItem(baseBlock))
         .group(getRecipeGroup());
-  }
-
-  @Override
-  public @Nullable RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
   }
 
   @Override
   protected MapCodec<? extends HungSignBarBlock> getCodec() {
     return CODEC;
+  }
+
+  @Override
+  public String customRecipeCategory() {
+    return "signs";
   }
 }

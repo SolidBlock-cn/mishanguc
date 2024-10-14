@@ -14,8 +14,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -94,11 +92,6 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
     return baseHandrail.asItem();
   }
 
-  @Override
-  public Identifier getItemId() {
-    return Registries.ITEM.getId(asItem());
-  }
-
   public @NotNull BlockStateSupplier createBlockStates(Identifier modelId) {
     return ModelHelper.stateForHorizontalCornerFacingBlock(this, modelId, true);
   }
@@ -144,11 +137,6 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
   public boolean connectsIn(@NotNull BlockState blockState, @NotNull Direction direction, @Nullable Direction offsetFacing) {
     final HorizontalCornerDirection facing = blockState.get(FACING);
     return offsetFacing != null && facing.hasDirection(direction) && facing.hasDirection(offsetFacing);
-  }
-
-  @Override
-  public @Nullable RecipeCategory getRecipeCategory() {
-    return RecipeCategory.DECORATIONS;
   }
 
   @Override
