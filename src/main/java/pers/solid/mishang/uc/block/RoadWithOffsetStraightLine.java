@@ -3,8 +3,6 @@ package pers.solid.mishang.uc.block;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.data.client.*;
@@ -25,11 +23,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.arrp.BRRPHelper;
-import pers.solid.mishang.uc.arrp.FasterJTextures;
+import pers.solid.mishang.uc.data.FasterTextureMap;
+import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
@@ -98,10 +94,8 @@ public interface RoadWithOffsetStraightLine extends Road {
     }
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  default @NotNull BlockStateSupplier getBlockStates() {
-    return VariantsBlockStateSupplier.create((Block) this, BlockStateVariant.create().put(VariantSettings.MODEL, getBlockModelId()).put(VariantSettings.UVLOCK, false)).coordinate(BlockStateVariantMap.create(FACING).register(direction -> BlockStateVariant.create().put(MishangUtils.DIRECTION_Y_VARIANT, direction.rotateYClockwise())));
+  default @NotNull BlockStateSupplier createBlockStates(Block block, Identifier modelId) {
+    return VariantsBlockStateSupplier.create(block, BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.UVLOCK, false)).coordinate(BlockStateVariantMap.create(FACING).register(direction -> BlockStateVariant.create().put(MishangUtils.DIRECTION_Y_VARIANT, direction.rotateYClockwise())));
   }
 
   @Contract(pure = true)
@@ -128,16 +122,11 @@ public interface RoadWithOffsetStraightLine extends Road {
       }
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull ModelJsonBuilder getBlockModel() {
-      return ModelJsonBuilder.create(Identifier.of("mishanguc:block/road_with_straight_line")).setTextures(new FasterJTextures().base("asphalt").lineSide(lineTexture).lineTop(lineTexture));
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public void writeBlockModel(RuntimeResourcePack pack) {
-      BRRPHelper.addModelWithSlab(pack, Impl.this);
+    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
+      final FasterTextureMap textures = new FasterTextureMap().base("asphalt").lineSide(lineTexture).lineTop(lineTexture);
+      final Identifier modelId = road.uploadModel("_with_straight_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_TOP);
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(createBlockStates(road, modelId)));
     }
 
     @Override

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "mishanguc:block/colored_andesite_slab"
+    },
+    "type=double": {
+      "model": "mishanguc:block/colored_andesite"
+    },
+    "type=top": {
+      "model": "mishanguc:block/colored_andesite_slab_top"
+    }
+  }
+}

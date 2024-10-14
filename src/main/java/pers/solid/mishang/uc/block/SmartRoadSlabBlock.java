@@ -2,8 +2,6 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -27,9 +25,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.mishang.uc.arrp.BRRPHelper;
+import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
@@ -145,18 +143,6 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
     return baseBlock.getConnectionStateOf(state, direction);
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @Nullable BlockStateSupplier getBlockStates() {
-    final BlockStateSupplier baseStates = baseBlock.getBlockStates();
-    return baseStates == null ? null : BRRPHelper.composeStateForSlab(baseStates);
-  }
-
-  @Override
-  public void writeBlockModel(RuntimeResourcePack pack) {
-    // 道路台阶方块的模型由其主方块代为完成，故这里什么也不做。
-  }
-
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     return ((ShapedRecipeJsonBuilder) RecipeProvider.createSlabRecipe(getRecipeCategory(), this, Ingredient.ofItems(baseBlock))).criterionFromItem(baseBlock).setCustomRecipeCategory("roads");
@@ -182,5 +168,10 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
   @Override
   public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
     return baseBlock.getPaintingRecipe(base, this);
+  }
+
+  @Override
+  public BlockStateSupplier composeState(@NotNull BlockStateSupplier stateForFull) {
+    return ModelHelper.composeStateForSlab(stateForFull);
   }
 }

@@ -1,10 +1,7 @@
 package pers.solid.mishang.uc.item;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.dispenser.DispenserBehavior;
-import net.minecraft.data.client.Models;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -28,14 +25,12 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
-import pers.solid.brrp.v1.generator.ItemResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
-public class IceSnowTool extends Item implements ItemResourceGenerator, DispenserBehavior, HotbarScrollInteraction {
+public class IceSnowTool extends Item implements MishangucItem, DispenserBehavior, HotbarScrollInteraction {
   public IceSnowTool(Settings settings) {
     super(settings.component(MishangucComponents.STRENGTH, 4));
     DispenserBlock.registerBehavior(this, this);
@@ -145,12 +140,6 @@ public class IceSnowTool extends Item implements ItemResourceGenerator, Dispense
       }
     }
     world.spawnParticles(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, (int) Math.pow((range * 2 + 1), 3) / 16, range, range, range, 0);
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public ModelJsonBuilder getItemModel() {
-    return ItemResourceGenerator.super.getItemModel().parent(Models.HANDHELD);
   }
 
   @Override

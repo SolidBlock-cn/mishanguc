@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "axis=x,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_yellow_line",
+      "y": 270
+    },
+    "axis=x,type=double": {
+      "model": "mishanguc:block/road_with_yellow_line",
+      "y": 270
+    },
+    "axis=x,type=top": {
+      "model": "mishanguc:block/road_slab_with_yellow_line_top",
+      "y": 270
+    },
+    "axis=z,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_yellow_line",
+      "y": 180
+    },
+    "axis=z,type=double": {
+      "model": "mishanguc:block/road_with_yellow_line",
+      "y": 180
+    },
+    "axis=z,type=top": {
+      "model": "mishanguc:block/road_slab_with_yellow_line_top",
+      "y": 180
+    }
+  }
+}

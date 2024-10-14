@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/medium_column_light",
+  "textures": {
+    "light": "mishanguc:block/orange_light"
+  }
+}

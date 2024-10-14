@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/road_mark_on_slab_rotated",
+  "textures": {
+    "texture": "mishanguc:block/arrow_straight"
+  }
+}

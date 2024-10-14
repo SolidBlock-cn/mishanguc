@@ -5,7 +5,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.data.client.Models;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.LivingEntity;
@@ -23,9 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import pers.solid.brrp.v1.generator.ItemResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.block.AbstractRoadBlock;
 import pers.solid.mishang.uc.block.AbstractRoadSlabBlock;
@@ -38,7 +34,7 @@ import pers.solid.mishang.uc.util.TextBridge;
 import java.util.List;
 
 @ApiStatus.AvailableSince("0.2.4")
-public class RoadToolItem extends BlockToolItem implements ItemResourceGenerator {
+public class RoadToolItem extends BlockToolItem implements MishangucItem {
   public RoadToolItem(Settings settings) {
     super(settings, Boolean.FALSE);
   }
@@ -121,12 +117,6 @@ public class RoadToolItem extends BlockToolItem implements ItemResourceGenerator
       return super.renderBlockOutline(player, itemStack, worldRenderContext, blockOutlineContext, hand);
     }
     return false;
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull ModelJsonBuilder getItemModel() {
-    return ItemResourceGenerator.super.getItemModel().parent(Models.HANDHELD);
   }
 
   @Override

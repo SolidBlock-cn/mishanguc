@@ -2,8 +2,6 @@ package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.Maps;
 import com.mojang.serialization.MapCodec;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -34,15 +32,14 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
-import pers.solid.mishang.uc.arrp.BRRPHelper;
+import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 
 import java.util.Map;
 
-public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block implements Waterloggable, BlockResourceGenerator, Handrails {
+public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block implements Waterloggable, MishangucBlock, Handrails {
   /**
    * 该方块的基础的栏杆方块。
    */
@@ -102,10 +99,8 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
     return Registries.ITEM.getId(asItem());
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull BlockStateSupplier getBlockStates() {
-    return BRRPHelper.stateForHorizontalCornerFacingBlock(this, getBlockModelId(), true);
+  public @NotNull BlockStateSupplier createBlockStates(Identifier modelId) {
+    return ModelHelper.stateForHorizontalCornerFacingBlock(this, modelId, true);
   }
 
   @Override

@@ -4,6 +4,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeveledCauldronBlock;
 import net.minecraft.block.cauldron.CauldronBehavior;
+import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.client.TextureKey;
+import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -22,8 +26,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
 import pers.solid.mishang.uc.util.EightHorizontalDirection;
 import pers.solid.mishang.uc.util.LineColor;
@@ -35,7 +39,7 @@ import java.util.List;
 /**
  * 所有道路方块类型均实现的接口。接口可以多重继承，并直接实现于已有类上，因此使用接口。
  */
-public interface Road extends BlockResourceGenerator {
+public interface Road extends MishangucBlock {
 
   /**
    * 获取该方块状态中，某个特定方向上的连接状态。连接状态可用于自动路块。
@@ -156,7 +160,7 @@ public interface Road extends BlockResourceGenerator {
   }
 
   default Identifier getPaintingRecipeId() {
-    return getRecipeId().brrp_suffixed("_from_painting");
+    return getRecipeId().withSuffixedPath("_from_painting");
   }
 
   default @Nullable String getRecipeGroup() {
@@ -185,4 +189,28 @@ public interface Road extends BlockResourceGenerator {
     }
     return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
   };
+
+  /**
+   * 对于道路方块，返回 {@code "road" + suffix}。对于道路台阶方块，返回 {@code "road_slab" + suffix}。
+   */
+  String getModelName(String suffix);
+
+  /**
+   * 生成方块的模型。如果此方块是台阶方块，则生成下半和上半台阶方块的模型，共两个模型，其中返回下半台阶方块的模型的 ID。
+   *
+   * @return 生成的方块模型的 ID。如果是台阶方块，则是下半台阶方块的 ID。
+   */
+  Identifier uploadModel(String suffix, TextureMap textureMap, BlockStateModelGenerator blockStateModelGenerator, TextureKey... textureKeys);
+
+  /**
+   * 生成方块的模型。如果此方块是台阶方块，则生成下半和上半台阶方块的模型，共两个模型，其中返回下半台阶方块的模型的 ID。
+   *
+   * @return 生成的方块模型的 ID。如果是台阶方块，则是下半台阶方块的 ID。
+   */
+  Identifier uploadModel(String suffix, String variant, TextureMap textureMap, BlockStateModelGenerator blockStateModelGenerator, TextureKey... textureKeys);
+
+  /**
+   * 对于道路方块，直接返回 {@code stateForFull}。对于道路台阶方块，会将其转化为台阶的方块状态再返回。
+   */
+  BlockStateSupplier composeState(@NotNull BlockStateSupplier stateForFull);
 }

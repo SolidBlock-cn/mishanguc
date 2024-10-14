@@ -1,0 +1,164 @@
+{
+  "variants": {
+    "down=false,rotation=0": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign",
+      "uvlock": true,
+      "y": 0
+    },
+    "down=false,rotation=1": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_1",
+      "uvlock": true,
+      "y": 0
+    },
+    "down=false,rotation=10": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_2",
+      "uvlock": true,
+      "y": 180
+    },
+    "down=false,rotation=11": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_3",
+      "uvlock": true,
+      "y": 270
+    },
+    "down=false,rotation=12": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign",
+      "uvlock": true,
+      "y": 270
+    },
+    "down=false,rotation=13": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_1",
+      "uvlock": true,
+      "y": 270
+    },
+    "down=false,rotation=14": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_2",
+      "uvlock": true,
+      "y": 270
+    },
+    "down=false,rotation=15": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_3",
+      "uvlock": true,
+      "y": 360
+    },
+    "down=false,rotation=2": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_2",
+      "uvlock": true,
+      "y": 0
+    },
+    "down=false,rotation=3": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_3",
+      "uvlock": true,
+      "y": 90
+    },
+    "down=false,rotation=4": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign",
+      "uvlock": true,
+      "y": 90
+    },
+    "down=false,rotation=5": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_1",
+      "uvlock": true,
+      "y": 90
+    },
+    "down=false,rotation=6": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_2",
+      "uvlock": true,
+      "y": 90
+    },
+    "down=false,rotation=7": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_3",
+      "uvlock": true,
+      "y": 180
+    },
+    "down=false,rotation=8": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign",
+      "uvlock": true,
+      "y": 180
+    },
+    "down=false,rotation=9": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_1",
+      "uvlock": true,
+      "y": 180
+    },
+    "down=true,rotation=0": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_barred",
+      "uvlock": true,
+      "y": 0
+    },
+    "down=true,rotation=1": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_barred_1",
+      "uvlock": true,
+      "y": 0
+    },
+    "down=true,rotation=10": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_barred_2",
+      "uvlock": true,
+      "y": 180
+    },
+    "down=true,rotation=11": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_barred_3",
+      "uvlock": true,
+      "y": 270
+    },
+    "down=true,rotation=12": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_barred",
+      "uvlock": true,
+      "y": 270
+    },
+    "down=true,rotation=13": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_barred_1",
+      "uvlock": true,
+      "y": 270
+    },
+    "down=true,rotation=14": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_barred_2",
+      "uvlock": true,
+      "y": 270
+    },
+    "down=true,rotation=15": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_barred_3",
+      "uvlock": true,
+      "y": 360
+    },
+    "down=true,rotation=2": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_barred_2",
+      "uvlock": true,
+      "y": 0
+    },
+    "down=true,rotation=3": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_barred_3",
+      "uvlock": true,
+      "y": 90
+    },
+    "down=true,rotation=4": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_barred",
+      "uvlock": true,
+      "y": 90
+    },
+    "down=true,rotation=5": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_barred_1",
+      "uvlock": true,
+      "y": 90
+    },
+    "down=true,rotation=6": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_barred_2",
+      "uvlock": true,
+      "y": 90
+    },
+    "down=true,rotation=7": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_barred_3",
+      "uvlock": true,
+      "y": 180
+    },
+    "down=true,rotation=8": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_barred",
+      "uvlock": true,
+      "y": 180
+    },
+    "down=true,rotation=9": {
+      "model": "mishanguc:block/glowing_nether_brick_standing_sign_barred_1",
+      "uvlock": true,
+      "y": 180
+    }
+  }
+}

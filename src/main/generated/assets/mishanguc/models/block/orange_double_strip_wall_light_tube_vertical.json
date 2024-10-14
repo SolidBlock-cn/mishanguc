@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/double_strip_wall_light_tube_vertical",
+  "textures": {
+    "light": "mishanguc:block/orange_light"
+  }
+}

@@ -3,14 +3,12 @@ package pers.solid.mishang.uc.block;
 import com.mojang.datafixers.util.Function3;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item.TooltipContext;
@@ -27,13 +25,10 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.arrp.BRRPHelper;
-import pers.solid.mishang.uc.arrp.FasterJTextures;
+import pers.solid.mishang.uc.data.FasterTextureMap;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
+import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
@@ -77,13 +72,6 @@ public interface RoadWithTwoBevelAngleLines extends Road {
     return Road.super.withPlacementState(state, ctx).with(FACING, ctx.getPlayer() != null && ctx.getPlayer().isSneaking() ? playerFacing.getOpposite() : playerFacing);
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  @NotNull
-  default BlockStateSupplier getBlockStates() {
-    return BlockStateModelGenerator.createSingletonBlockState((Block) this, getBlockModelId()).coordinate(BlockStateModelGenerator.createSouthDefaultHorizontalRotationStates());
-  }
-
   static <B extends AbstractRoadBlock & RoadWithTwoBevelAngleLines> MapCodec<B> createCodec(RecordCodecBuilder<B, AbstractBlock.Settings> settingsCodec, Function3<AbstractBlock.Settings, LineColor, LineType, B> function) {
     return RecordCodecBuilder.mapCodec(i -> i.group(settingsCodec, AbstractRoadBlock.lineColorFieldCodec(), AbstractRoadBlock.lineTypeFieldCodec()).apply(i, function));
   }
@@ -96,20 +84,14 @@ public interface RoadWithTwoBevelAngleLines extends Road {
       setDefaultState(getDefaultState().with(FACING, Direction.SOUTH));
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull ModelJsonBuilder getBlockModel() {
-      return ModelJsonBuilder.create(Identifier.of("mishanguc:block/road_with_bi_angle_line"))
-          .setTextures(new FasterJTextures()
-              .base("asphalt")
-              .lineTop(MishangUtils.composeAngleLineTexture(lineColor, lineType, true))
-              .lineSide(MishangUtils.composeStraightLineTexture(lineColor, lineType)));
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public void writeBlockModel(RuntimeResourcePack pack) {
-      BRRPHelper.addModelWithSlab(pack, this);
+    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
+      TextureMap textures = new FasterTextureMap()
+          .base("asphalt")
+          .lineTop(MishangUtils.composeAngleLineTexture(lineColor, lineType, true))
+          .lineSide(MishangUtils.composeStraightLineTexture(lineColor, lineType));
+      final Identifier modelId = road.uploadModel("_with_bi_angle_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_TOP, MishangucTextureKeys.LINE_SIDE);
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(BlockStateModelGenerator.createSingletonBlockState(road, modelId).coordinate(BlockStateModelGenerator.createSouthDefaultHorizontalRotationStates())));
     }
 
     @Override
@@ -155,21 +137,15 @@ public interface RoadWithTwoBevelAngleLines extends Road {
       setDefaultState(getDefaultState().with(FACING, Direction.SOUTH));
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull ModelJsonBuilder getBlockModel() {
-      return ModelJsonBuilder.create(Identifier.of("mishanguc:block/road_with_straight_and_bi_angle_line"))
-          .setTextures(new FasterJTextures()
-              .base("asphalt")
-              .lineTop(MishangUtils.composeStraightLineTexture(lineColor, lineType))
-              .lineSide(MishangUtils.composeStraightLineTexture(lineColor, lineType))
-              .varP("line_top2", MishangUtils.composeAngleLineTexture(lineColor, lineType, true)));
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public void writeBlockModel(RuntimeResourcePack pack) {
-      BRRPHelper.addModelWithSlab(pack, this);
+    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
+      final TextureMap textures = new FasterTextureMap()
+          .base("asphalt")
+          .lineTop(MishangUtils.composeStraightLineTexture(lineColor, lineType))
+          .lineSide(MishangUtils.composeStraightLineTexture(lineColor, lineType))
+          .lineTop2(MishangUtils.composeAngleLineTexture(lineColor, lineType, true));
+      final Identifier modelId = road.uploadModel("_with_straight_and_bi_angle_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_TOP, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_TOP2);
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(BlockStateModelGenerator.createSingletonBlockState(road, modelId).coordinate(BlockStateModelGenerator.createSouthDefaultHorizontalRotationStates())));
     }
 
     @Override

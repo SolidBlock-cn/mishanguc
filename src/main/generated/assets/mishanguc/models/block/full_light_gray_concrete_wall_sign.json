@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/full_wall_sign",
+  "textures": {
+    "texture": "minecraft:block/light_gray_concrete"
+  }
+}

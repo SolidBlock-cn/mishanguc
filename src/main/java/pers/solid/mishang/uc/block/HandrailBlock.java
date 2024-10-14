@@ -13,6 +13,7 @@ import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -23,8 +24,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
@@ -43,7 +42,7 @@ import java.util.Map;
  *   <p>五种栏杆方块共用同一个物品，物品放置时根据其位置和情形决定栏杆的形态。
  * <p>关于使用该方块的列表，请参见 {@link pers.solid.mishang.uc.blocks.HandrailBlocks}。
  */
-public abstract class HandrailBlock extends HorizontalFacingBlock implements Waterloggable, BlockResourceGenerator, Handrails {
+public abstract class HandrailBlock extends HorizontalFacingBlock implements Waterloggable, MishangucBlock, Handrails {
   /**
    * 该方块是否含水。
    */
@@ -190,10 +189,8 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
     return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull BlockStateSupplier getBlockStates() {
-    return BlockStateModelGenerator.createSingletonBlockState(this, getBlockModelId()).coordinate(BlockStateVariantMap.create(Properties.HORIZONTAL_FACING).register(direction -> BlockStateVariant.create().put(MishangUtils.DIRECTION_Y_VARIANT, direction).put(VariantSettings.UVLOCK, true)));
+  public @NotNull BlockStateSupplier createBlockStates(Identifier modelId) {
+    return BlockStateModelGenerator.createSingletonBlockState(this, modelId).coordinate(BlockStateVariantMap.create(Properties.HORIZONTAL_FACING).register(direction -> BlockStateVariant.create().put(MishangUtils.DIRECTION_Y_VARIANT, direction).put(VariantSettings.UVLOCK, true)));
   }
 
   @Override
@@ -201,33 +198,9 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
     return SHAPES.get(state.get(FACING));
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public abstract @NotNull ModelJsonBuilder getBlockModel();
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public void writeBlockStates(RuntimeResourcePack pack) {
-    BlockResourceGenerator.super.writeBlockStates(pack);
-    central().writeBlockStates(pack);
-    corner().writeBlockStates(pack);
-    stair().writeBlockStates(pack);
-    outer().writeBlockStates(pack);
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public void writeBlockModel(RuntimeResourcePack pack) {
-    BlockResourceGenerator.super.writeBlockModel(pack);
-    central().writeBlockModel(pack);
-    corner().writeBlockModel(pack);
-    stair().writeBlockModel(pack);
-    outer().writeBlockModel(pack);
-  }
-
   @Override
   public void writeLootTable(RuntimeResourcePack pack) {
-    BlockResourceGenerator.super.writeLootTable(pack);
+    MishangucBlock.super.writeLootTable(pack);
     central().writeLootTable(pack);
     corner().writeLootTable(pack);
     stair().writeLootTable(pack);

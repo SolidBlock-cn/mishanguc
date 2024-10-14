@@ -1,11 +1,7 @@
 package pers.solid.mishang.uc.item;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.pattern.CachedBlockPosition;
-import net.minecraft.data.client.Models;
-import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.LivingEntity;
@@ -25,13 +21,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.ItemResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
-public class RotatingToolItem extends BlockToolItem implements ItemResourceGenerator {
+public class RotatingToolItem extends BlockToolItem implements MishangucItem {
 
   public RotatingToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
@@ -92,12 +86,6 @@ public class RotatingToolItem extends BlockToolItem implements ItemResourceGener
     tooltip.add(
         TextBridge.translatable("item.mishanguc.rotating_tool.tooltip.2")
             .formatted(Formatting.GRAY));
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public ModelJsonBuilder getItemModel() {
-    return ModelJsonBuilder.create(Models.HANDHELD).addTexture(TextureKey.LAYER0, getTextureId());
   }
 
   @Override

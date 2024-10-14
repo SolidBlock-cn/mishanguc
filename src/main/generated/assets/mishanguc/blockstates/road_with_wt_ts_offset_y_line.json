@@ -1,0 +1,36 @@
+{
+  "variants": {
+    "axis=x,facing=north_east": {
+      "model": "mishanguc:block/road_with_wt_ts_offset_y_line",
+      "y": 180
+    },
+    "axis=x,facing=north_west": {
+      "model": "mishanguc:block/road_with_wt_ts_offset_y_line_mirrored",
+      "y": 180
+    },
+    "axis=x,facing=south_east": {
+      "model": "mishanguc:block/road_with_wt_ts_offset_y_line_mirrored",
+      "y": 0
+    },
+    "axis=x,facing=south_west": {
+      "model": "mishanguc:block/road_with_wt_ts_offset_y_line",
+      "y": 0
+    },
+    "axis=z,facing=north_east": {
+      "model": "mishanguc:block/road_with_wt_ts_offset_y_line_mirrored",
+      "y": 270
+    },
+    "axis=z,facing=north_west": {
+      "model": "mishanguc:block/road_with_wt_ts_offset_y_line",
+      "y": 90
+    },
+    "axis=z,facing=south_east": {
+      "model": "mishanguc:block/road_with_wt_ts_offset_y_line",
+      "y": 270
+    },
+    "axis=z,facing=south_west": {
+      "model": "mishanguc:block/road_with_wt_ts_offset_y_line_mirrored",
+      "y": 90
+    }
+  }
+}

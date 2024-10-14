@@ -18,7 +18,6 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -80,7 +79,7 @@ public class MishangucClient implements ClientModInitializer {
   private static void registerModelPredicateProviders() {
     // 模型谓词提供器
     ModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL,
-        Identifier.of("mishanguc", "explosion_power"),
+        Mishanguc.id("explosion_power"),
         new ClampedModelPredicateProvider() {
           @Override
           public float unclampedCall(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity, int seed) {
@@ -93,10 +92,10 @@ public class MishangucClient implements ClientModInitializer {
             return unclampedCall(itemStack, clientWorld, livingEntity, i);
           }
         });
-    ModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL, Identifier.of("mishanguc", "explosion_create_fire"), (stack, world, entity, seed) -> stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT).createFire() ? 1 : 0);
-    ModelPredicateProviderRegistry.register(MishangucItems.FAST_BUILDING_TOOL, Identifier.of("mishanguc", "fast_building_range"), (stack, world, entity, seed) -> stack.getOrDefault(MishangucComponents.FAST_BUILDING_TOOL_DATA, FastBuildingToolData.DEFAULT).range() / 64f);
-    ModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, Identifier.of("mishanguc", "is_holding_block"), (stack, world, entity, seed) -> BooleanUtils.toInteger(stack.get(MishangucComponents.CARRYING_TOOL_DATA) instanceof CarryingToolData.HoldingBlockState));
-    ModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, Identifier.of("mishanguc", "is_holding_entity"), (stack, world, entity, seed) -> BooleanUtils.toInteger(stack.get(MishangucComponents.CARRYING_TOOL_DATA) instanceof CarryingToolData.HoldingEntity));
+    ModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL, Mishanguc.id("explosion_create_fire"), (stack, world, entity, seed) -> stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT).createFire() ? 1 : 0);
+    ModelPredicateProviderRegistry.register(MishangucItems.FAST_BUILDING_TOOL, Mishanguc.id("fast_building_range"), (stack, world, entity, seed) -> stack.getOrDefault(MishangucComponents.FAST_BUILDING_TOOL_DATA, FastBuildingToolData.DEFAULT).range() / 64f);
+    ModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, Mishanguc.id("is_holding_block"), (stack, world, entity, seed) -> BooleanUtils.toInteger(stack.get(MishangucComponents.CARRYING_TOOL_DATA) instanceof CarryingToolData.HoldingBlockState));
+    ModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, Mishanguc.id("is_holding_entity"), (stack, world, entity, seed) -> BooleanUtils.toInteger(stack.get(MishangucComponents.CARRYING_TOOL_DATA) instanceof CarryingToolData.HoldingEntity));
   }
 
   private static void registerNetworking() {

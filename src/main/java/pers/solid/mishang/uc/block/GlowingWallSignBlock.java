@@ -2,10 +2,11 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.client.ModelProvider;
+import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.text.MutableText;
@@ -13,15 +14,17 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
+import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.TextBridge;
 
 public class GlowingWallSignBlock extends WallSignBlock {
   public static final MapCodec<GlowingWallSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec(), createSettingsCodec()).apply(instance, GlowingWallSignBlock::new));
   @ApiStatus.AvailableSince("0.1.7")
-  protected static final Identifier DEFAULT_GLOW_TEXTURE = Identifier.of("mishanguc:block/white_light");
+  protected static final Identifier DEFAULT_GLOW_TEXTURE = Mishanguc.id("block/white_light");
   /**
    * 告示牌发光部分的纹理。默认为 {@link #DEFAULT_GLOW_TEXTURE}。
    */
@@ -62,9 +65,11 @@ public class GlowingWallSignBlock extends WallSignBlock {
   }
 
   @Override
-  @Environment(EnvType.CLIENT)
-  public @NotNull ModelJsonBuilder getBlockModel() {
-    return ModelJsonBuilder.create(Identifier.of("mishanguc:block/glowing_wall_sign")).addTexture("texture", getBaseTexture()).addTexture("glow", glowTexture);
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final TextureMap textures = TextureMap.texture(getBaseTexture()).put(MishangucTextureKeys.GLOW, glowTexture);
+    final Identifier modelId = MishangucModels.GLOWING_WALL_SIGN.upload(this, textures, blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId));
+    blockStateModelGenerator.registerParentedItemModel(this, modelId);
   }
 
   @Override

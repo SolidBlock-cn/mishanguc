@@ -8,6 +8,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
+import pers.solid.mishang.uc.Mishanguc;
 
 import java.io.IOException;
 import java.util.function.BiFunction;
@@ -49,7 +50,7 @@ public final class SpecialDrawableTypes {
   });
 
   private static <T extends SpecialDrawableType<? extends SpecialDrawable>> T register(String namePath, T specialDrawable) {
-    return Registry.register(SpecialDrawableType.REGISTRY, Identifier.of("mishanguc", namePath), specialDrawable);
+    return Registry.register(SpecialDrawableType.REGISTRY, Mishanguc.id(namePath), specialDrawable);
   }
 
   private static <S extends SpecialDrawable> SpecialDrawableType<S> register(String namePath, BiFunction<TextContext, NbtCompound, S> fromNbt, BiFunction<TextContext, String, S> fromStringArgs) {

@@ -13,7 +13,6 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.data.client.Models;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -24,7 +23,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockBox;
@@ -34,8 +32,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.ItemResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
@@ -44,7 +41,7 @@ import pers.solid.mishang.uc.util.TextBridge;
 import java.util.List;
 import java.util.WeakHashMap;
 
-public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInteraction, ItemResourceGenerator {
+public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInteraction {
   /**
    * 记录放置柱的操作记录。当玩家放置了柱之后，可以对其进行撤销，其操作记录就是存储在这个里面的。
    */
@@ -52,9 +49,9 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
   private static @Nullable Triple<ClientWorld, Block, BlockBox> clientTempMemory = null;
 
   public static void registerTempMemoryEvents() {
-    ServerPlayConnectionEvents.DISCONNECT.register(Identifier.of("mishanguc", "remove_column_building_tool_memory"), (handler, server) -> tempMemory.remove(handler.player));
+    ServerPlayConnectionEvents.DISCONNECT.register(Mishanguc.id("remove_column_building_tool_memory"), (handler, server) -> tempMemory.remove(handler.player));
     if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-      ClientPlayConnectionEvents.DISCONNECT.register(Identifier.of("mishanguc", "remove_column_building_tool_memory"), (handler, client) -> clientTempMemory = null);
+      ClientPlayConnectionEvents.DISCONNECT.register(Mishanguc.id("remove_column_building_tool_memory"), (handler, client) -> clientTempMemory = null);
     }
   }
 
@@ -167,12 +164,6 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
   public void onScroll(int selectedSlot, double scrollAmount, ServerPlayerEntity player, ItemStack stack) {
     final int length = MathHelper.clamp(getLength(stack) - (int) scrollAmount, 1, 64);
     stack.set(MishangucComponents.LENGTH, length);
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public ModelJsonBuilder getItemModel() {
-    return ItemResourceGenerator.super.getItemModel().parent(Models.HANDHELD);
   }
 
   @Environment(EnvType.CLIENT)

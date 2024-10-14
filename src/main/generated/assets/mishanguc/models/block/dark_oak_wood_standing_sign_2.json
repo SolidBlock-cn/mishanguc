@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/standing_sign_2",
+  "textures": {
+    "bar": "minecraft:block/dark_oak_log",
+    "texture": "minecraft:block/dark_oak_log"
+  }
+}

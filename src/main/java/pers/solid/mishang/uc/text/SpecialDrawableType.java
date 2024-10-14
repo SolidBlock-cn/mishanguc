@@ -11,13 +11,14 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.Mishanguc;
 
 /**
  * SpecialDrawableType（特殊可渲染内容类型）表示一个 SpecialDrawable 的类型，可以指定一个 id 以及如何根据字符串参数或者 NBT 进行反序列化。SpecialDrawableType 拥有注册表。
  */
 @ApiStatus.AvailableSince("0.2.4")
 public interface SpecialDrawableType<S extends SpecialDrawable> {
-  RegistryKey<Registry<SpecialDrawableType<? extends SpecialDrawable>>> REGISTRY_KEY = RegistryKey.ofRegistry(Identifier.of("mishanguc", "special_drawable_type"));
+  RegistryKey<Registry<SpecialDrawableType<? extends SpecialDrawable>>> REGISTRY_KEY = RegistryKey.ofRegistry(Mishanguc.id("special_drawable_type"));
   /**
    * SpecialDrawableType 的注册表。
    */
@@ -43,7 +44,7 @@ public interface SpecialDrawableType<S extends SpecialDrawable> {
       return fromId(Identifier.of(id));
     } else {
       // id 中没有冒号的情况，使用默认命名空间。
-      return fromId(Identifier.of("mishanguc", id));
+      return fromId(Mishanguc.id(id));
     }
   }
 

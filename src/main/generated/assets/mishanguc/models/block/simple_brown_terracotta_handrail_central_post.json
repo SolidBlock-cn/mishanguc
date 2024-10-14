@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/simple_handrail_post",
+  "textures": {
+    "bottom": "minecraft:block/brown_terracotta",
+    "texture": "minecraft:block/brown_terracotta",
+    "top": "minecraft:block/brown_terracotta"
+  }
+}

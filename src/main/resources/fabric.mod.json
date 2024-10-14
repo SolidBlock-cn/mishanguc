@@ -18,8 +18,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "pers.solid.mishang.uc.Mishanguc",
-      "pers.solid.mishang.uc.arrp.ARRPMain"
+      "pers.solid.mishang.uc.Mishanguc"
     ],
     "client": [
       "pers.solid.mishang.uc.MishangucClient"

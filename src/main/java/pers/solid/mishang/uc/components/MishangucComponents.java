@@ -7,9 +7,9 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.ArrayList;
@@ -38,6 +38,6 @@ public final class MishangucComponents {
   }
 
   private static <T> ComponentType<T> register(String id, Codec<T> codec, PacketCodec<? super RegistryByteBuf, T> packetCodec) {
-    return Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of("mishanguc", id), ComponentType.<T>builder().codec(codec).packetCodec(packetCodec).build());
+    return Registry.register(Registries.DATA_COMPONENT_TYPE, Mishanguc.id(id), ComponentType.<T>builder().codec(codec).packetCodec(packetCodec).build());
   }
 }

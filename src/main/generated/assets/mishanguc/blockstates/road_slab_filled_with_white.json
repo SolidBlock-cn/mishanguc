@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "mishanguc:block/road_slab_filled_with_white",
+      "y": 270
+    },
+    "type=double": {
+      "model": "mishanguc:block/road_filled_with_white",
+      "y": 270
+    },
+    "type=top": {
+      "model": "mishanguc:block/road_slab_filled_with_white_top",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/hung_sign_top_bar_edge",
+  "textures": {
+    "bar": "minecraft:block/packed_ice",
+    "texture": "minecraft:block/snow"
+  }
+}

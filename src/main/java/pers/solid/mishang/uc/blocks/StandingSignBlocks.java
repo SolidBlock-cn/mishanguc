@@ -13,7 +13,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.Translucent;
-import pers.solid.mishang.uc.arrp.MiningLevel;
+import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.block.ColoredGlowingStandingSignBlock;
 import pers.solid.mishang.uc.block.ColoredStandingSignBlock;
 import pers.solid.mishang.uc.block.GlowingStandingSignBlock;
@@ -355,10 +355,10 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final GlowingStandingSignBlock GLOWING_POLISHED_BLACKSTONE_STANDING_SIGN = new GlowingStandingSignBlock(Blocks.POLISHED_BLACKSTONE);
 
   static {
-    GLOWING_NETHERRACK_STANDING_SIGN.glowTexture = "block/lava_still";
-    GLOWING_NETHER_BRICK_STANDING_SIGN.glowTexture = "block/lava_still";
-    GLOWING_BLACKSTONE_STANDING_SIGN.glowTexture = "block/glowstone";
-    GLOWING_POLISHED_BLACKSTONE_STANDING_SIGN.glowTexture = "block/glowstone";
+    GLOWING_NETHERRACK_STANDING_SIGN.glowTexture = Identifier.ofVanilla("block/lava_still");
+    GLOWING_NETHER_BRICK_STANDING_SIGN.glowTexture = Identifier.ofVanilla("block/lava_still");
+    GLOWING_BLACKSTONE_STANDING_SIGN.glowTexture = Identifier.ofVanilla("block/glowstone");
+    GLOWING_POLISHED_BLACKSTONE_STANDING_SIGN.glowTexture = Identifier.ofVanilla("block/glowstone");
   }
 
 

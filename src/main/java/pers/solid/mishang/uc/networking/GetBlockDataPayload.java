@@ -6,9 +6,10 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import pers.solid.mishang.uc.Mishanguc;
 
 public record GetBlockDataPayload(Identifier blockId, BlockPos blockPos, boolean hasData, NbtCompound data) implements CustomPayload {
-  public static final Id<GetBlockDataPayload> ID = new CustomPayload.Id<>(Identifier.of("mishanguc", "get_block_data"));
+  public static final Id<GetBlockDataPayload> ID = new CustomPayload.Id<>(Mishanguc.id("get_block_data"));
   public static final PacketCodec<PacketByteBuf, GetBlockDataPayload> CODEC = PacketCodec.of((value, buf) -> {
     buf.writeIdentifier(value.blockId).writeBlockPos(value.blockPos).writeBoolean(value.hasData);
     if (value.hasData) {

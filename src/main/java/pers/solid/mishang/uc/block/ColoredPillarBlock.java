@@ -1,13 +1,11 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PillarBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.data.client.ModelProvider;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.item.Item;
@@ -19,15 +17,12 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
+import pers.solid.mishang.uc.data.MishangucModels;
 
 import java.util.List;
 
-public class ColoredPillarBlock extends PillarBlock implements ColoredBlock, BlockResourceGenerator {
+public class ColoredPillarBlock extends PillarBlock implements ColoredBlock {
   public static final MapCodec<ColoredPillarBlock> CODEC = createCodec(settings1 -> new ColoredPillarBlock(settings1, null));
   private final @Nullable TextureMap textures;
 
@@ -53,24 +48,12 @@ public class ColoredPillarBlock extends PillarBlock implements ColoredBlock, Blo
     return new SimpleColoredBlockEntity(pos, state);
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public @UnknownNullability ModelJsonBuilder getBlockModel() {
-    if (textures == null) return null;
-    return ModelJsonBuilder.create(Identifier.of("mishanguc:block/colored_cube_column")).setTextures(textures);
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public void writeBlockModel(RuntimeResourcePack pack) {
-    ColoredBlock.super.writeBlockModel(pack);
-    pack.addModel(getBlockModelId().brrp_suffixed("_horizontal"), getBlockModel().withParent(Identifier.of("mishanguc:block/colored_cube_column_horizontal")));
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @UnknownNullability BlockStateSupplier getBlockStates() {
-    return BlockStateModelGenerator.createAxisRotatedBlockState(this, getBlockModelId(), getBlockModelId().brrp_suffixed("_horizontal"));
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final Identifier modelId = MishangucModels.COLORED_CUBE_COLUMN.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier horizontalModelId = MishangucModels.COLORED_CUBE_COLUMN_HORITONZAL.upload(this, textures, blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createAxisRotatedBlockState(this, modelId, horizontalModelId));
+    blockStateModelGenerator.registerParentedItemModel(this, modelId);
   }
 
   @Override

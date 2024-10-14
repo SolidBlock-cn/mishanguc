@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/hung_sign_bar",
+  "textures": {
+    "texture": "minecraft:block/cherry_log"
+  }
+}

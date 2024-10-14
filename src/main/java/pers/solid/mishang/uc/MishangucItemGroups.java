@@ -10,7 +10,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.ObjectUtils;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.ExplosionToolItem;
@@ -24,7 +23,7 @@ import java.util.function.Consumer;
 
 public class MishangucItemGroups {
   public static final ItemGroup ROADS = Registry.register(Registries.ITEM_GROUP,
-      Identifier.of("mishanguc", "roads"),
+      Mishanguc.id("roads"),
       FabricItemGroup.builder().icon(
           () -> new ItemStack(RoadBlocks.ROAD_WITH_WHITE_DOUBLE_LINE)).entries((displayContext, entries) -> {
         MishangUtils.instanceStream(RoadBlocks.class, Block.class).forEach(addEntries(entries));
@@ -32,9 +31,9 @@ public class MishangucItemGroups {
         MishangUtils.instanceStream(RoadMarkBlocks.class, Block.class).forEach(addEntries(entries));
       }).displayName(Text.translatable("itemGroup.mishanguc.roads")).build());
   public static final ItemGroup LIGHTS = Registry.register(Registries.ITEM_GROUP,
-      Identifier.of("mishanguc", "lights"),
+      Mishanguc.id("lights"),
       FabricItemGroup.builder().icon(() -> new ItemStack(LightBlocks.WHITE_LARGE_WALL_LIGHT)).entries((displayContext, entries) -> MishangUtils.instanceStream(LightBlocks.class, Block.class).forEach(addEntries(entries))).displayName(Text.translatable("itemGroup.mishanguc.lights")).build());
-  public static final ItemGroup SIGNS = Registry.register(Registries.ITEM_GROUP, Identifier.of("mishanguc", "signs"),
+  public static final ItemGroup SIGNS = Registry.register(Registries.ITEM_GROUP, Mishanguc.id("signs"),
       FabricItemGroup.builder(
       ).icon(
           () -> new ItemStack(StandingSignBlocks.ACACIA_STANDING_SIGN)).entries((displayContext, entries) -> {
@@ -42,7 +41,7 @@ public class MishangucItemGroups {
         MishangUtils.instanceStream(HungSignBlocks.class, Block.class).forEach(addEntries(entries));
         MishangUtils.instanceStream(StandingSignBlocks.class, Block.class).forEach(addEntries(entries));
       }).displayName(Text.translatable("itemGroup.mishanguc.signs")).build());
-  public static final ItemGroup TOOLS = Registry.register(Registries.ITEM_GROUP, Identifier.of("mishanguc", "tools"),
+  public static final ItemGroup TOOLS = Registry.register(Registries.ITEM_GROUP, Mishanguc.id("tools"),
       FabricItemGroup.builder().icon(() -> new ItemStack(MishangucItems.ROTATING_TOOL)).entries((displayContext, entries) -> MishangUtils.instanceStream(MishangucItems.class, ItemConvertible.class).forEach(item -> {
         if (item instanceof final ExplosionToolItem explosionToolItem) {
           explosionToolItem.appendToEntries(entries);
@@ -52,9 +51,9 @@ public class MishangucItemGroups {
           entries.add(item);
         }
       })).displayName(Text.translatable("itemGroup.mishanguc.tools")).build());
-  public static final ItemGroup DECORATIONS = Registry.register(Registries.ITEM_GROUP, Identifier.of("mishanguc", "decorations"), FabricItemGroup.builder().icon(() -> new ItemStack(HandrailBlocks.SIMPLE_ORANGE_CONCRETE_HANDRAIL)).entries((displayContext, entries) -> MishangUtils.instanceStream(HandrailBlocks.class, Block.class).forEach(addEntries(entries))).displayName(Text.translatable("itemGroup.mishanguc.decorations")).build());
+  public static final ItemGroup DECORATIONS = Registry.register(Registries.ITEM_GROUP, Mishanguc.id("decorations"), FabricItemGroup.builder().icon(() -> new ItemStack(HandrailBlocks.SIMPLE_ORANGE_CONCRETE_HANDRAIL)).entries((displayContext, entries) -> MishangUtils.instanceStream(HandrailBlocks.class, Block.class).forEach(addEntries(entries))).displayName(Text.translatable("itemGroup.mishanguc.decorations")).build());
 
-  public static final ItemGroup COLORED_BLOCKS = Registry.register(Registries.ITEM_GROUP, Identifier.of("mishanguc", "colored_blocks"), FabricItemGroup.builder().icon(() -> new ItemStack(ColoredBlocks.COLORED_WOOL)).entries((displayContext, entries) -> MishangUtils.instanceStream(ColoredBlocks.class, Block.class).forEach(addEntries(entries))).displayName(Text.translatable("itemGroup.mishanguc.colored_blocks")).build());
+  public static final ItemGroup COLORED_BLOCKS = Registry.register(Registries.ITEM_GROUP, Mishanguc.id("colored_blocks"), FabricItemGroup.builder().icon(() -> new ItemStack(ColoredBlocks.COLORED_WOOL)).entries((displayContext, entries) -> MishangUtils.instanceStream(ColoredBlocks.class, Block.class).forEach(addEntries(entries))).displayName(Text.translatable("itemGroup.mishanguc.colored_blocks")).build());
   public static final List<DyeColor> FANCY_COLORS = List.of(
       DyeColor.WHITE,
       DyeColor.LIGHT_GRAY,

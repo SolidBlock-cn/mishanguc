@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/hung_sign",
+  "textures": {
+    "bar": "minecraft:block/netherrack",
+    "texture": "minecraft:block/netherrack"
+  }
+}

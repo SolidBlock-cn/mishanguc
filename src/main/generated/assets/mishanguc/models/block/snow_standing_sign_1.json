@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/standing_sign_1",
+  "textures": {
+    "bar": "minecraft:block/packed_ice",
+    "texture": "minecraft:block/snow"
+  }
+}

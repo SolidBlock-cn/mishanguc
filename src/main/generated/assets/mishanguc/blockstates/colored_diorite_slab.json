@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "mishanguc:block/colored_diorite_slab"
+    },
+    "type=double": {
+      "model": "mishanguc:block/colored_diorite"
+    },
+    "type=top": {
+      "model": "mishanguc:block/colored_diorite_slab_top"
+    }
+  }
+}

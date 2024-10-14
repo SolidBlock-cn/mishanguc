@@ -2,12 +2,18 @@ package pers.solid.mishang.uc.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SlabBlock;
+import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.data.server.recipe.RecipeProvider;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
@@ -18,15 +24,17 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.generator.BRRPSlabBlock;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
+import pers.solid.mishang.uc.data.MishangucModels;
 
 import java.util.List;
 
-public abstract class AbstractRoadSlabBlock extends BRRPSlabBlock implements Road {
+public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
+  private final Block baseBlock;
+
   public AbstractRoadSlabBlock(Block baseBlock, Settings settings) {
-    super(baseBlock, settings);
+    super(settings);
+    this.baseBlock = baseBlock;
   }
 
   @Override
@@ -100,11 +108,47 @@ public abstract class AbstractRoadSlabBlock extends BRRPSlabBlock implements Roa
   }
 
   @Override
-  public void writeRecipes(RuntimeResourcePack pack) {
-    super.writeRecipes(pack);
+  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+    return ((ShapedRecipeJsonBuilder) RecipeProvider.createSlabRecipe(getRecipeCategory(), this, Ingredient.ofItems(baseBlock))
+        .criterion(RecipeProvider.hasItem(baseBlock), RecipeProvider.conditionsFromItem(baseBlock)))
+        .setCustomRecipeCategory("roads");
+  }
+
+  @Override
+  public void writeRecipes(RecipeExporter exporter) {
+    Road.super.writeRecipes(exporter);
     final CraftingRecipeJsonBuilder paintingRecipe = getPaintingRecipe(RoadBlocks.ROAD_BLOCK.getRoadSlab(), this);
     if (paintingRecipe != null) {
-      pack.addRecipeAndAdvancement(getPaintingRecipeId(), paintingRecipe.group(getRecipeGroup()));
+      paintingRecipe.group(getRecipeGroup()).offerTo(exporter, getPaintingRecipeId());
     }
+  }
+
+  @Override
+  public String getModelName(String suffix) {
+    return "road_slab" + suffix;
+  }
+
+  @Override
+  public final void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    ((AbstractRoadBlock) baseBlock).registerBaseOrSlabModels(this, blockStateModelGenerator);
+    blockStateModelGenerator.registerParentedItemModel(this, ModelIds.getBlockModelId(this));
+  }
+
+  @Override
+  public Identifier uploadModel(String suffix, TextureMap textureMap, BlockStateModelGenerator blockStateModelGenerator, TextureKey... textureKeys) {
+    final Model slabModel = MishangucModels.createBlock(getModelName(suffix), textureKeys);
+    final Model slabTopModel = MishangucModels.createBlock(getModelName(suffix + "_top"), "_top", textureKeys);
+    final Identifier slabModelId = slabModel.upload(this, textureMap, blockStateModelGenerator.modelCollector);
+    slabTopModel.upload(this, textureMap, blockStateModelGenerator.modelCollector);
+    return slabModelId;
+  }
+
+  @Override
+  public Identifier uploadModel(String suffix, String variant, TextureMap textureMap, BlockStateModelGenerator blockStateModelGenerator, TextureKey... textureKeys) {
+    final Model slabModel = MishangucModels.createBlock(getModelName(suffix), variant, textureKeys);
+    final Model slabTopModel = MishangucModels.createBlock(getModelName(suffix + "_top"), variant + "_top", textureKeys);
+    final Identifier slabModelId = slabModel.upload(this, textureMap, blockStateModelGenerator.modelCollector);
+    slabTopModel.upload(this, textureMap, blockStateModelGenerator.modelCollector);
+    return slabModelId;
   }
 }

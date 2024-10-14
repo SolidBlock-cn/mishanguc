@@ -5,8 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.booleans.BooleanArraySet;
 import it.unimi.dsi.fastutil.booleans.BooleanSet;
 import it.unimi.dsi.fastutil.booleans.BooleanSets;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -45,14 +43,13 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.BRRPUtils;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
+import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 import pers.solid.mishang.uc.networking.EditSignPayload;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -68,7 +65,7 @@ import java.util.Optional;
  * @see pers.solid.mishang.uc.render.StandingSignBlockEntityRenderer
  */
 @ApiStatus.AvailableSince("1.0.2")
-public class StandingSignBlock extends Block implements BlockEntityProvider, Waterloggable, BlockResourceGenerator {
+public class StandingSignBlock extends Block implements BlockEntityProvider, Waterloggable, MishangucBlock {
   public static final MapCodec<StandingSignBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(baseBlockCodec(), createSettingsCodec()).apply(i, StandingSignBlock::new));
 
   public static final IntProperty ROTATION = Properties.ROTATION;
@@ -168,10 +165,9 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     };
   }
 
-  @Environment(EnvType.CLIENT)
   public Identifier getBaseTexture() {
     if (baseTexture != null) return baseTexture;
-    return BRRPUtils.getTextureId(baseBlock == null ? this : baseBlock, TextureKey.ALL);
+    return ModelHelper.getTextureOf(baseBlock == null ? this : baseBlock);
   }
 
   @Override
@@ -230,53 +226,36 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     tooltip.add(TextBridge.translatable("block.mishanguc.standing_sign.tooltip.2").formatted(Formatting.GRAY));
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull ModelJsonBuilder getBlockModel() {
-    final Identifier texture = getBaseTexture();
-    return ModelJsonBuilder.create(Identifier.of("mishanguc:block/standing_sign")).addTexture("texture", texture).addTexture("bar", barTexture == null ? null : barTexture.toString());
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final TextureMap textures = TextureMap.texture(getBaseTexture()).put(MishangucTextureKeys.BAR, barTexture);
+    final Identifier modelId = MishangucModels.STANDING_SIGN.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier r1ModelId = MishangucModels.STANDING_SIGN_1.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier r2ModelId = MishangucModels.STANDING_SIGN_2.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier r3ModelId = MishangucModels.STANDING_SIGN_3.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier barredModelId = MishangucModels.STANDING_SIGN_BARRED.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier barredR1ModelId = MishangucModels.STANDING_SIGN_BARRED_1.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier barredR2ModelId = MishangucModels.STANDING_SIGN_BARRED_2.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier barredR3ModelId = MishangucModels.STANDING_SIGN_BARRED_3.upload(this, textures, blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId, r1ModelId, r2ModelId, r3ModelId, barredModelId, barredR1ModelId, barredR2ModelId, barredR3ModelId));
+    blockStateModelGenerator.registerParentedItemModel(this, barredModelId);
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public void writeBlockModel(RuntimeResourcePack pack) {
-    final ModelJsonBuilder model = getBlockModel();
-    final Identifier modelId = getBlockModelId();
-    pack.addModel(modelId, model);
-    pack.addModel(modelId.brrp_suffixed("_1"), model.withParent(model.parentId.brrp_suffixed("_1")));
-    pack.addModel(modelId.brrp_suffixed("_2"), model.withParent(model.parentId.brrp_suffixed("_2")));
-    pack.addModel(modelId.brrp_suffixed("_3"), model.withParent(model.parentId.brrp_suffixed("_3")));
-    pack.addModel(modelId.brrp_suffixed("_barred"), model.withParent(model.parentId.brrp_suffixed("_barred")));
-    pack.addModel(modelId.brrp_suffixed("_barred_1"), model.withParent(model.parentId.brrp_suffixed("_barred_1")));
-    pack.addModel(modelId.brrp_suffixed("_barred_2"), model.withParent(model.parentId.brrp_suffixed("_barred_2")));
-    pack.addModel(modelId.brrp_suffixed("_barred_3"), model.withParent(model.parentId.brrp_suffixed("_barred_3")));
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @Nullable BlockStateSupplier getBlockStates() {
-    final Identifier modelId = getBlockModelId();
+  public @Nullable BlockStateSupplier createBlockStates(Identifier modelId, Identifier r1ModelId, Identifier r2ModelId, Identifier r3ModelId, Identifier barredModelId, Identifier barredR1ModelId, Identifier barredR2ModelId, Identifier barredR3ModelId) {
     final BlockStateVariantMap.DoubleProperty<Boolean, Integer> map = BlockStateVariantMap.create(DOWN, ROTATION);
     for (int i = 0; i < 16; i += 4) {
       final int y = i * 90 / 4;
       map.register(false, i, BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangUtils.INT_Y_VARIANT, y));
-      map.register(false, (i + 1), BlockStateVariant.create().put(VariantSettings.MODEL, modelId.brrp_suffixed("_1")).put(MishangUtils.INT_Y_VARIANT, y));
-      map.register(false, (i + 2), BlockStateVariant.create().put(VariantSettings.MODEL, modelId.brrp_suffixed("_2")).put(MishangUtils.INT_Y_VARIANT, y));
-      map.register(false, (i + 3), BlockStateVariant.create().put(VariantSettings.MODEL, modelId.brrp_suffixed("_3")).put(MishangUtils.INT_Y_VARIANT, y + 90));
-      map.register(true, i, BlockStateVariant.create().put(VariantSettings.MODEL, modelId.brrp_suffixed("_barred")).put(MishangUtils.INT_Y_VARIANT, y));
-      map.register(true, (i + 1), BlockStateVariant.create().put(VariantSettings.MODEL, modelId.brrp_suffixed("_barred_1")).put(MishangUtils.INT_Y_VARIANT, y));
-      map.register(true, (i + 2), BlockStateVariant.create().put(VariantSettings.MODEL, modelId.brrp_suffixed("_barred_2")).put(MishangUtils.INT_Y_VARIANT, y));
-      map.register(true, (i + 3), BlockStateVariant.create().put(VariantSettings.MODEL, modelId.brrp_suffixed("_barred_3")).put(MishangUtils.INT_Y_VARIANT, y + 90));
+      map.register(false, (i + 1), BlockStateVariant.create().put(VariantSettings.MODEL, r1ModelId).put(MishangUtils.INT_Y_VARIANT, y));
+      map.register(false, (i + 2), BlockStateVariant.create().put(VariantSettings.MODEL, r2ModelId).put(MishangUtils.INT_Y_VARIANT, y));
+      map.register(false, (i + 3), BlockStateVariant.create().put(VariantSettings.MODEL, r3ModelId).put(MishangUtils.INT_Y_VARIANT, y + 90));
+      map.register(true, i, BlockStateVariant.create().put(VariantSettings.MODEL, barredModelId).put(MishangUtils.INT_Y_VARIANT, y));
+      map.register(true, (i + 1), BlockStateVariant.create().put(VariantSettings.MODEL, barredR1ModelId).put(MishangUtils.INT_Y_VARIANT, y));
+      map.register(true, (i + 2), BlockStateVariant.create().put(VariantSettings.MODEL, barredR2ModelId).put(MishangUtils.INT_Y_VARIANT, y));
+      map.register(true, (i + 3), BlockStateVariant.create().put(VariantSettings.MODEL, barredR3ModelId).put(MishangUtils.INT_Y_VARIANT, y + 90));
     }
     return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.UVLOCK, true)).coordinate(map);
   }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @Nullable ModelJsonBuilder getItemModel() {
-    return ModelJsonBuilder.create(getBlockModelId().brrp_suffixed("_barred"));
-  }
-
 
   private @Nullable String getRecipeGroup() {
     if (baseBlock instanceof ColoredBlock) return null;
@@ -377,7 +356,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
       return ActionResult.SUCCESS;
     } else if (isFront == null) return ActionResult.PASS;
     else if (!player.getAbilities().allowModifyWorld) {
-      // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
+      // 冒险模式玩家无权编辑。Adventure players have no permission to edit.
       return ActionResult.FAIL;
     } else if (world.isClient) {
       return ActionResult.SUCCESS;
@@ -409,7 +388,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     } else if (isFront == null) {
       return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     } else if (!player.getAbilities().allowModifyWorld) {
-      // 冒险模式玩家无权编辑。Adventure players has no permission to edit.
+      // 冒险模式玩家无权编辑。Adventure players have no permission to edit.
       return ItemActionResult.FAIL;
     } else if (world.isClient) {
       return ItemActionResult.SUCCESS;

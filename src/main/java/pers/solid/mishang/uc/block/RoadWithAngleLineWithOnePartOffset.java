@@ -3,8 +3,6 @@ package pers.solid.mishang.uc.block;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.data.client.*;
@@ -20,12 +18,9 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.Direction;
-import org.jetbrains.annotations.NotNull;
-import pers.solid.brrp.v1.api.RuntimeResourcePack;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.arrp.BRRPHelper;
-import pers.solid.mishang.uc.arrp.FasterJTextures;
+import pers.solid.mishang.uc.data.FasterTextureMap;
+import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
@@ -114,10 +109,14 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
       return offsetOutwards;
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public @NotNull BlockStateSupplier getBlockStates() {
-      final Identifier id = getBlockModelId();
+    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
+      final FasterTextureMap textures = new FasterTextureMap().base("asphalt")
+          .lineSide(lineSide)
+          .lineSide2(lineSide2)
+          .lineTop(lineTop);
+      final Identifier modelId = road.uploadModel("_with_angle_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_SIDE2, MishangucTextureKeys.LINE_TOP);
+      final Identifier mirroredModelId = road.uploadModel("_with_angle_line_mirrored", "_mirrored", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_SIDE2, MishangucTextureKeys.LINE_TOP);
       final BlockStateVariantMap.DoubleProperty<HorizontalCornerDirection, Direction.Axis> map = BlockStateVariantMap.create(FACING, AXIS);
       for (Direction direction : Direction.Type.HORIZONTAL) {
         // direction：正中线所朝的方向
@@ -126,30 +125,14 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
         map.register(
             HorizontalCornerDirection.fromDirections(direction, offsetDirection1),
             direction.getAxis(),
-            BlockStateVariant.create().put(VariantSettings.MODEL, id).put(MishangUtils.DIRECTION_Y_VARIANT, direction));
+            BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangUtils.DIRECTION_Y_VARIANT, direction));
         map.register(
             HorizontalCornerDirection.fromDirections(direction, offsetDirection2),
             direction.getAxis(),
-            BlockStateVariant.create().put(VariantSettings.MODEL, id.brrp_suffixed("_mirrored"))
+            BlockStateVariant.create().put(VariantSettings.MODEL, mirroredModelId)
                 .put(MishangUtils.DIRECTION_Y_VARIANT, direction));
       }
-      return VariantsBlockStateSupplier.create(this).coordinate(map);
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public @NotNull ModelJsonBuilder getBlockModel() {
-      return ModelJsonBuilder.create(Identifier.of("mishanguc:block/road_with_angle_line"))
-          .setTextures(new FasterJTextures().base("asphalt")
-              .lineSide(lineSide)
-              .lineSide2(lineSide2)
-              .lineTop(lineTop));
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public void writeBlockModel(RuntimeResourcePack pack) {
-      BRRPHelper.addModelWithSlabWithMirrored(pack, RoadWithAngleLineWithOnePartOffset.Impl.this);
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockStateSupplier.create(road).coordinate(map)));
     }
 
     @Override

@@ -1,0 +1,6 @@
+{
+  "parent": "mishanguc:block/wall_light_point_decoration_connection",
+  "textures": {
+    "light": "mishanguc:block/orange_light"
+  }
+}

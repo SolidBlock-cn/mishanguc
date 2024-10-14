@@ -1,0 +1,328 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_center",
+        "x": 180,
+        "y": 0
+      },
+      "when": {
+        "facing": "down"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection",
+        "x": 180,
+        "y": 360
+      },
+      "when": {
+        "facing": "down",
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection",
+        "x": 180,
+        "y": 180
+      },
+      "when": {
+        "facing": "down",
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection",
+        "x": 180,
+        "y": 270
+      },
+      "when": {
+        "facing": "down",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection",
+        "x": 180,
+        "y": 450
+      },
+      "when": {
+        "east": "true",
+        "facing": "down"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_center",
+        "x": 0,
+        "y": 0
+      },
+      "when": {
+        "facing": "up"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection",
+        "x": 0,
+        "y": 180
+      },
+      "when": {
+        "facing": "up",
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection",
+        "x": 0,
+        "y": 0
+      },
+      "when": {
+        "facing": "up",
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection",
+        "x": 0,
+        "y": 90
+      },
+      "when": {
+        "facing": "up",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection",
+        "x": 0,
+        "y": 270
+      },
+      "when": {
+        "east": "true",
+        "facing": "up"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_center",
+        "x": 90,
+        "y": 360
+      },
+      "when": {
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection",
+        "x": -90,
+        "y": 180
+      },
+      "when": {
+        "down": "true",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection",
+        "x": 90,
+        "y": 360
+      },
+      "when": {
+        "facing": "north",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection2",
+        "x": 0,
+        "y": 180
+      },
+      "when": {
+        "facing": "north",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection2",
+        "x": 180,
+        "y": 360
+      },
+      "when": {
+        "east": "true",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_center",
+        "x": 90,
+        "y": 180
+      },
+      "when": {
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection",
+        "x": -90,
+        "y": 0
+      },
+      "when": {
+        "down": "true",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection",
+        "x": 90,
+        "y": 180
+      },
+      "when": {
+        "facing": "south",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection2",
+        "x": 180,
+        "y": 180
+      },
+      "when": {
+        "facing": "south",
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection2",
+        "x": 0,
+        "y": 0
+      },
+      "when": {
+        "east": "true",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_center",
+        "x": 90,
+        "y": 270
+      },
+      "when": {
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection",
+        "x": -90,
+        "y": 90
+      },
+      "when": {
+        "down": "true",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection",
+        "x": 90,
+        "y": 270
+      },
+      "when": {
+        "facing": "west",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection2",
+        "x": 180,
+        "y": 270
+      },
+      "when": {
+        "facing": "west",
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection2",
+        "x": 0,
+        "y": 90
+      },
+      "when": {
+        "facing": "west",
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_center",
+        "x": 90,
+        "y": 450
+      },
+      "when": {
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection",
+        "x": -90,
+        "y": 270
+      },
+      "when": {
+        "down": "true",
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection",
+        "x": 90,
+        "y": 450
+      },
+      "when": {
+        "facing": "east",
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection2",
+        "x": 0,
+        "y": 270
+      },
+      "when": {
+        "facing": "east",
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/green_wall_light_simple_decoration_connection2",
+        "x": 180,
+        "y": 450
+      },
+      "when": {
+        "facing": "east",
+        "south": "true"
+      }
+    }
+  ]
+}

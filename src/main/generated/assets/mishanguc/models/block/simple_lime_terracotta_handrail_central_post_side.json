@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/simple_handrail_post_side",
+  "textures": {
+    "bottom": "minecraft:block/lime_terracotta",
+    "texture": "minecraft:block/lime_terracotta",
+    "top": "minecraft:block/lime_terracotta"
+  }
+}

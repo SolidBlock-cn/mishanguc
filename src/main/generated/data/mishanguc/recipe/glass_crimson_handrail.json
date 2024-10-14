@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "glass_wooden_handrail",
+  "key": {
+    "M": {
+      "item": "minecraft:crimson_planks"
+    },
+    "X": {
+      "item": "minecraft:crimson_hyphae"
+    },
+    "n": {
+      "item": "minecraft:stick"
+    },
+    "o": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "oMo",
+    "nnn"
+  ],
+  "result": {
+    "count": 6,
+    "id": "mishanguc:glass_crimson_handrail"
+  }
+}

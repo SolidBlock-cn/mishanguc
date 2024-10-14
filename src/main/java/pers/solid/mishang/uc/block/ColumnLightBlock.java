@@ -3,8 +3,6 @@ package pers.solid.mishang.uc.block;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -32,18 +30,15 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.arrp.FasterJTextures;
+import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.data.MishangucTextureKeys;
 
 /**
  * 柱形灯方块，且没有底座，因此没有朝向，而是直接根据的坐标轴。
  */
-public class ColumnLightBlock extends Block implements Waterloggable, BlockResourceGenerator {
+public class ColumnLightBlock extends Block implements Waterloggable, MishangucBlock {
   public static final MapCodec<ColumnLightBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.STRING.fieldOf("light_color").forGetter(block -> block.lightColor), createSettingsCodec(), Codec.INT.fieldOf("size_type").forGetter(block -> block.sizeType)).apply(instance, ColumnLightBlock::new));
   public static final EnumProperty<Direction.Axis> AXIS = Properties.AXIS;
   public final String lightColor;
@@ -113,23 +108,24 @@ public class ColumnLightBlock extends Block implements Waterloggable, BlockResou
     return stateFrom.isOf(this) && state.get(AXIS).test(direction) && stateFrom.get(AXIS).test(direction) || super.isSideInvisible(state, stateFrom, direction);
   }
 
-  @Environment(EnvType.CLIENT)
+
   @Override
-  public @Nullable BlockStateSupplier getBlockStates() {
-    final Identifier id = getBlockModelId();
-    return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.MODEL, id)).coordinate(BlockStateVariantMap.create(AXIS).register(Direction.Axis.Y, BlockStateVariant.create()).register(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R270).put(VariantSettings.Y, VariantSettings.Rotation.R90)).register(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R270)));
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final TextureMap textures = TextureMap.of(MishangucTextureKeys.LIGHT, MishangucModels.texture(lightColor + "_light"));
+    final Identifier modelId = getModelType().upload(this, textures, blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(this, BlockStateVariant.create()
+            .put(VariantSettings.MODEL, modelId))
+        .coordinate(BlockStateVariantMap.create(AXIS)
+            .register(Direction.Axis.Y, BlockStateVariant.create())
+            .register(Direction.Axis.X, BlockStateVariant.create()
+                .put(VariantSettings.X, VariantSettings.Rotation.R270)
+                .put(VariantSettings.Y, VariantSettings.Rotation.R90))
+            .register(Direction.Axis.Z, BlockStateVariant.create()
+                .put(VariantSettings.X, VariantSettings.Rotation.R270))));
+    blockStateModelGenerator.registerParentedItemModel(this, modelId);
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull ModelJsonBuilder getBlockModel() {
-    return ModelJsonBuilder.create(getModelParent())
-        .setTextures(new FasterJTextures().varP("light", lightColor + "_light"));
-  }
-
-  @Environment(EnvType.CLIENT)
-  @ApiStatus.AvailableSince("0.1.7")
-  public Identifier getModelParent() {
+  public Model getModelType() {
     final Identifier identifier = getBlockId();
     String path = identifier.getPath();
     final int i = lightColor.length();
@@ -138,7 +134,7 @@ public class ColumnLightBlock extends Block implements Waterloggable, BlockResou
     } else {
       throw new AssertionError();
     }
-    return Identifier.of(identifier.getNamespace(), path).brrp_prefixed("block/");
+    return MishangucModels.createBlock(path, MishangucTextureKeys.LIGHT);
   }
 
   @Override
@@ -161,7 +157,7 @@ public class ColumnLightBlock extends Block implements Waterloggable, BlockResou
           .criterionFromItem(fullLight)
           .setCustomRecipeCategory("light");
     } else {
-      final Identifier tubeId = itemId.brrp_suffixed("_tube");
+      final Identifier tubeId = itemId.withSuffixedPath("_tube");
       final @NotNull Item tube = Registries.ITEM.getOrEmpty(tubeId).orElseThrow(() -> new IllegalArgumentException(String.format("Can't generate recipes: %s does not have a corresponding tube block (with id [%s])", this, tubeId)));
       return ShapelessRecipeJsonBuilder.create(getRecipeCategory(), this, 1)
           .input(tube)

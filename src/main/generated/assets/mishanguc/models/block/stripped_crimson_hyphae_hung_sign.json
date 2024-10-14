@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/hung_sign",
+  "textures": {
+    "bar": "minecraft:block/stripped_crimson_stem",
+    "texture": "minecraft:block/stripped_crimson_stem"
+  }
+}

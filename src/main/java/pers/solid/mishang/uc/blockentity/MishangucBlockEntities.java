@@ -6,8 +6,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.blocks.*;
 
@@ -70,7 +70,7 @@ public final class MishangucBlockEntities {
   }
 
   private static <T extends BlockEntity> BlockEntityType<T> register(String name, BlockEntityType.BlockEntityFactory<T> factory, Block... blocks) {
-    return Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of("mishanguc", name), BlockEntityType.Builder.create(factory, blocks).build());
+    return Registry.register(Registries.BLOCK_ENTITY_TYPE, Mishanguc.id(name), BlockEntityType.Builder.create(factory, blocks).build());
   }
 
   private static <T extends BlockEntity> BlockEntityType<T> register(String name, BlockEntityType.BlockEntityFactory<T> factory, Stream<? extends Block> blockStream) {

@@ -1,8 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.data.client.*;
 import net.minecraft.fluid.Fluids;
@@ -20,7 +18,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
 import pers.solid.mishang.uc.MishangUtils;
 
 import java.util.Map;
@@ -31,7 +28,7 @@ import java.util.Map;
  *
  * @param <T> 其基础栏杆方块的类型。
  */
-public abstract class HandrailCentralBlock<T extends HandrailBlock> extends HorizontalConnectingBlock implements BlockResourceGenerator, Handrails {
+public abstract class HandrailCentralBlock<T extends HandrailBlock> extends HorizontalConnectingBlock implements MishangucBlock, Handrails {
   /**
    * 该方块的基础的栏杆方块。
    */
@@ -181,13 +178,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     return state;
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull BlockStateSupplier getBlockStates() {
-    final Identifier modelId = getBlockModelId();
-    final Identifier postId = modelId.brrp_suffixed("_post");
-    final Identifier postSideId = modelId.brrp_suffixed("_post_side");
-    final Identifier sideId = modelId.brrp_suffixed("_side");
+  public @NotNull BlockStateSupplier createBlockStates(Identifier postId, Identifier postSideId, Identifier sideId) {
     final MultipartBlockStateSupplier blockStateSupplier = MultipartBlockStateSupplier.create(this)
         .with(BlockStateVariant.create().put(VariantSettings.MODEL, postId));
     FACING_PROPERTIES.forEach((facing, property) -> {
@@ -204,7 +195,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
 
   @Override
   public boolean connectsIn(@NotNull BlockState blockState, @NotNull Direction direction, @Nullable Direction offsetFacing) {
-    return offsetFacing == null && blockState.get(FACING_PROPERTIES.get(direction));
+    return offsetFacing == null && direction.getAxis().isHorizontal() && blockState.get(FACING_PROPERTIES.get(direction));
   }
 
   @Override

@@ -3,8 +3,6 @@ package pers.solid.mishang.uc.block;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.data.client.*;
@@ -26,20 +24,18 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.brrp.v1.generator.BlockResourceGenerator;
-import pers.solid.brrp.v1.model.ModelJsonBuilder;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.arrp.FasterJTextures;
+import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.data.MishangucTextureKeys;
 
 import java.util.Map;
 
 import static net.minecraft.fluid.Fluids.WATER;
 
 public class CornerLightBlock extends HorizontalFacingBlock
-    implements Waterloggable, LightConnectable, BlockResourceGenerator {
+    implements Waterloggable, LightConnectable, MishangucBlock {
   public static final MapCodec<CornerLightBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.STRING.fieldOf("light_color").forGetter(b -> b.lightColor), createSettingsCodec()).apply(instance, CornerLightBlock::new));
   private static final EnumProperty<BlockHalf> BLOCK_HALF = Properties.BLOCK_HALF;
   private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -136,29 +132,21 @@ public class CornerLightBlock extends HorizontalFacingBlock
     prepareConnection(state, world, pos, flags, maxUpdateDepth, facingVertical);
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public @NotNull BlockStateSupplier getBlockStates() {
-    final Identifier identifier = getBlockModelId();
-    return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.MODEL, identifier)).coordinate(BlockStateVariantMap.create(BLOCK_HALF, FACING).register((blockHalf, direction) -> {
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final TextureMap textures = TextureMap.of(MishangucTextureKeys.LIGHT, MishangucModels.texture(lightColor + "_light"));
+    final Identifier modelId = getModelType().upload(this, textures, blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.MODEL, modelId)).coordinate(BlockStateVariantMap.create(BLOCK_HALF, FACING).register((blockHalf, direction) -> {
       if (blockHalf == BlockHalf.BOTTOM) {
         return BlockStateVariant.create().put(MishangUtils.DIRECTION_Y_VARIANT, direction);
       } else {
         return BlockStateVariant.create().put(MishangUtils.DIRECTION_Y_VARIANT, direction.getOpposite()).put(VariantSettings.X, VariantSettings.Rotation.R180);
       }
-    }));
+    })));
+    blockStateModelGenerator.registerParentedItemModel(this, modelId);
   }
 
-  @Environment(EnvType.CLIENT)
-  @Override
-  public @NotNull ModelJsonBuilder getBlockModel() {
-    return ModelJsonBuilder.create(getModelParent())
-        .setTextures(new FasterJTextures().varP("light", lightColor + "_light"));
-  }
-
-
-  @ApiStatus.AvailableSince("0.1.7")
-  public Identifier getModelParent() {
+  public Model getModelType() {
     final Identifier identifier = getBlockId();
     String path = identifier.getPath();
     final int i = lightColor.length();
@@ -168,7 +156,7 @@ public class CornerLightBlock extends HorizontalFacingBlock
       }
     } catch (IndexOutOfBoundsException ignored) {
     }
-    return Identifier.of(identifier.getNamespace(), path).brrp_prefixed("block/");
+    return MishangucModels.createBlock(path, MishangucTextureKeys.LIGHT);
   }
 
   @Override
