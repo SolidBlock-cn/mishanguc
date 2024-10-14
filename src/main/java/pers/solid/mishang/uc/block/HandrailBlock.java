@@ -125,8 +125,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
       if (placementState == null) return null;
       final Direction stairFacing = isStairsInCW ? facing.rotateYClockwise() : facing.rotateYCounterclockwise();
       return placementState
-          .with(HandrailStairBlock.FACING,
-              stairFacing)
+          .with(HandrailStairBlock.FACING, stairFacing)
           .with(HandrailStairBlock.SHAPE, HandrailStairBlock.Shape.BOTTOM)
           .with(HandrailStairBlock.POSITION, Util.make(() -> {
             final double diff = switch (stairFacing) {

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "item": "mishanguc:colored_light"
+    },
+    "X": {
+      "tag": "c:gems/diamond"
+    },
+    "o": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "oMo",
+    "XXX"
+  ],
+  "result": {
+    "count": 4,
+    "id": "mishanguc:glowing_colored_decorated_diamond_handrail"
+  }
+}

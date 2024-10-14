@@ -8,6 +8,13 @@ Note: Not all versions in this update log are already published. Please refer to
 - Fixed the issue of crash when on-stair handrail blocks are above handrail blocks.
 - Added full light blocks, light stairs, etc, into block and item tag `#mishanguc:lights`.
 - Added all stairs into block and item tag `#minecraft:stairs`.
+- When determining shape upon placing handrail blocks, only stairs of bottom half (regular direction) will affect the handrail's shape, position and direction, and stairs of top half (upside-down direction) will not affect anymore.
+- Added more handrail blocks.
+    - Added glowing variants for glass handrails of iron, gold, emerald, diamond, netherite and lapiz, which requires a colored light block when dyeing. (At present, there are no such blocks without custom coloring. You can color them in white.)
+    - Added glass bamboo handrails with custom coloring, and various handrails of stripped wood and stripped bamboo. These handrails support custom coloring.
+    - Added packed ice and blue ice handrails with custom coloring, which requires colored snow blocks when crafting. Non-custom-colored blocks require ordinary snow blocks when crafting.
+- The Color of custom-colored blocks can be changed through dyes.
+- When modifying block colors with color tools or dye, sounds will be played.
 
 ### 1.3.5-beta.2
 
