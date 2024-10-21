@@ -31,6 +31,11 @@ Note: Not all versions in this update log are already published. Please refer to
     - Amount of modification applied to color is controlled by component `mishanguc:color_change_amount`, where the type is float, and is used to specify the amount of modification to hue, saturation or luminosity. In the items in creative inventory, hue rotation amount is 1/24 by default, and saturation and luminosity's modification amount is 0.1 by default.
     - Note: Non-custom-colored blocks which can be converted to custom-colored blocks, when converting custom-colored blocks, takes the *map color* of the original block as an initial color, so it is normal its color differs from the color presented in custom-colored blocks.
     - Note: If you decrease the saturation to 0 (gray) with color tool that modifies saturation, or change the luminosity to 0 (black) or 1 (white) with color tool that modifies luminosity, then the color's hue will be 0 or 1 (red), and saturation will be 0. For example, if you decrease the saturation to 0, and then increase it, it will only be red. If you change luminosity to 0 or 1 and then increase or decrease it, it will be only gray.
+- Now you can select multiple lines when editing signs.
+    - Select text box while holding Ctrl to multi-select. Select selected text box while holding Ctrl to deselect it.
+    - Select text box while holding Shift to select continuous multiple text boxes at once.
+    - It is supported to operate multiple lines at ones, including adding, deleting, modifying styles or inputting text. If you increase or decrease their size, position coordinate, rotation, the modification is applied relatively to multiple lines. For properties such as color, or setting custom values, multiple lines will be set the same value.
+    - The Tab-key behavior when selecting multiple lines may be unstable.
 
 ### 1.3.5-beta.2
 
