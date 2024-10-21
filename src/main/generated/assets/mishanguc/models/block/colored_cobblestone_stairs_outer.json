@@ -1,5 +1,5 @@
 {
-  "parent": "mishanguc:block/colored_stairs",
+  "parent": "mishanguc:block/colored_outer_stairs",
   "textures": {
     "bottom": "mishanguc:block/pale_cobblestone",
     "side": "mishanguc:block/pale_cobblestone",
