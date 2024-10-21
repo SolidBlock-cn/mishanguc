@@ -46,9 +46,8 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
   }
 
   @Override
-  protected void initTextHolders() {
-    super.initTextHolders();
-    this.addDrawableChild(copyFromBackButton);
+  protected Collection<ButtonWidget> getTextHolders() {
+    return List.of(placeHolder, applyLeftArrowTemplateButton, applyDoubleLineTemplateButton, applyRightArrowTemplateButton, copyFromBackButton);
   }
 
   @Override
@@ -63,12 +62,6 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
     } else {
       entity.texts = backedUpTexts;
     }
-  }
-
-  @Override
-  public void addTextField(int index, @NotNull TextContext textContext, boolean isExisting) {
-    super.addTextField(index, textContext, isExisting);
-    copyFromBackButton.visible = false;
   }
 
   /**
@@ -96,10 +89,4 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
           90,
           200,
           20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.copy_from_back.description"))).build();
-
-  @Override
-  public void removeTextField(int index) {
-    super.removeTextField(index);
-    copyFromBackButton.visible = placeHolder.visible;
-  }
 }

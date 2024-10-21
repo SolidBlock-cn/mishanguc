@@ -1,7 +1,7 @@
 package pers.solid.mishang.uc.screen;
 
+import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
 import it.unimi.dsi.fastutil.floats.Float2ObjectFunction;
-import it.unimi.dsi.fastutil.floats.FloatConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -20,11 +20,13 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.TextBridge;
 
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -34,7 +36,7 @@ import java.util.function.Function;
 @Environment(EnvType.CLIENT)
 public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
   private final Function<FloatButtonWidget, @Nullable Float> valueGetter;
-  private final FloatConsumer valueSetter;
+  private final ValueConsumer valueSetter;
   private boolean sliderFocused;
 
   /**
@@ -72,7 +74,7 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
   public static final Float2ObjectFunction<MutableText> DEFAULT_VALUE_NARRATOR = value -> TextBridge.literal(MishangUtils.numberToString(value));
   private Float2ObjectFunction<MutableText> valueToText = DEFAULT_VALUE_NARRATOR;
 
-  public FloatButtonWidget(int x, int y, int width, int height, Text message, Function<FloatButtonWidget, Float> valueGetter, FloatConsumer valueSetter, PressAction onPress) {
+  public FloatButtonWidget(int x, int y, int width, int height, Text message, Function<FloatButtonWidget, Float> valueGetter, ValueConsumer valueSetter, PressAction onPress) {
     super(x, y, width, height, message, onPress, ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
     this.valueGetter = valueGetter;
     this.valueSetter = valueSetter;
@@ -94,28 +96,36 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
     return valueGetter.apply(this);
   }
 
+  public void setAllSameValue(float value) {
+    setValue(n -> value);
+  }
+
   /**
    * 设置该按钮的值。会受到最小值和最大值的限制。
    */
-  public void setValue(float value) {
-    if (value < min) {
-      if (Float.isFinite(max)) {
-        // 从最大值开始向下循环。
-        value = max;
-      } else {
-        // 封底为最小值。
-        value = min;
+  public void setValue(Float2FloatFunction valueFunction) {
+    final Float original = getValue();
+    if (original == null) return;
+    valueSetter.accept(valueFunction.andThenFloat(value -> {
+      if (value < min) {
+        if (Float.isFinite(max)) {
+          // 从最大值开始向下循环。
+          value = max;
+        } else {
+          // 封底为最小值。
+          value = min;
+        }
+      } else if (value > max) {
+        if (Float.isFinite(min)) {
+          // 从最小值开始向上循环。
+          value = min;
+        } else {
+          // 封顶为最大值。
+          value = max;
+        }
       }
-    } else if (value > max) {
-      if (Float.isFinite(min)) {
-        // 从最小值开始向上循环。
-        value = min;
-      } else {
-        // 封顶为最大值。
-        value = max;
-      }
-    }
-    valueSetter.accept(value);
+      return value;
+    }), original);
     updateTooltip();
   }
 
@@ -133,16 +143,13 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
   }
 
   public void onPress(int button) {
-    final Float value = getValue();
-    if (value != null) {
-      switch (button) { // 这种情况下直接采用了 onPress，所以直接略。
-        case 0, 1 -> setValue(value
-            + (Screen.hasShiftDown() || button == 1 ? -1 : 1)
-            * step
-            * (Screen.hasControlDown() ? 8 : 1)
-            * (Screen.hasAltDown() ? 0.125f : 1));
-        case 2 -> setValue(defaultValue);
-      }
+    switch (button) { // 这种情况下直接采用了 onPress，所以直接略。
+      case 0, 1 -> setValue(value -> value
+          + (Screen.hasShiftDown() || button == 1 ? -1 : 1)
+          * step
+          * (Screen.hasControlDown() ? 8 : 1)
+          * (Screen.hasAltDown() ? 0.125f : 1));
+      case 2 -> setAllSameValue(defaultValue);
     }
   }
 
@@ -158,15 +165,12 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
 
   @Override
   public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-    final Float value = getValue();
-    if (value != null) {
-      setValue((float) (value
-          + verticalAmount
-          * (Screen.hasShiftDown() ? -1 : 1)
-          * (Screen.hasControlDown() ? 8 : 1)
-          * step * scrollMultiplier
-          * (Screen.hasAltDown() ? 0.125f : 1)));
-    }
+    setValue(value -> (float) (value
+        + verticalAmount
+        * (Screen.hasShiftDown() ? -1 : 1)
+        * (Screen.hasControlDown() ? 8 : 1)
+        * step * scrollMultiplier
+        * (Screen.hasAltDown() ? 0.125f : 1)));
     super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     return true;
   }
@@ -176,7 +180,6 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
    * @see net.minecraft.client.gui.widget.SliderWidget#keyPressed(int, int, int)
    */
   public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-    final Float value = getValue();
     if (!KeyCodes.isToggle(keyCode)) {
       if (this.sliderFocused) {
         boolean decreases = keyCode == GLFW.GLFW_KEY_LEFT || keyCode == GLFW.GLFW_KEY_DOWN;
@@ -184,12 +187,12 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
         if (keyCode == GLFW.GLFW_KEY_LEFT && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_RIGHT)
             || keyCode == GLFW.GLFW_KEY_RIGHT && InputUtil.isKeyPressed(handle, InputUtil.GLFW_KEY_LEFT)) {
           // 当同时按下左右时，设为默认值。
-          setValue(defaultValue);
+          setAllSameValue(defaultValue);
           return true;
-        } else if ((decreases || keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_UP) && value != null) {
+        } else if ((decreases || keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_UP) && getValue() != null) {
           final float multiplier = keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_LEFT ? rightArrowStepMultiplier : upArrowStepMultiplier;
           float sign = decreases ? -1.0F : 1.0F;
-          this.setValue(value + sign
+          setValue(value -> value + sign
               * (Screen.hasShiftDown() ? -1 : 1)
               * (Screen.hasControlDown() ? 8 : 1)
               * step * multiplier
@@ -199,7 +202,7 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
       }
       return false;
     } else {
-      this.sliderFocused = value != null && !this.sliderFocused;
+      this.sliderFocused = getValue() != null && !this.sliderFocused;
       this.playDownSound(MinecraftClient.getInstance().getSoundManager());
       return true;
     }
@@ -270,5 +273,11 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
   protected FloatButtonWidget nameValueAs(Float2ObjectFunction<MutableText> valueToText) {
     this.valueToText = valueToText;
     return this;
+  }
+
+  @FunctionalInterface
+  public interface ValueConsumer extends BiConsumer<Float2FloatFunction, @NotNull Float> {
+    @Override
+    void accept(Float2FloatFunction valueFunction, @NotNull Float original);
   }
 }
