@@ -1,5 +1,77 @@
 {
   "parent": "minecraft:item/handheld",
+  "overrides": [
+    {
+      "model": "mishanguc:item/color_tool_opacity_10",
+      "predicate": {
+        "mishanguc:color_mixture_type": 0,
+        "mishanguc:transparency": 0.9
+      }
+    },
+    {
+      "model": "mishanguc:item/color_tool_opacity_25",
+      "predicate": {
+        "mishanguc:color_mixture_type": 0,
+        "mishanguc:transparency": 0.75
+      }
+    },
+    {
+      "model": "mishanguc:item/color_tool_opacity_50",
+      "predicate": {
+        "mishanguc:color_mixture_type": 0,
+        "mishanguc:transparency": 0.5
+      }
+    },
+    {
+      "model": "mishanguc:item/color_tool_opacity_75",
+      "predicate": {
+        "mishanguc:color_mixture_type": 0,
+        "mishanguc:transparency": 0.25
+      }
+    },
+    {
+      "model": "mishanguc:item/color_tool_random",
+      "predicate": {
+        "mishanguc:color_mixture_type": 0.1
+      }
+    },
+    {
+      "model": "mishanguc:item/color_tool_invert",
+      "predicate": {
+        "mishanguc:color_mixture_type": 0.2
+      }
+    },
+    {
+      "model": "mishanguc:item/color_tool_hue",
+      "predicate": {
+        "mishanguc:color_mixture_type": 0.3
+      }
+    },
+    {
+      "model": "mishanguc:item/color_tool_hue_and_saturation",
+      "predicate": {
+        "mishanguc:color_mixture_type": 0.4
+      }
+    },
+    {
+      "model": "mishanguc:item/color_tool_hue_rotate",
+      "predicate": {
+        "mishanguc:color_mixture_type": 0.5
+      }
+    },
+    {
+      "model": "mishanguc:item/color_tool_saturation_change",
+      "predicate": {
+        "mishanguc:color_mixture_type": 0.6
+      }
+    },
+    {
+      "model": "mishanguc:item/color_tool_brightness_change",
+      "predicate": {
+        "mishanguc:color_mixture_type": 0.7
+      }
+    }
+  ],
   "textures": {
     "layer0": "mishanguc:item/color_tool"
   }

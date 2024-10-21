@@ -45,6 +45,7 @@ import pers.solid.mishang.uc.render.*;
 import pers.solid.mishang.uc.screen.HungSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.StandingSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
+import pers.solid.mishang.uc.util.ColorMixtureType;
 
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -96,6 +97,12 @@ public class MishangucClient implements ClientModInitializer {
     ModelPredicateProviderRegistry.register(MishangucItems.FAST_BUILDING_TOOL, Mishanguc.id("fast_building_range"), (stack, world, entity, seed) -> stack.getOrDefault(MishangucComponents.FAST_BUILDING_TOOL_DATA, FastBuildingToolData.DEFAULT).range() / 64f);
     ModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, Mishanguc.id("is_holding_block"), (stack, world, entity, seed) -> BooleanUtils.toInteger(stack.get(MishangucComponents.CARRYING_TOOL_DATA) instanceof CarryingToolData.HoldingBlockState));
     ModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, Mishanguc.id("is_holding_entity"), (stack, world, entity, seed) -> BooleanUtils.toInteger(stack.get(MishangucComponents.CARRYING_TOOL_DATA) instanceof CarryingToolData.HoldingEntity));
+
+    ModelPredicateProviderRegistry.register(MishangucItems.COLOR_TOOL, Mishanguc.id("transparency"), (stack, world, entity, seed) -> {
+      final float opacity = stack.getOrDefault(MishangucComponents.OPACITY, 1f);
+      return 1 - opacity;
+    });
+    ModelPredicateProviderRegistry.register(MishangucItems.COLOR_TOOL, Mishanguc.id("color_mixture_type"), (stack, world, entity, seed) -> stack.getOrDefault(MishangucComponents.COLOR_MIXTURE_TYPE, ColorMixtureType.NORMAL).ordinal() * 0.1f);
   }
 
   private static void registerNetworking() {

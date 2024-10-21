@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "mishanguc:item/color_tool_opacity_50"
+  }
+}

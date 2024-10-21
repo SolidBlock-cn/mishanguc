@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.data;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import it.unimi.dsi.fastutil.floats.FloatObjectPair;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.client.*;
@@ -11,6 +12,9 @@ import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.MishangucBlock;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.item.MishangucItems;
+import pers.solid.mishang.uc.util.ColorMixtureType;
+
+import java.util.List;
 
 public class MishangucModelProvider extends FabricModelProvider {
   public MishangucModelProvider(FabricDataOutput output) {
@@ -40,7 +44,7 @@ public class MishangucModelProvider extends FabricModelProvider {
     itemModelGenerator.register(MishangucItems.BLOCK_STATE_TOOL, Models.HANDHELD);
     itemModelGenerator.register(MishangucItems.FLUID_STATE_TOOL, Models.HANDHELD);
     registerCarryingTool(itemModelGenerator, MishangucItems.CARRYING_TOOL);
-    itemModelGenerator.register(MishangucItems.COLOR_TOOL, Models.HANDHELD);
+    registerColorTool(itemModelGenerator, MishangucItems.COLOR_TOOL);
     itemModelGenerator.register(MishangucItems.COLUMN_BUILDING_TOOL, Models.HANDHELD);
     itemModelGenerator.register(MishangucItems.DATA_TAG_TOOL, Models.HANDHELD);
     registerExplosionToolVariants(itemModelGenerator, MishangucItems.EXPLOSION_TOOL);
@@ -95,5 +99,47 @@ public class MishangucModelProvider extends FabricModelProvider {
     }) {
       itemModelGenerator.register(item, name, Models.HANDHELD);
     }
+  }
+
+  private void registerColorTool(ItemModelGenerator itemModelGenerator, Item item) {
+    final List<FloatObjectPair<String>> opacities = List.of(
+        FloatObjectPair.of(0.1f, "_opacity_10"),
+        FloatObjectPair.of(0.25f, "_opacity_25"),
+        FloatObjectPair.of(0.5f, "_opacity_50"),
+        FloatObjectPair.of(0.75f, "_opacity_75")
+    );
+    for (FloatObjectPair<String> opacity : opacities) {
+      Models.HANDHELD.upload(ModelIds.getItemSubModelId(item, opacity.right()), TextureMap.layer0(TextureMap.getSubId(item, opacity.right())), itemModelGenerator.writer);
+    }
+    for (ColorMixtureType colorMixtureType : ColorMixtureType.values()) {
+      if (colorMixtureType == ColorMixtureType.NORMAL) continue;
+      Models.HANDHELD.upload(ModelIds.getItemSubModelId(item, "_" + colorMixtureType.asString()), TextureMap.layer0(TextureMap.getSubId(item, "_" + colorMixtureType.asString())), itemModelGenerator.writer);
+    }
+
+    Models.HANDHELD.upload(ModelIds.getItemModelId(item), TextureMap.layer0(item), itemModelGenerator.writer, (id, textures) -> {
+      final JsonObject json = Models.HANDHELD.createJson(id, textures);
+      final JsonArray overrides = new JsonArray();
+      json.add("overrides", overrides);
+
+      for (FloatObjectPair<String> pair : opacities) {
+        final JsonObject override = new JsonObject();
+        overrides.add(override);
+        final JsonObject predicate = new JsonObject();
+        override.add("predicate", predicate);
+        predicate.addProperty("mishanguc:transparency", 1 - pair.leftFloat());
+        predicate.addProperty("mishanguc:color_mixture_type", 0);
+        override.addProperty("model", ModelIds.getItemSubModelId(item, pair.right()).toString());
+      }
+      for (ColorMixtureType colorMixtureType : ColorMixtureType.values()) {
+        if (colorMixtureType == ColorMixtureType.NORMAL) continue;
+        final JsonObject override = new JsonObject();
+        overrides.add(override);
+        final JsonObject predicate = new JsonObject();
+        override.add("predicate", predicate);
+        predicate.addProperty("mishanguc:color_mixture_type", colorMixtureType.ordinal() * 0.1f);
+        override.addProperty("model", ModelIds.getItemSubModelId(item, "_" + colorMixtureType.asString()).toString());
+      }
+      return json;
+    });
   }
 }
