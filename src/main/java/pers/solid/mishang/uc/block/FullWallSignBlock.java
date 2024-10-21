@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.TransparentBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.BlockFace;
 import net.minecraft.data.client.BlockStateModelGenerator;
@@ -113,6 +114,23 @@ public class FullWallSignBlock extends WallSignBlock {
     final TextureMap textures = TextureMap.texture(ModelHelper.getTextureOf(baseBlock));
     final Identifier modelId = MishangucModels.FULL_WALL_SIGN.upload(this, textures, blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId));
+  }
+
+  @Override
+  public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
+    if (direction.getAxis().isHorizontal() && state.getBlock() instanceof FullWallSignBlock && stateFrom.getBlock() instanceof FullWallSignBlock wallSignBlockFrom && state.get(FACING) == stateFrom.get(FACING) && direction.getAxis() != state.get(FACING).getAxis()) {
+      if (wallSignBlockFrom.baseBlock instanceof TransparentBlock) {
+        if (baseBlock instanceof TransparentBlock) {
+          // 自身和相邻方块都为透明方块，则双方均为同一方块时隐藏。
+          return baseBlock == wallSignBlockFrom.baseBlock;
+        } else {
+          return false;
+        }
+      }
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @Override
