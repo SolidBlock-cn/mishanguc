@@ -8,6 +8,8 @@ import net.minecraft.util.Rarity;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.CustomId;
+import pers.solid.mishang.uc.components.MishangucComponents;
+import pers.solid.mishang.uc.util.ColorMixtureType;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -59,7 +61,7 @@ public final class MishangucItems {
   public static final ExplosionToolItem EXPLOSION_TOOL = new ExplosionToolItem(new Item.Settings().maxDamage(1024));
 
   @ApiStatus.AvailableSince("0.2.1")
-  public static final ColorToolItem COLOR_TOOL = new ColorToolItem(new Item.Settings().maxDamage(1024), null);
+  public static final ColorToolItem COLOR_TOOL = new ColorToolItem(new Item.Settings().maxDamage(1024).component(MishangucComponents.OPACITY, 1f).component(MishangucComponents.COLOR_MIXTURE_TYPE, ColorMixtureType.NORMAL), null);
 
   @ApiStatus.AvailableSince("0.2.4")
   public static final RoadToolItem ROAD_TOOL = new RoadToolItem(new Item.Settings().maxDamage(512));

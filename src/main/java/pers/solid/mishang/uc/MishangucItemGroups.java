@@ -12,6 +12,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
 import org.apache.commons.lang3.ObjectUtils;
 import pers.solid.mishang.uc.blocks.*;
+import pers.solid.mishang.uc.item.ColorToolItem;
 import pers.solid.mishang.uc.item.ExplosionToolItem;
 import pers.solid.mishang.uc.item.FastBuildingToolItem;
 import pers.solid.mishang.uc.item.MishangucItems;
@@ -47,6 +48,8 @@ public class MishangucItemGroups {
           explosionToolItem.appendToEntries(entries);
         } else if (item instanceof final FastBuildingToolItem fastBuildingToolItem) {
           fastBuildingToolItem.appendToEntries(entries);
+        } else if (item instanceof final ColorToolItem colorToolItem) {
+          colorToolItem.appendToEntries(entries);
         } else {
           entries.add(item);
         }

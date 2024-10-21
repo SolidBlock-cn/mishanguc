@@ -29,20 +29,20 @@
       "apply": {
         "model": "mishanguc:block/light_blue_decorated_iron_handrail_central_side",
         "uvlock": true,
-        "y": 180
+        "y": 270
       },
       "when": {
-        "north": "true"
+        "east": "true"
       }
     },
     {
       "apply": {
         "model": "mishanguc:block/light_blue_decorated_iron_handrail_central_post_side",
         "uvlock": true,
-        "y": 180
+        "y": 270
       },
       "when": {
-        "north": "false"
+        "east": "false"
       }
     },
     {
@@ -69,20 +69,20 @@
       "apply": {
         "model": "mishanguc:block/light_blue_decorated_iron_handrail_central_side",
         "uvlock": true,
-        "y": 270
+        "y": 180
       },
       "when": {
-        "east": "true"
+        "north": "true"
       }
     },
     {
       "apply": {
         "model": "mishanguc:block/light_blue_decorated_iron_handrail_central_post_side",
         "uvlock": true,
-        "y": 270
+        "y": 180
       },
       "when": {
-        "east": "false"
+        "north": "false"
       }
     }
   ]
