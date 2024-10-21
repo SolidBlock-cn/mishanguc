@@ -431,7 +431,7 @@ public class Mishanguc implements ModInitializer {
           for (Map.Entry<DyeColor, TagKey<Item>> entry : MishangUtils.DYE_ITEM_TAGS.get().entrySet()) {
             final ItemStack stack = player.getStackInHand(hand);
             if (stack.isIn(entry.getValue())) {
-              coloredBlockEntity.setColor(entry.getKey().getEntityColor());
+              coloredBlockEntity.setColor(entry.getKey().getFireworkColor());
               blockEntity.markDirty();
               world.updateListeners(blockPos, blockEntity.getCachedState(), blockEntity.getCachedState(), Block.NOTIFY_LISTENERS);
               stack.decrementUnlessCreative(1, player);

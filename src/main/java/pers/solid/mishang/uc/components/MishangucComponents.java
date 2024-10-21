@@ -32,17 +32,17 @@ public final class MishangucComponents {
   /**
    * 颜色工具应用颜色的不透明度，对所有颜色混合类型都有效。
    */
-  public static final ComponentType<Float> OPACITY = register("opacity", Codec.FLOAT, PacketCodecs.FLOAT);
+  public static final DataComponentType<Float> OPACITY = register("opacity", Codec.FLOAT, PacketCodecs.FLOAT);
 
   /**
    * 颜色工具的颜色混合类型。
    */
-  public static final ComponentType<ColorMixtureType> COLOR_MIXTURE_TYPE = register("color_mixture_type", ColorMixtureType.CODEC, ColorMixtureType.PACKET_CODEC);
+  public static final DataComponentType<ColorMixtureType> COLOR_MIXTURE_TYPE = register("color_mixture_type", ColorMixtureType.CODEC, ColorMixtureType.PACKET_CODEC);
 
   /**
    * 颜色工具对颜色的修改数量，仅限于部分混合类型。
    */
-  public static final ComponentType<Float> COLOR_CHANGE_AMOUNT = register("color_change_amount", Codec.FLOAT, PacketCodecs.FLOAT);
+  public static final DataComponentType<Float> COLOR_CHANGE_AMOUNT = register("color_change_amount", Codec.FLOAT, PacketCodecs.FLOAT);
 
   public static final DataComponentType<ExplosionToolComponent> EXPLOSION_TOOL_DATA = register("explosion_tool_data", ExplosionToolComponent.CODEC, ExplosionToolComponent.PACKET_CODEC);
   public static final DataComponentType<FastBuildingToolData> FAST_BUILDING_TOOL_DATA = register("fast_building_tool_data", FastBuildingToolData.CODEC, FastBuildingToolData.PACKET_CODEC);
