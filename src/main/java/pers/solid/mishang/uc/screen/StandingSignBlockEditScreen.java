@@ -52,8 +52,8 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
   }
 
   @Override
-  public void addTextField(int index, @NotNull TextContext textContext, boolean isExisting) {
-    super.addTextField(index, textContext, isExisting);
+  public void addTextField(int index, @NotNull TextContext textContext, boolean isExisting, boolean multiSel) {
+    super.addTextField(index, textContext, isExisting, multiSel);
     copyFromBackButton.visible = false;
   }
 
@@ -75,8 +75,8 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
   }).dimensions(this.width / 2 - 100, 90, 200, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.copy_from_back.description"))).build();
 
   @Override
-  public void removeTextField(int index) {
-    super.removeTextField(index);
+  public void removeTextField(int index, boolean focusNearby) {
+    super.removeTextField(index, focusNearby);
     copyFromBackButton.visible = placeHolder.visible;
   }
 }

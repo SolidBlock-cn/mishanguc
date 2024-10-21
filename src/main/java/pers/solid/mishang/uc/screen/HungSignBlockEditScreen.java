@@ -67,8 +67,8 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
   }
 
   @Override
-  public void addTextField(int index, @NotNull TextContext textContext, boolean isExisting) {
-    super.addTextField(index, textContext, isExisting);
+  public void addTextField(int index, @NotNull TextContext textContext, boolean isExisting, boolean multiSel) {
+    super.addTextField(index, textContext, isExisting, multiSel);
     copyFromBackButton.visible = false;
   }
 
@@ -99,8 +99,8 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
           20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.copy_from_back.description"))).build();
 
   @Override
-  public void removeTextField(int index) {
-    super.removeTextField(index);
+  public void removeTextField(int index, boolean focusNearby) {
+    super.removeTextField(index, focusNearby);
     copyFromBackButton.visible = placeHolder.visible;
   }
 }

@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.screen;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Streams;
 import com.google.gson.JsonParseException;
 import net.fabricmc.api.EnvType;
@@ -33,9 +32,10 @@ import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnmodifiableView;
 import org.lwjgl.glfw.GLFW;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.networking.SignEditFinishPayload;
 import pers.solid.mishang.uc.text.PatternSpecialDrawable;
@@ -45,6 +45,7 @@ import pers.solid.mishang.uc.util.HorizontalAlign;
 import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -84,8 +85,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   private final RegistryWrapper.WrapperLookup registryLookup;
   public final T entity;
 
-  protected final BiMap<@NotNull TextContext, @NotNull TextFieldWidget> contextToWidgetBiMap =
-      HashBiMap.create();
   /**
    * 是否发生了改变。如果改变了，则提交时发送完整内容，否则发送空 NBT 表示未做更改。
    */
@@ -94,15 +93,26 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public TextFieldListWidget textFieldListWidget;
 
   /**
-   * 正在被选中的 TextWidget。会在 {@link #setFocused(Element)} 时更改。可能为 null。
+   * 仅用于在 {@link #init()} 中保持子元素，其他时候可能为 {@code null}。一般建议使用 {@code textFieldListWidget.children()}。
    */
-  public @Nullable TextFieldWidget selectedTextField = null;
+  protected List<TextFieldListWidget.Entry> textFieldListChildren;
+
+  /**
+   * 被选中的多个项。
+   */
+  protected final @NotNull List<TextFieldListWidget.@NotNull Entry> selectedEntries = new ArrayList<>();
+
+  /**
+   * 正在被选中的 TextWidget。会在 {@link #setFocused(Element)} 时更改。
+   */
+  @NotNull
+  protected final @UnmodifiableView List<@NotNull TextFieldWidget> selectedTextField = Lists.transform(selectedEntries, input -> input.textFieldWidget);
 
   /**
    * 正在被选中的 TextContent。会在 {@link TextFieldListWidget#setFocused(Element)} 时更改。可能为 null。不是副本。
    */
-  public @Nullable TextContext selectedTextContext = null;
-
+  @NotNull
+  protected final @UnmodifiableView List<@NotNull TextContext> selectedTextContext = Lists.transform(selectedEntries, input -> input.textContext);
 
   /*
   ===== 上方第一行 =====
@@ -112,19 +122,27 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * 上方第一行：添加文本按钮
    */
   public final ButtonWidget addTextButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.add_text"), button1 -> {
-    int index = textFieldListWidget.children().indexOf(textFieldListWidget.children().stream().filter(entry -> entry.textFieldWidget == selectedTextField).findFirst().orElse(null));
-    addTextField(index == -1 ? textFieldListWidget.children().size() : index + 1);
+    final int[] index = getSelectedIndex();
+    if (index.length == 0) {
+      addTextField(textFieldListWidget.children().size());
+    } else {
+      for (int i = index.length - 1; i >= 0; i--) {
+        addTextField(index[i] + 1);
+      }
+    }
   }).position(width / 2 - 120 - 100, 5).size(80, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.add_text.description").append(ScreenTexts.LINE_BREAK).append(MishangUtils.describeShortcut(TextBridge.literal("Ctrl + Shift + ").append(TextBridge.translatable("message.mishanguc.keyboard_shortcut.equal")))))).build();
 
   /**
    * 上方第一行：移除文本按钮
    */
   public final ButtonWidget removeTextButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.remove_text"), button -> {
-    if (selectedTextField == null)
+    if (selectedTextField.isEmpty()) {
       return;
-    int index = textFieldListWidget.children().indexOf(textFieldListWidget.children().stream().filter(entry -> entry.textFieldWidget == selectedTextField).findFirst().orElse(null));
-    if (index != -1) {
-      removeTextField(index);
+    }
+    final int[] index = getSelectedIndex();
+
+    for (int i = index.length - 1; i >= 0; i--) {
+      removeTextField(index[i], true);
     }
   }).dimensions(width / 2 + 120 - 100, 5, 80, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.remove_text.description").append(ScreenTexts.LINE_BREAK).append(MishangUtils.describeShortcut(TextBridge.literal("Ctrl + Shift + ").append(TextBridge.translatable("message.mishanguc.keyboard_shortcut.minus")))))).build();
 
@@ -133,28 +151,55 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * 上方第一行：上移按钮。
    */
   public final ButtonWidget moveUpButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.moveUp"), button -> {
-    if (selectedTextField == null)
+    if (selectedTextField.isEmpty()) {
       return;
-    int i = textFieldListWidget.children().indexOf(textFieldListWidget.getSelectedOrNull());
-    final TextContext textContext = AbstractSignBlockEditScreen.this.textContextsEditing.get(i);
-    removeTextField(i);
-    if (i > 0)
-      i--;
-    addTextField(i, textContext, false);
+    }
+
+    // 确保按顺序排序
+    final List<TextFieldListWidget.Entry> selectedCopy = textFieldListWidget.children().stream().filter(selectedEntries::contains).toList();
+
+    selectedEntries.clear();
+    for (TextFieldListWidget.Entry entry : selectedCopy) {
+      final int i = textFieldListWidget.children().indexOf(entry);
+      if (i < 0) {
+        Mishanguc.MISHANG_LOGGER.warn("Unexpected entry which is not in children when moving up: {}", entry);
+        continue;
+      } else if (i == 0) {
+        // 顶到了第一元素，不能再移动。
+        selectedEntries.addAll(selectedCopy);
+        break;
+      }
+      removeTextField(i, false);
+      addTextField(i - 1, entry.textContext, false, true);
+    }
   }).dimensions(this.width - 20, 5, 80, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.moveUp.description").append(ScreenTexts.LINE_BREAK).append(MishangUtils.describeShortcut(TextBridge.literal("Ctrl + Shift + ").append(TextBridge.translatable("key.keyboard.up")))))).build();
 
   /**
    * 上方第一行：下移按钮。
    */
   public final ButtonWidget moveDownButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.moveDown"), button -> {
-    if (selectedTextField == null)
+    if (selectedTextField.isEmpty()) {
       return;
-    int i = textFieldListWidget.children().indexOf(textFieldListWidget.getSelectedOrNull());
-    final TextContext textContext = AbstractSignBlockEditScreen.this.textContextsEditing.get(i);
-    removeTextField(i);
-    if (i < textFieldListWidget.children().size())
-      i++;
-    addTextField(i, textContext, false);
+    }
+
+    // 确保按倒序排序
+    final List<TextFieldListWidget.Entry> selectedCopy = Lists.reverse(textFieldListWidget.children()).stream().filter(selectedEntries::contains).toList();
+
+    selectedEntries.clear();
+    for (TextFieldListWidget.Entry entry : selectedCopy) {
+      final int i = textFieldListWidget.children().indexOf(entry);
+      if (i < 0) {
+        Mishanguc.MISHANG_LOGGER.warn("Unexpected entry which is not in children when moving down: {}", entry);
+        continue;
+      } else if (i == textFieldListWidget.children().size() - 1) {
+        // 顶到了最后元素，不能再移动。
+        selectedEntries.addAll(selectedCopy);
+        break;
+      }
+      removeTextField(i, false);
+      addTextField(i + 1, entry.textContext, false, true);
+    }
+
   }).dimensions(this.width - 20, 5, 80, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.moveDown.description").append(ScreenTexts.LINE_BREAK).append(MishangUtils.describeShortcut(TextBridge.literal("Ctrl + Shift + ").append(TextBridge.translatable("key.keyboard.down")))))).build();
 
   /**
@@ -163,7 +208,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public final ButtonWidget clearButton = new ButtonWidget.Builder(BUTTON_CLEAR_MESSAGE, button -> {
     if (button.getMessage() == BUTTON_CLEAR_CONFIRM_MESSAGE) {
       for (int i = AbstractSignBlockEditScreen.this.textFieldListWidget.children().size() - 1; i >= 0; i--) {
-        removeTextField(i);
+        removeTextField(i, true);
       }
       button.setMessage(BUTTON_CLEAR_MESSAGE);
       button.setTooltip(Tooltip.of(BUTTON_CLEAR_DESCRIPTION_MESSAGE));
@@ -191,8 +236,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
 
   @ApiStatus.AvailableSince("0.1.6")
   public final ButtonWidget applyDoubleLineTemplateButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.apply_double_line_template"), button -> {
-    addTextField(0, AbstractSignBlockEditScreen.this.entity.createDefaultTextContext(), false);
-    addTextField(1, Util.make(AbstractSignBlockEditScreen.this.entity.createDefaultTextContext(), textContext -> textContext.size /= 2), false);
+    addTextField(0, AbstractSignBlockEditScreen.this.entity.createDefaultTextContext(), false, false);
+    addTextField(1, Util.make(AbstractSignBlockEditScreen.this.entity.createDefaultTextContext(), textContext -> textContext.size /= 2), false, false);
     textFieldListWidget.setFocused(textFieldListWidget.children().get(0));
     rearrange();
   }).dimensions(width / 2 - 50, 70, 120, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.apply_double_line_template.description"))).build();
@@ -205,7 +250,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     textContext0.size = 8;
     textContext0.offsetX = -4;
     textContext0.absolute = true;
-    AbstractSignBlockEditScreen.this.addTextField(0, textContext0, false);
+    AbstractSignBlockEditScreen.this.addTextField(0, textContext0, false, false);
     final TextContext textContext1 = entity.createDefaultTextContext();
     textContext1.offsetX = 8;
     textContext1.horizontalAlign = HorizontalAlign.LEFT;
@@ -249,20 +294,22 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第一行：加粗按钮。
    */
-  public final BooleanButtonWidget boldButton = new BooleanButtonWidget(this.width / 2 - 200, this.height - 50, 20, 20, TextBridge.translatable("message.mishanguc.bold"), button -> selectedTextContext == null ? null : selectedTextContext.bold, b -> {
+  public final BooleanButtonWidget boldButton = new BooleanButtonWidget(this.width / 2 - 200, this.height - 50, 20, 20, TextBridge.translatable("message.mishanguc.bold"), button -> selectedTextContext.isEmpty() ? null : selectedTextContext.getLast().bold, b -> {
     changed = true;
-    if (selectedTextContext != null)
-      selectedTextContext.bold = b;
+    for (TextContext textContext : selectedTextContext) {
+      textContext.bold = b;
+    }
   }, EMPTY_PRESS_ACTION)
       .setRenderedName(TextBridge.literal("B").formatted(Formatting.BOLD));
 
   /**
    * 下方第一行：斜体按钮。
    */
-  public final BooleanButtonWidget italicButton = new BooleanButtonWidget(this.width / 2 - 180, this.height - 50, 20, 20, TextBridge.translatable("message.mishanguc.italic"), button -> selectedTextContext == null ? null : selectedTextContext.italic, b -> {
+  public final BooleanButtonWidget italicButton = new BooleanButtonWidget(this.width / 2 - 180, this.height - 50, 20, 20, TextBridge.translatable("message.mishanguc.italic"), button -> selectedTextContext.isEmpty() ? null : selectedTextContext.getLast().italic, b -> {
     changed = true;
-    if (selectedTextContext != null)
-      selectedTextContext.italic = b;
+    for (TextContext textContext : selectedTextContext) {
+      textContext.italic = b;
+    }
   }, EMPTY_PRESS_ACTION)
       .setRenderedName(TextBridge.literal("I").formatted(Formatting.ITALIC))
       .setKeyboardShortcut(TextBridge.literal("Ctrl + I"));
@@ -270,10 +317,11 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第一行：下划线按钮。
    */
-  public final BooleanButtonWidget underlineButton = new BooleanButtonWidget(this.width / 2 - 160, this.height - 50, 20, 20, TextBridge.translatable("message.mishanguc.underline"), button -> selectedTextContext == null ? null : selectedTextContext.underline, b -> {
+  public final BooleanButtonWidget underlineButton = new BooleanButtonWidget(this.width / 2 - 160, this.height - 50, 20, 20, TextBridge.translatable("message.mishanguc.underline"), button -> selectedTextContext.isEmpty() ? null : selectedTextContext.getLast().underline, b -> {
     changed = true;
-    if (selectedTextContext != null)
-      selectedTextContext.underline = b;
+    for (TextContext textContext : selectedTextContext) {
+      textContext.italic = b;
+    }
   }, EMPTY_PRESS_ACTION)
       .setRenderedName(TextBridge.literal("U").formatted(Formatting.UNDERLINE))
       .setKeyboardShortcut(TextBridge.literal("Ctrl + U"));
@@ -281,10 +329,11 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第一行：删除线按钮。
    */
-  public final BooleanButtonWidget strikethroughButton = new BooleanButtonWidget(this.width / 2 - 140, this.height - 50, 20, 20, TextBridge.translatable("message.mishanguc.strikethrough"), button -> selectedTextContext == null ? null : selectedTextContext.strikethrough, b -> {
+  public final BooleanButtonWidget strikethroughButton = new BooleanButtonWidget(this.width / 2 - 140, this.height - 50, 20, 20, TextBridge.translatable("message.mishanguc.strikethrough"), button -> selectedTextContext.isEmpty() ? null : selectedTextContext.getLast().strikethrough, b -> {
     changed = true;
-    if (selectedTextContext != null)
-      selectedTextContext.strikethrough = b;
+    for (TextContext textContext : selectedTextContext) {
+      textContext.strikethrough = b;
+    }
   }, EMPTY_PRESS_ACTION)
       .setRenderedName(TextBridge.literal("S").formatted(Formatting.STRIKETHROUGH))
       .setKeyboardShortcut(TextBridge.literal("Ctrl + S"));
@@ -292,10 +341,11 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第一行：随机文字（obfuscated）按钮。
    */
-  public final BooleanButtonWidget obfuscatedButton = new BooleanButtonWidget(this.width / 2 - 120, this.height - 50, 20, 20, TextBridge.translatable("message.mishanguc.obfuscated"), button -> selectedTextContext == null ? null : selectedTextContext.obfuscated, b -> {
+  public final BooleanButtonWidget obfuscatedButton = new BooleanButtonWidget(this.width / 2 - 120, this.height - 50, 20, 20, TextBridge.translatable("message.mishanguc.obfuscated"), button -> selectedTextContext.isEmpty() ? null : selectedTextContext.getLast().obfuscated, b -> {
     changed = true;
-    if (selectedTextContext != null)
-      selectedTextContext.obfuscated = b;
+    for (TextContext textContext : selectedTextContext) {
+      textContext.obfuscated = b;
+    }
   }, EMPTY_PRESS_ACTION)
       .setRenderedName(TextBridge.literal("O").formatted(Formatting.OBFUSCATED))
       .setKeyboardShortcut(TextBridge.literal("Ctrl + O"));
@@ -304,50 +354,51 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第一行：阴影按钮。
    */
-  public final BooleanButtonWidget shadeButton = new BooleanButtonWidget(this.width / 2 - 100, this.height - 50, 35, 20, TextBridge.translatable("message.mishanguc.shade"), button -> selectedTextContext == null ? null : selectedTextContext.shadow, b -> {
+  public final BooleanButtonWidget shadeButton = new BooleanButtonWidget(this.width / 2 - 100, this.height - 50, 35, 20, TextBridge.translatable("message.mishanguc.shade"), button -> selectedTextContext.isEmpty() ? null : selectedTextContext.getLast().shadow, b -> {
     changed = true;
-    if (selectedTextContext != null)
-      selectedTextContext.shadow = b;
+    for (TextContext textContext : selectedTextContext) {
+      textContext.shadow = b;
+    }
   }, EMPTY_PRESS_ACTION)
       .setTooltip(TextBridge.translatable("message.mishanguc.shade.description"));
 
   /**
    * 下方第一行：文本大小按钮。
    */
-  public final FloatButtonWidget sizeButton = new FloatButtonWidget(this.width / 2 - 60, this.height - 50, 35, 20, TextBridge.translatable("message.mishanguc.size"), buttons -> selectedTextContext != null ? selectedTextContext.size : null, value -> {
+  public final FloatButtonWidget sizeButton = new FloatButtonWidget(this.width / 2 - 60, this.height - 50, 35, 20, TextBridge.translatable("message.mishanguc.size"), buttons -> selectedTextContext.isEmpty() ? null : selectedTextContext.getLast().size, value -> {
     changed = true;
-    if (selectedTextContext != null) {
-      selectedTextContext.size = value;
+    for (TextContext textContext : selectedTextContext) {
+      textContext.size = value;
     }
   }, EMPTY_PRESS_ACTION);
 
   /**
    * 下方第一行：X偏移。
    */
-  public final FloatButtonWidget offsetXButton = new FloatButtonWidget(this.width / 2 - 10, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.offsetX"), button -> selectedTextContext != null ? selectedTextContext.offsetX : null, value -> {
+  public final FloatButtonWidget offsetXButton = new FloatButtonWidget(this.width / 2 - 10, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.offsetX"), button -> selectedTextContext.isEmpty() ? null : selectedTextContext.getLast().offsetX, value -> {
     changed = true;
-    if (selectedTextContext != null) {
-      selectedTextContext.offsetX = value;
+    for (TextContext textContext : selectedTextContext) {
+      textContext.offsetX = value;
     }
   }, EMPTY_PRESS_ACTION);
 
   /**
    * 下方第一行：Y偏移。
    */
-  public final FloatButtonWidget offsetYButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.offsetY"), button -> selectedTextContext != null ? selectedTextContext.offsetY : null, value -> {
+  public final FloatButtonWidget offsetYButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.offsetY"), button -> selectedTextContext.isEmpty() ? null : selectedTextContext.getLast().offsetY, value -> {
     changed = true;
-    if (selectedTextContext != null) {
-      selectedTextContext.offsetY = value;
+    for (TextContext textContext : selectedTextContext) {
+      textContext.offsetY = value;
     }
   }, EMPTY_PRESS_ACTION);
 
   /**
    * 下方第一行：Z偏移。
    */
-  public final FloatButtonWidget offsetZButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.offsetZ"), button -> selectedTextContext != null ? selectedTextContext.offsetZ : null, value -> {
+  public final FloatButtonWidget offsetZButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.offsetZ"), button -> selectedTextContext.isEmpty() ? null : selectedTextContext.getLast().offsetZ, value -> {
     changed = true;
-    if (selectedTextContext != null) {
-      selectedTextContext.offsetZ = value;
+    for (TextContext textContext : selectedTextContext) {
+      textContext.offsetZ = value;
     }
   }, EMPTY_PRESS_ACTION);
 
@@ -356,22 +407,22 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    */
   public final FloatButtonWidget colorButton = new FloatButtonWidget(0, 0, 50, 20, TextBridge.translatable("message.mishanguc.color"), button -> {
     changed = true;
-    if (selectedTextContext == null) {
+    if (selectedTextContext.isEmpty()) {
       return null;
     }
-    final DyeColor dyeColor = MishangUtils.colorBySignColor(selectedTextContext.color);
+    final DyeColor dyeColor = MishangUtils.colorBySignColor(selectedTextContext.getLast().color);
     if (dyeColor == null) {
       return -2f;
     } else {
       return (float) dyeColor.getId();
     }
   }, colorId -> {
-    if (selectedTextContext != null) {
-      selectedTextContext.color = DyeColor.byId((int) colorId).getSignColor();
+    for (TextContext textContext : selectedTextContext) {
+      textContext.color = DyeColor.byId((int) colorId).getSignColor();
     }
   }, EMPTY_PRESS_ACTION).nameValueAs(colorId -> {
-    if (colorId == -2 && selectedTextContext != null) {
-      return MishangUtils.describeColor(selectedTextContext.color);
+    if (colorId == -2 && !selectedTextContext.isEmpty()) {
+      return MishangUtils.describeColor(selectedTextContext.getLast().color);
     } else {
       final DyeColor dyeColor = DyeColor.byId((int) colorId);
       return MishangUtils.describeColor(dyeColor.getSignColor(), TextBridge.translatable("color.minecraft." + dyeColor.asString()));
@@ -383,19 +434,19 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    */
   @ApiStatus.AvailableSince("0.1.6-mc1.17")
   public final FloatButtonWidget outlineColorButton = new FloatButtonWidget(0, 0, 70, 20, TextBridge.translatable("message.mishanguc.outline_color"), button -> {
-    if (selectedTextContext == null) {
+    if (selectedTextContext.isEmpty()) {
       return null;
     }
-    if (selectedTextContext.outlineColor == -1) {
+    if (selectedTextContext.getLast().outlineColor == -1) {
       return -1f;
-    } else if (selectedTextContext.outlineColor == -2) {
+    } else if (selectedTextContext.getLast().outlineColor == -2) {
       return -2f;
     }
-    final DyeColor colorOutline = MishangUtils.COLOR_TO_OUTLINE_COLOR.inverse().get(selectedTextContext.outlineColor);
+    final DyeColor colorOutline = MishangUtils.COLOR_TO_OUTLINE_COLOR.inverse().get(selectedTextContext.getLast().outlineColor);
     if (colorOutline != null) {
       return colorOutline.getId() + 16f;
     }
-    final DyeColor color = MishangUtils.colorBySignColor(selectedTextContext.outlineColor);
+    final DyeColor color = MishangUtils.colorBySignColor(selectedTextContext.getLast().outlineColor);
     if (color != null) {
       return (float) color.getId();
     } else {
@@ -403,13 +454,13 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
   }, colorId -> {
     changed = true;
-    if (selectedTextContext != null) {
+    for (TextContext textContext : selectedTextContext) {
       if (colorId == -1 || colorId == -2) {
-        selectedTextContext.outlineColor = (int) colorId;
+        textContext.outlineColor = (int) colorId;
       } else if (colorId > 15) {
-        selectedTextContext.outlineColor = MishangUtils.COLOR_TO_OUTLINE_COLOR.get(DyeColor.byId((int) colorId - 16));
+        textContext.outlineColor = MishangUtils.COLOR_TO_OUTLINE_COLOR.get(DyeColor.byId((int) colorId - 16));
       } else {
-        selectedTextContext.outlineColor = DyeColor.byId((int) colorId).getSignColor();
+        textContext.outlineColor = DyeColor.byId((int) colorId).getSignColor();
       }
     }
   }, EMPTY_PRESS_ACTION).nameValueAs(colorId -> {
@@ -423,11 +474,11 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       return TextBridge.translatable("message.mishanguc.outline_color.auto");
     } else if (colorId == -2) {
       return TextBridge.translatable("message.mishanguc.outline_color.none");
-    } else if (colorId == -3 && selectedTextContext != null) {
-      return MishangUtils.describeColor(selectedTextContext.outlineColor);
+    } else if (colorId == -3 && !selectedTextContext.isEmpty()) {
+      return MishangUtils.describeColor(selectedTextContext.getLast().outlineColor);
     } else if (colorId > 15) {
       final DyeColor color = DyeColor.byId((int) colorId - 16);
-      return TextBridge.translatable("message.mishanguc.outline_color.relate", MishangUtils.describeColor(selectedTextContext.outlineColor, TextBridge.translatable("message.mishanguc.outline_color.relate.$1")), MishangUtils.describeColor(color.getSignColor(), TextBridge.translatable("color.minecraft." + color.asString())));
+      return TextBridge.translatable("message.mishanguc.outline_color.relate", MishangUtils.describeColor(selectedTextContext.getLast().outlineColor, TextBridge.translatable("message.mishanguc.outline_color.relate.$1")), MishangUtils.describeColor(color.getSignColor(), TextBridge.translatable("color.minecraft." + color.asString())));
     } else {
       final DyeColor color = DyeColor.byId((int) colorId);
       if (color == null)
@@ -441,8 +492,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       return TextBridge.translatable("message.mishanguc.outline_color.composed.auto");
     } else if (value == -2) {
       return TextBridge.translatable("message.mishanguc.outline_color.composed.none");
-    } else if (selectedTextContext != null) {
-      return TextBridge.translatable("message.mishanguc.outline_color.composed", MishangUtils.describeColor(selectedTextContext.outlineColor));
+    } else if (!selectedTextContext.isEmpty()) {
+      return TextBridge.translatable("message.mishanguc.outline_color.composed", MishangUtils.describeColor(selectedTextContext.getLast().outlineColor));
     } else {
       return null;
     }
@@ -457,58 +508,61 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * 下方第二行：X旋转。
    */
   @ApiStatus.AvailableSince("0.1.6")
-  public final FloatButtonWidget rotationXButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.rotationX"), button -> selectedTextContext != null ? selectedTextContext.rotationX : null, value -> {
+  public final FloatButtonWidget rotationXButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.rotationX"), button -> selectedTextContext.isEmpty() ? null : selectedTextContext.getLast().rotationX, value -> {
     changed = true;
-    if (selectedTextContext != null)
-      selectedTextContext.rotationX = value;
+    for (TextContext textContext : selectedTextContext) {
+      textContext.rotationX = value;
+    }
   }, EMPTY_PRESS_ACTION);
 
   /**
    * 下方第二行：Y旋转。
    */
   @ApiStatus.AvailableSince("0.1.6")
-  public final FloatButtonWidget rotationYButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.rotationY"), button -> selectedTextContext != null ? selectedTextContext.rotationY : null, value -> {
+  public final FloatButtonWidget rotationYButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.rotationY"), button -> selectedTextContext.isEmpty() ? null : selectedTextContext.getLast().rotationY, value -> {
     changed = true;
-    if (selectedTextContext != null)
-      selectedTextContext.rotationY = value;
+    for (TextContext textContext : selectedTextContext) {
+      textContext.rotationY = value;
+    }
   }, EMPTY_PRESS_ACTION);
 
   /**
    * 下方第二行：Z旋转。
    */
   @ApiStatus.AvailableSince("0.1.6")
-  public final FloatButtonWidget rotationZButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.rotationZ"), button -> selectedTextContext != null ? selectedTextContext.rotationZ : null, value -> {
+  public final FloatButtonWidget rotationZButton = new FloatButtonWidget(this.width / 2 + 40, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.rotationZ"), button -> selectedTextContext.isEmpty() ? null : selectedTextContext.getLast().rotationZ, value -> {
     changed = true;
-    if (selectedTextContext != null)
-      selectedTextContext.rotationZ = value;
+    for (TextContext textContext : selectedTextContext) {
+      textContext.rotationZ = value;
+    }
   }, EMPTY_PRESS_ACTION);
 
   /**
    * 下方第二行：X缩放。
    */
-  public final FloatButtonWidget scaleXButton = new FloatButtonWidget(this.width / 2 + 90, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.scaleX"), button -> selectedTextContext != null ? selectedTextContext.scaleX : null, value -> {
+  public final FloatButtonWidget scaleXButton = new FloatButtonWidget(this.width / 2 + 90, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.scaleX"), button -> selectedTextContext.isEmpty() ? null : selectedTextContext.getLast().scaleX, value -> {
     changed = true;
-    if (selectedTextContext != null) {
-      selectedTextContext.scaleX = value;
+    for (TextContext textContext : selectedTextContext) {
+      textContext.scaleX = value;
     }
   }, EMPTY_PRESS_ACTION);
 
   /**
    * 下方第二行：Y缩放。
    */
-  public final FloatButtonWidget scaleYButton = new FloatButtonWidget(this.width / 2 + 140, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.scaleY"), button -> selectedTextContext != null ? selectedTextContext.scaleY : null, value -> {
+  public final FloatButtonWidget scaleYButton = new FloatButtonWidget(this.width / 2 + 140, this.height - 50, 40, 20, TextBridge.translatable("message.mishanguc.scaleY"), button -> selectedTextContext.isEmpty() ? null : selectedTextContext.getLast().scaleY, value -> {
     changed = true;
-    if (selectedTextContext != null) {
-      selectedTextContext.scaleY = value;
+    for (TextContext textContext : selectedTextContext) {
+      textContext.scaleY = value;
     }
   }, EMPTY_PRESS_ACTION);
 
   /**
    * 下方第二行：水平对齐方式。
    */
-  public final FloatButtonWidget horizontalAlignButton = new FloatButtonWidget(0, 0, 50, 20, TextBridge.translatable("message.mishanguc.horizontal_align"), b -> selectedTextContext != null ? (float) selectedTextContext.horizontalAlign.ordinal() : null, f -> {
-    if (selectedTextContext != null) {
-      selectedTextContext.horizontalAlign = HorizontalAlign.values()[(int) f];
+  public final FloatButtonWidget horizontalAlignButton = new FloatButtonWidget(0, 0, 50, 20, TextBridge.translatable("message.mishanguc.horizontal_align"), b -> selectedTextContext.isEmpty() ? null : (float) selectedTextContext.getLast().horizontalAlign.ordinal(), f -> {
+    for (TextContext textContext : selectedTextContext) {
+      textContext.horizontalAlign = HorizontalAlign.values()[(int) f];
     }
   }, b -> {
   }).nameValueAs(f -> HorizontalAlign.values()[(int) f].getName()).setRenderedNameSupplier((value, valueText) -> valueText);
@@ -516,9 +570,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第二行：垂直对齐方式。
    */
-  public final FloatButtonWidget verticalAlignButton = new FloatButtonWidget(0, 0, 50, 20, TextBridge.translatable("message.mishanguc.vertical_align"), b -> selectedTextContext != null ? (float) selectedTextContext.verticalAlign.ordinal() : null, f -> {
-    if (selectedTextContext != null) {
-      selectedTextContext.verticalAlign = VerticalAlign.values()[(int) f];
+  public final FloatButtonWidget verticalAlignButton = new FloatButtonWidget(0, 0, 50, 20, TextBridge.translatable("message.mishanguc.vertical_align"), b -> selectedTextContext.isEmpty() ? null : (float) selectedTextContext.getLast().verticalAlign.ordinal(), f -> {
+    for (TextContext textContext : selectedTextContext) {
+      textContext.verticalAlign = VerticalAlign.values()[(int) f];
     }
   }, b -> {
   }).nameValueAs(f -> VerticalAlign.values()[(int) f].getName()).setRenderedNameSupplier((value, valueText) -> valueText);
@@ -526,19 +580,21 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第二行：切换文字是否可以看穿。
    */
-  public final BooleanButtonWidget seeThroughButton = new BooleanButtonWidget(0, 0, 60, 20, TextBridge.translatable("message.mishanguc.see_through"), button -> selectedTextContext == null ? null : selectedTextContext.seeThrough, b -> {
+  public final BooleanButtonWidget seeThroughButton = new BooleanButtonWidget(0, 0, 60, 20, TextBridge.translatable("message.mishanguc.see_through"), button -> selectedTextContext.isEmpty() ? null : selectedTextContext.getLast().seeThrough, b -> {
     changed = true;
-    if (selectedTextContext != null)
-      selectedTextContext.seeThrough = b;
+    for (TextContext textContext : selectedTextContext) {
+      textContext.seeThrough = b;
+    }
   }, EMPTY_PRESS_ACTION);
 
   /**
    * 下方第二行：绝对模式。
    */
-  public final BooleanButtonWidget absoluteButton = new BooleanButtonWidget(0, 0, 50, 20, TextBridge.translatable("message.mishanguc.absolute"), button -> selectedTextContext != null ? selectedTextContext.absolute : null, b -> {
+  public final BooleanButtonWidget absoluteButton = new BooleanButtonWidget(0, 0, 50, 20, TextBridge.translatable("message.mishanguc.absolute"), button -> selectedTextContext.isEmpty() ? null : selectedTextContext.getLast().absolute, b -> {
     changed = true;
-    if (selectedTextContext != null)
-      selectedTextContext.absolute = b;
+    for (TextContext textContext : selectedTextContext) {
+      textContext.absolute = b;
+    }
   }, EMPTY_PRESS_ACTION)
       .setTooltip(TextBridge.translatable("message.mishanguc.absolute.description"));
 
@@ -603,11 +659,13 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public final ButtonWidget customValueCancelButton = ButtonWidget.builder(ScreenTexts.CANCEL, button -> {
     if (customValueFor != null) {
       if (customValueFor == colorButton) {
-        if (selectedTextContext != null)
-          selectedTextContext.color = customValueBeforeChange.intValue();
+        for (TextContext textContext : selectedTextContext) {
+          textContext.color = customValueBeforeChange.intValue();
+        }
       } else if (customValueFor == outlineColorButton) {
-        if (selectedTextContext != null)
-          selectedTextContext.outlineColor = customValueBeforeChange.intValue();
+        for (TextContext textContext : selectedTextContext) {
+          textContext.outlineColor = customValueBeforeChange.intValue();
+        }
       } else {
         customValueFor.setValue(customValueBeforeChange == null ? customValueFor.defaultValue : customValueBeforeChange);
       }
@@ -625,8 +683,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         textContext.flip();
       }
     } else {
-      if (selectedTextContext != null) {
-        selectedTextContext.flip();
+      for (TextContext textContext : selectedTextContext) {
+        textContext.flip();
       }
     }
   }).dimensions(this.width / 2, this.height - 50, 40, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.flip.description"))).build();
@@ -705,6 +763,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   protected void init() {
     super.init();
     textFieldListWidget = new TextFieldListWidget(this, client, width, height - 90, 25, 16);
+    textFieldListWidget.children().clear();
+
     // 添加按钮
 
     this.addDrawable(textFieldListWidget);
@@ -730,12 +790,17 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
 
     // 添加文本框
-    for (int i = 0, textContextsEditingSize = textContextsEditing.size();
-         i < textContextsEditingSize;
-         i++) {
-      TextContext textContext = textContextsEditing.get(i);
-      addTextField(i, textContext, true);
+    if (textFieldListChildren != null) {
+      textFieldListWidget.children().addAll(textFieldListChildren);
+    } else {
+      for (int i = 0, textContextsEditingSize = textContextsEditing.size();
+           i < textContextsEditingSize;
+           i++) {
+        TextContext textContext = textContextsEditing.get(i);
+        addTextField(i, textContext, true, false);
+      }
     }
+    textFieldListChildren = textFieldListWidget.children();
 
     arrangeToolboxButtons();
 
@@ -799,7 +864,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   }
 
   /**
-   * 添加一个新的文本框，并将其添加到 {@link #contextToWidgetBiMap} 中。
+   * 添加一个新的文本框。
    *
    * @param index 添加到的位置，对应在数组或列表中的次序。
    */
@@ -812,13 +877,25 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   }
 
   /**
-   * 添加一个文本框，并将其添加到 {@link #contextToWidgetBiMap} 中。
+   * 添加一个文本框。
    *
    * @param index       添加到的位置，对应在数组或列表中的次序。
    * @param textContext 需要添加的 {@link TextContext}。
    * @param isExisting  是否为现有的，如果是，则不会将这个 textContext 添加到 {@link #textContextsEditing} 中，也不会将 {@link #changed} 设为 <code>true</code>。
    */
   public void addTextField(int index, @NotNull TextContext textContext, boolean isExisting) {
+    addTextField(index, textContext, isExisting, false);
+  }
+
+  /**
+   * 添加一个文本框。
+   *
+   * @param index       添加到的位置，对应在数组或列表中的次序。
+   * @param textContext 需要添加的 {@link TextContext}。
+   * @param isExisting  是否为现有的，如果是，则不会将这个 textContext 添加到 {@link #textContextsEditing} 中，也不会将 {@link #changed} 设为 <code>true</code>。
+   * @param multiSel    如果为 {@code true}，则将之前的和新的均设置为已选中，否则仅将新的设置为已选中，之前的均解除选择。
+   */
+  public void addTextField(int index, @NotNull TextContext textContext, boolean isExisting, boolean multiSel) {
     if (!isExisting) {
       textContextsEditing.add(index, textContext);
       changed = true;
@@ -839,47 +916,44 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         textFieldWidget.setText("-json" + Text.Serialization.toJsonString(textContext.text, registryLookup));
       }
     }
-    final TextFieldListWidget.Entry newEntry = textFieldListWidget.new Entry(textFieldWidget);
+    final TextFieldListWidget.Entry newEntry = textFieldListWidget.new Entry(textFieldWidget, textContext);
     textFieldListWidget.children().add(index, newEntry);
-    contextToWidgetBiMap.put(textContext, textFieldWidget);
-    textFieldListWidget.setFocused(newEntry);
+    textFieldListWidget.setFocused(newEntry, multiSel, false);
     textFieldListWidget.setScrollAmount(textFieldListWidget.getScrollAmount());
     if (!textFieldListWidget.children().isEmpty()) {
       setFocused(textFieldListWidget);
     }
     textFieldWidget.setChangedListener(s -> {
-      final TextContext textContext1 = contextToWidgetBiMap.inverse().get(textFieldWidget);
-      if (textContext1 != null) {
-        final Matcher matcher = Pattern.compile("^-(\\w+?) (.+)$").matcher(s);
-        if (matcher.matches()) {
-          final String name = matcher.group(1);
-          final String value = matcher.group(2);
-          switch (name) {
-            case "literal":
-              textContext1.text = TextBridge.literal(value);
-              break;
-            case "json":
-              try {
-                textContext1.text = Text.Serialization.fromLenientJson(value, registryLookup);
-              } catch (
-                  JsonParseException e) {
-                // 如果文本有问题，则不执行操作。
-              }
-              break;
-            default:
-              final SpecialDrawable specialDrawable = SpecialDrawable.fromStringArgs(textContext1, name, value);
-              if (specialDrawable == null) {
-                textContext1.extra = null;
-                textContext1.text = TextBridge.literal(s);
-              } else if (specialDrawable != SpecialDrawable.INVALID) {
-                textContext1.extra = specialDrawable;
-                textContext1.text = TextBridge.literal("");
-              } // 如果为 INVALID 则不执行操作。
-          }
-        } else {
-          textContext1.extra = null;
-          textContext1.text = TextBridge.literal(s);
+      final TextContext textContext1 = newEntry.textContext;
+      final Matcher matcher = Pattern.compile("^-(\\w+?) (.+)$").matcher(s);
+      if (matcher.matches()) {
+        final String name = matcher.group(1);
+        final String value = matcher.group(2);
+        switch (name) {
+          case "literal":
+            textContext1.text = TextBridge.literal(value);
+            break;
+          case "json":
+            try {
+              textContext1.text = Text.Serialization.fromLenientJson(value, registryLookup);
+            } catch (
+                JsonParseException e) {
+              // 如果文本有问题，则不执行操作。
+            }
+            break;
+          default:
+            final SpecialDrawable specialDrawable = SpecialDrawable.fromStringArgs(textContext1, name, value);
+            if (specialDrawable == null) {
+              textContext1.extra = null;
+              textContext1.text = TextBridge.literal(s);
+            } else if (specialDrawable != SpecialDrawable.INVALID) {
+              textContext1.extra = specialDrawable;
+              textContext1.text = TextBridge.literal("");
+            } // 如果为 INVALID 则不执行操作。
         }
+      } else {
+        textContext1.extra = null;
+        textContext1.text = TextBridge.literal(s);
       }
       changed = true;
     });
@@ -917,26 +991,27 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   }
 
   /**
-   * 移除一个文本框。将从 {@link #contextToWidgetBiMap} 和 {@link #textContextsEditing} 中移除对应的元素。
+   * 移除一个文本框。
    *
-   * @param index 移除的文本框的位置。
-   * @see #addTextField(int, TextContext, boolean)
+   * @param index       移除的文本框的位置。
+   * @param focusNearby 移除后对焦到附近的文本。
+   * @see #addTextField(int, TextContext, boolean, boolean)
    */
-  public void removeTextField(int index) {
+  public void removeTextField(int index, boolean focusNearby) {
     final List<TextFieldListWidget.Entry> children = textFieldListWidget.children();
-    final TextFieldWidget removedWidget = children.remove(index).textFieldWidget;
-    final TextContext removedTextContext = contextToWidgetBiMap.inverse().get(removedWidget);
+    final TextFieldListWidget.Entry removedEntry = children.remove(index);
+    final TextFieldWidget removedWidget = removedEntry.textFieldWidget;
+    final TextContext removedTextContext = removedEntry.textContext;
     if (textFieldListWidget.getSelectedOrNull() != null
         && removedWidget == textFieldListWidget.getSelectedOrNull().textFieldWidget) {
-      textFieldListWidget.setFocused(null);
+      textFieldListWidget.setFocused(null, false, false);
     }
-    if (!children.isEmpty()) {
-      textFieldListWidget.setFocused(children.get(MathHelper.clamp(index - 1, 0, children.size() - 1)));
+    if (!children.isEmpty() && focusNearby) {
+      textFieldListWidget.setFocused(children.get(MathHelper.clamp(index - 1, 0, children.size() - 1)), false, false);
     }
     // 删除一行元素后，对滚动数量进行一次 clamp，以避免出现过度滚动的情况。
     textFieldListWidget.setScrollAmount(textFieldListWidget.getScrollAmount());
     textContextsEditing.remove(removedTextContext);
-    contextToWidgetBiMap.remove(removedTextContext);
     placeHolder.visible = children.isEmpty();
     applyDoubleLineTemplateButton.visible = placeHolder.visible;
     applyLeftArrowTemplateButton.visible = placeHolder.visible;
@@ -985,9 +1060,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     setFocused(customValueTextField);
     customValueFor = floatButtonWidget;
     if (floatButtonWidget == colorButton) {
-      if (selectedTextContext != null) {
-        customValueTextField.setText(MishangUtils.formatColorHex(selectedTextContext.color));
-        customValueBeforeChange = (float) selectedTextContext.color;
+      if (!selectedTextContext.isEmpty()) {
+        customValueTextField.setText(MishangUtils.formatColorHex(selectedTextContext.getLast().color));
+        customValueBeforeChange = (float) selectedTextContext.getLast().color;
       } else {
         customValueTextField.setText(StringUtils.EMPTY);
         customValueBeforeChange = null;
@@ -1004,20 +1079,21 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           customValueTextField.setEditableColor(16733525);
         } else {
           customValueTextField.setEditableColor(16777215);
-          if (selectedTextContext != null)
-            selectedTextContext.color = parse.getRgb();
+          for (TextContext textContext : selectedTextContext) {
+            textContext.color = parse.getRgb();
+          }
         }
       });
     } else if (floatButtonWidget == outlineColorButton) {
-      if (selectedTextContext != null) {
-        if (selectedTextContext.outlineColor == -1) {
+      if (!selectedTextContext.isEmpty()) {
+        if (selectedTextContext.getLast().outlineColor == -1) {
           customValueTextField.setText("auto");
-        } else if (selectedTextContext.outlineColor == -2) {
+        } else if (selectedTextContext.getLast().outlineColor == -2) {
           customValueTextField.setText("none");
         } else {
-          customValueTextField.setText(MishangUtils.formatColorHex(selectedTextContext.outlineColor));
+          customValueTextField.setText(MishangUtils.formatColorHex(selectedTextContext.getLast().outlineColor));
         }
-        customValueBeforeChange = (float) selectedTextContext.outlineColor;
+        customValueBeforeChange = (float) selectedTextContext.getLast().outlineColor;
       } else {
         customValueTextField.setText(StringUtils.EMPTY);
         customValueBeforeChange = null;
@@ -1030,11 +1106,11 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           Streams.concat(Stream.of("auto", "none"), Arrays.stream(Formatting.values()).filter(Formatting::isColor).map(Formatting::asString)).filter(name -> name.startsWith(text)).findAny().ifPresentOrElse(name -> customValueTextField.setSuggestion(name.substring(text.length())), () -> customValueTextField.setSuggestion(null));
         }
         if (text.equals("auto")) {
-          selectedTextContext.outlineColor = -1;
+          selectedTextContext.getLast().outlineColor = -1;
           customValueTextField.setEditableColor(16777215);
           return;
         } else if (text.equals("none")) {
-          selectedTextContext.outlineColor = -2;
+          selectedTextContext.getLast().outlineColor = -2;
           customValueTextField.setEditableColor(16777215);
           return;
         }
@@ -1043,8 +1119,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           customValueTextField.setEditableColor(16733525);
         } else {
           customValueTextField.setEditableColor(16777215);
-          if (selectedTextContext != null)
-            selectedTextContext.outlineColor = parse.getRgb();
+          for (TextContext textContext : selectedTextContext) {
+            textContext.outlineColor = parse.getRgb();
+          }
         }
       });
     } else {
@@ -1100,7 +1177,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     final double scrollAmountBeforeClear = textFieldListWidget == null ? -1 : textFieldListWidget.getScrollAmount();
     super.clearAndInit();
     if (textFieldListWidget != null && previouslyFocusedTextIndex >= 0 && textFieldListWidget.children().size() > previouslyFocusedTextIndex) {
-      textFieldListWidget.setFocused(textFieldListWidget.children().get(previouslyFocusedTextIndex));
+      textFieldListWidget.setFocused(textFieldListWidget.children().get(previouslyFocusedTextIndex), false, false);
       textFieldListWidget.setScrollAmount(scrollAmountBeforeClear);
     }
   }
@@ -1202,5 +1279,10 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
 
   @Override
   public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+  }
+
+  private int[] getSelectedIndex() {
+    final List<TextFieldListWidget.Entry> children = textFieldListWidget.children();
+    return children.stream().filter(entry -> selectedTextField.contains(entry.textFieldWidget)).mapToInt(children::indexOf).sorted().toArray();
   }
 }
