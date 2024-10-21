@@ -118,6 +118,9 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
         }
       }
     } else if (children().isEmpty() || !MinecraftClient.getInstance().getNavigationType().isKeyboard()) {
+      for (Entry selectedEntry : signBlockEditScreen.selectedEntries) {
+        selectedEntry.setFocused(false);
+      }
       // 使用键盘导航至其他按钮的时候，不设为 null。
       signBlockEditScreen.selectedEntries.clear();
     }
@@ -142,7 +145,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
       }
     } else if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
       // 此时，children().isEmpty() 为 true
-      signBlockEditScreen.addTextField(0);
+      signBlockEditScreen.addTextField(0, false);
       return true;
     }
     if (signBlockEditScreen.selectedEntries.size() > 1) {
@@ -276,7 +279,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
           if (index + 1 < children.size())
             TextFieldListWidget.this.setFocused(children.get(index + 1));
           else if (!children.isEmpty())
-            signBlockEditScreen.addTextField(index + 1);
+            signBlockEditScreen.addTextField(index + 1, false);
         }
         case GLFW.GLFW_KEY_BACKSPACE -> {
           final TextFieldListWidget.Entry focused = TextFieldListWidget.this.getSelectedOrNull();

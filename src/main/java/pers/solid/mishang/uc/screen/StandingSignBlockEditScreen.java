@@ -11,6 +11,7 @@ import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
 
+import java.util.Collection;
 import java.util.List;
 
 @ApiStatus.AvailableSince("1.0.2")
@@ -34,9 +35,8 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
   }
 
   @Override
-  protected void initTextHolders() {
-    super.initTextHolders();
-    this.addDrawableChild(copyFromBackButton);
+  protected Collection<ButtonWidget> getTextHolders() {
+    return List.of(placeHolder, applyLeftArrowTemplateButton, applyDoubleLineTemplateButton, applyRightArrowTemplateButton, copyFromBackButton);
   }
 
   @Override
@@ -49,12 +49,6 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
     } else {
       entity.setTextsOnSide(isFront, backedUpTexts);
     }
-  }
-
-  @Override
-  public void addTextField(int index, @NotNull TextContext textContext, boolean isExisting, boolean multiSel) {
-    super.addTextField(index, textContext, isExisting, multiSel);
-    copyFromBackButton.visible = false;
   }
 
 
@@ -73,10 +67,4 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
           addTextField(textContextsEditing.size(), flip, false);
         });
   }).dimensions(this.width / 2 - 100, 90, 200, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.copy_from_back.description"))).build();
-
-  @Override
-  public void removeTextField(int index, boolean focusNearby) {
-    super.removeTextField(index, focusNearby);
-    copyFromBackButton.visible = placeHolder.visible;
-  }
 }
