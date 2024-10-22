@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_packed_ice"
+      "has_packed_ice",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:simple_packed_ice_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

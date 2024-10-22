@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_spruce_planks"
+      "has_spruce_planks",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:simple_spruce_plank_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

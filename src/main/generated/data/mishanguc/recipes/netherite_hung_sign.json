@@ -17,5 +17,6 @@
   "result": {
     "count": 6,
     "item": "mishanguc:netherite_hung_sign"
-  }
+  },
+  "show_notification": true
 }

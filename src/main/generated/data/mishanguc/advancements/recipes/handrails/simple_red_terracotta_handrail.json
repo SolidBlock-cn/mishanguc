@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_red_terracotta"
+      "has_red_terracotta",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:simple_red_terracotta_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

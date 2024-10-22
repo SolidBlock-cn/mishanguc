@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_colored_cobblestone"
+      "has_colored_cobblestone",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:colored_cobblestone_stairs"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

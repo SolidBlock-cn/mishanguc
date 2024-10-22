@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_cobblestone"
+      "has_cobblestone",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:simple_cobblestone_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

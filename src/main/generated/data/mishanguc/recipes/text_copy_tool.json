@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "mishanguc:text_copy_tool"
-  }
+  },
+  "show_notification": true
 }

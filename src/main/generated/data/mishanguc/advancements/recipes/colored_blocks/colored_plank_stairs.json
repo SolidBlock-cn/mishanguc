@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_colored_planks"
+      "has_colored_planks",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:colored_plank_stairs"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

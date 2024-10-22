@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "mishanguc:rotating_tool"
-  }
+  },
+  "show_notification": true
 }

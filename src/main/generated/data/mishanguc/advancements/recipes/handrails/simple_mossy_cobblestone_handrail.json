@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_mossy_cobblestone"
+      "has_mossy_cobblestone",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:simple_mossy_cobblestone_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

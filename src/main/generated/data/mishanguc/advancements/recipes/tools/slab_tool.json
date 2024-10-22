@@ -34,14 +34,15 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_shears",
-      "has_stone"
+      "has_stone",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:slab_tool"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

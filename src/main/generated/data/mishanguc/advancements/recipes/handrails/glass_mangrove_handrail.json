@@ -58,16 +58,17 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_mangrove_wood",
       "has_glass_pane",
       "has_mangrove_planks",
-      "has_stick"
+      "has_stick",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:glass_mangrove_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

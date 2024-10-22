@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_orange_medium_wall_light_tube"
+      "has_orange_medium_wall_light_tube",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:orange_medium_wall_light"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

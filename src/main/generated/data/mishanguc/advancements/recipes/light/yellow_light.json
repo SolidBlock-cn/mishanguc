@@ -46,15 +46,16 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_yellow_dye",
       "has_glowstone",
-      "has_yellow_concrete"
+      "has_yellow_concrete",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:yellow_light"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

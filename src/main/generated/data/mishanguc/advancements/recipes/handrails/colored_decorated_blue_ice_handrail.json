@@ -58,16 +58,17 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_packed_ice",
       "has_glass_pane",
       "has_colored_snow_block",
-      "has_blue_ice"
+      "has_blue_ice",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:colored_decorated_blue_ice_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

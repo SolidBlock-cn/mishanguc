@@ -20,13 +20,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_road_slab"
+      "has_road_slab",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:road_slab_from_paling"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

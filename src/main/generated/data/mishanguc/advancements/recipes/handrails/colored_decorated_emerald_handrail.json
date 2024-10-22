@@ -44,15 +44,16 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_emerald",
       "has_glass_pane",
-      "has_colored_concrete"
+      "has_colored_concrete",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:colored_decorated_emerald_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -46,15 +46,16 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_pink_dye",
       "has_glowstone",
-      "has_pink_concrete"
+      "has_pink_concrete",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:pink_light"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_blue_ice"
+      "has_blue_ice",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:simple_blue_ice_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

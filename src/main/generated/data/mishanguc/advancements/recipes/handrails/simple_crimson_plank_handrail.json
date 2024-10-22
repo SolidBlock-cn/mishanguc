@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_crimson_planks"
+      "has_crimson_planks",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:simple_crimson_plank_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

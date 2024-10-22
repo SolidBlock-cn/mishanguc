@@ -44,15 +44,16 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_netherite_ingot",
       "has_glass_pane",
-      "has_colored_concrete"
+      "has_colored_concrete",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:colored_decorated_netherite_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

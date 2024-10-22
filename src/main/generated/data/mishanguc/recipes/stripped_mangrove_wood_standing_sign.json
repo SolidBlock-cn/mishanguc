@@ -21,5 +21,6 @@
   "result": {
     "count": 4,
     "item": "mishanguc:stripped_mangrove_wood_standing_sign"
-  }
+  },
+  "show_notification": true
 }

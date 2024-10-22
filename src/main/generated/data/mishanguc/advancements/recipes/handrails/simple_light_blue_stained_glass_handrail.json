@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_light_blue_stained_glass"
+      "has_light_blue_stained_glass",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:simple_light_blue_stained_glass_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

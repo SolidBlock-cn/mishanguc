@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_orange_light"
+      "has_orange_light",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:orange_wall_light_simple_decoration"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

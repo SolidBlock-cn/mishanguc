@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_orange_thin_strip_wall_light_tube"
+      "has_orange_thin_strip_wall_light_tube",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:orange_thin_strip_corner_light_tube"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

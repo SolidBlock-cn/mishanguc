@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_cyan_light"
+      "has_cyan_light",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:cyan_medium_column_light_tube"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

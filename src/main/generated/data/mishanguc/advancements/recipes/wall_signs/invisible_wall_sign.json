@@ -46,15 +46,16 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_iron_nugget",
       "has_feather",
-      "has_gold_ingot"
+      "has_gold_ingot",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:invisible_wall_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

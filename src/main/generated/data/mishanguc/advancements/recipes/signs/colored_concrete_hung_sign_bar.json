@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_base_block"
+      "has_base_block",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:colored_concrete_hung_sign_bar"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

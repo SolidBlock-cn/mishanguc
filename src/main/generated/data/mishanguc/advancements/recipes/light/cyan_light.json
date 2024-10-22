@@ -46,15 +46,16 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_cyan_dye",
       "has_glowstone",
-      "has_cyan_concrete"
+      "has_cyan_concrete",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:cyan_light"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

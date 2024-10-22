@@ -54,16 +54,17 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_iron_ingot",
       "has_glass_pane",
       "has_dye",
-      "has_iron_nugget"
+      "has_iron_nugget",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:gray_decorated_iron_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

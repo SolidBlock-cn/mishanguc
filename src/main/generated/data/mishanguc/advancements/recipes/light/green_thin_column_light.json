@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_green_thin_column_light_tube"
+      "has_green_thin_column_light_tube",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:green_thin_column_light"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_colored_smooth_quartz"
+      "has_colored_smooth_quartz",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:colored_smooth_quartz_stairs"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

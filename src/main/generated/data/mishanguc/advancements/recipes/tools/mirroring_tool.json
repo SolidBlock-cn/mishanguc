@@ -46,15 +46,16 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_cyan_dye",
       "has_netherite_ingot",
-      "has_lime_dye"
+      "has_lime_dye",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:mirroring_tool"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

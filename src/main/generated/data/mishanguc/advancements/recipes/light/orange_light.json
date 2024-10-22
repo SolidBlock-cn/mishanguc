@@ -46,15 +46,16 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_orange_dye",
       "has_glowstone",
-      "has_orange_concrete"
+      "has_orange_concrete",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:orange_light"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

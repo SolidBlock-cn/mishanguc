@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_white_thick_strip_wall_light_tube"
+      "has_white_thick_strip_wall_light_tube",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:white_thick_strip_wall_light"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

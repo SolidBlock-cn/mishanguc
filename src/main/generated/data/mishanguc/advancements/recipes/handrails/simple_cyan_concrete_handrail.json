@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_cyan_concrete"
+      "has_cyan_concrete",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:simple_cyan_concrete_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

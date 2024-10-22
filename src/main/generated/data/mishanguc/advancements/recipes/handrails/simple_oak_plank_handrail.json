@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_oak_planks"
+      "has_oak_planks",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:simple_oak_plank_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

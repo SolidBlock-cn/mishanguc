@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_pink_light"
+      "has_pink_light",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:pink_light_cover"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

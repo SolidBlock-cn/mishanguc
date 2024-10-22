@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_mangrove_wood"
+      "has_mangrove_wood",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:simple_mangrove_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

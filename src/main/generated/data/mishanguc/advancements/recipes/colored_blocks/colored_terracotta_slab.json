@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_colored_terracotta"
+      "has_colored_terracotta",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:colored_terracotta_slab"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_bamboo_mosaic"
+      "has_bamboo_mosaic",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:simple_bamboo_mosaic_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

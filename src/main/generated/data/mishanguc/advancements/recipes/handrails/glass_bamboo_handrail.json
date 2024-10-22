@@ -58,16 +58,17 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_bamboo_block",
       "has_glass_pane",
       "has_bamboo_planks",
-      "has_bamboo"
+      "has_bamboo",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:glass_bamboo_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

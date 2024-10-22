@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_green_light"
+      "has_green_light",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:green_thin_strip_wall_light_tube"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

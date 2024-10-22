@@ -58,16 +58,17 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_warped_hyphae",
       "has_glass_pane",
       "has_warped_planks",
-      "has_stick"
+      "has_stick",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:glass_warped_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_yellow_light"
+      "has_yellow_light",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:yellow_light_slab"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

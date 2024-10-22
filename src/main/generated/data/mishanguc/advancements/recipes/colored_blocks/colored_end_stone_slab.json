@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_colored_end_stone"
+      "has_colored_end_stone",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:colored_end_stone_slab"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

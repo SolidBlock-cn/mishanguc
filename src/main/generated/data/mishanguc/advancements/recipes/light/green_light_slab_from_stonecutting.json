@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_green_light"
+      "has_green_light",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:green_light_slab_from_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

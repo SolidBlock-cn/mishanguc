@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_acacia_wood"
+      "has_acacia_wood",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:simple_acacia_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

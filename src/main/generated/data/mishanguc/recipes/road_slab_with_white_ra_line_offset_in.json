@@ -12,5 +12,6 @@
   "result": {
     "count": 6,
     "item": "mishanguc:road_slab_with_white_ra_line_offset_in"
-  }
+  },
+  "show_notification": true
 }

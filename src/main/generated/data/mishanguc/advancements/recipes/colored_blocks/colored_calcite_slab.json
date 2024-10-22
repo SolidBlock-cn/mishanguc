@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_colored_calcite"
+      "has_colored_calcite",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:colored_calcite_slab"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

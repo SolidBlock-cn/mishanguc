@@ -34,14 +34,15 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_base_block",
-      "has_sign"
+      "has_sign",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:colored_glowing_cobblestone_hung_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

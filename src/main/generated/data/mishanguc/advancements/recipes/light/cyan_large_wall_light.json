@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_cyan_large_wall_light_tube"
+      "has_cyan_large_wall_light_tube",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:cyan_large_wall_light"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

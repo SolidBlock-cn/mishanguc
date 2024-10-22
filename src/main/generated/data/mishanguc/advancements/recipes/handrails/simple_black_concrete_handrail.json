@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_black_concrete"
+      "has_black_concrete",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:simple_black_concrete_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

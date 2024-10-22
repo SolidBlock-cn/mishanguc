@@ -47,15 +47,16 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_coal",
       "has_flint",
-      "has_proper_concrete"
+      "has_proper_concrete",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:road_block"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

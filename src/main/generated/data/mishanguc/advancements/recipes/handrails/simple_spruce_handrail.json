@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_spruce_wood"
+      "has_spruce_wood",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:simple_spruce_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

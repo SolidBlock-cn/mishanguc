@@ -20,13 +20,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_white_dye"
+      "has_white_dye",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:arrow_straight_mark"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_stone"
+      "has_stone",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:simple_stone_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_magenta_concrete"
+      "has_magenta_concrete",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:simple_magenta_concrete_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_colored_andesite"
+      "has_colored_andesite",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:colored_andesite_slab"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

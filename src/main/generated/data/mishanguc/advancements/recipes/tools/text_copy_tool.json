@@ -34,14 +34,15 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_paper",
-      "has_slime_ball"
+      "has_slime_ball",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:text_copy_tool"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

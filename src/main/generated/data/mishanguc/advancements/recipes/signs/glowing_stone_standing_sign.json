@@ -34,14 +34,15 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_base_block",
-      "has_sign"
+      "has_sign",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:glowing_stone_standing_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

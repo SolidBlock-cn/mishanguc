@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_road_block"
+      "has_road_block",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:road_slab_from_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

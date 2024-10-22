@@ -46,15 +46,16 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_white_dye",
       "has_glowstone",
-      "has_white_concrete"
+      "has_white_concrete",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:white_light"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

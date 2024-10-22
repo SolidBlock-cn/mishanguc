@@ -46,15 +46,16 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_packed_ice",
       "has_glass_pane",
-      "has_colored_snow_block"
+      "has_colored_snow_block",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:colored_decorated_packed_ice_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

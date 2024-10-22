@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_road_with_y_ts_offset_w_line"
+      "has_road_with_y_ts_offset_w_line",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "mishanguc:road_slab_with_y_ts_offset_w_line_from_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }
