@@ -839,6 +839,10 @@
   "message.mishanguc.set_custom_value.description.keyboard": "使用鍵盤操作時，選擇一個按鈕，然後按下快捷鍵即可為選擇的按鈕編輯值。",
   "message.mishanguc.shade": "陰影",
   "message.mishanguc.shade.description": "可能造成渲染問題，不建議開啟。",
+  "message.mishanguc.sign.glow_off": "告示牌已移除發光",
+  "message.mishanguc.sign.glow_on": "告示牌已發光，文本將在黑暗中明亮顯示",
+  "message.mishanguc.sign.wax_off": "告示牌已脫蠟，僅創造模式玩家能夠脫蠟",
+  "message.mishanguc.sign.wax_on": "告示牌已塗蠟，將不可編輯",
   "message.mishanguc.sign_edit": "編輯告示牌",
   "message.mishanguc.size": "大小",
   "message.mishanguc.strikethrough": "刪除線",
@@ -864,10 +868,5 @@
   "roadConnectionState.whether.probably_connected": "應當連接",
   "vertical_align.mishanguc.bottom": "底部對齊",
   "vertical_align.mishanguc.middle": "垂直居中",
-  "vertical_align.mishanguc.top": "頂部對齊",
-
-  "message.mishanguc.sign.glow_on": "告示牌已發光，文本將在黑暗中明亮顯示",
-  "message.mishanguc.sign.glow_off": "告示牌已移除發光",
-  "message.mishanguc.sign.wax_on": "告示牌已塗蠟，將不可編輯",
-  "message.mishanguc.sign.wax_off": "告示牌已脫蠟，僅創造模式玩家能夠脫蠟"
+  "vertical_align.mishanguc.top": "頂部對齊"
 }
