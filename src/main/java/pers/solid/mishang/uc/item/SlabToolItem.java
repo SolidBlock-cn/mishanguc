@@ -19,6 +19,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.SlabType;
+import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -38,6 +39,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -298,7 +300,8 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
         if (player.getEyePos().squaredDistanceTo(Vec3d.ofCenter(blockPos)) > ServerPlayNetworkHandler.MAX_BREAK_SQUARED_DISTANCE) {
           return;
         }
-        if (!(player.getMainHandStack().getItem() instanceof SlabToolItem) || !player.getAbilities().allowModifyWorld) {
+        final ItemStack stack = player.getMainHandStack();
+        if (!(stack.getItem() instanceof SlabToolItem) || !(player.getAbilities().allowModifyWorld || stack.canDestroy(server.getRegistryManager().get(RegistryKeys.BLOCK), new CachedBlockPosition(player.getWorld(), blockPos, false)))) {
           return;
         }
         final Runnable remove = SERVER_BLOCK_BREAKING_BRIDGE.remove(Pair.of(player.getWorld(), blockPos));

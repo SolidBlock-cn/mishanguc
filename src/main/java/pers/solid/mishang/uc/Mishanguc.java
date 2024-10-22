@@ -408,7 +408,7 @@ public class Mishanguc implements ModInitializer {
     });
 
     UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-      if (player.isSpectator() || !player.canModifyBlocks()) {
+      if (player.isSpectator()) {
         return ActionResult.PASS;
       }
       if (hitResult.getType() == HitResult.Type.BLOCK) {
