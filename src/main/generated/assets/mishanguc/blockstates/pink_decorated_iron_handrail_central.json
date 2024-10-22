@@ -9,46 +9,6 @@
       "apply": {
         "model": "mishanguc:block/pink_decorated_iron_handrail_central_side",
         "uvlock": true,
-        "y": 90
-      },
-      "when": {
-        "west": "true"
-      }
-    },
-    {
-      "apply": {
-        "model": "mishanguc:block/pink_decorated_iron_handrail_central_post_side",
-        "uvlock": true,
-        "y": 90
-      },
-      "when": {
-        "west": "false"
-      }
-    },
-    {
-      "apply": {
-        "model": "mishanguc:block/pink_decorated_iron_handrail_central_side",
-        "uvlock": true,
-        "y": 0
-      },
-      "when": {
-        "south": "true"
-      }
-    },
-    {
-      "apply": {
-        "model": "mishanguc:block/pink_decorated_iron_handrail_central_post_side",
-        "uvlock": true,
-        "y": 0
-      },
-      "when": {
-        "south": "false"
-      }
-    },
-    {
-      "apply": {
-        "model": "mishanguc:block/pink_decorated_iron_handrail_central_side",
-        "uvlock": true,
         "y": 180
       },
       "when": {
@@ -83,6 +43,46 @@
       },
       "when": {
         "east": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/pink_decorated_iron_handrail_central_side",
+        "uvlock": true,
+        "y": 0
+      },
+      "when": {
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/pink_decorated_iron_handrail_central_post_side",
+        "uvlock": true,
+        "y": 0
+      },
+      "when": {
+        "south": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/pink_decorated_iron_handrail_central_side",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/pink_decorated_iron_handrail_central_post_side",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "west": "false"
       }
     }
   ]
