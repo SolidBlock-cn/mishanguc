@@ -93,6 +93,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     return switch (destructionType) {
       case "none", "keep" -> Explosion.DestructionType.KEEP;
       case "destroy_with_decay", "destroy" -> Explosion.DestructionType.DESTROY_WITH_DECAY;
+      case "trigger_block" -> Explosion.DestructionType.TRIGGER_BLOCK;
       default -> Explosion.DestructionType.DESTROY;
     };
   }
@@ -124,6 +125,10 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
 
     stack = new ItemStack(this);
     stack.getOrCreateNbt().putString("destructionType", "destroy_with_decay");
+    stacks.add(stack);
+
+    stack = new ItemStack(this);
+    stack.getOrCreateNbt().putString("destructionType", "trigger_block");
     stacks.add(stack);
   }
 

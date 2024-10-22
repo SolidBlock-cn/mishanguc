@@ -662,6 +662,7 @@
   "item.mishanguc.explosion_tool.destructionType.destroy": "destroy all",
   "item.mishanguc.explosion_tool.destructionType.destroy_with_decay": "destroy with decay",
   "item.mishanguc.explosion_tool.destructionType.keep": "keep",
+  "item.mishanguc.explosion_tool.destructionType.trigger_block": "trigger block (similar to wind charge)",
   "item.mishanguc.explosion_tool.formatted": "Explosion Tool - Power: %s, %s, %s",
   "item.mishanguc.explosion_tool.tooltip.1": "Click %s to create explosions.",
   "item.mishanguc.explosion_tool.tooltip.2": "Sneak to avoid irritating entities.",

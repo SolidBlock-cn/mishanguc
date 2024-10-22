@@ -662,6 +662,7 @@
   "item.mishanguc.explosion_tool.destructionType.destroy": "摧毁所有",
   "item.mishanguc.explosion_tool.destructionType.destroy_with_decay": "摧毁并损耗",
   "item.mishanguc.explosion_tool.destructionType.keep": "保留方块",
+  "item.mishanguc.explosion_tool.destructionType.trigger_block": "触发方块（类似风弹）",
   "item.mishanguc.explosion_tool.formatted": "爆炸工具 - 强度：%s，%s，%s",
   "item.mishanguc.explosion_tool.tooltip.1": "按下%s以产生爆炸。",
   "item.mishanguc.explosion_tool.tooltip.2": "潜行时爆炸可以避免激怒实体。",
