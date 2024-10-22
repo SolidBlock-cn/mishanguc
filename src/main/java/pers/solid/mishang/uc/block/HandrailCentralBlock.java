@@ -176,7 +176,8 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   public @NotNull BlockStateSupplier createBlockStates(Identifier postId, Identifier postSideId, Identifier sideId) {
     final MultipartBlockStateSupplier blockStateSupplier = MultipartBlockStateSupplier.create(this)
         .with(BlockStateVariant.create().put(VariantSettings.MODEL, postId));
-    FACING_PROPERTIES.forEach((facing, property) -> {
+    Direction.Type.HORIZONTAL.forEach(facing -> {
+      final BooleanProperty property = FACING_PROPERTIES.get(facing);
       blockStateSupplier.with(When.create().set(property, true), BlockStateVariant.create().put(VariantSettings.MODEL, sideId).put(MishangUtils.DIRECTION_Y_VARIANT, facing).put(VariantSettings.UVLOCK, true));
       blockStateSupplier.with(When.create().set(property, false), BlockStateVariant.create().put(VariantSettings.MODEL, postSideId).put(MishangUtils.DIRECTION_Y_VARIANT, facing).put(VariantSettings.UVLOCK, true));
     });
