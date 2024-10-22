@@ -32,8 +32,9 @@ public class MishangucTagBuilder<T> extends TagProvider.ProvidedTagBuilder<T> {
   }
 
 
+  @SafeVarargs
   @Override
-  public MishangucTagBuilder<T> add(RegistryKey<T>... keys) {
+  public final MishangucTagBuilder<T> add(RegistryKey<T>... keys) {
     super.add(keys);
     return this;
   }

@@ -22,6 +22,7 @@ import org.lwjgl.glfw.GLFW;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,6 +41,16 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   }
 
   private boolean isFocused;
+
+  /**
+   * 在按住 Shift 进行多选时，多选起始的元素。在非 Shift 模式下进行任意选择后，此字段清空。
+   */
+  private @Nullable Entry startContEntry;
+
+  /**
+   * 被选中的多个项。
+   */
+  protected final @NotNull List<TextFieldListWidget.@NotNull Entry> selectedEntries = new ArrayList<>();
 
   @Override
   public void setFocused(boolean focused) {
@@ -85,12 +96,19 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
       }
     }
     if (entry instanceof TextFieldListWidget.Entry) {
-      final int contFrom = contSel ? children().indexOf(prevFocused) : -1;
+      if (contSel) {
+        if (startContEntry == null) {
+          startContEntry = prevFocused;
+        }
+      } else {
+        startContEntry = null;
+      }
+      final int contFrom = contSel ? children().indexOf(startContEntry) : -1;
       if (!multiSel) {
-        for (Entry selectedEntry : signBlockEditScreen.selectedEntries) {
+        for (Entry selectedEntry : selectedEntries) {
           selectedEntry.setFocused(false);
         }
-        signBlockEditScreen.selectedEntries.clear();
+        selectedEntries.clear();
       }
 
       final int contUntil = contSel ? children().indexOf(entry) : -1;
@@ -100,29 +118,39 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
         for (int i = min; i <= max; i++) {
           final Entry entry1 = children().get(i);
-          signBlockEditScreen.selectedEntries.add(entry1);
+          selectedEntries.add(entry1);
           entry1.setFocused(true);
         }
-      } else if (multiSel && signBlockEditScreen.selectedEntries.contains(entry)) {
-        signBlockEditScreen.selectedEntries.remove(entry);
+      } else if (multiSel && selectedEntries.contains(entry)) {
+        // 在多选模式下，如果再次选中同一个，则失掉这个选择。
+        final int index = selectedEntries.indexOf(entry);
+        selectedEntries.remove(entry);
         if (getFocused() == entry) {
           super.setFocused(null);
+          if (!selectedEntries.isEmpty()) {
+            // 失掉一个多选后，如果还有一个多选，则选中其他选项。
+            if (selectedEntries.size() > index) {
+              super.setFocused(selectedEntries.get(index));
+            } else {
+              super.setFocused(selectedEntries.get(index - 1));
+            }
+          }
         }
         if (getSelectedOrNull() == entry) {
           super.setSelected(null);
         }
       } else {
-        signBlockEditScreen.selectedEntries.add(((Entry) entry));
-        for (Entry selectedEntry : signBlockEditScreen.selectedEntries) {
-          selectedEntry.setFocused(true);
-        }
+        selectedEntries.add((Entry) entry);
+      }
+      for (Entry selectedEntry : selectedEntries) {
+        selectedEntry.setFocused(true);
       }
     } else if (children().isEmpty() || !MinecraftClient.getInstance().getNavigationType().isKeyboard()) {
-      for (Entry selectedEntry : signBlockEditScreen.selectedEntries) {
+      for (Entry selectedEntry : selectedEntries) {
         selectedEntry.setFocused(false);
       }
       // 使用键盘导航至其他按钮的时候，不设为 null。
-      signBlockEditScreen.selectedEntries.clear();
+      selectedEntries.clear();
     }
 
     // 更新屏幕按钮中的一些 tooltip
@@ -148,9 +176,9 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
       signBlockEditScreen.addTextField(0, false);
       return true;
     }
-    if (signBlockEditScreen.selectedEntries.size() > 1) {
+    if (selectedEntries.size() > 1) {
       boolean success = false;
-      for (Entry selectedEntry : signBlockEditScreen.selectedEntries) {
+      for (Entry selectedEntry : List.copyOf(selectedEntries)) {
         success = selectedEntry.keyPressed(keyCode, scanCode, modifiers) || success;
       }
       return success;
@@ -160,9 +188,9 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
   @Override
   public boolean charTyped(char chr, int modifiers) {
-    if (signBlockEditScreen.selectedEntries.size() > 1) {
+    if (selectedEntries.size() > 1) {
       boolean success = false;
-      for (Entry selectedEntry : signBlockEditScreen.selectedEntries) {
+      for (Entry selectedEntry : selectedEntries) {
         success = selectedEntry.charTyped(chr, modifiers) || success;
       }
       return success;
@@ -203,7 +231,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
   @Override
   protected boolean isSelectedEntry(int index) {
-    return super.isSelectedEntry(index) || signBlockEditScreen.selectedEntries.contains(children().get(index));
+    return super.isSelectedEntry(index) || selectedEntries.contains(children().get(index));
   }
 
   @Override
@@ -275,16 +303,16 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
       switch (keyCode) {
         case GLFW.GLFW_KEY_ENTER -> {
           final List<TextFieldListWidget.Entry> children = TextFieldListWidget.this.children();
-          final int index = children.indexOf(getSelectedOrNull());
-          if (index + 1 < children.size())
+          final int index = children.indexOf(this);
+          if (index + 1 < children.size()) {
             TextFieldListWidget.this.setFocused(children.get(index + 1));
-          else if (!children.isEmpty())
+          } else if (!children.isEmpty()) {
             signBlockEditScreen.addTextField(index + 1, false);
+          }
         }
         case GLFW.GLFW_KEY_BACKSPACE -> {
-          final TextFieldListWidget.Entry focused = TextFieldListWidget.this.getSelectedOrNull();
-          if (focused != null && textFieldWidget.getText().isEmpty()) {
-            final int index = TextFieldListWidget.this.children().indexOf(focused);
+          if (textFieldWidget.getText().isEmpty()) {
+            final int index = TextFieldListWidget.this.children().indexOf(this);
             if (index >= 0) {
               signBlockEditScreen.removeTextField(index, true);
             }
