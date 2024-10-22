@@ -18,6 +18,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.SlabType;
+import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipType;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -293,7 +294,8 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
         if (!player.canInteractWithBlockAt(blockPos, 0)) {
           return;
         }
-        if (!(player.getMainHandStack().getItem() instanceof SlabToolItem) || !player.getAbilities().allowModifyWorld) {
+        final ItemStack stack = player.getMainHandStack();
+        if (!(stack.getItem() instanceof SlabToolItem) || !(player.getAbilities().allowModifyWorld || stack.canBreak(new CachedBlockPosition(player.getWorld(), blockPos, false)))) {
           return;
         }
         final Runnable remove = SERVER_BLOCK_BREAKING_BRIDGE.remove(Pair.of(player.getWorld(), blockPos));

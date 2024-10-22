@@ -2,7 +2,7 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
-### 1.4.0-beta.5
+### 1.4.0-beta.6
 
 - No longer depends on Better Runtime Resource Pack mod.
 - Fixed the issue of crash when on-stair handrail blocks are above handrail blocks.
@@ -36,6 +36,7 @@ Note: Not all versions in this update log are already published. Please refer to
     - Select text box while holding Shift to select continuous multiple text boxes at once.
     - It is supported to operate multiple lines at ones, including adding, deleting, modifying styles or inputting text. If you increase or decrease their size, position coordinate, rotation, the modification is applied relatively to multiple lines. For properties such as color, or setting custom values, multiple lines will be set the same value.
     - The Tab-key behavior when selecting multiple lines may be unstable.
+- Fixed the issue that players in Adventure Mode using slab tools with `CanDestroy` NBT tag (or component) cannot destroy blocks correctly.
 
 ### 1.3.5-beta.2
 

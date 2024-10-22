@@ -57,9 +57,6 @@ public class MirroringToolItem extends BlockToolItem implements MishangucItem {
       Hand hand,
       boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
-    if (!player.getAbilities().allowModifyWorld && !stack.canPlaceOn(new CachedBlockPosition(world, blockPos, false))) {
-      return ActionResult.PASS;
-    }
     if (world.getBlockState(blockPos).getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
       return ActionResult.FAIL;
     }
