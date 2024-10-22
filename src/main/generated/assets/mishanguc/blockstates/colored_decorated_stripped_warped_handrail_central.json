@@ -9,20 +9,20 @@
       "apply": {
         "model": "mishanguc:block/colored_decorated_stripped_warped_handrail_central_side",
         "uvlock": true,
-        "y": 90
+        "y": 180
       },
       "when": {
-        "west": "true"
+        "north": "true"
       }
     },
     {
       "apply": {
         "model": "mishanguc:block/colored_decorated_stripped_warped_handrail_central_post_side",
         "uvlock": true,
-        "y": 90
+        "y": 180
       },
       "when": {
-        "west": "false"
+        "north": "false"
       }
     },
     {
@@ -69,20 +69,20 @@
       "apply": {
         "model": "mishanguc:block/colored_decorated_stripped_warped_handrail_central_side",
         "uvlock": true,
-        "y": 180
+        "y": 90
       },
       "when": {
-        "north": "true"
+        "west": "true"
       }
     },
     {
       "apply": {
         "model": "mishanguc:block/colored_decorated_stripped_warped_handrail_central_post_side",
         "uvlock": true,
-        "y": 180
+        "y": 90
       },
       "when": {
-        "north": "false"
+        "west": "false"
       }
     }
   ]
