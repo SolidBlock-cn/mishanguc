@@ -839,6 +839,10 @@
   "message.mishanguc.set_custom_value.description.keyboard": "使用键盘操作时，选择一个按钮，然后按下快捷键即可为选择的按钮编辑值。",
   "message.mishanguc.shade": "阴影",
   "message.mishanguc.shade.description": "可能造成渲染问题，不建议开启。",
+  "message.mishanguc.sign.glow_off": "告示牌已移除发光",
+  "message.mishanguc.sign.glow_on": "告示牌已发光，文本将在黑暗中明亮显示",
+  "message.mishanguc.sign.wax_off": "告示牌已脱蜡，仅创造模式玩家能够脱蜡",
+  "message.mishanguc.sign.wax_on": "告示牌已涂蜡，将不可编辑",
   "message.mishanguc.sign_edit": "编辑告示牌",
   "message.mishanguc.size": "大小",
   "message.mishanguc.strikethrough": "删除线",
@@ -864,10 +868,5 @@
   "roadConnectionState.whether.probably_connected": "应当连接",
   "vertical_align.mishanguc.bottom": "底部对齐",
   "vertical_align.mishanguc.middle": "垂直居中",
-  "vertical_align.mishanguc.top": "顶部对齐",
-
-  "message.mishanguc.sign.glow_on": "告示牌已发光，文本将在黑暗中明亮显示",
-  "message.mishanguc.sign.glow_off": "告示牌已移除发光",
-  "message.mishanguc.sign.wax_on": "告示牌已涂蜡，将不可编辑",
-  "message.mishanguc.sign.wax_off": "告示牌已脱蜡，仅创造模式玩家能够脱蜡"
+  "vertical_align.mishanguc.top": "顶部对齐"
 }
