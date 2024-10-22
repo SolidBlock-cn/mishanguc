@@ -40,9 +40,6 @@ public class RotatingToolItem extends BlockToolItem implements MishangucItem {
       Hand hand,
       boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
-    if (!player.getAbilities().allowModifyWorld && !stack.canPlaceOn(new CachedBlockPosition(world, blockPos, false))) {
-      return ActionResult.PASS;
-    }
     final ActionResult result = rotateBlock(player, world, blockPos);
     if (result == ActionResult.SUCCESS) {
       stack.damage(1, player, LivingEntity.getSlotForHand(hand));
