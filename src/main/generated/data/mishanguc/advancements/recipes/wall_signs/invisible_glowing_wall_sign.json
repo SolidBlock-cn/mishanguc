@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:invisible_glowing_wall_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

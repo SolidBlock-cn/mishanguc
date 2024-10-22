@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:colored_terracotta_hung_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

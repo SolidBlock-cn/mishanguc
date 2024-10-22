@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:warped_hyphae_hung_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

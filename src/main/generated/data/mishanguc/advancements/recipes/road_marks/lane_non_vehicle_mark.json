@@ -28,5 +28,6 @@
     "recipes": [
       "mishanguc:lane_non_vehicle_mark"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

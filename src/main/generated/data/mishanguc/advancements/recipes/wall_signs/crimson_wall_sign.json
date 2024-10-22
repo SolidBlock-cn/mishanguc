@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:crimson_wall_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

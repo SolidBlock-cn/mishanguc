@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:glowing_crying_obsidian_hung_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

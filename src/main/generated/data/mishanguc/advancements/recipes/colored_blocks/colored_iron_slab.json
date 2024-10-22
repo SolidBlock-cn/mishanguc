@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:colored_iron_slab"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

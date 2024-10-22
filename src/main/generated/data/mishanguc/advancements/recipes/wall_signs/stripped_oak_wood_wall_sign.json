@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:stripped_oak_wood_wall_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

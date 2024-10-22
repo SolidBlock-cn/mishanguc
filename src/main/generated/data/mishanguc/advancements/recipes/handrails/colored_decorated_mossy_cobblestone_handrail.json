@@ -56,5 +56,6 @@
     "recipes": [
       "mishanguc:colored_decorated_mossy_cobblestone_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

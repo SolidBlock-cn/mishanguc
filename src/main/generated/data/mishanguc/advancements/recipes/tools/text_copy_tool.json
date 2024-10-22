@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:text_copy_tool"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

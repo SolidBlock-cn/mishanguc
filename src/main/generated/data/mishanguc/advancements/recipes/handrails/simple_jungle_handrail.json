@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:simple_jungle_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

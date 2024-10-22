@@ -56,5 +56,6 @@
     "recipes": [
       "mishanguc:pink_light"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

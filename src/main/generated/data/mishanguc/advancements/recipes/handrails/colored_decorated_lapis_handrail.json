@@ -54,5 +54,6 @@
     "recipes": [
       "mishanguc:colored_decorated_lapis_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

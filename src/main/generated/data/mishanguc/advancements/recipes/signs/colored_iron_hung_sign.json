@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:colored_iron_hung_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:colored_plank_slab"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

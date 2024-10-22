@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:orange_concrete_hung_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

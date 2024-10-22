@@ -17,5 +17,6 @@
   "result": {
     "count": 6,
     "item": "mishanguc:bamboo_wall_sign"
-  }
+  },
+  "show_notification": true
 }

@@ -16,5 +16,6 @@
   "result": {
     "count": 3,
     "item": "mishanguc:invisible_glowing_wall_sign"
-  }
+  },
+  "show_notification": true
 }

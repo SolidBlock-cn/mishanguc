@@ -23,5 +23,6 @@
   "result": {
     "count": 4,
     "item": "mishanguc:glowing_colored_decorated_iron_handrail"
-  }
+  },
+  "show_notification": true
 }

@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:simple_mossy_cobblestone_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -28,5 +28,6 @@
     "recipes": [
       "mishanguc:road_slab_from_paling"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

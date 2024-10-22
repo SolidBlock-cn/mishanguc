@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:orange_large_wall_light"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

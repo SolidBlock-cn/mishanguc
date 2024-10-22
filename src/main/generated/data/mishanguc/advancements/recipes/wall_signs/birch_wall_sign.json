@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:birch_wall_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:simple_mangrove_plank_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

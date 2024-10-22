@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:glowing_nether_brick_wall_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

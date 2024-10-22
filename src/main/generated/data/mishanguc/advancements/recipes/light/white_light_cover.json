@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:white_light_cover"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:cherry_wall_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

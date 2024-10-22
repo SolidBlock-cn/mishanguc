@@ -17,5 +17,6 @@
   "result": {
     "count": 6,
     "item": "mishanguc:polished_blackstone_wall_sign"
-  }
+  },
+  "show_notification": true
 }

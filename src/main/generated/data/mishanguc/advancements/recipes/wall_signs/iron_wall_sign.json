@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:iron_wall_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

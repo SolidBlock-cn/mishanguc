@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:simple_crimson_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

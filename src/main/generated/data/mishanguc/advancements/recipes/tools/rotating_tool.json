@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:rotating_tool"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

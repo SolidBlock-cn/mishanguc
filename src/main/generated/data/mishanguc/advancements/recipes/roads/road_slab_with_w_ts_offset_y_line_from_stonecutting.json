@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:road_slab_with_w_ts_offset_y_line_from_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

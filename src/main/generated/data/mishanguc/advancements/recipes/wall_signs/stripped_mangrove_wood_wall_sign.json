@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:stripped_mangrove_wood_wall_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

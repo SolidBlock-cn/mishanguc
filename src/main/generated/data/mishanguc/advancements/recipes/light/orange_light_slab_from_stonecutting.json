@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:orange_light_slab_from_stonecutting"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

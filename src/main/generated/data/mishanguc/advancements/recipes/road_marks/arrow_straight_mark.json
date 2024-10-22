@@ -28,5 +28,6 @@
     "recipes": [
       "mishanguc:arrow_straight_mark"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

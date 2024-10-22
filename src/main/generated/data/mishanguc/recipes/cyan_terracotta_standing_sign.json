@@ -21,5 +21,6 @@
   "result": {
     "count": 4,
     "item": "mishanguc:cyan_terracotta_standing_sign"
-  }
+  },
+  "show_notification": true
 }

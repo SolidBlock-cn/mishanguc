@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:acacia_wood_hung_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

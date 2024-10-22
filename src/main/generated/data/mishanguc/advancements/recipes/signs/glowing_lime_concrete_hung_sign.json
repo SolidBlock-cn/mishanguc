@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:glowing_lime_concrete_hung_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:stripped_spruce_wood_wall_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

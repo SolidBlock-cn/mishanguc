@@ -56,5 +56,6 @@
     "recipes": [
       "mishanguc:mirroring_tool"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

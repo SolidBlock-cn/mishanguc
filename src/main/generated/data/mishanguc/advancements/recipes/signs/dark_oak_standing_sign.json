@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:dark_oak_standing_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:pink_terracotta_wall_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:colored_glowing_cobblestone_wall_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

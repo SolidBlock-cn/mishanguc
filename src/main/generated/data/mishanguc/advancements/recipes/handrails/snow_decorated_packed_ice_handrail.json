@@ -56,5 +56,6 @@
     "recipes": [
       "mishanguc:snow_decorated_packed_ice_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

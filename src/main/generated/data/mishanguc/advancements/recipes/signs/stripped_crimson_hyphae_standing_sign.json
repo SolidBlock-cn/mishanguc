@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:stripped_crimson_hyphae_standing_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

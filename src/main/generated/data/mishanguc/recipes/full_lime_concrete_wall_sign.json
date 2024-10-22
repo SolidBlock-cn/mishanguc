@@ -18,5 +18,6 @@
   "result": {
     "count": 4,
     "item": "mishanguc:full_lime_concrete_wall_sign"
-  }
+  },
+  "show_notification": true
 }

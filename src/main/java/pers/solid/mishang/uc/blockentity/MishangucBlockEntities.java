@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.blockentity;
 
 import com.google.common.collect.Streams;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -69,11 +70,11 @@ public final class MishangucBlockEntities {
   public static void init() {
   }
 
-  private static <T extends BlockEntity> BlockEntityType<T> register(String name, BlockEntityType.BlockEntityFactory<T> factory, Block... blocks) {
-    return Registry.register(Registries.BLOCK_ENTITY_TYPE, Mishanguc.id(name), BlockEntityType.Builder.create(factory, blocks).build());
+  private static <T extends BlockEntity> BlockEntityType<T> register(String name, FabricBlockEntityTypeBuilder.Factory<T> factory, Block... blocks) {
+    return Registry.register(Registries.BLOCK_ENTITY_TYPE, Mishanguc.id(name), FabricBlockEntityTypeBuilder.create(factory, blocks).build(null));
   }
 
-  private static <T extends BlockEntity> BlockEntityType<T> register(String name, BlockEntityType.BlockEntityFactory<T> factory, Stream<? extends Block> blockStream) {
+  private static <T extends BlockEntity> BlockEntityType<T> register(String name, FabricBlockEntityTypeBuilder.Factory<T> factory, Stream<? extends Block> blockStream) {
     return register(name, factory, blockStream.toArray(Block[]::new));
   }
 }

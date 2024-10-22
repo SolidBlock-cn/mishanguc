@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:simple_dirt_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

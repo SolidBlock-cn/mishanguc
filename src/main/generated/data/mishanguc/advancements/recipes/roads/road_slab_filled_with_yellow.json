@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:road_slab_filled_with_yellow"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

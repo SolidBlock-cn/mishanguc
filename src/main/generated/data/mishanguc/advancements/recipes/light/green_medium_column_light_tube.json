@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:green_medium_column_light_tube"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

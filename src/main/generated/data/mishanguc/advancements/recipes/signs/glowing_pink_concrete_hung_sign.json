@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:glowing_pink_concrete_hung_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

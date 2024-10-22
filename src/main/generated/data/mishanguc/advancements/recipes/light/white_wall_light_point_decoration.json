@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:white_wall_light_point_decoration"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

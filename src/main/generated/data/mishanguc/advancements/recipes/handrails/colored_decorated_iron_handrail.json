@@ -67,5 +67,6 @@
     "recipes": [
       "mishanguc:colored_decorated_iron_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:simple_pink_concrete_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

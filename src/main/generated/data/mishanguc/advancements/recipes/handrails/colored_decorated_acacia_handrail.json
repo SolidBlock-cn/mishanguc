@@ -69,5 +69,6 @@
     "recipes": [
       "mishanguc:colored_decorated_acacia_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

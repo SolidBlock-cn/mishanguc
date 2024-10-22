@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:glowing_yellow_terracotta_standing_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

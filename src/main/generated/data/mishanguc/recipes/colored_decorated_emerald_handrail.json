@@ -20,5 +20,6 @@
   "result": {
     "count": 4,
     "item": "mishanguc:colored_decorated_emerald_handrail"
-  }
+  },
+  "show_notification": true
 }

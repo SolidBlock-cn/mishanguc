@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:simple_lime_terracotta_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

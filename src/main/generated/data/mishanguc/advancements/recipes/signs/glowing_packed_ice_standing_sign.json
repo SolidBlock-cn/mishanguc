@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:glowing_packed_ice_standing_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

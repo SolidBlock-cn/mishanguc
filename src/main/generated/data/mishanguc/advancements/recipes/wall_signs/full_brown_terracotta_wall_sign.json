@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:full_brown_terracotta_wall_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

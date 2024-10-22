@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:simple_bamboo_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

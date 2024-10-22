@@ -69,5 +69,6 @@
     "recipes": [
       "mishanguc:glass_crimson_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

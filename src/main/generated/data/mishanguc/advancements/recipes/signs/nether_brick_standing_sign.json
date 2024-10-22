@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:nether_brick_standing_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

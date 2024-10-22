@@ -39,5 +39,6 @@
     "recipes": [
       "mishanguc:road_tool"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

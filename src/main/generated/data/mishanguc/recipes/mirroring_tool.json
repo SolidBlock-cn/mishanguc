@@ -22,5 +22,6 @@
   ],
   "result": {
     "item": "mishanguc:mirroring_tool"
-  }
+  },
+  "show_notification": true
 }

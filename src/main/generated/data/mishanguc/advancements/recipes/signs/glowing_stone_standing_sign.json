@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:glowing_stone_standing_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

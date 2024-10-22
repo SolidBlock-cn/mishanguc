@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:stripped_crimson_hung_sign_bar"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

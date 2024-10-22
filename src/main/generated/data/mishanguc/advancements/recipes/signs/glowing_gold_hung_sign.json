@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:glowing_gold_hung_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

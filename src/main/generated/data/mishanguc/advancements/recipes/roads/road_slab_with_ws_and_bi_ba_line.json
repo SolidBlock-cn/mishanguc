@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:road_slab_with_ws_and_bi_ba_line"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -21,20 +21,20 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 @ApiStatus.AvailableSince("0.2.4")
 public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock {
-  private final Function<Block, LootTable.Builder> lootBuilder;
+  private final BiFunction<Block, BlockLootTableGenerator, LootTable.Builder> lootBuilder;
   private final Identifier texture;
 
-  public ColoredLeavesBlock(Settings settings, @Nullable Function<Block, LootTable.Builder> lootBuilder, Identifier texture) {
+  public ColoredLeavesBlock(Settings settings, @Nullable BiFunction<Block, BlockLootTableGenerator, LootTable.Builder> lootBuilder, Identifier texture) {
     super(settings);
     this.lootBuilder = lootBuilder;
     this.texture = texture;
   }
 
-  public ColoredLeavesBlock(Settings settings, @Nullable Function<Block, LootTable.Builder> lootBuilder, String texture) {
+  public ColoredLeavesBlock(Settings settings, @Nullable BiFunction<Block, BlockLootTableGenerator, LootTable.Builder> lootBuilder, String texture) {
     this(settings, lootBuilder, new Identifier(texture));
   }
 
@@ -66,6 +66,6 @@ public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock {
   @Override
   public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
     if (lootBuilder == null) return null;
-    return (lootBuilder.apply(this).apply(COPY_COLOR_LOOT_FUNCTION));
+    return (lootBuilder.apply(this, blockLootTableGenerator).apply(COPY_COLOR_LOOT_FUNCTION));
   }
 }

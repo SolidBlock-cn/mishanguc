@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:cyan_medium_column_light"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

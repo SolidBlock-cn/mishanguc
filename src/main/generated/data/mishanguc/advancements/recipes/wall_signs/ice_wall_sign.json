@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:ice_wall_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

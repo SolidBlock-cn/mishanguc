@@ -18,5 +18,6 @@
   "result": {
     "count": 6,
     "item": "mishanguc:glowing_brown_terracotta_hung_sign"
-  }
+  },
+  "show_notification": true
 }

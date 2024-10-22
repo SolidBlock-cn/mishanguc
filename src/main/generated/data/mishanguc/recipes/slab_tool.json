@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "mishanguc:slab_tool"
-  }
+  },
+  "show_notification": true
 }

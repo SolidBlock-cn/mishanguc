@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:simple_cherry_plank_handrail"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

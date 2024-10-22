@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:colored_stone_brick_hung_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

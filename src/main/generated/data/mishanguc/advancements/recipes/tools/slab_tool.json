@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:slab_tool"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

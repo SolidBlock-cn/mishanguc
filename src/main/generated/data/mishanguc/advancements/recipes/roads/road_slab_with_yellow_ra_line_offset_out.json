@@ -30,5 +30,6 @@
     "recipes": [
       "mishanguc:road_slab_with_yellow_ra_line_offset_out"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

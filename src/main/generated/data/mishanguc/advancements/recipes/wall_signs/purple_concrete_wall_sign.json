@@ -43,5 +43,6 @@
     "recipes": [
       "mishanguc:purple_concrete_wall_sign"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

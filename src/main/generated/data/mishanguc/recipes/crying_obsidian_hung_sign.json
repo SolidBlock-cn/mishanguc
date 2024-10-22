@@ -17,5 +17,6 @@
   "result": {
     "count": 6,
     "item": "mishanguc:crying_obsidian_hung_sign"
-  }
+  },
+  "show_notification": true
 }

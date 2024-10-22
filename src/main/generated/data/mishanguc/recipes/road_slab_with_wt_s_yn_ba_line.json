@@ -12,5 +12,6 @@
   "result": {
     "count": 6,
     "item": "mishanguc:road_slab_with_wt_s_yn_ba_line"
-  }
+  },
+  "show_notification": true
 }
