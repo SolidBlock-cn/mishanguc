@@ -1,0 +1,56 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_road_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mishanguc:road_block"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:road_with_w_yd_ra_line_from_painting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_white_paint": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "c:white_dyes"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_yellow_paint": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "c:yellow_dyes"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_white_paint",
+      "has_road_block",
+      "has_yellow_paint",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:road_with_w_yd_ra_line_from_painting"
+    ]
+  }
+}
