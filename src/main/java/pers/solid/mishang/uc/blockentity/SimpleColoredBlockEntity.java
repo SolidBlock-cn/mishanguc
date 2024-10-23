@@ -56,6 +56,7 @@ public class SimpleColoredBlockEntity extends BlockEntity implements ColoredBloc
     componentMapBuilder.add(MishangucComponents.COLOR, color);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public void removeFromCopiedStackNbt(NbtCompound nbt) {
     super.removeFromCopiedStackNbt(nbt);

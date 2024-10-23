@@ -139,6 +139,7 @@ public class HungSignBlockEntity extends BlockEntityWithText {
     componentMapBuilder.add(MishangucComponents.TEXT_MAP, texts);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public void removeFromCopiedStackNbt(NbtCompound nbt) {
     super.removeFromCopiedStackNbt(nbt);

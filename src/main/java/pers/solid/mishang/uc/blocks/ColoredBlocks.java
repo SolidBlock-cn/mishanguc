@@ -12,8 +12,8 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.Mishanguc;
-import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.annotations.MiningLevel;
+import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.*;
 
 /**

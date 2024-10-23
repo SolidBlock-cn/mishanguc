@@ -105,6 +105,7 @@ public class WallSignBlockEntity extends BlockEntityWithText {
     componentMapBuilder.add(MishangucComponents.TEXTS, textContexts);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public void removeFromCopiedStackNbt(NbtCompound nbt) {
     super.removeFromCopiedStackNbt(nbt);
