@@ -1,7 +1,7 @@
 {
   "parent": "mishanguc:block/light_slab",
   "textures": {
-    "end": "mishanguc:block/cyan_light",
+    "bottom": "mishanguc:block/cyan_light",
     "side": "mishanguc:block/cyan_light",
     "top": "mishanguc:block/cyan_light"
   }
