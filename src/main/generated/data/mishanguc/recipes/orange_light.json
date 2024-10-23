@@ -20,5 +20,6 @@
   "result": {
     "count": 8,
     "item": "mishanguc:orange_light"
-  }
+  },
+  "show_notification": true
 }

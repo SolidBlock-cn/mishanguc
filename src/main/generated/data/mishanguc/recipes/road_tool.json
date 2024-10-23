@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "mishanguc:road_tool"
-  }
+  },
+  "show_notification": true
 }

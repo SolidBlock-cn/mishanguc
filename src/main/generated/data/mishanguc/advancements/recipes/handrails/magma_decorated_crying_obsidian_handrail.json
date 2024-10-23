@@ -46,10 +46,10 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_crying_obsidian",
       "has_glass_pane",
-      "has_magma_block"
+      "has_magma_block",
+      "has_the_recipe"
     ]
   ],
   "rewards": {

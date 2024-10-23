@@ -56,11 +56,11 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_gold_ingot",
       "has_glass_pane",
       "has_colored_concrete",
-      "has_gold_nugget"
+      "has_gold_nugget",
+      "has_the_recipe"
     ]
   ],
   "rewards": {

@@ -23,5 +23,6 @@
   "result": {
     "count": 8,
     "item": "mishanguc:magma_decorated_crying_obsidian_handrail"
-  }
+  },
+  "show_notification": true
 }

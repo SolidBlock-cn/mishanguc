@@ -46,10 +46,10 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_crying_obsidian",
       "has_glass_pane",
-      "has_netherrack"
+      "has_netherrack",
+      "has_the_recipe"
     ]
   ],
   "rewards": {

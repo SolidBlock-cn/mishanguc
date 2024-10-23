@@ -12,5 +12,6 @@
   "result": {
     "count": 6,
     "item": "mishanguc:road_slab_with_y_ts_offset_w_line"
-  }
+  },
+  "show_notification": true
 }

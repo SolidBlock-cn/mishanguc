@@ -17,5 +17,6 @@
   "result": {
     "count": 6,
     "item": "mishanguc:colored_glowing_cobblestone_hung_sign"
-  }
+  },
+  "show_notification": true
 }

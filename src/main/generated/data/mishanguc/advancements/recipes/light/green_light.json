@@ -46,10 +46,10 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_lime_dye",
       "has_glowstone",
-      "has_lime_concrete"
+      "has_lime_concrete",
+      "has_the_recipe"
     ]
   ],
   "rewards": {

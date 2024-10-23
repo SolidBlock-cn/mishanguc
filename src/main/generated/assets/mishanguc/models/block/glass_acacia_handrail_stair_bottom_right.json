@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/glass_handrail_stair_bottom_right",
+  "textures": {
+    "decoration": "minecraft:block/acacia_planks",
+    "frame": "minecraft:block/acacia_log",
+    "glass": "mishanguc:block/glass_unframed"
+  }
+}

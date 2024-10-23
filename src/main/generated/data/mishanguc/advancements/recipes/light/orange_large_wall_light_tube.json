@@ -22,8 +22,8 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_orange_light"
+      "has_orange_light",
+      "has_the_recipe"
     ]
   ],
   "rewards": {

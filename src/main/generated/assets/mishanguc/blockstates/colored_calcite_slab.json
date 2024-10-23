@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "mishanguc:block/colored_calcite_slab"
+    },
+    "type=double": {
+      "model": "mishanguc:block/colored_calcite"
+    },
+    "type=top": {
+      "model": "mishanguc:block/colored_calcite_slab_top"
+    }
+  }
+}

@@ -34,9 +34,9 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_pink_dye",
-      "has_netherite_ingot"
+      "has_netherite_ingot",
+      "has_the_recipe"
     ]
   ],
   "rewards": {

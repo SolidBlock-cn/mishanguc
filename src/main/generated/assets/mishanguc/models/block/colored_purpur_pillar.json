@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/colored_cube_column",
+  "textures": {
+    "end": "mishanguc:block/pale_purpur_pillar_top",
+    "side": "mishanguc:block/pale_purpur_pillar"
+  }
+}

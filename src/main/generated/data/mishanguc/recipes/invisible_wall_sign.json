@@ -20,5 +20,6 @@
   "result": {
     "count": 9,
     "item": "mishanguc:invisible_wall_sign"
-  }
+  },
+  "show_notification": true
 }

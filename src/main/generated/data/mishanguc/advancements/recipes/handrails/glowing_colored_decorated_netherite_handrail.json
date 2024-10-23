@@ -44,10 +44,10 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_netherite_ingot",
       "has_glass_pane",
-      "has_colored_light"
+      "has_colored_light",
+      "has_the_recipe"
     ]
   ],
   "rewards": {

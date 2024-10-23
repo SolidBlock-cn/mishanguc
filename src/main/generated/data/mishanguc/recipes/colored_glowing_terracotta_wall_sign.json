@@ -17,5 +17,6 @@
   "result": {
     "count": 6,
     "item": "mishanguc:colored_glowing_terracotta_wall_sign"
-  }
+  },
+  "show_notification": true
 }

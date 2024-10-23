@@ -1,0 +1,196 @@
+{
+  "variants": {
+    "axis=x,bevel_top=false,facing=north_east,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_mirrored",
+      "y": 180
+    },
+    "axis=x,bevel_top=false,facing=north_east,type=double": {
+      "model": "mishanguc:block/road_with_wt_s_yn_ba_line_mirrored",
+      "y": 180
+    },
+    "axis=x,bevel_top=false,facing=north_east,type=top": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_mirrored_top",
+      "y": 180
+    },
+    "axis=x,bevel_top=false,facing=north_west,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line",
+      "y": 90
+    },
+    "axis=x,bevel_top=false,facing=north_west,type=double": {
+      "model": "mishanguc:block/road_with_wt_s_yn_ba_line",
+      "y": 90
+    },
+    "axis=x,bevel_top=false,facing=north_west,type=top": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_top",
+      "y": 90
+    },
+    "axis=x,bevel_top=false,facing=south_east,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line",
+      "y": 270
+    },
+    "axis=x,bevel_top=false,facing=south_east,type=double": {
+      "model": "mishanguc:block/road_with_wt_s_yn_ba_line",
+      "y": 270
+    },
+    "axis=x,bevel_top=false,facing=south_east,type=top": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_top",
+      "y": 270
+    },
+    "axis=x,bevel_top=false,facing=south_west,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_mirrored",
+      "y": 0
+    },
+    "axis=x,bevel_top=false,facing=south_west,type=double": {
+      "model": "mishanguc:block/road_with_wt_s_yn_ba_line_mirrored",
+      "y": 0
+    },
+    "axis=x,bevel_top=false,facing=south_west,type=top": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_mirrored_top",
+      "y": 0
+    },
+    "axis=x,bevel_top=true,facing=north_east,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_bevel_top_mirrored",
+      "y": 180
+    },
+    "axis=x,bevel_top=true,facing=north_east,type=double": {
+      "model": "mishanguc:block/road_with_wt_s_yn_ba_line_bevel_top_mirrored",
+      "y": 180
+    },
+    "axis=x,bevel_top=true,facing=north_east,type=top": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_bevel_top_mirrored_top",
+      "y": 180
+    },
+    "axis=x,bevel_top=true,facing=north_west,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_bevel_top",
+      "y": 90
+    },
+    "axis=x,bevel_top=true,facing=north_west,type=double": {
+      "model": "mishanguc:block/road_with_wt_s_yn_ba_line_bevel_top",
+      "y": 90
+    },
+    "axis=x,bevel_top=true,facing=north_west,type=top": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_bevel_top_top",
+      "y": 90
+    },
+    "axis=x,bevel_top=true,facing=south_east,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_bevel_top",
+      "y": 270
+    },
+    "axis=x,bevel_top=true,facing=south_east,type=double": {
+      "model": "mishanguc:block/road_with_wt_s_yn_ba_line_bevel_top",
+      "y": 270
+    },
+    "axis=x,bevel_top=true,facing=south_east,type=top": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_bevel_top_top",
+      "y": 270
+    },
+    "axis=x,bevel_top=true,facing=south_west,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_bevel_top_mirrored",
+      "y": 0
+    },
+    "axis=x,bevel_top=true,facing=south_west,type=double": {
+      "model": "mishanguc:block/road_with_wt_s_yn_ba_line_bevel_top_mirrored",
+      "y": 0
+    },
+    "axis=x,bevel_top=true,facing=south_west,type=top": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_bevel_top_mirrored_top",
+      "y": 0
+    },
+    "axis=z,bevel_top=false,facing=north_east,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line",
+      "y": 180
+    },
+    "axis=z,bevel_top=false,facing=north_east,type=double": {
+      "model": "mishanguc:block/road_with_wt_s_yn_ba_line",
+      "y": 180
+    },
+    "axis=z,bevel_top=false,facing=north_east,type=top": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_top",
+      "y": 180
+    },
+    "axis=z,bevel_top=false,facing=north_west,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_mirrored",
+      "y": 90
+    },
+    "axis=z,bevel_top=false,facing=north_west,type=double": {
+      "model": "mishanguc:block/road_with_wt_s_yn_ba_line_mirrored",
+      "y": 90
+    },
+    "axis=z,bevel_top=false,facing=north_west,type=top": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_mirrored_top",
+      "y": 90
+    },
+    "axis=z,bevel_top=false,facing=south_east,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_mirrored",
+      "y": -90
+    },
+    "axis=z,bevel_top=false,facing=south_east,type=double": {
+      "model": "mishanguc:block/road_with_wt_s_yn_ba_line_mirrored",
+      "y": -90
+    },
+    "axis=z,bevel_top=false,facing=south_east,type=top": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_mirrored_top",
+      "y": -90
+    },
+    "axis=z,bevel_top=false,facing=south_west,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line",
+      "y": 0
+    },
+    "axis=z,bevel_top=false,facing=south_west,type=double": {
+      "model": "mishanguc:block/road_with_wt_s_yn_ba_line",
+      "y": 0
+    },
+    "axis=z,bevel_top=false,facing=south_west,type=top": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_top",
+      "y": 0
+    },
+    "axis=z,bevel_top=true,facing=north_east,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_bevel_top",
+      "y": 180
+    },
+    "axis=z,bevel_top=true,facing=north_east,type=double": {
+      "model": "mishanguc:block/road_with_wt_s_yn_ba_line_bevel_top",
+      "y": 180
+    },
+    "axis=z,bevel_top=true,facing=north_east,type=top": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_bevel_top_top",
+      "y": 180
+    },
+    "axis=z,bevel_top=true,facing=north_west,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_bevel_top_mirrored",
+      "y": 90
+    },
+    "axis=z,bevel_top=true,facing=north_west,type=double": {
+      "model": "mishanguc:block/road_with_wt_s_yn_ba_line_bevel_top_mirrored",
+      "y": 90
+    },
+    "axis=z,bevel_top=true,facing=north_west,type=top": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_bevel_top_mirrored_top",
+      "y": 90
+    },
+    "axis=z,bevel_top=true,facing=south_east,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_bevel_top_mirrored",
+      "y": -90
+    },
+    "axis=z,bevel_top=true,facing=south_east,type=double": {
+      "model": "mishanguc:block/road_with_wt_s_yn_ba_line_bevel_top_mirrored",
+      "y": -90
+    },
+    "axis=z,bevel_top=true,facing=south_east,type=top": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_bevel_top_mirrored_top",
+      "y": -90
+    },
+    "axis=z,bevel_top=true,facing=south_west,type=bottom": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_bevel_top",
+      "y": 0
+    },
+    "axis=z,bevel_top=true,facing=south_west,type=double": {
+      "model": "mishanguc:block/road_with_wt_s_yn_ba_line_bevel_top",
+      "y": 0
+    },
+    "axis=z,bevel_top=true,facing=south_west,type=top": {
+      "model": "mishanguc:block/road_slab_with_wt_s_yn_ba_line_bevel_top_top",
+      "y": 0
+    }
+  }
+}

@@ -20,8 +20,8 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_road_slab"
+      "has_road_slab",
+      "has_the_recipe"
     ]
   ],
   "rewards": {

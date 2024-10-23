@@ -34,9 +34,9 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_paper",
-      "has_slime_ball"
+      "has_slime_ball",
+      "has_the_recipe"
     ]
   ],
   "rewards": {

@@ -1,0 +1,24 @@
+{
+  "variants": {
+    "facing=north_east": {
+      "model": "mishanguc:block/cyan_decorated_iron_handrail_outer",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=north_west": {
+      "model": "mishanguc:block/cyan_decorated_iron_handrail_outer",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=south_east": {
+      "model": "mishanguc:block/cyan_decorated_iron_handrail_outer",
+      "uvlock": true,
+      "y": -90
+    },
+    "facing=south_west": {
+      "model": "mishanguc:block/cyan_decorated_iron_handrail_outer",
+      "uvlock": true,
+      "y": 0
+    }
+  }
+}

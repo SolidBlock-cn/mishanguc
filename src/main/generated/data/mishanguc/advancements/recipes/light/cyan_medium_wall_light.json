@@ -22,8 +22,8 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_cyan_medium_wall_light_tube"
+      "has_cyan_medium_wall_light_tube",
+      "has_the_recipe"
     ]
   ],
   "rewards": {

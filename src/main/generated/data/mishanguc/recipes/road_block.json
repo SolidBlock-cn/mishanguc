@@ -31,5 +31,6 @@
   "result": {
     "count": 9,
     "item": "mishanguc:road_block"
-  }
+  },
+  "show_notification": true
 }

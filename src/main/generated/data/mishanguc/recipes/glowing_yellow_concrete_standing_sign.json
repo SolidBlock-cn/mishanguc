@@ -21,5 +21,6 @@
   "result": {
     "count": 4,
     "item": "mishanguc:glowing_yellow_concrete_standing_sign"
-  }
+  },
+  "show_notification": true
 }

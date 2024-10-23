@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "mishanguc:block/colored_smooth_quartz_slab"
+    },
+    "type=double": {
+      "model": "mishanguc:block/colored_smooth_quartz"
+    },
+    "type=top": {
+      "model": "mishanguc:block/colored_smooth_quartz_slab_top"
+    }
+  }
+}

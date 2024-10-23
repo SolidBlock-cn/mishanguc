@@ -20,5 +20,6 @@
   "result": {
     "count": 4,
     "item": "mishanguc:colored_terracotta_standing_sign"
-  }
+  },
+  "show_notification": true
 }

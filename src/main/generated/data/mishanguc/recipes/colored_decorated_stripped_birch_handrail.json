@@ -24,5 +24,6 @@
   "result": {
     "count": 6,
     "item": "mishanguc:colored_decorated_stripped_birch_handrail"
-  }
+  },
+  "show_notification": true
 }

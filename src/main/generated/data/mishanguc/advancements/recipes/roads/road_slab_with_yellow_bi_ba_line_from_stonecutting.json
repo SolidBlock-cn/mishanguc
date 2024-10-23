@@ -22,8 +22,8 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_road_with_yellow_bi_ba_line"
+      "has_road_with_yellow_bi_ba_line",
+      "has_the_recipe"
     ]
   ],
   "rewards": {

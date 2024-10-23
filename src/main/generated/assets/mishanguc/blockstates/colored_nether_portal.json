@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "mishanguc:block/colored_nether_portal_ns"
+    },
+    "axis=z": {
+      "model": "mishanguc:block/colored_nether_portal_ew"
+    }
+  }
+}

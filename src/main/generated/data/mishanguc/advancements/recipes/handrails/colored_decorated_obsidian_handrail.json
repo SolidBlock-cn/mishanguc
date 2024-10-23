@@ -46,10 +46,10 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_obsidian",
       "has_glass_pane",
-      "has_colored_concrete"
+      "has_colored_concrete",
+      "has_the_recipe"
     ]
   ],
   "rewards": {

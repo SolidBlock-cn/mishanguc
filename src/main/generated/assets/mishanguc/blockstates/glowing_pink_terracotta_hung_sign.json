@@ -1,0 +1,117 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "mishanguc:block/glowing_pink_terracotta_hung_sign_body",
+        "uvlock": true
+      },
+      "when": {
+        "axis": "z"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/glowing_pink_terracotta_hung_sign_body",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "axis": "x"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/glowing_pink_terracotta_hung_sign_top_bar",
+        "uvlock": true
+      },
+      "when": {
+        "axis": "z",
+        "left": "false",
+        "right": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/glowing_pink_terracotta_hung_sign_top_bar",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "axis": "z",
+        "left": "true",
+        "right": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/glowing_pink_terracotta_hung_sign_top_bar",
+        "uvlock": true,
+        "y": -90
+      },
+      "when": {
+        "axis": "x",
+        "left": "false",
+        "right": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/glowing_pink_terracotta_hung_sign_top_bar",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "axis": "x",
+        "left": "true",
+        "right": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/glowing_pink_terracotta_hung_sign_top_bar_edge",
+        "uvlock": true
+      },
+      "when": {
+        "axis": "z",
+        "left": "false",
+        "right": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/glowing_pink_terracotta_hung_sign_top_bar_edge",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "axis": "z",
+        "left": "false",
+        "right": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/glowing_pink_terracotta_hung_sign_top_bar_edge",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "axis": "x",
+        "left": "false",
+        "right": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "mishanguc:block/glowing_pink_terracotta_hung_sign_top_bar_edge",
+        "uvlock": true,
+        "y": 270
+      },
+      "when": {
+        "axis": "x",
+        "left": "false",
+        "right": "false"
+      }
+    }
+  ]
+}

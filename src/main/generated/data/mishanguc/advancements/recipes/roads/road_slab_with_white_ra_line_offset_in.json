@@ -22,8 +22,8 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_road_with_white_ra_line_offset_in"
+      "has_road_with_white_ra_line_offset_in",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
