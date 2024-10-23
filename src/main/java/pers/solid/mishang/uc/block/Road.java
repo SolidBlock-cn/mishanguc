@@ -11,7 +11,10 @@ import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
@@ -172,7 +175,7 @@ public interface Road extends MishangucBlock {
   }
 
   default @Nullable String getRecipeGroup() {
-    final Identifier itemId = Registries.ITEM.getId((Item) this);
+    final Identifier itemId = Registries.ITEM.getId(((ItemConvertible) this).asItem());
     return itemId.getNamespace() + ":" + StringUtils.replaceEach(itemId.getPath(), new String[]{"_white_", "_yellow_", "_w_", "_y_"}, new String[]{"_", "_", "_", "_"});
   }
 
