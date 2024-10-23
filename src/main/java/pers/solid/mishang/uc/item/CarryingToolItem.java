@@ -128,7 +128,7 @@ public class CarryingToolItem extends BlockToolItem
       return ActionResult.PASS;
     }
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
-    if (carryingToolData instanceof CarryingToolData.HoldingBlockState holdingBlockState) {
+    if (carryingToolData instanceof CarryingToolData.HoldingBlockState) {
       final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockHitResult.getBlockPos(), player, stack, blockHitResult, fluidIncluded);
       if (blockPlacementContext.canPlace()) {
         blockPlacementContext.setBlockState(3);

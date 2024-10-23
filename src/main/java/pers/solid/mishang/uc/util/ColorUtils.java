@@ -60,11 +60,6 @@ public final class ColorUtils {
       x = y + (v - y) * (6.0f * hue - MathHelper.floor(6.0f * hue));
       z = v - (v - y) * (6.0f * hue - MathHelper.floor(6.0f * hue));
       switch ((int) (6.0f * hue)) {
-        case 0:
-          r = v;
-          g = x;
-          b = y;
-          break;
         case 1:
           r = z;
           g = v;
@@ -90,6 +85,7 @@ public final class ColorUtils {
           g = y;
           b = z;
           break;
+        case 0:
         default:
           r = v;
           g = x;

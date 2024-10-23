@@ -10,7 +10,6 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -151,7 +150,6 @@ public class BlockPlacementContext {
         // 尝试 placeFromTag
         final BlockStateComponent blockStateComponent = stackInHand0.get(DataComponentTypes.BLOCK_STATE);
         if (blockStateComponent != null) {
-          final StateManager<Block, BlockState> stateManager = handBlock.getStateManager();
           stateToPlace1 = blockStateComponent.applyToState(stateToPlace1);
         }
         stackInHand1 = stackInHand0;
