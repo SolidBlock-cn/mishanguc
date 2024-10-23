@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public final class MishangucModels {
   public static final Model LIGHT = createBlock("light", TextureKey.ALL);
-  public static final Model LIGHT_SLAB = createBlock("light_slab", TextureKey.TOP, TextureKey.SIDE, TextureKey.END);
-  public static final Model LIGHT_SLAB_TOP = createBlock("light_slab_top", "_top", TextureKey.TOP, TextureKey.SIDE, TextureKey.END);
+  public static final Model LIGHT_SLAB = createBlock("light_slab", TextureKey.TOP, TextureKey.SIDE, TextureKey.BOTTOM);
+  public static final Model LIGHT_SLAB_TOP = createBlock("light_slab_top", "_top", TextureKey.TOP, TextureKey.SIDE, TextureKey.BOTTOM);
 
   public static final Model GLASS_HANDRAIL = createBlock("glass_handrail", GlassHandrailBlock.FRAME, GlassHandrailBlock.GLASS, GlassHandrailBlock.DECORATION);
   public static final Model GLASS_HANDRAIL_INVENTORY = createBlock("glass_handrail_inventory", "_inventory", GlassHandrailBlock.FRAME, GlassHandrailBlock.GLASS, GlassHandrailBlock.DECORATION);
