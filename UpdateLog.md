@@ -2,7 +2,7 @@
 
 注意：更新记录中的版本并不一定都已发布。具体请以 CurseForge、Modrinth 中的下载页面或 GitHub 中的“releases”为准。
 
-### 1.4.0-beta.6
+### 1.4.0
 
 - 不再依赖更好的运行时资源包（Better Runtime Resource Pack）模组。
 - 修复了栏杆方块上有楼梯上的栏杆时可能导致崩溃的问题。
