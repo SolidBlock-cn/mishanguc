@@ -137,6 +137,7 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
     componentMapBuilder.add(MishangucComponents.BACK_TEXTS, backTexts);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public void removeFromCopiedStackNbt(NbtCompound nbt) {
     super.removeFromCopiedStackNbt(nbt);
