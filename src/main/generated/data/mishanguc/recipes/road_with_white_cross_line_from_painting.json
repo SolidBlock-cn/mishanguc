@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "mishanguc:road_with_cross_line",
+  "key": {
+    "*": {
+      "tag": "c:white_dyes"
+    },
+    "X": {
+      "item": "mishanguc:road_block"
+    }
+  },
+  "pattern": [
+    "*X*",
+    "X*X",
+    "*X*"
+  ],
+  "result": {
+    "count": 4,
+    "item": "mishanguc:road_with_white_cross_line"
+  },
+  "show_notification": true
+}

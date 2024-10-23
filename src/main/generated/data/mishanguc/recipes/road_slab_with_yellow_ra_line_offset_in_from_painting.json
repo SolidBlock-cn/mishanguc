@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "mishanguc:road_slab_with_ra_line_offset_in",
+  "key": {
+    "*": {
+      "tag": "c:yellow_dyes"
+    },
+    "X": {
+      "item": "mishanguc:road_slab"
+    }
+  },
+  "pattern": [
+    "  *",
+    "*XX",
+    " X "
+  ],
+  "result": {
+    "count": 3,
+    "item": "mishanguc:road_slab_with_yellow_ra_line_offset_in"
+  },
+  "show_notification": true
+}

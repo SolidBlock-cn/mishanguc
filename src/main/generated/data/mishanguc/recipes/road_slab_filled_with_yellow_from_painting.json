@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "mishanguc:road_slab_filled_with_yellow",
+  "key": {
+    "*": {
+      "tag": "c:yellow_dyes"
+    },
+    "X": {
+      "item": "mishanguc:road_slab"
+    }
+  },
+  "pattern": [
+    "***",
+    " X "
+  ],
+  "result": {
+    "item": "mishanguc:road_slab_filled_with_yellow"
+  },
+  "show_notification": true
+}
