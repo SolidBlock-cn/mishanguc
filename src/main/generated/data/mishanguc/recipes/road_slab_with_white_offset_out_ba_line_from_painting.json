@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "mishanguc:road_slab_with_offset_out_ba_line",
+  "key": {
+    "*": {
+      "tag": "c:white_dyes"
+    },
+    "X": {
+      "item": "mishanguc:road_slab"
+    }
+  },
+  "pattern": [
+    "**X",
+    "*X ",
+    " X "
+  ],
+  "result": {
+    "count": 3,
+    "item": "mishanguc:road_slab_with_white_offset_out_ba_line"
+  },
+  "show_notification": true
+}
