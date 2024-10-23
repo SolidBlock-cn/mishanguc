@@ -2,6 +2,10 @@
 
 注意：更新记录中的版本并不一定都已发布。具体请以 CurseForge、Modrinth 中的下载页面或 GitHub 中的“releases”为准。
 
+### 1.4.1
+
+- 修复了道路标线配方缺失的问题。
+
 ### 1.4.0
 
 - 不再依赖更好的运行时资源包（Better Runtime Resource Pack）模组。

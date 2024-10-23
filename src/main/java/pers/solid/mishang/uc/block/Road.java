@@ -156,7 +156,7 @@ public interface Road extends MishangucBlock {
   }
 
   default @Nullable String getRecipeGroup() {
-    final Identifier itemId = Registries.ITEM.getId((Item) this);
+    final Identifier itemId = Registries.ITEM.getId(((ItemConvertible) this).asItem());
     return itemId.getNamespace() + ":" + StringUtils.replaceEach(itemId.getPath(), new String[]{"_white_", "_yellow_", "_w_", "_y_"}, new String[]{"_", "_", "_", "_"});
   }
 

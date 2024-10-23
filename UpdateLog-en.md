@@ -2,6 +2,10 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.4.1
+
+- Fixed the issue that road painting recipes are lost.
+
 ### 1.4.0
 
 - No longer depends on Better Runtime Resource Pack mod.
