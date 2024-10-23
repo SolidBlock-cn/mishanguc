@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "mishanguc:road_with_double_ts_line",
+  "key": {
+    "X": {
+      "item": "mishanguc:road_with_white_double_line"
+    },
+    "a": {
+      "tag": "c:dyes/white"
+    }
+  },
+  "pattern": [
+    " a ",
+    "XXX"
+  ],
+  "result": {
+    "count": 3,
+    "id": "mishanguc:road_with_white_double_ts_line"
+  }
+}
