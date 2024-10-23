@@ -23,7 +23,6 @@ import pers.solid.mishang.uc.util.TextBridge;
  * <p>必须注意：由于 {@link Block#getName()} 仅限客户端，因此本类的方块必须确保覆盖该方法时，没有注解为 {@code @}{@link Environment}{@code (EnvType.CLIENT)}！！</p>
  */
 public class NamedBlockItem extends BlockItem {
-  public static int cachedColor = -1;
 
   public NamedBlockItem(Block block, Settings settings) {
     super(block, settings);
