@@ -8,14 +8,12 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.item.NamedBlockItem;
 
 public class SimpleColoredBlockEntity extends BlockEntity implements ColoredBlockEntity {
-  public int color;
+  public int color = 0;
 
   public SimpleColoredBlockEntity(BlockPos pos, BlockState state) {
     super(MishangucBlockEntities.SIMPLE_COLORED_BLOCK_ENTITY, pos, state);
-    color = NamedBlockItem.cachedColor;
   }
 
   @Override
