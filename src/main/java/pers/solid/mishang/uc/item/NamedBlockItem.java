@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.item;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -23,7 +24,6 @@ import pers.solid.mishang.uc.util.TextBridge;
  * <p>必须注意：由于 {@link Block#getName()} 仅限客户端，因此本类的方块必须确保覆盖该方法时，没有注解为 {@code @}{@link Environment}{@code (EnvType.CLIENT)}！！</p>
  */
 public class NamedBlockItem extends BlockItem {
-  public static int cachedColor = -1;
 
   public NamedBlockItem(Block block, Settings settings) {
     super(block, settings);
@@ -37,45 +37,46 @@ public class NamedBlockItem extends BlockItem {
   @Override
   public Text getName(ItemStack stack) {
     final Block block = getBlock();
-    try {
-      if (getBlock() instanceof ColoredBlock) {
-        final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
-        if (nbt != null && nbt.contains("color", NbtElement.NUMBER_TYPE)) {
-          final int color = nbt.getInt("color");
-          return TextBridge.translatable("block.mishanguc.colored_block.color", block.getName(), MishangUtils.describeColor(color));
-        } else if (getBlock() instanceof ColoredGlassHandrailBlock) {
-          return TextBridge.translatable("block.mishanguc.colored_block.auto_color_decoration", block.getName());
-        } else {
-          return TextBridge.translatable("block.mishanguc.colored_block.auto_color", block.getName());
-        }
+    if (getBlock() instanceof ColoredBlock) {
+      final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
+      if (nbt != null && nbt.contains("color", NbtElement.NUMBER_TYPE)) {
+        final int color = nbt.getInt("color");
+        return TextBridge.translatable("block.mishanguc.colored_block.color", block.getName(), MishangUtils.describeColor(color));
+      } else if (getBlock() instanceof ColoredGlassHandrailBlock) {
+        return TextBridge.translatable("block.mishanguc.colored_block.auto_color_decoration", block.getName());
+      } else {
+        return TextBridge.translatable("block.mishanguc.colored_block.auto_color", block.getName());
       }
-      return block.getName();
-    } catch (NoSuchMethodError error) {
-      throw new NoSuchMethodError(String.format("Please ensure the 'getName' method of block '%s' is not annotated with '@Environment(EnvType.CLIENT)'!!!", block));
     }
+    return block.getName();
   }
 
-  /**
-   * 每次放置<i>之前</i>就会保存好放置时所需要的颜色，这是因为，放置后，客户端在收到实体更新之前，就已经决定好了颜色，导致方块放置之后的颜色是默认颜色，而不是方块物品储存的颜色。
-   */
   @Override
   protected boolean place(ItemPlacementContext context, BlockState state) {
     final ItemStack stack = context.getStack();
     if (getBlock() instanceof ColoredBlock) {
+      final Integer color;
       final NbtCompound nbt = stack.getSubNbt("BlockEntityTag");
       if (nbt != null && nbt.contains("color", NbtElement.NUMBER_TYPE)) {
-        cachedColor = nbt.getInt("color");
+        color = nbt.getInt("color");
       } else {
-        final BlockPos blockPos = ((ItemUsageContextInvoker) context).invokeGetHitResult().getBlockPos();
-        final World world = context.getWorld();
-        if (world.getBlockEntity(blockPos) instanceof ColoredBlockEntity coloredBlockEntity) {
-          cachedColor = coloredBlockEntity.getColor();
+        color = null;
+      }
+      final World world = context.getWorld();
+      int dependentColor = -1;
+      if (color == null) {
+        final BlockPos dependingPos = ((ItemUsageContextInvoker) context).invokeGetHitResult().getBlockPos();
+        if (world.getBlockEntity(dependingPos) instanceof ColoredBlockEntity dependingColoredBlockEntity) {
+          dependentColor = dependingColoredBlockEntity.getColor();
         } else {
-          cachedColor = world.getBlockState(blockPos).getMapColor(world, blockPos).color;
+          dependentColor = world.getBlockState(dependingPos).getMapColor(world, dependingPos).color;
         }
       }
       final boolean place = super.place(context, state);
-      cachedColor = -1;
+      final BlockEntity placedEntity = world.getBlockEntity(context.getBlockPos());
+      if (color == null && placedEntity instanceof final ColoredBlockEntity placedColoredBlockEntity) {
+        placedColoredBlockEntity.setColor(dependentColor);
+      }
       return place;
     } else {
       return super.place(context, state);
