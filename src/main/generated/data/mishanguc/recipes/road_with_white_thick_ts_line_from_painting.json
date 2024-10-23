@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "mishanguc:road_with_thick_ts_line",
+  "key": {
+    "X": {
+      "item": "mishanguc:road_with_white_thick_line"
+    },
+    "a": {
+      "tag": "c:white_dyes"
+    }
+  },
+  "pattern": [
+    " a ",
+    "XXX"
+  ],
+  "result": {
+    "count": 3,
+    "item": "mishanguc:road_with_white_thick_ts_line"
+  }
+}

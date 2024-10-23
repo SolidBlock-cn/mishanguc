@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "mishanguc:road_slab_with_double_line",
+  "key": {
+    "*": {
+      "tag": "c:white_dyes"
+    },
+    "X": {
+      "item": "mishanguc:road_slab"
+    }
+  },
+  "pattern": [
+    "* *",
+    "XXX",
+    "* *"
+  ],
+  "result": {
+    "count": 3,
+    "item": "mishanguc:road_slab_with_white_double_line"
+  }
+}

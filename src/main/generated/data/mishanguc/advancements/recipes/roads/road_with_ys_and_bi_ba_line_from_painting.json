@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_paint": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "c:yellow_dyes"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_road_with_yellow_line": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mishanguc:road_with_yellow_line"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mishanguc:road_with_ys_and_bi_ba_line_from_painting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_paint",
+      "has_road_with_yellow_line"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:road_with_ys_and_bi_ba_line_from_painting"
+    ]
+  }
+}

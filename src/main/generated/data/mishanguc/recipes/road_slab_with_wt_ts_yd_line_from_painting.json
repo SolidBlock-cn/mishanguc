@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "mishanguc:road_slab_with_wt_ts_yd_line",
+  "key": {
+    "X": {
+      "item": "mishanguc:road_slab_with_white_thick_line"
+    },
+    "a": {
+      "tag": "c:yellow_dyes"
+    }
+  },
+  "pattern": [
+    "a a",
+    "XXX"
+  ],
+  "result": {
+    "count": 3,
+    "item": "mishanguc:road_slab_with_wt_ts_yd_line"
+  }
+}

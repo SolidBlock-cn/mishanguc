@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "mishanguc:road_with_yellow_double_line",
+  "key": {
+    "X": {
+      "item": "mishanguc:road_block"
+    },
+    "w": {
+      "tag": "c:white_dyes"
+    },
+    "y": {
+      "tag": "c:yellow_dyes"
+    }
+  },
+  "pattern": [
+    "w y",
+    "XXX",
+    "w y"
+  ],
+  "result": {
+    "count": 3,
+    "item": "mishanguc:road_with_white_yellow_double_line"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "mishanguc:road_with_offset_in_ra_line",
+  "key": {
+    "*": {
+      "tag": "c:white_dyes"
+    },
+    "X": {
+      "item": "mishanguc:road_block"
+    }
+  },
+  "pattern": [
+    " * ",
+    "*XX",
+    "X  "
+  ],
+  "result": {
+    "count": 3,
+    "item": "mishanguc:road_with_white_offset_in_ra_line"
+  }
+}

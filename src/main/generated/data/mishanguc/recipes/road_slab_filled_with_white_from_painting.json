@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "mishanguc:road_slab_filled_with_white",
+  "key": {
+    "*": {
+      "tag": "c:white_dyes"
+    },
+    "X": {
+      "item": "mishanguc:road_slab"
+    }
+  },
+  "pattern": [
+    "***",
+    " X "
+  ],
+  "result": {
+    "item": "mishanguc:road_slab_filled_with_white"
+  }
+}
