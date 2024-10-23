@@ -43,9 +43,4 @@ public class ColoredHungSignBlock extends HungSignBlock implements ColoredBlock 
   public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
     return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
-
-  @Override
-  protected MapCodec<? extends ColoredHungSignBlock> getCodec() {
-    return CODEC;
-  }
 }
