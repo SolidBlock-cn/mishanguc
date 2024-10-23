@@ -969,7 +969,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
             break;
           case "json":
             try {
-                textContext1.text = Text.Serialization.fromLenientJson(value);
+              textContext1.text = Text.Serialization.fromLenientJson(value);
             } catch (
                 JsonParseException e) {
               // 如果文本有问题，则不执行操作。

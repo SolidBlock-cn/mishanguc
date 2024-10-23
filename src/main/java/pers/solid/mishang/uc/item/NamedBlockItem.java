@@ -74,8 +74,12 @@ public class NamedBlockItem extends BlockItem {
       }
       final boolean place = super.place(context, state);
       final BlockEntity placedEntity = world.getBlockEntity(context.getBlockPos());
-      if (color == null && placedEntity instanceof final ColoredBlockEntity placedColoredBlockEntity) {
-        placedColoredBlockEntity.setColor(dependentColor);
+      if (placedEntity instanceof final ColoredBlockEntity placedColoredBlockEntity) {
+        if (color == null) {
+          placedColoredBlockEntity.setColor(dependentColor);
+        } else {
+          placedColoredBlockEntity.setColor(color);
+        }
       }
       return place;
     } else {
