@@ -46,12 +46,12 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
 
   /**
    * 玩家手持物品点击方块的行为。通常此时准星已经指向一个非流体方块。<br>
-   * Behaviour when a player click a block holding the item. Usually the crossbar has already
+   * Behaviour when a player clicks a block holding the item. Usually the crossbar has already
    * focused on a non-fluid block.<br>
    * 如果 {@link #includesFluid} 为 <code>true</code>，则该方法不会执行，因为 {@link #use} 会执行，并执行可以包含流体的视线追踪。<br>
    * If {@link #includesFluid} is <code>false</code>, it does not execute, because {@link #use}
    * executes, and performs raycast that may include fluids.<br>
-   * 会在服务端和客户端同时执行。Executes both on client and server side.
+   * 会在服务端和客户端同时执行。Executes both on the client and server side.
    *
    * @see Item#useOnBlock(ItemUsageContext)
    */
@@ -62,9 +62,9 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
 
   /**
    * 默认情况下，该方法仅在 {@link #includesFluid} 为 <code>false</code> 的情况下执行，此时会进行视线追踪并获取可能为流体的方块触及结果。<br>
-   * By default these methods only performs when {@link #includesFluid} returns <code>false</code>,
+   * By default these methods only perform when {@link #includesFluid} returns <code>false</code>,
    * when it performs raycast and get the {@link BlockHitResult} that may be of a fluid.
-   * 会在服务端和客户端同时执行。Executes both on client and server side.
+   * 会在服务端和客户端同时执行。Executes both on the client and server side.
    *
    * @see #raycast
    * @see Item#use(World, PlayerEntity, Hand)

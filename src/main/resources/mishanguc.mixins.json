@@ -19,7 +19,6 @@
     "PlayerInventoryMixin",
     "PointOfInterestTypesMixin",
     "RecipeJsonBuilderMixins",
-    "ServerChunkManagerAccessor",
     "WallBlockMixin",
     "WorldChunkMixin"
   ],
