@@ -9,18 +9,6 @@ public class FasterTextureMap extends TextureMap implements Cloneable {
     return this;
   }
 
-  public FasterTextureMap top(String val) {
-    return varP(TextureKey.TOP, val);
-  }
-
-  public FasterTextureMap side(String val) {
-    return varP(TextureKey.SIDE, val);
-  }
-
-  public FasterTextureMap bottom(String val) {
-    return varP(TextureKey.BOTTOM, val);
-  }
-
   public FasterTextureMap base(String val) {
     return varP(MishangucTextureKeys.BASE, val);
   }
