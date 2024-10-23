@@ -47,16 +47,7 @@ public class MishangucRecipeProvider extends FabricRecipeProvider {
   private static void addRegularRecipes(RecipeExporter exporter) {
     for (Block block : MishangUtils.blocks()) {
       if (block instanceof MishangucBlock r) {
-        final CraftingRecipeJsonBuilder craftingRecipe = r.getCraftingRecipe();
-        if (craftingRecipe != null) {
-          craftingRecipe.offerTo(exporter);
-        }
-        if (r.shouldWriteStonecuttingRecipe()) {
-          final SingleItemRecipeJsonBuilder stonecuttingRecipe = r.getStonecuttingRecipe();
-          if (stonecuttingRecipe != null) {
-            stonecuttingRecipe.offerTo(exporter, r.getStonecuttingRecipeId());
-          }
-        }
+        r.writeRecipes(exporter);
       } else {
         throw new IllegalStateException();
       }
