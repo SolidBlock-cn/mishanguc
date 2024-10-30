@@ -1,8 +1,6 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "mishanguc:green_light"
-  },
+  "ingredient": "mishanguc:green_light",
   "result": {
     "count": 32,
     "id": "mishanguc:green_thin_column_light_tube"

@@ -4,8 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -97,8 +96,8 @@ public class MirroringToolItem extends BlockToolItem implements MishangucItem {
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, this)
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
+    return recipeGenerator.createShaped(RecipeCategory.TOOLS, this)
         .pattern("CNL")
         .pattern(" | ")
         .pattern(" | ")
@@ -106,8 +105,8 @@ public class MirroringToolItem extends BlockToolItem implements MishangucItem {
         .input('N', Items.NETHERITE_INGOT)
         .input('L', Items.LIME_DYE)
         .input('|', Items.STICK)
-        .criterion("has_cyan_dye", RecipeProvider.conditionsFromItem(Items.CYAN_DYE))
-        .criterion("has_netherite_ingot", RecipeProvider.conditionsFromItem(Items.NETHERITE_INGOT))
-        .criterion("has_lime_dye", RecipeProvider.conditionsFromItem(Items.LIME_DYE));
+        .criterion("has_cyan_dye", recipeGenerator.conditionsFromItem(Items.CYAN_DYE))
+        .criterion("has_netherite_ingot", recipeGenerator.conditionsFromItem(Items.NETHERITE_INGOT))
+        .criterion("has_lime_dye", recipeGenerator.conditionsFromItem(Items.LIME_DYE));
   }
 }

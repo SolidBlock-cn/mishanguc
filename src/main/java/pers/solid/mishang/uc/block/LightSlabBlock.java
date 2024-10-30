@@ -9,7 +9,7 @@ import net.minecraft.data.client.ModelIds;
 import net.minecraft.data.client.ModelProvider;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.recipe.Ingredient;
@@ -35,11 +35,6 @@ public class LightSlabBlock extends SlabBlock implements MishangucBlock {
     this.baseBlock = baseBlock;
   }
 
-  public LightSlabBlock(@NotNull Block baseBlock) {
-    super(Settings.copy(baseBlock));
-    this.baseBlock = baseBlock;
-  }
-
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final Identifier bottomModelId = MishangucModels.LIGHT_SLAB.upload(this, TextureMap.all(baseBlock), blockStateModelGenerator.modelCollector);
@@ -49,9 +44,9 @@ public class LightSlabBlock extends SlabBlock implements MishangucBlock {
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ((ShapedRecipeJsonBuilder) RecipeProvider.createSlabRecipe(RecipeCategory.BUILDING_BLOCKS, this, Ingredient.ofItems(baseBlock)))
-        .criterion(RecipeProvider.hasItem(baseBlock), RecipeProvider.conditionsFromItem(baseBlock));
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
+    return ((ShapedRecipeJsonBuilder) recipeGenerator.createSlabRecipe(RecipeCategory.BUILDING_BLOCKS, this, Ingredient.ofItems(baseBlock)))
+        .criterion(RecipeGenerator.hasItem(baseBlock), recipeGenerator.conditionsFromItem(baseBlock));
   }
 
   @Override
@@ -60,9 +55,9 @@ public class LightSlabBlock extends SlabBlock implements MishangucBlock {
   }
 
   @Override
-  public StonecuttingRecipeJsonBuilder getStonecuttingRecipe() {
+  public StonecuttingRecipeJsonBuilder getStonecuttingRecipe(RecipeGenerator recipeGenerator) {
     return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), RecipeCategory.DECORATIONS, this, 2)
-        .criterion(RecipeProvider.hasItem(baseBlock), RecipeProvider.conditionsFromItem(baseBlock));
+        .criterion(RecipeGenerator.hasItem(baseBlock), recipeGenerator.conditionsFromItem(baseBlock));
   }
 
   @Override

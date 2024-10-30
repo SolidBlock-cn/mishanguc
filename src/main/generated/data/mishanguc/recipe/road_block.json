@@ -2,26 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "*": {
-      "tag": "minecraft:coals"
-    },
+    "*": "#minecraft:coals",
     "X": [
-      {
-        "item": "minecraft:white_concrete"
-      },
-      {
-        "item": "minecraft:gray_concrete"
-      },
-      {
-        "item": "minecraft:light_gray_concrete"
-      },
-      {
-        "item": "minecraft:black_concrete"
-      }
+      "minecraft:white_concrete",
+      "minecraft:gray_concrete",
+      "minecraft:light_gray_concrete",
+      "minecraft:black_concrete"
     ],
-    "|": {
-      "item": "minecraft:flint"
-    }
+    "|": "minecraft:flint"
   },
   "pattern": [
     "***",

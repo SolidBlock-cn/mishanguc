@@ -12,6 +12,7 @@ import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.loot.LootTable;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
@@ -21,10 +22,10 @@ import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import java.util.List;
 
 public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements ColoredBlock {
-  public static final MapCodec<ColoredGlassHandrailBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(GlassHandrailBlock::baseBlock), createSettingsCodec()).apply(instance, (block, settings1) -> new ColoredGlassHandrailBlock(block, settings1, null, null)));
+  public static final MapCodec<ColoredGlassHandrailBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(GlassHandrailBlock::baseBlock), createSettingsCodec()).apply(instance, (block, settings1) -> new ColoredGlassHandrailBlock(block, settings1, null, null, null)));
 
-  public ColoredGlassHandrailBlock(Block baseBlock, Settings settings, String frameTexture, String decorationTexture) {
-    super(baseBlock, settings, frameTexture, decorationTexture, ColoredCentral::new, ColoredCorner::new, ColoredStair::new, ColoredOuter::new);
+  public ColoredGlassHandrailBlock(Block baseBlock, Settings settings, String frameTexture, String decorationTexture, Identifier identifier) {
+    super(baseBlock, settings, frameTexture, decorationTexture, ColoredCentral::new, ColoredCorner::new, ColoredStair::new, ColoredOuter::new, identifier);
   }
 
   @Override
@@ -62,8 +63,8 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
   public static class ColoredCentral extends CentralBlock implements ColoredBlock {
     public static final MapCodec<ColoredCentral> CODEC = createSubCodec(b -> b.baseHandrail, ColoredCentral::new);
 
-    protected ColoredCentral(@NotNull GlassHandrailBlock baseRail) {
-      super(baseRail);
+    protected ColoredCentral(@NotNull GlassHandrailBlock baseRail, Settings settings) {
+      super(baseRail, settings);
     }
 
     @Override
@@ -102,8 +103,8 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
   public static class ColoredCorner extends CornerBlock implements ColoredBlock {
     public static final MapCodec<ColoredCorner> CODEC = createSubCodec(b -> b.baseHandrail, ColoredCorner::new);
 
-    protected ColoredCorner(@NotNull GlassHandrailBlock baseRail) {
-      super(baseRail);
+    protected ColoredCorner(@NotNull GlassHandrailBlock baseRail, Settings settings) {
+      super(baseRail, settings);
     }
 
     @Override
@@ -142,8 +143,8 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
   public static class ColoredOuter extends OuterBlock implements ColoredBlock {
     public static final MapCodec<ColoredOuter> CODEC = createSubCodec(b -> b.baseHandrail, ColoredOuter::new);
 
-    protected ColoredOuter(@NotNull GlassHandrailBlock baseRail) {
-      super(baseRail);
+    protected ColoredOuter(@NotNull GlassHandrailBlock baseRail, Settings settings) {
+      super(baseRail, settings);
     }
 
     @Override
@@ -182,8 +183,8 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
   public static class ColoredStair extends StairBlock implements ColoredBlock {
     public static final MapCodec<ColoredStair> CODEC = createSubCodec(b -> b.baseHandrail, ColoredStair::new);
 
-    protected ColoredStair(@NotNull GlassHandrailBlock baseRail) {
-      super(baseRail);
+    protected ColoredStair(@NotNull GlassHandrailBlock baseRail, Settings settings) {
+      super(baseRail, settings);
     }
 
     @Override

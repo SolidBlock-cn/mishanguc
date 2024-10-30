@@ -3,15 +3,9 @@
   "category": "building",
   "group": "mishanguc:glowing_terracotta_standing_sign",
   "key": {
-    "#": {
-      "item": "minecraft:cyan_terracotta"
-    },
-    "-": {
-      "item": "mishanguc:invisible_glowing_wall_sign"
-    },
-    "|": {
-      "item": "minecraft:stick"
-    }
+    "#": "minecraft:cyan_terracotta",
+    "-": "mishanguc:invisible_glowing_wall_sign",
+    "|": "minecraft:stick"
   },
   "pattern": [
     "---",

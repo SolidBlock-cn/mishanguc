@@ -10,8 +10,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -34,15 +33,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldEvents;
+import net.minecraft.world.WorldView;
+import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
@@ -96,10 +96,6 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     super(settings);
     this.baseBlock = baseBlock;
     setDefaultState(getDefaultState().with(WATERLOGGED, false).with(ROTATION, 0).with(DOWN, true));
-  }
-
-  public StandingSignBlock(@NotNull Block baseBlock) {
-    this(baseBlock, Block.Settings.copy(baseBlock));
   }
 
   /**
@@ -191,11 +187,11 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   }
 
   @Override
-  public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+  protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
     if (state.get(WATERLOGGED)) {
-      world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+      tickView.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
-    final BlockState state1 = super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    final BlockState state1 = super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
     return direction == Direction.DOWN ? state1.with(DOWN, neighborState.isSideSolid(world, neighborPos, Direction.UP, SideShapeType.CENTER)) : state1;
   }
 
@@ -272,15 +268,15 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
     if (baseBlock == null) return null;
-    return ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this, 4)
+    return recipeGenerator.createShaped(RecipeCategory.DECORATIONS, this, 4)
         .pattern("---")
         .pattern("###")
         .pattern(" | ")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN).input('|', Items.STICK)
-        .criterion("has_base_block", RecipeProvider.conditionsFromItem(baseBlock))
-        .criterion("has_sign", RecipeProvider.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN))
+        .criterion("has_base_block", recipeGenerator.conditionsFromItem(baseBlock))
+        .criterion("has_sign", recipeGenerator.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN))
         .group(getRecipeGroup());
   }
 
@@ -303,7 +299,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   }
 
   @Override
-  public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
+  protected VoxelShape getCullingShape(BlockState state) {
     return state.get(ROTATION) % 4 == 0 && state.get(DOWN) ? CULLING_SHAPE : VoxelShapes.empty();
   }
 
@@ -373,22 +369,22 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   }
 
   @Override
-  protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+  protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     final Boolean isFront = getHitSide(state, hit);
     if (!(blockEntity instanceof StandingSignBlockEntity entity)) {
-      return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+      return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
     } else if (player.isSneaking()) {
       // 潜行时点击告示牌，可以切换底部杆子的显示。
       world.setBlockState(pos, state.with(DOWN, !state.get(DOWN)));
-      return ItemActionResult.SUCCESS;
+      return ActionResult.SUCCESS;
     } else if (isFront == null) {
-      return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+      return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
     } else if (!player.getAbilities().allowModifyWorld) {
       // 冒险模式玩家无权编辑。Adventure players have no permission to edit.
-      return ItemActionResult.FAIL;
+      return ActionResult.FAIL;
     } else if (world.isClient) {
-      return ItemActionResult.SUCCESS;
+      return ActionResult.SUCCESS;
     } else {
       final ItemStack stackInHand = player.getStackInHand(hand);
       if (stackInHand.getItem() instanceof HoneycombItem) {
@@ -399,24 +395,24 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
           world.syncWorldEvent(null, WorldEvents.BLOCK_WAXED, entity.getPos(), 0);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stackInHand.decrement(1);
-          return ItemActionResult.SUCCESS;
+          return ActionResult.SUCCESS;
         } else if (player.isCreative()) {
           entity.waxed = removeFromSet(entity.waxed, isFront);
           player.sendMessage(BlockEntityWithText.MESSAGE_WAX_OFF, true);
           world.syncWorldEvent(null, WorldEvents.WAX_REMOVED, entity.getPos(), 0);
           entity.markDirtyAndUpdate();
-          return ItemActionResult.SUCCESS;
+          return ActionResult.SUCCESS;
         }
       }
       if (entity.waxed.contains(isFront.booleanValue())) {
         // 涂蜡的告示牌不应该进行操作。
         world.playSound(null, entity.getPos(), SoundEvents.BLOCK_SIGN_WAXED_INTERACT_FAIL, SoundCategory.BLOCKS);
-        return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
       } else if (stackInHand.isOf(Items.MAGMA_CREAM)) {
         // 玩家手持岩浆膏时，可快速进行重整。
         MishangUtils.rearrange(entity.getTextsOnSide(isFront));
         entity.markDirtyAndUpdate();
-        return ItemActionResult.SUCCESS;
+        return ActionResult.SUCCESS;
       } else if (stackInHand.getItem() instanceof GlowInkSacItem) {
         if (!entity.glowing.contains(isFront.booleanValue())) {
           entity.glowing = addToSet(entity.glowing, isFront);
@@ -424,7 +420,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
           world.playSound(null, entity.getPos(), SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stackInHand.decrement(1);
-          return ItemActionResult.SUCCESS;
+          return ActionResult.SUCCESS;
         }
       } else if (stackInHand.getItem() instanceof InkSacItem) {
         if (entity.glowing.contains(isFront.booleanValue())) {
@@ -433,11 +429,11 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
           world.playSound(null, entity.getPos(), SoundEvents.ITEM_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stackInHand.decrement(1);
-          return ItemActionResult.SUCCESS;
+          return ActionResult.SUCCESS;
         }
       }
     }
-    return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
   }
 
   @Override

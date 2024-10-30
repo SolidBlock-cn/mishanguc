@@ -3,15 +3,9 @@
   "category": "misc",
   "group": "mishanguc:terracotta_standing_sign",
   "key": {
-    "#": {
-      "item": "minecraft:yellow_terracotta"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    },
-    "|": {
-      "item": "minecraft:stick"
-    }
+    "#": "minecraft:yellow_terracotta",
+    "-": "mishanguc:invisible_wall_sign",
+    "|": "minecraft:stick"
   },
   "pattern": [
     "---",

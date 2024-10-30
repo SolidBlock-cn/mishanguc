@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "minecraft:obsidian"
-    },
-    "-": {
-      "item": "mishanguc:invisible_glowing_wall_sign"
-    },
-    "|": {
-      "item": "minecraft:stick"
-    }
+    "#": "minecraft:obsidian",
+    "-": "mishanguc:invisible_glowing_wall_sign",
+    "|": "minecraft:stick"
   },
   "pattern": [
     "---",

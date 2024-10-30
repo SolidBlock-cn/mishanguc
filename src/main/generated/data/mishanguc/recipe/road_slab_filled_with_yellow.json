@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "mishanguc:road_filled_with_yellow"
-    }
+    "#": "mishanguc:road_filled_with_yellow"
   },
   "pattern": [
     "###"

@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "minecraft:nether_bricks"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    },
-    "|": {
-      "item": "minecraft:stick"
-    }
+    "#": "minecraft:nether_bricks",
+    "-": "mishanguc:invisible_wall_sign",
+    "|": "minecraft:stick"
   },
   "pattern": [
     "---",

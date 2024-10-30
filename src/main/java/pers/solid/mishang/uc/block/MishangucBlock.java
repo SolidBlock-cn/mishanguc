@@ -8,9 +8,13 @@ import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.loot.LootTable;
+import net.minecraft.recipe.Recipe;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 
 public interface MishangucBlock {
@@ -18,31 +22,31 @@ public interface MishangucBlock {
     return blockLootTableGenerator.drops((ItemConvertible) this);
   }
 
-  default CraftingRecipeJsonBuilder getCraftingRecipe() {
+  default CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
     return null;
   }
 
-  default StonecuttingRecipeJsonBuilder getStonecuttingRecipe() {
+  default StonecuttingRecipeJsonBuilder getStonecuttingRecipe(RecipeGenerator recipeGenerator) {
     return null;
   }
 
-  default Identifier getStonecuttingRecipeId() {
-    return CraftingRecipeJsonBuilder.getItemId((ItemConvertible) this).withSuffixedPath("_from_stonecutting");
+  default RegistryKey<Recipe<?>> getStonecuttingRecipeKey() {
+    return RegistryKey.of(RegistryKeys.RECIPE, CraftingRecipeJsonBuilder.getItemId((ItemConvertible) this).withSuffixedPath("_from_stonecutting"));
   }
 
   default boolean shouldWriteStonecuttingRecipe() {
     return false;
   }
 
-  default void writeRecipes(RecipeExporter exporter) {
-    final CraftingRecipeJsonBuilder craftingRecipe = getCraftingRecipe();
+  default void writeRecipes(RecipeGenerator recipeGenerator, RecipeExporter exporter) {
+    final CraftingRecipeJsonBuilder craftingRecipe = getCraftingRecipe(recipeGenerator);
     if (craftingRecipe != null) {
       craftingRecipe.offerTo(exporter);
     }
     if (shouldWriteStonecuttingRecipe()) {
-      final StonecuttingRecipeJsonBuilder stonecuttingRecipe = getStonecuttingRecipe();
+      final StonecuttingRecipeJsonBuilder stonecuttingRecipe = getStonecuttingRecipe(recipeGenerator);
       if (stonecuttingRecipe != null) {
-        stonecuttingRecipe.offerTo(exporter, getStonecuttingRecipeId());
+        stonecuttingRecipe.offerTo(exporter, getStonecuttingRecipeKey());
       }
     }
   }

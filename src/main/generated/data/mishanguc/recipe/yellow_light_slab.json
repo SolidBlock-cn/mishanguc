@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "mishanguc:yellow_light"
-    }
+    "#": "mishanguc:yellow_light"
   },
   "pattern": [
     "###"

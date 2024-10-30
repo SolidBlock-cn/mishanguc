@@ -2,6 +2,7 @@
   "parent": "mishanguc:block/hung_sign",
   "textures": {
     "bar": "minecraft:block/lime_terracotta",
-    "texture": "minecraft:block/lime_terracotta"
+    "texture": "minecraft:block/lime_terracotta",
+    "texture_top": "minecraft:block/lime_terracotta"
   }
 }

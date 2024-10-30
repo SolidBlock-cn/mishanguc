@@ -6,8 +6,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -121,15 +120,15 @@ public class RoadToolItem extends BlockToolItem implements MishangucItem {
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, this)
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
+    return recipeGenerator.createShaped(RecipeCategory.TOOLS, this)
         .pattern("aba")
         .pattern("bXb")
         .pattern("aba")
         .input('a', LineColor.WHITE.getIngredient())
         .input('b', LineColor.YELLOW.getIngredient())
         .input('X', Items.STICK)
-        .criterion("has_white_dye", RecipeProvider.conditionsFromTag(LineColor.WHITE.getIngredient()))
-        .criterion("has_yellow_dye", RecipeProvider.conditionsFromTag(LineColor.YELLOW.getIngredient()));
+        .criterion("has_white_dye", recipeGenerator.conditionsFromTag(LineColor.WHITE.getIngredient()))
+        .criterion("has_yellow_dye", recipeGenerator.conditionsFromTag(LineColor.YELLOW.getIngredient()));
   }
 }

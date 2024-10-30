@@ -10,15 +10,14 @@ import net.minecraft.block.SlabBlock;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockMirror;
@@ -42,7 +41,7 @@ import java.util.List;
  */
 @ApiStatus.AvailableSince("1.1.0")
 public interface RoadWithTwoBevelAngleLines extends Road {
-  DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+  EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
 
   @Override
   default void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
@@ -118,15 +117,15 @@ public interface RoadWithTwoBevelAngleLines extends Road {
     }
 
     @Override
-    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
-      return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
+      return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern(" **")
           .pattern("** ")
           .pattern("XXX")
           .input('*', lineColor.getIngredient())
           .input('X', base)
-          .criterion("has_paint", RecipeProvider.conditionsFromTag(lineColor.getIngredient()))
-          .criterion(RecipeProvider.hasItem(base), RecipeProvider.conditionsFromItem(base));
+          .criterion("has_paint", recipeGenerator.conditionsFromTag(lineColor.getIngredient()))
+          .criterion(RecipeGenerator.hasItem(base), recipeGenerator.conditionsFromItem(base));
     }
   }
 
@@ -170,19 +169,19 @@ public interface RoadWithTwoBevelAngleLines extends Road {
     }
 
     @Override
-    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
       Block base2 = RoadBlocks.getRoadBlockWithLine(lineColor, lineType);
       if (base instanceof SlabBlock) {
         base2 = ((AbstractRoadBlock) base2).getRoadSlab();
       }
-      return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
+      return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern(" *X")
           .pattern("*X*")
           .pattern("X* ")
           .input('*', lineColor.getIngredient())
           .input('X', base2)
-          .criterion("has_paint", RecipeProvider.conditionsFromTag(lineColor.getIngredient()))
-          .criterion(RecipeProvider.hasItem(base2), RecipeProvider.conditionsFromItem(base2));
+          .criterion("has_paint", recipeGenerator.conditionsFromTag(lineColor.getIngredient()))
+          .criterion(RecipeGenerator.hasItem(base2), recipeGenerator.conditionsFromItem(base2));
     }
   }
 }

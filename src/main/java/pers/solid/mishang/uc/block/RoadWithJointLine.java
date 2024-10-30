@@ -7,7 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockMirror;
@@ -32,7 +32,7 @@ import pers.solid.mishang.uc.util.*;
 import java.util.List;
 
 public interface RoadWithJointLine extends Road {
-  DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+  EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
 
   @Override
   default void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
@@ -150,7 +150,7 @@ public interface RoadWithJointLine extends Road {
     }
 
     @Override
-    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
       final String pattern1 = switch (lineTypeSide) {
         case NORMAL -> " a ";
         case DOUBLE -> "a a";
@@ -160,15 +160,15 @@ public interface RoadWithJointLine extends Road {
       if (base instanceof SlabBlock) {
         base2 = ((AbstractRoadBlock) base2).getRoadSlab();
       }
-      final ShapedRecipeJsonBuilder recipe = ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
+      final ShapedRecipeJsonBuilder recipe = recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern(pattern1)
           .pattern("XXX")
           .input('a', lineColorSide.getIngredient())
           .input('X', base2)
-          .criterion("has_" + lineColorSide.asString() + "_paint", RecipeProvider.conditionsFromTag(lineColorSide.getIngredient()))
-          .criterion(RecipeProvider.hasItem(base2), RecipeProvider.conditionsFromItem(base2));
+          .criterion("has_" + lineColorSide.asString() + "_paint", recipeGenerator.conditionsFromTag(lineColorSide.getIngredient()))
+          .criterion(RecipeGenerator.hasItem(base2), recipeGenerator.conditionsFromItem(base2));
       if (lineColorSide != lineColor) {
-        recipe.criterion("has_" + lineColor.asString() + "_paint", RecipeProvider.conditionsFromTag(lineColor.getIngredient()));
+        recipe.criterion("has_" + lineColor.asString() + "_paint", recipeGenerator.conditionsFromTag(lineColor.getIngredient()));
       }
       return recipe;
     }

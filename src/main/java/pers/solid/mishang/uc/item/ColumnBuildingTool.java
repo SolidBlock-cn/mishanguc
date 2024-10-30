@@ -12,6 +12,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -25,16 +26,12 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.components.MishangucComponents;
-import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
 import pers.solid.mishang.uc.util.TextBridge;
 
@@ -198,29 +195,27 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
     if (blockPlacementContext.canPlace()) {
       for (int i = 0; i < length; i++) {
         if (world.getBlockState(posToPlace).canReplace(blockPlacementContext.placementContext)) {
-          WorldRendererInvoker.drawCuboidShapeOutline(
+          VertexRendering.drawOutline(
               worldRenderContext.matrixStack(),
               vertexConsumer,
               blockPlacementContext.stateToPlace.getOutlineShape(world, posToPlace, ShapeContext.of(player)),
               posToPlace.getX() - blockOutlineContext.cameraX(),
               posToPlace.getY() - blockOutlineContext.cameraY(),
               posToPlace.getZ() - blockOutlineContext.cameraZ(),
-              0,
-              1,
-              1,
-              0.8f);
+              ColorHelper.fromFloats(0.8f, 0,
+                  1,
+                  1));
           if (includesFluid) {
-            WorldRendererInvoker.drawCuboidShapeOutline(
+            VertexRendering.drawOutline(
                 worldRenderContext.matrixStack(),
                 vertexConsumer,
                 blockPlacementContext.stateToPlace.getFluidState().getShape(world, posToPlace),
                 posToPlace.getX() - blockOutlineContext.cameraX(),
                 posToPlace.getY() - blockOutlineContext.cameraY(),
                 posToPlace.getZ() - blockOutlineContext.cameraZ(),
-                0,
-                0.5f,
-                1,
-                0.5f);
+                ColorHelper.fromFloats(0.5f, 0,
+                    0.5f,
+                    1));
           }
         } else {
           posToPlace.move(side, -1);
@@ -238,29 +233,27 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
       for (BlockPos posToRemove : BlockPos.iterate(lastPlacedBox.getMinX(), lastPlacedBox.getMinY(), lastPlacedBox.getMinZ(), lastPlacedBox.getMaxX(), lastPlacedBox.getMaxY(), lastPlacedBox.getMaxZ())) {
         final BlockState existingState = world.getBlockState(posToRemove);
         if (lastPlacedBlock.equals(existingState.getBlock()) && !(existingState.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
-          WorldRendererInvoker.drawCuboidShapeOutline(
+          VertexRendering.drawOutline(
               worldRenderContext.matrixStack(),
               vertexConsumer,
               existingState.getOutlineShape(world, posToRemove, ShapeContext.of(player)),
               posToRemove.getX() - blockOutlineContext.cameraX(),
               posToRemove.getY() - blockOutlineContext.cameraY(),
               posToRemove.getZ() - blockOutlineContext.cameraZ(),
-              1,
-              0,
-              0,
-              0.8f);
+              ColorHelper.fromFloats(0.8f, 1,
+                  0,
+                  0));
           if (includesFluid) {
-            WorldRendererInvoker.drawCuboidShapeOutline(
+            VertexRendering.drawOutline(
                 worldRenderContext.matrixStack(),
                 vertexConsumer,
                 existingState.getFluidState().getShape(world, posToRemove),
                 posToRemove.getX() - blockOutlineContext.cameraX(),
                 posToRemove.getY() - blockOutlineContext.cameraY(),
                 posToRemove.getZ() - blockOutlineContext.cameraZ(),
-                1,
-                0.5f,
-                0,
-                0.5f);
+                ColorHelper.fromFloats(0.5f, 1,
+                    0.5f,
+                    0));
           }
         }
       }

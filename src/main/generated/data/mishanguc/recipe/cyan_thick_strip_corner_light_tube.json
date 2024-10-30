@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "mishanguc:cyan_thick_strip_wall_light_tube"
-    },
-    {
-      "item": "mishanguc:cyan_thick_strip_wall_light_tube"
-    }
+    "mishanguc:cyan_thick_strip_wall_light_tube",
+    "mishanguc:cyan_thick_strip_wall_light_tube"
   ],
   "result": {
     "count": 1,

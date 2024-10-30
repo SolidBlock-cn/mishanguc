@@ -3,18 +3,10 @@
   "category": "misc",
   "group": "mishanguc:decorated_iron_handrail",
   "key": {
-    "M": {
-      "tag": "c:dyes/magenta"
-    },
-    "X": {
-      "tag": "c:ingots/iron"
-    },
-    "n": {
-      "item": "minecraft:iron_nugget"
-    },
-    "o": {
-      "item": "minecraft:glass_pane"
-    }
+    "M": "#c:dyes/magenta",
+    "X": "#c:ingots/iron",
+    "n": "minecraft:iron_nugget",
+    "o": "minecraft:glass_pane"
   },
   "pattern": [
     "XXX",

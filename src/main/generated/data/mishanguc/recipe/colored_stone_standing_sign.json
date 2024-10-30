@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "mishanguc:colored_stone"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    },
-    "|": {
-      "item": "minecraft:stick"
-    }
+    "#": "mishanguc:colored_stone",
+    "-": "mishanguc:invisible_wall_sign",
+    "|": "minecraft:stick"
   },
   "pattern": [
     "---",

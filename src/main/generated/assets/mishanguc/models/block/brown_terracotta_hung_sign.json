@@ -2,6 +2,7 @@
   "parent": "mishanguc:block/hung_sign",
   "textures": {
     "bar": "minecraft:block/brown_terracotta",
-    "texture": "minecraft:block/brown_terracotta"
+    "texture": "minecraft:block/brown_terracotta",
+    "texture_top": "minecraft:block/brown_terracotta"
   }
 }

@@ -1,8 +1,6 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "minecraft:mossy_cobblestone"
-  },
+  "ingredient": "minecraft:mossy_cobblestone",
   "result": {
     "count": 5,
     "id": "mishanguc:simple_mossy_cobblestone_handrail"

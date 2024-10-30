@@ -3,12 +3,8 @@
   "category": "building",
   "group": "mishanguc:road_with_offset_in_ra_line",
   "key": {
-    "*": {
-      "tag": "c:dyes/yellow"
-    },
-    "X": {
-      "item": "mishanguc:road_block"
-    }
+    "*": "#c:dyes/yellow",
+    "X": "mishanguc:road_block"
   },
   "pattern": [
     " * ",

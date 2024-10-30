@@ -1,8 +1,6 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "mishanguc:yellow_light"
-  },
+  "ingredient": "mishanguc:yellow_light",
   "result": {
     "count": 32,
     "id": "mishanguc:yellow_medium_wall_light_tube"

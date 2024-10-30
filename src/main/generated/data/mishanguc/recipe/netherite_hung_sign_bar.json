@@ -1,8 +1,6 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "minecraft:netherite_block"
-  },
+  "ingredient": "minecraft:netherite_block",
   "result": {
     "count": 20,
     "id": "mishanguc:netherite_hung_sign_bar"

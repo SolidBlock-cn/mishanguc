@@ -3,15 +3,9 @@
   "category": "building",
   "group": "mishanguc:glowing_concrete_standing_sign",
   "key": {
-    "#": {
-      "item": "minecraft:gray_concrete"
-    },
-    "-": {
-      "item": "mishanguc:invisible_glowing_wall_sign"
-    },
-    "|": {
-      "item": "minecraft:stick"
-    }
+    "#": "minecraft:gray_concrete",
+    "-": "mishanguc:invisible_glowing_wall_sign",
+    "|": "minecraft:stick"
   },
   "pattern": [
     "---",

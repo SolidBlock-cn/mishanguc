@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "mishanguc:road_with_yellow_thick_line"
-    }
+    "#": "mishanguc:road_with_yellow_thick_line"
   },
   "pattern": [
     "###"

@@ -3,18 +3,10 @@
   "category": "misc",
   "group": "glass_wooden_handrail",
   "key": {
-    "M": {
-      "item": "minecraft:crimson_planks"
-    },
-    "X": {
-      "item": "minecraft:crimson_hyphae"
-    },
-    "n": {
-      "item": "minecraft:stick"
-    },
-    "o": {
-      "item": "minecraft:glass_pane"
-    }
+    "M": "minecraft:crimson_planks",
+    "X": "minecraft:crimson_hyphae",
+    "n": "minecraft:stick",
+    "o": "minecraft:glass_pane"
   },
   "pattern": [
     "XXX",

@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "mishanguc:plank_wood_hung_sign",
   "key": {
-    "#": {
-      "item": "minecraft:birch_planks"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    }
+    "#": "minecraft:birch_planks",
+    "-": "mishanguc:invisible_wall_sign"
   },
   "pattern": [
     "-#-",

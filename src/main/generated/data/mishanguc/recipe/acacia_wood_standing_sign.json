@@ -3,15 +3,9 @@
   "category": "misc",
   "group": "mishanguc:wood_standing_sign",
   "key": {
-    "#": {
-      "item": "minecraft:acacia_wood"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    },
-    "|": {
-      "item": "minecraft:stick"
-    }
+    "#": "minecraft:acacia_wood",
+    "-": "mishanguc:invisible_wall_sign",
+    "|": "minecraft:stick"
   },
   "pattern": [
     "---",

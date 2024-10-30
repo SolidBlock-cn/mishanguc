@@ -7,8 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -23,8 +22,10 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
+import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
@@ -123,12 +124,12 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       final BlockPos blockPos = ctx.getBlockPos();
       final BlockPos neighborPos = blockPos.offset(direction);
       final World world = ctx.getWorld();
-      return getStateForNeighborUpdate(placementState, direction, world.getBlockState(neighborPos), world, blockPos, neighborPos);
+      return getStateForNeighborUpdate(placementState, world, world, blockPos, direction, neighborPos, world.getBlockState(neighborPos), world.random);
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-      BlockState stateForNeighborUpdate = super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
+      BlockState stateForNeighborUpdate = super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
       if (stateForNeighborUpdate.contains(BEVEL_TOP) && stateForNeighborUpdate.get(AXIS).test(direction) && stateForNeighborUpdate.get(FACING).hasDirection(direction)) {
         // 如果连接的那个方块在连接部分的道路标线与当前道路的斜线部分颜色一致，那么 bevel_top = true。
         final Block neighborBlock = neighborState.getBlock();
@@ -244,7 +245,7 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
     }
 
     @Override
-    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
       if (lineTypeSide != LineType.NORMAL) {
         throw new UnsupportedOperationException();
       }
@@ -252,14 +253,14 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       if (base instanceof SlabBlock) {
         base2 = ((AbstractRoadBlock) base2).getRoadSlab();
       }
-      return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
+      return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern(" *X")
           .pattern("*X ")
           .pattern("X  ")
           .input('*', lineColorSide.getIngredient())
           .input('X', base2)
-          .criterion("has_paint", RecipeProvider.conditionsFromTag(lineColorSide.getIngredient()))
-          .criterion(RecipeProvider.hasItem(base2), RecipeProvider.conditionsFromItem(base2));
+          .criterion("has_paint", recipeGenerator.conditionsFromTag(lineColorSide.getIngredient()))
+          .criterion(RecipeGenerator.hasItem(base2), recipeGenerator.conditionsFromItem(base2));
     }
   }
 }

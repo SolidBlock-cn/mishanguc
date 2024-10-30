@@ -3,18 +3,10 @@
   "category": "misc",
   "group": "colored_decorated_wooden_handrail",
   "key": {
-    "M": {
-      "item": "mishanguc:colored_planks"
-    },
-    "X": {
-      "item": "minecraft:acacia_wood"
-    },
-    "n": {
-      "item": "minecraft:stick"
-    },
-    "o": {
-      "item": "minecraft:glass_pane"
-    }
+    "M": "mishanguc:colored_planks",
+    "X": "minecraft:acacia_wood",
+    "n": "minecraft:stick",
+    "o": "minecraft:glass_pane"
   },
   "pattern": [
     "XXX",

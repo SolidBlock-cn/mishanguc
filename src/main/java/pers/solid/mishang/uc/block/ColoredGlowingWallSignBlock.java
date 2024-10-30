@@ -20,10 +20,10 @@ import pers.solid.mishang.uc.blockentity.ColoredWallSignBlockEntity;
 import java.util.List;
 
 public class ColoredGlowingWallSignBlock extends GlowingWallSignBlock implements ColoredBlock {
-  public static final MapCodec<ColoredGlowingWallSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec()).apply(instance, ColoredGlowingWallSignBlock::new));
+  public static final MapCodec<ColoredGlowingWallSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec(), createSettingsCodec()).apply(instance, ColoredGlowingWallSignBlock::new));
 
-  public ColoredGlowingWallSignBlock(@NotNull Block baseBlock) {
-    super(baseBlock);
+  public ColoredGlowingWallSignBlock(@NotNull Block baseBlock, Settings settings) {
+    super(baseBlock, settings);
   }
 
   @Override

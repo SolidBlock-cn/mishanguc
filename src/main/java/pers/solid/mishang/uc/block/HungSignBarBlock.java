@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.*;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -23,13 +23,14 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.EmptyBlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.WorldView;
+import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.data.MishangucModels;
@@ -42,7 +43,7 @@ import java.util.Map;
  * 悬挂的告示牌上面的专用的悬挂物方块。其方块状态会与其下方的悬挂告示牌方块同步。
  */
 public class HungSignBarBlock extends Block implements Waterloggable, MishangucBlock {
-  public static final MapCodec<ColoredHungSignBarBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec()).apply(instance, ColoredHungSignBarBlock::new));
+  public static final MapCodec<ColoredHungSignBarBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec(), createSettingsCodec()).apply(instance, ColoredHungSignBarBlock::new));
 
   protected static <B extends HungSignBarBlock> RecordCodecBuilder<B, Block> createBaseBlockCodec() {
     return Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(b -> b.baseBlock);
@@ -82,11 +83,6 @@ public class HungSignBarBlock extends Block implements Waterloggable, MishangucB
         .with(RIGHT, true));
   }
 
-  @ApiStatus.AvailableSince("0.1.7")
-  public HungSignBarBlock(@NotNull Block baseBlock) {
-    this(baseBlock, Block.Settings.copy(baseBlock));
-  }
-
   @Override
   protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
     super.appendProperties(builder);
@@ -103,17 +99,20 @@ public class HungSignBarBlock extends Block implements Waterloggable, MishangucB
     final World world = ctx.getWorld();
     final BlockPos blockPos = ctx.getBlockPos();
     final BlockPos downPos = blockPos.down();
+    final BlockState downState = world.getBlockState(downPos);
 
     // 考虑放置之初，底部若为悬挂的告示牌方块，则该方块没有连接，因此在
     // getStateForNeighborUpdate 的时候，将 neighborState 设为假定连接后的 state。
     // 注意，悬挂告示牌方块的 getStateForNeighborUpdate 并不会检查其上方的告示牌杆的属性是否匹配，只要存在就行。
     return placementState.getStateForNeighborUpdate(
-            Direction.DOWN,
-            world.getBlockState(downPos)
-                .getStateForNeighborUpdate(Direction.UP, placementState, world, downPos, blockPos),
+            world,
             world,
             blockPos,
-            downPos)
+            Direction.DOWN,
+            downPos,
+            downState
+                .getStateForNeighborUpdate(world, world, blockPos, Direction.UP, downPos, placementState, world.getRandom()),
+            world.getRandom())
         .with(WATERLOGGED, world.getFluidState(blockPos).getFluid() == Fluids.WATER);
   }
 
@@ -198,22 +197,15 @@ public class HungSignBarBlock extends Block implements Waterloggable, MishangucB
   }
 
   @Override
-  public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
-    return getCollisionShape(state, world, pos, ShapeContext.absent());
+  protected VoxelShape getCullingShape(BlockState state) {
+    return getCollisionShape(state, EmptyBlockView.INSTANCE, BlockPos.ORIGIN, ShapeContext.absent());
   }
 
   @Override
-  public BlockState getStateForNeighborUpdate(
-      BlockState state,
-      Direction direction,
-      BlockState neighborState,
-      WorldAccess world,
-      BlockPos pos,
-      BlockPos neighborPos) {
-    state =
-        super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+  protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
+    state = super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
     if (state.get(WATERLOGGED)) {
-      world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+      tickView.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
     if (direction == Direction.DOWN) {
       final Block neighborBlock = neighborState.getBlock();
@@ -308,13 +300,13 @@ public class HungSignBarBlock extends Block implements Waterloggable, MishangucB
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
     return StonecuttingRecipeJsonBuilder.createStonecutting(
             Ingredient.ofItems(baseBlock),
             RecipeCategory.DECORATIONS,
             this,
             20)
-        .criterion("has_base_block", RecipeProvider.conditionsFromItem(baseBlock))
+        .criterion("has_base_block", recipeGenerator.conditionsFromItem(baseBlock))
         .group(getRecipeGroup());
   }
 

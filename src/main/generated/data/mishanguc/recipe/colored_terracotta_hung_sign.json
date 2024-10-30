@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "mishanguc:colored_terracotta"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    }
+    "#": "mishanguc:colored_terracotta",
+    "-": "mishanguc:invisible_wall_sign"
   },
   "pattern": [
     "-#-",

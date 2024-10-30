@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "minecraft:gold_block"
-    },
-    "-": {
-      "item": "mishanguc:invisible_glowing_wall_sign"
-    }
+    "#": "minecraft:gold_block",
+    "-": "mishanguc:invisible_glowing_wall_sign"
   },
   "pattern": [
     "---",

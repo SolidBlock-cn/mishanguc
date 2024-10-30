@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "mishanguc:colored_calcite"
-    }
+    "#": "mishanguc:colored_calcite"
   },
   "pattern": [
     "#  ",

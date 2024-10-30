@@ -43,11 +43,13 @@ public interface LightConnectable extends MishangucBlock {
             Block.replace(
                 neighborState2,
                 neighborState2.getStateForNeighborUpdate(
-                    facing,
-                    world.getBlockState(neighborPos2.offset(facing)),
+                    world,
                     world,
                     neighborPos2,
-                    pos),
+                    facing,
+                    pos,
+                    world.getBlockState(neighborPos2.offset(facing)),
+                    world.getRandom()),
                 world,
                 neighborPos2,
                 flags,

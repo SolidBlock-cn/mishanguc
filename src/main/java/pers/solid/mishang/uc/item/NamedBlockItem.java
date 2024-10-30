@@ -28,10 +28,6 @@ public class NamedBlockItem extends BlockItem {
     super(block, settings);
   }
 
-  @Override
-  public Text getName() {
-    return getBlock().getName();
-  }
 
   @Override
   public Text getName(ItemStack stack) {

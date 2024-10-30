@@ -7,8 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -161,20 +160,20 @@ public interface RoadWithAngleLine extends Road {
     };
 
     @Override
-    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
       final String[] patterns = isBevel ? switch (lineType) {
         case NORMAL -> NORMAL_BEVEL_PATTERN;
         case DOUBLE -> DOUBLE_BEVEL_PATTERN;
         case THICK -> THICK_BEVEL_PATTERN;
       } : NORMAL_RIGHT_ANGLE_PATTERN;
-      return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
+      return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern(patterns[0])
           .pattern(patterns[1])
           .pattern(patterns[2])
           .input('*', lineColor.getIngredient())
           .input('X', base)
-          .criterion("*", RecipeProvider.conditionsFromTag(lineColor.getIngredient()))
-          .criterion(RecipeProvider.hasItem(base), RecipeProvider.conditionsFromItem(base));
+          .criterion("*", recipeGenerator.conditionsFromTag(lineColor.getIngredient()))
+          .criterion(RecipeGenerator.hasItem(base), recipeGenerator.conditionsFromItem(base));
     }
   }
 }

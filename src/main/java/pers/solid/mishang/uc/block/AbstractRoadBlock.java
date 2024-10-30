@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
@@ -17,8 +18,11 @@ import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
+import net.minecraft.world.block.WireOrientation;
+import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -90,24 +94,23 @@ public abstract class AbstractRoadBlock extends Block implements Road {
   }
 
   @Override
-  protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-    final ItemActionResult result = super.onUseWithItem(stack, state, world, pos, player, hand, hit);
-    if (result == ItemActionResult.FAIL) {
+  protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    final ActionResult result = super.onUseWithItem(stack, state, world, pos, player, hand, hit);
+    if (result instanceof ActionResult.Fail) {
       return result;
     }
     return onUseRoadWithItem(stack, state, world, pos, player, hand, hit);
   }
 
   @Override
-  public void neighborUpdate(
-      BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-    super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
-    neighborRoadUpdate(state, world, pos, sourceBlock, sourcePos, notify);
+  protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, @Nullable WireOrientation wireOrientation, boolean notify) {
+    super.neighborUpdate(state, world, pos, sourceBlock, wireOrientation, notify);
+    neighborRoadUpdate(state, world, pos, sourceBlock, wireOrientation, notify);
   }
 
   @Override
-  public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-    return withStateForNeighborUpdate(super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos), direction, neighborState, world, pos, neighborPos);
+  protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
+    return withStateForNeighborUpdate(super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random), tickView, world, pos, direction, neighborPos, neighborState, random);
   }
 
   @Override
@@ -129,11 +132,11 @@ public abstract class AbstractRoadBlock extends Block implements Road {
   }
 
   @Override
-  public void writeRecipes(RecipeExporter exporter) {
-    Road.super.writeRecipes(exporter);
-    final CraftingRecipeJsonBuilder paintingRecipe = getPaintingRecipe(RoadBlocks.ROAD_BLOCK, this);
+  public void writeRecipes(RecipeGenerator recipeGenerator, RecipeExporter exporter) {
+    Road.super.writeRecipes(recipeGenerator, exporter);
+    final CraftingRecipeJsonBuilder paintingRecipe = getPaintingRecipe(RoadBlocks.ROAD_BLOCK, this, recipeGenerator);
     if (paintingRecipe != null) {
-      paintingRecipe.group(getRecipeGroup()).offerTo(exporter, getPaintingRecipeId());
+      paintingRecipe.group(getRecipeGroup()).offerTo(exporter, getPaintingRecipeKey());
     }
   }
 

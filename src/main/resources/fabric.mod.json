@@ -33,7 +33,7 @@
   "depends": {
     "fabricloader": "*",
     "fabric": "*",
-    "minecraft": "~1.21",
+    "minecraft": ">=1.21.2 <1.22",
     "mixinextras": ">=0.2.0"
   },
   "breaks": {

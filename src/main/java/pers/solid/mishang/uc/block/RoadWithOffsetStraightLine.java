@@ -7,15 +7,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockMirror;
@@ -39,7 +38,7 @@ public interface RoadWithOffsetStraightLine extends Road {
   /**
    * 道路偏移直线所偏移的反方向。例如道路有一条南北方向的向西偏移的直线，则该道路朝向东。
    */
-  DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+  EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
 
   @Override
   default void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
@@ -132,18 +131,18 @@ public interface RoadWithOffsetStraightLine extends Road {
     }
 
     @Override
-    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
       if (offsetLevel == 114514) {
-        return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
+        return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
             .pattern("w y")
             .pattern("XXX")
             .pattern("w y")
             .input('w', LineColor.WHITE.getIngredient())
             .input('y', LineColor.YELLOW.getIngredient())
             .input('X', base)
-            .criterion("has_white_paint", RecipeProvider.conditionsFromTag(LineColor.WHITE.getIngredient()))
-            .criterion("has_yellow_paint", RecipeProvider.conditionsFromTag(LineColor.YELLOW.getIngredient()))
-            .criterion(RecipeProvider.hasItem(base), RecipeProvider.conditionsFromItem(base));
+            .criterion("has_white_paint", recipeGenerator.conditionsFromTag(LineColor.WHITE.getIngredient()))
+            .criterion("has_yellow_paint", recipeGenerator.conditionsFromTag(LineColor.YELLOW.getIngredient()))
+            .criterion(RecipeGenerator.hasItem(base), recipeGenerator.conditionsFromItem(base));
       } else {
         final String[] patterns = switch (offsetLevel) {
           case 2 -> new String[]{
@@ -158,14 +157,14 @@ public interface RoadWithOffsetStraightLine extends Road {
           };
           default -> throw new IllegalStateException("Unexpected value: " + offsetLevel);
         };
-        return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
+        return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
             .pattern(patterns[0])
             .pattern(patterns[1])
             .pattern(patterns[2])
             .input('*', lineColor.getIngredient())
             .input('X', base)
-            .criterion("has_paint", RecipeProvider.conditionsFromTag(lineColor.getIngredient()))
-            .criterion(RecipeProvider.hasItem(base), RecipeProvider.conditionsFromItem(base));
+            .criterion("has_paint", recipeGenerator.conditionsFromTag(lineColor.getIngredient()))
+            .criterion(RecipeGenerator.hasItem(base), recipeGenerator.conditionsFromItem(base));
       }
     }
 

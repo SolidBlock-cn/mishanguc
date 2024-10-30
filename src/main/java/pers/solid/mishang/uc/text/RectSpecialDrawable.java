@@ -2,7 +2,7 @@ package pers.solid.mishang.uc.text;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.font.GlyphRenderer;
+import net.minecraft.client.font.BakedGlyph;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -11,6 +11,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
+import net.minecraft.util.math.ColorHelper;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import pers.solid.mishang.uc.MishangUtils;
@@ -30,25 +31,22 @@ public record RectSpecialDrawable(float width, float height, @NotNull TextContex
   @Override
   public void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, float x, float y) {
     int color = textContext.color;
-    final float red = (float) (color >> 16 & 0xFF) / 255.0f;
-    final float green = (float) (color >> 8 & 0xFF) / 255.0f;
-    final float blue = (float) (color & 0xFF) / 255.0f;
-    final float alpha = ((color & 0xFC000000) == 0) ? 1 : (float) (color >> 24 & 0xFF) / 255.0f;
-    GlyphRenderer glyphRenderer = ((TextRendererAccessor) textRenderer).invokeGetFontStorage(Style.DEFAULT_FONT_ID).getRectangleRenderer();
+    final int alpha = ((color & 0xFC000000) == 0) ? 1 : (color >> 24 & 0xFF);
+    BakedGlyph glyphRenderer = ((TextRendererAccessor) textRenderer).invokeGetFontStorage(Style.DEFAULT_FONT_ID).getRectangleBakedGlyph();
     final Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
     final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(glyphRenderer.getLayer(textContext.outlineColor != -2 ? TextRenderer.TextLayerType.POLYGON_OFFSET : textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL));
     if (textContext.shadow) {
       // 绘制阴影
-      GlyphRenderer.Rectangle shadowRectangle = new GlyphRenderer.Rectangle(x + 1, (height + y) + 1, (width + x) + 1, y + 1, 0, red * 0.25f, green * 0.25f, blue * 0.25f, alpha);
+      BakedGlyph.Rectangle shadowRectangle = new BakedGlyph.Rectangle(x + 1, (height + y) + 1, (width + x) + 1, y + 1, 0, ColorHelper.withAlpha(alpha, ColorHelper.scaleRgb(color, 0.25f)));
       glyphRenderer.drawRectangle(shadowRectangle, matrix4f, vertexConsumer, light);
     }
     if (textContext.outlineColor != -2) {
       // 绘制轮廓
       int outlineColor = textContext.outlineColor == -1 ? MishangUtils.toSignOutlineColor(color) : textContext.outlineColor;
-      GlyphRenderer.Rectangle rectangle = new GlyphRenderer.Rectangle(x - 1, (height + y) + 1, (width + x) + 1, y - 1, 0, (outlineColor >> 16 & 255) / 255f, (outlineColor >> 8 & 255) / 255f, (outlineColor & 255) / 255f, alpha);
+      BakedGlyph.Rectangle rectangle = new BakedGlyph.Rectangle(x - 1, (height + y) + 1, (width + x) + 1, y - 1, 0, ColorHelper.withAlpha(alpha, outlineColor));
       glyphRenderer.drawRectangle(rectangle, matrix4f, vertexConsumers.getBuffer(glyphRenderer.getLayer(TextRenderer.TextLayerType.NORMAL)), light);
     }
-    GlyphRenderer.Rectangle rectangle = new GlyphRenderer.Rectangle(x, (height + y), (width + x), y, textContext.shadow ? 0.24f : textContext.outlineColor != -2 ? 0.02f : 0, red, green, blue, alpha);
+    BakedGlyph.Rectangle rectangle = new BakedGlyph.Rectangle(x, (height + y), (width + x), y, textContext.shadow ? 0.24f : textContext.outlineColor != -2 ? 0.02f : 0, ColorHelper.withAlpha(alpha, color));
     glyphRenderer.drawRectangle(rectangle, matrix4f, vertexConsumer, light);
   }
 

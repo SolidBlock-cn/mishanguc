@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "mishanguc:colored_iron_block"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    },
-    "|": {
-      "item": "minecraft:stick"
-    }
+    "#": "mishanguc:colored_iron_block",
+    "-": "mishanguc:invisible_wall_sign",
+    "|": "minecraft:stick"
   },
   "pattern": [
     "---",

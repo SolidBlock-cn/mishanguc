@@ -3,15 +3,9 @@
   "category": "misc",
   "group": "mishanguc:concrete_standing_sign",
   "key": {
-    "#": {
-      "item": "minecraft:white_concrete"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    },
-    "|": {
-      "item": "minecraft:stick"
-    }
+    "#": "minecraft:white_concrete",
+    "-": "mishanguc:invisible_wall_sign",
+    "|": "minecraft:stick"
   },
   "pattern": [
     "---",

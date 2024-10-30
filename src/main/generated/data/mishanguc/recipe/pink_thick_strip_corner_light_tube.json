@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "mishanguc:pink_thick_strip_wall_light_tube"
-    },
-    {
-      "item": "mishanguc:pink_thick_strip_wall_light_tube"
-    }
+    "mishanguc:pink_thick_strip_wall_light_tube",
+    "mishanguc:pink_thick_strip_wall_light_tube"
   ],
   "result": {
     "count": 1,

@@ -7,8 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
@@ -92,20 +91,20 @@ public interface RoadWithAngleLineWithTwoPartsOffset extends RoadWithAngleLine {
     };
 
     @Override
-    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
       final String[] patterns = switch (offsetOutwards) {
         case 2 -> isBevel() ? OUTER_OFFSET_BEVEL_PATTERN : OUTER_OFFSET_RIGHT_ANGLE_PATTERN;
         case -2 -> isBevel() ? INNER_OFFSET_BEVEL_PATTERN : INNER_OFFSET_RIGHT_ANGLE_PATTERN;
         default -> throw new IllegalStateException("Unexpected value: " + offsetOutwards);
       };
-      return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 3)
+      return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern(patterns[0])
           .pattern(patterns[1])
           .pattern(patterns[2])
           .input('*', lineColor.getIngredient())
           .input('X', base)
-          .criterion("has_paint", RecipeProvider.conditionsFromTag(lineColor.getIngredient()))
-          .criterion(RecipeProvider.hasItem(base), RecipeProvider.conditionsFromItem(base));
+          .criterion("has_paint", recipeGenerator.conditionsFromTag(lineColor.getIngredient()))
+          .criterion(RecipeGenerator.hasItem(base), recipeGenerator.conditionsFromItem(base));
     }
   }
 }

@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "minecraft:glowstone"
-    },
-    "*": {
-      "item": "minecraft:cyan_dye"
-    },
-    "C": {
-      "item": "minecraft:cyan_concrete"
-    }
+    "#": "minecraft:glowstone",
+    "*": "minecraft:cyan_dye",
+    "C": "minecraft:cyan_concrete"
   },
   "pattern": [
     "*#*",

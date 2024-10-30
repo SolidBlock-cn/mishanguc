@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "mishanguc:wood_wall_sign",
   "key": {
-    "#": {
-      "item": "minecraft:dark_oak_wood"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    }
+    "#": "minecraft:dark_oak_wood",
+    "-": "mishanguc:invisible_wall_sign"
   },
   "pattern": [
     "---",

@@ -22,10 +22,10 @@ import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import java.util.List;
 
 public class ColoredHungSignBarBlock extends HungSignBarBlock implements BlockEntityProvider, ColoredBlock {
-  public static final MapCodec<ColoredHungSignBarBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec()).apply(instance, ColoredHungSignBarBlock::new));
+  public static final MapCodec<ColoredHungSignBarBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec(), createSettingsCodec()).apply(instance, ColoredHungSignBarBlock::new));
 
-  public ColoredHungSignBarBlock(@NotNull Block baseBlock) {
-    super(baseBlock);
+  public ColoredHungSignBarBlock(@NotNull Block baseBlock, Settings settings) {
+    super(baseBlock, settings);
   }
 
   @Nullable

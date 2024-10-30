@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "mishanguc:concrete_wall_sign",
   "key": {
-    "#": {
-      "item": "minecraft:light_blue_concrete"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    }
+    "#": "minecraft:light_blue_concrete",
+    "-": "mishanguc:invisible_wall_sign"
   },
   "pattern": [
     "---",

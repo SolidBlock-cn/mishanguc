@@ -11,18 +11,19 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.block.WallSignBlock;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
-import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.Collection;
@@ -52,17 +53,16 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
       if (mainHandStackItem instanceof final BlockItem blockItem
           && INVISIBLE_BLOCKS.contains(blockItem.getBlock())) {
         boolean glowing = entity.getCachedState().isOf(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN);
-        WorldRendererInvoker.drawCuboidShapeOutline(
+        VertexRendering.drawOutline(
             matrices,
             vertexConsumers.getBuffer(RenderLayer.LINES),
             entity.getCachedState().getOutlineShape(ctx.getRenderDispatcher().world, entity.getPos(), ShapeContext.of(player)),
             0,
             0,
             0,
-            glowing ? 0.9f : 0.3f,
-            0.8f,
-            glowing ? 0.3f : 0.9f,
-            0.9f);
+            ColorHelper.fromFloats(0.9f, glowing ? 0.9f : 0.3f,
+                0.8f,
+                glowing ? 0.3f : 0.9f));
       }
     }
 

@@ -1,8 +1,6 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "minecraft:cobblestone"
-  },
+  "ingredient": "minecraft:cobblestone",
   "result": {
     "count": 20,
     "id": "mishanguc:cobblestone_hung_sign_bar"

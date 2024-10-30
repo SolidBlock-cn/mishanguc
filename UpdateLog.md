@@ -2,6 +2,12 @@
 
 注意：更新记录中的版本并不一定都已发布。具体请以 CurseForge、Modrinth 中的下载页面或 GitHub 中的“releases”为准。
 
+### 1.4.2-beta.1
+
+- 适应 1.21.3。
+- 修复木制的悬挂告示牌的顶部纹理错误的问题。
+- 修复 `block.mishanguc.glass_dark_oak_handrail` 的英文错误。
+
 ### 1.4.1
 
 - 修复了道路标线配方缺失的问题。

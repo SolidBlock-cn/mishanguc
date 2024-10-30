@@ -3,15 +3,9 @@
   "category": "misc",
   "group": "mishanguc:stripped_wood_standing_sign",
   "key": {
-    "#": {
-      "item": "minecraft:stripped_crimson_hyphae"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    },
-    "|": {
-      "item": "minecraft:stick"
-    }
+    "#": "minecraft:stripped_crimson_hyphae",
+    "-": "mishanguc:invisible_wall_sign",
+    "|": "minecraft:stick"
   },
   "pattern": [
     "---",

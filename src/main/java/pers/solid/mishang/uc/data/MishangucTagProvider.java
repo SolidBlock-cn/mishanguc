@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.StairsBlock;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
@@ -295,6 +296,7 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
         configureMineableTags(field, glassHandrailBlock.selfAndVariants());
       }
     });
+
 
     configureColoredTags(HandrailBlocks.SIMPLE_CONCRETE_HANDRAILS);
     configureColoredTags(HandrailBlocks.SIMPLE_TERRACOTTA_HANDRAILS);
@@ -709,6 +711,10 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
 
     blockTagWithItem(BlockTags.STAIRS, ItemTags.STAIRS).add(blocks().stream().filter(block -> block instanceof StairsBlock).toArray(Block[]::new));
     blockTagWithItem(BlockTags.SLABS, ItemTags.SLABS).add(blocks().stream().filter(block -> block instanceof SlabBlock).toArray(Block[]::new));
+
+    blockTagOnly("incorrect_for_omnipotent_tool");
+    itemTag("omnipotent_repair_items").add(Items.BEDROCK);
+    itemTag("road_materials").add(Items.WHITE_CONCRETE, Items.GRAY_CONCRETE, Items.LIGHT_GRAY_CONCRETE, Items.BLACK_CONCRETE);
   }
 
   public class MishangucItemTagProvider extends FabricTagProvider.ItemTagProvider {

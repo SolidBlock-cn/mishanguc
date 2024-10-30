@@ -9,6 +9,7 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,15 +18,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.components.MishangucComponents;
-import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 
 import java.util.Objects;
@@ -39,6 +39,8 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
    * sneaking".
    */
   protected final @Nullable Boolean includesFluid;
+  private static final int OUTLINE_COLOR_MIDORI = ColorHelper.fromFloats(0.8f, 0, 1, 0);
+  private static final int OUTLINE_COLOR_MIDORI_LIGHT = ColorHelper.fromFloats(0.5f, 0, 1, 0.5f);
 
   public BlockToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings);
@@ -71,7 +73,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
    * @see Item#use(World, PlayerEntity, Hand)
    */
   @Override
-  public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+  public ActionResult use(World world, PlayerEntity user, Hand hand) {
     return super.use(world, user, hand);
   }
 
@@ -136,29 +138,23 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
     final ClientWorld world = worldRenderContext.world();
     final BlockPos blockPos = blockOutlineContext.blockPos();
     final BlockState state = blockOutlineContext.blockState();
-    WorldRendererInvoker.drawCuboidShapeOutline(
+    VertexRendering.drawOutline(
         worldRenderContext.matrixStack(),
         vertexConsumer,
         state.getOutlineShape(world, blockPos, ShapeContext.of(player)),
         blockPos.getX() - blockOutlineContext.cameraX(),
         blockPos.getY() - blockOutlineContext.cameraY(),
         blockPos.getZ() - blockOutlineContext.cameraZ(),
-        0,
-        1,
-        0,
-        0.8f);
+        OUTLINE_COLOR_MIDORI);
     if (includesFluid(itemStack, player.isSneaking())) {
-      WorldRendererInvoker.drawCuboidShapeOutline(
+      VertexRendering.drawOutline(
           worldRenderContext.matrixStack(),
           vertexConsumer,
           state.getFluidState().getShape(world, blockPos),
           blockPos.getX() - blockOutlineContext.cameraX(),
           blockPos.getY() - blockOutlineContext.cameraY(),
           blockPos.getZ() - blockOutlineContext.cameraZ(),
-          0,
-          1,
-          0.5f,
-          0.5f);
+          OUTLINE_COLOR_MIDORI_LIGHT);
     }
     return false;
   }

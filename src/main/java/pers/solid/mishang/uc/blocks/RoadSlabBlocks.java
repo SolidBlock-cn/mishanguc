@@ -2,9 +2,9 @@ package pers.solid.mishang.uc.blocks;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import net.minecraft.item.Item;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -29,11 +29,15 @@ public final class RoadSlabBlocks extends MishangucBlocks {
 
   @SuppressWarnings("unchecked")
   private static <T extends AbstractRoadBlock & Road> SmartRoadSlabBlock<T> of(T baseBlock) {
+    final Identifier baseId = Registries.BLOCK.getId(baseBlock);
+    final String path = baseId.getPath();
+    final String slabPath = StringUtils.replace(StringUtils.removeEnd(path, "_block"), "road", "road_slab", 1);
+
     final SmartRoadSlabBlock<T> slab;
     if (baseBlock instanceof RoadBlockWithAutoLine) {
-      slab = (SmartRoadSlabBlock<T>) new RoadSlabBlockWithAutoLine((RoadBlockWithAutoLine) baseBlock);
+      slab = (SmartRoadSlabBlock<T>) register(slabPath, settings -> new RoadSlabBlockWithAutoLine((RoadBlockWithAutoLine) baseBlock, settings), AbstractBlock.Settings.copy(baseBlock));
     } else {
-      slab = new SmartRoadSlabBlock<>(baseBlock);
+      slab = register(slabPath, settings -> new SmartRoadSlabBlock<>(baseBlock, settings), AbstractBlock.Settings.copy(baseBlock));
     }
     if (BLOCK_TO_SLABS.containsKey(baseBlock)) {
       throw new IllegalArgumentException(String.format("The slab for this road (%s) already exists!", baseBlock));
@@ -43,13 +47,6 @@ public final class RoadSlabBlocks extends MishangucBlocks {
   }
 
   static void registerAll() {
-    SLABS.forEach(slab -> {
-      final Identifier baseId = Registries.BLOCK.getId(slab.baseBlock);
-      final String namespace = baseId.getNamespace();
-      final String path = baseId.getPath();
-      final Identifier slabId = Identifier.of(namespace, StringUtils.replace(StringUtils.removeEnd(path, "_block"), "road", "road_slab", 1));
-      Registry.register(Registries.BLOCK, slabId, slab);
-      Registry.register(Registries.ITEM, slabId, new NamedBlockItem(slab, new Item.Settings()));
-    });
+    SLABS.forEach(slab -> Items.register(slab, NamedBlockItem::new));
   }
 }

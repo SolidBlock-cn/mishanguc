@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "mishanguc:ice_wall_sign",
   "key": {
-    "#": {
-      "item": "minecraft:ice"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    }
+    "#": "minecraft:ice",
+    "-": "mishanguc:invisible_wall_sign"
   },
   "pattern": [
     "---",

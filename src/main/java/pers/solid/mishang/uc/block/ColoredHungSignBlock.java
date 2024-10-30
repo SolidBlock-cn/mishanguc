@@ -21,10 +21,10 @@ import java.util.List;
 
 @Beta
 public class ColoredHungSignBlock extends HungSignBlock implements ColoredBlock {
-  public static final MapCodec<ColoredHungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec()).apply(instance, ColoredHungSignBlock::new));
+  public static final MapCodec<ColoredHungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), createSettingsCodec()).apply(instance, ColoredHungSignBlock::new));
 
-  public ColoredHungSignBlock(@NotNull Block baseBlock) {
-    super(baseBlock);
+  public ColoredHungSignBlock(@NotNull Block baseBlock, Settings settings) {
+    super(baseBlock, settings);
   }
 
   @Override

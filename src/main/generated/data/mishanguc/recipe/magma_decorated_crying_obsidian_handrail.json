@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "M": {
-      "item": "minecraft:magma_block"
-    },
-    "X": {
-      "item": "minecraft:crying_obsidian"
-    },
-    "n": {
-      "item": "minecraft:crying_obsidian"
-    },
-    "o": {
-      "item": "minecraft:glass_pane"
-    }
+    "M": "minecraft:magma_block",
+    "X": "minecraft:crying_obsidian",
+    "n": "minecraft:crying_obsidian",
+    "o": "minecraft:glass_pane"
   },
   "pattern": [
     "XXX",

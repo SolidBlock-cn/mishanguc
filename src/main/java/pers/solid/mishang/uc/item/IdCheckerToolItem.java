@@ -10,6 +10,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -25,6 +26,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShapes;
@@ -32,7 +34,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.TextBridge;
 
@@ -54,7 +55,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
           TextBridge.literal("")
               .append(TextBridge.translatable("debug.mishanguc.blockId.header", String.format(
                       "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-                  .formatted(Formatting.YELLOW)));
+                  .formatted(Formatting.YELLOW)), false);
       broadcastId(player, block.getName(), identifier, rawId);
       return ActionResult.SUCCESS;
     }
@@ -73,7 +74,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
                 ? TextBridge.translatable("gui.none")
                 : TextBridge.literal(identifier.toString())))
             .append("\n  ")
-            .append(TextBridge.translatable("debug.mishanguc.id.rawId", TextBridge.literal(Integer.toString(rawId)))));
+            .append(TextBridge.translatable("debug.mishanguc.id.rawId", TextBridge.literal(Integer.toString(rawId)))), false);
   }
 
   @Override
@@ -95,18 +96,18 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
   }
 
   @Override
-  public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+  public ActionResult use(World world, PlayerEntity user, Hand hand) {
     if (world.isClient) {
       final BlockPos blockPos = user.getBlockPos();
       final Biome biome = user.getEntityWorld().getBiome(blockPos).value();
-      final Registry<Biome> biomes = world.getRegistryManager().get(RegistryKeys.BIOME);
+      final Registry<Biome> biomes = world.getRegistryManager().getOrThrow(RegistryKeys.BIOME);
       final Identifier identifier = biomes.getId(biome);
       final int rawId = biomes.getRawId(biome);
       user.sendMessage(
           TextBridge.literal("").append(
               TextBridge.translatable("debug.mishanguc.biomeId.header", String.format(
                       "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-                  .formatted(Formatting.YELLOW)));
+                  .formatted(Formatting.YELLOW)), false);
       broadcastId(
           user,
           TextBridge.translatable(Util.createTranslationKey("biome", identifier)),
@@ -158,7 +159,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
         TextBridge.literal("").append(
             TextBridge.translatable("debug.mishanguc.entityId.header", String.format(
                     "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-                .formatted(Formatting.YELLOW)));
+                .formatted(Formatting.YELLOW)), false);
     final EntityType<?> type = entity.getType();
     broadcastId(
         player,
@@ -178,7 +179,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
       if (consumers == null) return;
       final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.getLines());
       final Vec3d cameraPos = context.camera().getPos();
-      WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, 0f, 1f, 0f, 0.8f);
+      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, ColorHelper.fromFloats(0.8f, 0f, 1f, 0f));
     }
   }
 }

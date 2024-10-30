@@ -3,18 +3,10 @@
   "category": "misc",
   "group": "glass_wooden_handrail",
   "key": {
-    "M": {
-      "item": "minecraft:acacia_planks"
-    },
-    "X": {
-      "item": "minecraft:acacia_wood"
-    },
-    "n": {
-      "item": "minecraft:stick"
-    },
-    "o": {
-      "item": "minecraft:glass_pane"
-    }
+    "M": "minecraft:acacia_planks",
+    "X": "minecraft:acacia_wood",
+    "n": "minecraft:stick",
+    "o": "minecraft:glass_pane"
   },
   "pattern": [
     "XXX",

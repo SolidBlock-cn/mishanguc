@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "mishanguc:colored_quartz_block"
-    }
+    "#": "mishanguc:colored_quartz_block"
   },
   "pattern": [
     "#  ",

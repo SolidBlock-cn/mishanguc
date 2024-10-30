@@ -1,16 +1,12 @@
 package pers.solid.mishang.uc.blocks;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.MapColor;
-import net.minecraft.item.BlockItem;
+import net.minecraft.block.*;
 import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.item.Items;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.CustomId;
@@ -27,6 +23,8 @@ import pers.solid.mishang.uc.item.WallSignBlockItem;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.ToIntFunction;
 
 /**
@@ -110,16 +108,13 @@ public class MishangucBlocks {
 
           // 注册方块。
           Block value = (Block) field.get(null);
-          String namespace, path;
+          String path;
           if (field.isAnnotationPresent(CustomId.class)) {
             final CustomId annotation = field.getAnnotation(CustomId.class);
-            namespace = annotation.nameSpace();
             path = annotation.path();
           } else {
-            namespace = "mishanguc";
             path = field.getName().toLowerCase();
           }
-          Registry.register(Registries.BLOCK, Identifier.of(namespace, path), value);
           if (field.isAnnotationPresent(Cutout.class)) {
             cutoutBlocks.add(value);
           } else if (field.isAnnotationPresent(Translucent.class)) {
@@ -131,27 +126,19 @@ public class MishangucBlocks {
               translucentBlocks.add(((HandrailBlock) value).stair());
             }
           }
-          if (value instanceof HandrailBlock handrailBlock) {
-            // 如果该方块为 HandrailBlock，则一并注册其 central 方块，应为该方块并没有作为字段存在。
-            // 此类方块也没有对应的方块物品，其物品为对应的基础方块的物品。
-            Registry.register(Registries.BLOCK, Mishanguc.id(path + "_central"), handrailBlock.central());
-            Registry.register(Registries.BLOCK, Mishanguc.id(path + "_corner"), handrailBlock.corner());
-            Registry.register(Registries.BLOCK, Mishanguc.id(path + "_stair"), handrailBlock.stair());
-            Registry.register(Registries.BLOCK, Mishanguc.id(path + "_outer"), handrailBlock.outer());
-          }
           final Item.Settings settings = new Item.Settings();
           if (path.contains("netherite")) {
             settings.fireproof();
           }
-          final BlockItem item =
+          final BiFunction<Block, Item.Settings, Item> biFunction =
               value instanceof HungSignBlock
-                  ? new HungSignBlockItem(value, settings)
+                  ? HungSignBlockItem::new
                   : value instanceof WallSignBlock
-                  ? new WallSignBlockItem(value, settings)
+                  ? WallSignBlockItem::new
                   : value instanceof StandingSignBlock
-                  ? new StandingSignBlockItem(value, settings)
-                  : new NamedBlockItem(value, settings);
-          Registry.register(Registries.ITEM, Mishanguc.id(path), item);
+                  ? StandingSignBlockItem::new
+                  : NamedBlockItem::new;
+          Items.register(value, biFunction, settings);
         } catch (IllegalAccessException e) {
           Mishanguc.MISHANG_LOGGER.error("Error when registering blocks:", e);
         }
@@ -169,5 +156,15 @@ public class MishangucBlocks {
     registerAll(StandingSignBlocks.class);
     registerAll(HandrailBlocks.class);
     registerAll(ColoredBlocks.class);
+  }
+
+  public static <T extends Block> T register(String name, Function<AbstractBlock.Settings, T> factory) {
+    return register(name, factory, AbstractBlock.Settings.create());
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T extends Block> T register(String name, Function<AbstractBlock.Settings, T> factory, AbstractBlock.Settings settings) {
+    final Block block = Blocks.register(RegistryKey.of(RegistryKeys.BLOCK, Mishanguc.id(name)), factory::apply, settings);
+    return (T) block;
   }
 }

@@ -1,9 +1,7 @@
 {
   "type": "minecraft:stonecutting",
   "group": "mishanguc:wood_hung_sign_bar",
-  "ingredient": {
-    "item": "minecraft:warped_hyphae"
-  },
+  "ingredient": "minecraft:warped_hyphae",
   "result": {
     "count": 20,
     "id": "mishanguc:warped_hung_sign_bar"

@@ -14,8 +14,7 @@ import net.minecraft.data.client.ModelIds;
 import net.minecraft.data.client.ModelProvider;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
@@ -92,15 +91,15 @@ public class FullWallSignBlock extends WallSignBlock {
   }
 
   @Override
-  public @Nullable CraftingRecipeJsonBuilder getCraftingRecipe() {
+  public @Nullable CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
     if (baseBlock == null) return null;
-    return ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this, 4)
+    return recipeGenerator.createShaped(RecipeCategory.DECORATIONS, this, 4)
         .pattern("-#-")
         .pattern("###")
         .pattern("-#-")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
-        .criterion("has_base_block", RecipeProvider.conditionsFromItem(baseBlock))
-        .criterion("has_sign", RecipeProvider.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN))
+        .criterion("has_base_block", recipeGenerator.conditionsFromItem(baseBlock))
+        .criterion("has_sign", recipeGenerator.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN))
         .group(getRecipeGroup());
   }
 

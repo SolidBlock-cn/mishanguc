@@ -10,8 +10,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -315,15 +314,15 @@ public class TextCopyToolItem extends BlockToolItem implements MishangucItem {
   }
 
   @Override
-  public @NotNull CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, this)
+  public @NotNull CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
+    return recipeGenerator.createShaped(RecipeCategory.TOOLS, this)
         .pattern("SPS")
         .pattern(" / ")
         .pattern(" / ")
         .input('P', Items.PAPER)
         .input('S', Items.SLIME_BALL)
         .input('/', Items.STICK)
-        .criterion("has_paper", RecipeProvider.conditionsFromItem(Items.PAPER))
-        .criterion("has_slime_ball", RecipeProvider.conditionsFromItem(Items.SLIME_BALL));
+        .criterion("has_paper", recipeGenerator.conditionsFromItem(Items.PAPER))
+        .criterion("has_slime_ball", recipeGenerator.conditionsFromItem(Items.SLIME_BALL));
   }
 }

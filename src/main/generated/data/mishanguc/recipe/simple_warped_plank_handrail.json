@@ -1,9 +1,7 @@
 {
   "type": "minecraft:stonecutting",
   "group": "mishanguc:simple_plank_handrail",
-  "ingredient": {
-    "item": "minecraft:warped_planks"
-  },
+  "ingredient": "minecraft:warped_planks",
   "result": {
     "count": 5,
     "id": "mishanguc:simple_warped_plank_handrail"

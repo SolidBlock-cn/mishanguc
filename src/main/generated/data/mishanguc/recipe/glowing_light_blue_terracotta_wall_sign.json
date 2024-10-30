@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "mishanguc:glowing_terracotta_wall_sign",
   "key": {
-    "#": {
-      "item": "minecraft:light_blue_terracotta"
-    },
-    "-": {
-      "item": "mishanguc:invisible_glowing_wall_sign"
-    }
+    "#": "minecraft:light_blue_terracotta",
+    "-": "mishanguc:invisible_glowing_wall_sign"
   },
   "pattern": [
     "---",

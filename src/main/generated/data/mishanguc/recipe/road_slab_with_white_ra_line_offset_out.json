@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "mishanguc:road_with_white_ra_line_offset_out"
-    }
+    "#": "mishanguc:road_with_white_ra_line_offset_out"
   },
   "pattern": [
     "###"

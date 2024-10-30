@@ -9,8 +9,7 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -27,10 +26,12 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
+import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.data.MishangucModels;
@@ -59,13 +60,11 @@ public class ColumnLightBlock extends Block implements Waterloggable, MishangucB
   }
 
   @Override
-  public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+  protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
     if (state.get(Properties.WATERLOGGED)) {
-      world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+      tickView.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
-
-    return super.getStateForNeighborUpdate(
-        state, direction, neighborState, world, pos, neighborPos);
+    return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
   }
 
   @Override
@@ -139,7 +138,7 @@ public class ColumnLightBlock extends Block implements Waterloggable, MishangucB
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
     final Identifier itemId = Registries.ITEM.getId(asItem());
     final String itemPath = itemId.getPath();
     if (itemPath.endsWith("_tube")) {
@@ -155,14 +154,14 @@ public class ColumnLightBlock extends Block implements Waterloggable, MishangucB
         throw new IllegalStateException(String.format("Can't generate recipes: Cannot determine the type of %s according to its id", this));
       }
       return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), RecipeCategory.DECORATIONS, this, outputCount)
-          .criterion(RecipeProvider.hasItem(fullLight), RecipeProvider.conditionsFromItem(fullLight));
+          .criterion(RecipeGenerator.hasItem(fullLight), recipeGenerator.conditionsFromItem(fullLight));
     } else {
       final Identifier tubeId = itemId.withSuffixedPath("_tube");
-      final @NotNull Item tube = Registries.ITEM.getOrEmpty(tubeId).orElseThrow(() -> new IllegalArgumentException(String.format("Can't generate recipes: %s does not have a corresponding tube block (with id [%s])", this, tubeId)));
-      return ShapelessRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this, 1)
+      final @NotNull Item tube = Registries.ITEM.getOptionalValue(tubeId).orElseThrow(() -> new IllegalArgumentException(String.format("Can't generate recipes: %s does not have a corresponding tube block (with id [%s])", this, tubeId)));
+      return recipeGenerator.createShapeless(RecipeCategory.DECORATIONS, this, 1)
           .input(tube)
           .input(Items.GRAY_CONCRETE)
-          .criterion(RecipeProvider.hasItem(tube), RecipeProvider.conditionsFromItem(tube));
+          .criterion(RecipeGenerator.hasItem(tube), recipeGenerator.conditionsFromItem(tube));
     }
   }
 

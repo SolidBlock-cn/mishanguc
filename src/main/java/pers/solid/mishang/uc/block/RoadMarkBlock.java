@@ -6,12 +6,11 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.block.*;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -23,12 +22,13 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -99,19 +99,19 @@ public class RoadMarkBlock extends Block implements Waterloggable, MishangucBloc
   }
 
   @Override
-  public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+  protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
     if (state.get(Properties.WATERLOGGED)) {
-      world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+      tickView.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
     if (direction == Direction.DOWN) {
       if (!this.canPlaceAt(state, world, pos)) {
         return Blocks.AIR.getDefaultState();
       } else {
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos)
+        return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random)
             .with(ON_SLAB, VoxelShapes.matchesAnywhere(world.getBlockState(neighborPos).getOutlineShape(world, neighborPos), SHAPE_TOP_MASK, BooleanBiFunction.ONLY_SECOND));
       }
     }
-    return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
   }
 
   @Override
@@ -133,9 +133,9 @@ public class RoadMarkBlock extends Block implements Waterloggable, MishangucBloc
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.fromTag(ConventionalItemTags.WHITE_DYES), RecipeCategory.DECORATIONS, this)
-        .criterion("has_white_dye", RecipeProvider.conditionsFromTag(ConventionalItemTags.WHITE_DYES));
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
+    return StonecuttingRecipeJsonBuilder.createStonecutting(recipeGenerator.ingredientFromTag(ConventionalItemTags.WHITE_DYES), RecipeCategory.DECORATIONS, this)
+        .criterion("has_white_dye", recipeGenerator.conditionsFromTag(ConventionalItemTags.WHITE_DYES));
   }
 
   @Override

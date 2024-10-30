@@ -3,15 +3,9 @@
   "category": "misc",
   "group": "mishanguc:ice_standing_sign",
   "key": {
-    "#": {
-      "item": "minecraft:blue_ice"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    },
-    "|": {
-      "item": "minecraft:stick"
-    }
+    "#": "minecraft:blue_ice",
+    "-": "mishanguc:invisible_wall_sign",
+    "|": "minecraft:stick"
   },
   "pattern": [
     "---",

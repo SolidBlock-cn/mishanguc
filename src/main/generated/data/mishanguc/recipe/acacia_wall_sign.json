@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "mishanguc:plank_wall_sign",
   "key": {
-    "#": {
-      "item": "minecraft:acacia_planks"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    }
+    "#": "minecraft:acacia_planks",
+    "-": "mishanguc:invisible_wall_sign"
   },
   "pattern": [
     "---",

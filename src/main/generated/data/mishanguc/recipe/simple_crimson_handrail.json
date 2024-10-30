@@ -1,9 +1,7 @@
 {
   "type": "minecraft:stonecutting",
   "group": "mishanguc:simple_wood_handrail",
-  "ingredient": {
-    "item": "minecraft:crimson_hyphae"
-  },
+  "ingredient": "minecraft:crimson_hyphae",
   "result": {
     "count": 5,
     "id": "mishanguc:simple_crimson_handrail"

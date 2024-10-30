@@ -12,7 +12,7 @@ import net.minecraft.data.client.ModelProvider;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -42,11 +42,6 @@ public class ColoredSlabBlock extends SlabBlock implements ColoredBlock {
 
   public ColoredSlabBlock(@Nullable Block baseBlock, Settings settings) {
     super(settings);
-    this.baseBlock = baseBlock;
-  }
-
-  public ColoredSlabBlock(@NotNull Block baseBlock) {
-    super(Settings.copy(baseBlock));
     this.baseBlock = baseBlock;
   }
 
@@ -89,9 +84,9 @@ public class ColoredSlabBlock extends SlabBlock implements ColoredBlock {
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ((ShapedRecipeJsonBuilder) RecipeProvider.createSlabRecipe(RecipeCategory.BUILDING_BLOCKS, this, Ingredient.ofItems(baseBlock)))
-        .criterion(RecipeProvider.hasItem(this.baseBlock), RecipeProvider.conditionsFromItem(this.baseBlock));
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
+    return ((ShapedRecipeJsonBuilder) recipeGenerator.createSlabRecipe(RecipeCategory.BUILDING_BLOCKS, this, Ingredient.ofItems(baseBlock)))
+        .criterion(RecipeGenerator.hasItem(this.baseBlock), recipeGenerator.conditionsFromItem(this.baseBlock));
   }
 
   @Override

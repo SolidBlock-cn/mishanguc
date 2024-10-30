@@ -1,20 +1,17 @@
 package pers.solid.mishang.uc.item;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ToolComponent;
 import net.minecraft.component.type.UnbreakableComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.MiningToolItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
@@ -27,17 +24,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
 public class OmnipotentToolItem extends MiningToolItem implements MishangucItem, InteractsWithEntity {
-  protected static final OmnipotentToolMaterial MATERIAL = new OmnipotentToolMaterial();
+  protected static final ToolMaterial MATERIAL = new ToolMaterial(TagKey.of(RegistryKeys.BLOCK, Mishanguc.id("incorrect_for_omnipotent_tool")), Integer.MAX_VALUE, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Integer.MAX_VALUE, TagKey.of(RegistryKeys.ITEM, Mishanguc.id("omnipotent_repair_items")));
 
   public OmnipotentToolItem(Settings settings) {
-    super(MATERIAL, BlockTags.PICKAXE_MINEABLE, settings
-        .component(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(false))
-        .attributeModifiers(MiningToolItem.createAttributeModifiers(MATERIAL, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)));
+    super(MATERIAL, BlockTags.PICKAXE_MINEABLE, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, settings);
   }
 
   @Override
@@ -89,45 +85,5 @@ public class OmnipotentToolItem extends MiningToolItem implements MishangucItem,
   @Override
   public boolean isCorrectForDrops(ItemStack stack, BlockState state) {
     return true;
-  }
-
-  protected static class OmnipotentToolMaterial implements ToolMaterial {
-    private OmnipotentToolMaterial() {
-    }
-
-    @Override
-    public int getDurability() {
-      return Integer.MAX_VALUE;
-    }
-
-    @Override
-    public float getMiningSpeedMultiplier() {
-      return Float.POSITIVE_INFINITY;
-    }
-
-    @Override
-    public float getAttackDamage() {
-      return Float.POSITIVE_INFINITY;
-    }
-
-    @Override
-    public TagKey<Block> getInverseTag() {
-      return BlockTags.INCORRECT_FOR_NETHERITE_TOOL;
-    }
-
-    @Override
-    public int getEnchantability() {
-      return Integer.MAX_VALUE;
-    }
-
-    @Override
-    public Ingredient getRepairIngredient() {
-      return Ingredient.ofItems(Items.BEDROCK);
-    }
-
-    @Override
-    public ToolComponent createComponent(TagKey<Block> tag) {
-      return new ToolComponent(List.of(), Float.POSITIVE_INFINITY, 0);
-    }
   }
 }

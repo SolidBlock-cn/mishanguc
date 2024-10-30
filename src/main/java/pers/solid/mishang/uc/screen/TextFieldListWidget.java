@@ -13,6 +13,7 @@ import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -204,7 +205,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   }
 
   @Override
-  protected int getRowTop(int index) {
+  public int getRowTop(int index) {
     return super.getRowTop(index) - 2;
   }
 
@@ -245,8 +246,8 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   protected void drawMenuListBackground(DrawContext context) {
     RenderSystem.enableBlend();
     Identifier identifier = background;
-    context.drawTexture(identifier, this.getX(), 0, 0, 0, this.getWidth(), this.getY(), 32, 32);
-    context.drawTexture(identifier, this.getX(), this.getBottom(), 0, 0, this.getWidth(), this.getHeight(), 32, 32);
+    context.drawTexture(RenderLayer::getGuiTextured, identifier, this.getX(), 0, 0, 0, this.getWidth(), this.getY(), 32, 32);
+    context.drawTexture(RenderLayer::getGuiTextured, identifier, this.getX(), this.getBottom(), 0, 0, this.getWidth(), this.getHeight(), 32, 32);
     RenderSystem.disableBlend();
   }
 

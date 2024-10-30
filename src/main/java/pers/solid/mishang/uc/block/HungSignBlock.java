@@ -8,8 +8,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -30,12 +29,11 @@ import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldEvents;
+import net.minecraft.world.*;
+import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -124,11 +122,6 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
         .with(RIGHT, false));
   }
 
-  @ApiStatus.AvailableSince("0.1.7")
-  public HungSignBlock(@NotNull Block baseBlock) {
-    this(baseBlock, Block.Settings.copy(baseBlock));
-  }
-
   @Override
   protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
     super.appendProperties(builder);
@@ -152,8 +145,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
                 ? blockState.get(AXIS)
                 : ctx.getHorizontalPlayerFacing().getAxis())
         .with(WATERLOGGED, world.getFluidState(blockPos).getFluid() == Fluids.WATER)
-        .getStateForNeighborUpdate(
-            Direction.UP, world.getBlockState(blockPos.up()), world, blockPos, blockPos.up());
+        .getStateForNeighborUpdate(world, world, blockPos, Direction.UP, blockPos.up(), world.getBlockState(blockPos.up()), world.random);
   }
 
   @NotNull
@@ -207,8 +199,8 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   }
 
   @Override
-  public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
-    return getCollisionShape(state, world, pos, ShapeContext.absent());
+  protected VoxelShape getCullingShape(BlockState state) {
+    return getCollisionShape(state, EmptyBlockRenderView.INSTANCE, BlockPos.ORIGIN, ShapeContext.absent());
   }
 
   @Override
@@ -216,21 +208,17 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
   }
 
+
   /**
    * 当这个指定的方向连接有同类方块时，这个方块（left 和 right）就会为 true，此时上方将不会显示栏杆。<br>
    * 如果连接有非同类方块，且上方没有连接带有碰撞箱的方块，则这个方向也会为 true。
    */
+
   @Override
-  public BlockState getStateForNeighborUpdate(
-      BlockState state,
-      Direction direction,
-      BlockState neighborState,
-      WorldAccess world,
-      BlockPos pos,
-      BlockPos neighborPos) {
-    state = super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+  protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
+    state = super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
     if (state.get(WATERLOGGED)) {
-      world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+      tickView.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
     if (Direction.Type.HORIZONTAL.test(direction)) {
       if (world.getBlockState(pos.up()).getCollisionShape(world, pos.up()).getMin(Direction.Axis.Y) == 0) {
@@ -343,21 +331,21 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   }
 
   @Override
-  protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-    final ItemActionResult itemActionResult = super.onUseWithItem(stack, state, world, pos, player, hand, hit);
-    if (itemActionResult != ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) return itemActionResult;
+  protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    final ActionResult actionResult = super.onUseWithItem(stack, state, world, pos, player, hand, hit);
+    if (actionResult != ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION) return actionResult;
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     final Direction side = hit.getSide();
     if (!(blockEntity instanceof final HungSignBlockEntity entity)) {
-      return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+      return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
     } else if (!state.get(AXIS).test(side)) {
       // 若方块实体不对应，或者编辑的这一侧不可编辑，则在客户端和服务器均略过。
-      return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+      return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
     } else if (!player.getAbilities().allowModifyWorld) {
       // 冒险模式玩家无权编辑。Adventure players have no permission to edit.
-      return ItemActionResult.FAIL;
+      return ActionResult.FAIL;
     } else if (world.isClient) {
-      return ItemActionResult.SUCCESS;
+      return ActionResult.SUCCESS;
     } else {
       if (stack.getItem() instanceof HoneycombItem) {
         // 处理告示牌的涂蜡
@@ -367,25 +355,25 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
           world.syncWorldEvent(null, WorldEvents.BLOCK_WAXED, entity.getPos(), 0);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stack.decrement(1);
-          return ItemActionResult.SUCCESS;
+          return ActionResult.SUCCESS;
         } else if (player.isCreative()) {
           entity.waxed = removeFromSet(entity.waxed, side);
           player.sendMessage(BlockEntityWithText.MESSAGE_WAX_OFF, true);
           world.syncWorldEvent(null, WorldEvents.WAX_REMOVED, entity.getPos(), 0);
           entity.markDirtyAndUpdate();
-          return ItemActionResult.SUCCESS;
+          return ActionResult.SUCCESS;
         }
       }
       if (entity.waxed.contains(side)) {
         // 涂蜡的告示牌不应该进行操作。
         world.playSound(null, entity.getPos(), SoundEvents.BLOCK_SIGN_WAXED_INTERACT_FAIL, SoundCategory.BLOCKS);
-        return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
       } else if (stack.isOf(Items.MAGMA_CREAM)) {
         // 玩家手持岩浆膏时，可快速进行重整。
         final List<@NotNull TextContext> textContexts = entity.texts.get(side);
         if (textContexts != null) MishangUtils.rearrange(textContexts);
         entity.markDirtyAndUpdate();
-        return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
       } else if (stack.getItem() instanceof GlowInkSacItem) {
         if (!entity.glowing.contains(side)) {
           entity.glowing = addToSet(entity.glowing, side);
@@ -393,7 +381,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
           world.playSound(null, entity.getPos(), SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stack.decrement(1);
-          return ItemActionResult.SUCCESS;
+          return ActionResult.SUCCESS;
         }
       } else if (stack.getItem() instanceof InkSacItem) {
         if (entity.glowing.contains(side)) {
@@ -402,12 +390,12 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
           world.playSound(null, entity.getPos(), SoundEvents.ITEM_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stack.decrement(1);
-          return ItemActionResult.SUCCESS;
+          return ActionResult.SUCCESS;
         }
       }
     }
 
-    return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
   }
 
   @Override
@@ -474,16 +462,16 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
     if (baseBlock == null) return null;
-    return ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this, 6)
+    return recipeGenerator.createShaped(RecipeCategory.DECORATIONS, this, 6)
         .pattern("-#-")
         .pattern("-#-")
         .pattern("-#-")
         .input('#', baseBlock)
         .input('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
-        .criterion("has_base_block", RecipeProvider.conditionsFromItem(baseBlock))
-        .criterion("has_sign", RecipeProvider.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN))
+        .criterion("has_base_block", recipeGenerator.conditionsFromItem(baseBlock))
+        .criterion("has_sign", recipeGenerator.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN))
         .group(getRecipeGroup());
   }
 

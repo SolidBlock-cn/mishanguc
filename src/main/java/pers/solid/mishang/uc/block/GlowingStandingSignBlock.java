@@ -8,8 +8,7 @@ import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ModelProvider;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.text.MutableText;
@@ -31,12 +30,8 @@ public class GlowingStandingSignBlock extends StandingSignBlock {
   protected static final Identifier DEFAULT_GLOW_TEXTURE = Mishanguc.id("block/white_light");
   public Identifier glowTexture = DEFAULT_GLOW_TEXTURE;
 
-  public GlowingStandingSignBlock(@Nullable Block baseBlock, Settings settings) {
-    super(baseBlock, settings);
-  }
-
-  public GlowingStandingSignBlock(@NotNull Block baseBlock) {
-    this(baseBlock, Block.Settings.copy(baseBlock).luminance(x -> 15));
+  public GlowingStandingSignBlock(@NotNull Block baseBlock, Settings settings) {
+    super(baseBlock, settings.luminance(x -> 15));
   }
 
   @Override
@@ -71,15 +66,15 @@ public class GlowingStandingSignBlock extends StandingSignBlock {
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
     if (baseBlock == null) return null;
-    return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, this, 4)
+    return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, this, 4)
         .pattern("---")
         .pattern("###")
         .pattern(" | ")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN).input('|', Items.STICK)
-        .criterion("has_base_block", RecipeProvider.conditionsFromItem(baseBlock))
-        .criterion("has_sign", RecipeProvider.conditionsFromItem(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN))
+        .criterion("has_base_block", recipeGenerator.conditionsFromItem(baseBlock))
+        .criterion("has_sign", recipeGenerator.conditionsFromItem(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN))
         .group(getRecipeGroup());
   }
 

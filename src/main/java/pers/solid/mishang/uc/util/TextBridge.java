@@ -40,8 +40,8 @@ public interface TextBridge extends Text {
     return Text.score(name, objective);
   }
 
-  static MutableText selector(String pattern, Optional<Text> separator) {
-    return Text.selector(pattern, separator);
+  static MutableText selector(ParsedSelector selector, Optional<Text> separator) {
+    return Text.selector(selector, separator);
   }
 
   static boolean isEmpty(Text text) {

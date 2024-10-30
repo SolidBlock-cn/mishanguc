@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "mishanguc:concrete_hung_sign",
   "key": {
-    "#": {
-      "item": "minecraft:orange_concrete"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    }
+    "#": "minecraft:orange_concrete",
+    "-": "mishanguc:invisible_wall_sign"
   },
   "pattern": [
     "-#-",

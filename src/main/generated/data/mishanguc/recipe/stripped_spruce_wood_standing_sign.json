@@ -3,15 +3,9 @@
   "category": "misc",
   "group": "mishanguc:stripped_wood_standing_sign",
   "key": {
-    "#": {
-      "item": "minecraft:stripped_spruce_wood"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    },
-    "|": {
-      "item": "minecraft:stick"
-    }
+    "#": "minecraft:stripped_spruce_wood",
+    "-": "mishanguc:invisible_wall_sign",
+    "|": "minecraft:stick"
   },
   "pattern": [
     "---",

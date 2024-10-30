@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "mishanguc:green_large_wall_light_tube"
-    },
-    {
-      "item": "minecraft:gray_concrete"
-    }
+    "mishanguc:green_large_wall_light_tube",
+    "minecraft:gray_concrete"
   ],
   "result": {
     "count": 1,

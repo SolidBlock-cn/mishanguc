@@ -3,8 +3,7 @@ package pers.solid.mishang.uc.item;
 import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -58,8 +57,8 @@ public class RotatingToolItem extends BlockToolItem implements MishangucItem {
 
   @NotNull
   private ActionResult rotateBlock(World world, BlockPos blockPos, BlockRotation rotation) {
-    final boolean b = world.setBlockState(blockPos, world.getBlockState(blockPos).rotate(rotation));
-    return ActionResult.success(b);
+    world.setBlockState(blockPos, world.getBlockState(blockPos).rotate(rotation));
+    return ActionResult.SUCCESS;
   }
 
   @Override
@@ -87,15 +86,15 @@ public class RotatingToolItem extends BlockToolItem implements MishangucItem {
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, this)
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
+    return recipeGenerator.createShaped(RecipeCategory.TOOLS, this)
         .pattern("DND")
         .pattern(" | ")
         .pattern(" | ")
         .input('D', Items.PINK_DYE)
         .input('N', Items.NETHERITE_INGOT)
         .input('|', Items.STICK)
-        .criterion("has_pink_dye", RecipeProvider.conditionsFromItem(Items.PINK_DYE))
-        .criterion("has_netherite_ingot", RecipeProvider.conditionsFromItem(Items.NETHERITE_INGOT));
+        .criterion("has_pink_dye", recipeGenerator.conditionsFromItem(Items.PINK_DYE))
+        .criterion("has_netherite_ingot", recipeGenerator.conditionsFromItem(Items.NETHERITE_INGOT));
   }
 }

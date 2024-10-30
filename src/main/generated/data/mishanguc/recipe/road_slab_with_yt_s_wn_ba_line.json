@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "mishanguc:road_with_yt_s_wn_ba_line"
-    }
+    "#": "mishanguc:road_with_yt_s_wn_ba_line"
   },
   "pattern": [
     "###"

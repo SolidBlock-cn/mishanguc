@@ -3,15 +3,9 @@
   "category": "building",
   "group": "mishanguc:road_slab_with_y_ra_line",
   "key": {
-    "X": {
-      "item": "mishanguc:road_slab"
-    },
-    "a": {
-      "tag": "c:dyes/white"
-    },
-    "b": {
-      "tag": "c:dyes/yellow"
-    }
+    "X": "mishanguc:road_slab",
+    "a": "#c:dyes/white",
+    "b": "#c:dyes/yellow"
   },
   "pattern": [
     " a ",

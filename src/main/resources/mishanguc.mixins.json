@@ -12,11 +12,13 @@
     "BucketItemAccessor",
     "ChunkHolderAccessor",
     "FenceBlockMixin",
+    "ItemMixin",
+    "ItemMixin$SettingsMixin",
     "ItemUsageContextInvoker",
+    "MouseMixin",
     "NbtCompoundAccessor",
     "NetherPortalBlockMixin",
     "PaneBlockMixin",
-    "PlayerInventoryMixin",
     "PointOfInterestTypesMixin",
     "RecipeJsonBuilderMixins",
     "WallBlockMixin",
@@ -26,8 +28,7 @@
     "BetterClientPlayerInteractionManagerMixin",
     "GameRendererMixin",
     "ScreenMixin",
-    "TextRendererAccessor",
-    "WorldRendererInvoker"
+    "TextRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

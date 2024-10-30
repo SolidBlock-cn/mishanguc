@@ -1,8 +1,6 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "minecraft:blackstone"
-  },
+  "ingredient": "minecraft:blackstone",
   "result": {
     "count": 20,
     "id": "mishanguc:blackstone_hung_sign_bar"

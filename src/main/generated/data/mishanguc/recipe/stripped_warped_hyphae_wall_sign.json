@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "mishanguc:stripped_wood_wall_sign",
   "key": {
-    "#": {
-      "item": "minecraft:stripped_warped_hyphae"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    }
+    "#": "minecraft:stripped_warped_hyphae",
+    "-": "mishanguc:invisible_wall_sign"
   },
   "pattern": [
     "---",

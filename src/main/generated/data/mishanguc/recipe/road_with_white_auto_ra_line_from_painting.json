@@ -3,15 +3,9 @@
   "category": "building",
   "group": "mishanguc:road_with_auto_ra_line",
   "key": {
-    "X": {
-      "item": "mishanguc:road_block"
-    },
-    "a": {
-      "tag": "c:dyes/white"
-    },
-    "b": {
-      "tag": "c:dyes/yellow"
-    }
+    "X": "mishanguc:road_block",
+    "a": "#c:dyes/white",
+    "b": "#c:dyes/yellow"
   },
   "pattern": [
     "aba",

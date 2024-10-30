@@ -48,6 +48,7 @@ import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
 import pers.solid.mishang.uc.util.ColorMixtureType;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
@@ -137,7 +138,7 @@ public class MishangucClient implements ClientModInitializer {
   private static void registerBlockColors() {
     // 注册方块和颜色
     final Block[] coloredBlocks = MishangUtils.blocks().stream().filter(Predicates.instanceOf(ColoredBlock.class))
-        .flatMap(block -> block instanceof HandrailBlock handrailBlock ? Stream.of(handrailBlock, handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer()) : Stream.of(block))  // since 0.2.4 用于可着色的栏杆方块及其变种
+        .flatMap(block -> block instanceof HandrailBlock handrailBlock ? Arrays.stream(handrailBlock.selfAndVariants()) : Stream.of(block))  // since 0.2.4 用于可着色的栏杆方块及其变种
         .toArray(Block[]::new);
     ColorProviderRegistry.BLOCK.register(
         (state, world, pos, tintIndex) -> {

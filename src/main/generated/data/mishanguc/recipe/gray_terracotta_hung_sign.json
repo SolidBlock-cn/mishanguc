@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "mishanguc:terracotta_hung_sign",
   "key": {
-    "#": {
-      "item": "minecraft:gray_terracotta"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    }
+    "#": "minecraft:gray_terracotta",
+    "-": "mishanguc:invisible_wall_sign"
   },
   "pattern": [
     "-#-",

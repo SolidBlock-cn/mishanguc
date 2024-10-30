@@ -8,6 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -25,13 +26,13 @@ import net.minecraft.util.collection.Int2ObjectBiMap;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.components.FastBuildingToolData;
 import pers.solid.mishang.uc.components.MishangucComponents;
-import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.util.BlockMatchingRule;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -188,56 +189,56 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
       final BlockState state = world.getBlockState(pos);
       final BlockPlacementContext offsetBlockPlacementContext = new BlockPlacementContext(blockPlacementContext, pos);
       if (offsetBlockPlacementContext.canPlace() && offsetBlockPlacementContext.canReplace()) {
-        WorldRendererInvoker.drawCuboidShapeOutline(
+        VertexRendering.drawOutline(
             worldRenderContext.matrixStack(),
             vertexConsumer,
             offsetBlockPlacementContext.stateToPlace.getOutlineShape(world, pos, ShapeContext.of(player)),
             offsetBlockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(),
             offsetBlockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(),
             offsetBlockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(),
-            0,
-            1,
-            1,
-            0.8f);
+            ColorHelper.fromFloats(0.8f,
+                0,
+                1,
+                1));
         if (includesFluid) {
-          WorldRendererInvoker.drawCuboidShapeOutline(
+          VertexRendering.drawOutline(
               worldRenderContext.matrixStack(),
               vertexConsumer,
               offsetBlockPlacementContext.stateToPlace.getFluidState().getShape(world, pos),
               offsetBlockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(),
               offsetBlockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(),
               offsetBlockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(),
-              0,
-              0.5f,
-              1,
-              0.5f);
+              ColorHelper.fromFloats(0.5f,
+                  0,
+                  0.5f,
+                  1));
         }
       }
       if (hand == Hand.MAIN_HAND && !(state.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
         // 只有当主手持有此物品时，才绘制边框，且对非管理员玩家忽略管理员方块。
-        WorldRendererInvoker.drawCuboidShapeOutline(
+        VertexRendering.drawOutline(
             worldRenderContext.matrixStack(),
             vertexConsumer,
             state.getOutlineShape(world, pos, ShapeContext.of(player)),
             pos.getX() - blockOutlineContext.cameraX(),
             pos.getY() - blockOutlineContext.cameraY(),
             pos.getZ() - blockOutlineContext.cameraZ(),
-            1,
-            0,
-            0,
-            0.8f);
+            ColorHelper.fromFloats(0.8f,
+                1,
+                0,
+                0));
         if (includesFluid) {
-          WorldRendererInvoker.drawCuboidShapeOutline(
+          VertexRendering.drawOutline(
               worldRenderContext.matrixStack(),
               vertexConsumer,
               state.getFluidState().getShape(world, pos),
               pos.getX() - blockOutlineContext.cameraX(),
               pos.getY() - blockOutlineContext.cameraY(),
               pos.getZ() - blockOutlineContext.cameraZ(),
-              1,
-              0.5f,
-              0,
-              0.5f);
+              ColorHelper.fromFloats(0.5f,
+                  1,
+                  0.5f,
+                  0));
         }
       }
     }

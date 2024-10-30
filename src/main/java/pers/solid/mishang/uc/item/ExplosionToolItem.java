@@ -10,6 +10,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.network.packet.s2c.play.ExplosionS2CPacket;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityFlagsPredicate;
 import net.minecraft.predicate.entity.EntityPredicates;
@@ -17,20 +18,22 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
+import net.minecraft.world.explosion.ExplosionImpl;
 import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.components.ExplosionToolComponent;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ExplosionToolItem extends Item implements HotbarScrollInteraction, DispenserBehavior {
   public ExplosionToolItem(Settings settings) {
@@ -39,51 +42,51 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
   }
 
   @Override
-  public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+  public ActionResult use(World world, PlayerEntity user, Hand hand) {
     final ItemStack stack = user.getStackInHand(hand);
     final HitResult raycast = user.raycast(128, 0, user.isSneaking());
     if (raycast.getType() == HitResult.Type.MISS) {
-      return TypedActionResult.fail(stack);
+      return ActionResult.FAIL;
     }
-    if (world.isClient) {
-      return TypedActionResult.pass(stack);
+    if (!(world instanceof ServerWorld serverWorld)) {
+      return ActionResult.PASS;
     }
-    if (!world.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).get().hasAccess(user, true)) {
-      return TypedActionResult.pass(super.use(world, user, hand).getValue());
+    if (!serverWorld.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).get().hasAccess(user, true)) {
+      return ActionResult.PASS;
     }
     final Vec3d pos = raycast.getPos();
-    final GameRules.BooleanRule booleanRule = world.getGameRules().get(GameRules.DO_TILE_DROPS);
+    final GameRules.BooleanRule booleanRule = serverWorld.getGameRules().get(GameRules.DO_TILE_DROPS);
     final boolean backup = booleanRule.get();
     if (user.isCreative()) {
       // 创造模式下，将游戏规则临时设为不掉落。
       booleanRule.set(false, null);
     }
     final ExplosionToolComponent component = stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT);
-    Explosion explosion = new Explosion(world, user, user.isSneaking() ? world.getDamageSources().explosion(null) : null, null, pos.x, pos.y, pos.z, component.power(), component.createFire(), component.destructionType(), ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE);
-    explosion.collectBlocksAndDamageEntities();
-    explosion.affectWorld(true);
 
-    // 适用于 1.19.3，因为不是通过 world.createExplosion 实现的，没有向客户端发送消息，所以需要在这里手动发送
-    if (!explosion.shouldDestroy()) {
-      explosion.clearAffectedBlocks();
-    }
-    for (PlayerEntity playerEntity : world.getPlayers()) {
-      ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
-      if (serverPlayerEntity.squaredDistanceTo(pos.x, pos.y, pos.z) < 4096.0) {
-        serverPlayerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.x, pos.y, pos.z, component.power(), explosion.getAffectedBlocks(), explosion.getAffectedPlayers().get(serverPlayerEntity), component.destructionType(), ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE));
+    Explosion.DestructionType destructionType = component.destructionType();
+
+    ExplosionImpl explosionImpl = new ExplosionImpl(serverWorld, user, user.isSneaking() ? world.getDamageSources().explosion(null) : null, null, pos, component.power(), component.createFire(), destructionType);
+    explosionImpl.explode();
+    ParticleEffect particleEffect = ParticleTypes.EXPLOSION;
+
+    for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers()) {
+      if (serverPlayerEntity.squaredDistanceTo(pos) < 4096.0) {
+        Optional<Vec3d> optional = Optional.ofNullable(explosionImpl.getKnockbackByPlayer().get(serverPlayerEntity));
+        serverPlayerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos, optional, particleEffect, SoundEvents.ENTITY_GENERIC_EXPLODE));
       }
     }
+
     stack.damage((int) component.power(), user, LivingEntity.getSlotForHand(hand));
     if (user.isCreative()) {
       booleanRule.set(backup, null);
     }
-    return TypedActionResult.success(stack);
+    return ActionResult.SUCCESS_SERVER;
   }
 
   @Override
   public Text getName(ItemStack stack) {
     final ExplosionToolComponent component = stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT);
-    return TextBridge.translatable(getTranslationKey(stack) + ".formatted", component.power(), TextBridge.translatable("item.mishanguc.explosion_tool.createFire." + component.createFire()), TextBridge.translatable("item.mishanguc.explosion_tool.destructionType." + component.destructionType().name().toLowerCase()));
+    return TextBridge.translatable(getTranslationKey() + ".formatted", component.power(), TextBridge.translatable("item.mishanguc.explosion_tool.createFire." + component.createFire()), TextBridge.translatable("item.mishanguc.explosion_tool.destructionType." + component.destructionType().name().toLowerCase()));
   }
 
   public void appendToEntries(ItemGroup.Entries stacks) {
@@ -129,8 +132,8 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
 
   @Override
   public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
-    final ServerWorld world = pointer.world();
-    if (!world.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).get().hasAccess(null)) {
+    final ServerWorld serverWorld = pointer.world();
+    if (!serverWorld.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).get().hasAccess(null)) {
       return stack;
     }
     final BlockPos basePos = pointer.pos();
@@ -138,24 +141,25 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     final ExplosionToolComponent component = stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT);
     for (int i = 1; i < 33; i++) {
       final BlockPos pos = basePos.offset(direction, i);
-      if (world.getBlockState(pos).getCollisionShape(world, pos).isEmpty()
-          && world.getEntitiesByClass(Entity.class, new Box(pos), EntityPredicates.EXCEPT_SPECTATOR.and(Entity::canHit).and(EntityFlagsPredicate.Builder.create().sneaking(false).build()::test)).isEmpty()
+      if (serverWorld.getBlockState(pos).getCollisionShape(serverWorld, pos).isEmpty()
+          && serverWorld.getEntitiesByClass(Entity.class, new Box(pos), EntityPredicates.EXCEPT_SPECTATOR.and(Entity::canHit).and(EntityFlagsPredicate.Builder.create().sneaking(false).build()::test)).isEmpty()
       ) {
         continue;
       }
-      Explosion explosion = new Explosion(world, null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, component.power(), component.createFire(), component.destructionType());
-      explosion.collectBlocksAndDamageEntities();
-      explosion.affectWorld(true);
-      // 适用于 1.19.3，因为不是通过 world.createExplosion 实现的，没有向客户端发送消息，所以需要在这里手动发送
-      if (!explosion.shouldDestroy()) {
-        explosion.clearAffectedBlocks();
-      }
-      for (ServerPlayerEntity playerEntity : world.getPlayers()) {
-        if (playerEntity.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) < 4096.0) {
-          playerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.getX(), pos.getY(), pos.getZ(), component.power(), explosion.getAffectedBlocks(), explosion.getAffectedPlayers().get(playerEntity), component.destructionType(), ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.ENTITY_GENERIC_EXPLODE));
+
+      Explosion.DestructionType destructionType = component.destructionType();
+
+      ExplosionImpl explosionImpl = new ExplosionImpl(serverWorld, null, serverWorld.getDamageSources().explosion(null), null, pos.toCenterPos(), component.power(), component.createFire(), destructionType);
+      explosionImpl.explode();
+      ParticleEffect particleEffect = ParticleTypes.EXPLOSION;
+
+      for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers()) {
+        if (serverPlayerEntity.squaredDistanceTo(pos.toCenterPos()) < 4096.0) {
+          Optional<Vec3d> optional = Optional.ofNullable(explosionImpl.getKnockbackByPlayer().get(serverPlayerEntity));
+          serverPlayerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.toCenterPos(), optional, particleEffect, SoundEvents.ENTITY_GENERIC_EXPLODE));
         }
       }
-      stack.damage((int) component.power(), world, null, item -> {});
+      stack.damage((int) component.power(), serverWorld, null, item -> {});
     }
     return stack;
   }

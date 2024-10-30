@@ -2,20 +2,17 @@ package pers.solid.mishang.uc.blocks;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.ImmutableMap;
-import net.fabricmc.fabric.mixin.object.builder.AbstractBlockAccessor;
-import net.fabricmc.fabric.mixin.object.builder.AbstractBlockSettingsAccessor;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.*;
-import pers.solid.mishang.uc.data.MishangucRecipeProvider;
+import pers.solid.mishang.uc.data.MishangucRecipeGenerator;
 
 import java.util.Map;
 
@@ -23,7 +20,7 @@ import java.util.Map;
  * <h1>告示牌类方块</h1>
  * 具有多种不同颜色和纹理。每一种告示牌都有对应的告示牌杆，且部分的告示牌都有对应的发光告示牌方块。<br>
  * 每个告示牌都要在 {@link pers.solid.mishang.uc.blockentity.MishangucBlockEntities#HUNG_SIGN_BLOCK_ENTITY} 中能够识别，因此添加新的告示牌需要在该字段的相关参数中添加。<br>
- * 同时，还需要注意在 {@link MishangucRecipeProvider} 中添加此方块。
+ * 同时，还需要注意在 {@link MishangucRecipeGenerator} 中添加此方块。
  *
  * @see HungSignBlock
  * @see HungSignBarBlock
@@ -33,122 +30,127 @@ public final class HungSignBlocks extends MishangucBlocks {
 
   // 木告示牌部分。仅有不发光的告示牌。
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBlock OAK_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.OAK_WOOD);
+  public static final HungSignBlock OAK_WOOD_HUNG_SIGN = register("oak_wood_hung_sign", Blocks.OAK_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBlock SPRUCE_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.SPRUCE_WOOD);
+  public static final HungSignBlock SPRUCE_WOOD_HUNG_SIGN = register("spruce_wood_hung_sign", Blocks.SPRUCE_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBlock BIRCH_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.BIRCH_WOOD);
+  public static final HungSignBlock BIRCH_WOOD_HUNG_SIGN = register("birch_wood_hung_sign", Blocks.BIRCH_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBlock JUNGLE_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.JUNGLE_WOOD);
+  public static final HungSignBlock JUNGLE_WOOD_HUNG_SIGN = register("jungle_wood_hung_sign", Blocks.JUNGLE_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBlock ACACIA_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.ACACIA_WOOD);
+  public static final HungSignBlock ACACIA_WOOD_HUNG_SIGN = register("acacia_wood_hung_sign", Blocks.ACACIA_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBlock CHERRY_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.CHERRY_WOOD);
+  public static final HungSignBlock CHERRY_WOOD_HUNG_SIGN = register("cherry_wood_hung_sign", Blocks.CHERRY_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBlock DARK_OAK_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.DARK_OAK_WOOD);
+  public static final HungSignBlock DARK_OAK_WOOD_HUNG_SIGN = register("dark_oak_wood_hung_sign", Blocks.DARK_OAK_WOOD);
+  public static final HungSignBlock PALE_OAK_WOOD_HUNG_SIGN = register("pale_oak_wood_hung_sign", Blocks.PALE_OAK_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBlock MANGROVE_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.MANGROVE_WOOD);
+  public static final HungSignBlock MANGROVE_WOOD_HUNG_SIGN = register("mangrove_wood_hung_sign", Blocks.MANGROVE_WOOD);
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock CRIMSON_HYPHAE_HUNG_SIGN = new HungSignBlock(Blocks.CRIMSON_HYPHAE);
+  public static final HungSignBlock CRIMSON_HYPHAE_HUNG_SIGN = register("crimson_hyphae_hung_sign", Blocks.CRIMSON_HYPHAE);
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock WARPED_HYPHAE_HUNG_SIGN = new HungSignBlock(Blocks.WARPED_HYPHAE);
+  public static final HungSignBlock WARPED_HYPHAE_HUNG_SIGN = register("warped_hyphae_hung_sign", Blocks.WARPED_HYPHAE);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBlock STRIPPED_OAK_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_OAK_WOOD);
+  public static final HungSignBlock STRIPPED_OAK_WOOD_HUNG_SIGN = register("stripped_oak_wood_hung_sign", Blocks.STRIPPED_OAK_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBlock STRIPPED_SPRUCE_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_SPRUCE_WOOD);
+  public static final HungSignBlock STRIPPED_SPRUCE_WOOD_HUNG_SIGN = register("stripped_spruce_wood_hung_sign", Blocks.STRIPPED_SPRUCE_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBlock STRIPPED_BIRCH_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_BIRCH_WOOD);
+  public static final HungSignBlock STRIPPED_BIRCH_WOOD_HUNG_SIGN = register("stripped_birch_wood_hung_sign", Blocks.STRIPPED_BIRCH_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBlock STRIPPED_JUNGLE_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_JUNGLE_WOOD);
+  public static final HungSignBlock STRIPPED_JUNGLE_WOOD_HUNG_SIGN = register("stripped_jungle_wood_hung_sign", Blocks.STRIPPED_JUNGLE_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBlock STRIPPED_ACACIA_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_ACACIA_WOOD);
+  public static final HungSignBlock STRIPPED_ACACIA_WOOD_HUNG_SIGN = register("stripped_acacia_wood_hung_sign", Blocks.STRIPPED_ACACIA_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBlock STRIPPED_CHERRY_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_CHERRY_WOOD);
+  public static final HungSignBlock STRIPPED_CHERRY_WOOD_HUNG_SIGN = register("stripped_cherry_wood_hung_sign", Blocks.STRIPPED_CHERRY_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBlock STRIPPED_DARK_OAK_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_DARK_OAK_WOOD);
+  public static final HungSignBlock STRIPPED_DARK_OAK_WOOD_HUNG_SIGN = register("stripped_dark_oak_wood_hung_sign", Blocks.STRIPPED_DARK_OAK_WOOD);
+  public static final HungSignBlock STRIPPED_PALE_OAK_WOOD_HUNG_SIGN = register("stripped_pale_oak_wood_hung_sign", Blocks.STRIPPED_PALE_OAK_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBlock STRIPPED_MANGROVE_WOOD_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_MANGROVE_WOOD, Block.Settings.copy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED));
+  public static final HungSignBlock STRIPPED_MANGROVE_WOOD_HUNG_SIGN = register("stripped_mangrove_wood_hung_sign", Blocks.STRIPPED_MANGROVE_WOOD, Block.Settings.copy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED));
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock STRIPPED_CRIMSON_HYPHAE_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_CRIMSON_HYPHAE);
+  public static final HungSignBlock STRIPPED_CRIMSON_HYPHAE_HUNG_SIGN = register("stripped_crimson_hyphae_hung_sign", Blocks.STRIPPED_CRIMSON_HYPHAE);
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock STRIPPED_WARPED_HYPHAE_HUNG_SIGN = new HungSignBlock(Blocks.STRIPPED_WARPED_HYPHAE);
+  public static final HungSignBlock STRIPPED_WARPED_HYPHAE_HUNG_SIGN = register("stripped_warped_hyphae_hung_sign", Blocks.STRIPPED_WARPED_HYPHAE);
 
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock OAK_HUNG_SIGN = new HungSignBlock(Blocks.OAK_PLANKS);
+  public static final HungSignBlock OAK_HUNG_SIGN = register("oak_hung_sign", Blocks.OAK_PLANKS);
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock SPRUCE_HUNG_SIGN = new HungSignBlock(Blocks.SPRUCE_PLANKS);
+  public static final HungSignBlock SPRUCE_HUNG_SIGN = register("spruce_hung_sign", Blocks.SPRUCE_PLANKS);
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock BIRCH_HUNG_SIGN = new HungSignBlock(Blocks.BIRCH_PLANKS);
+  public static final HungSignBlock BIRCH_HUNG_SIGN = register("birch_hung_sign", Blocks.BIRCH_PLANKS);
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock JUNGLE_HUNG_SIGN = new HungSignBlock(Blocks.JUNGLE_PLANKS);
+  public static final HungSignBlock JUNGLE_HUNG_SIGN = register("jungle_hung_sign", Blocks.JUNGLE_PLANKS);
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock ACACIA_HUNG_SIGN = new HungSignBlock(Blocks.ACACIA_PLANKS);
+  public static final HungSignBlock ACACIA_HUNG_SIGN = register("acacia_hung_sign", Blocks.ACACIA_PLANKS);
   @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
-  public static final HungSignBlock CHERRY_HUNG_SIGN = new HungSignBlock(Blocks.CHERRY_PLANKS);
+  public static final HungSignBlock CHERRY_HUNG_SIGN = register("cherry_hung_sign", Blocks.CHERRY_PLANKS);
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock DARK_OAK_HUNG_SIGN = new HungSignBlock(Blocks.DARK_OAK_PLANKS);
+  public static final HungSignBlock DARK_OAK_HUNG_SIGN = register("dark_oak_hung_sign", Blocks.DARK_OAK_PLANKS);
+  public static final HungSignBlock PALE_OAK_HUNG_SIGN = register("pale_oak_hung_sign", Blocks.PALE_OAK_PLANKS);
   @ApiStatus.AvailableSince("0.2.0-mc1.19")
-  public static final HungSignBlock MANGROVE_HUNG_SIGN = new HungSignBlock(Blocks.MANGROVE_PLANKS);
+  public static final HungSignBlock MANGROVE_HUNG_SIGN = register("mangrove_hung_sign", Blocks.MANGROVE_PLANKS);
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock CRIMSON_HUNG_SIGN = new HungSignBlock(Blocks.CRIMSON_PLANKS);
+  public static final HungSignBlock CRIMSON_HUNG_SIGN = register("crimson_hung_sign", Blocks.CRIMSON_PLANKS);
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock WARPED_HUNG_SIGN = new HungSignBlock(Blocks.WARPED_PLANKS);
+  public static final HungSignBlock WARPED_HUNG_SIGN = register("warped_hung_sign", Blocks.WARPED_PLANKS);
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final HungSignBlock BAMBOO_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))));
+  public static final HungSignBlock BAMBOO_HUNG_SIGN = register("bamboo_hung_sign", Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(MapColor.DARK_GREEN));
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final HungSignBlock BAMBOO_PLANK_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_PLANKS, Block.Settings.copy(Blocks.BAMBOO_PLANKS));
+  public static final HungSignBlock BAMBOO_PLANK_HUNG_SIGN = register("bamboo_plank_hung_sign", Blocks.BAMBOO_PLANKS, Block.Settings.copy(Blocks.BAMBOO_PLANKS));
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final HungSignBlock BAMBOO_MOSAIC_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_MOSAIC, Block.Settings.copy(Blocks.BAMBOO_MOSAIC));
+  public static final HungSignBlock BAMBOO_MOSAIC_HUNG_SIGN = register("bamboo_mosaic_hung_sign", Blocks.BAMBOO_MOSAIC, Block.Settings.copy(Blocks.BAMBOO_MOSAIC));
 
   // 木告示牌杆部分。
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock OAK_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.OAK_WOOD);
+  public static final HungSignBarBlock OAK_HUNG_SIGN_BAR = registerBar("oak_hung_sign_bar", Blocks.OAK_WOOD);
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock SPRUCE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.SPRUCE_WOOD);
+  public static final HungSignBarBlock SPRUCE_HUNG_SIGN_BAR = registerBar("spruce_hung_sign_bar", Blocks.SPRUCE_WOOD);
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock BIRCH_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.BIRCH_WOOD);
+  public static final HungSignBarBlock BIRCH_HUNG_SIGN_BAR = registerBar("birch_hung_sign_bar", Blocks.BIRCH_WOOD);
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock JUNGLE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.JUNGLE_WOOD);
+  public static final HungSignBarBlock JUNGLE_HUNG_SIGN_BAR = registerBar("jungle_hung_sign_bar", Blocks.JUNGLE_WOOD);
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock ACACIA_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.ACACIA_WOOD);
+  public static final HungSignBarBlock ACACIA_HUNG_SIGN_BAR = registerBar("acacia_hung_sign_bar", Blocks.ACACIA_WOOD);
   @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
-  public static final HungSignBarBlock CHERRY_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.CHERRY_WOOD);
+  public static final HungSignBarBlock CHERRY_HUNG_SIGN_BAR = registerBar("cherry_hung_sign_bar", Blocks.CHERRY_WOOD);
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock DARK_OAK_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.DARK_OAK_WOOD);
+  public static final HungSignBarBlock DARK_OAK_HUNG_SIGN_BAR = registerBar("dark_oak_hung_sign_bar", Blocks.DARK_OAK_WOOD);
+  public static final HungSignBarBlock PALE_OAK_HUNG_SIGN_BAR = registerBar("pale_oak_hung_sign_bar", Blocks.PALE_OAK_WOOD);
   @ApiStatus.AvailableSince("0.2.0-mc1.19")
-  public static final HungSignBarBlock MANGROVE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.MANGROVE_WOOD);
+  public static final HungSignBarBlock MANGROVE_HUNG_SIGN_BAR = registerBar("mangrove_hung_sign_bar", Blocks.MANGROVE_WOOD);
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock CRIMSON_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.CRIMSON_HYPHAE);
+  public static final HungSignBarBlock CRIMSON_HUNG_SIGN_BAR = registerBar("crimson_hung_sign_bar", Blocks.CRIMSON_HYPHAE);
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock WARPED_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.WARPED_HYPHAE);
+  public static final HungSignBarBlock WARPED_HUNG_SIGN_BAR = registerBar("warped_hung_sign_bar", Blocks.WARPED_HYPHAE);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBarBlock STRIPPED_OAK_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.OAK_WOOD);
+  public static final HungSignBarBlock STRIPPED_OAK_HUNG_SIGN_BAR = registerBar("stripped_oak_hung_sign_bar", Blocks.OAK_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBarBlock STRIPPED_SPRUCE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_SPRUCE_WOOD);
+  public static final HungSignBarBlock STRIPPED_SPRUCE_HUNG_SIGN_BAR = registerBar("stripped_spruce_hung_sign_bar", Blocks.STRIPPED_SPRUCE_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBarBlock STRIPPED_BIRCH_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_BIRCH_WOOD);
+  public static final HungSignBarBlock STRIPPED_BIRCH_HUNG_SIGN_BAR = registerBar("stripped_birch_hung_sign_bar", Blocks.STRIPPED_BIRCH_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBarBlock STRIPPED_JUNGLE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_JUNGLE_WOOD);
+  public static final HungSignBarBlock STRIPPED_JUNGLE_HUNG_SIGN_BAR = registerBar("stripped_jungle_hung_sign_bar", Blocks.STRIPPED_JUNGLE_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBarBlock STRIPPED_ACACIA_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_ACACIA_WOOD);
+  public static final HungSignBarBlock STRIPPED_ACACIA_HUNG_SIGN_BAR = registerBar("stripped_acacia_hung_sign_bar", Blocks.STRIPPED_ACACIA_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBarBlock STRIPPED_CHERRY_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_CHERRY_WOOD);
+  public static final HungSignBarBlock STRIPPED_CHERRY_HUNG_SIGN_BAR = registerBar("stripped_cherry_hung_sign_bar", Blocks.STRIPPED_CHERRY_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBarBlock STRIPPED_DARK_OAK_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_DARK_OAK_WOOD);
+  public static final HungSignBarBlock STRIPPED_DARK_OAK_HUNG_SIGN_BAR = registerBar("stripped_dark_oak_hung_sign_bar", Blocks.STRIPPED_DARK_OAK_WOOD);
+  public static final HungSignBarBlock STRIPPED_PALE_OAK_HUNG_SIGN_BAR = registerBar("stripped_pale_oak_hung_sign_bar", Blocks.STRIPPED_PALE_OAK_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBarBlock STRIPPED_MANGROVE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_MANGROVE_WOOD, Block.Settings.copy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED));
+  public static final HungSignBarBlock STRIPPED_MANGROVE_HUNG_SIGN_BAR = registerBar("stripped_mangrove_hung_sign_bar", Blocks.STRIPPED_MANGROVE_WOOD, Block.Settings.copy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED));
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBarBlock STRIPPED_CRIMSON_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_CRIMSON_HYPHAE);
+  public static final HungSignBarBlock STRIPPED_CRIMSON_HUNG_SIGN_BAR = registerBar("stripped_crimson_hung_sign_bar", Blocks.STRIPPED_CRIMSON_HYPHAE);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final HungSignBarBlock STRIPPED_WARPED_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STRIPPED_WARPED_HYPHAE);
+  public static final HungSignBarBlock STRIPPED_WARPED_HUNG_SIGN_BAR = registerBar("stripped_warped_hung_sign_bar", Blocks.STRIPPED_WARPED_HYPHAE);
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final HungSignBarBlock BAMBOO_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))));
+  public static final HungSignBarBlock BAMBOO_HUNG_SIGN_BAR = registerBar("bamboo_hung_sign_bar", Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(MapColor.DARK_GREEN));
 
   static {
     OAK_WOOD_HUNG_SIGN.baseTexture = OAK_WOOD_HUNG_SIGN.barTexture = OAK_HUNG_SIGN.barTexture = Identifier.ofVanilla("block/oak_log");
@@ -158,6 +160,7 @@ public final class HungSignBlocks extends MishangucBlocks {
     ACACIA_WOOD_HUNG_SIGN.baseTexture = ACACIA_WOOD_HUNG_SIGN.barTexture = ACACIA_HUNG_SIGN.barTexture = Identifier.ofVanilla("block/acacia_log");
     CHERRY_WOOD_HUNG_SIGN.baseTexture = CHERRY_WOOD_HUNG_SIGN.barTexture = CHERRY_HUNG_SIGN.barTexture = Identifier.ofVanilla("block/cherry_log");
     DARK_OAK_WOOD_HUNG_SIGN.baseTexture = DARK_OAK_WOOD_HUNG_SIGN.barTexture = DARK_OAK_HUNG_SIGN.barTexture = Identifier.ofVanilla("block/dark_oak_log");
+    PALE_OAK_WOOD_HUNG_SIGN.baseTexture = PALE_OAK_WOOD_HUNG_SIGN.barTexture = PALE_OAK_HUNG_SIGN.barTexture = Identifier.ofVanilla("block/pale_oak_log");
     MANGROVE_WOOD_HUNG_SIGN.baseTexture = MANGROVE_WOOD_HUNG_SIGN.barTexture = MANGROVE_HUNG_SIGN.barTexture = Identifier.ofVanilla("block/mangrove_log");
     CRIMSON_HYPHAE_HUNG_SIGN.baseTexture = CRIMSON_HYPHAE_HUNG_SIGN.barTexture = CRIMSON_HUNG_SIGN.barTexture = Identifier.ofVanilla("block/crimson_stem");
     WARPED_HYPHAE_HUNG_SIGN.baseTexture = WARPED_HYPHAE_HUNG_SIGN.barTexture = WARPED_HUNG_SIGN.barTexture = Identifier.ofVanilla("block/warped_stem");
@@ -168,6 +171,7 @@ public final class HungSignBlocks extends MishangucBlocks {
     STRIPPED_ACACIA_WOOD_HUNG_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_acacia_log");
     STRIPPED_CHERRY_WOOD_HUNG_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_cherry_log");
     STRIPPED_DARK_OAK_WOOD_HUNG_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_dark_oak_log");
+    STRIPPED_PALE_OAK_WOOD_HUNG_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_pale_oak_log");
     STRIPPED_MANGROVE_WOOD_HUNG_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_mangrove_log");
     STRIPPED_CRIMSON_HYPHAE_HUNG_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_crimson_stem");
     STRIPPED_WARPED_HYPHAE_HUNG_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_warped_stem");
@@ -178,6 +182,7 @@ public final class HungSignBlocks extends MishangucBlocks {
     ACACIA_HUNG_SIGN.textureTop = Identifier.ofVanilla("block/acacia_log");
     CHERRY_HUNG_SIGN.textureTop = Identifier.ofVanilla("block/cherry_log");
     DARK_OAK_HUNG_SIGN.textureTop = Identifier.ofVanilla("block/dark_oak_log");
+    PALE_OAK_HUNG_SIGN.textureTop = Identifier.ofVanilla("block/pale_oak_log");
     MANGROVE_HUNG_SIGN.textureTop = Identifier.ofVanilla("block/mangrove_log");
     CRIMSON_HUNG_SIGN.textureTop = Identifier.ofVanilla("block/crimson_stem");
     WARPED_HUNG_SIGN.textureTop = Identifier.ofVanilla("block/warped_stem");
@@ -188,6 +193,7 @@ public final class HungSignBlocks extends MishangucBlocks {
     ACACIA_HUNG_SIGN_BAR.texture = Identifier.ofVanilla("block/acacia_log");
     CHERRY_HUNG_SIGN_BAR.texture = Identifier.ofVanilla("block/cherry_log");
     DARK_OAK_HUNG_SIGN_BAR.texture = Identifier.ofVanilla("block/dark_oak_log");
+    PALE_OAK_HUNG_SIGN_BAR.texture = Identifier.ofVanilla("block/pale_oak_log");
     MANGROVE_HUNG_SIGN_BAR.texture = Identifier.ofVanilla("block/mangrove_log");
     CRIMSON_HUNG_SIGN_BAR.texture = Identifier.ofVanilla("block/crimson_stem");
     WARPED_HUNG_SIGN_BAR.texture = Identifier.ofVanilla("block/warped_stem");
@@ -198,6 +204,7 @@ public final class HungSignBlocks extends MishangucBlocks {
     STRIPPED_ACACIA_HUNG_SIGN_BAR.texture = Identifier.ofVanilla("block/stripped_acacia_log");
     STRIPPED_CHERRY_HUNG_SIGN_BAR.texture = Identifier.ofVanilla("block/stripped_cherry_log");
     STRIPPED_DARK_OAK_HUNG_SIGN_BAR.texture = Identifier.ofVanilla("block/stripped_dark_oak_log");
+    STRIPPED_PALE_OAK_HUNG_SIGN_BAR.texture = Identifier.ofVanilla("block/stripped_pale_oak_log");
     STRIPPED_MANGROVE_HUNG_SIGN_BAR.texture = Identifier.ofVanilla("block/stripped_mangrove_log");
     STRIPPED_CRIMSON_HUNG_SIGN_BAR.texture = Identifier.ofVanilla("block/stripped_crimson_stem");
     STRIPPED_WARPED_HUNG_SIGN_BAR.texture = Identifier.ofVanilla("block/stripped_warped_stem");
@@ -206,58 +213,42 @@ public final class HungSignBlocks extends MishangucBlocks {
 
   // 混凝土告示牌部分
 
-  public static final HungSignBlock WHITE_CONCRETE_HUNG_SIGN =
-      new HungSignBlock(Blocks.WHITE_CONCRETE);
+  public static final HungSignBlock WHITE_CONCRETE_HUNG_SIGN = register("white_concrete_hung_sign", Blocks.WHITE_CONCRETE);
 
-  public static final HungSignBlock ORANGE_CONCRETE_HUNG_SIGN =
-      new HungSignBlock(Blocks.ORANGE_CONCRETE);
+  public static final HungSignBlock ORANGE_CONCRETE_HUNG_SIGN = register("orange_concrete_hung_sign", Blocks.ORANGE_CONCRETE);
 
-  public static final HungSignBlock MAGENTA_CONCRETE_HUNG_SIGN =
-      new HungSignBlock(Blocks.MAGENTA_CONCRETE);
+  public static final HungSignBlock MAGENTA_CONCRETE_HUNG_SIGN = register("magenta_concrete_hung_sign", Blocks.MAGENTA_CONCRETE);
 
-  public static final HungSignBlock LIGHT_BLUE_CONCRETE_HUNG_SIGN =
-      new HungSignBlock(Blocks.LIGHT_BLUE_CONCRETE);
+  public static final HungSignBlock LIGHT_BLUE_CONCRETE_HUNG_SIGN = register("light_blue_concrete_hung_sign", Blocks.LIGHT_BLUE_CONCRETE);
 
-  public static final HungSignBlock YELLOW_CONCRETE_HUNG_SIGN =
-      new HungSignBlock(Blocks.YELLOW_CONCRETE);
+  public static final HungSignBlock YELLOW_CONCRETE_HUNG_SIGN = register("yellow_concrete_hung_sign", Blocks.YELLOW_CONCRETE);
 
-  public static final HungSignBlock LIME_CONCRETE_HUNG_SIGN =
-      new HungSignBlock(Blocks.LIME_CONCRETE);
+  public static final HungSignBlock LIME_CONCRETE_HUNG_SIGN = register("lime_concrete_hung_sign", Blocks.LIME_CONCRETE);
 
-  public static final HungSignBlock PINK_CONCRETE_HUNG_SIGN =
-      new HungSignBlock(Blocks.PINK_CONCRETE);
+  public static final HungSignBlock PINK_CONCRETE_HUNG_SIGN = register("pink_concrete_hung_sign", Blocks.PINK_CONCRETE);
 
-  public static final HungSignBlock GRAY_CONCRETE_HUNG_SIGN =
-      new HungSignBlock(Blocks.GRAY_CONCRETE);
+  public static final HungSignBlock GRAY_CONCRETE_HUNG_SIGN = register("gray_concrete_hung_sign", Blocks.GRAY_CONCRETE);
 
-  public static final HungSignBlock LIGHT_GRAY_CONCRETE_HUNG_SIGN =
-      new HungSignBlock(Blocks.LIGHT_GRAY_CONCRETE);
+  public static final HungSignBlock LIGHT_GRAY_CONCRETE_HUNG_SIGN = register("light_gray_concrete_hung_sign", Blocks.LIGHT_GRAY_CONCRETE);
 
-  public static final HungSignBlock CYAN_CONCRETE_HUNG_SIGN =
-      new HungSignBlock(Blocks.CYAN_CONCRETE);
+  public static final HungSignBlock CYAN_CONCRETE_HUNG_SIGN = register("cyan_concrete_hung_sign", Blocks.CYAN_CONCRETE);
 
-  public static final HungSignBlock PURPLE_CONCRETE_HUNG_SIGN =
-      new HungSignBlock(Blocks.PURPLE_CONCRETE);
+  public static final HungSignBlock PURPLE_CONCRETE_HUNG_SIGN = register("purple_concrete_hung_sign", Blocks.PURPLE_CONCRETE);
 
-  public static final HungSignBlock BLUE_CONCRETE_HUNG_SIGN =
-      new HungSignBlock(Blocks.BLUE_CONCRETE);
+  public static final HungSignBlock BLUE_CONCRETE_HUNG_SIGN = register("blue_concrete_hung_sign", Blocks.BLUE_CONCRETE);
 
-  public static final HungSignBlock BROWN_CONCRETE_HUNG_SIGN =
-      new HungSignBlock(Blocks.BROWN_CONCRETE);
+  public static final HungSignBlock BROWN_CONCRETE_HUNG_SIGN = register("brown_concrete_hung_sign", Blocks.BROWN_CONCRETE);
 
-  public static final HungSignBlock GREEN_CONCRETE_HUNG_SIGN =
-      new HungSignBlock(Blocks.GREEN_CONCRETE);
+  public static final HungSignBlock GREEN_CONCRETE_HUNG_SIGN = register("green_concrete_hung_sign", Blocks.GREEN_CONCRETE);
 
-  public static final HungSignBlock RED_CONCRETE_HUNG_SIGN =
-      new HungSignBlock(Blocks.RED_CONCRETE);
+  public static final HungSignBlock RED_CONCRETE_HUNG_SIGN = register("red_concrete_hung_sign", Blocks.RED_CONCRETE);
 
-  public static final HungSignBlock BLACK_CONCRETE_HUNG_SIGN =
-      new HungSignBlock(Blocks.BLACK_CONCRETE);
+  public static final HungSignBlock BLACK_CONCRETE_HUNG_SIGN = register("black_concrete_hung_sign", Blocks.BLACK_CONCRETE);
 
   /**
    * 自定义颜色的混凝土悬挂告示牌。
    */
-  public static final ColoredHungSignBlock COLORED_CONCRETE_HUNG_SIGN = new ColoredHungSignBlock(ColoredBlocks.COLORED_CONCRETE);
+  public static final ColoredHungSignBlock COLORED_CONCRETE_HUNG_SIGN = registerColored("colored_concrete_hung_sign", ColoredBlocks.COLORED_CONCRETE);
 
   /**
    * 由所有混凝土告示牌组成的映射。
@@ -283,58 +274,42 @@ public final class HungSignBlocks extends MishangucBlocks {
 
   // 混凝土告示牌杆
 
-  public static final HungSignBarBlock WHITE_CONCRETE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.WHITE_CONCRETE);
+  public static final HungSignBarBlock WHITE_CONCRETE_HUNG_SIGN_BAR = registerBar("white_concrete_hung_sign_bar", Blocks.WHITE_CONCRETE);
 
-  public static final HungSignBarBlock ORANGE_CONCRETE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.ORANGE_CONCRETE);
+  public static final HungSignBarBlock ORANGE_CONCRETE_HUNG_SIGN_BAR = registerBar("orange_concrete_hung_sign_bar", Blocks.ORANGE_CONCRETE);
 
-  public static final HungSignBarBlock MAGENTA_CONCRETE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.MAGENTA_CONCRETE);
+  public static final HungSignBarBlock MAGENTA_CONCRETE_HUNG_SIGN_BAR = registerBar("magenta_concrete_hung_sign_bar", Blocks.MAGENTA_CONCRETE);
 
-  public static final HungSignBarBlock LIGHT_BLUE_CONCRETE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.LIGHT_BLUE_CONCRETE);
+  public static final HungSignBarBlock LIGHT_BLUE_CONCRETE_HUNG_SIGN_BAR = registerBar("light_blue_concrete_hung_sign_bar", Blocks.LIGHT_BLUE_CONCRETE);
 
-  public static final HungSignBarBlock YELLOW_CONCRETE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.YELLOW_CONCRETE);
+  public static final HungSignBarBlock YELLOW_CONCRETE_HUNG_SIGN_BAR = registerBar("yellow_concrete_hung_sign_bar", Blocks.YELLOW_CONCRETE);
 
-  public static final HungSignBarBlock LIME_CONCRETE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.LIME_CONCRETE);
+  public static final HungSignBarBlock LIME_CONCRETE_HUNG_SIGN_BAR = registerBar("lime_concrete_hung_sign_bar", Blocks.LIME_CONCRETE);
 
-  public static final HungSignBarBlock PINK_CONCRETE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.PINK_CONCRETE);
+  public static final HungSignBarBlock PINK_CONCRETE_HUNG_SIGN_BAR = registerBar("pink_concrete_hung_sign_bar", Blocks.PINK_CONCRETE);
 
-  public static final HungSignBarBlock GRAY_CONCRETE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.GRAY_CONCRETE);
+  public static final HungSignBarBlock GRAY_CONCRETE_HUNG_SIGN_BAR = registerBar("gray_concrete_hung_sign_bar", Blocks.GRAY_CONCRETE);
 
-  public static final HungSignBarBlock LIGHT_GRAY_CONCRETE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.LIGHT_GRAY_CONCRETE);
+  public static final HungSignBarBlock LIGHT_GRAY_CONCRETE_HUNG_SIGN_BAR = registerBar("light_gray_concrete_hung_sign_bar", Blocks.LIGHT_GRAY_CONCRETE);
 
-  public static final HungSignBarBlock CYAN_CONCRETE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.CYAN_CONCRETE);
+  public static final HungSignBarBlock CYAN_CONCRETE_HUNG_SIGN_BAR = registerBar("cyan_concrete_hung_sign_bar", Blocks.CYAN_CONCRETE);
 
-  public static final HungSignBarBlock PURPLE_CONCRETE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.PURPLE_CONCRETE);
+  public static final HungSignBarBlock PURPLE_CONCRETE_HUNG_SIGN_BAR = registerBar("purple_concrete_hung_sign_bar", Blocks.PURPLE_CONCRETE);
 
-  public static final HungSignBarBlock BLUE_CONCRETE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.BLUE_CONCRETE);
+  public static final HungSignBarBlock BLUE_CONCRETE_HUNG_SIGN_BAR = registerBar("blue_concrete_hung_sign_bar", Blocks.BLUE_CONCRETE);
 
-  public static final HungSignBarBlock BROWN_CONCRETE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.BROWN_CONCRETE);
+  public static final HungSignBarBlock BROWN_CONCRETE_HUNG_SIGN_BAR = registerBar("brown_concrete_hung_sign_bar", Blocks.BROWN_CONCRETE);
 
-  public static final HungSignBarBlock GREEN_CONCRETE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.GREEN_CONCRETE);
+  public static final HungSignBarBlock GREEN_CONCRETE_HUNG_SIGN_BAR = registerBar("green_concrete_hung_sign_bar", Blocks.GREEN_CONCRETE);
 
-  public static final HungSignBarBlock RED_CONCRETE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.RED_CONCRETE);
+  public static final HungSignBarBlock RED_CONCRETE_HUNG_SIGN_BAR = registerBar("red_concrete_hung_sign_bar", Blocks.RED_CONCRETE);
 
-  public static final HungSignBarBlock BLACK_CONCRETE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.BLACK_CONCRETE);
+  public static final HungSignBarBlock BLACK_CONCRETE_HUNG_SIGN_BAR = registerBar("black_concrete_hung_sign_bar", Blocks.BLACK_CONCRETE);
 
   /**
    * 自定义颜色的混凝土悬挂告示牌杆。
    */
-  public static final HungSignBarBlock COLORED_CONCRETE_HUNG_SIGN_BAR = new ColoredHungSignBarBlock(ColoredBlocks.COLORED_CONCRETE);
+  public static final HungSignBarBlock COLORED_CONCRETE_HUNG_SIGN_BAR = registerColoredBar("colored_concrete_hung_sign_bar", ColoredBlocks.COLORED_CONCRETE);
 
   /**
    * 由所有混凝土告示牌杆组成的映射。
@@ -361,56 +336,40 @@ public final class HungSignBlocks extends MishangucBlocks {
 
   // 陶瓦告示牌部分
 
-  public static final HungSignBlock WHITE_TERRACOTTA_HUNG_SIGN =
-      new HungSignBlock(Blocks.WHITE_TERRACOTTA);
+  public static final HungSignBlock WHITE_TERRACOTTA_HUNG_SIGN = register("white_terracotta_hung_sign", Blocks.WHITE_TERRACOTTA);
 
-  public static final HungSignBlock ORANGE_TERRACOTTA_HUNG_SIGN =
-      new HungSignBlock(Blocks.ORANGE_TERRACOTTA);
+  public static final HungSignBlock ORANGE_TERRACOTTA_HUNG_SIGN = register("orange_terracotta_hung_sign", Blocks.ORANGE_TERRACOTTA);
 
-  public static final HungSignBlock MAGENTA_TERRACOTTA_HUNG_SIGN =
-      new HungSignBlock(Blocks.MAGENTA_TERRACOTTA);
+  public static final HungSignBlock MAGENTA_TERRACOTTA_HUNG_SIGN = register("magenta_terracotta_hung_sign", Blocks.MAGENTA_TERRACOTTA);
 
-  public static final HungSignBlock LIGHT_BLUE_TERRACOTTA_HUNG_SIGN =
-      new HungSignBlock(Blocks.LIGHT_BLUE_TERRACOTTA);
+  public static final HungSignBlock LIGHT_BLUE_TERRACOTTA_HUNG_SIGN = register("light_blue_terracotta_hung_sign", Blocks.LIGHT_BLUE_TERRACOTTA);
 
-  public static final HungSignBlock YELLOW_TERRACOTTA_HUNG_SIGN =
-      new HungSignBlock(Blocks.YELLOW_TERRACOTTA);
+  public static final HungSignBlock YELLOW_TERRACOTTA_HUNG_SIGN = register("yellow_terracotta_hung_sign", Blocks.YELLOW_TERRACOTTA);
 
-  public static final HungSignBlock LIME_TERRACOTTA_HUNG_SIGN =
-      new HungSignBlock(Blocks.LIME_TERRACOTTA);
+  public static final HungSignBlock LIME_TERRACOTTA_HUNG_SIGN = register("lime_terracotta_hung_sign", Blocks.LIME_TERRACOTTA);
 
-  public static final HungSignBlock PINK_TERRACOTTA_HUNG_SIGN =
-      new HungSignBlock(Blocks.PINK_TERRACOTTA);
+  public static final HungSignBlock PINK_TERRACOTTA_HUNG_SIGN = register("pink_terracotta_hung_sign", Blocks.PINK_TERRACOTTA);
 
-  public static final HungSignBlock GRAY_TERRACOTTA_HUNG_SIGN =
-      new HungSignBlock(Blocks.GRAY_TERRACOTTA);
+  public static final HungSignBlock GRAY_TERRACOTTA_HUNG_SIGN = register("gray_terracotta_hung_sign", Blocks.GRAY_TERRACOTTA);
 
-  public static final HungSignBlock LIGHT_GRAY_TERRACOTTA_HUNG_SIGN =
-      new HungSignBlock(Blocks.LIGHT_GRAY_TERRACOTTA);
+  public static final HungSignBlock LIGHT_GRAY_TERRACOTTA_HUNG_SIGN = register("light_gray_terracotta_hung_sign", Blocks.LIGHT_GRAY_TERRACOTTA);
 
-  public static final HungSignBlock CYAN_TERRACOTTA_HUNG_SIGN =
-      new HungSignBlock(Blocks.CYAN_TERRACOTTA);
+  public static final HungSignBlock CYAN_TERRACOTTA_HUNG_SIGN = register("cyan_terracotta_hung_sign", Blocks.CYAN_TERRACOTTA);
 
-  public static final HungSignBlock PURPLE_TERRACOTTA_HUNG_SIGN =
-      new HungSignBlock(Blocks.PURPLE_TERRACOTTA);
+  public static final HungSignBlock PURPLE_TERRACOTTA_HUNG_SIGN = register("purple_terracotta_hung_sign", Blocks.PURPLE_TERRACOTTA);
 
-  public static final HungSignBlock BLUE_TERRACOTTA_HUNG_SIGN =
-      new HungSignBlock(Blocks.BLUE_TERRACOTTA);
+  public static final HungSignBlock BLUE_TERRACOTTA_HUNG_SIGN = register("blue_terracotta_hung_sign", Blocks.BLUE_TERRACOTTA);
 
-  public static final HungSignBlock BROWN_TERRACOTTA_HUNG_SIGN =
-      new HungSignBlock(Blocks.BROWN_TERRACOTTA);
+  public static final HungSignBlock BROWN_TERRACOTTA_HUNG_SIGN = register("brown_terracotta_hung_sign", Blocks.BROWN_TERRACOTTA);
 
-  public static final HungSignBlock GREEN_TERRACOTTA_HUNG_SIGN =
-      new HungSignBlock(Blocks.GREEN_TERRACOTTA);
+  public static final HungSignBlock GREEN_TERRACOTTA_HUNG_SIGN = register("green_terracotta_hung_sign", Blocks.GREEN_TERRACOTTA);
 
-  public static final HungSignBlock RED_TERRACOTTA_HUNG_SIGN =
-      new HungSignBlock(Blocks.RED_TERRACOTTA);
+  public static final HungSignBlock RED_TERRACOTTA_HUNG_SIGN = register("red_terracotta_hung_sign", Blocks.RED_TERRACOTTA);
 
-  public static final HungSignBlock BLACK_TERRACOTTA_HUNG_SIGN =
-      new HungSignBlock(Blocks.BLACK_TERRACOTTA);
+  public static final HungSignBlock BLACK_TERRACOTTA_HUNG_SIGN = register("black_terracotta_hung_sign", Blocks.BLACK_TERRACOTTA);
 
   @Beta
-  public static final ColoredHungSignBlock COLORED_TERRACOTTA_HUNG_SIGN = new ColoredHungSignBlock(ColoredBlocks.COLORED_TERRACOTTA);
+  public static final ColoredHungSignBlock COLORED_TERRACOTTA_HUNG_SIGN = registerColored("colored_terracotta_hung_sign", ColoredBlocks.COLORED_TERRACOTTA);
 
   /**
    * 由所有陶瓦告示牌组成的映射。
@@ -436,56 +395,40 @@ public final class HungSignBlocks extends MishangucBlocks {
 
   // 陶瓦告示牌杆
 
-  public static final HungSignBarBlock WHITE_TERRACOTTA_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.WHITE_TERRACOTTA);
+  public static final HungSignBarBlock WHITE_TERRACOTTA_HUNG_SIGN_BAR = registerBar("white_terracotta_hung_sign_bar", Blocks.WHITE_TERRACOTTA);
 
-  public static final HungSignBarBlock ORANGE_TERRACOTTA_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.ORANGE_TERRACOTTA);
+  public static final HungSignBarBlock ORANGE_TERRACOTTA_HUNG_SIGN_BAR = registerBar("orange_terracotta_hung_sign_bar", Blocks.ORANGE_TERRACOTTA);
 
-  public static final HungSignBarBlock MAGENTA_TERRACOTTA_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.MAGENTA_TERRACOTTA);
+  public static final HungSignBarBlock MAGENTA_TERRACOTTA_HUNG_SIGN_BAR = registerBar("magenta_terracotta_hung_sign_bar", Blocks.MAGENTA_TERRACOTTA);
 
-  public static final HungSignBarBlock LIGHT_BLUE_TERRACOTTA_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.LIGHT_BLUE_TERRACOTTA);
+  public static final HungSignBarBlock LIGHT_BLUE_TERRACOTTA_HUNG_SIGN_BAR = registerBar("light_blue_terracotta_hung_sign_bar", Blocks.LIGHT_BLUE_TERRACOTTA);
 
-  public static final HungSignBarBlock YELLOW_TERRACOTTA_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.YELLOW_TERRACOTTA);
+  public static final HungSignBarBlock YELLOW_TERRACOTTA_HUNG_SIGN_BAR = registerBar("yellow_terracotta_hung_sign_bar", Blocks.YELLOW_TERRACOTTA);
 
-  public static final HungSignBarBlock LIME_TERRACOTTA_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.LIME_TERRACOTTA);
+  public static final HungSignBarBlock LIME_TERRACOTTA_HUNG_SIGN_BAR = registerBar("lime_terracotta_hung_sign_bar", Blocks.LIME_TERRACOTTA);
 
-  public static final HungSignBarBlock PINK_TERRACOTTA_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.PINK_TERRACOTTA);
+  public static final HungSignBarBlock PINK_TERRACOTTA_HUNG_SIGN_BAR = registerBar("pink_terracotta_hung_sign_bar", Blocks.PINK_TERRACOTTA);
 
-  public static final HungSignBarBlock GRAY_TERRACOTTA_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.GRAY_TERRACOTTA);
+  public static final HungSignBarBlock GRAY_TERRACOTTA_HUNG_SIGN_BAR = registerBar("gray_terracotta_hung_sign_bar", Blocks.GRAY_TERRACOTTA);
 
-  public static final HungSignBarBlock LIGHT_GRAY_TERRACOTTA_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.LIGHT_GRAY_TERRACOTTA);
+  public static final HungSignBarBlock LIGHT_GRAY_TERRACOTTA_HUNG_SIGN_BAR = registerBar("light_gray_terracotta_hung_sign_bar", Blocks.LIGHT_GRAY_TERRACOTTA);
 
-  public static final HungSignBarBlock CYAN_TERRACOTTA_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.CYAN_TERRACOTTA);
+  public static final HungSignBarBlock CYAN_TERRACOTTA_HUNG_SIGN_BAR = registerBar("cyan_terracotta_hung_sign_bar", Blocks.CYAN_TERRACOTTA);
 
-  public static final HungSignBarBlock PURPLE_TERRACOTTA_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.PURPLE_TERRACOTTA);
+  public static final HungSignBarBlock PURPLE_TERRACOTTA_HUNG_SIGN_BAR = registerBar("purple_terracotta_hung_sign_bar", Blocks.PURPLE_TERRACOTTA);
 
-  public static final HungSignBarBlock BLUE_TERRACOTTA_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.BLUE_TERRACOTTA);
+  public static final HungSignBarBlock BLUE_TERRACOTTA_HUNG_SIGN_BAR = registerBar("blue_terracotta_hung_sign_bar", Blocks.BLUE_TERRACOTTA);
 
-  public static final HungSignBarBlock BROWN_TERRACOTTA_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.BROWN_TERRACOTTA);
+  public static final HungSignBarBlock BROWN_TERRACOTTA_HUNG_SIGN_BAR = registerBar("brown_terracotta_hung_sign_bar", Blocks.BROWN_TERRACOTTA);
 
-  public static final HungSignBarBlock GREEN_TERRACOTTA_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.GREEN_TERRACOTTA);
+  public static final HungSignBarBlock GREEN_TERRACOTTA_HUNG_SIGN_BAR = registerBar("green_terracotta_hung_sign_bar", Blocks.GREEN_TERRACOTTA);
 
-  public static final HungSignBarBlock RED_TERRACOTTA_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.RED_TERRACOTTA);
+  public static final HungSignBarBlock RED_TERRACOTTA_HUNG_SIGN_BAR = registerBar("red_terracotta_hung_sign_bar", Blocks.RED_TERRACOTTA);
 
-  public static final HungSignBarBlock BLACK_TERRACOTTA_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.BLACK_TERRACOTTA);
+  public static final HungSignBarBlock BLACK_TERRACOTTA_HUNG_SIGN_BAR = registerBar("black_terracotta_hung_sign_bar", Blocks.BLACK_TERRACOTTA);
 
   @Beta
-  public static final ColoredHungSignBarBlock COLORED_TERRACOTTA_HUNG_SIGN_BAR = new ColoredHungSignBarBlock(ColoredBlocks.COLORED_TERRACOTTA);
+  public static final ColoredHungSignBarBlock COLORED_TERRACOTTA_HUNG_SIGN_BAR = registerColoredBar("colored_terracotta_hung_sign_bar", ColoredBlocks.COLORED_TERRACOTTA);
 
   /**
    * 由所有陶瓦告示牌杆组成的映射。
@@ -512,56 +455,40 @@ public final class HungSignBlocks extends MishangucBlocks {
 
   // 发光的混凝土告示牌
 
-  public static final GlowingHungSignBlock GLOWING_WHITE_CONCRETE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.WHITE_CONCRETE);
+  public static final GlowingHungSignBlock GLOWING_WHITE_CONCRETE_HUNG_SIGN = registerGlowing("glowing_white_concrete_hung_sign", Blocks.WHITE_CONCRETE);
 
-  public static final GlowingHungSignBlock GLOWING_ORANGE_CONCRETE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.ORANGE_CONCRETE);
+  public static final GlowingHungSignBlock GLOWING_ORANGE_CONCRETE_HUNG_SIGN = registerGlowing("glowing_orange_concrete_hung_sign", Blocks.ORANGE_CONCRETE);
 
-  public static final GlowingHungSignBlock GLOWING_MAGENTA_CONCRETE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.MAGENTA_CONCRETE);
+  public static final GlowingHungSignBlock GLOWING_MAGENTA_CONCRETE_HUNG_SIGN = registerGlowing("glowing_magenta_concrete_hung_sign", Blocks.MAGENTA_CONCRETE);
 
-  public static final GlowingHungSignBlock GLOWING_LIGHT_BLUE_CONCRETE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.LIGHT_BLUE_CONCRETE);
+  public static final GlowingHungSignBlock GLOWING_LIGHT_BLUE_CONCRETE_HUNG_SIGN = registerGlowing("glowing_light_blue_concrete_hung_sign", Blocks.LIGHT_BLUE_CONCRETE);
 
-  public static final GlowingHungSignBlock GLOWING_YELLOW_CONCRETE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.YELLOW_CONCRETE);
+  public static final GlowingHungSignBlock GLOWING_YELLOW_CONCRETE_HUNG_SIGN = registerGlowing("glowing_yellow_concrete_hung_sign", Blocks.YELLOW_CONCRETE);
 
-  public static final GlowingHungSignBlock GLOWING_LIME_CONCRETE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.LIME_CONCRETE);
+  public static final GlowingHungSignBlock GLOWING_LIME_CONCRETE_HUNG_SIGN = registerGlowing("glowing_lime_concrete_hung_sign", Blocks.LIME_CONCRETE);
 
-  public static final GlowingHungSignBlock GLOWING_PINK_CONCRETE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.PINK_CONCRETE);
+  public static final GlowingHungSignBlock GLOWING_PINK_CONCRETE_HUNG_SIGN = registerGlowing("glowing_pink_concrete_hung_sign", Blocks.PINK_CONCRETE);
 
-  public static final GlowingHungSignBlock GLOWING_GRAY_CONCRETE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.GRAY_CONCRETE);
+  public static final GlowingHungSignBlock GLOWING_GRAY_CONCRETE_HUNG_SIGN = registerGlowing("glowing_gray_concrete_hung_sign", Blocks.GRAY_CONCRETE);
 
-  public static final GlowingHungSignBlock GLOWING_LIGHT_GRAY_CONCRETE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.LIGHT_GRAY_CONCRETE);
+  public static final GlowingHungSignBlock GLOWING_LIGHT_GRAY_CONCRETE_HUNG_SIGN = registerGlowing("glowing_light_gray_concrete_hung_sign", Blocks.LIGHT_GRAY_CONCRETE);
 
-  public static final GlowingHungSignBlock GLOWING_CYAN_CONCRETE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.CYAN_CONCRETE);
+  public static final GlowingHungSignBlock GLOWING_CYAN_CONCRETE_HUNG_SIGN = registerGlowing("glowing_cyan_concrete_hung_sign", Blocks.CYAN_CONCRETE);
 
-  public static final GlowingHungSignBlock GLOWING_PURPLE_CONCRETE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.PURPLE_CONCRETE);
+  public static final GlowingHungSignBlock GLOWING_PURPLE_CONCRETE_HUNG_SIGN = registerGlowing("glowing_purple_concrete_hung_sign", Blocks.PURPLE_CONCRETE);
 
-  public static final GlowingHungSignBlock GLOWING_BLUE_CONCRETE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.BLUE_CONCRETE);
+  public static final GlowingHungSignBlock GLOWING_BLUE_CONCRETE_HUNG_SIGN = registerGlowing("glowing_blue_concrete_hung_sign", Blocks.BLUE_CONCRETE);
 
-  public static final GlowingHungSignBlock GLOWING_BROWN_CONCRETE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.BROWN_CONCRETE);
+  public static final GlowingHungSignBlock GLOWING_BROWN_CONCRETE_HUNG_SIGN = registerGlowing("glowing_brown_concrete_hung_sign", Blocks.BROWN_CONCRETE);
 
-  public static final GlowingHungSignBlock GLOWING_GREEN_CONCRETE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.GREEN_CONCRETE);
+  public static final GlowingHungSignBlock GLOWING_GREEN_CONCRETE_HUNG_SIGN = registerGlowing("glowing_green_concrete_hung_sign", Blocks.GREEN_CONCRETE);
 
-  public static final GlowingHungSignBlock GLOWING_RED_CONCRETE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.RED_CONCRETE);
+  public static final GlowingHungSignBlock GLOWING_RED_CONCRETE_HUNG_SIGN = registerGlowing("glowing_red_concrete_hung_sign", Blocks.RED_CONCRETE);
 
-  public static final GlowingHungSignBlock GLOWING_BLACK_CONCRETE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.BLACK_CONCRETE);
+  public static final GlowingHungSignBlock GLOWING_BLACK_CONCRETE_HUNG_SIGN = registerGlowing("glowing_black_concrete_hung_sign", Blocks.BLACK_CONCRETE);
 
   @ApiStatus.AvailableSince("1.0.2")
-  public static final ColoredGlowingHungSignBlock COLORED_GLOWING_CONCRETE_HUNG_SIGN = new ColoredGlowingHungSignBlock(ColoredBlocks.COLORED_CONCRETE);
+  public static final ColoredGlowingHungSignBlock COLORED_GLOWING_CONCRETE_HUNG_SIGN = registerColoredGlowing("colored_glowing_concrete_hung_sign", ColoredBlocks.COLORED_CONCRETE);
 
   /**
    * 由发光的混凝土告示牌组成的映射。
@@ -587,56 +514,40 @@ public final class HungSignBlocks extends MishangucBlocks {
 
   // 发光的陶瓦告示牌
 
-  public static final GlowingHungSignBlock GLOWING_WHITE_TERRACOTTA_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.WHITE_TERRACOTTA);
+  public static final GlowingHungSignBlock GLOWING_WHITE_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_white_terracotta_hung_sign", Blocks.WHITE_TERRACOTTA);
 
-  public static final GlowingHungSignBlock GLOWING_ORANGE_TERRACOTTA_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.ORANGE_TERRACOTTA);
+  public static final GlowingHungSignBlock GLOWING_ORANGE_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_orange_terracotta_hung_sign", Blocks.ORANGE_TERRACOTTA);
 
-  public static final GlowingHungSignBlock GLOWING_MAGENTA_TERRACOTTA_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.MAGENTA_TERRACOTTA);
+  public static final GlowingHungSignBlock GLOWING_MAGENTA_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_magenta_terracotta_hung_sign", Blocks.MAGENTA_TERRACOTTA);
 
-  public static final GlowingHungSignBlock GLOWING_LIGHT_BLUE_TERRACOTTA_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.LIGHT_BLUE_TERRACOTTA);
+  public static final GlowingHungSignBlock GLOWING_LIGHT_BLUE_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_light_blue_terracotta_hung_sign", Blocks.LIGHT_BLUE_TERRACOTTA);
 
-  public static final GlowingHungSignBlock GLOWING_YELLOW_TERRACOTTA_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.YELLOW_TERRACOTTA);
+  public static final GlowingHungSignBlock GLOWING_YELLOW_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_yellow_terracotta_hung_sign", Blocks.YELLOW_TERRACOTTA);
 
-  public static final GlowingHungSignBlock GLOWING_LIME_TERRACOTTA_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.LIME_TERRACOTTA);
+  public static final GlowingHungSignBlock GLOWING_LIME_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_lime_terracotta_hung_sign", Blocks.LIME_TERRACOTTA);
 
-  public static final GlowingHungSignBlock GLOWING_PINK_TERRACOTTA_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.PINK_TERRACOTTA);
+  public static final GlowingHungSignBlock GLOWING_PINK_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_pink_terracotta_hung_sign", Blocks.PINK_TERRACOTTA);
 
-  public static final GlowingHungSignBlock GLOWING_GRAY_TERRACOTTA_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.GRAY_TERRACOTTA);
+  public static final GlowingHungSignBlock GLOWING_GRAY_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_gray_terracotta_hung_sign", Blocks.GRAY_TERRACOTTA);
 
-  public static final GlowingHungSignBlock GLOWING_LIGHT_GRAY_TERRACOTTA_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.LIGHT_GRAY_TERRACOTTA);
+  public static final GlowingHungSignBlock GLOWING_LIGHT_GRAY_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_light_gray_terracotta_hung_sign", Blocks.LIGHT_GRAY_TERRACOTTA);
 
-  public static final GlowingHungSignBlock GLOWING_CYAN_TERRACOTTA_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.CYAN_TERRACOTTA);
+  public static final GlowingHungSignBlock GLOWING_CYAN_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_cyan_terracotta_hung_sign", Blocks.CYAN_TERRACOTTA);
 
-  public static final GlowingHungSignBlock GLOWING_PURPLE_TERRACOTTA_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.PURPLE_TERRACOTTA);
+  public static final GlowingHungSignBlock GLOWING_PURPLE_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_purple_terracotta_hung_sign", Blocks.PURPLE_TERRACOTTA);
 
-  public static final GlowingHungSignBlock GLOWING_BLUE_TERRACOTTA_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.BLUE_TERRACOTTA);
+  public static final GlowingHungSignBlock GLOWING_BLUE_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_blue_terracotta_hung_sign", Blocks.BLUE_TERRACOTTA);
 
-  public static final GlowingHungSignBlock GLOWING_BROWN_TERRACOTTA_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.BROWN_TERRACOTTA);
+  public static final GlowingHungSignBlock GLOWING_BROWN_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_brown_terracotta_hung_sign", Blocks.BROWN_TERRACOTTA);
 
-  public static final GlowingHungSignBlock GLOWING_GREEN_TERRACOTTA_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.GREEN_TERRACOTTA);
+  public static final GlowingHungSignBlock GLOWING_GREEN_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_green_terracotta_hung_sign", Blocks.GREEN_TERRACOTTA);
 
-  public static final GlowingHungSignBlock GLOWING_RED_TERRACOTTA_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.RED_TERRACOTTA);
+  public static final GlowingHungSignBlock GLOWING_RED_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_red_terracotta_hung_sign", Blocks.RED_TERRACOTTA);
 
-  public static final GlowingHungSignBlock GLOWING_BLACK_TERRACOTTA_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.BLACK_TERRACOTTA);
+  public static final GlowingHungSignBlock GLOWING_BLACK_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_black_terracotta_hung_sign", Blocks.BLACK_TERRACOTTA);
 
   @ApiStatus.AvailableSince("1.0.2")
-  public static final ColoredGlowingHungSignBlock COLORED_GLOWING_TERRACOTTA_HUNG_SIGN = new ColoredGlowingHungSignBlock(ColoredBlocks.COLORED_TERRACOTTA);
+  public static final ColoredGlowingHungSignBlock COLORED_GLOWING_TERRACOTTA_HUNG_SIGN = registerColoredGlowing("colored_glowing_terracotta_hung_sign", ColoredBlocks.COLORED_TERRACOTTA);
 
   /**
    * 由发光的陶瓦告示牌组成的映射。
@@ -665,230 +576,222 @@ public final class HungSignBlocks extends MishangucBlocks {
   // 石头
 
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock STONE_HUNG_SIGN = new HungSignBlock(Blocks.STONE);
+  public static final HungSignBlock STONE_HUNG_SIGN = register("stone_hung_sign", Blocks.STONE);
 
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingHungSignBlock GLOWING_STONE_HUNG_SIGN = new GlowingHungSignBlock(Blocks.STONE);
+  public static final GlowingHungSignBlock GLOWING_STONE_HUNG_SIGN = registerGlowing("glowing_stone_hung_sign", Blocks.STONE);
 
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock STONE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STONE);
+  public static final HungSignBarBlock STONE_HUNG_SIGN_BAR = registerBar("stone_hung_sign_bar", Blocks.STONE);
 
   @ApiStatus.AvailableSince("1.0.2")
-  public static final ColoredHungSignBlock COLORED_STONE_HUNG_SIGN = new ColoredHungSignBlock(ColoredBlocks.COLORED_STONE);
+  public static final ColoredHungSignBlock COLORED_STONE_HUNG_SIGN = registerColored("colored_stone_hung_sign", ColoredBlocks.COLORED_STONE);
 
   @ApiStatus.AvailableSince("1.0.2")
-  public static final ColoredGlowingHungSignBlock COLORED_GLOWING_STONE_HUNG_SIGN = new ColoredGlowingHungSignBlock(ColoredBlocks.COLORED_STONE);
+  public static final ColoredGlowingHungSignBlock COLORED_GLOWING_STONE_HUNG_SIGN = registerColoredGlowing("colored_glowing_stone_hung_sign", ColoredBlocks.COLORED_STONE);
 
   @ApiStatus.AvailableSince("1.0.2")
-  public static final ColoredHungSignBarBlock COLORED_STONE_HUNG_SIGN_BAR = new ColoredHungSignBarBlock(ColoredBlocks.COLORED_STONE);
+  public static final ColoredHungSignBarBlock COLORED_STONE_HUNG_SIGN_BAR = registerColoredBar("colored_stone_hung_sign_bar", ColoredBlocks.COLORED_STONE);
 
   // 圆石
 
   @ApiStatus.AvailableSince("0.2.4")
-  public static final HungSignBlock COBBLESTONE_HUNG_SIGN = new HungSignBlock(Blocks.COBBLESTONE);
+  public static final HungSignBlock COBBLESTONE_HUNG_SIGN = register("cobblestone_hung_sign", Blocks.COBBLESTONE);
 
   @ApiStatus.AvailableSince("0.2.4")
-  public static final GlowingHungSignBlock GLOWING_COBBLESTONE_HUNG_SIGN = new GlowingHungSignBlock(Blocks.COBBLESTONE);
+  public static final GlowingHungSignBlock GLOWING_COBBLESTONE_HUNG_SIGN = registerGlowing("glowing_cobblestone_hung_sign", Blocks.COBBLESTONE);
 
   @ApiStatus.AvailableSince("0.2.4")
-  public static final HungSignBarBlock COBBLESTONE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.COBBLESTONE);
+  public static final HungSignBarBlock COBBLESTONE_HUNG_SIGN_BAR = registerBar("cobblestone_hung_sign_bar", Blocks.COBBLESTONE);
 
   @ApiStatus.AvailableSince("1.0.2")
-  public static final ColoredHungSignBlock COLORED_COBBLESTONE_HUNG_SIGN = new ColoredHungSignBlock(ColoredBlocks.COLORED_COBBLESTONE);
+  public static final ColoredHungSignBlock COLORED_COBBLESTONE_HUNG_SIGN = registerColored("colored_cobblestone_hung_sign", ColoredBlocks.COLORED_COBBLESTONE);
 
   @ApiStatus.AvailableSince("1.0.2")
-  public static final ColoredGlowingHungSignBlock COLORED_GLOWING_COBBLESTONE_HUNG_SIGN = new ColoredGlowingHungSignBlock(ColoredBlocks.COLORED_COBBLESTONE);
+  public static final ColoredGlowingHungSignBlock COLORED_GLOWING_COBBLESTONE_HUNG_SIGN = registerColoredGlowing("colored_glowing_cobblestone_hung_sign", ColoredBlocks.COLORED_COBBLESTONE);
 
   @ApiStatus.AvailableSince("1.0.2")
-  public static final ColoredHungSignBarBlock COLORED_COBBLESTONE_HUNG_SIGN_BAR = new ColoredHungSignBarBlock(ColoredBlocks.COLORED_COBBLESTONE);
+  public static final ColoredHungSignBarBlock COLORED_COBBLESTONE_HUNG_SIGN_BAR = registerColoredBar("colored_cobblestone_hung_sign_bar", ColoredBlocks.COLORED_COBBLESTONE);
 
   // 石砖
 
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock STONE_BRICK_HUNG_SIGN = new HungSignBlock(Blocks.STONE_BRICKS);
+  public static final HungSignBlock STONE_BRICK_HUNG_SIGN = register("stone_brick_hung_sign", Blocks.STONE_BRICKS);
 
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingHungSignBlock GLOWING_STONE_BRICK_HUNG_SIGN = new GlowingHungSignBlock(Blocks.STONE_BRICKS);
+  public static final GlowingHungSignBlock GLOWING_STONE_BRICK_HUNG_SIGN = registerGlowing("glowing_stone_brick_hung_sign", Blocks.STONE_BRICKS);
 
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock STONE_BRICK_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.STONE_BRICKS);
+  public static final HungSignBarBlock STONE_BRICK_HUNG_SIGN_BAR = registerBar("stone_brick_hung_sign_bar", Blocks.STONE_BRICKS);
 
   @ApiStatus.AvailableSince("1.0.2")
-  public static final ColoredHungSignBlock COLORED_STONE_BRICK_HUNG_SIGN = new ColoredHungSignBlock(ColoredBlocks.COLORED_STONE_BRICKS);
+  public static final ColoredHungSignBlock COLORED_STONE_BRICK_HUNG_SIGN = registerColored("colored_stone_brick_hung_sign", ColoredBlocks.COLORED_STONE_BRICKS);
 
   @ApiStatus.AvailableSince("1.0.2")
-  public static final ColoredGlowingHungSignBlock COLORED_GLOWING_STONE_BRICK_HUNG_SIGN = new ColoredGlowingHungSignBlock(ColoredBlocks.COLORED_STONE_BRICKS);
+  public static final ColoredGlowingHungSignBlock COLORED_GLOWING_STONE_BRICK_HUNG_SIGN = registerColoredGlowing("colored_glowing_stone_brick_hung_sign", ColoredBlocks.COLORED_STONE_BRICKS);
 
   @ApiStatus.AvailableSince("1.0.2")
-  public static final ColoredHungSignBarBlock COLORED_STONE_BRICK_HUNG_SIGN_BAR = new ColoredHungSignBarBlock(ColoredBlocks.COLORED_STONE_BRICKS);
+  public static final ColoredHungSignBarBlock COLORED_STONE_BRICK_HUNG_SIGN_BAR = registerColoredBar("colored_stone_brick_hung_sign_bar", ColoredBlocks.COLORED_STONE_BRICKS);
 
   // 铁块
 
   @ApiStatus.AvailableSince("0.1.7")
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final HungSignBlock IRON_HUNG_SIGN = new HungSignBlock(Blocks.IRON_BLOCK);
+  public static final HungSignBlock IRON_HUNG_SIGN = register("iron_hung_sign", Blocks.IRON_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final HungSignBlock GLOWING_IRON_HUNG_SIGN = new GlowingHungSignBlock(Blocks.IRON_BLOCK);
+  public static final HungSignBlock GLOWING_IRON_HUNG_SIGN = registerGlowing("glowing_iron_hung_sign", Blocks.IRON_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final HungSignBarBlock IRON_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.IRON_BLOCK);
+  public static final HungSignBarBlock IRON_HUNG_SIGN_BAR = registerBar("iron_hung_sign_bar", Blocks.IRON_BLOCK);
 
   @ApiStatus.AvailableSince("1.0.2")
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final ColoredHungSignBlock COLORED_IRON_HUNG_SIGN = new ColoredHungSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
+  public static final ColoredHungSignBlock COLORED_IRON_HUNG_SIGN = registerColored("colored_iron_hung_sign", ColoredBlocks.COLORED_IRON_BLOCK);
 
   @ApiStatus.AvailableSince("1.0.2")
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final ColoredGlowingHungSignBlock COLORED_GLOWING_IRON_HUNG_SIGN = new ColoredGlowingHungSignBlock(ColoredBlocks.COLORED_IRON_BLOCK);
+  public static final ColoredGlowingHungSignBlock COLORED_GLOWING_IRON_HUNG_SIGN = registerColoredGlowing("colored_glowing_iron_hung_sign", ColoredBlocks.COLORED_IRON_BLOCK);
 
   @ApiStatus.AvailableSince("1.0.2")
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final ColoredHungSignBarBlock COLORED_IRON_HUNG_SIGN_BAR = new ColoredHungSignBarBlock(ColoredBlocks.COLORED_IRON_BLOCK);
+  public static final ColoredHungSignBarBlock COLORED_IRON_HUNG_SIGN_BAR = registerColoredBar("colored_iron_hung_sign_bar", ColoredBlocks.COLORED_IRON_BLOCK);
 
   // 金块
 
   @ApiStatus.AvailableSince("0.1.7")
   @MiningLevel(level = MiningLevel.Level.IRON)
-  public static final HungSignBlock GOLD_HUNG_SIGN = new HungSignBlock(Blocks.GOLD_BLOCK);
+  public static final HungSignBlock GOLD_HUNG_SIGN = register("gold_hung_sign", Blocks.GOLD_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
   @MiningLevel(level = MiningLevel.Level.IRON)
-  public static final GlowingHungSignBlock GLOWING_GOLD_HUNG_SIGN = new GlowingHungSignBlock(Blocks.GOLD_BLOCK);
+  public static final GlowingHungSignBlock GLOWING_GOLD_HUNG_SIGN = registerGlowing("glowing_gold_hung_sign", Blocks.GOLD_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
   @MiningLevel(level = MiningLevel.Level.IRON)
-  public static final HungSignBarBlock GOLD_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.GOLD_BLOCK);
+  public static final HungSignBarBlock GOLD_HUNG_SIGN_BAR = registerBar("gold_hung_sign_bar", Blocks.GOLD_BLOCK);
 
   // 钻石块
 
   @ApiStatus.AvailableSince("0.1.7")
   @MiningLevel(level = MiningLevel.Level.IRON)
-  public static final HungSignBlock DIAMOND_HUNG_SIGN = new HungSignBlock(Blocks.DIAMOND_BLOCK);
+  public static final HungSignBlock DIAMOND_HUNG_SIGN = register("diamond_hung_sign", Blocks.DIAMOND_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
   @MiningLevel(level = MiningLevel.Level.IRON)
-  public static final GlowingHungSignBlock GLOWING_DIAMOND_HUNG_SIGN = new GlowingHungSignBlock(Blocks.DIAMOND_BLOCK);
+  public static final GlowingHungSignBlock GLOWING_DIAMOND_HUNG_SIGN = registerGlowing("glowing_diamond_hung_sign", Blocks.DIAMOND_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
   @MiningLevel(level = MiningLevel.Level.IRON)
-  public static final HungSignBarBlock DIAMOND_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.DIAMOND_BLOCK);
+  public static final HungSignBarBlock DIAMOND_HUNG_SIGN_BAR = registerBar("diamond_hung_sign_bar", Blocks.DIAMOND_BLOCK);
 
   // 绿宝石块
 
   @ApiStatus.AvailableSince("0.1.7")
   @MiningLevel(level = MiningLevel.Level.IRON)
-  public static final HungSignBlock EMERALD_HUNG_SIGN = new HungSignBlock(Blocks.EMERALD_BLOCK);
+  public static final HungSignBlock EMERALD_HUNG_SIGN = register("emerald_hung_sign", Blocks.EMERALD_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
   @MiningLevel(level = MiningLevel.Level.IRON)
-  public static final GlowingHungSignBlock GLOWING_EMERALD_HUNG_SIGN = new GlowingHungSignBlock(Blocks.EMERALD_BLOCK);
+  public static final GlowingHungSignBlock GLOWING_EMERALD_HUNG_SIGN = registerGlowing("glowing_emerald_hung_sign", Blocks.EMERALD_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
   @MiningLevel(level = MiningLevel.Level.IRON)
-  public static final HungSignBarBlock EMERALD_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.EMERALD_BLOCK);
+  public static final HungSignBarBlock EMERALD_HUNG_SIGN_BAR = registerBar("emerald_hung_sign_bar", Blocks.EMERALD_BLOCK);
 
   // 青金石块
 
   @ApiStatus.AvailableSince("0.1.7")
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final HungSignBlock LAPIS_HUNG_SIGN = new HungSignBlock(Blocks.LAPIS_BLOCK);
+  public static final HungSignBlock LAPIS_HUNG_SIGN = register("lapis_hung_sign", Blocks.LAPIS_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlowingHungSignBlock GLOWING_LAPIS_HUNG_SIGN = new GlowingHungSignBlock(Blocks.LAPIS_BLOCK);
+  public static final GlowingHungSignBlock GLOWING_LAPIS_HUNG_SIGN = registerGlowing("glowing_lapis_hung_sign", Blocks.LAPIS_BLOCK);
 
   @ApiStatus.AvailableSince("0.1.7")
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final HungSignBarBlock LAPIS_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.LAPIS_BLOCK);
+  public static final HungSignBarBlock LAPIS_HUNG_SIGN_BAR = registerBar("lapis_hung_sign_bar", Blocks.LAPIS_BLOCK);
 
   // 下界合金
 
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final HungSignBlock NETHERITE_HUNG_SIGN = new HungSignBlock(Blocks.NETHERITE_BLOCK);
+  public static final HungSignBlock NETHERITE_HUNG_SIGN = register("netherite_hung_sign", Blocks.NETHERITE_BLOCK);
 
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final GlowingHungSignBlock GLOWING_NETHERITE_HUNG_SIGN = new GlowingHungSignBlock(Blocks.NETHERITE_BLOCK);
+  public static final GlowingHungSignBlock GLOWING_NETHERITE_HUNG_SIGN = registerGlowing("glowing_netherite_hung_sign", Blocks.NETHERITE_BLOCK);
 
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final HungSignBarBlock NETHERITE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.NETHERITE_BLOCK);
+  public static final HungSignBarBlock NETHERITE_HUNG_SIGN_BAR = registerBar("netherite_hung_sign_bar", Blocks.NETHERITE_BLOCK);
 
   // 黑曜石
 
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final HungSignBlock OBSIDIAN_HUNG_SIGN = new HungSignBlock(Blocks.OBSIDIAN);
+  public static final HungSignBlock OBSIDIAN_HUNG_SIGN = register("obsidian_hung_sign", Blocks.OBSIDIAN);
 
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final GlowingHungSignBlock GLOWING_OBSIDIAN_HUNG_SIGN = new GlowingHungSignBlock(Blocks.OBSIDIAN);
+  public static final GlowingHungSignBlock GLOWING_OBSIDIAN_HUNG_SIGN = registerGlowing("glowing_obsidian_hung_sign", Blocks.OBSIDIAN);
 
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final HungSignBarBlock OBSIDIAN_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.OBSIDIAN);
+  public static final HungSignBarBlock OBSIDIAN_HUNG_SIGN_BAR = registerBar("obsidian_hung_sign_bar", Blocks.OBSIDIAN);
 
   // 哭泣的黑曜石
 
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final HungSignBlock CRYING_OBSIDIAN_HUNG_SIGN = new HungSignBlock(Blocks.CRYING_OBSIDIAN);
+  public static final HungSignBlock CRYING_OBSIDIAN_HUNG_SIGN = register("crying_obsidian_hung_sign", Blocks.CRYING_OBSIDIAN);
 
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final GlowingHungSignBlock GLOWING_CRYING_OBSIDIAN_HUNG_SIGN = new GlowingHungSignBlock(Blocks.CRYING_OBSIDIAN);
+  public static final GlowingHungSignBlock GLOWING_CRYING_OBSIDIAN_HUNG_SIGN = registerGlowing("glowing_crying_obsidian_hung_sign", Blocks.CRYING_OBSIDIAN);
 
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final HungSignBarBlock CRYING_OBSIDIAN_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.CRYING_OBSIDIAN);
+  public static final HungSignBarBlock CRYING_OBSIDIAN_HUNG_SIGN_BAR = registerBar("crying_obsidian_hung_sign_bar", Blocks.CRYING_OBSIDIAN);
 
   // 下界岩
 
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock NETHERRACK_HUNG_SIGN = new HungSignBlock(Blocks.NETHERRACK);
+  public static final HungSignBlock NETHERRACK_HUNG_SIGN = register("netherrack_hung_sign", Blocks.NETHERRACK);
 
-  public static final GlowingHungSignBlock GLOWING_NETHERRACK_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.NETHERRACK);
+  public static final GlowingHungSignBlock GLOWING_NETHERRACK_HUNG_SIGN = registerGlowing("glowing_netherrack_hung_sign", Blocks.NETHERRACK);
 
-  public static final HungSignBarBlock NETHERRACK_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.NETHERRACK);
+  public static final HungSignBarBlock NETHERRACK_HUNG_SIGN_BAR = registerBar("netherrack_hung_sign_bar", Blocks.NETHERRACK);
 
   // 下界砖
 
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock NETHER_BRICK_HUNG_SIGN = new HungSignBlock(Blocks.NETHER_BRICKS);
+  public static final HungSignBlock NETHER_BRICK_HUNG_SIGN = register("nether_brick_hung_sign", Blocks.NETHER_BRICKS);
 
-  public static final GlowingHungSignBlock GLOWING_NETHER_BRICK_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.NETHER_BRICKS);
+  public static final GlowingHungSignBlock GLOWING_NETHER_BRICK_HUNG_SIGN = registerGlowing("glowing_nether_brick_hung_sign", Blocks.NETHER_BRICKS);
 
-  public static final HungSignBarBlock NETHER_BRICK_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.NETHER_BRICKS);
+  public static final HungSignBarBlock NETHER_BRICK_HUNG_SIGN_BAR = registerBar("nether_brick_hung_sign_bar", Blocks.NETHER_BRICKS);
 
   // 黑石
 
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock BLACKSTONE_HUNG_SIGN = new HungSignBlock(Blocks.BLACKSTONE);
+  public static final HungSignBlock BLACKSTONE_HUNG_SIGN = register("blackstone_hung_sign", Blocks.BLACKSTONE);
 
-  public static final GlowingHungSignBlock GLOWING_BLACKSTONE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.BLACKSTONE);
+  public static final GlowingHungSignBlock GLOWING_BLACKSTONE_HUNG_SIGN = registerGlowing("glowing_blackstone_hung_sign", Blocks.BLACKSTONE);
 
-  public static final HungSignBarBlock BLACKSTONE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.BLACKSTONE);
+  public static final HungSignBarBlock BLACKSTONE_HUNG_SIGN_BAR = registerBar("blackstone_hung_sign_bar", Blocks.BLACKSTONE);
 
   // 磨制黑石
 
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock POLISHED_BLACKSTONE_HUNG_SIGN = new HungSignBlock(Blocks.POLISHED_BLACKSTONE);
+  public static final HungSignBlock POLISHED_BLACKSTONE_HUNG_SIGN = register("polished_blackstone_hung_sign", Blocks.POLISHED_BLACKSTONE);
 
-  public static final GlowingHungSignBlock GLOWING_POLISHED_BLACKSTONE_HUNG_SIGN =
-      new GlowingHungSignBlock(Blocks.POLISHED_BLACKSTONE);
+  public static final GlowingHungSignBlock GLOWING_POLISHED_BLACKSTONE_HUNG_SIGN = registerGlowing("glowing_polished_blackstone_hung_sign", Blocks.POLISHED_BLACKSTONE);
 
-  public static final HungSignBarBlock POLISHED_BLACKSTONE_HUNG_SIGN_BAR =
-      new HungSignBarBlock(Blocks.POLISHED_BLACKSTONE);
+  public static final HungSignBarBlock POLISHED_BLACKSTONE_HUNG_SIGN_BAR = registerBar("polished_blackstone_hung_sign_bar", Blocks.POLISHED_BLACKSTONE);
 
   static {
     GLOWING_NETHERRACK_HUNG_SIGN.glowTexture = Identifier.ofVanilla("block/lava_still");
@@ -901,16 +804,16 @@ public final class HungSignBlocks extends MishangucBlocks {
 
   @ApiStatus.AvailableSince("0.1.7")
   @MiningLevel(MiningLevel.Tool.SHOVEL)
-  public static final HungSignBlock SNOW_HUNG_SIGN = new HungSignBlock(Blocks.SNOW_BLOCK);
+  public static final HungSignBlock SNOW_HUNG_SIGN = register("snow_hung_sign", Blocks.SNOW_BLOCK);
 
   @MiningLevel(MiningLevel.Tool.SHOVEL)
-  public static final GlowingHungSignBlock GLOWING_SNOW_HUNG_SIGN = new GlowingHungSignBlock(Blocks.SNOW_BLOCK);
+  public static final GlowingHungSignBlock GLOWING_SNOW_HUNG_SIGN = registerGlowing("glowing_snow_hung_sign", Blocks.SNOW_BLOCK);
 
   // 冰
 
   @ApiStatus.AvailableSince("0.1.7")
   @Translucent
-  public static final HungSignBlock ICE_HUNG_SIGN = new HungSignBlock(Blocks.ICE);
+  public static final HungSignBlock ICE_HUNG_SIGN = register("ice_hung_sign", Blocks.ICE);
 
   static {
     SNOW_HUNG_SIGN.baseTexture = Identifier.ofVanilla("block/snow");
@@ -925,23 +828,54 @@ public final class HungSignBlocks extends MishangucBlocks {
   // 浮冰
 
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock PACKED_ICE_HUNG_SIGN = new HungSignBlock(Blocks.PACKED_ICE);
+  public static final HungSignBlock PACKED_ICE_HUNG_SIGN = register("packed_ice_hung_sign", Blocks.PACKED_ICE);
 
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingHungSignBlock GLOWING_PACKED_ICE_HUNG_SIGN = new GlowingHungSignBlock(Blocks.PACKED_ICE);
+  public static final GlowingHungSignBlock GLOWING_PACKED_ICE_HUNG_SIGN = registerGlowing("glowing_packed_ice_hung_sign", Blocks.PACKED_ICE);
 
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock PACKED_ICE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.PACKED_ICE);
+  public static final HungSignBarBlock PACKED_ICE_HUNG_SIGN_BAR = registerBar("packed_ice_hung_sign_bar", Blocks.PACKED_ICE);
 
   // 蓝冰
 
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBlock BLUE_ICE_HUNG_SIGN = new HungSignBlock(Blocks.BLUE_ICE);
+  public static final HungSignBlock BLUE_ICE_HUNG_SIGN = register("blue_ice_hung_sign", Blocks.BLUE_ICE);
 
   @ApiStatus.AvailableSince("0.1.7")
-  public static final GlowingHungSignBlock GLOWING_BLUE_ICE_HUNG_SIGN = new GlowingHungSignBlock(Blocks.BLUE_ICE);
+  public static final GlowingHungSignBlock GLOWING_BLUE_ICE_HUNG_SIGN = registerGlowing("glowing_blue_ice_hung_sign", Blocks.BLUE_ICE);
 
   @ApiStatus.AvailableSince("0.1.7")
-  public static final HungSignBarBlock BLUE_ICE_HUNG_SIGN_BAR = new HungSignBarBlock(Blocks.BLUE_ICE);
+  public static final HungSignBarBlock BLUE_ICE_HUNG_SIGN_BAR = registerBar("blue_ice_hung_sign_bar", Blocks.BLUE_ICE);
 
+  public static HungSignBlock register(String name, Block baseBlock, AbstractBlock.Settings settings) {
+    return MishangucBlocks.register(name, settings1 -> new HungSignBlock(baseBlock, settings1), settings);
+  }
+
+  public static HungSignBlock register(String name, Block baseBlock) {
+    return register(name, baseBlock, AbstractBlock.Settings.copy(baseBlock));
+  }
+
+  public static ColoredHungSignBlock registerColored(String name, Block baseBlock) {
+    return MishangucBlocks.register(name, settings -> new ColoredHungSignBlock(baseBlock, settings), AbstractBlock.Settings.copy(baseBlock));
+  }
+
+  public static GlowingHungSignBlock registerGlowing(String name, Block baseBlock) {
+    return MishangucBlocks.register(name, settings1 -> new GlowingHungSignBlock(baseBlock, settings1), AbstractBlock.Settings.copy(baseBlock));
+  }
+
+  public static ColoredGlowingHungSignBlock registerColoredGlowing(String name, Block baseBlock) {
+    return MishangucBlocks.register(name, settings1 -> new ColoredGlowingHungSignBlock(baseBlock, settings1), AbstractBlock.Settings.copy(baseBlock));
+  }
+
+  public static HungSignBarBlock registerBar(String name, Block baseBlock, AbstractBlock.Settings settings) {
+    return MishangucBlocks.register(name, settings1 -> new HungSignBarBlock(baseBlock, settings1), settings);
+  }
+
+  public static HungSignBarBlock registerBar(String name, Block baseBlock) {
+    return registerBar(name, baseBlock, AbstractBlock.Settings.copy(baseBlock));
+  }
+
+  public static ColoredHungSignBarBlock registerColoredBar(String name, Block baseBlock) {
+    return MishangucBlocks.register(name, settings -> new ColoredHungSignBarBlock(baseBlock, settings), AbstractBlock.Settings.copy(baseBlock));
+  }
 }

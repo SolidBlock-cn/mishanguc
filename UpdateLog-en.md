@@ -2,6 +2,12 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.4.2-beta.1
+
+- Fit 1.21.3。
+- Fixed the issue of incorrect top textures in wooden hung signs.
+- Fixed the incorrect english for `block.mishanguc.glass_dark_oak_handrail`.
+
 ### 1.4.1
 
 - Fixed the issue that road painting recipes are lost.

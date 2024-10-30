@@ -1,9 +1,7 @@
 {
   "type": "minecraft:stonecutting",
   "group": "mishanguc:simple_plank_handrail",
-  "ingredient": {
-    "item": "minecraft:spruce_planks"
-  },
+  "ingredient": "minecraft:spruce_planks",
   "result": {
     "count": 5,
     "id": "mishanguc:simple_spruce_plank_handrail"

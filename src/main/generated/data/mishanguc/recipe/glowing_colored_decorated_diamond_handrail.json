@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "M": {
-      "item": "mishanguc:colored_light"
-    },
-    "X": {
-      "tag": "c:gems/diamond"
-    },
-    "o": {
-      "item": "minecraft:glass_pane"
-    }
+    "M": "mishanguc:colored_light",
+    "X": "#c:gems/diamond",
+    "o": "minecraft:glass_pane"
   },
   "pattern": [
     "XXX",

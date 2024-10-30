@@ -1,8 +1,6 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "minecraft:bamboo_block"
-  },
+  "ingredient": "minecraft:bamboo_block",
   "result": {
     "count": 5,
     "id": "mishanguc:simple_bamboo_handrail"

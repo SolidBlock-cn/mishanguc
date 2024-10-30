@@ -3,12 +3,8 @@
   "category": "building",
   "group": "mishanguc:road_with_ts_thick_line",
   "key": {
-    "X": {
-      "item": "mishanguc:road_with_white_line"
-    },
-    "a": {
-      "tag": "c:dyes/white"
-    }
+    "X": "mishanguc:road_with_white_line",
+    "a": "#c:dyes/white"
   },
   "pattern": [
     "aaa",

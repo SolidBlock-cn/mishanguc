@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "minecraft:bamboo_mosaic"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    }
+    "#": "minecraft:bamboo_mosaic",
+    "-": "mishanguc:invisible_wall_sign"
   },
   "pattern": [
     "---",

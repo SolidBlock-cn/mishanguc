@@ -3,12 +3,8 @@
   "category": "building",
   "group": "mishanguc:road_slab_with_ra_line_offset_out",
   "key": {
-    "*": {
-      "tag": "c:dyes/white"
-    },
-    "X": {
-      "item": "mishanguc:road_slab"
-    }
+    "*": "#c:dyes/white",
+    "X": "mishanguc:road_slab"
   },
   "pattern": [
     "  *",

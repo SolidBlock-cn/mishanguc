@@ -3,12 +3,8 @@
   "category": "building",
   "group": "mishanguc:road_slab_with_ws_and_bi_ba_line",
   "key": {
-    "*": {
-      "tag": "c:dyes/white"
-    },
-    "X": {
-      "item": "mishanguc:road_slab_with_white_line"
-    }
+    "*": "#c:dyes/white",
+    "X": "mishanguc:road_slab_with_white_line"
   },
   "pattern": [
     " *X",

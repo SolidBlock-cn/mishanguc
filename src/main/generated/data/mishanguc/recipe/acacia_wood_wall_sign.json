@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "mishanguc:wood_wall_sign",
   "key": {
-    "#": {
-      "item": "minecraft:acacia_wood"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    }
+    "#": "minecraft:acacia_wood",
+    "-": "mishanguc:invisible_wall_sign"
   },
   "pattern": [
     "---",

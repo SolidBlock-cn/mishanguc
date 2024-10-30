@@ -3,18 +3,10 @@
   "category": "misc",
   "group": "glass_wooden_handrail",
   "key": {
-    "M": {
-      "item": "minecraft:dark_oak_planks"
-    },
-    "X": {
-      "item": "minecraft:dark_oak_wood"
-    },
-    "n": {
-      "item": "minecraft:stick"
-    },
-    "o": {
-      "item": "minecraft:glass_pane"
-    }
+    "M": "minecraft:dark_oak_planks",
+    "X": "minecraft:dark_oak_wood",
+    "n": "minecraft:stick",
+    "o": "minecraft:glass_pane"
   },
   "pattern": [
     "XXX",

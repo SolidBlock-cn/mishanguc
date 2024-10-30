@@ -12,9 +12,9 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPointer;
 import net.minecraft.util.math.BlockPos;
@@ -52,13 +52,13 @@ public class IceSnowTool extends Item implements MishangucItem, DispenserBehavio
   }
 
   @Override
-  public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+  public ActionResult use(World world, PlayerEntity user, Hand hand) {
     final ItemStack stack = user.getStackInHand(hand);
     if (!(world instanceof ServerWorld serverWorld))
-      return TypedActionResult.success(stack);
+      return ActionResult.SUCCESS;
     final HitResult hitResult = user.raycast(64, 0, false);
     if (hitResult.getType() == HitResult.Type.MISS)
-      return TypedActionResult.fail(stack);
+      return ActionResult.FAIL;
     final Vec3d pos = hitResult.getPos();
     final int strength = getStrength(stack);
     if (user.isSneaking()) {
@@ -67,7 +67,7 @@ public class IceSnowTool extends Item implements MishangucItem, DispenserBehavio
       applyIce(serverWorld, pos, strength);
     }
     stack.damage(strength + 1, user, LivingEntity.getSlotForHand(hand));
-    return TypedActionResult.success(stack);
+    return ActionResult.SUCCESS;
   }
 
   /**
@@ -129,7 +129,7 @@ public class IceSnowTool extends Item implements MishangucItem, DispenserBehavio
           world.removeBlock(blockPos, false);
         } else {
           world.setBlockState(blockPos, IceBlock.getMeltedState());
-          world.updateNeighbor(blockPos, IceBlock.getMeltedState().getBlock(), blockPos);
+          world.updateNeighbor(blockPos, IceBlock.getMeltedState().getBlock(), null);
         }
       }
 

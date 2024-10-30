@@ -1,8 +1,6 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "minecraft:diamond_block"
-  },
+  "ingredient": "minecraft:diamond_block",
   "result": {
     "count": 20,
     "id": "mishanguc:diamond_hung_sign_bar"

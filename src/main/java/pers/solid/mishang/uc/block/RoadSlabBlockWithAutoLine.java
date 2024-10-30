@@ -10,17 +10,19 @@ import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.minecraft.world.block.WireOrientation;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.EnumMap;
 
 public class RoadSlabBlockWithAutoLine extends SmartRoadSlabBlock<RoadBlockWithAutoLine>
     implements RoadWithAutoLine {
-  public static final MapCodec<RoadSlabBlockWithAutoLine> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(Registries.BLOCK.getCodec().flatXmap(block -> block instanceof RoadBlockWithAutoLine roadBlockWithAutoLine ? DataResult.success(roadBlockWithAutoLine) : DataResult.error(() -> block + " must be instance of " + RoadBlockWithAutoLine.class.getName()), DataResult::success).fieldOf("base_block").forGetter(b -> b.baseBlock)).apply(i, RoadSlabBlockWithAutoLine::new));
+  public static final MapCodec<RoadSlabBlockWithAutoLine> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(Registries.BLOCK.getCodec().flatXmap(block -> block instanceof RoadBlockWithAutoLine roadBlockWithAutoLine ? DataResult.success(roadBlockWithAutoLine) : DataResult.error(() -> block + " must be instance of " + RoadBlockWithAutoLine.class.getName()), DataResult::success).fieldOf("base_block").forGetter(b -> b.baseBlock), createSettingsCodec()).apply(i, RoadSlabBlockWithAutoLine::new));
 
-  public RoadSlabBlockWithAutoLine(RoadBlockWithAutoLine baseBlock) {
-    super(baseBlock);
+  public RoadSlabBlockWithAutoLine(RoadBlockWithAutoLine baseBlock, Settings settings) {
+    super(baseBlock, settings);
   }
 
   @Override
@@ -40,10 +42,9 @@ public class RoadSlabBlockWithAutoLine extends SmartRoadSlabBlock<RoadBlockWithA
   }
 
   @Override
-  public void neighborUpdate(
-      BlockState state, World world, BlockPos pos, Block block, BlockPos sourcePos, boolean notify) {
-    super.neighborUpdate(state, world, pos, block, sourcePos, notify);
-    neighborRoadUpdate(state, world, pos, block, sourcePos, notify);
+  protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, @Nullable WireOrientation wireOrientation, boolean notify) {
+    super.neighborUpdate(state, world, pos, sourceBlock, wireOrientation, notify);
+    neighborRoadUpdate(state, world, pos, sourceBlock, wireOrientation, notify);
   }
 
   private <T extends Comparable<T>> BlockState sendProperty(

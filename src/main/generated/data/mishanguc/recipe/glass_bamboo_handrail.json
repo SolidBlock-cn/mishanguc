@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "M": {
-      "item": "minecraft:bamboo_planks"
-    },
-    "X": {
-      "item": "minecraft:bamboo_block"
-    },
-    "n": {
-      "item": "minecraft:bamboo"
-    },
-    "o": {
-      "item": "minecraft:glass_pane"
-    }
+    "M": "minecraft:bamboo_planks",
+    "X": "minecraft:bamboo_block",
+    "n": "minecraft:bamboo",
+    "o": "minecraft:glass_pane"
   },
   "pattern": [
     "XXX",

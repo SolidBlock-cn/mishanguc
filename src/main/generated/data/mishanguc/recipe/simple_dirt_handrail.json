@@ -1,8 +1,6 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "minecraft:dirt"
-  },
+  "ingredient": "minecraft:dirt",
   "result": {
     "count": 5,
     "id": "mishanguc:simple_dirt_handrail"

@@ -59,7 +59,6 @@ public class MishangUtils {
   public static final VariantSetting<Integer> INT_Y_VARIANT = new VariantSetting<>("y", JsonPrimitive::new);
   public static final VariantSetting<Direction> DIRECTION_Y_VARIANT = new VariantSetting<>("y", direction -> new JsonPrimitive((int) direction.asRotation()));
   private static final Supplier<ImmutableList<Block>> memoizedBlocks = Suppliers.memoize(MishangUtils::blocksInternal);
-  private static final Supplier<ImmutableList<Item>> memoizedItems = Suppliers.memoize(MishangUtils::itemsInternal);
   private static final ImmutableSet<Block> WOODS = ImmutableSet.of(Blocks.OAK_WOOD, Blocks.SPRUCE_WOOD, Blocks.BIRCH_WOOD, Blocks.JUNGLE_WOOD, Blocks.ACACIA_WOOD, Blocks.DARK_OAK_WOOD, Blocks.MANGROVE_WOOD, Blocks.CRIMSON_HYPHAE, Blocks.WARPED_HYPHAE, Blocks.CHERRY_WOOD);
   private static final ImmutableSet<Block> STRIPPED_WOODS = ImmutableSet.of(Blocks.STRIPPED_OAK_WOOD, Blocks.STRIPPED_SPRUCE_WOOD, Blocks.STRIPPED_BIRCH_WOOD, Blocks.STRIPPED_JUNGLE_WOOD, Blocks.STRIPPED_ACACIA_WOOD, Blocks.STRIPPED_DARK_OAK_WOOD, Blocks.STRIPPED_MANGROVE_WOOD, Blocks.STRIPPED_CRIMSON_HYPHAE, Blocks.STRIPPED_WARPED_HYPHAE, Blocks.STRIPPED_CHERRY_WOOD);
   private static final ImmutableSet<Block> PLANKS = ImmutableSet.of(Blocks.OAK_PLANKS, Blocks.SPRUCE_PLANKS, Blocks.BIRCH_PLANKS, Blocks.JUNGLE_PLANKS, Blocks.ACACIA_PLANKS, Blocks.DARK_OAK_PLANKS, Blocks.MANGROVE_PLANKS, Blocks.WARPED_PLANKS, Blocks.CRIMSON_PLANKS, Blocks.CHERRY_PLANKS, Blocks.BAMBOO_PLANKS);
@@ -211,16 +210,6 @@ public class MishangUtils {
     return build;
   }
 
-  @ApiStatus.AvailableSince("0.2.0")
-  @ApiStatus.Internal
-  private static @Unmodifiable ImmutableList<@NotNull Item> itemsInternal() {
-    final ImmutableList<@NotNull Item> build = instanceStream(MishangucItems.class, Item.class).collect(ImmutableList.toImmutableList());
-    if (build.isEmpty()) {
-      throw new AssertionError("The collection returned is empty, which is not expected. You may have to report to the author of Mishang Urban Construction mod.");
-    }
-    return build;
-  }
-
   /**
    * 该模组的所有方块字段及其值的集合。会通过反射来访问字段，并记住这个值，下次直接返回该值。
    *
@@ -237,8 +226,8 @@ public class MishangUtils {
    * @return 由物品字段和值组成的不可变映射。第一次调用时会生成，此后的所有调用都会直接使用这个值。
    */
   @ApiStatus.AvailableSince("0.2.0")
-  public static @Unmodifiable ImmutableList<Item> items() {
-    return memoizedItems.get();
+  public static @Unmodifiable List<Item> items() {
+    return MishangucItems.items();
   }
 
   /**

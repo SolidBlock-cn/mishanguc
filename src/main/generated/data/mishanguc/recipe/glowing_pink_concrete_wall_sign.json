@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "mishanguc:glowing_concrete_wall_sign",
   "key": {
-    "#": {
-      "item": "minecraft:pink_concrete"
-    },
-    "-": {
-      "item": "mishanguc:invisible_glowing_wall_sign"
-    }
+    "#": "minecraft:pink_concrete",
+    "-": "mishanguc:invisible_glowing_wall_sign"
   },
   "pattern": [
     "---",

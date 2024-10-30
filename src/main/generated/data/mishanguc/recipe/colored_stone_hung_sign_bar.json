@@ -1,8 +1,6 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "mishanguc:colored_stone"
-  },
+  "ingredient": "mishanguc:colored_stone",
   "result": {
     "count": 20,
     "id": "mishanguc:colored_stone_hung_sign_bar"

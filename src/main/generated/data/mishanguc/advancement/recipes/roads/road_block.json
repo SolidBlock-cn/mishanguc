@@ -25,12 +25,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:white_concrete",
-              "minecraft:gray_concrete",
-              "minecraft:light_gray_concrete",
-              "minecraft:black_concrete"
-            ]
+            "items": "#mishanguc:road_materials"
           }
         ]
       },

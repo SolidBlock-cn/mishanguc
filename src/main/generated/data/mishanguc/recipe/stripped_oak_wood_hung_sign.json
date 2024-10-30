@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "mishanguc:stripped_wood_hung_sign",
   "key": {
-    "#": {
-      "item": "minecraft:stripped_oak_wood"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    }
+    "#": "minecraft:stripped_oak_wood",
+    "-": "mishanguc:invisible_wall_sign"
   },
   "pattern": [
     "-#-",

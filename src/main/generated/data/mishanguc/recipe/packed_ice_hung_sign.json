@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "mishanguc:ice_hung_sign",
   "key": {
-    "#": {
-      "item": "minecraft:packed_ice"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    }
+    "#": "minecraft:packed_ice",
+    "-": "mishanguc:invisible_wall_sign"
   },
   "pattern": [
     "-#-",

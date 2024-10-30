@@ -20,7 +20,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPointer;
@@ -52,12 +51,12 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
   }
 
   @Override
-  public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-    final TypedActionResult<ItemStack> use = super.use(world, user, hand);
+  public ActionResult use(World world, PlayerEntity user, Hand hand) {
+    final ActionResult use = super.use(world, user, hand);
     if (world.isClient) return use;
     final HitResult raycast = user.raycast(64, 0, true);
     if (raycast.getType() == HitResult.Type.MISS) {
-      return TypedActionResult.fail(use.getValue());
+      return ActionResult.FAIL;
     }
     final Vec3d center = raycast.getPos();
     final int damage = apply(world, center, !user.isSneaking());

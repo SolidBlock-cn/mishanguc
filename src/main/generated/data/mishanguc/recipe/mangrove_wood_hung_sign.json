@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "mishanguc:wood_hung_sign",
   "key": {
-    "#": {
-      "item": "minecraft:mangrove_wood"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    }
+    "#": "minecraft:mangrove_wood",
+    "-": "mishanguc:invisible_wall_sign"
   },
   "pattern": [
     "-#-",

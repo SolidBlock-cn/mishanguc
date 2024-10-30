@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "C": {
-      "tag": "c:stones"
-    },
-    "S": {
-      "item": "minecraft:shears"
-    },
-    "|": {
-      "item": "minecraft:stick"
-    }
+    "C": "#c:stones",
+    "S": "minecraft:shears",
+    "|": "minecraft:stick"
   },
   "pattern": [
     "SCS",

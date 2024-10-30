@@ -1,9 +1,7 @@
 {
   "type": "minecraft:stonecutting",
   "group": "mishanguc:wood_hung_sign_bar",
-  "ingredient": {
-    "item": "minecraft:jungle_wood"
-  },
+  "ingredient": "minecraft:jungle_wood",
   "result": {
     "count": 20,
     "id": "mishanguc:jungle_hung_sign_bar"

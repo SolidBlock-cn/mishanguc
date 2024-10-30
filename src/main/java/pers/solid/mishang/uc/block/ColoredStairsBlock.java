@@ -11,7 +11,7 @@ import net.minecraft.data.client.ModelProvider;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -39,10 +39,6 @@ public class ColoredStairsBlock extends StairsBlock implements ColoredBlock {
   public ColoredStairsBlock(@NotNull Block baseBlock, Settings settings) {
     super(baseBlock.getDefaultState(), settings);
     this.baseBlock = baseBlock;
-  }
-
-  public ColoredStairsBlock(@NotNull Block baseBlock) {
-    this(baseBlock, Settings.copy(baseBlock));
   }
 
   @Override
@@ -78,9 +74,9 @@ public class ColoredStairsBlock extends StairsBlock implements ColoredBlock {
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ((ShapedRecipeJsonBuilder) RecipeProvider.createStairsRecipe(this, Ingredient.ofItems(baseBlock)))
-        .criterion(RecipeProvider.hasItem(baseBlock), RecipeProvider.conditionsFromItem(baseBlock));
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
+    return ((ShapedRecipeJsonBuilder) recipeGenerator.createStairsRecipe(this, Ingredient.ofItems(baseBlock)))
+        .criterion(RecipeGenerator.hasItem(baseBlock), recipeGenerator.conditionsFromItem(baseBlock));
   }
 
   @Override

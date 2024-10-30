@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "minecraft:pale_oak_wood",
+    "-": "mishanguc:invisible_wall_sign",
+    "|": "minecraft:stick"
+  },
+  "pattern": [
+    "---",
+    "###",
+    " | "
+  ],
+  "result": {
+    "count": 4,
+    "id": "mishanguc:pale_oak_wood_standing_sign"
+  }
+}

@@ -8,8 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.property.Properties;
@@ -524,16 +523,16 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
-    return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self, 1)
+  public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
+    return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 1)
         .pattern("aba")
         .pattern("bXb")
         .pattern("aba")
         .input('a', type == RoadAutoLineType.RIGHT_ANGLE ? LineColor.WHITE.getIngredient() : LineColor.YELLOW.getIngredient())
         .input('b', type != RoadAutoLineType.RIGHT_ANGLE ? LineColor.WHITE.getIngredient() : LineColor.YELLOW.getIngredient())
         .input('X', base)
-        .criterion(RecipeProvider.hasItem(base), RecipeProvider.conditionsFromItem(base))
-        .criterion("has_white_dye", RecipeProvider.conditionsFromTag(LineColor.WHITE.getIngredient()))
-        .criterion("has_yellow_dye", RecipeProvider.conditionsFromTag(LineColor.YELLOW.getIngredient()));
+        .criterion(RecipeGenerator.hasItem(base), recipeGenerator.conditionsFromItem(base))
+        .criterion("has_white_dye", recipeGenerator.conditionsFromTag(LineColor.WHITE.getIngredient()))
+        .criterion("has_yellow_dye", recipeGenerator.conditionsFromTag(LineColor.YELLOW.getIngredient()));
   }
 }

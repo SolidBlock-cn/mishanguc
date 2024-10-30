@@ -23,12 +23,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.data.family.BlockFamilies;
 import net.minecraft.data.family.BlockFamily;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -48,6 +48,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -56,7 +57,6 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.block.AbstractRoadBlock;
 import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
-import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.networking.SlabToolPayload;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -248,33 +248,32 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
       final BlockState halfState =
           state.with(Properties.SLAB_TYPE, isTop ? SlabType.TOP : SlabType.BOTTOM);
       final BlockPos blockPos = blockOutlineContext.blockPos();
-      WorldRendererInvoker.drawCuboidShapeOutline(
+      VertexRendering.drawOutline(
           worldRenderContext.matrixStack(),
           consumers.getBuffer(RenderLayer.LINES),
           halfState.getOutlineShape(world, blockPos, ShapeContext.of(blockOutlineContext.entity())),
           (double) blockPos.getX() - blockOutlineContext.cameraX(),
           (double) blockPos.getY() - blockOutlineContext.cameraY(),
           (double) blockPos.getZ() - blockOutlineContext.cameraZ(),
-          0.0F,
-          0.0F,
-          0.0F,
-          0.4F);
+          ColorHelper.fromFloats(0.4f, 0.0F,
+              0.0F,
+              0.0F));
       return false;
     }
     return true;
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getCraftingRecipe() {
-    return ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, this)
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
+    return recipeGenerator.createShaped(RecipeCategory.TOOLS, this)
         .pattern("SCS")
         .pattern(" | ")
         .pattern(" | ")
         .input('S', Items.SHEARS)
         .input('C', ConventionalItemTags.STONES)
         .input('|', Items.STICK)
-        .criterion("has_shears", RecipeProvider.conditionsFromItem(Items.SHEARS))
-        .criterion("has_stone", RecipeProvider.conditionsFromTag(ConventionalItemTags.STONES));
+        .criterion("has_shears", recipeGenerator.conditionsFromItem(Items.SHEARS))
+        .criterion("has_stone", recipeGenerator.conditionsFromTag(ConventionalItemTags.STONES));
   }
 
   @ApiStatus.AvailableSince("1.0.3")

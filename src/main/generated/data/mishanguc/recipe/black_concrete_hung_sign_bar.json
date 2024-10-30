@@ -1,9 +1,7 @@
 {
   "type": "minecraft:stonecutting",
   "group": "mishanguc:concrete_hung_sign_bar",
-  "ingredient": {
-    "item": "minecraft:black_concrete"
-  },
+  "ingredient": "minecraft:black_concrete",
   "result": {
     "count": 20,
     "id": "mishanguc:black_concrete_hung_sign_bar"

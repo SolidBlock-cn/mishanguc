@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "mishanguc:glowing_ice_wall_sign",
   "key": {
-    "#": {
-      "item": "minecraft:blue_ice"
-    },
-    "-": {
-      "item": "mishanguc:invisible_glowing_wall_sign"
-    }
+    "#": "minecraft:blue_ice",
+    "-": "mishanguc:invisible_glowing_wall_sign"
   },
   "pattern": [
     "---",

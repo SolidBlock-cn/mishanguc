@@ -13,6 +13,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.command.BlockDataObject;
 import net.minecraft.command.EntityDataObject;
@@ -33,6 +34,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShapes;
@@ -40,7 +42,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.networking.GetBlockDataPayload;
 import pers.solid.mishang.uc.networking.GetEntityDataPayload;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
@@ -134,7 +135,7 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
       if (consumers == null) return;
       final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.getLines());
       final Vec3d cameraPos = context.camera().getPos();
-      WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, 0f, 1f, 0f, 0.8f);
+      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, ColorHelper.fromFloats(0.8f, 0f, 1f, 0f));
     }
   }
 

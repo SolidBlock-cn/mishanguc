@@ -1,15 +1,20 @@
 package pers.solid.mishang.uc.blocks;
 
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.ColoredGlassHandrailBlock;
 import pers.solid.mishang.uc.block.GlassHandrailBlock;
+import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.SimpleHandrailBlock;
 
 import java.util.EnumMap;
@@ -25,22 +30,22 @@ public final class HandrailBlocks extends MishangucBlocks {
 
   // 简单的混凝土栏杆
 
-  public static final SimpleHandrailBlock SIMPLE_WHITE_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.WHITE_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_ORANGE_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.ORANGE_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_MAGENTA_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.MAGENTA_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_LIGHT_BLUE_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.LIGHT_BLUE_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_YELLOW_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.YELLOW_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_LIME_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.LIME_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_PINK_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.PINK_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_GRAY_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.GRAY_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_LIGHT_GRAY_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.LIGHT_GRAY_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_CYAN_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.CYAN_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_PURPLE_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.PURPLE_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_BLUE_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.BLUE_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_BROWN_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.BROWN_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_GREEN_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.GREEN_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_RED_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.RED_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_BLACK_CONCRETE_HANDRAIL = new SimpleHandrailBlock(Blocks.BLACK_CONCRETE);
+  public static final SimpleHandrailBlock SIMPLE_WHITE_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_white_concrete_handrail", Blocks.WHITE_CONCRETE);
+  public static final SimpleHandrailBlock SIMPLE_ORANGE_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_orange_concrete_handrail", Blocks.ORANGE_CONCRETE);
+  public static final SimpleHandrailBlock SIMPLE_MAGENTA_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_magenta_concrete_handrail", Blocks.MAGENTA_CONCRETE);
+  public static final SimpleHandrailBlock SIMPLE_LIGHT_BLUE_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_light_blue_concrete_handrail", Blocks.LIGHT_BLUE_CONCRETE);
+  public static final SimpleHandrailBlock SIMPLE_YELLOW_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_yellow_concrete_handrail", Blocks.YELLOW_CONCRETE);
+  public static final SimpleHandrailBlock SIMPLE_LIME_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_lime_concrete_handrail", Blocks.LIME_CONCRETE);
+  public static final SimpleHandrailBlock SIMPLE_PINK_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_pink_concrete_handrail", Blocks.PINK_CONCRETE);
+  public static final SimpleHandrailBlock SIMPLE_GRAY_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_gray_concrete_handrail", Blocks.GRAY_CONCRETE);
+  public static final SimpleHandrailBlock SIMPLE_LIGHT_GRAY_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_light_gray_concrete_handrail", Blocks.LIGHT_GRAY_CONCRETE);
+  public static final SimpleHandrailBlock SIMPLE_CYAN_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_cyan_concrete_handrail", Blocks.CYAN_CONCRETE);
+  public static final SimpleHandrailBlock SIMPLE_PURPLE_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_purple_concrete_handrail", Blocks.PURPLE_CONCRETE);
+  public static final SimpleHandrailBlock SIMPLE_BLUE_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_blue_concrete_handrail", Blocks.BLUE_CONCRETE);
+  public static final SimpleHandrailBlock SIMPLE_BROWN_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_brown_concrete_handrail", Blocks.BROWN_CONCRETE);
+  public static final SimpleHandrailBlock SIMPLE_GREEN_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_green_concrete_handrail", Blocks.GREEN_CONCRETE);
+  public static final SimpleHandrailBlock SIMPLE_RED_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_red_concrete_handrail", Blocks.RED_CONCRETE);
+  public static final SimpleHandrailBlock SIMPLE_BLACK_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_black_concrete_handrail", Blocks.BLACK_CONCRETE);
 
   /**
    * 颜色及其对应的简单混凝土栏杆组成的映射。
@@ -69,22 +74,22 @@ public final class HandrailBlocks extends MishangucBlocks {
 
   // 简单的陶瓦栏杆
 
-  public static final SimpleHandrailBlock SIMPLE_WHITE_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.WHITE_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_ORANGE_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.ORANGE_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_MAGENTA_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.MAGENTA_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_LIGHT_BLUE_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.LIGHT_BLUE_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_YELLOW_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.YELLOW_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_LIME_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.LIME_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_PINK_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.PINK_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_GRAY_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.GRAY_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_LIGHT_GRAY_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.LIGHT_GRAY_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_CYAN_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.CYAN_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_PURPLE_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.PURPLE_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_BLUE_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.BLUE_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_BROWN_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.BROWN_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_GREEN_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.GREEN_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_RED_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.RED_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_BLACK_TERRACOTTA_HANDRAIL = new SimpleHandrailBlock(Blocks.BLACK_TERRACOTTA);
+  public static final SimpleHandrailBlock SIMPLE_WHITE_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_white_terracotta_handrail", Blocks.WHITE_TERRACOTTA);
+  public static final SimpleHandrailBlock SIMPLE_ORANGE_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_orange_terracotta_handrail", Blocks.ORANGE_TERRACOTTA);
+  public static final SimpleHandrailBlock SIMPLE_MAGENTA_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_magenta_terracotta_handrail", Blocks.MAGENTA_TERRACOTTA);
+  public static final SimpleHandrailBlock SIMPLE_LIGHT_BLUE_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_light_blue_terracotta_handrail", Blocks.LIGHT_BLUE_TERRACOTTA);
+  public static final SimpleHandrailBlock SIMPLE_YELLOW_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_yellow_terracotta_handrail", Blocks.YELLOW_TERRACOTTA);
+  public static final SimpleHandrailBlock SIMPLE_LIME_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_lime_terracotta_handrail", Blocks.LIME_TERRACOTTA);
+  public static final SimpleHandrailBlock SIMPLE_PINK_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_pink_terracotta_handrail", Blocks.PINK_TERRACOTTA);
+  public static final SimpleHandrailBlock SIMPLE_GRAY_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_gray_terracotta_handrail", Blocks.GRAY_TERRACOTTA);
+  public static final SimpleHandrailBlock SIMPLE_LIGHT_GRAY_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_light_gray_terracotta_handrail", Blocks.LIGHT_GRAY_TERRACOTTA);
+  public static final SimpleHandrailBlock SIMPLE_CYAN_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_cyan_terracotta_handrail", Blocks.CYAN_TERRACOTTA);
+  public static final SimpleHandrailBlock SIMPLE_PURPLE_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_purple_terracotta_handrail", Blocks.PURPLE_TERRACOTTA);
+  public static final SimpleHandrailBlock SIMPLE_BLUE_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_blue_terracotta_handrail", Blocks.BLUE_TERRACOTTA);
+  public static final SimpleHandrailBlock SIMPLE_BROWN_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_brown_terracotta_handrail", Blocks.BROWN_TERRACOTTA);
+  public static final SimpleHandrailBlock SIMPLE_GREEN_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_green_terracotta_handrail", Blocks.GREEN_TERRACOTTA);
+  public static final SimpleHandrailBlock SIMPLE_RED_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_red_terracotta_handrail", Blocks.RED_TERRACOTTA);
+  public static final SimpleHandrailBlock SIMPLE_BLACK_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_black_terracotta_handrail", Blocks.BLACK_TERRACOTTA);
 
   /**
    * 颜色及其对应的简单陶瓦栏杆组成的映射。
@@ -112,52 +117,54 @@ public final class HandrailBlocks extends MishangucBlocks {
 
   // 冰雪。
   @Translucent
-  public static final SimpleHandrailBlock SIMPLE_ICE_HANDRAIL = new SimpleHandrailBlock(Blocks.ICE);
-  public static final SimpleHandrailBlock SIMPLE_PACKED_ICE_HANDRAIL = new SimpleHandrailBlock(Blocks.PACKED_ICE);
-  public static final SimpleHandrailBlock SIMPLE_BLUE_ICE_HANDRAIL = new SimpleHandrailBlock(Blocks.BLUE_ICE);
+  public static final SimpleHandrailBlock SIMPLE_ICE_HANDRAIL = registerSimpleHandrail("simple_ice_handrail", Blocks.ICE);
+  public static final SimpleHandrailBlock SIMPLE_PACKED_ICE_HANDRAIL = registerSimpleHandrail("simple_packed_ice_handrail", Blocks.PACKED_ICE);
+  public static final SimpleHandrailBlock SIMPLE_BLUE_ICE_HANDRAIL = registerSimpleHandrail("simple_blue_ice_handrail", Blocks.BLUE_ICE);
   @MiningLevel(MiningLevel.Tool.SHOVEL)
-  public static final SimpleHandrailBlock SIMPLE_SNOW_HANDRAIL = new SimpleHandrailBlock(Blocks.SNOW_BLOCK);
+  public static final SimpleHandrailBlock SIMPLE_SNOW_HANDRAIL = registerSimpleHandrail("simple_snow_handrail", Blocks.SNOW_BLOCK);
 
   static {
     SIMPLE_SNOW_HANDRAIL.texture = Identifier.ofVanilla("block/snow");
   }
 
   // 木头
-  public static final SimpleHandrailBlock SIMPLE_OAK_HANDRAIL = new SimpleHandrailBlock(Blocks.OAK_WOOD);
-  public static final SimpleHandrailBlock SIMPLE_SPRUCE_HANDRAIL = new SimpleHandrailBlock(Blocks.SPRUCE_WOOD);
-  public static final SimpleHandrailBlock SIMPLE_BIRCH_HANDRAIL = new SimpleHandrailBlock(Blocks.BIRCH_WOOD);
-  public static final SimpleHandrailBlock SIMPLE_JUNGLE_HANDRAIL = new SimpleHandrailBlock(Blocks.JUNGLE_WOOD);
-  public static final SimpleHandrailBlock SIMPLE_ACACIA_HANDRAIL = new SimpleHandrailBlock(Blocks.ACACIA_WOOD);
+  public static final SimpleHandrailBlock SIMPLE_OAK_HANDRAIL = registerSimpleHandrail("simple_oak_handrail", Blocks.OAK_WOOD);
+  public static final SimpleHandrailBlock SIMPLE_SPRUCE_HANDRAIL = registerSimpleHandrail("simple_spruce_handrail", Blocks.SPRUCE_WOOD);
+  public static final SimpleHandrailBlock SIMPLE_BIRCH_HANDRAIL = registerSimpleHandrail("simple_birch_handrail", Blocks.BIRCH_WOOD);
+  public static final SimpleHandrailBlock SIMPLE_JUNGLE_HANDRAIL = registerSimpleHandrail("simple_jungle_handrail", Blocks.JUNGLE_WOOD);
+  public static final SimpleHandrailBlock SIMPLE_ACACIA_HANDRAIL = registerSimpleHandrail("simple_acacia_handrail", Blocks.ACACIA_WOOD);
   @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
-  public static final SimpleHandrailBlock SIMPLE_CHERRY_HANDRAIL = new SimpleHandrailBlock(Blocks.CHERRY_WOOD);
-  public static final SimpleHandrailBlock SIMPLE_DARK_OAK_HANDRAIL = new SimpleHandrailBlock(Blocks.DARK_OAK_WOOD);
+  public static final SimpleHandrailBlock SIMPLE_CHERRY_HANDRAIL = registerSimpleHandrail("simple_cherry_handrail", Blocks.CHERRY_WOOD);
+  public static final SimpleHandrailBlock SIMPLE_DARK_OAK_HANDRAIL = registerSimpleHandrail("simple_dark_oak_handrail", Blocks.DARK_OAK_WOOD);
+  public static final SimpleHandrailBlock SIMPLE_PALE_OAK_HANDRAIL = registerSimpleHandrail("simple_pale_oak_handrail", Blocks.PALE_OAK_WOOD);
   @ApiStatus.AvailableSince("0.2.0-mc1.19")
-  public static final SimpleHandrailBlock SIMPLE_MANGROVE_HANDRAIL = new SimpleHandrailBlock(Blocks.MANGROVE_WOOD);
-  public static final SimpleHandrailBlock SIMPLE_CRIMSON_HANDRAIL = new SimpleHandrailBlock(Blocks.CRIMSON_HYPHAE);
-  public static final SimpleHandrailBlock SIMPLE_WARPED_HANDRAIL = new SimpleHandrailBlock(Blocks.WARPED_HYPHAE);
-  public static final SimpleHandrailBlock SIMPLE_OAK_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.OAK_PLANKS);
-  public static final SimpleHandrailBlock SIMPLE_SPRUCE_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.SPRUCE_PLANKS);
-  public static final SimpleHandrailBlock SIMPLE_BIRCH_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.BIRCH_PLANKS);
-  public static final SimpleHandrailBlock SIMPLE_JUNGLE_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.JUNGLE_PLANKS);
-  public static final SimpleHandrailBlock SIMPLE_ACACIA_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.ACACIA_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_MANGROVE_HANDRAIL = registerSimpleHandrail("simple_mangrove_handrail", Blocks.MANGROVE_WOOD);
+  public static final SimpleHandrailBlock SIMPLE_CRIMSON_HANDRAIL = registerSimpleHandrail("simple_crimson_handrail", Blocks.CRIMSON_HYPHAE);
+  public static final SimpleHandrailBlock SIMPLE_WARPED_HANDRAIL = registerSimpleHandrail("simple_warped_handrail", Blocks.WARPED_HYPHAE);
+  public static final SimpleHandrailBlock SIMPLE_OAK_PLANK_HANDRAIL = registerSimpleHandrail("simple_oak_plank_handrail", Blocks.OAK_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_SPRUCE_PLANK_HANDRAIL = registerSimpleHandrail("simple_spruce_plank_handrail", Blocks.SPRUCE_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_BIRCH_PLANK_HANDRAIL = registerSimpleHandrail("simple_birch_plank_handrail", Blocks.BIRCH_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_JUNGLE_PLANK_HANDRAIL = registerSimpleHandrail("simple_jungle_plank_handrail", Blocks.JUNGLE_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_ACACIA_PLANK_HANDRAIL = registerSimpleHandrail("simple_acacia_plank_handrail", Blocks.ACACIA_PLANKS);
   @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
-  public static final SimpleHandrailBlock SIMPLE_CHERRY_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.CHERRY_PLANKS);
-  public static final SimpleHandrailBlock SIMPLE_DARK_OAK_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.DARK_OAK_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_CHERRY_PLANK_HANDRAIL = registerSimpleHandrail("simple_cherry_plank_handrail", Blocks.CHERRY_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_DARK_OAK_PLANK_HANDRAIL = registerSimpleHandrail("simple_dark_oak_plank_handrail", Blocks.DARK_OAK_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_PALE_OAK_PLANK_HANDRAIL = registerSimpleHandrail("simple_pale_oak_plank_handrail", Blocks.PALE_OAK_PLANKS);
   @ApiStatus.AvailableSince("0.2.0-mc1.19")
-  public static final SimpleHandrailBlock SIMPLE_MANGROVE_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.MANGROVE_PLANKS);
-  public static final SimpleHandrailBlock SIMPLE_CRIMSON_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.CRIMSON_PLANKS);
-  public static final SimpleHandrailBlock SIMPLE_WARPED_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.WARPED_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_MANGROVE_PLANK_HANDRAIL = registerSimpleHandrail("simple_mangrove_plank_handrail", Blocks.MANGROVE_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_CRIMSON_PLANK_HANDRAIL = registerSimpleHandrail("simple_crimson_plank_handrail", Blocks.CRIMSON_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_WARPED_PLANK_HANDRAIL = registerSimpleHandrail("simple_warped_plank_handrail", Blocks.WARPED_PLANKS);
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final SimpleHandrailBlock SIMPLE_BAMBOO_HANDRAIL = new SimpleHandrailBlock(Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(MapColor.DARK_GREEN));
+  public static final SimpleHandrailBlock SIMPLE_BAMBOO_HANDRAIL = registerSimpleHandrail("simple_bamboo_handrail", Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(MapColor.DARK_GREEN));
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final SimpleHandrailBlock SIMPLE_BAMBOO_PLANK_HANDRAIL = new SimpleHandrailBlock(Blocks.BAMBOO_PLANKS, Block.Settings.copy(Blocks.BAMBOO_PLANKS));
+  public static final SimpleHandrailBlock SIMPLE_BAMBOO_PLANK_HANDRAIL = registerSimpleHandrail("simple_bamboo_plank_handrail", Blocks.BAMBOO_PLANKS, Block.Settings.copy(Blocks.BAMBOO_PLANKS));
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final SimpleHandrailBlock SIMPLE_BAMBOO_MOSAIC_HANDRAIL = new SimpleHandrailBlock(Blocks.BAMBOO_MOSAIC, Block.Settings.copy(Blocks.BAMBOO_MOSAIC));
+  public static final SimpleHandrailBlock SIMPLE_BAMBOO_MOSAIC_HANDRAIL = registerSimpleHandrail("simple_bamboo_mosaic_handrail", Blocks.BAMBOO_MOSAIC, Block.Settings.copy(Blocks.BAMBOO_MOSAIC));
 
   static {
     SIMPLE_OAK_HANDRAIL.texture = Identifier.ofVanilla("block/oak_log");
@@ -167,6 +174,7 @@ public final class HandrailBlocks extends MishangucBlocks {
     SIMPLE_ACACIA_HANDRAIL.texture = Identifier.ofVanilla("block/acacia_log");
     SIMPLE_CHERRY_HANDRAIL.texture = Identifier.ofVanilla("block/cherry_log");
     SIMPLE_DARK_OAK_HANDRAIL.texture = Identifier.ofVanilla("block/dark_oak_log");
+    SIMPLE_PALE_OAK_HANDRAIL.texture = Identifier.ofVanilla("block/pale_oak_log");
     SIMPLE_MANGROVE_HANDRAIL.texture = Identifier.ofVanilla("block/mangrove_log");
     SIMPLE_CRIMSON_HANDRAIL.texture = Identifier.ofVanilla("block/crimson_stem");
     SIMPLE_WARPED_HANDRAIL.texture = Identifier.ofVanilla("block/warped_stem");
@@ -176,43 +184,43 @@ public final class HandrailBlocks extends MishangucBlocks {
   // 染色玻璃。
 
   @MiningLevel(MiningLevel.Tool.SHOVEL)
-  public static final SimpleHandrailBlock SIMPLE_DIRT_HANDRAIL = new SimpleHandrailBlock(Blocks.DIRT);
-  public static final SimpleHandrailBlock SIMPLE_STONE_HANDRAIL = new SimpleHandrailBlock(Blocks.STONE);
-  public static final SimpleHandrailBlock SIMPLE_COBBLESTONE_HANDRAIL = new SimpleHandrailBlock(Blocks.COBBLESTONE);
-  public static final SimpleHandrailBlock SIMPLE_MOSSY_COBBLESTONE_HANDRAIL = new SimpleHandrailBlock(Blocks.MOSSY_COBBLESTONE);
+  public static final SimpleHandrailBlock SIMPLE_DIRT_HANDRAIL = registerSimpleHandrail("simple_dirt_handrail", Blocks.DIRT);
+  public static final SimpleHandrailBlock SIMPLE_STONE_HANDRAIL = registerSimpleHandrail("simple_stone_handrail", Blocks.STONE);
+  public static final SimpleHandrailBlock SIMPLE_COBBLESTONE_HANDRAIL = registerSimpleHandrail("simple_cobblestone_handrail", Blocks.COBBLESTONE);
+  public static final SimpleHandrailBlock SIMPLE_MOSSY_COBBLESTONE_HANDRAIL = registerSimpleHandrail("simple_mossy_cobblestone_handrail", Blocks.MOSSY_COBBLESTONE);
 
   @Translucent
-  public static final SimpleHandrailBlock SIMPLE_WHITE_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.WHITE_STAINED_GLASS);
+  public static final SimpleHandrailBlock SIMPLE_WHITE_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_white_stained_glass_handrail", Blocks.WHITE_STAINED_GLASS);
   @Translucent
-  public static final SimpleHandrailBlock SIMPLE_ORANGE_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.ORANGE_STAINED_GLASS);
+  public static final SimpleHandrailBlock SIMPLE_ORANGE_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_orange_stained_glass_handrail", Blocks.ORANGE_STAINED_GLASS);
   @Translucent
-  public static final SimpleHandrailBlock SIMPLE_MAGENTA_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.MAGENTA_STAINED_GLASS);
+  public static final SimpleHandrailBlock SIMPLE_MAGENTA_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_magenta_stained_glass_handrail", Blocks.MAGENTA_STAINED_GLASS);
   @Translucent
-  public static final SimpleHandrailBlock SIMPLE_LIGHT_BLUE_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.LIGHT_BLUE_STAINED_GLASS);
+  public static final SimpleHandrailBlock SIMPLE_LIGHT_BLUE_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_light_blue_stained_glass_handrail", Blocks.LIGHT_BLUE_STAINED_GLASS);
   @Translucent
-  public static final SimpleHandrailBlock SIMPLE_YELLOW_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.YELLOW_STAINED_GLASS);
+  public static final SimpleHandrailBlock SIMPLE_YELLOW_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_yellow_stained_glass_handrail", Blocks.YELLOW_STAINED_GLASS);
   @Translucent
-  public static final SimpleHandrailBlock SIMPLE_LIME_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.LIME_STAINED_GLASS);
+  public static final SimpleHandrailBlock SIMPLE_LIME_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_lime_stained_glass_handrail", Blocks.LIME_STAINED_GLASS);
   @Translucent
-  public static final SimpleHandrailBlock SIMPLE_PINK_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.PINK_STAINED_GLASS);
+  public static final SimpleHandrailBlock SIMPLE_PINK_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_pink_stained_glass_handrail", Blocks.PINK_STAINED_GLASS);
   @Translucent
-  public static final SimpleHandrailBlock SIMPLE_GRAY_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.GRAY_STAINED_GLASS);
+  public static final SimpleHandrailBlock SIMPLE_GRAY_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_gray_stained_glass_handrail", Blocks.GRAY_STAINED_GLASS);
   @Translucent
-  public static final SimpleHandrailBlock SIMPLE_LIGHT_GRAY_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.LIGHT_GRAY_STAINED_GLASS);
+  public static final SimpleHandrailBlock SIMPLE_LIGHT_GRAY_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_light_gray_stained_glass_handrail", Blocks.LIGHT_GRAY_STAINED_GLASS);
   @Translucent
-  public static final SimpleHandrailBlock SIMPLE_CYAN_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.CYAN_STAINED_GLASS);
+  public static final SimpleHandrailBlock SIMPLE_CYAN_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_cyan_stained_glass_handrail", Blocks.CYAN_STAINED_GLASS);
   @Translucent
-  public static final SimpleHandrailBlock SIMPLE_PURPLE_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.PURPLE_STAINED_GLASS);
+  public static final SimpleHandrailBlock SIMPLE_PURPLE_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_purple_stained_glass_handrail", Blocks.PURPLE_STAINED_GLASS);
   @Translucent
-  public static final SimpleHandrailBlock SIMPLE_BLUE_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.BLUE_STAINED_GLASS);
+  public static final SimpleHandrailBlock SIMPLE_BLUE_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_blue_stained_glass_handrail", Blocks.BLUE_STAINED_GLASS);
   @Translucent
-  public static final SimpleHandrailBlock SIMPLE_BROWN_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.BROWN_STAINED_GLASS);
+  public static final SimpleHandrailBlock SIMPLE_BROWN_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_brown_stained_glass_handrail", Blocks.BROWN_STAINED_GLASS);
   @Translucent
-  public static final SimpleHandrailBlock SIMPLE_GREEN_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.GREEN_STAINED_GLASS);
+  public static final SimpleHandrailBlock SIMPLE_GREEN_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_green_stained_glass_handrail", Blocks.GREEN_STAINED_GLASS);
   @Translucent
-  public static final SimpleHandrailBlock SIMPLE_RED_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.RED_STAINED_GLASS);
+  public static final SimpleHandrailBlock SIMPLE_RED_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_red_stained_glass_handrail", Blocks.RED_STAINED_GLASS);
   @Translucent
-  public static final SimpleHandrailBlock SIMPLE_BLACK_STAINED_GLASS_HANDRAIL = new SimpleHandrailBlock(Blocks.BLACK_STAINED_GLASS);
+  public static final SimpleHandrailBlock SIMPLE_BLACK_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_black_stained_glass_handrail", Blocks.BLACK_STAINED_GLASS);
 
   /**
    * 颜色及其对应的染色玻璃栏杆组成的映射。
@@ -240,78 +248,78 @@ public final class HandrailBlocks extends MishangucBlocks {
 
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STONE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STONE, Block.Settings.copy(Blocks.STONE).strength(2.5f, 6f), "block/stone", "block/white_concrete");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STONE_HANDRAIL = registerColoredGlassHandrail("colored_decorated_stone_handrail", Blocks.STONE, Block.Settings.copy(Blocks.STONE).strength(2.5f, 6f), "block/stone", "block/white_concrete");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_COBBLESTONE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.COBBLESTONE, Block.Settings.copy(Blocks.COBBLESTONE).strength(2.5f, 6f), "block/cobblestone", "block/white_concrete");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_COBBLESTONE_HANDRAIL = registerColoredGlassHandrail("colored_decorated_cobblestone_handrail", Blocks.COBBLESTONE, Block.Settings.copy(Blocks.COBBLESTONE).strength(2.5f, 6f), "block/cobblestone", "block/white_concrete");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_MOSSY_COBBLESTONE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.MOSSY_COBBLESTONE, Block.Settings.copy(Blocks.COBBLESTONE).strength(2.5f, 6f), "block/mossy_cobblestone", "block/white_concrete");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_MOSSY_COBBLESTONE_HANDRAIL = registerColoredGlassHandrail("colored_decorated_mossy_cobblestone_handrail", Blocks.MOSSY_COBBLESTONE, Block.Settings.copy(Blocks.COBBLESTONE).strength(2.5f, 6f), "block/mossy_cobblestone", "block/white_concrete");
 
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock WHITE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(Blocks.IRON_BLOCK).strength(2.5f, 6f).mapColor(DyeColor.WHITE), "block/iron_block", "block/white_concrete");
+  public static final GlassHandrailBlock WHITE_DECORATED_IRON_HANDRAIL = registerGlassHandrail("white_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(Blocks.IRON_BLOCK).strength(2.5f, 6f).mapColor(DyeColor.WHITE), "block/iron_block", "block/white_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock ORANGE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.ORANGE), "block/iron_block", "block/orange_concrete");
+  public static final GlassHandrailBlock ORANGE_DECORATED_IRON_HANDRAIL = registerGlassHandrail("orange_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.ORANGE), "block/iron_block", "block/orange_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock MAGENTA_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.MAGENTA), "block/iron_block", "block/magenta_concrete");
+  public static final GlassHandrailBlock MAGENTA_DECORATED_IRON_HANDRAIL = registerGlassHandrail("magenta_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.MAGENTA), "block/iron_block", "block/magenta_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock LIGHT_BLUE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.LIGHT_BLUE), "block/iron_block", "block/light_blue_concrete");
+  public static final GlassHandrailBlock LIGHT_BLUE_DECORATED_IRON_HANDRAIL = registerGlassHandrail("light_blue_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.LIGHT_BLUE), "block/iron_block", "block/light_blue_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock YELLOW_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.YELLOW), "block/iron_block", "block/yellow_concrete");
+  public static final GlassHandrailBlock YELLOW_DECORATED_IRON_HANDRAIL = registerGlassHandrail("yellow_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.YELLOW), "block/iron_block", "block/yellow_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock LIME_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.LIME), "block/iron_block", "block/lime_concrete");
+  public static final GlassHandrailBlock LIME_DECORATED_IRON_HANDRAIL = registerGlassHandrail("lime_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.LIME), "block/iron_block", "block/lime_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock PINK_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.PINK), "block/iron_block", "block/pink_concrete");
+  public static final GlassHandrailBlock PINK_DECORATED_IRON_HANDRAIL = registerGlassHandrail("pink_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.PINK), "block/iron_block", "block/pink_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock GRAY_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.GRAY), "block/iron_block", "block/gray_concrete");
+  public static final GlassHandrailBlock GRAY_DECORATED_IRON_HANDRAIL = registerGlassHandrail("gray_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.GRAY), "block/iron_block", "block/gray_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock LIGHT_GRAY_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.LIGHT_GRAY), "block/iron_block", "block/light_gray_concrete");
+  public static final GlassHandrailBlock LIGHT_GRAY_DECORATED_IRON_HANDRAIL = registerGlassHandrail("light_gray_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.LIGHT_GRAY), "block/iron_block", "block/light_gray_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock CYAN_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.CYAN), "block/iron_block", "block/cyan_concrete");
+  public static final GlassHandrailBlock CYAN_DECORATED_IRON_HANDRAIL = registerGlassHandrail("cyan_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.CYAN), "block/iron_block", "block/cyan_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock PURPLE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.PURPLE), "block/iron_block", "block/purple_concrete");
+  public static final GlassHandrailBlock PURPLE_DECORATED_IRON_HANDRAIL = registerGlassHandrail("purple_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.PURPLE), "block/iron_block", "block/purple_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock BLUE_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.BLUE), "block/iron_block", "block/blue_concrete");
+  public static final GlassHandrailBlock BLUE_DECORATED_IRON_HANDRAIL = registerGlassHandrail("blue_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.BLUE), "block/iron_block", "block/blue_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock BROWN_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.BROWN), "block/iron_block", "block/brown_concrete");
+  public static final GlassHandrailBlock BROWN_DECORATED_IRON_HANDRAIL = registerGlassHandrail("brown_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.BROWN), "block/iron_block", "block/brown_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock GREEN_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.GREEN), "block/iron_block", "block/green_concrete");
+  public static final GlassHandrailBlock GREEN_DECORATED_IRON_HANDRAIL = registerGlassHandrail("green_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.GREEN), "block/iron_block", "block/green_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock RED_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.RED), "block/iron_block", "block/red_concrete");
+  public static final GlassHandrailBlock RED_DECORATED_IRON_HANDRAIL = registerGlassHandrail("red_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.RED), "block/iron_block", "block/red_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock BLACK_DECORATED_IRON_HANDRAIL = new GlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.BLACK), "block/iron_block", "block/black_concrete");
+  public static final GlassHandrailBlock BLACK_DECORATED_IRON_HANDRAIL = registerGlassHandrail("black_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.BLACK), "block/iron_block", "block/black_concrete");
 
   public static final EnumMap<DyeColor, GlassHandrailBlock> DECORATED_IRON_HANDRAILS = new EnumMap<>(DyeColor.class);
 
@@ -340,7 +348,7 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_IRON_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL), "block/iron_block", "block/white_concrete");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_IRON_HANDRAIL = registerColoredGlassHandrail("colored_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL), "block/iron_block", "block/white_concrete");
 
   /**
    * 可自定义染色的金栏杆方块。
@@ -348,231 +356,265 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.IRON)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_GOLD_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.GOLD_BLOCK, Block.Settings.copy(Blocks.GOLD_BLOCK).strength(1.5f, 6f), "block/gold_block", "block/white_concrete");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_GOLD_HANDRAIL = registerColoredGlassHandrail("colored_decorated_gold_handrail", Blocks.GOLD_BLOCK, Block.Settings.copy(Blocks.GOLD_BLOCK).strength(1.5f, 6f), "block/gold_block", "block/white_concrete");
 
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.IRON)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_EMERALD_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.EMERALD_BLOCK, Block.Settings.copy(Blocks.EMERALD_BLOCK).strength(2.5f, 6f), "block/emerald_block", "block/white_concrete");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_EMERALD_HANDRAIL = registerColoredGlassHandrail("colored_decorated_emerald_handrail", Blocks.EMERALD_BLOCK, Block.Settings.copy(Blocks.EMERALD_BLOCK).strength(2.5f, 6f), "block/emerald_block", "block/white_concrete");
 
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.IRON)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_DIAMOND_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.DIAMOND_BLOCK, Block.Settings.copy(Blocks.DIAMOND_BLOCK).strength(2.5f, 6f), "block/diamond_block", "block/white_concrete");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_DIAMOND_HANDRAIL = registerColoredGlassHandrail("colored_decorated_diamond_handrail", Blocks.DIAMOND_BLOCK, Block.Settings.copy(Blocks.DIAMOND_BLOCK).strength(2.5f, 6f), "block/diamond_block", "block/white_concrete");
 
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_NETHERITE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.NETHERITE_BLOCK, Block.Settings.copy(Blocks.NETHERITE_BLOCK).strength(25f, 1200f), "block/netherite_block", "block/white_concrete");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_NETHERITE_HANDRAIL = registerColoredGlassHandrail("colored_decorated_netherite_handrail", Blocks.NETHERITE_BLOCK, Block.Settings.copy(Blocks.NETHERITE_BLOCK).strength(25f, 1200f), "block/netherite_block", "block/white_concrete");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.IRON)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_LAPIS_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.LAPIS_BLOCK, Block.Settings.copy(Blocks.LAPIS_BLOCK).strength(2.5f, 6f), "block/lapis_block", "block/white_concrete");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_LAPIS_HANDRAIL = registerColoredGlassHandrail("colored_decorated_lapis_handrail", Blocks.LAPIS_BLOCK, Block.Settings.copy(Blocks.LAPIS_BLOCK).strength(2.5f, 6f), "block/lapis_block", "block/white_concrete");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_IRON_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).luminance(x -> 15), "block/iron_block", "mishanguc:block/white_light");
+  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_IRON_HANDRAIL = registerColoredGlassHandrail("glowing_colored_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Settings.copy(WHITE_DECORATED_IRON_HANDRAIL).luminance(x -> 15), "block/iron_block", "mishanguc:block/white_light");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.IRON)
-  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_GOLD_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.GOLD_BLOCK, Block.Settings.copy(Blocks.GOLD_BLOCK).strength(1.5f, 6f).luminance(x -> 15), "block/gold_block", "mishanguc:block/white_light");
+  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_GOLD_HANDRAIL = registerColoredGlassHandrail("glowing_colored_decorated_gold_handrail", Blocks.GOLD_BLOCK, Block.Settings.copy(Blocks.GOLD_BLOCK).strength(1.5f, 6f).luminance(x -> 15), "block/gold_block", "mishanguc:block/white_light");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.IRON)
-  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_EMERALD_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.EMERALD_BLOCK, Block.Settings.copy(Blocks.EMERALD_BLOCK).strength(2.5f, 6f).luminance(x -> 15), "block/emerald_block", "mishanguc:block/white_light");
+  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_EMERALD_HANDRAIL = registerColoredGlassHandrail("glowing_colored_decorated_emerald_handrail", Blocks.EMERALD_BLOCK, Block.Settings.copy(Blocks.EMERALD_BLOCK).strength(2.5f, 6f).luminance(x -> 15), "block/emerald_block", "mishanguc:block/white_light");
 
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.IRON)
-  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_DIAMOND_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.DIAMOND_BLOCK, Block.Settings.copy(Blocks.DIAMOND_BLOCK).strength(2.5f, 6f).luminance(x -> 15), "block/diamond_block", "mishanguc:block/white_light");
+  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_DIAMOND_HANDRAIL = registerColoredGlassHandrail("glowing_colored_decorated_diamond_handrail", Blocks.DIAMOND_BLOCK, Block.Settings.copy(Blocks.DIAMOND_BLOCK).strength(2.5f, 6f).luminance(x -> 15), "block/diamond_block", "mishanguc:block/white_light");
 
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_NETHERITE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.NETHERITE_BLOCK, Block.Settings.copy(Blocks.NETHERITE_BLOCK).strength(25f, 1200f).luminance(x -> 15), "block/netherite_block", "mishanguc:block/white_light");
+  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_NETHERITE_HANDRAIL = registerColoredGlassHandrail("glowing_colored_decorated_netherite_handrail", Blocks.NETHERITE_BLOCK, Block.Settings.copy(Blocks.NETHERITE_BLOCK).strength(25f, 1200f).luminance(x -> 15), "block/netherite_block", "mishanguc:block/white_light");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.IRON)
-  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_LAPIS_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.LAPIS_BLOCK, Block.Settings.copy(Blocks.LAPIS_BLOCK).strength(2.5f, 6f).luminance(x -> 15), "block/lapis_block", "mishanguc:block/white_light");
+  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_LAPIS_HANDRAIL = registerColoredGlassHandrail("glowing_colored_decorated_lapis_handrail", Blocks.LAPIS_BLOCK, Block.Settings.copy(Blocks.LAPIS_BLOCK).strength(2.5f, 6f).luminance(x -> 15), "block/lapis_block", "mishanguc:block/white_light");
 
 
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
-  public static final GlassHandrailBlock SNOW_DECORATED_PACKED_ICE_HANDRAIL = new GlassHandrailBlock(Blocks.PACKED_ICE, Block.Settings.copy(Blocks.PACKED_ICE).strength(2.5f, 6f), "block/packed_ice", "block/snow");
+  public static final GlassHandrailBlock SNOW_DECORATED_PACKED_ICE_HANDRAIL = registerGlassHandrail("snow_decorated_packed_ice_handrail", Blocks.PACKED_ICE, Block.Settings.copy(Blocks.PACKED_ICE).strength(2.5f, 6f), "block/packed_ice", "block/snow");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
-  public static final GlassHandrailBlock SNOW_DECORATED_BLUE_ICE_HANDRAIL = new GlassHandrailBlock(Blocks.BLUE_ICE, Block.Settings.copy(Blocks.BLUE_ICE).strength(2.5f, 6f), "block/blue_ice", "block/snow");
+  public static final GlassHandrailBlock SNOW_DECORATED_BLUE_ICE_HANDRAIL = registerGlassHandrail("snow_decorated_blue_ice_handrail", Blocks.BLUE_ICE, Block.Settings.copy(Blocks.BLUE_ICE).strength(2.5f, 6f), "block/blue_ice", "block/snow");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_PACKED_ICE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.PACKED_ICE, Block.Settings.copy(Blocks.PACKED_ICE).strength(2.5f, 6f), "block/packed_ice", "block/snow");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_PACKED_ICE_HANDRAIL = registerColoredGlassHandrail("colored_decorated_packed_ice_handrail", Blocks.PACKED_ICE, Block.Settings.copy(Blocks.PACKED_ICE).strength(2.5f, 6f), "block/packed_ice", "block/snow");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_BLUE_ICE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.BLUE_ICE, Block.Settings.copy(Blocks.BLUE_ICE).strength(2.5f, 6f), "block/blue_ice", "block/snow");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_BLUE_ICE_HANDRAIL = registerColoredGlassHandrail("colored_decorated_blue_ice_handrail", Blocks.BLUE_ICE, Block.Settings.copy(Blocks.BLUE_ICE).strength(2.5f, 6f), "block/blue_ice", "block/snow");
 
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final GlassHandrailBlock GLASS_OAK_HANDRAIL = new GlassHandrailBlock(Blocks.OAK_WOOD, Block.Settings.copy(Blocks.OAK_WOOD).strength(1.0f), "block/oak_log", "block/oak_planks");
+  public static final GlassHandrailBlock GLASS_OAK_HANDRAIL = registerGlassHandrail("glass_oak_handrail", Blocks.OAK_WOOD, Block.Settings.copy(Blocks.OAK_WOOD).strength(1.0f), "block/oak_log", "block/oak_planks");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final GlassHandrailBlock GLASS_SPRUCE_HANDRAIL = new GlassHandrailBlock(Blocks.SPRUCE_WOOD, Block.Settings.copy(Blocks.SPRUCE_WOOD).strength(1.0f), "block/spruce_log", "block/spruce_planks");
+  public static final GlassHandrailBlock GLASS_SPRUCE_HANDRAIL = registerGlassHandrail("glass_spruce_handrail", Blocks.SPRUCE_WOOD, Block.Settings.copy(Blocks.SPRUCE_WOOD).strength(1.0f), "block/spruce_log", "block/spruce_planks");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final GlassHandrailBlock GLASS_BIRCH_HANDRAIL = new GlassHandrailBlock(Blocks.BIRCH_WOOD, Block.Settings.copy(Blocks.BIRCH_WOOD).strength(1.0f), "block/birch_log", "block/birch_planks");
+  public static final GlassHandrailBlock GLASS_BIRCH_HANDRAIL = registerGlassHandrail("glass_birch_handrail", Blocks.BIRCH_WOOD, Block.Settings.copy(Blocks.BIRCH_WOOD).strength(1.0f), "block/birch_log", "block/birch_planks");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final GlassHandrailBlock GLASS_JUNGLE_HANDRAIL = new GlassHandrailBlock(Blocks.JUNGLE_WOOD, Block.Settings.copy(Blocks.JUNGLE_WOOD).strength(1.0f), "block/jungle_log", "block/jungle_planks");
+  public static final GlassHandrailBlock GLASS_JUNGLE_HANDRAIL = registerGlassHandrail("glass_jungle_handrail", Blocks.JUNGLE_WOOD, Block.Settings.copy(Blocks.JUNGLE_WOOD).strength(1.0f), "block/jungle_log", "block/jungle_planks");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final GlassHandrailBlock GLASS_ACACIA_HANDRAIL = new GlassHandrailBlock(Blocks.ACACIA_WOOD, Block.Settings.copy(Blocks.ACACIA_WOOD).strength(1.0f), "block/acacia_log", "block/acacia_planks");
+  public static final GlassHandrailBlock GLASS_ACACIA_HANDRAIL = registerGlassHandrail("glass_acacia_handrail", Blocks.ACACIA_WOOD, Block.Settings.copy(Blocks.ACACIA_WOOD).strength(1.0f), "block/acacia_log", "block/acacia_planks");
   @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final GlassHandrailBlock GLASS_CHERRY_HANDRAIL = new GlassHandrailBlock(Blocks.CHERRY_WOOD, Block.Settings.copy(Blocks.CHERRY_WOOD).strength(1.0f), "block/cherry_log", "block/cherry_planks");
+  public static final GlassHandrailBlock GLASS_CHERRY_HANDRAIL = registerGlassHandrail("glass_cherry_handrail", Blocks.CHERRY_WOOD, Block.Settings.copy(Blocks.CHERRY_WOOD).strength(1.0f), "block/cherry_log", "block/cherry_planks");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final GlassHandrailBlock GLASS_DARK_OAK_HANDRAIL = new GlassHandrailBlock(Blocks.DARK_OAK_WOOD, Block.Settings.copy(Blocks.DARK_OAK_WOOD).strength(1.0f), "block/dark_oak_log", "block/dark_oak_planks");
+  public static final GlassHandrailBlock GLASS_DARK_OAK_HANDRAIL = registerGlassHandrail("glass_dark_oak_handrail", Blocks.DARK_OAK_WOOD, Block.Settings.copy(Blocks.DARK_OAK_WOOD).strength(1.0f), "block/dark_oak_log", "block/dark_oak_planks");
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final GlassHandrailBlock GLASS_PALE_OAK_HANDRAIL = registerGlassHandrail("glass_pale_oak_handrail", Blocks.PALE_OAK_WOOD, Block.Settings.copy(Blocks.PALE_OAK_WOOD).strength(1.0f), "block/pale_oak_log", "block/pale_oak_planks");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final GlassHandrailBlock GLASS_MANGROVE_HANDRAIL = new GlassHandrailBlock(Blocks.MANGROVE_WOOD, Block.Settings.copy(Blocks.MANGROVE_WOOD).strength(1.0f), "block/mangrove_log", "block/mangrove_planks");
+  public static final GlassHandrailBlock GLASS_MANGROVE_HANDRAIL = registerGlassHandrail("glass_mangrove_handrail", Blocks.MANGROVE_WOOD, Block.Settings.copy(Blocks.MANGROVE_WOOD).strength(1.0f), "block/mangrove_log", "block/mangrove_planks");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final GlassHandrailBlock GLASS_CRIMSON_HANDRAIL = new GlassHandrailBlock(Blocks.CRIMSON_HYPHAE, Block.Settings.copy(Blocks.CRIMSON_HYPHAE).strength(1.0f), "block/crimson_stem", "block/crimson_planks");
+  public static final GlassHandrailBlock GLASS_CRIMSON_HANDRAIL = registerGlassHandrail("glass_crimson_handrail", Blocks.CRIMSON_HYPHAE, Block.Settings.copy(Blocks.CRIMSON_HYPHAE).strength(1.0f), "block/crimson_stem", "block/crimson_planks");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final GlassHandrailBlock GLASS_WARPED_HANDRAIL = new GlassHandrailBlock(Blocks.WARPED_HYPHAE, Block.Settings.copy(Blocks.WARPED_HYPHAE).strength(1.0f), "block/warped_stem", "block/warped_planks");
+  public static final GlassHandrailBlock GLASS_WARPED_HANDRAIL = registerGlassHandrail("glass_warped_handrail", Blocks.WARPED_HYPHAE, Block.Settings.copy(Blocks.WARPED_HYPHAE).strength(1.0f), "block/warped_stem", "block/warped_planks");
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final GlassHandrailBlock GLASS_BAMBOO_HANDRAIL = new GlassHandrailBlock(Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(MapColor.DARK_GREEN).strength(1.0f), "block/bamboo_block", "block/bamboo_mosaic");
+  public static final GlassHandrailBlock GLASS_BAMBOO_HANDRAIL = registerGlassHandrail("glass_bamboo_handrail", Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(MapColor.DARK_GREEN).strength(1.0f), "block/bamboo_block", "block/bamboo_mosaic");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_OAK_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.OAK_WOOD, Block.Settings.copy(Blocks.OAK_WOOD).strength(1.0f), "block/oak_log", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_OAK_HANDRAIL = registerColoredGlassHandrail("colored_decorated_oak_handrail", Blocks.OAK_WOOD, Block.Settings.copy(Blocks.OAK_WOOD).strength(1.0f), "block/oak_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_SPRUCE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.SPRUCE_WOOD, Block.Settings.copy(Blocks.SPRUCE_WOOD).strength(1.0f), "block/spruce_log", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_SPRUCE_HANDRAIL = registerColoredGlassHandrail("colored_decorated_spruce_handrail", Blocks.SPRUCE_WOOD, Block.Settings.copy(Blocks.SPRUCE_WOOD).strength(1.0f), "block/spruce_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_BIRCH_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.BIRCH_WOOD, Block.Settings.copy(Blocks.BIRCH_WOOD).strength(1.0f), "block/birch_log", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_BIRCH_HANDRAIL = registerColoredGlassHandrail("colored_decorated_birch_handrail", Blocks.BIRCH_WOOD, Block.Settings.copy(Blocks.BIRCH_WOOD).strength(1.0f), "block/birch_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_JUNGLE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.JUNGLE_WOOD, Block.Settings.copy(Blocks.JUNGLE_WOOD).strength(1.0f), "block/jungle_log", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_JUNGLE_HANDRAIL = registerColoredGlassHandrail("colored_decorated_jungle_handrail", Blocks.JUNGLE_WOOD, Block.Settings.copy(Blocks.JUNGLE_WOOD).strength(1.0f), "block/jungle_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_ACACIA_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.ACACIA_WOOD, Block.Settings.copy(Blocks.ACACIA_WOOD).strength(1.0f), "block/acacia_log", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_ACACIA_HANDRAIL = registerColoredGlassHandrail("colored_decorated_acacia_handrail", Blocks.ACACIA_WOOD, Block.Settings.copy(Blocks.ACACIA_WOOD).strength(1.0f), "block/acacia_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.1.1-mc1.19.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_CHERRY_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.CHERRY_WOOD, Block.Settings.copy(Blocks.CHERRY_WOOD).strength(1.0f), "block/cherry_log", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_CHERRY_HANDRAIL = registerColoredGlassHandrail("colored_decorated_cherry_handrail", Blocks.CHERRY_WOOD, Block.Settings.copy(Blocks.CHERRY_WOOD).strength(1.0f), "block/cherry_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_DARK_OAK_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.DARK_OAK_WOOD, Block.Settings.copy(Blocks.DARK_OAK_WOOD).strength(1.0f), "block/dark_oak_log", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_DARK_OAK_HANDRAIL = registerColoredGlassHandrail("colored_decorated_dark_oak_handrail", Blocks.DARK_OAK_WOOD, Block.Settings.copy(Blocks.DARK_OAK_WOOD).strength(1.0f), "block/dark_oak_log", "mishanguc:block/pale_planks");
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_PALE_OAK_HANDRAIL = registerColoredGlassHandrail("colored_decorated_pale_oak_handrail", Blocks.PALE_OAK_WOOD, Block.Settings.copy(Blocks.PALE_OAK_WOOD).strength(1.0f), "block/pale_oak_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_MANGROVE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.MANGROVE_WOOD, Block.Settings.copy(Blocks.MANGROVE_WOOD).strength(1.0f), "block/mangrove_log", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_MANGROVE_HANDRAIL = registerColoredGlassHandrail("colored_decorated_mangrove_handrail", Blocks.MANGROVE_WOOD, Block.Settings.copy(Blocks.MANGROVE_WOOD).strength(1.0f), "block/mangrove_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_CRIMSON_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.CRIMSON_HYPHAE, Block.Settings.copy(Blocks.CRIMSON_HYPHAE).strength(1.0f), "block/crimson_stem", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_CRIMSON_HANDRAIL = registerColoredGlassHandrail("colored_decorated_crimson_handrail", Blocks.CRIMSON_HYPHAE, Block.Settings.copy(Blocks.CRIMSON_HYPHAE).strength(1.0f), "block/crimson_stem", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_WARPED_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.WARPED_HYPHAE, Block.Settings.copy(Blocks.WARPED_HYPHAE).strength(1.0f), "block/warped_stem", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_WARPED_HANDRAIL = registerColoredGlassHandrail("colored_decorated_warped_handrail", Blocks.WARPED_HYPHAE, Block.Settings.copy(Blocks.WARPED_HYPHAE).strength(1.0f), "block/warped_stem", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_BAMBOO_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(MapColor.DARK_GREEN).strength(1.0f), "block/bamboo_block", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_BAMBOO_HANDRAIL = registerColoredGlassHandrail("colored_decorated_bamboo_handrail", Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(MapColor.DARK_GREEN).strength(1.0f), "block/bamboo_block", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_OAK_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_OAK_WOOD, Block.Settings.copy(Blocks.STRIPPED_OAK_WOOD).strength(1.0f), "block/stripped_oak_log", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_OAK_HANDRAIL = registerColoredGlassHandrail("colored_decorated_stripped_oak_handrail", Blocks.STRIPPED_OAK_WOOD, Block.Settings.copy(Blocks.STRIPPED_OAK_WOOD).strength(1.0f), "block/stripped_oak_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_SPRUCE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_SPRUCE_WOOD, Block.Settings.copy(Blocks.STRIPPED_SPRUCE_WOOD).strength(1.0f), "block/stripped_spruce_log", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_SPRUCE_HANDRAIL = registerColoredGlassHandrail("colored_decorated_stripped_spruce_handrail", Blocks.STRIPPED_SPRUCE_WOOD, Block.Settings.copy(Blocks.STRIPPED_SPRUCE_WOOD).strength(1.0f), "block/stripped_spruce_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_BIRCH_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_BIRCH_WOOD, Block.Settings.copy(Blocks.STRIPPED_BIRCH_WOOD).strength(1.0f), "block/stripped_birch_log", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_BIRCH_HANDRAIL = registerColoredGlassHandrail("colored_decorated_stripped_birch_handrail", Blocks.STRIPPED_BIRCH_WOOD, Block.Settings.copy(Blocks.STRIPPED_BIRCH_WOOD).strength(1.0f), "block/stripped_birch_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_JUNGLE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_JUNGLE_WOOD, Block.Settings.copy(Blocks.STRIPPED_JUNGLE_WOOD).strength(1.0f), "block/stripped_jungle_log", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_JUNGLE_HANDRAIL = registerColoredGlassHandrail("colored_decorated_stripped_jungle_handrail", Blocks.STRIPPED_JUNGLE_WOOD, Block.Settings.copy(Blocks.STRIPPED_JUNGLE_WOOD).strength(1.0f), "block/stripped_jungle_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_ACACIA_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_ACACIA_WOOD, Block.Settings.copy(Blocks.STRIPPED_ACACIA_WOOD).strength(1.0f), "block/stripped_acacia_log", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_ACACIA_HANDRAIL = registerColoredGlassHandrail("colored_decorated_stripped_acacia_handrail", Blocks.STRIPPED_ACACIA_WOOD, Block.Settings.copy(Blocks.STRIPPED_ACACIA_WOOD).strength(1.0f), "block/stripped_acacia_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_CHERRY_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_CHERRY_WOOD, Block.Settings.copy(Blocks.STRIPPED_CHERRY_WOOD).strength(1.0f), "block/stripped_cherry_log", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_CHERRY_HANDRAIL = registerColoredGlassHandrail("colored_decorated_stripped_cherry_handrail", Blocks.STRIPPED_CHERRY_WOOD, Block.Settings.copy(Blocks.STRIPPED_CHERRY_WOOD).strength(1.0f), "block/stripped_cherry_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_DARK_OAK_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_DARK_OAK_WOOD, Block.Settings.copy(Blocks.STRIPPED_DARK_OAK_WOOD).strength(1.0f), "block/stripped_dark_oak_log", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_DARK_OAK_HANDRAIL = registerColoredGlassHandrail("colored_decorated_stripped_dark_oak_handrail", Blocks.STRIPPED_DARK_OAK_WOOD, Block.Settings.copy(Blocks.STRIPPED_DARK_OAK_WOOD).strength(1.0f), "block/stripped_dark_oak_log", "mishanguc:block/pale_planks");
+  @Translucent
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_PALE_OAK_HANDRAIL = registerColoredGlassHandrail("colored_decorated_stripped_pale_oak_handrail", Blocks.STRIPPED_PALE_OAK_WOOD, Block.Settings.copy(Blocks.STRIPPED_PALE_OAK_WOOD).strength(1.0f), "block/stripped_pale_oak_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_MANGROVE_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_MANGROVE_WOOD, Block.Settings.copy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED).strength(1.0f), "block/stripped_mangrove_log", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_MANGROVE_HANDRAIL = registerColoredGlassHandrail("colored_decorated_stripped_mangrove_handrail", Blocks.STRIPPED_MANGROVE_WOOD, Block.Settings.copy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED).strength(1.0f), "block/stripped_mangrove_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_CRIMSON_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_CRIMSON_HYPHAE, Block.Settings.copy(Blocks.STRIPPED_CRIMSON_HYPHAE).strength(1.0f), "block/stripped_crimson_stem", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_CRIMSON_HANDRAIL = registerColoredGlassHandrail("colored_decorated_stripped_crimson_handrail", Blocks.STRIPPED_CRIMSON_HYPHAE, Block.Settings.copy(Blocks.STRIPPED_CRIMSON_HYPHAE).strength(1.0f), "block/stripped_crimson_stem", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_WARPED_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_WARPED_HYPHAE, Block.Settings.copy(Blocks.STRIPPED_WARPED_HYPHAE).strength(1.0f), "block/stripped_warped_stem", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_WARPED_HANDRAIL = registerColoredGlassHandrail("colored_decorated_stripped_warped_handrail", Blocks.STRIPPED_WARPED_HYPHAE, Block.Settings.copy(Blocks.STRIPPED_WARPED_HYPHAE).strength(1.0f), "block/stripped_warped_stem", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.4.0")
   @Translucent
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_BAMBOO_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.STRIPPED_BAMBOO_BLOCK, Block.Settings.copy(Blocks.STRIPPED_BAMBOO_BLOCK).mapColor(MapColor.YELLOW).strength(1.0f), "block/bamboo_block", "mishanguc:block/pale_planks");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_BAMBOO_HANDRAIL = registerColoredGlassHandrail("colored_decorated_stripped_bamboo_handrail", Blocks.STRIPPED_BAMBOO_BLOCK, Block.Settings.copy(Blocks.STRIPPED_BAMBOO_BLOCK).mapColor(MapColor.YELLOW).strength(1.0f), "block/bamboo_block", "mishanguc:block/pale_planks");
 
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final GlassHandrailBlock NETHERRACK_DECORATED_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.OBSIDIAN, Block.Settings.copy(Blocks.OBSIDIAN).strength(10, 1200), "block/obsidian", "block/netherrack");
+  public static final GlassHandrailBlock NETHERRACK_DECORATED_OBSIDIAN_HANDRAIL = registerGlassHandrail("netherrack_decorated_obsidian_handrail", Blocks.OBSIDIAN, Block.Settings.copy(Blocks.OBSIDIAN).strength(10, 1200), "block/obsidian", "block/netherrack");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final GlassHandrailBlock NETHERRACK_DECORATED_CRYING_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.CRYING_OBSIDIAN, Block.Settings.copy(Blocks.CRYING_OBSIDIAN).strength(10, 1200), "block/crying_obsidian", "block/netherrack");
+  public static final GlassHandrailBlock NETHERRACK_DECORATED_CRYING_OBSIDIAN_HANDRAIL = registerGlassHandrail("netherrack_decorated_crying_obsidian_handrail", Blocks.CRYING_OBSIDIAN, Block.Settings.copy(Blocks.CRYING_OBSIDIAN).strength(10, 1200), "block/crying_obsidian", "block/netherrack");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final GlassHandrailBlock SOUL_SOIL_DECORATED_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.OBSIDIAN, Block.Settings.copy(Blocks.OBSIDIAN).strength(10, 1200), "block/obsidian", "block/soul_soil");
+  public static final GlassHandrailBlock SOUL_SOIL_DECORATED_OBSIDIAN_HANDRAIL = registerGlassHandrail("soul_soil_decorated_obsidian_handrail", Blocks.OBSIDIAN, Block.Settings.copy(Blocks.OBSIDIAN).strength(10, 1200), "block/obsidian", "block/soul_soil");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final GlassHandrailBlock SOUL_SOIL_DECORATED_CRYING_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.CRYING_OBSIDIAN, Block.Settings.copy(Blocks.CRYING_OBSIDIAN).strength(10, 1200), "block/crying_obsidian", "block/soul_soil");
+  public static final GlassHandrailBlock SOUL_SOIL_DECORATED_CRYING_OBSIDIAN_HANDRAIL = registerGlassHandrail("soul_soil_decorated_crying_obsidian_handrail", Blocks.CRYING_OBSIDIAN, Block.Settings.copy(Blocks.CRYING_OBSIDIAN).strength(10, 1200), "block/crying_obsidian", "block/soul_soil");
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final GlassHandrailBlock MAGMA_DECORATED_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.OBSIDIAN, Block.Settings.copy(Blocks.OBSIDIAN).strength(10, 1200).luminance(x -> 3), "block/obsidian", "block/magma");
+  public static final GlassHandrailBlock MAGMA_DECORATED_OBSIDIAN_HANDRAIL = registerGlassHandrail("magma_decorated_obsidian_handrail", Blocks.OBSIDIAN, Block.Settings.copy(Blocks.OBSIDIAN).strength(10, 1200).luminance(x -> 3), "block/obsidian", "block/magma");
 
   @ApiStatus.AvailableSince("1.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final GlassHandrailBlock MAGMA_DECORATED_CRYING_OBSIDIAN_HANDRAIL = new GlassHandrailBlock(Blocks.CRYING_OBSIDIAN, Block.Settings.copy(Blocks.CRYING_OBSIDIAN).strength(10, 1200).luminance(x -> 3), "block/crying_obsidian", "block/magma");
+  public static final GlassHandrailBlock MAGMA_DECORATED_CRYING_OBSIDIAN_HANDRAIL = registerGlassHandrail("magma_decorated_crying_obsidian_handrail", Blocks.CRYING_OBSIDIAN, Block.Settings.copy(Blocks.CRYING_OBSIDIAN).strength(10, 1200).luminance(x -> 3), "block/crying_obsidian", "block/magma");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_OBSIDIAN_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.OBSIDIAN, Block.Settings.copy(Blocks.OBSIDIAN).strength(10, 1200), "block/obsidian", "block/white_concrete");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_OBSIDIAN_HANDRAIL = registerColoredGlassHandrail("colored_decorated_obsidian_handrail", Blocks.OBSIDIAN, Block.Settings.copy(Blocks.OBSIDIAN).strength(10, 1200), "block/obsidian", "block/white_concrete");
   @ApiStatus.AvailableSince("0.2.4")
   @Translucent
   @MiningLevel(level = MiningLevel.Level.DIAMOND)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_CRYING_OBSIDIAN_HANDRAIL = new ColoredGlassHandrailBlock(Blocks.CRYING_OBSIDIAN, Block.Settings.copy(Blocks.CRYING_OBSIDIAN).strength(10, 1200), "block/crying_obsidian", "block/white_concrete");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_CRYING_OBSIDIAN_HANDRAIL = registerColoredGlassHandrail("colored_decorated_crying_obsidian_handrail", Blocks.CRYING_OBSIDIAN, Block.Settings.copy(Blocks.CRYING_OBSIDIAN).strength(10, 1200), "block/crying_obsidian", "block/white_concrete");
+
+  private static <T extends HandrailBlock> T registerMultiple(String name, T block) {
+    Registry.register(Registries.BLOCK, Mishanguc.id(name), block);
+    Registry.register(Registries.BLOCK, Mishanguc.id(name + "_central"), block.central());
+    Registry.register(Registries.BLOCK, Mishanguc.id(name + "_stair"), block.stair());
+    Registry.register(Registries.BLOCK, Mishanguc.id(name + "_corner"), block.corner());
+    Registry.register(Registries.BLOCK, Mishanguc.id(name + "_outer"), block.outer());
+    return block;
+  }
+
+  private static SimpleHandrailBlock registerSimpleHandrail(String name, Block baseBlock, AbstractBlock.Settings settings) {
+    return registerMultiple(name, new SimpleHandrailBlock(baseBlock, settings, Mishanguc.id(name)));
+  }
+
+  private static SimpleHandrailBlock registerSimpleHandrail(String name, Block baseBlock) {
+    return registerSimpleHandrail(name, baseBlock, AbstractBlock.Settings.copy(baseBlock));
+  }
+
+  private static GlassHandrailBlock registerGlassHandrail(String name, Block baseBlock, AbstractBlock.Settings settings, String frameTexture, String decorationTexture) {
+    return registerMultiple(name, new GlassHandrailBlock(baseBlock, settings, frameTexture, decorationTexture, Mishanguc.id(name)));
+  }
+
+  private static ColoredGlassHandrailBlock registerColoredGlassHandrail(String name, Block baseBlock, AbstractBlock.Settings settings, String frameTexture, String decorationTexture) {
+    return registerMultiple(name, new ColoredGlassHandrailBlock(baseBlock, settings, frameTexture, decorationTexture, Mishanguc.id(name)));
+  }
 }

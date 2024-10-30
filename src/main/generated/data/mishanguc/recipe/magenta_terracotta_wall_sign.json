@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "mishanguc:terracotta_wall_sign",
   "key": {
-    "#": {
-      "item": "minecraft:magenta_terracotta"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    }
+    "#": "minecraft:magenta_terracotta",
+    "-": "mishanguc:invisible_wall_sign"
   },
   "pattern": [
     "---",

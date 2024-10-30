@@ -8,9 +8,9 @@ import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -32,13 +32,13 @@ public class TpToolItem extends Item implements MishangucItem {
   }
 
   @Override
-  public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-    final TypedActionResult<ItemStack> data = super.use(world, user, hand);
+  public ActionResult use(World world, PlayerEntity user, Hand hand) {
+    final ActionResult data = super.use(world, user, hand);
     if (world.isClient) return data;
     final Vec3d oldPos = user.getPos();
     final HitResult raycast = user.raycast(256, 0, user.isSneaking());
     if (raycast.getType() == HitResult.Type.MISS) {
-      return TypedActionResult.fail(data.getValue());
+      return ActionResult.FAIL;
     }
     final Vec3d pos = raycast.getPos();
     user.fallDistance = 0;
@@ -51,7 +51,7 @@ public class TpToolItem extends Item implements MishangucItem {
     world.emitGameEvent(GameEvent.TELEPORT, pos, GameEvent.Emitter.of(user));
     world.sendEntityStatus(user, (byte) 46);
     world.playSound(null, pos.x, pos.y, pos.z, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
-    data.getValue().damage((int) MathHelper.sqrt((float) (MathHelper.square(oldPos.x - pos.x) + MathHelper.square(oldPos.y - pos.y) + MathHelper.square(oldPos.z - pos.z))), user, LivingEntity.getSlotForHand(hand));
-    return TypedActionResult.success(data.getValue());
+    user.getStackInHand(hand).damage((int) MathHelper.sqrt((float) (MathHelper.square(oldPos.x - pos.x) + MathHelper.square(oldPos.y - pos.y) + MathHelper.square(oldPos.z - pos.z))), user, LivingEntity.getSlotForHand(hand));
+    return ActionResult.SUCCESS;
   }
 }

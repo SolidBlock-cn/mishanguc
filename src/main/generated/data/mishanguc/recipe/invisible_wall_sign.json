@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "minecraft:feather"
-    },
-    ".": {
-      "item": "minecraft:iron_nugget"
-    },
-    "o": {
-      "item": "minecraft:gold_ingot"
-    }
+    "#": "minecraft:feather",
+    ".": "minecraft:iron_nugget",
+    "o": "minecraft:gold_ingot"
   },
   "pattern": [
     ".#.",

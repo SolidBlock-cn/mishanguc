@@ -1,8 +1,6 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "minecraft:gold_block"
-  },
+  "ingredient": "minecraft:gold_block",
   "result": {
     "count": 20,
     "id": "mishanguc:gold_hung_sign_bar"

@@ -14,14 +14,15 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.block.WireOrientation;
 import org.apache.commons.lang3.ObjectUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.util.EightHorizontalDirection;
 import pers.solid.mishang.uc.util.LineType;
@@ -95,27 +96,27 @@ public interface RoadWithAutoLine extends Road {
   }
 
   @Override
-  default ItemActionResult onUseRoadWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+  default ActionResult onUseRoadWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
     final Item item = player.getStackInHand(hand).getItem();
     if (item instanceof final BlockItem blockItem
         && blockItem.getBlock() instanceof RoadWithAutoLine
         && !Direction.Type.VERTICAL.test(hit.getSide())) {
-      return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+      return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
     }
-    return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    return ActionResult.PASS;
   }
 
   @Override
   default void neighborRoadUpdate(
-      BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+      BlockState state, World world, BlockPos pos, Block sourceBlock, @Nullable WireOrientation wireOrientation, boolean notify) {
     // 屏蔽上下方的更新。
-    if (!sourcePos.equals(pos.up())
-        && !sourcePos.equals(pos.down())
-        && !(world.getBlockState(sourcePos).getBlock() instanceof AirBlock)) {
+    if (!wireOrientation.equals(pos.up())
+        && !wireOrientation.equals(pos.down())
+        && !(world.getBlockState(pos).getBlock() instanceof AirBlock)) {
       // flags设为2从而使得 <code>flags&1 !=0</code> 不成立，从而不递归更新邻居，参考 {@link World#setBlockState}。
       world.setBlockState(pos, tryMakeState(getConnectionStateMap(world, pos), state, pos), 2);
     }
-    Road.super.neighborRoadUpdate(state, world, pos, sourceBlock, sourcePos, notify);
+    Road.super.neighborRoadUpdate(state, world, pos, sourceBlock, wireOrientation, notify);
   }
 
   @Override

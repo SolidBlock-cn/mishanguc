@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "mishanguc:wood_hung_sign",
   "key": {
-    "#": {
-      "item": "minecraft:crimson_hyphae"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    }
+    "#": "minecraft:crimson_hyphae",
+    "-": "mishanguc:invisible_wall_sign"
   },
   "pattern": [
     "-#-",

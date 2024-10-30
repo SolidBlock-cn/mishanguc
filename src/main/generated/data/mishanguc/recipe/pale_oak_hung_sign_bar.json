@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "minecraft:pale_oak_wood",
+  "result": {
+    "count": 20,
+    "id": "mishanguc:pale_oak_hung_sign_bar"
+  }
+}

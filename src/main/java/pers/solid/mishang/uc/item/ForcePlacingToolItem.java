@@ -13,6 +13,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.dragon.EnderDragonPart;
@@ -22,6 +23,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -30,6 +32,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShapes;
@@ -39,7 +42,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangucClient;
 import pers.solid.mishang.uc.MishangucRules;
-import pers.solid.mishang.uc.mixin.WorldRendererInvoker;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -72,7 +74,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     blockPlacementContext.setBlockState(flags);
     suppressOnBlockAdded = false;
     blockPlacementContext.setBlockEntity();
-    return ActionResult.success(world.isClient);
+    return ActionResult.SUCCESS;
   }
 
   public static boolean suppressOnBlockAdded = false;
@@ -91,7 +93,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     world.removeBlockEntity(pos);
     int flags = getFlags(stack);
     world.setBlockState(pos, fluidIncluded ? Blocks.AIR.getDefaultState() : fluidState.getBlockState(), flags);
-    return ActionResult.success(world.isClient);
+    return ActionResult.SUCCESS;
   }
 
   private static int getFlags(ItemStack stack) {
@@ -162,7 +164,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
             itemStack,
             blockHitResult,
             includesFluid);
-    WorldRendererInvoker.drawCuboidShapeOutline(
+    VertexRendering.drawOutline(
         matrices,
         vertexConsumer,
         blockPlacementContext.stateToPlace.getOutlineShape(
@@ -170,12 +172,11 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
         blockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(),
         blockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(),
         blockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(),
-        0,
-        1,
-        1,
-        0.8f);
+        ColorHelper.fromFloats(0.8f, 0,
+            1,
+            1));
     if (includesFluid) {
-      WorldRendererInvoker.drawCuboidShapeOutline(
+      VertexRendering.drawOutline(
           matrices,
           vertexConsumer,
           blockPlacementContext
@@ -185,14 +186,13 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           blockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(),
           blockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(),
           blockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(),
-          0,
-          0.5f,
-          1,
-          0.5f);
+          ColorHelper.fromFloats(0.5f, 0,
+              0.5f,
+              1));
     }
     if (hand == Hand.MAIN_HAND) {
       // 只有当主手持有此物品时，才绘制红色边框。
-      WorldRendererInvoker.drawCuboidShapeOutline(
+      VertexRendering.drawOutline(
           matrices,
           vertexConsumer,
           blockPlacementContext.hitState.getOutlineShape(
@@ -200,12 +200,11 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           blockPlacementContext.blockPos.getX() - blockOutlineContext.cameraX(),
           blockPlacementContext.blockPos.getY() - blockOutlineContext.cameraY(),
           blockPlacementContext.blockPos.getZ() - blockOutlineContext.cameraZ(),
-          1,
-          0,
-          0,
-          0.8f);
+          ColorHelper.fromFloats(0.8f, 1,
+              0,
+              0));
       if (includesFluid) {
-        WorldRendererInvoker.drawCuboidShapeOutline(
+        VertexRendering.drawOutline(
             matrices,
             vertexConsumer,
             blockPlacementContext
@@ -215,10 +214,9 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
             blockPlacementContext.blockPos.getX() - blockOutlineContext.cameraX(),
             blockPlacementContext.blockPos.getY() - blockOutlineContext.cameraY(),
             blockPlacementContext.blockPos.getZ() - blockOutlineContext.cameraZ(),
-            1,
-            0.5f,
-            0,
-            0.5f);
+            ColorHelper.fromFloats(0.5f, 1,
+                0.5f,
+                0));
       }
     }
     return false;
@@ -232,14 +230,14 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       Entity entity,
       @Nullable EntityHitResult hitResult) {
     if (!hasAccess(player, world, true)) return ActionResult.PASS;
-    if (!world.isClient) {
+    if (world instanceof ServerWorld serverWorld) {
       if (entity instanceof PlayerEntity) {
-        entity.kill();
+        entity.kill(serverWorld);
       } else {
         entity.remove(Entity.RemovalReason.KILLED);
       }
       if (entity instanceof EnderDragonPart enderDragonPart) {
-        enderDragonPart.owner.kill();
+        enderDragonPart.owner.kill(serverWorld);
       }
     }
     return ActionResult.SUCCESS;
@@ -250,10 +248,10 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
    */
   @ApiStatus.AvailableSince("1.0.0")
   private static boolean hasAccess(PlayerEntity player, World world, boolean warn) {
-    if (world.isClient) {
+    if (!(world instanceof ServerWorld serverWorld)) {
       return MishangucClient.CLIENT_FORCE_PLACING_TOOL_ACCESS.get().hasAccess(player);
     } else {
-      final MishangucRules.ToolAccess toolAccess = world.getGameRules().get(MishangucRules.FORCE_PLACING_TOOL_ACCESS).get();
+      final MishangucRules.ToolAccess toolAccess = serverWorld.getGameRules().get(MishangucRules.FORCE_PLACING_TOOL_ACCESS).get();
       return toolAccess.hasAccess(player, warn);
     }
   }
@@ -270,7 +268,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     final Vec3d cameraPos = context.camera().getPos();
     if (hitResult instanceof EntityHitResult entityHitResult) {
       final Entity entity = entityHitResult.getEntity();
-      WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, 1.0f, 0f, 0f, 0.8f);
+      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, ColorHelper.fromFloats(0.8f, 1.0f, 0f, 0f));
     }
   }
 }

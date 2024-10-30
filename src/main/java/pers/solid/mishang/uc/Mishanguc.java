@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc;
 
 import com.google.common.collect.ImmutableSet;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.Event;
@@ -13,7 +15,7 @@ import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.fabricmc.fabric.api.registry.FuelRegistryEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -21,6 +23,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
@@ -30,11 +35,11 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.poi.PointOfInterestType;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -105,9 +110,10 @@ public class Mishanguc implements ModInitializer {
   }
 
   private static void registerFlammableAndFuels() {
+    final Object2IntMap<Block> fuelRegistry = new Object2IntOpenHashMap<>();
+
     // 注册可燃方块
     final FlammableBlockRegistry flammableBlockRegistry = FlammableBlockRegistry.getDefaultInstance();
-    final FuelRegistry fuelRegistry = FuelRegistry.INSTANCE;
 
     final Block[] woodenBlocks = {
         HungSignBlocks.OAK_HUNG_SIGN,
@@ -117,6 +123,7 @@ public class Mishanguc implements ModInitializer {
         HungSignBlocks.ACACIA_HUNG_SIGN,
         HungSignBlocks.CHERRY_HUNG_SIGN,
         HungSignBlocks.DARK_OAK_HUNG_SIGN,
+        HungSignBlocks.PALE_OAK_HUNG_SIGN,
         HungSignBlocks.MANGROVE_HUNG_SIGN,
         HungSignBlocks.OAK_WOOD_HUNG_SIGN,
         HungSignBlocks.SPRUCE_WOOD_HUNG_SIGN,
@@ -125,6 +132,7 @@ public class Mishanguc implements ModInitializer {
         HungSignBlocks.ACACIA_WOOD_HUNG_SIGN,
         HungSignBlocks.CHERRY_WOOD_HUNG_SIGN,
         HungSignBlocks.DARK_OAK_WOOD_HUNG_SIGN,
+        HungSignBlocks.PALE_OAK_WOOD_HUNG_SIGN,
         HungSignBlocks.MANGROVE_WOOD_HUNG_SIGN,
         HungSignBlocks.STRIPPED_OAK_WOOD_HUNG_SIGN,
         HungSignBlocks.STRIPPED_SPRUCE_WOOD_HUNG_SIGN,
@@ -133,6 +141,7 @@ public class Mishanguc implements ModInitializer {
         HungSignBlocks.STRIPPED_ACACIA_WOOD_HUNG_SIGN,
         HungSignBlocks.STRIPPED_CHERRY_WOOD_HUNG_SIGN,
         HungSignBlocks.STRIPPED_DARK_OAK_WOOD_HUNG_SIGN,
+        HungSignBlocks.STRIPPED_PALE_OAK_WOOD_HUNG_SIGN,
         HungSignBlocks.STRIPPED_MANGROVE_WOOD_HUNG_SIGN,
         HungSignBlocks.BAMBOO_HUNG_SIGN,
         HungSignBlocks.BAMBOO_PLANK_HUNG_SIGN,
@@ -144,6 +153,7 @@ public class Mishanguc implements ModInitializer {
         HungSignBlocks.ACACIA_HUNG_SIGN_BAR,
         HungSignBlocks.CHERRY_HUNG_SIGN_BAR,
         HungSignBlocks.DARK_OAK_HUNG_SIGN_BAR,
+        HungSignBlocks.PALE_OAK_HUNG_SIGN_BAR,
         HungSignBlocks.MANGROVE_HUNG_SIGN_BAR,
         HungSignBlocks.BAMBOO_HUNG_SIGN_BAR,
         HungSignBlocks.STRIPPED_OAK_HUNG_SIGN_BAR,
@@ -153,6 +163,7 @@ public class Mishanguc implements ModInitializer {
         HungSignBlocks.STRIPPED_ACACIA_HUNG_SIGN_BAR,
         HungSignBlocks.STRIPPED_CHERRY_HUNG_SIGN_BAR,
         HungSignBlocks.STRIPPED_DARK_OAK_HUNG_SIGN_BAR,
+        HungSignBlocks.STRIPPED_PALE_OAK_HUNG_SIGN_BAR,
         HungSignBlocks.STRIPPED_MANGROVE_HUNG_SIGN_BAR,
         WallSignBlocks.OAK_WOOD_WALL_SIGN,
         WallSignBlocks.SPRUCE_WOOD_WALL_SIGN,
@@ -161,6 +172,7 @@ public class Mishanguc implements ModInitializer {
         WallSignBlocks.ACACIA_WOOD_WALL_SIGN,
         WallSignBlocks.CHERRY_WOOD_WALL_SIGN,
         WallSignBlocks.DARK_OAK_WOOD_WALL_SIGN,
+        WallSignBlocks.PALE_OAK_WOOD_WALL_SIGN,
         WallSignBlocks.MANGROVE_WOOD_WALL_SIGN,
         WallSignBlocks.STRIPPED_OAK_WOOD_WALL_SIGN,
         WallSignBlocks.STRIPPED_SPRUCE_WOOD_WALL_SIGN,
@@ -169,6 +181,7 @@ public class Mishanguc implements ModInitializer {
         WallSignBlocks.STRIPPED_ACACIA_WOOD_WALL_SIGN,
         WallSignBlocks.STRIPPED_CHERRY_WOOD_WALL_SIGN,
         WallSignBlocks.STRIPPED_DARK_OAK_WOOD_WALL_SIGN,
+        WallSignBlocks.STRIPPED_PALE_OAK_WOOD_WALL_SIGN,
         WallSignBlocks.STRIPPED_MANGROVE_WOOD_WALL_SIGN,
         WallSignBlocks.OAK_WALL_SIGN,
         WallSignBlocks.SPRUCE_WALL_SIGN,
@@ -177,6 +190,7 @@ public class Mishanguc implements ModInitializer {
         WallSignBlocks.ACACIA_WALL_SIGN,
         WallSignBlocks.CHERRY_WALL_SIGN,
         WallSignBlocks.DARK_OAK_WALL_SIGN,
+        WallSignBlocks.PALE_OAK_WALL_SIGN,
         WallSignBlocks.MANGROVE_WALL_SIGN,
         WallSignBlocks.OAK_WOOD_WALL_SIGN,
         WallSignBlocks.SPRUCE_WOOD_WALL_SIGN,
@@ -185,6 +199,7 @@ public class Mishanguc implements ModInitializer {
         WallSignBlocks.ACACIA_WOOD_WALL_SIGN,
         WallSignBlocks.CHERRY_WOOD_WALL_SIGN,
         WallSignBlocks.DARK_OAK_WOOD_WALL_SIGN,
+        WallSignBlocks.PALE_OAK_WOOD_WALL_SIGN,
         WallSignBlocks.MANGROVE_WOOD_WALL_SIGN,
         WallSignBlocks.STRIPPED_OAK_WOOD_WALL_SIGN,
         WallSignBlocks.STRIPPED_SPRUCE_WOOD_WALL_SIGN,
@@ -193,6 +208,7 @@ public class Mishanguc implements ModInitializer {
         WallSignBlocks.STRIPPED_ACACIA_WOOD_WALL_SIGN,
         WallSignBlocks.STRIPPED_CHERRY_WOOD_WALL_SIGN,
         WallSignBlocks.STRIPPED_DARK_OAK_WOOD_WALL_SIGN,
+        WallSignBlocks.STRIPPED_PALE_OAK_WOOD_WALL_SIGN,
         WallSignBlocks.STRIPPED_MANGROVE_WOOD_WALL_SIGN,
         WallSignBlocks.BAMBOO_WALL_SIGN,
         WallSignBlocks.BAMBOO_PLANK_WALL_SIGN,
@@ -205,6 +221,7 @@ public class Mishanguc implements ModInitializer {
         StandingSignBlocks.CHERRY_STANDING_SIGN,
         StandingSignBlocks.JUNGLE_STANDING_SIGN,
         StandingSignBlocks.DARK_OAK_STANDING_SIGN,
+        StandingSignBlocks.PALE_OAK_STANDING_SIGN,
         StandingSignBlocks.MANGROVE_STANDING_SIGN,
         StandingSignBlocks.OAK_WOOD_STANDING_SIGN,
         StandingSignBlocks.SPRUCE_WOOD_STANDING_SIGN,
@@ -213,6 +230,7 @@ public class Mishanguc implements ModInitializer {
         StandingSignBlocks.CHERRY_WOOD_STANDING_SIGN,
         StandingSignBlocks.JUNGLE_WOOD_STANDING_SIGN,
         StandingSignBlocks.DARK_OAK_WOOD_STANDING_SIGN,
+        StandingSignBlocks.PALE_OAK_WOOD_STANDING_SIGN,
         StandingSignBlocks.MANGROVE_WOOD_STANDING_SIGN,
         StandingSignBlocks.STRIPPED_OAK_WOOD_STANDING_SIGN,
         StandingSignBlocks.STRIPPED_SPRUCE_WOOD_STANDING_SIGN,
@@ -221,6 +239,7 @@ public class Mishanguc implements ModInitializer {
         StandingSignBlocks.STRIPPED_CHERRY_WOOD_STANDING_SIGN,
         StandingSignBlocks.STRIPPED_JUNGLE_WOOD_STANDING_SIGN,
         StandingSignBlocks.STRIPPED_DARK_OAK_WOOD_STANDING_SIGN,
+        StandingSignBlocks.STRIPPED_PALE_OAK_WOOD_STANDING_SIGN,
         StandingSignBlocks.STRIPPED_MANGROVE_WOOD_STANDING_SIGN,
         StandingSignBlocks.BAMBOO_STANDING_SIGN,
         StandingSignBlocks.BAMBOO_PLANK_STANDING_SIGN,
@@ -228,7 +247,7 @@ public class Mishanguc implements ModInitializer {
     };
     for (Block block : woodenBlocks) {
       flammableBlockRegistry.add(block, 5, 20);
-      fuelRegistry.add(block, 100);
+      fuelRegistry.put(block, 100);
     }
     final Collection<HandrailBlock> woodenHandrails = ImmutableSet.of(
         HandrailBlocks.SIMPLE_OAK_HANDRAIL,
@@ -238,6 +257,7 @@ public class Mishanguc implements ModInitializer {
         HandrailBlocks.SIMPLE_ACACIA_HANDRAIL,
         HandrailBlocks.SIMPLE_CHERRY_HANDRAIL,
         HandrailBlocks.SIMPLE_DARK_OAK_HANDRAIL,
+        HandrailBlocks.SIMPLE_PALE_OAK_HANDRAIL,
         HandrailBlocks.SIMPLE_MANGROVE_HANDRAIL,
         HandrailBlocks.SIMPLE_OAK_PLANK_HANDRAIL,
         HandrailBlocks.SIMPLE_SPRUCE_PLANK_HANDRAIL,
@@ -246,6 +266,7 @@ public class Mishanguc implements ModInitializer {
         HandrailBlocks.SIMPLE_ACACIA_PLANK_HANDRAIL,
         HandrailBlocks.SIMPLE_CHERRY_PLANK_HANDRAIL,
         HandrailBlocks.SIMPLE_DARK_OAK_PLANK_HANDRAIL,
+        HandrailBlocks.SIMPLE_PALE_OAK_PLANK_HANDRAIL,
         HandrailBlocks.SIMPLE_MANGROVE_PLANK_HANDRAIL,
         HandrailBlocks.SIMPLE_BAMBOO_HANDRAIL,
         HandrailBlocks.SIMPLE_BAMBOO_PLANK_HANDRAIL,
@@ -257,6 +278,7 @@ public class Mishanguc implements ModInitializer {
         HandrailBlocks.GLASS_ACACIA_HANDRAIL,
         HandrailBlocks.GLASS_CHERRY_HANDRAIL,
         HandrailBlocks.GLASS_DARK_OAK_HANDRAIL,
+        HandrailBlocks.GLASS_PALE_OAK_HANDRAIL,
         HandrailBlocks.GLASS_MANGROVE_HANDRAIL,
         HandrailBlocks.GLASS_BAMBOO_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_OAK_HANDRAIL,
@@ -266,6 +288,7 @@ public class Mishanguc implements ModInitializer {
         HandrailBlocks.COLORED_DECORATED_ACACIA_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_CHERRY_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_DARK_OAK_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_PALE_OAK_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_MANGROVE_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_BAMBOO_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_STRIPPED_OAK_HANDRAIL,
@@ -275,6 +298,7 @@ public class Mishanguc implements ModInitializer {
         HandrailBlocks.COLORED_DECORATED_STRIPPED_ACACIA_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_STRIPPED_CHERRY_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_STRIPPED_DARK_OAK_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_PALE_OAK_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_STRIPPED_MANGROVE_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_STRIPPED_BAMBOO_HANDRAIL
     );
@@ -284,21 +308,23 @@ public class Mishanguc implements ModInitializer {
       flammableBlockRegistry.add(handrail.corner(), 5, 20);
       flammableBlockRegistry.add(handrail.outer(), 5, 20);
       flammableBlockRegistry.add(handrail.stair(), 5, 20);
-      fuelRegistry.add(handrail, 100);
-      fuelRegistry.add(handrail.central(), 100);
-      fuelRegistry.add(handrail.corner(), 100);
-      fuelRegistry.add(handrail.outer(), 100);
-      fuelRegistry.add(handrail.stair(), 100);
+      fuelRegistry.put(handrail, 100);
+      fuelRegistry.put(handrail.central(), 100);
+      fuelRegistry.put(handrail.corner(), 100);
+      fuelRegistry.put(handrail.outer(), 100);
+      fuelRegistry.put(handrail.stair(), 100);
     }
 
     flammableBlockRegistry.add(ColoredBlocks.COLORED_PLANKS, 5, 20);
-    fuelRegistry.add(ColoredBlocks.COLORED_PLANKS, 300);
+    fuelRegistry.put(ColoredBlocks.COLORED_PLANKS, 300);
     flammableBlockRegistry.add(ColoredBlocks.COLORED_PLANK_STAIRS, 5, 20);
-    fuelRegistry.add(ColoredBlocks.COLORED_PLANK_STAIRS, 300);
+    fuelRegistry.put(ColoredBlocks.COLORED_PLANK_STAIRS, 300);
     flammableBlockRegistry.add(ColoredBlocks.COLORED_PLANK_SLAB, 5, 20);
-    fuelRegistry.add(ColoredBlocks.COLORED_PLANK_SLAB, 150);
+    fuelRegistry.put(ColoredBlocks.COLORED_PLANK_SLAB, 150);
     flammableBlockRegistry.add(ColoredBlocks.COLORED_WOOL, 30, 60);
-    fuelRegistry.add(ColoredBlocks.COLORED_WOOL, 100);
+    fuelRegistry.put(ColoredBlocks.COLORED_WOOL, 100);
+
+    FuelRegistryEvents.BUILD.register((builder, context) -> fuelRegistry.forEach(builder::add));
   }
 
   private static void registerNetworkingReceiver() {
@@ -416,8 +442,7 @@ public class Mishanguc implements ModInitializer {
       if (!blockState.isOf(Blocks.WATER_CAULDRON)) {
         return ActionResult.PASS;
       }
-      final ItemActionResult result = Road.CLEAN_ROAD_BLOCK.interact(blockState, world, blockPos, player, hand, stack);
-      return result.toActionResult();
+      return Road.CLEAN_ROAD_BLOCK.interact(blockState, world, blockPos, player, hand, stack);
     });
 
     UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
@@ -546,6 +571,7 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(Blocks.PACKED_ICE, ColoredBlocks.COLORED_PACKED_ICE);
     blockMap.put(Blocks.OAK_LEAVES, ColoredBlocks.COLORED_OAK_LEAVES);
     blockMap.put(Blocks.DARK_OAK_LEAVES, ColoredBlocks.COLORED_DARK_OAK_LEAVES);
+    blockMap.put(Blocks.PALE_OAK_LEAVES, ColoredBlocks.COLORED_PALE_OAK_LEAVES);
     blockMap.put(Blocks.SPRUCE_LEAVES, ColoredBlocks.COLORED_SPRUCE_LEAVES);
     blockMap.put(Blocks.JUNGLE_LEAVES, ColoredBlocks.COLORED_JUNGLE_LEAVES);
     blockMap.put(Blocks.BIRCH_LEAVES, ColoredBlocks.COLORED_BIRCH_LEAVES);
@@ -632,6 +658,8 @@ public class Mishanguc implements ModInitializer {
     registerCommands();
     registerColoredBlocks();
     registerColorfulBlocks();
+
+    Registry.register(Registries.POINT_OF_INTEREST_TYPE, RegistryKey.of(RegistryKeys.POINT_OF_INTEREST_TYPE, id("nether_portal")), new PointOfInterestType(ImmutableSet.copyOf(ColoredBlocks.COLORED_NETHER_PORTAL.getStateManager().getStates()), 0, 1));
   }
 
   private static void registerColorfulBlocks() {

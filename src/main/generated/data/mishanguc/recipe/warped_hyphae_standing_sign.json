@@ -3,15 +3,9 @@
   "category": "misc",
   "group": "mishanguc:wood_standing_sign",
   "key": {
-    "#": {
-      "item": "minecraft:warped_hyphae"
-    },
-    "-": {
-      "item": "mishanguc:invisible_wall_sign"
-    },
-    "|": {
-      "item": "minecraft:stick"
-    }
+    "#": "minecraft:warped_hyphae",
+    "-": "mishanguc:invisible_wall_sign",
+    "|": "minecraft:stick"
   },
   "pattern": [
     "---",

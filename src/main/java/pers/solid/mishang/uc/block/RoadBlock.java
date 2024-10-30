@@ -9,17 +9,18 @@ import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.Models;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.Items;
-import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
@@ -64,29 +65,29 @@ public class RoadBlock extends AbstractRoadBlock {
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getCraftingRecipe() {
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
     if (lineColor != LineColor.NONE) return null;
-    return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, this, 9)
+    return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, this, 9)
         .pattern("***")
         .pattern("|X|")
         .pattern("***")
         .input('*', ItemTags.COALS)
         .input('|', Items.FLINT)
         .input('X', Ingredient.ofItems(Items.WHITE_CONCRETE, Items.GRAY_CONCRETE, Items.LIGHT_GRAY_CONCRETE, Items.BLACK_CONCRETE))
-        .criterion("has_coal", RecipeProvider.conditionsFromTag(ItemTags.COALS))
-        .criterion(RecipeProvider.hasItem(Items.FLINT), RecipeProvider.conditionsFromItem(Items.FLINT))
-        .criterion("has_proper_concrete", RecipeProvider.conditionsFromItemPredicates(ItemPredicate.Builder.create().items(Items.WHITE_CONCRETE, Items.GRAY_CONCRETE, Items.LIGHT_GRAY_CONCRETE, Items.BLACK_CONCRETE).build()));
+        .criterion("has_coal", recipeGenerator.conditionsFromTag(ItemTags.COALS))
+        .criterion(RecipeGenerator.hasItem(Items.FLINT), recipeGenerator.conditionsFromItem(Items.FLINT))
+        .criterion("has_proper_concrete", recipeGenerator.conditionsFromTag(TagKey.of(RegistryKeys.ITEM, Mishanguc.id("road_materials"))));
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+  public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
     if (lineColor == LineColor.NONE) return null;
-    return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, self)
+    return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self)
         .pattern("***")
         .pattern(" X ")
         .input('*', lineColor.getIngredient())
         .input('X', base)
-        .criterion("has_paint", RecipeProvider.conditionsFromTag(lineColor.getIngredient()))
-        .criterion(RecipeProvider.hasItem(base), RecipeProvider.conditionsFromItem(base));
+        .criterion("has_paint", recipeGenerator.conditionsFromTag(lineColor.getIngredient()))
+        .criterion(RecipeGenerator.hasItem(base), recipeGenerator.conditionsFromItem(base));
   }
 }

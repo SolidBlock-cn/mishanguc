@@ -9,18 +9,25 @@ import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.recipe.Recipe;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
+import net.minecraft.world.block.WireOrientation;
+import net.minecraft.world.tick.ScheduledTickView;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -97,7 +104,7 @@ public interface Road extends MishangucBlock {
    * @since 0.2.4
    */
   @ApiStatus.AvailableSince("0.2.4")
-  default BlockState withStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+  default BlockState withStateForNeighborUpdate(BlockState state, ScheduledTickView tickView, WorldView world, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
     return state;
   }
 
@@ -111,26 +118,26 @@ public interface Road extends MishangucBlock {
   /**
    * @see AbstractRoadBlock#onUseRoadWithItem(ItemStack, BlockState, World, BlockPos, PlayerEntity, Hand, BlockHitResult)
    */
-  default ItemActionResult onUseRoadWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-    return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+  default ActionResult onUseRoadWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
   }
 
   /**
    * 附近有方块更新时的操作。
    *
-   * @param state       方块状态。
-   * @param world       世界。
-   * @param pos         坐标。
-   * @param sourceBlock 方块。
-   * @param sourcePos   导致触发方块更新的方块。
-   * @param notify      一个布尔值。
+   * @param state           方块状态。
+   * @param world           世界。
+   * @param pos             坐标。
+   * @param sourceBlock     方块。
+   * @param wireOrientation 导致触发方块更新的方块。
+   * @param notify          一个布尔值。
    * @see AbstractRoadBlock#neighborUpdate
    * @see AbstractRoadSlabBlock#neighborUpdate
    * @see Block#neighborUpdate
    * @see BlockState#neighborUpdate
    */
   default void neighborRoadUpdate(
-      BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+      BlockState state, World world, BlockPos pos, Block sourceBlock, @Nullable WireOrientation wireOrientation, boolean notify) {
   }
 
   default void appendRoadTooltip(
@@ -147,12 +154,12 @@ public interface Road extends MishangucBlock {
   @ApiStatus.AvailableSince("0.2.4")
   void appendDescriptionTooltip(List<Text> tooltip, Item.TooltipContext context);
 
-  default CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self) {
+  default CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
     return null;
   }
 
-  default Identifier getPaintingRecipeId() {
-    return CraftingRecipeJsonBuilder.getItemId((ItemConvertible) this).withSuffixedPath("_from_painting");
+  default RegistryKey<Recipe<?>> getPaintingRecipeKey() {
+    return RegistryKey.of(RegistryKeys.RECIPE, CraftingRecipeJsonBuilder.getItemId((ItemConvertible) this).withSuffixedPath("_from_painting"));
   }
 
   default @Nullable String getRecipeGroup() {
@@ -176,10 +183,10 @@ public interface Road extends MishangucBlock {
           }
           LeveledCauldronBlock.decrementFluidLevel(state, world, pos);
         }
-        return ItemActionResult.success(world.isClient);
+        return ActionResult.SUCCESS;
       }
     }
-    return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    return ActionResult.PASS;
   };
 
   /**

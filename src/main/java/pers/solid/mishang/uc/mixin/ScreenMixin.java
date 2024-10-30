@@ -39,12 +39,12 @@ public class ScreenMixin {
     final ClickEvent clickEvent = style.getClickEvent();
     if (clickEvent instanceof final TextClickEvent textClickEvent && client != null && client.player != null) {
       this.client.player.sendMessage(
-          textClickEvent.text);
+          textClickEvent.text, false);
       cir.setReturnValue(true);
       cir.cancel();
     } else if (clickEvent instanceof final NbtClickEvent nbtClickEvent && client != null && client.player != null) {
       this.client.player.sendMessage(
-          NbtPrettyPrinter.serialize(nbtClickEvent.nbt));
+          NbtPrettyPrinter.serialize(nbtClickEvent.nbt), false);
       cir.setReturnValue(true);
       cir.cancel();
     }

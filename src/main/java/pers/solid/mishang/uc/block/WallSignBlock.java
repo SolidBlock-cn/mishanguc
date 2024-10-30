@@ -9,8 +9,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.BlockFace;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.RecipeGenerator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -26,14 +25,21 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.*;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldEvents;
+import net.minecraft.world.WorldView;
+import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUtils;
@@ -98,11 +104,6 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
         .with(WATERLOGGED, false));
   }
 
-  @ApiStatus.AvailableSince("0.1.7")
-  public WallSignBlock(@NotNull Block baseBlock) {
-    this(baseBlock, Block.Settings.copy(baseBlock));
-  }
-
   @Override
   protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
     super.appendProperties(builder);
@@ -136,16 +137,10 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   }
 
   @Override
-  public BlockState getStateForNeighborUpdate(
-      BlockState state,
-      Direction direction,
-      BlockState neighborState,
-      WorldAccess world,
-      BlockPos pos,
-      BlockPos neighborPos) {
-    super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+  protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
+    state = super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
     if (state.get(WATERLOGGED)) {
-      world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+      tickView.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
     return state;
   }
@@ -195,16 +190,16 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   }
 
   @Override
-  protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+  protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
     // 在服务端触发打开告示牌编辑界面。
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     if (!(blockEntity instanceof final WallSignBlockEntity entity)) {
-      return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+      return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
     } else if (!player.getAbilities().allowModifyWorld) {
       // 冒险模式玩家无权编辑。Adventure players have no permission to edit.
-      return ItemActionResult.FAIL;
+      return ActionResult.FAIL;
     } else if (world.isClient) {
-      return ItemActionResult.SUCCESS;
+      return ActionResult.SUCCESS;
     } else {
       if (stack.getItem() instanceof HoneycombItem) {
         // 处理告示牌的涂蜡。
@@ -214,24 +209,24 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
           world.syncWorldEvent(null, WorldEvents.BLOCK_WAXED, entity.getPos(), 0);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stack.decrement(1);
-          return ItemActionResult.SUCCESS;
+          return ActionResult.SUCCESS;
         } else if (player.isCreative()) {
           entity.waxed = false;
           player.sendMessage(BlockEntityWithText.MESSAGE_WAX_OFF, true);
           world.syncWorldEvent(null, WorldEvents.WAX_REMOVED, entity.getPos(), 0);
           entity.markDirtyAndUpdate();
-          return ItemActionResult.SUCCESS;
+          return ActionResult.SUCCESS;
         }
       }
       if (entity.waxed) {
         // 涂蜡的告示牌不应该进行操作。
         world.playSound(null, entity.getPos(), SoundEvents.BLOCK_SIGN_WAXED_INTERACT_FAIL, SoundCategory.BLOCKS);
-        return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
       } else if (stack.isOf(Items.MAGMA_CREAM)) {
         MishangUtils.rearrange(entity.textContexts);
         entity.markDirtyAndUpdate();
         if (!player.isCreative()) stack.decrement(1);
-        return ItemActionResult.SUCCESS;
+        return ActionResult.SUCCESS;
       } else if (stack.getItem() instanceof GlowInkSacItem) {
         if (!entity.glowing) {
           entity.glowing = true;
@@ -239,7 +234,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
           world.playSound(null, entity.getPos(), SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stack.decrement(1);
-          return ItemActionResult.SUCCESS;
+          return ActionResult.SUCCESS;
         }
       } else if (stack.getItem() instanceof InkSacItem) {
         if (entity.glowing) {
@@ -248,12 +243,12 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
           world.playSound(null, entity.getPos(), SoundEvents.ITEM_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stack.decrement(1);
-          return ItemActionResult.SUCCESS;
+          return ActionResult.SUCCESS;
         }
       }
     }
 
-    return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
   }
 
   @Nullable
@@ -302,15 +297,15 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   }
 
   @Override
-  public @Nullable CraftingRecipeJsonBuilder getCraftingRecipe() {
+  public @Nullable CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
     if (baseBlock == null) return null;
-    return ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this, 6)
+    return recipeGenerator.createShaped(RecipeCategory.DECORATIONS, this, 6)
         .pattern("---")
         .pattern("###")
         .pattern("---")
         .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
-        .criterion("has_base_block", RecipeProvider.conditionsFromItem(baseBlock))
-        .criterion("has_sign", RecipeProvider.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN))
+        .criterion("has_base_block", recipeGenerator.conditionsFromItem(baseBlock))
+        .criterion("has_sign", recipeGenerator.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN))
         .group(getRecipeGroup());
   }
 

@@ -6,6 +6,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.data.client.*;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
@@ -15,11 +17,12 @@ import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.util.TextBridge;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @ApiStatus.AvailableSince("0.2.4")
 public class GlassHandrailBlock extends HandrailBlock {
-  public static final MapCodec<GlassHandrailBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(GlassHandrailBlock::baseBlock), createSettingsCodec()).apply(instance, (block, settings1) -> new GlassHandrailBlock(block, settings1, null, null)));
+  public static final MapCodec<GlassHandrailBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(GlassHandrailBlock::baseBlock), createSettingsCodec()).apply(instance, (block, settings1) -> new GlassHandrailBlock(block, settings1, null, null, null)));
   public final Identifier decorationTexture;
   private final CentralBlock central;
   private final CornerBlock corner;
@@ -28,26 +31,26 @@ public class GlassHandrailBlock extends HandrailBlock {
   private final Block baseBlock;
   private final Identifier frameTexture;
 
-  public GlassHandrailBlock(Block baseBlock, Settings settings, String frameTexture, String decorationTexture) {
-    super(settings);
+  public GlassHandrailBlock(Block baseBlock, Settings settings, String frameTexture, String decorationTexture, Identifier identifier) {
+    super(settings.nonOpaque().registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier)));
     this.baseBlock = baseBlock;
     this.frameTexture = frameTexture == null ? null : Identifier.of(frameTexture);
     this.decorationTexture = decorationTexture == null ? null : Identifier.of(decorationTexture);
-    this.central = new CentralBlock(this);
-    this.corner = new CornerBlock(this);
-    this.stair = new StairBlock(this);
-    this.outer = new OuterBlock(this);
+    this.central = new CentralBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_central"))));
+    this.corner = new CornerBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_corner"))));
+    this.stair = new StairBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_stair"))));
+    this.outer = new OuterBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_outer"))));
   }
 
-  protected GlassHandrailBlock(Block baseBlock, Settings settings, String frameTexture, String decorationTexture, Function<GlassHandrailBlock, CentralBlock> centralProvider, Function<GlassHandrailBlock, CornerBlock> cornerProvider, Function<GlassHandrailBlock, StairBlock> stairProvider, Function<GlassHandrailBlock, OuterBlock> outerProvider) {
-    super(settings.nonOpaque());
+  protected GlassHandrailBlock(Block baseBlock, Settings settings, String frameTexture, String decorationTexture, BiFunction<GlassHandrailBlock, Settings, CentralBlock> centralProvider, BiFunction<GlassHandrailBlock, Settings, CornerBlock> cornerProvider, BiFunction<GlassHandrailBlock, Settings, StairBlock> stairProvider, BiFunction<GlassHandrailBlock, Settings, OuterBlock> outerProvider, Identifier identifier) {
+    super(settings.nonOpaque().registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier)));
     this.baseBlock = baseBlock;
     this.frameTexture = Identifier.of(frameTexture);
     this.decorationTexture = Identifier.of(decorationTexture);
-    central = centralProvider.apply(this);
-    corner = cornerProvider.apply(this);
-    stair = stairProvider.apply(this);
-    outer = outerProvider.apply(this);
+    central = centralProvider.apply(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_central"))));
+    corner = cornerProvider.apply(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_corner"))));
+    stair = stairProvider.apply(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_stair"))));
+    outer = outerProvider.apply(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_outer"))));
   }
 
   @Override
@@ -97,8 +100,8 @@ public class GlassHandrailBlock extends HandrailBlock {
     return CODEC;
   }
 
-  protected static <B extends Block> MapCodec<B> createSubCodec(Function<B, GlassHandrailBlock> baseGetter, Function<GlassHandrailBlock, B> function) {
-    return RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_rail").flatXmap(block -> block instanceof GlassHandrailBlock glassHandrailBlock ? DataResult.success(glassHandrailBlock) : DataResult.error(() -> block + " not instance of " + GlassHandrailBlock.class.getName()), DataResult::success).forGetter(baseGetter)).apply(instance, function));
+  protected static <B extends Block> MapCodec<B> createSubCodec(Function<B, GlassHandrailBlock> baseGetter, BiFunction<GlassHandrailBlock, Settings, B> function) {
+    return RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_rail").flatXmap(block -> block instanceof GlassHandrailBlock glassHandrailBlock ? DataResult.success(glassHandrailBlock) : DataResult.error(() -> block + " not instance of " + GlassHandrailBlock.class.getName()), DataResult::success).forGetter(baseGetter), createSettingsCodec()).apply(instance, function));
   }
 
   public static class CentralBlock extends HandrailCentralBlock<GlassHandrailBlock> {
@@ -109,8 +112,8 @@ public class GlassHandrailBlock extends HandrailBlock {
       return TextBridge.translatable("block.mishanguc.handrail_central", baseHandrail.getName());
     }
 
-    protected CentralBlock(@NotNull GlassHandrailBlock baseRail) {
-      super(baseRail, Block.Settings.copy(baseRail).nonOpaque());
+    protected CentralBlock(@NotNull GlassHandrailBlock baseRail, Settings settings) {
+      super(baseRail, settings);
     }
 
     @Override
@@ -136,8 +139,8 @@ public class GlassHandrailBlock extends HandrailBlock {
       return TextBridge.translatable("block.mishanguc.handrail_corner", baseHandrail.getName());
     }
 
-    protected CornerBlock(@NotNull GlassHandrailBlock baseRail) {
-      super(baseRail, Block.Settings.copy(baseRail).nonOpaque());
+    protected CornerBlock(@NotNull GlassHandrailBlock baseRail, Settings settings) {
+      super(baseRail, settings);
     }
 
     @Override
@@ -155,8 +158,8 @@ public class GlassHandrailBlock extends HandrailBlock {
   public static class StairBlock extends HandrailStairBlock<GlassHandrailBlock> {
     public static final MapCodec<StairBlock> CODEC = createSubCodec(b -> b.baseHandrail, StairBlock::new);
 
-    protected StairBlock(@NotNull GlassHandrailBlock baseRail) {
-      super(baseRail, Block.Settings.copy(baseRail).nonOpaque());
+    protected StairBlock(@NotNull GlassHandrailBlock baseRail, Settings settings) {
+      super(baseRail, settings);
     }
 
     @Override
@@ -185,8 +188,8 @@ public class GlassHandrailBlock extends HandrailBlock {
   public static class OuterBlock extends HandrailOuterBlock<GlassHandrailBlock> {
     public static final MapCodec<OuterBlock> CODEC = createSubCodec(b -> b.baseHandrail, OuterBlock::new);
 
-    protected OuterBlock(@NotNull GlassHandrailBlock baseRail) {
-      super(baseRail, Block.Settings.copy(baseRail).nonOpaque());
+    protected OuterBlock(@NotNull GlassHandrailBlock baseRail, Settings settings) {
+      super(baseRail, settings);
     }
 
     @Override
