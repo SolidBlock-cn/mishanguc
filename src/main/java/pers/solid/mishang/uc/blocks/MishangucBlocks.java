@@ -167,4 +167,8 @@ public class MishangucBlocks {
     final Block block = Blocks.register(RegistryKey.of(RegistryKeys.BLOCK, Mishanguc.id(name)), factory::apply, settings);
     return (T) block;
   }
+
+  public static <T extends Block> T register(String name, Function<AbstractBlock.Settings, T> factory, Block copySettingsFrom) {
+    return register(name, factory, AbstractBlock.Settings.copy(copySettingsFrom));
+  }
 }
