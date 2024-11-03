@@ -27,7 +27,6 @@ import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.block.AbstractRoadBlock;
 import pers.solid.mishang.uc.block.ColoredBlock;
-import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.StandingSignBlock;
 import pers.solid.mishang.uc.blockentity.*;
 import pers.solid.mishang.uc.blocks.MishangucBlocks;
@@ -49,7 +48,6 @@ import pers.solid.mishang.uc.util.ColorMixtureType;
 
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Stream;
 
 @Environment(EnvType.CLIENT)
 public class MishangucClient implements ClientModInitializer {
@@ -137,7 +135,6 @@ public class MishangucClient implements ClientModInitializer {
   private static void registerBlockColors() {
     // 注册方块和颜色
     final Block[] coloredBlocks = MishangUtils.blocks().stream().filter(Predicates.instanceOf(ColoredBlock.class))
-        .flatMap(block -> block instanceof HandrailBlock handrailBlock ? Stream.of(handrailBlock, handrailBlock.central(), handrailBlock.corner(), handrailBlock.stair(), handrailBlock.outer()) : Stream.of(block))  // since 0.2.4 用于可着色的栏杆方块及其变种
         .toArray(Block[]::new);
     ColorProviderRegistry.BLOCK.register(
         (state, world, pos, tintIndex) -> {
@@ -177,7 +174,7 @@ public class MishangucClient implements ClientModInitializer {
         (stack, tintIndex) -> {
           final Integer color = stack.get(MishangucComponents.COLOR);
           if (color != null) {
-            return color; // 此处忽略 colorRemembered
+            return 0xff000000 | color;
           }
           return Color.HSBtoRGB(Util.getMeasuringTimeMs() / 4096f + (stack.getItem().hashCode() >> 16) / 64f, 0.5f, 0.95f);
         },
