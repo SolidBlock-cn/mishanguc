@@ -23,7 +23,6 @@ import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.PlainTextContent;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
@@ -1100,13 +1099,13 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         } else {
           Arrays.stream(Formatting.values()).filter(Formatting::isColor).map(Formatting::asString).filter(name -> name.startsWith(text)).findAny().ifPresentOrElse(name -> customValueTextField.setSuggestion(name.substring(text.length())), () -> customValueTextField.setSuggestion(null));
         }
-        final TextColor parse = TextColor.parse(text).result().orElse(null);
+        final Integer parse = MishangUtils.parseColor(text).result().orElse(null);
         if (parse == null) {
           customValueTextField.setEditableColor(16733525);
         } else {
           customValueTextField.setEditableColor(16777215);
           for (TextContext textContext : selectedTextContexts) {
-            textContext.color = parse.getRgb();
+            textContext.color = parse;
           }
         }
       });
@@ -1140,13 +1139,13 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           customValueTextField.setEditableColor(16777215);
           return;
         }
-        final TextColor parse = TextColor.parse(text).result().orElse(null);
+        final Integer parse = MishangUtils.parseColor(text).result().orElse(null);
         if (parse == null) {
           customValueTextField.setEditableColor(16733525);
         } else {
           customValueTextField.setEditableColor(16777215);
           for (TextContext textContext : selectedTextContexts) {
-            textContext.outlineColor = parse.getRgb();
+            textContext.outlineColor = parse;
           }
         }
       });

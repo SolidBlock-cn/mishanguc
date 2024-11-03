@@ -7,6 +7,9 @@ Note: Not all versions in this update log are already published. Please refer to
 - Fit 1.21.3。
 - Fixed the issue of incorrect top textures in wooden hung signs.
 - Fixed the incorrect english for `block.mishanguc.glass_dark_oak_handrail`.
+- Now specifying opacity is supported when setting custom text or outline color, and the following hex formats are supported: `#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`. For example, `#f80` and `#ff8800` means orange, `#0ff8` and `#00ffff88` means translucent cyan.
+    - When displaying the hex format of transparent color, the two bits indicating alpha are also displayed at the end.
+    - Please note, when texts in translucent colors are bolded, or texts are outlined in translucent colors, z-fighting may happen.
 
 ### 1.4.1
 
