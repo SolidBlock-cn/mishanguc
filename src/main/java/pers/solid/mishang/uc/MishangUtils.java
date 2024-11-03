@@ -34,6 +34,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.text.TextContext;
@@ -203,9 +204,9 @@ public class MishangUtils {
         instanceStream(HungSignBlocks.class, Block.class),
         instanceStream(WallSignBlocks.class, Block.class),
         instanceStream(StandingSignBlocks.class, Block.class),
-        instanceStream(HandrailBlocks.class, Block.class),
+        instanceStream(HandrailBlocks.class, Block.class).flatMap(block -> block instanceof HandrailBlock handrailBlock ? Arrays.stream(handrailBlock.selfAndVariants()) : Stream.of(block)),
         instanceStream(ColoredBlocks.class, Block.class)
-    ).collect(ImmutableList.toImmutableList());
+    ).map(Objects::requireNonNull).collect(ImmutableList.toImmutableList());
     if (build.isEmpty()) {
       throw new AssertionError("The collection returned is empty, which is not expected. You may have to report to the author of Mishang Urban Construction mod.");
     }
@@ -223,7 +224,7 @@ public class MishangUtils {
   }
 
   /**
-   * 该模组的所有方块字段及其值的集合。会通过反射来访问字段，并记住这个值，下次直接返回该值。
+   * 该模组的所有方块字段及其值的集合。会通过反射来访问字段，并记住这个值，下次直接返回该值。对于栏杆方块，包括其所有的栏杆变种。
    *
    * @return 由方块字段和值组成的不可变映射。第一次调用时会生成，此后的所有调用都会直接使用这个值。
    */

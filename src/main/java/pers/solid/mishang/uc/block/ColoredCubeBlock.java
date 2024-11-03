@@ -18,6 +18,7 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
+import pers.solid.mishang.uc.blocks.ColoredBlocks;
 import pers.solid.mishang.uc.data.MishangucModels;
 
 import java.util.List;
@@ -65,11 +66,23 @@ public class ColoredCubeBlock extends Block implements ColoredBlock {
 
   @Override
   public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    if (this == ColoredBlocks.COLORED_PACKED_ICE) {
+      return blockLootTableGenerator.dropsWithSilkTouch(this).apply(COPY_COLOR_LOOT_FUNCTION);
+    } else if (this == ColoredBlocks.COLORED_STONE) {
+      return blockLootTableGenerator.drops(this, ColoredBlocks.COLORED_COBBLESTONE).apply(COPY_COLOR_LOOT_FUNCTION);
+    }
     return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    if (this == ColoredBlocks.COLORED_STONE) {
+      final Identifier modelId = ColoredCubeBlock.COLORED_CUBE_ALL.upload(this, textures, blockStateModelGenerator.modelCollector);
+      final Identifier mirroredModelId = ColoredCubeBlock.COLORED_CUBE_MIRRORED_ALL.upload(this, textures, blockStateModelGenerator.modelCollector);
+
+      blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createBlockStateWithTwoModelAndRandomInversion(this, modelId, mirroredModelId));
+      return;
+    }
     final Identifier modelId = model.upload(this, textures, blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(this, modelId));
     blockStateModelGenerator.registerParentedItemModel(this, modelId);

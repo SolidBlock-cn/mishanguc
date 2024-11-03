@@ -49,6 +49,18 @@ public class NamedBlockItem extends BlockItem {
     return block.getName();
   }
 
+  public static int getDependentColor(ItemPlacementContext context) {
+    final World world = context.getWorld();
+    final int dependentColor;
+    final BlockPos dependingPos = ((ItemUsageContextInvoker) context).invokeGetHitResult().getBlockPos();
+    if (world.getBlockEntity(dependingPos) instanceof ColoredBlockEntity dependingColoredBlockEntity) {
+      dependentColor = dependingColoredBlockEntity.getColor();
+    } else {
+      dependentColor = world.getBlockState(dependingPos).getMapColor(world, dependingPos).color;
+    }
+    return dependentColor;
+  }
+
   @Override
   protected boolean place(ItemPlacementContext context, BlockState state) {
     final ItemStack stack = context.getStack();
@@ -57,12 +69,7 @@ public class NamedBlockItem extends BlockItem {
       final World world = context.getWorld();
       int dependentColor = -1;
       if (color == null) {
-        final BlockPos dependingPos = ((ItemUsageContextInvoker) context).invokeGetHitResult().getBlockPos();
-        if (world.getBlockEntity(dependingPos) instanceof ColoredBlockEntity dependingColoredBlockEntity) {
-          dependentColor = dependingColoredBlockEntity.getColor();
-        } else {
-          dependentColor = world.getBlockState(dependingPos).getMapColor(world, dependingPos).color;
-        }
+        dependentColor = getDependentColor(context);
       }
       final boolean place = super.place(context, state);
       final BlockEntity placedEntity = world.getBlockEntity(context.getBlockPos());

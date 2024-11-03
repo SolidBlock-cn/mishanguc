@@ -10,6 +10,7 @@ import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
+import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -125,7 +126,7 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
 
     @Override
     public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
-      return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+      return blockLootTableGenerator.drops(this, ConstantLootNumberProvider.create(2)).apply(COPY_COLOR_LOOT_FUNCTION);
     }
 
     @Override

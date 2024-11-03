@@ -9,6 +9,7 @@ import net.minecraft.data.client.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -24,6 +25,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
+import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
+import pers.solid.mishang.uc.components.MishangucComponents;
+import pers.solid.mishang.uc.item.NamedBlockItem;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 
 import java.util.Map;
@@ -151,22 +155,34 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
 
   @Override
   public boolean canReplace(BlockState state, ItemPlacementContext context) {
-    if (state.getBlock().asItem() != context.getStack().getItem()) return false;
+    final ItemStack stack = context.getStack();
+    if (state.getBlock().asItem() != stack.getItem()) return false;
+    final BlockPos blockPos = context.getBlockPos();
+    if (this instanceof ColoredBlock) {
+      // 对于染色方块，如果颜色不一致，不可以替换。
+      final World world = context.getWorld();
+      if (world.getBlockEntity(blockPos) instanceof ColoredBlockEntity entity) {
+        final int colorToReplace = entity.getColor();
+        final Integer colorToSet = stack.get(MishangucComponents.COLOR);
+        if (colorToSet != null && colorToSet != colorToReplace) {
+          return false;
+        } else if (colorToSet == null && NamedBlockItem.getDependentColor(context) != colorToReplace) {
+          return false;
+        }
+      }
+    }
     final Direction facing = state.get(FACING);
     final Direction playerFacing = context.getHorizontalPlayerFacing();
     final Vec3d hitPos = context.getHitPos();
-    final BlockPos blockPos = context.getBlockPos();
     final Direction.Axis axis = playerFacing.getAxis();
     assert axis != Direction.Axis.Y;
     final Direction possibleNewFacing;
     if (axis == Direction.Axis.Z) {
       final double diff = hitPos.z - blockPos.getZ();
-      possibleNewFacing = diff < 0.3 ? Direction.SOUTH :
-          diff > 0.7 ? Direction.NORTH : null;
+      possibleNewFacing = diff < 0.3 ? Direction.SOUTH : diff > 0.7 ? Direction.NORTH : null;
     } else {
       final double diff = hitPos.x - blockPos.getX();
-      possibleNewFacing = diff < 0.3 ? Direction.EAST :
-          diff > 0.7 ? Direction.WEST : null;
+      possibleNewFacing = diff < 0.3 ? Direction.EAST : diff > 0.7 ? Direction.WEST : null;
     }
     return possibleNewFacing != null && facing.getAxis() != possibleNewFacing.getAxis();
   }
