@@ -1,0 +1,22 @@
+{
+  "values": [
+    "mishanguc:snow_wall_sign",
+    "mishanguc:glowing_snow_wall_sign",
+    "mishanguc:snow_hung_sign",
+    "mishanguc:glowing_snow_hung_sign",
+    "mishanguc:snow_standing_sign",
+    "mishanguc:glowing_snow_standing_sign",
+    "mishanguc:simple_snow_handrail",
+    "mishanguc:simple_snow_handrail_central",
+    "mishanguc:simple_snow_handrail_corner",
+    "mishanguc:simple_snow_handrail_stair",
+    "mishanguc:simple_snow_handrail_outer",
+    "mishanguc:simple_dirt_handrail",
+    "mishanguc:simple_dirt_handrail_central",
+    "mishanguc:simple_dirt_handrail_corner",
+    "mishanguc:simple_dirt_handrail_stair",
+    "mishanguc:simple_dirt_handrail_outer",
+    "mishanguc:colored_dirt",
+    "mishanguc:colored_snow_block"
+  ]
+}
