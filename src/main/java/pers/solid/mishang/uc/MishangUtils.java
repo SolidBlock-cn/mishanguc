@@ -26,6 +26,7 @@ import net.minecraft.text.TextColor;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -188,7 +189,7 @@ public class MishangUtils {
     if (color == 0) {
       return 0xf0ebcc;
     }
-    return (0) << 24 | (l & 0xFF) << 16 | (k & 0xFF) << 8 | (j & 0xFF);
+    return 0 << 24 | (l & 0xFF) << 16 | (k & 0xFF) << 8 | j & 0xFF;
   }
 
   @ApiStatus.AvailableSince("0.2.0")
@@ -299,7 +300,7 @@ public class MishangUtils {
     directionToContexts.forEach((verticalAlign, list) -> {
       float stackedHeight = 0;
       for (TextContext textContext : list) {
-        textContext.offsetY = (stackedHeight += textContext.getMarginTop() / 2f);
+        textContext.offsetY = stackedHeight += textContext.getMarginTop() / 2f;
         stackedHeight += textContext.getHeight() / 2f;
         stackedHeight += textContext.getMarginTop() / 2f;
       }
@@ -327,7 +328,7 @@ public class MishangUtils {
   }
 
   public static <T extends Comparable<T>> BlockState with(BlockState state, Property<T> property, String name) {
-    return property.parse(name).map((value) -> state.with(property, value)).orElse(state);
+    return property.parse(name).map(value -> state.with(property, value)).orElse(state);
   }
 
   @ApiStatus.AvailableSince("0.2.1")
@@ -343,7 +344,52 @@ public class MishangUtils {
    * 接收一个整数形式的颜色，考虑到 Minecraft 可能存在带有 alpha 通道的颜色，因此当检测到有 alpha 通道时，格式化为 #aarrggbb 的格式，否则格式化为 #rrggbb 的格式。
    */
   public static String formatColorHex(int color) {
-    return (color & 0xff000000) != 0 ? String.format("#%08x", color) : String.format("#%06x", color);
+    final int alpha = (color >> 24) & 0xff;
+    return alpha != 0 ? String.format("#%08x", (color & 0xffffff) << 8 | alpha) : String.format("#%06x", color);
+  }
+
+  /**
+   * 从字符串获取颜色，可以是支持的颜色名称，或者十六进制的格式。例如，{@code "red"} 或 {@code "#fab"}。
+   */
+  public static @NotNull DataResult<Integer> parseColor(String s) {
+    if (s.startsWith("#")) {
+      try {
+        final String hexPart = s.substring(1);
+        final int i = Integer.parseUnsignedInt(hexPart, 16);
+        switch (hexPart.length()) {
+          case 4 -> {
+            final int r, g, b, a;
+            r = i >> 12 & 0xf;
+            g = i >> 8 & 0xf;
+            b = i >> 4 & 0xf;
+            a = i & 0xf;
+            return DataResult.success(ColorHelper.getArgb(a * 17, r * 17, g * 17, b * 17));
+          }
+          case 3 -> {
+            final int r, g, b;
+            r = i >> 8 & 0xf;
+            g = i >> 4 & 0xf;
+            b = i & 0xf;
+            return DataResult.success(ColorHelper.getArgb(0, r * 17, g * 17, b * 17));
+          }
+          case 8 -> {
+            final int rgb = i >> 8 & 0xffffff;
+            final int a = i & 0xff;
+            return DataResult.success(ColorHelper.withAlpha(a, rgb));
+          }
+          case 6 -> {
+            return DataResult.success(i & 0xffffff);
+          }
+          default -> {
+            return DataResult.error(() -> "Invalid value length: " + s);
+          }
+        }
+      } catch (NumberFormatException e) {
+        return DataResult.error(() -> "Cannot parse number value: " + s);
+      }
+    } else {
+      return TextColor.parse(s).map(TextColor::getRgb);
+    }
   }
 
   public static MutableText describeShortcut(Text shortcut) {
@@ -373,7 +419,7 @@ public class MishangUtils {
       int green = integers.get(1) & 0xff;
       int blue = integers.get(2) & 0xff;
       int alpha = integers.size() > 3 ? integers.get(3) & 0xff : 0xff;
-      return DataResult.success((red << 16) | (green << 8) | blue | (alpha << 24));
+      return DataResult.success(red << 16 | green << 8 | blue | alpha << 24);
     }, integer -> DataResult.success(IntList.of(integer >> 16 & 0xff, integer >> 8 & 0xff, integer & 0xff, integer >> 24 & 0xff)));
 
     @Override
