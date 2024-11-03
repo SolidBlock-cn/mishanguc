@@ -7,7 +7,6 @@ import net.minecraft.loot.LootTable;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryWrapper;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.MishangucBlock;
 
 import java.util.Optional;
@@ -26,15 +25,8 @@ public class MishangucBlockLootTableProvider extends FabricBlockLootTableProvide
         if (lootTableKey.isEmpty()) {
           continue;
         }
-        if (r instanceof HandrailBlock handrailBlock) {
-          for (Block i : handrailBlock.selfAndVariants()) {
-            final LootTable.Builder lootTable = ((MishangucBlock) i).getLootTable(this);
-            lootTables.put(lootTableKey.get(), lootTable);
-          }
-        } else {
-          final LootTable.Builder lootTable = r.getLootTable(this);
-          lootTables.put(lootTableKey.get(), lootTable);
-        }
+        final LootTable.Builder lootTable = r.getLootTable(this);
+        lootTables.put(lootTableKey.get(), lootTable);
       } else {
         throw new IllegalStateException();
       }
