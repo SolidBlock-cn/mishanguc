@@ -8,10 +8,12 @@ import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ModelIds;
 import net.minecraft.data.client.ModelProvider;
 import net.minecraft.data.client.TextureMap;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.SingleItemRecipeJsonBuilder;
+import net.minecraft.loot.LootTable;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
@@ -63,6 +65,11 @@ public class LightSlabBlock extends SlabBlock implements MishangucBlock {
   public SingleItemRecipeJsonBuilder getStonecuttingRecipe() {
     return SingleItemRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), RecipeCategory.DECORATIONS, this, 2)
         .criterion(RecipeProvider.hasItem(baseBlock), RecipeProvider.conditionsFromItem(baseBlock));
+  }
+
+  @Override
+  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    return blockLootTableGenerator.slabDrops(this);
   }
 
   @Override
