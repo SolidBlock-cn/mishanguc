@@ -13,6 +13,7 @@ Note: Not all versions in this update log are already published. Please refer to
 - Fixed the severe issue that some tags disappear.
 - Fixed the issue that colored corner handrail only drops one item.
 - When holding a colored handrail block, if you place a corner block by adding to an existing same block, you can place successfully only when the color is consistent (the color of the item in hand is identical to the existing block, or when holding the item that has auto colors, the color automatically determined according to the context is identical to the existing block), to avoid replacing the color of the existing handrail block.
+- Fixed the issue that the slabs of light and road blocks only drop one.
 
 ### 1.4.1
 

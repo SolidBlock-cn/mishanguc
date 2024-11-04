@@ -3,12 +3,7 @@
   "category": "building",
   "key": {
     "*": "#minecraft:coals",
-    "X": [
-      "minecraft:white_concrete",
-      "minecraft:gray_concrete",
-      "minecraft:light_gray_concrete",
-      "minecraft:black_concrete"
-    ],
+    "X": "#mishanguc:road_materials",
     "|": "minecraft:flint"
   },
   "pattern": [
