@@ -101,9 +101,9 @@ public interface RoadWithAutoLine extends Road {
     if (item instanceof final BlockItem blockItem
         && blockItem.getBlock() instanceof RoadWithAutoLine
         && !Direction.Type.VERTICAL.test(hit.getSide())) {
-      return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
+      return ActionResult.PASS;
     }
-    return ActionResult.PASS;
+    return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
   }
 
   @Override

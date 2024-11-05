@@ -10,9 +10,9 @@ import net.minecraft.data.client.Models;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeGenerator;
+import net.minecraft.item.Item;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.ItemTags;
@@ -67,16 +67,17 @@ public class RoadBlock extends AbstractRoadBlock {
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
     if (lineColor != LineColor.NONE) return null;
+    final TagKey<Item> tag = TagKey.of(RegistryKeys.ITEM, Mishanguc.id("road_materials"));
     return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, this, 9)
         .pattern("***")
         .pattern("|X|")
         .pattern("***")
         .input('*', ItemTags.COALS)
         .input('|', Items.FLINT)
-        .input('X', Ingredient.ofItems(Items.WHITE_CONCRETE, Items.GRAY_CONCRETE, Items.LIGHT_GRAY_CONCRETE, Items.BLACK_CONCRETE))
+        .input('X', tag)
         .criterion("has_coal", recipeGenerator.conditionsFromTag(ItemTags.COALS))
         .criterion(RecipeGenerator.hasItem(Items.FLINT), recipeGenerator.conditionsFromItem(Items.FLINT))
-        .criterion("has_proper_concrete", recipeGenerator.conditionsFromTag(TagKey.of(RegistryKeys.ITEM, Mishanguc.id("road_materials"))));
+        .criterion("has_proper_concrete", recipeGenerator.conditionsFromTag(tag));
   }
 
   @Override
