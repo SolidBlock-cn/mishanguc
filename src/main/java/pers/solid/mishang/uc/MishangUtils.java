@@ -184,13 +184,13 @@ public class MishangUtils {
    * @return 发光后颜色的整数值。
    */
   public static int toSignOutlineColor(int color) {
-    int j = (int) ((double) (color & 0xFF) * 0.4);
-    int k = (int) ((double) (color >> 8 & 0xFF) * 0.4);
-    int l = (int) ((double) (color >> 16 & 0xFF) * 0.4);
-    if (color == 0) {
-      return 0xf0ebcc;
+    if ((color & 0xffffff) == 0) {
+      return (color & 0xff000000) | 0xf0ebcc;
     }
-    return 0 << 24 | (l & 0xFF) << 16 | (k & 0xFF) << 8 | j & 0xFF;
+    int j = (int) ((double) ColorHelper.Argb.getRed(color) * 0.4);
+    int k = (int) ((double) ColorHelper.Argb.getGreen(color) * 0.4);
+    int l = (int) ((double) ColorHelper.Argb.getBlue(color) * 0.4);
+    return ColorHelper.Argb.getArgb(ColorHelper.Argb.getAlpha(color), j, k, l);
   }
 
   @ApiStatus.AvailableSince("0.2.0")
@@ -364,19 +364,19 @@ public class MishangUtils {
             g = i >> 8 & 0xf;
             b = i >> 4 & 0xf;
             a = i & 0xf;
-            return DataResult.success(ColorHelper.getArgb(a * 17, r * 17, g * 17, b * 17));
+            return DataResult.success(ColorHelper.Argb.getArgb(a * 17, r * 17, g * 17, b * 17));
           }
           case 3 -> {
             final int r, g, b;
             r = i >> 8 & 0xf;
             g = i >> 4 & 0xf;
             b = i & 0xf;
-            return DataResult.success(ColorHelper.getArgb(0, r * 17, g * 17, b * 17));
+            return DataResult.success(ColorHelper.Argb.getArgb(0, r * 17, g * 17, b * 17));
           }
           case 8 -> {
             final int rgb = i >> 8 & 0xffffff;
             final int a = i & 0xff;
-            return DataResult.success(ColorHelper.withAlpha(a, rgb));
+            return DataResult.success(ColorHelper.Argb.withAlpha(a, rgb));
           }
           case 6 -> {
             return DataResult.success(i & 0xffffff);
