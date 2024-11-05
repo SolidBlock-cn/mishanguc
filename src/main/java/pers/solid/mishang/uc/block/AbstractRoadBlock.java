@@ -83,7 +83,7 @@ public abstract class AbstractRoadBlock extends Block implements Road {
   @Override
   public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
     ActionResult result = super.onUse(state, world, pos, player, hit);
-    if (result instanceof ActionResult.Fail) {
+    if (result == ActionResult.FAIL) {
       return result;
     }
     return onUseRoad(state, world, pos, player, hit);
