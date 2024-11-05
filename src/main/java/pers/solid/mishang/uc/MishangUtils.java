@@ -183,13 +183,13 @@ public class MishangUtils {
    * @return 发光后颜色的整数值。
    */
   public static int toSignOutlineColor(int color) {
-    int j = (int) ((double) (color & 0xFF) * 0.4);
-    int k = (int) ((double) (color >> 8 & 0xFF) * 0.4);
-    int l = (int) ((double) (color >> 16 & 0xFF) * 0.4);
-    if (color == 0) {
-      return 0xf0ebcc;
+    if ((color & 0xffffff) == 0) {
+      return (color & 0xff000000) | 0xf0ebcc;
     }
-    return 0 << 24 | (l & 0xFF) << 16 | (k & 0xFF) << 8 | j & 0xFF;
+    int j = (int) ((double) ColorHelper.getRed(color) * 0.4);
+    int k = (int) ((double) ColorHelper.getGreen(color) * 0.4);
+    int l = (int) ((double) ColorHelper.getBlue(color) * 0.4);
+    return ColorHelper.getArgb(ColorHelper.getAlpha(color), j, k, l);
   }
 
   @ApiStatus.AvailableSince("0.2.0")

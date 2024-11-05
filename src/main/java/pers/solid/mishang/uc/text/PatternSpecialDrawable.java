@@ -22,6 +22,8 @@ import org.joml.Matrix4f;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.mixin.TextRendererAccessor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public record PatternSpecialDrawable(TextContext textContext, String shapeName, @Unmodifiable float[][] rectangles) implements SpecialDrawable {
@@ -224,41 +226,50 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
   @Override
   public void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, float x, float y) {
     int color = textContext.color;
-    final int alpha = ((color & 0xFC000000) == 0) ? 1 : (color >> 24 & 0xFF);
+    final int alpha = ((color & 0xFC000000) == 0) ? 255 : (color >> 24 & 0xFF);
     //noinspection resource
-    BakedGlyph glyphRenderer = ((TextRendererAccessor) textRenderer).invokeGetFontStorage(Style.DEFAULT_FONT_ID).getRectangleBakedGlyph();
+    BakedGlyph bakedGlyph = ((TextRendererAccessor) textRenderer).invokeGetFontStorage(Style.DEFAULT_FONT_ID).getRectangleBakedGlyph();
     final float sizeMultiplier = 1;
-    final RenderLayer layer = glyphRenderer.getLayer(textContext.outlineColor != -2 ? TextRenderer.TextLayerType.POLYGON_OFFSET : textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
-    final Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
-    final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(layer);
+    final RenderLayer layer = bakedGlyph.getLayer(textContext.outlineColor != -2 ? TextRenderer.TextLayerType.POLYGON_OFFSET : textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
 
     // 文本是否存在阴影。
     final boolean shadow = textContext.shadow;
     // 用于文本渲染的矩阵。当存在阴影时，文本渲染需要适当调整。
+    final List<BakedGlyph.Rectangle> rectanglesToDraw = new ArrayList<>();
+    final List<BakedGlyph.Rectangle> outlineRectangles = textContext.outlineColor == -2 ? null : new ArrayList<>();
     for (float[] rectangle : rectangles) {
       final float minX = (rectangle[0] + x) * sizeMultiplier;
       final float minY = (rectangle[3] + y) * sizeMultiplier;
       final float maxX = (rectangle[2] + x) * sizeMultiplier;
       final float maxY = (rectangle[1] + y) * sizeMultiplier;
       if (shadow) {
-        glyphRenderer.drawRectangle(
-            new BakedGlyph.Rectangle(minX + 1, minY + 1, maxX + 1, maxY + 1, 0, ColorHelper.scaleRgb(color, 0.25f)),
-            matrix4f, vertexConsumer, light
+        rectanglesToDraw.add(
+            new BakedGlyph.Rectangle(minX + 1, minY + 1, maxX + 1, maxY + 1, 0, ColorHelper.withAlpha(alpha, ColorHelper.scaleRgb(color, 0.25f)))
         );
       }
-      if (textContext.outlineColor != -2) {
-        final VertexConsumer vertexConsumerOutline = vertexConsumers.getBuffer(glyphRenderer.getLayer(TextRenderer.TextLayerType.NORMAL));
+      if (outlineRectangles != null) {
         int outlineColor = textContext.outlineColor == -1 ? MishangUtils.toSignOutlineColor(color) : textContext.outlineColor;
-        glyphRenderer.drawRectangle(
-            new BakedGlyph.Rectangle(minX - 1, minY + 1, maxX + 1, maxY - 1, 0, ColorHelper.withAlpha(alpha, outlineColor)),
-            matrix4f, vertexConsumerOutline, light
+        final int outlineAlpha = ((outlineColor & 0xFC000000) == 0) ? 255 : (outlineColor >> 24 & 0xFF);
+        outlineRectangles.add(
+            new BakedGlyph.Rectangle(minX - 1, minY + 1, maxX + 1, maxY - 1, 0, ColorHelper.withAlpha(outlineAlpha, outlineColor))
         );
 
       }
-      glyphRenderer.drawRectangle(
-          new BakedGlyph.Rectangle(minX, minY, maxX, maxY, shadow ? 0.24f : textContext.outlineColor != -2 ? 0.02f : 0, ColorHelper.withAlpha(alpha, color)),
-          matrix4f, vertexConsumer, light
+      rectanglesToDraw.add(
+          new BakedGlyph.Rectangle(minX, minY, maxX, maxY, shadow ? 0.03f : textContext.outlineColor != -2 ? 0.02f : 0, ColorHelper.withAlpha(alpha, color))
       );
+    }
+
+    final Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
+    final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(layer);
+    for (BakedGlyph.Rectangle rectangle : rectanglesToDraw) {
+      bakedGlyph.drawRectangle(rectangle, matrix4f, vertexConsumer, light);
+    }
+    if (outlineRectangles != null) {
+      final VertexConsumer vertexConsumerOutline = vertexConsumers.getBuffer(bakedGlyph.getLayer(TextRenderer.TextLayerType.NORMAL));
+      for (BakedGlyph.Rectangle outlineRectangle : outlineRectangles) {
+        bakedGlyph.drawRectangle(outlineRectangle, matrix4f, vertexConsumerOutline, light);
+      }
     }
   }
 
