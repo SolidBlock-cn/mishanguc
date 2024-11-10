@@ -2,7 +2,7 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
-### 1.4.2-beta.1
+### 1.4.2-beta.2
 
 - Fit 1.21.3。
 - Fixed the issue of incorrect top textures in wooden hung signs.
@@ -16,6 +16,8 @@ Note: Not all versions in this update log are already published. Please refer to
 - Fixed the issue that colored corner handrail only drops one item.
 - When holding a colored handrail block, if you place a corner block by adding to an existing same block, you can place successfully only when the color is consistent (the color of the item in hand is identical to the existing block, or when holding the item that has auto colors, the color automatically determined according to the context is identical to the existing block), to avoid replacing the color of the existing handrail block.
 - Fixed the issue that the slabs of light and road blocks only drop one.
+- When using Text Copy Tool to copy the text in blocks of this mod to vanilla signs, if the copied content does not meet the number of the lines in the vanilla sign, the remaining lines of the vanilla sign will be cleared. If it exceeds, the concrete ignored text content will be displayed in the message.
+- When using Text Copy Tool to copy the text in blocks of this mod to vanilla signs, warnings about custom colors will no longer be made.
 
 ### 1.4.1
 
