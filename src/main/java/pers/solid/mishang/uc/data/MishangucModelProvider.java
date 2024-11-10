@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.client.*;
 import net.minecraft.item.Item;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.MishangucBlock;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.item.MishangucItems;
@@ -22,12 +21,6 @@ public class MishangucModelProvider extends FabricModelProvider {
     MishangUtils.blocks().forEach(block -> {
       if (block instanceof MishangucBlock mishangucBlock) {
         mishangucBlock.registerModels(this, blockStateModelGenerator);
-        if (block instanceof HandrailBlock handrailBlock) {
-          handrailBlock.central().registerModels(this, blockStateModelGenerator);
-          handrailBlock.corner().registerModels(this, blockStateModelGenerator);
-          handrailBlock.stair().registerModels(this, blockStateModelGenerator);
-          handrailBlock.outer().registerModels(this, blockStateModelGenerator);
-        }
       }
     });
   }

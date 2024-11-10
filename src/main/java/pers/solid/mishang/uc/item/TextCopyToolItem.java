@@ -21,6 +21,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
@@ -122,10 +123,11 @@ public class TextCopyToolItem extends BlockToolItem implements MishangucItem {
           return ActionResult.SUCCESS;
         @Nullable DyeColor color = null;
         for (int i = 0; i < texts.size(); i++) {
+          final TextContext textContext = TextContext.fromNbt(texts.get(i));
+          final MutableText styledText = textContext.asStyledText();
           if (i < 4) {
             // 设置告示牌文字
-            final TextContext textContext = TextContext.fromNbt(texts.get(i));
-            signBlockEntity.setTextOnRow(i, textContext.asStyledText());
+            signBlockEntity.setTextOnRow(i, styledText);
 
             // 设置告示牌颜色
             final DyeColor possibleColor = MishangUtils.colorBySignColor(textContext.color);
@@ -135,13 +137,12 @@ public class TextCopyToolItem extends BlockToolItem implements MishangucItem {
                 signBlockEntity.setTextColor(possibleColor);
               }
             }
-            if (color == null) {
-              // 由于只支持部分颜色，故这些颜色没有使用。
-              player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.warn.colorSelectionLimit").formatted(Formatting.YELLOW), false);
-            }
           } else {
-            player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.warn.outOfBound").formatted(Formatting.YELLOW), false);
+            player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.warn.outOfBound", styledText, 4).formatted(Formatting.YELLOW), false);
           }
+        }
+        for (int i = texts.size(); i < 4; i++) {
+          signBlockEntity.setTextOnRow(i, ScreenTexts.EMPTY);
         }
         blockEntity.markDirty();
         world.updateListeners(blockPos, blockState, blockState, 3);

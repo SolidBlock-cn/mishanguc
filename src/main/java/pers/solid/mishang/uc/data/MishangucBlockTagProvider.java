@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.data;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicates;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
@@ -16,14 +18,13 @@ import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagBuilder;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.util.DyeColor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.blocks.*;
-import pers.solid.mishang.uc.item.MishangucItems;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -32,28 +33,27 @@ import java.util.concurrent.CompletableFuture;
 
 import static pers.solid.mishang.uc.MishangUtils.*;
 
-public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
+public class MishangucBlockTagProvider extends FabricTagProvider.BlockTagProvider {
   public final @NotNull MishangucItemTagProvider affiliate;
+  protected final Map<TagKey<Block>, TagKey<Item>> blockTagsWithItem = new HashMap<>();
+  protected MishangucTagBuilder<Block> pickaxeMineable;
+  protected MishangucTagBuilder<Block> shovelMineable;
+  protected MishangucTagBuilder<Block> axeMineable;
+  protected MishangucTagBuilder<Block> hoeMineable;
+  protected MishangucTagBuilder<Block> needsStoneTool;
+  protected MishangucTagBuilder<Block> needsIronTool;
+  protected MishangucTagBuilder<Block> needsDiamondTool;
+  protected final Multimap<DyeColor, Item> coloredItems = ArrayListMultimap.create();
+
+  protected MishangucBlockTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+    super(output, registriesFuture);
+    this.affiliate = new MishangucItemTagProvider(output, registriesFuture, this);
+  }
 
   @SuppressWarnings("deprecation")
   protected MishangucTagBuilder<Block> getMishangucTagBuilder(TagKey<Block> tag) {
     final TagBuilder tagBuilder = getTagBuilder(tag);
     return new MishangucTagBuilder<>(tag, tagBuilder, block -> block.getRegistryEntry().registryKey());
-  }
-
-  protected final Map<TagKey<Block>, TagKey<Item>> blockTagsWithItem = new HashMap<>();
-
-  protected final MishangucTagBuilder<Block> pickaxeMineable = blockTagOnly(BlockTags.PICKAXE_MINEABLE);
-  protected final MishangucTagBuilder<Block> shovelMineable = blockTagOnly(BlockTags.SHOVEL_MINEABLE);
-  protected final MishangucTagBuilder<Block> axeMineable = blockTagOnly(BlockTags.AXE_MINEABLE);
-  protected final MishangucTagBuilder<Block> hoeMineable = blockTagOnly(BlockTags.HOE_MINEABLE);
-  protected final MishangucTagBuilder<Block> needsStoneTool = blockTagOnly(BlockTags.NEEDS_STONE_TOOL);
-  protected final MishangucTagBuilder<Block> needsIronTool = blockTagOnly(BlockTags.NEEDS_IRON_TOOL);
-  protected final MishangucTagBuilder<Block> needsDiamondTool = blockTagOnly(BlockTags.NEEDS_DIAMOND_TOOL);
-
-  protected MishangucTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
-    super(output, registriesFuture);
-    this.affiliate = new MishangucItemTagProvider(output, registriesFuture, this);
   }
 
   protected MishangucTagBuilder<Block> blockTagOnly(TagKey<Block> blockTagKey) {
@@ -78,12 +78,14 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
     return tag;
   }
 
-  protected MishangucTagBuilder<Item> itemTag(TagKey<Item> tagKey) {
-    return affiliate.getMishangucTagBuilder(tagKey);
-  }
-
-  protected MishangucTagBuilder<Item> itemTag(String path) {
-    return affiliate.getMishangucTagBuilder(TagKey.of(RegistryKeys.ITEM, Mishanguc.id(path)));
+  protected void init() {
+    pickaxeMineable = blockTagOnly(BlockTags.PICKAXE_MINEABLE);
+    shovelMineable = blockTagOnly(BlockTags.SHOVEL_MINEABLE);
+    axeMineable = blockTagOnly(BlockTags.AXE_MINEABLE);
+    hoeMineable = blockTagOnly(BlockTags.HOE_MINEABLE);
+    needsStoneTool = blockTagOnly(BlockTags.NEEDS_STONE_TOOL);
+    needsIronTool = blockTagOnly(BlockTags.NEEDS_IRON_TOOL);
+    needsDiamondTool = blockTagOnly(BlockTags.NEEDS_DIAMOND_TOOL);
   }
 
   protected void roads() {
@@ -114,7 +116,6 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
         .addTag(simpleConcreteCornerHandrails)
         .addTag(simpleConcreteOuterHandrails)
         .addTag(simpleConcreteStairHandrails);
-    final var simpleConcreteHandrailItems = itemTag("simple_concrete_handrails");
 
     // 陶瓦栏杆部分
     final var simpleTerracottaNormalHandrails = blockTagOnly("simple_terracotta_normal_handrails");
@@ -128,7 +129,6 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
         .addTag(simpleTerracottaCornerHandrails)
         .addTag(simpleTerracottaOuterHandrails)
         .addTag(simpleTerracottaStairHandrails);
-    final var simpleTerracottaHandrailItems = itemTag("simple_terracotta_handrails");
 
     // 染色玻璃栏杆部分
     final var simpleStainedGlassNormalHandrails = blockTagOnly("simple_stained_glass_normal_handrails");
@@ -142,7 +142,6 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
         .addTag(simpleStainedGlassCornerHandrails)
         .addTag(simpleStainedGlassOuterHandrails)
         .addTag(simpleStainedGlassStairHandrails);
-    final var simpleStainedGlassHandrailItems = itemTag("simple_stained_glass_handrails");
 
     // 染色木头部分
     final var simpleWoodenNormalHandrails = blockTagOnly("simple_wooden_normal_handrails");
@@ -152,7 +151,6 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
     final var simpleWoodenStairHandrails = blockTagOnly("simple_wooden_stair_handrails");
     final var simpleWoodenHandrails = blockTagOnly("simple_wooden_handrails")
         .addTag(simpleWoodenNormalHandrails, simpleWoodenCentralHandrails, simpleWoodenCornerHandrails, simpleWoodenOuterHandrails, simpleWoodenStairHandrails);
-    final var simpleWoodenHandrailItems = itemTag("simple_wooden_handrails");
 
     // 所有的简单栏杆
     final var simpleNormalHandrails = blockTagOnly("simple_normal_handrails")
@@ -167,8 +165,6 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
         .addTag(simpleConcreteStairHandrails, simpleTerracottaStairHandrails, simpleStainedGlassStairHandrails, simpleWoodenStairHandrails);
     final var simpleHandrails = blockTagOnly("simple_handrails")
         .addTag(simpleNormalHandrails, simpleCentralHandrails, simpleCornerHandrails, simpleOuterHandrails, simpleStairHandrails);
-    final var simpleHandrailItems = itemTag("simple_handrails")
-        .addTag(simpleConcreteHandrailItems, simpleTerracottaHandrailItems, simpleStainedGlassHandrailItems, simpleWoodenHandrailItems);
 
     // 玻璃栏杆部分
     final var glassNormalHandrails = blockTagOnly("glass_normal_handrails");
@@ -177,7 +173,6 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
     final var glassOuterHandrails = blockTagOnly("glass_outer_handrails");
     final var glassStairHandrails = blockTagOnly("glass_stair_handrails");
     final var glassHandrails = blockTagOnly("glass_handrails").addTag(glassNormalHandrails, glassCentralHandrails, glassCornerHandrails, glassOuterHandrails, glassStairHandrails);
-    final var glassHandrailItems = itemTag("glass_handrails");
 
     final var normalHandrails = blockTagOnly("normal_handrails")
         .addTag(glassNormalHandrails)
@@ -200,11 +195,6 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
         .addTag(cornerHandrails)
         .addTag(outerHandrails)
         .addTag(stairHandrails);
-    final var handrailItems = itemTag("handrails")
-        .addTag(simpleStainedGlassHandrailItems)
-        .addTag(simpleTerracottaHandrailItems)
-        .addTag(simpleConcreteHandrailItems)
-        .addTag(simpleWoodenHandrailItems);
 
     MishangUtils.instanceEntryStream(HandrailBlocks.class, Block.class).forEach(entry -> {
       final Field field = entry.getKey();
@@ -216,35 +206,30 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
           simpleStainedGlassCornerHandrails.add(simpleHandrailBlock.corner);
           simpleStainedGlassOuterHandrails.add(simpleHandrailBlock.outer);
           simpleStainedGlassStairHandrails.add(simpleHandrailBlock.stair);
-          simpleStainedGlassHandrailItems.add(simpleHandrailBlock.asItem());
         } else if (isConcrete(simpleHandrailBlock.baseBlock)) {
           simpleConcreteNormalHandrails.add(simpleHandrailBlock);
           simpleConcreteCentralHandrails.add(simpleHandrailBlock.central);
           simpleConcreteCornerHandrails.add(simpleHandrailBlock.corner);
           simpleConcreteOuterHandrails.add(simpleHandrailBlock.outer);
           simpleConcreteStairHandrails.add(simpleHandrailBlock.stair);
-          simpleConcreteHandrailItems.add(simpleHandrailBlock.asItem());
         } else if (isTerracotta(simpleHandrailBlock.baseBlock)) {
           simpleTerracottaNormalHandrails.add(simpleHandrailBlock);
           simpleTerracottaCentralHandrails.add(simpleHandrailBlock.central);
           simpleTerracottaCornerHandrails.add(simpleHandrailBlock.corner);
           simpleTerracottaOuterHandrails.add(simpleHandrailBlock.outer);
           simpleTerracottaStairHandrails.add(simpleHandrailBlock.stair);
-          simpleTerracottaHandrailItems.add(simpleHandrailBlock.asItem());
         } else if (isWood(simpleHandrailBlock.baseBlock) || isPlanks(simpleHandrailBlock.baseBlock)) {
           simpleWoodenNormalHandrails.add(simpleHandrailBlock);
           simpleWoodenCentralHandrails.add(simpleHandrailBlock.central);
           simpleWoodenCornerHandrails.add(simpleHandrailBlock.corner);
           simpleWoodenOuterHandrails.add(simpleHandrailBlock.outer);
           simpleWoodenStairHandrails.add(simpleHandrailBlock.stair);
-          simpleWoodenHandrailItems.add(simpleHandrailBlock.asItem());
         } else {
           simpleNormalHandrails.add(simpleHandrailBlock);
           simpleCentralHandrails.add(simpleHandrailBlock.central);
           simpleCornerHandrails.add(simpleHandrailBlock.corner);
           simpleOuterHandrails.add(simpleHandrailBlock.outer);
           simpleStairHandrails.add(simpleHandrailBlock.stair);
-          simpleHandrailItems.add(simpleHandrailBlock.asItem());
           configureMineableTags(field, simpleHandrailBlock.selfAndVariants());
         }
       } else if (block instanceof GlassHandrailBlock glassHandrailBlock) {
@@ -263,7 +248,7 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
   }
 
   protected void coloredBlocks() {
-    final MishangucTagBuilder<Block> colored = blockTagWithItem("colored");
+    final MishangucTagBuilder<Block> colored = blockTagOnly("colored"); // 因为涉及染色栏杆的要特殊处理，所以这里先这样。
     MishangUtils.blocks().stream().filter(Predicates.instanceOf(ColoredBlock.class)).forEach(colored::add);
     MishangUtils.instanceEntryStream(ColoredBlocks.class, Block.class).forEach(entry -> configureMineableTags(entry.getKey(), entry.getValue()));
 
@@ -613,41 +598,18 @@ public class MishangucTagProvider extends FabricTagProvider.BlockTagProvider {
     }
   }
 
-  protected void tools() {
-    itemTag(ItemTags.PICKAXES).add(MishangucItems.OMNIPOTENT_TOOL);
-    itemTag(ItemTags.AXES).add(MishangucItems.OMNIPOTENT_TOOL);
-    itemTag(ItemTags.SHOVELS).add(MishangucItems.OMNIPOTENT_TOOL);
-    itemTag(ItemTags.HOES).add(MishangucItems.OMNIPOTENT_TOOL);
-    itemTag(ItemTags.SWORDS).add(MishangucItems.OMNIPOTENT_TOOL);
-  }
-
   @Override
   protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
+    init();
     roads();
     signs();
     lights();
     handrails();
     coloredBlocks();
-    tools();
 
     blockTagWithItem(BlockTags.STAIRS, ItemTags.STAIRS).add(blocks().stream().filter(block -> block instanceof StairsBlock).toArray(Block[]::new));
     blockTagWithItem(BlockTags.SLABS, ItemTags.SLABS).add(blocks().stream().filter(block -> block instanceof SlabBlock).toArray(Block[]::new));
-  }
 
-  public class MishangucItemTagProvider extends FabricTagProvider.ItemTagProvider {
-    public MishangucItemTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture, @Nullable FabricTagProvider.BlockTagProvider blockTagProvider) {
-      super(output, completableFuture, blockTagProvider);
-    }
-
-    @SuppressWarnings("deprecation")
-    protected MishangucTagBuilder<Item> getMishangucTagBuilder(TagKey<Item> tag) {
-      final TagBuilder tagBuilder = this.getTagBuilder(tag);
-      return new MishangucTagBuilder<>(tag, tagBuilder, item -> item.getRegistryEntry().registryKey());
-    }
-
-    @Override
-    protected void configure(RegistryWrapper.WrapperLookup lookup) {
-      blockTagsWithItem.forEach(this::copy);
-    }
+    blockTagOnly("incorrect_for_omnipotent_tool");
   }
 }

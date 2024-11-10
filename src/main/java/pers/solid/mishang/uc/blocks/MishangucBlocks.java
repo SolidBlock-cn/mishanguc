@@ -63,7 +63,7 @@ public class MishangucBlocks {
   /**
    * 绝大多数黄色光方块共用的方块设置。
    */
-  protected static final FabricBlockSettings YELLOW_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP,MapColor.YELLOW).luminance(15).strength(0.2f);
+  protected static final FabricBlockSettings YELLOW_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, MapColor.YELLOW).luminance(15).strength(0.2f);
   /**
    * 墙上的黄色灯等方块等用到的方块设置。与{@link #YELLOW_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。
    */
@@ -72,22 +72,22 @@ public class MishangucBlocks {
   /**
    * 绝大多数青色光方块共用的方块设置。
    */
-  protected static final FabricBlockSettings CYAN_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP,MapColor.CYAN).luminance(15).strength(0.2f);
+  protected static final FabricBlockSettings CYAN_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, MapColor.CYAN).luminance(15).strength(0.2f);
   /**
    * 墙上的青色灯等方块等用到的方块设置。与{@link #YELLOW_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。
    */
   protected static final FabricBlockSettings CYAN_WALL_LIGHT_SETTINGS =
       FabricBlockSettings.copyOf(CYAN_LIGHT_SETTINGS).noCollision();
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final FabricBlockSettings ORANGE_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP,DyeColor.ORANGE).luminance(15).strength(0.2f);
+  protected static final FabricBlockSettings ORANGE_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, DyeColor.ORANGE).luminance(15).strength(0.2f);
   @ApiStatus.AvailableSince("1.1.0")
   protected static final FabricBlockSettings ORANGE_WALL_LIGHT_SETTINGS = FabricBlockSettings.copyOf(ORANGE_LIGHT_SETTINGS).noCollision();
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final FabricBlockSettings GREEN_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP,DyeColor.GREEN).luminance(15).strength(0.2f);
+  protected static final FabricBlockSettings GREEN_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, DyeColor.GREEN).luminance(15).strength(0.2f);
   @ApiStatus.AvailableSince("1.1.0")
   protected static final FabricBlockSettings GREEN_WALL_LIGHT_SETTINGS = FabricBlockSettings.copyOf(GREEN_LIGHT_SETTINGS).noCollision();
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final FabricBlockSettings PINK_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP,DyeColor.PINK).luminance(15).strength(0.2f);
+  protected static final FabricBlockSettings PINK_LIGHT_SETTINGS = FabricBlockSettings.of(Material.REDSTONE_LAMP, DyeColor.PINK).luminance(15).strength(0.2f);
   @ApiStatus.AvailableSince("1.1.0")
   protected static final FabricBlockSettings PINK_WALL_LIGHT_SETTINGS = FabricBlockSettings.copyOf(PINK_LIGHT_SETTINGS).noCollision();
   @ApiStatus.Internal
