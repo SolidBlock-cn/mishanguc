@@ -4,8 +4,9 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.block.Block;
 import net.minecraft.loot.LootTable;
+import net.minecraft.loot.LootTables;
+import net.minecraft.util.Identifier;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.MishangucBlock;
 
 public class MishangucBlockLootTableProvider extends FabricBlockLootTableProvider {
@@ -17,15 +18,12 @@ public class MishangucBlockLootTableProvider extends FabricBlockLootTableProvide
   public void generate() {
     for (Block block : MishangUtils.blocks()) {
       if (block instanceof MishangucBlock r) {
-        if (r instanceof HandrailBlock handrailBlock) {
-          for (Block i : handrailBlock.selfAndVariants()) {
-            final LootTable.Builder lootTable = ((MishangucBlock) i).getLootTable(this);
-            lootTables.put(i.getLootTableId(), lootTable);
-          }
-        } else {
-          final LootTable.Builder lootTable = r.getLootTable(this);
-          lootTables.put(block.getLootTableId(), lootTable);
+        final Identifier lootTableId = block.getLootTableId();
+        if (LootTables.EMPTY.equals(lootTableId)) {
+          continue;
         }
+        final LootTable.Builder lootTable = r.getLootTable(this);
+        lootTables.put(lootTableId, lootTable);
       } else {
         throw new IllegalStateException();
       }

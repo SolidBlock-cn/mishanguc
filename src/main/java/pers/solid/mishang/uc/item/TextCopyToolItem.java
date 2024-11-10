@@ -22,6 +22,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
@@ -123,12 +124,14 @@ public class TextCopyToolItem extends BlockToolItem implements MishangucItem {
           return ActionResult.SUCCESS;
         final SignText textFacing = signBlockEntity.getTextFacing(player);
         final Text[] messagesUnfiltered = textFacing.getMessages(false);
+        Arrays.fill(messagesUnfiltered, ScreenTexts.EMPTY);
         @Nullable DyeColor color = null;
         for (int i = 0; i < texts.size(); i++) {
-          if (i < 4) {
+          final TextContext textContext = TextContext.fromNbt(texts.get(i));
+          final MutableText styledText = textContext.asStyledText();
+          if (i < messagesUnfiltered.length) {
             // 设置告示牌文字
-            final TextContext textContext = TextContext.fromNbt(texts.get(i));
-            messagesUnfiltered[i] = (textContext.asStyledText());
+            messagesUnfiltered[i] = styledText;
 
             // 设置告示牌颜色
             final DyeColor possibleColor = MishangUtils.colorBySignColor(textContext.color);
@@ -137,12 +140,8 @@ public class TextCopyToolItem extends BlockToolItem implements MishangucItem {
                 color = possibleColor;
               }
             }
-            if (color == null) {
-              // 由于只支持部分颜色，故这些颜色没有使用。
-              player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.warn.colorSelectionLimit").formatted(Formatting.YELLOW), false);
-            }
           } else {
-            player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.warn.outOfBound").formatted(Formatting.YELLOW), false);
+            player.sendMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.warn.outOfBound", styledText, messagesUnfiltered.length).formatted(Formatting.YELLOW), false);
           }
         }
         signBlockEntity.setText(color == null ? textFacing : textFacing.withColor(color), signBlockEntity.isPlayerFacingFront(player));

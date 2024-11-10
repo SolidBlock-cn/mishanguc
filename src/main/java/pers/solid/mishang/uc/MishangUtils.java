@@ -19,6 +19,7 @@ import net.minecraft.text.TextColor;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.text.TextContext;
@@ -175,13 +177,13 @@ public class MishangUtils {
    * @return 发光后颜色的整数值。
    */
   public static int toSignOutlineColor(int color) {
-    int j = (int) ((double) (color & 0xFF) * 0.4);
-    int k = (int) ((double) (color >> 8 & 0xFF) * 0.4);
-    int l = (int) ((double) (color >> 16 & 0xFF) * 0.4);
-    if (color == 0) {
-      return 0xf0ebcc;
+    if ((color & 0xffffff) == 0) {
+      return (color & 0xff000000) | 0xf0ebcc;
     }
-    return (0) << 24 | (l & 0xFF) << 16 | (k & 0xFF) << 8 | (j & 0xFF);
+    int j = (int) ((double) ColorHelper.Argb.getRed(color) * 0.4);
+    int k = (int) ((double) ColorHelper.Argb.getGreen(color) * 0.4);
+    int l = (int) ((double) ColorHelper.Argb.getBlue(color) * 0.4);
+    return ColorHelper.Argb.getArgb(ColorHelper.Argb.getAlpha(color), j, k, l);
   }
 
   @ApiStatus.AvailableSince("0.2.0")
@@ -195,9 +197,9 @@ public class MishangUtils {
         instanceStream(HungSignBlocks.class, Block.class),
         instanceStream(WallSignBlocks.class, Block.class),
         instanceStream(StandingSignBlocks.class, Block.class),
-        instanceStream(HandrailBlocks.class, Block.class),
+        instanceStream(HandrailBlocks.class, Block.class).flatMap(block -> block instanceof HandrailBlock handrailBlock ? Arrays.stream(handrailBlock.selfAndVariants()) : Stream.of(block)),
         instanceStream(ColoredBlocks.class, Block.class)
-    ).collect(ImmutableList.toImmutableList());
+    ).map(Objects::requireNonNull).collect(ImmutableList.toImmutableList());
     if (build.isEmpty()) {
       throw new AssertionError("The collection returned is empty, which is not expected. You may have to report to the author of Mishang Urban Construction mod.");
     }
@@ -215,7 +217,7 @@ public class MishangUtils {
   }
 
   /**
-   * 该模组的所有方块字段及其值的集合。会通过反射来访问字段，并记住这个值，下次直接返回该值。
+   * 该模组的所有方块字段及其值的集合。会通过反射来访问字段，并记住这个值，下次直接返回该值。对于栏杆方块，包括其所有的栏杆变种。
    *
    * @return 由方块字段和值组成的不可变映射。第一次调用时会生成，此后的所有调用都会直接使用这个值。
    */
@@ -292,7 +294,7 @@ public class MishangUtils {
     directionToContexts.forEach((verticalAlign, list) -> {
       float stackedHeight = 0;
       for (TextContext textContext : list) {
-        textContext.offsetY = (stackedHeight += textContext.getMarginTop() / 2f);
+        textContext.offsetY = stackedHeight += textContext.getMarginTop() / 2f;
         stackedHeight += textContext.getHeight() / 2f;
         stackedHeight += textContext.getMarginTop() / 2f;
       }
@@ -320,7 +322,7 @@ public class MishangUtils {
   }
 
   public static <T extends Comparable<T>> BlockState with(BlockState state, Property<T> property, String name) {
-    return property.parse(name).map((value) -> state.with(property, value)).orElse(state);
+    return property.parse(name).map(value -> state.with(property, value)).orElse(state);
   }
 
   @ApiStatus.AvailableSince("0.2.1")
@@ -336,7 +338,53 @@ public class MishangUtils {
    * 接收一个整数形式的颜色，考虑到 Minecraft 可能存在带有 alpha 通道的颜色，因此当检测到有 alpha 通道时，格式化为 #aarrggbb 的格式，否则格式化为 #rrggbb 的格式。
    */
   public static String formatColorHex(int color) {
-    return (color & 0xff000000) != 0 ? String.format("#%08x", color) : String.format("#%06x", color);
+    final int alpha = (color >> 24) & 0xff;
+    return alpha != 0 ? String.format("#%08x", (color & 0xffffff) << 8 | alpha) : String.format("#%06x", color);
+  }
+
+  /**
+   * 从字符串获取颜色，可以是支持的颜色名称，或者十六进制的格式。例如，{@code "red"} 或 {@code "#fab"}。
+   */
+  public static @Nullable Integer parseColor(String s) {
+    if (s.startsWith("#")) {
+      try {
+        final String hexPart = s.substring(1);
+        final int i = Integer.parseUnsignedInt(hexPart, 16);
+        switch (hexPart.length()) {
+          case 4 -> {
+            final int r, g, b, a;
+            r = i >> 12 & 0xf;
+            g = i >> 8 & 0xf;
+            b = i >> 4 & 0xf;
+            a = i & 0xf;
+            return ColorHelper.Argb.getArgb(a * 17, r * 17, g * 17, b * 17);
+          }
+          case 3 -> {
+            final int r, g, b;
+            r = i >> 8 & 0xf;
+            g = i >> 4 & 0xf;
+            b = i & 0xf;
+            return ColorHelper.Argb.getArgb(0, r * 17, g * 17, b * 17);
+          }
+          case 8 -> {
+            final int rgb = i >> 8 & 0xffffff;
+            final int a = i & 0xff;
+            return a << 24 | rgb;
+          }
+          case 6 -> {
+            return i & 0xffffff;
+          }
+          default -> {
+            return null;
+          }
+        }
+      } catch (NumberFormatException e) {
+        return null;
+      }
+    } else {
+      final TextColor parse = TextColor.parse(s);
+      return parse == null ? null : parse.getRgb();
+    }
   }
 
   public static MutableText describeShortcut(Text shortcut) {
@@ -372,7 +420,7 @@ public class MishangUtils {
       int green = _green instanceof AbstractNbtNumber ? ((AbstractNbtNumber) _green).intValue() & 0xff : 0;
       int blue = _blue instanceof AbstractNbtNumber ? ((AbstractNbtNumber) _blue).intValue() & 0xff : 0;
       int alpha = _alpha instanceof AbstractNbtNumber ? ((AbstractNbtNumber) _alpha).intValue() & 0xff : 0;
-      return (red << 16) | (green << 8) | blue | (alpha << 24);
+      return (red << 16 | green << 8 | blue | alpha << 24);
     } else if (nbtColor instanceof final NbtCompound nbtCompound) {
       if (nbtCompound.contains("signColor", NbtElement.STRING_TYPE)) {
         return DyeColor.byName(nbtCompound.getString("signColor"), DyeColor.BLACK).getSignColor();

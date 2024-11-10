@@ -20,6 +20,8 @@ import org.joml.Matrix4f;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.mixin.TextRendererAccessor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public record PatternSpecialDrawable(TextContext textContext, String shapeName, @Unmodifiable float[][] rectangles) implements SpecialDrawable {
@@ -229,13 +231,13 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
     //noinspection resource
     GlyphRenderer glyphRenderer = ((TextRendererAccessor) textRenderer).invokeGetFontStorage(Style.DEFAULT_FONT_ID).getRectangleRenderer();
     final float sizeMultiplier = 1;
-    final RenderLayer layer = glyphRenderer.getLayer(textContext.outlineColor != -2 ? TextRenderer.TextLayerType.POLYGON_OFFSET : textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
-    final Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
-    final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(layer);
+    final RenderLayer layer = glyphRenderer.getLayer(textContext.outlineColorType != OutlineColorType.NONE ? TextRenderer.TextLayerType.POLYGON_OFFSET : textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
 
     // 文本是否存在阴影。
-    final boolean shadow = textContext.shadow;
+    final boolean shadow = textContext.outlineColorType == OutlineColorType.NONE && textContext.shadow;
     // 用于文本渲染的矩阵。当存在阴影时，文本渲染需要适当调整。
+    final List<GlyphRenderer.Rectangle> rectanglesToDraw = new ArrayList<>();
+    final List<GlyphRenderer.Rectangle> outlineRectangles = textContext.outlineColorType == OutlineColorType.NONE ? null : new ArrayList<>();
     for (float[] rectangle : rectangles) {
       final float minX = (rectangle[0] + x) * sizeMultiplier;
       final float minY = (rectangle[3] + y) * sizeMultiplier;
@@ -245,27 +247,36 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
         float g = red * 0.25f;
         float h = green * 0.25f;
         float l = blue * 0.25f;
-        glyphRenderer.drawRectangle(
-            new GlyphRenderer.Rectangle(minX + 1, minY + 1, maxX + 1, maxY + 1, 0, g, h, l, alpha),
-            matrix4f, vertexConsumer, light
+        rectanglesToDraw.add(
+            new GlyphRenderer.Rectangle(minX + 1, minY + 1, maxX + 1, maxY + 1, 0, g, h, l, alpha)
         );
       }
-      if (textContext.outlineColor != -2) {
-        final VertexConsumer vertexConsumerOutline = vertexConsumers.getBuffer(glyphRenderer.getLayer(TextRenderer.TextLayerType.NORMAL));
-        int outlineColor = textContext.outlineColor == -1 ? MishangUtils.toSignOutlineColor(color) : textContext.outlineColor;
+      if (outlineRectangles != null) {
+        int outlineColor = textContext.outlineColorType == OutlineColorType.AUTO ? MishangUtils.toSignOutlineColor(color) : textContext.outlineColor;
         float outlineR = (outlineColor >> 16 & 255) / 255f;
         float outlineG = (outlineColor >> 8 & 255) / 255f;
         float outlineB = (outlineColor & 255) / 255f;
-        glyphRenderer.drawRectangle(
-            new GlyphRenderer.Rectangle(minX - 1, minY + 1, maxX + 1, maxY - 1, 0, outlineR, outlineG, outlineB, alpha),
-            matrix4f, vertexConsumerOutline, light
+        final float outlineAlpha = ((outlineColor & 0xFC000000) == 0) ? 1 : (outlineColor >> 24 & 0xFF) / 255f;
+        outlineRectangles.add(
+            new GlyphRenderer.Rectangle(minX - 1, minY + 1, maxX + 1, maxY - 1, 0, outlineR, outlineG, outlineB, outlineAlpha)
         );
 
       }
-      glyphRenderer.drawRectangle(
-          new GlyphRenderer.Rectangle(minX, minY, maxX, maxY, shadow ? 0.24f : textContext.outlineColor != -2 ? 0.02f : 0, red, green, blue, alpha),
-          matrix4f, vertexConsumer, light
+      rectanglesToDraw.add(
+          new GlyphRenderer.Rectangle(minX, minY, maxX, maxY, shadow ? 0.03f : textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, red, green, blue, alpha)
       );
+    }
+
+    final Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
+    final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(layer);
+    for (GlyphRenderer.Rectangle rectangle : rectanglesToDraw) {
+      glyphRenderer.drawRectangle(rectangle, matrix4f, vertexConsumer, light);
+    }
+    if (outlineRectangles != null) {
+      final VertexConsumer vertexConsumerOutline = vertexConsumers.getBuffer(glyphRenderer.getLayer(TextRenderer.TextLayerType.NORMAL));
+      for (GlyphRenderer.Rectangle outlineRectangle : outlineRectangles) {
+        glyphRenderer.drawRectangle(outlineRectangle, matrix4f, vertexConsumerOutline, light);
+      }
     }
   }
 
