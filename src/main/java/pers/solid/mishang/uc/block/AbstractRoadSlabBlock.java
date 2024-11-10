@@ -7,12 +7,14 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.data.client.*;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootTable;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.state.StateManager;
@@ -36,6 +38,11 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
   public AbstractRoadSlabBlock(Block baseBlock, Settings settings) {
     super(settings);
     this.baseBlock = baseBlock;
+  }
+
+  @Override
+  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    return blockLootTableGenerator.slabDrops(this);
   }
 
   @Override

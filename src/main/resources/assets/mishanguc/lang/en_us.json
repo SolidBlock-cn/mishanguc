@@ -733,7 +733,7 @@
   "item.mishanguc.text_copy_tool.message.success.paste": "Successfully pasted %1$s rows of text on the block.",
   "item.mishanguc.text_copy_tool.message.warn.colorConsistencyLimit": "Some colors are ignored, as a sign only supports one color.",
   "item.mishanguc.text_copy_tool.message.warn.colorSelectionLimit": "Some colors are ignored, as a sign only supports limited number of colors.",
-  "item.mishanguc.text_copy_tool.message.warn.outOfBound": "Some rows are skipped as a vanilla sign only accepts 4 lines.",
+  "item.mishanguc.text_copy_tool.message.warn.outOfBound": "The text \"%s\" is not pasted because the vanilla sign only accepts %s lines.",
   "item.mishanguc.text_copy_tool.tooltip.1": "Click %s on blocks to copy;",
   "item.mishanguc.text_copy_tool.tooltip.2": "click %s on blocks to paste.",
   "item.mishanguc.text_copy_tool.tooltip.3": "Copied texts:",

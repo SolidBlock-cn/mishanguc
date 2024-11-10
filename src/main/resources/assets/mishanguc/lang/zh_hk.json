@@ -733,7 +733,7 @@
   "item.mishanguc.text_copy_tool.message.success.paste": "成功粘貼咗%1$s行文本。",
   "item.mishanguc.text_copy_tool.message.warn.colorConsistencyLimit": "忽略咗一些顏色，因為一個指示牌僅支持一種顏色。",
   "item.mishanguc.text_copy_tool.message.warn.colorSelectionLimit": "忽略咗一些顏色，因為指示牌僅支持幾種特定嘅顏色。",
-  "item.mishanguc.text_copy_tool.message.warn.outOfBound": "一些行未被粘貼上去，因為原版指示牌僅支持4行。",
+  "item.mishanguc.text_copy_tool.message.warn.outOfBound": "文本「%s」未被粘貼上去，因為原版指示牌僅支持%s行。",
   "item.mishanguc.text_copy_tool.tooltip.1": "對方塊按「%s」鍵以複製文本，",
   "item.mishanguc.text_copy_tool.tooltip.2": "對方塊按「%s」鍵以粘貼文本。",
   "item.mishanguc.text_copy_tool.tooltip.3": "已複製嘅文本：",

@@ -24,7 +24,6 @@ import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.PlainTextContent;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -39,6 +38,7 @@ import org.lwjgl.glfw.GLFW;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
+import pers.solid.mishang.uc.text.OutlineColorType;
 import pers.solid.mishang.uc.text.PatternSpecialDrawable;
 import pers.solid.mishang.uc.text.SpecialDrawable;
 import pers.solid.mishang.uc.text.TextContext;
@@ -450,9 +450,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (selectedTextContexts.isEmpty()) {
       return null;
     }
-    if (textFieldListWidget.getFocused().textContext.outlineColor == -1) {
+    if (textFieldListWidget.getFocused().textContext.outlineColorType == OutlineColorType.AUTO) {
       return -1f;
-    } else if (textFieldListWidget.getFocused().textContext.outlineColor == -2) {
+    } else if (textFieldListWidget.getFocused().textContext.outlineColorType == OutlineColorType.NONE) {
       return -2f;
     }
     final DyeColor colorOutline = MishangUtils.COLOR_TO_OUTLINE_COLOR.inverse().get(textFieldListWidget.getFocused().textContext.outlineColor);
@@ -469,6 +469,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     changed = true;
     final int colorId = (int) valueFunction.get(original.floatValue());
     final int outlineColor;
+    final OutlineColorType outlineColorType;
     if (colorId == -1 || colorId == -2) {
       outlineColor = colorId;
     } else if (colorId > 15) {
@@ -476,8 +477,10 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     } else {
       outlineColor = DyeColor.byId(colorId).getSignColor();
     }
+    outlineColorType = OutlineColorType.fromCompatibilityValue(outlineColor);
     for (TextContext textContext : selectedTextContexts) {
       textContext.outlineColor = outlineColor;
+      textContext.outlineColorType = outlineColorType;
     }
   }, EMPTY_PRESS_ACTION).nameValueAs(colorId -> {
     // colorId=-1：表示当前自动根据文本内容绘制描边。
@@ -666,6 +669,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * 自定义文本编辑框，仅在编辑自定义值时显示。
    */
   public final TextFieldWidget customValueTextField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, 5, height - 40, width - 112, 20, TextBridge.translatable("message.mishanguc.custom_value"));
+
+  // 对于 outlineColor，此时可能为 -0.125f 和 -0.25f。
   private Float customValueBeforeChange;
   private FloatButtonWidget customValueFor;
   public final ButtonWidget customValueConfirmButton = ButtonWidget.builder(ScreenTexts.OK, button -> {
@@ -680,7 +685,16 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         }
       } else if (customValueFor == outlineColorButton) {
         for (TextContext textContext : selectedTextContexts) {
-          textContext.outlineColor = customValueBeforeChange.intValue();
+          if (customValueBeforeChange == -0.25f) {
+            textContext.outlineColorType = OutlineColorType.NONE;
+            textContext.outlineColor = -2;
+          } else if (customValueBeforeChange == -0.125f) {
+            textContext.outlineColorType = OutlineColorType.AUTO;
+            textContext.outlineColor = -1;
+          } else {
+            textContext.outlineColorType = OutlineColorType.CUSTOM;
+            textContext.outlineColor = customValueBeforeChange.intValue();
+          }
         }
       } else {
         customValueFor.setAllSameValue(customValueBeforeChange == null ? customValueFor.defaultValue : customValueBeforeChange);
@@ -1104,26 +1118,28 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         } else {
           Arrays.stream(Formatting.values()).filter(Formatting::isColor).map(Formatting::asString).filter(name -> name.startsWith(text)).findAny().ifPresentOrElse(name -> customValueTextField.setSuggestion(name.substring(text.length())), () -> customValueTextField.setSuggestion(null));
         }
-        final TextColor parse = TextColor.parse(text).result().orElse(null);
+        final Integer parse = MishangUtils.parseColor(text).result().orElse(null);
         if (parse == null) {
           customValueTextField.setEditableColor(16733525);
         } else {
           customValueTextField.setEditableColor(16777215);
           for (TextContext textContext : selectedTextContexts) {
-            textContext.color = parse.getRgb();
+            textContext.color = parse;
           }
         }
       });
     } else if (floatButtonWidget == outlineColorButton) {
       if (!selectedTextContexts.isEmpty()) {
-        if (textFieldListWidget.getFocused().textContext.outlineColor == -1) {
+        if (textFieldListWidget.getFocused().textContext.outlineColorType == OutlineColorType.AUTO) {
           customValueTextField.setText("auto");
-        } else if (textFieldListWidget.getFocused().textContext.outlineColor == -2) {
+          customValueBeforeChange = -0.125f;
+        } else if (textFieldListWidget.getFocused().textContext.outlineColorType == OutlineColorType.NONE) {
           customValueTextField.setText("none");
+          customValueBeforeChange = -0.25f;
         } else {
           customValueTextField.setText(MishangUtils.formatColorHex(textFieldListWidget.getFocused().textContext.outlineColor));
+          customValueBeforeChange = (float) textFieldListWidget.getFocused().textContext.outlineColor;
         }
-        customValueBeforeChange = (float) textFieldListWidget.getFocused().textContext.outlineColor;
       } else {
         customValueTextField.setText(StringUtils.EMPTY);
         customValueBeforeChange = null;
@@ -1136,21 +1152,28 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           Streams.concat(Stream.of("auto", "none"), Arrays.stream(Formatting.values()).filter(Formatting::isColor).map(Formatting::asString)).filter(name -> name.startsWith(text)).findAny().ifPresentOrElse(name -> customValueTextField.setSuggestion(name.substring(text.length())), () -> customValueTextField.setSuggestion(null));
         }
         if (text.equals("auto")) {
-          textFieldListWidget.getFocused().textContext.outlineColor = -1;
+          for (TextContext textContext : selectedTextContexts) {
+            textContext.outlineColor = -1;
+            textContext.outlineColorType = OutlineColorType.AUTO;
+          }
           customValueTextField.setEditableColor(16777215);
           return;
         } else if (text.equals("none")) {
-          textFieldListWidget.getFocused().textContext.outlineColor = -2;
+          for (TextContext textContext : selectedTextContexts) {
+            textContext.outlineColor = -2;
+            textContext.outlineColorType = OutlineColorType.NONE;
+          }
           customValueTextField.setEditableColor(16777215);
           return;
         }
-        final TextColor parse = TextColor.parse(text).result().orElse(null);
+        final Integer parse = MishangUtils.parseColor(text).result().orElse(null);
         if (parse == null) {
           customValueTextField.setEditableColor(16733525);
         } else {
           customValueTextField.setEditableColor(16777215);
           for (TextContext textContext : selectedTextContexts) {
-            textContext.outlineColor = parse.getRgb();
+            textContext.outlineColor = parse;
+            textContext.outlineColorType = OutlineColorType.CUSTOM;
           }
         }
       });

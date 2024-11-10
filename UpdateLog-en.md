@@ -2,6 +2,25 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.4.2-beta.2
+
+- Fit 1.21.3。
+- Fixed the issue of incorrect top textures in wooden hung signs.
+- Fixed the incorrect english for `block.mishanguc.glass_dark_oak_handrail`.
+- Now specifying opacity is supported when setting custom text or outline color, and the following hex formats are supported: `#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`. For example, `#f80` and `#ff8800` means orange, `#0ff8` and `#00ffff88` means translucent cyan.
+    - When displaying the hex format of transparent color, the two bits indicating alpha are also displayed at the end.
+    - Please note, when texts in translucent colors are bolded, or texts are outlined in translucent colors, z-fighting may happen.
+    - The opacities of outline and the text are separate. When the outline color is auto-decided, the same opacity as the text will be used. When the outline color is specified colors, it will not be affected by text opacity.
+    - Translucent texts may make anything translucent things behind the text (such as stained glass, water, cloud) disappear, so please use cautiously.
+- Fixed the severe issue that some tags disappear.
+- Fixed the issue that colored corner handrail only drops one item.
+- When holding a colored handrail block, if you place a corner block by adding to an existing same block, you can place successfully only when the color is consistent (the color of the item in hand is identical to the existing block, or when holding the item that has auto colors, the color automatically determined according to the context is identical to the existing block), to avoid replacing the color of the existing handrail block.
+- Fixed the issue that the slabs of light and road blocks only drop one.
+- When using Text Copy Tool to copy the text in blocks of this mod to vanilla signs, if the copied content does not meet the number of the lines in the vanilla sign, the remaining lines of the vanilla sign will be cleared. If it exceeds, the concrete ignored text content will be displayed in the message.
+- When using Text Copy Tool to copy the text in blocks of this mod to vanilla signs, warnings about custom colors will no longer be made.
+- Fixed the issue that error happens when texts in such forms like `-pattern` or `-rect` with outline is rendered. To be consistent with ordinary texts, shadows will never be rendered when outline exists.
+- Added a field `outlineColorType` to sign texts, of which values can be `auto`, `none` or `custom`, fixing the issue that when the outline color is exactly `#fffffeff` or `#ffffffff`, will be identified as none or auto.
+
 ### 1.4.1
 
 - Fixed the issue that road painting recipes are lost.

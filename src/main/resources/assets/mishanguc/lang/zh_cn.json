@@ -733,7 +733,7 @@
   "item.mishanguc.text_copy_tool.message.success.paste": "成功粘贴了%1$s行文本。",
   "item.mishanguc.text_copy_tool.message.warn.colorConsistencyLimit": "忽略了一些颜色，因为一个告示牌仅支持一种颜色。",
   "item.mishanguc.text_copy_tool.message.warn.colorSelectionLimit": "忽略了一些颜色，因为告示牌仅支持几种特定的颜色。",
-  "item.mishanguc.text_copy_tool.message.warn.outOfBound": "一些行没有被粘贴上去，因为原版告示牌仅支持4行。",
+  "item.mishanguc.text_copy_tool.message.warn.outOfBound": "文本“%s”没有被粘贴上去，因为原版告示牌仅支持%s行。",
   "item.mishanguc.text_copy_tool.tooltip.1": "对方块按“%s”键以复制文本，",
   "item.mishanguc.text_copy_tool.tooltip.2": "对方块按“%s”键以粘贴文本。",
   "item.mishanguc.text_copy_tool.tooltip.3": "已复制的文本：",
