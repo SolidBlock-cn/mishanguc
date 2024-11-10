@@ -54,6 +54,6 @@ public class ColoredIceBlock extends IceBlock implements ColoredBlock {
 
   @Override
   public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
-    return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
+    return blockLootTableGenerator.dropsWithSilkTouch(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 }

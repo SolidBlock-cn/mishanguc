@@ -10,7 +10,7 @@ public class MishangucDataGeneration implements DataGeneratorEntrypoint {
     pack.addProvider(MishangucBlockLootTableProvider::new);
     pack.addProvider(MishangucRecipeProvider::new);
     pack.addProvider(MishangucModelProvider::new);
-    final MishangucTagProvider mishangucTagProvider = pack.addProvider(MishangucTagProvider::new);
-    pack.addProvider((output, registriesFuture) -> mishangucTagProvider.affiliate);
+    final MishangucBlockTagProvider mishangucBlockTagProvider = pack.addProvider(MishangucBlockTagProvider::new);
+    pack.addProvider((output, registriesFuture) -> mishangucBlockTagProvider.affiliate);
   }
 }
