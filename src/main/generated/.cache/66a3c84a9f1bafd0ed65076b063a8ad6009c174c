@@ -1,4 +1,4 @@
-// 1.21.3	2024-11-04T10:10:39.9253688	Mishang Urban Construction/Block Loot Tables
+// 1.21.3	2024-11-11T17:59:08.3641013	Mishang Urban Construction/Block Loot Tables
 db2535d570c5abb6fcf889f1555d7bb39173af57 data\mishanguc\loot_table\blocks\cherry_wall_sign.json
 67bc7c30dcac567ec580e7335f41fa96332c4448 data\mishanguc\loot_table\blocks\road_slab_with_white_cross_line.json
 9911969e56f6e76fe748b7191912352240729fc9 data\mishanguc\loot_table\blocks\cherry_wood_wall_sign.json
@@ -158,8 +158,8 @@ bb33daf6dc92f635ec2c257ff8eb0a36f4d35373 data\mishanguc\loot_table\blocks\simple
 adaf1b0a0b3f0a772d6b06a36a934c52b4aa4684 data\mishanguc\loot_table\blocks\colored_decorated_acacia_handrail.json
 66add093c5d88a481124cbf133490504fd4fb5c5 data\mishanguc\loot_table\blocks\road_with_white_yellow_double_line.json
 2fc2062126e087c78543b7dbabc4e332d26d1d08 data\mishanguc\loot_table\blocks\white_thin_column_light_tube.json
-913e5e071d4fcf4ce22a5632232ddb49167159a4 data\mishanguc\loot_table\blocks\purple_concrete_wall_sign.json
 40abfafecfc8d2a7a3c5e7602b4399b89be50e8b data\mishanguc\loot_table\blocks\road_slab_with_white_offset_out_ba_line.json
+913e5e071d4fcf4ce22a5632232ddb49167159a4 data\mishanguc\loot_table\blocks\purple_concrete_wall_sign.json
 bd644b8b109ec708eaddf34291302ecfd1aeef1d data\mishanguc\loot_table\blocks\glowing_pink_concrete_hung_sign.json
 2562164f6cd5f649e5463050f46296b8fedf5b91 data\mishanguc\loot_table\blocks\simple_white_stained_glass_handrail_corner.json
 60aff415fdbce91913032c9f64464f1397a13e3e data\mishanguc\loot_table\blocks\simple_dirt_handrail_corner.json
