@@ -1,4 +1,4 @@
-// 1.20.2	2024-11-11T16:32:42.9574597	Mishang Urban Construction/Tags for minecraft:block
+// 1.20.2	2024-11-11T17:08:14.2434386	Mishang Urban Construction/Tags for minecraft:block
 7b4a3839ba16088d4067a83f11baf081c606ea2d data\mishanguc\tags\blocks\cyan_column_lights.json
 2056d7158ee088d7a060debc8246b042948b84dc data\mishanguc\tags\blocks\outer_handrails.json
 7d8865906fbe37842dd60bf99146820c70373cde data\mishanguc\tags\blocks\glass_normal_handrails.json
@@ -87,7 +87,6 @@ a7f5415359714d8c07e6edb058f13935e19a46a9 data\mishanguc\tags\blocks\pink_strip_w
 f460601f9b84b08e7014e77e6850be98a5648d32 data\c\tags\blocks\glass_panes.json
 88ced64513be8e04162ebe2c30c8d717dae07b31 data\minecraft\tags\blocks\mineable\hoe.json
 ecafce0b2f52f073b932f21d70db9b959f4c2662 data\mishanguc\tags\blocks\standing_signs.json
-8a23702b05296c8af5014d6aa6e9265ded85c7d9 data\mishanguc\tags\blocks\incorrect_for_omnipotent_tool.json
 79ed1681f6821aa59975475bc1696820b397303a data\minecraft\tags\blocks\needs_diamond_tool.json
 c2d95221a3a018e283dc77e2adfaad3b45ffc658 data\mishanguc\tags\blocks\yellow_wall_lights.json
 2596a7c9c21513f4f86aa91d7375955f01cdf0d3 data\mishanguc\tags\blocks\yellow_light_decorations.json
