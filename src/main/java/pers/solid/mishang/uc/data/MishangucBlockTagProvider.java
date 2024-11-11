@@ -609,7 +609,5 @@ public class MishangucBlockTagProvider extends FabricTagProvider.BlockTagProvide
 
     blockTagWithItem(BlockTags.STAIRS, ItemTags.STAIRS).add(blocks().stream().filter(block -> block instanceof StairsBlock).toArray(Block[]::new));
     blockTagWithItem(BlockTags.SLABS, ItemTags.SLABS).add(blocks().stream().filter(block -> block instanceof SlabBlock).toArray(Block[]::new));
-
-    blockTagOnly("incorrect_for_omnipotent_tool");
   }
 }
