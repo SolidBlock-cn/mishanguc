@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.block.Block;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
-import net.minecraft.loot.LootTables;
 import net.minecraft.util.Identifier;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.MishangucBlock;
