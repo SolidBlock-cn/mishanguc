@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
@@ -122,6 +123,9 @@ public class MishangucItemTagProvider extends FabricTagProvider.ItemTagProvider 
     blockTagProvider.blockTagsWithItem.forEach(this::copy);
     final MishangucTagBuilder<Item> colored = itemTag("colored"); // 因为涉及染色栏杆的要特殊处理，所以这里先这样。
     MishangUtils.blocks().stream().filter(Predicates.instanceOf(ColoredBlock.class)).map(Block::asItem).distinct().forEach(colored::add);
+
+    itemTag("omnipotent_repair_items").add(Items.BEDROCK);
+    itemTag("road_materials").add(Items.WHITE_CONCRETE, Items.GRAY_CONCRETE, Items.LIGHT_GRAY_CONCRETE, Items.BLACK_CONCRETE);
   }
 
   protected MishangucTagBuilder<Item> itemTag(TagKey<Item> tagKey) {
