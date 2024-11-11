@@ -11,19 +11,15 @@ import net.minecraft.data.client.TextureMap;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
-import net.minecraft.item.Item;
 import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.Items;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
@@ -70,7 +66,6 @@ public class RoadBlock extends AbstractRoadBlock {
   @Override
   public CraftingRecipeJsonBuilder getCraftingRecipe() {
     if (lineColor != LineColor.NONE) return null;
-    final TagKey<Item> tag = TagKey.of(RegistryKeys.ITEM, Mishanguc.id("road_materials"));
     return ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, this, 9)
         .pattern("***")
         .pattern("|X|")
