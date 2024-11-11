@@ -2,7 +2,7 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
-### 1.4.2-beta.2
+### 1.4.2
 
 - Fit 1.21.3。
 - Fixed the issue of incorrect top textures in wooden hung signs.
