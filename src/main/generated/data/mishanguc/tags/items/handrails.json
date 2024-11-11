@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#mishanguc:simple_stained_glass_handrails",
+    "#mishanguc:simple_terracotta_handrails",
+    "#mishanguc:simple_concrete_handrails",
+    "#mishanguc:simple_wooden_handrails",
+    "#mishanguc:glass_handrails"
+  ]
+}
