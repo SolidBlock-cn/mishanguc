@@ -232,13 +232,13 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
     //noinspection resource
     GlyphRenderer glyphRenderer = ((TextRendererAccessor) textRenderer).invokeGetFontStorage(Style.DEFAULT_FONT_ID).getRectangleRenderer();
     final float sizeMultiplier = 1;
-    final RenderLayer layer = glyphRenderer.getLayer(textContext.outlineColor != -2 ? TextRenderer.TextLayerType.POLYGON_OFFSET : textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
+    final RenderLayer layer = glyphRenderer.getLayer(textContext.outlineColorType != OutlineColorType.NONE ? TextRenderer.TextLayerType.POLYGON_OFFSET : textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
 
     // 文本是否存在阴影。
     final boolean shadow = textContext.shadow;
     // 用于文本渲染的矩阵。当存在阴影时，文本渲染需要适当调整。
     final List<GlyphRenderer.Rectangle> rectanglesToDraw = new ArrayList<>();
-    final List<GlyphRenderer.Rectangle> outlineRectangles = textContext.outlineColor == -2 ? null : new ArrayList<>();
+    final List<GlyphRenderer.Rectangle> outlineRectangles = textContext.outlineColorType == OutlineColorType.NONE ? null : new ArrayList<>();
     for (float[] rectangle : rectangles) {
       final float minX = (rectangle[0] + x) * sizeMultiplier;
       final float minY = (rectangle[3] + y) * sizeMultiplier;
@@ -253,7 +253,7 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
         );
       }
       if (outlineRectangles != null) {
-        int outlineColor = textContext.outlineColor == -1 ? MishangUtils.toSignOutlineColor(color) : textContext.outlineColor;
+        int outlineColor = textContext.outlineColorType == OutlineColorType.AUTO ? MishangUtils.toSignOutlineColor(color) : textContext.outlineColor;
         float outlineR = (outlineColor >> 16 & 255) / 255f;
         float outlineG = (outlineColor >> 8 & 255) / 255f;
         float outlineB = (outlineColor & 255) / 255f;
@@ -264,7 +264,7 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
 
       }
       rectanglesToDraw.add(
-          new GlyphRenderer.Rectangle(minX, minY, maxX, maxY, shadow ? 0.24f : textContext.outlineColor != -2 ? 0.02f : 0, red, green, blue, alpha)
+          new GlyphRenderer.Rectangle(minX, minY, maxX, maxY, shadow ? 0.24f : textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, red, green, blue, alpha)
       );
     }
 

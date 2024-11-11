@@ -18,6 +18,8 @@ Note: Not all versions in this update log are already published. Please refer to
 - Fixed the issue that the slabs of light and road blocks only drop one.
 - When using Text Copy Tool to copy the text in blocks of this mod to vanilla signs, if the copied content does not meet the number of the lines in the vanilla sign, the remaining lines of the vanilla sign will be cleared. If it exceeds, the concrete ignored text content will be displayed in the message.
 - When using Text Copy Tool to copy the text in blocks of this mod to vanilla signs, warnings about custom colors will no longer be made.
+- Fixed the issue that error happens when texts in such forms like `-pattern` or `-rect` with outline is rendered.
+- Added a field `outlineColorType` to sign texts, of which values can be `auto`, `none` or `custom`, fixing the issue that when the outline color is exactly `#fffffeff` or `#ffffffff`, will be identified as none or auto.
 
 ### 1.4.1
 
