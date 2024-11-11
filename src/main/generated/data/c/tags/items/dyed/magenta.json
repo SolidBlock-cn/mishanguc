@@ -1,0 +1,26 @@
+{
+  "values": [
+    "mishanguc:magenta_concrete_wall_sign",
+    "mishanguc:glowing_magenta_concrete_wall_sign",
+    "mishanguc:full_magenta_concrete_wall_sign",
+    "mishanguc:magenta_terracotta_wall_sign",
+    "mishanguc:glowing_magenta_terracotta_wall_sign",
+    "mishanguc:full_magenta_terracotta_wall_sign",
+    "mishanguc:magenta_concrete_hung_sign",
+    "mishanguc:magenta_concrete_hung_sign_bar",
+    "mishanguc:glowing_magenta_concrete_hung_sign",
+    "mishanguc:magenta_concrete_hung_sign_bar",
+    "mishanguc:magenta_terracotta_hung_sign",
+    "mishanguc:magenta_terracotta_hung_sign_bar",
+    "mishanguc:glowing_magenta_terracotta_hung_sign",
+    "mishanguc:magenta_terracotta_hung_sign_bar",
+    "mishanguc:magenta_concrete_standing_sign",
+    "mishanguc:magenta_terracotta_standing_sign",
+    "mishanguc:glowing_magenta_concrete_standing_sign",
+    "mishanguc:glowing_magenta_terracotta_standing_sign",
+    "mishanguc:simple_magenta_concrete_handrail",
+    "mishanguc:simple_magenta_terracotta_handrail",
+    "mishanguc:simple_magenta_stained_glass_handrail",
+    "mishanguc:magenta_decorated_iron_handrail"
+  ]
+}
