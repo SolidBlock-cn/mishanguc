@@ -17,7 +17,7 @@ import pers.solid.mishang.uc.item.BlockToolItem;
 public class GameRendererMixin {
   @Shadow
   @Final
-  MinecraftClient client;
+  private MinecraftClient client;
 
   @ModifyArg(
       method = "findCrosshairTarget",

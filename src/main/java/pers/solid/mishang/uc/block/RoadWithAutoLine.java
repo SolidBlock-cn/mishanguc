@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -110,9 +109,7 @@ public interface RoadWithAutoLine extends Road {
   default void neighborRoadUpdate(
       BlockState state, World world, BlockPos pos, Block sourceBlock, @Nullable WireOrientation wireOrientation, boolean notify) {
     // 屏蔽上下方的更新。
-    if (!wireOrientation.equals(pos.up())
-        && !wireOrientation.equals(pos.down())
-        && !(world.getBlockState(pos).getBlock() instanceof AirBlock)) {
+    if (!(wireOrientation != null && wireOrientation.getFront().getAxis().isVertical())) {
       // flags设为2从而使得 <code>flags&1 !=0</code> 不成立，从而不递归更新邻居，参考 {@link World#setBlockState}。
       world.setBlockState(pos, tryMakeState(getConnectionStateMap(world, pos), state, pos), 2);
     }
