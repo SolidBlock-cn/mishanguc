@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.block.Block;
 import net.minecraft.loot.LootTable;
+import net.minecraft.loot.LootTables;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryWrapper;
 import pers.solid.mishang.uc.MishangUtils;
@@ -21,7 +22,7 @@ public class MishangucBlockLootTableProvider extends FabricBlockLootTableProvide
     for (Block block : MishangUtils.blocks()) {
       if (block instanceof MishangucBlock r) {
         final RegistryKey<LootTable> lootTableKey = block.getLootTableKey();
-        if (lootTableKey == null /* todo check*/) {
+        if (LootTables.EMPTY.equals(lootTableKey)) {
           continue;
         }
         final LootTable.Builder lootTable = r.getLootTable(this);
