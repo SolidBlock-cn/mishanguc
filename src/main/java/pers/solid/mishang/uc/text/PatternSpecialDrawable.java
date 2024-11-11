@@ -233,7 +233,7 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
     final RenderLayer layer = bakedGlyph.getLayer(textContext.outlineColorType != OutlineColorType.NONE ? TextRenderer.TextLayerType.POLYGON_OFFSET : textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
 
     // 文本是否存在阴影。
-    final boolean shadow = textContext.shadow;
+    final boolean shadow = textContext.outlineColorType == OutlineColorType.NONE && textContext.shadow;
     // 用于文本渲染的矩阵。当存在阴影时，文本渲染需要适当调整。
     final List<BakedGlyph.Rectangle> rectanglesToDraw = new ArrayList<>();
     final List<BakedGlyph.Rectangle> outlineRectangles = textContext.outlineColorType == OutlineColorType.NONE ? null : new ArrayList<>();
