@@ -235,7 +235,7 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
     final RenderLayer layer = glyphRenderer.getLayer(textContext.outlineColorType != OutlineColorType.NONE ? TextRenderer.TextLayerType.POLYGON_OFFSET : textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
 
     // 文本是否存在阴影。
-    final boolean shadow = textContext.shadow;
+    final boolean shadow = textContext.outlineColorType == OutlineColorType.NONE && textContext.shadow;
     // 用于文本渲染的矩阵。当存在阴影时，文本渲染需要适当调整。
     final List<GlyphRenderer.Rectangle> rectanglesToDraw = new ArrayList<>();
     final List<GlyphRenderer.Rectangle> outlineRectangles = textContext.outlineColorType == OutlineColorType.NONE ? null : new ArrayList<>();
@@ -264,7 +264,7 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
 
       }
       rectanglesToDraw.add(
-          new GlyphRenderer.Rectangle(minX, minY, maxX, maxY, shadow ? 0.24f : textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, red, green, blue, alpha)
+          new GlyphRenderer.Rectangle(minX, minY, maxX, maxY, shadow ? 0.03f : textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, red, green, blue, alpha)
       );
     }
 
