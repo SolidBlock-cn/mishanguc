@@ -158,12 +158,12 @@ public class TextContext implements Cloneable {
    */
   public float size = 8;
   /**
-   * 文本的外边框的颜色。<br>
-   * 若为 -1，则表示自动渲染。<br>
-   * 若为 -2，则表示不渲染。
+   * 文本的外边框的颜色。当 {@code outlineColorType} 不为 {@code NONE} 时，这里会取 {@link OutlineColorType#toCompatibilityValue(int)} 的值以兼容旧版本。
    */
   @ApiStatus.AvailableSince("0.1.6-mc1.17")
   public int outlineColor = -2;
+  @ApiStatus.AvailableSince("1.4.2")
+  public @NotNull OutlineColorType outlineColorType = OutlineColorType.NONE;
 
   /**
    * 该对象的特殊渲染内容，如果存在，渲染时则会渲染它。此项通常用于特殊的渲染功能。
@@ -262,8 +262,19 @@ public class TextContext implements Cloneable {
     if (nbt.contains("color")) {
       color = MishangUtils.readColorFromNbtElement(nbt.get("color"));
     }
+    final OutlineColorType outlineColorType;
+    if (nbt.contains("outlineColorType")) {
+      outlineColorType = OutlineColorType.CODEC.byId(nbt.getString("outlineColorType"));
+    } else {
+      outlineColorType = null;
+    }
     if (nbt.contains("outlineColor")) {
       outlineColor = MishangUtils.readColorFromNbtElement(nbt.get("outlineColor"));
+    }
+    if (outlineColorType == null) {
+      this.outlineColorType = OutlineColorType.fromCompatibilityValue(outlineColor);
+    } else {
+      this.outlineColorType = outlineColorType;
     }
     shadow = nbt.getBoolean("shadow");
     seeThrough = nbt.getBoolean("seeThrough");
@@ -395,10 +406,10 @@ public class TextContext implements Cloneable {
   @Environment(EnvType.CLIENT)
   @Contract(pure = true)
   protected void drawText(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, OrderedText text, float x, float y) {
-    if (outlineColor == -2) {
+    if (outlineColorType == OutlineColorType.NONE) {
       textRenderer.draw(text, x, y, color, shadow, matrixStack.peek().getPositionMatrix(), vertexConsumers, seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL, 0, light);
     } else {
-      textRenderer.drawWithOutline(text, x, y, color, outlineColor == -1 ? MishangUtils.toSignOutlineColor(color) : outlineColor, matrixStack.peek().getPositionMatrix(), vertexConsumers, light);
+      textRenderer.drawWithOutline(text, x, y, color, outlineColorType == OutlineColorType.AUTO ? MishangUtils.toSignOutlineColor(color) : outlineColor, matrixStack.peek().getPositionMatrix(), vertexConsumers, light);
     }
   }
 
@@ -430,11 +441,8 @@ public class TextContext implements Cloneable {
       nbt.remove("verticalAlign");
     }
     nbt.putInt("color", color);
-    if (outlineColor != -2) {
-      nbt.putInt("outlineColor", outlineColor);
-    } else {
-      nbt.remove("outlineColor");
-    }
+    nbt.putString("outlineColorType", outlineColorType.asString());
+    nbt.putInt("outlineColor", outlineColor);
     putBooleanParam(nbt, "shadow", shadow);
     putBooleanParam(nbt, "seeThrough", seeThrough);
     nbt.putFloat("size", size);

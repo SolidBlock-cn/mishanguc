@@ -230,13 +230,13 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
     //noinspection resource
     BakedGlyph bakedGlyph = ((TextRendererAccessor) textRenderer).invokeGetFontStorage(Style.DEFAULT_FONT_ID).getRectangleBakedGlyph();
     final float sizeMultiplier = 1;
-    final RenderLayer layer = bakedGlyph.getLayer(textContext.outlineColor != -2 ? TextRenderer.TextLayerType.POLYGON_OFFSET : textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
+    final RenderLayer layer = bakedGlyph.getLayer(textContext.outlineColorType != OutlineColorType.NONE ? TextRenderer.TextLayerType.POLYGON_OFFSET : textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
 
     // 文本是否存在阴影。
     final boolean shadow = textContext.shadow;
     // 用于文本渲染的矩阵。当存在阴影时，文本渲染需要适当调整。
     final List<BakedGlyph.Rectangle> rectanglesToDraw = new ArrayList<>();
-    final List<BakedGlyph.Rectangle> outlineRectangles = textContext.outlineColor == -2 ? null : new ArrayList<>();
+    final List<BakedGlyph.Rectangle> outlineRectangles = textContext.outlineColorType == OutlineColorType.NONE ? null : new ArrayList<>();
     for (float[] rectangle : rectangles) {
       final float minX = (rectangle[0] + x) * sizeMultiplier;
       final float minY = (rectangle[3] + y) * sizeMultiplier;
@@ -248,7 +248,7 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
         );
       }
       if (outlineRectangles != null) {
-        int outlineColor = textContext.outlineColor == -1 ? MishangUtils.toSignOutlineColor(color) : textContext.outlineColor;
+        int outlineColor = textContext.outlineColorType == OutlineColorType.AUTO ? MishangUtils.toSignOutlineColor(color) : textContext.outlineColor;
         final int outlineAlpha = ((outlineColor & 0xFC000000) == 0) ? 255 : (outlineColor >> 24 & 0xFF);
         outlineRectangles.add(
             new BakedGlyph.Rectangle(minX - 1, minY + 1, maxX + 1, maxY - 1, 0, ColorHelper.withAlpha(outlineAlpha, outlineColor))
@@ -256,7 +256,7 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
 
       }
       rectanglesToDraw.add(
-          new BakedGlyph.Rectangle(minX, minY, maxX, maxY, shadow ? 0.03f : textContext.outlineColor != -2 ? 0.02f : 0, ColorHelper.withAlpha(alpha, color))
+          new BakedGlyph.Rectangle(minX, minY, maxX, maxY, shadow ? 0.03f : textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, ColorHelper.withAlpha(alpha, color))
       );
     }
 
