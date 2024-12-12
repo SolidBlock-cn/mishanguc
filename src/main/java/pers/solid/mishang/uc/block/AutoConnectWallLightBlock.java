@@ -7,10 +7,10 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.data.client.*;
-import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeGenerator;
-import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
+import net.minecraft.client.data.*;
+import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.recipe.RecipeGenerator;
+import net.minecraft.data.recipe.StonecuttingRecipeJsonBuilder;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
@@ -37,7 +37,7 @@ import pers.solid.mishang.uc.data.MishangucTextureKeys;
 
 import java.util.*;
 
-import static net.minecraft.data.client.VariantSettings.MODEL;
+import static net.minecraft.client.data.VariantSettings.MODEL;
 
 public class AutoConnectWallLightBlock extends WallLightBlock implements LightConnectable {
   public static final MapCodec<AutoConnectWallLightBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(

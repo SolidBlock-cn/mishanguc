@@ -1,7 +1,7 @@
 package pers.solid.mishang.uc.data;
 
-import net.minecraft.data.client.TextureKey;
-import net.minecraft.data.client.TextureMap;
+import net.minecraft.client.data.TextureKey;
+import net.minecraft.client.data.TextureMap;
 
 public class FasterTextureMap extends TextureMap implements Cloneable {
   public FasterTextureMap varP(TextureKey textureKey, String val) {

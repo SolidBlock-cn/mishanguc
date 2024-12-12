@@ -1,7 +1,7 @@
 package pers.solid.mishang.uc.data;
 
-import net.minecraft.data.client.Model;
-import net.minecraft.data.client.TextureKey;
+import net.minecraft.client.data.Model;
+import net.minecraft.client.data.TextureKey;
 import net.minecraft.util.Identifier;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.block.GlassHandrailBlock;

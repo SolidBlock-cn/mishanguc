@@ -1,6 +1,6 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.datafixers.util.Function3;
+import com.mojang.datafixers.util.Function4;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.Block;
@@ -53,12 +53,12 @@ public interface ColoredBlock extends BlockEntityProvider, MishangucBlock {
   }
 
   /**
-   * 子类在覆盖 {@link net.minecraft.block.Block#getPickStack(WorldView, BlockPos, BlockState)} 时，可以这么写（下列代码使用yarn映射）：
+   * 子类在覆盖 {@link net.minecraft.block.Block#getPickStack(WorldView, BlockPos, BlockState, boolean)} 时，可以这么写（下列代码使用yarn映射）：
    * <pre>{@code
    *     return getColoredPickStack(world, pos, state, super::getPickStack);}</pre>
    */
-  default ItemStack getColoredPickStack(WorldView world, BlockPos pos, BlockState state, Function3<WorldView, BlockPos, BlockState, ItemStack> superGetPickStack) {
-    final ItemStack stack = superGetPickStack.apply(world, pos, state);
+  default ItemStack getColoredPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData, Function4<WorldView, BlockPos, BlockState, Boolean, ItemStack> superGetPickStack) {
+    final ItemStack stack = superGetPickStack.apply(world, pos, state, includeData);
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     if (blockEntity instanceof ColoredBlockEntity coloredBlockEntity) {
       stack.set(MishangucComponents.COLOR, coloredBlockEntity.getColor());

@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.data.server.loottable.BlockLootTableGenerator;
+import net.minecraft.data.loottable.BlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
@@ -40,8 +40,8 @@ public class ColoredHungSignBarBlock extends HungSignBarBlock implements BlockEn
   }
 
   @Override
-  public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
-    return getColoredPickStack(world, pos, state, super::getPickStack);
+  public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData) {
+    return getColoredPickStack(world, pos, state, includeData, super::getPickStack);
   }
 
   @Override

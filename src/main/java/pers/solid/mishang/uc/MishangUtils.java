@@ -14,7 +14,7 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.client.VariantSetting;
+import net.minecraft.client.data.VariantSetting;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;

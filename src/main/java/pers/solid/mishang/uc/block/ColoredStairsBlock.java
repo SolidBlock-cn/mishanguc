@@ -6,13 +6,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.StairsBlock;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.ModelProvider;
-import net.minecraft.data.client.TextureMap;
-import net.minecraft.data.server.loottable.BlockLootTableGenerator;
-import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeGenerator;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.ModelProvider;
+import net.minecraft.client.data.TextureMap;
+import net.minecraft.data.loottable.BlockLootTableGenerator;
+import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.recipe.RecipeGenerator;
+import net.minecraft.data.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
@@ -42,8 +42,8 @@ public class ColoredStairsBlock extends StairsBlock implements ColoredBlock {
   }
 
   @Override
-  public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
-    return getColoredPickStack(world, pos, state, super::getPickStack);
+  public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData) {
+    return getColoredPickStack(world, pos, state, includeData, super::getPickStack);
   }
 
   @Override

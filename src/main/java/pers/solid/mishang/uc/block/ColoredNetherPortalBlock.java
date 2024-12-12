@@ -4,8 +4,8 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.data.client.*;
-import net.minecraft.data.server.loottable.BlockLootTableGenerator;
+import net.minecraft.client.data.*;
+import net.minecraft.data.loottable.BlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -39,8 +39,8 @@ public class ColoredNetherPortalBlock extends NetherPortalBlock implements Color
   }
 
   @Override
-  public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
-    return getColoredPickStack(world, pos, state, (blockView, pos1, state1) -> new ItemStack(this));
+  public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData) {
+    return getColoredPickStack(world, pos, state, includeData, (blockView, pos1, state1) -> new ItemStack(this));
   }
 
   @Override

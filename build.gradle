@@ -167,5 +167,7 @@ publish {
 }
 
 fabricApi {
-    configureDataGeneration()
+    configureDataGeneration() {
+        client = true
+    }
 }

@@ -3,9 +3,9 @@ package pers.solid.mishang.uc.data;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.floats.FloatObjectPair;
+import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.data.client.*;
+import net.minecraft.client.data.*;
 import net.minecraft.item.Item;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.MishangucBlock;
@@ -58,6 +58,7 @@ public class MishangucModelProvider extends FabricModelProvider {
   }
 
   private void registerCarryingTool(ItemModelGenerator itemModelGenerator, Item item) {
+    itemModelGenerator.register(item, ItemModels.select());
     Models.HANDHELD.upload(ModelIds.getItemModelId(item), TextureMap.layer0(item), itemModelGenerator.writer, (id, textures) -> {
       final JsonObject json = Models.HANDHELD.createJson(id, textures);
       final JsonArray overrides = new JsonArray();

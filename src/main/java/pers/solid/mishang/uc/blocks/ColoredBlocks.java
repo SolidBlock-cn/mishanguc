@@ -1,7 +1,7 @@
 package pers.solid.mishang.uc.blocks;
 
 import net.minecraft.block.Blocks;
-import net.minecraft.data.client.TextureMap;
+import net.minecraft.client.data.TextureMap;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import pers.solid.mishang.uc.Mishanguc;

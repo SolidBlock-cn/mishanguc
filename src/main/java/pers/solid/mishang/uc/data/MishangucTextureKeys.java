@@ -1,6 +1,6 @@
 package pers.solid.mishang.uc.data;
 
-import net.minecraft.data.client.TextureKey;
+import net.minecraft.client.data.TextureKey;
 
 public final class MishangucTextureKeys {
   public static final TextureKey LIGHT = TextureKey.of("light", TextureKey.ALL);
