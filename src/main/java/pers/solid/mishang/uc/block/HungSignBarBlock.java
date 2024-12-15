@@ -35,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.ModelHelper;
+import pers.solid.mishang.uc.item.ColoredTintSource;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Map;
@@ -266,7 +267,11 @@ public class HungSignBarBlock extends Block implements Waterloggable, MishangucB
     final Identifier edgeModelId = MishangucModels.HUNG_SIGN_BAR_EDGE.upload(this, textures, blockStateModelGenerator.modelCollector);
 
     blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId, centralModelId, edgeModelId));
-    blockStateModelGenerator.registerParentedItemModel(this, modelId);
+    if (this instanceof ColoredBlock) {
+      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(modelId, ColoredTintSource.INSTANCE));
+    } else {
+      blockStateModelGenerator.registerParentedItemModel(this, modelId);
+    }
   }
 
   public @Nullable BlockStateSupplier createBlockStates(Identifier modelId, Identifier centralModelId, Identifier edgeModelId) {

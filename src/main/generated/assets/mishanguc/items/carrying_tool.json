@@ -1,0 +1,26 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "mishanguc:item/carrying_tool_with_block"
+        },
+        "when": 0
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "mishanguc:item/carrying_tool_with_entity"
+        },
+        "when": 1
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "mishanguc:item/carrying_tool"
+    },
+    "property": "mishanguc:carrying_tool_type"
+  }
+}

@@ -1,20 +1,24 @@
 package pers.solid.mishang.uc.data;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.common.base.Predicates;
 import it.unimi.dsi.fastutil.floats.FloatObjectPair;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.client.data.*;
 import net.minecraft.item.Item;
+import net.minecraft.util.Identifier;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.MishangucBlock;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
-import pers.solid.mishang.uc.item.MishangucItems;
+import pers.solid.mishang.uc.item.*;
 import pers.solid.mishang.uc.util.ColorMixtureType;
 
+import java.util.Arrays;
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 public class MishangucModelProvider extends FabricModelProvider {
   public MishangucModelProvider(FabricDataOutput output) {
     super(output);
@@ -55,44 +59,63 @@ public class MishangucModelProvider extends FabricModelProvider {
     itemModelGenerator.register(MishangucItems.SLAB_TOOL, Models.HANDHELD);
     itemModelGenerator.register(MishangucItems.TEXT_COPY_TOOL, Models.HANDHELD);
     itemModelGenerator.register(MishangucItems.TP_TOOL, Models.HANDHELD);
+    registerFastBuildingTool(itemModelGenerator, MishangucItems.FAST_BUILDING_TOOL);
+  }
+
+  private void registerFastBuildingTool(ItemModelGenerator itemModelGenerator, Item item) {
+    final Identifier modelId = Models.HANDHELD.upload(item, TextureMap.layer0(item), itemModelGenerator.modelCollector);
+    final Identifier darkModelId = Models.HANDHELD.upload(ModelIds.getItemSubModelId(item, "_dark"), TextureMap.layer0(TextureMap.getSubId(item, "_dark")), itemModelGenerator.modelCollector);
+
+    itemModelGenerator.output.accept(item, ItemModels.rangeDispatch(FastBuildingRangeProperty.INSTANCE, 1 / 64f, ItemModels.basic(modelId), ItemModels.rangeDispatchEntry(ItemModels.basic(darkModelId), 0.5f)));
   }
 
   private void registerCarryingTool(ItemModelGenerator itemModelGenerator, Item item) {
-    itemModelGenerator.register(item, ItemModels.select());
-    Models.HANDHELD.upload(ModelIds.getItemModelId(item), TextureMap.layer0(item), itemModelGenerator.writer, (id, textures) -> {
-      final JsonObject json = Models.HANDHELD.createJson(id, textures);
-      final JsonArray overrides = new JsonArray();
-      json.add("overrides", overrides);
-      final JsonObject withBlock = new JsonObject();
-      overrides.add(withBlock);
-      final JsonObject withBlockPredicate = new JsonObject();
-      withBlock.add("predicate", withBlockPredicate);
-      withBlockPredicate.addProperty("mishanguc:is_holding_block", 1f);
-      withBlock.addProperty("model", ModelIds.getItemSubModelId(item, "_with_block").toString());
-      final JsonObject withEntity = new JsonObject();
-      overrides.add(withEntity);
-      final JsonObject withEntityPredicate = new JsonObject();
-      withEntity.add("predicate", withEntityPredicate);
-      withEntityPredicate.addProperty("mishanguc:is_holding_entity", 1f);
-      withEntity.addProperty("model", ModelIds.getItemSubModelId(item, "_with_entity").toString());
-      return json;
-    });
-    itemModelGenerator.register(item, "_with_block", Models.HANDHELD);
-    itemModelGenerator.register(item, "_with_entity", Models.HANDHELD);
+    final Identifier modelId = Models.HANDHELD.upload(item, TextureMap.layer0(item), itemModelGenerator.modelCollector);
+    final Identifier withBlock = Models.HANDHELD.upload(ModelIds.getItemSubModelId(item, "_with_block"), TextureMap.layer0(TextureMap.getSubId(item, "_with_block")), itemModelGenerator.modelCollector);
+    final Identifier withEntity = Models.HANDHELD.upload(ModelIds.getItemSubModelId(item, "_with_entity"), TextureMap.layer0(TextureMap.getSubId(item, "_with_entity")), itemModelGenerator.modelCollector);
+    itemModelGenerator.output.accept(item, ItemModels.select(CarryingToolTypeProperty.INSTANCE,
+        ItemModels.basic(modelId),
+        ItemModels.switchCase((short) 0, ItemModels.basic(withBlock)),
+        ItemModels.switchCase((short) 1, ItemModels.basic(withEntity))
+    ));
   }
 
   private void registerExplosionToolVariants(ItemModelGenerator itemModelGenerator, Item item) {
-    for (final String name : new String[]{
-        "_fire",
-        "_4", "_4_fire",
-        "_8", "_8_fire",
-        "_16", "_16_fire",
-        "_32", "_32_fire",
-        "_64", "_64_fire",
-        "_128", "_128_fire",
-    }) {
-      itemModelGenerator.register(item, name, Models.HANDHELD);
+    record ExplosionToolEntry(String suffix, float power, boolean createFire) {}
+    final List<ExplosionToolEntry> entries = List.of(
+        new ExplosionToolEntry("", 0, false),
+        new ExplosionToolEntry("_fire", 0, true),
+        new ExplosionToolEntry("_4", 4, false),
+        new ExplosionToolEntry("_4_fire", 4, true),
+        new ExplosionToolEntry("_8", 8, false),
+        new ExplosionToolEntry("_8_fire", 8, true),
+        new ExplosionToolEntry("_16", 16, false),
+        new ExplosionToolEntry("_16_fire", 16, true),
+        new ExplosionToolEntry("_32", 32, false),
+        new ExplosionToolEntry("_32_fire", 32, true),
+        new ExplosionToolEntry("_64", 64, false),
+        new ExplosionToolEntry("_64_fire", 64, true),
+        new ExplosionToolEntry("_128", 128, false),
+        new ExplosionToolEntry("_128_fire", 128, true)
+    );
+    for (final ExplosionToolEntry entry : entries) {
+      Models.HANDHELD.upload(ModelIds.getItemSubModelId(item, entry.suffix), TextureMap.layer0(TextureMap.getSubId(item, entry.suffix)), itemModelGenerator.modelCollector);
     }
+    itemModelGenerator.output.accept(item, ItemModels.condition(ExplosionCreateFireProperty.INSTANCE,
+        ItemModels.rangeDispatch(ExplosionPowerProperty.INSTANCE,
+            ItemModels.basic(ModelIds.getItemSubModelId(item, "_fire")),
+            entries.stream()
+                .filter(ExplosionToolEntry::createFire)
+                .filter(entry -> entry.power != 0)
+                .map(entry -> ItemModels.rangeDispatchEntry(ItemModels.basic(ModelIds.getItemSubModelId(item, entry.suffix)), entry.power))
+                .toList()),
+        ItemModels.rangeDispatch(ExplosionPowerProperty.INSTANCE,
+            ItemModels.basic(ModelIds.getItemModelId(item)),
+            entries.stream()
+                .filter(Predicates.not(ExplosionToolEntry::createFire))
+                .filter(entry -> entry.power != 0)
+                .map(entry -> ItemModels.rangeDispatchEntry(ItemModels.basic(ModelIds.getItemSubModelId(item, entry.suffix)), entry.power))
+                .toList())));
   }
 
   private void registerColorTool(ItemModelGenerator itemModelGenerator, Item item) {
@@ -103,37 +126,24 @@ public class MishangucModelProvider extends FabricModelProvider {
         FloatObjectPair.of(0.75f, "_opacity_75")
     );
     for (FloatObjectPair<String> opacity : opacities) {
-      Models.HANDHELD.upload(ModelIds.getItemSubModelId(item, opacity.right()), TextureMap.layer0(TextureMap.getSubId(item, opacity.right())), itemModelGenerator.writer);
+      Models.HANDHELD.upload(ModelIds.getItemSubModelId(item, opacity.right()), TextureMap.layer0(TextureMap.getSubId(item, opacity.right())), itemModelGenerator.modelCollector);
     }
     for (ColorMixtureType colorMixtureType : ColorMixtureType.values()) {
       if (colorMixtureType == ColorMixtureType.NORMAL) continue;
-      Models.HANDHELD.upload(ModelIds.getItemSubModelId(item, "_" + colorMixtureType.asString()), TextureMap.layer0(TextureMap.getSubId(item, "_" + colorMixtureType.asString())), itemModelGenerator.writer);
+      Models.HANDHELD.upload(ModelIds.getItemSubModelId(item, "_" + colorMixtureType.asString()), TextureMap.layer0(TextureMap.getSubId(item, "_" + colorMixtureType.asString())), itemModelGenerator.modelCollector);
     }
 
-    Models.HANDHELD.upload(ModelIds.getItemModelId(item), TextureMap.layer0(item), itemModelGenerator.writer, (id, textures) -> {
-      final JsonObject json = Models.HANDHELD.createJson(id, textures);
-      final JsonArray overrides = new JsonArray();
-      json.add("overrides", overrides);
+    itemModelGenerator.output.accept(item, ItemModels.select(ColorMixtureTypeProperty.INSTANCE,
+        ItemModels.rangeDispatch(TransparencyPropertyProperty.INSTANCE,
+            ItemModels.basic(ModelIds.getItemModelId(item)),
+            opacities.stream()
+                .map(pair -> ItemModels.rangeDispatchEntry(ItemModels.basic(ModelIds.getItemSubModelId(item, pair.right())), 1 - pair.leftFloat()))
+                .toList()),
+        Arrays.stream(ColorMixtureType.values())
+            .filter(colorMixtureType -> colorMixtureType != ColorMixtureType.NORMAL)
+            .map(colorMixtureType -> ItemModels.switchCase(colorMixtureType, ItemModels.basic(ModelIds.getItemSubModelId(item, "_" + colorMixtureType.asString()))))
+            .toList()));
 
-      for (FloatObjectPair<String> pair : opacities) {
-        final JsonObject override = new JsonObject();
-        overrides.add(override);
-        final JsonObject predicate = new JsonObject();
-        override.add("predicate", predicate);
-        predicate.addProperty("mishanguc:transparency", 1 - pair.leftFloat());
-        predicate.addProperty("mishanguc:color_mixture_type", 0);
-        override.addProperty("model", ModelIds.getItemSubModelId(item, pair.right()).toString());
-      }
-      for (ColorMixtureType colorMixtureType : ColorMixtureType.values()) {
-        if (colorMixtureType == ColorMixtureType.NORMAL) continue;
-        final JsonObject override = new JsonObject();
-        overrides.add(override);
-        final JsonObject predicate = new JsonObject();
-        override.add("predicate", predicate);
-        predicate.addProperty("mishanguc:color_mixture_type", colorMixtureType.ordinal() * 0.1f);
-        override.addProperty("model", ModelIds.getItemSubModelId(item, "_" + colorMixtureType.asString()).toString());
-      }
-      return json;
-    });
+    Models.HANDHELD.upload(ModelIds.getItemModelId(item), TextureMap.layer0(item), itemModelGenerator.modelCollector);
   }
 }

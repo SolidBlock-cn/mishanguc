@@ -82,8 +82,9 @@ public class SimpleHandrailBlock extends HandrailBlock {
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final TextureMap textures = getTextures();
     final Identifier modelId = MishangucModels.SIMPLE_HANDRAIL.upload(this, textures, blockStateModelGenerator.modelCollector);
-    MishangucModels.SIMPLE_HANDRAIL_INVENTORY.upload(ModelIds.getItemModelId(asItem()), textures, blockStateModelGenerator.modelCollector);
+    final Identifier itemModelId = MishangucModels.SIMPLE_HANDRAIL_INVENTORY.upload(ModelIds.getItemModelId(asItem()), textures, blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId));
+    blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.basic(itemModelId));
   }
 
   @Override

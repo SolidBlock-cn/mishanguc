@@ -208,7 +208,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
     for (Direction facing : Direction.values()) {
       // 中心装饰物
       BlockStateVariant central = BlockStateVariant.create().put(MODEL, centerModelId)
-          .put(MishangUtils.INT_Y_VARIANT, facing.getAxis() == Direction.Axis.Y ? 0 : (int) (facing.asRotation() + 180))
+          .put(MishangUtils.INT_Y_VARIANT, facing.getAxis() == Direction.Axis.Y ? 0 : (int) (facing.getPositiveHorizontalDegrees() + 180))
           .put(MishangUtils.INT_X_VARIANT, facing == Direction.DOWN ? 180 : facing == Direction.UP ? 0 : 90);
       blockStateSupplier.with(When.create().set(FACING, facing), central);
 
@@ -225,27 +225,27 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
         if (facing == Direction.UP) {
           modelName = connectionModelId;
           x = 0;
-          y = (int) direction.asRotation();
+          y = (int) direction.getPositiveHorizontalDegrees();
         } else if (facing == Direction.DOWN) {
           modelName = connectionModelId;
           x = 180;
-          y = (int) direction.asRotation() + 180;
+          y = (int) direction.getPositiveHorizontalDegrees() + 180;
         } else if (direction == Direction.UP) {
           modelName = connectionModelId;
           x = 90;
-          y = (int) facing.asRotation() + 180;
+          y = (int) facing.getPositiveHorizontalDegrees() + 180;
         } else if (direction == Direction.DOWN) {
           modelName = connectionModelId;
           x = -90;
-          y = (int) facing.asRotation();
+          y = (int) facing.getPositiveHorizontalDegrees();
         } else if (direction == facing.rotateYCounterclockwise()) {
           modelName = connection2ModelId;
           x = 0;
-          y = (int) facing.asRotation();
+          y = (int) facing.getPositiveHorizontalDegrees();
         } else if (direction == facing.rotateYClockwise()) {
           modelName = connection2ModelId;
           x = 180;
-          y = (int) facing.asRotation() + 180;
+          y = (int) facing.getPositiveHorizontalDegrees() + 180;
         } else {
           Mishanguc.MISHANG_LOGGER.error(String.format("Unknown state to generate models: facing=%s,direction=%s", facing.asString(), direction.asString()));
           continue;

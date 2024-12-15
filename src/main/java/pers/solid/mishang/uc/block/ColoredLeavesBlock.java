@@ -6,10 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.data.BlockStateModelGenerator;
-import net.minecraft.client.data.ModelProvider;
-import net.minecraft.client.data.Models;
-import net.minecraft.client.data.TextureMap;
+import net.minecraft.client.data.*;
 import net.minecraft.data.loottable.BlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -22,6 +19,7 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
+import pers.solid.mishang.uc.item.ColoredTintSource;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -64,7 +62,7 @@ public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock {
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final Identifier modelId = Models.LEAVES.upload(this, TextureMap.all(texture), blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(this, modelId));
-    blockStateModelGenerator.registerParentedItemModel(this, modelId);
+    blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(modelId, ColoredTintSource.INSTANCE));
   }
 
 

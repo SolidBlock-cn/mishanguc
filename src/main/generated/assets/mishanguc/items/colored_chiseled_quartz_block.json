@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "mishanguc:block/colored_chiseled_quartz_block",
+    "tints": [
+      {
+        "type": "mishanguc:color"
+      }
+    ]
+  }
+}

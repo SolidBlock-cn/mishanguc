@@ -1,0 +1,20 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "entries": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "mishanguc:item/fast_building_tool_dark"
+        },
+        "threshold": 0.5
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "mishanguc:item/fast_building_tool"
+    },
+    "property": "mishanguc:fast_building_range",
+    "scale": 0.015625
+  }
+}

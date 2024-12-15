@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "mishanguc:item/colored_decorated_stripped_spruce_handrail",
+    "tints": [
+      {
+        "type": "mishanguc:color"
+      }
+    ]
+  }
+}

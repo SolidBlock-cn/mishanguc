@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.IceBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.ItemModels;
 import net.minecraft.client.data.ModelProvider;
 import net.minecraft.client.data.TextureMap;
 import net.minecraft.data.loottable.BlockLootTableGenerator;
@@ -19,6 +20,7 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
+import pers.solid.mishang.uc.item.ColoredTintSource;
 
 import java.util.List;
 
@@ -53,7 +55,7 @@ public class ColoredIceBlock extends IceBlock implements ColoredBlock {
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final Identifier modelId = ColoredCubeBlock.COLORED_CUBE_ALL.upload(this, textures, blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(this, modelId));
-    blockStateModelGenerator.registerParentedItemModel(this, modelId);
+    blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(modelId, ColoredTintSource.INSTANCE));
   }
 
   @Override

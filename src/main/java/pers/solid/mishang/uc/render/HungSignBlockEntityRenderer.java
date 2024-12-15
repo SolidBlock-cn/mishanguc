@@ -48,7 +48,7 @@ public class HungSignBlockEntityRenderer<T extends HungSignBlockEntity> implemen
       }
       final boolean glowing = entity.glowing.contains(direction);
       matrices.push();
-      matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-direction.asRotation()));
+      matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-direction.getPositiveHorizontalDegrees()));
       matrices.translate(0, 0, 1.0125 / 32f);
       matrices.scale(1 / 16f, -1 / 16f, 1 / 16f);
       for (TextContext textContext : textContexts) {

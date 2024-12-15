@@ -155,7 +155,7 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
 
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int button) {
-    if (this.active && this.visible && clicked(mouseX, mouseY)) {
+    if (this.active && this.visible && isMouseOver(mouseX, mouseY)) {
       this.playDownSound(MinecraftClient.getInstance().getSoundManager());
       onPress(button);
       return true;

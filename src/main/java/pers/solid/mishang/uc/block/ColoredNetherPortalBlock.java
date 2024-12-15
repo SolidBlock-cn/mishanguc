@@ -40,7 +40,7 @@ public class ColoredNetherPortalBlock extends NetherPortalBlock implements Color
 
   @Override
   public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData) {
-    return getColoredPickStack(world, pos, state, includeData, (blockView, pos1, state1) -> new ItemStack(this));
+    return getColoredPickStack(world, pos, state, includeData, (worldView, blockPos, blockState, aBoolean) -> new ItemStack(this));
   }
 
   @Override

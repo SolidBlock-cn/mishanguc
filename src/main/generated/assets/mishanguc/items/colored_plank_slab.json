@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "mishanguc:block/colored_plank_slab",
+    "tints": [
+      {
+        "type": "mishanguc:color"
+      }
+    ]
+  }
+}

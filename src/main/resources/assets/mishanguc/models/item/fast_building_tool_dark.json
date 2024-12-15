@@ -1,6 +1,0 @@
-{
-  "parent": "item/handheld",
-  "textures": {
-    "layer0": "mishanguc:item/fast_building_tool_dark"
-  }
-}

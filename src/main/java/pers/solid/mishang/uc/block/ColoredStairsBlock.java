@@ -7,6 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.StairsBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.ItemModels;
 import net.minecraft.client.data.ModelProvider;
 import net.minecraft.client.data.TextureMap;
 import net.minecraft.data.loottable.BlockLootTableGenerator;
@@ -26,6 +27,7 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.item.ColoredTintSource;
 
 import java.util.List;
 
@@ -65,7 +67,7 @@ public class ColoredStairsBlock extends StairsBlock implements ColoredBlock {
     final Identifier innerModelId = MishangucModels.COLORED_INNER_STAIRS.upload(this, textureMap, blockStateModelGenerator.modelCollector);
     final Identifier outerModelId = MishangucModels.COLORED_OUTER_STAIRS.upload(this, textureMap, blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createStairsBlockState(this, innerModelId, regularModelId, outerModelId));
-    blockStateModelGenerator.registerParentedItemModel(this, regularModelId);
+    blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(regularModelId, ColoredTintSource.INSTANCE));
   }
 
   @Override

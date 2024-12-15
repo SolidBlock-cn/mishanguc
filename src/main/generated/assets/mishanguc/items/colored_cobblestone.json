@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "mishanguc:block/colored_cobblestone",
+    "tints": [
+      {
+        "type": "mishanguc:color"
+      }
+    ]
+  }
+}

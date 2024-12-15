@@ -6,10 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.data.BlockStateModelGenerator;
-import net.minecraft.client.data.ModelIds;
-import net.minecraft.client.data.ModelProvider;
-import net.minecraft.client.data.TextureMap;
+import net.minecraft.client.data.*;
 import net.minecraft.data.loottable.BlockLootTableGenerator;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
@@ -29,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.item.ColoredTintSource;
 
 import java.util.List;
 
@@ -75,7 +73,7 @@ public class ColoredSlabBlock extends SlabBlock implements ColoredBlock {
     }
 
     blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSlabBlockState(this, bottomModelId, topModelId, fullModelId));
-    blockStateModelGenerator.registerParentedItemModel(this, bottomModelId);
+    blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(bottomModelId, ColoredTintSource.INSTANCE));
   }
 
   @Override

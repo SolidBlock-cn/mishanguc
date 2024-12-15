@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "mishanguc:block/colored_stone_brick_hung_sign",
+    "tints": [
+      {
+        "type": "mishanguc:color"
+      }
+    ]
+  }
+}

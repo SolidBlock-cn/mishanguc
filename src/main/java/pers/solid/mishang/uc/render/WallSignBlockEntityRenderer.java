@@ -73,7 +73,7 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
     final BlockState state = entity.getCachedState();
     final Direction facing = state.get(WallSignBlock.FACING);
     final BlockFace face = state.get(WallSignBlock.FACE);
-    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-facing.asRotation()));
+    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-facing.getPositiveHorizontalDegrees()));
     matrices.multiply(
         RotationAxis.POSITIVE_X.rotationDegrees(
             face == BlockFace.CEILING ? 90 : face == BlockFace.FLOOR ? -90 : 0));

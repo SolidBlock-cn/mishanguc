@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import pers.solid.mishang.uc.blocks.ColoredBlocks;
 import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.item.ColoredTintSource;
 
 import java.util.List;
 
@@ -85,7 +86,7 @@ public class ColoredCubeBlock extends Block implements ColoredBlock {
     }
     final Identifier modelId = model.upload(this, textures, blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(this, modelId));
-    blockStateModelGenerator.registerParentedItemModel(this, modelId);
+    blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(modelId, ColoredTintSource.INSTANCE));
   }
 
   @Override

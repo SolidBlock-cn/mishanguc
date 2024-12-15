@@ -51,6 +51,7 @@ import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.data.ModelHelper;
+import pers.solid.mishang.uc.item.ColoredTintSource;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 import pers.solid.mishang.uc.networking.EditSignPayload;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -235,7 +236,12 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     final Identifier barredR2ModelId = MishangucModels.STANDING_SIGN_BARRED_2.upload(this, textures, blockStateModelGenerator.modelCollector);
     final Identifier barredR3ModelId = MishangucModels.STANDING_SIGN_BARRED_3.upload(this, textures, blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId, r1ModelId, r2ModelId, r3ModelId, barredModelId, barredR1ModelId, barredR2ModelId, barredR3ModelId));
-    blockStateModelGenerator.registerParentedItemModel(this, barredModelId);
+
+    if (this instanceof ColoredBlock) {
+      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(modelId, ColoredTintSource.INSTANCE));
+    } else {
+      blockStateModelGenerator.registerParentedItemModel(this, barredModelId);
+    }
   }
 
   public @Nullable BlockStateSupplier createBlockStates(Identifier modelId, Identifier r1ModelId, Identifier r2ModelId, Identifier r3ModelId, Identifier barredModelId, Identifier barredR1ModelId, Identifier barredR2ModelId, Identifier barredR3ModelId) {

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableBiMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.google.gson.Strictness;
 import com.google.gson.stream.JsonReader;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
@@ -237,7 +238,7 @@ public class TextContext implements Cloneable {
       try {
         if (registryLookup == null) {
           JsonReader jsonReader = new JsonReader(new StringReader(textJson));
-          jsonReader.setLenient(true);
+          jsonReader.setStrictness(Strictness.LENIENT);
           JsonElement jsonElement = JsonParser.parseReader(jsonReader);
           text = (MutableText) TextCodecs.CODEC.parse(JsonOps.INSTANCE, jsonElement).getOrThrow();
         } else {

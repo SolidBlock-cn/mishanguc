@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.data;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.data.Model;
 import net.minecraft.client.data.TextureKey;
 import net.minecraft.util.Identifier;
@@ -8,6 +10,7 @@ import pers.solid.mishang.uc.block.GlassHandrailBlock;
 
 import java.util.Optional;
 
+@Environment(EnvType.CLIENT)
 public final class MishangucModels {
   public static final Model LIGHT = createBlock("light", TextureKey.ALL);
   public static final Model LIGHT_SLAB = createBlock("light_slab", TextureKey.TOP, TextureKey.SIDE, TextureKey.BOTTOM);

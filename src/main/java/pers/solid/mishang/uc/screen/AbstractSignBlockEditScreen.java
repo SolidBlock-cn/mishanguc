@@ -963,7 +963,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     final TextFieldListWidget.Entry newEntry = textFieldListWidget.new Entry(textFieldWidget, textContext);
     textFieldListWidget.children().add(index, newEntry);
     textFieldListWidget.setFocused(newEntry, multiSel, false);
-    textFieldListWidget.setScrollAmount(textFieldListWidget.getScrollAmount());
+    textFieldListWidget.setScrollY(textFieldListWidget.getScrollY());
     if (!textFieldListWidget.children().isEmpty()) {
       setFocused(textFieldListWidget);
     }
@@ -1052,7 +1052,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       textFieldListWidget.setFocused(children.get(MathHelper.clamp(index - 1, 0, children.size() - 1)), true, false);
     }
     // 删除一行元素后，对滚动数量进行一次 clamp，以避免出现过度滚动的情况。
-    textFieldListWidget.setScrollAmount(textFieldListWidget.getScrollAmount());
+    textFieldListWidget.setScrollY(textFieldListWidget.getScrollY());
     textContextsEditing.remove(removedTextContext);
 
     updateTextHoldersVisibility();
@@ -1222,14 +1222,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
 
   @Override
   protected void clearAndInit() {
-    final double scrollAmountBeforeClear = textFieldListWidget == null ? -1 : textFieldListWidget.getScrollAmount();
+    final double scrollAmountBeforeClear = textFieldListWidget == null ? -1 : textFieldListWidget.getScrollY();
     final Element previousFocused = getFocused();
     final TextFieldListWidget.Entry previouslyWidgetFocused = textFieldListWidget.getFocused();
     final List<TextFieldListWidget.Entry> selectedEntriesCopy = List.copyOf(textFieldListWidget.selectedEntries);
     super.clearAndInit();
     setFocused(previousFocused);
     if (textFieldListWidget != null) {
-      textFieldListWidget.setScrollAmount(scrollAmountBeforeClear);
+      textFieldListWidget.setScrollY(scrollAmountBeforeClear);
       textFieldListWidget.setFocused(previouslyWidgetFocused);
       textFieldListWidget.selectedEntries.clear();
       textFieldListWidget.selectedEntries.addAll(selectedEntriesCopy);

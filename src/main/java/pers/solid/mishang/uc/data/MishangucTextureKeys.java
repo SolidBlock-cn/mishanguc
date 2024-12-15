@@ -1,7 +1,10 @@
 package pers.solid.mishang.uc.data;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.data.TextureKey;
 
+@Environment(EnvType.CLIENT)
 public final class MishangucTextureKeys {
   public static final TextureKey LIGHT = TextureKey.of("light", TextureKey.ALL);
   public static final TextureKey BAR = TextureKey.of("bar", TextureKey.TEXTURE);

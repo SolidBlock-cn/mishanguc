@@ -44,6 +44,7 @@ import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.data.ModelHelper;
+import pers.solid.mishang.uc.item.ColoredTintSource;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 import pers.solid.mishang.uc.networking.EditSignPayload;
 import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
@@ -431,7 +432,11 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     final Identifier topBarEdgeId = MishangucModels.HUNG_SIGN_TOP_BAR_EDGE.upload(this, textures, blockStateModelGenerator.modelCollector);
 
     blockStateModelGenerator.blockStateCollector.accept(createBlockStates(bodyId, topBarId, topBarEdgeId));
-    blockStateModelGenerator.registerParentedItemModel(this, id);
+    if (this instanceof ColoredBlock) {
+      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(id, ColoredTintSource.INSTANCE));
+    } else {
+      blockStateModelGenerator.registerParentedItemModel(this, id);
+    }
   }
 
   public @NotNull BlockStateSupplier createBlockStates(Identifier bodyId, Identifier topBarId, Identifier topBarEdgeId) {

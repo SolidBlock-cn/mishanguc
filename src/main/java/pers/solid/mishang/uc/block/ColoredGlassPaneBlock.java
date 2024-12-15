@@ -18,6 +18,7 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.item.ColoredTintSource;
 
 import java.util.List;
 
@@ -59,7 +60,8 @@ public class ColoredGlassPaneBlock extends PaneBlock implements ColoredBlock {
     final Identifier nosideAltId = MishangucModels.TEMPLATE_COLORED_GLASS_PANE_NOSIDE_ALT.upload(this, textures, blockStateModelGenerator.modelCollector);
 
     blockStateModelGenerator.blockStateCollector.accept(createBlockStates(postId, sideId, SideAltId, nosideId, nosideAltId));
-    Models.GENERATED.upload(ModelIds.getItemModelId(asItem()), TextureMap.layer0(paneTexture), blockStateModelGenerator.modelCollector);
+    final Identifier itemModelId = Models.GENERATED.upload(asItem(), TextureMap.layer0(paneTexture), blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(itemModelId, ColoredTintSource.INSTANCE));
   }
 
   public @NotNull BlockStateSupplier createBlockStates(Identifier postId, Identifier sideId, Identifier sideAltId, Identifier nosideId, Identifier nosideAltId) {

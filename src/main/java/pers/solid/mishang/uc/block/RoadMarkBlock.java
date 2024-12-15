@@ -147,7 +147,8 @@ public class RoadMarkBlock extends Block implements Waterloggable, MishangucBloc
         .coordinate(BlockStateVariantMap.create(ON_SLAB)
             .register(false, new BlockStateVariant().put(VariantSettings.MODEL, modelId))
             .register(true, new BlockStateVariant().put(VariantSettings.MODEL, onSlabModelId))));
-    Models.HANDHELD.upload(ModelIds.getItemModelId(asItem()), TextureMap.layer0(texture), blockStateModelGenerator.modelCollector);
+    final Identifier itemModelId = Models.HANDHELD.upload(asItem(), TextureMap.layer0(texture), blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.basic(itemModelId));
   }
 
   @Override

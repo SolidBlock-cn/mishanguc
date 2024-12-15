@@ -1,0 +1,95 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "mishanguc:item/color_tool_random"
+        },
+        "when": "random"
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "mishanguc:item/color_tool_invert"
+        },
+        "when": "invert"
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "mishanguc:item/color_tool_hue"
+        },
+        "when": "hue"
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "mishanguc:item/color_tool_hue_and_saturation"
+        },
+        "when": "hue_and_saturation"
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "mishanguc:item/color_tool_hue_rotate"
+        },
+        "when": "hue_rotate"
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "mishanguc:item/color_tool_saturation_change"
+        },
+        "when": "saturation_change"
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "mishanguc:item/color_tool_brightness_change"
+        },
+        "when": "brightness_change"
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:range_dispatch",
+      "entries": [
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "mishanguc:item/color_tool_opacity_10"
+          },
+          "threshold": 0.9
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "mishanguc:item/color_tool_opacity_25"
+          },
+          "threshold": 0.75
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "mishanguc:item/color_tool_opacity_50"
+          },
+          "threshold": 0.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "mishanguc:item/color_tool_opacity_75"
+          },
+          "threshold": 0.25
+        }
+      ],
+      "fallback": {
+        "type": "minecraft:model",
+        "model": "mishanguc:item/color_tool"
+      },
+      "property": "mishanguc:transparency"
+    },
+    "property": "mishanguc:color_mixture_type"
+  }
+}

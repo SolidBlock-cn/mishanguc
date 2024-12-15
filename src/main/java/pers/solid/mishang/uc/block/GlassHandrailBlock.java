@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.item.ColoredTintSource;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.function.BiFunction;
@@ -57,8 +58,13 @@ public class GlassHandrailBlock extends HandrailBlock {
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final TextureMap textures = getTextures();
     final Identifier modelId = MishangucModels.GLASS_HANDRAIL.upload(this, textures, blockStateModelGenerator.modelCollector);
-    MishangucModels.GLASS_HANDRAIL_INVENTORY.upload(ModelIds.getItemModelId(asItem()), textures, blockStateModelGenerator.modelCollector);
+    final Identifier itemModelId = MishangucModels.GLASS_HANDRAIL_INVENTORY.upload(ModelIds.getItemModelId(asItem()), textures, blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId));
+    if (this instanceof ColoredBlock) {
+      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(itemModelId, ColoredTintSource.INSTANCE));
+    } else {
+      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.basic(itemModelId));
+    }
   }
 
   public static final TextureKey FRAME = TextureKey.of("frame");

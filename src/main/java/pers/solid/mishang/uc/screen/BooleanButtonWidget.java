@@ -114,7 +114,7 @@ public class BooleanButtonWidget extends ButtonWidget implements TooltipUpdated 
 
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int button) {
-    if (this.active && this.visible && clicked(mouseX, mouseY) && button == 2) {
+    if (this.active && this.visible && isMouseOver(mouseX, mouseY) && button == 2) { // todo check
       this.playDownSound(MinecraftClient.getInstance().getSoundManager());
       setValue(defaultValue);
       return true;

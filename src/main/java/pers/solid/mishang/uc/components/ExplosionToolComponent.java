@@ -31,7 +31,7 @@ public record ExplosionToolComponent(float power, boolean createFire, Explosion.
     case TRIGGER_BLOCK -> "trigger_block";
   });
   public static final Codec<ExplosionToolComponent> CODEC = RecordCodecBuilder.create(i -> i.group(Codec.floatRange(-128, 128).optionalFieldOf("power", 4f).forGetter(ExplosionToolComponent::power), Codec.BOOL.optionalFieldOf("create_fire", false).forGetter(ExplosionToolComponent::createFire), DESTRUCTION_TYPE_CODEC.optionalFieldOf("destruction_type", Explosion.DestructionType.DESTROY).forGetter(ExplosionToolComponent::destructionType)).apply(i, ExplosionToolComponent::new));
-  public static final PacketCodec<RegistryByteBuf, ExplosionToolComponent> PACKET_CODEC = PacketCodec.tuple(PacketCodecs.FLOAT, ExplosionToolComponent::power, PacketCodecs.BOOL, ExplosionToolComponent::createFire, PacketCodec.of((value, buf) -> buf.writeEnumConstant(value), buf -> buf.readEnumConstant(Explosion.DestructionType.class)), ExplosionToolComponent::destructionType, ExplosionToolComponent::new);
+  public static final PacketCodec<RegistryByteBuf, ExplosionToolComponent> PACKET_CODEC = PacketCodec.tuple(PacketCodecs.FLOAT, ExplosionToolComponent::power, PacketCodecs.BOOLEAN, ExplosionToolComponent::createFire, PacketCodec.of((value, buf) -> buf.writeEnumConstant(value), buf -> buf.readEnumConstant(Explosion.DestructionType.class)), ExplosionToolComponent::destructionType, ExplosionToolComponent::new);
 
   @Override
   public void appendTooltip(Item.TooltipContext context, Consumer<Text> tooltip, TooltipType type) {

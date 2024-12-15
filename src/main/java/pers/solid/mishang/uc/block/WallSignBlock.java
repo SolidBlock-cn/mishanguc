@@ -48,6 +48,7 @@ import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.ModelHelper;
+import pers.solid.mishang.uc.item.ColoredTintSource;
 import pers.solid.mishang.uc.networking.EditSignPayload;
 import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -262,6 +263,9 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     final TextureMap textures = TextureMap.texture(getBaseTexture());
     final Identifier modelId = MishangucModels.WALL_SIGN.upload(this, textures, blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId));
+    if (this instanceof ColoredBlock) {
+      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(modelId, ColoredTintSource.INSTANCE));
+    }
   }
 
   public VariantsBlockStateSupplier createBlockStates(Identifier modelId) {

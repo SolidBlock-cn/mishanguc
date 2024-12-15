@@ -1,0 +1,110 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "minecraft:range_dispatch",
+      "entries": [
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "mishanguc:item/explosion_tool_4"
+          },
+          "threshold": 4.0
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "mishanguc:item/explosion_tool_8"
+          },
+          "threshold": 8.0
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "mishanguc:item/explosion_tool_16"
+          },
+          "threshold": 16.0
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "mishanguc:item/explosion_tool_32"
+          },
+          "threshold": 32.0
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "mishanguc:item/explosion_tool_64"
+          },
+          "threshold": 64.0
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "mishanguc:item/explosion_tool_128"
+          },
+          "threshold": 128.0
+        }
+      ],
+      "fallback": {
+        "type": "minecraft:model",
+        "model": "mishanguc:item/explosion_tool"
+      },
+      "property": "mishanguc:explosion_power"
+    },
+    "on_true": {
+      "type": "minecraft:range_dispatch",
+      "entries": [
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "mishanguc:item/explosion_tool_4_fire"
+          },
+          "threshold": 4.0
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "mishanguc:item/explosion_tool_8_fire"
+          },
+          "threshold": 8.0
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "mishanguc:item/explosion_tool_16_fire"
+          },
+          "threshold": 16.0
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "mishanguc:item/explosion_tool_32_fire"
+          },
+          "threshold": 32.0
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "mishanguc:item/explosion_tool_64_fire"
+          },
+          "threshold": 64.0
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "mishanguc:item/explosion_tool_128_fire"
+          },
+          "threshold": 128.0
+        }
+      ],
+      "fallback": {
+        "type": "minecraft:model",
+        "model": "mishanguc:item/explosion_tool_fire"
+      },
+      "property": "mishanguc:explosion_power"
+    },
+    "property": "mishanguc:explosion_create_fire"
+  }
+}

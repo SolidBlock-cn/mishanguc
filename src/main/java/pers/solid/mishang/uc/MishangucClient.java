@@ -11,31 +11,22 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.ClampedModelPredicateProvider;
-import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Util;
+import net.minecraft.client.render.item.property.bool.BooleanProperties;
+import net.minecraft.client.render.item.property.numeric.NumericProperties;
+import net.minecraft.client.render.item.property.select.SelectProperties;
+import net.minecraft.client.render.item.tint.TintSourceTypes;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.Validate;
-import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.block.AbstractRoadBlock;
 import pers.solid.mishang.uc.block.ColoredBlock;
 import pers.solid.mishang.uc.block.StandingSignBlock;
 import pers.solid.mishang.uc.blockentity.*;
 import pers.solid.mishang.uc.blocks.MishangucBlocks;
-import pers.solid.mishang.uc.components.CarryingToolData;
-import pers.solid.mishang.uc.components.ExplosionToolComponent;
-import pers.solid.mishang.uc.components.FastBuildingToolData;
-import pers.solid.mishang.uc.components.MishangucComponents;
-import pers.solid.mishang.uc.item.DataTagToolItem;
-import pers.solid.mishang.uc.item.MishangucItems;
+import pers.solid.mishang.uc.item.*;
 import pers.solid.mishang.uc.networking.EditSignPayload;
 import pers.solid.mishang.uc.networking.GetBlockDataPayload;
 import pers.solid.mishang.uc.networking.GetEntityDataPayload;
@@ -44,9 +35,7 @@ import pers.solid.mishang.uc.render.*;
 import pers.solid.mishang.uc.screen.HungSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.StandingSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
-import pers.solid.mishang.uc.util.ColorMixtureType;
 
-import java.awt.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Environment(EnvType.CLIENT)
@@ -72,35 +61,17 @@ public class MishangucClient implements ClientModInitializer {
 
     registerNetworking();
 
-    registerModelPredicateProviders();
+    registerItemProperties();
   }
 
-  private static void registerModelPredicateProviders() {
-    // 模型谓词提供器
-    ModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL,
-        Mishanguc.id("explosion_power"),
-        new ClampedModelPredicateProvider() {
-          @Override
-          public float unclampedCall(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity, int seed) {
-            return stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT).power();
-          }
-
-          @SuppressWarnings("deprecation")
-          @Override
-          public float call(ItemStack itemStack, @Nullable ClientWorld clientWorld, @Nullable LivingEntity livingEntity, int i) {
-            return unclampedCall(itemStack, clientWorld, livingEntity, i);
-          }
-        });
-    ModelPredicateProviderRegistry.register(MishangucItems.EXPLOSION_TOOL, Mishanguc.id("explosion_create_fire"), (stack, world, entity, seed) -> stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT).createFire() ? 1 : 0);
-    ModelPredicateProviderRegistry.register(MishangucItems.FAST_BUILDING_TOOL, Mishanguc.id("fast_building_range"), (stack, world, entity, seed) -> stack.getOrDefault(MishangucComponents.FAST_BUILDING_TOOL_DATA, FastBuildingToolData.DEFAULT).range() / 64f);
-    ModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, Mishanguc.id("is_holding_block"), (stack, world, entity, seed) -> BooleanUtils.toInteger(stack.get(MishangucComponents.CARRYING_TOOL_DATA) instanceof CarryingToolData.HoldingBlockState));
-    ModelPredicateProviderRegistry.register(MishangucItems.CARRYING_TOOL, Mishanguc.id("is_holding_entity"), (stack, world, entity, seed) -> BooleanUtils.toInteger(stack.get(MishangucComponents.CARRYING_TOOL_DATA) instanceof CarryingToolData.HoldingEntity));
-
-    ModelPredicateProviderRegistry.register(MishangucItems.COLOR_TOOL, Mishanguc.id("transparency"), (stack, world, entity, seed) -> {
-      final float opacity = stack.getOrDefault(MishangucComponents.OPACITY, 1f);
-      return 1 - opacity;
-    });
-    ModelPredicateProviderRegistry.register(MishangucItems.COLOR_TOOL, Mishanguc.id("color_mixture_type"), (stack, world, entity, seed) -> stack.getOrDefault(MishangucComponents.COLOR_MIXTURE_TYPE, ColorMixtureType.NORMAL).ordinal() * 0.1f);
+  private static void registerItemProperties() {
+    SelectProperties.ID_MAPPER.put(Mishanguc.id("color_mixture_type"), ColorMixtureTypeProperty.TYPE);
+    SelectProperties.ID_MAPPER.put(Mishanguc.id("carrying_tool_type"), CarryingToolTypeProperty.TYPE);
+    NumericProperties.ID_MAPPER.put(Mishanguc.id("transparency"), TransparencyPropertyProperty.CODEC);
+    NumericProperties.ID_MAPPER.put(Mishanguc.id("explosion_power"), ExplosionPowerProperty.CODEC);
+    BooleanProperties.ID_MAPPER.put(Mishanguc.id("explosion_create_fire"), ExplosionCreateFireProperty.CODEC);
+    NumericProperties.ID_MAPPER.put(Mishanguc.id("fast_building_range"), FastBuildingRangeProperty.CODEC);
+    TintSourceTypes.ID_MAPPER.put(Mishanguc.id("color"), ColoredTintSource.CODEC);
   }
 
   private static void registerNetworking() {
@@ -167,16 +138,6 @@ public class MishangucClient implements ClientModInitializer {
               return -1;
             }
           }
-        },
-        coloredBlocks
-    );
-    ColorProviderRegistry.ITEM.register(
-        (stack, tintIndex) -> {
-          final Integer color = stack.get(MishangucComponents.COLOR);
-          if (color != null) {
-            return 0xff000000 | color;
-          }
-          return Color.HSBtoRGB(Util.getMeasuringTimeMs() / 4096f + (stack.getItem().hashCode() >> 16) / 64f, 0.5f, 0.95f);
         },
         coloredBlocks
     );

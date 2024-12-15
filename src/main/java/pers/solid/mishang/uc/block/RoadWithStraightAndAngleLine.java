@@ -188,7 +188,7 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       final BlockStateVariantMap.DoubleProperty<Direction.Axis, HorizontalCornerDirection> map1 = hasBevelTop ? null : BlockStateVariantMap.create(AXIS, FACING);
       final BlockStateVariantMap.TripleProperty<Direction.Axis, HorizontalCornerDirection, Boolean> map2 = hasBevelTop ? BlockStateVariantMap.create(AXIS, FACING, BEVEL_TOP) : null;
       for (Direction direction : Direction.Type.HORIZONTAL) {
-        final int rotation = (int) direction.asRotation();
+        final int rotation = (int) direction.getPositiveHorizontalDegrees();
         final Direction.Axis axis = direction.getAxis();
         final @NotNull HorizontalCornerDirection facing1 = HorizontalCornerDirection.fromDirections(direction, direction.rotateYClockwise());
         final @NotNull HorizontalCornerDirection facing2 = HorizontalCornerDirection.fromDirections(direction, direction.rotateYCounterclockwise());

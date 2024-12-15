@@ -64,7 +64,7 @@ public enum EightHorizontalDirection implements StringIdentifiable {
   }
 
   public float asRotation() {
-    return either.map(Direction::asRotation, cornerDirection -> (float) cornerDirection.asRotation());
+    return either.map(Direction::getPositiveHorizontalDegrees, cornerDirection -> (float) cornerDirection.asRotation());
   }
 
   public static EightHorizontalDirection fromRotation(float rotation) {

@@ -40,7 +40,7 @@ public final class SpecialDrawableTypes {
     } else if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
       // 考虑到输入过程中，还未输入完成时会抛出纹理不存在的错误，故在这里先进行抑制。
       try (final ResourceTexture resourceTexture = new ResourceTexture(identifier)) {
-        resourceTexture.load(MinecraftClient.getInstance().getResourceManager());
+        resourceTexture.loadContents(MinecraftClient.getInstance().getResourceManager());
         return new TextureSpecialDrawable(identifier, textContext);
       } catch (IOException e) {
         return null;

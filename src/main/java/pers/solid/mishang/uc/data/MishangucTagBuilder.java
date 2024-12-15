@@ -1,6 +1,6 @@
 package pers.solid.mishang.uc.data;
 
-import net.minecraft.data.server.tag.TagProvider;
+import net.minecraft.data.tag.TagProvider;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.tag.TagBuilder;
 import net.minecraft.registry.tag.TagKey;

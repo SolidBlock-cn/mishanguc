@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.PillarBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.ItemModels;
 import net.minecraft.client.data.ModelProvider;
 import net.minecraft.client.data.TextureMap;
 import net.minecraft.data.loottable.BlockLootTableGenerator;
@@ -19,6 +20,7 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.item.ColoredTintSource;
 
 import java.util.List;
 
@@ -53,7 +55,7 @@ public class ColoredPillarBlock extends PillarBlock implements ColoredBlock {
     final Identifier modelId = MishangucModels.COLORED_CUBE_COLUMN.upload(this, textures, blockStateModelGenerator.modelCollector);
     final Identifier horizontalModelId = MishangucModels.COLORED_CUBE_COLUMN_HORITONZAL.upload(this, textures, blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createAxisRotatedBlockState(this, modelId, horizontalModelId));
-    blockStateModelGenerator.registerParentedItemModel(this, modelId);
+    blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(modelId, ColoredTintSource.INSTANCE));
   }
 
   @Override

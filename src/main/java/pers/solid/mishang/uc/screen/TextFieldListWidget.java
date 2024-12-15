@@ -222,9 +222,9 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   }
 
   @Override
-  public void setScrollAmount(double amount) {
-    super.setScrollAmount(amount);
-    int width = getMaxScroll() > 0 ? this.width - 10 : this.width - 4;
+  public void setScrollY(double scrollY) {
+    super.setScrollY(scrollY);
+    int width = getMaxScrollY() > 0 ? this.width - 10 : this.width - 4;
     for (Entry child : children()) {
       child.textFieldWidget.setWidth(width);
     }
