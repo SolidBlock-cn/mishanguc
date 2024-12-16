@@ -7,6 +7,7 @@ import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.StonecuttingRecipeJsonBuilder;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -326,5 +327,10 @@ public class HungSignBarBlock extends Block implements Waterloggable, MishangucB
   @Override
   public String customRecipeCategory() {
     return "signs";
+  }
+
+  @Override
+  protected boolean canPathfindThrough(BlockState state, NavigationType type) {
+    return false;
   }
 }

@@ -6,6 +6,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.data.client.*;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -261,4 +262,9 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
 
   @Override
   protected abstract MapCodec<? extends HandrailBlock> getCodec();
+
+  @Override
+  protected boolean canPathfindThrough(BlockState state, NavigationType type) {
+    return false;
+  }
 }
