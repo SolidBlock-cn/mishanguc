@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.data.client.*;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -253,6 +254,12 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   public MutableText getName() {
     final Block block = baseBlock();
     return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.handrail_stair", block.getName());
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    return false;
   }
 
   public enum Position implements StringIdentifiable {

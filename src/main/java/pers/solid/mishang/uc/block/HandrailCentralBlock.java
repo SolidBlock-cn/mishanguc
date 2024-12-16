@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.data.client.*;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
@@ -13,6 +14,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
@@ -194,5 +196,11 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   @Override
   public boolean connectsIn(@NotNull BlockState blockState, @NotNull Direction direction, @Nullable Direction offsetFacing) {
     return offsetFacing == null && direction.getAxis().isHorizontal() && blockState.get(FACING_PROPERTIES.get(direction));
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    return false;
   }
 }

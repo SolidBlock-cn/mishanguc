@@ -8,6 +8,7 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.data.server.loottable.BlockLootTableGenerator;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -143,5 +144,11 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
   public boolean connectsIn(@NotNull BlockState blockState, @NotNull Direction direction, @Nullable Direction offsetFacing) {
     final HorizontalCornerDirection facing = blockState.get(FACING);
     return offsetFacing != null && facing.hasDirection(direction) && facing.hasDirection(offsetFacing);
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    return false;
   }
 }

@@ -12,6 +12,7 @@ import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -329,5 +330,11 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   @Override
   public String customRecipeCategory() {
     return "wall_signs";
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    return false;
   }
 }
