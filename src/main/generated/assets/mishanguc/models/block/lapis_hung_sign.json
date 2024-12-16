@@ -2,6 +2,7 @@
   "parent": "mishanguc:block/hung_sign",
   "textures": {
     "bar": "minecraft:block/lapis_block",
-    "texture": "minecraft:block/lapis_block"
+    "texture": "minecraft:block/lapis_block",
+    "texture_top": "minecraft:block/lapis_block"
   }
 }
