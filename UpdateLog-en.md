@@ -2,6 +2,12 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.4.3-beta.1
+
+- Fit 1.21.4.
+- Fixed the issue that blocks in this mod incorrectly influence mobs' pathfinding.
+- Fixed the wrong name of column light blocks in versions since 1.21.3.
+
 ### 1.4.2
 
 - Fit 1.21.3.
@@ -233,7 +239,7 @@ About the keyboard control added in 1.19.4: Minecraft added the keyboard-only co
 Updated the following content:
 
 - Added features related to block light.
-- Adjusted the order of light blocks。
+- Adjusted the order of light blocks.
 - Now the same and connected strip light can have invisible face culled.
 - Adjusted the outline shape of large wall light and light tube to encompass the whole look.
 - Added thick stripped light; in former versions there were only stripp light tubes.
