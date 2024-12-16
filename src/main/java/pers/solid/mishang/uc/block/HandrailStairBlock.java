@@ -6,6 +6,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.data.client.*;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -255,6 +256,11 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
 
   @Override
   protected abstract MapCodec<? extends HandrailStairBlock<?>> getCodec();
+
+  @Override
+  protected boolean canPathfindThrough(BlockState state, NavigationType type) {
+    return false;
+  }
 
   public enum Position implements StringIdentifiable {
     LEFT("left"), CENTER("center"), RIGHT("right");

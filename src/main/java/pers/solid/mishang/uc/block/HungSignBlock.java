@@ -9,6 +9,7 @@ import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.data.client.*;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeGenerator;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -528,5 +529,10 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   @Override
   public String customRecipeCategory() {
     return "signs";
+  }
+
+  @Override
+  protected boolean canPathfindThrough(BlockState state, NavigationType type) {
+    return false;
   }
 }
