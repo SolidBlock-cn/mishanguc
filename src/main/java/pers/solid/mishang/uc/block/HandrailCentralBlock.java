@@ -198,7 +198,6 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     return offsetFacing == null && direction.getAxis().isHorizontal() && blockState.get(FACING_PROPERTIES.get(direction));
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
     return false;
