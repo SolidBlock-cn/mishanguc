@@ -63,7 +63,7 @@ public class ColoredCubeBlock extends Block implements ColoredBlock {
   @Override
   public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
     if (this == ColoredBlocks.COLORED_PACKED_ICE) {
-      return blockLootTableGenerator.dropsWithSilkTouch(this).apply(COPY_COLOR_LOOT_FUNCTION);
+      return BlockLootTableGenerator.dropsWithSilkTouch(this).apply(COPY_COLOR_LOOT_FUNCTION);
     } else if (this == ColoredBlocks.COLORED_STONE) {
       return blockLootTableGenerator.drops(this, ColoredBlocks.COLORED_COBBLESTONE).apply(COPY_COLOR_LOOT_FUNCTION);
     }
