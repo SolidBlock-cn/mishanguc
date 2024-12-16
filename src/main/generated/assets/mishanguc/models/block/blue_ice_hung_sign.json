@@ -2,6 +2,7 @@
   "parent": "mishanguc:block/hung_sign",
   "textures": {
     "bar": "minecraft:block/blue_ice",
-    "texture": "minecraft:block/blue_ice"
+    "texture": "minecraft:block/blue_ice",
+    "texture_top": "minecraft:block/blue_ice"
   }
 }

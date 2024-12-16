@@ -2,6 +2,7 @@
   "parent": "mishanguc:block/hung_sign_body",
   "textures": {
     "bar": "minecraft:block/acacia_log",
-    "texture": "minecraft:block/acacia_planks"
+    "texture": "minecraft:block/acacia_planks",
+    "texture_top": "minecraft:block/acacia_log"
   }
 }
