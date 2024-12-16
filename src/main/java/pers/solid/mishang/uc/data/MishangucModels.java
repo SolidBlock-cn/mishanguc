@@ -71,8 +71,8 @@ public final class MishangucModels {
   public static final Model GLOWING_STANDING_SIGN_BARRED_2 = createBlock("glowing_standing_sign_barred_2", "_barred_2", TextureKey.TEXTURE, MishangucTextureKeys.BAR, MishangucTextureKeys.GLOW);
   public static final Model GLOWING_STANDING_SIGN_BARRED_3 = createBlock("glowing_standing_sign_barred_3", "_barred_3", TextureKey.TEXTURE, MishangucTextureKeys.BAR, MishangucTextureKeys.GLOW);
 
-  public static final Model HUNG_SIGN = createBlock("hung_sign", TextureKey.TEXTURE, MishangucTextureKeys.BAR);
-  public static final Model HUNG_SIGN_BODY = createBlock("hung_sign_body", "_body", TextureKey.TEXTURE, MishangucTextureKeys.BAR);
+  public static final Model HUNG_SIGN = createBlock("hung_sign", TextureKey.TEXTURE, MishangucTextureKeys.BAR, MishangucTextureKeys.TEXTURE_TOP);
+  public static final Model HUNG_SIGN_BODY = createBlock("hung_sign_body", "_body", TextureKey.TEXTURE, MishangucTextureKeys.BAR, MishangucTextureKeys.TEXTURE_TOP);
   public static final Model HUNG_SIGN_TOP_BAR = createBlock("hung_sign_top_bar", "_top_bar", TextureKey.TEXTURE, MishangucTextureKeys.BAR);
   public static final Model HUNG_SIGN_TOP_BAR_EDGE = createBlock("hung_sign_top_bar_edge", "_top_bar_edge", TextureKey.TEXTURE, MishangucTextureKeys.BAR);
   public static final Model GLOWING_HUNG_SIGN = createBlock("glowing_hung_sign", TextureKey.TEXTURE, MishangucTextureKeys.BAR, MishangucTextureKeys.GLOW);
