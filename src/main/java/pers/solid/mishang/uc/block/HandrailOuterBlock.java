@@ -7,6 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.data.client.BlockStateSupplier;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -135,5 +136,11 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
 
   public @NotNull BlockStateSupplier createBlockStates(Identifier modeId) {
     return ModelHelper.stateForHorizontalCornerFacingBlock(this, modeId, true);
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    return false;
   }
 }

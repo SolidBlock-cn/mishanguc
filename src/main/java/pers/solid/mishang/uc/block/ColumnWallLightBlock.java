@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.block;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -42,5 +43,11 @@ public class ColumnWallLightBlock extends WallLightBlock {
         Direction.Axis.Y, createCuboidShape(min, 0, min, 16 - min, 16, 16 - min),
         Direction.Axis.Z, createCuboidShape(min, min, 0, 16 - min, 16 - min, 16)
     );
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    return false;
   }
 }
