@@ -7,6 +7,8 @@ Note: Not all versions in this update log are already published. Please refer to
 - Fit 1.21.4.
 - Fixed the issue that blocks in this mod incorrectly influence mobs' pathfinding.
 - Fixed the wrong name of column light blocks in versions since 1.21.3.
+- Fixed the issue that Color Tool can convert nether wood planks into custom-colored planks (which can be flamed). Now only vanilla flammable planks (not including bamboo planks) can be converted.
+- Fixed the issue that Color Tool can convert wall sign blocks of block such as logs into custom-colored plank wall signs. Now only wall signs of vanilla flammable planks can be converted.
 
 ### 1.4.2
 
