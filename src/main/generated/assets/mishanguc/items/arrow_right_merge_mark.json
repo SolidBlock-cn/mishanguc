@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "mishanguc:block/arrow_right_merge_mark"
+    "model": "mishanguc:item/arrow_right_merge_mark"
   }
 }

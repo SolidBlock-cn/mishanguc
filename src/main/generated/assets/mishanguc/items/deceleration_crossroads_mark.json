@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "mishanguc:block/deceleration_crossroads_mark"
+    "model": "mishanguc:item/deceleration_crossroads_mark"
   }
 }

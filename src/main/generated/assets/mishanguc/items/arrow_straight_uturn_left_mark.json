@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "mishanguc:block/arrow_straight_uturn_left_mark"
+    "model": "mishanguc:item/arrow_straight_uturn_left_mark"
   }
 }
