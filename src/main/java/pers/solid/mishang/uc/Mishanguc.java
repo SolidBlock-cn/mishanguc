@@ -494,9 +494,9 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(Blocks.BLACK_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
 
     // 下面的木制方块不含任何下界方块和竹制方块
-    List.of(Blocks.OAK_PLANKS, Blocks.SPRUCE_PLANKS, Blocks.BIRCH_PLANKS, Blocks.JUNGLE_PLANKS, Blocks.ACACIA_PLANKS, Blocks.DARK_OAK_PLANKS, Blocks.MANGROVE_PLANKS, Blocks.CHERRY_PLANKS).forEach(block -> blockMap.put(block, ColoredBlocks.COLORED_PLANKS));
-    List.of(Blocks.OAK_STAIRS, Blocks.SPRUCE_STAIRS, Blocks.BIRCH_STAIRS, Blocks.JUNGLE_STAIRS, Blocks.ACACIA_STAIRS, Blocks.DARK_OAK_STAIRS, Blocks.MANGROVE_STAIRS, Blocks.CHERRY_STAIRS).forEach(block -> blockMap.put(block, ColoredBlocks.COLORED_PLANK_STAIRS));
-    List.of(Blocks.OAK_SLAB, Blocks.SPRUCE_SLAB, Blocks.BIRCH_SLAB, Blocks.JUNGLE_SLAB, Blocks.ACACIA_SLAB, Blocks.DARK_OAK_SLAB, Blocks.MANGROVE_SLAB, Blocks.CHERRY_SLAB).forEach(block -> blockMap.put(block, ColoredBlocks.COLORED_PLANK_SLAB));
+    List.of(Blocks.OAK_PLANKS, Blocks.SPRUCE_PLANKS, Blocks.BIRCH_PLANKS, Blocks.JUNGLE_PLANKS, Blocks.ACACIA_PLANKS, Blocks.DARK_OAK_PLANKS, Blocks.PALE_OAK_PLANKS, Blocks.MANGROVE_PLANKS, Blocks.CHERRY_PLANKS).forEach(block -> blockMap.put(block, ColoredBlocks.COLORED_PLANKS));
+    List.of(Blocks.OAK_STAIRS, Blocks.SPRUCE_STAIRS, Blocks.BIRCH_STAIRS, Blocks.JUNGLE_STAIRS, Blocks.ACACIA_STAIRS, Blocks.DARK_OAK_STAIRS, Blocks.PALE_OAK_STAIRS, Blocks.MANGROVE_STAIRS, Blocks.CHERRY_STAIRS).forEach(block -> blockMap.put(block, ColoredBlocks.COLORED_PLANK_STAIRS));
+    List.of(Blocks.OAK_SLAB, Blocks.SPRUCE_SLAB, Blocks.BIRCH_SLAB, Blocks.JUNGLE_SLAB, Blocks.ACACIA_SLAB, Blocks.DARK_OAK_SLAB, Blocks.PALE_OAK_SLAB, Blocks.MANGROVE_SLAB, Blocks.CHERRY_SLAB).forEach(block -> blockMap.put(block, ColoredBlocks.COLORED_PLANK_SLAB));
 
     blockMap.put(Blocks.DIRT, ColoredBlocks.COLORED_DIRT);
     blockMap.put(Blocks.COBBLESTONE, ColoredBlocks.COLORED_COBBLESTONE);
@@ -617,7 +617,7 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(HungSignBlocks.GLOWING_IRON_HUNG_SIGN, HungSignBlocks.COLORED_GLOWING_IRON_HUNG_SIGN);
     blockMap.put(HungSignBlocks.IRON_HUNG_SIGN_BAR, HungSignBlocks.COLORED_IRON_HUNG_SIGN_BAR);
 
-    List.of(WallSignBlocks.OAK_WALL_SIGN, WallSignBlocks.SPRUCE_WALL_SIGN, WallSignBlocks.BIRCH_WALL_SIGN, WallSignBlocks.JUNGLE_WALL_SIGN, WallSignBlocks.ACACIA_WALL_SIGN, WallSignBlocks.CHERRY_WALL_SIGN, WallSignBlocks.DARK_OAK_WALL_SIGN, WallSignBlocks.MANGROVE_WALL_SIGN).forEach(b -> blockMap.put(b, WallSignBlocks.COLORED_WOODEN_WALL_SIGN));
+    List.of(WallSignBlocks.OAK_WALL_SIGN, WallSignBlocks.SPRUCE_WALL_SIGN, WallSignBlocks.BIRCH_WALL_SIGN, WallSignBlocks.JUNGLE_WALL_SIGN, WallSignBlocks.ACACIA_WALL_SIGN, WallSignBlocks.CHERRY_WALL_SIGN, WallSignBlocks.DARK_OAK_WALL_SIGN, WallSignBlocks.PALE_OAK_WALL_SIGN, WallSignBlocks.MANGROVE_WALL_SIGN).forEach(b -> blockMap.put(b, WallSignBlocks.COLORED_WOODEN_WALL_SIGN));
     tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("concrete_wall_signs")), WallSignBlocks.COLORED_CONCRETE_WALL_SIGN);
     tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("terracotta_wall_signs")), WallSignBlocks.COLORED_TERRACOTTA_WALL_SIGN);
     tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("glowing_concrete_wall_signs")), WallSignBlocks.COLORED_GLOWING_CONCRETE_WALL_SIGN);
