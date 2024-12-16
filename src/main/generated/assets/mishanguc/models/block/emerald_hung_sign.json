@@ -2,6 +2,7 @@
   "parent": "mishanguc:block/hung_sign",
   "textures": {
     "bar": "minecraft:block/emerald_block",
-    "texture": "minecraft:block/emerald_block"
+    "texture": "minecraft:block/emerald_block",
+    "texture_top": "minecraft:block/emerald_block"
   }
 }
