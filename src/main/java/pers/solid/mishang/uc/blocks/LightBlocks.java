@@ -47,11 +47,11 @@ public final class LightBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("1.1.0")
   public static final StripWallLightBlock WHITE_THICK_STRIP_WALL_LIGHT = register("white_thick_strip_wall_light", settings -> new StripWallLightBlock("white", settings), WHITE_WALL_LIGHT_SETTINGS);
   @ApiStatus.AvailableSince("1.1.0")
-  public static final ColumnWallLightBlock WHITE_THIN_COLUMN_LIGHT = register("white_thin_column_light", settings -> new ColumnWallLightBlock("white", WHITE_LIGHT_SETTINGS, 0));
+  public static final ColumnWallLightBlock WHITE_THIN_COLUMN_LIGHT = register("white_thin_column_light", settings -> new ColumnWallLightBlock("white", settings, 0), WHITE_LIGHT_SETTINGS);
   @ApiStatus.AvailableSince("1.1.0")
-  public static final ColumnWallLightBlock WHITE_MEDIUM_COLUMN_LIGHT = register("white_medium_column_light", settings -> new ColumnWallLightBlock("white", WHITE_LIGHT_SETTINGS, 1));
+  public static final ColumnWallLightBlock WHITE_MEDIUM_COLUMN_LIGHT = register("white_medium_column_light", settings -> new ColumnWallLightBlock("white", settings, 1), WHITE_LIGHT_SETTINGS);
   @ApiStatus.AvailableSince("1.1.0")
-  public static final ColumnWallLightBlock WHITE_THICK_COLUMN_LIGHT = register("white_thick_column_light", settings -> new ColumnWallLightBlock("white", WHITE_LIGHT_SETTINGS, 2));
+  public static final ColumnWallLightBlock WHITE_THICK_COLUMN_LIGHT = register("white_thick_column_light", settings -> new ColumnWallLightBlock("white", settings, 2), WHITE_LIGHT_SETTINGS);
 
   public static final AutoConnectWallLightBlock WHITE_WALL_LIGHT_SIMPLE_DECORATION = register("white_wall_light_simple_decoration", settings -> new AutoConnectWallLightBlock("white", "simple", settings, false), WHITE_WALL_LIGHT_SETTINGS);
 
@@ -105,11 +105,11 @@ public final class LightBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("1.1.0")
   public static final StripWallLightBlock YELLOW_THICK_STRIP_WALL_LIGHT = register("yellow_thick_strip_wall_light", settings -> new StripWallLightBlock("yellow", settings), YELLOW_WALL_LIGHT_SETTINGS);
   @ApiStatus.AvailableSince("1.1.0")
-  public static final ColumnWallLightBlock YELLOW_THIN_COLUMN_LIGHT = register("yellow_thin_column_light", settings -> new ColumnWallLightBlock("yellow", YELLOW_LIGHT_SETTINGS, 0));
+  public static final ColumnWallLightBlock YELLOW_THIN_COLUMN_LIGHT = register("yellow_thin_column_light", settings -> new ColumnWallLightBlock("yellow", settings, 0), YELLOW_LIGHT_SETTINGS);
   @ApiStatus.AvailableSince("1.1.0")
-  public static final ColumnWallLightBlock YELLOW_MEDIUM_COLUMN_LIGHT = register("yellow_medium_column_light", settings -> new ColumnWallLightBlock("yellow", YELLOW_LIGHT_SETTINGS, 1));
+  public static final ColumnWallLightBlock YELLOW_MEDIUM_COLUMN_LIGHT = register("yellow_medium_column_light", settings -> new ColumnWallLightBlock("yellow", settings, 1), YELLOW_LIGHT_SETTINGS);
   @ApiStatus.AvailableSince("1.1.0")
-  public static final ColumnWallLightBlock YELLOW_THICK_COLUMN_LIGHT = register("yellow_thick_column_light", settings -> new ColumnWallLightBlock("yellow", YELLOW_LIGHT_SETTINGS, 2));
+  public static final ColumnWallLightBlock YELLOW_THICK_COLUMN_LIGHT = register("yellow_thick_column_light", settings -> new ColumnWallLightBlock("yellow", settings, 2), YELLOW_LIGHT_SETTINGS);
 
   public static final AutoConnectWallLightBlock YELLOW_WALL_LIGHT_SIMPLE_DECORATION = register("yellow_wall_light_simple_decoration", settings -> new AutoConnectWallLightBlock("yellow", "simple", settings, false), YELLOW_WALL_LIGHT_SETTINGS);
 
@@ -153,9 +153,9 @@ public final class LightBlocks extends MishangucBlocks {
   public static final WallLightBlock ORANGE_LARGE_WALL_LIGHT = register("orange_large_wall_light", settings -> new WallLightBlock("orange", settings, true), ORANGE_WALL_LIGHT_SETTINGS);
   public static final StripWallLightBlock ORANGE_THIN_STRIP_WALL_LIGHT = register("orange_thin_strip_wall_light", settings -> new StripWallLightBlock("orange", settings), ORANGE_WALL_LIGHT_SETTINGS);
   public static final StripWallLightBlock ORANGE_THICK_STRIP_WALL_LIGHT = register("orange_thick_strip_wall_light", settings -> new StripWallLightBlock("orange", settings), ORANGE_WALL_LIGHT_SETTINGS);
-  public static final ColumnWallLightBlock ORANGE_THIN_COLUMN_LIGHT = register("orange_thin_column_light", settings -> new ColumnWallLightBlock("orange", ORANGE_LIGHT_SETTINGS, 0));
-  public static final ColumnWallLightBlock ORANGE_MEDIUM_COLUMN_LIGHT = register("orange_medium_column_light", settings -> new ColumnWallLightBlock("orange", ORANGE_LIGHT_SETTINGS, 1));
-  public static final ColumnWallLightBlock ORANGE_THICK_COLUMN_LIGHT = register("orange_thick_column_light", settings -> new ColumnWallLightBlock("orange", ORANGE_LIGHT_SETTINGS, 2));
+  public static final ColumnWallLightBlock ORANGE_THIN_COLUMN_LIGHT = register("orange_thin_column_light", settings -> new ColumnWallLightBlock("orange", settings, 0), ORANGE_LIGHT_SETTINGS);
+  public static final ColumnWallLightBlock ORANGE_MEDIUM_COLUMN_LIGHT = register("orange_medium_column_light", settings -> new ColumnWallLightBlock("orange", settings, 1), ORANGE_LIGHT_SETTINGS);
+  public static final ColumnWallLightBlock ORANGE_THICK_COLUMN_LIGHT = register("orange_thick_column_light", settings -> new ColumnWallLightBlock("orange", settings, 2), ORANGE_LIGHT_SETTINGS);
 
   public static final AutoConnectWallLightBlock ORANGE_WALL_LIGHT_SIMPLE_DECORATION = register("orange_wall_light_simple_decoration", settings -> new AutoConnectWallLightBlock("orange", "simple", settings, false), ORANGE_WALL_LIGHT_SETTINGS);
 
@@ -199,9 +199,9 @@ public final class LightBlocks extends MishangucBlocks {
   public static final WallLightBlock GREEN_LARGE_WALL_LIGHT = register("green_large_wall_light", settings -> new WallLightBlock("green", settings, true), GREEN_WALL_LIGHT_SETTINGS);
   public static final StripWallLightBlock GREEN_THIN_STRIP_WALL_LIGHT = register("green_thin_strip_wall_light", settings -> new StripWallLightBlock("green", settings), GREEN_WALL_LIGHT_SETTINGS);
   public static final StripWallLightBlock GREEN_THICK_STRIP_WALL_LIGHT = register("green_thick_strip_wall_light", settings -> new StripWallLightBlock("green", settings), GREEN_WALL_LIGHT_SETTINGS);
-  public static final ColumnWallLightBlock GREEN_THIN_COLUMN_LIGHT = register("green_thin_column_light", settings -> new ColumnWallLightBlock("green", GREEN_LIGHT_SETTINGS, 0));
-  public static final ColumnWallLightBlock GREEN_MEDIUM_COLUMN_LIGHT = register("green_medium_column_light", settings -> new ColumnWallLightBlock("green", GREEN_LIGHT_SETTINGS, 1));
-  public static final ColumnWallLightBlock GREEN_THICK_COLUMN_LIGHT = register("green_thick_column_light", settings -> new ColumnWallLightBlock("green", GREEN_LIGHT_SETTINGS, 2));
+  public static final ColumnWallLightBlock GREEN_THIN_COLUMN_LIGHT = register("green_thin_column_light", settings -> new ColumnWallLightBlock("green", settings, 0), GREEN_LIGHT_SETTINGS);
+  public static final ColumnWallLightBlock GREEN_MEDIUM_COLUMN_LIGHT = register("green_medium_column_light", settings -> new ColumnWallLightBlock("green", settings, 1), GREEN_LIGHT_SETTINGS);
+  public static final ColumnWallLightBlock GREEN_THICK_COLUMN_LIGHT = register("green_thick_column_light", settings -> new ColumnWallLightBlock("green", settings, 2), GREEN_LIGHT_SETTINGS);
 
   public static final AutoConnectWallLightBlock GREEN_WALL_LIGHT_SIMPLE_DECORATION = register("green_wall_light_simple_decoration", settings -> new AutoConnectWallLightBlock("green", "simple", settings, false), GREEN_WALL_LIGHT_SETTINGS);
 
@@ -255,11 +255,11 @@ public final class LightBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("1.1.0")
   public static final StripWallLightBlock CYAN_THICK_STRIP_WALL_LIGHT = register("cyan_thick_strip_wall_light", settings -> new StripWallLightBlock("cyan", settings), CYAN_WALL_LIGHT_SETTINGS);
   @ApiStatus.AvailableSince("1.1.0")
-  public static final ColumnWallLightBlock CYAN_THIN_COLUMN_LIGHT = register("cyan_thin_column_light", settings -> new ColumnWallLightBlock("cyan", CYAN_LIGHT_SETTINGS, 0));
+  public static final ColumnWallLightBlock CYAN_THIN_COLUMN_LIGHT = register("cyan_thin_column_light", settings -> new ColumnWallLightBlock("cyan", settings, 0), CYAN_LIGHT_SETTINGS);
   @ApiStatus.AvailableSince("1.1.0")
-  public static final ColumnWallLightBlock CYAN_MEDIUM_COLUMN_LIGHT = register("cyan_medium_column_light", settings -> new ColumnWallLightBlock("cyan", CYAN_LIGHT_SETTINGS, 1));
+  public static final ColumnWallLightBlock CYAN_MEDIUM_COLUMN_LIGHT = register("cyan_medium_column_light", settings -> new ColumnWallLightBlock("cyan", settings, 1), CYAN_LIGHT_SETTINGS);
   @ApiStatus.AvailableSince("1.1.0")
-  public static final ColumnWallLightBlock CYAN_THICK_COLUMN_LIGHT = register("cyan_thick_column_light", settings -> new ColumnWallLightBlock("cyan", CYAN_LIGHT_SETTINGS, 2));
+  public static final ColumnWallLightBlock CYAN_THICK_COLUMN_LIGHT = register("cyan_thick_column_light", settings -> new ColumnWallLightBlock("cyan", settings, 2), CYAN_LIGHT_SETTINGS);
   public static final AutoConnectWallLightBlock CYAN_WALL_LIGHT_SIMPLE_DECORATION = register("cyan_wall_light_simple_decoration", settings -> new AutoConnectWallLightBlock("cyan", "simple", settings, false), CYAN_WALL_LIGHT_SETTINGS);
 
   public static final AutoConnectWallLightBlock CYAN_WALL_LIGHT_POINT_DECORATION = register("cyan_wall_light_point_decoration", settings -> new AutoConnectWallLightBlock("cyan", "point", settings, false), CYAN_WALL_LIGHT_SETTINGS);
@@ -302,9 +302,9 @@ public final class LightBlocks extends MishangucBlocks {
   public static final WallLightBlock PINK_LARGE_WALL_LIGHT = register("pink_large_wall_light", settings -> new WallLightBlock("pink", settings, true), PINK_WALL_LIGHT_SETTINGS);
   public static final StripWallLightBlock PINK_THIN_STRIP_WALL_LIGHT = register("pink_thin_strip_wall_light", settings -> new StripWallLightBlock("pink", settings), PINK_WALL_LIGHT_SETTINGS);
   public static final StripWallLightBlock PINK_THICK_STRIP_WALL_LIGHT = register("pink_thick_strip_wall_light", settings -> new StripWallLightBlock("pink", settings), PINK_WALL_LIGHT_SETTINGS);
-  public static final ColumnWallLightBlock PINK_THIN_COLUMN_LIGHT = register("pink_thin_column_light", settings -> new ColumnWallLightBlock("pink", PINK_LIGHT_SETTINGS, 0));
-  public static final ColumnWallLightBlock PINK_MEDIUM_COLUMN_LIGHT = register("pink_medium_column_light", settings -> new ColumnWallLightBlock("pink", PINK_LIGHT_SETTINGS, 1));
-  public static final ColumnWallLightBlock PINK_THICK_COLUMN_LIGHT = register("pink_thick_column_light", settings -> new ColumnWallLightBlock("pink", PINK_LIGHT_SETTINGS, 2));
+  public static final ColumnWallLightBlock PINK_THIN_COLUMN_LIGHT = register("pink_thin_column_light", settings -> new ColumnWallLightBlock("pink", settings, 0), PINK_LIGHT_SETTINGS);
+  public static final ColumnWallLightBlock PINK_MEDIUM_COLUMN_LIGHT = register("pink_medium_column_light", settings -> new ColumnWallLightBlock("pink", settings, 1), PINK_LIGHT_SETTINGS);
+  public static final ColumnWallLightBlock PINK_THICK_COLUMN_LIGHT = register("pink_thick_column_light", settings -> new ColumnWallLightBlock("pink", settings, 2), PINK_LIGHT_SETTINGS);
 
   public static final AutoConnectWallLightBlock PINK_WALL_LIGHT_SIMPLE_DECORATION = register("pink_wall_light_simple_decoration", settings -> new AutoConnectWallLightBlock("pink", "simple", settings, false), PINK_WALL_LIGHT_SETTINGS);
 
