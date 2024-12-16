@@ -2,6 +2,7 @@
   "parent": "mishanguc:block/hung_sign_body",
   "textures": {
     "bar": "minecraft:block/bamboo_block",
-    "texture": "minecraft:block/bamboo_planks"
+    "texture": "minecraft:block/bamboo_planks",
+    "texture_top": "minecraft:block/bamboo_block"
   }
 }

@@ -2,6 +2,7 @@
   "parent": "mishanguc:block/hung_sign",
   "textures": {
     "bar": "minecraft:block/warped_stem",
-    "texture": "minecraft:block/warped_planks"
+    "texture": "minecraft:block/warped_planks",
+    "texture_top": "minecraft:block/warped_stem"
   }
 }
