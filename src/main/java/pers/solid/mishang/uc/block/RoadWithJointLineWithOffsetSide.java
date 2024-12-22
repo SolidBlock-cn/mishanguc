@@ -5,6 +5,8 @@ import com.google.common.collect.HashBiMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
@@ -32,6 +34,7 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
 import pers.solid.mishang.uc.data.FasterTextureMap;
+import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.*;
 
@@ -138,6 +141,7 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
       return offsetLevel;
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
       final FasterTextureMap textures = new FasterTextureMap().base("asphalt").lineSide(lineSide).lineSide2(lineSide2).lineTop(lineTop);
@@ -154,10 +158,10 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
         final @NotNull HorizontalCornerDirection facing2 = HorizontalCornerDirection.fromDirections(direction, offsetDirection2);
         map
             .register(facing1, offsetDirection1.getAxis(),
-                BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangUtils.DIRECTION_Y_VARIANT, direction))
+                BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangucModels.DIRECTION_Y_VARIANT, direction))
             .register(facing2, offsetDirection2.getAxis(),
                 BlockStateVariant.create().put(VariantSettings.MODEL, mirroredModelId)
-                    .put(MishangUtils.DIRECTION_Y_VARIANT, direction));
+                    .put(MishangucModels.DIRECTION_Y_VARIANT, direction));
       }
       blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockStateSupplier.create(road).coordinate(map)));
     }

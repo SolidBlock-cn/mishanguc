@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.data.*;
@@ -140,6 +142,7 @@ public abstract class AbstractRoadBlock extends Block implements Road {
     }
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public final void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     registerBaseOrSlabModels(this, blockStateModelGenerator);
@@ -149,23 +152,28 @@ public abstract class AbstractRoadBlock extends Block implements Road {
   /**
    * 注册基础方块或台阶方块的模型。此方块应该由基础方块调用，即 {@code this} 应该是基础方块，然而 {@code road} 可能是基础方块，也可能是台阶。
    */
+  @Environment(EnvType.CLIENT)
   protected abstract <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator);
 
+  @Environment(EnvType.CLIENT)
   @Override
   public String getModelName(String suffix) {
     return "road" + suffix;
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public Identifier uploadModel(String suffix, TextureMap textureMap, BlockStateModelGenerator blockStateModelGenerator, TextureKey... textureKeys) {
     return MishangucModels.createBlock(getModelName(suffix), textureKeys).upload(this, textureMap, blockStateModelGenerator.modelCollector);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public Identifier uploadModel(String suffix, String variant, TextureMap textureMap, BlockStateModelGenerator blockStateModelGenerator, TextureKey... textureKeys) {
     return MishangucModels.createBlock(getModelName(suffix), variant, textureKeys).upload(this, textureMap, blockStateModelGenerator.modelCollector);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public BlockStateSupplier composeState(@NotNull BlockStateSupplier stateForFull) {
     return stateForFull;

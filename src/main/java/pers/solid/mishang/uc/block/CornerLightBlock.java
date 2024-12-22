@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.block;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.client.data.*;
@@ -134,15 +136,16 @@ public class CornerLightBlock extends HorizontalFacingBlock
     prepareConnection(state, world, pos, flags, maxUpdateDepth, facingVertical);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final TextureMap textures = TextureMap.of(MishangucTextureKeys.LIGHT, MishangucModels.texture(lightColor + "_light"));
     final Identifier modelId = getModelType().upload(this, textures, blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.MODEL, modelId)).coordinate(BlockStateVariantMap.create(BLOCK_HALF, FACING).register((blockHalf, direction) -> {
       if (blockHalf == BlockHalf.BOTTOM) {
-        return BlockStateVariant.create().put(MishangUtils.DIRECTION_Y_VARIANT, direction);
+        return BlockStateVariant.create().put(MishangucModels.DIRECTION_Y_VARIANT, direction);
       } else {
-        return BlockStateVariant.create().put(MishangUtils.DIRECTION_Y_VARIANT, direction.getOpposite()).put(VariantSettings.X, VariantSettings.Rotation.R180);
+        return BlockStateVariant.create().put(MishangucModels.DIRECTION_Y_VARIANT, direction.getOpposite()).put(VariantSettings.X, VariantSettings.Rotation.R180);
       }
     })));
     blockStateModelGenerator.registerParentedItemModel(this, modelId);

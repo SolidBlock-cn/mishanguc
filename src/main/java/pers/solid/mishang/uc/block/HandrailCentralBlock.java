@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.client.data.*;
@@ -20,7 +22,7 @@ import net.minecraft.world.WorldView;
 import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.data.MishangucModels;
 
 import java.util.Map;
 
@@ -176,14 +178,15 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     return state;
   }
 
+  @Environment(EnvType.CLIENT)
   public @NotNull BlockStateSupplier createBlockStates(Identifier postId, Identifier postSideId, Identifier sideId) {
     final MultipartBlockStateSupplier blockStateSupplier = MultipartBlockStateSupplier.create(this)
         .with(BlockStateVariant.create().put(VariantSettings.MODEL, postId));
-    Direction.Type.HORIZONTAL.forEach(facing -> {
+    for (Direction facing : Direction.Type.HORIZONTAL) {
       final BooleanProperty property = FACING_PROPERTIES.get(facing);
-      blockStateSupplier.with(When.create().set(property, true), BlockStateVariant.create().put(VariantSettings.MODEL, sideId).put(MishangUtils.DIRECTION_Y_VARIANT, facing).put(VariantSettings.UVLOCK, true));
-      blockStateSupplier.with(When.create().set(property, false), BlockStateVariant.create().put(VariantSettings.MODEL, postSideId).put(MishangUtils.DIRECTION_Y_VARIANT, facing).put(VariantSettings.UVLOCK, true));
-    });
+      blockStateSupplier.with(When.create().set(property, true), BlockStateVariant.create().put(VariantSettings.MODEL, sideId).put(MishangucModels.DIRECTION_Y_VARIANT, facing).put(VariantSettings.UVLOCK, true));
+      blockStateSupplier.with(When.create().set(property, false), BlockStateVariant.create().put(VariantSettings.MODEL, postSideId).put(MishangucModels.DIRECTION_Y_VARIANT, facing).put(VariantSettings.UVLOCK, true));
+    }
     return blockStateSupplier;
   }
 

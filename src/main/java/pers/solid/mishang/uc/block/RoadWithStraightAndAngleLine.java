@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
@@ -32,6 +34,7 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
 import pers.solid.mishang.uc.data.FasterTextureMap;
+import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.*;
 
@@ -153,6 +156,7 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       return stateForNeighborUpdate;
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
       final String lineTopStraight = MishangUtils.composeStraightLineTexture(lineColor, lineType);
@@ -194,20 +198,20 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
         final @NotNull HorizontalCornerDirection facing2 = HorizontalCornerDirection.fromDirections(direction, direction.rotateYCounterclockwise());
         if (hasBevelTop) {
           map2.register(axis, facing1, false,
-              BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangUtils.INT_Y_VARIANT, rotation));
+              BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangucModels.INT_Y_VARIANT, rotation));
           map2.register(axis, facing1, true,
-              BlockStateVariant.create().put(VariantSettings.MODEL, beveledTopModelId).put(MishangUtils.INT_Y_VARIANT, rotation));
+              BlockStateVariant.create().put(VariantSettings.MODEL, beveledTopModelId).put(MishangucModels.INT_Y_VARIANT, rotation));
           map2.register(axis, facing2, false,
-              BlockStateVariant.create().put(VariantSettings.MODEL, mirroredModelId).put(MishangUtils.INT_Y_VARIANT, rotation - 90));
+              BlockStateVariant.create().put(VariantSettings.MODEL, mirroredModelId).put(MishangucModels.INT_Y_VARIANT, rotation - 90));
           map2.register(axis, facing2, true,
-              BlockStateVariant.create().put(VariantSettings.MODEL, beveledTopMirroredModelId).put(MishangUtils.INT_Y_VARIANT, rotation - 90));
+              BlockStateVariant.create().put(VariantSettings.MODEL, beveledTopMirroredModelId).put(MishangucModels.INT_Y_VARIANT, rotation - 90));
         } else {
           map1.register(
               axis, facing1,
-              BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangUtils.INT_Y_VARIANT, rotation));
+              BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangucModels.INT_Y_VARIANT, rotation));
           map1.register(
               axis, facing2,
-              BlockStateVariant.create().put(VariantSettings.MODEL, mirroredModelId).put(MishangUtils.INT_Y_VARIANT, rotation - 90));
+              BlockStateVariant.create().put(VariantSettings.MODEL, mirroredModelId).put(MishangucModels.INT_Y_VARIANT, rotation - 90));
         }
       }
       blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockStateSupplier.create(road).coordinate(hasBevelTop ? map2 : map1)));

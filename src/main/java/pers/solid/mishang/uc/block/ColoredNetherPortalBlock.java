@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.block.entity.BlockEntity;
@@ -55,6 +57,7 @@ public class ColoredNetherPortalBlock extends NetherPortalBlock implements Color
     return new SimpleColoredBlockEntity(pos, state);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final Identifier ewId = ModelIds.getBlockSubModelId(this, "_ew");

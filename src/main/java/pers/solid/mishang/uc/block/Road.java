@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.block;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeveledCauldronBlock;
@@ -192,6 +194,7 @@ public interface Road extends MishangucBlock {
   /**
    * 对于道路方块，返回 {@code "road" + suffix}。对于道路台阶方块，返回 {@code "road_slab" + suffix}。
    */
+  @Environment(EnvType.CLIENT)
   String getModelName(String suffix);
 
   /**
@@ -199,6 +202,7 @@ public interface Road extends MishangucBlock {
    *
    * @return 生成的方块模型的 ID。如果是台阶方块，则是下半台阶方块的 ID。
    */
+  @Environment(EnvType.CLIENT)
   Identifier uploadModel(String suffix, TextureMap textureMap, BlockStateModelGenerator blockStateModelGenerator, TextureKey... textureKeys);
 
   /**
@@ -206,11 +210,13 @@ public interface Road extends MishangucBlock {
    *
    * @return 生成的方块模型的 ID。如果是台阶方块，则是下半台阶方块的 ID。
    */
+  @Environment(EnvType.CLIENT)
   Identifier uploadModel(String suffix, String variant, TextureMap textureMap, BlockStateModelGenerator blockStateModelGenerator, TextureKey... textureKeys);
 
   /**
    * 对于道路方块，直接返回 {@code stateForFull}。对于道路台阶方块，会将其转化为台阶的方块状态再返回。
    */
+  @Environment(EnvType.CLIENT)
   BlockStateSupplier composeState(@NotNull BlockStateSupplier stateForFull);
 
   @Override

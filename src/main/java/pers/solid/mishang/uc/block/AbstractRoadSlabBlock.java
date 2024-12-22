@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.block;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
@@ -125,17 +127,20 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
     }
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public String getModelName(String suffix) {
     return "road_slab" + suffix;
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public final void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     ((AbstractRoadBlock) baseBlock).registerBaseOrSlabModels(this, blockStateModelGenerator);
     blockStateModelGenerator.registerParentedItemModel(this, ModelIds.getBlockModelId(this));
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public Identifier uploadModel(String suffix, TextureMap textureMap, BlockStateModelGenerator blockStateModelGenerator, TextureKey... textureKeys) {
     final Model slabModel = MishangucModels.createBlock(getModelName(suffix), textureKeys);
@@ -145,6 +150,7 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
     return slabModelId;
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public Identifier uploadModel(String suffix, String variant, TextureMap textureMap, BlockStateModelGenerator blockStateModelGenerator, TextureKey... textureKeys) {
     final Model slabModel = MishangucModels.createBlock(getModelName(suffix), variant, textureKeys);

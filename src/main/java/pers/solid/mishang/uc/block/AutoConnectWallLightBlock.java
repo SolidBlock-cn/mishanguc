@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -195,6 +197,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
     return VoxelShapes.union(baseShape, extraShapes);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final TextureMap textureMap = TextureMap.of(MishangucTextureKeys.LIGHT, MishangucModels.texture(lightColor + "_light"));
@@ -208,8 +211,8 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
     for (Direction facing : Direction.values()) {
       // 中心装饰物
       BlockStateVariant central = BlockStateVariant.create().put(MODEL, centerModelId)
-          .put(MishangUtils.INT_Y_VARIANT, facing.getAxis() == Direction.Axis.Y ? 0 : (int) (facing.getPositiveHorizontalDegrees() + 180))
-          .put(MishangUtils.INT_X_VARIANT, facing == Direction.DOWN ? 180 : facing == Direction.UP ? 0 : 90);
+          .put(MishangucModels.INT_Y_VARIANT, facing.getAxis() == Direction.Axis.Y ? 0 : (int) (facing.getPositiveHorizontalDegrees() + 180))
+          .put(MishangucModels.INT_X_VARIANT, facing == Direction.DOWN ? 180 : facing == Direction.UP ? 0 : 90);
       blockStateSupplier.with(When.create().set(FACING, facing), central);
 
       // 连接物
@@ -250,7 +253,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
           Mishanguc.MISHANG_LOGGER.error(String.format("Unknown state to generate models: facing=%s,direction=%s", facing.asString(), direction.asString()));
           continue;
         }
-        blockStateSupplier.with(When.create().set(FACING, facing).set(DIRECTION_TO_PROPERTY.get(direction), true), BlockStateVariant.create().put(MODEL, modelName).put(MishangUtils.INT_X_VARIANT, x).put(MishangUtils.INT_Y_VARIANT, y));
+        blockStateSupplier.with(When.create().set(FACING, facing).set(DIRECTION_TO_PROPERTY.get(direction), true), BlockStateVariant.create().put(MODEL, modelName).put(MishangucModels.INT_X_VARIANT, x).put(MishangucModels.INT_Y_VARIANT, y));
       }
     }
     blockStateModelGenerator.blockStateCollector.accept(blockStateSupplier);

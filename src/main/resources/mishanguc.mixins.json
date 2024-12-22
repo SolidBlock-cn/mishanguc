@@ -15,7 +15,6 @@
     "ItemMixin",
     "ItemMixin$SettingsMixin",
     "ItemUsageContextInvoker",
-    "MouseMixin",
     "NbtCompoundAccessor",
     "NetherPortalBlockMixin",
     "PaneBlockMixin",
@@ -27,6 +26,7 @@
   "client": [
     "BetterClientPlayerInteractionManagerMixin",
     "GameRendererMixin",
+    "MouseMixin",
     "ScreenMixin",
     "TextRendererAccessor"
   ],

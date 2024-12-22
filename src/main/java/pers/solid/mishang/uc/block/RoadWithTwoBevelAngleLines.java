@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.block;
 import com.mojang.datafixers.util.Function3;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -85,6 +87,7 @@ public interface RoadWithTwoBevelAngleLines extends Road {
       setDefaultState(getDefaultState().with(FACING, Direction.SOUTH));
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
       TextureMap textures = new FasterTextureMap()
@@ -137,6 +140,7 @@ public interface RoadWithTwoBevelAngleLines extends Road {
       setDefaultState(getDefaultState().with(FACING, Direction.SOUTH));
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
       final TextureMap textures = new FasterTextureMap()

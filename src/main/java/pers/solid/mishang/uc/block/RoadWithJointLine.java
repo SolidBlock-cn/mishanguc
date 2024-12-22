@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
@@ -26,6 +28,7 @@ import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
 import pers.solid.mishang.uc.data.FasterTextureMap;
+import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.*;
 
@@ -137,11 +140,12 @@ public interface RoadWithJointLine extends Road {
       }
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
       final FasterTextureMap textures = new FasterTextureMap().base("asphalt").lineSide(lineSide).lineSide2(lineSide2).lineTop(lineTop);
       final Identifier modelId = road.uploadModel("_with_joint_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_TOP);
-      blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockStateSupplier.create(road, BlockStateVariant.create().put(VariantSettings.MODEL, modelId)).coordinate(BlockStateVariantMap.create(FACING).register(direction -> BlockStateVariant.create().put(MishangUtils.DIRECTION_Y_VARIANT, direction)))));
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockStateSupplier.create(road, BlockStateVariant.create().put(VariantSettings.MODEL, modelId)).coordinate(BlockStateVariantMap.create(FACING).register(direction -> BlockStateVariant.create().put(MishangucModels.DIRECTION_Y_VARIANT, direction)))));
     }
 
     @Override

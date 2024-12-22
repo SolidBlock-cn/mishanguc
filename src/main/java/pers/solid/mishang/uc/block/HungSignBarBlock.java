@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.client.data.*;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
@@ -260,6 +262,7 @@ public class HungSignBarBlock extends Block implements Waterloggable, MishangucB
     return super.getName();
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final TextureMap textures = TextureMap.texture(getBaseTexture());
@@ -275,17 +278,18 @@ public class HungSignBarBlock extends Block implements Waterloggable, MishangucB
     }
   }
 
+  @Environment(EnvType.CLIENT)
   public @Nullable BlockStateSupplier createBlockStates(Identifier modelId, Identifier centralModelId, Identifier edgeModelId) {
     return MultipartBlockStateSupplier.create(this)
         .with(When.create().set(LEFT, true).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, centralModelId).put(VariantSettings.UVLOCK, true))
         .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.UVLOCK, true))
-        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 180))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, -90))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 90))
+        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 180))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, -90))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 90))
         .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, edgeModelId).put(VariantSettings.UVLOCK, true))
-        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, edgeModelId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 180))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, edgeModelId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 90))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, edgeModelId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 270));
+        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, edgeModelId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 180))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, edgeModelId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 90))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, edgeModelId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 270));
   }
 
   public Identifier getBaseTexture() {

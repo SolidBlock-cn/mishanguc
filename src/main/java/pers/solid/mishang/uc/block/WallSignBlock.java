@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.block;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -259,6 +261,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     return new WallSignBlockEntity(pos, state);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final TextureMap textures = TextureMap.texture(getBaseTexture());
@@ -269,6 +272,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     }
   }
 
+  @Environment(EnvType.CLIENT)
   public VariantsBlockStateSupplier createBlockStates(Identifier modelId) {
     return BlockStateModelGenerator.createSingletonBlockState(this, modelId).coordinate(BlockStateVariantMap.create(FACE, FACING).register((wallMountLocation, direction) -> {
       final int x = switch (wallMountLocation) {
@@ -277,12 +281,13 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
         default -> -90;
       };
       return BlockStateVariant.create().put(VariantSettings.MODEL, modelId)
-          .put(MishangUtils.INT_X_VARIANT, x)
-          .put(MishangUtils.DIRECTION_Y_VARIANT, direction)
+          .put(MishangucModels.INT_X_VARIANT, x)
+          .put(MishangucModels.DIRECTION_Y_VARIANT, direction)
           .put(VariantSettings.UVLOCK, true);
     }));
   }
 
+  @Environment(EnvType.CLIENT)
   public Identifier getBaseTexture() {
     if (texture != null) return texture;
     return ModelHelper.getTextureOf(baseBlock == null ? this : baseBlock);

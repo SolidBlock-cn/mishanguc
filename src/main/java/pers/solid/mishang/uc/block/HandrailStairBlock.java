@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.block;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
 import com.mojang.serialization.MapCodec;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.client.data.*;
@@ -33,8 +35,8 @@ import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
-import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
+import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.ArrayList;
@@ -83,12 +85,13 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   /**
    * @param modelId 不含形状和位置信息的模型 ID
    */
+  @Environment(EnvType.CLIENT)
   public @NotNull BlockStateSupplier createBlockStates(Identifier modelId) {
     return VariantsBlockStateSupplier.create(this)
         .coordinate(BlockStateVariantMap.create(FACING, POSITION, SHAPE)
             .register((facing, position, shape) -> BlockStateVariant.create()
                 .put(VariantSettings.MODEL, modelId.withSuffixedPath("_" + shape.asString() + "_" + position.asString()))
-                .put(MishangUtils.DIRECTION_Y_VARIANT, facing.getOpposite())
+                .put(MishangucModels.DIRECTION_Y_VARIANT, facing.getOpposite())
                 .put(VariantSettings.UVLOCK, true)));
   }
 

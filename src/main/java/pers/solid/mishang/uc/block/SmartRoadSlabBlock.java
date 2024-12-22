@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.data.BlockStateSupplier;
@@ -164,6 +166,7 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
     return baseBlock.getPaintingRecipe(base, this, recipeGenerator);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public BlockStateSupplier composeState(@NotNull BlockStateSupplier stateForFull) {
     return ModelHelper.composeStateForSlab(stateForFull);

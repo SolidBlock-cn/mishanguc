@@ -2,9 +2,9 @@ package pers.solid.mishang.uc.blocks;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.block.*;
-import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
 
@@ -14,7 +14,7 @@ import pers.solid.mishang.uc.util.LineType;
  * 最基本的普通路块。
  */
 public final class RoadBlocks extends MishangucBlocks {
-  public static final RoadBlock ROAD_BLOCK = register("road_block", settings -> new RoadBlock(settings, MishangucModels.texture("asphalt"), LineColor.NONE), ROAD_SETTINGS);
+  public static final RoadBlock ROAD_BLOCK = register("road_block", settings -> new RoadBlock(settings, Mishanguc.id("block/asphalt"), LineColor.NONE), ROAD_SETTINGS);
   /**
    * <h2>单一的直线道路</h2>
    * <p>
@@ -424,9 +424,9 @@ public final class RoadBlocks extends MishangucBlocks {
    * <p>
    * 填满的路块。
    */
-  public static final RoadBlock ROAD_FILLED_WITH_WHITE = register("road_filled_with_white", settings -> new RoadBlock(settings, MishangucModels.texture("white_ink"), LineColor.WHITE), WHITE_ROAD_SETTINGS);
+  public static final RoadBlock ROAD_FILLED_WITH_WHITE = register("road_filled_with_white", settings -> new RoadBlock(settings, Mishanguc.id("block/white_ink"), LineColor.WHITE), WHITE_ROAD_SETTINGS);
 
-  public static final RoadBlock ROAD_FILLED_WITH_YELLOW = register("road_filled_with_yellow", settings -> new RoadBlock(settings, MishangucModels.texture("yellow_ink"), LineColor.YELLOW), YELLOW_ROAD_SETTINGS);
+  public static final RoadBlock ROAD_FILLED_WITH_YELLOW = register("road_filled_with_yellow", settings -> new RoadBlock(settings, Mishanguc.id("block/yellow_ink"), LineColor.YELLOW), YELLOW_ROAD_SETTINGS);
 
   public static @NotNull AbstractRoadBlock getRoadBlockWithLine(LineColor lineColor, LineType lineType) {
     return switch (lineColor) {

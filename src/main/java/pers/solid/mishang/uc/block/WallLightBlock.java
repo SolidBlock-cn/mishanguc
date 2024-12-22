@@ -5,6 +5,8 @@ import com.google.common.collect.ImmutableBiMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.client.data.*;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
@@ -136,6 +138,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, Mishan
     }
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final Identifier id = getModelType().upload(this, getTextureMap(), blockStateModelGenerator.modelCollector);
@@ -143,7 +146,7 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, Mishan
     map.register(Direction.UP, BlockStateVariant.create().put(VariantSettings.MODEL, id));
     map.register(Direction.DOWN, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R180));
     for (Direction direction : Direction.Type.HORIZONTAL) {
-      map.register(direction, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangUtils.DIRECTION_Y_VARIANT, direction));
+      map.register(direction, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangucModels.DIRECTION_Y_VARIANT, direction));
     }
     blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.UVLOCK, true)).coordinate(map));
     blockStateModelGenerator.registerParentedItemModel(this, id);

@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
@@ -58,6 +60,7 @@ public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock {
     return new SimpleColoredBlockEntity(pos, state);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final Identifier modelId = Models.LEAVES.upload(this, TextureMap.all(texture), blockStateModelGenerator.modelCollector);

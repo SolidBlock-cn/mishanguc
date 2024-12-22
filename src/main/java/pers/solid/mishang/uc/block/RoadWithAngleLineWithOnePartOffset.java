@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.block;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.data.*;
@@ -21,6 +23,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.data.FasterTextureMap;
+import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.*;
 
@@ -110,6 +113,7 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
       return offsetOutwards;
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
       final FasterTextureMap textures = new FasterTextureMap().base("asphalt")
@@ -126,12 +130,12 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
         map.register(
             HorizontalCornerDirection.fromDirections(direction, offsetDirection1),
             direction.getAxis(),
-            BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangUtils.DIRECTION_Y_VARIANT, direction));
+            BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangucModels.DIRECTION_Y_VARIANT, direction));
         map.register(
             HorizontalCornerDirection.fromDirections(direction, offsetDirection2),
             direction.getAxis(),
             BlockStateVariant.create().put(VariantSettings.MODEL, mirroredModelId)
-                .put(MishangUtils.DIRECTION_Y_VARIANT, direction));
+                .put(MishangucModels.DIRECTION_Y_VARIANT, direction));
       }
       blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockStateSupplier.create(road).coordinate(map)));
     }

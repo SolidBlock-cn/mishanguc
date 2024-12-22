@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.block;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.data.*;
@@ -95,6 +97,7 @@ public interface RoadWithStraightLine extends Road {
       tooltip.add(TextBridge.translatable("lineType.straight.composed", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
       final TextureMap textures = new FasterTextureMap().base("asphalt").lineSide(lineTexture).lineTop(lineTexture);

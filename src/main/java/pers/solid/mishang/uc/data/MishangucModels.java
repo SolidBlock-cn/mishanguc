@@ -1,10 +1,13 @@
 package pers.solid.mishang.uc.data;
 
+import com.google.gson.JsonPrimitive;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.Model;
 import net.minecraft.client.data.TextureKey;
+import net.minecraft.client.data.VariantSetting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.block.GlassHandrailBlock;
 
@@ -16,13 +19,13 @@ public final class MishangucModels {
   public static final Model LIGHT_SLAB = createBlock("light_slab", TextureKey.TOP, TextureKey.SIDE, TextureKey.BOTTOM);
   public static final Model LIGHT_SLAB_TOP = createBlock("light_slab_top", "_top", TextureKey.TOP, TextureKey.SIDE, TextureKey.BOTTOM);
 
-  public static final Model GLASS_HANDRAIL = createBlock("glass_handrail", GlassHandrailBlock.FRAME, GlassHandrailBlock.GLASS, GlassHandrailBlock.DECORATION);
-  public static final Model GLASS_HANDRAIL_INVENTORY = createBlock("glass_handrail_inventory", "_inventory", GlassHandrailBlock.FRAME, GlassHandrailBlock.GLASS, GlassHandrailBlock.DECORATION);
-  public static final Model GLASS_HANDRAIL_POST = createBlock("glass_handrail_post", "_post", GlassHandrailBlock.FRAME, GlassHandrailBlock.GLASS, GlassHandrailBlock.DECORATION);
-  public static final Model GLASS_HANDRAIL_SIDE = createBlock("glass_handrail_side", "_side", GlassHandrailBlock.FRAME, GlassHandrailBlock.GLASS, GlassHandrailBlock.DECORATION);
-  public static final Model GLASS_HANDRAIL_POST_SIDE = createBlock("glass_handrail_post_side", "_post_side", GlassHandrailBlock.FRAME, GlassHandrailBlock.GLASS, GlassHandrailBlock.DECORATION);
-  public static final Model GLASS_HANDRAIL_CORNER = createBlock("glass_handrail_corner", GlassHandrailBlock.FRAME, GlassHandrailBlock.GLASS, GlassHandrailBlock.DECORATION);
-  public static final Model GLASS_HANDRAIL_OUTER = createBlock("glass_handrail_outer", GlassHandrailBlock.FRAME, GlassHandrailBlock.GLASS, GlassHandrailBlock.DECORATION);
+  public static final Model GLASS_HANDRAIL = createBlock("glass_handrail", GlassHandrailBlock.TextureKeys.FRAME, GlassHandrailBlock.TextureKeys.GLASS, GlassHandrailBlock.TextureKeys.DECORATION);
+  public static final Model GLASS_HANDRAIL_INVENTORY = createBlock("glass_handrail_inventory", "_inventory", GlassHandrailBlock.TextureKeys.FRAME, GlassHandrailBlock.TextureKeys.GLASS, GlassHandrailBlock.TextureKeys.DECORATION);
+  public static final Model GLASS_HANDRAIL_POST = createBlock("glass_handrail_post", "_post", GlassHandrailBlock.TextureKeys.FRAME, GlassHandrailBlock.TextureKeys.GLASS, GlassHandrailBlock.TextureKeys.DECORATION);
+  public static final Model GLASS_HANDRAIL_SIDE = createBlock("glass_handrail_side", "_side", GlassHandrailBlock.TextureKeys.FRAME, GlassHandrailBlock.TextureKeys.GLASS, GlassHandrailBlock.TextureKeys.DECORATION);
+  public static final Model GLASS_HANDRAIL_POST_SIDE = createBlock("glass_handrail_post_side", "_post_side", GlassHandrailBlock.TextureKeys.FRAME, GlassHandrailBlock.TextureKeys.GLASS, GlassHandrailBlock.TextureKeys.DECORATION);
+  public static final Model GLASS_HANDRAIL_CORNER = createBlock("glass_handrail_corner", GlassHandrailBlock.TextureKeys.FRAME, GlassHandrailBlock.TextureKeys.GLASS, GlassHandrailBlock.TextureKeys.DECORATION);
+  public static final Model GLASS_HANDRAIL_OUTER = createBlock("glass_handrail_outer", GlassHandrailBlock.TextureKeys.FRAME, GlassHandrailBlock.TextureKeys.GLASS, GlassHandrailBlock.TextureKeys.DECORATION);
 
   public static final Model SIMPLE_HANDRAIL = createBlock("simple_handrail", TextureKey.TEXTURE, TextureKey.TOP, TextureKey.BOTTOM);
   public static final Model SIMPLE_HANDRAIL_INVENTORY = createBlock("simple_handrail_inventory", "_inventory", TextureKey.TEXTURE, TextureKey.TOP, TextureKey.BOTTOM);
@@ -84,6 +87,34 @@ public final class MishangucModels {
   public static final Model HUNG_SIGN_BAR = createBlock("hung_sign_bar", TextureKey.TEXTURE);
   public static final Model HUNG_SIGN_BAR_CENTRAL = createBlock("hung_sign_bar_central", "_central", TextureKey.TEXTURE);
   public static final Model HUNG_SIGN_BAR_EDGE = createBlock("hung_sign_bar_edge", "_edge", TextureKey.TEXTURE);
+  /**
+   * previously in {@link pers.solid.mishang.uc.block.ColoredCubeBlock}
+   */
+  public static final Model COLORED_CUBE_ALL = createBlock("colored_cube_all", TextureKey.ALL);
+  /**
+   * previously in {@link pers.solid.mishang.uc.block.ColoredCubeBlock}
+   */
+  public static final Model COLORED_CUBE_BOTTOM_TOP = createBlock("colored_cube_bottom_top", TextureKey.TOP, TextureKey.BOTTOM, TextureKey.SIDE);
+  /**
+   * previously in {@link pers.solid.mishang.uc.block.ColoredCubeBlock}
+   */
+  public static final Model COLORED_CUBE_MIRRORED_ALL = createBlock("colored_cube_mirrored_all", "_mirrored", TextureKey.ALL);
+  /**
+   * previously in {@link pers.solid.mishang.uc.block.ColoredCubeBlock}
+   */
+  public static final Model COLORED_CUBE_ALL_WITHOUT_SHADE = createBlock("colored_cube_all_without_shade", TextureKey.ALL);
+  /**
+   * previously in {@link pers.solid.mishang.uc.MishangUtils}
+   */
+  public static final VariantSetting<Integer> INT_X_VARIANT = new VariantSetting<>("x", JsonPrimitive::new);
+  /**
+   * previously in {@link pers.solid.mishang.uc.MishangUtils}
+   */
+  public static final VariantSetting<Integer> INT_Y_VARIANT = new VariantSetting<>("y", JsonPrimitive::new);
+  /**
+   * previously in {@link pers.solid.mishang.uc.MishangUtils}
+   */
+  public static final VariantSetting<Direction> DIRECTION_Y_VARIANT = new VariantSetting<>("y", direction -> new JsonPrimitive((int) direction.getPositiveHorizontalDegrees()));
 
   public static Identifier texture(String path) {
     return Mishanguc.id("block/" + path);

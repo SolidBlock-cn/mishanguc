@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.ModelProvider;
@@ -30,6 +32,7 @@ public class FullLightBlock extends Block implements MishangucBlock {
     this.concreteIngredient = concreteIngredient;
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final Identifier modelId = MishangucModels.LIGHT.upload(this, TextureMap.all(this), blockStateModelGenerator.modelCollector);

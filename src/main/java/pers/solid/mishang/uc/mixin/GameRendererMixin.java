@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.mixin;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.GameRenderer;
@@ -13,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import pers.solid.mishang.uc.item.BlockToolItem;
 
+@Environment(EnvType.CLIENT)
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
   @Shadow

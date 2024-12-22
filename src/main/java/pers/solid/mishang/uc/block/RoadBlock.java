@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
@@ -41,6 +43,7 @@ public class RoadBlock extends AbstractRoadBlock {
     return RoadConnectionState.empty();
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
     final TextureMap textures = TextureMap.all(texture);

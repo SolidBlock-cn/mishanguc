@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.block.*;
 import net.minecraft.client.data.*;
@@ -32,7 +34,6 @@ import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blocks.RoadMarkBlocks;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.util.EightHorizontalDirection;
@@ -138,6 +139,7 @@ public class RoadMarkBlock extends Block implements Waterloggable, MishangucBloc
         .criterion("has_white_dye", recipeGenerator.conditionsFromTag(ConventionalItemTags.WHITE_DYES));
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final TextureMap textures = TextureMap.all(texture);
@@ -205,6 +207,7 @@ public class RoadMarkBlock extends Block implements Waterloggable, MishangucBloc
       return mirror1.with(AXIS, state.get(AXIS).mirror());
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
       final TextureMap textures = TextureMap.all(texture);
@@ -213,14 +216,14 @@ public class RoadMarkBlock extends Block implements Waterloggable, MishangucBloc
       final Identifier onSlabModelId = MishangucModels.ROAD_MARK_ON_SLAB.upload(this, textures, blockStateModelGenerator.modelCollector);
       final Identifier onSlabRotatedModelId = MishangucModels.ROAD_MARK_ON_SLAB_ROTATED.upload(this, textures, blockStateModelGenerator.modelCollector);
       final BlockStateVariantMap.DoubleProperty<Boolean, FourHorizontalAxis> map = BlockStateVariantMap.create(ON_SLAB, AXIS)
-          .register(false, FourHorizontalAxis.X, BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangUtils.INT_Y_VARIANT, 90))
-          .register(false, FourHorizontalAxis.NW_SE, BlockStateVariant.create().put(VariantSettings.MODEL, rotatedModelId).put(MishangUtils.INT_Y_VARIANT, 90))
-          .register(false, FourHorizontalAxis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangUtils.INT_Y_VARIANT, 0))
-          .register(false, FourHorizontalAxis.NE_SW, BlockStateVariant.create().put(VariantSettings.MODEL, rotatedModelId).put(MishangUtils.INT_Y_VARIANT, 0))
-          .register(true, FourHorizontalAxis.X, BlockStateVariant.create().put(VariantSettings.MODEL, onSlabModelId).put(MishangUtils.INT_Y_VARIANT, 90))
-          .register(true, FourHorizontalAxis.NW_SE, BlockStateVariant.create().put(VariantSettings.MODEL, onSlabRotatedModelId).put(MishangUtils.INT_Y_VARIANT, 90))
-          .register(true, FourHorizontalAxis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, onSlabModelId).put(MishangUtils.INT_Y_VARIANT, 0))
-          .register(true, FourHorizontalAxis.NE_SW, BlockStateVariant.create().put(VariantSettings.MODEL, onSlabRotatedModelId).put(MishangUtils.INT_Y_VARIANT, 0));
+          .register(false, FourHorizontalAxis.X, BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangucModels.INT_Y_VARIANT, 90))
+          .register(false, FourHorizontalAxis.NW_SE, BlockStateVariant.create().put(VariantSettings.MODEL, rotatedModelId).put(MishangucModels.INT_Y_VARIANT, 90))
+          .register(false, FourHorizontalAxis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangucModels.INT_Y_VARIANT, 0))
+          .register(false, FourHorizontalAxis.NE_SW, BlockStateVariant.create().put(VariantSettings.MODEL, rotatedModelId).put(MishangucModels.INT_Y_VARIANT, 0))
+          .register(true, FourHorizontalAxis.X, BlockStateVariant.create().put(VariantSettings.MODEL, onSlabModelId).put(MishangucModels.INT_Y_VARIANT, 90))
+          .register(true, FourHorizontalAxis.NW_SE, BlockStateVariant.create().put(VariantSettings.MODEL, onSlabRotatedModelId).put(MishangucModels.INT_Y_VARIANT, 90))
+          .register(true, FourHorizontalAxis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, onSlabModelId).put(MishangucModels.INT_Y_VARIANT, 0))
+          .register(true, FourHorizontalAxis.NE_SW, BlockStateVariant.create().put(VariantSettings.MODEL, onSlabRotatedModelId).put(MishangucModels.INT_Y_VARIANT, 0));
       blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(this).coordinate(map));
       final Identifier itemModelId = Models.HANDHELD.upload(ModelIds.getItemModelId(asItem()), TextureMap.layer0(texture), blockStateModelGenerator.modelCollector);
       blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.basic(itemModelId));
@@ -281,6 +284,7 @@ public class RoadMarkBlock extends Block implements Waterloggable, MishangucBloc
       return mirror1.with(FACING, state.get(FACING).mirror(mirror));
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
       final TextureMap textures = TextureMap.all(texture);
@@ -295,8 +299,8 @@ public class RoadMarkBlock extends Block implements Waterloggable, MishangucBloc
         if (rotated) {
           rotation -= 45;
         }
-        map.register(false, direction, BlockStateVariant.create().put(VariantSettings.MODEL, rotated ? rotatedModelId : modelId).put(MishangUtils.INT_Y_VARIANT, rotation));
-        map.register(true, direction, BlockStateVariant.create().put(VariantSettings.MODEL, rotated ? onSlabRotatedModelId : onSlabModelId).put(MishangUtils.INT_Y_VARIANT, rotation));
+        map.register(false, direction, BlockStateVariant.create().put(VariantSettings.MODEL, rotated ? rotatedModelId : modelId).put(MishangucModels.INT_Y_VARIANT, rotation));
+        map.register(true, direction, BlockStateVariant.create().put(VariantSettings.MODEL, rotated ? onSlabRotatedModelId : onSlabModelId).put(MishangucModels.INT_Y_VARIANT, rotation));
       }
       blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(this).coordinate(map));
       final Identifier itemModelId = Models.HANDHELD.upload(ModelIds.getItemModelId(asItem()), TextureMap.layer0(texture), blockStateModelGenerator.modelCollector);

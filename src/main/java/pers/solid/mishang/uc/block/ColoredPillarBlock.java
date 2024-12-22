@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PillarBlock;
 import net.minecraft.block.entity.BlockEntity;
@@ -21,14 +23,15 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.item.ColoredTintSource;
+import pers.solid.mishang.uc.util.TextureMapReference;
 
 import java.util.List;
 
 public class ColoredPillarBlock extends PillarBlock implements ColoredBlock {
-  public static final MapCodec<ColoredPillarBlock> CODEC = createCodec(settings1 -> new ColoredPillarBlock(settings1, null));
-  private final @Nullable TextureMap textures;
+  public static final MapCodec<ColoredPillarBlock> CODEC = createCodec(settings1 -> new ColoredPillarBlock(settings1, TextureMapReference.EMPTY));
+  private final TextureMapReference textures;
 
-  public ColoredPillarBlock(Settings settings, @Nullable TextureMap textures) {
+  public ColoredPillarBlock(Settings settings, @Nullable TextureMapReference textures) {
     super(settings);
     this.textures = textures;
   }
@@ -50,10 +53,12 @@ public class ColoredPillarBlock extends PillarBlock implements ColoredBlock {
     return new SimpleColoredBlockEntity(pos, state);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
-    final Identifier modelId = MishangucModels.COLORED_CUBE_COLUMN.upload(this, textures, blockStateModelGenerator.modelCollector);
-    final Identifier horizontalModelId = MishangucModels.COLORED_CUBE_COLUMN_HORITONZAL.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final TextureMap textureMap = textures.getTextureMap();
+    final Identifier modelId = MishangucModels.COLORED_CUBE_COLUMN.upload(this, textureMap, blockStateModelGenerator.modelCollector);
+    final Identifier horizontalModelId = MishangucModels.COLORED_CUBE_COLUMN_HORITONZAL.upload(this, textureMap, blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createAxisRotatedBlockState(this, modelId, horizontalModelId));
     blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(modelId, ColoredTintSource.INSTANCE));
   }

@@ -5,6 +5,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.booleans.BooleanArraySet;
 import it.unimi.dsi.fastutil.booleans.BooleanSet;
 import it.unimi.dsi.fastutil.booleans.BooleanSets;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -163,6 +165,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     };
   }
 
+  @Environment(EnvType.CLIENT)
   public Identifier getBaseTexture() {
     if (baseTexture != null) return baseTexture;
     return ModelHelper.getTextureOf(baseBlock == null ? this : baseBlock);
@@ -224,6 +227,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     tooltip.add(TextBridge.translatable("block.mishanguc.standing_sign.tooltip.2").formatted(Formatting.GRAY));
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final TextureMap textures = TextureMap.texture(getBaseTexture()).put(MishangucTextureKeys.BAR, barTexture);
@@ -244,18 +248,19 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     }
   }
 
+  @Environment(EnvType.CLIENT)
   public @Nullable BlockStateSupplier createBlockStates(Identifier modelId, Identifier r1ModelId, Identifier r2ModelId, Identifier r3ModelId, Identifier barredModelId, Identifier barredR1ModelId, Identifier barredR2ModelId, Identifier barredR3ModelId) {
     final BlockStateVariantMap.DoubleProperty<Boolean, Integer> map = BlockStateVariantMap.create(DOWN, ROTATION);
     for (int i = 0; i < 16; i += 4) {
       final int y = i * 90 / 4;
-      map.register(false, i, BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangUtils.INT_Y_VARIANT, y));
-      map.register(false, (i + 1), BlockStateVariant.create().put(VariantSettings.MODEL, r1ModelId).put(MishangUtils.INT_Y_VARIANT, y));
-      map.register(false, (i + 2), BlockStateVariant.create().put(VariantSettings.MODEL, r2ModelId).put(MishangUtils.INT_Y_VARIANT, y));
-      map.register(false, (i + 3), BlockStateVariant.create().put(VariantSettings.MODEL, r3ModelId).put(MishangUtils.INT_Y_VARIANT, y + 90));
-      map.register(true, i, BlockStateVariant.create().put(VariantSettings.MODEL, barredModelId).put(MishangUtils.INT_Y_VARIANT, y));
-      map.register(true, (i + 1), BlockStateVariant.create().put(VariantSettings.MODEL, barredR1ModelId).put(MishangUtils.INT_Y_VARIANT, y));
-      map.register(true, (i + 2), BlockStateVariant.create().put(VariantSettings.MODEL, barredR2ModelId).put(MishangUtils.INT_Y_VARIANT, y));
-      map.register(true, (i + 3), BlockStateVariant.create().put(VariantSettings.MODEL, barredR3ModelId).put(MishangUtils.INT_Y_VARIANT, y + 90));
+      map.register(false, i, BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangucModels.INT_Y_VARIANT, y));
+      map.register(false, (i + 1), BlockStateVariant.create().put(VariantSettings.MODEL, r1ModelId).put(MishangucModels.INT_Y_VARIANT, y));
+      map.register(false, (i + 2), BlockStateVariant.create().put(VariantSettings.MODEL, r2ModelId).put(MishangucModels.INT_Y_VARIANT, y));
+      map.register(false, (i + 3), BlockStateVariant.create().put(VariantSettings.MODEL, r3ModelId).put(MishangucModels.INT_Y_VARIANT, y + 90));
+      map.register(true, i, BlockStateVariant.create().put(VariantSettings.MODEL, barredModelId).put(MishangucModels.INT_Y_VARIANT, y));
+      map.register(true, (i + 1), BlockStateVariant.create().put(VariantSettings.MODEL, barredR1ModelId).put(MishangucModels.INT_Y_VARIANT, y));
+      map.register(true, (i + 2), BlockStateVariant.create().put(VariantSettings.MODEL, barredR2ModelId).put(MishangucModels.INT_Y_VARIANT, y));
+      map.register(true, (i + 3), BlockStateVariant.create().put(VariantSettings.MODEL, barredR3ModelId).put(MishangucModels.INT_Y_VARIANT, y + 90));
     }
     return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.UVLOCK, true)).coordinate(map);
   }

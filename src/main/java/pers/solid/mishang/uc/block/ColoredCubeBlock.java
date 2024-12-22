@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -21,31 +23,29 @@ import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import pers.solid.mishang.uc.blocks.ColoredBlocks;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.item.ColoredTintSource;
+import pers.solid.mishang.uc.util.ModelReference;
+import pers.solid.mishang.uc.util.TextureMapReference;
 
 import java.util.List;
 
 public class ColoredCubeBlock extends Block implements ColoredBlock {
-  protected final Model model;
-  protected final TextureMap textures;
-  public static final MapCodec<ColoredCubeBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createSettingsCodec()).apply(instance, (settings1) -> new ColoredCubeBlock(settings1, null, new TextureMap())));
-  public static final Model COLORED_CUBE_ALL = MishangucModels.createBlock("colored_cube_all", TextureKey.ALL);
-  public static final Model COLORED_CUBE_BOTTOM_TOP = MishangucModels.createBlock("colored_cube_bottom_top", TextureKey.TOP, TextureKey.BOTTOM, TextureKey.SIDE);
-  public static final Model COLORED_CUBE_MIRRORED_ALL = MishangucModels.createBlock("colored_cube_mirrored_all", "_mirrored", TextureKey.ALL);
-  public static final Model COLORED_CUBE_ALL_WITHOUT_SHADE = MishangucModels.createBlock("colored_cube_all_without_shade", TextureKey.ALL);
+  protected final ModelReference model;
+  protected final TextureMapReference textures;
+  public static final MapCodec<ColoredCubeBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createSettingsCodec()).apply(instance, (settings1) -> new ColoredCubeBlock(settings1, null, TextureMapReference.EMPTY)));
 
   @ApiStatus.Internal
-  public ColoredCubeBlock(Settings settings, Model model, TextureMap textures) {
+  public ColoredCubeBlock(Settings settings, ModelReference model, TextureMapReference textures) {
     super(settings);
     this.model = model;
     this.textures = textures;
   }
 
   public static ColoredCubeBlock cubeAll(Settings settings, String allTexture) {
-    return new ColoredCubeBlock(settings, COLORED_CUBE_ALL, TextureMap.all(Identifier.of(allTexture)));
+    return new ColoredCubeBlock(settings, ModelReference.COLORED_CUBE_ALL, TextureMapReference.all(Identifier.of(allTexture)));
   }
 
   public static ColoredCubeBlock cubeBottomTop(Settings settings, String topTexture, String sideTexture, String bottomTexture) {
-    return new ColoredCubeBlock(settings, COLORED_CUBE_BOTTOM_TOP, TextureMap.of(TextureKey.TOP, Identifier.of(topTexture)).put(TextureKey.SIDE, Identifier.of(sideTexture)).put(TextureKey.BOTTOM, Identifier.of(bottomTexture)));
+    return new ColoredCubeBlock(settings, ModelReference.COLORED_CUBE_BOTTOM_TOP, TextureMapReference.topSideBottom(Identifier.of(topTexture), Identifier.of(sideTexture), Identifier.of(bottomTexture)));
   }
 
   @Override
@@ -75,16 +75,18 @@ public class ColoredCubeBlock extends Block implements ColoredBlock {
     return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final TextureMap textureMap = textures.getTextureMap();
     if (this == ColoredBlocks.COLORED_STONE) {
-      final Identifier modelId = ColoredCubeBlock.COLORED_CUBE_ALL.upload(this, textures, blockStateModelGenerator.modelCollector);
-      final Identifier mirroredModelId = ColoredCubeBlock.COLORED_CUBE_MIRRORED_ALL.upload(this, textures, blockStateModelGenerator.modelCollector);
+      final Identifier modelId = MishangucModels.COLORED_CUBE_ALL.upload(this, textureMap, blockStateModelGenerator.modelCollector);
+      final Identifier mirroredModelId = MishangucModels.COLORED_CUBE_MIRRORED_ALL.upload(this, textureMap, blockStateModelGenerator.modelCollector);
 
       blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createBlockStateWithTwoModelAndRandomInversion(this, modelId, mirroredModelId));
       return;
     }
-    final Identifier modelId = model.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier modelId = model.getModel().upload(this, textureMap, blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(this, modelId));
     blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(modelId, ColoredTintSource.INSTANCE));
   }
@@ -94,8 +96,9 @@ public class ColoredCubeBlock extends Block implements ColoredBlock {
     return CODEC;
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public Identifier getTexture(TextureKey key) {
-    return textures.getTexture(key);
+    return textures.getTextureMap().getTexture(key);
   }
 }

@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.block;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.data.*;
@@ -24,8 +26,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.data.FasterTextureMap;
+import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.*;
 
@@ -95,8 +97,9 @@ public interface RoadWithOffsetStraightLine extends Road {
     }
   }
 
+  @Environment(EnvType.CLIENT)
   default @NotNull BlockStateSupplier createBlockStates(Block block, Identifier modelId) {
-    return VariantsBlockStateSupplier.create(block, BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.UVLOCK, false)).coordinate(BlockStateVariantMap.create(FACING).register(direction -> BlockStateVariant.create().put(MishangUtils.DIRECTION_Y_VARIANT, direction.rotateYClockwise())));
+    return VariantsBlockStateSupplier.create(block, BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.UVLOCK, false)).coordinate(BlockStateVariantMap.create(FACING).register(direction -> BlockStateVariant.create().put(MishangucModels.DIRECTION_Y_VARIANT, direction.rotateYClockwise())));
   }
 
   @Contract(pure = true)
@@ -123,6 +126,7 @@ public interface RoadWithOffsetStraightLine extends Road {
       }
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
       final FasterTextureMap textures = new FasterTextureMap().base("asphalt").lineSide(lineTexture).lineTop(lineTexture);

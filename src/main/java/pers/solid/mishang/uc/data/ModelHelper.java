@@ -10,7 +10,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.data.*;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
-import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.block.MishangucBlock;
 
@@ -30,7 +29,7 @@ public final class ModelHelper {
    */
   @NotNull
   public static BlockStateSupplier stateForHorizontalCornerFacingBlock(@NotNull Block block, @NotNull Identifier modelIdentifier, boolean uvlock) {
-    return VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(MishangucProperties.HORIZONTAL_CORNER_FACING).register(direction -> BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifier).put(MishangUtils.INT_Y_VARIANT, direction.asRotation() - 45).put(VariantSettings.UVLOCK, uvlock)));
+    return VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(MishangucProperties.HORIZONTAL_CORNER_FACING).register(direction -> BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifier).put(MishangucModels.INT_Y_VARIANT, direction.asRotation() - 45).put(VariantSettings.UVLOCK, uvlock)));
   }
 
   public static BlockStateSupplier composeStateForSlab(@NotNull BlockStateSupplier stateForFull) {
@@ -63,19 +62,7 @@ public final class ModelHelper {
             doubleModel);
       }
     }
-    return new BlockStateSupplier() {
-      @Override
-      public Block getBlock() {
-        return stateForFull.getBlock();
-      }
-
-      @Override
-      public JsonElement get() {
-        final JsonObject jsonObject = new JsonObject();
-        jsonObject.add("variants", slabVariant);
-        return jsonObject;
-      }
-    };
+    return new Forwarding(stateForFull, slabVariant);
   }
 
   public static Identifier getTextureOf(Block block) {
@@ -83,6 +70,29 @@ public final class ModelHelper {
       return mishangucBlock.getTexture(TextureKey.TEXTURE);
     } else {
       return TextureMap.getId(block);
+    }
+  }
+
+  @Environment(EnvType.CLIENT)
+  private static class Forwarding implements BlockStateSupplier {
+    private final @NotNull BlockStateSupplier stateForFull;
+    private final JsonObject slabVariant;
+
+    public Forwarding(@NotNull BlockStateSupplier stateForFull, JsonObject slabVariant) {
+      this.stateForFull = stateForFull;
+      this.slabVariant = slabVariant;
+    }
+
+    @Override
+    public Block getBlock() {
+      return stateForFull.getBlock();
+    }
+
+    @Override
+    public JsonElement get() {
+      final JsonObject jsonObject = new JsonObject();
+      jsonObject.add("variants", slabVariant);
+      return jsonObject;
     }
   }
 }

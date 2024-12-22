@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.block;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.data.*;
@@ -78,6 +80,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     this.outer = createAffiliatedBlocks ? new OuterBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_outer")))) : null;
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final TextureMap textures = getTextures();
@@ -87,6 +90,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.basic(itemModelId));
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public @NotNull TextureMap getTextures() {
     return TextureMap.all(getTexture()).put(TextureKey.TOP, top).put(TextureKey.BOTTOM, bottom);
@@ -147,6 +151,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
       super(baseBlock, settings);
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
       final Identifier postModelId = MishangucModels.SIMPLE_HANDRAIL_POST.upload(this, baseHandrail.getTextures(), blockStateModelGenerator.modelCollector);
@@ -174,6 +179,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
       super(baseHandrail, settings);
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
       final Identifier modelId = MishangucModels.SIMPLE_HANDRAIL_CORNER.upload(this, baseHandrail.getTextures(), blockStateModelGenerator.modelCollector);
@@ -199,6 +205,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
       super(baseRail, settings);
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
       final TextureMap textures = baseHandrail.getTextures();
@@ -230,6 +237,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
       super(baseRail, settings);
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
       final Identifier modelId = MishangucModels.SIMPLE_HANDRAIL_OUTER.upload(this, baseHandrail.getTextures(), blockStateModelGenerator.modelCollector);

@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.block;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.client.data.*;
 import net.minecraft.registry.Registries;
@@ -54,6 +56,11 @@ public class GlassHandrailBlock extends HandrailBlock {
     outer = outerProvider.apply(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_outer"))));
   }
 
+  protected static <B extends Block> MapCodec<B> createSubCodec(Function<B, GlassHandrailBlock> baseGetter, BiFunction<GlassHandrailBlock, Settings, B> function) {
+    return RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_rail").flatXmap(block -> block instanceof GlassHandrailBlock glassHandrailBlock ? DataResult.success(glassHandrailBlock) : DataResult.error(() -> block + " not instance of " + GlassHandrailBlock.class.getName()), DataResult::success).forGetter(baseGetter), createSettingsCodec()).apply(instance, function));
+  }
+
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final TextureMap textures = getTextures();
@@ -67,13 +74,10 @@ public class GlassHandrailBlock extends HandrailBlock {
     }
   }
 
-  public static final TextureKey FRAME = TextureKey.of("frame");
-  public static final TextureKey GLASS = TextureKey.of("glass");
-  public static final TextureKey DECORATION = TextureKey.of("decoration");
-
+  @Environment(EnvType.CLIENT)
   @Override
   public @NotNull TextureMap getTextures() {
-    return new TextureMap().put(FRAME, frameTexture).put(GLASS, Mishanguc.id("block/glass_unframed")).put(DECORATION, decorationTexture);
+    return new TextureMap().put(TextureKeys.FRAME, frameTexture).put(TextureKeys.GLASS, Mishanguc.id("block/glass_unframed")).put(TextureKeys.DECORATION, decorationTexture);
   }
 
   @Override
@@ -106,22 +110,29 @@ public class GlassHandrailBlock extends HandrailBlock {
     return CODEC;
   }
 
-  protected static <B extends Block> MapCodec<B> createSubCodec(Function<B, GlassHandrailBlock> baseGetter, BiFunction<GlassHandrailBlock, Settings, B> function) {
-    return RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_rail").flatXmap(block -> block instanceof GlassHandrailBlock glassHandrailBlock ? DataResult.success(glassHandrailBlock) : DataResult.error(() -> block + " not instance of " + GlassHandrailBlock.class.getName()), DataResult::success).forGetter(baseGetter), createSettingsCodec()).apply(instance, function));
+  @Environment(EnvType.CLIENT)
+  public static class TextureKeys {
+    public static final TextureKey FRAME = TextureKey.of("frame");
+    public static final TextureKey GLASS = TextureKey.of("glass");
+    public static final TextureKey DECORATION = TextureKey.of("decoration");
+
+    private TextureKeys() {
+    }
   }
 
   public static class CentralBlock extends HandrailCentralBlock<GlassHandrailBlock> {
     public static final MapCodec<CentralBlock> CODEC = createSubCodec(b -> b.baseHandrail, CentralBlock::new);
+
+    protected CentralBlock(@NotNull GlassHandrailBlock baseRail, Settings settings) {
+      super(baseRail, settings);
+    }
 
     @Override
     public MutableText getName() {
       return TextBridge.translatable("block.mishanguc.handrail_central", baseHandrail.getName());
     }
 
-    protected CentralBlock(@NotNull GlassHandrailBlock baseRail, Settings settings) {
-      super(baseRail, settings);
-    }
-
+    @Environment(EnvType.CLIENT)
     @Override
     public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
       final TextureMap textures = baseHandrail.getTextures();
@@ -140,15 +151,16 @@ public class GlassHandrailBlock extends HandrailBlock {
   public static class CornerBlock extends HandrailCornerBlock<GlassHandrailBlock> {
     public static final MapCodec<CornerBlock> CODEC = createSubCodec(b -> b.baseHandrail, CornerBlock::new);
 
+    protected CornerBlock(@NotNull GlassHandrailBlock baseRail, Settings settings) {
+      super(baseRail, settings);
+    }
+
     @Override
     public MutableText getName() {
       return TextBridge.translatable("block.mishanguc.handrail_corner", baseHandrail.getName());
     }
 
-    protected CornerBlock(@NotNull GlassHandrailBlock baseRail, Settings settings) {
-      super(baseRail, settings);
-    }
-
+    @Environment(EnvType.CLIENT)
     @Override
     public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
       final Identifier modelId = MishangucModels.GLASS_HANDRAIL_CORNER.upload(this, baseHandrail.getTextures(), blockStateModelGenerator.modelCollector);
@@ -173,13 +185,14 @@ public class GlassHandrailBlock extends HandrailBlock {
       return TextBridge.translatable("block.mishanguc.handrail_stair", baseHandrail.getName());
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
       final TextureMap textures = baseHandrail.getTextures();
-      final Identifier baseModelId = MishangucModels.createBlock("glass_handrail_stair_middle_center", FRAME, GLASS, DECORATION).upload(this, textures, blockStateModelGenerator.modelCollector);
+      final Identifier baseModelId = MishangucModels.createBlock("glass_handrail_stair_middle_center", TextureKeys.FRAME, TextureKeys.GLASS, TextureKeys.DECORATION).upload(this, textures, blockStateModelGenerator.modelCollector);
       for (Shape shape : Shape.values()) {
         for (Position position : Position.values()) {
-          MishangucModels.createBlock(String.format("glass_handrail_stair_%s_%s", shape.asString(), position.asString()), "_" + shape.asString() + "_" + position.asString(), FRAME, GLASS, DECORATION).upload(this, textures, blockStateModelGenerator.modelCollector);
+          MishangucModels.createBlock(String.format("glass_handrail_stair_%s_%s", shape.asString(), position.asString()), "_" + shape.asString() + "_" + position.asString(), TextureKeys.FRAME, TextureKeys.GLASS, TextureKeys.DECORATION).upload(this, textures, blockStateModelGenerator.modelCollector);
         }
       }
       blockStateModelGenerator.blockStateCollector.accept(createBlockStates(baseModelId));
@@ -203,6 +216,7 @@ public class GlassHandrailBlock extends HandrailBlock {
       return TextBridge.translatable("block.mishanguc.handrail_outer", baseHandrail.getName());
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
       final Identifier modelId = MishangucModels.GLASS_HANDRAIL_OUTER.upload(this, baseHandrail.getTextures(), blockStateModelGenerator.modelCollector);

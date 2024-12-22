@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.block;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.ModelProvider;
@@ -51,9 +53,10 @@ public interface MishangucBlock {
     }
   }
 
+  @Environment(EnvType.CLIENT)
   void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator);
 
-
+  @Environment(EnvType.CLIENT)
   default Identifier getTexture(TextureKey key) {
     return TextureMap.getId(((Block) this));
   }

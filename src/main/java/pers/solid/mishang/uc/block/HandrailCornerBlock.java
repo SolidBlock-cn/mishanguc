@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.Maps;
 import com.mojang.serialization.MapCodec;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -95,6 +97,7 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
     return baseHandrail.asItem();
   }
 
+  @Environment(EnvType.CLIENT)
   public @NotNull BlockStateSupplier createBlockStates(Identifier modelId) {
     return ModelHelper.stateForHorizontalCornerFacingBlock(this, modelId, true);
   }

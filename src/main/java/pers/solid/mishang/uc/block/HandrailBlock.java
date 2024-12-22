@@ -28,6 +28,7 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 import pers.solid.mishang.uc.components.MishangucComponents;
+import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.item.NamedBlockItem;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 
@@ -203,8 +204,9 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
     return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
   }
 
+  @Environment(EnvType.CLIENT)
   public @NotNull BlockStateSupplier createBlockStates(Identifier modelId) {
-    return BlockStateModelGenerator.createSingletonBlockState(this, modelId).coordinate(BlockStateVariantMap.create(Properties.HORIZONTAL_FACING).register(direction -> BlockStateVariant.create().put(MishangUtils.DIRECTION_Y_VARIANT, direction).put(VariantSettings.UVLOCK, true)));
+    return BlockStateModelGenerator.createSingletonBlockState(this, modelId).coordinate(BlockStateVariantMap.create(Properties.HORIZONTAL_FACING).register(direction -> BlockStateVariant.create().put(MishangucModels.DIRECTION_Y_VARIANT, direction).put(VariantSettings.UVLOCK, true)));
   }
 
   @Override

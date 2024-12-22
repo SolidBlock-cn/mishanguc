@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.client.data.BlockStateModelGenerator;
@@ -37,6 +39,7 @@ public class LightSlabBlock extends SlabBlock implements MishangucBlock {
     this.baseBlock = baseBlock;
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final Identifier bottomModelId = MishangucModels.LIGHT_SLAB.upload(this, TextureMap.all(baseBlock), blockStateModelGenerator.modelCollector);

@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.block;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -19,6 +21,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.data.MishangucModels;
 
 import java.util.Map;
 
@@ -126,6 +129,7 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
   }
 
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final BlockStateVariantMap.DoubleProperty<Direction, StripType> map = BlockStateVariantMap.create(FACING, STRIP_TYPE);
@@ -139,8 +143,8 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
     map.register(Direction.DOWN, StripType.HORIZONTAL, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R180));
     map.register(Direction.DOWN, StripType.VERTICAL, BlockStateVariant.create().put(VariantSettings.MODEL, idVertical).put(VariantSettings.X, VariantSettings.Rotation.R180));
     for (Direction direction : Direction.Type.HORIZONTAL) {
-      map.register(direction, StripType.HORIZONTAL, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangUtils.DIRECTION_Y_VARIANT, direction));
-      map.register(direction, StripType.VERTICAL, BlockStateVariant.create().put(VariantSettings.MODEL, idVertical).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangUtils.DIRECTION_Y_VARIANT, direction));
+      map.register(direction, StripType.HORIZONTAL, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangucModels.DIRECTION_Y_VARIANT, direction));
+      map.register(direction, StripType.VERTICAL, BlockStateVariant.create().put(VariantSettings.MODEL, idVertical).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangucModels.DIRECTION_Y_VARIANT, direction));
     }
     blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.UVLOCK, true)).coordinate(map));
   }

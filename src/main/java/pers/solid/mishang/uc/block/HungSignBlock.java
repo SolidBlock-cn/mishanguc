@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -415,11 +417,13 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     tooltip.add(TextBridge.translatable("block.mishanguc.hung_sign.tooltip.2").formatted(Formatting.GRAY));
   }
 
+  @Environment(EnvType.CLIENT)
   public Identifier getBaseTexture() {
     if (baseTexture != null) return baseTexture;
     return ModelHelper.getTextureOf(baseBlock == null ? this : baseBlock);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final Identifier texture = getBaseTexture();
@@ -440,18 +444,19 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     }
   }
 
+  @Environment(EnvType.CLIENT)
   public @NotNull BlockStateSupplier createBlockStates(Identifier bodyId, Identifier topBarId, Identifier topBarEdgeId) {
     return MultipartBlockStateSupplier.create(this)
         .with(When.create().set(AXIS, Direction.Axis.Z), BlockStateVariant.create().put(VariantSettings.MODEL, bodyId).put(VariantSettings.UVLOCK, true))
         .with(When.create().set(AXIS, Direction.Axis.X), BlockStateVariant.create().put(VariantSettings.MODEL, bodyId).put(VariantSettings.UVLOCK, true).put(VariantSettings.Y, VariantSettings.Rotation.R90))
         .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, topBarId).put(VariantSettings.UVLOCK, true))
-        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 180))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, topBarId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, -90))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 90))
+        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 180))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, topBarId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, -90))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 90))
         .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarEdgeId).put(VariantSettings.UVLOCK, true))
-        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarEdgeId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 180))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarEdgeId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 90))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarEdgeId).put(VariantSettings.UVLOCK, true).put(MishangUtils.INT_Y_VARIANT, 270));
+        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarEdgeId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 180))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarEdgeId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 90))
+        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarEdgeId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 270));
   }
 
   private @Nullable String getRecipeGroup() {

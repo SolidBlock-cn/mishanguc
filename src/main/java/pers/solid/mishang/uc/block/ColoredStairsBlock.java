@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.StairsBlock;
@@ -60,9 +62,10 @@ public class ColoredStairsBlock extends StairsBlock implements ColoredBlock {
     return new SimpleColoredBlockEntity(pos, state);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
-    final TextureMap textureMap = baseBlock instanceof ColoredCubeBlock coloredCubeBlock ? coloredCubeBlock.textures : TextureMap.all(this);
+    final TextureMap textureMap = baseBlock instanceof ColoredCubeBlock coloredCubeBlock ? coloredCubeBlock.textures.getTextureMap() : TextureMap.all(this);
     final Identifier regularModelId = MishangucModels.COLORED_STAIRS.upload(this, textureMap, blockStateModelGenerator.modelCollector);
     final Identifier innerModelId = MishangucModels.COLORED_INNER_STAIRS.upload(this, textureMap, blockStateModelGenerator.modelCollector);
     final Identifier outerModelId = MishangucModels.COLORED_OUTER_STAIRS.upload(this, textureMap, blockStateModelGenerator.modelCollector);

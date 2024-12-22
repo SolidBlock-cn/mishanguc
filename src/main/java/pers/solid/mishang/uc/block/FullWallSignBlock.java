@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.block;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -103,6 +105,7 @@ public class FullWallSignBlock extends WallSignBlock {
         .group(getRecipeGroup());
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     if (this == WallSignBlocks.INVISIBLE_WALL_SIGN || this == WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN) {

@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
@@ -60,9 +62,10 @@ public class ColoredSlabBlock extends SlabBlock implements ColoredBlock {
     return new SimpleColoredBlockEntity(pos, state);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
-    final TextureMap textures = baseBlock instanceof ColoredCubeBlock coloredCubeBlock ? coloredCubeBlock.textures : TextureMap.all(this);
+    final TextureMap textures = baseBlock instanceof ColoredCubeBlock coloredCubeBlock ? coloredCubeBlock.textures.getTextureMap() : TextureMap.all(this);
     final Identifier bottomModelId = MishangucModels.COLORED_SLAB.upload(this, textures, blockStateModelGenerator.modelCollector);
     final Identifier topModelId = MishangucModels.COLORED_SLAB_TOP.upload(this, textures, blockStateModelGenerator.modelCollector);
     final Identifier fullModelId;

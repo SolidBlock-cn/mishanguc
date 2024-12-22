@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PaneBlock;
 import net.minecraft.block.entity.BlockEntity;
@@ -50,6 +52,7 @@ public class ColoredGlassPaneBlock extends PaneBlock implements ColoredBlock {
     return new SimpleColoredBlockEntity(pos, state);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     TextureMap textures = TextureMap.of(TextureKey.PANE, paneTexture).put(TextureKey.EDGE, edgeTexture);
@@ -64,6 +67,7 @@ public class ColoredGlassPaneBlock extends PaneBlock implements ColoredBlock {
     blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(itemModelId, ColoredTintSource.INSTANCE));
   }
 
+  @Environment(EnvType.CLIENT)
   public @NotNull BlockStateSupplier createBlockStates(Identifier postId, Identifier sideId, Identifier sideAltId, Identifier nosideId, Identifier nosideAltId) {
     return MultipartBlockStateSupplier.create(this)
         .with(BlockStateVariant.create()
