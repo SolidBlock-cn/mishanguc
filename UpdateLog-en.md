@@ -2,7 +2,7 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
-### 1.4.3-beta.1
+### 1.4.3
 
 - Fit 1.21.4.
 - Fixed the issue that blocks in this mod incorrectly influence mobs' pathfinding.
