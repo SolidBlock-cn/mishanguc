@@ -22,7 +22,7 @@ import java.util.function.Function;
 
 @ApiStatus.AvailableSince("0.2.4")
 public class GlassHandrailBlock extends HandrailBlock {
-  public static final MapCodec<GlassHandrailBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(GlassHandrailBlock::baseBlock), createSettingsCodec()).apply(instance, (block, settings1) -> new GlassHandrailBlock(block, settings1, null, null, null)));
+  public static final MapCodec<GlassHandrailBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(GlassHandrailBlock::baseBlock), createSettingsCodec()).apply(instance, (block, settings1) -> new GlassHandrailBlock(block, settings1, null, null, Registries.BLOCK.getId(block), false)));
   public final Identifier decorationTexture;
   private final CentralBlock central;
   private final CornerBlock corner;
@@ -32,14 +32,18 @@ public class GlassHandrailBlock extends HandrailBlock {
   private final Identifier frameTexture;
 
   public GlassHandrailBlock(Block baseBlock, Settings settings, String frameTexture, String decorationTexture, Identifier identifier) {
+    this(baseBlock, settings, frameTexture, decorationTexture, identifier, true);
+  }
+
+  protected GlassHandrailBlock(Block baseBlock, Settings settings, String frameTexture, String decorationTexture, Identifier identifier, boolean createAffiliateBlocks) {
     super(settings.nonOpaque().registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier)));
     this.baseBlock = baseBlock;
     this.frameTexture = frameTexture == null ? null : Identifier.of(frameTexture);
     this.decorationTexture = decorationTexture == null ? null : Identifier.of(decorationTexture);
-    this.central = new CentralBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_central"))));
-    this.corner = new CornerBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_corner"))));
-    this.stair = new StairBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_stair"))));
-    this.outer = new OuterBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_outer"))));
+    this.central = createAffiliateBlocks ? new CentralBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_central")))) : null;
+    this.corner = createAffiliateBlocks ? new CornerBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_corner")))) : null;
+    this.stair = createAffiliateBlocks ? new StairBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_stair")))) : null;
+    this.outer = createAffiliateBlocks ? new OuterBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_outer")))) : null;
   }
 
   protected GlassHandrailBlock(Block baseBlock, Settings settings, String frameTexture, String decorationTexture, BiFunction<GlassHandrailBlock, Settings, CentralBlock> centralProvider, BiFunction<GlassHandrailBlock, Settings, CornerBlock> cornerProvider, BiFunction<GlassHandrailBlock, Settings, StairBlock> stairProvider, BiFunction<GlassHandrailBlock, Settings, OuterBlock> outerProvider, Identifier identifier) {
