@@ -31,7 +31,7 @@ import java.util.function.Function;
  * 简单的栏杆方块。基本上都是采用相同的纹理，如有使用也可以采用不同的纹理。其形状都是最基本的图形。
  */
 public class SimpleHandrailBlock extends HandrailBlock {
-  public static final MapCodec<SimpleHandrailBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(b -> b.baseBlock), createSettingsCodec()).apply(instance, (block, settings1) -> new SimpleHandrailBlock(block, settings1, null, false)));
+  public static final MapCodec<SimpleHandrailBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(b -> b.baseBlock), createSettingsCodec()).apply(instance, (block, settings1) -> new SimpleHandrailBlock(block, settings1, Registries.BLOCK.getId(block), false)));
   /**
    * 该栏杆的基础方块。
    */
@@ -71,7 +71,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     this(baseBlock, settings, identifier, true);
   }
 
-  private SimpleHandrailBlock(@Nullable Block baseBlock, Settings settings, Identifier identifier, boolean createAffiliatedBlocks) {
+  protected SimpleHandrailBlock(@Nullable Block baseBlock, Settings settings, Identifier identifier, boolean createAffiliatedBlocks) {
     super(settings.nonOpaque().registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier)));
     this.baseBlock = baseBlock;
     this.central = createAffiliatedBlocks ? new CentralBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_central")))) : null;
