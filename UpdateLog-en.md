@@ -2,6 +2,10 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.4.4
+
+- Fixed the severe issue that the mod is unable to run in 1.21.1.
+
 ### 1.4.3
 
 - Fit 1.21.4.
