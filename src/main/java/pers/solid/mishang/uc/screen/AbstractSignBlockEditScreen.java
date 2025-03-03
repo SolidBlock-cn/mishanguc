@@ -48,6 +48,7 @@ import pers.solid.mishang.uc.util.VerticalAlign;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -822,9 +823,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
 
     // 添加文本框
+    updateTextHoldersVisibility();
     if (textFieldListChildren != null) {
       textFieldListWidget.children().addAll(textFieldListChildren);
-      updateTextHoldersVisibility();
     } else {
       for (int i = 0, textContextsEditingSize = textContextsEditing.size();
            i < textContextsEditingSize;
@@ -870,11 +871,17 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
   }
 
+  /**
+   * 更新初始屏幕（未添加文本时的按钮）与文本编辑框的可见性。初始化界面以及增删文本时，均调用此方法。
+   */
   protected void updateTextHoldersVisibility() {
     final boolean visible = textFieldListWidget.children().isEmpty();
     for (ButtonWidget textHolder : getTextHolders()) {
       textHolder.visible = visible;
     }
+
+    // 同时也需要更新 textFieldListWidget 的可见性
+    textFieldListWidget.active = !visible;
   }
 
   public static final Text HIDDEN_TEXT_NOTE = TextBridge.translatable("message.mishanguc.hide_gui.note");
@@ -1061,29 +1068,31 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
 
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int button) {
-    for (Element element : this.children()) {
+    // 此处采用的是新版的写法，即使用 hoveredElement 找到正在悬浮的对象，而非在此方法中迭代。
+    // 旧版本可能采用不同的方法，具体参见 super 方法的源代码。
+    Optional<Element> optional = this.hoveredElement(mouseX, mouseY);
+    if (optional.isEmpty()) {
+      return false;
+    } else {
+      Element element = optional.get();
       if (isSelectingButtonToSetCustom && element instanceof FloatButtonWidget floatButtonWidget) {
-        if (element.isMouseOver(mouseX, mouseY)) {
-          floatButtonWidget.playDownSound(MinecraftClient.getInstance().getSoundManager());
-          customValueStartAccepting(floatButtonWidget);
-          return true;
+        floatButtonWidget.playDownSound(MinecraftClient.getInstance().getSoundManager());
+        customValueStartAccepting(floatButtonWidget);
+        return true;
+      }
+      if (element.mouseClicked(mouseX, mouseY, button)) {
+        if (element == textFieldListWidget || element instanceof TextFieldWidget) {
+          this.setFocused(element);
         } else {
-          continue;
+          setFocused(textFieldListWidget);
+        }
+        if (button == 0) {
+          this.setDragging(true);
         }
       }
-      if (!element.mouseClicked(mouseX, mouseY, button))
-        continue;
-      if (element == textFieldListWidget || element instanceof TextFieldWidget) {
-        this.setFocused(element);
-      } else {
-        setFocused(textFieldListWidget);
-      }
-      if (button == 0) {
-        this.setDragging(true);
-      }
+
       return true;
     }
-    return false;
   }
 
   private void customValueStartAccepting(FloatButtonWidget floatButtonWidget) {
