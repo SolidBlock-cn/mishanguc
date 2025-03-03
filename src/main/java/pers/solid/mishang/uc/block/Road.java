@@ -7,7 +7,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.LeveledCauldronBlock;
 import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.client.data.BlockStateModelGenerator;
-import net.minecraft.client.data.BlockStateSupplier;
 import net.minecraft.client.data.TextureKey;
 import net.minecraft.client.data.TextureMap;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
