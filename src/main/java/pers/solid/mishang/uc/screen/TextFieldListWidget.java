@@ -33,11 +33,21 @@ import java.util.List;
 public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextFieldListWidget.Entry> {
 
   private final AbstractSignBlockEditScreen<?> signBlockEditScreen;
+  /**
+   * 用于显示时渲染背景时的高度。通常情况下与 {@link #height} 保持一致，但简化模式下会使用不一致的值。{@link #setHeight(int)} 方法不会同步更新此字段的值。
+   */
+  protected int heightForBackground;
+  /**
+   * 用于在简化模式下渲染内容的高度。在简化模式下，此值与实际的 {@link #height} 保持一致。
+   */
+  protected int cuttingHeight = 48;
+  public boolean simplified;
 
   public TextFieldListWidget(AbstractSignBlockEditScreen<?> signBlockEditScreen,
                              MinecraftClient client, int width, int height, int y, int itemHeight) {
     super(client, width, height, y, itemHeight);
     this.signBlockEditScreen = signBlockEditScreen;
+    this.heightForBackground = height;
   }
 
   private boolean isFocused;
@@ -241,12 +251,39 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
   private static final Identifier background = Identifier.ofVanilla("textures/gui/inworld_menu_background.png");
 
+  protected void setSimplified(boolean simplified) {
+    this.simplified = simplified;
+    if (simplified) {
+      this.setHeight(cuttingHeight);
+    } else {
+      this.setHeight(heightForBackground);
+    }
+  }
+
+  protected void increaseHeight(int amount) {
+    cuttingHeight = (Math.clamp(height + amount, 0, heightForBackground));
+    if (simplified) {
+      this.setHeight(cuttingHeight);
+    }
+    setScrollY(getScrollY()); // 更新滚动以避免滚动溢出
+  }
+
+  protected void drawHeaderAndFooterSeparators(DrawContext context) {
+    super.drawHeaderAndFooterSeparators(context);
+    if (simplified) {
+      // 简化模式下，多显示一个。
+      Identifier identifier2 = this.client.world == null ? Screen.FOOTER_SEPARATOR_TEXTURE : Screen.INWORLD_FOOTER_SEPARATOR_TEXTURE;
+      context.drawTexture(RenderLayer::getGuiTextured, identifier2, this.getX(), this.getY() - heightForBackground, 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
+    }
+  }
+
+
   @Override
   protected void drawMenuListBackground(DrawContext context) {
     RenderSystem.enableBlend();
     Identifier identifier = background;
     context.drawTexture(identifier, this.getX(), 0, 0, 0, this.getWidth(), this.getY(), 32, 32);
-    context.drawTexture(identifier, this.getX(), this.getBottom(), 0, 0, this.getWidth(), this.getHeight(), 32, 32);
+    context.drawTexture(identifier, this.getX(), getY() + heightForBackground, 0, 0, this.getWidth(), heightForBackground, 32, 32);
     RenderSystem.disableBlend();
   }
 

@@ -16,6 +16,7 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * 用于处理布尔值的按钮。按下鼠标时切换。
@@ -30,6 +31,10 @@ public class BooleanButtonWidget extends ButtonWidget implements TooltipUpdated 
   private final Function<BooleanButtonWidget, @Nullable Boolean> valueGetter;
 
   private final BooleanConsumer valueSetter;
+  public Function<@Nullable Boolean, Text> renderedNameSupplier = null;
+  public @Nullable Function<@Nullable Boolean, @Nullable Text> tooltipSupplier = null;
+  public @Nullable Text keyboardShortcut = null;
+  private Supplier<Text> summaryTextSupplier = null;
 
   /**
    * 用于布尔值的按钮。
@@ -50,7 +55,10 @@ public class BooleanButtonWidget extends ButtonWidget implements TooltipUpdated 
     updateTooltip();
   }
 
-  public Function<@Nullable Boolean, Text> renderedNameSupplier = null;
+  public BooleanButtonWidget setSummaryTextSupplier(Supplier<Text> summaryTextSupplier) {
+    this.summaryTextSupplier = summaryTextSupplier;
+    return this;
+  }
 
   public BooleanButtonWidget setRenderedNameSupplier(Function<@Nullable Boolean, Text> renderedNameSupplier) {
     this.renderedNameSupplier = renderedNameSupplier;
@@ -62,8 +70,6 @@ public class BooleanButtonWidget extends ButtonWidget implements TooltipUpdated 
     return this;
   }
 
-  public @Nullable Function<@Nullable Boolean, @Nullable Text> tooltipSupplier = null;
-
   public BooleanButtonWidget setTooltipSupplier(Function<@Nullable Boolean, @Nullable Text> tooltipSupplier) {
     this.tooltipSupplier = tooltipSupplier;
     return this;
@@ -74,15 +80,13 @@ public class BooleanButtonWidget extends ButtonWidget implements TooltipUpdated 
     return this;
   }
 
-  public @Nullable Text keyboardShortcut = null;
-
   public BooleanButtonWidget setKeyboardShortcut(Text text) {
     this.keyboardShortcut = text;
     return this;
   }
 
   public Text getSummaryMessage() {
-    return super.getMessage(); // 忽略 renderMessage
+    return summaryTextSupplier == null ? super.getMessage() : summaryTextSupplier.get(); // 忽略 renderMessage
   }
 
   @Override
