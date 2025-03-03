@@ -24,10 +24,12 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
@@ -71,10 +73,12 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, Mishan
 
   @Override
   public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-    Direction direction = state.get(FACING).getOpposite();
-    BlockPos blockPos = pos.offset(direction);
-    final BlockState blockState = world.getBlockState(blockPos);
-    return !blockState.getSidesShape(world, pos).getFace(direction.getOpposite()).isEmpty() || !blockState.getOutlineShape(world, pos).getFace(direction.getOpposite()).isEmpty();
+    final Direction facing = state.get(FACING);
+    final Direction backDirection = facing.getOpposite();
+    final BlockPos backPos = pos.offset(backDirection);
+    final VoxelShape centerShape = Block.createCuboidShape(7, 7, 7, 9, 9, 9);
+    final BlockState backState = world.getBlockState(backPos);
+    return !VoxelShapes.matchesAnywhere(backState.getSidesShape(world, backPos).getFace(facing), centerShape, BooleanBiFunction.ONLY_SECOND) || !VoxelShapes.matchesAnywhere(backState.getCollisionShape(world, backPos).getFace(facing), centerShape, BooleanBiFunction.ONLY_SECOND);
   }
 
   @Override

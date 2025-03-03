@@ -112,7 +112,7 @@ public class HungSignBarBlock extends Block implements Waterloggable, MishangucB
             Direction.DOWN,
             downPos,
             downState
-                .getStateForNeighborUpdate(world, world, blockPos, Direction.UP, downPos, placementState, world.getRandom()),
+                .getStateForNeighborUpdate(world, world, downPos, Direction.UP, blockPos, placementState, world.getRandom()),
             world.getRandom())
         .with(WATERLOGGED, world.getFluidState(blockPos).getFluid() == Fluids.WATER);
   }
