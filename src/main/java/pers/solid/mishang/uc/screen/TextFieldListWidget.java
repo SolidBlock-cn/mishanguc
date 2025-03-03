@@ -32,6 +32,15 @@ import java.util.List;
 public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextFieldListWidget.Entry> {
 
   private final AbstractSignBlockEditScreen<?> signBlockEditScreen;
+  /**
+   * 用于显示时渲染背景时的高度。通常情况下与 {@link #height} 保持一致，但简化模式下会使用不一致的值。{@link #setHeight(int)} 方法不会同步更新此字段的值。
+   */
+  protected int heightForBackground;
+  /**
+   * 用于在简化模式下渲染内容的高度。在简化模式下，此值与实际的 {@link #height} 保持一致。
+   */
+  protected int cuttingHeight = 48;
+  public boolean simplified;
 
   public TextFieldListWidget(AbstractSignBlockEditScreen<?> signBlockEditScreen,
                              MinecraftClient client, int width, int height, int top, int bottom, int itemHeight) {
