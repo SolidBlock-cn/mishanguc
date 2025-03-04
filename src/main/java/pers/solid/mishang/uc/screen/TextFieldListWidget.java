@@ -266,7 +266,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   }
 
   protected void increaseHeight(int amount) {
-    cuttingHeight = (Math.clamp(height + amount, 0, heightForBackground));
+    cuttingHeight = (Math.clamp(cuttingHeight + amount, 0, heightForBackground));
     if (simplified) {
       this.setHeight(cuttingHeight);
     }
