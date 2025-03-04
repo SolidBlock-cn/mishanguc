@@ -904,7 +904,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
 
     // 同时也需要更新 textFieldListWidget 的可见性
-    textFieldListWidget.active = !visible;
+//    textFieldListWidget.active = !visible;
   }
 
   public static final Text HIDDEN_TEXT_NOTE = TextBridge.translatable("message.mishanguc.hide_gui.note");
@@ -1273,6 +1273,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       textFieldListWidget.selectedEntries.addAll(selectedEntriesCopy);
       textFieldListWidget.cuttingHeight = previousCuttingHeight;
       textFieldListWidget.setSimplified(previousSimplified);
+      textFieldListWidget.increaseHeight(0);
       for (TextFieldListWidget.Entry selectedEntry : textFieldListWidget.selectedEntries) {
         selectedEntry.setFocused(true);
       }
