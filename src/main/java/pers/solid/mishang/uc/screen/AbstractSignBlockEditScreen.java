@@ -1274,6 +1274,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       textFieldListWidget.selectedEntries.addAll(selectedEntriesCopy);
       textFieldListWidget.cuttingHeight = previousCuttingHeight;
       textFieldListWidget.setSimplified(previousSimplified);
+      textFieldListWidget.increaseHeight(0);
       for (TextFieldListWidget.Entry selectedEntry : textFieldListWidget.selectedEntries) {
         selectedEntry.setFocused(true);
       }
