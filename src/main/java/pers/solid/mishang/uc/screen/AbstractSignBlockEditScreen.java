@@ -48,7 +48,6 @@ import pers.solid.mishang.uc.util.VerticalAlign;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -1091,31 +1090,30 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
 
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int button) {
-    // 此处采用的是新版的写法，即使用 hoveredElement 找到正在悬浮的对象，而非在此方法中迭代。
-    // 旧版本可能采用不同的方法，具体参见 super 方法的源代码。
-    Optional<Element> optional = this.hoveredElement(mouseX, mouseY);
-    if (optional.isEmpty()) {
-      return false;
-    } else {
-      Element element = optional.get();
+    // 此处采用的是 1.21.4 版本之前的旧版写法
+    for (Element element : this.children()) {
       if (isSelectingButtonToSetCustom && element instanceof FloatButtonWidget floatButtonWidget) {
-        floatButtonWidget.playDownSound(MinecraftClient.getInstance().getSoundManager());
-        customValueStartAccepting(floatButtonWidget);
-        return true;
-      }
-      if (element.mouseClicked(mouseX, mouseY, button)) {
-        if (element == textFieldListWidget || element instanceof TextFieldWidget) {
-          this.setFocused(element);
+        if (element.isMouseOver(mouseX, mouseY)) {
+          floatButtonWidget.playDownSound(MinecraftClient.getInstance().getSoundManager());
+          customValueStartAccepting(floatButtonWidget);
+          return true;
         } else {
-          setFocused(textFieldListWidget);
-        }
-        if (button == 0) {
-          this.setDragging(true);
+          continue;
         }
       }
-
+      if (!element.mouseClicked(mouseX, mouseY, button))
+        continue;
+      if (element == textFieldListWidget || element instanceof TextFieldWidget) {
+        this.setFocused(element);
+      } else {
+        setFocused(textFieldListWidget);
+      }
+      if (button == 0) {
+        this.setDragging(true);
+      }
       return true;
     }
+    return false;
   }
 
   private void customValueStartAccepting(FloatButtonWidget floatButtonWidget) {
