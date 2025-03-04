@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.ApiStatus;
@@ -250,10 +251,10 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   protected void setSimplified(boolean simplified) {
     this.simplified = simplified;
     if (simplified) {
-//      this.height = cuttingHeight;
+      this.setRenderHorizontalShadows(false);
       this.bottom = top + cuttingHeight;
     } else {
-//      this.height = heightForBackground;
+      this.setRenderHorizontalShadows(true);
       this.bottom = top + heightForBackground;
     }
     this.setScrollAmount(getScrollAmount());
@@ -273,6 +274,22 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     final Entry selectedOrNull = getSelectedOrNull();
     if (selectedOrNull != null) {
       ensureVisible(selectedOrNull);
+    }
+  }
+
+  @Override
+  public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    super.render(context, mouseX, mouseY, delta);
+    if (simplified) {
+      // 在简化模式下，取消了 renderHorizontalShadows，因此在这里补充并重新写。
+      final int bottomForBackground = this.top + heightForBackground;
+      context.setShaderColor(0.25F, 0.25F, 0.25F, 1.0F);
+      context.drawTexture(Screen.OPTIONS_BACKGROUND_TEXTURE, this.left, 0, 0.0F, 0.0F, this.width, this.top, 32, 32);
+      context.drawTexture(Screen.OPTIONS_BACKGROUND_TEXTURE, this.left, bottomForBackground, 0.0F, bottomForBackground, this.width, this.height - bottomForBackground, 32, 32);
+      context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+      context.fillGradient(RenderLayer.getGuiOverlay(), this.left, this.top, this.right, this.top + 4, -16777216, 0, 0);
+      context.fillGradient(RenderLayer.getGuiOverlay(), this.left, bottomForBackground - 4, this.right, bottomForBackground, 0, -16777216, 0);
+      context.fillGradient(RenderLayer.getGuiOverlay(), this.left, this.bottom - 4, this.right, this.bottom, 0, -16777216, 0);
     }
   }
 

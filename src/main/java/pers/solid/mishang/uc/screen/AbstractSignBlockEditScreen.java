@@ -1391,14 +1391,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   }
 
   @Override
-  public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+  public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
     // 在启用了简化模式时，对着隐藏按钮并按下 Shift 键滚动时，可调节高度。
     if (textFieldListWidget.simplified && hideButton.isHovered() && hasShiftDown()) {
-      textFieldListWidget.increaseHeight((int) verticalAmount * -4);
+      textFieldListWidget.increaseHeight((int) amount * -4);
       hideButton.updateTooltip();
       return true;
     }
-    return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+    return super.mouseScrolled(mouseX, mouseY, amount);
   }
 
   private void finishEditing() {
