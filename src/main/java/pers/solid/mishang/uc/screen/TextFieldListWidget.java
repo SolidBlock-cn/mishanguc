@@ -33,7 +33,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
   private final AbstractSignBlockEditScreen<?> signBlockEditScreen;
   /**
-   * 用于显示时渲染背景时的高度。通常情况下与 {@link #height} 保持一致，但简化模式下会使用不一致的值。{@link #setHeight(int)} 方法不会同步更新此字段的值。
+   * 用于显示时渲染背景时的高度。通常情况下与 {@link #height} 保持一致，但简化模式下会使用不一致的值。
    */
   protected int heightForBackground;
   /**
@@ -49,7 +49,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     this.setRenderBackground(false);
     this.setRenderHeader(false, 0);
     this.setRenderSelection(false);
-    this.heightForBackground = height;
+    this.heightForBackground = bottom - top;
   }
 
   private boolean isFocused;
@@ -250,9 +250,11 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   protected void setSimplified(boolean simplified) {
     this.simplified = simplified;
     if (simplified) {
-      this.setHeight(cuttingHeight);
+//      this.height = cuttingHeight;
+      this.bottom = top + cuttingHeight;
     } else {
-      this.setHeight(heightForBackground);
+//      this.height = heightForBackground;
+      this.bottom = top + heightForBackground;
     }
     this.setScrollAmount(getScrollAmount());
     final Entry selectedOrNull = getSelectedOrNull();
@@ -262,9 +264,10 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   }
 
   protected void increaseHeight(int amount) {
-    cuttingHeight = (MathHelper.clamp(height + amount, 0, heightForBackground));
+    cuttingHeight = (MathHelper.clamp(cuttingHeight + amount, 0, heightForBackground));
     if (simplified) {
-      this.setHeight(cuttingHeight);
+//      this.height = cuttingHeight;
+      this.bottom = this.top + cuttingHeight;
     }
     setScrollAmount(getScrollAmount()); // 更新滚动以避免滚动溢出
     final Entry selectedOrNull = getSelectedOrNull();
