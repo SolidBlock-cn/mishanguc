@@ -258,6 +258,11 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     } else {
       this.setHeight(heightForBackground);
     }
+    this.setScrollAmount(getScrollAmount());
+    final Entry selectedOrNull = getSelectedOrNull();
+    if (selectedOrNull != null) {
+      ensureVisible(selectedOrNull);
+    }
   }
 
   protected void increaseHeight(int amount) {
@@ -265,7 +270,11 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     if (simplified) {
       this.setHeight(cuttingHeight);
     }
-    setScrollY(getScrollY()); // 更新滚动以避免滚动溢出
+    setScrollAmount(getScrollAmount()); // 更新滚动以避免滚动溢出
+    final Entry selectedOrNull = getSelectedOrNull();
+    if (selectedOrNull != null) {
+      ensureVisible(selectedOrNull);
+    }
   }
 
   protected void drawHeaderAndFooterSeparators(DrawContext context) {
@@ -273,7 +282,9 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     if (simplified) {
       // 简化模式下，多显示一个。
       Identifier identifier2 = this.client.world == null ? Screen.FOOTER_SEPARATOR_TEXTURE : Screen.INWORLD_FOOTER_SEPARATOR_TEXTURE;
-      context.drawTexture(RenderLayer::getGuiTextured, identifier2, this.getX(), this.getY() - heightForBackground, 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
+      RenderSystem.enableBlend();
+      context.drawTexture(identifier2, this.getX(), this.getY() + heightForBackground, 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
+      RenderSystem.disableBlend();
     }
   }
 
