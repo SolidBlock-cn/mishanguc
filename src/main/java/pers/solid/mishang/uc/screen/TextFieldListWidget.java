@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.ApiStatus;
@@ -271,6 +272,14 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     final Entry selectedOrNull = getSelectedOrNull();
     if (selectedOrNull != null) {
       ensureVisible(selectedOrNull);
+    }
+  }
+
+  @Override
+  public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    super.render(context, mouseX, mouseY, delta);
+    if (simplified) {
+      context.fillGradient(RenderLayer.getGuiOverlay(), 0, top + cuttingHeight - 4, width, top + cuttingHeight, 0, -16777216, 0);
     }
   }
 
