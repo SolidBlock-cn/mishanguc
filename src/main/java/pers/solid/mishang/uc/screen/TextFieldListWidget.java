@@ -47,6 +47,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     super(client, width, height, top, bottom, itemHeight);
     this.signBlockEditScreen = signBlockEditScreen;
     setRenderBackground(false);
+    this.heightForBackground = height;
   }
 
   private boolean isFocused;
@@ -242,6 +243,32 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   @Override
   protected void drawSelectionHighlight(DrawContext context, int y, int entryWidth, int entryHeight, int borderColor, int fillColor) {
     context.fill(1, y - 1, width - 1, y + entryHeight + 4, 0xfff0f0f0);
+  }
+
+  protected void setSimplified(boolean simplified) {
+    this.simplified = simplified;
+    if (simplified) {
+      this.setHeight(cuttingHeight);
+    } else {
+      this.setHeight(heightForBackground);
+    }
+    this.setScrollAmount(getScrollAmount());
+    final Entry selectedOrNull = getSelectedOrNull();
+    if (selectedOrNull != null) {
+      ensureVisible(selectedOrNull);
+    }
+  }
+
+  protected void increaseHeight(int amount) {
+    cuttingHeight = (MathHelper.clamp(height + amount, 0, heightForBackground));
+    if (simplified) {
+      this.setHeight(cuttingHeight);
+    }
+    setScrollAmount(getScrollAmount()); // 更新滚动以避免滚动溢出
+    final Entry selectedOrNull = getSelectedOrNull();
+    if (selectedOrNull != null) {
+      ensureVisible(selectedOrNull);
+    }
   }
 
   /**
