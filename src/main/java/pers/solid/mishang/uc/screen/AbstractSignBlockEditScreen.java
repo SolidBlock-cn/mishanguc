@@ -1289,11 +1289,16 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
   }
 
+  private boolean _previousShiftDown = false;
+
   @Override
   public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
     if (keyCode == GLFW.GLFW_KEY_LEFT_SHIFT || keyCode == GLFW.GLFW_KEY_RIGHT_SHIFT) {
       // 因技术限制，在修改高度以及按下/松开 shift 后需要更新。
-      hideButton.updateTooltip();
+      if (!_previousShiftDown) {
+        hideButton.updateTooltip();
+      }
+      _previousShiftDown = true;
     }
     if (hasControlDown() && !hasShiftDown() && !hasAltDown()) {
         /*if (keyCode == GLFW.GLFW_KEY_B) {
@@ -1378,7 +1383,10 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
     if (keyCode == GLFW.GLFW_KEY_LEFT_SHIFT || keyCode == GLFW.GLFW_KEY_RIGHT_SHIFT) {
       // 因技术限制，在修改高度以及按下/松开 shift 后需要更新。
-      hideButton.updateTooltip();
+      if (_previousShiftDown) {
+        hideButton.updateTooltip();
+      }
+      _previousShiftDown = false;
     }
     return super.keyReleased(keyCode, scanCode, modifiers);
   }
