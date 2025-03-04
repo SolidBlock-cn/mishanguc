@@ -2,6 +2,17 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.4.5
+
+- Adjusted the placing rule of the wall light block and corner light block. The light can be placed only when the block has a sides shape or collision at the center of the surface, avoiding placing the light on the side where the center is empty.
+- Fixed the incorrect behavior of hung sign bars.
+- Fixed the issue that in the sign edit screen, when there are too many edit boxes and some boxes are not displayed, those edit boxes not displayed will still influence the interaction of other buttons.
+- Introduced the utility of simplifying the sign edit screen. Hold Shift and click the "hide" button to enable or disable simplified ode. In simplified mode, even if there are many texts, the text editing interface will still display in a smaller area, leaving more room for displaying the actual effect while editing the text. To adjust the height of the text area, hold Shift down, hover the mouse on the "hide" button and scroll the mouse wheel, or when the "hide" button has a focus, hold Shift and press the up/down arrow key.
+
+### 1.4.4
+
+- Fixed the severe issue that the mod is unable to run in 1.21.1.
+
 ### 1.4.3
 
 - Fit 1.21.4.

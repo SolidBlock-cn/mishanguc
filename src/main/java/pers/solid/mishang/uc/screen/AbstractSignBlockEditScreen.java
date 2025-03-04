@@ -738,14 +738,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第三行：隐藏界面
    */
-  public final BooleanButtonWidget hideButton = new BooleanButtonWidget(0, height - 25, 40, 20, TextBridge.translatable("message.mishanguc.hide_gui"), booleanButtonWidget -> hasShiftDown() ? textFieldListWidget.simplified : hidden, value -> {
+  public final BooleanButtonWidget hideButton = new BooleanButtonWidget(0, height - 25, 40, 20, TextBridge.translatable("message.mishanguc.hide_gui"), booleanButtonWidget -> hidden || (hasShiftDown() ? textFieldListWidget.simplified : hidden), value -> {
     if (!hidden && hasShiftDown()) {
       textFieldListWidget.setSimplified(!textFieldListWidget.simplified);
     } else {
       hidden = value;
     }
   }, EMPTY_PRESS_ACTION)
-      .setSummaryTextSupplier(() -> hasShiftDown() ? Text.translatable("message.mishanguc.simplify") : TextBridge.translatable("message.mishanguc.hide_gui"))
+      .setSummaryTextSupplier(() -> (hasShiftDown() && !hidden) ? Text.translatable("message.mishanguc.simplify") : TextBridge.translatable("message.mishanguc.hide_gui"))
       .setRenderedNameSupplier(value -> {
         if (hidden) {
           // 在隐藏模式下，显示“显示”按钮
@@ -756,9 +756,10 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           return TextBridge.translatable("message.mishanguc.hide_gui.hide");
         }
       })
-      .setTooltipSupplier(value -> TextBridge.translatable("message.mishanguc.hide_gui.tooltip")
-          .append(ScreenTexts.LINE_BREAK)
-          .append(textFieldListWidget.simplified ? Text.translatable("message.mishanguc.simplify.height", textFieldListWidget.cuttingHeight).formatted(Formatting.ITALIC).append(ScreenTexts.LINE_BREAK) : Text.empty())
+      .setTooltipSupplier(value -> ((hidden || !hasShiftDown())
+          ? TextBridge.translatable("message.mishanguc.hide_gui.tooltip").append(ScreenTexts.LINE_BREAK)
+          : textFieldListWidget.simplified ? Text.translatable("message.mishanguc.simplify.height", textFieldListWidget.cuttingHeight).append(ScreenTexts.LINE_BREAK) : Text.empty()
+      )
           .append(TextBridge.translatable("message.mishanguc.simplify.tooltip")
               .formatted(Formatting.GRAY)));
 
