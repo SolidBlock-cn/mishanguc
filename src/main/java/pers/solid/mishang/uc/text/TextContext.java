@@ -34,7 +34,6 @@ import pers.solid.mishang.uc.util.VerticalAlign;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
 
 /**
  * 对 {@link net.minecraft.text.Text} 的简单包装与扩展，允许设置对齐属性、尺寸等参数，以便渲染时使用。同时还提供对象与 NBT、JSON 之间的转换。
@@ -208,10 +207,12 @@ public class TextContext implements Cloneable {
    */
   @Contract(value = "_, _, _ -> param2", mutates = "param2")
   public static @NotNull TextContext fromNbt(NbtElement nbt, TextContext defaults, RegistryWrapper.WrapperLookup registryLookup) {
-    if (nbt instanceof NbtString || nbt instanceof AbstractNbtNumber) {
-      defaults.text = TextBridge.literal(nbt.asString().or(() -> nbt.asNumber().map(Objects::toString)).orElse(""));
+    if (nbt instanceof NbtString(String value)) {
+      defaults.text = Text.literal(value);
     } else if (nbt instanceof NbtCompound nbtCompound) {
       defaults.readNbt(nbtCompound, registryLookup);
+    } else if (nbt instanceof AbstractNbtNumber nbtNumber) {
+      defaults.text = Text.literal(nbtNumber.numberValue().toString());
     }
     return defaults;
   }
@@ -421,7 +422,7 @@ public class TextContext implements Cloneable {
   @Contract(mutates = "param1")
   public void writeNbt(@NotNull NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
     if (text != null) {
-      nbt.put("text", TextCodecs.CODEC, registryLookup.getOps(NbtOps.INSTANCE), text);
+      nbt.put("text", TextCodecs.CODEC, registryLookup == null ? NbtOps.INSTANCE : registryLookup.getOps(NbtOps.INSTANCE), text);
     } else {
       nbt.remove("text");
     }

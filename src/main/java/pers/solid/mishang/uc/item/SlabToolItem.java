@@ -203,11 +203,11 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
   @Override
   public boolean canMine(ItemStack stack, BlockState state, World world, BlockPos pos, LivingEntity user) {
     // 处理双台阶的情况。
-    if (world.isClient && user instanceof ClientPlayerEntity clientPlayerEntity) {
+    if (world.isClient && user instanceof ClientPlayerEntity) {
       final HitResult raycast = MinecraftClient.getInstance().crosshairTarget;
       if (!(raycast instanceof BlockHitResult) || raycast.getType() == HitResult.Type.MISS) return false;
       boolean isTop = raycast.getPos().y - (double) ((BlockHitResult) raycast).getBlockPos().getY() > 0.5D;
-      final boolean bl1 = performBreak(world, pos, clientPlayerEntity, isTop);
+      final boolean bl1 = performBreak(world, pos, ((PlayerEntity) user), isTop);
       ClientPlayNetworking.send(new SlabToolPayload(pos, isTop));
       return !bl1;
     } else {

@@ -158,7 +158,7 @@ public final class NbtPrettyPrinter {
                   .formatted(Formatting.GRAY)
                   .styled(style -> style
                       .withHoverEvent(new HoverEvent.ShowText(TextBridge.translatable(
-                              "debug.mishanguc.nbt.compound_display_full")))
+                          "debug.mishanguc.nbt.compound_display_full")))
                       .withClickEvent(new NbtClickEvent(compound))));
         }
         text.append("}");

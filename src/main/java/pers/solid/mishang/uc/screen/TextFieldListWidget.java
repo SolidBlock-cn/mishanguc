@@ -289,12 +289,9 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
   @Override
   protected void drawMenuListBackground(DrawContext context) {
-    // todo check enableBlend
-//    RenderSystem.enableBlend();
     Identifier identifier = background;
     context.drawTexture(RenderLayer::getGuiTextured, identifier, this.getX(), 0, 0, 0, this.getWidth(), this.getY(), 32, 32);
     context.drawTexture(RenderLayer::getGuiTextured, identifier, this.getX(), getY() + heightForBackground, 0, 0, this.getWidth(), heightForBackground, 32, 32);
-//    RenderSystem.disableBlend();
   }
 
   /**

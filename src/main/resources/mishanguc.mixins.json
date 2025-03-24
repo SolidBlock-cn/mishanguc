@@ -11,6 +11,7 @@
     "BeaconBlockEntityMixin",
     "BucketItemAccessor",
     "ChunkHolderAccessor",
+    "ClickEventMixin",
     "FenceBlockMixin",
     "ItemMixin",
     "ItemMixin$SettingsMixin",
@@ -20,8 +21,7 @@
     "PaneBlockMixin",
     "PointOfInterestTypesMixin",
     "RecipeJsonBuilderMixins",
-    "WallBlockMixin",
-    "WorldChunkMixin"
+    "WallBlockMixin"
   ],
   "client": [
     "BetterClientPlayerInteractionManagerMixin",

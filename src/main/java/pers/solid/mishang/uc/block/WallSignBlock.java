@@ -283,7 +283,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
             case WALL -> AxisRotation.R0;
             case FLOOR -> AxisRotation.R90;
             default -> AxisRotation.R270;
-      };
+          };
           return ModelVariantOperator.ROTATION_X.withValue(x);
         }))
         .coordinate(BlockStateModelGeneratorAccessor.getSOUTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS())

@@ -5,6 +5,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -17,6 +18,9 @@ import net.minecraft.client.render.item.property.bool.BooleanProperties;
 import net.minecraft.client.render.item.property.numeric.NumericProperties;
 import net.minecraft.client.render.item.property.select.SelectProperties;
 import net.minecraft.client.render.item.tint.TintSourceTypes;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
+import net.minecraft.item.BlockItem;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -26,6 +30,7 @@ import pers.solid.mishang.uc.block.ColoredBlock;
 import pers.solid.mishang.uc.block.StandingSignBlock;
 import pers.solid.mishang.uc.blockentity.*;
 import pers.solid.mishang.uc.blocks.MishangucBlocks;
+import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.item.*;
 import pers.solid.mishang.uc.networking.EditSignPayload;
 import pers.solid.mishang.uc.networking.GetBlockDataPayload;
@@ -35,6 +40,7 @@ import pers.solid.mishang.uc.render.*;
 import pers.solid.mishang.uc.screen.HungSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.StandingSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -62,6 +68,19 @@ public class MishangucClient implements ClientModInitializer {
     registerNetworking();
 
     registerItemProperties();
+
+    ItemTooltipCallback.EVENT.register((itemStack, tooltipContext, tooltipType, list) -> {
+      if (itemStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof WithMishangTooltip withMishangTooltip) {
+        withMishangTooltip.getMishangTooltip(itemStack, tooltipContext, list, tooltipType);
+      } else if (itemStack.getItem() instanceof WithMishangTooltip withMishangTooltip) {
+        withMishangTooltip.getMishangTooltip(itemStack, tooltipContext, list, tooltipType);
+      }
+    });
+
+    ItemTooltipCallback.EVENT.register((itemStack, tooltipContext, tooltipType, list) -> {
+      TooltipDisplayComponent tooltipDisplayComponent = itemStack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT);
+      itemStack.appendComponentTooltip(MishangucComponents.EXPLOSION_TOOL_DATA, tooltipContext, tooltipDisplayComponent, list::add, tooltipType);
+    });
   }
 
   private static void registerItemProperties() {

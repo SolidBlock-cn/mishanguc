@@ -1,6 +1,11 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "mishanguc:block/colored_glowing_iron_standing_sign_barred"
+    "model": "mishanguc:block/colored_glowing_iron_standing_sign_barred",
+    "tints": [
+      {
+        "type": "mishanguc:color"
+      }
+    ]
   }
 }

@@ -12,6 +12,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
@@ -121,7 +122,7 @@ public abstract class BlockEntityWithText extends BlockEntity {
           final PlayerEntity editorAllowed = entity.getEditor();
           entity.setEditor(null);
           final @Unmodifiable ImmutableList<TextContext> textContexts = nbt != null
-              ? nbt.getList("texts").stream()
+              ? nbt.getList("texts").stream().flatMap(NbtList::stream)
               .map(e -> TextContext.fromNbt(e, entity.createDefaultTextContext(), context.player().getRegistryManager()))
               .collect(ImmutableList.toImmutableList())
               : null;

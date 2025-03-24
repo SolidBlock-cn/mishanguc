@@ -71,14 +71,10 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     blockPlacementContext.playSound();
     // 放置方块。对客户端和服务器均生效。
     int flags = getFlags(stack);
-    suppressOnBlockAdded = true;
     blockPlacementContext.setBlockState(flags);
-    suppressOnBlockAdded = false;
     blockPlacementContext.setBlockEntity();
     return ActionResult.SUCCESS;
   }
-
-  public static boolean suppressOnBlockAdded = false;
 
   @Override
   public ActionResult beginAttackBlock(
@@ -98,7 +94,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   }
 
   private static int getFlags(ItemStack stack) {
-    return 0b11010;
+    return 0b1101011010;
   }
 
   @Override

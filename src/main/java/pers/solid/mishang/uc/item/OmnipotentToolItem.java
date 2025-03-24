@@ -11,6 +11,7 @@ import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -33,7 +34,7 @@ public class OmnipotentToolItem extends Item implements MishangucItem, Interacts
   protected static final ToolMaterial MATERIAL = new ToolMaterial(TagKey.of(RegistryKeys.BLOCK, Mishanguc.id("incorrect_for_omnipotent_tool")), Integer.MAX_VALUE, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Integer.MAX_VALUE, TagKey.of(RegistryKeys.ITEM, Mishanguc.id("omnipotent_repair_items")));
 
   public OmnipotentToolItem(Settings settings) {
-    super(settings);
+    super(settings.tool(MATERIAL, BlockTags.PICKAXE_MINEABLE, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, 0f).component(DataComponentTypes.UNBREAKABLE, Unit.INSTANCE));
   }
 
   @Override

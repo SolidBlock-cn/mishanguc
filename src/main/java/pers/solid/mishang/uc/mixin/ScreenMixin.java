@@ -4,8 +4,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,7 +20,7 @@ import pers.solid.mishang.uc.util.TextClickEvent;
 
 @Environment(EnvType.CLIENT)
 @Mixin(Screen.class)
-public class ScreenMixin {
+public abstract class ScreenMixin {
   @Shadow
   @Nullable
   protected MinecraftClient client;
@@ -31,20 +33,18 @@ public class ScreenMixin {
       method = "handleTextClick",
       at =
       @At(
-          target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;sendCommand(Ljava/lang/String;)Z",
-          shift = At.Shift.BEFORE,
-          value = "INVOKE"),
+          target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V",
+          value = "INVOKE",
+          ordinal = 1),
       cancellable = true)
   public void handleTextClickMixin(Style style, CallbackInfoReturnable<Boolean> cir) {
     final ClickEvent clickEvent = style.getClickEvent();
-    if (clickEvent instanceof final TextClickEvent textClickEvent && client != null && client.player != null) {
-      this.client.player.sendMessage(
-          textClickEvent.text, false);
+    if (clickEvent instanceof TextClickEvent(Text text) && client != null && client.player != null) {
+      this.client.player.sendMessage(text, false);
       cir.setReturnValue(true);
       cir.cancel();
-    } else if (clickEvent instanceof final NbtClickEvent nbtClickEvent && client != null && client.player != null) {
-      this.client.player.sendMessage(
-          NbtPrettyPrinter.serialize(nbtClickEvent.nbt), false);
+    } else if (clickEvent instanceof NbtClickEvent(NbtElement nbt) && client != null && client.player != null) {
+      this.client.player.sendMessage(NbtPrettyPrinter.serialize(nbt), false);
       cir.setReturnValue(true);
       cir.cancel();
     }
