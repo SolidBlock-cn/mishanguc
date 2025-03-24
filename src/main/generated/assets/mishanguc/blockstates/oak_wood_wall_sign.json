@@ -3,25 +3,24 @@
     "face=ceiling,facing=east": {
       "model": "mishanguc:block/oak_wood_wall_sign",
       "uvlock": true,
-      "x": -90,
+      "x": 270,
       "y": 270
     },
     "face=ceiling,facing=north": {
       "model": "mishanguc:block/oak_wood_wall_sign",
       "uvlock": true,
-      "x": -90,
+      "x": 270,
       "y": 180
     },
     "face=ceiling,facing=south": {
       "model": "mishanguc:block/oak_wood_wall_sign",
       "uvlock": true,
-      "x": -90,
-      "y": 0
+      "x": 270
     },
     "face=ceiling,facing=west": {
       "model": "mishanguc:block/oak_wood_wall_sign",
       "uvlock": true,
-      "x": -90,
+      "x": 270,
       "y": 90
     },
     "face=floor,facing=east": {
@@ -39,8 +38,7 @@
     "face=floor,facing=south": {
       "model": "mishanguc:block/oak_wood_wall_sign",
       "uvlock": true,
-      "x": 90,
-      "y": 0
+      "x": 90
     },
     "face=floor,facing=west": {
       "model": "mishanguc:block/oak_wood_wall_sign",
@@ -51,25 +49,20 @@
     "face=wall,facing=east": {
       "model": "mishanguc:block/oak_wood_wall_sign",
       "uvlock": true,
-      "x": 0,
       "y": 270
     },
     "face=wall,facing=north": {
       "model": "mishanguc:block/oak_wood_wall_sign",
       "uvlock": true,
-      "x": 0,
       "y": 180
     },
     "face=wall,facing=south": {
       "model": "mishanguc:block/oak_wood_wall_sign",
-      "uvlock": true,
-      "x": 0,
-      "y": 0
+      "uvlock": true
     },
     "face=wall,facing=west": {
       "model": "mishanguc:block/oak_wood_wall_sign",
       "uvlock": true,
-      "x": 0,
       "y": 90
     }
   }

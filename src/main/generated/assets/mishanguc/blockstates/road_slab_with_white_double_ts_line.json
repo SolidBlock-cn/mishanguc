@@ -25,16 +25,13 @@
       "y": 180
     },
     "facing=south,type=bottom": {
-      "model": "mishanguc:block/road_slab_with_white_double_ts_line",
-      "y": 0
+      "model": "mishanguc:block/road_slab_with_white_double_ts_line"
     },
     "facing=south,type=double": {
-      "model": "mishanguc:block/road_with_white_double_ts_line",
-      "y": 0
+      "model": "mishanguc:block/road_with_white_double_ts_line"
     },
     "facing=south,type=top": {
-      "model": "mishanguc:block/road_slab_with_white_double_ts_line_top",
-      "y": 0
+      "model": "mishanguc:block/road_slab_with_white_double_ts_line_top"
     },
     "facing=west,type=bottom": {
       "model": "mishanguc:block/road_slab_with_white_double_ts_line",

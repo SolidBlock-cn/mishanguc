@@ -37,14 +37,12 @@
     "facing=south,strip_type=horizontal": {
       "model": "mishanguc:block/green_thin_strip_wall_light_tube",
       "uvlock": true,
-      "x": 270,
-      "y": 0
+      "x": 270
     },
     "facing=south,strip_type=vertical": {
       "model": "mishanguc:block/green_thin_strip_wall_light_tube_vertical",
       "uvlock": true,
-      "x": 270,
-      "y": 0
+      "x": 270
     },
     "facing=up,strip_type=horizontal": {
       "model": "mishanguc:block/green_thin_strip_wall_light_tube",

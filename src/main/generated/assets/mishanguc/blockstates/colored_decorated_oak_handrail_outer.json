@@ -13,12 +13,11 @@
     "facing=south_east": {
       "model": "mishanguc:block/colored_decorated_oak_handrail_outer",
       "uvlock": true,
-      "y": -90
+      "y": 270
     },
     "facing=south_west": {
       "model": "mishanguc:block/colored_decorated_oak_handrail_outer",
-      "uvlock": true,
-      "y": 0
+      "uvlock": true
     }
   }
 }

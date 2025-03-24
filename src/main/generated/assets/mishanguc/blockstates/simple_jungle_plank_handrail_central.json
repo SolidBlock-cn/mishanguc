@@ -48,8 +48,7 @@
     {
       "apply": {
         "model": "mishanguc:block/simple_jungle_plank_handrail_central_side",
-        "uvlock": true,
-        "y": 0
+        "uvlock": true
       },
       "when": {
         "south": "true"
@@ -58,8 +57,7 @@
     {
       "apply": {
         "model": "mishanguc:block/simple_jungle_plank_handrail_central_post_side",
-        "uvlock": true,
-        "y": 0
+        "uvlock": true
       },
       "when": {
         "south": "false"

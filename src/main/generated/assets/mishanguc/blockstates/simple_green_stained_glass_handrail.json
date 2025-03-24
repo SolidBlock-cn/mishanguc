@@ -12,8 +12,7 @@
     },
     "facing=south": {
       "model": "mishanguc:block/simple_green_stained_glass_handrail",
-      "uvlock": true,
-      "y": 0
+      "uvlock": true
     },
     "facing=west": {
       "model": "mishanguc:block/simple_green_stained_glass_handrail",

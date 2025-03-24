@@ -8,20 +8,17 @@
     "facing=east": {
       "model": "mishanguc:block/cyan_thin_column_light",
       "uvlock": true,
-      "x": 270,
       "y": 270
     },
     "facing=north": {
       "model": "mishanguc:block/cyan_thin_column_light",
       "uvlock": true,
-      "x": 270,
       "y": 180
     },
     "facing=south": {
       "model": "mishanguc:block/cyan_thin_column_light",
       "uvlock": true,
-      "x": 270,
-      "y": 0
+      "y": 270
     },
     "facing=up": {
       "model": "mishanguc:block/cyan_thin_column_light",
@@ -30,7 +27,6 @@
     "facing=west": {
       "model": "mishanguc:block/cyan_thin_column_light",
       "uvlock": true,
-      "x": 270,
       "y": 90
     }
   }

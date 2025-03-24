@@ -13,8 +13,7 @@
       "y": 270
     },
     "axis=x,facing=south_west": {
-      "model": "mishanguc:block/road_with_yt_s_n_ba_line_mirrored",
-      "y": 0
+      "model": "mishanguc:block/road_with_yt_s_n_ba_line_mirrored"
     },
     "axis=z,facing=north_east": {
       "model": "mishanguc:block/road_with_yt_s_n_ba_line",
@@ -26,11 +25,10 @@
     },
     "axis=z,facing=south_east": {
       "model": "mishanguc:block/road_with_yt_s_n_ba_line_mirrored",
-      "y": -90
+      "y": 270
     },
     "axis=z,facing=south_west": {
-      "model": "mishanguc:block/road_with_yt_s_n_ba_line",
-      "y": 0
+      "model": "mishanguc:block/road_with_yt_s_n_ba_line"
     }
   }
 }

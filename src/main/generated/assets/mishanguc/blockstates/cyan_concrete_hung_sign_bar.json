@@ -37,7 +37,7 @@
       "apply": {
         "model": "mishanguc:block/cyan_concrete_hung_sign_bar",
         "uvlock": true,
-        "y": -90
+        "y": 270
       },
       "when": {
         "axis": "x",

@@ -13,12 +13,11 @@
     "facing=south_east": {
       "model": "mishanguc:block/simple_acacia_plank_handrail_corner",
       "uvlock": true,
-      "y": -90
+      "y": 270
     },
     "facing=south_west": {
       "model": "mishanguc:block/simple_acacia_plank_handrail_corner",
-      "uvlock": true,
-      "y": 0
+      "uvlock": true
     }
   }
 }

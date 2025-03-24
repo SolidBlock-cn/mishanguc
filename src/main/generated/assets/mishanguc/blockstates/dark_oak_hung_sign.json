@@ -46,7 +46,7 @@
       "apply": {
         "model": "mishanguc:block/dark_oak_hung_sign_top_bar",
         "uvlock": true,
-        "y": -90
+        "y": 270
       },
       "when": {
         "axis": "x",

@@ -25,12 +25,10 @@
       "y": 180
     },
     "axis=z,facing=south_east": {
-      "model": "mishanguc:block/road_with_white_ra_line_offset_out_mirrored",
-      "y": 0
+      "model": "mishanguc:block/road_with_white_ra_line_offset_out_mirrored"
     },
     "axis=z,facing=south_west": {
-      "model": "mishanguc:block/road_with_white_ra_line_offset_out",
-      "y": 0
+      "model": "mishanguc:block/road_with_white_ra_line_offset_out"
     }
   }
 }

@@ -37,16 +37,13 @@
       "y": 270
     },
     "axis=x,facing=south_west,type=bottom": {
-      "model": "mishanguc:block/road_slab_with_yt_s_n_ba_line_mirrored",
-      "y": 0
+      "model": "mishanguc:block/road_slab_with_yt_s_n_ba_line_mirrored"
     },
     "axis=x,facing=south_west,type=double": {
-      "model": "mishanguc:block/road_with_yt_s_n_ba_line_mirrored",
-      "y": 0
+      "model": "mishanguc:block/road_with_yt_s_n_ba_line_mirrored"
     },
     "axis=x,facing=south_west,type=top": {
-      "model": "mishanguc:block/road_slab_with_yt_s_n_ba_line_mirrored_top",
-      "y": 0
+      "model": "mishanguc:block/road_slab_with_yt_s_n_ba_line_mirrored_top"
     },
     "axis=z,facing=north_east,type=bottom": {
       "model": "mishanguc:block/road_slab_with_yt_s_n_ba_line",
@@ -74,27 +71,24 @@
     },
     "axis=z,facing=south_east,type=bottom": {
       "model": "mishanguc:block/road_slab_with_yt_s_n_ba_line_mirrored",
-      "y": -90
+      "y": 270
     },
     "axis=z,facing=south_east,type=double": {
       "model": "mishanguc:block/road_with_yt_s_n_ba_line_mirrored",
-      "y": -90
+      "y": 270
     },
     "axis=z,facing=south_east,type=top": {
       "model": "mishanguc:block/road_slab_with_yt_s_n_ba_line_mirrored_top",
-      "y": -90
+      "y": 270
     },
     "axis=z,facing=south_west,type=bottom": {
-      "model": "mishanguc:block/road_slab_with_yt_s_n_ba_line",
-      "y": 0
+      "model": "mishanguc:block/road_slab_with_yt_s_n_ba_line"
     },
     "axis=z,facing=south_west,type=double": {
-      "model": "mishanguc:block/road_with_yt_s_n_ba_line",
-      "y": 0
+      "model": "mishanguc:block/road_with_yt_s_n_ba_line"
     },
     "axis=z,facing=south_west,type=top": {
-      "model": "mishanguc:block/road_slab_with_yt_s_n_ba_line_top",
-      "y": 0
+      "model": "mishanguc:block/road_slab_with_yt_s_n_ba_line_top"
     }
   }
 }

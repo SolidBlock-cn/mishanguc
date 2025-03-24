@@ -33,28 +33,24 @@
       "y": 90
     },
     "facing=south,on_slab=false": {
-      "model": "mishanguc:block/arrow_left_uturn_mark",
-      "y": 0
+      "model": "mishanguc:block/arrow_left_uturn_mark"
     },
     "facing=south,on_slab=true": {
-      "model": "mishanguc:block/arrow_left_uturn_mark_on_slab",
-      "y": 0
+      "model": "mishanguc:block/arrow_left_uturn_mark_on_slab"
     },
     "facing=south_east,on_slab=false": {
       "model": "mishanguc:block/arrow_left_uturn_mark_rotated",
-      "y": -90
+      "y": 270
     },
     "facing=south_east,on_slab=true": {
       "model": "mishanguc:block/arrow_left_uturn_mark_on_slab_rotated",
-      "y": -90
+      "y": 270
     },
     "facing=south_west,on_slab=false": {
-      "model": "mishanguc:block/arrow_left_uturn_mark_rotated",
-      "y": 0
+      "model": "mishanguc:block/arrow_left_uturn_mark_rotated"
     },
     "facing=south_west,on_slab=true": {
-      "model": "mishanguc:block/arrow_left_uturn_mark_on_slab_rotated",
-      "y": 0
+      "model": "mishanguc:block/arrow_left_uturn_mark_on_slab_rotated"
     },
     "facing=west,on_slab=false": {
       "model": "mishanguc:block/arrow_left_uturn_mark",

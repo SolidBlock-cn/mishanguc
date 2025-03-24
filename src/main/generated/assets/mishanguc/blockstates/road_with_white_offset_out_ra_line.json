@@ -10,11 +10,10 @@
     },
     "facing=south_east": {
       "model": "mishanguc:block/road_with_white_offset_out_ra_line",
-      "y": -90
+      "y": 270
     },
     "facing=south_west": {
-      "model": "mishanguc:block/road_with_white_offset_out_ra_line",
-      "y": 0
+      "model": "mishanguc:block/road_with_white_offset_out_ra_line"
     }
   }
 }

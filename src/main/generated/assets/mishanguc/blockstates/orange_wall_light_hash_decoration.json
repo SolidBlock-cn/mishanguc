@@ -3,8 +3,7 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_center",
-        "x": 180,
-        "y": 0
+        "x": 180
       },
       "when": {
         "facing": "down"
@@ -13,8 +12,7 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_connection",
-        "x": 180,
-        "y": 360
+        "x": 180
       },
       "when": {
         "facing": "down",
@@ -46,8 +44,7 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_connection",
-        "x": 180,
-        "y": 450
+        "x": 180
       },
       "when": {
         "east": "true",
@@ -56,9 +53,7 @@
     },
     {
       "apply": {
-        "model": "mishanguc:block/orange_wall_light_hash_decoration_center",
-        "x": 0,
-        "y": 0
+        "model": "mishanguc:block/orange_wall_light_hash_decoration_center"
       },
       "when": {
         "facing": "up"
@@ -67,7 +62,6 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_connection",
-        "x": 0,
         "y": 180
       },
       "when": {
@@ -77,9 +71,7 @@
     },
     {
       "apply": {
-        "model": "mishanguc:block/orange_wall_light_hash_decoration_connection",
-        "x": 0,
-        "y": 0
+        "model": "mishanguc:block/orange_wall_light_hash_decoration_connection"
       },
       "when": {
         "facing": "up",
@@ -89,7 +81,6 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_connection",
-        "x": 0,
         "y": 90
       },
       "when": {
@@ -100,7 +91,6 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_connection",
-        "x": 0,
         "y": 270
       },
       "when": {
@@ -111,8 +101,7 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_center",
-        "x": 90,
-        "y": 360
+        "x": 90
       },
       "when": {
         "facing": "north"
@@ -121,7 +110,7 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_connection",
-        "x": -90,
+        "x": 270,
         "y": 180
       },
       "when": {
@@ -132,8 +121,7 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_connection",
-        "x": 90,
-        "y": 360
+        "x": 90
       },
       "when": {
         "facing": "north",
@@ -143,7 +131,6 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_connection2",
-        "x": 0,
         "y": 180
       },
       "when": {
@@ -154,8 +141,7 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_connection2",
-        "x": 180,
-        "y": 360
+        "x": 180
       },
       "when": {
         "east": "true",
@@ -175,8 +161,7 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_connection",
-        "x": -90,
-        "y": 0
+        "x": 270
       },
       "when": {
         "down": "true",
@@ -207,9 +192,7 @@
     },
     {
       "apply": {
-        "model": "mishanguc:block/orange_wall_light_hash_decoration_connection2",
-        "x": 0,
-        "y": 0
+        "model": "mishanguc:block/orange_wall_light_hash_decoration_connection2"
       },
       "when": {
         "east": "true",
@@ -229,7 +212,7 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_connection",
-        "x": -90,
+        "x": 270,
         "y": 90
       },
       "when": {
@@ -262,7 +245,6 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_connection2",
-        "x": 0,
         "y": 90
       },
       "when": {
@@ -274,7 +256,7 @@
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_center",
         "x": 90,
-        "y": 450
+        "y": 90
       },
       "when": {
         "facing": "east"
@@ -283,7 +265,7 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_connection",
-        "x": -90,
+        "x": 270,
         "y": 270
       },
       "when": {
@@ -294,8 +276,7 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_connection",
-        "x": 90,
-        "y": 450
+        "x": 90
       },
       "when": {
         "facing": "east",
@@ -305,7 +286,6 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_connection2",
-        "x": 0,
         "y": 270
       },
       "when": {
@@ -316,8 +296,7 @@
     {
       "apply": {
         "model": "mishanguc:block/orange_wall_light_hash_decoration_connection2",
-        "x": 180,
-        "y": 450
+        "x": 180
       },
       "when": {
         "facing": "east",

@@ -73,28 +73,22 @@
       "y": 180
     },
     "axis=z,facing=south_east,type=bottom": {
-      "model": "mishanguc:block/road_slab_with_yellow_ra_line_offset_out_mirrored",
-      "y": 0
+      "model": "mishanguc:block/road_slab_with_yellow_ra_line_offset_out_mirrored"
     },
     "axis=z,facing=south_east,type=double": {
-      "model": "mishanguc:block/road_with_yellow_ra_line_offset_out_mirrored",
-      "y": 0
+      "model": "mishanguc:block/road_with_yellow_ra_line_offset_out_mirrored"
     },
     "axis=z,facing=south_east,type=top": {
-      "model": "mishanguc:block/road_slab_with_yellow_ra_line_offset_out_mirrored_top",
-      "y": 0
+      "model": "mishanguc:block/road_slab_with_yellow_ra_line_offset_out_mirrored_top"
     },
     "axis=z,facing=south_west,type=bottom": {
-      "model": "mishanguc:block/road_slab_with_yellow_ra_line_offset_out",
-      "y": 0
+      "model": "mishanguc:block/road_slab_with_yellow_ra_line_offset_out"
     },
     "axis=z,facing=south_west,type=double": {
-      "model": "mishanguc:block/road_with_yellow_ra_line_offset_out",
-      "y": 0
+      "model": "mishanguc:block/road_with_yellow_ra_line_offset_out"
     },
     "axis=z,facing=south_west,type=top": {
-      "model": "mishanguc:block/road_slab_with_yellow_ra_line_offset_out_top",
-      "y": 0
+      "model": "mishanguc:block/road_slab_with_yellow_ra_line_offset_out_top"
     }
   }
 }
