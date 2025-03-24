@@ -7,6 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.ItemModels;
 import net.minecraft.client.data.ModelProvider;
 import net.minecraft.client.data.TextureMap;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
@@ -21,6 +22,7 @@ import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
+import pers.solid.mishang.uc.item.ColoredTintSource;
 import pers.solid.mishang.uc.util.TextBridge;
 
 public class GlowingHungSignBlock extends HungSignBlock {
@@ -57,7 +59,9 @@ public class GlowingHungSignBlock extends HungSignBlock {
     final Identifier topBarEdgeId = MishangucModels.HUNG_SIGN_TOP_BAR_EDGE.upload(this, textures, blockStateModelGenerator.modelCollector);
 
     blockStateModelGenerator.blockStateCollector.accept(createBlockStates(bodyId, topBarId, topBarEdgeId));
-    blockStateModelGenerator.registerParentedItemModel(this, id);
+    if (this instanceof ColoredBlock) {
+      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(id, ColoredTintSource.INSTANCE));
+    }
   }
 
 

@@ -7,6 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.ItemModels;
 import net.minecraft.client.data.ModelProvider;
 import net.minecraft.client.data.TextureMap;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
@@ -22,6 +23,7 @@ import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
+import pers.solid.mishang.uc.item.ColoredTintSource;
 import pers.solid.mishang.uc.util.TextBridge;
 
 /**
@@ -55,7 +57,12 @@ public class GlowingStandingSignBlock extends StandingSignBlock {
     final Identifier barredR2ModelId = MishangucModels.GLOWING_STANDING_SIGN_BARRED_2.upload(this, textures, blockStateModelGenerator.modelCollector);
     final Identifier barredR3ModelId = MishangucModels.GLOWING_STANDING_SIGN_BARRED_3.upload(this, textures, blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId, r1ModelId, r2ModelId, r3ModelId, barredModelId, barredR1ModelId, barredR2ModelId, barredR3ModelId));
-    blockStateModelGenerator.registerParentedItemModel(this, barredModelId);
+
+    if (this instanceof ColoredBlock) {
+      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(barredModelId, ColoredTintSource.INSTANCE));
+    } else {
+      blockStateModelGenerator.registerParentedItemModel(this, barredModelId);
+    }
   }
 
   private @Nullable String getRecipeGroup() {

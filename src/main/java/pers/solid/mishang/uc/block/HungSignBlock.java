@@ -439,8 +439,6 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     blockStateModelGenerator.blockStateCollector.accept(createBlockStates(bodyId, topBarId, topBarEdgeId));
     if (this instanceof ColoredBlock) {
       blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(id, ColoredTintSource.INSTANCE));
-    } else {
-      blockStateModelGenerator.registerParentedItemModel(this, id);
     }
   }
 
