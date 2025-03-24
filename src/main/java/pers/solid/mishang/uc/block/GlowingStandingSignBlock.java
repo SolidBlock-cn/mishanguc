@@ -59,7 +59,7 @@ public class GlowingStandingSignBlock extends StandingSignBlock {
     blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId, r1ModelId, r2ModelId, r3ModelId, barredModelId, barredR1ModelId, barredR2ModelId, barredR3ModelId));
 
     if (this instanceof ColoredBlock) {
-      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(barredModelId, ColoredTintSource.INSTANCE));
+      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(barredModelId, ColoredTintSource.INSTANCE, ColoredTintSource.INSTANCE));
     } else {
       blockStateModelGenerator.registerParentedItemModel(this, barredModelId);
     }
