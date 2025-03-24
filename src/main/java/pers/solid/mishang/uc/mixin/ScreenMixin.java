@@ -35,7 +35,8 @@ public abstract class ScreenMixin {
       @At(
           target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V",
           value = "INVOKE",
-          ordinal = 1),
+          ordinal = 1,
+          remap = false),
       cancellable = true)
   public void handleTextClickMixin(Style style, CallbackInfoReturnable<Boolean> cir) {
     final ClickEvent clickEvent = style.getClickEvent();
