@@ -2,6 +2,10 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.4.6
+
+- Fixed the issue that some custom-colored signs are rendered in incorrect models in the inventory.
+
 ### 1.4.5
 
 - Adjusted the placing rule of the wall light block and corner light block. The light can be placed only when the block has a sides shape or collision at the center of the surface, avoiding placing the light on the side where the center is empty.
