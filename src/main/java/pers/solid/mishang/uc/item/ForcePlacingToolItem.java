@@ -45,11 +45,12 @@ import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
-public class ForcePlacingToolItem extends BlockToolItem implements InteractsWithEntity, RendersBeforeOutline {
+public class ForcePlacingToolItem extends BlockToolItem implements InteractsWithEntity, RendersBeforeOutline, WithMishangTooltip {
 
   public ForcePlacingToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
@@ -101,8 +102,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(
         TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.1")
             .formatted(Formatting.GRAY));

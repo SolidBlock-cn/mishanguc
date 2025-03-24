@@ -44,13 +44,14 @@ import pers.solid.mishang.uc.components.TextCopyToolComponent;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.RoadConnectionState;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.*;
 
 /**
  * 用于复制粘贴文本的工具。持有该工具，“攻击”（默认左键）告示牌（含原版告示牌、悬挂告示牌和墙上的告示牌）可以将文本复制到物品中，"使用"（默认右键）告示牌可将文本粘贴上去。
  */
-public class TextCopyToolItem extends BlockToolItem implements MishangucItem {
+public class TextCopyToolItem extends BlockToolItem implements MishangucItem, WithMishangTooltip {
   // 1.18.1 之前用 apache 的 Logger，自 1.18.2 用 slf4j 的 Logger。
   public static final Logger LOGGER = LoggerFactory.getLogger(TextCopyToolItem.class);
 
@@ -59,8 +60,7 @@ public class TextCopyToolItem extends BlockToolItem implements MishangucItem {
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(TextBridge.translatable("item.mishanguc.text_copy_tool.tooltip.1", TextBridge.keybind("key.attack").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.text_copy_tool.tooltip.2", TextBridge.keybind("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
 

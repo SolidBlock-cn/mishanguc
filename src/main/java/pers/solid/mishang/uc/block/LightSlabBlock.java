@@ -44,7 +44,7 @@ public class LightSlabBlock extends SlabBlock implements MishangucBlock {
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final Identifier bottomModelId = MishangucModels.LIGHT_SLAB.upload(this, TextureMap.all(baseBlock), blockStateModelGenerator.modelCollector);
     final Identifier topModelId = MishangucModels.LIGHT_SLAB_TOP.upload(this, TextureMap.all(baseBlock), blockStateModelGenerator.modelCollector);
-    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSlabBlockState(this, bottomModelId, topModelId, ModelIds.getBlockModelId(baseBlock)));
+    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSlabBlockState(this, BlockStateModelGenerator.createWeightedVariant(bottomModelId), BlockStateModelGenerator.createWeightedVariant(topModelId), BlockStateModelGenerator.createWeightedVariant(ModelIds.getBlockModelId(baseBlock))));
     blockStateModelGenerator.registerParentedItemModel(this, bottomModelId);
   }
 

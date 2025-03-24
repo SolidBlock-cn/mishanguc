@@ -121,8 +121,7 @@ public abstract class AbstractRoadBlock extends Block implements Road {
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-    super.appendTooltip(stack, context, tooltip, options);
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
     appendDescriptionTooltip(tooltip, context);
     appendRoadTooltip(stack, context, tooltip, options);
   }
@@ -175,7 +174,7 @@ public abstract class AbstractRoadBlock extends Block implements Road {
 
   @Environment(EnvType.CLIENT)
   @Override
-  public BlockStateSupplier composeState(@NotNull BlockStateSupplier stateForFull) {
+  public BlockModelDefinitionCreator composeState(@NotNull BlockModelDefinitionCreator stateForFull) {
     return stateForFull;
   }
 }

@@ -27,13 +27,14 @@ import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.util.ColorMixtureType;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ColorToolItem extends BlockToolItem implements MishangucItem {
+public class ColorToolItem extends BlockToolItem implements MishangucItem, WithMishangTooltip {
   public ColorToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
@@ -61,7 +62,7 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem {
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     final Integer color = stack.get(MishangucComponents.COLOR);
     final ColorMixtureType mixtureType = stack.getOrDefault(MishangucComponents.COLOR_MIXTURE_TYPE, ColorMixtureType.NORMAL);
     if (mixtureType.requiresTargetColor()) {

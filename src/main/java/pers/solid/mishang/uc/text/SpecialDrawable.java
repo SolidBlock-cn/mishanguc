@@ -99,7 +99,7 @@ public interface SpecialDrawable extends Cloneable {
    */
   @Contract("_, _ -> new")
   static @Nullable SpecialDrawable fromNbt(TextContext textContext, @NotNull NbtCompound nbt) {
-    final String id = nbt.getString("id");
+    final String id = nbt.getString("id", null);
     if (id == null) {
       return null;
     }

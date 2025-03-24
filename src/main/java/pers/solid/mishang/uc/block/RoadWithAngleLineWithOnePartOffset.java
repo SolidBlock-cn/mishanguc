@@ -7,7 +7,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.data.*;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.BlockStateVariantMap;
+import net.minecraft.client.data.VariantsBlockModelDefinitionCreator;
+import net.minecraft.client.render.model.json.ModelVariantOperator;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.item.Item.TooltipContext;
@@ -20,10 +23,10 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.data.FasterTextureMap;
-import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.*;
 
@@ -122,22 +125,29 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
           .lineTop(lineTop);
       final Identifier modelId = road.uploadModel("_with_angle_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_SIDE2, MishangucTextureKeys.LINE_TOP);
       final Identifier mirroredModelId = road.uploadModel("_with_angle_line_mirrored", "_mirrored", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_SIDE2, MishangucTextureKeys.LINE_TOP);
-      final BlockStateVariantMap.DoubleProperty<HorizontalCornerDirection, Direction.Axis> map = BlockStateVariantMap.create(FACING, AXIS);
+      final var map = BlockStateVariantMap.models(FACING, AXIS);
       for (Direction direction : Direction.Type.HORIZONTAL) {
         // direction：正中线所朝的方向
         final Direction offsetDirection1 = direction.rotateYClockwise();
         final Direction offsetDirection2 = direction.rotateYCounterclockwise();
+
+
+        final AxisRotation axisRotation = switch (direction) {
+          case WEST -> AxisRotation.R90;
+          case NORTH -> AxisRotation.R180;
+          case EAST -> AxisRotation.R270;
+          default -> AxisRotation.R0;
+        };
         map.register(
             HorizontalCornerDirection.fromDirections(direction, offsetDirection1),
             direction.getAxis(),
-            BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangucModels.DIRECTION_Y_VARIANT, direction));
+            BlockStateModelGenerator.createWeightedVariant(modelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
         map.register(
             HorizontalCornerDirection.fromDirections(direction, offsetDirection2),
             direction.getAxis(),
-            BlockStateVariant.create().put(VariantSettings.MODEL, mirroredModelId)
-                .put(MishangucModels.DIRECTION_Y_VARIANT, direction));
+            BlockStateModelGenerator.createWeightedVariant(mirroredModelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
       }
-      blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockStateSupplier.create(road).coordinate(map)));
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockModelDefinitionCreator.of(road).with(map)));
     }
 
     @Override

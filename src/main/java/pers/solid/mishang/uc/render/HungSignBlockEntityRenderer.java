@@ -8,6 +8,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.block.HungSignBlock;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
@@ -30,13 +31,7 @@ public class HungSignBlockEntityRenderer<T extends HungSignBlockEntity> implemen
   }
 
   @Override
-  public void render(
-      HungSignBlockEntity entity,
-      float tickDelta,
-      MatrixStack matrices,
-      VertexConsumerProvider vertexConsumers,
-      int light,
-      int overlay) {
+  public void render(T entity, float tickProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, Vec3d cameraPos) {
     matrices.translate(0.5, 9 / 16f, 0.5);
     final Direction.Axis axis = entity.getCachedState().get(HungSignBlock.AXIS);
     for (Map.Entry<@NotNull Direction, @NotNull List<@NotNull TextContext>> entry :

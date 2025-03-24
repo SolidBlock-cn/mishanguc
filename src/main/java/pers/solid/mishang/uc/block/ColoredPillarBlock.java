@@ -42,8 +42,7 @@ public class ColoredPillarBlock extends PillarBlock implements ColoredBlock {
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-    super.appendTooltip(stack, context, tooltip, options);
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
     ColoredBlock.appendColorTooltip(stack, tooltip);
   }
 
@@ -59,7 +58,7 @@ public class ColoredPillarBlock extends PillarBlock implements ColoredBlock {
     final TextureMap textureMap = textures.getTextureMap();
     final Identifier modelId = MishangucModels.COLORED_CUBE_COLUMN.upload(this, textureMap, blockStateModelGenerator.modelCollector);
     final Identifier horizontalModelId = MishangucModels.COLORED_CUBE_COLUMN_HORITONZAL.upload(this, textureMap, blockStateModelGenerator.modelCollector);
-    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createAxisRotatedBlockState(this, modelId, horizontalModelId));
+    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createAxisRotatedBlockState(this, BlockStateModelGenerator.createWeightedVariant(modelId), BlockStateModelGenerator.createWeightedVariant(horizontalModelId)));
     blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(modelId, ColoredTintSource.INSTANCE));
   }
 

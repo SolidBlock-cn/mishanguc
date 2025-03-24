@@ -53,6 +53,7 @@ import pers.solid.mishang.uc.networking.EditSignPayload;
 import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.*;
 
@@ -60,7 +61,7 @@ import java.util.*;
  * @see HungSignBlockEntity
  * @see HungSignBlockEntityRenderer
  */
-public class HungSignBlock extends Block implements Waterloggable, BlockEntityProvider, MishangucBlock {
+public class HungSignBlock extends Block implements Waterloggable, BlockEntityProvider, MishangucBlock, WithMishangTooltip {
   public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
   public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
   /**
@@ -411,8 +412,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-    super.appendTooltip(stack, context, tooltip, options);
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(TextBridge.translatable("block.mishanguc.hung_sign.tooltip.1").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("block.mishanguc.hung_sign.tooltip.2").formatted(Formatting.GRAY));
   }
@@ -445,18 +445,18 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
   }
 
   @Environment(EnvType.CLIENT)
-  public @NotNull BlockStateSupplier createBlockStates(Identifier bodyId, Identifier topBarId, Identifier topBarEdgeId) {
-    return MultipartBlockStateSupplier.create(this)
-        .with(When.create().set(AXIS, Direction.Axis.Z), BlockStateVariant.create().put(VariantSettings.MODEL, bodyId).put(VariantSettings.UVLOCK, true))
-        .with(When.create().set(AXIS, Direction.Axis.X), BlockStateVariant.create().put(VariantSettings.MODEL, bodyId).put(VariantSettings.UVLOCK, true).put(VariantSettings.Y, VariantSettings.Rotation.R90))
-        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, topBarId).put(VariantSettings.UVLOCK, true))
-        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 180))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, topBarId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, -90))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 90))
-        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarEdgeId).put(VariantSettings.UVLOCK, true))
-        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarEdgeId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 180))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarEdgeId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 90))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, topBarEdgeId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 270));
+  public @NotNull BlockModelDefinitionCreator createBlockStates(Identifier bodyId, Identifier topBarId, Identifier topBarEdgeId) {
+    return MultipartBlockModelDefinitionCreator.create(this)
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.Z), BlockStateModelGenerator.createWeightedVariant(bodyId).apply(BlockStateModelGenerator.UV_LOCK))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.X), BlockStateModelGenerator.createWeightedVariant(bodyId).apply(BlockStateModelGenerator.UV_LOCK).apply(BlockStateModelGenerator.ROTATE_Y_90))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.Z).put(LEFT, false).put(RIGHT, true), BlockStateModelGenerator.createWeightedVariant(topBarId).apply(BlockStateModelGenerator.UV_LOCK))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.Z).put(LEFT, true).put(RIGHT, false), BlockStateModelGenerator.createWeightedVariant(topBarId).apply(BlockStateModelGenerator.UV_LOCK).apply(BlockStateModelGenerator.ROTATE_Y_180))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.X).put(LEFT, false).put(RIGHT, true), BlockStateModelGenerator.createWeightedVariant(topBarId).apply(BlockStateModelGenerator.UV_LOCK).apply(BlockStateModelGenerator.ROTATE_Y_270))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.X).put(LEFT, true).put(RIGHT, false), BlockStateModelGenerator.createWeightedVariant(topBarId).apply(BlockStateModelGenerator.UV_LOCK).apply(BlockStateModelGenerator.ROTATE_Y_90))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.Z).put(LEFT, false).put(RIGHT, false), BlockStateModelGenerator.createWeightedVariant(topBarEdgeId).apply(BlockStateModelGenerator.UV_LOCK))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.Z).put(LEFT, false).put(RIGHT, false), BlockStateModelGenerator.createWeightedVariant(topBarEdgeId).apply(BlockStateModelGenerator.UV_LOCK).apply(BlockStateModelGenerator.ROTATE_Y_180))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.X).put(LEFT, false).put(RIGHT, false), BlockStateModelGenerator.createWeightedVariant(topBarEdgeId).apply(BlockStateModelGenerator.UV_LOCK).apply(BlockStateModelGenerator.ROTATE_Y_90))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.X).put(LEFT, false).put(RIGHT, false), BlockStateModelGenerator.createWeightedVariant(topBarEdgeId).apply(BlockStateModelGenerator.UV_LOCK).apply(BlockStateModelGenerator.ROTATE_Y_270));
   }
 
   private @Nullable String getRecipeGroup() {

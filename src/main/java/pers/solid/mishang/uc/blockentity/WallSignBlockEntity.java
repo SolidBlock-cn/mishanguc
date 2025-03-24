@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.component.ComponentMap;
+import net.minecraft.component.ComponentsAccess;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -55,7 +56,7 @@ public class WallSignBlockEntity extends BlockEntityWithText {
   protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
     super.readNbt(nbt, registryLookup);
     final @Nullable NbtElement nbtText = nbt.get("text");
-    if (nbtText instanceof NbtString || nbt.contains("textJson", NbtElement.STRING_TYPE)) {
+    if (nbtText instanceof NbtString || nbt.contains("textJson")) {
       // 如果 text 是个字符串，则读取整个 nbt 作为 TextContext。
       // 例如，整个 nbt 可以是 {text: "abc", color: "red", size: 5}。
       textContexts = ImmutableList.of(TextContext.fromNbt(nbt, createDefaultTextContext(), registryLookup));
@@ -71,8 +72,8 @@ public class WallSignBlockEntity extends BlockEntityWithText {
       textContexts = builder.build();
     }
 
-    glowing = nbt.getBoolean("glowing");
-    waxed = nbt.getBoolean("waxed");
+    glowing = nbt.getBoolean("glowing", false);
+    waxed = nbt.getBoolean("waxed", false);
   }
 
   @Override

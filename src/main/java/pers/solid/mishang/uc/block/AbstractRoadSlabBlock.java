@@ -106,8 +106,7 @@ public abstract class AbstractRoadSlabBlock extends SlabBlock implements Road {
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-    super.appendTooltip(stack, context, tooltip, options);
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
     appendDescriptionTooltip(tooltip, context);
     appendRoadTooltip(stack, context, tooltip, options);
   }

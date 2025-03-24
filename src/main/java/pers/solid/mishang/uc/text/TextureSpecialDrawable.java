@@ -28,7 +28,8 @@ public record TextureSpecialDrawable(@NotNull Identifier identifier, @NotNull Te
   @Environment(EnvType.CLIENT)
   public void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, float x, float y) {
     try (final ResourceTexture resourceTexture = new ResourceTexture(identifier)) {
-      resourceTexture.bindTexture();
+//      resourceTexture.bindTexture();
+      // todo check bindTexture
       final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getText(identifier));
       final Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
 

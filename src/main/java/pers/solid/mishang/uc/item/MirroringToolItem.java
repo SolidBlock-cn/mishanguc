@@ -23,10 +23,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 
-public class MirroringToolItem extends BlockToolItem implements MishangucItem {
+public class MirroringToolItem extends BlockToolItem implements MishangucItem, WithMishangTooltip {
   public MirroringToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
@@ -79,8 +80,7 @@ public class MirroringToolItem extends BlockToolItem implements MishangucItem {
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(
         TextBridge.translatable("item.mishanguc.mirroring_tool.tooltip").formatted(Formatting.GRAY));
     final Boolean includesFluid = includesFluid(stack);

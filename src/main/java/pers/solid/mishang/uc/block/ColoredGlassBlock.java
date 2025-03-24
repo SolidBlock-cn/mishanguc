@@ -41,8 +41,7 @@ public class ColoredGlassBlock extends TransparentBlock implements ColoredBlock 
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-    super.appendTooltip(stack, context, tooltip, options);
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
     ColoredBlock.appendColorTooltip(stack, tooltip);
   }
 
@@ -61,7 +60,7 @@ public class ColoredGlassBlock extends TransparentBlock implements ColoredBlock 
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final Identifier modelId = MishangucModels.COLORED_CUBE_ALL.upload(this, textures.getTextureMap(), blockStateModelGenerator.modelCollector);
-    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(this, modelId));
+    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(this, BlockStateModelGenerator.createWeightedVariant(modelId)));
     blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(modelId, ColoredTintSource.INSTANCE));
   }
 

@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
@@ -21,6 +22,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.pattern.CachedBlockPosition;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
@@ -52,11 +56,13 @@ import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blocks.*;
+import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.item.*;
 import pers.solid.mishang.uc.networking.*;
 import pers.solid.mishang.uc.text.SpecialDrawableTypes;
 import pers.solid.mishang.uc.util.BlockMatchingRule;
 import pers.solid.mishang.uc.util.ColorfulBlockRegistry;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.Collection;
 import java.util.List;
@@ -393,7 +399,7 @@ public class Mishanguc implements ModInitializer {
           final ItemStack stack = player.getStackInHand(hand);
           final Item item = stack.getItem();
           if (item instanceof final BlockToolItem blockToolItem) {
-            return blockToolItem.beginAttackBlock(stack, player, world, hand, pos, direction, ((BlockToolItem) item).includesFluid(stack, player.isSneaking()));
+            return blockToolItem.beginAttackBlock(stack, player, world, hand, pos, direction, blockToolItem.includesFluid(stack, player.isSneaking()));
           } else {
             return ActionResult.PASS;
           }
@@ -664,6 +670,17 @@ public class Mishanguc implements ModInitializer {
     registerColorfulBlocks();
 
     Registry.register(Registries.POINT_OF_INTEREST_TYPE, RegistryKey.of(RegistryKeys.POINT_OF_INTEREST_TYPE, id("nether_portal")), new PointOfInterestType(ImmutableSet.copyOf(ColoredBlocks.COLORED_NETHER_PORTAL.getStateManager().getStates()), 0, 1));
+
+    ItemTooltipCallback.EVENT.register((itemStack, tooltipContext, tooltipType, list) -> {
+      if (itemStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof WithMishangTooltip withMishangTooltip) {
+        withMishangTooltip.getMishangTooltip(itemStack, tooltipContext, list, tooltipType);
+      }
+    });
+
+    ItemTooltipCallback.EVENT.register((itemStack, tooltipContext, tooltipType, list) -> {
+      TooltipDisplayComponent tooltipDisplayComponent = itemStack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT);
+      itemStack.appendComponentTooltip(MishangucComponents.EXPLOSION_TOOL_DATA, tooltipContext, tooltipDisplayComponent, list::add, tooltipType);
+    });
   }
 
   private static void registerColorfulBlocks() {

@@ -6,7 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.data.BlockStateSupplier;
+import net.minecraft.client.data.BlockModelDefinitionCreator;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.data.recipe.StonecuttingRecipeJsonBuilder;
@@ -134,8 +134,8 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-    super.appendTooltip(stack, context, tooltip, options);
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
+    super.getMishangTooltip(stack, context, tooltip, options);
     appendDescriptionTooltip(tooltip, context);
     appendRoadTooltip(stack, context, tooltip, options);
   }
@@ -168,7 +168,7 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
 
   @Environment(EnvType.CLIENT)
   @Override
-  public BlockStateSupplier composeState(@NotNull BlockStateSupplier stateForFull) {
+  public BlockModelDefinitionCreator composeState(@NotNull BlockModelDefinitionCreator stateForFull) {
     return ModelHelper.composeStateForSlab(stateForFull);
   }
 }

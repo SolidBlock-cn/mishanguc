@@ -11,11 +11,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * @see pers.solid.mishang.uc.mixin.ScreenMixin#handleTextClickMixin(Style, CallbackInfoReturnable)
  * @since 0.1.7 This class is designed for client-only, as it is related to client-side clicking actions, and it cannot be serialized as JSON.
  */
-public class TextClickEvent extends ClickEvent {
+public class TextClickEvent implements ClickEvent {
   public final Text text;
 
   public TextClickEvent(Text text) {
-    super(Action.RUN_COMMAND, "/");
     this.text = text;
+  }
+
+  @Override
+  public Action getAction() {
+    return Action.RUN_COMMAND;
   }
 }

@@ -9,11 +9,15 @@ import net.minecraft.text.ClickEvent;
  * @see pers.solid.mishang.uc.mixin.ScreenMixin#handleTextClickMixin
  * @since 0.1.7 This class is designed for client-only, as it is related to client-side clicking actions, and it cannot be serialized as JSON.
  */
-public class NbtClickEvent extends ClickEvent {
+public class NbtClickEvent implements ClickEvent {
   public final NbtElement nbt;
 
   public NbtClickEvent(NbtElement nbt) {
-    super(Action.RUN_COMMAND, "/");
     this.nbt = nbt;
+  }
+
+  @Override
+  public Action getAction() {
+    return Action.RUN_COMMAND;
   }
 }

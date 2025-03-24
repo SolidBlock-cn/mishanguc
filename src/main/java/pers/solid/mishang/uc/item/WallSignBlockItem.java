@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.item;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.Block;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.MutableText;
@@ -10,6 +12,7 @@ import net.minecraft.util.Formatting;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 
@@ -18,14 +21,15 @@ import java.util.List;
  *
  * @see pers.solid.mishang.uc.blockentity.WallSignBlockEntity#readNbt
  */
-public class WallSignBlockItem extends NamedBlockItem {
+public class WallSignBlockItem extends NamedBlockItem implements WithMishangTooltip {
   public WallSignBlockItem(Block block, Settings settings) {
     super(block, settings);
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+    final TooltipDisplayComponent displayComponent = stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT);
+    if (!displayComponent.shouldDisplay(MishangucComponents.TEXTS)) return;
     final List<TextContext> textContexts = stack.get(MishangucComponents.TEXTS);
     if (textContexts == null || textContexts.isEmpty()) return;
     final List<MutableText> texts = ImmutableList.copyOf(

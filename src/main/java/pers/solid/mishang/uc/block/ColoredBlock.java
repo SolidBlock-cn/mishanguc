@@ -21,6 +21,7 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.awt.*;
 import java.util.List;
@@ -29,14 +30,14 @@ import java.util.List;
  * <p>所有带有颜色的方块应有的接口。其对应的方块实体应该实现 {@link pers.solid.mishang.uc.blockentity.ColoredBlockEntity}。
  * <p>在 {@link pers.solid.mishang.uc.MishangucClient} 中，本模组中所有实现该接口的方块都会为其自身以及方块物品注册颜色提供器。
  */
-public interface ColoredBlock extends BlockEntityProvider, MishangucBlock {
+public interface ColoredBlock extends BlockEntityProvider, MishangucBlock, WithMishangTooltip {
 
   LootFunction COPY_COLOR_LOOT_FUNCTION = CopyComponentsLootFunction.builder(CopyComponentsLootFunction.Source.BLOCK_ENTITY).include(MishangucComponents.COLOR).build();
 
   /**
    * 给方块添加关于颜色的提示。
    *
-   * @see Block#appendTooltip(ItemStack, Item.TooltipContext, List, TooltipType)
+   * @see WithMishangTooltip#getMishangTooltip(ItemStack, Item.TooltipContext, List, TooltipType)
    */
   static void appendColorTooltip(ItemStack stack, List<Text> tooltip) {
     final Integer color = stack.get(MishangucComponents.COLOR);

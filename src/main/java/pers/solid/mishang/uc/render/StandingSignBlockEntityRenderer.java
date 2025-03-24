@@ -9,6 +9,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.block.StandingSignBlock;
 import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
@@ -19,7 +20,7 @@ import pers.solid.mishang.uc.text.TextContext;
 public record StandingSignBlockEntityRenderer<T extends StandingSignBlockEntity>(BlockEntityRendererFactory.Context ctx) implements BlockEntityRenderer<T> {
 
   @Override
-  public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+  public void render(T entity, float tickProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, Vec3d cameraPos) {
     final BooleanSet glowing = entity.glowing;
     matrices.translate(0.5, 0.75, 0.5);
     final BlockState state = entity.getCachedState();

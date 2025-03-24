@@ -7,6 +7,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.block.*;
 import net.minecraft.client.data.*;
+import net.minecraft.client.render.model.json.ModelVariantOperator;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.data.recipe.StonecuttingRecipeJsonBuilder;
@@ -22,6 +23,7 @@ import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.function.BooleanBiFunction;
+import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
@@ -145,10 +147,10 @@ public class RoadMarkBlock extends Block implements Waterloggable, MishangucBloc
     final TextureMap textures = TextureMap.all(texture);
     final Identifier modelId = MishangucModels.ROAD_MARK.upload(this, textures, blockStateModelGenerator.modelCollector);
     final Identifier onSlabModelId = MishangucModels.ROAD_MARK_ON_SLAB.upload(this, textures, blockStateModelGenerator.modelCollector);
-    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(this)
-        .coordinate(BlockStateVariantMap.create(ON_SLAB)
-            .register(false, new BlockStateVariant().put(VariantSettings.MODEL, modelId))
-            .register(true, new BlockStateVariant().put(VariantSettings.MODEL, onSlabModelId))));
+    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(this)
+        .with(BlockStateVariantMap.models(ON_SLAB)
+            .register(false, BlockStateModelGenerator.createWeightedVariant(modelId))
+            .register(true, BlockStateModelGenerator.createWeightedVariant(onSlabModelId))));
     final Identifier itemModelId = Models.HANDHELD.upload(asItem(), TextureMap.layer0(texture), blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.basic(itemModelId));
   }
@@ -215,16 +217,16 @@ public class RoadMarkBlock extends Block implements Waterloggable, MishangucBloc
       final Identifier rotatedModelId = MishangucModels.ROAD_MARK_ROTATED.upload(this, textures, blockStateModelGenerator.modelCollector);
       final Identifier onSlabModelId = MishangucModels.ROAD_MARK_ON_SLAB.upload(this, textures, blockStateModelGenerator.modelCollector);
       final Identifier onSlabRotatedModelId = MishangucModels.ROAD_MARK_ON_SLAB_ROTATED.upload(this, textures, blockStateModelGenerator.modelCollector);
-      final BlockStateVariantMap.DoubleProperty<Boolean, FourHorizontalAxis> map = BlockStateVariantMap.create(ON_SLAB, AXIS)
-          .register(false, FourHorizontalAxis.X, BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangucModels.INT_Y_VARIANT, 90))
-          .register(false, FourHorizontalAxis.NW_SE, BlockStateVariant.create().put(VariantSettings.MODEL, rotatedModelId).put(MishangucModels.INT_Y_VARIANT, 90))
-          .register(false, FourHorizontalAxis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangucModels.INT_Y_VARIANT, 0))
-          .register(false, FourHorizontalAxis.NE_SW, BlockStateVariant.create().put(VariantSettings.MODEL, rotatedModelId).put(MishangucModels.INT_Y_VARIANT, 0))
-          .register(true, FourHorizontalAxis.X, BlockStateVariant.create().put(VariantSettings.MODEL, onSlabModelId).put(MishangucModels.INT_Y_VARIANT, 90))
-          .register(true, FourHorizontalAxis.NW_SE, BlockStateVariant.create().put(VariantSettings.MODEL, onSlabRotatedModelId).put(MishangucModels.INT_Y_VARIANT, 90))
-          .register(true, FourHorizontalAxis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, onSlabModelId).put(MishangucModels.INT_Y_VARIANT, 0))
-          .register(true, FourHorizontalAxis.NE_SW, BlockStateVariant.create().put(VariantSettings.MODEL, onSlabRotatedModelId).put(MishangucModels.INT_Y_VARIANT, 0));
-      blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(this).coordinate(map));
+      final var map = BlockStateVariantMap.models(ON_SLAB, AXIS)
+          .register(false, FourHorizontalAxis.X, BlockStateModelGenerator.createWeightedVariant(modelId).apply(BlockStateModelGenerator.ROTATE_Y_90))
+          .register(false, FourHorizontalAxis.NW_SE, BlockStateModelGenerator.createWeightedVariant(rotatedModelId).apply(BlockStateModelGenerator.ROTATE_Y_90))
+          .register(false, FourHorizontalAxis.Z, BlockStateModelGenerator.createWeightedVariant(modelId).apply(BlockStateModelGenerator.NO_OP))
+          .register(false, FourHorizontalAxis.NE_SW, BlockStateModelGenerator.createWeightedVariant(rotatedModelId).apply(BlockStateModelGenerator.NO_OP))
+          .register(true, FourHorizontalAxis.X, BlockStateModelGenerator.createWeightedVariant(onSlabModelId).apply(BlockStateModelGenerator.ROTATE_Y_90))
+          .register(true, FourHorizontalAxis.NW_SE, BlockStateModelGenerator.createWeightedVariant(onSlabRotatedModelId).apply(BlockStateModelGenerator.ROTATE_Y_90))
+          .register(true, FourHorizontalAxis.Z, BlockStateModelGenerator.createWeightedVariant(onSlabModelId).apply(BlockStateModelGenerator.NO_OP))
+          .register(true, FourHorizontalAxis.NE_SW, BlockStateModelGenerator.createWeightedVariant(onSlabRotatedModelId).apply(BlockStateModelGenerator.NO_OP));
+      blockStateModelGenerator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(this).with(map));
       final Identifier itemModelId = Models.HANDHELD.upload(ModelIds.getItemModelId(asItem()), TextureMap.layer0(texture), blockStateModelGenerator.modelCollector);
       blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.basic(itemModelId));
     }
@@ -292,17 +294,23 @@ public class RoadMarkBlock extends Block implements Waterloggable, MishangucBloc
       final Identifier rotatedModelId = MishangucModels.ROAD_MARK_ROTATED.upload(this, textures, blockStateModelGenerator.modelCollector);
       final Identifier onSlabModelId = MishangucModels.ROAD_MARK_ON_SLAB.upload(this, textures, blockStateModelGenerator.modelCollector);
       final Identifier onSlabRotatedModelId = MishangucModels.ROAD_MARK_ON_SLAB_ROTATED.upload(this, textures, blockStateModelGenerator.modelCollector);
-      final BlockStateVariantMap.DoubleProperty<Boolean, EightHorizontalDirection> map = BlockStateVariantMap.create(ON_SLAB, FACING);
+      final var map = BlockStateVariantMap.models(ON_SLAB, FACING);
       for (EightHorizontalDirection direction : EightHorizontalDirection.VALUES) {
         int rotation = (int) direction.asRotation();
         boolean rotated = direction.right().isPresent();
         if (rotated) {
           rotation -= 45;
         }
-        map.register(false, direction, BlockStateVariant.create().put(VariantSettings.MODEL, rotated ? rotatedModelId : modelId).put(MishangucModels.INT_Y_VARIANT, rotation));
-        map.register(true, direction, BlockStateVariant.create().put(VariantSettings.MODEL, rotated ? onSlabRotatedModelId : onSlabModelId).put(MishangucModels.INT_Y_VARIANT, rotation));
+        final AxisRotation axisRotation = switch (rotation) {
+          case 90 -> AxisRotation.R90;
+          case 180 -> AxisRotation.R180;
+          case 270, -90 -> AxisRotation.R270;
+          default -> AxisRotation.R0;
+        };
+        map.register(false, direction, BlockStateModelGenerator.createWeightedVariant(rotated ? rotatedModelId : modelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
+        map.register(true, direction, BlockStateModelGenerator.createWeightedVariant(rotated ? onSlabRotatedModelId : onSlabModelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
       }
-      blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(this).coordinate(map));
+      blockStateModelGenerator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(this).with(map));
       final Identifier itemModelId = Models.HANDHELD.upload(ModelIds.getItemModelId(asItem()), TextureMap.layer0(texture), blockStateModelGenerator.modelCollector);
       blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.basic(itemModelId));
     }

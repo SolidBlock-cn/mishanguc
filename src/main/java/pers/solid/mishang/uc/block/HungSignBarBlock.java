@@ -279,17 +279,17 @@ public class HungSignBarBlock extends Block implements Waterloggable, MishangucB
   }
 
   @Environment(EnvType.CLIENT)
-  public @Nullable BlockStateSupplier createBlockStates(Identifier modelId, Identifier centralModelId, Identifier edgeModelId) {
-    return MultipartBlockStateSupplier.create(this)
-        .with(When.create().set(LEFT, true).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, centralModelId).put(VariantSettings.UVLOCK, true))
-        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.UVLOCK, true))
-        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 180))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, true), BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, -90))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, true).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 90))
-        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, edgeModelId).put(VariantSettings.UVLOCK, true))
-        .with(When.create().set(AXIS, Direction.Axis.Z).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, edgeModelId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 180))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, edgeModelId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 90))
-        .with(When.create().set(AXIS, Direction.Axis.X).set(LEFT, false).set(RIGHT, false), BlockStateVariant.create().put(VariantSettings.MODEL, edgeModelId).put(VariantSettings.UVLOCK, true).put(MishangucModels.INT_Y_VARIANT, 270));
+  public @Nullable BlockModelDefinitionCreator createBlockStates(Identifier modelId, Identifier centralModelId, Identifier edgeModelId) {
+    return MultipartBlockModelDefinitionCreator.create(this)
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(LEFT, true).put(RIGHT, true), BlockStateModelGenerator.createWeightedVariant(centralModelId).apply(BlockStateModelGenerator.UV_LOCK))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.Z).put(LEFT, false).put(RIGHT, true), BlockStateModelGenerator.createWeightedVariant(modelId).apply(BlockStateModelGenerator.UV_LOCK))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.Z).put(LEFT, true).put(RIGHT, false), BlockStateModelGenerator.createWeightedVariant(modelId).apply(BlockStateModelGenerator.UV_LOCK).apply(BlockStateModelGenerator.ROTATE_Y_180))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.X).put(LEFT, false).put(RIGHT, true), BlockStateModelGenerator.createWeightedVariant(modelId).apply(BlockStateModelGenerator.UV_LOCK).apply(BlockStateModelGenerator.ROTATE_Y_270))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.X).put(LEFT, true).put(RIGHT, false), BlockStateModelGenerator.createWeightedVariant(modelId).apply(BlockStateModelGenerator.UV_LOCK).apply(BlockStateModelGenerator.ROTATE_Y_90))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.Z).put(LEFT, false).put(RIGHT, false), BlockStateModelGenerator.createWeightedVariant(edgeModelId).apply(BlockStateModelGenerator.UV_LOCK))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.Z).put(LEFT, false).put(RIGHT, false), BlockStateModelGenerator.createWeightedVariant(edgeModelId).apply(BlockStateModelGenerator.UV_LOCK).apply(BlockStateModelGenerator.ROTATE_Y_180))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.X).put(LEFT, false).put(RIGHT, false), BlockStateModelGenerator.createWeightedVariant(edgeModelId).apply(BlockStateModelGenerator.UV_LOCK).apply(BlockStateModelGenerator.ROTATE_Y_90))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(AXIS, Direction.Axis.X).put(LEFT, false).put(RIGHT, false), BlockStateModelGenerator.createWeightedVariant(edgeModelId).apply(BlockStateModelGenerator.UV_LOCK).apply(BlockStateModelGenerator.ROTATE_Y_270));
   }
 
   public Identifier getBaseTexture() {

@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -290,11 +289,12 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
   @Override
   protected void drawMenuListBackground(DrawContext context) {
-    RenderSystem.enableBlend();
+    // todo check enableBlend
+//    RenderSystem.enableBlend();
     Identifier identifier = background;
     context.drawTexture(RenderLayer::getGuiTextured, identifier, this.getX(), 0, 0, 0, this.getWidth(), this.getY(), 32, 32);
     context.drawTexture(RenderLayer::getGuiTextured, identifier, this.getX(), getY() + heightForBackground, 0, 0, this.getWidth(), heightForBackground, 32, 32);
-    RenderSystem.disableBlend();
+//    RenderSystem.disableBlend();
   }
 
   /**

@@ -31,8 +31,7 @@ public class ColoredGlowingHungSignBlock extends GlowingHungSignBlock implements
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-    super.appendTooltip(stack, context, tooltip, options);
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
     ColoredBlock.appendColorTooltip(stack, tooltip);
   }
 

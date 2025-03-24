@@ -121,7 +121,7 @@ public abstract class BlockEntityWithText extends BlockEntity {
           final PlayerEntity editorAllowed = entity.getEditor();
           entity.setEditor(null);
           final @Unmodifiable ImmutableList<TextContext> textContexts = nbt != null
-              ? nbt.getList("texts", 10).stream()
+              ? nbt.getList("texts").stream()
               .map(e -> TextContext.fromNbt(e, entity.createDefaultTextContext(), context.player().getRegistryManager()))
               .collect(ImmutableList.toImmutableList())
               : null;

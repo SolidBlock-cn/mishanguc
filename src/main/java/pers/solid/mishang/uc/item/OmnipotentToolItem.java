@@ -2,23 +2,22 @@ package pers.solid.mishang.uc.item;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.UnbreakableComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.MiningToolItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Unit;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -26,19 +25,19 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 
-public class OmnipotentToolItem extends MiningToolItem implements MishangucItem, InteractsWithEntity {
+public class OmnipotentToolItem extends Item implements MishangucItem, InteractsWithEntity, WithMishangTooltip {
   protected static final ToolMaterial MATERIAL = new ToolMaterial(TagKey.of(RegistryKeys.BLOCK, Mishanguc.id("incorrect_for_omnipotent_tool")), Integer.MAX_VALUE, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Integer.MAX_VALUE, TagKey.of(RegistryKeys.ITEM, Mishanguc.id("omnipotent_repair_items")));
 
   public OmnipotentToolItem(Settings settings) {
-    super(MATERIAL, BlockTags.PICKAXE_MINEABLE, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, settings);
+    super(settings);
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(TextBridge.translatable("item.mishanguc.omnipotent_tool.tooltip.1", TextBridge.keybind("key.attack").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.omnipotent_tool.tooltip.2", TextBridge.keybind("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
   }
@@ -73,7 +72,7 @@ public class OmnipotentToolItem extends MiningToolItem implements MishangucItem,
   @Override
   public ItemStack getDefaultStack() {
     final ItemStack defaultStack = super.getDefaultStack();
-    defaultStack.set(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(false));
+    defaultStack.set(DataComponentTypes.UNBREAKABLE, Unit.INSTANCE);
     return defaultStack;
   }
 

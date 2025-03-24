@@ -5,7 +5,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
-import net.minecraft.client.data.*;
+import net.minecraft.client.data.BlockModelDefinitionCreator;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.MultipartBlockModelDefinitionCreator;
+import net.minecraft.client.render.model.json.ModelVariantOperator;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -14,6 +17,7 @@ import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
@@ -22,7 +26,6 @@ import net.minecraft.world.WorldView;
 import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.data.MishangucModels;
 
 import java.util.Map;
 
@@ -179,15 +182,22 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   }
 
   @Environment(EnvType.CLIENT)
-  public @NotNull BlockStateSupplier createBlockStates(Identifier postId, Identifier postSideId, Identifier sideId) {
-    final MultipartBlockStateSupplier blockStateSupplier = MultipartBlockStateSupplier.create(this)
-        .with(BlockStateVariant.create().put(VariantSettings.MODEL, postId));
+  public @NotNull BlockModelDefinitionCreator createBlockStates(Identifier postId, Identifier postSideId, Identifier sideId) {
+    final MultipartBlockModelDefinitionCreator creator = MultipartBlockModelDefinitionCreator.create(this)
+        .with(BlockStateModelGenerator.createWeightedVariant(postId));
+
     for (Direction facing : Direction.Type.HORIZONTAL) {
+      final AxisRotation axisRotation = switch (facing) {
+        case WEST -> AxisRotation.R90;
+        case NORTH -> AxisRotation.R180;
+        case EAST -> AxisRotation.R270;
+        default -> AxisRotation.R0;
+      };
       final BooleanProperty property = FACING_PROPERTIES.get(facing);
-      blockStateSupplier.with(When.create().set(property, true), BlockStateVariant.create().put(VariantSettings.MODEL, sideId).put(MishangucModels.DIRECTION_Y_VARIANT, facing).put(VariantSettings.UVLOCK, true));
-      blockStateSupplier.with(When.create().set(property, false), BlockStateVariant.create().put(VariantSettings.MODEL, postSideId).put(MishangucModels.DIRECTION_Y_VARIANT, facing).put(VariantSettings.UVLOCK, true));
+      creator.with(BlockStateModelGenerator.createMultipartConditionBuilder().put(property, true), BlockStateModelGenerator.createWeightedVariant(sideId).apply(BlockStateModelGenerator.UV_LOCK).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
+      creator.with(BlockStateModelGenerator.createMultipartConditionBuilder().put(property, false), BlockStateModelGenerator.createWeightedVariant(postSideId).apply(BlockStateModelGenerator.UV_LOCK).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
     }
-    return blockStateSupplier;
+    return creator;
   }
 
   @Override

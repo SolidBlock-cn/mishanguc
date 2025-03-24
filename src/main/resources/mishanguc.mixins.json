@@ -25,6 +25,7 @@
   ],
   "client": [
     "BetterClientPlayerInteractionManagerMixin",
+    "BlockStateModelGeneratorAccessor",
     "GameRendererMixin",
     "MouseMixin",
     "ScreenMixin",

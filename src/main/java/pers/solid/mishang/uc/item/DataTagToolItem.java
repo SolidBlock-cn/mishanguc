@@ -47,18 +47,18 @@ import pers.solid.mishang.uc.networking.GetEntityDataPayload;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.NbtPrettyPrinter;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
-public class DataTagToolItem extends BlockToolItem implements InteractsWithEntity, RendersBeforeOutline {
+public class DataTagToolItem extends BlockToolItem implements InteractsWithEntity, RendersBeforeOutline, WithMishangTooltip {
   public DataTagToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(TextBridge.translatable("item.mishanguc.data_tag_tool.tooltip").formatted(Formatting.GRAY));
   }
 

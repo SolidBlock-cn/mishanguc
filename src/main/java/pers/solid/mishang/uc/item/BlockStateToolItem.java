@@ -20,11 +20,12 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.Collection;
 import java.util.List;
 
-public class BlockStateToolItem extends BlockToolItem implements MishangucItem {
+public class BlockStateToolItem extends BlockToolItem implements MishangucItem, WithMishangTooltip {
 
   public BlockStateToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
@@ -94,11 +95,6 @@ public class BlockStateToolItem extends BlockToolItem implements MishangucItem {
     return getBlockStateOf(player, world, pos, fluidIncluded);
   }
 
-  @Override
-  public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-    return super.canMine(state, world, pos, miner);
-  }
-
   public ActionResult getBlockStateOf(
       PlayerEntity player, World world, BlockPos blockPos, boolean fluidIncluded) {
     BlockState blockState = world.getBlockState(blockPos);
@@ -121,8 +117,7 @@ public class BlockStateToolItem extends BlockToolItem implements MishangucItem {
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(
         TextBridge.translatable("item.mishanguc.block_state_tool.tooltip").formatted(Formatting.GRAY));
     final Boolean includesFluid = includesFluid(stack);

@@ -7,6 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.VariantsBlockModelDefinitionCreator;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.item.Item.TooltipContext;
@@ -49,7 +50,7 @@ public interface RoadWithCrossLine extends Road {
           .lineSide(MishangUtils.composeStraightLineTexture(lineColor, LineType.NORMAL))
           .lineTop(lineColor.asString() + "_cross_line");
       final Identifier modelId = road.uploadModel("_with_cross_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_TOP);
-      blockStateModelGenerator.blockStateCollector.accept(road.composeState(BlockStateModelGenerator.createBlockStateWithRandomHorizontalRotations(road, modelId)));
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockModelDefinitionCreator.of(road, BlockStateModelGenerator.modelWithYRotation(BlockStateModelGenerator.createModelVariant(modelId)))));
     }
 
 

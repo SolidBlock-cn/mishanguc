@@ -8,6 +8,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.client.data.*;
+import net.minecraft.client.render.model.json.ModelVariantOperator;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.fluid.FluidState;
@@ -21,6 +22,7 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.function.BooleanBiFunction;
+import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
@@ -144,11 +146,21 @@ public class CornerLightBlock extends HorizontalFacingBlock
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final TextureMap textures = TextureMap.of(MishangucTextureKeys.LIGHT, MishangucModels.texture(lightColor + "_light"));
     final Identifier modelId = getModelType().upload(this, textures, blockStateModelGenerator.modelCollector);
-    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.MODEL, modelId)).coordinate(BlockStateVariantMap.create(BLOCK_HALF, FACING).register((blockHalf, direction) -> {
+    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(this, BlockStateModelGenerator.createWeightedVariant(modelId)).coordinate(BlockStateVariantMap.operations(BLOCK_HALF, FACING).generate((blockHalf, direction) -> {
       if (blockHalf == BlockHalf.BOTTOM) {
-        return BlockStateVariant.create().put(MishangucModels.DIRECTION_Y_VARIANT, direction);
+        return ModelVariantOperator.ROTATION_Y.withValue(switch (direction) {
+          case WEST -> AxisRotation.R90;
+          case NORTH -> AxisRotation.R180;
+          case EAST -> AxisRotation.R270;
+          default -> AxisRotation.R0;
+        });
       } else {
-        return BlockStateVariant.create().put(MishangucModels.DIRECTION_Y_VARIANT, direction.getOpposite()).put(VariantSettings.X, VariantSettings.Rotation.R180);
+        return ModelVariantOperator.ROTATION_Y.withValue(switch (direction) {
+          case EAST -> AxisRotation.R90;
+          case SOUTH -> AxisRotation.R180;
+          case WEST -> AxisRotation.R270;
+          default -> AxisRotation.R0;
+        }).then(BlockStateModelGenerator.ROTATE_X_180);
       }
     })));
     blockStateModelGenerator.registerParentedItemModel(this, modelId);

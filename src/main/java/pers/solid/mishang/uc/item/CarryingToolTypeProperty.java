@@ -7,8 +7,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.item.property.select.SelectProperty;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ModelTransformationMode;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.components.CarryingToolData;
 import pers.solid.mishang.uc.components.MishangucComponents;
@@ -18,15 +18,19 @@ public enum CarryingToolTypeProperty implements SelectProperty<Short> {
   INSTANCE;
   public static final SelectProperty.Type<CarryingToolTypeProperty, Short> TYPE = Type.create(MapCodec.unit(INSTANCE), Codec.SHORT);
 
-  @Nullable
   @Override
-  public Short getValue(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity user, int seed, ModelTransformationMode modelTransformationMode) {
+  public @Nullable Short getValue(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity user, int seed, ItemDisplayContext displayContext) {
     final CarryingToolData data = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     if (data == null) {
       return null;
     } else {
       return data.type();
     }
+  }
+
+  @Override
+  public Codec<Short> valueCodec() {
+    return Codec.SHORT;
   }
 
   @Override

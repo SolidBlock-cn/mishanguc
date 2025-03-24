@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.data.*;
+import net.minecraft.client.render.model.json.ModelVariantOperator;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,10 +32,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -57,6 +55,7 @@ import pers.solid.mishang.uc.item.ColoredTintSource;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 import pers.solid.mishang.uc.networking.EditSignPayload;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 import java.util.Optional;
@@ -69,7 +68,7 @@ import java.util.Optional;
  * @see pers.solid.mishang.uc.render.StandingSignBlockEntityRenderer
  */
 @ApiStatus.AvailableSince("1.0.2")
-public class StandingSignBlock extends Block implements BlockEntityProvider, Waterloggable, MishangucBlock {
+public class StandingSignBlock extends Block implements BlockEntityProvider, Waterloggable, MishangucBlock, WithMishangTooltip {
   public static final MapCodec<StandingSignBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(baseBlockCodec(), createSettingsCodec()).apply(i, StandingSignBlock::new));
 
   public static final IntProperty ROTATION = Properties.ROTATION;
@@ -221,8 +220,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-    super.appendTooltip(stack, context, tooltip, options);
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(TextBridge.translatable("block.mishanguc.standing_sign.tooltip.1").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("block.mishanguc.standing_sign.tooltip.2").formatted(Formatting.GRAY));
   }
@@ -249,20 +247,23 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
   }
 
   @Environment(EnvType.CLIENT)
-  public @Nullable BlockStateSupplier createBlockStates(Identifier modelId, Identifier r1ModelId, Identifier r2ModelId, Identifier r3ModelId, Identifier barredModelId, Identifier barredR1ModelId, Identifier barredR2ModelId, Identifier barredR3ModelId) {
-    final BlockStateVariantMap.DoubleProperty<Boolean, Integer> map = BlockStateVariantMap.create(DOWN, ROTATION);
+  public @Nullable BlockModelDefinitionCreator createBlockStates(Identifier modelId, Identifier r1ModelId, Identifier r2ModelId, Identifier r3ModelId, Identifier barredModelId, Identifier barredR1ModelId, Identifier barredR2ModelId, Identifier barredR3ModelId) {
+    final var map = BlockStateVariantMap.models(DOWN, ROTATION);
+    final AxisRotation[] axisRotations = AxisRotation.values();
     for (int i = 0; i < 16; i += 4) {
       final int y = i * 90 / 4;
-      map.register(false, i, BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(MishangucModels.INT_Y_VARIANT, y));
-      map.register(false, (i + 1), BlockStateVariant.create().put(VariantSettings.MODEL, r1ModelId).put(MishangucModels.INT_Y_VARIANT, y));
-      map.register(false, (i + 2), BlockStateVariant.create().put(VariantSettings.MODEL, r2ModelId).put(MishangucModels.INT_Y_VARIANT, y));
-      map.register(false, (i + 3), BlockStateVariant.create().put(VariantSettings.MODEL, r3ModelId).put(MishangucModels.INT_Y_VARIANT, y + 90));
-      map.register(true, i, BlockStateVariant.create().put(VariantSettings.MODEL, barredModelId).put(MishangucModels.INT_Y_VARIANT, y));
-      map.register(true, (i + 1), BlockStateVariant.create().put(VariantSettings.MODEL, barredR1ModelId).put(MishangucModels.INT_Y_VARIANT, y));
-      map.register(true, (i + 2), BlockStateVariant.create().put(VariantSettings.MODEL, barredR2ModelId).put(MishangucModels.INT_Y_VARIANT, y));
-      map.register(true, (i + 3), BlockStateVariant.create().put(VariantSettings.MODEL, barredR3ModelId).put(MishangucModels.INT_Y_VARIANT, y + 90));
+      final AxisRotation axisRotation = axisRotations[y / 90];
+      final AxisRotation axisRotationNext = axisRotations[(y / 90 + 1) % 4];
+      map.register(false, i, BlockStateModelGenerator.createWeightedVariant(modelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
+      map.register(false, (i + 1), BlockStateModelGenerator.createWeightedVariant(r1ModelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
+      map.register(false, (i + 2), BlockStateModelGenerator.createWeightedVariant(r2ModelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
+      map.register(false, (i + 3), BlockStateModelGenerator.createWeightedVariant(r3ModelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotationNext)));
+      map.register(true, i, BlockStateModelGenerator.createWeightedVariant(barredModelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
+      map.register(true, (i + 1), BlockStateModelGenerator.createWeightedVariant(barredR1ModelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
+      map.register(true, (i + 2), BlockStateModelGenerator.createWeightedVariant(barredR2ModelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
+      map.register(true, (i + 3), BlockStateModelGenerator.createWeightedVariant(barredR3ModelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotationNext)));
     }
-    return VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.UVLOCK, true)).coordinate(map);
+    return VariantsBlockModelDefinitionCreator.of(this).with(map).apply(BlockStateModelGenerator.UV_LOCK);
   }
 
   private @Nullable String getRecipeGroup() {

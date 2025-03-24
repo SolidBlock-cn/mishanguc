@@ -117,15 +117,11 @@ public class ColumnLightBlock extends Block implements Waterloggable, MishangucB
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final TextureMap textures = TextureMap.of(MishangucTextureKeys.LIGHT, MishangucModels.texture(lightColor + "_light"));
     final Identifier modelId = getModelType().upload(this, textures, blockStateModelGenerator.modelCollector);
-    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(this, BlockStateVariant.create()
-            .put(VariantSettings.MODEL, modelId))
-        .coordinate(BlockStateVariantMap.create(AXIS)
-            .register(Direction.Axis.Y, BlockStateVariant.create())
-            .register(Direction.Axis.X, BlockStateVariant.create()
-                .put(VariantSettings.X, VariantSettings.Rotation.R270)
-                .put(VariantSettings.Y, VariantSettings.Rotation.R90))
-            .register(Direction.Axis.Z, BlockStateVariant.create()
-                .put(VariantSettings.X, VariantSettings.Rotation.R270))));
+    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(this, BlockStateModelGenerator.createWeightedVariant(modelId))
+        .coordinate(BlockStateVariantMap.operations(AXIS)
+            .register(Direction.Axis.Y, BlockStateModelGenerator.NO_OP)
+            .register(Direction.Axis.X, BlockStateModelGenerator.ROTATE_X_270.then(BlockStateModelGenerator.ROTATE_Y_90))
+            .register(Direction.Axis.Z, BlockStateModelGenerator.ROTATE_X_270)));
     blockStateModelGenerator.registerParentedItemModel(this, modelId);
   }
 

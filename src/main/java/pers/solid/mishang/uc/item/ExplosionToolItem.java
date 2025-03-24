@@ -31,11 +31,12 @@ import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.components.ExplosionToolComponent;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 import java.util.Optional;
 
-public class ExplosionToolItem extends Item implements HotbarScrollInteraction, DispenserBehavior {
+public class ExplosionToolItem extends Item implements HotbarScrollInteraction, DispenserBehavior, WithMishangTooltip {
   public ExplosionToolItem(Settings settings) {
     super(settings.component(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT));
     DispenserBlock.registerBehavior(this, this);
@@ -109,18 +110,12 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.1", TextBridge.keybind("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.2").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.3").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.4").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.5").formatted(Formatting.GRAY));
-
-    final ExplosionToolComponent component = stack.get(MishangucComponents.EXPLOSION_TOOL_DATA);
-    if (component != null) {
-      component.appendTooltip(context, tooltip::add, type);
-    }
   }
 
   @Override

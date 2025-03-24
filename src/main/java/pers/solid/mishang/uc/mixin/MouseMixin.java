@@ -20,7 +20,7 @@ public abstract class MouseMixin {
    */
   @WrapOperation(method = "onMouseScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/input/Scroller;scrollCycling(DII)I"))
   private int lockSelection(double amount, int selectedIndex, int total, Operation<Integer> original, @Local PlayerInventory playerInventory) {
-    final ItemStack mainHandStack = playerInventory.getMainHandStack();
+    final ItemStack mainHandStack = playerInventory.getSelectedStack();
     if (mainHandStack.getItem() instanceof HotbarScrollInteraction interaction && interaction.shouldLockScroll(selectedIndex, amount)) {
       return selectedIndex;
     } else {

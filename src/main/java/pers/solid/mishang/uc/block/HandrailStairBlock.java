@@ -7,7 +7,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
-import net.minecraft.client.data.*;
+import net.minecraft.client.data.BlockModelDefinitionCreator;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.BlockStateVariantMap;
+import net.minecraft.client.data.VariantsBlockModelDefinitionCreator;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -36,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangucProperties;
-import pers.solid.mishang.uc.data.MishangucModels;
+import pers.solid.mishang.uc.mixin.BlockStateModelGeneratorAccessor;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.ArrayList;
@@ -86,13 +89,13 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
    * @param modelId 不含形状和位置信息的模型 ID
    */
   @Environment(EnvType.CLIENT)
-  public @NotNull BlockStateSupplier createBlockStates(Identifier modelId) {
-    return VariantsBlockStateSupplier.create(this)
-        .coordinate(BlockStateVariantMap.create(FACING, POSITION, SHAPE)
-            .register((facing, position, shape) -> BlockStateVariant.create()
-                .put(VariantSettings.MODEL, modelId.withSuffixedPath("_" + shape.asString() + "_" + position.asString()))
-                .put(MishangucModels.DIRECTION_Y_VARIANT, facing.getOpposite())
-                .put(VariantSettings.UVLOCK, true)));
+  public @NotNull BlockModelDefinitionCreator createBlockStates(Identifier modelId) {
+    return VariantsBlockModelDefinitionCreator.of(this)
+        .with(BlockStateVariantMap.models(POSITION, SHAPE)
+            .generate((position, shape) -> BlockStateModelGenerator.createWeightedVariant(BlockStateModelGenerator.createModelVariant(modelId.withSuffixedPath("_" + shape.asString() + "_" + position.asString())))))
+        .apply(BlockStateModelGenerator.UV_LOCK)
+        .coordinate(BlockStateModelGeneratorAccessor.getNORTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS());
+
   }
 
   @Nullable
@@ -267,7 +270,6 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
 
   public enum Position implements StringIdentifiable {
     LEFT("left"), CENTER("center"), RIGHT("right");
-    @SuppressWarnings("deprecation")
     public static final EnumCodec<Position> CODEC = StringIdentifiable.createCodec(Position::values);
     private final String name;
 
@@ -291,7 +293,6 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
 
   public enum Shape implements StringIdentifiable {
     BOTTOM("bottom"), MIDDLE("middle"), TOP("top");
-    @SuppressWarnings("deprecation")
     public static final EnumCodec<Shape> CODEC = StringIdentifiable.createCodec(Shape::values);
     private final String name;
 

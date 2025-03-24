@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.client.data.*;
+import net.minecraft.client.render.model.json.ModelVariantOperator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -16,12 +17,12 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.data.MishangucModels;
 
 import java.util.Map;
 
@@ -132,21 +133,27 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
-    final BlockStateVariantMap.DoubleProperty<Direction, StripType> map = BlockStateVariantMap.create(FACING, STRIP_TYPE);
+    final var map = BlockStateVariantMap.models(FACING, STRIP_TYPE);
 
     final TextureMap textureMap = getTextureMap();
     final Identifier id = getModelType().upload(this, textureMap, blockStateModelGenerator.modelCollector);
     final Identifier idVertical = getModelType("_vertical").upload(this, textureMap, blockStateModelGenerator.modelCollector);
 
-    map.register(Direction.UP, StripType.HORIZONTAL, BlockStateVariant.create().put(VariantSettings.MODEL, id));
-    map.register(Direction.UP, StripType.VERTICAL, BlockStateVariant.create().put(VariantSettings.MODEL, idVertical));
-    map.register(Direction.DOWN, StripType.HORIZONTAL, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R180));
-    map.register(Direction.DOWN, StripType.VERTICAL, BlockStateVariant.create().put(VariantSettings.MODEL, idVertical).put(VariantSettings.X, VariantSettings.Rotation.R180));
+    map.register(Direction.UP, StripType.HORIZONTAL, BlockStateModelGenerator.createWeightedVariant(id));
+    map.register(Direction.UP, StripType.VERTICAL, BlockStateModelGenerator.createWeightedVariant(idVertical));
+    map.register(Direction.DOWN, StripType.HORIZONTAL, BlockStateModelGenerator.createWeightedVariant(id).apply(BlockStateModelGenerator.ROTATE_X_180));
+    map.register(Direction.DOWN, StripType.VERTICAL, BlockStateModelGenerator.createWeightedVariant(idVertical).apply(BlockStateModelGenerator.ROTATE_X_180));
     for (Direction direction : Direction.Type.HORIZONTAL) {
-      map.register(direction, StripType.HORIZONTAL, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangucModels.DIRECTION_Y_VARIANT, direction));
-      map.register(direction, StripType.VERTICAL, BlockStateVariant.create().put(VariantSettings.MODEL, idVertical).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangucModels.DIRECTION_Y_VARIANT, direction));
+      final AxisRotation axisRotation = switch (direction) {
+        case WEST -> AxisRotation.R90;
+        case NORTH -> AxisRotation.R180;
+        case EAST -> AxisRotation.R270;
+        default -> AxisRotation.R0;
+      };
+      map.register(direction, StripType.HORIZONTAL, BlockStateModelGenerator.createWeightedVariant(id).apply(BlockStateModelGenerator.ROTATE_X_270).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
+      map.register(direction, StripType.VERTICAL, BlockStateModelGenerator.createWeightedVariant(idVertical).apply(BlockStateModelGenerator.ROTATE_X_270).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
     }
-    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.UVLOCK, true)).coordinate(map));
+    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(this).with(map).apply(BlockStateModelGenerator.UV_LOCK));
   }
 
   @Override

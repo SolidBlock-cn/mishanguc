@@ -32,6 +32,7 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
 import pers.solid.mishang.uc.data.FasterTextureMap;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
+import pers.solid.mishang.uc.mixin.BlockStateModelGeneratorAccessor;
 import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
@@ -95,7 +96,7 @@ public interface RoadWithTwoBevelAngleLines extends Road {
           .lineTop(MishangUtils.composeAngleLineTexture(lineColor, lineType, true))
           .lineSide(MishangUtils.composeStraightLineTexture(lineColor, lineType));
       final Identifier modelId = road.uploadModel("_with_bi_angle_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_TOP, MishangucTextureKeys.LINE_SIDE);
-      blockStateModelGenerator.blockStateCollector.accept(road.composeState(BlockStateModelGenerator.createSingletonBlockState(road, modelId).coordinate(BlockStateModelGenerator.createSouthDefaultHorizontalRotationStates())));
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(BlockStateModelGenerator.createSingletonBlockState(road, BlockStateModelGenerator.createWeightedVariant(modelId)).coordinate(BlockStateModelGeneratorAccessor.getSOUTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS())));
     }
 
     @Override
@@ -149,7 +150,7 @@ public interface RoadWithTwoBevelAngleLines extends Road {
           .lineSide(MishangUtils.composeStraightLineTexture(lineColor, lineType))
           .lineTop2(MishangUtils.composeAngleLineTexture(lineColor, lineType, true));
       final Identifier modelId = road.uploadModel("_with_straight_and_bi_angle_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_TOP, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_TOP2);
-      blockStateModelGenerator.blockStateCollector.accept(road.composeState(BlockStateModelGenerator.createSingletonBlockState(road, modelId).coordinate(BlockStateModelGenerator.createSouthDefaultHorizontalRotationStates())));
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(BlockStateModelGenerator.createSingletonBlockState(road, BlockStateModelGenerator.createWeightedVariant(modelId)).coordinate(BlockStateModelGeneratorAccessor.getSOUTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS())));
     }
 
     @Override

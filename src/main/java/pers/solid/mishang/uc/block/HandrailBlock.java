@@ -5,7 +5,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
-import net.minecraft.client.data.*;
+import net.minecraft.client.data.BlockModelDefinitionCreator;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.TextureMap;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -28,8 +30,8 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 import pers.solid.mishang.uc.components.MishangucComponents;
-import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.item.NamedBlockItem;
+import pers.solid.mishang.uc.mixin.BlockStateModelGeneratorAccessor;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 
 import java.util.Map;
@@ -205,8 +207,8 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
   }
 
   @Environment(EnvType.CLIENT)
-  public @NotNull BlockStateSupplier createBlockStates(Identifier modelId) {
-    return BlockStateModelGenerator.createSingletonBlockState(this, modelId).coordinate(BlockStateVariantMap.create(Properties.HORIZONTAL_FACING).register(direction -> BlockStateVariant.create().put(MishangucModels.DIRECTION_Y_VARIANT, direction).put(VariantSettings.UVLOCK, true)));
+  public @NotNull BlockModelDefinitionCreator createBlockStates(Identifier modelId) {
+    return BlockStateModelGenerator.createSingletonBlockState(this, BlockStateModelGenerator.createWeightedVariant(modelId)).coordinate((BlockStateModelGeneratorAccessor.getSOUTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS())).apply(BlockStateModelGenerator.UV_LOCK);
   }
 
   @Override

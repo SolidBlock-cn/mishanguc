@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.component.ComponentMap;
+import net.minecraft.component.ComponentsAccess;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -87,22 +88,22 @@ public class HungSignBlockEntity extends BlockEntityWithText {
       }
     }
     texts = builder.build();
-    if (nbt.contains("waxed", NbtElement.LIST_TYPE)) {
-      final NbtList list = nbt.getList("waxed", NbtElement.STRING_TYPE);
+    if (nbt.contains("waxed")) {
+      final Optional<NbtList> list = nbt.getList("waxed");
       if (list.isEmpty()) {
         waxed = Set.of();
       } else {
-        waxed = list.stream().map(nbtElement -> Direction.byName(nbtElement.asString())).filter(Objects::nonNull).collect(Collectors.toCollection(() -> new HashSet<>(2)));
+        waxed = list.get().stream().map(nbtElement -> Direction.CODEC.byId(nbtElement.asString().orElse(""))).filter(Objects::nonNull).collect(Collectors.toCollection(() -> new HashSet<>(2)));
       }
     } else {
       waxed = Set.of();
     }
-    if (nbt.contains("glowing", NbtElement.LIST_TYPE)) {
-      final NbtList list = nbt.getList("glowing", NbtElement.STRING_TYPE);
+    if (nbt.contains("glowing")) {
+      final Optional<NbtList> list = nbt.getList("glowing");
       if (list.isEmpty()) {
         glowing = Set.of();
       } else {
-        glowing = list.stream().map(nbtElement -> Direction.byName(nbtElement.asString())).filter(Objects::nonNull).collect(Collectors.toCollection(() -> new HashSet<>(2)));
+        glowing = list.get().stream().map(nbtElement -> Direction.CODEC.byId(nbtElement.asString().orElse(""))).filter(Objects::nonNull).collect(Collectors.toCollection(() -> new HashSet<>(2)));
       }
     } else {
       glowing = Set.of();

@@ -31,20 +31,20 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.Collections;
 import java.util.List;
 
 @ApiStatus.AvailableSince("0.2.4")
-public class GrowthToolItem extends Item implements InteractsWithEntity, MishangucItem, DispenserBehavior {
+public class GrowthToolItem extends Item implements InteractsWithEntity, MishangucItem, DispenserBehavior, WithMishangTooltip {
   public GrowthToolItem(Settings settings) {
     super(settings);
     DispenserBlock.registerBehavior(this, this);
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(TextBridge.translatable("item.mishanguc.growth_tool.tooltip.1").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.growth_tool.tooltip.2").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.growth_tool.tooltip.3").formatted(Formatting.GRAY));
@@ -65,10 +65,10 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
   }
 
   @Override
-  public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-    if (super.canMine(state, world, pos, miner) && !world.isClient) {
-      final int damage = apply(world, Vec3d.ofCenter(pos), !miner.isSneaking());
-      miner.getStackInHand(Hand.MAIN_HAND).damage(damage, miner, EquipmentSlot.MAINHAND);
+  public boolean canMine(ItemStack stack, BlockState state, World world, BlockPos pos, LivingEntity user) {
+    if (super.canMine(stack, state, world, pos, user) && !world.isClient) {
+      final int damage = apply(world, Vec3d.ofCenter(pos), !user.isSneaking());
+      user.getStackInHand(Hand.MAIN_HAND).damage(damage, user, EquipmentSlot.MAINHAND);
     }
     return false;
   }

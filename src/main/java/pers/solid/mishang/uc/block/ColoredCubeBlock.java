@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.data.*;
+import net.minecraft.client.render.model.json.ModelVariant;
 import net.minecraft.data.loottable.BlockLootTableGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -54,8 +55,7 @@ public class ColoredCubeBlock extends Block implements ColoredBlock {
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-    super.appendTooltip(stack, context, tooltip, options);
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
     ColoredBlock.appendColorTooltip(stack, tooltip);
   }
 
@@ -83,11 +83,11 @@ public class ColoredCubeBlock extends Block implements ColoredBlock {
       final Identifier modelId = MishangucModels.COLORED_CUBE_ALL.upload(this, textureMap, blockStateModelGenerator.modelCollector);
       final Identifier mirroredModelId = MishangucModels.COLORED_CUBE_MIRRORED_ALL.upload(this, textureMap, blockStateModelGenerator.modelCollector);
 
-      blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createBlockStateWithTwoModelAndRandomInversion(this, modelId, mirroredModelId));
+      blockStateModelGenerator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(this, BlockStateModelGenerator.modelWithMirroring(new ModelVariant(modelId), new ModelVariant(mirroredModelId))));
       return;
     }
     final Identifier modelId = model.getModel().upload(this, textureMap, blockStateModelGenerator.modelCollector);
-    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(this, modelId));
+    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(this, BlockStateModelGenerator.createWeightedVariant(modelId)));
     blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(modelId, ColoredTintSource.INSTANCE));
   }
 

@@ -10,15 +10,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.chars.Char2CharArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2CharMap;
+import joptsimple.internal.Strings;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.nbt.AbstractNbtNumber;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtString;
+import net.minecraft.nbt.*;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.registry.RegistryWrapper;
@@ -36,6 +34,7 @@ import pers.solid.mishang.uc.util.VerticalAlign;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * 对 {@link net.minecraft.text.Text} 的简单包装与扩展，允许设置对齐属性、尺寸等参数，以便渲染时使用。同时还提供对象与 NBT、JSON 之间的转换。
@@ -210,7 +209,7 @@ public class TextContext implements Cloneable {
   @Contract(value = "_, _, _ -> param2", mutates = "param2")
   public static @NotNull TextContext fromNbt(NbtElement nbt, TextContext defaults, RegistryWrapper.WrapperLookup registryLookup) {
     if (nbt instanceof NbtString || nbt instanceof AbstractNbtNumber) {
-      defaults.text = TextBridge.literal(nbt.asString());
+      defaults.text = TextBridge.literal(nbt.asString().or(() -> nbt.asNumber().map(Objects::toString)).orElse(""));
     } else if (nbt instanceof NbtCompound nbtCompound) {
       defaults.readNbt(nbtCompound, registryLookup);
     }
@@ -232,9 +231,8 @@ public class TextContext implements Cloneable {
    */
   @Contract(mutates = "this")
   public void readNbt(@NotNull NbtCompound nbt, RegistryWrapper.@Nullable WrapperLookup registryLookup) {
-    final @Nullable NbtElement nbtText = nbt.get("text");
-    final String textJson = nbt.getString("textJson");
-    if (!textJson.isEmpty()) {
+    final String textJson = nbt.getString("textJson", null);
+    if (!Strings.isNullOrEmpty(textJson)) {
       try {
         if (registryLookup == null) {
           JsonReader jsonReader = new JsonReader(new StringReader(textJson));
@@ -247,16 +245,16 @@ public class TextContext implements Cloneable {
       } catch (JsonParseException e) {
         text = TextBridge.translatable("message.mishanguc.invalid_json", e.getMessage());
       }
-    } else if (nbtText instanceof NbtString) {
-      text = TextBridge.literal(nbtText.asString());
+    } else if (nbt.contains("text")) {
+      text = (MutableText) nbt.get("text", TextCodecs.CODEC, registryLookup == null ? NbtOps.INSTANCE : registryLookup.getOps(NbtOps.INSTANCE)).orElseGet(() -> Text.literal(nbt.get("text").toString()).formatted(Formatting.RED));
     } else {
       text = null;
     }
-    horizontalAlign = HorizontalAlign.byName(nbt.getString("horizontalAlign"));
+    horizontalAlign = HorizontalAlign.byName(nbt.getString("horizontalAlign", null));
     if (horizontalAlign == null) {
       horizontalAlign = HorizontalAlign.CENTER;
     }
-    verticalAlign = VerticalAlign.byName(nbt.getString("verticalAlign"));
+    verticalAlign = VerticalAlign.byName(nbt.getString("verticalAlign", null));
     if (verticalAlign == null) {
       verticalAlign = VerticalAlign.MIDDLE;
     }
@@ -265,7 +263,7 @@ public class TextContext implements Cloneable {
     }
     final OutlineColorType outlineColorType;
     if (nbt.contains("outlineColorType")) {
-      outlineColorType = OutlineColorType.CODEC.byId(nbt.getString("outlineColorType"));
+      outlineColorType = OutlineColorType.CODEC.byId(nbt.getString("outlineColorType", null));
     } else {
       outlineColorType = null;
     }
@@ -277,31 +275,31 @@ public class TextContext implements Cloneable {
     } else {
       this.outlineColorType = outlineColorType;
     }
-    shadow = nbt.getBoolean("shadow");
-    seeThrough = nbt.getBoolean("seeThrough");
-    offsetX = nbt.getFloat("offsetX");
-    offsetY = nbt.getFloat("offsetY");
-    offsetZ = nbt.getFloat("offsetZ");
-    rotationX = nbt.getFloat("rotationX");
-    rotationY = nbt.getFloat("rotationY");
-    rotationZ = nbt.getFloat("rotationZ");
-    scaleX = nbt.getFloat("scaleX");
-    if (scaleX == 0) {
-      scaleX = 1;
-    }
-    scaleY = nbt.getFloat("scaleY");
-    if (scaleY == 0) {
-      scaleY = 1;
-    }
-    size = nbt.contains("size", 99) ? nbt.getFloat("size") : size;
-    bold = nbt.getBoolean("bold");
-    italic = nbt.getBoolean("italic");
-    underline = nbt.getBoolean("underline");
-    strikethrough = nbt.getBoolean("strikethrough");
-    obfuscated = nbt.getBoolean("obfuscated");
-    absolute = nbt.getBoolean("absolute");
+    shadow = nbt.getBoolean("shadow", false);
+    seeThrough = nbt.getBoolean("seeThrough", false);
+    offsetX = nbt.getFloat("offsetX", 0f);
+    offsetY = nbt.getFloat("offsetY", 0f);
+    offsetZ = nbt.getFloat("offsetZ", 0f);
+    rotationX = nbt.getFloat("rotationX", 0f);
+    rotationY = nbt.getFloat("rotationY", 0f);
+    rotationZ = nbt.getFloat("rotationZ", 0f);
+    scaleX = nbt.getFloat("scaleX", 1f);
+//    if (scaleX == 0) {
+//      scaleX = 1;
+//    }
+    scaleY = nbt.getFloat("scaleY", 1f);
+//    if (scaleY == 0) {
+//      scaleY = 1;
+//    }
+    size = nbt.contains("size") ? nbt.getFloat("size", 0f) : size;
+    bold = nbt.getBoolean("bold", false);
+    italic = nbt.getBoolean("italic", false);
+    underline = nbt.getBoolean("underline", false);
+    strikethrough = nbt.getBoolean("strikethrough", false);
+    obfuscated = nbt.getBoolean("obfuscated", false);
+    absolute = nbt.getBoolean("absolute", false);
 
-    extra = nbt.contains("extra", NbtElement.COMPOUND_TYPE) ? SpecialDrawable.fromNbt(this, nbt.getCompound("extra")) : null;
+    extra = nbt.contains("extra") ? SpecialDrawable.fromNbt(this, nbt.getCompoundOrEmpty("extra")) : null;
   }
 
   @Environment(EnvType.CLIENT)
@@ -423,11 +421,7 @@ public class TextContext implements Cloneable {
   @Contract(mutates = "param1")
   public void writeNbt(@NotNull NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
     if (text != null) {
-      if (text.getContent() instanceof PlainTextContent plainTextContent && text.getSiblings().isEmpty() && text.getStyle().isEmpty()) {
-        nbt.putString("text", plainTextContent.string());
-      } else {
-        nbt.putString("textJson", TextCodecs.CODEC.encodeStart(JsonOps.INSTANCE, text).getOrThrow(JsonParseException::new).toString());
-      }
+      nbt.put("text", TextCodecs.CODEC, registryLookup.getOps(NbtOps.INSTANCE), text);
     } else {
       nbt.remove("text");
     }

@@ -40,11 +40,11 @@ public abstract class BetterClientPlayerInteractionManagerMixin {
   protected abstract void sendSequencedPacket(ClientWorld world, SequencedPacketCreator packetCreator);
 
   @Inject(
-      at =
-      @At(
+      at = {@At(
           value = "INVOKE",
-          target = "Lnet/minecraft/world/GameMode;isCreative()Z",
-          ordinal = 0),
+          target = "Lnet/minecraft/client/network/ClientPlayerEntity;getAbilities()Lnet/minecraft/entity/player/PlayerAbilities;",
+          ordinal = 0
+      )},
       method = "attackBlock",
       cancellable = true)
   public void attackBlock(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> info) {
@@ -61,11 +61,11 @@ public abstract class BetterClientPlayerInteractionManagerMixin {
   }
 
   @Inject(
-      at =
-      @At(
+      at = {@At(
           value = "INVOKE",
-          target = "Lnet/minecraft/world/GameMode;isCreative()Z",
-          ordinal = 0),
+          target = "Lnet/minecraft/client/network/ClientPlayerEntity;getAbilities()Lnet/minecraft/entity/player/PlayerAbilities;",
+          ordinal = 0
+      )},
       method = "updateBlockBreakingProgress",
       cancellable = true)
   public void method_2902(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> info) {
@@ -87,7 +87,7 @@ public abstract class BetterClientPlayerInteractionManagerMixin {
   /**
    * 在原版MC中，处理破坏过程中，仍有可能执行 attackBlock。当玩家持有此类物品时，不再击打方块。这种情况通常在生存模式出现。
    */
-  @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;attackBlock(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z", shift = At.Shift.BEFORE), method = "updateBlockBreakingProgress", cancellable = true)
+  @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;attackBlock(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z", ordinal = 0), method = "updateBlockBreakingProgress", cancellable = true)
   public void doNotAttack(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
     ActionResult result =
         Mishanguc.PROGRESS_ATTACK_BLOCK_EVENT

@@ -36,6 +36,7 @@ import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.util.BlockMatchingRule;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.Iterator;
 import java.util.List;
@@ -45,7 +46,7 @@ import java.util.List;
  *
  * @see BlockMatchingRule
  */
-public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollInteraction {
+public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollInteraction, WithMishangTooltip {
 
   private static final Int2ObjectBiMap<BlockMatchingRule> RULES_TO_CYCLE = Util.make(Int2ObjectBiMap.create(4), map -> {
     map.add(BlockMatchingRule.SAME_STATE);
@@ -122,8 +123,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.1")
         .formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.2").formatted(Formatting.GRAY));

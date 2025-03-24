@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.components;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.component.ComponentsAccess;
 import net.minecraft.item.Item;
 import net.minecraft.item.tooltip.TooltipAppender;
 import net.minecraft.item.tooltip.TooltipType;
@@ -34,10 +35,10 @@ public record ExplosionToolComponent(float power, boolean createFire, Explosion.
   public static final PacketCodec<RegistryByteBuf, ExplosionToolComponent> PACKET_CODEC = PacketCodec.tuple(PacketCodecs.FLOAT, ExplosionToolComponent::power, PacketCodecs.BOOLEAN, ExplosionToolComponent::createFire, PacketCodec.of((value, buf) -> buf.writeEnumConstant(value), buf -> buf.readEnumConstant(Explosion.DestructionType.class)), ExplosionToolComponent::destructionType, ExplosionToolComponent::new);
 
   @Override
-  public void appendTooltip(Item.TooltipContext context, Consumer<Text> tooltip, TooltipType type) {
-    tooltip.accept(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.power", TextBridge.literal(String.valueOf(power)).formatted(Formatting.YELLOW)).formatted(Formatting.GRAY));
-    tooltip.accept(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.createFire", createFire ? ScreenTexts.YES.copy().formatted(Formatting.GREEN) : ScreenTexts.NO.copy().formatted(Formatting.RED)).formatted(Formatting.GRAY));
-    tooltip.accept(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.destructionType", TextBridge.translatable("item.mishanguc.explosion_tool.destructionType." + destructionType.name().toLowerCase()).styled(style -> style.withColor(0x779999))).formatted(Formatting.GRAY));
+  public void appendTooltip(Item.TooltipContext context, Consumer<Text> textConsumer, TooltipType type, ComponentsAccess components) {
+    textConsumer.accept(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.power", TextBridge.literal(String.valueOf(power)).formatted(Formatting.YELLOW)).formatted(Formatting.GRAY));
+    textConsumer.accept(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.createFire", createFire ? ScreenTexts.YES.copy().formatted(Formatting.GREEN) : ScreenTexts.NO.copy().formatted(Formatting.RED)).formatted(Formatting.GRAY));
+    textConsumer.accept(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.destructionType", TextBridge.translatable("item.mishanguc.explosion_tool.destructionType." + destructionType.name().toLowerCase()).styled(style -> style.withColor(0x779999))).formatted(Formatting.GRAY));
   }
 
   public ExplosionToolComponent withPower(float power) {

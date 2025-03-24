@@ -1,21 +1,25 @@
 package pers.solid.mishang.uc.data;
 
-import com.google.common.collect.Lists;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.common.collect.ImmutableMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.client.data.*;
+import net.minecraft.client.render.model.BlockStateModel;
+import net.minecraft.client.render.model.SimpleBlockStateModel;
+import net.minecraft.client.render.model.WeightedBlockStateModel;
+import net.minecraft.client.render.model.json.BlockModelDefinition;
+import net.minecraft.client.render.model.json.ModelVariant;
+import net.minecraft.client.render.model.json.ModelVariantOperator;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.Pool;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.block.MishangucBlock;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 @Environment(EnvType.CLIENT)
 public final class ModelHelper {
@@ -28,41 +32,47 @@ public final class ModelHelper {
    * @return 方块状态。
    */
   @NotNull
-  public static BlockStateSupplier stateForHorizontalCornerFacingBlock(@NotNull Block block, @NotNull Identifier modelIdentifier, boolean uvlock) {
-    return VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(MishangucProperties.HORIZONTAL_CORNER_FACING).register(direction -> BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifier).put(MishangucModels.INT_Y_VARIANT, direction.asRotation() - 45).put(VariantSettings.UVLOCK, uvlock)));
+  public static BlockModelDefinitionCreator stateForHorizontalCornerFacingBlock(@NotNull Block block, @NotNull Identifier modelIdentifier, boolean uvlock) {
+    return VariantsBlockModelDefinitionCreator.of(block, BlockStateModelGenerator.createWeightedVariant(modelIdentifier)).coordinate(BlockStateVariantMap.operations(MishangucProperties.HORIZONTAL_CORNER_FACING).generate(direction -> ModelVariantOperator.ROTATION_Y.withValue(direction.asAxisRotationCCW45()).then(ModelVariantOperator.UV_LOCK.withValue(uvlock))));
   }
 
-  public static BlockStateSupplier composeStateForSlab(@NotNull BlockStateSupplier stateForFull) {
-    final JsonObject variants = stateForFull.get().getAsJsonObject().getAsJsonObject("variants");
-    final JsonObject slabVariant = new JsonObject();
-    for (Map.Entry<String, JsonElement> entry : variants.entrySet()) {
-      final String key = entry.getKey();
-      final List<JsonObject> models;
-      if (entry.getValue() instanceof JsonArray jsonArray) {
-        models = Lists.transform(jsonArray.asList(), JsonElement::getAsJsonObject);
-      } else {
-        models = Collections.singletonList(entry.getValue().getAsJsonObject());
+  public static BlockModelDefinition composeStateForSlab(@NotNull BlockModelDefinition modelForFull) {
+    final Optional<BlockModelDefinition.Variants> simpleModels = modelForFull.simpleModels();
+    final Optional<BlockModelDefinition.Variants> newSimpleModels;
+    if (simpleModels.isEmpty()) {
+      newSimpleModels = Optional.empty();
+    } else {
+      final BlockModelDefinition.Variants variants = simpleModels.get();
+      final Map<String, BlockStateModel.Unbaked> models = variants.models();
+      final ImmutableMap.Builder<String, BlockStateModel.Unbaked> newModelsBuilder = new ImmutableMap.Builder<>();
+
+      for (Map.Entry<String, BlockStateModel.Unbaked> entry : models.entrySet()) {
+        final String key = entry.getKey();
+        final BlockStateModel.Unbaked unbaked = entry.getValue();
+        newModelsBuilder.put(key.isEmpty() ? "type=bottom" : key + ",type=bottom", unbaked);
+        newModelsBuilder.put(key.isEmpty() ? "type=top" : key + ",type=top", transformUnbakedModel(unbaked, modelVariant -> modelVariant.withModel(modelVariant.modelId().withSuffixedPath("_top"))));
+        newModelsBuilder.put(key.isEmpty() ? "type=double" : key + ",type=double", transformUnbakedModel(unbaked, modelVariant -> modelVariant.withModel(modelVariant.modelId().withPath(s -> s.endsWith("_slab") ? s.replace("_slab", "_block") : s.replace("_slab", "")))));
       }
-      for (JsonObject blockModel : models) {
-        final Identifier modelId = Identifier.of(blockModel.get("model").getAsString());
-        JsonObject bottomModel = blockModel.deepCopy();
-        bottomModel.addProperty("model", modelId.toString());
-        slabVariant.add(
-            key.isEmpty() ? "type=bottom" : key + ",type=bottom",
-            bottomModel);
-        JsonObject topModel = blockModel.deepCopy();
-        topModel.addProperty("model", modelId.withSuffixedPath("_top").toString());
-        slabVariant.add(
-            key.isEmpty() ? "type=top" : key + ",type=top",
-            topModel);
-        JsonObject doubleModel = blockModel.deepCopy();
-        doubleModel.addProperty("model", modelId.withPath(s -> s.endsWith("_slab") ? s.replace("_slab", "_block") : s.replace("_slab", "")).toString());
-        slabVariant.add(
-            key.isEmpty() ? "type=double" : key + ",type=double",
-            doubleModel);
-      }
+
+      newSimpleModels = Optional.of(new BlockModelDefinition.Variants(newModelsBuilder.build()));
     }
-    return new Forwarding(stateForFull, slabVariant);
+
+    // mubltipart 的部分，目前不用动
+    return new BlockModelDefinition(newSimpleModels, modelForFull.multipartModel());
+  }
+
+  public static BlockStateModel.Unbaked transformUnbakedModel(BlockStateModel.Unbaked unbaked, UnaryOperator<ModelVariant> operator) {
+    if (unbaked instanceof SimpleBlockStateModel.Unbaked(ModelVariant variant)) {
+      return new SimpleBlockStateModel.Unbaked(operator.apply(variant));
+    } else if (unbaked instanceof WeightedBlockStateModel.Unbaked(Pool<BlockStateModel.Unbaked> entries)) {
+      return new WeightedBlockStateModel.Unbaked(entries.transform(unbaked1 -> transformUnbakedModel(unbaked1, operator)));
+    } else {
+      return unbaked;
+    }
+  }
+
+  public static BlockModelDefinitionCreator composeStateForSlab(@NotNull BlockModelDefinitionCreator stateForFull) {
+    return new Forwarding(stateForFull);
   }
 
   public static Identifier getTextureOf(Block block) {
@@ -74,13 +84,11 @@ public final class ModelHelper {
   }
 
   @Environment(EnvType.CLIENT)
-  private static class Forwarding implements BlockStateSupplier {
-    private final @NotNull BlockStateSupplier stateForFull;
-    private final JsonObject slabVariant;
+  private static class Forwarding implements BlockModelDefinitionCreator {
+    private final @NotNull BlockModelDefinitionCreator stateForFull;
 
-    public Forwarding(@NotNull BlockStateSupplier stateForFull, JsonObject slabVariant) {
+    public Forwarding(@NotNull BlockModelDefinitionCreator stateForFull) {
       this.stateForFull = stateForFull;
-      this.slabVariant = slabVariant;
     }
 
     @Override
@@ -89,10 +97,8 @@ public final class ModelHelper {
     }
 
     @Override
-    public JsonElement get() {
-      final JsonObject jsonObject = new JsonObject();
-      jsonObject.add("variants", slabVariant);
-      return jsonObject;
+    public BlockModelDefinition createBlockModelDefinition() {
+      return composeStateForSlab(stateForFull.createBlockModelDefinition());
     }
   }
 }

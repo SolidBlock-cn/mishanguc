@@ -513,7 +513,7 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
         .line(texture)
         .particle("asphalt");
     final Identifier modelId = road.uploadModel("_with_auto_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE, TextureKey.PARTICLE);
-    blockStateModelGenerator.blockStateCollector.accept(road.composeState(BlockStateModelGenerator.createSingletonBlockState(road, modelId)));
+    blockStateModelGenerator.blockStateCollector.accept(road.composeState(BlockStateModelGenerator.createSingletonBlockState(road, BlockStateModelGenerator.createWeightedVariant(modelId))));
   }
 
   @Override

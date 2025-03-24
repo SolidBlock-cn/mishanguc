@@ -30,6 +30,7 @@ import net.minecraft.data.family.BlockFamily;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -60,6 +61,7 @@ import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
 import pers.solid.mishang.uc.networking.SlabToolPayload;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -71,7 +73,7 @@ import java.util.Objects;
  * 用于处理台阶的工具。
  */
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBlockOutline.class)
-public class SlabToolItem extends Item implements RendersBlockOutline, MishangucItem {
+public class SlabToolItem extends Item implements RendersBlockOutline, MishangucItem, WithMishangTooltip {
   /**
    * 从原版的 {@link BlockFamilies} 提取的方块至台阶方块的映射。
    */
@@ -148,7 +150,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
     }
   }
 
-  private static boolean performBreak(World world, BlockPos pos, PlayerEntity miner, boolean isTop) {
+  private static boolean performBreak(World world, BlockPos pos, PlayerEntity user, boolean isTop) {
     BlockState state = world.getBlockState(pos);
     final Block block = state.getBlock();
     final BlockState doubleSlabState = tryToDoubleSlab(state);
@@ -173,13 +175,13 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
         newBlockEntity.read(nbt, world.getRegistryManager());
       }
       final BlockState brokenState = state.with(Properties.SLAB_TYPE, slabTypeBroken);
-      block.onBreak(world, pos, brokenState, miner);
+      block.onBreak(world, pos, brokenState, user);
       if (bl1) {
         block.onBroken(world, pos, brokenState);
-        if (!miner.isCreative()) {
-          block.afterBreak(world, miner, pos, brokenState, world.getBlockEntity(pos), miner.getMainHandStack().copy());
+        if (!user.isCreative()) {
+          block.afterBreak(world, user, pos, brokenState, world.getBlockEntity(pos), user.getMainHandStack().copy());
         }
-        miner.getStackInHand(Hand.MAIN_HAND).damage(1, miner, EquipmentSlot.MAINHAND);
+        user.getStackInHand(Hand.MAIN_HAND).damage(1, user, EquipmentSlot.MAINHAND);
       }
       return bl1;
     }
@@ -187,8 +189,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(TextBridge.translatable("item.mishanguc.slab_tool.tooltip").formatted(Formatting.GRAY));
   }
 
@@ -197,14 +198,16 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
    *
    * @see Handler#receive
    */
+
+
   @Override
-  public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+  public boolean canMine(ItemStack stack, BlockState state, World world, BlockPos pos, LivingEntity user) {
     // 处理双台阶的情况。
-    if (world.isClient && miner instanceof ClientPlayerEntity) {
+    if (world.isClient && user instanceof ClientPlayerEntity clientPlayerEntity) {
       final HitResult raycast = MinecraftClient.getInstance().crosshairTarget;
       if (!(raycast instanceof BlockHitResult) || raycast.getType() == HitResult.Type.MISS) return false;
       boolean isTop = raycast.getPos().y - (double) ((BlockHitResult) raycast).getBlockPos().getY() > 0.5D;
-      final boolean bl1 = performBreak(world, pos, miner, isTop);
+      final boolean bl1 = performBreak(world, pos, clientPlayerEntity, isTop);
       ClientPlayNetworking.send(new SlabToolPayload(pos, isTop));
       return !bl1;
     } else {
@@ -282,7 +285,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
 
 
     /**
-     * @see #canMine(BlockState, World, BlockPos, PlayerEntity)
+     * @see #canMine(ItemStack, BlockState, World, BlockPos, LivingEntity)
      */
     @Override
     public void receive(SlabToolPayload payload, ServerPlayNetworking.Context context) {

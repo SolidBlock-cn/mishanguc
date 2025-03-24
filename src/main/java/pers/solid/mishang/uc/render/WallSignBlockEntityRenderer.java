@@ -20,6 +20,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.block.WallSignBlock;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
@@ -44,7 +45,7 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
   }
 
   @Override
-  public void render(T entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+  public void render(T entity, float tickProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, Vec3d cameraPos) {
     final Block block = entity.getCachedState().getBlock();
     // 若方块为隐形方块，且玩家手中拿着该方块，则显示该方块轮廓。
     final ClientPlayerEntity player = MinecraftClient.getInstance().player;

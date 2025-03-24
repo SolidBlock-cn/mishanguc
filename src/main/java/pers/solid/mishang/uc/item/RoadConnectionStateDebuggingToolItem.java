@@ -17,10 +17,11 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.util.RoadConnectionState;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 
-public class RoadConnectionStateDebuggingToolItem extends BlockToolItem implements MishangucItem {
+public class RoadConnectionStateDebuggingToolItem extends BlockToolItem implements MishangucItem, WithMishangTooltip {
 
   public RoadConnectionStateDebuggingToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
@@ -75,8 +76,7 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem implemen
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(TextBridge.translatable("item.mishanguc.road_connection_state_debugging_tool.tooltip.1").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.road_connection_state_debugging_tool.tooltip.2").formatted(Formatting.GRAY));
   }

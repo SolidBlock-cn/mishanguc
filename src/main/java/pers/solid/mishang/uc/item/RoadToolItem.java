@@ -30,18 +30,18 @@ import pers.solid.mishang.uc.block.RoadWithAutoLine;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 
 @ApiStatus.AvailableSince("0.2.4")
-public class RoadToolItem extends BlockToolItem implements MishangucItem {
+public class RoadToolItem extends BlockToolItem implements MishangucItem, WithMishangTooltip {
   public RoadToolItem(Settings settings) {
     super(settings, Boolean.FALSE);
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(TextBridge.translatable("item.mishanguc.road_tool.tooltip.1", TextBridge.keybind("key.attack").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.road_tool.tooltip.2", TextBridge.keybind("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.road_tool.tooltip.3").formatted(Formatting.GRAY));

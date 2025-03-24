@@ -28,6 +28,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Uuids;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -45,6 +46,7 @@ import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 import java.util.Optional;
@@ -52,7 +54,7 @@ import java.util.UUID;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
 public class CarryingToolItem extends BlockToolItem
-    implements MishangucItem, InteractsWithEntity, RendersBeforeOutline {
+    implements MishangucItem, InteractsWithEntity, RendersBeforeOutline, WithMishangTooltip {
 
   private static final int OUTLINE_COLOR_CYAN = ColorHelper.fromFloats(0.8f, 0, 1, 1);
   private static final int OUTLINE_COLOR_AO = ColorHelper.fromFloats(0.5f, 0, 0.5f, 1);
@@ -77,7 +79,7 @@ public class CarryingToolItem extends BlockToolItem
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     final NbtCompound entityTag = carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity ? holdingEntity.entityTag().orElse(null) : null;
     if (entityTag != null) {
-      entityTag.putUuid("UUID", uuid);
+      entityTag.put("UUID", Uuids.INT_STREAM_CODEC, uuid);
     }
   }
 
@@ -110,8 +112,7 @@ public class CarryingToolItem extends BlockToolItem
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.1").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.2").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.3").formatted(Formatting.GRAY));

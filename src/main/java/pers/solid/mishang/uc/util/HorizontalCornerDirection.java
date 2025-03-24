@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.util;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -121,6 +122,15 @@ public enum HorizontalCornerDirection implements StringIdentifiable {
 
   public int asRotation() {
     return rotation;
+  }
+
+  public AxisRotation asAxisRotationCCW45() {
+    return switch (this) {
+      case SOUTH_WEST -> AxisRotation.R0;
+      case NORTH_WEST -> AxisRotation.R90;
+      case NORTH_EAST -> AxisRotation.R180;
+      case SOUTH_EAST -> AxisRotation.R270;
+    };
   }
 
   /**

@@ -427,10 +427,10 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (dyeColor == null) {
       return -2f;
     } else {
-      return (float) dyeColor.getId();
+      return (float) dyeColor.getIndex();
     }
   }, (valueFunction, original) -> {
-    final int color = DyeColor.byId((int) valueFunction.get(original.floatValue())).getSignColor();
+    final int color = DyeColor.byIndex((int) valueFunction.get(original.floatValue())).getSignColor();
     for (TextContext textContext : selectedTextContexts) {
       textContext.color = color;
     }
@@ -438,7 +438,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (colorId == -2 && !selectedTextContexts.isEmpty()) {
       return MishangUtils.describeColor(textFieldListWidget.getFocused().textContext.color);
     } else {
-      final DyeColor dyeColor = DyeColor.byId((int) colorId);
+      final DyeColor dyeColor = DyeColor.byIndex((int) colorId);
       return MishangUtils.describeColor(dyeColor.getSignColor(), TextBridge.translatable("color.minecraft." + dyeColor.asString()));
     }
   }).setRenderedNameSupplier((value, valueText) -> valueText);
@@ -458,49 +458,49 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
     final DyeColor colorOutline = MishangUtils.COLOR_TO_OUTLINE_COLOR.inverse().get(textFieldListWidget.getFocused().textContext.outlineColor);
     if (colorOutline != null) {
-      return colorOutline.getId() + 16f;
+      return colorOutline.getIndex() + 16f;
     }
     final DyeColor color = MishangUtils.colorBySignColor(textFieldListWidget.getFocused().textContext.outlineColor);
     if (color != null) {
-      return (float) color.getId();
+      return (float) color.getIndex();
     } else {
       return -3f;
     }
   }, (valueFunction, original) -> {
     changed = true;
-    final int colorId = (int) valueFunction.get(original.floatValue());
+    final int colorIndex = (int) valueFunction.get(original.floatValue());
     final int outlineColor;
     final OutlineColorType outlineColorType;
-    if (colorId == -1 || colorId == -2) {
-      outlineColor = colorId;
-    } else if (colorId > 15) {
-      outlineColor = MishangUtils.COLOR_TO_OUTLINE_COLOR.get(DyeColor.byId(colorId - 16));
+    if (colorIndex == -1 || colorIndex == -2) {
+      outlineColor = colorIndex;
+    } else if (colorIndex > 15) {
+      outlineColor = MishangUtils.COLOR_TO_OUTLINE_COLOR.get(DyeColor.byIndex(colorIndex - 16));
     } else {
-      outlineColor = DyeColor.byId(colorId).getSignColor();
+      outlineColor = DyeColor.byIndex(colorIndex).getSignColor();
     }
     outlineColorType = OutlineColorType.fromCompatibilityValue(outlineColor);
     for (TextContext textContext : selectedTextContexts) {
       textContext.outlineColor = outlineColor;
       textContext.outlineColorType = outlineColorType;
     }
-  }, EMPTY_PRESS_ACTION).nameValueAs(colorId -> {
-    // colorId=-1：表示当前自动根据文本内容绘制描边。
-    // colorId=-2：表示当前不绘制描边（默认）。
-    // colorId=-3：表示是自定义的。
-    // colorId=null：表示当前没有选中文本。
-    // colorId=0-15：标准颜色。
-    // colorId=16-31：描边颜色
-    if (colorId == -1) {
+  }, EMPTY_PRESS_ACTION).nameValueAs(colorIndex -> {
+    // colorIndex=-1：表示当前自动根据文本内容绘制描边。
+    // colorIndex=-2：表示当前不绘制描边（默认）。
+    // colorIndex=-3：表示是自定义的。
+    // colorIndex=null：表示当前没有选中文本。
+    // colorIndex=0-15：标准颜色。
+    // colorIndex=16-31：描边颜色
+    if (colorIndex == -1) {
       return TextBridge.translatable("message.mishanguc.outline_color.auto");
-    } else if (colorId == -2) {
+    } else if (colorIndex == -2) {
       return TextBridge.translatable("message.mishanguc.outline_color.none");
-    } else if (colorId == -3 && !selectedTextContexts.isEmpty()) {
+    } else if (colorIndex == -3 && !selectedTextContexts.isEmpty()) {
       return MishangUtils.describeColor(textFieldListWidget.getFocused().textContext.outlineColor);
-    } else if (colorId > 15) {
-      final DyeColor color = DyeColor.byId((int) colorId - 16);
+    } else if (colorIndex > 15) {
+      final DyeColor color = DyeColor.byIndex((int) colorIndex - 16);
       return TextBridge.translatable("message.mishanguc.outline_color.relate", MishangUtils.describeColor(textFieldListWidget.getFocused().textContext.outlineColor, TextBridge.translatable("message.mishanguc.outline_color.relate.$1")), MishangUtils.describeColor(color.getSignColor(), TextBridge.translatable("color.minecraft." + color.asString())));
     } else {
-      final DyeColor color = DyeColor.byId((int) colorId);
+      final DyeColor color = DyeColor.byIndex((int) colorIndex);
       if (color == null)
         return TextBridge.translatable("message.mishanguc.outline_color.none");
       return MishangUtils.describeColor(color.getSignColor(), TextBridge.translatable("color.minecraft." + color.asString()));

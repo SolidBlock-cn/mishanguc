@@ -8,7 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
-import net.minecraft.client.data.BlockStateSupplier;
+import net.minecraft.client.data.BlockModelDefinitionCreator;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -133,7 +133,7 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
   }
 
   @Environment(EnvType.CLIENT)
-  public @NotNull BlockStateSupplier createBlockStates(Identifier modeId) {
+  public @NotNull BlockModelDefinitionCreator createBlockStates(Identifier modeId) {
     return ModelHelper.stateForHorizontalCornerFacingBlock(this, modeId, true);
   }
 

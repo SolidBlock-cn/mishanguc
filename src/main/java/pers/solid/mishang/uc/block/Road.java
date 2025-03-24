@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeveledCauldronBlock;
 import net.minecraft.block.cauldron.CauldronBehavior;
+import net.minecraft.client.data.BlockModelDefinitionCreator;
 import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.TextureKey;
 import net.minecraft.client.data.TextureMap;
@@ -34,17 +35,14 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
-import pers.solid.mishang.uc.util.EightHorizontalDirection;
-import pers.solid.mishang.uc.util.LineColor;
-import pers.solid.mishang.uc.util.LineType;
-import pers.solid.mishang.uc.util.RoadConnectionState;
+import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
 
 /**
  * 所有道路方块类型均实现的接口。接口可以多重继承，并直接实现于已有类上，因此使用接口。
  */
-public interface Road extends MishangucBlock {
+public interface Road extends MishangucBlock, WithMishangTooltip {
 
   /**
    * 获取该方块状态中，某个特定方向上的连接状态。连接状态可用于自动路块。
@@ -216,7 +214,7 @@ public interface Road extends MishangucBlock {
    * 对于道路方块，直接返回 {@code stateForFull}。对于道路台阶方块，会将其转化为台阶的方块状态再返回。
    */
   @Environment(EnvType.CLIENT)
-  BlockStateSupplier composeState(@NotNull BlockStateSupplier stateForFull);
+  BlockModelDefinitionCreator composeState(@NotNull BlockModelDefinitionCreator stateForFull);
 
   @Override
   default String customRecipeCategory() {

@@ -31,7 +31,7 @@ public final class SpecialDrawableTypes {
   });
 
   public static final SpecialDrawableType<TextureSpecialDrawable> TEXTURE = register("texture", (textContext, nbt) -> {
-    final Identifier texture = Identifier.tryParse(nbt.getString("texture"));
+    final Identifier texture = Identifier.tryParse(nbt.getString("texture", null));
     return texture != null ? new TextureSpecialDrawable(texture, textContext) : null;
   }, (textContext, args) -> {
     final Identifier identifier = Identifier.tryParse(args);

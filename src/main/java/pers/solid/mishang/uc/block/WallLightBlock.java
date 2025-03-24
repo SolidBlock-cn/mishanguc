@@ -146,13 +146,14 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, Mishan
   @Override
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final Identifier id = getModelType().upload(this, getTextureMap(), blockStateModelGenerator.modelCollector);
-    final BlockStateVariantMap.SingleProperty<Direction> map = BlockStateVariantMap.create(FACING);
-    map.register(Direction.UP, BlockStateVariant.create().put(VariantSettings.MODEL, id));
-    map.register(Direction.DOWN, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R180));
-    for (Direction direction : Direction.Type.HORIZONTAL) {
-      map.register(direction, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.X, VariantSettings.Rotation.R270).put(MishangucModels.DIRECTION_Y_VARIANT, direction));
-    }
-    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(this, BlockStateVariant.create().put(VariantSettings.UVLOCK, true)).coordinate(map));
+    final var map = BlockStateVariantMap.operations(FACING);
+    map.register(Direction.UP, BlockStateModelGenerator.NO_OP);
+    map.register(Direction.DOWN, BlockStateModelGenerator.ROTATE_X_180);
+    map.register(Direction.SOUTH, BlockStateModelGenerator.ROTATE_Y_270.then(BlockStateModelGenerator.NO_OP));
+    map.register(Direction.WEST, BlockStateModelGenerator.ROTATE_Y_270.then(BlockStateModelGenerator.ROTATE_Y_90));
+    map.register(Direction.NORTH, BlockStateModelGenerator.ROTATE_Y_270.then(BlockStateModelGenerator.ROTATE_Y_180));
+    map.register(Direction.EAST, BlockStateModelGenerator.ROTATE_Y_270.then(BlockStateModelGenerator.ROTATE_Y_270));
+    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(this, BlockStateModelGenerator.createWeightedVariant(id)).coordinate(map).apply(BlockStateModelGenerator.UV_LOCK));
     blockStateModelGenerator.registerParentedItemModel(this, id);
   }
 

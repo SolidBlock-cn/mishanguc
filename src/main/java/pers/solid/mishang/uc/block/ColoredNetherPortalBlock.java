@@ -46,8 +46,7 @@ public class ColoredNetherPortalBlock extends NetherPortalBlock implements Color
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-    super.appendTooltip(stack, context, tooltip, options);
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
     ColoredBlock.appendColorTooltip(stack, tooltip);
   }
 
@@ -62,11 +61,11 @@ public class ColoredNetherPortalBlock extends NetherPortalBlock implements Color
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final Identifier ewId = ModelIds.getBlockSubModelId(this, "_ew");
     final Identifier nsId = ModelIds.getBlockSubModelId(this, "_ns");
-    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(this)
-        .coordinate(
-            BlockStateVariantMap.create(Properties.HORIZONTAL_AXIS)
-                .register(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.MODEL, nsId))
-                .register(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, ewId))));
+    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(this)
+        .with(
+            BlockStateVariantMap.models(Properties.HORIZONTAL_AXIS)
+                .register(Direction.Axis.X, BlockStateModelGenerator.createWeightedVariant(nsId))
+                .register(Direction.Axis.Z, BlockStateModelGenerator.createWeightedVariant(ewId))));
     blockStateModelGenerator.registerParentedItemModel(this, nsId);
   }
 

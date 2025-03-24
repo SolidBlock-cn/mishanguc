@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.item;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.Block;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.MutableText;
@@ -11,6 +13,7 @@ import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 import java.util.Map;
@@ -20,16 +23,15 @@ import java.util.Map;
  *
  * @see pers.solid.mishang.uc.blockentity.HungSignBlockEntity#readNbt
  */
-public class HungSignBlockItem extends NamedBlockItem {
+public class HungSignBlockItem extends NamedBlockItem implements WithMishangTooltip {
   public HungSignBlockItem(Block block, Settings settings) {
     super(block, settings);
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     final Map<Direction, List<TextContext>> map = stack.get(MishangucComponents.TEXT_MAP);
-    if (map == null) return;
+    if (map == null || !stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.TEXT_MAP)) return;
     map.forEach(
         (direction, textContexts) -> {
           tooltip.add(

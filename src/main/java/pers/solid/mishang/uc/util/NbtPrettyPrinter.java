@@ -66,7 +66,7 @@ public final class NbtPrettyPrinter {
    * @see NbtHelper#toPrettyPrintedText
    */
   public static Text serialize(NbtCompound compound, int layer, String indent, int depth) {
-    final Map<String, NbtElement> entries = ((NbtCompoundAccessor) compound).getEntries();
+    final Map<String, NbtElement> entries = ((NbtCompoundAccessor) (Object) compound).getEntries();
     switch (layer) {
       case 0 -> {
         // 第0层的情况，整个数据的前一部分会完整展示。每一项显示在单独一行。
@@ -95,8 +95,7 @@ public final class NbtPrettyPrinter {
           if (n >= 7) {
             // 超过8个元素时，折叠这些元素，放到新的复合标签中。
             NbtCompound remains = new NbtCompound();
-            final Map<String, NbtElement> remainsEntries =
-                ((NbtCompoundAccessor) remains).getEntries();
+            final Map<String, NbtElement> remainsEntries = ((NbtCompoundAccessor) (Object) remains).getEntries();
             while (iterator.hasNext()) {
               final Map.Entry<String, NbtElement> next = iterator.next();
               remainsEntries.put(next.getKey(), next.getValue());
@@ -105,9 +104,7 @@ public final class NbtPrettyPrinter {
                 .formatted(Formatting.GRAY)
                 .styled(style -> style
                     .withClickEvent(new NbtClickEvent(remains))
-                    .withHoverEvent(new HoverEvent(
-                        HoverEvent.Action.SHOW_TEXT,
-                        TextBridge.translatable("debug.mishanguc.nbt.compound_display_remains")))));
+                    .withHoverEvent(new HoverEvent.ShowText(TextBridge.translatable("debug.mishanguc.nbt.compound_display_remains")))));
             break;
           }
           n++;
@@ -137,7 +134,7 @@ public final class NbtPrettyPrinter {
                 .formatted(Formatting.GRAY)
                 .append(TextBridge.translatable("debug.mishanguc.nbt.compound_total", entries.size()))
                 .styled(style -> style
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextBridge.translatable("debug.mishanguc.nbt.compound_display_full")))
+                    .withHoverEvent(new HoverEvent.ShowText(TextBridge.translatable("debug.mishanguc.nbt.compound_display_full")))
                     .withClickEvent(new NbtClickEvent(compound))));
             break;
           }
@@ -148,7 +145,7 @@ public final class NbtPrettyPrinter {
                   .formatted(Formatting.GRAY)
                   .append(TextBridge.translatable("debug.mishanguc.nbt.compound_expand", entries.size()))
                   .styled(style -> style.withHoverEvent(
-                          new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextBridge.translatable("debug.mishanguc.nbt.compound_display_full")))
+                          new HoverEvent.ShowText(TextBridge.translatable("debug.mishanguc.nbt.compound_display_full")))
                       .withClickEvent(new NbtClickEvent(compound))));
         }
         return text.append("}");
@@ -160,8 +157,7 @@ public final class NbtPrettyPrinter {
               TextBridge.translatable("debug.mishanguc.nbt.compound_brief", compound.getSize())
                   .formatted(Formatting.GRAY)
                   .styled(style -> style
-                      .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                          TextBridge.translatable(
+                      .withHoverEvent(new HoverEvent.ShowText(TextBridge.translatable(
                               "debug.mishanguc.nbt.compound_display_full")))
                       .withClickEvent(new NbtClickEvent(compound))));
         }
@@ -205,7 +201,7 @@ public final class NbtPrettyPrinter {
             text.append(TextBridge.translatable("debug.mishanguc.nbt.list_eclipse", nbtList.size() - n)
                 .formatted(Formatting.GRAY)
                 .styled(style -> style
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextBridge.translatable("debug.mishanguc.nbt.list_display_remains")))
+                    .withHoverEvent(new HoverEvent.ShowText(TextBridge.translatable("debug.mishanguc.nbt.list_display_remains")))
                     .withClickEvent(new NbtClickEvent(remains))));
             return text;
           }
@@ -229,7 +225,7 @@ public final class NbtPrettyPrinter {
                 .formatted(Formatting.GRAY)
                 .append(TextBridge.translatable("debug.mishanguc.nbt.list_total", nbtList.size()))
                 .styled(style -> style
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextBridge.translatable("debug.mishanguc.nbt.list_display_full")))
+                    .withHoverEvent(new HoverEvent.ShowText(TextBridge.translatable("debug.mishanguc.nbt.list_display_full")))
                     .withClickEvent(new NbtClickEvent(nbtList))));
             break;
           }
@@ -239,7 +235,7 @@ public final class NbtPrettyPrinter {
               .formatted(Formatting.GRAY)
               .append(TextBridge.translatable("debug.mishanguc.nbt.list_expand", nbtList.size()))
               .styled(style -> style
-                  .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextBridge.translatable("debug.mishanguc.nbt.list_display_full")))
+                  .withHoverEvent(new HoverEvent.ShowText(TextBridge.translatable("debug.mishanguc.nbt.list_display_full")))
                   .withClickEvent(new NbtClickEvent(nbtList))));
         }
         text.append("]");
@@ -251,7 +247,7 @@ public final class NbtPrettyPrinter {
           text.append(TextBridge.translatable("debug.mishanguc.nbt.list_brief", nbtList.size())
               .formatted(Formatting.GRAY)
               .styled(style -> style
-                  .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextBridge.translatable("debug.mishanguc.nbt.list_display_full")))
+                  .withHoverEvent(new HoverEvent.ShowText(TextBridge.translatable("debug.mishanguc.nbt.list_display_full")))
                   .withClickEvent(new NbtClickEvent(nbtList))));
         }
         text.append("]");
@@ -261,7 +257,7 @@ public final class NbtPrettyPrinter {
   }
 
   public static Text serialize(NbtString nbtString, int layer) {
-    final String string = nbtString.asString();
+    final String string = nbtString.value();
     final UnaryOperator<Style> strStyle = style -> style.withColor(0xcccccc);
     if (layer == 0) {
       return TextBridge.literal(string).styled(strStyle);

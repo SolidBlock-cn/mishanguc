@@ -41,8 +41,7 @@ public class ColoredGlassPaneBlock extends PaneBlock implements ColoredBlock {
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-    super.appendTooltip(stack, context, tooltip, options);
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
     ColoredBlock.appendColorTooltip(stack, tooltip);
   }
 
@@ -68,38 +67,29 @@ public class ColoredGlassPaneBlock extends PaneBlock implements ColoredBlock {
   }
 
   @Environment(EnvType.CLIENT)
-  public @NotNull BlockStateSupplier createBlockStates(Identifier postId, Identifier sideId, Identifier sideAltId, Identifier nosideId, Identifier nosideAltId) {
-    return MultipartBlockStateSupplier.create(this)
-        .with(BlockStateVariant.create()
-            .put(VariantSettings.MODEL, postId))
-        .with(When.create().set(Properties.NORTH, true),
-            BlockStateVariant.create()
-                .put(VariantSettings.MODEL, sideId))
-        .with(When.create().set(Properties.EAST, true),
-            BlockStateVariant.create()
-                .put(VariantSettings.MODEL, sideId)
-                .put(VariantSettings.Y, VariantSettings.Rotation.R90))
-        .with(When.create().set(Properties.SOUTH, true),
-            BlockStateVariant.create()
-                .put(VariantSettings.MODEL, sideAltId))
-        .with(When.create().set(Properties.WEST, true),
-            BlockStateVariant.create()
-                .put(VariantSettings.MODEL, sideAltId)
-                .put(VariantSettings.Y, VariantSettings.Rotation.R90))
-        .with(When.create().set(Properties.NORTH, false),
-            BlockStateVariant.create()
-                .put(VariantSettings.MODEL, nosideId))
-        .with(When.create().set(Properties.EAST, false),
-            BlockStateVariant.create()
-                .put(VariantSettings.MODEL, nosideAltId))
-        .with(When.create().set(Properties.SOUTH, false),
-            BlockStateVariant.create()
-                .put(VariantSettings.MODEL, nosideAltId)
-                .put(VariantSettings.Y, VariantSettings.Rotation.R90))
-        .with(When.create().set(Properties.WEST, false),
-            BlockStateVariant.create()
-                .put(VariantSettings.MODEL, nosideId)
-                .put(VariantSettings.Y, VariantSettings.Rotation.R270));
+  public @NotNull BlockModelDefinitionCreator createBlockStates(Identifier postId, Identifier sideId, Identifier sideAltId, Identifier nosideId, Identifier nosideAltId) {
+    return MultipartBlockModelDefinitionCreator.create(this)
+        .with(BlockStateModelGenerator.createWeightedVariant(postId))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(Properties.NORTH, true),
+            BlockStateModelGenerator.createWeightedVariant(sideId))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(Properties.EAST, true),
+            BlockStateModelGenerator.createWeightedVariant(sideId)
+                .apply(BlockStateModelGenerator.ROTATE_Y_90))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(Properties.SOUTH, true),
+            BlockStateModelGenerator.createWeightedVariant(sideAltId))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(Properties.WEST, true),
+            BlockStateModelGenerator.createWeightedVariant(sideAltId)
+                .apply(BlockStateModelGenerator.ROTATE_Y_90))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(Properties.NORTH, false),
+            BlockStateModelGenerator.createWeightedVariant(nosideId))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(Properties.EAST, false),
+            BlockStateModelGenerator.createWeightedVariant(nosideAltId))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(Properties.SOUTH, false),
+            BlockStateModelGenerator.createWeightedVariant(nosideAltId)
+                .apply(BlockStateModelGenerator.ROTATE_Y_90))
+        .with(BlockStateModelGenerator.createMultipartConditionBuilder().put(Properties.WEST, false),
+            BlockStateModelGenerator.createWeightedVariant(nosideId)
+                .apply(BlockStateModelGenerator.ROTATE_Y_270));
   }
 
   @Override

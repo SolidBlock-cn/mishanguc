@@ -22,10 +22,11 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 
-public class RotatingToolItem extends BlockToolItem implements MishangucItem {
+public class RotatingToolItem extends BlockToolItem implements MishangucItem, WithMishangTooltip {
 
   public RotatingToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
@@ -75,8 +76,7 @@ public class RotatingToolItem extends BlockToolItem implements MishangucItem {
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(
         TextBridge.translatable("item.mishanguc.rotating_tool.tooltip.1")
             .formatted(Formatting.GRAY));

@@ -80,7 +80,7 @@ public enum ColorMixtureType implements StringIdentifiable {
   };
 
   public static final Codec<ColorMixtureType> CODEC = StringIdentifiable.createCodec(ColorMixtureType::values);
-  public static final PacketCodec<ByteBuf, ColorMixtureType> PACKET_CODEC = PacketCodecs.indexed(ValueLists.createIdToValueFunction(ColorMixtureType::ordinal, values(), ValueLists.OutOfBoundsHandling.WRAP), Enum::ordinal);
+  public static final PacketCodec<ByteBuf, ColorMixtureType> PACKET_CODEC = PacketCodecs.indexed(ValueLists.createIndexToValueFunction(ColorMixtureType::ordinal, values(), ValueLists.OutOfBoundsHandling.WRAP), Enum::ordinal);
 
   private final String name;
   private final Text translatableName;

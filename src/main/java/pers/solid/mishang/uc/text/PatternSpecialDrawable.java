@@ -305,7 +305,7 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
 
   @Contract(value = "_,_ -> new", pure = true)
   public static PatternSpecialDrawable fromNbt(TextContext textContext, NbtCompound nbt) {
-    final String shapeName = nbt.getString("shapeName");
+    final String shapeName = nbt.getString("shapeName", null);
     return fromName(textContext, shapeName);
   }
 

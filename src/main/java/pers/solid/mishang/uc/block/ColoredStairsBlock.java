@@ -51,8 +51,7 @@ public class ColoredStairsBlock extends StairsBlock implements ColoredBlock {
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-    super.appendTooltip(stack, context, tooltip, options);
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
     ColoredBlock.appendColorTooltip(stack, tooltip);
   }
 
@@ -69,7 +68,7 @@ public class ColoredStairsBlock extends StairsBlock implements ColoredBlock {
     final Identifier regularModelId = MishangucModels.COLORED_STAIRS.upload(this, textureMap, blockStateModelGenerator.modelCollector);
     final Identifier innerModelId = MishangucModels.COLORED_INNER_STAIRS.upload(this, textureMap, blockStateModelGenerator.modelCollector);
     final Identifier outerModelId = MishangucModels.COLORED_OUTER_STAIRS.upload(this, textureMap, blockStateModelGenerator.modelCollector);
-    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createStairsBlockState(this, innerModelId, regularModelId, outerModelId));
+    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createStairsBlockState(this, BlockStateModelGenerator.createWeightedVariant(innerModelId), BlockStateModelGenerator.createWeightedVariant(regularModelId), BlockStateModelGenerator.createWeightedVariant(outerModelId)));
     blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(regularModelId, ColoredTintSource.INSTANCE));
   }
 

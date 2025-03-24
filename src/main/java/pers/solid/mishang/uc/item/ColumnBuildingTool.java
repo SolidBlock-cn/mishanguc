@@ -34,11 +34,12 @@ import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 import java.util.WeakHashMap;
 
-public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInteraction {
+public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInteraction, WithMishangTooltip {
   /**
    * 记录放置柱的操作记录。当玩家放置了柱之后，可以对其进行撤销，其操作记录就是存储在这个里面的。
    */
@@ -62,8 +63,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(TextBridge.translatable("item.mishanguc.column_building_tool.tooltip.1").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.column_building_tool.tooltip.2").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.column_building_tool.tooltip.3").formatted(Formatting.GRAY));

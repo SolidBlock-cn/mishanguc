@@ -2,6 +2,8 @@ package pers.solid.mishang.uc.item;
 
 import com.google.common.collect.Collections2;
 import net.minecraft.block.Block;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.MutableText;
@@ -10,25 +12,26 @@ import net.minecraft.util.Formatting;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 import java.util.stream.Stream;
 
-public class StandingSignBlockItem extends NamedBlockItem {
+public class StandingSignBlockItem extends NamedBlockItem implements WithMishangTooltip {
   public StandingSignBlockItem(Block block, Settings settings) {
     super(block, settings);
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+    final TooltipDisplayComponent displayComponent = stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT);
     final List<TextContext> frontTexts = stack.getOrDefault(MishangucComponents.FRONT_TEXTS, List.of());
-    if (!frontTexts.isEmpty()) {
+    if (!frontTexts.isEmpty() && displayComponent.shouldDisplay(MishangucComponents.FRONT_TEXTS)) {
       tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.standing_sign_block_front").formatted(Formatting.GRAY));
       tooltip.addAll(Collections2.transform(frontTexts, TextContext::asStyledText));
     }
     final List<TextContext> backTexts = stack.getOrDefault(MishangucComponents.BACK_TEXTS, List.of());
-    if (!backTexts.isEmpty()) {
+    if (!backTexts.isEmpty() && displayComponent.shouldDisplay(MishangucComponents.BACK_TEXTS)) {
       tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.standing_sign_block_back").formatted(Formatting.GRAY));
       tooltip.addAll(Collections2.transform(backTexts, TextContext::asStyledText));
     }

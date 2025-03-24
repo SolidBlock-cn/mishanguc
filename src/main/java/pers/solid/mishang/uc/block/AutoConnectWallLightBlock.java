@@ -9,7 +9,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.client.data.*;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.ModelProvider;
+import net.minecraft.client.data.MultipartBlockModelDefinitionCreator;
+import net.minecraft.client.data.TextureMap;
+import net.minecraft.client.render.model.json.ModelVariantOperator;
+import net.minecraft.client.render.model.json.WeightedVariant;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.data.recipe.StonecuttingRecipeJsonBuilder;
@@ -22,6 +27,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
@@ -38,8 +44,6 @@ import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 
 import java.util.*;
-
-import static net.minecraft.client.data.VariantSettings.MODEL;
 
 public class AutoConnectWallLightBlock extends WallLightBlock implements LightConnectable {
   public static final MapCodec<AutoConnectWallLightBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -207,53 +211,64 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
     final Identifier connection2ModelId = MishangucModels.createBlock("wall_light_%s_decoration_connection2".formatted(shape), "_connection2", MishangucTextureKeys.LIGHT).upload(this, textureMap, blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.registerParentedItemModel(this, modelId);
 
-    final MultipartBlockStateSupplier blockStateSupplier = MultipartBlockStateSupplier.create(this);
+    final MultipartBlockModelDefinitionCreator blockStateSupplier = MultipartBlockModelDefinitionCreator.create(this);
     for (Direction facing : Direction.values()) {
       // 中心装饰物
-      BlockStateVariant central = BlockStateVariant.create().put(MODEL, centerModelId)
-          .put(MishangucModels.INT_Y_VARIANT, facing.getAxis() == Direction.Axis.Y ? 0 : (int) (facing.getPositiveHorizontalDegrees() + 180))
-          .put(MishangucModels.INT_X_VARIANT, facing == Direction.DOWN ? 180 : facing == Direction.UP ? 0 : 90);
-      blockStateSupplier.with(When.create().set(FACING, facing), central);
+      WeightedVariant central = BlockStateModelGenerator.createWeightedVariant(centerModelId)
+          .apply(ModelVariantOperator.ROTATION_Y.withValue(switch (facing) {
+            case EAST -> AxisRotation.R90;
+            case SOUTH -> AxisRotation.R180;
+            case WEST -> AxisRotation.R270;
+            default -> AxisRotation.R0;
+          }))
+          .apply(ModelVariantOperator.ROTATION_X.withValue(facing == Direction.DOWN ? AxisRotation.R180 : facing == Direction.UP ? AxisRotation.R0 : AxisRotation.R90));
+      blockStateSupplier.with(BlockStateModelGenerator.createMultipartConditionBuilder().put(FACING, facing), central);
 
       // 连接物
       // 共有两种连接物模型：一种是位于底部或顶部的朝南连接，可以通过x和y的旋转得到位于底部朝向任意方向的连接，以及位于侧面朝向垂直方向的连接。
       // 第二种是位于侧面的朝东连接，可以通过x和y的旋转得到任意水平方向上的，以及底部或顶部任意连接。
       for (Direction direction : Direction.values()) {
         final Direction.Axis axis = direction.getAxis();
-        final int x, y;
+        final AxisRotation x;
+        final int y;
         final Identifier modelName;
         if (axis == facing.getAxis()) {
           continue;
         }
         if (facing == Direction.UP) {
           modelName = connectionModelId;
-          x = 0;
+          x = AxisRotation.R0;
           y = (int) direction.getPositiveHorizontalDegrees();
         } else if (facing == Direction.DOWN) {
           modelName = connectionModelId;
-          x = 180;
+          x = AxisRotation.R180;
           y = (int) direction.getPositiveHorizontalDegrees() + 180;
         } else if (direction == Direction.UP) {
           modelName = connectionModelId;
-          x = 90;
+          x = AxisRotation.R90;
           y = (int) facing.getPositiveHorizontalDegrees() + 180;
         } else if (direction == Direction.DOWN) {
           modelName = connectionModelId;
-          x = -90;
+          x = AxisRotation.R270;
           y = (int) facing.getPositiveHorizontalDegrees();
         } else if (direction == facing.rotateYCounterclockwise()) {
           modelName = connection2ModelId;
-          x = 0;
+          x = AxisRotation.R0;
           y = (int) facing.getPositiveHorizontalDegrees();
         } else if (direction == facing.rotateYClockwise()) {
           modelName = connection2ModelId;
-          x = 180;
+          x = AxisRotation.R180;
           y = (int) facing.getPositiveHorizontalDegrees() + 180;
         } else {
-          Mishanguc.MISHANG_LOGGER.error(String.format("Unknown state to generate models: facing=%s,direction=%s", facing.asString(), direction.asString()));
+          Mishanguc.MISHANG_LOGGER.error("Unknown state to generate models: facing={},direction={}", facing.asString(), direction.asString());
           continue;
         }
-        blockStateSupplier.with(When.create().set(FACING, facing).set(DIRECTION_TO_PROPERTY.get(direction), true), BlockStateVariant.create().put(MODEL, modelName).put(MishangucModels.INT_X_VARIANT, x).put(MishangucModels.INT_Y_VARIANT, y));
+        blockStateSupplier.with(BlockStateModelGenerator.createMultipartConditionBuilder().put(FACING, facing).put(DIRECTION_TO_PROPERTY.get(direction), true), BlockStateModelGenerator.createWeightedVariant(modelName).apply(ModelVariantOperator.ROTATION_X.withValue(x)).apply(ModelVariantOperator.ROTATION_Y.withValue(switch (y) {
+          case 90 -> AxisRotation.R90;
+          case 180 -> AxisRotation.R180;
+          case 270 -> AxisRotation.R270;
+          default -> AxisRotation.R0;
+        })));
       }
     }
     blockStateModelGenerator.blockStateCollector.accept(blockStateSupplier);

@@ -10,6 +10,7 @@ import net.minecraft.block.SlabBlock;
 import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.Models;
 import net.minecraft.client.data.TextureMap;
+import net.minecraft.client.data.VariantsBlockModelDefinitionCreator;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.item.Item;
@@ -54,7 +55,7 @@ public class RoadBlock extends AbstractRoadBlock {
     } else {
       modelId = Models.CUBE_ALL.upload(road, textures, blockStateModelGenerator.modelCollector);
     }
-    blockStateModelGenerator.blockStateCollector.accept(road.composeState(BlockStateModelGenerator.createBlockStateWithRandomHorizontalRotations(road, modelId)));
+    blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockModelDefinitionCreator.of(road, BlockStateModelGenerator.modelWithYRotation(BlockStateModelGenerator.createModelVariant(modelId)))));
   }
 
   @Override

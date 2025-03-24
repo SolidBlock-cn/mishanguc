@@ -7,7 +7,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.data.*;
+import net.minecraft.client.data.BlockModelDefinitionCreator;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.VariantsBlockModelDefinitionCreator;
+import net.minecraft.client.render.model.json.ModelVariantOperator;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.item.Item.TooltipContext;
@@ -27,8 +30,8 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.data.FasterTextureMap;
-import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
+import pers.solid.mishang.uc.mixin.BlockStateModelGeneratorAccessor;
 import pers.solid.mishang.uc.util.*;
 
 import java.util.List;
@@ -98,8 +101,8 @@ public interface RoadWithOffsetStraightLine extends Road {
   }
 
   @Environment(EnvType.CLIENT)
-  default @NotNull BlockStateSupplier createBlockStates(Block block, Identifier modelId) {
-    return VariantsBlockStateSupplier.create(block, BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.UVLOCK, false)).coordinate(BlockStateVariantMap.create(FACING).register(direction -> BlockStateVariant.create().put(MishangucModels.DIRECTION_Y_VARIANT, direction.rotateYClockwise())));
+  default @NotNull BlockModelDefinitionCreator createBlockStates(Block block, Identifier modelId) {
+    return VariantsBlockModelDefinitionCreator.of(block, BlockStateModelGenerator.createWeightedVariant(modelId).apply(ModelVariantOperator.UV_LOCK.withValue(false))).coordinate(BlockStateModelGeneratorAccessor.getEAST_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS()); // 检查一下是否确实为 east_default
   }
 
   @Contract(pure = true)

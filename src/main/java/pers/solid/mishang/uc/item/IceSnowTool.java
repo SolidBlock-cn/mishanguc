@@ -27,10 +27,11 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 
-public class IceSnowTool extends Item implements MishangucItem, DispenserBehavior, HotbarScrollInteraction {
+public class IceSnowTool extends Item implements MishangucItem, DispenserBehavior, HotbarScrollInteraction, WithMishangTooltip {
   public IceSnowTool(Settings settings) {
     super(settings.component(MishangucComponents.STRENGTH, 4));
     DispenserBlock.registerBehavior(this, this);
@@ -42,8 +43,7 @@ public class IceSnowTool extends Item implements MishangucItem, DispenserBehavio
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-    super.appendTooltip(stack, context, tooltip, type);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.1").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.2").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.3").formatted(Formatting.GRAY));

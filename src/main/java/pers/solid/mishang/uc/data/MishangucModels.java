@@ -1,13 +1,10 @@
 package pers.solid.mishang.uc.data;
 
-import com.google.gson.JsonPrimitive;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.Model;
 import net.minecraft.client.data.TextureKey;
-import net.minecraft.client.data.VariantSetting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.block.GlassHandrailBlock;
 
@@ -103,18 +100,7 @@ public final class MishangucModels {
    * previously in {@link pers.solid.mishang.uc.block.ColoredCubeBlock}
    */
   public static final Model COLORED_CUBE_ALL_WITHOUT_SHADE = createBlock("colored_cube_all_without_shade", TextureKey.ALL);
-  /**
-   * previously in {@link pers.solid.mishang.uc.MishangUtils}
-   */
-  public static final VariantSetting<Integer> INT_X_VARIANT = new VariantSetting<>("x", JsonPrimitive::new);
-  /**
-   * previously in {@link pers.solid.mishang.uc.MishangUtils}
-   */
-  public static final VariantSetting<Integer> INT_Y_VARIANT = new VariantSetting<>("y", JsonPrimitive::new);
-  /**
-   * previously in {@link pers.solid.mishang.uc.MishangUtils}
-   */
-  public static final VariantSetting<Direction> DIRECTION_Y_VARIANT = new VariantSetting<>("y", direction -> new JsonPrimitive((int) direction.getPositiveHorizontalDegrees()));
+
 
   public static Identifier texture(String path) {
     return Mishanguc.id("block/" + path);

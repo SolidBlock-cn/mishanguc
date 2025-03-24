@@ -67,7 +67,7 @@ public record RectSpecialDrawable(float width, float height, @NotNull TextContex
   }
 
   public static RectSpecialDrawable fromNbt(@NotNull TextContext textContext, @NotNull NbtCompound nbt) {
-    return new RectSpecialDrawable(nbt.getFloat("width"), nbt.getFloat("height"), textContext);
+    return new RectSpecialDrawable(nbt.getFloat("width", 0f), nbt.getFloat("height", 0f), textContext);
   }
 
   public static RectSpecialDrawable fromStringArgs(TextContext textContext, String args) {

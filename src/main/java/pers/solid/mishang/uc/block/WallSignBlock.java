@@ -10,6 +10,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.BlockFace;
 import net.minecraft.client.data.*;
+import net.minecraft.client.render.model.json.ModelVariantOperator;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -33,6 +34,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
@@ -52,9 +54,11 @@ import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.item.ColoredTintSource;
+import pers.solid.mishang.uc.mixin.BlockStateModelGeneratorAccessor;
 import pers.solid.mishang.uc.networking.EditSignPayload;
 import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
 import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 import java.util.Map;
@@ -68,7 +72,7 @@ import java.util.Optional;
  * @see WallSignBlockEntity
  * @see WallSignBlockEntityRenderer
  */
-public class WallSignBlock extends WallMountedBlock implements Waterloggable, BlockEntityProvider, MishangucBlock {
+public class WallSignBlock extends WallMountedBlock implements Waterloggable, BlockEntityProvider, MishangucBlock, WithMishangTooltip {
   protected static <B extends WallSignBlock> RecordCodecBuilder<B, Block> createBaseBlockCodec() {
     return Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(b -> b.baseBlock);
   }
@@ -157,8 +161,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   }
 
   @Override
-  public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-    super.appendTooltip(stack, context, tooltip, options);
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(TextBridge.translatable("block.mishanguc.wall_sign.tooltip.1").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("block.mishanguc.wall_sign.tooltip.2").formatted(Formatting.GRAY));
   }
@@ -273,18 +276,18 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   }
 
   @Environment(EnvType.CLIENT)
-  public VariantsBlockStateSupplier createBlockStates(Identifier modelId) {
-    return BlockStateModelGenerator.createSingletonBlockState(this, modelId).coordinate(BlockStateVariantMap.create(FACE, FACING).register((wallMountLocation, direction) -> {
-      final int x = switch (wallMountLocation) {
-        case WALL -> 0;
-        case FLOOR -> 90;
-        default -> -90;
+  public VariantsBlockModelDefinitionCreator createBlockStates(Identifier modelId) {
+    return BlockStateModelGenerator.createSingletonBlockState(this, BlockStateModelGenerator.createWeightedVariant(modelId))
+        .coordinate(BlockStateVariantMap.operations(FACE).generate((wallMountLocation) -> {
+          final AxisRotation x = switch (wallMountLocation) {
+            case WALL -> AxisRotation.R0;
+            case FLOOR -> AxisRotation.R90;
+            default -> AxisRotation.R270;
       };
-      return BlockStateVariant.create().put(VariantSettings.MODEL, modelId)
-          .put(MishangucModels.INT_X_VARIANT, x)
-          .put(MishangucModels.DIRECTION_Y_VARIANT, direction)
-          .put(VariantSettings.UVLOCK, true);
-    }));
+          return ModelVariantOperator.ROTATION_X.withValue(x);
+        }))
+        .coordinate(BlockStateModelGeneratorAccessor.getSOUTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS())
+        .apply(BlockStateModelGenerator.UV_LOCK);
   }
 
   @Environment(EnvType.CLIENT)

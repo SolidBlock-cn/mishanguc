@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.booleans.BooleanSets;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.component.ComponentMap;
+import net.minecraft.component.ComponentsAccess;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -80,8 +81,8 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
     } else {
       backTexts = ImmutableList.of(TextContext.fromNbt(nbtBackTexts, createDefaultTextContext(), registryLookup));
     }
-    final boolean frontWaxed = nbt.getBoolean("frontWaxed");
-    final boolean backWaxed = nbt.getBoolean("backWaxed");
+    final boolean frontWaxed = nbt.getBoolean("frontWaxed", false);
+    final boolean backWaxed = nbt.getBoolean("backWaxed", false);
     if (!frontWaxed && !backWaxed) {
       waxed = BooleanSets.emptySet();
     } else {
@@ -89,8 +90,8 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
       if (frontWaxed) waxed.add(true);
       if (backWaxed) waxed.add(false);
     }
-    final boolean frontGlowing = nbt.getBoolean("frontGlowing");
-    final boolean backGlowing = nbt.getBoolean("backGlowing");
+    final boolean frontGlowing = nbt.getBoolean("frontGlowing", false);
+    final boolean backGlowing = nbt.getBoolean("backGlowing", false);
     if (!frontGlowing && !backGlowing) {
       glowing = BooleanSets.emptySet();
     } else {
