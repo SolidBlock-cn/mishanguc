@@ -1,8 +1,11 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "mishanguc:block/colored_terracotta_standing_sign",
+    "model": "mishanguc:block/colored_terracotta_standing_sign_barred",
     "tints": [
+      {
+        "type": "mishanguc:color"
+      },
       {
         "type": "mishanguc:color"
       }

@@ -1,6 +1,11 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "mishanguc:block/colored_glowing_concrete_wall_sign"
+    "model": "mishanguc:block/colored_glowing_concrete_wall_sign",
+    "tints": [
+      {
+        "type": "mishanguc:color"
+      }
+    ]
   }
 }
