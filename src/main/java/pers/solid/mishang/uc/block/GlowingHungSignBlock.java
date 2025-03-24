@@ -60,7 +60,7 @@ public class GlowingHungSignBlock extends HungSignBlock {
 
     blockStateModelGenerator.blockStateCollector.accept(createBlockStates(bodyId, topBarId, topBarEdgeId));
     if (this instanceof ColoredBlock) {
-      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(id, ColoredTintSource.INSTANCE));
+      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(id, ColoredTintSource.INSTANCE, ColoredTintSource.INSTANCE));
     }
   }
 
