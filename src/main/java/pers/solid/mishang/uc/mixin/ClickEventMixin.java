@@ -14,7 +14,7 @@ import java.util.function.Function;
 
 @Mixin(ClickEvent.class)
 public interface ClickEventMixin {
-  @ModifyExpressionValue(method = "<clinit>", at = @At(value = "INVOKE", target = "Lcom/mojang/serialization/Codec;dispatch(Ljava/lang/String;Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;"))
+  @ModifyExpressionValue(method = "<clinit>", at = @At(value = "INVOKE", target = "Lcom/mojang/serialization/Codec;dispatch(Ljava/lang/String;Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;", remap = false))
   private static Codec<ClickEvent> modifyCodec(Codec<ClickEvent> original) {
     return Codec.either(Codec.STRING.<ClickEvent>dispatch("action", clickEvent -> switch (clickEvent) {
       case NbtClickEvent nbtClickEvent -> "mishanguc:nbt";

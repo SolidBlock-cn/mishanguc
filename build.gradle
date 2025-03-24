@@ -148,9 +148,10 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     mainFile.changelogType = 'markdown'
     mainFile.releaseType = project.mod_version.contains('-') ? 'beta' : 'release'
 
-    for (final def v in ((project.supported_minecraft_versions as String).split(','))) {
-        mainFile.addGameVersion v
-    }
+    mainFile.addGameVersion '1.21.5-Snapshot'
+//    for (final def v in ((project.supported_minecraft_versions as String).split(','))) {
+//        mainFile.addGameVersion v
+//    }
 
     mainFile.addRelations 'requiredDependency', 'fabric-api'
     mainFile.withAdditionalFile(sourcesJar)
