@@ -33,13 +33,12 @@
   "depends": {
     "fabricloader": "*",
     "fabric": "*",
-    "minecraft": ">=1.21.4 <1.22",
-    "mixinextras": ">=0.2.0"
+    "minecraft": ">=1.21.5 <1.22"
   },
   "breaks": {
   },
   "custom": {
-    "branch": "1.21.4",
+    "branch": "1.21.5",
     "modmenu": {
       "links": {
         "mcmod.cn": "https://www.mcmod.cn/class/5743.html",

@@ -15,6 +15,8 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.player.PlayerEntity;
@@ -42,6 +44,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangucClient;
 import pers.solid.mishang.uc.MishangucRules;
+import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -105,7 +108,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     tooltip.add(
         TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.2")
             .formatted(Formatting.GRAY));
-    if (Boolean.TRUE.equals(includesFluid(stack))) {
+    if (Boolean.TRUE.equals(includesFluid(stack)) && stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.INCLUDES_FIELD)) {
       tooltip.add(
           TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.fluids")
               .formatted(Formatting.GRAY));

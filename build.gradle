@@ -182,7 +182,7 @@ githubRelease {
     owner = "SolidBlock-cn"
     repo = "mishanguc"
     tagName = "v$project.mod_version"
-    targetCommitish = "1.21.3"
+    targetCommitish = "1.21.5"
     body = content
     draft = true
     prerelease = false

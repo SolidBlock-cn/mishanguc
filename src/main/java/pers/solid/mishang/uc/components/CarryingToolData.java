@@ -4,7 +4,11 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.BlockState;
+import net.minecraft.component.ComponentsAccess;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.Item;
+import net.minecraft.item.tooltip.TooltipAppender;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -13,10 +17,13 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextCodecs;
+import net.minecraft.util.Formatting;
+import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
-public sealed interface CarryingToolData {
+public sealed interface CarryingToolData extends TooltipAppender {
   short type();
 
   Codec<CarryingToolData> CODEC = Codec.SHORT.dispatch(CarryingToolData::type, s -> switch (s) {
@@ -41,6 +48,11 @@ public sealed interface CarryingToolData {
     public short type() {
       return 0;
     }
+
+    @Override
+    public void appendTooltip(Item.TooltipContext context, Consumer<Text> textConsumer, TooltipType type, ComponentsAccess components) {
+      textConsumer.accept(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.currently", state().getBlock().getName().formatted(Formatting.YELLOW)).formatted(Formatting.GREEN));
+    }
   }
 
   record HoldingEntity(EntityType<?> entityType, Optional<NbtCompound> entityTag, Text name, float width, float height) implements CarryingToolData {
@@ -56,6 +68,11 @@ public sealed interface CarryingToolData {
     @Override
     public short type() {
       return 1;
+    }
+
+    @Override
+    public void appendTooltip(Item.TooltipContext context, Consumer<Text> textConsumer, TooltipType type, ComponentsAccess components) {
+      textConsumer.accept(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.currently", name().copy().formatted(Formatting.YELLOW)).formatted(Formatting.GREEN));
     }
   }
 }

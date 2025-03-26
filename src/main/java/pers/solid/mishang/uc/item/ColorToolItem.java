@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.item;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
@@ -63,6 +65,7 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
 
   @Override
   public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+    final TooltipDisplayComponent displayComponent = stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT);
     final Integer color = stack.get(MishangucComponents.COLOR);
     final ColorMixtureType mixtureType = stack.getOrDefault(MishangucComponents.COLOR_MIXTURE_TYPE, ColorMixtureType.NORMAL);
     if (mixtureType.requiresTargetColor()) {
@@ -77,7 +80,7 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
     if (mixtureType.hasInvertEffect()) {
       tooltip.add(TextBridge.translatable("item.mishanguc.color_tool.tooltip.invert_when_sneaking").formatted(Formatting.GRAY));
     }
-    if (color != null) {
+    if (color != null && displayComponent.shouldDisplay(MishangucComponents.COLOR)) {
       // 此时该对象已经定义了颜色。
       Color colorObject = new Color(color);
       tooltip.add(TextBridge.translatable("block.mishanguc.colored_block.tooltip.color",
@@ -87,10 +90,12 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
     }
 
     final Float opacity = stack.getOrDefault(MishangucComponents.OPACITY, 1f);
-    if (!opacity.equals(1f)) {
+    if (!opacity.equals(1f) && displayComponent.shouldDisplay(MishangucComponents.OPACITY)) {
       tooltip.add(TextBridge.translatable("item.mishanguc.color_tool.tooltip.opacity", opacity).formatted(Formatting.GRAY));
     }
-    tooltip.add(TextBridge.translatable("item.mishanguc.color_tool.tooltip.mixture_type", mixtureType.getName()).formatted(Formatting.GRAY));
+    if (displayComponent.shouldDisplay(MishangucComponents.COLOR_MIXTURE_TYPE)) {
+      tooltip.add(TextBridge.translatable("item.mishanguc.color_tool.tooltip.mixture_type", mixtureType.getName()).formatted(Formatting.GRAY));
+    }
   }
 
   @Override

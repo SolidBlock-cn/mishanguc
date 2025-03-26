@@ -72,14 +72,17 @@ public class MishangucClient implements ClientModInitializer {
     ItemTooltipCallback.EVENT.register((itemStack, tooltipContext, tooltipType, list) -> {
       if (itemStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof WithMishangTooltip withMishangTooltip) {
         withMishangTooltip.getMishangTooltip(itemStack, tooltipContext, list, tooltipType);
-      } else if (itemStack.getItem() instanceof WithMishangTooltip withMishangTooltip) {
+      }
+      if (itemStack.getItem() instanceof WithMishangTooltip withMishangTooltip) {
         withMishangTooltip.getMishangTooltip(itemStack, tooltipContext, list, tooltipType);
       }
     });
 
     ItemTooltipCallback.EVENT.register((itemStack, tooltipContext, tooltipType, list) -> {
       TooltipDisplayComponent tooltipDisplayComponent = itemStack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT);
+      itemStack.appendComponentTooltip(MishangucComponents.CARRYING_TOOL_DATA, tooltipContext, tooltipDisplayComponent, list::add, tooltipType);
       itemStack.appendComponentTooltip(MishangucComponents.EXPLOSION_TOOL_DATA, tooltipContext, tooltipDisplayComponent, list::add, tooltipType);
+      itemStack.appendComponentTooltip(MishangucComponents.FAST_BUILDING_TOOL_DATA, tooltipContext, tooltipDisplayComponent, list::add, tooltipType);
     });
   }
 

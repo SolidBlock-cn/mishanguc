@@ -127,13 +127,6 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
     tooltip.add(TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.1")
         .formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.2").formatted(Formatting.GRAY));
-    final FastBuildingToolData fastBuildingToolData = stack.get(MishangucComponents.FAST_BUILDING_TOOL_DATA);
-    if (fastBuildingToolData != null) {
-      tooltip.add(TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.range", TextBridge.literal(Integer.toString(fastBuildingToolData.range())).formatted(Formatting.YELLOW))
-          .formatted(Formatting.GRAY));
-      tooltip.add(TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.matchingRule", fastBuildingToolData.matchingRule().getName().formatted(Formatting.YELLOW))
-          .formatted(Formatting.GRAY));
-    }
   }
 
   protected ItemStack createStack(int range, BlockMatchingRule blockMatchingRule) {

@@ -12,6 +12,8 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,6 +36,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
@@ -124,14 +127,16 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
         TextBridge.translatable("item.mishanguc.id_checker_tool.tooltip.1")
             .formatted(Formatting.GRAY));
     final @Nullable Boolean includesFluid = includesFluid(stack);
-    if (includesFluid == null) {
-      tooltip.add(
-          TextBridge.translatable("item.mishanguc.id_checker_tool.tooltip.2")
-              .formatted(Formatting.GRAY));
-    } else if (includesFluid) {
-      tooltip.add(
-          TextBridge.translatable("item.mishanguc.id_checker_tool.tooltip.3")
-              .formatted(Formatting.GRAY));
+    if (stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.INCLUDES_FIELD)) {
+      if (includesFluid == null) {
+        tooltip.add(
+            TextBridge.translatable("item.mishanguc.id_checker_tool.tooltip.2")
+                .formatted(Formatting.GRAY));
+      } else if (includesFluid) {
+        tooltip.add(
+            TextBridge.translatable("item.mishanguc.id_checker_tool.tooltip.3")
+                .formatted(Formatting.GRAY));
+      }
     }
   }
 

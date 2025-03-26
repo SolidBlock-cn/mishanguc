@@ -7,6 +7,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
@@ -40,6 +42,9 @@ public interface ColoredBlock extends BlockEntityProvider, MishangucBlock, WithM
    * @see WithMishangTooltip#getMishangTooltip(ItemStack, Item.TooltipContext, List, TooltipType)
    */
   static void appendColorTooltip(ItemStack stack, List<Text> tooltip) {
+    if (!stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.COLOR)) {
+      return;
+    }
     final Integer color = stack.get(MishangucComponents.COLOR);
     if (color != null) {
       // 此时该对象已经定义了颜色。

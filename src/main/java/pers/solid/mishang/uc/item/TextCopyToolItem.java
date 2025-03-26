@@ -9,6 +9,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.entity.LivingEntity;
@@ -66,7 +68,7 @@ public class TextCopyToolItem extends BlockToolItem implements MishangucItem, Wi
 
     final List<TextContext> texts = stack.get(MishangucComponents.TEXTS);
 
-    if (texts != null && !texts.isEmpty()) {
+    if (texts != null && !texts.isEmpty() && stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.TEXTS)) {
       tooltip.add(TextBridge.translatable("item.mishanguc.text_copy_tool.tooltip.3").formatted(Formatting.GRAY));
       texts.stream().map(TextContext::asStyledText).peek(text -> {
         final TextColor color = text.getStyle().getColor();

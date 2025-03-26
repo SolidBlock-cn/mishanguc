@@ -116,12 +116,6 @@ public class CarryingToolItem extends BlockToolItem
     tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.1").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.2").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.3").formatted(Formatting.GRAY));
-    final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
-    if (carryingToolData instanceof CarryingToolData.HoldingBlockState holdingBlockState) {
-      tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.currently", holdingBlockState.state().getBlock().getName().formatted(Formatting.YELLOW)).formatted(Formatting.GREEN));
-    } else if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
-      tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.currently", holdingEntity.name().copy().formatted(Formatting.YELLOW)).formatted(Formatting.GREEN));
-    }
   }
 
 

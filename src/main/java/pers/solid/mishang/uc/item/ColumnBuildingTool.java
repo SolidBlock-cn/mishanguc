@@ -14,6 +14,8 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -67,7 +69,9 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
     tooltip.add(TextBridge.translatable("item.mishanguc.column_building_tool.tooltip.1").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.column_building_tool.tooltip.2").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.column_building_tool.tooltip.3").formatted(Formatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.column_building_tool.tooltip.length", TextBridge.literal(Integer.toString(getLength(stack))).formatted(Formatting.YELLOW)).formatted(Formatting.GRAY));
+    if (stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.LENGTH)) {
+      tooltip.add(TextBridge.translatable("item.mishanguc.column_building_tool.tooltip.length", TextBridge.literal(Integer.toString(getLength(stack))).formatted(Formatting.YELLOW)).formatted(Formatting.GRAY));
+    }
   }
 
   @Override

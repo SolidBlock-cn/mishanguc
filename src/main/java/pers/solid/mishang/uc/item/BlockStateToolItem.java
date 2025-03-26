@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.item;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
@@ -19,6 +21,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
@@ -121,14 +124,16 @@ public class BlockStateToolItem extends BlockToolItem implements MishangucItem, 
     tooltip.add(
         TextBridge.translatable("item.mishanguc.block_state_tool.tooltip").formatted(Formatting.GRAY));
     final Boolean includesFluid = includesFluid(stack);
-    if (includesFluid == null) {
-      tooltip.add(
-          TextBridge.translatable("item.mishanguc.block_state_tool.tooltip.includesFluidWhileSneaking")
-              .formatted(Formatting.GRAY));
-    } else if (includesFluid) {
-      tooltip.add(
-          TextBridge.translatable("item.mishanguc.block_state_tool.tooltip.includesFluid")
-              .formatted(Formatting.GRAY));
+    if (stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.INCLUDES_FIELD)) {
+      if (includesFluid == null) {
+        tooltip.add(
+            TextBridge.translatable("item.mishanguc.block_state_tool.tooltip.includesFluidWhileSneaking")
+                .formatted(Formatting.GRAY));
+      } else if (includesFluid) {
+        tooltip.add(
+            TextBridge.translatable("item.mishanguc.block_state_tool.tooltip.includesFluid")
+                .formatted(Formatting.GRAY));
+      }
     }
   }
 }

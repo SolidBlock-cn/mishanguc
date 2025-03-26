@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.item;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.pattern.CachedBlockPosition;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.entity.Entity;
@@ -22,6 +24,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
@@ -84,14 +87,16 @@ public class MirroringToolItem extends BlockToolItem implements MishangucItem, W
     tooltip.add(
         TextBridge.translatable("item.mishanguc.mirroring_tool.tooltip").formatted(Formatting.GRAY));
     final Boolean includesFluid = includesFluid(stack);
-    if (includesFluid == null) {
-      tooltip.add(
-          TextBridge.translatable("item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking")
-              .formatted(Formatting.GRAY));
-    } else if (includesFluid) {
-      tooltip.add(
-          TextBridge.translatable("item.mishanguc.block_tool.tooltip.includesFluid")
-              .formatted(Formatting.GRAY));
+    if (stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.INCLUDES_FIELD)) {
+      if (includesFluid == null) {
+        tooltip.add(
+            TextBridge.translatable("item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking")
+                .formatted(Formatting.GRAY));
+      } else if (includesFluid) {
+        tooltip.add(
+            TextBridge.translatable("item.mishanguc.block_tool.tooltip.includesFluid")
+                .formatted(Formatting.GRAY));
+      }
     }
   }
 
