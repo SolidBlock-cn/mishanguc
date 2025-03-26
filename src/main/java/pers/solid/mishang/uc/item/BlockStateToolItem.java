@@ -124,7 +124,7 @@ public class BlockStateToolItem extends BlockToolItem implements MishangucItem, 
     tooltip.add(
         TextBridge.translatable("item.mishanguc.block_state_tool.tooltip").formatted(Formatting.GRAY));
     final Boolean includesFluid = includesFluid(stack);
-    if (stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.INCLUDES_FIELD)) {
+    if (stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.INCLUDES_FLUID)) {
       if (includesFluid == null) {
         tooltip.add(
             TextBridge.translatable("item.mishanguc.block_state_tool.tooltip.includesFluidWhileSneaking")

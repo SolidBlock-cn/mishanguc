@@ -127,7 +127,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
         TextBridge.translatable("item.mishanguc.id_checker_tool.tooltip.1")
             .formatted(Formatting.GRAY));
     final @Nullable Boolean includesFluid = includesFluid(stack);
-    if (stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.INCLUDES_FIELD)) {
+    if (stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.INCLUDES_FLUID)) {
       if (includesFluid == null) {
         tooltip.add(
             TextBridge.translatable("item.mishanguc.id_checker_tool.tooltip.2")

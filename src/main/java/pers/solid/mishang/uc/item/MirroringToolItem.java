@@ -87,7 +87,7 @@ public class MirroringToolItem extends BlockToolItem implements MishangucItem, W
     tooltip.add(
         TextBridge.translatable("item.mishanguc.mirroring_tool.tooltip").formatted(Formatting.GRAY));
     final Boolean includesFluid = includesFluid(stack);
-    if (stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.INCLUDES_FIELD)) {
+    if (stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.INCLUDES_FLUID)) {
       if (includesFluid == null) {
         tooltip.add(
             TextBridge.translatable("item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking")

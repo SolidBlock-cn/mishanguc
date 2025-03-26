@@ -2,6 +2,11 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.4.7
+
+- Now in 1.21.5, the tooltips of various blocks and items can be hidden according to the field `hidden_components` in the item component `tooltip_display`.
+- Fixed the issue that the item component `mishanguc:includes_fluid` is misspelled as `mishanguc:includes_field`. If there are items defined this item component manually, that item component will be ignored.
+
 ### 1.4.6
 
 - Fixed the issue that some custom-colored signs are rendered in incorrect models in the inventory.

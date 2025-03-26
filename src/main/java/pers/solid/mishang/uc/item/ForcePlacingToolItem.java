@@ -108,7 +108,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     tooltip.add(
         TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.2")
             .formatted(Formatting.GRAY));
-    if (Boolean.TRUE.equals(includesFluid(stack)) && stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.INCLUDES_FIELD)) {
+    if (Boolean.TRUE.equals(includesFluid(stack)) && stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.INCLUDES_FLUID)) {
       tooltip.add(
           TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.fluids")
               .formatted(Formatting.GRAY));
