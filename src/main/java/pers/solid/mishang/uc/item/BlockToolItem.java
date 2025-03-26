@@ -109,17 +109,17 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
   }
 
   /**
-   * 如果物品堆的物品标签包含 {@link MishangucComponents#INCLUDES_FIELD} 物品组件，则返回其值，否则返回物品对象中的 {@link #includesFluid}。
+   * 如果物品堆的物品标签包含 {@link MishangucComponents#INCLUDES_FLUID} 物品组件，则返回其值，否则返回物品对象中的 {@link #includesFluid}。
    *
    * @param stack The item stack.
    * @return Whether it can detect fluid. May be {@code null}able, which means it depends.
    */
   public @Nullable Boolean includesFluid(ItemStack stack) {
     final ComponentMap components = stack.getComponents();
-    if (!components.contains(MishangucComponents.INCLUDES_FIELD)) {
+    if (!components.contains(MishangucComponents.INCLUDES_FLUID)) {
       return this.includesFluid;
     } else {
-      return components.get(MishangucComponents.INCLUDES_FIELD);
+      return components.get(MishangucComponents.INCLUDES_FLUID);
     }
   }
 
