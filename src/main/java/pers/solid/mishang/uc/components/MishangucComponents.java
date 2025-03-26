@@ -46,7 +46,7 @@ public final class MishangucComponents {
 
   public static final ComponentType<ExplosionToolComponent> EXPLOSION_TOOL_DATA = register("explosion_tool_data", ExplosionToolComponent.CODEC, ExplosionToolComponent.PACKET_CODEC);
   public static final ComponentType<FastBuildingToolData> FAST_BUILDING_TOOL_DATA = register("fast_building_tool_data", FastBuildingToolData.CODEC, FastBuildingToolData.PACKET_CODEC);
-  public static final ComponentType<Boolean> INCLUDES_FIELD = register("includes_field", Codec.BOOL, PacketCodecs.BOOLEAN);
+  public static final ComponentType<Boolean> INCLUDES_FLUID = register("includes_fluid", Codec.BOOL, PacketCodecs.BOOLEAN);
   public static final ComponentType<Integer> LENGTH = register("length", Codec.intRange(1, 64), PacketCodecs.INTEGER);
   public static final ComponentType<Integer> STRENGTH = register("strength", Codec.intRange(0, 10), PacketCodecs.INTEGER);
   public static final ComponentType<TextCopyToolComponent> TEXT_COPY_TOOL_PROPERTIES = register("text_copy_tool_properties", TextCopyToolComponent.CODEC, TextCopyToolComponent.PACKET_CODEC);
