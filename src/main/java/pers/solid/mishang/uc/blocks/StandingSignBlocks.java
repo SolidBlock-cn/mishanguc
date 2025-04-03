@@ -1,8 +1,6 @@
 package pers.solid.mishang.uc.blocks;
 
 import com.google.common.collect.ImmutableMap;
-import net.fabricmc.fabric.mixin.object.builder.AbstractBlockAccessor;
-import net.fabricmc.fabric.mixin.object.builder.AbstractBlockSettingsAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
@@ -18,6 +16,8 @@ import pers.solid.mishang.uc.block.ColoredGlowingStandingSignBlock;
 import pers.solid.mishang.uc.block.ColoredStandingSignBlock;
 import pers.solid.mishang.uc.block.GlowingStandingSignBlock;
 import pers.solid.mishang.uc.block.StandingSignBlock;
+import pers.solid.mishang.uc.mixin.AbstractBlockAccessor;
+import pers.solid.mishang.uc.mixin.AbstractBlockSettingsAccessor;
 
 /**
  * <h1>直立的告示牌方块</h1>
