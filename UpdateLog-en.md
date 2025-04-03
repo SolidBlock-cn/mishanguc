@@ -2,6 +2,10 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.4.8
+
+- Fixed the issue of incompatibility with Sinytra Connector.
+
 ### 1.4.7
 
 - Now in 1.21.5, the tooltips of various blocks and items can be hidden according to the field `hidden_components` in the item component `tooltip_display`.
