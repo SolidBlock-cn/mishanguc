@@ -2,6 +2,10 @@
 
 注意：更新记录中的版本并不一定都已发布。具体请以 CurseForge、Modrinth 中的下载页面或 GitHub 中的“releases”为准。
 
+### 1.4.8
+
+- 修复与 Sinytra Connector 不兼容的问题。
+
 ### 1.4.7
 
 - 现在在 1.21.5 中，各方块和物品的物品提示可根据 `tooltip_display` 物品组件中的 `hidden_components` 字段隐藏。
