@@ -11,6 +11,8 @@ import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.*;
+import pers.solid.mishang.uc.mixin.AbstractBlockAccessor;
+import pers.solid.mishang.uc.mixin.AbstractBlockSettingsAccessor;
 
 /**
  * <h1>墙上的告示牌方块</h1>
