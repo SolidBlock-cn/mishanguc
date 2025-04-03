@@ -2,8 +2,6 @@ package pers.solid.mishang.uc.blocks;
 
 import com.google.common.collect.ImmutableMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.mixin.object.builder.AbstractBlockAccessor;
-import net.fabricmc.fabric.mixin.object.builder.AbstractBlockSettingsAccessor;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
 import net.minecraft.state.property.Properties;
@@ -14,6 +12,8 @@ import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.*;
+import pers.solid.mishang.uc.mixin.AbstractBlockAccessor;
+import pers.solid.mishang.uc.mixin.AbstractBlockSettingsAccessor;
 
 /**
  * <h1>墙上的告示牌方块</h1>
