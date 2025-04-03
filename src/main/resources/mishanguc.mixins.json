@@ -4,6 +4,8 @@
   "package": "pers.solid.mishang.uc.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "AbstractBlockAccessor",
+    "AbstractBlockSettingsAccessor",
     "AbstractBlockStateMixin",
     "AreaHelperMixin",
     "BeaconBlockEntityAccessor",

@@ -33,8 +33,7 @@
   "depends": {
     "fabricloader": "*",
     "fabric": "*",
-    "minecraft": ">=1.20.3 <1.25",
-    "mixinextras": ">=0.2.0"
+    "minecraft": ">=1.20.3 <1.25"
   },
   "custom": {
     "branch": "1.20.4",
