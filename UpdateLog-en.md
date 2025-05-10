@@ -2,6 +2,10 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.4.9
+
+- Fixed the incorrect texture of the side of some road blocks.
+
 ### 1.4.8
 
 - Fixed the issue of incompatibility with Sinytra Connector.
