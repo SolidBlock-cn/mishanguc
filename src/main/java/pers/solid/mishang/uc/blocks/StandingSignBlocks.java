@@ -11,8 +11,6 @@ import pers.solid.mishang.uc.block.ColoredGlowingStandingSignBlock;
 import pers.solid.mishang.uc.block.ColoredStandingSignBlock;
 import pers.solid.mishang.uc.block.GlowingStandingSignBlock;
 import pers.solid.mishang.uc.block.StandingSignBlock;
-import pers.solid.mishang.uc.mixin.AbstractBlockAccessor;
-import pers.solid.mishang.uc.mixin.AbstractBlockSettingsAccessor;
 
 /**
  * <h1>直立的告示牌方块</h1>
