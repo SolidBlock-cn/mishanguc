@@ -145,7 +145,7 @@ public interface RoadWithJointLine extends Road {
     @Override
     protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
       final FasterTextureMap textures = new FasterTextureMap().base("asphalt").lineSide(lineSide).lineSide2(lineSide2).lineTop(lineTop);
-      final Identifier modelId = road.uploadModel("_with_joint_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_TOP);
+      final Identifier modelId = road.uploadModel("_with_joint_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_TOP, MishangucTextureKeys.LINE_SIDE2);
       blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockModelDefinitionCreator.of(road, BlockStateModelGenerator.createWeightedVariant(modelId)).coordinate(BlockStateModelGeneratorAccessor.getSOUTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS())));
     }
 
