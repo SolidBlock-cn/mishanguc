@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "mishanguc:white_thick_column_light"
+          "name": "mishanguc:white_thick_column_light_tube"
         }
       ],
       "rolls": 1.0
