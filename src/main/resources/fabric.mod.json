@@ -35,8 +35,6 @@
     "fabric": "*",
     "minecraft": ">=1.21.4 <1.22"
   },
-  "breaks": {
-  },
   "custom": {
     "branch": "1.21.4",
     "modmenu": {
