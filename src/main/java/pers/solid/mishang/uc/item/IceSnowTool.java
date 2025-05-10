@@ -51,7 +51,7 @@ public class IceSnowTool extends Item implements MishangucItem, DispenserBehavio
     tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.3").formatted(Formatting.GRAY));
     tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.4").formatted(Formatting.GRAY));
     if (stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.STRENGTH)) {
-    tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.strength", TextBridge.literal(Integer.toString(getStrength(stack))).formatted(Formatting.YELLOW)).formatted(Formatting.GRAY));
+      tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.strength", TextBridge.literal(Integer.toString(getStrength(stack))).formatted(Formatting.YELLOW)).formatted(Formatting.GRAY));
     }
   }
 
