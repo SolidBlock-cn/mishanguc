@@ -149,10 +149,10 @@ public class WallLightBlock extends FacingBlock implements Waterloggable, Mishan
     final var map = BlockStateVariantMap.operations(FACING);
     map.register(Direction.UP, BlockStateModelGenerator.NO_OP);
     map.register(Direction.DOWN, BlockStateModelGenerator.ROTATE_X_180);
-    map.register(Direction.SOUTH, BlockStateModelGenerator.ROTATE_Y_270.then(BlockStateModelGenerator.NO_OP));
-    map.register(Direction.WEST, BlockStateModelGenerator.ROTATE_Y_270.then(BlockStateModelGenerator.ROTATE_Y_90));
-    map.register(Direction.NORTH, BlockStateModelGenerator.ROTATE_Y_270.then(BlockStateModelGenerator.ROTATE_Y_180));
-    map.register(Direction.EAST, BlockStateModelGenerator.ROTATE_Y_270.then(BlockStateModelGenerator.ROTATE_Y_270));
+    map.register(Direction.SOUTH, BlockStateModelGenerator.ROTATE_X_270.then(BlockStateModelGenerator.NO_OP));
+    map.register(Direction.WEST, BlockStateModelGenerator.ROTATE_X_270.then(BlockStateModelGenerator.ROTATE_Y_90));
+    map.register(Direction.NORTH, BlockStateModelGenerator.ROTATE_X_270.then(BlockStateModelGenerator.ROTATE_Y_180));
+    map.register(Direction.EAST, BlockStateModelGenerator.ROTATE_X_270.then(BlockStateModelGenerator.ROTATE_Y_270));
     blockStateModelGenerator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(this, BlockStateModelGenerator.createWeightedVariant(id)).coordinate(map).apply(BlockStateModelGenerator.UV_LOCK));
     blockStateModelGenerator.registerParentedItemModel(this, id);
   }
