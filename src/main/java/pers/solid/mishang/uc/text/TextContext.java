@@ -465,9 +465,9 @@ public class TextContext implements Cloneable {
     if (rotationX != 0) nbt.putFloat("rotationX", rotationX);
     else nbt.remove("rotationX");
     if (rotationY != 0) nbt.putFloat("rotationY", rotationY);
-    else nbt.remove("rotationX");
+    else nbt.remove("rotationY");
     if (rotationZ != 0) nbt.putFloat("rotationZ", rotationZ);
-    else nbt.remove("rotationX");
+    else nbt.remove("rotationZ");
     if (scaleX != 1) {
       nbt.putFloat("scaleX", scaleX);
     } else {
