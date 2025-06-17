@@ -8,17 +8,19 @@
     "facing=east": {
       "model": "mishanguc:block/yellow_large_wall_light",
       "uvlock": true,
+      "x": 270,
       "y": 270
     },
     "facing=north": {
       "model": "mishanguc:block/yellow_large_wall_light",
       "uvlock": true,
+      "x": 270,
       "y": 180
     },
     "facing=south": {
       "model": "mishanguc:block/yellow_large_wall_light",
       "uvlock": true,
-      "y": 270
+      "x": 270
     },
     "facing=up": {
       "model": "mishanguc:block/yellow_large_wall_light",
@@ -27,6 +29,7 @@
     "facing=west": {
       "model": "mishanguc:block/yellow_large_wall_light",
       "uvlock": true,
+      "x": 270,
       "y": 90
     }
   }

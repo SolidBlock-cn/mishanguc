@@ -44,7 +44,8 @@
     {
       "apply": {
         "model": "mishanguc:block/pink_wall_light_hash_decoration_connection",
-        "x": 180
+        "x": 180,
+        "y": 90
       },
       "when": {
         "east": "true",
@@ -276,7 +277,8 @@
     {
       "apply": {
         "model": "mishanguc:block/pink_wall_light_hash_decoration_connection",
-        "x": 90
+        "x": 90,
+        "y": 90
       },
       "when": {
         "facing": "east",
@@ -296,7 +298,8 @@
     {
       "apply": {
         "model": "mishanguc:block/pink_wall_light_hash_decoration_connection2",
-        "x": 180
+        "x": 180,
+        "y": 90
       },
       "when": {
         "facing": "east",
