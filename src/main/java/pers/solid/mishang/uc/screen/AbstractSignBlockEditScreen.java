@@ -332,7 +332,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public final BooleanButtonWidget underlineButton = new BooleanButtonWidget(this.width / 2 - 160, this.height - 50, 20, 20, TextBridge.translatable("message.mishanguc.underline"), button -> selectedTextContexts.isEmpty() ? null : textFieldListWidget.getFocused().textContext.underline, b -> {
     changed = true;
     for (TextContext textContext : selectedTextContexts) {
-      textContext.italic = b;
+      textContext.underline = b;
     }
   }, EMPTY_PRESS_ACTION)
       .setRenderedName(TextBridge.literal("U").formatted(Formatting.UNDERLINE))
@@ -1000,6 +1000,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     textFieldWidget.setChangedListener(s -> {
       final TextContext textContext1 = newEntry.textContext;
       final Matcher matcher = Pattern.compile("^-(\\w+?) (.+)$").matcher(s);
+      textFieldWidget.setTooltip(null);
+      textFieldWidget.setEditableColor(0xffe0e0e0);
       if (matcher.matches()) {
         final String name = matcher.group(1);
         final String value = matcher.group(2);
@@ -1010,9 +1012,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           case "json":
             try {
               textContext1.text = Text.Serializer.fromLenientJson(value);
-            } catch (
-                JsonParseException e) {
-              // 如果文本有问题，则不执行操作。
+            } catch (JsonParseException | IllegalStateException e) {
+              textFieldWidget.setEditableColor(0xffff5555);
+              textFieldWidget.setTooltip(Tooltip.of(Text.literal(e.getMessage())));
             }
             break;
           default:
@@ -1023,7 +1025,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
             } else if (specialDrawable != SpecialDrawable.INVALID) {
               textContext1.extra = specialDrawable;
               textContext1.text = TextBridge.literal("");
-            } // 如果为 INVALID 则不执行操作。
+            } else { // 如果为 INVALID 则文本为红色。
+              textFieldWidget.setEditableColor(0xffff5555);
+            }
         }
       } else {
         textContext1.extra = null;
@@ -1125,7 +1129,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       }
     }
     isAcceptingCustomValue = true;
-    customValueTextField.setEditableColor(16777215);
+    customValueTextField.setEditableColor(0xffe0e0e0);
     customValueTextField.setSuggestion(null);
     clearAndInit();
     setFocused(customValueTextField);
@@ -1149,7 +1153,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         if (parse == null) {
           customValueTextField.setEditableColor(16733525);
         } else {
-          customValueTextField.setEditableColor(16777215);
+          customValueTextField.setEditableColor(0xffe0e0e0);
           for (TextContext textContext : selectedTextContexts) {
             textContext.color = parse;
           }
@@ -1183,21 +1187,21 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
             textContext.outlineColor = -1;
             textContext.outlineColorType = OutlineColorType.AUTO;
           }
-          customValueTextField.setEditableColor(16777215);
+          customValueTextField.setEditableColor(0xffe0e0e0);
           return;
         } else if (text.equals("none")) {
           for (TextContext textContext : selectedTextContexts) {
             textContext.outlineColor = -2;
             textContext.outlineColorType = OutlineColorType.NONE;
           }
-          customValueTextField.setEditableColor(16777215);
+          customValueTextField.setEditableColor(0xffe0e0e0);
           return;
         }
         final Integer parse = MishangUtils.parseColor(text);
         if (parse == null) {
           customValueTextField.setEditableColor(16733525);
         } else {
-          customValueTextField.setEditableColor(16777215);
+          customValueTextField.setEditableColor(0xffe0e0e0);
           for (TextContext textContext : selectedTextContexts) {
             textContext.outlineColor = parse;
             textContext.outlineColorType = OutlineColorType.CUSTOM;
@@ -1214,10 +1218,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       customValueTextField.setChangedListener(s -> {
         try {
           final float value = Float.parseFloat(s);
-          customValueTextField.setEditableColor(16777215);
+          customValueTextField.setEditableColor(0xffe0e0e0);
           floatButtonWidget.setAllSameValue(value);
-        } catch (
-            NumberFormatException e) {
+        } catch (NumberFormatException e) {
           customValueTextField.setEditableColor(16733525);
         }
       });
