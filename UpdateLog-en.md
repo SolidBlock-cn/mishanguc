@@ -8,6 +8,7 @@ Note: Not all versions in this update log are already published. Please refer to
 - Fixed the issue of incorrect texture in 1.21.5.
 - Fixed the issue that the X-rotation of text cannot be set correctly.
 - Adjusted the name of some contents.
+- Fixed the issue of typing JSON prefixed with "`-json`" in the sign and opening the edit interface will cause a space character missed and result in incorrect parsing.
 
 ### 1.4.9
 
