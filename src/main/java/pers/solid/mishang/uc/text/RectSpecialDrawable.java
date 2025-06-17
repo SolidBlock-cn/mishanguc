@@ -32,7 +32,6 @@ public record RectSpecialDrawable(float width, float height, @NotNull TextContex
   @Override
   public void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, float x, float y) {
     int color = textContext.color;
-    final int alpha = ((color & 0xFC000000) == 0) ? 255 : (color >> 24 & 0xFF);
     BakedGlyph bakedGlyph = ((TextRendererAccessor) textRenderer).invokeGetFontStorage(Style.DEFAULT_FONT_ID).getRectangleBakedGlyph();
     final Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
     final RenderLayer layer = bakedGlyph.getLayer(textContext.outlineColorType != OutlineColorType.NONE ? TextRenderer.TextLayerType.POLYGON_OFFSET : textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
@@ -40,19 +39,19 @@ public record RectSpecialDrawable(float width, float height, @NotNull TextContex
     final boolean shadow = textContext.outlineColorType == OutlineColorType.NONE && textContext.shadow;
     if (shadow) {
       // 绘制阴影
-      BakedGlyph.Rectangle shadowRectangle = new BakedGlyph.Rectangle(x + 1, (height + y) + 1, (width + x) + 1, y + 1, 0, ColorHelper.withAlpha(alpha, ColorHelper.scaleRgb(color, 0.25f)));
+      BakedGlyph.Rectangle shadowRectangle = new BakedGlyph.Rectangle(x + 1, y + 1, (width + x) + 1, y + height + 1, 0, ColorHelper.scaleRgb(color, 0.25f));
       bakedGlyph.drawRectangle(shadowRectangle, matrix4f, vertexConsumer, light, false);
     }
     if (textContext.outlineColorType != OutlineColorType.NONE) {
       // 绘制轮廓
       int outlineColor = textContext.outlineColorType == OutlineColorType.AUTO ? MishangUtils.toSignOutlineColor(color) : textContext.outlineColor;
       final int outlineAlpha = ((outlineColor & 0xfc000000) == 0) ? 255 : (outlineColor >> 24 & 0xFF);
-      BakedGlyph.Rectangle outlineRectangle = new BakedGlyph.Rectangle(x - 1, (height + y) + 1, (width + x) + 1, y - 1, 0, ColorHelper.withAlpha(outlineAlpha, outlineColor));
+      BakedGlyph.Rectangle outlineRectangle = new BakedGlyph.Rectangle(x - 1, y - 1, (width + x) + 1, y + height + 1, 0, ColorHelper.withAlpha(outlineAlpha, outlineColor));
       bakedGlyph.drawRectangle(outlineRectangle, matrix4f, vertexConsumers.getBuffer(bakedGlyph.getLayer(TextRenderer.TextLayerType.NORMAL)), light, false);
     }
 
     final VertexConsumer vertexConsumer2 = vertexConsumers.getBuffer(layer);
-    BakedGlyph.Rectangle rectangle = new BakedGlyph.Rectangle(x, (height + y), (width + x), y, shadow ? 0.03f : textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, ColorHelper.withAlpha(alpha, color));
+    BakedGlyph.Rectangle rectangle = new BakedGlyph.Rectangle(x, y, (width + x), y + height, shadow ? 0.03f : textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, color);
     bakedGlyph.drawRectangle(rectangle, matrix4f, vertexConsumer2, light, false);
   }
 

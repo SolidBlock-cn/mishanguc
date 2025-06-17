@@ -990,7 +990,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           textFieldWidget.setText(text);
         }
       } else {
-        textFieldWidget.setText("-json" + TextCodecs.CODEC.encodeStart(registryLookup.getOps(JsonOps.INSTANCE), textContext.text).getOrThrow().toString());
+        textFieldWidget.setText("-json " + TextCodecs.CODEC.encodeStart(registryLookup.getOps(JsonOps.INSTANCE), textContext.text).getOrThrow().toString());
       }
     }
     final TextFieldListWidget.Entry newEntry = textFieldListWidget.new Entry(textFieldWidget, textContext);
