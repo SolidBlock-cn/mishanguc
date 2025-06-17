@@ -30,6 +30,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -263,7 +264,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
           Mishanguc.MISHANG_LOGGER.error("Unknown state to generate models: facing={},direction={}", facing.asString(), direction.asString());
           continue;
         }
-        blockStateSupplier.with(BlockStateModelGenerator.createMultipartConditionBuilder().put(FACING, facing).put(DIRECTION_TO_PROPERTY.get(direction), true), BlockStateModelGenerator.createWeightedVariant(modelName).apply(ModelVariantOperator.ROTATION_X.withValue(x)).apply(ModelVariantOperator.ROTATION_Y.withValue(switch (y) {
+        blockStateSupplier.with(BlockStateModelGenerator.createMultipartConditionBuilder().put(FACING, facing).put(DIRECTION_TO_PROPERTY.get(direction), true), BlockStateModelGenerator.createWeightedVariant(modelName).apply(ModelVariantOperator.ROTATION_X.withValue(x)).apply(ModelVariantOperator.ROTATION_Y.withValue(switch (MathHelper.floorMod(y, 360)) {
           case 90 -> AxisRotation.R90;
           case 180 -> AxisRotation.R180;
           case 270 -> AxisRotation.R270;
