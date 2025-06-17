@@ -2,6 +2,13 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.5.0
+
+- Compatible with 1.21.6.
+- Fixed the issue of incorrect texture in 1.21.5.
+- Fixed the issue that the X-rotation of text cannot be set correctly.
+- Adjusted the name of some contents.
+
 ### 1.4.9
 
 - Fixed the incorrect texture of the side of some road blocks.
