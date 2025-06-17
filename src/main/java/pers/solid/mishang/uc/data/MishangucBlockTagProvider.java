@@ -433,6 +433,7 @@ public class MishangucBlockTagProvider extends FabricTagProvider.BlockTagProvide
 
     axeMineable.addTag(woodenStandingSigns);
     pickaxeMineable.addTag(concreteStandingSigns, glowingConcreteStandingSigns, terracottaStandingSigns, glowingTerracottaStandingSigns);
+    blockTagOnly(BlockTags.WALL_POST_OVERRIDE).addTag(standingSigns, glowingStandingSigns);
   }
 
   private void hungSignsAndBars() {
@@ -496,6 +497,8 @@ public class MishangucBlockTagProvider extends FabricTagProvider.BlockTagProvide
 
     axeMineable.addTag(woodenHungSigns, woodenHungSignBars);
     pickaxeMineable.addTag(concreteHungSigns, concreteHungSignBars, glowingConcreteHungSigns, terracottaHungSigns, terracottaHungSignBars, glowingTerracottaHungSigns);
+
+    blockTagOnly(BlockTags.WALL_POST_OVERRIDE).addTag(hungSignBars);
   }
 
   private void wallSigns() {
