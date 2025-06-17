@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.storage.NbtReadView;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
 import net.minecraft.util.ActionResult;
@@ -133,8 +134,8 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
         world.setBlockState(blockPos, coloredState);
         final BlockEntity oldBlockEntity = blockEntity;
         blockEntity = world.getBlockEntity(blockPos);
-        if (oldBlockEntity != null && blockEntity != null) {
-          blockEntity.read(oldBlockEntity.createNbt(world.getRegistryManager()), world.getRegistryManager());
+        if (oldBlockEntity != null && blockEntity != null) { // todo reporter 不应该是 null
+          blockEntity.read(NbtReadView.create(null, world.getRegistryManager(), oldBlockEntity.createNbt(world.getRegistryManager())));
         }
       }
     } else {

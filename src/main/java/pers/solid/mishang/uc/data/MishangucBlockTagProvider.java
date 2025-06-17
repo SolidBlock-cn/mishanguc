@@ -17,7 +17,6 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.registry.tag.TagBuilder;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.DyeColor;
 import org.jetbrains.annotations.NotNull;
@@ -69,10 +68,8 @@ public class MishangucBlockTagProvider extends FabricTagProvider.BlockTagProvide
     this.affiliate = new MishangucItemTagProvider(output, registriesFuture, this);
   }
 
-  @SuppressWarnings("deprecation")
   protected MishangucTagBuilder<Block> getMishangucTagBuilder(TagKey<Block> tag) {
-    final TagBuilder tagBuilder = getTagBuilder(tag);
-    return new MishangucTagBuilder<>(tag, tagBuilder, block -> block.getRegistryEntry().registryKey());
+    return new MishangucTagBuilder<>(tag, valueLookupBuilder(tag));
   }
 
   protected MishangucTagBuilder<Block> blockTagOnly(TagKey<Block> blockTagKey) {

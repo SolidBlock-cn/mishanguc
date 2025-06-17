@@ -3,6 +3,9 @@ package pers.solid.mishang.uc.screen;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Streams;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+import com.mojang.serialization.JsonOps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -23,6 +26,7 @@ import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.PlainTextContent;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextCodecs;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
@@ -45,6 +49,7 @@ import pers.solid.mishang.uc.util.HorizontalAlign;
 import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -985,7 +990,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           textFieldWidget.setText(text);
         }
       } else {
-        textFieldWidget.setText("-json" + Text.Serialization.toJsonString(textContext.text, registryLookup));
+        textFieldWidget.setText("-json" + TextCodecs.CODEC.encodeStart(registryLookup.getOps(JsonOps.INSTANCE), textContext.text).getOrThrow().toString());
       }
     }
     final TextFieldListWidget.Entry newEntry = textFieldListWidget.new Entry(textFieldWidget, textContext);
@@ -1007,7 +1012,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
             break;
           case "json":
             try {
-              textContext1.text = Text.Serialization.fromLenientJson(value, registryLookup);
+              final JsonReader jsonReader = new JsonReader(new StringReader(value));
+              textContext1.text = (MutableText) TextCodecs.CODEC.parse(registryLookup.getOps(JsonOps.INSTANCE), JsonParser.parseReader(jsonReader)).getOrThrow();
             } catch (
                 JsonParseException e) {
               // 如果文本有问题，则不执行操作。
@@ -1124,7 +1130,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       }
     }
     isAcceptingCustomValue = true;
-    customValueTextField.setEditableColor(16777215);
+    customValueTextField.setEditableColor(0xffffffff);
     customValueTextField.setSuggestion(null);
     clearAndInit();
     setFocused(customValueTextField);
@@ -1146,9 +1152,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         }
         final Integer parse = MishangUtils.parseColor(text).result().orElse(null);
         if (parse == null) {
-          customValueTextField.setEditableColor(16733525);
+          customValueTextField.setEditableColor(0xffff5555);
         } else {
-          customValueTextField.setEditableColor(16777215);
+          customValueTextField.setEditableColor(0xffffffff);
           for (TextContext textContext : selectedTextContexts) {
             textContext.color = parse;
           }
@@ -1182,21 +1188,21 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
             textContext.outlineColor = -1;
             textContext.outlineColorType = OutlineColorType.AUTO;
           }
-          customValueTextField.setEditableColor(16777215);
+          customValueTextField.setEditableColor(0xffffffff);
           return;
         } else if (text.equals("none")) {
           for (TextContext textContext : selectedTextContexts) {
             textContext.outlineColor = -2;
             textContext.outlineColorType = OutlineColorType.NONE;
           }
-          customValueTextField.setEditableColor(16777215);
+          customValueTextField.setEditableColor(0xffffffff);
           return;
         }
         final Integer parse = MishangUtils.parseColor(text).result().orElse(null);
         if (parse == null) {
-          customValueTextField.setEditableColor(16733525);
+          customValueTextField.setEditableColor(0xffff5555);
         } else {
-          customValueTextField.setEditableColor(16777215);
+          customValueTextField.setEditableColor(0xffffffff);
           for (TextContext textContext : selectedTextContexts) {
             textContext.outlineColor = parse;
             textContext.outlineColorType = OutlineColorType.CUSTOM;
@@ -1213,11 +1219,11 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       customValueTextField.setChangedListener(s -> {
         try {
           final float value = Float.parseFloat(s);
-          customValueTextField.setEditableColor(16777215);
+          customValueTextField.setEditableColor(0xffffffff);
           floatButtonWidget.setAllSameValue(value);
         } catch (
             NumberFormatException e) {
-          customValueTextField.setEditableColor(16733525);
+          customValueTextField.setEditableColor(0xffff5555);
         }
       });
     }

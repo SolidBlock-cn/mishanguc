@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * 类似于一般的方块物品，但是会读取 BlockEntityTag 中的内容来显示文字。
  *
- * @see pers.solid.mishang.uc.blockentity.HungSignBlockEntity#readNbt
+ * @see pers.solid.mishang.uc.blockentity.HungSignBlockEntity#readData
  */
 public class HungSignBlockItem extends NamedBlockItem implements WithMishangTooltip {
   public HungSignBlockItem(Block block, Settings settings) {

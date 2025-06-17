@@ -6,6 +6,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.Strictness;
 import com.google.gson.stream.JsonReader;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.chars.Char2CharArrayMap;
@@ -34,12 +35,23 @@ import pers.solid.mishang.uc.util.VerticalAlign;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * 对 {@link net.minecraft.text.Text} 的简单包装与扩展，允许设置对齐属性、尺寸等参数，以便渲染时使用。同时还提供对象与 NBT、JSON 之间的转换。
  */
 public class TextContext implements Cloneable {
   public static final Codec<TextContext> CODEC = NbtCompound.CODEC.xmap(nbtCompound -> TextContext.fromNbt(nbtCompound, null), textContext -> textContext.createNbt(null));
+
+  public static Codec<List<TextContext>> createListCodec(Supplier<TextContext> defaultSupplier) {
+    return Codec.either(Codec.STRING, Codec.either(CODEC, CODEC.listOf())).<List<TextContext>>xmap(e -> e.map(string -> {
+      final TextContext textContext = defaultSupplier.get();
+      textContext.text = Text.literal(string);
+      return Collections.singletonList(textContext);
+    }, ei -> ei.map(Collections::singletonList, textContexts -> textContexts)), x -> x.size() == 1 ? Either.right(Either.left(x.get(0))) : Either.right(Either.right(x)));
+  }
   public static final PacketCodec<RegistryByteBuf, TextContext> PACKET_CODEC = PacketCodec.of((value, buf) -> buf.writeNbt(value.createNbt(buf.getRegistryManager())), buf -> TextContext.fromNbt(buf.readNbt(), buf.getRegistryManager()));
 
   /**
@@ -89,7 +101,7 @@ public class TextContext implements Cloneable {
   /**
    * 文本颜色。
    */
-  public int color = 0xffffff;
+  public int color = 0xffffffff;
   /**
    * 是否渲染阴影。
    */
@@ -235,13 +247,14 @@ public class TextContext implements Cloneable {
     final String textJson = nbt.getString("textJson", null);
     if (!Strings.isNullOrEmpty(textJson)) {
       try {
+        JsonElement jsonElement = null;
+        JsonReader jsonReader = new JsonReader(new StringReader(textJson));
+        jsonReader.setStrictness(Strictness.LENIENT);
+        jsonElement = JsonParser.parseReader(jsonReader);
         if (registryLookup == null) {
-          JsonReader jsonReader = new JsonReader(new StringReader(textJson));
-          jsonReader.setStrictness(Strictness.LENIENT);
-          JsonElement jsonElement = JsonParser.parseReader(jsonReader);
           text = (MutableText) TextCodecs.CODEC.parse(JsonOps.INSTANCE, jsonElement).getOrThrow();
         } else {
-          text = Text.Serialization.fromLenientJson(textJson, registryLookup);
+          text = (MutableText) TextCodecs.CODEC.parse(registryLookup.getOps(JsonOps.INSTANCE), jsonElement).getOrThrow();
         }
       } catch (JsonParseException e) {
         text = TextBridge.translatable("message.mishanguc.invalid_json", e.getMessage());

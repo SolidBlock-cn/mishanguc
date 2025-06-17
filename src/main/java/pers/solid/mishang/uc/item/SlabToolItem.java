@@ -25,6 +25,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.data.family.BlockFamilies;
 import net.minecraft.data.family.BlockFamily;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
@@ -172,7 +173,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
       final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, slabTypeToSet));
       final BlockEntity newBlockEntity = world.getBlockEntity(pos);
       if (newBlockEntity != null && nbt != null) {
-        newBlockEntity.read(nbt, world.getRegistryManager());
+        NbtComponent.of(nbt).applyToBlockEntity(newBlockEntity, world.getRegistryManager());
       }
       final BlockState brokenState = state.with(Properties.SLAB_TYPE, slabTypeBroken);
       block.onBreak(world, pos, brokenState, user);
@@ -292,7 +293,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
       final BlockPos blockPos = payload.blockPos();
       final boolean isTop = payload.isTop();
       final ServerPlayerEntity player = context.player();
-      player.server.execute(() -> {
+      player.getServer().execute(() -> {
         if (!player.canInteractWithBlockAt(blockPos, 0)) {
           return;
         }
@@ -303,9 +304,9 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
         final Runnable remove = SERVER_BLOCK_BREAKING_BRIDGE.remove(Pair.of(player.getWorld(), blockPos));
         if (remove == CAN_MINE_CALLED_FIRST) {
           performBreak(player.getWorld(), blockPos, player, isTop);
-        } else if (tryToDoubleSlab(player.getServerWorld().getBlockState(blockPos)) != null) {
+        } else if (tryToDoubleSlab(player.getWorld().getBlockState(blockPos)) != null) {
           // 收到封包之后，送到 canMine 中执行。
-          SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of(player.getServerWorld(), blockPos), (PacketReceivedFirst) () -> performBreak(player.getServerWorld(), blockPos, player, isTop));
+          SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of(player.getWorld(), blockPos), (PacketReceivedFirst) () -> performBreak(player.getWorld(), blockPos, player, isTop));
         }
       });
     }

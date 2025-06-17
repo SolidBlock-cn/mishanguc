@@ -2,16 +2,15 @@ package pers.solid.mishang.uc.blockentity;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.mojang.serialization.Codec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.ComponentsAccess;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Util;
@@ -25,7 +24,6 @@ import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @see pers.solid.mishang.uc.block.HungSignBlock
@@ -69,63 +67,31 @@ public class HungSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-    super.readNbt(nbt, registryLookup);
+  protected void readData(ReadView view) {
+    super.readData(view);
     ImmutableMap.Builder<Direction, List<TextContext>> builder = new ImmutableMap.Builder<>();
+    final Codec<List<TextContext>> listCodec = TextContext.createListCodec(this::createDefaultTextContext);
     for (Direction direction : Direction.Type.HORIZONTAL) {
-      final NbtElement element = nbt.get(direction.asString());
-      if (element instanceof NbtList) {
-        ImmutableList.Builder<TextContext> listBuilder = new ImmutableList.Builder<>();
-        for (NbtElement nbtElement : ((NbtList) element)) {
-          TextContext textContext = TextContext.fromNbt(nbtElement, registryLookup);
-          listBuilder.add(textContext);
-        }
-        final ImmutableList<TextContext> build = listBuilder.build();
-        if (!build.isEmpty()) builder.put(direction, build);
-      } else if (element != null) {
-        builder.put(
-            direction, ImmutableList.of(TextContext.fromNbt(element, createDefaultTextContext(), registryLookup)));
-      }
+      final Optional<List<TextContext>> optionalValue = view.read(direction.asString(), listCodec);
+      optionalValue.ifPresent(textContexts -> builder.put(direction, textContexts));
     }
     texts = builder.build();
-    if (nbt.contains("waxed")) {
-      final Optional<NbtList> list = nbt.getList("waxed");
-      if (list.isEmpty()) {
-        waxed = Set.of();
-      } else {
-        waxed = list.get().stream().map(nbtElement -> Direction.CODEC.byId(nbtElement.asString().orElse(""))).filter(Objects::nonNull).collect(Collectors.toCollection(() -> new HashSet<>(2)));
-      }
-    } else {
-      waxed = Set.of();
-    }
-    if (nbt.contains("glowing")) {
-      final Optional<NbtList> list = nbt.getList("glowing");
-      if (list.isEmpty()) {
-        glowing = Set.of();
-      } else {
-        glowing = list.get().stream().map(nbtElement -> Direction.CODEC.byId(nbtElement.asString().orElse(""))).filter(Objects::nonNull).collect(Collectors.toCollection(() -> new HashSet<>(2)));
-      }
-    } else {
-      glowing = Set.of();
-    }
+    waxed = view.read("waxed", Direction.CODEC.listOf()).map(ImmutableSet::copyOf).orElseGet(ImmutableSet::of);
+    glowing = view.read("glowing", Direction.CODEC.listOf()).map(ImmutableSet::copyOf).orElseGet(ImmutableSet::of);
   }
 
   @Override
-  public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-    super.writeNbt(nbt, registryLookup);
+  protected void writeData(WriteView view) {
+    super.writeData(view);
     for (Direction direction : Direction.Type.HORIZONTAL) {
       final List<@NotNull TextContext> textContexts = texts.get(direction);
       if (textContexts == null || textContexts.isEmpty()) {
         continue;
       }
-      final NbtList nbtList = new NbtList();
-      for (TextContext textContext : textContexts) {
-        nbtList.add(textContext.createNbt(registryLookup));
-      }
-      nbt.put(direction.asString(), nbtList);
+      view.put(direction.asString(), TextContext.createListCodec(this::createDefaultTextContext), textContexts);
     }
-    nbt.put("waxed", waxed.stream().map(Direction::asString).map(NbtString::of).collect(Collectors.toCollection(NbtList::new)));
-    nbt.put("glowing", glowing.stream().map(Direction::asString).map(NbtString::of).collect(Collectors.toCollection(NbtList::new)));
+    view.put("waxed", Direction.CODEC.listOf(), ImmutableList.copyOf(waxed));
+    view.put("glowing", Direction.CODEC.listOf(), ImmutableList.copyOf(glowing));
   }
 
   @Override
@@ -142,10 +108,10 @@ public class HungSignBlockEntity extends BlockEntityWithText {
 
   @SuppressWarnings("deprecation")
   @Override
-  public void removeFromCopiedStackNbt(NbtCompound nbt) {
-    super.removeFromCopiedStackNbt(nbt);
+  public void removeFromCopiedStackData(WriteView view) {
+    super.removeFromCopiedStackData(view);
     for (Direction direction : Direction.Type.HORIZONTAL) {
-      nbt.remove(direction.asString());
+      view.remove(direction.asString());
     }
   }
 

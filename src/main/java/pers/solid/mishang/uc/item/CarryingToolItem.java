@@ -13,6 +13,7 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.FallingBlockEntity;
@@ -22,13 +23,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.storage.NbtWriteView;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Uuids;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -86,7 +84,7 @@ public class CarryingToolItem extends BlockToolItem
   @Contract(pure = true)
   public static @Nullable Entity createHoldingEntity(@NotNull CarryingToolData.HoldingEntity data, ServerWorld world, PlayerEntity player) {
     final EntityType<?> entityType = data.entityType();
-    return entityType.create(world, entity -> entity.readNbt(data.entityTag().orElseGet(NbtCompound::new)), player.getBlockPos(), SpawnReason.EVENT, false, false);
+    return entityType.create(world, entity -> data.entityTag().ifPresent(nbtCompound -> NbtComponent.of(nbtCompound).applyToEntity(entity)), player.getBlockPos(), SpawnReason.EVENT, false, false);
   }
 
   private static Text getEntityName(@NotNull ItemStack stack) {
@@ -258,8 +256,8 @@ public class CarryingToolItem extends BlockToolItem
       }
       final FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(EntityType.FALLING_BLOCK, world);
       NbtCompound nbt = new NbtCompound();
-      nbt.put("BlockState", NbtHelper.fromBlockState(state));
-      fallingBlockEntity.readNbt(nbt);
+      nbt.put("BlockState", BlockState.CODEC, state);
+      NbtComponent.of(nbt).applyToEntity(fallingBlockEntity);
       final Vec3d eyePos = user.getEyePos();
       fallingBlockEntity.updatePositionAndAngles(eyePos.x, eyePos.y, eyePos.z, user.getYaw(), user.getPitch());
       fallingBlockEntity.setVelocity(Vec3d.fromPolar(user.getPitch(), user.getYaw()).multiply(2).add(user.getVelocity()));
@@ -340,7 +338,9 @@ public class CarryingToolItem extends BlockToolItem
       } else {
         player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity", entity.getName()), true);
       }
-      stack.set(MishangucComponents.CARRYING_TOOL_DATA, new CarryingToolData.HoldingEntity(entity.getType(), Optional.of(entity.writeNbt(new NbtCompound())), entity.getName(), entity.getWidth(), entity.getHeight()));
+      final NbtWriteView nbtWriteView = NbtWriteView.create(ErrorReporter.EMPTY, entity.getRegistryManager());
+      entity.writeData(nbtWriteView);
+      stack.set(MishangucComponents.CARRYING_TOOL_DATA, new CarryingToolData.HoldingEntity(entity.getType(), Optional.of(nbtWriteView.getNbt()), entity.getName(), entity.getWidth(), entity.getHeight()));
       entity.remove(Entity.RemovalReason.DISCARDED);
       if (entity instanceof EnderDragonPart enderDragonPart) {
         enderDragonPart.owner.kill(serverWorld);

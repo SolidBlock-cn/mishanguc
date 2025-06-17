@@ -108,7 +108,7 @@ public abstract class BlockEntityWithText extends BlockEntity {
       final BlockPos blockPos = payload.blockPos();
       final NbtCompound nbt = payload.nbt();
       final ServerPlayerEntity player = context.player();
-      player.server.execute(() -> {
+      player.getServer().execute(() -> {
         try {
           final BlockEntityWithText entity = (BlockEntityWithText) player.getWorld().getBlockEntity(blockPos);
           if (entity == null) {

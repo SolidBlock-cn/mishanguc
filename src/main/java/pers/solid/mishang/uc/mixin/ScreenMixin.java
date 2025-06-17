@@ -6,14 +6,13 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.ClickEvent;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pers.solid.mishang.uc.util.NbtClickEvent;
 import pers.solid.mishang.uc.util.NbtPrettyPrinter;
 import pers.solid.mishang.uc.util.TextClickEvent;
@@ -30,24 +29,20 @@ public abstract class ScreenMixin {
    * element, but instead, uses {@link TextClickEvent} that extends vanilla {@link ClickEvent}s.
    */
   @Inject(
-      method = "handleTextClick",
+      method = "handleClickEvent(Lnet/minecraft/text/ClickEvent;Lnet/minecraft/client/MinecraftClient;Lnet/minecraft/client/gui/screen/Screen;)V",
       at =
       @At(
-          target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V",
+          target = "Ljava/util/Objects;requireNonNull(Ljava/lang/Object;)Ljava/lang/Object;",
           value = "INVOKE",
-          ordinal = 1,
-          remap = false),
+          shift = At.Shift.AFTER),
       cancellable = true)
-  public void handleTextClickMixin(Style style, CallbackInfoReturnable<Boolean> cir) {
-    final ClickEvent clickEvent = style.getClickEvent();
+  private static void handleTextClickMixin(ClickEvent clickEvent, MinecraftClient client, Screen screenAfterRun, CallbackInfo ci) {
     if (clickEvent instanceof TextClickEvent(Text text) && client != null && client.player != null) {
-      this.client.player.sendMessage(text, false);
-      cir.setReturnValue(true);
-      cir.cancel();
+      client.player.sendMessage(text, false);
+      ci.cancel();
     } else if (clickEvent instanceof NbtClickEvent(NbtElement nbt) && client != null && client.player != null) {
-      this.client.player.sendMessage(NbtPrettyPrinter.serialize(nbt), false);
-      cir.setReturnValue(true);
-      cir.cancel();
+      client.player.sendMessage(NbtPrettyPrinter.serialize(nbt), false);
+      ci.cancel();
     }
   }
 }

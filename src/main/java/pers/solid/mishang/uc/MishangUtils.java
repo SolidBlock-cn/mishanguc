@@ -44,6 +44,7 @@ import pers.solid.mishang.uc.util.VerticalAlign;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -326,11 +327,11 @@ public class MishangUtils {
   }
 
   /**
-   * 接收一个整数形式的颜色，考虑到 Minecraft 可能存在带有 alpha 通道的颜色，因此当检测到有 alpha 通道时，格式化为 #aarrggbb 的格式，否则格式化为 #rrggbb 的格式。
+   * 接收一个整数形式的颜色，考虑到 Minecraft 可能存在带有 alpha 通道的颜色，因此当检测到有 alpha 通道时，格式化为 #rrggbbaa 的格式，否则格式化为 #rrggbb 的格式。
    */
   public static String formatColorHex(int color) {
     final int alpha = (color >> 24) & 0xff;
-    return alpha != 0 ? String.format("#%08x", (color & 0xffffff) << 8 | alpha) : String.format("#%06x", color);
+    return alpha != 255 ? String.format("#%08x", (color & 0xffffff) << 8 | alpha) : String.format("#%06x", color & 0xffffff);
   }
 
   /**
@@ -355,7 +356,7 @@ public class MishangUtils {
             r = i >> 8 & 0xf;
             g = i >> 4 & 0xf;
             b = i & 0xf;
-            return DataResult.success(ColorHelper.getArgb(0, r * 17, g * 17, b * 17));
+            return DataResult.success(ColorHelper.getArgb(255, r * 17, g * 17, b * 17));
           }
           case 8 -> {
             final int rgb = i >> 8 & 0xffffff;
@@ -363,7 +364,7 @@ public class MishangUtils {
             return DataResult.success(ColorHelper.withAlpha(a, rgb));
           }
           case 6 -> {
-            return DataResult.success(i & 0xffffff);
+            return DataResult.success(i & 0xffffff | 0xff000000);
           }
           default -> {
             return DataResult.error(() -> "Invalid value length: " + s);
@@ -373,7 +374,7 @@ public class MishangUtils {
         return DataResult.error(() -> "Cannot parse number value: " + s);
       }
     } else {
-      return TextColor.parse(s).map(TextColor::getRgb);
+      return TextColor.parse(s).map(textColor -> textColor.getRgb() | 0xff000000);
     }
   }
 
@@ -394,7 +395,7 @@ public class MishangUtils {
     return lineColor.asString() + "_" + (lineType == LineType.NORMAL ? "" : lineColor.asString() + "_") + (bevel ? "bevel" : "right") + "_angle_line";
   }
 
-  public static final Codec<Integer> COLOR_CODEC = Codec.INT.mapResult(new Codec.ResultFunction<>() {
+  public static final Codec<Integer> COLOR_CODEC = Codec.INT.xmap(integer -> ColorHelper.getAlpha(integer) < 1 ? ColorHelper.fullAlpha(integer) : integer, Function.identity()).mapResult(new Codec.ResultFunction<>() {
     public static final Decoder<Integer> COLOR_CODEC_STRING = Codec.STRING.flatMap(s -> TextColor.parse(s).map(TextColor::getRgb));
     public static final Codec<Integer> COLOR_CODEC_LIST = Codec.list(Codec.INT).flatXmap(integers -> {
       if (integers.size() < 3 || integers.size() > 4) {

@@ -4,15 +4,15 @@ import com.google.common.base.Predicates;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.item.property.bool.BooleanProperties;
 import net.minecraft.client.render.item.property.numeric.NumericProperties;
@@ -184,11 +184,11 @@ public class MishangucClient implements ClientModInitializer {
 
   private static void registerBlockLayers() {
     // 设置相应的 BlockLayer
-    Validate.notEmpty(MishangucBlocks.translucentBlocks).forEach(block -> BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getTranslucent()));
+    Validate.notEmpty(MishangucBlocks.translucentBlocks).forEach(block -> BlockRenderLayerMap.putBlock(block, BlockRenderLayer.TRANSLUCENT));
     Validate.notEmpty(MishangucBlocks.cutoutBlocks).forEach(block -> {
-      BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout());
+      BlockRenderLayerMap.putBlock(block, BlockRenderLayer.CUTOUT);
       if (block instanceof AbstractRoadBlock roadBlock && roadBlock.getRoadSlab() != null) {
-        BlockRenderLayerMap.INSTANCE.putBlock(roadBlock.getRoadSlab(), RenderLayer.getCutout());
+        BlockRenderLayerMap.putBlock(roadBlock.getRoadSlab(), BlockRenderLayer.CUTOUT);
       }
     });
     MishangucBlocks.translucentBlocks = null;

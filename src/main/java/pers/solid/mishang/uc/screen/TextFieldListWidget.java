@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.screen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Narratable;
@@ -12,7 +13,6 @@ import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -282,7 +282,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     if (simplified) {
       // 简化模式下，多显示一个。
       Identifier identifier2 = this.client.world == null ? Screen.FOOTER_SEPARATOR_TEXTURE : Screen.INWORLD_FOOTER_SEPARATOR_TEXTURE;
-      context.drawTexture(RenderLayer::getGuiTextured, identifier2, this.getX(), this.getY() + heightForBackground, 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
+      context.drawTexture(RenderPipelines.GUI_TEXTURED, identifier2, this.getX(), this.getY() + heightForBackground, 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
     }
   }
 
@@ -290,8 +290,8 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   @Override
   protected void drawMenuListBackground(DrawContext context) {
     Identifier identifier = background;
-    context.drawTexture(RenderLayer::getGuiTextured, identifier, this.getX(), 0, 0, 0, this.getWidth(), this.getY(), 32, 32);
-    context.drawTexture(RenderLayer::getGuiTextured, identifier, this.getX(), getY() + heightForBackground, 0, 0, this.getWidth(), heightForBackground, 32, 32);
+    context.drawTexture(RenderPipelines.GUI_TEXTURED, identifier, this.getX(), 0, 0, 0, this.getWidth(), this.getY(), 32, 32);
+    context.drawTexture(RenderPipelines.GUI_TEXTURED, identifier, this.getX(), getY() + heightForBackground, 0, 0, this.getWidth(), heightForBackground, 32, 32);
   }
 
   /**

@@ -15,11 +15,13 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -95,7 +97,8 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
             if (blockPlacementContext.stackInHand != null) {
               BlockItem.writeNbtToBlockEntity(world, player, posToPlace, blockPlacementContext.stackInHand);
             } else if (blockPlacementContext.hitEntity != null && entityToPlace != null) {
-              entityToPlace.read(blockPlacementContext.hitEntity.createNbt(world.getRegistryManager()), world.getRegistryManager());
+              final NbtCompound nbt = blockPlacementContext.hitEntity.createNbt(world.getRegistryManager());
+              NbtComponent.of(nbt).applyToBlockEntity(entityToPlace, world.getRegistryManager());
               entityToPlace.markDirty();
               world.updateListeners(posToPlace, entityToPlace.getCachedState(), entityToPlace.getCachedState(), Block.NOTIFY_ALL);
             }

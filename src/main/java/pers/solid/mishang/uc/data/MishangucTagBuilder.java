@@ -1,60 +1,49 @@
 package pers.solid.mishang.uc.data;
 
-import net.minecraft.data.tag.TagProvider;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.tag.TagBuilder;
+import net.minecraft.data.tag.ProvidedTagBuilder;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
 
 import java.util.Arrays;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
-public class MishangucTagBuilder<T> extends TagProvider.ProvidedTagBuilder<T> {
+/**
+ * @since 1.21.6 随原版进行了变更，由直接继承改变了实现 {@link ProvidedTagBuilder}，其底层实现方式为对 {@link #parent} 字段进行操作。
+ */
+public class MishangucTagBuilder<T> implements ProvidedTagBuilder<T, T> {
   private final TagKey<T> tagKey;
-  private final Function<T, RegistryKey<T>> valueToKey;
+  private final ProvidedTagBuilder<T, T> parent;
 
-  protected MishangucTagBuilder(TagKey<T> tagKey, TagBuilder builder, Function<T, RegistryKey<T>> valueToKey) {
-    super(builder);
+  protected MishangucTagBuilder(TagKey<T> tagKey, ProvidedTagBuilder<T, T> parent) {
     this.tagKey = tagKey;
-    this.valueToKey = valueToKey;
+    this.parent = parent;
   }
 
   public MishangucTagBuilder<T> add(T value) {
-    add(valueToKey.apply(value));
+    parent.add(value);
     return this;
   }
 
   @SafeVarargs
   public final MishangucTagBuilder<T> add(T... values) {
-    Stream.of(values).map(this.valueToKey).forEach(this::add);
-    return this;
-  }
-
-
-  @SafeVarargs
-  @Override
-  public final MishangucTagBuilder<T> add(RegistryKey<T>... keys) {
-    super.add(keys);
+    parent.add(values);
     return this;
   }
 
   @Override
-  public MishangucTagBuilder<T> addOptional(Identifier id) {
-    super.addOptional(id);
+  public ProvidedTagBuilder<T, T> addOptional(T value) {
+    parent.addOptional(value);
     return this;
   }
 
   @Override
-  public MishangucTagBuilder<T> addTag(TagKey<T> identifiedTag) {
-    super.addTag(identifiedTag);
+  public MishangucTagBuilder<T> addTag(TagKey<T> tag) {
+    parent.addTag(tag);
     return this;
   }
 
   @SafeVarargs
   public final MishangucTagBuilder<T> addTag(TagKey<T>... tags) {
     for (TagKey<T> tag : tags) {
-      super.addTag(tag);
+      parent.addTag(tag);
     }
     return this;
   }
@@ -70,8 +59,8 @@ public class MishangucTagBuilder<T> extends TagProvider.ProvidedTagBuilder<T> {
   }
 
   @Override
-  public MishangucTagBuilder<T> addOptionalTag(Identifier id) {
-    super.addOptionalTag(id);
+  public ProvidedTagBuilder<T, T> addOptionalTag(TagKey<T> tag) {
+    parent.addOptionalTag(tag);
     return this;
   }
 }

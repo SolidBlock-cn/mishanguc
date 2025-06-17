@@ -263,12 +263,12 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
     final Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
     final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(layer);
     for (BakedGlyph.Rectangle rectangle : rectanglesToDraw) {
-      bakedGlyph.drawRectangle(rectangle, matrix4f, vertexConsumer, light);
+      bakedGlyph.drawRectangle(rectangle, matrix4f, vertexConsumer, light, false);
     }
     if (outlineRectangles != null) {
       final VertexConsumer vertexConsumerOutline = vertexConsumers.getBuffer(bakedGlyph.getLayer(TextRenderer.TextLayerType.NORMAL));
       for (BakedGlyph.Rectangle outlineRectangle : outlineRectangles) {
-        bakedGlyph.drawRectangle(outlineRectangle, matrix4f, vertexConsumerOutline, light);
+        bakedGlyph.drawRectangle(outlineRectangle, matrix4f, vertexConsumerOutline, light, false);
       }
     }
   }

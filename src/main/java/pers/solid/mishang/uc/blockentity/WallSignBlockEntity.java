@@ -1,16 +1,18 @@
 package pers.solid.mishang.uc.blockentity;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gson.JsonParser;
+import com.google.gson.Strictness;
+import com.google.gson.stream.JsonReader;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.ComponentsAccess;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
+import net.minecraft.text.TextCodecs;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +22,9 @@ import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
 import pers.solid.mishang.uc.text.TextContext;
 
+import java.io.StringReader;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @see pers.solid.mishang.uc.block.WallSignBlock
@@ -53,45 +57,30 @@ public class WallSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-    super.readNbt(nbt, registryLookup);
-    final @Nullable NbtElement nbtText = nbt.get("text");
-    if (nbtText instanceof NbtString || nbt.contains("textJson")) {
-      // 如果 text 是个字符串，则读取整个 nbt 作为 TextContext。
-      // 例如，整个 nbt 可以是 {text: "abc", color: "red", size: 5}。
-      textContexts = ImmutableList.of(TextContext.fromNbt(nbt, createDefaultTextContext(), registryLookup));
-    } else if (nbtText instanceof NbtCompound) {
-      // 如果 text 是个复合标签，则读取这个复合标签。
-      // 例如，整个 nbt 可以是 {text: {text: "abc", color: "red", size: 5}}。
-      textContexts = ImmutableList.of(TextContext.fromNbt(nbtText, createDefaultTextContext(), registryLookup));
-    } else if (nbtText instanceof NbtList) {
-      ImmutableList.Builder<TextContext> builder = new ImmutableList.Builder<>();
-      for (NbtElement nbtElement : ((NbtList) nbtText)) {
-        builder.add(TextContext.fromNbt(nbtElement, createDefaultTextContext(), registryLookup));
-      }
-      textContexts = builder.build();
+  protected void readData(ReadView view) {
+    super.readData(view);
+    final Optional<String> textJson = view.getOptionalString("textJson");
+    if (textJson.isPresent()) {
+      // 此部分仅用于兼容
+      final TextContext defaultTextContext = createDefaultTextContext();
+      var reader = new JsonReader(new StringReader(textJson.get()));
+      reader.setStrictness(Strictness.LENIENT);
+      defaultTextContext.text = (net.minecraft.text.MutableText) TextCodecs.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseReader(reader)).getOrThrow();
+      textContexts = ImmutableList.of(defaultTextContext);
+    } else {
+      textContexts = view.read("text", TextContext.createListCodec(this::createDefaultTextContext)).orElseGet(ImmutableList::of);
     }
 
-    glowing = nbt.getBoolean("glowing", false);
-    waxed = nbt.getBoolean("waxed", false);
+    glowing = view.getBoolean("glowing", false);
+    waxed = view.getBoolean("waxed", false);
   }
 
   @Override
-  public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-    super.writeNbt(nbt, registryLookup);
-    if (textContexts.size() == 1) {
-      final NbtCompound nbtCompound = new NbtCompound();
-      textContexts.get(0).writeNbt(nbtCompound, registryLookup);
-      nbt.put("text", nbtCompound);
-    } else {
-      final NbtList nbtList = new NbtList();
-      for (TextContext textContext : textContexts) {
-        nbtList.add(textContext.createNbt(registryLookup));
-      }
-      nbt.put("text", nbtList);
-    }
-    nbt.putBoolean("glowing", glowing);
-    nbt.putBoolean("waxed", waxed);
+  protected void writeData(WriteView view) {
+    super.writeData(view);
+    view.put("text", TextContext.createListCodec(this::createDefaultTextContext), textContexts);
+    view.putBoolean("glowing", glowing);
+    view.putBoolean("waxed", waxed);
   }
 
   @Override
@@ -108,9 +97,9 @@ public class WallSignBlockEntity extends BlockEntityWithText {
 
   @SuppressWarnings("deprecation")
   @Override
-  public void removeFromCopiedStackNbt(NbtCompound nbt) {
-    super.removeFromCopiedStackNbt(nbt);
-    nbt.remove("text");
+  public void removeFromCopiedStackData(WriteView view) {
+    super.removeFromCopiedStackData(view);
+    view.remove("text");
   }
 
   @Override

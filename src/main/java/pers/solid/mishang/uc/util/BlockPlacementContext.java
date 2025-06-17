@@ -5,9 +5,11 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.BlockStateComponent;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
@@ -220,7 +222,8 @@ public class BlockPlacementContext {
     if (stackInHand != null) {
       BlockItem.writeNbtToBlockEntity(world, player, posToPlace, stackInHand);
     } else if (hitEntity != null && entityToPlace != null) {
-      entityToPlace.read(hitEntity.createNbt(world.getRegistryManager()), world.getRegistryManager());
+      final NbtCompound nbt = hitEntity.createNbt(world.getRegistryManager());
+      NbtComponent.of(nbt).applyToBlockEntity(entityToPlace, world.getRegistryManager());
       entityToPlace.markDirty();
       world.updateListeners(posToPlace, entityToPlace.getCachedState(), entityToPlace.getCachedState(), Block.NOTIFY_ALL);
     }

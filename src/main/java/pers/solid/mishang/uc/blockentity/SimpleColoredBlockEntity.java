@@ -9,6 +9,8 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.math.BlockPos;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.components.MishangucComponents;
@@ -31,18 +33,19 @@ public class SimpleColoredBlockEntity extends BlockEntity implements ColoredBloc
   }
 
   @Override
-  protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-    super.readNbt(nbt, registryLookup);
-    color = MishangUtils.readColorFromNbtElement(nbt.get("color"));
+  protected void readData(ReadView view) {
+    super.readData(view);
+    color = view.read("color", MishangUtils.COLOR_CODEC).orElse(0);
     if (world != null && world.isClient) {
       world.updateListeners(pos, this.getCachedState(), this.getCachedState(), 3);
     }
   }
 
+
   @Override
-  protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-    super.writeNbt(nbt, registryLookup);
-    nbt.putInt("color", color);
+  protected void writeData(WriteView view) {
+    super.writeData(view);
+    view.put("color", MishangUtils.COLOR_CODEC, color);
   }
 
   @Override
@@ -59,9 +62,8 @@ public class SimpleColoredBlockEntity extends BlockEntity implements ColoredBloc
 
   @SuppressWarnings("deprecation")
   @Override
-  public void removeFromCopiedStackNbt(NbtCompound nbt) {
-    super.removeFromCopiedStackNbt(nbt);
-    nbt.remove("color");
+  public void removeFromCopiedStackData(WriteView view) {
+    view.remove("color");
   }
 
   @Override

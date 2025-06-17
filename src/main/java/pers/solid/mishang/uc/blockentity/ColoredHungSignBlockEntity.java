@@ -3,8 +3,8 @@ package pers.solid.mishang.uc.blockentity;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.ComponentsAccess;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.math.BlockPos;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.components.MishangucComponents;
@@ -20,18 +20,18 @@ public class ColoredHungSignBlockEntity extends HungSignBlockEntity implements C
   }
 
   @Override
-  protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-    super.readNbt(nbt, registryLookup);
-    color = MishangUtils.readColorFromNbtElement(nbt.get("color"));
+  protected void readData(ReadView view) {
+    super.readData(view);
+    color = view.read("color", MishangUtils.COLOR_CODEC).orElse(0);
     if (world != null && world.isClient) {
       world.updateListeners(pos, this.getCachedState(), this.getCachedState(), 3);
     }
   }
 
   @Override
-  public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-    super.writeNbt(nbt, registryLookup);
-    nbt.putInt("color", color);
+  protected void writeData(WriteView view) {
+    super.writeData(view);
+    view.put("color", MishangUtils.COLOR_CODEC, color);
   }
 
   @Override
@@ -47,9 +47,9 @@ public class ColoredHungSignBlockEntity extends HungSignBlockEntity implements C
   }
 
   @Override
-  public void removeFromCopiedStackNbt(NbtCompound nbt) {
-    super.removeFromCopiedStackNbt(nbt);
-    nbt.remove("color");
+  public void removeFromCopiedStackData(WriteView view) {
+    super.removeFromCopiedStackData(view);
+    view.remove("color");
   }
 
   @Override

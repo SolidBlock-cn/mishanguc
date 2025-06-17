@@ -103,7 +103,7 @@ public class IdCheckerToolItem extends BlockToolItem implements InteractsWithEnt
   public ActionResult use(World world, PlayerEntity user, Hand hand) {
     if (world.isClient) {
       final BlockPos blockPos = user.getBlockPos();
-      final Biome biome = user.getEntityWorld().getBiome(blockPos).value();
+      final Biome biome = user.getWorld().getBiome(blockPos).value();
       final Registry<Biome> biomes = world.getRegistryManager().getOrThrow(RegistryKeys.BIOME);
       final Identifier identifier = biomes.getId(biome);
       final int rawId = biomes.getRawId(biome);
