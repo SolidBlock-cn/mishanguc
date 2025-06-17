@@ -2,6 +2,30 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.5.3
+
+- For versions 1.21,4 and above, fixed the issue that custom-colored sign bars are not tinted dynamically in the inventory.
+- Other updates see the changelog for 1.5.2, 1.5.1 and 1.5.0.
+
+### 1.5.2
+
+- Now all standing signs and sign bars have the block tag `#wall_post_override` so that the standing signs placed on the walls make the wall posts visible.
+
+### 1.5.1
+
+- Optimized the parsing of JSON text.
+- When typing special texts in the sign, if the content is invalid (for example, `-json` with an invalid JSON text), the text field will be now displayed red.
+- Fixed the issue that the side texture of road blocks with straight line and two bevel angle lines will disappear on some occasions.
+- Fixed the issue that in the sign edit interface, the underline button changes the italic of text by mistake.
+
+### 1.5.0
+
+- Compatible with 1.21.6.
+- Fixed the issue of incorrect texture in 1.21.5.
+- Fixed the issue that the X-rotation of text cannot be set correctly.
+- Adjusted the name of some contents.
+- Fixed the issue of typing JSON prefixed with "`-json`" in the sign and opening the edit interface will cause a space character missed and result in incorrect parsing.
+
 ### 1.4.9
 
 - Fixed the incorrect texture of the side of some road blocks.
