@@ -1,11 +1,7 @@
 package pers.solid.mishang.uc.text;
 
 import com.google.common.collect.ImmutableBiMap;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
-import com.google.gson.Strictness;
-import com.google.gson.stream.JsonReader;
+import com.google.gson.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.chars.Char2CharArrayMap;
@@ -33,7 +29,6 @@ import pers.solid.mishang.uc.util.HorizontalAlign;
 import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
-import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -41,6 +36,7 @@ import java.util.Collection;
  * 对 {@link net.minecraft.text.Text} 的简单包装与扩展，允许设置对齐属性、尺寸等参数，以便渲染时使用。同时还提供对象与 NBT、JSON 之间的转换。
  */
 public class TextContext implements Cloneable {
+  public static final Gson GSON = new GsonBuilder().setStrictness(Strictness.LENIENT).create();
   public static final Codec<TextContext> CODEC = NbtCompound.CODEC.xmap(nbtCompound -> TextContext.fromNbt(nbtCompound, null), textContext -> textContext.createNbt(null));
   public static final PacketCodec<RegistryByteBuf, TextContext> PACKET_CODEC = PacketCodec.of((value, buf) -> buf.writeNbt(value.createNbt(buf.getRegistryManager())), buf -> TextContext.fromNbt(buf.readNbt(), buf.getRegistryManager()));
 
@@ -237,9 +233,7 @@ public class TextContext implements Cloneable {
     if (!textJson.isEmpty()) {
       try {
         if (registryLookup == null) {
-          JsonReader jsonReader = new JsonReader(new StringReader(textJson));
-          jsonReader.setStrictness(Strictness.LENIENT);
-          JsonElement jsonElement = JsonParser.parseReader(jsonReader);
+          JsonElement jsonElement = GSON.fromJson(textJson, JsonElement.class);
           text = (MutableText) TextCodecs.CODEC.parse(JsonOps.INSTANCE, jsonElement).getOrThrow();
         } else {
           text = Text.Serialization.fromLenientJson(textJson, registryLookup);
