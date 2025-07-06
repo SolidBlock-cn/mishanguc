@@ -1,11 +1,7 @@
 package pers.solid.mishang.uc.text;
 
 import com.google.common.collect.ImmutableBiMap;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
-import com.google.gson.Strictness;
-import com.google.gson.stream.JsonReader;
+import com.google.gson.*;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
@@ -32,7 +28,6 @@ import pers.solid.mishang.uc.util.HorizontalAlign;
 import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
-import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -44,9 +39,10 @@ import java.util.function.Supplier;
  */
 public class TextContext implements Cloneable {
   public static final Codec<TextContext> CODEC = NbtCompound.CODEC.xmap(nbtCompound -> TextContext.fromNbt(nbtCompound, null), textContext -> textContext.createNbt(null));
+  public static final Gson GSON = new GsonBuilder().setStrictness(Strictness.LENIENT).create();
 
   public static Codec<List<TextContext>> createListCodec(Supplier<TextContext> defaultSupplier) {
-    return Codec.either(Codec.STRING, Codec.either(CODEC, CODEC.listOf())).<List<TextContext>>xmap(e -> e.map(string -> {
+    return Codec.either(Codec.STRING, Codec.either(CODEC, CODEC.listOf())).xmap(e -> e.map(string -> {
       final TextContext textContext = defaultSupplier.get();
       textContext.text = Text.literal(string);
       return Collections.singletonList(textContext);
@@ -247,10 +243,7 @@ public class TextContext implements Cloneable {
     final String textJson = nbt.getString("textJson", null);
     if (!Strings.isNullOrEmpty(textJson)) {
       try {
-        JsonElement jsonElement = null;
-        JsonReader jsonReader = new JsonReader(new StringReader(textJson));
-        jsonReader.setStrictness(Strictness.LENIENT);
-        jsonElement = JsonParser.parseReader(jsonReader);
+        JsonElement jsonElement = GSON.fromJson(textJson, JsonElement.class);
         if (registryLookup == null) {
           text = (MutableText) TextCodecs.CODEC.parse(JsonOps.INSTANCE, jsonElement).getOrThrow();
         } else {

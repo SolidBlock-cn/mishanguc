@@ -1,9 +1,7 @@
 package pers.solid.mishang.uc.blockentity;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonParser;
-import com.google.gson.Strictness;
-import com.google.gson.stream.JsonReader;
+import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
@@ -12,6 +10,7 @@ import net.minecraft.component.ComponentsAccess;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.TextCodecs;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
@@ -22,7 +21,6 @@ import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
 import pers.solid.mishang.uc.text.TextContext;
 
-import java.io.StringReader;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,9 +61,7 @@ public class WallSignBlockEntity extends BlockEntityWithText {
     if (textJson.isPresent()) {
       // 此部分仅用于兼容
       final TextContext defaultTextContext = createDefaultTextContext();
-      var reader = new JsonReader(new StringReader(textJson.get()));
-      reader.setStrictness(Strictness.LENIENT);
-      defaultTextContext.text = (net.minecraft.text.MutableText) TextCodecs.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseReader(reader)).getOrThrow();
+      defaultTextContext.text = (MutableText) TextCodecs.CODEC.parse(JsonOps.INSTANCE, TextContext.GSON.fromJson(textJson.get(), JsonElement.class)).getOrThrow();
       textContexts = ImmutableList.of(defaultTextContext);
     } else {
       textContexts = view.read("text", TextContext.createListCodec(this::createDefaultTextContext)).orElseGet(ImmutableList::of);
