@@ -1014,8 +1014,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
             try {
               final JsonReader jsonReader = new JsonReader(new StringReader(value));
               textContext1.text = (MutableText) TextCodecs.CODEC.parse(registryLookup.getOps(JsonOps.INSTANCE), JsonParser.parseReader(jsonReader)).getOrThrow();
-            } catch (
-                JsonParseException e) {
+            } catch (JsonParseException | IllegalStateException e) {
               // 如果文本有问题，则不执行操作。
             }
             break;
