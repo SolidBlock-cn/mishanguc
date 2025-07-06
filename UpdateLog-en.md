@@ -2,6 +2,12 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.5.1
+
+- Optimized the parsing of JSON text.
+- When typing special texts in the sign, if the content is invalid (for example, `-json` with an invalid JSON text), the text field will be now displayed red.
+- Fixed the issue that the side texture of road blocks with straight line and two bevel angle lines will disappear in some occasions.
+
 ### 1.5.0
 
 - Compatible with 1.21.6.
