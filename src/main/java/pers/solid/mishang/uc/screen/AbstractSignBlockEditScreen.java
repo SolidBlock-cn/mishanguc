@@ -338,7 +338,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public final BooleanButtonWidget underlineButton = new BooleanButtonWidget(this.width / 2 - 160, this.height - 50, 20, 20, TextBridge.translatable("message.mishanguc.underline"), button -> selectedTextContexts.isEmpty() ? null : textFieldListWidget.getFocused().textContext.underline, b -> {
     changed = true;
     for (TextContext textContext : selectedTextContexts) {
-      textContext.italic = b;
+      textContext.underline = b;
     }
   }, EMPTY_PRESS_ACTION)
       .setRenderedName(TextBridge.literal("U").formatted(Formatting.UNDERLINE))
