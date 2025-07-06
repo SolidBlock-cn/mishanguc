@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.10-SNAPSHOT'
+    id 'fabric-loom' version '1.11-SNAPSHOT'
     id 'maven-publish'
 
     id "com.modrinth.minotaur" version "2.+"
@@ -148,10 +148,10 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     mainFile.changelogType = 'markdown'
     mainFile.releaseType = project.mod_version.contains('-') ? 'beta' : 'release'
 
-    mainFile.addGameVersion '1.21.6-snapshot'
-//    for (final def v in ((project.supported_minecraft_versions as String).split(','))) {
-//        mainFile.addGameVersion v
-//    }
+//    mainFile.addGameVersion '1.21.6-snapshot'
+    for (final def v in ((project.supported_minecraft_versions as String).split(','))) {
+        mainFile.addGameVersion v
+    }
 
     mainFile.addRelations 'requiredDependency', 'fabric-api'
     mainFile.withAdditionalFile(sourcesJar)
