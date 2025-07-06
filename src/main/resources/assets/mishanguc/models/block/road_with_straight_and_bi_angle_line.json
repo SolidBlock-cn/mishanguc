@@ -56,7 +56,7 @@
         },
         "north": {
           "texture": "#line_side",
-          "cullface": "west"
+          "cullface": "north"
         },
         "south": {
           "texture": "#line_side",
