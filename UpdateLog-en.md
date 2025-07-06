@@ -6,7 +6,8 @@ Note: Not all versions in this update log are already published. Please refer to
 
 - Optimized the parsing of JSON text.
 - When typing special texts in the sign, if the content is invalid (for example, `-json` with an invalid JSON text), the text field will be now displayed red.
-- Fixed the issue that the side texture of road blocks with straight line and two bevel angle lines will disappear in some occasions.
+- Fixed the issue that the side texture of road blocks with straight line and two bevel angle lines will disappear on some occasions.
+- Fixed the issue that in the sign edit interface, the underline button changes the italic of text by mistake.
 
 ### 1.5.0
 
