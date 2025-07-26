@@ -2,6 +2,10 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.5.2
+
+- Now all standing signs have the block tag `#wall_post_override` so that the standing signs placed on the walls make the wall posts visible.
+
 ### 1.5.1
 
 - Optimized the parsing of JSON text.
