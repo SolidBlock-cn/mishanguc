@@ -14,9 +14,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.loot.LootTable;
-import net.minecraft.particle.EntityEffectParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.particle.ParticleUtil;
+import net.minecraft.particle.TintedParticleEffect;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.dynamic.Codecs;
@@ -87,7 +87,7 @@ public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock {
 
   @Override
   protected void spawnLeafParticle(World world, BlockPos pos, Random random) {
-    EntityEffectParticleEffect entityEffectParticleEffect = EntityEffectParticleEffect.create(ParticleTypes.TINTED_LEAVES, world.getBlockColor(pos));
+    TintedParticleEffect entityEffectParticleEffect = TintedParticleEffect.create(ParticleTypes.TINTED_LEAVES, world.getBlockColor(pos));
     ParticleUtil.spawnParticle(world, pos, random, entityEffectParticleEffect);
     // 检查彩色树叶的颗粒颜色
   }
