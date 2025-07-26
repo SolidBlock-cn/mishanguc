@@ -4,7 +4,7 @@ Note: Not all versions in this update log are already published. Please refer to
 
 ### 1.5.2
 
-- Now all standing signs have the block tag `#wall_post_override` so that the standing signs placed on the walls make the wall posts visible.
+- Now all standing signs and sign bars have the block tag `#wall_post_override` so that the standing signs placed on the walls make the wall posts visible.
 
 ### 1.5.1
 
