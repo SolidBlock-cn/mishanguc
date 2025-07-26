@@ -1,4 +1,4 @@
-// 1.20.4	2025-05-10T21:34:45.9421735	Mishang Urban Construction/Tags for minecraft:block
+// 1.20.4	2025-07-27T01:28:22.348742	Mishang Urban Construction/Tags for minecraft:block
 5510d77f85b3aca462b15d8e4336337878d3f3f4 data\minecraft\tags\blocks\portals.json
 8613c20f674e1b0592f34b8cd8c8feed073e6ce0 data\minecraft\tags\blocks\slabs.json
 a7f5415359714d8c07e6edb058f13935e19a46a9 data\mishanguc\tags\blocks\pink_strip_wall_lights.json
@@ -137,6 +137,7 @@ cfeced06209a1173ffd92bc8a385a9dc497fabde data\mishanguc\tags\blocks\simple_norma
 694e920090248eb7e35576edc8638a4ebb90f535 data\mishanguc\tags\blocks\simple_stained_glass_corner_handrails.json
 6f24ddaec9c258a5b8dc752f5ef293f6c61679fc data\mishanguc\tags\blocks\simple_wooden_handrails.json
 16730dcf2f467b85236fe621611bb333382676b9 data\mishanguc\tags\blocks\glass_central_handrails.json
+aa7cbaed67ee8c4140c13a56bf8d75f83fe3ab83 data\minecraft\tags\blocks\wall_post_override.json
 e37d012e79bdc6bc8232755caaeb717c3bacfa2a data\mishanguc\tags\blocks\terracotta_wall_signs.json
 2eff57926c2dbcd7f8e5bc3bcce1e2e2a0fa9913 data\mishanguc\tags\blocks\wall_lights.json
 d973f7a5e917d2712b7809ebbc69896e85d21d96 data\mishanguc\tags\blocks\simple_terracotta_normal_handrails.json
