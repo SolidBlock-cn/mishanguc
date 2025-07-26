@@ -272,7 +272,7 @@ public class HungSignBarBlock extends Block implements Waterloggable, MishangucB
 
     blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId, centralModelId, edgeModelId));
     if (this instanceof ColoredBlock) {
-      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(modelId, ColoredTintSource.INSTANCE));
+      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(modelId, ColoredTintSource.INSTANCE, ColoredTintSource.INSTANCE));
     } else {
       blockStateModelGenerator.registerParentedItemModel(this, modelId);
     }
