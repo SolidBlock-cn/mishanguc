@@ -2,6 +2,11 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.5.3
+
+- For versions 1.21,4 and above, fixed the issue that custom-colored sign bars are not tinted dynamically in the inventory.
+- Other updates see the changelog for 1.5.2, 1.5.1 and 1.5.0.
+
 ### 1.5.2
 
 - Now all standing signs and sign bars have the block tag `#wall_post_override` so that the standing signs placed on the walls make the wall posts visible.
