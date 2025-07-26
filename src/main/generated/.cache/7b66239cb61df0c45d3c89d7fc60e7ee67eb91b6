@@ -38,6 +38,7 @@ f265dbdfa7cddda9fc606bcdae6e64c4095315d1 data/minecraft/tags/block/needs_stone_t
 24e16c7d5146c71ebce21b3de9256a75d34e21e5 data/minecraft/tags/block/snow_layer_cannot_survive_on.json
 92e8765ba46866793479df0e269e7cba5a6feca4 data/minecraft/tags/block/stairs.json
 58f41f8ea2e28c92c0c0c9e1e0547280665627ee data/minecraft/tags/block/terracotta.json
+4cd8f9d9983e48a34f048bcbcb7b4f99dbc8bc55 data/minecraft/tags/block/wall_post_override.json
 f67709a0ee92eb08f67a41fd6b1cc1a2ac998966 data/minecraft/tags/block/wool.json
 e5d85ad4db97860d2eb15d7345fd9c8b9b916c17 data/mishanguc/tags/block/central_handrails.json
 237195e171db613c0c6fffe2283d949ef84eb783 data/mishanguc/tags/block/colored.json

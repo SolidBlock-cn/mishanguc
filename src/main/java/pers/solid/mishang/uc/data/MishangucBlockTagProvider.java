@@ -463,6 +463,7 @@ public class MishangucBlockTagProvider extends FabricTagProvider.BlockTagProvide
 
     axeMineable.addTag(woodenStandingSigns);
     pickaxeMineable.addTag(concreteStandingSigns, glowingConcreteStandingSigns, terracottaStandingSigns, glowingTerracottaStandingSigns);
+    blockTagOnly(BlockTags.WALL_POST_OVERRIDE).addTag(standingSigns, glowingStandingSigns);
   }
 
   private void hungSignsAndBars() {
