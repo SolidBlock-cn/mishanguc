@@ -148,7 +148,6 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     mainFile.changelogType = 'markdown'
     mainFile.releaseType = project.mod_version.contains('-') ? 'beta' : 'release'
 
-//    mainFile.addGameVersion '1.21.6-snapshot'
     for (final def v in ((project.supported_minecraft_versions as String).split(','))) {
         mainFile.addGameVersion v
     }
@@ -182,7 +181,7 @@ githubRelease {
     owner = "SolidBlock-cn"
     repo = "mishanguc"
     tagName = "v$project.mod_version"
-    targetCommitish = "1.21.7"
+    targetCommitish = "1.21.8"
     body = content
     draft = true
     prerelease = false
