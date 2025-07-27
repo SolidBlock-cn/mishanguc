@@ -16,6 +16,7 @@ import net.minecraft.storage.NbtReadView;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ErrorReporter;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -134,8 +135,8 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
         world.setBlockState(blockPos, coloredState);
         final BlockEntity oldBlockEntity = blockEntity;
         blockEntity = world.getBlockEntity(blockPos);
-        if (oldBlockEntity != null && blockEntity != null) { // todo reporter 不应该是 null
-          blockEntity.read(NbtReadView.create(null, world.getRegistryManager(), oldBlockEntity.createNbt(world.getRegistryManager())));
+        if (oldBlockEntity != null && blockEntity != null) {
+          blockEntity.read(NbtReadView.create(ErrorReporter.EMPTY, world.getRegistryManager(), oldBlockEntity.createNbt(world.getRegistryManager())));
         }
       }
     } else {
