@@ -10,6 +10,7 @@ Note: Not all versions in this update log are already published. Please refer to
 - Fixed the issue that the block entity data is not updated when the block is placed with some tools like Force Placing Tool and the block is from the offhand block or the block specified by the Carrying Tool in the offhand.
 - Fixed the issue that Carry Tools do not handle data components of block entities correctly.
 - Fixed the issue of wrong operating logic of the text outline control button on the sign edit screen.
+- The shader option in the sign edit screen is no longer seen as not recommended enabling.
 
 ### 1.5.3
 

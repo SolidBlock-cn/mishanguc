@@ -356,8 +356,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     for (TextFieldListWidget.@NotNull Entry entry : textFieldListWidget.selectedEntries) {
       entry.textContext.shadow = b;
     }
-  }, EMPTY_PRESS_ACTION)
-      .setTooltip(TextBridge.translatable("message.mishanguc.shade.description"));
+  }, EMPTY_PRESS_ACTION);
 
   /**
    * 下方第一行：文本大小按钮。
