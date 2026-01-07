@@ -2,6 +2,15 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.6.0
+
+- Updated to 1.21.10 and 1.21.11.
+- Fixed the issue that the text in the sign edit screen does not display in some cases.
+- Fixed the operating logic and display effect in the sign edit screen.
+- Fixed the issue that the block entity data is not updated when the block is placed with some tools like Force Placing Tool and the block is from the offhand block or the block specified by the Carrying Tool in the offhand.
+- Fixed the issue that Carry Tools do not handle data components of block entities correctly.
+- Fixed the issue of wrong operating logic of the text outline control button on the sign edit screen.
+
 ### 1.5.3
 
 - For versions 1.21,4 and above, fixed the issue that custom-colored sign bars are not tinted dynamically in the inventory.
