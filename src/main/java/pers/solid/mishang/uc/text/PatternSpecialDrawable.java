@@ -218,8 +218,7 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
   @Override
   public void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, OrderedRenderCommandQueue queue, int light, float x, float y) {
     int color = this.textContext.color;
-    //noinspection resource
-   /* BakedGlyphImpl bakedGlyph = (BakedGlyphImpl) ((TextRendererAccessor) textRenderer).invokeGetFontStorage(MinecraftClient.DEFAULT_FONT_ID).getRectangleBakedGlyph();
+    /* BakedGlyphImpl bakedGlyph = (BakedGlyphImpl) ((TextRendererAccessor) textRenderer).invokeGetFontStorage(MinecraftClient.DEFAULT_FONT_ID).getRectangleBakedGlyph();
     final float sizeMultiplier = 1;
     final RenderLayer layer = bakedGlyph.getLayer(this.textContext.outlineColorType != OutlineColorType.NONE ? TextRenderer.TextLayerType.POLYGON_OFFSET : this.textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
 
