@@ -175,6 +175,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
     stack.set(MishangucComponents.LENGTH, length);
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public @Nullable MishangRenderState getMishangRenderState(@Nullable MishangRenderState previous, ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
     if (!player.isCreative()) {

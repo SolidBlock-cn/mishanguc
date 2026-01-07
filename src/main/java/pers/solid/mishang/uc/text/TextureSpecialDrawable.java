@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.text;
 
 import com.google.common.annotations.Beta;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -19,6 +21,7 @@ import org.joml.Matrix4f;
 @Beta
 public record TextureSpecialDrawable(@NotNull Identifier identifier, @NotNull TextContext textContext) implements SpecialDrawable {
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y) {
     final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getText(identifier));
