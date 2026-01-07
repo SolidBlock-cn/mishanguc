@@ -5,8 +5,9 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexRendering;
@@ -156,7 +157,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
       OutlineRenderState outlineRenderState) {
     final VertexConsumerProvider consumers = context.consumers();
     if (consumers == null) return true;
-    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.LINES);
+    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayers.LINES);
     final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
     final BlockPos blockPos = outlineRenderState.pos();
 
@@ -170,7 +171,8 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
         blockPos.getX() - cameraPos.getX(),
         blockPos.getY() - cameraPos.getY(),
         blockPos.getZ() - cameraPos.getZ(),
-        OUTLINE_COLOR_MIDORI);
+        OUTLINE_COLOR_MIDORI,
+        MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
     if (state.lightGreenPos != null && state.lightGreenShape != null) {
       VertexRendering.drawOutline(
           context.matrices(),
@@ -179,7 +181,8 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
           blockPos.getX() - cameraPos.getX(),
           blockPos.getY() - cameraPos.getY(),
           blockPos.getZ() - cameraPos.getZ(),
-          OUTLINE_COLOR_MIDORI_LIGHT);
+          OUTLINE_COLOR_MIDORI_LIGHT,
+          MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
     }
     return false;
   }

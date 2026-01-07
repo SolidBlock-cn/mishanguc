@@ -2,7 +2,8 @@ package pers.solid.mishang.uc.render.state;
 
 import it.unimi.dsi.fastutil.longs.LongObjectPair;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexRendering;
@@ -27,7 +28,7 @@ public class BuildingToolState implements MishangRenderState {
     }
     final VertexConsumerProvider consumers = context.consumers();
     if (consumers == null) return true;
-    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.LINES);
+    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayers.lines());
 
     final BlockPos.Mutable mutable = new BlockPos.Mutable();
     final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
@@ -45,7 +46,8 @@ public class BuildingToolState implements MishangRenderState {
           ColorHelper.fromFloats(0.8f,
               0,
               1,
-              1));
+              1),
+          MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
     }
     for (LongObjectPair<VoxelShape> pair : state.blueShapes) {
       mutable.set(pair.leftLong());
@@ -60,7 +62,8 @@ public class BuildingToolState implements MishangRenderState {
           ColorHelper.fromFloats(0.5f,
               0,
               0.5f,
-              1));
+              1),
+          MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
     }
     for (LongObjectPair<VoxelShape> pair : state.redShapes) {
       mutable.set(pair.leftLong());
@@ -75,7 +78,8 @@ public class BuildingToolState implements MishangRenderState {
           ColorHelper.fromFloats(0.5f,
               1,
               0,
-              0));
+              0),
+          MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
     }
     for (LongObjectPair<VoxelShape> pair : state.orangeShapes) {
       mutable.set(pair.leftLong());
@@ -90,7 +94,8 @@ public class BuildingToolState implements MishangRenderState {
           ColorHelper.fromFloats(0.8f,
               1f,
               0.5f,
-              0));
+              0),
+          MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
     }
 
     return state.showVanillaOutline;

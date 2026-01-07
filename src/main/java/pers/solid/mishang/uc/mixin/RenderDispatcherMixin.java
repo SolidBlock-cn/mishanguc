@@ -25,7 +25,7 @@ public abstract class RenderDispatcherMixin {
   @Unique
   private final TextSpecialDrawableRenderer textSpecialDrawableRenderer = new TextSpecialDrawableRenderer();
 
-  @Inject(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/command/RenderDispatcher;debugHitboxCommandRenderer:Lnet/minecraft/client/render/command/DebugHitboxCommandRenderer;", opcode = Opcodes.GETFIELD))
+  @Inject(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/command/RenderDispatcher;leashCommandRenderer:Lnet/minecraft/client/render/command/LeashCommandRenderer;", opcode = Opcodes.GETFIELD))
   private void renderSpecialText(CallbackInfo ci, @Local BatchingRenderCommandQueue batchingRenderCommandQueue) {
     this.textSpecialDrawableRenderer.render(batchingRenderCommandQueue, vertexConsumers);
   }

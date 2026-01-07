@@ -24,10 +24,10 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionImpl;
+import net.minecraft.world.rule.GameRules;
 import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.components.ExplosionToolComponent;
 import pers.solid.mishang.uc.components.MishangucComponents;
@@ -53,15 +53,14 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     if (!(world instanceof ServerWorld serverWorld)) {
       return ActionResult.PASS;
     }
-    if (!serverWorld.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).get().hasAccess(user, true)) {
+    if (!serverWorld.getGameRules().getValue(MishangucRules.EXPLOSION_TOOL_ACCESS).hasAccess(user, true)) {
       return ActionResult.PASS;
     }
     final Vec3d pos = raycast.getPos();
-    final GameRules.BooleanRule booleanRule = serverWorld.getGameRules().get(GameRules.DO_TILE_DROPS);
-    final boolean backup = booleanRule.get();
+    final boolean backup = serverWorld.getGameRules().getValue(GameRules.DO_TILE_DROPS);
     if (user.isCreative()) {
       // 创造模式下，将游戏规则临时设为不掉落。
-      booleanRule.set(false, null);
+      serverWorld.getGameRules().setValue(GameRules.DO_TILE_DROPS, false, null);
     }
     final ExplosionToolComponent component = stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT);
 
@@ -80,7 +79,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
 
     stack.damage((int) component.power(), user, hand.getEquipmentSlot());
     if (user.isCreative()) {
-      booleanRule.set(backup, null);
+      serverWorld.getGameRules().setValue(GameRules.DO_TILE_DROPS, backup, null);
     }
     return ActionResult.SUCCESS_SERVER;
   }
@@ -137,7 +136,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
   @Override
   public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
     final ServerWorld serverWorld = pointer.world();
-    if (!serverWorld.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).get().hasAccess(null)) {
+    if (!serverWorld.getGameRules().getValue(MishangucRules.EXPLOSION_TOOL_ACCESS).hasAccess(null)) {
       return stack;
     }
     final BlockPos basePos = pointer.pos();

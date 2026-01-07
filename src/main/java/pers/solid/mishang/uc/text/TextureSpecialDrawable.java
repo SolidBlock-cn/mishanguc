@@ -1,7 +1,7 @@
 package pers.solid.mishang.uc.text;
 
 import com.google.common.annotations.Beta;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.nbt.NbtCompound;
@@ -21,7 +21,7 @@ public record TextureSpecialDrawable(@NotNull Identifier identifier, @NotNull Te
 
   @Override
   public void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y) {
-    final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getText(identifier));
+    final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayers.text(identifier));
     
     vertexConsumer.vertex(matricesEntry, 0, 8, -0).color(255, 255, 255, 255).texture(0.0f, 1.0f).light(light);
     vertexConsumer.vertex(matricesEntry, 8, 8, -0).color(255, 255, 255, 255).texture(1.0f, 1.0f).light(light);

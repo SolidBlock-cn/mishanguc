@@ -22,7 +22,7 @@ import net.minecraft.block.enums.SlabType;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.render.state.OutlineRenderState;
@@ -267,14 +267,15 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
       final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
       VertexRendering.drawOutline(
           context.matrices(),
-          consumers.getBuffer(RenderLayer.LINES),
+          consumers.getBuffer(RenderLayers.LINES),
           state.slabShape,
           (double) pos.getX() - cameraPos.getX(),
           (double) pos.getY() - cameraPos.getY(),
           (double) pos.getZ() - cameraPos.getZ(),
           ColorHelper.fromFloats(0.4f, 0.0F,
               0.0F,
-              0.0F));
+              0.0F),
+          MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
       return false;
     }
     return true;

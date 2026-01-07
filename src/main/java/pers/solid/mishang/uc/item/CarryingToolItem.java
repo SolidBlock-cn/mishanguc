@@ -7,13 +7,15 @@ import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.render.state.OutlineRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.command.DefaultPermissions;
 import net.minecraft.entity.*;
 import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.player.PlayerEntity;
@@ -183,7 +185,7 @@ public class CarryingToolItem extends BlockToolItem
     if (!(world instanceof ServerWorld serverWorld)) {
       return MishangucClient.CLIENT_CARRYING_TOOL_ACCESS.get().hasAccess(player);
     } else {
-      final MishangucRules.ToolAccess toolAccess = serverWorld.getGameRules().get(MishangucRules.CARRYING_TOOL_ACCESS).get();
+      final MishangucRules.ToolAccess toolAccess = serverWorld.getGameRules().getValue(MishangucRules.CARRYING_TOOL_ACCESS);
       return toolAccess.hasAccess(player, warn);
     }
   }
@@ -210,7 +212,7 @@ public class CarryingToolItem extends BlockToolItem
       }
     }
     final BlockState removed = world.getBlockState(pos);
-    if (removed.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+    if (removed.getBlock() instanceof OperatorBlock && !player.getPermissions().hasPermission(DefaultPermissions.GAMEMASTERS)) {
       return ActionResult.FAIL;
     }
     final BlockEntity blockEntity = world.getBlockEntity(pos);
@@ -246,7 +248,7 @@ public class CarryingToolItem extends BlockToolItem
     final ItemStack stack = user.getStackInHand(hand);
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     if (carryingToolData instanceof CarryingToolData.HoldingBlockState(BlockState state, Optional<NbtCompound> blockEntityTag)) {
-      if (state.getBlock() instanceof OperatorBlock && !user.hasPermissionLevel(2)) {
+      if (state.getBlock() instanceof OperatorBlock && !user.getPermissions().hasPermission(DefaultPermissions.GAMEMASTERS)) {
         return ActionResult.FAIL;
       }
       if (world.isClient()) {
@@ -408,23 +410,23 @@ public class CarryingToolItem extends BlockToolItem
     if (!(data instanceof CarryingToolState state)) return true;
 
     final MatrixStack matrices = context.matrices();
-    final VertexConsumer vertexConsumer = context.consumers().getBuffer(RenderLayer.getLines());
+    final VertexConsumer vertexConsumer = context.consumers().getBuffer(RenderLayers.lines());
     final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
 
     if (state.cyanShape != null && state.cyanPos != null) {
-      VertexRendering.drawOutline(matrices, vertexConsumer, state.cyanShape, state.cyanPos.getX() - cameraPos.x, state.cyanPos.getY() - cameraPos.y, state.cyanPos.getZ() - cameraPos.z, OUTLINE_COLOR_CYAN);
+      VertexRendering.drawOutline(matrices, vertexConsumer, state.cyanShape, state.cyanPos.getX() - cameraPos.x, state.cyanPos.getY() - cameraPos.y, state.cyanPos.getZ() - cameraPos.z, OUTLINE_COLOR_CYAN, MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
     }
 
     if (state.blueShape != null && state.bluePos != null) {
-      VertexRendering.drawOutline(matrices, vertexConsumer, state.blueShape, state.bluePos.getX() - cameraPos.x, state.bluePos.getY() - cameraPos.y, state.bluePos.getZ() - cameraPos.z, OUTLINE_COLOR_AO);
+      VertexRendering.drawOutline(matrices, vertexConsumer, state.blueShape, state.bluePos.getX() - cameraPos.x, state.bluePos.getY() - cameraPos.y, state.bluePos.getZ() - cameraPos.z, OUTLINE_COLOR_AO, MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
     }
 
     if (state.redShape != null && state.redPos != null) {
-      VertexRendering.drawOutline(matrices, vertexConsumer, state.redShape, state.redPos.getX() - cameraPos.x, state.redPos.getY() - cameraPos.y, state.redPos.getZ() - cameraPos.z, OUTLINE_COLOR_AKA);
+      VertexRendering.drawOutline(matrices, vertexConsumer, state.redShape, state.redPos.getX() - cameraPos.x, state.redPos.getY() - cameraPos.y, state.redPos.getZ() - cameraPos.z, OUTLINE_COLOR_AKA, MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
     }
 
     if (state.redShape != null && state.orangePos != null) {
-      VertexRendering.drawOutline(matrices, vertexConsumer, state.redShape, state.orangePos.getX() - cameraPos.x, state.orangePos.getY() - cameraPos.y, state.orangePos.getZ() - cameraPos.z, OUTLINE_COLOR_ORANGE);
+      VertexRendering.drawOutline(matrices, vertexConsumer, state.redShape, state.orangePos.getX() - cameraPos.x, state.orangePos.getY() - cameraPos.y, state.orangePos.getZ() - cameraPos.z, OUTLINE_COLOR_ORANGE, MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
     }
 
     return false;
@@ -438,17 +440,17 @@ public class CarryingToolItem extends BlockToolItem
     if (!(data instanceof CarryingToolState state)) return;
 
     final MatrixStack matrices = context.matrices();
-    final VertexConsumer vertexConsumer = context.consumers().getBuffer(RenderLayer.getLines());
+    final VertexConsumer vertexConsumer = context.consumers().getBuffer(RenderLayers.lines());
     final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
 
     if (state.cyanEntityPos != null) {
       final float width = state.cyanEntityWidth;
       final float height = state.cyanEntityHeight;
       final Vec3d pos = state.cyanEntityPos;
-      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(pos.x - width / 2, pos.y, pos.z - width / 2, pos.x + width / 2, pos.y + height, pos.z + width / 2), -cameraPos.x, -cameraPos.y, -cameraPos.z, OUTLINE_COLOR_CYAN);
+      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(pos.x - width / 2, pos.y, pos.z - width / 2, pos.x + width / 2, pos.y + height, pos.z + width / 2), -cameraPos.x, -cameraPos.y, -cameraPos.z, OUTLINE_COLOR_CYAN, MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
     }
     if (state.redEntityShape != null) {
-      VertexRendering.drawOutline(matrices, vertexConsumer, state.redEntityShape, -cameraPos.x, -cameraPos.y, -cameraPos.z, OUTLINE_COLOR_AKA);
+      VertexRendering.drawOutline(matrices, vertexConsumer, state.redEntityShape, -cameraPos.x, -cameraPos.y, -cameraPos.z, OUTLINE_COLOR_AKA, MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
     }
   }
 }

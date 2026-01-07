@@ -34,7 +34,7 @@ public abstract class BatchingRenderCommandQueueMixin implements RenderCommandQu
     specialDrawableCommands.add(new SpecialDrawableCommand(new Matrix4f(matrixStack.peek().getPositionMatrix()), specialDrawable, light, x, y));
   }
 
-  @Inject(method = "clear", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/command/BatchingRenderCommandQueue;debugHitboxCommands:Ljava/util/List;", opcode = Opcodes.GETFIELD))
+  @Inject(method = "clear", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/command/BatchingRenderCommandQueue;leashCommands:Ljava/util/List;", opcode = Opcodes.GETFIELD))
   private void clearSpecialDrawable(CallbackInfo ci) {
     specialDrawableCommands.clear();
   }

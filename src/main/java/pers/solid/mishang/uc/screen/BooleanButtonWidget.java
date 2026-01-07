@@ -13,7 +13,6 @@ import net.minecraft.client.input.AbstractInput;
 import net.minecraft.client.input.MouseInput;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -25,7 +24,7 @@ import java.util.function.Supplier;
  * 用于处理布尔值的按钮。按下鼠标时切换。
  */
 @Environment(EnvType.CLIENT)
-public class BooleanButtonWidget extends ButtonWidget implements TooltipUpdated {
+public class BooleanButtonWidget extends ButtonWidget.Text implements TooltipUpdated {
   public final boolean defaultValue = false;
 
   /**
@@ -34,10 +33,10 @@ public class BooleanButtonWidget extends ButtonWidget implements TooltipUpdated 
   private final Function<BooleanButtonWidget, @Nullable Boolean> valueGetter;
 
   private final BooleanConsumer valueSetter;
-  public Function<@Nullable Boolean, Text> renderedNameSupplier = null;
-  public @Nullable Function<@Nullable Boolean, @Nullable Text> tooltipSupplier = null;
-  public @Nullable Text keyboardShortcut = null;
-  private Supplier<Text> summaryTextSupplier = null;
+  public Function<@Nullable Boolean, net.minecraft.text.Text> renderedNameSupplier = null;
+  public @Nullable Function<@Nullable Boolean, net.minecraft.text.@Nullable Text> tooltipSupplier = null;
+  public @Nullable net.minecraft.text.Text keyboardShortcut = null;
+  private Supplier<net.minecraft.text.Text> summaryTextSupplier = null;
 
   /**
    * 用于布尔值的按钮。
@@ -51,51 +50,51 @@ public class BooleanButtonWidget extends ButtonWidget implements TooltipUpdated 
    * @param valueSetter 如何设置布尔值？
    * @param onPress     按钮按下去的反应。通常为空。
    */
-  public BooleanButtonWidget(int x, int y, int width, int height, Text message, Function<BooleanButtonWidget, @Nullable Boolean> valueGetter, BooleanConsumer valueSetter, PressAction onPress) {
+  public BooleanButtonWidget(int x, int y, int width, int height, net.minecraft.text.Text message, Function<BooleanButtonWidget, @Nullable Boolean> valueGetter, BooleanConsumer valueSetter, PressAction onPress) {
     super(x, y, width, height, message, onPress, ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
     this.valueGetter = valueGetter;
     this.valueSetter = valueSetter;
     updateTooltip();
   }
 
-  public BooleanButtonWidget setSummaryTextSupplier(Supplier<Text> summaryTextSupplier) {
+  public BooleanButtonWidget setSummaryTextSupplier(Supplier<net.minecraft.text.Text> summaryTextSupplier) {
     this.summaryTextSupplier = summaryTextSupplier;
     return this;
   }
 
-  public BooleanButtonWidget setRenderedNameSupplier(Function<@Nullable Boolean, Text> renderedNameSupplier) {
+  public BooleanButtonWidget setRenderedNameSupplier(Function<@Nullable Boolean, net.minecraft.text.Text> renderedNameSupplier) {
     this.renderedNameSupplier = renderedNameSupplier;
     return this;
   }
 
-  public BooleanButtonWidget setRenderedName(Text renderedName) {
+  public BooleanButtonWidget setRenderedName(net.minecraft.text.Text renderedName) {
     this.renderedNameSupplier = ignore -> renderedName;
     return this;
   }
 
-  public BooleanButtonWidget setTooltipSupplier(Function<@Nullable Boolean, @Nullable Text> tooltipSupplier) {
+  public BooleanButtonWidget setTooltipSupplier(Function<@Nullable Boolean, net.minecraft.text.@Nullable Text> tooltipSupplier) {
     this.tooltipSupplier = tooltipSupplier;
     return this;
   }
 
-  public BooleanButtonWidget setTooltip(Text tooltip) {
+  public BooleanButtonWidget setTooltip(net.minecraft.text.Text tooltip) {
     this.tooltipSupplier = ignore -> tooltip;
     return this;
   }
 
-  public BooleanButtonWidget setKeyboardShortcut(Text text) {
+  public BooleanButtonWidget setKeyboardShortcut(net.minecraft.text.Text text) {
     this.keyboardShortcut = text;
     return this;
   }
 
-  public Text getSummaryMessage() {
+  public net.minecraft.text.Text getSummaryMessage() {
     return summaryTextSupplier == null ? super.getMessage() : summaryTextSupplier.get(); // 忽略 renderMessage
   }
 
   @Override
   public void updateTooltip() {
     final Boolean value = getValue();
-    final Text tooltip = tooltipSupplier == null ? null : tooltipSupplier.apply(value);
+    final net.minecraft.text.Text tooltip = tooltipSupplier == null ? null : tooltipSupplier.apply(value);
     final MutableText content = value == null ? TextBridge.empty().append(getSummaryMessage()) : ScreenTexts.composeToggleText(getSummaryMessage(), value);
     final MutableText narration = value == null ? TextBridge.empty() : TextBridge.translatable("narration.mishanguc.button.current_value", value ? ScreenTexts.ON : ScreenTexts.OFF);
     if (tooltip != null) {
@@ -156,8 +155,8 @@ public class BooleanButtonWidget extends ButtonWidget implements TooltipUpdated 
   }
 
   @Override
-  public Text getMessage() {
-    final Text renderedName = renderedNameSupplier == null ? super.getMessage() : renderedNameSupplier.apply(getValue());
+  public net.minecraft.text.Text getMessage() {
+    final net.minecraft.text.Text renderedName = renderedNameSupplier == null ? super.getMessage() : renderedNameSupplier.apply(getValue());
     final @Nullable Boolean value = getValue();
     return value == null
         ? renderedName

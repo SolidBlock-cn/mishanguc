@@ -6,7 +6,7 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.*;
@@ -31,7 +31,7 @@ public final class RoadSlabBlocks extends MishangucBlocks {
   private static <T extends AbstractRoadBlock & Road> SmartRoadSlabBlock<T> of(T baseBlock) {
     final Identifier baseId = Registries.BLOCK.getId(baseBlock);
     final String path = baseId.getPath();
-    final String slabPath = StringUtils.replace(StringUtils.removeEnd(path, "_block"), "road", "road_slab", 1);
+    final String slabPath = Strings.CS.replace(Strings.CS.removeEnd(path, "_block"), "road", "road_slab", 1);
 
     final SmartRoadSlabBlock<T> slab;
     if (baseBlock instanceof RoadBlockWithAutoLine) {

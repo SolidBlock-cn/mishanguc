@@ -29,7 +29,7 @@
     "BatchingRenderCommandQueueMixin",
     "BetterClientPlayerInteractionManagerMixin",
     "BlockStateModelGeneratorAccessor",
-    "GameRendererMixin",
+    "ClientPlayerEntityMixin",
     "MouseMixin",
     "OrderedRenderCommandQueueImplMixin",
     "RenderCommandQueueMixin",

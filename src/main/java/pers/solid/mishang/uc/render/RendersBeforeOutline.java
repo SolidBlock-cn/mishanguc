@@ -29,6 +29,9 @@ public interface RendersBeforeOutline extends MishangRenderStateProvider {
 
   WorldRenderEvents.DebugRender DEBUG_RENDER = context -> {
     final ClientPlayerEntity player = MinecraftClient.getInstance().player;
+    if (context.worldState() == null) {
+      return;// 不知道为什么这里会是 null，但是确实发生了
+    }
     final ItemStack stack = context.worldState().getData(MishangRenderStateProvider.HAND_STACK);
     if (stack == null) return;
     if (player == null) return;

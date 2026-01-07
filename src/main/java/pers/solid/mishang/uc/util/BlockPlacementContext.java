@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.util;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.SlabType;
+import net.minecraft.command.DefaultPermissions;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.BlockStateComponent;
 import net.minecraft.entity.TypedEntityData;
@@ -248,7 +249,7 @@ public class BlockPlacementContext {
    * Calls {@link BlockState#canPlaceAt}.
    */
   public boolean canPlace() {
-    if (stateToPlace.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+    if (stateToPlace.getBlock() instanceof OperatorBlock && !player.getPermissions().hasPermission(DefaultPermissions.GAMEMASTERS)) {
       return false;
     }
     return stateToPlace.canPlaceAt(world, posToPlace);

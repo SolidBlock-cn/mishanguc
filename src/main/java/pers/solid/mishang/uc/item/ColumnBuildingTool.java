@@ -13,6 +13,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.state.OutlineRenderState;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.command.DefaultPermissions;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.player.PlayerEntity;
@@ -155,7 +156,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
     if (lastPlacedBox != null && lastPlacedBlock != null && !world.isClient()) {
       for (BlockPos posToRemove : BlockPos.iterate(lastPlacedBox.getMinX(), lastPlacedBox.getMinY(), lastPlacedBox.getMinZ(), lastPlacedBox.getMaxX(), lastPlacedBox.getMaxY(), lastPlacedBox.getMaxZ())) {
         final BlockState existingState = world.getBlockState(posToRemove);
-        if (lastPlacedBlock.equals(existingState.getBlock()) && !(existingState.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
+        if (lastPlacedBlock.equals(existingState.getBlock()) && !(existingState.getBlock() instanceof OperatorBlock && !player.getPermissions().hasPermission(DefaultPermissions.GAMEMASTERS))) {
           // 非管理员不应该破坏管理方块。
           if (fluidIncluded) {
             world.setBlockState(posToRemove, Blocks.AIR.getDefaultState());
@@ -223,7 +224,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
       final Block lastPlacedBlock = clientTempMemory.getMiddle();
       for (BlockPos posToRemove : BlockPos.iterate(lastPlacedBox.getMinX(), lastPlacedBox.getMinY(), lastPlacedBox.getMinZ(), lastPlacedBox.getMaxX(), lastPlacedBox.getMaxY(), lastPlacedBox.getMaxZ())) {
         final BlockState existingState = world.getBlockState(posToRemove);
-        if (lastPlacedBlock.equals(existingState.getBlock()) && !(existingState.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
+        if (lastPlacedBlock.equals(existingState.getBlock()) && !(existingState.getBlock() instanceof OperatorBlock && !player.getPermissions().hasPermission(DefaultPermissions.GAMEMASTERS))) {
           buildingToolState.redShapes.add(LongObjectPair.of(posToRemove.asLong(), existingState.getOutlineShape(world, posToRemove, shapeContext)));
           if (includesFluid) {
             buildingToolState.orangeShapes.add(LongObjectPair.of(posToRemove.asLong(), existingState.getFluidState().getShape(world, posToRemove)));

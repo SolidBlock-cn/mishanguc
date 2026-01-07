@@ -9,6 +9,7 @@ import net.minecraft.block.*;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.state.OutlineRenderState;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.command.DefaultPermissions;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
@@ -109,7 +110,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
       final int range = data.range();
       final BlockMatchingRule matchingRule = data.matchingRule();
       for (BlockPos pos1 : matchingRule.getPlainValidBlockPoss(world, pos, direction, range)) {
-        if (world.getBlockState(pos1).getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+        if (world.getBlockState(pos1).getBlock() instanceof OperatorBlock && !player.getPermissions().hasPermission(DefaultPermissions.GAMEMASTERS)) {
           // 非管理员不应该破坏管理方块。
         } else if (fluidIncluded) {
           world.setBlockState(pos1, Blocks.AIR.getDefaultState());
@@ -182,7 +183,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
           buildingToolState.blueShapes.add(LongObjectPair.of(offsetBlockPlacementContext.posToPlace.asLong(), offsetBlockPlacementContext.stateToPlace.getFluidState().getShape(world, offsetBlockPlacementContext.posToPlace)));
         }
       }
-      if (hand == Hand.MAIN_HAND && !(state.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
+      if (hand == Hand.MAIN_HAND && !(state.getBlock() instanceof OperatorBlock && !player.getPermissions().hasPermission(DefaultPermissions.GAMEMASTERS))) {
         buildingToolState.redShapes.add(LongObjectPair.of(pos.asLong(), state.getOutlineShape(world, pos, shapeContext)));
         if (includesFluid) {
           buildingToolState.orangeShapes.add(LongObjectPair.of(pos.asLong(), state.getFluidState().getShape(world, pos)));

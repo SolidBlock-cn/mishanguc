@@ -6,6 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.Alignment;
 import net.minecraft.client.font.MultilineText;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
@@ -888,7 +889,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public void render(DrawContext context, int mouseX, int mouseY, float delta) {
     if (hidden) {
       hideButton.render(context, mouseX, mouseY, delta);
-      MultilineText.create(textRenderer, HIDDEN_TEXT_NOTE, width - 20).draw(context, MultilineText.Alignment.LEFT, 10, 10, 20, false, 0xffffffff);
+      MultilineText.create(textRenderer, HIDDEN_TEXT_NOTE, width - 20).draw(Alignment.LEFT, 10, 10, 20, context.getTextConsumer());
       return;
     }
     super.render(context, mouseX, mouseY, delta);
@@ -903,10 +904,10 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
     if (isSelectingButtonToSetCustom) {
       final MutableText text = TextBridge.translatable("message.mishanguc.select_button_to_set_custom");
-      MultilineText.create(textRenderer, text, width - 20).draw(context, MultilineText.Alignment.LEFT, 10, 10, 20, false, 0xffdddddd);
+      MultilineText.create(textRenderer, text, width - 20).draw(Alignment.LEFT, 10, 10, 20, context.getTextConsumer());
     } else if (isAcceptingCustomValue) {
       final MutableText text = TextBridge.translatable("message.mishanguc.accept_custom_value", customValueFor.getSummaryMessage().copy().formatted(Formatting.YELLOW));
-      MultilineText.create(textRenderer, text, width - 20).draw(context, MultilineText.Alignment.LEFT, 10, 10, 20, false, 0xffdddddd);
+      MultilineText.create(textRenderer, text, width - 20).draw(Alignment.LEFT, 10, 10, 20, context.getTextConsumer());
       context.drawTextWithShadow(textRenderer, ScreenTexts.composeGenericOptionText(customValueFor.getSummaryMessage(), ScreenTexts.EMPTY), 5, height - 55, 0xffdddddd);
     }
   }

@@ -21,10 +21,11 @@ import net.minecraft.util.math.BlockPointer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
+import net.minecraft.world.attribute.EnvironmentAttributes;
+import net.minecraft.world.rule.GameRules;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -99,7 +100,7 @@ public class IceSnowTool extends Item implements MishangucItem, DispenserBehavio
 
       // 模拟降雪
       final boolean isSnowInRange = centerBlockPos.getY() - range <= topBlockPos.getY() && topBlockPos.getY() <= centerBlockPos.getY() + range;
-      final int snowAccumulationHeight = world.getGameRules().getInt(GameRules.SNOW_ACCUMULATION_HEIGHT);
+      final int snowAccumulationHeight = world.getGameRules().getValue(GameRules.MAX_SNOW_ACCUMULATION_HEIGHT);
       if (snowAccumulationHeight > 0 && isInsufficientBlockLight && isSnowInRange && Blocks.SNOW.getDefaultState().canPlaceAt(world, topBlockPos)) {
         final BlockState blockState = world.getBlockState(topBlockPos);
         if (blockState.isOf(Blocks.SNOW)) {
@@ -128,7 +129,7 @@ public class IceSnowTool extends Item implements MishangucItem, DispenserBehavio
       // 结冰
       final BlockState blockState = world.getBlockState(blockPos);
       if (blockState.getBlock() instanceof IceBlock) {
-        if (world.getDimension().ultrawarm()) {
+        if (world.getEnvironmentAttributes().getAttributeValue(EnvironmentAttributes.WATER_EVAPORATES_GAMEPLAY, pos)) {
           world.removeBlock(blockPos, false);
         } else {
           world.setBlockState(blockPos, IceBlock.getMeltedState());

@@ -9,7 +9,7 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.enums.BlockFace;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
@@ -71,7 +71,7 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
       if (mainHandStackItem instanceof final BlockItem blockItem
           && INVISIBLE_BLOCKS.contains(blockItem.getBlock())) {
         boolean glowing = state.blockState.isOf(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN);
-        queue.submitCustom(matrices, RenderLayer.LINES, (matricesEntry, vertexConsumer) -> VertexRendering.drawOutline(
+        queue.submitCustom(matrices, RenderLayers.LINES, (matricesEntry, vertexConsumer) -> VertexRendering.drawOutline(
             matrices,
             vertexConsumer,
             state.voxelShape,
@@ -80,7 +80,9 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
             0,
             ColorHelper.fromFloats(0.9f, glowing ? 0.9f : 0.3f,
                 0.8f,
-                glowing ? 0.3f : 0.9f)));
+                glowing ? 0.3f : 0.9f),
+            MinecraftClient.getInstance().getWindow().getMinimumLineWidth())
+        );
       }
     }
 

@@ -33,10 +33,10 @@
   "depends": {
     "fabricloader": "*",
     "fabric": "*",
-    "minecraft": ">=1.21.9-0 <=1.21.10"
+    "minecraft": "~1.21.11"
   },
   "custom": {
-    "branch": "1.21.10",
+    "branch": "1.21.11",
     "modmenu": {
       "links": {
         "mcmod.cn": "https://www.mcmod.cn/class/5743.html",

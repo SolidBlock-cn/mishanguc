@@ -5,9 +5,8 @@ import it.unimi.dsi.fastutil.floats.Float2ObjectFunction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.font.DrawnTextConsumer;
 import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -17,7 +16,6 @@ import net.minecraft.client.input.KeyInput;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Contract;
@@ -37,7 +35,7 @@ import static pers.solid.mishang.uc.screen.MishangScreenUtil.*;
  * 用于处理浮点数的按钮。按下鼠标时增大，但是按住 shift 则会减小。滚动鼠标滚轮也会减小。
  */
 @Environment(EnvType.CLIENT)
-public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
+public class FloatButtonWidget extends ButtonWidget.Text implements TooltipUpdated {
   private final Function<FloatButtonWidget, @Nullable Float> valueGetter;
   private final ValueConsumer valueSetter;
   private boolean sliderFocused;
@@ -77,7 +75,7 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
   public static final Float2ObjectFunction<MutableText> DEFAULT_VALUE_NARRATOR = value -> TextBridge.literal(MishangUtils.numberToString(value));
   private Float2ObjectFunction<MutableText> valueToText = DEFAULT_VALUE_NARRATOR;
 
-  public FloatButtonWidget(int x, int y, int width, int height, Text message, Function<FloatButtonWidget, Float> valueGetter, ValueConsumer valueSetter, PressAction onPress) {
+  public FloatButtonWidget(int x, int y, int width, int height, net.minecraft.text.Text message, Function<FloatButtonWidget, Float> valueGetter, ValueConsumer valueSetter, PressAction onPress) {
     super(x, y, width, height, message, onPress, ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
     this.valueGetter = valueGetter;
     this.valueSetter = valueSetter;
@@ -133,10 +131,11 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
   }
 
   @Override
-  protected void drawScrollableText(DrawContext context, TextRenderer textRenderer, int xMargin, int color) {
+  protected void drawLabel(DrawnTextConsumer drawer) {
+    // 对应 1.21.10 之前的 drawScrollableText
     if (!sliderFocused || Util.getMeasuringTimeMs() % 1000 > 500) {
       // 在 sliderFocused 的情况下，文字应该闪烁
-      super.drawScrollableText(context, textRenderer, xMargin, color);
+      super.drawLabel(drawer);
     }
   }
 
@@ -211,10 +210,10 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
   }
 
   @Override
-  public Text getMessage() {
+  public net.minecraft.text.Text getMessage() {
     final Float value = getValue();
     if (renderedNameSupplier != null) {
-      final Text apply = renderedNameSupplier.apply(value, valueToText.apply(value));
+      final net.minecraft.text.Text apply = renderedNameSupplier.apply(value, valueToText.apply(value));
       if (apply != null) return apply;
     }
     if (value == null || value == defaultValue) {
@@ -225,10 +224,10 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
   }
 
   @Environment(EnvType.CLIENT)
-  public interface NameRenderer extends BiFunction<@Nullable Float, Text, @Nullable Text> {
+  public interface NameRenderer extends BiFunction<@Nullable Float, net.minecraft.text.Text, net.minecraft.text.@Nullable Text> {
     @Override
     @Nullable
-    Text apply(@Nullable Float value, Text valueText);
+    net.minecraft.text.Text apply(@Nullable Float value, net.minecraft.text.Text valueText);
   }
 
   public NameRenderer renderedNameSupplier = null;
@@ -239,7 +238,7 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
   }
 
 
-  public Text getSummaryMessage() {
+  public net.minecraft.text.Text getSummaryMessage() {
     return super.getMessage();
   }
 

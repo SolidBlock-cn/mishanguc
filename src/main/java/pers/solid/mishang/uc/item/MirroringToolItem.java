@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.item;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.pattern.CachedBlockPosition;
+import net.minecraft.command.DefaultPermissions;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
@@ -59,7 +60,7 @@ public class MirroringToolItem extends BlockToolItem implements MishangucItem, W
       Hand hand,
       boolean fluidIncluded) {
     final BlockPos blockPos = blockHitResult.getBlockPos();
-    if (world.getBlockState(blockPos).getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+    if (world.getBlockState(blockPos).getBlock() instanceof OperatorBlock && !player.getPermissions().hasPermission(DefaultPermissions.GAMEMASTERS)) {
       return ActionResult.FAIL;
     }
     final ActionResult result = mirror(world, blockPos, blockHitResult.getSide(), player);
@@ -73,7 +74,7 @@ public class MirroringToolItem extends BlockToolItem implements MishangucItem, W
     if (!player.getAbilities().allowModifyWorld && !stack.canBreak(new CachedBlockPosition(world, pos, false))) {
       return ActionResult.PASS;
     }
-    if (world.getBlockState(pos).getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+    if (world.getBlockState(pos).getBlock() instanceof OperatorBlock && !player.getPermissions().hasPermission(DefaultPermissions.GAMEMASTERS)) {
       return ActionResult.FAIL;
     }
     final ActionResult result = mirror(world, pos, direction, player);

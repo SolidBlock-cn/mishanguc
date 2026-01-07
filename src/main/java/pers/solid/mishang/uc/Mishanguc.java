@@ -11,7 +11,6 @@ import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
-import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
@@ -38,7 +37,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.poi.PointOfInterestType;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
@@ -61,6 +59,7 @@ import pers.solid.mishang.uc.util.ColorfulBlockRegistry;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class Mishanguc implements ModInitializer {
   public static final Logger MISHANG_LOGGER = LoggerFactory.getLogger("Mishang Urban Construction");
@@ -647,7 +646,7 @@ public class Mishanguc implements ModInitializer {
     MishangucBlocks.init();
     MishangucItems.init();
     MishangucBlockEntities.init();
-    final GameRules.Key<EnumRule<MishangucRules.ToolAccess>> ignore = MishangucRules.CARRYING_TOOL_ACCESS;
+    Objects.requireNonNull(MishangucRules.CARRYING_TOOL_ACCESS);
     SpecialDrawableTypes.init();
     MishangucItemGroups.init();
     Validate.validState(!BlockMatchingRule.REGISTRY.isEmpty());

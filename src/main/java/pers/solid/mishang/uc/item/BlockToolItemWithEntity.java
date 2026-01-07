@@ -5,8 +5,9 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexRendering;
@@ -67,8 +68,8 @@ public abstract class BlockToolItemWithEntity extends BlockToolItem implements R
     final MatrixStack matrices = context.matrices();
     final VertexConsumerProvider consumers = context.consumers();
     if (consumers == null) return;
-    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.getLines());
+    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayers.lines());
     final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
-    VertexRendering.drawOutline(matrices, vertexConsumer, state.greenEntityShape, -cameraPos.x, -cameraPos.y, -cameraPos.z, ColorHelper.fromFloats(0.8f, 0f, 1f, 0f));
+    VertexRendering.drawOutline(matrices, vertexConsumer, state.greenEntityShape, -cameraPos.x, -cameraPos.y, -cameraPos.z, ColorHelper.fromFloats(0.8f, 0f, 1f, 0f), MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
   }
 }

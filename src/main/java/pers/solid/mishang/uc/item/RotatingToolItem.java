@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.item;
 
 import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.pattern.CachedBlockPosition;
+import net.minecraft.command.DefaultPermissions;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.entity.player.PlayerEntity;
@@ -48,7 +49,7 @@ public class RotatingToolItem extends BlockToolItem implements MishangucItem, Wi
 
   @NotNull
   private ActionResult rotateBlock(PlayerEntity player, World world, BlockPos blockPos) {
-    if (world.getBlockState(blockPos).getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
+    if (world.getBlockState(blockPos).getBlock() instanceof OperatorBlock && !player.getPermissions().hasPermission(DefaultPermissions.GAMEMASTERS)) {
       return ActionResult.FAIL;
     }
     final BlockRotation rotation = player.isSneaking() ? BlockRotation.COUNTERCLOCKWISE_90 : BlockRotation.CLOCKWISE_90;

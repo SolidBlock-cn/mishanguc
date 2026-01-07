@@ -9,8 +9,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexRendering;
@@ -203,7 +204,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     }
 
     final MatrixStack matrices = context.matrices();
-    final VertexConsumer vertexConsumer = context.consumers().getBuffer(RenderLayer.getLines());
+    final VertexConsumer vertexConsumer = context.consumers().getBuffer(RenderLayers.lines());
     final Vec3d cameraPos = worldRenderState.cameraRenderState.pos;
     double cameraX = cameraPos.x;
     double cameraY = cameraPos.y;
@@ -218,7 +219,8 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           state.cyanPos.getZ() - cameraZ,
           ColorHelper.fromFloats(0.8f, 0,
               1,
-              1));
+              1),
+          MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
     }
 
     if (state.blueShape != null && state.bluePos != null) {
@@ -231,7 +233,8 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           state.bluePos.getZ() - cameraZ,
           ColorHelper.fromFloats(0.5f, 0,
               0.5f,
-              1));
+              1),
+          MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
     }
     if (state.redShape != null && state.redPos != null) {
       VertexRendering.drawOutline(
@@ -243,7 +246,8 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           state.redPos.getZ() - cameraZ,
           ColorHelper.fromFloats(0.8f, 1,
               0,
-              0));
+              0),
+          MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
     }
     if (state.yellowShape != null && state.yellowPos != null) {
         VertexRendering.drawOutline(
@@ -255,7 +259,8 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
             state.yellowPos.getZ() - cameraZ,
             ColorHelper.fromFloats(0.5f, 1,
                 0.5f,
-                0));
+                0),
+            MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
 
     }
     return false;
@@ -290,7 +295,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     if (!(world instanceof ServerWorld serverWorld)) {
       return MishangucClient.CLIENT_FORCE_PLACING_TOOL_ACCESS.get().hasAccess(player);
     } else {
-      final MishangucRules.ToolAccess toolAccess = serverWorld.getGameRules().get(MishangucRules.FORCE_PLACING_TOOL_ACCESS).get();
+      final MishangucRules.ToolAccess toolAccess = serverWorld.getGameRules().getValue(MishangucRules.FORCE_PLACING_TOOL_ACCESS);
       return toolAccess.hasAccess(player, warn);
     }
   }
@@ -302,7 +307,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     final MatrixStack matrices = context.matrices();
     final VertexConsumerProvider consumers = context.consumers();
     if (consumers == null) return;
-    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.getLines());
+    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayers.lines());
 
     if (!(context.worldState().getData(MishangRenderStateProvider.MISHANG_BLOCK_OUTLINE) instanceof ForcePlacingToolState state)) {
       return;
@@ -310,7 +315,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
 
     final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
     if (state.hitEntityBoundingBox != null) {
-      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(state.hitEntityBoundingBox), -cameraPos.x, -cameraPos.y, -cameraPos.z, ColorHelper.fromFloats(0.8f, 1.0f, 0f, 0f));
+      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(state.hitEntityBoundingBox), -cameraPos.x, -cameraPos.y, -cameraPos.z, ColorHelper.fromFloats(0.8f, 1.0f, 0f, 0f), MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
     }
   }
 }

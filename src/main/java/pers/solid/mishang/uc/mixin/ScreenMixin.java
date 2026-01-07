@@ -8,6 +8,7 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,6 +21,7 @@ import pers.solid.mishang.uc.util.TextClickEvent;
 @Environment(EnvType.CLIENT)
 @Mixin(Screen.class)
 public abstract class ScreenMixin {
+  @Final
   @Shadow
   @Nullable
   protected MinecraftClient client;
