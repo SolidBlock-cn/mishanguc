@@ -1,21 +1,24 @@
 package pers.solid.mishang.uc.text;
 
 import com.google.common.collect.ImmutableMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.EffectGlyph;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.MutableText;
+import net.minecraft.util.math.ColorHelper;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.joml.Matrix4f;
+import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.mixin.TextRendererAccessor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public record PatternSpecialDrawable(TextContext textContext, String shapeName, @Unmodifiable float[][] rectangles) implements SpecialDrawable {
@@ -214,58 +217,44 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
     return rectangles == EMPTY;
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, OrderedRenderCommandQueue queue, int light, float x, float y) {
+  public void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y) {
     int color = this.textContext.color;
-    /* BakedGlyphImpl bakedGlyph = (BakedGlyphImpl) ((TextRendererAccessor) textRenderer).invokeGetFontStorage(MinecraftClient.DEFAULT_FONT_ID).getRectangleBakedGlyph();
+    final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
     final float sizeMultiplier = 1;
-    final RenderLayer layer = bakedGlyph.getLayer(this.textContext.outlineColorType != OutlineColorType.NONE ? TextRenderer.TextLayerType.POLYGON_OFFSET : this.textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
+    final TextRenderer.TextLayerType textLayerType = this.textContext.outlineColorType != OutlineColorType.NONE ? TextRenderer.TextLayerType.POLYGON_OFFSET : this.textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL;
+    final TextRenderer.GlyphDrawer glyphDrawer = TextRenderer.GlyphDrawer.drawing(vertexConsumers, matricesEntry, textLayerType, light);
 
     // 文本是否存在阴影。
     final boolean shadow = this.textContext.outlineColorType == OutlineColorType.NONE && this.textContext.shadow;
     // 用于文本渲染的矩阵。当存在阴影时，文本渲染需要适当调整。
-    final List<BakedGlyphImpl.Rectangle> rectanglesToDraw = new ArrayList<>();
-    final List<BakedGlyphImpl.Rectangle> outlineRectangles = this.textContext.outlineColorType == OutlineColorType.NONE ? null : new ArrayList<>();
+    final List<float[]> mainRectangles = new ArrayList<>();
+    final List<float[]> outlineRectangles = this.textContext.outlineColorType == OutlineColorType.NONE ? null : new ArrayList<>();
     for (float[] rectangle : rectangles) {
       final float minX = (rectangle[0] + x) * sizeMultiplier;
       final float minY = (rectangle[1] + y) * sizeMultiplier;
       final float maxX = (rectangle[2] + x) * sizeMultiplier;
       final float maxY = (rectangle[3] + y) * sizeMultiplier;
-      if (shadow) {
-        rectanglesToDraw.add(
-            new BakedGlyphImpl(minX + 1, minY + 1, maxX + 1, maxY + 1, 0, ColorHelper.scaleRgb(color, 0.25f))
-        );
-      }
       if (outlineRectangles != null) {
-        int outlineColor = this.textContext.outlineColorType == OutlineColorType.AUTO ? MishangUtils.toSignOutlineColor(color) : this.textContext.outlineColor;
-        final int outlineAlpha = ((outlineColor & 0xFC000000) == 0) ? 255 : (outlineColor >> 24 & 0xFF);
-        outlineRectangles.add(
-            new BakedGlyph.Rectangle(minX - 1, minY - 1, maxX + 1, maxY + 1, 0, ColorHelper.withAlpha(outlineAlpha, outlineColor))
-        );
+        outlineRectangles.add(new float[]{minX - 1, minY - 1, maxX + 1, maxY + 1});
 
       }
-      rectanglesToDraw.add(
-          new BakedGlyph.Rectangle(minX, minY, maxX, maxY, shadow ? 0.03f : this.textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, color)
-      );
+      mainRectangles.add(new float[]{minX, minY, maxX, maxY});
     }
 
-    final Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
-    final VertexConsumer vertexConsumer = vertexConsumer.getBuffer(layer);
-    for (BakedGlyph.Rectangle rectangle : rectanglesToDraw) {
-      bakedGlyph.drawRectangle(rectangle, matrix4f, vertexConsumer, light, false);
-    }
+    final EffectGlyph rectangleGlyph = ((TextRendererAccessor) textRenderer).getFonts()
+        .getRectangleGlyph();
     if (outlineRectangles != null) {
-      final VertexConsumer vertexConsumerOutline = vertexConsumer.getBuffer(bakedGlyph.getLayer(TextRenderer.TextLayerType.NORMAL));
-      for (BakedGlyph.Rectangle outlineRectangle : outlineRectangles) {
-        bakedGlyph.drawRectangle(outlineRectangle, matrix4f, vertexConsumerOutline, light, false);
+      int outlineColor = this.textContext.outlineColorType == OutlineColorType.AUTO ? MishangUtils.toSignOutlineColor(color) : this.textContext.outlineColor;
+      final int outlineAlpha = ((outlineColor & 0xFC000000) == 0) ? 255 : (outlineColor >> 24 & 0xFF);
+      outlineColor = ColorHelper.withAlpha(outlineAlpha, outlineColor);
+      for (float[] rectangle : outlineRectangles) {
+        glyphDrawer.drawRectangle(rectangleGlyph.create(rectangle[0], rectangle[1], rectangle[2], rectangle[3], 0, outlineColor, 0, 0));
       }
-    }*/
-  }
-
-  @Override
-  public void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y) {
-
+    }
+    for (float[] rectangle : mainRectangles) {
+      glyphDrawer.drawRectangle(rectangleGlyph.create(rectangle[0], rectangle[1], rectangle[2], rectangle[3], this.textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, color, shadow ? ColorHelper.scaleRgb(color, 0.25f) : 0, 1));
+    }
   }
 
   @Override
