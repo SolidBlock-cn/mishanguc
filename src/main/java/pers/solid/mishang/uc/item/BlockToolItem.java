@@ -3,13 +3,14 @@ package pers.solid.mishang.uc.item;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexRendering;
+import net.minecraft.client.render.state.OutlineRenderState;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,14 +20,18 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
+import pers.solid.mishang.uc.render.state.BlockToolState;
+import pers.solid.mishang.uc.render.state.MishangRenderState;
 
 import java.util.Objects;
 
@@ -125,35 +130,55 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
     }
   }
 
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public @Nullable MishangRenderState getMishangRenderState(@Nullable MishangRenderState previous, ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+    final BlockToolState state = previous instanceof BlockToolState blockToolState ? blockToolState : new BlockToolState();
+
+    final ClientWorld world = context.world();
+
+    if (result instanceof BlockHitResult blockHitResult && includesFluid(stack, player.isSneaking())) {
+      final BlockPos blockPos = blockHitResult.getBlockPos();
+      state.lightGreenShape = world.getFluidState(blockPos).getShape(world, blockPos);
+      state.lightGreenPos = blockPos;
+    }
+
+    return state;
+  }
+
   @Environment(EnvType.CLIENT)
   @Override
   public boolean renderBlockOutline(
       PlayerEntity player,
       ItemStack itemStack,
-      WorldRenderContext worldRenderContext,
-      WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
-    final VertexConsumerProvider consumers = worldRenderContext.consumers();
+      WorldRenderContext context,
+      OutlineRenderState outlineRenderState) {
+    final VertexConsumerProvider consumers = context.consumers();
     if (consumers == null) return true;
     final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.LINES);
-    final ClientWorld world = worldRenderContext.world();
-    final BlockPos blockPos = blockOutlineContext.blockPos();
-    final BlockState state = blockOutlineContext.blockState();
+    final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
+    final BlockPos blockPos = outlineRenderState.pos();
+
+    if (!(context.worldState().getData(MISHANG_BLOCK_OUTLINE) instanceof final BlockToolState state)) {
+      return false;
+    }
     VertexRendering.drawOutline(
-        worldRenderContext.matrixStack(),
+        context.matrices(),
         vertexConsumer,
-        state.getOutlineShape(world, blockPos, ShapeContext.of(player)),
-        blockPos.getX() - blockOutlineContext.cameraX(),
-        blockPos.getY() - blockOutlineContext.cameraY(),
-        blockPos.getZ() - blockOutlineContext.cameraZ(),
+        outlineRenderState.shape(),
+        blockPos.getX() - cameraPos.getX(),
+        blockPos.getY() - cameraPos.getY(),
+        blockPos.getZ() - cameraPos.getZ(),
         OUTLINE_COLOR_MIDORI);
-    if (includesFluid(itemStack, player.isSneaking())) {
+    if (state.lightGreenPos != null && state.lightGreenShape != null) {
       VertexRendering.drawOutline(
-          worldRenderContext.matrixStack(),
+          context.matrices(),
           vertexConsumer,
-          state.getFluidState().getShape(world, blockPos),
-          blockPos.getX() - blockOutlineContext.cameraX(),
-          blockPos.getY() - blockOutlineContext.cameraY(),
-          blockPos.getZ() - blockOutlineContext.cameraZ(),
+          state.lightGreenShape,
+          blockPos.getX() - cameraPos.getX(),
+          blockPos.getY() - cameraPos.getY(),
+          blockPos.getZ() - cameraPos.getZ(),
           OUTLINE_COLOR_MIDORI_LIGHT);
     }
     return false;

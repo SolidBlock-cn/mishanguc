@@ -65,7 +65,7 @@ public interface RoadWithAngleLineWithTwoPartsOffset extends RoadWithAngleLine {
           .lineSide2(lineSide2)
           .lineTop(lineTop);
       final Identifier modelId = road.uploadModel("_with_angle_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_SIDE2, MishangucTextureKeys.LINE_TOP);
-      blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockModelDefinitionCreator.of(road, BlockStateModelGenerator.createWeightedVariant(modelId)).coordinate(BlockStateVariantMap.operations(FACING).generate(direction -> ModelVariantOperator.ROTATION_Y.withValue(direction.asAxisRotationCCW45())))));
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockModelDefinitionCreator.of(road, BlockStateModelGenerator.createWeightedVariant(modelId)).apply(BlockStateVariantMap.operations(FACING).generate(direction -> ModelVariantOperator.ROTATION_Y.withValue(direction.asAxisRotationCCW45())))));
     }
 
     @Override

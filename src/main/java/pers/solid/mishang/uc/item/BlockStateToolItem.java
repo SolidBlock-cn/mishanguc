@@ -84,7 +84,7 @@ public class BlockStateToolItem extends BlockToolItem implements MishangucItem, 
       BlockHitResult blockHitResult,
       Hand hand,
       boolean fluidIncluded) {
-    if (world.isClient) {
+    if (world.isClient()) {
       return getBlockStateOf(player, world, blockHitResult.getBlockPos(), fluidIncluded);
     } else {
       return ActionResult.SUCCESS;
@@ -94,7 +94,7 @@ public class BlockStateToolItem extends BlockToolItem implements MishangucItem, 
   @Override
   public ActionResult beginAttackBlock(
       ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    if (!world.isClient()) return ActionResult.SUCCESS;
+    if (!world.isClient())return ActionResult.SUCCESS;
     return getBlockStateOf(player, world, pos, fluidIncluded);
   }
 

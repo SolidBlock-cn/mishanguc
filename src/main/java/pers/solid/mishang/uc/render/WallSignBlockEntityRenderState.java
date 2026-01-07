@@ -1,0 +1,19 @@
+package pers.solid.mishang.uc.render;
+
+import com.google.common.collect.ImmutableList;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.render.block.entity.state.BlockEntityRenderState;
+import net.minecraft.util.shape.VoxelShape;
+import org.jetbrains.annotations.Unmodifiable;
+import pers.solid.mishang.uc.text.TextContext;
+
+import java.util.List;
+
+@Environment(EnvType.CLIENT)
+public class WallSignBlockEntityRenderState extends BlockEntityRenderState {
+  public @Unmodifiable List<TextContext> textContexts = ImmutableList.of();
+  public boolean glowing;
+  public float height;
+  public VoxelShape voxelShape;
+}

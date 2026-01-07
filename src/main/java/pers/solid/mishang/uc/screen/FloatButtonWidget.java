@@ -6,13 +6,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.input.KeyCodes;
+import net.minecraft.client.input.AbstractInput;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
@@ -29,6 +30,8 @@ import pers.solid.mishang.uc.util.TextBridge;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+
+import static pers.solid.mishang.uc.screen.MishangScreenUtil.*;
 
 /**
  * 用于处理浮点数的按钮。按下鼠标时增大，但是按住 shift 则会减小。滚动鼠标滚轮也会减小。
@@ -138,26 +141,25 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
   }
 
   @Override
-  public void onPress() {
-    onPress(0);
-  }
-
-  public void onPress(int button) {
-    switch (button) { // 这种情况下直接采用了 onPress，所以直接略。
-      case 0, 1 -> setValue(value -> value
-          + (Screen.hasShiftDown() || button == 1 ? -1 : 1)
-          * step
-          * (Screen.hasControlDown() ? 8 : 1)
-          * (Screen.hasAltDown() ? 0.125f : 1));
-      case 2 -> setAllSameValue(defaultValue);
+  public void onPress(AbstractInput input) {
+    if (input instanceof Click click) {
+      final int button = click.button();
+      switch (button) { // 这种情况下直接采用了 onPress，所以直接略。
+        case 0, 1 -> setValue(value -> value
+            + (input.hasShift() || button == 1 ? -1 : 1)
+            * step
+            * (input.hasCtrl() ? 8 : 1)
+            * (input.hasAlt() ? 0.125f : 1));
+        case 2 -> setAllSameValue(defaultValue);
+      }
     }
   }
 
   @Override
-  public boolean mouseClicked(double mouseX, double mouseY, int button) {
-    if (this.active && this.visible && isMouseOver(mouseX, mouseY)) {
+  public boolean mouseClicked(Click click, boolean doubled) {
+    if (this.active && this.visible && isMouseOver(click.x(), click.y())) {
       this.playDownSound(MinecraftClient.getInstance().getSoundManager());
-      onPress(button);
+      onPress(click);
       return true;
     }
     return false;
@@ -167,36 +169,36 @@ public class FloatButtonWidget extends ButtonWidget implements TooltipUpdated {
   public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
     setValue(value -> (float) (value
         + verticalAmount
-        * (Screen.hasShiftDown() ? -1 : 1)
-        * (Screen.hasControlDown() ? 8 : 1)
+        * (hasShiftDown() ? -1 : 1)
+        * (hasControlDown() ? 8 : 1)
         * step * scrollMultiplier
-        * (Screen.hasAltDown() ? 0.125f : 1)));
+        * (hasAltDown() ? 0.125f : 1)));
     super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     return true;
   }
 
-
   /**
-   * @see net.minecraft.client.gui.widget.SliderWidget#keyPressed(int, int, int)
+   * @see net.minecraft.client.gui.widget.SliderWidget#keyPressed
    */
-  public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-    if (!KeyCodes.isToggle(keyCode)) {
+
+  public boolean keyPressed(KeyInput input) {
+    if (!input.isEnterOrSpace()) {
       if (this.sliderFocused) {
-        boolean decreases = keyCode == GLFW.GLFW_KEY_LEFT || keyCode == GLFW.GLFW_KEY_DOWN;
-        final var handle = MinecraftClient.getInstance().getWindow().getHandle();
-        if (keyCode == GLFW.GLFW_KEY_LEFT && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_RIGHT)
-            || keyCode == GLFW.GLFW_KEY_RIGHT && InputUtil.isKeyPressed(handle, InputUtil.GLFW_KEY_LEFT)) {
+        boolean decreases = input.isLeft() || input.isDown();
+        final var window = MinecraftClient.getInstance().getWindow();
+        if (input.isLeft() && InputUtil.isKeyPressed(window, GLFW.GLFW_KEY_RIGHT)
+            || input.isRight() && InputUtil.isKeyPressed(window, InputUtil.GLFW_KEY_LEFT)) {
           // 当同时按下左右时，设为默认值。
           setAllSameValue(defaultValue);
           return true;
-        } else if ((decreases || keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_UP) && getValue() != null) {
-          final float multiplier = keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_LEFT ? rightArrowStepMultiplier : upArrowStepMultiplier;
+        } else if ((decreases || input.isRight() || input.isUp()) && getValue() != null) {
+          final float multiplier = input.isRight() || input.isLeft() ? rightArrowStepMultiplier : upArrowStepMultiplier;
           float sign = decreases ? -1.0F : 1.0F;
           setValue(value -> value + sign
-              * (Screen.hasShiftDown() ? -1 : 1)
-              * (Screen.hasControlDown() ? 8 : 1)
+              * (input.hasShift() ? -1 : 1)
+              * (input.hasCtrl() ? 8 : 1)
               * step * multiplier
-              * (Screen.hasAltDown() ? 0.125f : 1));
+              * (input.hasAlt() ? 0.125f : 1));
           return true;
         }
       }

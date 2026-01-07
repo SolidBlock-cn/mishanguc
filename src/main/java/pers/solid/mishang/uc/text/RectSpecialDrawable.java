@@ -1,17 +1,11 @@
 package pers.solid.mishang.uc.text;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.font.BakedGlyph;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
 import net.minecraft.util.math.ColorHelper;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
@@ -28,32 +22,28 @@ import pers.solid.mishang.uc.util.TextBridge;
  */
 public record RectSpecialDrawable(float width, float height, @NotNull TextContext textContext) implements SpecialDrawable {
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, float x, float y) {
-    int color = textContext.color;
-    BakedGlyph bakedGlyph = ((TextRendererAccessor) textRenderer).invokeGetFontStorage(Style.DEFAULT_FONT_ID).getRectangleBakedGlyph();
-    final Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
-    final RenderLayer layer = bakedGlyph.getLayer(textContext.outlineColorType != OutlineColorType.NONE ? TextRenderer.TextLayerType.POLYGON_OFFSET : textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
-    final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(layer);
-    final boolean shadow = textContext.outlineColorType == OutlineColorType.NONE && textContext.shadow;
-    if (shadow) {
-      // 绘制阴影
-      BakedGlyph.Rectangle shadowRectangle = new BakedGlyph.Rectangle(x + 1, y + 1, (width + x) + 1, y + height + 1, 0, ColorHelper.scaleRgb(color, 0.25f));
-      bakedGlyph.drawRectangle(shadowRectangle, matrix4f, vertexConsumer, light, false);
-    }
-    if (textContext.outlineColorType != OutlineColorType.NONE) {
+  public void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y) {
+    final int color = textContext.color;
+    final boolean shadow = this.textContext.outlineColorType == OutlineColorType.NONE && this.textContext.shadow;
+    final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+    final TextRenderer.TextLayerType textLayerType = this.textContext.outlineColorType != OutlineColorType.NONE ? TextRenderer.TextLayerType.POLYGON_OFFSET : this.textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL;
+    final TextRenderer.GlyphDrawer glyphDrawer = TextRenderer.GlyphDrawer.drawing(vertexConsumers, matricesEntry, textLayerType, light);
+    if (this.textContext.outlineColorType != OutlineColorType.NONE) {
       // 绘制轮廓
-      int outlineColor = textContext.outlineColorType == OutlineColorType.AUTO ? MishangUtils.toSignOutlineColor(color) : textContext.outlineColor;
+      int outlineColor = this.textContext.outlineColorType == OutlineColorType.AUTO ? MishangUtils.toSignOutlineColor(color) : this.textContext.outlineColor;
       final int outlineAlpha = ((outlineColor & 0xfc000000) == 0) ? 255 : (outlineColor >> 24 & 0xFF);
-      BakedGlyph.Rectangle outlineRectangle = new BakedGlyph.Rectangle(x - 1, y - 1, (width + x) + 1, y + height + 1, 0, ColorHelper.withAlpha(outlineAlpha, outlineColor));
-      bakedGlyph.drawRectangle(outlineRectangle, matrix4f, vertexConsumers.getBuffer(bakedGlyph.getLayer(TextRenderer.TextLayerType.NORMAL)), light, false);
+      glyphDrawer.drawRectangle(
+          ((TextRendererAccessor) textRenderer).getFonts()
+              .getRectangleGlyph()
+              .create(x - 1, y - 1, (width + x) + 1, y + height + 1, 0, ColorHelper.withAlpha(outlineAlpha, outlineColor), 0, 0));
     }
-
-    final VertexConsumer vertexConsumer2 = vertexConsumers.getBuffer(layer);
-    BakedGlyph.Rectangle rectangle = new BakedGlyph.Rectangle(x, y, (width + x), y + height, shadow ? 0.03f : textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, color);
-    bakedGlyph.drawRectangle(rectangle, matrix4f, vertexConsumer2, light, false);
+    glyphDrawer.drawRectangle(
+        ((TextRendererAccessor) textRenderer).getFonts()
+            .getRectangleGlyph()
+            .create(x, y, (width + x), height + y, shadow ? 0.03f : this.textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, color, shadow ? ColorHelper.scaleRgb(color, 0.25f) : 0, 1));
   }
+
 
   @Override
   public @NotNull String getId() {

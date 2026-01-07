@@ -177,7 +177,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     } else if (!player.getAbilities().allowModifyWorld) {
       // 冒险模式玩家无权编辑。Adventure players have no permission to edit.
       return ActionResult.FAIL;
-    } else if (world.isClient) {
+    } else if (world.isClient()) {
       return ActionResult.SUCCESS;
     }
 
@@ -205,7 +205,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
     } else if (!player.getAbilities().allowModifyWorld) {
       // 冒险模式玩家无权编辑。Adventure players have no permission to edit.
       return ActionResult.FAIL;
-    } else if (world.isClient) {
+    } else if (world.isClient()) {
       return ActionResult.SUCCESS;
     } else {
       if (stack.getItem() instanceof HoneycombItem) {
@@ -278,7 +278,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
   @Environment(EnvType.CLIENT)
   public VariantsBlockModelDefinitionCreator createBlockStates(Identifier modelId) {
     return BlockStateModelGenerator.createSingletonBlockState(this, BlockStateModelGenerator.createWeightedVariant(modelId))
-        .coordinate(BlockStateVariantMap.operations(FACE).generate((wallMountLocation) -> {
+        .apply(BlockStateVariantMap.operations(FACE).generate((wallMountLocation) -> {
           final AxisRotation x = switch (wallMountLocation) {
             case WALL -> AxisRotation.R0;
             case FLOOR -> AxisRotation.R90;
@@ -286,7 +286,7 @@ public class WallSignBlock extends WallMountedBlock implements Waterloggable, Bl
           };
           return ModelVariantOperator.ROTATION_X.withValue(x);
         }))
-        .coordinate(BlockStateModelGeneratorAccessor.getSOUTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS())
+        .apply(BlockStateModelGeneratorAccessor.getSOUTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS())
         .apply(BlockStateModelGenerator.UV_LOCK);
   }
 

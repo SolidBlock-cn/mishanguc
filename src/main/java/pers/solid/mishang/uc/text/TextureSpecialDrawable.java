@@ -1,13 +1,9 @@
 package pers.solid.mishang.uc.text;
 
 import com.google.common.annotations.Beta;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
@@ -24,15 +20,13 @@ import org.joml.Matrix4f;
 public record TextureSpecialDrawable(@NotNull Identifier identifier, @NotNull TextContext textContext) implements SpecialDrawable {
 
   @Override
-  @Environment(EnvType.CLIENT)
-  public void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, float x, float y) {
+  public void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y) {
     final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getText(identifier));
-    final Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
-
-    vertexConsumer.vertex(matrix4f, 0, 8, -0).color(255, 255, 255, 255).texture(0.0f, 1.0f).light(light);
-    vertexConsumer.vertex(matrix4f, 8, 8, -0).color(255, 255, 255, 255).texture(1.0f, 1.0f).light(light);
-    vertexConsumer.vertex(matrix4f, 8, 0, -0).color(255, 255, 255, 255).texture(1.0f, 0.0f).light(light);
-    vertexConsumer.vertex(matrix4f, 0, 0, -0).color(255, 255, 255, 255).texture(0.0f, 0.0f).light(light);
+    
+    vertexConsumer.vertex(matricesEntry, 0, 8, -0).color(255, 255, 255, 255).texture(0.0f, 1.0f).light(light);
+    vertexConsumer.vertex(matricesEntry, 8, 8, -0).color(255, 255, 255, 255).texture(1.0f, 1.0f).light(light);
+    vertexConsumer.vertex(matricesEntry, 8, 0, -0).color(255, 255, 255, 255).texture(1.0f, 0.0f).light(light);
+    vertexConsumer.vertex(matricesEntry, 0, 0, -0).color(255, 255, 255, 255).texture(0.0f, 0.0f).light(light);
   }
 
   @Override

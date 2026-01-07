@@ -208,7 +208,7 @@ public abstract class HandrailBlock extends HorizontalFacingBlock implements Wat
 
   @Environment(EnvType.CLIENT)
   public @NotNull BlockModelDefinitionCreator createBlockStates(Identifier modelId) {
-    return BlockStateModelGenerator.createSingletonBlockState(this, BlockStateModelGenerator.createWeightedVariant(modelId)).coordinate((BlockStateModelGeneratorAccessor.getSOUTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS())).apply(BlockStateModelGenerator.UV_LOCK);
+    return BlockStateModelGenerator.createSingletonBlockState(this, BlockStateModelGenerator.createWeightedVariant(modelId)).apply((BlockStateModelGeneratorAccessor.getSOUTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS())).apply(BlockStateModelGenerator.UV_LOCK);
   }
 
   @Override

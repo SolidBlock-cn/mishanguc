@@ -170,7 +170,7 @@ public interface Road extends MishangucBlock, WithMishangTooltip {
     if (stack.getItem() instanceof BlockItem blockItem) {
       final Block block = blockItem.getBlock();
       if ((block instanceof AbstractRoadBlock || block instanceof AbstractRoadSlabBlock) && block != RoadBlocks.ROAD_BLOCK && block != RoadBlocks.ROAD_BLOCK.getRoadSlab()) {
-        if (!world.isClient) {
+        if (!world.isClient()) {
           stack.decrementUnlessCreative(1, player);
           final ItemStack itemStack = block instanceof AbstractRoadSlabBlock ? new ItemStack(RoadBlocks.ROAD_BLOCK.getRoadSlab()) : new ItemStack(RoadBlocks.ROAD_BLOCK);
           if (stack.isEmpty()) {

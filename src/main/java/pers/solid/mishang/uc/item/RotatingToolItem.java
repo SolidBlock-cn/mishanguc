@@ -4,7 +4,6 @@ import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -42,7 +41,7 @@ public class RotatingToolItem extends BlockToolItem implements MishangucItem, Wi
     final BlockPos blockPos = blockHitResult.getBlockPos();
     final ActionResult result = rotateBlock(player, world, blockPos);
     if (result == ActionResult.SUCCESS) {
-      stack.damage(1, player, LivingEntity.getSlotForHand(hand));
+      stack.damage(1, player, hand.getEquipmentSlot());
     }
     return result;
   }
@@ -70,7 +69,7 @@ public class RotatingToolItem extends BlockToolItem implements MishangucItem, Wi
     }
     final ActionResult result = rotateBlock(player, world, pos);
     if (result == ActionResult.SUCCESS) {
-      stack.damage(1, player, LivingEntity.getSlotForHand(hand));
+      stack.damage(1, player, hand.getEquipmentSlot());
     }
     return result;
   }

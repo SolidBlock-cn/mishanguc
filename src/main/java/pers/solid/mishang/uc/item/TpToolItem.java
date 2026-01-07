@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.item;
 
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -34,8 +33,8 @@ public class TpToolItem extends Item implements MishangucItem, WithMishangToolti
   @Override
   public ActionResult use(World world, PlayerEntity user, Hand hand) {
     final ActionResult data = super.use(world, user, hand);
-    if (world.isClient) return data;
-    final Vec3d oldPos = user.getPos();
+    if (world.isClient()) return data;
+    final Vec3d oldPos = user.getEntityPos();
     final HitResult raycast = user.raycast(256, 0, user.isSneaking());
     if (raycast.getType() == HitResult.Type.MISS) {
       return ActionResult.FAIL;
@@ -51,7 +50,7 @@ public class TpToolItem extends Item implements MishangucItem, WithMishangToolti
     world.emitGameEvent(GameEvent.TELEPORT, pos, GameEvent.Emitter.of(user));
     world.sendEntityStatus(user, (byte) 46);
     world.playSound(null, pos.x, pos.y, pos.z, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
-    user.getStackInHand(hand).damage((int) MathHelper.sqrt((float) (MathHelper.square(oldPos.x - pos.x) + MathHelper.square(oldPos.y - pos.y) + MathHelper.square(oldPos.z - pos.z))), user, LivingEntity.getSlotForHand(hand));
+    user.getStackInHand(hand).damage((int) MathHelper.sqrt((float) (MathHelper.square(oldPos.x - pos.x) + MathHelper.square(oldPos.y - pos.y) + MathHelper.square(oldPos.z - pos.z))), user, hand.getEquipmentSlot());
     return ActionResult.SUCCESS;
   }
 }

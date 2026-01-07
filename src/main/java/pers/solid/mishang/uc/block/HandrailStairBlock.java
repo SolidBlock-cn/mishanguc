@@ -94,7 +94,7 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
         .with(BlockStateVariantMap.models(POSITION, SHAPE)
             .generate((position, shape) -> BlockStateModelGenerator.createWeightedVariant(BlockStateModelGenerator.createModelVariant(modelId.withSuffixedPath("_" + shape.asString() + "_" + position.asString())))))
         .apply(BlockStateModelGenerator.UV_LOCK)
-        .coordinate(BlockStateModelGeneratorAccessor.getNORTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS());
+        .apply(BlockStateModelGeneratorAccessor.getNORTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS());
 
   }
 

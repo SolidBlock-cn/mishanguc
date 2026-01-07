@@ -5,7 +5,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.BlockStateComponent;
-import net.minecraft.component.type.NbtComponent;
+import net.minecraft.entity.TypedEntityData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
@@ -19,6 +19,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.components.CarryingToolData;
+import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.item.CarryingToolItem;
 import pers.solid.mishang.uc.mixin.BucketItemAccessor;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
@@ -219,11 +221,19 @@ public class BlockPlacementContext {
    */
   public void setBlockEntity() {
     BlockEntity entityToPlace = world.getBlockEntity(posToPlace);
-    if (stackInHand != null) {
+    if (stackInHand != null && entityToPlace != null) {
+      if (stackInHand.get(MishangucComponents.CARRYING_TOOL_DATA) instanceof CarryingToolData.HoldingBlockState holdingBlockState) {
+        if (holdingBlockState.blockEntityTag().isPresent()) {
+          // 手持 Carrying Tool 时，可能使用该工作的方块实体数据，这一数据并非存储在 block_entity_data 数组组件中。
+          TypedEntityData.create(entityToPlace.getType(), holdingBlockState.blockEntityTag().get()).applyToBlockEntity(entityToPlace, world.getRegistryManager());
+        }
+      }
+      // 从指定的物品堆对应的方块中读取组件
       BlockItem.writeNbtToBlockEntity(world, player, posToPlace, stackInHand);
+      entityToPlace.readComponents(stackInHand);
     } else if (hitEntity != null && entityToPlace != null) {
       final NbtCompound nbt = hitEntity.createNbt(world.getRegistryManager());
-      NbtComponent.of(nbt).applyToBlockEntity(entityToPlace, world.getRegistryManager());
+      TypedEntityData.create(entityToPlace.getType(), nbt).applyToBlockEntity(entityToPlace, world.getRegistryManager());
       entityToPlace.markDirty();
       world.updateListeners(posToPlace, entityToPlace.getCachedState(), entityToPlace.getCachedState(), Block.NOTIFY_ALL);
     }

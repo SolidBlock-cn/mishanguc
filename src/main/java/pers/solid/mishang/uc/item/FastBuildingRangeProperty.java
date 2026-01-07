@@ -5,8 +5,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.item.property.numeric.NumericProperty;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.HeldItemContext;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.components.FastBuildingToolData;
 import pers.solid.mishang.uc.components.MishangucComponents;
@@ -17,7 +17,7 @@ public enum FastBuildingRangeProperty implements NumericProperty {
   public static final MapCodec<FastBuildingRangeProperty> CODEC = MapCodec.unit(INSTANCE);
 
   @Override
-  public float getValue(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity holder, int seed) {
+  public float getValue(ItemStack stack, @Nullable ClientWorld world, @Nullable HeldItemContext context, int seed) {
     final FastBuildingToolData data = stack.get(MishangucComponents.FAST_BUILDING_TOOL_DATA);
     return data == null ? 0 : data.range();
   }

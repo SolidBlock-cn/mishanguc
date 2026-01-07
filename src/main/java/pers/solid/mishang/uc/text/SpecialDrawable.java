@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
@@ -13,6 +14,8 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
+import pers.solid.mishang.uc.render.RenderCommandQueueExtension;
 import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Collection;
@@ -30,7 +33,12 @@ public interface SpecialDrawable extends Cloneable {
   SpecialDrawable INVALID = new SpecialDrawable() {
     @Environment(EnvType.CLIENT)
     @Override
-    public void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, float x, float y) {
+    public void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, OrderedRenderCommandQueue queue, int light, float x, float y) {
+    }
+
+    @Override
+    public void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y) {
+
     }
 
     @Override
@@ -55,7 +63,12 @@ public interface SpecialDrawable extends Cloneable {
    * <p>实现此方法时，必须注解 {@code @Environment(EnvType.CLIENT)}。</p>
    */
   @Environment(EnvType.CLIENT)
-  void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, float x, float y);
+  default void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, OrderedRenderCommandQueue queue, int light, float x, float y) {
+    ((RenderCommandQueueExtension) queue).submitSpecialDrawable$mishang(matrixStack, this, light, x, y);
+  }
+
+  @Environment(EnvType.CLIENT)
+  void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y);
 
   /**
    * 这一类 SpecialDrawable 对象的 id，通常是一个字符串，并且应该要被 {@link #fromNbt} 和 {@link #fromStringArgs} 识别。同一类对象返回的 id 应该相同，因此覆盖此方法时，通常是返回一个常量。
@@ -120,7 +133,7 @@ public interface SpecialDrawable extends Cloneable {
   }
 
   /**
-   * 根据已有的 id 和参数返回对象，用于告示牌编辑界面中。如果在文本框中输入 {@code -rect 2 3}，则会调用 {@code fromStringArgs(textContext, "rect", "2 3")}。
+   * 根据已有的 id 和参数返回对象，用于告示牌编辑界面中。如果在文本框中输入 {@code -rect 2 3}，则会调用 {@code fromStringArgs(specialDrawable, "rect", "2 3")}。
    */
   static @Nullable SpecialDrawable fromStringArgs(TextContext textContext, String id, String args) {
     if (id == null) return null;
@@ -145,9 +158,9 @@ public interface SpecialDrawable extends Cloneable {
   }
 
   /**
-   * 由于该对象需要确保其对应的 TextContext 对应，因此 {@link TextContext#clone()} 中需要复制此对象并将其 textContext 字段设为复制后的 textContext。
+   * 由于该对象需要确保其对应的 TextContext 对应，因此 {@link TextContext#clone()} 中需要复制此对象并将其 specialDrawable 字段设为复制后的 specialDrawable。
    *
-   * @param textContext 新的 TextContext 对象。通常来说，应该确保返回的对象是（或者将会是）textContext 的 {@link TextContext#extra} 字段，同时返回的这个 SpecialDrawable 对象的 textContext 字段应该是该参数。
+   * @param textContext 新的 TextContext 对象。通常来说，应该确保返回的对象是（或者将会是）specialDrawable 的 {@link TextContext#extra} 字段，同时返回的这个 SpecialDrawable 对象的 specialDrawable 字段应该是该参数。
    * @return 新的 SpecialDrawable 字段。
    */
   @Contract(value = "_ -> new", pure = true)

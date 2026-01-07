@@ -118,7 +118,7 @@ public class ColumnLightBlock extends Block implements Waterloggable, MishangucB
     final TextureMap textures = TextureMap.of(MishangucTextureKeys.LIGHT, MishangucModels.texture(lightColor + "_light"));
     final Identifier modelId = getModelType().upload(this, textures, blockStateModelGenerator.modelCollector);
     blockStateModelGenerator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(this, BlockStateModelGenerator.createWeightedVariant(modelId))
-        .coordinate(BlockStateVariantMap.operations(AXIS)
+        .apply(BlockStateVariantMap.operations(AXIS)
             .register(Direction.Axis.Y, BlockStateModelGenerator.NO_OP)
             .register(Direction.Axis.X, BlockStateModelGenerator.ROTATE_X_270.then(BlockStateModelGenerator.ROTATE_Y_90))
             .register(Direction.Axis.Z, BlockStateModelGenerator.ROTATE_X_270)));

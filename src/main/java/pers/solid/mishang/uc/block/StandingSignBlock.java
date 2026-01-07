@@ -363,7 +363,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     else if (!player.getAbilities().allowModifyWorld) {
       // 冒险模式玩家无权编辑。Adventure players have no permission to edit.
       return ActionResult.FAIL;
-    } else if (world.isClient) {
+    } else if (world.isClient()) {
       return ActionResult.SUCCESS;
     }
 
@@ -395,7 +395,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     } else if (!player.getAbilities().allowModifyWorld) {
       // 冒险模式玩家无权编辑。Adventure players have no permission to edit.
       return ActionResult.FAIL;
-    } else if (world.isClient) {
+    } else if (world.isClient()) {
       return ActionResult.SUCCESS;
     } else {
       final ItemStack stackInHand = player.getStackInHand(hand);

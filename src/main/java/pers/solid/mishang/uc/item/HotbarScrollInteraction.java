@@ -3,10 +3,10 @@ package pers.solid.mishang.uc.item;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import pers.solid.mishang.uc.networking.ItemScrollPayload;
+import pers.solid.mishang.uc.screen.MishangScreenUtil;
 
 /**
  * 实现此接口的物体，在滚动鼠标滚轮时，会暂时锁定快捷栏，并进行相应的特殊处理。
@@ -22,7 +22,7 @@ public interface HotbarScrollInteraction {
    */
   @Environment(EnvType.CLIENT)
   default boolean shouldLockScroll(int selectedSlot, double scrollAmount) {
-    if (Screen.hasShiftDown() || Screen.hasAltDown()) {
+    if (MishangScreenUtil.hasShiftDown() || MishangScreenUtil.hasAltDown()) {
       ClientPlayNetworking.send(new ItemScrollPayload(selectedSlot, scrollAmount));
       return true;
     } else {

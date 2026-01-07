@@ -3,13 +3,13 @@ package pers.solid.mishang.uc.item;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.network.packet.s2c.play.ExplosionS2CPacket;
+import net.minecraft.particle.BlockParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityFlagsPredicate;
@@ -21,6 +21,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.collection.Pool;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.GameRules;
@@ -67,17 +68,17 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     Explosion.DestructionType destructionType = component.destructionType();
 
     ExplosionImpl explosionImpl = new ExplosionImpl(serverWorld, user, user.isSneaking() ? world.getDamageSources().explosion(null) : null, null, pos, component.power(), component.createFire(), destructionType);
-    explosionImpl.explode();
+    final int blocksCount = explosionImpl.explode();
     ParticleEffect particleEffect = ParticleTypes.EXPLOSION;
 
     for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers()) {
       if (serverPlayerEntity.squaredDistanceTo(pos) < 4096.0) {
         Optional<Vec3d> optional = Optional.ofNullable(explosionImpl.getKnockbackByPlayer().get(serverPlayerEntity));
-        serverPlayerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos, optional, particleEffect, SoundEvents.ENTITY_GENERIC_EXPLODE));
+        serverPlayerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos, explosionImpl.getPower(), blocksCount, optional, particleEffect, SoundEvents.ENTITY_GENERIC_EXPLODE, EXPLOSION_BLOCK_PARTICLES));
       }
     }
 
-    stack.damage((int) component.power(), user, LivingEntity.getSlotForHand(hand));
+    stack.damage((int) component.power(), user, hand.getEquipmentSlot());
     if (user.isCreative()) {
       booleanRule.set(backup, null);
     }
@@ -125,6 +126,14 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     stack.apply(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT, c -> c.withPower(power));
   }
 
+  /**
+   * @see World#EXPLOSION_BLOCK_PARTICLES
+   */
+  private static final Pool<BlockParticleEffect> EXPLOSION_BLOCK_PARTICLES = Pool.<BlockParticleEffect>builder()
+      .add(new BlockParticleEffect(ParticleTypes.POOF, 0.5F, 1.0F))
+      .add(new BlockParticleEffect(ParticleTypes.SMOKE, 1.0F, 1.0F))
+      .build();
+
   @Override
   public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
     final ServerWorld serverWorld = pointer.world();
@@ -145,13 +154,13 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       Explosion.DestructionType destructionType = component.destructionType();
 
       ExplosionImpl explosionImpl = new ExplosionImpl(serverWorld, null, serverWorld.getDamageSources().explosion(null), null, pos.toCenterPos(), component.power(), component.createFire(), destructionType);
-      explosionImpl.explode();
+      final int blockCount = explosionImpl.explode();
       ParticleEffect particleEffect = ParticleTypes.EXPLOSION;
 
       for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers()) {
         if (serverPlayerEntity.squaredDistanceTo(pos.toCenterPos()) < 4096.0) {
           Optional<Vec3d> optional = Optional.ofNullable(explosionImpl.getKnockbackByPlayer().get(serverPlayerEntity));
-          serverPlayerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.toCenterPos(), optional, particleEffect, SoundEvents.ENTITY_GENERIC_EXPLODE));
+          serverPlayerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.toCenterPos(), explosionImpl.getPower(), blockCount, optional, particleEffect, SoundEvents.ENTITY_GENERIC_EXPLODE, EXPLOSION_BLOCK_PARTICLES));
         }
       }
       stack.damage((int) component.power(), serverWorld, null, item -> {});

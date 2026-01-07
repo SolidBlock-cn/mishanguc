@@ -2,12 +2,13 @@ package pers.solid.mishang.uc.item;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.state.OutlineRenderState;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -18,16 +19,19 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.block.AbstractRoadBlock;
 import pers.solid.mishang.uc.block.AbstractRoadSlabBlock;
 import pers.solid.mishang.uc.block.Road;
 import pers.solid.mishang.uc.block.RoadWithAutoLine;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
+import pers.solid.mishang.uc.render.state.MishangRenderState;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
@@ -52,21 +56,21 @@ public class RoadToolItem extends BlockToolItem implements MishangucItem, WithMi
     final BlockPos blockPos = blockHitResult.getBlockPos();
     final BlockState blockState = world.getBlockState(blockPos);
     if (blockState.isOf(RoadBlocks.ROAD_BLOCK)) {
-      if (!world.isClient) {
+      if (!world.isClient()) {
         world.setBlockState(blockPos, (player.isSneaking() ? RoadBlocks.ROAD_WITH_WHITE_AUTO_RA_LINE : RoadBlocks.ROAD_WITH_WHITE_AUTO_BA_LINE).getStateWithProperties(blockState));
-        player.getStackInHand(hand).damage(1, player, LivingEntity.getSlotForHand(hand));
+        player.getStackInHand(hand).damage(1, player, hand.getEquipmentSlot());
         player.sendMessage(TextBridge.translatable("item.mishanguc.road_tool.message.painted"), true);
       }
       return ActionResult.SUCCESS;
     } else if (blockState.isOf(RoadBlocks.ROAD_BLOCK.getRoadSlab())) {
-      if (!world.isClient) {
+      if (!world.isClient()) {
         world.setBlockState(blockPos, (player.isSneaking() ? RoadBlocks.ROAD_WITH_WHITE_AUTO_RA_LINE : RoadBlocks.ROAD_WITH_WHITE_AUTO_BA_LINE).getRoadSlab().getStateWithProperties(blockState));
-        player.getStackInHand(hand).damage(1, player, LivingEntity.getSlotForHand(hand));
+        player.getStackInHand(hand).damage(1, player, hand.getEquipmentSlot());
         player.sendMessage(TextBridge.translatable("item.mishanguc.road_tool.message.painted"), true);
       }
       return ActionResult.SUCCESS;
     } else if (blockState.getBlock() instanceof RoadWithAutoLine roadWithAutoLine) {
-      if (!world.isClient) {
+      if (!world.isClient()) {
         try {
           final BlockState newState = roadWithAutoLine.makeState(roadWithAutoLine.getConnectionStateMap(world, blockPos), blockState);
           world.setBlockState(blockPos, newState);
@@ -93,17 +97,17 @@ public class RoadToolItem extends BlockToolItem implements MishangucItem, WithMi
       return ActionResult.FAIL;
     }
     if (block instanceof AbstractRoadBlock) {
-      if (!world.isClient) {
+      if (!world.isClient()) {
         world.setBlockState(pos, RoadBlocks.ROAD_BLOCK.getStateWithProperties(blockState));
         player.sendMessage(TextBridge.translatable("item.mishanguc.road_tool.message.cleared"), true);
-        player.getStackInHand(hand).damage(1, player, LivingEntity.getSlotForHand(hand));
+        player.getStackInHand(hand).damage(1, player, hand.getEquipmentSlot());
       }
       return ActionResult.SUCCESS;
     } else if (block instanceof AbstractRoadSlabBlock) {
-      if (!world.isClient) {
+      if (!world.isClient()) {
         world.setBlockState(pos, RoadBlocks.ROAD_BLOCK.getRoadSlab().getStateWithProperties(blockState));
         player.sendMessage(TextBridge.translatable("item.mishanguc.road_tool.message.cleared"), true);
-        player.getStackInHand(hand).damage(1, player, LivingEntity.getSlotForHand(hand));
+        player.getStackInHand(hand).damage(1, player, hand.getEquipmentSlot());
       }
       return ActionResult.SUCCESS;
     }
@@ -112,11 +116,17 @@ public class RoadToolItem extends BlockToolItem implements MishangucItem, WithMi
 
   @Environment(EnvType.CLIENT)
   @Override
-  public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext worldRenderContext, WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
-    if (worldRenderContext.world().getBlockState(blockOutlineContext.blockPos()).getBlock() instanceof Road) {
-      return super.renderBlockOutline(player, itemStack, worldRenderContext, blockOutlineContext, hand);
+  public @Nullable MishangRenderState getMishangRenderState(@Nullable MishangRenderState previous, ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+    final OutlineRenderState outlineRenderState = context.worldState().outlineRenderState;
+    if (outlineRenderState == null) return null;
+
+    final BlockState blockState = player.getEntityWorld().getBlockState(outlineRenderState.pos());
+
+    if (blockState.getBlock() instanceof Road) {
+      return super.getMishangRenderState(previous, player, hand, stack, context, result);
+    } else {
+      return null;
     }
-    return false;
   }
 
   @Override

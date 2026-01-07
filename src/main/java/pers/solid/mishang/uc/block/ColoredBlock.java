@@ -17,9 +17,11 @@ import net.minecraft.loot.function.LootFunction;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.context.ContextParameter;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -34,7 +36,7 @@ import java.util.List;
  */
 public interface ColoredBlock extends BlockEntityProvider, MishangucBlock, WithMishangTooltip {
 
-  LootFunction COPY_COLOR_LOOT_FUNCTION = CopyComponentsLootFunction.builder(CopyComponentsLootFunction.Source.BLOCK_ENTITY).include(MishangucComponents.COLOR).build();
+  LootFunction COPY_COLOR_LOOT_FUNCTION = CopyComponentsLootFunction.blockEntity(new ContextParameter<>(Mishanguc.id("colored_block"))).include(MishangucComponents.COLOR).build();
 
   /**
    * 给方块添加关于颜色的提示。

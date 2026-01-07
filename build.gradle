@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.11-SNAPSHOT'
+    id 'fabric-loom' version '1.14-SNAPSHOT'
     id 'maven-publish'
 
     id "com.modrinth.minotaur" version "2.+"
@@ -181,7 +181,7 @@ githubRelease {
     owner = "SolidBlock-cn"
     repo = "mishanguc"
     tagName = "v$project.mod_version"
-    targetCommitish = "1.21.8"
+    targetCommitish = "1.21.10"
     body = content
     draft = true
     prerelease = false

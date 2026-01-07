@@ -33,7 +33,7 @@ public final class ModelHelper {
    */
   @NotNull
   public static BlockModelDefinitionCreator stateForHorizontalCornerFacingBlock(@NotNull Block block, @NotNull Identifier modelIdentifier, boolean uvlock) {
-    return VariantsBlockModelDefinitionCreator.of(block, BlockStateModelGenerator.createWeightedVariant(modelIdentifier)).coordinate(BlockStateVariantMap.operations(MishangucProperties.HORIZONTAL_CORNER_FACING).generate(direction -> ModelVariantOperator.ROTATION_Y.withValue(direction.asAxisRotationCCW45()).then(ModelVariantOperator.UV_LOCK.withValue(uvlock))));
+    return VariantsBlockModelDefinitionCreator.of(block, BlockStateModelGenerator.createWeightedVariant(modelIdentifier)).apply(BlockStateVariantMap.operations(MishangucProperties.HORIZONTAL_CORNER_FACING).generate(direction -> ModelVariantOperator.ROTATION_Y.withValue(direction.asAxisRotationCCW45()).then(ModelVariantOperator.UV_LOCK.withValue(uvlock))));
   }
 
   public static BlockModelDefinition composeStateForSlab(@NotNull BlockModelDefinition modelForFull) {

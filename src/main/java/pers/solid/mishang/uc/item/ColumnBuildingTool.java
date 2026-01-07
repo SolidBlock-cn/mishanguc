@@ -1,21 +1,19 @@
 package pers.solid.mishang.uc.item;
 
+import it.unimi.dsi.fastutil.longs.LongObjectPair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.VertexRendering;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.state.OutlineRenderState;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
 import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -24,18 +22,25 @@ import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.storage.NbtReadView;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ErrorReporter;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockBox;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.components.MishangucComponents;
+import pers.solid.mishang.uc.render.state.BuildingToolState;
+import pers.solid.mishang.uc.render.state.MishangRenderState;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
 import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
@@ -91,14 +96,14 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
     if (blockPlacementContext.canPlace()) {
       for (int i = 0; i < length; i++) {
         if (world.getBlockState(posToPlace).canReplace(blockPlacementContext.placementContext)) {
-          if (!world.isClient) {
+          if (!world.isClient()) {
             world.setBlockState(posToPlace, blockPlacementContext.stateToPlace, 0b1011);
             BlockEntity entityToPlace = world.getBlockEntity(posToPlace);
             if (blockPlacementContext.stackInHand != null) {
               BlockItem.writeNbtToBlockEntity(world, player, posToPlace, blockPlacementContext.stackInHand);
             } else if (blockPlacementContext.hitEntity != null && entityToPlace != null) {
               final NbtCompound nbt = blockPlacementContext.hitEntity.createNbt(world.getRegistryManager());
-              NbtComponent.of(nbt).applyToBlockEntity(entityToPlace, world.getRegistryManager());
+              entityToPlace.read(NbtReadView.create(ErrorReporter.EMPTY, world.getRegistryManager(), nbt));
               entityToPlace.markDirty();
               world.updateListeners(posToPlace, entityToPlace.getCachedState(), entityToPlace.getCachedState(), Block.NOTIFY_ALL);
             }
@@ -113,7 +118,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
       } // end for
     }
     if (soundPlayed) {
-      if (!world.isClient) {
+      if (!world.isClient()) {
         tempMemory.put(((ServerPlayerEntity) player), Triple.of(((ServerWorld) world), blockPlacementContext.stateToPlace.getBlock(), BlockBox.create(blockPlacementContext.posToPlace, posToPlace.toImmutable())));
       } else if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
         clientTempMemory = Triple.of(((ClientWorld) world), blockPlacementContext.stateToPlace.getBlock(), BlockBox.create(blockPlacementContext.posToPlace, posToPlace.toImmutable()));
@@ -133,7 +138,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
 
     // 检查是否存在上次记录的区域。如果有，且点击的方块在该区域内，则直接删除这个区域的方块。
     // 注意：只要点击了，即使点击的位置不在该区域内，也会清除有关的记录。
-    if (!world.isClient) {
+    if (!world.isClient()) {
       final Triple<ServerWorld, Block, BlockBox> pair = tempMemory.get(((ServerPlayerEntity) player));
       if (pair != null && pair.getLeft().equals(world) && pair.getRight().contains(pos)) {
         lastPlacedBox = pair.getRight();
@@ -147,7 +152,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
       }
       clientTempMemory = null;
     }
-    if (lastPlacedBox != null && lastPlacedBlock != null && !world.isClient) {
+    if (lastPlacedBox != null && lastPlacedBlock != null && !world.isClient()) {
       for (BlockPos posToRemove : BlockPos.iterate(lastPlacedBox.getMinX(), lastPlacedBox.getMinY(), lastPlacedBox.getMinZ(), lastPlacedBox.getMaxX(), lastPlacedBox.getMaxY(), lastPlacedBox.getMaxZ())) {
         final BlockState existingState = world.getBlockState(posToRemove);
         if (lastPlacedBlock.equals(existingState.getBlock()) && !(existingState.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
@@ -170,59 +175,38 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
     stack.set(MishangucComponents.LENGTH, length);
   }
 
-  @Environment(EnvType.CLIENT)
   @Override
-  public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext worldRenderContext, WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
-    final MinecraftClient client = MinecraftClient.getInstance();
+  public @Nullable MishangRenderState getMishangRenderState(@Nullable MishangRenderState previous, ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
     if (!player.isCreative()) {
       // 只有在创造模式下，才会绘制边框。
-      return true;
+      return null;
     } else if (hand == Hand.OFF_HAND && player.getMainHandStack().getItem() instanceof BlockItem) {
       // 当玩家副手持有物品，主手持有方块时，直接跳过，不绘制。
-      return true;
+      return null;
     }
-    final VertexConsumerProvider consumers = worldRenderContext.consumers();
-    if (consumers == null) return true;
-    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.LINES);
-    final boolean includesFluid = this.includesFluid(itemStack, player.isSneaking());
-    final int length = getLength(itemStack);
+    final boolean includesFluid = this.includesFluid(stack, player.isSneaking());
+    final int length = getLength(stack);
     final BlockHitResult raycast;
-    if (client.crosshairTarget instanceof BlockHitResult blockHitResult && blockHitResult.getType() == HitResult.Type.BLOCK) {
+    if (result instanceof BlockHitResult blockHitResult && blockHitResult.getType() == HitResult.Type.BLOCK) {
       raycast = blockHitResult;
     } else {
-      return true;
+      return null;
     }
-    final ClientWorld world = worldRenderContext.world();
-    final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockOutlineContext.blockPos(), player, itemStack, raycast, includesFluid);
+    final BuildingToolState buildingToolState = new BuildingToolState();
+    final ClientWorld world = context.world();
+    final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockHitResult.getBlockPos(), player, stack, raycast, includesFluid);
 
     // 绘制将要放置的方块。
 
     final Direction side = blockHitResult.getSide();
     final BlockPos.Mutable posToPlace = new BlockPos.Mutable().set(blockPlacementContext.posToPlace);
+    final ShapeContext shapeContext = ShapeContext.of(player);
     if (blockPlacementContext.canPlace()) {
       for (int i = 0; i < length; i++) {
         if (world.getBlockState(posToPlace).canReplace(blockPlacementContext.placementContext)) {
-          VertexRendering.drawOutline(
-              worldRenderContext.matrixStack(),
-              vertexConsumer,
-              blockPlacementContext.stateToPlace.getOutlineShape(world, posToPlace, ShapeContext.of(player)),
-              posToPlace.getX() - blockOutlineContext.cameraX(),
-              posToPlace.getY() - blockOutlineContext.cameraY(),
-              posToPlace.getZ() - blockOutlineContext.cameraZ(),
-              ColorHelper.fromFloats(0.8f, 0,
-                  1,
-                  1));
+          buildingToolState.cyanShapes.add(LongObjectPair.of(posToPlace.asLong(), blockPlacementContext.stateToPlace.getOutlineShape(world, posToPlace, shapeContext)));
           if (includesFluid) {
-            VertexRendering.drawOutline(
-                worldRenderContext.matrixStack(),
-                vertexConsumer,
-                blockPlacementContext.stateToPlace.getFluidState().getShape(world, posToPlace),
-                posToPlace.getX() - blockOutlineContext.cameraX(),
-                posToPlace.getY() - blockOutlineContext.cameraY(),
-                posToPlace.getZ() - blockOutlineContext.cameraZ(),
-                ColorHelper.fromFloats(0.5f, 0,
-                    0.5f,
-                    1));
+            buildingToolState.blueShapes.add(LongObjectPair.of(posToPlace.asLong(), blockPlacementContext.stateToPlace.getFluidState().getShape(world, posToPlace)));
           }
         } else {
           posToPlace.move(side, -1);
@@ -240,34 +224,23 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
       for (BlockPos posToRemove : BlockPos.iterate(lastPlacedBox.getMinX(), lastPlacedBox.getMinY(), lastPlacedBox.getMinZ(), lastPlacedBox.getMaxX(), lastPlacedBox.getMaxY(), lastPlacedBox.getMaxZ())) {
         final BlockState existingState = world.getBlockState(posToRemove);
         if (lastPlacedBlock.equals(existingState.getBlock()) && !(existingState.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
-          VertexRendering.drawOutline(
-              worldRenderContext.matrixStack(),
-              vertexConsumer,
-              existingState.getOutlineShape(world, posToRemove, ShapeContext.of(player)),
-              posToRemove.getX() - blockOutlineContext.cameraX(),
-              posToRemove.getY() - blockOutlineContext.cameraY(),
-              posToRemove.getZ() - blockOutlineContext.cameraZ(),
-              ColorHelper.fromFloats(0.8f, 1,
-                  0,
-                  0));
+          buildingToolState.redShapes.add(LongObjectPair.of(posToRemove.asLong(), existingState.getOutlineShape(world, posToRemove, shapeContext)));
           if (includesFluid) {
-            VertexRendering.drawOutline(
-                worldRenderContext.matrixStack(),
-                vertexConsumer,
-                existingState.getFluidState().getShape(world, posToRemove),
-                posToRemove.getX() - blockOutlineContext.cameraX(),
-                posToRemove.getY() - blockOutlineContext.cameraY(),
-                posToRemove.getZ() - blockOutlineContext.cameraZ(),
-                ColorHelper.fromFloats(0.5f, 1,
-                    0.5f,
-                    0));
+            buildingToolState.orangeShapes.add(LongObjectPair.of(posToRemove.asLong(), existingState.getFluidState().getShape(world, posToRemove)));
           }
         }
       }
       // 绘制了红色之后，就不再绘制原版的边框。
-      return false;
+      buildingToolState.showVanillaOutline = false;
+    } else {
+      buildingToolState.showVanillaOutline = true;
     }
-    // 由于常规的破坏方便可能仍然有效，因此保留原先的边框绘制。
-    return true;
+    return buildingToolState;
+  }
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext context, OutlineRenderState outlineRenderState) {
+    return BuildingToolState.render(context);
   }
 }

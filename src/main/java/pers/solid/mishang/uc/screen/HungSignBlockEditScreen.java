@@ -15,8 +15,10 @@ import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSignBlockEntity> {
@@ -31,12 +33,12 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
 
   public HungSignBlockEditScreen(
       RegistryWrapper.WrapperLookup registryLookup, BlockPos blockPos, Direction direction, HungSignBlockEntity entity) {
-    super(registryLookup, entity, blockPos, Optional.ofNullable(entity.texts.get(direction)).map(textContexts -> textContexts.stream().map(TextContext::clone).collect(Collectors.toList())).orElseGet(ArrayList::new));
+    super(registryLookup, entity, blockPos, entity.texts.get(direction));
     this.backedUpTexts = entity.texts;
     this.direction = direction;
     // 此时的 entity.texts 是可修改的，忽略 @Unmodifiable 注解。
     entity.texts = new HashMap<>(entity.texts);
-    entity.texts.put(direction, textContextsEditing);
+    entity.texts.put(direction, textFieldListWidget.getTextContexts());
   }
 
   @Override
@@ -58,7 +60,7 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
     if (changed) {
       // 固化 texts 字段
       final HashMap<@NotNull Direction, @Unmodifiable @NotNull List<@NotNull TextContext>> map = new HashMap<>(entity.texts);
-      map.put(direction, ImmutableList.copyOf(textContextsEditing));
+      map.put(direction, ImmutableList.copyOf(textFieldListWidget.getTextContexts()));
       entity.texts = ImmutableMap.copyOf(map);
     } else {
       entity.texts = backedUpTexts;
@@ -84,7 +86,7 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
                 textContext -> {
                   final TextContext flip = textContext.clone().flip();
                   // 留意添加到的位置是列表末尾。
-                  addTextField(textContextsEditing.size(), flip, false);
+                  addTextField(-1, flip, false);
                 });
           }).dimensions(this.width / 2 - 100,
           90,

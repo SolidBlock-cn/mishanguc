@@ -337,7 +337,7 @@ public class Mishanguc implements ModInitializer {
       final int selectedSlot = payload.selectedSlot();
       final double scrollAmount = payload.scrollAmount();
       final ServerPlayerEntity player = context.player();
-      player.getServer().execute(() -> {
+      player.getEntityWorld().getServer().execute(() -> {
         final ItemStack stack = player.getInventory().getStack(selectedSlot);
         if (stack.getItem() instanceof HotbarScrollInteraction interaction) {
           interaction.onScroll(selectedSlot, scrollAmount, player, stack);
@@ -357,7 +357,7 @@ public class Mishanguc implements ModInitializer {
     BEGIN_ATTACK_BLOCK_EVENT.register(
         // 仅限客户端执行
         (player, world, hand, pos, direction) -> {
-          if (!world.isClient || player.isSpectator()) {
+          if (!world.isClient() || player.isSpectator()) {
             return ActionResult.PASS;
           }
           final ItemStack stack = player.getMainHandStack();
@@ -372,7 +372,7 @@ public class Mishanguc implements ModInitializer {
     PROGRESS_ATTACK_BLOCK_EVENT.register(
         // 仅限客户端执行
         (player, world, hand, pos, direction) -> {
-          if (!world.isClient || player.isSpectator()) {
+          if (!world.isClient() || player.isSpectator()) {
             return ActionResult.PASS;
           }
           final ItemStack stack = player.getStackInHand(hand);
@@ -387,7 +387,7 @@ public class Mishanguc implements ModInitializer {
     AttackBlockCallback.EVENT.register(
         // 仅限服务器执行
         (player, world, hand, pos, direction) -> {
-          if (world.isClient || player.isSpectator()) {
+          if (world.isClient() || player.isSpectator()) {
             return ActionResult.PASS;
           }
           final ItemStack stack = player.getStackInHand(hand);

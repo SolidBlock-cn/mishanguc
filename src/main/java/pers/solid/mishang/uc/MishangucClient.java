@@ -8,7 +8,7 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
@@ -37,6 +37,7 @@ import pers.solid.mishang.uc.networking.GetBlockDataPayload;
 import pers.solid.mishang.uc.networking.GetEntityDataPayload;
 import pers.solid.mishang.uc.networking.RuleChangedPayload;
 import pers.solid.mishang.uc.render.*;
+import pers.solid.mishang.uc.render.state.MishangRenderStateProvider;
 import pers.solid.mishang.uc.screen.HungSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.StandingSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
@@ -178,8 +179,9 @@ public class MishangucClient implements ClientModInitializer {
 
   private static void registerRenderEvents() {
     // 注册方块外观描绘
-    WorldRenderEvents.BLOCK_OUTLINE.register(RendersBlockOutline.RENDERER);
-    WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register(RendersBeforeOutline.RENDERER);
+    WorldRenderEvents.AFTER_BLOCK_OUTLINE_EXTRACTION.register(MishangRenderStateProvider.MISHANG_EXTRACTION);
+    WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register(RendersBlockOutline.RENDERER);
+    WorldRenderEvents.BEFORE_DEBUG_RENDER.register(RendersBeforeOutline.DEBUG_RENDER);
   }
 
   private static void registerBlockLayers() {

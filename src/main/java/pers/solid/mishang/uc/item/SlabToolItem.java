@@ -9,7 +9,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.fabricmc.loader.api.FabricLoader;
@@ -24,14 +25,14 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexRendering;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.component.type.NbtComponent;
+import net.minecraft.client.render.state.OutlineRenderState;
 import net.minecraft.data.family.BlockFamilies;
 import net.minecraft.data.family.BlockFamily;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.TypedEntityData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -51,6 +52,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ColorHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -61,6 +63,8 @@ import pers.solid.mishang.uc.block.AbstractRoadBlock;
 import pers.solid.mishang.uc.blocks.RoadSlabBlocks;
 import pers.solid.mishang.uc.networking.SlabToolPayload;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
+import pers.solid.mishang.uc.render.state.MishangRenderState;
+import pers.solid.mishang.uc.render.state.SlabToolState;
 import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
@@ -173,7 +177,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
       final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, slabTypeToSet));
       final BlockEntity newBlockEntity = world.getBlockEntity(pos);
       if (newBlockEntity != null && nbt != null) {
-        NbtComponent.of(nbt).applyToBlockEntity(newBlockEntity, world.getRegistryManager());
+        TypedEntityData.create(newBlockEntity, nbt).applyToBlockEntity(newBlockEntity, world.getRegistryManager());
       }
       final BlockState brokenState = state.with(Properties.SLAB_TYPE, slabTypeBroken);
       block.onBreak(world, pos, brokenState, user);
@@ -204,7 +208,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
   @Override
   public boolean canMine(ItemStack stack, BlockState state, World world, BlockPos pos, LivingEntity user) {
     // 处理双台阶的情况。
-    if (world.isClient && user instanceof ClientPlayerEntity) {
+    if (world.isClient() && user instanceof ClientPlayerEntity) {
       final HitResult raycast = MinecraftClient.getInstance().crosshairTarget;
       if (!(raycast instanceof BlockHitResult) || raycast.getType() == HitResult.Type.MISS) return false;
       boolean isTop = raycast.getPos().y - (double) ((BlockHitResult) raycast).getBlockPos().getY() > 0.5D;
@@ -232,33 +236,42 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
 
   @Environment(EnvType.CLIENT)
   @Override
-  public boolean renderBlockOutline(
-      PlayerEntity player,
-      ItemStack itemStack,
-      WorldRenderContext worldRenderContext,
-      WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
-    final VertexConsumerProvider consumers = worldRenderContext.consumers();
-    if (consumers == null || hand != Hand.MAIN_HAND) return true;
-    final ClientWorld world = worldRenderContext.world();
-    BlockState state = blockOutlineContext.blockState();
-    final HitResult crosshairTarget = MinecraftClient.getInstance().crosshairTarget;
-    if (!(crosshairTarget instanceof final BlockHitResult blockHitResult)) {
+  public @Nullable MishangRenderState getMishangRenderState(@Nullable MishangRenderState previous, ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+    if (!(result instanceof final BlockHitResult blockHitResult) || hand != Hand.MAIN_HAND) {
+      return null;
+    }
+
+    boolean isTop = result.getPos().y - (double) blockHitResult.getBlockPos().getY() > 0.5D;
+    BlockState blockState = context.world().getBlockState(blockHitResult.getBlockPos());
+    blockState = tryToDoubleSlab(blockState);
+    if (blockState != null) {
+      final SlabToolState state = previous instanceof SlabToolState slabToolState ? slabToolState : new SlabToolState();
+      state.clear();
+      // 渲染时需要使用的方块状态。
+      final BlockState halfState = blockState.with(Properties.SLAB_TYPE, isTop ? SlabType.TOP : SlabType.BOTTOM);
+      state.slabShape = halfState.getOutlineShape(context.world(), blockHitResult.getBlockPos(), ShapeContext.of(player));
+      return state;
+    } else {
+      return null;
+    }
+  }
+
+  @Override
+  public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext context, OutlineRenderState outlineRenderState) {
+    if (!(context.worldState().getData(MISHANG_BLOCK_OUTLINE) instanceof SlabToolState state)) {
       return true;
     }
-    boolean isTop = crosshairTarget.getPos().y - (double) blockHitResult.getBlockPos().getY() > 0.5D;
-    state = tryToDoubleSlab(state);
-    if (state != null) {
-      // 渲染时需要使用的方块状态。
-      final BlockState halfState =
-          state.with(Properties.SLAB_TYPE, isTop ? SlabType.TOP : SlabType.BOTTOM);
-      final BlockPos blockPos = blockOutlineContext.blockPos();
+    final VertexConsumerProvider consumers = context.consumers();
+    if (state.slabShape != null) {
+      final BlockPos pos = outlineRenderState.pos();
+      final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
       VertexRendering.drawOutline(
-          worldRenderContext.matrixStack(),
+          context.matrices(),
           consumers.getBuffer(RenderLayer.LINES),
-          halfState.getOutlineShape(world, blockPos, ShapeContext.of(blockOutlineContext.entity())),
-          (double) blockPos.getX() - blockOutlineContext.cameraX(),
-          (double) blockPos.getY() - blockOutlineContext.cameraY(),
-          (double) blockPos.getZ() - blockOutlineContext.cameraZ(),
+          state.slabShape,
+          (double) pos.getX() - cameraPos.getX(),
+          (double) pos.getY() - cameraPos.getY(),
+          (double) pos.getZ() - cameraPos.getZ(),
           ColorHelper.fromFloats(0.4f, 0.0F,
               0.0F,
               0.0F));
@@ -293,20 +306,20 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
       final BlockPos blockPos = payload.blockPos();
       final boolean isTop = payload.isTop();
       final ServerPlayerEntity player = context.player();
-      player.getServer().execute(() -> {
+      player.getEntityWorld().getServer().execute(() -> {
         if (!player.canInteractWithBlockAt(blockPos, 0)) {
           return;
         }
         final ItemStack stack = player.getMainHandStack();
-        if (!(stack.getItem() instanceof SlabToolItem) || !(player.getAbilities().allowModifyWorld || stack.canBreak(new CachedBlockPosition(player.getWorld(), blockPos, false)))) {
+        if (!(stack.getItem() instanceof SlabToolItem) || !(player.getAbilities().allowModifyWorld || stack.canBreak(new CachedBlockPosition(player.getEntityWorld(), blockPos, false)))) {
           return;
         }
-        final Runnable remove = SERVER_BLOCK_BREAKING_BRIDGE.remove(Pair.of(player.getWorld(), blockPos));
+        final Runnable remove = SERVER_BLOCK_BREAKING_BRIDGE.remove(Pair.of(player.getEntityWorld(), blockPos));
         if (remove == CAN_MINE_CALLED_FIRST) {
-          performBreak(player.getWorld(), blockPos, player, isTop);
-        } else if (tryToDoubleSlab(player.getWorld().getBlockState(blockPos)) != null) {
+          performBreak(player.getEntityWorld(), blockPos, player, isTop);
+        } else if (tryToDoubleSlab(player.getEntityWorld().getBlockState(blockPos)) != null) {
           // 收到封包之后，送到 canMine 中执行。
-          SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of(player.getWorld(), blockPos), (PacketReceivedFirst) () -> performBreak(player.getWorld(), blockPos, player, isTop));
+          SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of(player.getEntityWorld(), blockPos), (PacketReceivedFirst) () -> performBreak(player.getEntityWorld(), blockPos, player, isTop));
         }
       });
     }

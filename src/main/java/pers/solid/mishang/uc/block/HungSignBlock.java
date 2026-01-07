@@ -317,7 +317,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     } else if (!player.getAbilities().allowModifyWorld) {
       // 冒险模式玩家无权编辑。Adventure players have no permission to edit.
       return ActionResult.FAIL;
-    } else if (world.isClient) {
+    } else if (world.isClient()) {
       return ActionResult.SUCCESS;
     }
 
@@ -349,7 +349,7 @@ public class HungSignBlock extends Block implements Waterloggable, BlockEntityPr
     } else if (!player.getAbilities().allowModifyWorld) {
       // 冒险模式玩家无权编辑。Adventure players have no permission to edit.
       return ActionResult.FAIL;
-    } else if (world.isClient) {
+    } else if (world.isClient()) {
       return ActionResult.SUCCESS;
     } else {
       if (stack.getItem() instanceof HoneycombItem) {

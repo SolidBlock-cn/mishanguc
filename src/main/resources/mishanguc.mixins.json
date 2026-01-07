@@ -26,10 +26,14 @@
     "WallBlockMixin"
   ],
   "client": [
+    "BatchingRenderCommandQueueMixin",
     "BetterClientPlayerInteractionManagerMixin",
     "BlockStateModelGeneratorAccessor",
     "GameRendererMixin",
     "MouseMixin",
+    "OrderedRenderCommandQueueImplMixin",
+    "RenderCommandQueueMixin",
+    "RenderDispatcherMixin",
     "ScreenMixin",
     "TextRendererAccessor"
   ],

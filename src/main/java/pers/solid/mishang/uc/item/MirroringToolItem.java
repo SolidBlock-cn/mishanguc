@@ -8,7 +8,6 @@ import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -64,7 +63,7 @@ public class MirroringToolItem extends BlockToolItem implements MishangucItem, W
       return ActionResult.FAIL;
     }
     final ActionResult result = mirror(world, blockPos, blockHitResult.getSide(), player);
-    if (result == ActionResult.SUCCESS) stack.damage(1, player, LivingEntity.getSlotForHand(hand));
+    if (result == ActionResult.SUCCESS) stack.damage(1, player, hand.getEquipmentSlot());
     return result;
   }
 
@@ -78,7 +77,7 @@ public class MirroringToolItem extends BlockToolItem implements MishangucItem, W
       return ActionResult.FAIL;
     }
     final ActionResult result = mirror(world, pos, direction, player);
-    if (result == ActionResult.SUCCESS) stack.damage(1, player, LivingEntity.getSlotForHand(hand));
+    if (result == ActionResult.SUCCESS) stack.damage(1, player, hand.getEquipmentSlot());
     return result;
   }
 

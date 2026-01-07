@@ -3,27 +3,19 @@ package pers.solid.mishang.uc.text;
 import com.google.common.collect.ImmutableMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.font.BakedGlyph;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.util.math.ColorHelper;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.joml.Matrix4f;
-import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.mixin.TextRendererAccessor;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public record PatternSpecialDrawable(TextContext textContext, String shapeName, @Unmodifiable float[][] rectangles) implements SpecialDrawable {
@@ -224,18 +216,18 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, float x, float y) {
-    int color = textContext.color;
+  public void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, OrderedRenderCommandQueue queue, int light, float x, float y) {
+    int color = this.textContext.color;
     //noinspection resource
-    BakedGlyph bakedGlyph = ((TextRendererAccessor) textRenderer).invokeGetFontStorage(Style.DEFAULT_FONT_ID).getRectangleBakedGlyph();
+   /* BakedGlyphImpl bakedGlyph = (BakedGlyphImpl) ((TextRendererAccessor) textRenderer).invokeGetFontStorage(MinecraftClient.DEFAULT_FONT_ID).getRectangleBakedGlyph();
     final float sizeMultiplier = 1;
-    final RenderLayer layer = bakedGlyph.getLayer(textContext.outlineColorType != OutlineColorType.NONE ? TextRenderer.TextLayerType.POLYGON_OFFSET : textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
+    final RenderLayer layer = bakedGlyph.getLayer(this.textContext.outlineColorType != OutlineColorType.NONE ? TextRenderer.TextLayerType.POLYGON_OFFSET : this.textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL);
 
     // 文本是否存在阴影。
-    final boolean shadow = textContext.outlineColorType == OutlineColorType.NONE && textContext.shadow;
+    final boolean shadow = this.textContext.outlineColorType == OutlineColorType.NONE && this.textContext.shadow;
     // 用于文本渲染的矩阵。当存在阴影时，文本渲染需要适当调整。
-    final List<BakedGlyph.Rectangle> rectanglesToDraw = new ArrayList<>();
-    final List<BakedGlyph.Rectangle> outlineRectangles = textContext.outlineColorType == OutlineColorType.NONE ? null : new ArrayList<>();
+    final List<BakedGlyphImpl.Rectangle> rectanglesToDraw = new ArrayList<>();
+    final List<BakedGlyphImpl.Rectangle> outlineRectangles = this.textContext.outlineColorType == OutlineColorType.NONE ? null : new ArrayList<>();
     for (float[] rectangle : rectangles) {
       final float minX = (rectangle[0] + x) * sizeMultiplier;
       final float minY = (rectangle[1] + y) * sizeMultiplier;
@@ -243,11 +235,11 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
       final float maxY = (rectangle[3] + y) * sizeMultiplier;
       if (shadow) {
         rectanglesToDraw.add(
-            new BakedGlyph.Rectangle(minX + 1, minY + 1, maxX + 1, maxY + 1, 0, ColorHelper.scaleRgb(color, 0.25f))
+            new BakedGlyphImpl(minX + 1, minY + 1, maxX + 1, maxY + 1, 0, ColorHelper.scaleRgb(color, 0.25f))
         );
       }
       if (outlineRectangles != null) {
-        int outlineColor = textContext.outlineColorType == OutlineColorType.AUTO ? MishangUtils.toSignOutlineColor(color) : textContext.outlineColor;
+        int outlineColor = this.textContext.outlineColorType == OutlineColorType.AUTO ? MishangUtils.toSignOutlineColor(color) : this.textContext.outlineColor;
         final int outlineAlpha = ((outlineColor & 0xFC000000) == 0) ? 255 : (outlineColor >> 24 & 0xFF);
         outlineRectangles.add(
             new BakedGlyph.Rectangle(minX - 1, minY - 1, maxX + 1, maxY + 1, 0, ColorHelper.withAlpha(outlineAlpha, outlineColor))
@@ -255,21 +247,26 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
 
       }
       rectanglesToDraw.add(
-          new BakedGlyph.Rectangle(minX, minY, maxX, maxY, shadow ? 0.03f : textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, color)
+          new BakedGlyph.Rectangle(minX, minY, maxX, maxY, shadow ? 0.03f : this.textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, color)
       );
     }
 
     final Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
-    final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(layer);
+    final VertexConsumer vertexConsumer = vertexConsumer.getBuffer(layer);
     for (BakedGlyph.Rectangle rectangle : rectanglesToDraw) {
       bakedGlyph.drawRectangle(rectangle, matrix4f, vertexConsumer, light, false);
     }
     if (outlineRectangles != null) {
-      final VertexConsumer vertexConsumerOutline = vertexConsumers.getBuffer(bakedGlyph.getLayer(TextRenderer.TextLayerType.NORMAL));
+      final VertexConsumer vertexConsumerOutline = vertexConsumer.getBuffer(bakedGlyph.getLayer(TextRenderer.TextLayerType.NORMAL));
       for (BakedGlyph.Rectangle outlineRectangle : outlineRectangles) {
         bakedGlyph.drawRectangle(outlineRectangle, matrix4f, vertexConsumerOutline, light, false);
       }
-    }
+    }*/
+  }
+
+  @Override
+  public void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y) {
+
   }
 
   @Override

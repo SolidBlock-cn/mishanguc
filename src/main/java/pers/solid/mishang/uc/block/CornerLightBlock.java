@@ -146,7 +146,7 @@ public class CornerLightBlock extends HorizontalFacingBlock
   public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final TextureMap textures = TextureMap.of(MishangucTextureKeys.LIGHT, MishangucModels.texture(lightColor + "_light"));
     final Identifier modelId = getModelType().upload(this, textures, blockStateModelGenerator.modelCollector);
-    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(this, BlockStateModelGenerator.createWeightedVariant(modelId)).coordinate(BlockStateVariantMap.operations(BLOCK_HALF, FACING).generate((blockHalf, direction) -> {
+    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(this, BlockStateModelGenerator.createWeightedVariant(modelId)).apply(BlockStateVariantMap.operations(BLOCK_HALF, FACING).generate((blockHalf, direction) -> {
       if (blockHalf == BlockHalf.BOTTOM) {
         return ModelVariantOperator.ROTATION_Y.withValue(switch (direction) {
           case WEST -> AxisRotation.R90;

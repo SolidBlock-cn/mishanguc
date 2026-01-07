@@ -1,14 +1,13 @@
 package pers.solid.mishang.uc.item;
 
+import it.unimi.dsi.fastutil.longs.LongObjectPair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.block.*;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.VertexRendering;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.state.OutlineRenderState;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -26,13 +25,14 @@ import net.minecraft.util.collection.Int2ObjectBiMap;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.components.FastBuildingToolData;
 import pers.solid.mishang.uc.components.MishangucComponents;
+import pers.solid.mishang.uc.render.state.BuildingToolState;
+import pers.solid.mishang.uc.render.state.MishangRenderState;
 import pers.solid.mishang.uc.util.BlockMatchingRule;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -85,7 +85,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
         final BlockPlacementContext offsetBlockPlacementContext =
             new BlockPlacementContext(blockPlacementContext, pos);
         if (offsetBlockPlacementContext.canPlace() && offsetBlockPlacementContext.canReplace()) {
-          if (!world.isClient) {
+          if (!world.isClient()) {
             offsetBlockPlacementContext.setBlockState(0b1011);
             offsetBlockPlacementContext.setBlockEntity();
           }
@@ -148,94 +148,59 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
     return TextBridge.translatable("item.mishanguc.fast_building_tool.format", getName(), Integer.toString(data.range()), data.matchingRule().getName());
   }
 
+
+  @Environment(EnvType.CLIENT)
+  @Override
+  public @Nullable MishangRenderState getMishangRenderState(@Nullable MishangRenderState previous, ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+    if (!player.isCreative()) {
+      // 只有在创造模式下，才会绘制边框。
+      return null;
+    } else if (hand == Hand.OFF_HAND && player.getMainHandStack().getItem() instanceof BlockItem) {
+      // 当玩家副手持有物品，主手持有方块时，直接跳过，不绘制。
+      return null;
+    }
+    final boolean includesFluid = this.includesFluid(stack, player.isSneaking());
+    final FastBuildingToolData data = stack.getOrDefault(MishangucComponents.FAST_BUILDING_TOOL_DATA, FastBuildingToolData.DEFAULT);
+    final BlockMatchingRule matchingRule = data.matchingRule();
+    final int range = data.range();
+    final BlockHitResult raycast;
+    if (result instanceof BlockHitResult blockHitResult && blockHitResult.getType() == HitResult.Type.BLOCK) {
+      raycast = blockHitResult;
+    } else {
+      return null;
+    }
+    final BuildingToolState buildingToolState = new BuildingToolState();
+    final ClientWorld world = context.world();
+    final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockHitResult.getBlockPos(), player, stack, raycast, includesFluid);
+    final ShapeContext shapeContext = ShapeContext.of(player);
+    for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, raycast.getBlockPos(), raycast.getSide(), range)) {
+      final BlockState state = world.getBlockState(pos);
+      final BlockPlacementContext offsetBlockPlacementContext = new BlockPlacementContext(blockPlacementContext, pos);
+      if (offsetBlockPlacementContext.canPlace() && offsetBlockPlacementContext.canReplace()) {
+        buildingToolState.cyanShapes.add(LongObjectPair.of(offsetBlockPlacementContext.posToPlace.asLong(), offsetBlockPlacementContext.stateToPlace.getOutlineShape(world, offsetBlockPlacementContext.posToPlace, shapeContext)));
+        if (includesFluid) {
+          buildingToolState.blueShapes.add(LongObjectPair.of(offsetBlockPlacementContext.posToPlace.asLong(), offsetBlockPlacementContext.stateToPlace.getFluidState().getShape(world, offsetBlockPlacementContext.posToPlace)));
+        }
+      }
+      if (hand == Hand.MAIN_HAND && !(state.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
+        buildingToolState.redShapes.add(LongObjectPair.of(pos.asLong(), state.getOutlineShape(world, pos, shapeContext)));
+        if (includesFluid) {
+          buildingToolState.orangeShapes.add(LongObjectPair.of(pos.asLong(), state.getFluidState().getShape(world, pos)));
+        }
+      }
+    }
+
+    return buildingToolState;
+  }
+
   @Environment(EnvType.CLIENT)
   @Override
   public boolean renderBlockOutline(
       PlayerEntity player,
       ItemStack itemStack,
-      WorldRenderContext worldRenderContext,
-      WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {
-    final MinecraftClient client = MinecraftClient.getInstance();
-    if (!player.isCreative()) {
-      // 只有在创造模式下，才会绘制边框。
-      return true;
-    } else if (hand == Hand.OFF_HAND && player.getMainHandStack().getItem() instanceof BlockItem) {
-      // 当玩家副手持有物品，主手持有方块时，直接跳过，不绘制。
-      return true;
-    }
-    final VertexConsumerProvider consumers = worldRenderContext.consumers();
-    if (consumers == null) return true;
-    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.LINES);
-    final boolean includesFluid = this.includesFluid(itemStack, player.isSneaking());
-    final FastBuildingToolData data = itemStack.getOrDefault(MishangucComponents.FAST_BUILDING_TOOL_DATA, FastBuildingToolData.DEFAULT);
-    final BlockMatchingRule matchingRule = data.matchingRule();
-    final int range = data.range();
-    final BlockHitResult raycast;
-    if (client.crosshairTarget instanceof BlockHitResult blockHitResult && blockHitResult.getType() == HitResult.Type.BLOCK) {
-      raycast = blockHitResult;
-    } else {
-      return true;
-    }
-    final ClientWorld world = worldRenderContext.world();
-    final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockOutlineContext.blockPos(), player, itemStack, raycast, includesFluid);
-    for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, raycast.getBlockPos(), raycast.getSide(), range)) {
-      final BlockState state = world.getBlockState(pos);
-      final BlockPlacementContext offsetBlockPlacementContext = new BlockPlacementContext(blockPlacementContext, pos);
-      if (offsetBlockPlacementContext.canPlace() && offsetBlockPlacementContext.canReplace()) {
-        VertexRendering.drawOutline(
-            worldRenderContext.matrixStack(),
-            vertexConsumer,
-            offsetBlockPlacementContext.stateToPlace.getOutlineShape(world, pos, ShapeContext.of(player)),
-            offsetBlockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(),
-            offsetBlockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(),
-            offsetBlockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(),
-            ColorHelper.fromFloats(0.8f,
-                0,
-                1,
-                1));
-        if (includesFluid) {
-          VertexRendering.drawOutline(
-              worldRenderContext.matrixStack(),
-              vertexConsumer,
-              offsetBlockPlacementContext.stateToPlace.getFluidState().getShape(world, pos),
-              offsetBlockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(),
-              offsetBlockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(),
-              offsetBlockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(),
-              ColorHelper.fromFloats(0.5f,
-                  0,
-                  0.5f,
-                  1));
-        }
-      }
-      if (hand == Hand.MAIN_HAND && !(state.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
-        // 只有当主手持有此物品时，才绘制边框，且对非管理员玩家忽略管理员方块。
-        VertexRendering.drawOutline(
-            worldRenderContext.matrixStack(),
-            vertexConsumer,
-            state.getOutlineShape(world, pos, ShapeContext.of(player)),
-            pos.getX() - blockOutlineContext.cameraX(),
-            pos.getY() - blockOutlineContext.cameraY(),
-            pos.getZ() - blockOutlineContext.cameraZ(),
-            ColorHelper.fromFloats(0.8f,
-                1,
-                0,
-                0));
-        if (includesFluid) {
-          VertexRendering.drawOutline(
-              worldRenderContext.matrixStack(),
-              vertexConsumer,
-              state.getFluidState().getShape(world, pos),
-              pos.getX() - blockOutlineContext.cameraX(),
-              pos.getY() - blockOutlineContext.cameraY(),
-              pos.getZ() - blockOutlineContext.cameraZ(),
-              ColorHelper.fromFloats(0.5f,
-                  1,
-                  0.5f,
-                  0));
-        }
-      }
-    }
-    return false;
+      WorldRenderContext context,
+      OutlineRenderState outlineRenderState) {
+    return BuildingToolState.render(context);
   }
 
   @Override

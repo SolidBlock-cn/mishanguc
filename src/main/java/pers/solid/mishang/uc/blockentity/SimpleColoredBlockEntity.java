@@ -36,7 +36,7 @@ public class SimpleColoredBlockEntity extends BlockEntity implements ColoredBloc
   protected void readData(ReadView view) {
     super.readData(view);
     color = view.read("color", MishangUtils.COLOR_CODEC).orElse(0);
-    if (world != null && world.isClient) {
+    if (world != null && world.isClient()) {
       world.updateListeners(pos, this.getCachedState(), this.getCachedState(), 3);
     }
   }

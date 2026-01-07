@@ -4,7 +4,6 @@ import net.minecraft.block.*;
 import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.TooltipDisplayComponent;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -70,7 +69,7 @@ public class IceSnowTool extends Item implements MishangucItem, DispenserBehavio
     } else {
       applyIce(serverWorld, pos, strength);
     }
-    stack.damage(strength + 1, user, LivingEntity.getSlotForHand(hand));
+    stack.damage(strength + 1, user, hand.getEquipmentSlot());
     return ActionResult.SUCCESS;
   }
 

@@ -53,20 +53,20 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
   @Override
   public ActionResult use(World world, PlayerEntity user, Hand hand) {
     final ActionResult use = super.use(world, user, hand);
-    if (world.isClient) return use;
+    if (world.isClient()) return use;
     final HitResult raycast = user.raycast(64, 0, true);
     if (raycast.getType() == HitResult.Type.MISS) {
       return ActionResult.FAIL;
     }
     final Vec3d center = raycast.getPos();
     final int damage = apply(world, center, !user.isSneaking());
-    user.getStackInHand(hand).damage(damage, user, LivingEntity.getSlotForHand(hand));
+    user.getStackInHand(hand).damage(damage, user, hand.getEquipmentSlot());
     return use;
   }
 
   @Override
   public boolean canMine(ItemStack stack, BlockState state, World world, BlockPos pos, LivingEntity user) {
-    if (super.canMine(stack, state, world, pos, user) && !world.isClient) {
+    if (super.canMine(stack, state, world, pos, user) && !world.isClient()) {
       final int damage = apply(world, Vec3d.ofCenter(pos), !user.isSneaking());
       user.getStackInHand(Hand.MAIN_HAND).damage(damage, user, EquipmentSlot.MAINHAND);
     }
@@ -89,7 +89,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
     for (Entity entity : world.getNonSpectatingEntities(Entity.class, Box.of(center, 9, 9, 9))) {
       if (entity instanceof PassiveEntity passiveEntity && passiveEntity.getBreedingAge() < 0) {
         passiveEntity.setBreedingAge(isPositive ? 0 : PassiveEntity.BABY_AGE);
-        createParticle(world, entity.getPos(), isPositive);
+        createParticle(world, entity.getEntityPos(), isPositive);
         damage += 1;
       } else if (entity instanceof SlimeEntity slimeEntity) {
         final int prevSize = slimeEntity.getSize();
@@ -98,12 +98,12 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
         } else {
           slimeEntity.setSize(prevSize / 2, false);
         }
-        createParticle(world, entity.getPos(), isPositive);
+        createParticle(world, entity.getEntityPos(), isPositive);
         damage += 1;
       } else if (entity instanceof MobEntity mobEntity) {
         if (mobEntity.isBaby() == isPositive) {
           mobEntity.setBaby(!isPositive);
-          createParticle(world, entity.getPos(), isPositive);
+          createParticle(world, entity.getEntityPos(), isPositive);
           damage += 1;
         }
       }
@@ -121,9 +121,9 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
   @Override
   public @NotNull ActionResult useEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
     final ActionResult actionResult = InteractsWithEntity.super.useEntityCallback(player, world, hand, entity, hitResult);
-    if (actionResult == ActionResult.PASS && !world.isClient) {
-      final int damage = apply(world, hitResult == null ? entity.getPos() : hitResult.getPos(), !player.isSneaking());
-      player.getStackInHand(hand).damage(damage, player, LivingEntity.getSlotForHand(hand));
+    if (actionResult == ActionResult.PASS && !world.isClient()) {
+      final int damage = apply(world, hitResult == null ? entity.getEntityPos() : hitResult.getPos(), !player.isSneaking());
+      player.getStackInHand(hand).damage(damage, player, hand.getEquipmentSlot());
       return ActionResult.SUCCESS;
     }
     return actionResult;
@@ -132,9 +132,9 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
   @Override
   public @NotNull ActionResult attackEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
     final ActionResult actionResult = InteractsWithEntity.super.attackEntityCallback(player, world, hand, entity, hitResult);
-    if (actionResult == ActionResult.PASS && !world.isClient) {
-      final int damage = apply(world, hitResult == null ? entity.getPos() : hitResult.getPos(), !player.isSneaking());
-      player.getStackInHand(hand).damage(damage, player, LivingEntity.getSlotForHand(hand));
+    if (actionResult == ActionResult.PASS && !world.isClient()) {
+      final int damage = apply(world, hitResult == null ? entity.getEntityPos() : hitResult.getPos(), !player.isSneaking());
+      player.getStackInHand(hand).damage(damage, player, hand.getEquipmentSlot());
       return ActionResult.SUCCESS;
     }
     return actionResult;

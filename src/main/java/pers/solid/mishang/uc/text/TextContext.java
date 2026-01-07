@@ -11,7 +11,7 @@ import joptsimple.internal.Strings;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.*;
 import net.minecraft.network.RegistryByteBuf;
@@ -234,7 +234,7 @@ public class TextContext implements Cloneable {
   }
 
   /**
-   * 从一个 NBT 复合标签中读取数据，写入当前的 textContext 中。
+   * 从一个 NBT 复合标签中读取数据，写入当前的 specialDrawable 中。
    *
    * @param nbt NBT 复合标签。
    */
@@ -311,7 +311,7 @@ public class TextContext implements Cloneable {
 
   @Environment(EnvType.CLIENT)
   @Contract(pure = true)
-  public void draw(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, float width, float height) {
+  public void draw(TextRenderer textRenderer, MatrixStack matrixStack, OrderedRenderCommandQueue queue, int light, float width, float height) {
     if (text == null && extra == null) {
       return;
     }
@@ -351,10 +351,10 @@ public class TextContext implements Cloneable {
 
     // 执行渲染
     if (orderedText != null) {
-      drawText(textRenderer, matrixStack, vertexConsumers, light, orderedText, x, y);
+      submitText(matrixStack, queue, light, orderedText, x, y);
     }
     if (extra != null) {
-      extra.drawExtra(textRenderer, matrixStack, vertexConsumers, light, x, y);
+      extra.drawExtra(textRenderer, matrixStack, queue, light, x, y);
     }
     matrixStack.pop();
   }
@@ -411,12 +411,12 @@ public class TextContext implements Cloneable {
 
   @Environment(EnvType.CLIENT)
   @Contract(pure = true)
-  protected void drawText(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, OrderedText text, float x, float y) {
-    if (outlineColorType == OutlineColorType.NONE) {
-      textRenderer.draw(text, x, y, color, shadow, matrixStack.peek().getPositionMatrix(), vertexConsumers, seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL, 0, light);
-    } else {
-      textRenderer.drawWithOutline(text, x, y, color, outlineColorType == OutlineColorType.AUTO ? MishangUtils.toSignOutlineColor(color) : outlineColor, matrixStack.peek().getPositionMatrix(), vertexConsumers, light);
-    }
+  protected void submitText(MatrixStack matrixStack, OrderedRenderCommandQueue queue, int light, OrderedText text, float x, float y) {
+    queue.submitText(matrixStack, x, y, text, shadow, seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL, light, color, 0, switch (outlineColorType) {
+      case AUTO -> MishangUtils.toSignOutlineColor(color);
+      case CUSTOM -> outlineColor;
+      default -> 0;
+    });
   }
 
   /**
