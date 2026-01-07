@@ -246,16 +246,16 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
               0));
     }
     if (state.yellowShape != null && state.yellowPos != null) {
-        VertexRendering.drawOutline(
-            matrices,
-            vertexConsumer,
-            state.yellowShape,
-            state.yellowPos.getX() - cameraX,
-            state.yellowPos.getY() - cameraY,
-            state.yellowPos.getZ() - cameraZ,
-            ColorHelper.fromFloats(0.5f, 1,
-                0.5f,
-                0));
+      VertexRendering.drawOutline(
+          matrices,
+          vertexConsumer,
+          state.yellowShape,
+          state.yellowPos.getX() - cameraX,
+          state.yellowPos.getY() - cameraY,
+          state.yellowPos.getZ() - cameraZ,
+          ColorHelper.fromFloats(0.5f, 1,
+              0.5f,
+              0));
 
     }
     return false;
