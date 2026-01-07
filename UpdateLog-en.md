@@ -2,7 +2,11 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
-### 1.6.0
+### 1.6.0-beta.2
+
+- Fixed the issue that the server cannot start.
+
+### 1.6.0-beta.1
 
 - Updated to 1.21.10 and 1.21.11.
 - Fixed the issue that the text in the sign edit screen does not display in some cases.

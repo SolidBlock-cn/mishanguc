@@ -36,6 +36,7 @@ public interface SpecialDrawable extends Cloneable {
     public void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, OrderedRenderCommandQueue queue, int light, float x, float y) {
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y) {
 
