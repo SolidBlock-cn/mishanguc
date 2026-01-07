@@ -113,7 +113,7 @@ public class DataTagToolItem extends BlockToolItemWithEntity implements Interact
     if (!world.isClient() && !player.isSpectator()) return getEntityDataOf((ServerPlayerEntity) player, entity);
     else return ActionResult.SUCCESS;
   }
-  
+
   /**
    * 用于接收服务器的 {@code mishanguc:get_block_data} 的数据包。用户使用该工具点击方块后，服务器获取其数据并传给客户端，客户端收到数据后，将消息反馈至聊天框。
    */
