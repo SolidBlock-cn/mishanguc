@@ -2,16 +2,17 @@ package pers.solid.mishang.uc.util;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.ClickEvent;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextCodecs;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * <p>The click event that, when clicked, shows the player another {@link Text}.</p>
  *
- * @see pers.solid.mishang.uc.mixin.ScreenMixin#handleTextClickMixin(Style, CallbackInfoReturnable)
+ * @see pers.solid.mishang.uc.mixin.ScreenMixin#handleTextClickMixin(ClickEvent, MinecraftClient, Screen, CallbackInfo)
  * @since 0.1.7 This class is designed for client-only, as it is related to client-side clicking actions, and it cannot be serialized as JSON.
  */
 public record TextClickEvent(Text text) implements ClickEvent {

@@ -21,8 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import pers.solid.mishang.uc.Mishanguc;
 
 /**
- * 本 mixin 参考了 {@link
- * net.fabricmc.fabric.mixin.event.interaction.client.ClientPlayerInteractionManagerMixin}，不过这个 mixin
+ * 本 mixin 参考了 {@code ClientPlayerInteractionManagerMixin}（仅限旧版本），不过这个 mixin
  * 有个很大的问题，一是在客户端结果不为 PASS 时会阻止产生 packet 导致服务器不执行该 callback，而且方块破坏过程中也会执行该 mixin。因此改进了此 mixin。<br>
  * 该 mixin 具有两个特点：一是在客户端结果不返回 PASS 时也会发送 packet，这样可以让服务器也执行，二是分类开始破坏和中途破坏两个情况。
  */
