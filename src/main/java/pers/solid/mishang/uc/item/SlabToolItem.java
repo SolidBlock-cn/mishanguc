@@ -256,6 +256,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
     }
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext context, OutlineRenderState outlineRenderState) {
     if (!(context.worldState().getData(MISHANG_BLOCK_OUTLINE) instanceof SlabToolState state)) {

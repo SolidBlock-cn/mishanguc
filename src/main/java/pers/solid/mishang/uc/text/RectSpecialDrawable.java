@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.text;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.EffectGlyph;
 import net.minecraft.client.font.TextRenderer;
@@ -23,6 +25,7 @@ import pers.solid.mishang.uc.util.TextBridge;
  */
 public record RectSpecialDrawable(float width, float height, @NotNull TextContext textContext) implements SpecialDrawable {
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y) {
     final int color = textContext.color;

@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.text;
 
 import com.google.common.collect.ImmutableMap;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.EffectGlyph;
 import net.minecraft.client.font.TextRenderer;
@@ -217,6 +219,7 @@ public record PatternSpecialDrawable(TextContext textContext, String shapeName, 
     return rectangles == EMPTY;
   }
 
+  @Environment(EnvType.CLIENT)
   @Override
   public void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y) {
     int color = this.textContext.color;
