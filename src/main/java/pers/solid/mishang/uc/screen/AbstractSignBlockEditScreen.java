@@ -456,14 +456,19 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     final int colorIndex = (int) valueFunction.get(original.floatValue());
     final int outlineColor;
     final OutlineColorType outlineColorType;
-    if (colorIndex == -1 || colorIndex == -2) {
+    if (colorIndex == -1) {
       outlineColor = colorIndex;
+      outlineColorType = OutlineColorType.AUTO;
+    } else if (colorIndex == -2) {
+      outlineColor = colorIndex;
+      outlineColorType = OutlineColorType.NONE;
     } else if (colorIndex > 15) {
       outlineColor = MishangUtils.COLOR_TO_OUTLINE_COLOR.get(DyeColor.byIndex(colorIndex - 16));
+      outlineColorType = OutlineColorType.CUSTOM;
     } else {
       outlineColor = DyeColor.byIndex(colorIndex).getSignColor();
+      outlineColorType = OutlineColorType.CUSTOM;
     }
-    outlineColorType = OutlineColorType.fromCompatibilityValue(outlineColor);
     for (TextFieldListWidget.@NotNull Entry entry : textFieldListWidget.selectedEntries) {
       entry.textContext.outlineColor = outlineColor;
       entry.textContext.outlineColorType = outlineColorType;
