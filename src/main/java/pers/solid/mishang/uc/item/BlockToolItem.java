@@ -133,8 +133,8 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable MishangRenderState getMishangRenderState(@Nullable MishangRenderState previous, ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
-    final BlockToolState state = previous instanceof BlockToolState blockToolState ? blockToolState : new BlockToolState();
+  public @Nullable MishangRenderState getMishangRenderState(ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+    final BlockToolState state = new BlockToolState();
 
     final ClientWorld world = context.world();
 

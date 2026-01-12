@@ -25,7 +25,6 @@ import net.minecraft.util.shape.VoxelShapes;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.render.state.BlockToolStateWithEntity;
-import pers.solid.mishang.uc.render.state.MishangRenderState;
 
 /**
  * @since Minecraft 1.21.10
@@ -38,8 +37,8 @@ public abstract class BlockToolItemWithEntity extends BlockToolItem implements R
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable BlockToolStateWithEntity getMishangRenderState(@Nullable MishangRenderState previous, ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
-    final BlockToolStateWithEntity state = previous instanceof BlockToolStateWithEntity blockToolState ? blockToolState : new BlockToolStateWithEntity();
+  public @Nullable BlockToolStateWithEntity getMishangRenderState(ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+    final BlockToolStateWithEntity state = new BlockToolStateWithEntity();
 
     final ClientWorld world = context.world();
 
