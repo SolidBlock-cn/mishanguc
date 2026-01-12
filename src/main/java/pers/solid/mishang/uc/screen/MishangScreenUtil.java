@@ -1,10 +1,16 @@
 package pers.solid.mishang.uc.screen;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.Window;
 import org.lwjgl.glfw.GLFW;
 
+/**
+ * 用于替代自 Minecraft 1.21.10 中移除的 {@code Screen} 中的静态方法。
+ */
+@Environment(EnvType.CLIENT)
 public final class MishangScreenUtil {
   public static boolean hasShiftDown() {
     final Window window = MinecraftClient.getInstance().getWindow();

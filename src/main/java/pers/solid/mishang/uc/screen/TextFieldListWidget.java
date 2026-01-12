@@ -55,7 +55,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
   private static final Identifier background = Identifier.ofVanilla("textures/gui/inworld_menu_background.png");
   /**
-   * 被选中的多个项。
+   * 被选中的多个项的列表，通常包含 {@link #selected} 的对象但不一定。一般通过 {@link Entry#setSelected(boolean)} 来修改。
    */
   protected final @NotNull List<TextFieldListWidget.@NotNull Entry> selectedEntries = new ArrayList<>();
   private final AbstractSignBlockEditScreen<?> signBlockEditScreen;
@@ -88,6 +88,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
   /**
    * 设置当前 TextFieldListScreen 的已选中的文本框。
+   * @implNote 此对象的 {@link #selected} 一般不是 null，而 {@link #focused} 会在此对象（{@link TextFieldListWidget}）失焦时变成 {@code null}。
    *
    * @param entry 需要选中的 {@link Entry}。
    * @see AbstractSignBlockEditScreen#setFocused(Element)
@@ -551,6 +552,10 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
       super.setFocused(focused);
     }
 
+    /**
+     * <p>标记此元素是否被选中，与 {@link #focused} 有区别，即使 {@link TextFieldListWidget} 对象失焦时，此字段可能仍为 {@code true}，从而确保文本框的边缘能够正常用白色显示。
+     * <p>修改此对象时，也会一并修改 {@link #selectedEntries}。
+     */
     public void setSelected(boolean selected) {
       // 即使是因为焦点转移到其他元素，导致此元素的 focused 为 false，其文本框仍为 focused
       this.setFocused(selected);
