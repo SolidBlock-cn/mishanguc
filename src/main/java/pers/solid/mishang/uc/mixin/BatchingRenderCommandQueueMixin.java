@@ -20,6 +20,9 @@ import pers.solid.mishang.uc.text.SpecialDrawable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @since Minecraft 1.21.10
+ */
 @Environment(EnvType.CLIENT)
 @Mixin(BatchingRenderCommandQueue.class)
 public abstract class BatchingRenderCommandQueueMixin implements RenderCommandQueueExtension, BatchingRenderCommandQueueExtension {
