@@ -116,14 +116,14 @@ public class RoadToolItem extends BlockToolItem implements MishangucItem, WithMi
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable MishangRenderState getMishangRenderState(@Nullable MishangRenderState previous, ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  public @Nullable MishangRenderState getMishangRenderState(ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
     final OutlineRenderState outlineRenderState = context.worldState().outlineRenderState;
     if (outlineRenderState == null) return null;
 
     final BlockState blockState = player.getEntityWorld().getBlockState(outlineRenderState.pos());
 
     if (blockState.getBlock() instanceof Road) {
-      return super.getMishangRenderState(previous, player, hand, stack, context, result);
+      return super.getMishangRenderState(player, hand, stack, context, result);
     } else {
       return null;
     }

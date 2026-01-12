@@ -152,7 +152,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable MishangRenderState getMishangRenderState(@Nullable MishangRenderState previous, ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  public @Nullable MishangRenderState getMishangRenderState(ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
     if (!player.isCreative()) {
       // 只有在创造模式下，才会绘制边框。
       return null;

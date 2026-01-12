@@ -50,7 +50,6 @@ import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.render.state.ForcePlacingToolState;
-import pers.solid.mishang.uc.render.state.MishangRenderState;
 import pers.solid.mishang.uc.render.state.MishangRenderStateProvider;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -130,7 +129,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable ForcePlacingToolState getMishangRenderState(@Nullable MishangRenderState previous, ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  public @Nullable ForcePlacingToolState getMishangRenderState(ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
     if (!hasAccess(player, context.world(), false)) {
       // 只有在符合条件的情况下，才会绘制边框。
       return null;
@@ -142,13 +141,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       }
     }
 
-    final ForcePlacingToolState state;
-    if (previous instanceof ForcePlacingToolState p) {
-      state = p;
-      p.clear();
-    } else {
-      state = new ForcePlacingToolState();
-    }
+    final ForcePlacingToolState state = new ForcePlacingToolState();
 
     if (result instanceof EntityHitResult entityHitResult) {
       state.hitEntityBoundingBox = entityHitResult.getEntity().getBoundingBox();

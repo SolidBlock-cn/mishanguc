@@ -236,7 +236,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable MishangRenderState getMishangRenderState(@Nullable MishangRenderState previous, ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  public @Nullable MishangRenderState getMishangRenderState(ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
     if (!(result instanceof final BlockHitResult blockHitResult) || hand != Hand.MAIN_HAND) {
       return null;
     }
@@ -245,8 +245,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
     BlockState blockState = context.world().getBlockState(blockHitResult.getBlockPos());
     blockState = tryToDoubleSlab(blockState);
     if (blockState != null) {
-      final SlabToolState state = previous instanceof SlabToolState slabToolState ? slabToolState : new SlabToolState();
-      state.clear();
+      final SlabToolState state = new SlabToolState();
       // 渲染时需要使用的方块状态。
       final BlockState halfState = blockState.with(Properties.SLAB_TYPE, isTop ? SlabType.TOP : SlabType.BOTTOM);
       state.slabShape = halfState.getOutlineShape(context.world(), blockHitResult.getBlockPos(), ShapeContext.of(player));

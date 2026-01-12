@@ -307,13 +307,13 @@ public class TextCopyToolItem extends BlockToolItem implements MishangucItem, Wi
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable MishangRenderState getMishangRenderState(@Nullable MishangRenderState previous, ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  public @Nullable MishangRenderState getMishangRenderState(ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
     final OutlineRenderState outlineRenderState = context.worldState().outlineRenderState;
     if (outlineRenderState == null) return null;
 
     final BlockEntity blockEntity = player.getEntityWorld().getBlockEntity(outlineRenderState.pos());
     if (blockEntity instanceof SignBlockEntity || blockEntity instanceof HungSignBlockEntity || blockEntity instanceof WallSignBlockEntity || blockEntity instanceof StandingSignBlockEntity) {
-      return super.getMishangRenderState(previous, player, hand, stack, context, result);
+      return super.getMishangRenderState(player, hand, stack, context, result);
     } else {
       return null;
     }

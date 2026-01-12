@@ -30,15 +30,14 @@ public interface MishangRenderStateProvider {
       final Item item = stackInHand.getItem();
       if (item instanceof final MishangRenderStateProvider mishangRenderStateProvider) {
         worldRenderState.setData(HAND_STACK, stackInHand);
-        final MishangRenderState previous = worldRenderState.getData(MISHANG_BLOCK_OUTLINE);
-        worldRenderState.setData(MISHANG_BLOCK_OUTLINE, mishangRenderStateProvider.getMishangRenderState(previous, player, hand, stackInHand, context, result));
+        worldRenderState.setData(MISHANG_BLOCK_OUTLINE, mishangRenderStateProvider.getMishangRenderState(player, hand, stackInHand, context, result));
         break;
       }
     }
   };
 
   @Nullable
-  default MishangRenderState getMishangRenderState(@Nullable MishangRenderState previous, ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  default MishangRenderState getMishangRenderState(ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
     return null;
   }
 }

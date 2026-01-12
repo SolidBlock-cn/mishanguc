@@ -351,9 +351,8 @@ public class CarryingToolItem extends BlockToolItem
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable CarryingToolState getMishangRenderState(@Nullable MishangRenderState previous, ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
-    final CarryingToolState state = previous instanceof CarryingToolState carryingToolState ? carryingToolState : new CarryingToolState();
-    state.clear();
+  public @Nullable CarryingToolState getMishangRenderState(ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+    final CarryingToolState state = new CarryingToolState();
 
     final ClientWorld world = context.world();
     if (!hasAccess(player, world, true)) {
