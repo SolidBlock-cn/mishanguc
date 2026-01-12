@@ -30,6 +30,7 @@
     "BetterClientPlayerInteractionManagerMixin",
     "BlockStateModelGeneratorAccessor",
     "ClientPlayerEntityMixin",
+    "EntryListWidgetAccessor",
     "MouseMixin",
     "OrderedRenderCommandQueueImplMixin",
     "RenderCommandQueueMixin",
