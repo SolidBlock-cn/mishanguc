@@ -147,57 +147,12 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 上方第一行：上移按钮。
    */
-  public final ButtonWidget moveUpButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.moveUp"), button -> {
-    if (textFieldListWidget.selectedEntries.isEmpty()) {
-      return;
-    }
-
-    // 确保按顺序排序
-    final List<TextFieldListWidget.Entry> selectedCopy = textFieldListWidget.children().stream().filter(textFieldListWidget.selectedEntries::contains).toList();
-
-    textFieldListWidget.selectedEntries.clear();
-    for (TextFieldListWidget.Entry entry : selectedCopy) {
-      final int i = textFieldListWidget.children().indexOf(entry);
-      if (i < 0) {
-        Mishanguc.MISHANG_LOGGER.warn("Unexpected entry which is not in children when moving up: {}", entry);
-        continue;
-      } else if (i == 0) {
-        // 顶到了第一元素，不能再移动。
-        textFieldListWidget.selectedEntries.addAll(selectedCopy);
-        break;
-      }
-      removeTextField(i, false);
-      addTextField(i - 1, entry.textContext, false, true);
-    }
-  }).dimensions(this.width - 20, 5, 80, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.moveUp.description").append(ScreenTexts.LINE_BREAK).append(MishangUtils.describeShortcut(TextBridge.literal("Ctrl + Shift + ").append(TextBridge.translatable("key.keyboard.up")))))).build();
+  public final ButtonWidget moveUpButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.moveUp"), button -> textFieldListWidget.moveUpEntries(textFieldListWidget.selectedEntries)).dimensions(this.width - 20, 5, 80, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.moveUp.description").append(ScreenTexts.LINE_BREAK).append(MishangUtils.describeShortcut(TextBridge.literal("Ctrl + Shift + ").append(TextBridge.translatable("key.keyboard.up")))))).build();
 
   /**
    * 上方第一行：下移按钮。
    */
-  public final ButtonWidget moveDownButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.moveDown"), button -> {
-    if (textFieldListWidget.selectedEntries.isEmpty()) {
-      return;
-    }
-
-    // 确保按倒序排序
-    final List<TextFieldListWidget.Entry> selectedCopy = Lists.reverse(textFieldListWidget.children()).stream().filter(textFieldListWidget.selectedEntries::contains).toList();
-
-    textFieldListWidget.selectedEntries.clear();
-    for (TextFieldListWidget.Entry entry : selectedCopy) {
-      final int i = textFieldListWidget.children().indexOf(entry);
-      if (i < 0) {
-        Mishanguc.MISHANG_LOGGER.warn("Unexpected entry which is not in children when moving down: {}", entry);
-        continue;
-      } else if (i == textFieldListWidget.children().size() - 1) {
-        // 顶到了最后元素，不能再移动。
-        textFieldListWidget.selectedEntries.addAll(selectedCopy);
-        break;
-      }
-      removeTextField(i, false);
-      addTextField(i + 1, entry.textContext, false, true);
-    }
-
-  }).dimensions(this.width - 20, 5, 80, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.moveDown.description").append(ScreenTexts.LINE_BREAK).append(MishangUtils.describeShortcut(TextBridge.literal("Ctrl + Shift + ").append(TextBridge.translatable("key.keyboard.down")))))).build();
+  public final ButtonWidget moveDownButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.moveDown"), button -> textFieldListWidget.moveDownEntries(textFieldListWidget.selectedEntries)).dimensions(this.width - 20, 5, 80, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.moveDown.description").append(ScreenTexts.LINE_BREAK).append(MishangUtils.describeShortcut(TextBridge.literal("Ctrl + Shift + ").append(TextBridge.translatable("key.keyboard.down")))))).build();
 
   /**
    * 上方第一行：清除按钮。
