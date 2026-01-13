@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Streams;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.JsonOps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,19 +20,16 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.input.KeyCodes;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.*;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.PlainTextContent;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextCodecs;
+import net.minecraft.text.*;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.packrat.PackratParser;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -992,7 +991,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           textFieldWidget.setText(text);
         }
       } else {
-        textFieldWidget.setText("-json " + TextCodecs.CODEC.encodeStart(registryLookup.getOps(JsonOps.INSTANCE), textContext.text).getOrThrow().toString());
+        textFieldWidget.setText("-nbt " + TextCodecs.CODEC.encodeStart(registryLookup.getOps(NbtOps.INSTANCE), textContext.text).getOrThrow().toString());
       }
     }
     final TextFieldListWidget.Entry newEntry = textFieldListWidget.new Entry(textFieldWidget, textContext);
@@ -1019,6 +1018,23 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
               final JsonElement jsonElement = TextContext.GSON.fromJson(value, JsonElement.class);
               textContext1.text = (MutableText) TextCodecs.CODEC.parse(registryLookup.getOps(JsonOps.INSTANCE), jsonElement).getOrThrow();
             } catch (JsonParseException | IllegalStateException e) {
+              textFieldWidget.setEditableColor(0xffff5555);
+              textFieldWidget.setTooltip(Tooltip.of(Text.literal(e.getMessage())));
+            }
+            break;
+          case "nbt":
+            try {
+              final PackratParser<NbtElement> parser = SnbtParsing.createParser(NbtOps.INSTANCE);
+              final StringReader reader = new StringReader(value);
+              final NbtElement nbtElement = parser.parse(reader);
+              if (reader.canRead()) {
+                throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownArgument().createWithContext(reader);
+              }
+              textContext1.text = (MutableText) TextCodecs.CODEC.parse(registryLookup.getOps(NbtOps.INSTANCE), nbtElement).getOrThrow();
+            } catch (CommandSyntaxException e) {
+              textFieldWidget.setEditableColor(0xffff5555);
+              textFieldWidget.setTooltip(Tooltip.of(Texts.toText(e.getRawMessage())));
+            } catch (IllegalStateException e) {
               textFieldWidget.setEditableColor(0xffff5555);
               textFieldWidget.setTooltip(Tooltip.of(Text.literal(e.getMessage())));
             }
