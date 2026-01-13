@@ -54,7 +54,7 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
             }))
         .then(literal("list")
             .executes(commandContext -> {
-              final Collection<SignPreset> values = SignPresets.all().values();
+              final Collection<SignPreset> values = SignPresets.streamValues().toList();
               commandContext.getSource().sendFeedback(Text.translatable("message.mishanguc.signPreset.list", Texts.join(values, Texts.DEFAULT_SEPARATOR_TEXT, signPreset -> signPreset.name().copy().formatted(Formatting.YELLOW).styled(style -> {
                 final MutableText text = Text.empty();
                 final Text description = signPreset.description();
@@ -97,12 +97,10 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
 
     if (args != null) {
       force = args.getBoolean("force", false);
-      reload = args.getBoolean("reload", true);
       order = args.getInt("order", 0);
       initialFocus = args.getInt("initial_focus", 0);
     } else {
       force = false;
-      reload = true;
       order = 0;
       initialFocus = 0;
     }
@@ -152,9 +150,7 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
     final Thread thread = new Thread(() -> {
       final SignPreset.Info info = new SignPreset.Info(order, name, description, textContextsCopy, initialFocus);
       info.save(id, source, force);
-      if (reload) {
-        SignPresets.loadAll();
-      }
+      SignPresets.register(info.create(id));
     });
     thread.start();
     source.sendFeedback(Text.translatable("message.mishanguc.signPreset.save.start"));
