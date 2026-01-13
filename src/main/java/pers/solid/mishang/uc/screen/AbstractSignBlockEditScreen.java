@@ -8,9 +8,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.Alignment;
 import net.minecraft.client.font.MultilineText;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -186,6 +184,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     setFocused(textFieldListWidget);
     textFieldListWidget.setFocused(textFieldListWidget.children().get(0));
   }).dimensions(0, 35, 200, 20).build();
+
+  public final SignPresetGridWidget signPresets = SignPresetGridWidget.createAllWidgets(this);
 
   @ApiStatus.AvailableSince("0.1.6")
   public final ButtonWidget applyDoubleLineTemplateButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.apply_double_line_template"), button -> {
@@ -797,9 +797,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     arrangeToolboxButtons();
 
     placeHolder.setX(width / 2 - 100);
-    applyDoubleLineTemplateButton.setX(width / 2 - 60);
-    applyLeftArrowTemplateButton.setX(width / 2 - 180);
-    applyRightArrowTemplateButton.setX(width / 2 + 60);
 
     if (isAcceptingCustomValue) {
       customValueTextField.setY(height - 40);
@@ -820,13 +817,17 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   }
 
   protected Collection<ButtonWidget> getTextHolders() {
-    return List.of(placeHolder, applyLeftArrowTemplateButton, applyDoubleLineTemplateButton, applyRightArrowTemplateButton);
+    return List.of(placeHolder);
   }
 
   protected void initTextHolders() {
     for (ButtonWidget textHolder : getTextHolders()) {
       this.addDrawableChild(textHolder);
     }
+    signPresets.refreshPositions();
+    signPresets.forEachElement(widget -> this.addDrawableChild((Element & Drawable & Selectable) widget));
+    signPresets.setX(width / 2 - signPresets.getWidth() / 2);
+    signPresets.setY(70);
   }
 
   /**
@@ -837,6 +838,11 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     for (ButtonWidget textHolder : getTextHolders()) {
       textHolder.visible = visible;
     }
+    signPresets.forEachElement(widget -> {
+      if (widget instanceof ClickableWidget clickableWidget) {
+        clickableWidget.visible = visible;
+      }
+    });
 
     // 同时也需要更新 textFieldListWidget 的可见性
     textFieldListWidget.active = !visible;
@@ -853,13 +859,13 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
     super.render(context, mouseX, mouseY, delta);
     if (placeHolder.visible) {
-      final MutableText text0 = TextBridge.translatable("message.mishanguc.or");
+      final MutableText text0 = TextBridge.translatable("message.mishanguc.or_use_preset");
       context.drawTextWithShadow(
           textRenderer,
           text0,
           (int) (width / 2f - textRenderer.getWidth(text0) / 2f),
           60,
-          0xdddddd);
+          0xffdddddd);
     }
     if (isSelectingButtonToSetCustom) {
       final MutableText text = TextBridge.translatable("message.mishanguc.select_button_to_set_custom");
