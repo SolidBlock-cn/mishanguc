@@ -108,7 +108,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     final Direction side = blockHitResult.getSide();
     if (side.getAxis().isVertical()) {
       final Vec3d pos = blockHitResult.getPos();
-      double minAngle = MathHelper.RADIANS_PER_DEGREE * (360 / 16f * blockState.get(ROTATION));
+      double minAngle = MathHelper.RADIANS_PER_DEGREE * (360 / 16f * blockState.get(ROTATION, 0));
       double clickAngle = MathHelper.atan2(MathHelper.floorMod(pos.z, 1) - 0.5, MathHelper.floorMod(pos.x, 1) - 0.5);
       return (minAngle < clickAngle && clickAngle < minAngle + MathHelper.PI)
           || (minAngle - 2 * MathHelper.PI < clickAngle && clickAngle < minAngle - MathHelper.PI);

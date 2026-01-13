@@ -4,6 +4,7 @@ import com.google.common.base.Predicates;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
@@ -69,6 +70,8 @@ public class MishangucClient implements ClientModInitializer {
     registerNetworking();
 
     registerItemProperties();
+
+    ClientCommandRegistrationCallback.EVENT.register(SignPresetCommand.INSTANCE);
 
     ItemTooltipCallback.EVENT.register((itemStack, tooltipContext, tooltipType, list) -> {
       if (itemStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof WithMishangTooltip withMishangTooltip) {
