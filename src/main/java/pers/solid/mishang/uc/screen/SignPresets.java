@@ -20,7 +20,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,14 +126,14 @@ public final class SignPresets {
   }
 
   public static SignPreset register(SignPreset preset) {
-    if (REGISTRY.containsKey(preset.id())) {
-      throw new IllegalArgumentException(preset.id() + " is already registered!");
-    }
     REGISTRY.put(preset.id(), preset);
     return preset;
   }
 
-  public static Map<String, SignPreset> all() {
-    return Collections.unmodifiableMap(REGISTRY);
+  /**
+   * 按指定的顺序排序已注册的所有告示牌预设的流。
+   */
+  public static Stream<SignPreset> streamValues() {
+    return REGISTRY.values().stream().sorted(Comparator.comparingInt(SignPreset::order));
   }
 }

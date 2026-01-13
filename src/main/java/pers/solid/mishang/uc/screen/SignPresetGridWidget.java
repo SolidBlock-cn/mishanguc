@@ -6,14 +6,13 @@ import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.text.Text;
 import pers.solid.mishang.uc.text.TextContext;
 
-import java.util.Comparator;
 import java.util.List;
 
 public class SignPresetGridWidget extends GridWidget {
   public static SignPresetGridWidget createAllWidgets(AbstractSignBlockEditScreen<?> screen) {
     final SignPresetGridWidget gridWidget = new SignPresetGridWidget();
     final Adder adder = gridWidget.createAdder(3);
-    SignPresets.all().values().stream().sorted(Comparator.comparingInt(SignPreset::order)).forEach(signPreset -> adder.add(createWidgetForPreset(screen, signPreset)));
+    SignPresets.streamValues().forEach(signPreset -> adder.add(createWidgetForPreset(screen, signPreset)));
     return gridWidget;
   }
 
