@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Runnables;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.JsonOps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -22,12 +24,13 @@ import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.input.CharInput;
 import net.minecraft.client.input.KeyInput;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.PlainTextContent;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextCodecs;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.SnbtParsing;
+import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.packrat.PackratParser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -309,7 +312,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
           textFieldWidget.setText(text);
         }
       } else {
-        textFieldWidget.setText("-json " + TextCodecs.CODEC.encodeStart(signBlockEditScreen.registryLookup.getOps(JsonOps.INSTANCE), textContext.text).getOrThrow().toString());
+        textFieldWidget.setText("-nbt " + TextCodecs.CODEC.encodeStart(signBlockEditScreen.registryLookup.getOps(NbtOps.INSTANCE), textContext.text).getOrThrow().toString());
       }
     }
     final Entry newEntry = new Entry(textFieldWidget, textContext);
@@ -341,6 +344,23 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
               final JsonElement jsonElement = TextContext.GSON.fromJson(value, JsonElement.class);
               textContext1.text = (MutableText) TextCodecs.CODEC.parse(signBlockEditScreen.registryLookup.getOps(JsonOps.INSTANCE), jsonElement).getOrThrow();
             } catch (JsonParseException | IllegalStateException e) {
+              textFieldWidget.setEditableColor(0xffff5555);
+              textFieldWidget.setTooltip(Tooltip.of(Text.literal(e.getMessage())));
+            }
+            break;
+          case "nbt":
+            try {
+              final PackratParser<NbtElement> parser = SnbtParsing.createParser(NbtOps.INSTANCE);
+              final StringReader reader = new StringReader(value);
+              final NbtElement nbtElement = parser.parse(reader);
+              if (reader.canRead()) {
+                throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownArgument().createWithContext(reader);
+              }
+              textContext1.text = (MutableText) TextCodecs.CODEC.parse(signBlockEditScreen.registryLookup.getOps(NbtOps.INSTANCE), nbtElement).getOrThrow();
+            } catch (CommandSyntaxException e) {
+              textFieldWidget.setEditableColor(0xffff5555);
+              textFieldWidget.setTooltip(Tooltip.of(Texts.toText(e.getRawMessage())));
+            } catch (IllegalStateException e) {
               textFieldWidget.setEditableColor(0xffff5555);
               textFieldWidget.setTooltip(Tooltip.of(Text.literal(e.getMessage())));
             }
