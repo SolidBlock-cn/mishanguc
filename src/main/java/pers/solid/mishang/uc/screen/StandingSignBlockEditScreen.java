@@ -39,7 +39,7 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
 
   @Override
   protected Collection<ButtonWidget> getTextHolders() {
-    return List.of(placeHolder, applyLeftArrowTemplateButton, applyDoubleLineTemplateButton, applyRightArrowTemplateButton, copyFromBackButton);
+    return List.of(placeHolder, copyFromBackButton);
   }
 
   @Override
