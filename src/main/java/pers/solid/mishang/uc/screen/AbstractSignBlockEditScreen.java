@@ -184,14 +184,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public final ButtonWidget placeHolder = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.add_first_text"), button -> {
     addTextField(0, false);
     setFocused(textFieldListWidget);
-    textFieldListWidget.setSelected(textFieldListWidget.children().get(0));
+    textFieldListWidget.setFocused(textFieldListWidget.children().get(0));
   }).dimensions(0, 35, 200, 20).build();
 
   @ApiStatus.AvailableSince("0.1.6")
   public final ButtonWidget applyDoubleLineTemplateButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.apply_double_line_template"), button -> {
     addTextField(0, AbstractSignBlockEditScreen.this.entity.createDefaultTextContext(), false, false);
     addTextField(1, Util.make(AbstractSignBlockEditScreen.this.entity.createDefaultTextContext(), textContext -> textContext.size /= 2), false, false);
-    textFieldListWidget.setSelected(textFieldListWidget.children().get(0));
+    textFieldListWidget.setFocused(textFieldListWidget.children().get(0));
     rearrange();
   }).dimensions(width / 2 - 50, 70, 120, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.apply_double_line_template.description"))).build();
 
@@ -213,7 +213,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     textContext2.horizontalAlign = HorizontalAlign.LEFT;
     textContext2.size /= 2;
     AbstractSignBlockEditScreen.this.addTextField(2, textContext2, false);
-    textFieldListWidget.setSelected(textFieldListWidget.children().get(1));
+    textFieldListWidget.setFocused(textFieldListWidget.children().get(1));
     rearrange();
   }).dimensions(width / 2 - 150, 70, 120, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.apply_left_arrow_template.description"))).build();
 
@@ -235,7 +235,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     textContext2.horizontalAlign = HorizontalAlign.RIGHT;
     textContext2.size /= 2;
     AbstractSignBlockEditScreen.this.addTextField(2, textContext2, false);
-    textFieldListWidget.setSelected(textFieldListWidget.children().get(1));
+    textFieldListWidget.setFocused(textFieldListWidget.children().get(1));
     rearrange();
   }).dimensions(width / 2 - 50, 70, 120, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.apply_right_arrow_template.description"))).build();
 
