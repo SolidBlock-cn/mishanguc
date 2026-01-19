@@ -257,13 +257,11 @@ public class TextContext implements Cloneable {
     }
     if (nbt.contains("color")) {
       color = MishangUtils.readColorFromNbtElement(nbt.get("color"));
+    } else {
+      color = 0xffffffff;
     }
     final OutlineColorType outlineColorType;
-    if (nbt.contains("outlineColorType")) {
-      outlineColorType = OutlineColorType.CODEC.byId(nbt.getString("outlineColorType", null));
-    } else {
-      outlineColorType = null;
-    }
+    outlineColorType = nbt.get("outlineColorType", OutlineColorType.CODEC).orElse(null);
     if (nbt.contains("outlineColor")) {
       outlineColor = MishangUtils.readColorFromNbtElement(nbt.get("outlineColor"));
     }
@@ -281,13 +279,7 @@ public class TextContext implements Cloneable {
     rotationY = nbt.getFloat("rotationY", 0f);
     rotationZ = nbt.getFloat("rotationZ", 0f);
     scaleX = nbt.getFloat("scaleX", 1f);
-//    if (scaleX == 0) {
-//      scaleX = 1;
-//    }
     scaleY = nbt.getFloat("scaleY", 1f);
-//    if (scaleY == 0) {
-//      scaleY = 1;
-//    }
     size = nbt.contains("size") ? nbt.getFloat("size", 0f) : size;
     bold = nbt.getBoolean("bold", false);
     italic = nbt.getBoolean("italic", false);
@@ -432,9 +424,18 @@ public class TextContext implements Cloneable {
     } else {
       nbt.remove("verticalAlign");
     }
-    nbt.putInt("color", color);
-    nbt.putString("outlineColorType", outlineColorType.asString());
-    nbt.putInt("outlineColor", outlineColor);
+    if (color != 0xffffffff) {
+      nbt.putInt("color", color);
+    } else {
+      nbt.remove("color");
+    }
+    if (outlineColorType == OutlineColorType.NONE && outlineColor == -2) {
+      nbt.remove("outlineColorType");
+      nbt.remove("outlineColor");
+    } else {
+      nbt.put("outlineColorType", OutlineColorType.CODEC, outlineColorType);
+      nbt.putInt("outlineColor", outlineColor);
+    }
     putBooleanParam(nbt, "shadow", shadow);
     putBooleanParam(nbt, "seeThrough", seeThrough);
     nbt.putFloat("size", size);
