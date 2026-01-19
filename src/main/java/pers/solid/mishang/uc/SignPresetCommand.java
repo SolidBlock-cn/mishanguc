@@ -7,6 +7,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.NbtCompoundArgumentType;
@@ -27,9 +28,13 @@ import pers.solid.mishang.uc.screen.SignPreset;
 import pers.solid.mishang.uc.screen.SignPresets;
 import pers.solid.mishang.uc.text.TextContext;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 import static com.mojang.brigadier.arguments.StringArgumentType.string;
@@ -70,13 +75,14 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
         .then(literal("reload")
             .executes(commandContext -> {
               final FabricClientCommandSource source = commandContext.getSource();
+              final MinecraftClient client = source.getClient();
               source.sendFeedback(Text.translatable("message.mishanguc.signPreset.list.reload"));
               final Thread thread = new Thread(() -> {
                 final int i = SignPresets.loadAll();
                 if (i >= 0) {
-                  source.sendFeedback(Text.translatable("message.mishanguc.signPreset.list.reload.success", i));
+                  client.execute(() -> source.sendFeedback(Text.translatable("message.mishanguc.signPreset.list.reload.success", i)));
                 } else {
-                  source.sendFeedback(Text.translatable("message.mishanguc.signPreset.list.reload.error", Text.literal(SignPresets.PATH.toString()).styled(style -> style.withClickEvent(new ClickEvent.OpenFile(SignPresets.PATH)))));
+                  client.execute(() -> source.sendFeedback(Text.translatable("message.mishanguc.signPreset.list.reload.error", Text.literal(SignPresets.PATH.toString()).styled(style -> style.withClickEvent(new ClickEvent.OpenFile(SignPresets.PATH))))));
                 }
               });
               thread.start();
@@ -86,12 +92,18 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
             .then(argument("id", string())
                 .executes(commandContext -> executeSave(commandContext, null))
                 .then(argument("args", NbtCompoundArgumentType.nbtCompound())
-                    .executes(commandContext -> executeSave(commandContext, NbtCompoundArgumentType.getNbtCompound(commandContext, "args")))))));
+                    .executes(commandContext -> executeSave(commandContext, NbtCompoundArgumentType.getNbtCompound(commandContext, "args"))))))
+        .then(literal("delete")
+            .then(argument("id", string()).suggests(SignPresets.SUGGEST_KEYS)
+                .executes(commandContext -> executeDelete(commandContext, true))))
+        .then(literal("reset")
+            .executes(SignPresetCommand::executeResetAll)
+            .then(argument("id", string()).suggests(SignPresets.SUGGEST_KEYS_AND_BUILTIN)
+                .executes(commandContext -> executeDelete(commandContext, false)))));
   }
 
-  private int executeSave(CommandContext<FabricClientCommandSource> commandContext, @Nullable NbtCompound args) {
+  private static int executeSave(CommandContext<FabricClientCommandSource> commandContext, @Nullable NbtCompound args) {
     final boolean force;
-    final boolean reload;
     final int order;
     final int initialFocus;
 
@@ -143,17 +155,62 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
     final String id = getString(commandContext, "id");
     final Optional<Text> name = args == null ? Optional.empty() : args.get("name", TextCodecs.CODEC);
     final Optional<Text> description = args == null ? Optional.empty() : args.get("description", TextCodecs.CODEC);
-    if (initialFocus < 0 || initialFocus >= textContextsCopy.size()) {
+    if (initialFocus < 0 || (initialFocus >= textContextsCopy.size() && initialFocus > 0)) {
       source.sendError(Text.translatable("message.mishanguc.signPreset.save.initial_focus_invalid", initialFocus, textContextsCopy.size()));
       return -1;
     }
     final Thread thread = new Thread(() -> {
       final SignPreset.Info info = new SignPreset.Info(order, name, description, textContextsCopy, initialFocus);
       info.save(id, source, force);
-      SignPresets.register(info.create(id));
     });
     thread.start();
     source.sendFeedback(Text.translatable("message.mishanguc.signPreset.save.start"));
+    return 1;
+  }
+
+  private static int executeDelete(CommandContext<FabricClientCommandSource> commandContext, boolean hideIdBuiltin) {
+    final FabricClientCommandSource source = commandContext.getSource();
+    final String id = getString(commandContext, "id");
+    final SignPreset signPreset = SignPresets.getOrBuiltin(id);
+    if (signPreset == null) {
+      source.sendError(Text.translatable("message.mishanguc.signPreset.delete.not_exist", id));
+      return -1;
+    }
+
+    final Thread thread = new Thread(() -> {
+      final SignPreset.Info info = signPreset.asInfo();
+      info.delete(id, source, hideIdBuiltin);
+    });
+    thread.start();
+    source.sendFeedback(Text.translatable("message.mishanguc.signPreset.delete.start", signPreset.name()));
+    return 1;
+  }
+
+  private static int executeResetAll(CommandContext<FabricClientCommandSource> commandContext) {
+    final FabricClientCommandSource source = commandContext.getSource();
+    final MinecraftClient client = source.getClient();
+    final Thread thread = new Thread(() -> {
+      try (final Stream<Path> stream = Files.walk(SignPresets.PATH)) {
+        stream
+            .peek(System.out::println)
+            .filter(Files::isRegularFile)
+            .filter(path -> path.getFileName().toString().endsWith(".json"))
+            .forEach(path -> {
+              try {
+                Files.delete(path);
+              } catch (IOException e) {
+                SignPresets.LOGGER.error("Failed to delete sign preset {}", path, e);
+              }
+            });
+        client.execute(() -> source.sendFeedback(Text.translatable("message.mishanguc.signPreset.reset.success")));
+        SignPresets.resetToBuiltin();
+      } catch (IOException e) {
+        SignPresets.LOGGER.error("Failed to delete sign presets", e);
+        client.execute(() -> source.sendError(Text.translatable("message.mishanguc.signPreset.reset.fail.unknown")));
+      }
+    });
+    thread.start();
+    source.sendFeedback(Text.translatable("message.mishanguc.signPreset.reset.start"));
     return 1;
   }
 }
