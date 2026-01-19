@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.screen;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.GridWidget;
@@ -11,6 +13,7 @@ import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 public class SignPresetGridWidget extends GridWidget {
   public static SignPresetGridWidget createAllWidgets(AbstractSignBlockEditScreen<?> screen) {
     final SignPresetGridWidget gridWidget = new SignPresetGridWidget();
