@@ -7,6 +7,8 @@ import com.google.gson.JsonObject;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -31,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+@Environment(EnvType.CLIENT)
 public final class SignPresets {
   public static final Logger LOGGER = LoggerFactory.getLogger("Mishang Urban Construction/Sign Presets");
   /**

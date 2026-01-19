@@ -52,7 +52,6 @@ import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.*;
 import pers.solid.mishang.uc.networking.*;
-import pers.solid.mishang.uc.screen.SignPresets;
 import pers.solid.mishang.uc.text.SpecialDrawableTypes;
 import pers.solid.mishang.uc.util.BlockMatchingRule;
 import pers.solid.mishang.uc.util.ColorfulBlockRegistry;
@@ -659,7 +658,6 @@ public class Mishanguc implements ModInitializer {
     // 玩家踩在道路方块上时，予以加速。
     ColumnBuildingTool.registerTempMemoryEvents();
 
-    SignPresets.loadAll();
     registerCommands();
     registerColoredBlocks();
     registerColorfulBlocks();
