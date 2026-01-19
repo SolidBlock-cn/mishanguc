@@ -759,13 +759,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     textFieldListWidget.setWidth(width);
     textFieldListWidget.setHeight(height - 90);
 
-    if (initialTexts != null) {
-      for (TextContext initialText : initialTexts) {
-        addTextField(-1, initialText, true);
-      }
-      initialTexts = null;
-    }
-
     // 添加按钮
 
     this.addDrawable(textFieldListWidget);
@@ -791,6 +784,12 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
 
     // 添加文本框
+    if (initialTexts != null) {
+      for (TextContext initialText : initialTexts) {
+        addTextField(-1, initialText.clone(), true);
+      }
+      initialTexts = null;
+    }
     updateTextHoldersVisibility();
 
     arrangeToolboxButtons();
