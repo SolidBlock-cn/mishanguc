@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.screen;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
@@ -54,10 +55,10 @@ public record SignPreset(int order, String id, Text name, @Nullable Text descrip
         Codec.INT.optionalFieldOf("order", 0).forGetter(Info::order),
         TextCodecs.CODEC.optionalFieldOf("display_name").forGetter(Info::name),
         TextCodecs.CODEC.optionalFieldOf("description").forGetter(Info::description),
-        TextContext.CODEC.listOf().optionalFieldOf("text_contexts", List.of()).forGetter(Info::textContexts),
+        TextContext.CODEC.listOf().fieldOf("text_contexts").forGetter(Info::textContexts),
         Codecs.rangedInt(0, Integer.MAX_VALUE).optionalFieldOf("initial_focus", 0).forGetter(Info::initialFocus)
     ).apply(i, Info::new)).comapFlatMap(o -> {
-      if (o.initialFocus >= o.textContexts.size()) {
+      if (o.initialFocus > 0 && o.initialFocus >= o.textContexts.size()) {
         return DataResult.error(() -> "initial focus (" + o.initialFocus + ") must be less than the size of text contexts (" + o.textContexts.size() + ")");
       } else {
         return DataResult.success(o);
@@ -65,7 +66,7 @@ public record SignPreset(int order, String id, Text name, @Nullable Text descrip
     }, Function.identity());
 
     /**
-     * 将此预设存储在文件夹中。
+     * 将此预设存储在文件夹中。如果存储成功，则加入注册表。
      *
      * @param id    文件名称。
      * @param force 如果为 true，则会覆盖已知文件。
@@ -80,7 +81,7 @@ public record SignPreset(int order, String id, Text name, @Nullable Text descrip
           client.execute(() -> source.sendError(Text.translatable("message.mishanguc.signPreset.save.invalid_name", id)));
           return;
         }
-        if (!force && Files.exists(filePath)) {
+        if (!force && (Files.exists(filePath) || SignPresets.BUILTIN.containsKey(id))) {
           final String newCommand = "/mishanguc:signpreset save " + id + " {force:true}";
           client.execute(() -> source.sendError(Text.translatable("message.mishanguc.signPreset.save.fail.already_exist", Text.literal(newCommand).styled(style -> style
               .withUnderline(true)
@@ -100,11 +101,14 @@ public record SignPreset(int order, String id, Text name, @Nullable Text descrip
         try (FileWriter writer = new FileWriter(filePath.toFile())) {
           gson.toJson(result.result().orElseThrow(), writer);
         }
-        client.execute(() -> source.sendFeedback(Text.translatable("message.mishanguc.signPreset.save.success", Text.literal(filePath.getFileName().toString()).styled(style -> style
-            .withUnderline(true)
-            .withColor(Formatting.YELLOW)
-            .withHoverEvent(new HoverEvent.ShowText(Text.translatable("message.mishanguc.signPreset.save.success.click_to_open")))
-            .withClickEvent(new ClickEvent.OpenFile(filePath))))));
+        client.execute(() -> {
+          SignPresets.register(create(id));
+          source.sendFeedback(Text.translatable("message.mishanguc.signPreset.save.success", Text.literal(filePath.getFileName().toString()).styled(style -> style
+              .withUnderline(true)
+              .withColor(Formatting.YELLOW)
+              .withHoverEvent(new HoverEvent.ShowText(Text.translatable("message.mishanguc.signPreset.save.success.click_to_open")))
+              .withClickEvent(new ClickEvent.OpenFile(filePath)))));
+        });
 
       } catch (InvalidPathException e) {
         client.execute(() -> source.sendError(Text.translatable("message.mishanguc.signPreset.save.invalid_name", id)));
@@ -115,8 +119,54 @@ public record SignPreset(int order, String id, Text name, @Nullable Text descrip
       }
     }
 
+    /**
+     * 从磁盘中删除此告示牌预设。如果删除成功，则在注册表中进行相应操作（删除或重置为默认）。
+     *
+     * @param id            告示牌调取的 id。
+     * @param hideIfBuiltin 若为 true，对于内置告示牌预设，将存储一个空白 json 以表示在告示牌编辑界面中不呈现；若为 false，则直接删除文件，内置告示牌预设将在告示牌编辑界面中以默认状态呈现。
+     */
+    public void delete(String id, FabricClientCommandSource source, boolean hideIfBuiltin) {
+      final MinecraftClient client = source.getClient();
+
+      try {
+        Files.createDirectories(SignPresets.PATH);
+
+        final Path filePath = SignPresets.PATH.resolve(id + ".json");
+        if (!filePath.getParent().equals(SignPresets.PATH)) {
+          client.execute(() -> source.sendError(Text.translatable("message.mishanguc.signPreset.save.invalid_name", id)));
+          return;
+        }
+
+        final boolean isBuiltin = SignPresets.BUILTIN.containsKey(id);
+
+        Files.deleteIfExists(filePath);
+
+        if (isBuiltin && hideIfBuiltin) {
+          Gson gson = new GsonBuilder().setPrettyPrinting().create();
+          try (FileWriter writer = new FileWriter(filePath.toFile())) {
+            gson.toJson(new JsonObject(), writer);
+          }
+        }
+
+        client.execute(() -> {
+          if (hideIfBuiltin) {
+            SignPresets.unregister(id);
+          } else {
+            SignPresets.reset(id);
+          }
+          source.sendFeedback(Text.translatable("message.mishanguc.signPreset.delete.success", Text.literal(filePath.getFileName().toString()).formatted(Formatting.YELLOW)));
+        });
+      } catch (InvalidPathException e) {
+        client.execute(() -> source.sendError(Text.translatable("message.mishanguc.signPreset.save.invalid_name", id)));
+        SignPresets.LOGGER.error("Invalid path when deleting sign preset {}: {}", id, e.getMessage());
+      } catch (IOException e) {
+        client.execute(() -> source.sendError(Text.translatable("message.mishanguc.signPreset.save.delete.unknown")));
+        SignPresets.LOGGER.error("Failed to delete sign preset {}:", id, e);
+      }
+    }
+
     public SignPreset create(String id) {
-      return new SignPreset(order, id, name.orElseGet(() -> TextBridge.translatable("signPreset.mishanguc." + id + ".name")), description.orElse(null), textContexts, initialFocus);
+      return new SignPreset(order, id, name.orElseGet(() -> Text.translatableWithFallback("signPreset.mishanguc." + id + ".name", id)), description.orElse(null), textContexts, initialFocus);
     }
   }
 }

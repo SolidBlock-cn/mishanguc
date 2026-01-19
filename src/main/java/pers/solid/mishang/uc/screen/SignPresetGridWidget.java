@@ -3,7 +3,10 @@ package pers.solid.mishang.uc.screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.GridWidget;
+import net.minecraft.screen.ScreenTexts;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.List;
@@ -17,7 +20,13 @@ public class SignPresetGridWidget extends GridWidget {
   }
 
   public static ButtonWidget createWidgetForPreset(AbstractSignBlockEditScreen<?> screen, SignPreset signPreset) {
-    final Text description = signPreset.description();
+    Text description = signPreset.description();
+    final MutableText idText = Text.translatable("message.mishanguc.signPreset.list.id_info", signPreset.id()).formatted(Formatting.GRAY);
+    if (description != null) {
+      description = Text.empty().append(description).append(ScreenTexts.LINE_BREAK).append(idText);
+    } else {
+      description = idText;
+    }
     return new ButtonWidget.Builder(signPreset.name(), button -> {
       for (TextContext textContext : signPreset.textContexts()) {
         final TextContext newTextContext = textContext.clone();
@@ -30,7 +39,7 @@ public class SignPresetGridWidget extends GridWidget {
       }
       screen.rearrange();
     }).dimensions(0, 0, 150, 20)
-        .tooltip(description == null ? null : Tooltip.of(description))
+        .tooltip(Tooltip.of(description))
         .build();
   }
 }

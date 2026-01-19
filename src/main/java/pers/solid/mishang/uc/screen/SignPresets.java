@@ -3,9 +3,15 @@ package pers.solid.mishang.uc.screen;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.command.CommandSource;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.util.Util;
 import org.apache.commons.io.file.PathUtils;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -17,7 +23,6 @@ import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.HorizontalAlign;
 
 import java.io.FileReader;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
@@ -28,8 +33,23 @@ import java.util.stream.Stream;
 
 public final class SignPresets {
   public static final Logger LOGGER = LoggerFactory.getLogger("Mishang Urban Construction/Sign Presets");
+  /**
+   * 存储告示版预设文件的路径。所有预设文件都是 .json 结尾，且不支持子文件夹。
+   */
   public static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve("mishanguc_sign_presets");
   private static final Map<String, SignPreset> REGISTRY = new LinkedHashMap<>();
+  /**
+   * 模组内置的、非通过文件加载的告示牌预设的 id。
+   */
+  static final Map<String, SignPreset> BUILTIN = new LinkedHashMap<>();
+  /**
+   * 在命令中提供告示牌预设 id 的建议。
+   */
+  public static final SuggestionProvider<FabricClientCommandSource> SUGGEST_KEYS = (commandContext, suggestionsBuilder) -> CommandSource.suggestMatching(REGISTRY.keySet().stream().map(NbtString::escapeUnquoted), suggestionsBuilder);
+  /**
+   * 在命令中提供告示牌预设 id 包括内置预设 id（可能实际已从注册表中移除）的建议。
+   */
+  public static final SuggestionProvider<FabricClientCommandSource> SUGGEST_KEYS_AND_BUILTIN = (commandContext, suggestionsBuilder) -> CommandSource.suggestMatching(Stream.concat(REGISTRY.keySet().stream(), BUILTIN.keySet().stream()).distinct().map(NbtString::escapeUnquoted), suggestionsBuilder);
 
   // region text entries
   private static final TextContext DEFAULT_TEXT = new TextContext();
@@ -77,20 +97,31 @@ public final class SignPresets {
   public static final SignPreset RIGHT_ARROW_TWO_LINES = new SignPreset(-1, "right_arrow_two_lines", List.of(ARROW_RIGHT, DEFAULT_TEXT_RIGHT, HALF_SIZE_TEXT_RIGHT), 1);
   //endregion presets
 
-  private static void registerAll() {
+  private static void registerBuiltins() {
     // 确保顺序不被打乱
-    register(LEFT_ARROW_ONE_LINE);
-    register(ONE_LINE);
-    register(RIGHT_ARROW_ONE_LINE);
-    register(LEFT_ARROW_TWO_LINES);
-    register(TWO_LINES);
-    register(RIGHT_ARROW_TWO_LINES);
+    registerBuiltin(LEFT_ARROW_ONE_LINE);
+    registerBuiltin(ONE_LINE);
+    registerBuiltin(RIGHT_ARROW_ONE_LINE);
+    registerBuiltin(LEFT_ARROW_TWO_LINES);
+    registerBuiltin(TWO_LINES);
+    registerBuiltin(RIGHT_ARROW_TWO_LINES);
+  }
+
+  static {
+    registerBuiltins();
+  }
+
+  /**
+   * 清空注册表并恢复为内置状态，仅加载内置的。
+   */
+  public static void resetToBuiltin() {
+    REGISTRY.clear();
+    REGISTRY.putAll(BUILTIN);
   }
 
   public static int loadAll() {
     LOGGER.info("Loading Mishang Urban Construction Sign Presets");
-    REGISTRY.clear();
-    registerAll();
+    resetToBuiltin();
 
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     MutableInt counter = new MutableInt();
@@ -100,20 +131,27 @@ public final class SignPresets {
             .filter(Files::isRegularFile)
             .filter(path -> path.getFileName().toString().endsWith(".json"))
             .forEach(path -> {
-              final String name = PathUtils.getBaseName(path); // 不带扩展名的文件名
+              final String id = PathUtils.getBaseName(path); // 不带扩展名的文件名
               try (final FileReader reader = new FileReader(path.toFile())) {
                 final JsonElement element = gson.fromJson(reader, JsonElement.class);
+
+                if (element instanceof JsonObject jsonObject && jsonObject.isEmpty()) {
+                  // 表示这是一个空的告示牌预设，如果是内置的则将其删除。
+                  REGISTRY.remove(id);
+                  return;
+                }
+
                 final DataResult<SignPreset.Info> parse = SignPreset.Info.CODEC.parse(JsonOps.INSTANCE, element);
                 if (parse.isSuccess()) {
                   counter.increment();
                 }
-                parse.ifSuccess(info -> register(info.create(name)));
-                parse.ifError(error -> LOGGER.warn("Failed to parse sign preset JSON: {}", error.message()));
-              } catch (IOException e) {
+                parse.ifSuccess(info -> MinecraftClient.getInstance().execute(() -> register(info.create(id))));
+                parse.ifError(error -> LOGGER.warn("Failed to parse sign preset JSON for {}: {}", path.getFileName(), error.message()));
+              } catch (Throwable e) {
                 LOGGER.error("Error reading file {}", path, e);
               }
             });
-      } catch (IOException e) {
+      } catch (Throwable e) {
         LOGGER.error("Error reading file {}", PATH, e);
         return -1;
       }
@@ -125,9 +163,35 @@ public final class SignPresets {
     return counter.intValue();
   }
 
-  public static SignPreset register(SignPreset preset) {
+  public static void register(SignPreset preset) {
     REGISTRY.put(preset.id(), preset);
-    return preset;
+  }
+
+  private static void registerBuiltin(SignPreset preset) {
+    BUILTIN.put(preset.id(), preset);
+  }
+
+  public static void unregister(String id) {
+    REGISTRY.remove(id);
+  }
+
+  public static void reset(String id) {
+    REGISTRY.remove(id);
+    if (BUILTIN.containsKey(id)) {
+      REGISTRY.put(id, BUILTIN.get(id));
+    }
+  }
+
+  public static SignPreset get(String id) {
+    return REGISTRY.get(id);
+  }
+
+  public static SignPreset getOrBuiltin(String id) {
+    SignPreset signPreset = REGISTRY.get(id);
+    if (signPreset == null) {
+      signPreset = BUILTIN.get(id);
+    }
+    return signPreset;
   }
 
   /**
