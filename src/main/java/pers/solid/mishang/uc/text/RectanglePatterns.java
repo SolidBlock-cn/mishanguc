@@ -159,13 +159,13 @@ public final class RectanglePatterns {
       {2, 6, 3, 7},
       {4, 6, 5, 7},
       {4, 5, 6, 6},
-  }, "aud", "atb");
+  }, "aud");
   public static final RectanglePattern CIRCLE_SMALL = register("circle-small", new float[][]{
       {2, 1, 5, 2},
       {1, 2, 2, 5},
       {5, 2, 6, 5},
       {2, 5, 5, 6}
-  });
+  }, "small-circle");
   public static final RectanglePattern CIRCLE_MEDIUM = register("circle-medium", new float[][]{
       {2, 0, 5, 1},
       {2, 6, 5, 7},
@@ -175,7 +175,7 @@ public final class RectanglePatterns {
       {5, 1, 6, 2},
       {1, 5, 2, 6},
       {5, 5, 6, 6}
-  }, "circle", "O");
+  }, "medium-circle", "circle", "O");
   public static final RectanglePattern BAN = register("ban", new float[][]{
       {2, 0, 5, 1},
       {2, 6, 5, 7},
@@ -190,7 +190,7 @@ public final class RectanglePatterns {
       {4, 4, 5, 5}
   });
 
-  public static final RectanglePattern U_TURN_LEFT_BOTTOM = register("u-turn-left-bottom", new float[][]{
+  public static final RectanglePattern U_TURN_LEFT_DOWN = register("u-turn-left-down", new float[][]{
       {3, 0, 6, 1},
       {6, 1, 7, 6},
       {2, 1, 3, 7},
@@ -198,17 +198,17 @@ public final class RectanglePatterns {
       {1, 5, 2, 6},
       {4, 4, 5, 5},
       {3, 5, 4, 6}
-  }, "ulb");
-  public static final RectanglePattern U_TURN_RIGHT_BOTTOM = register(U_TURN_LEFT_BOTTOM.flipLeftRight("u-turn-right-bottom"), "urb");
-  public static final RectanglePattern U_TURN_LEFT_TOP = register(U_TURN_LEFT_BOTTOM.flipUpDown("u-turn-left-top"), "ult");
-  public static final RectanglePattern U_TURN_RIGHT_TOP = register(U_TURN_RIGHT_BOTTOM.flipAll("u-turn-right-top"), "urt");
+  }, "u-turn-left-bottom", "uld", "ulb");
+  public static final RectanglePattern U_TURN_RIGHT_DOWN = register(U_TURN_LEFT_DOWN.flipLeftRight("u-turn-right-down"), "u-turn-right-bottom", "urd", "urb");
+  public static final RectanglePattern U_TURN_LEFT_UP = register(U_TURN_LEFT_DOWN.flipUpDown("u-turn-left-up"), "u-turn-left-top", "ulu", "ult");
+  public static final RectanglePattern U_TURN_RIGHT_UP = register(U_TURN_RIGHT_DOWN.flipAll("u-turn-right-up"), "u-turn-right-top", "uru", "urt");
   public static final RectanglePattern CROSS_SMALL = register("cross-small", new float[][]{
       {2, 2, 3, 3},
       {3, 3, 4, 4},
       {4, 4, 5, 5},
       {4, 2, 5, 3},
       {2, 4, 3, 5},
-  }, "small_cross");
+  }, "small-cross");
   public static final RectanglePattern CROSS_MEDIUM = register("cross-medium", new float[][]{
       {1, 1, 2, 2},
       {2, 2, 3, 3},
@@ -234,7 +234,7 @@ public final class RectanglePatterns {
       {2, 4, 3, 5},
       {1, 5, 2, 6},
       {0, 6, 1, 7},
-  });
+  }, "large-cross");
 
   public static final RectanglePattern SQUARE_SMALL = register("square-small", new float[][]{
       {2, 2, 5, 3},
