@@ -8,6 +8,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.ClickEvent;
@@ -38,6 +40,7 @@ import java.util.function.UnaryOperator;
  * @param textContexts 文本的列表，每个元素是可将默认的文本（会因告示牌而异）添加内容的 {@link UnaryOperator}。
  * @param initialFocus 在告示牌界面中应用预设后，应将焦点选中在第几个元素上。
  */
+@Environment(EnvType.CLIENT)
 public record SignPreset(int order, String id, Text name, @Nullable Text description, List<TextContext> textContexts, int initialFocus) {
   public SignPreset(int order, String id, List<TextContext> textContexts, int initialFocus) {
     this(order, id, TextBridge.translatable("signPreset.mishanguc." + id + ".name"), TextBridge.translatable("signPreset.mishanguc." + id + ".description"), textContexts, initialFocus);
@@ -50,10 +53,11 @@ public record SignPreset(int order, String id, Text name, @Nullable Text descrip
   /**
    * 用于存储在模组配置中的信息。注意：此信息用于与 json 文件对应，不存储名称，因为名称是通过文件名体现的。
    */
+  @Environment(EnvType.CLIENT)
   public record Info(int order, Optional<Text> name, Optional<Text> description, List<TextContext> textContexts, int initialFocus) {
     public static final Codec<Info> CODEC = RecordCodecBuilder.<Info>create(i -> i.group(
         Codec.INT.optionalFieldOf("order", 0).forGetter(Info::order),
-        TextCodecs.CODEC.optionalFieldOf("display_name").forGetter(Info::name),
+        TextCodecs.CODEC.optionalFieldOf("name").forGetter(Info::name),
         TextCodecs.CODEC.optionalFieldOf("description").forGetter(Info::description),
         TextContext.CODEC.listOf().fieldOf("text_contexts").forGetter(Info::textContexts),
         Codecs.rangedInt(0, Integer.MAX_VALUE).optionalFieldOf("initial_focus", 0).forGetter(Info::initialFocus)

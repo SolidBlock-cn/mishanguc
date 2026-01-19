@@ -39,6 +39,7 @@ import pers.solid.mishang.uc.networking.GetEntityDataPayload;
 import pers.solid.mishang.uc.networking.RuleChangedPayload;
 import pers.solid.mishang.uc.render.*;
 import pers.solid.mishang.uc.screen.HungSignBlockEditScreen;
+import pers.solid.mishang.uc.screen.SignPresets;
 import pers.solid.mishang.uc.screen.StandingSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
@@ -69,6 +70,8 @@ public class MishangucClient implements ClientModInitializer {
     registerNetworking();
 
     registerItemProperties();
+    
+    SignPresets.loadAll();
 
     ClientCommandRegistrationCallback.EVENT.register(SignPresetCommand.INSTANCE);
 
