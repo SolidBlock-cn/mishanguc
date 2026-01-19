@@ -38,7 +38,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   protected final @NotNull List<TextFieldListWidget.@NotNull Entry> selectedEntries = new ArrayList<>();
   private final AbstractSignBlockEditScreen<?> signBlockEditScreen;
   /**
-   * 用于显示时渲染背景时的高度。通常情况下与 {@link #height} 保持一致，但简化模式下会使用不一致的值。{@link #setHeight(int)} 方法不会同步更新此字段的值。
+   * 用于显示时渲染背景时的高度。通常情况下与 {@link #height} 保持一致，但简化模式下会使用不一致的值。{@link #setHeight(int)} 方法会同步更新此字段的值。
    */
   protected int heightForBackground;
   /**
@@ -63,8 +63,12 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
   @Override
   public void setFocused(boolean focused) {
-    super.setFocused(focused);
+    if (simplified) {
+      super.setHeight(cuttingHeight);
+    } else {
+      super.setFocused(focused);
     isFocused = focused;
+    }
     if (getFocused() != null) {
       getFocused().textFieldWidget.setFocused(focused);
     }
@@ -253,11 +257,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
   protected void setSimplified(boolean simplified) {
     this.simplified = simplified;
-    if (simplified) {
-      this.setHeight(cuttingHeight);
-    } else {
-      this.setHeight(heightForBackground);
-    }
+    this.setHeight(heightForBackground);
     this.setScrollY(getScrollY());
     final Entry selectedOrNull = getSelectedOrNull();
     if (selectedOrNull != null) {
@@ -267,9 +267,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
   protected void increaseHeight(int amount) {
     cuttingHeight = (Math.clamp(cuttingHeight + amount, 0, heightForBackground));
-    if (simplified) {
-      this.setHeight(cuttingHeight);
-    }
+    this.setHeight(heightForBackground);
     setScrollY(getScrollY()); // 更新滚动以避免滚动溢出
     final Entry selectedOrNull = getSelectedOrNull();
     if (selectedOrNull != null) {
