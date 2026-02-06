@@ -40,12 +40,12 @@ public class MirroringToolItem extends BlockToolItem implements MishangucItem, W
     final Direction.Axis axis = side.getAxis();
     final BlockMirror mirror = switch (axis) {
       case X -> BlockMirror.FRONT_BACK;
+      case Z -> BlockMirror.LEFT_RIGHT;
       default -> entity == null ? BlockMirror.NONE : switch (entity.getHorizontalFacing().getAxis()) {
         case X -> BlockMirror.FRONT_BACK;
         case Z -> BlockMirror.LEFT_RIGHT;
         default -> BlockMirror.NONE;
       };
-      case Z -> BlockMirror.LEFT_RIGHT;
     };
     final BlockState mirrored = blockState.mirror(mirror);
     final boolean setBlockState = world.setBlockState(blockPos, mirrored);

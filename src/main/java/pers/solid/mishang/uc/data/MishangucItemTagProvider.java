@@ -14,6 +14,7 @@ import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.DyeColor;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.block.ColoredBlock;
@@ -113,7 +114,7 @@ public class MishangucItemTagProvider extends FabricTagProvider.ItemTagProvider 
   }
 
   @Override
-  protected void configure(RegistryWrapper.WrapperLookup lookup) {
+  protected void configure(RegistryWrapper.@NonNull WrapperLookup lookup) {
     tools();
     handrailItems();
     coloredItems();

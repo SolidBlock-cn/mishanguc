@@ -36,7 +36,6 @@ import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.networking.SignEditFinishPayload;
 import pers.solid.mishang.uc.text.OutlineColorType;
-import pers.solid.mishang.uc.text.PatternSpecialDrawable;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.HorizontalAlign;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -186,58 +185,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   }).dimensions(0, 35, 200, 20).build();
 
   public final SignPresetGridWidget signPresets = SignPresetGridWidget.createAllWidgets(this);
-
-  @ApiStatus.AvailableSince("0.1.6")
-  public final ButtonWidget applyDoubleLineTemplateButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.apply_double_line_template"), button -> {
-    addTextField(0, AbstractSignBlockEditScreen.this.entity.createDefaultTextContext(), false, false);
-    addTextField(1, Util.make(AbstractSignBlockEditScreen.this.entity.createDefaultTextContext(), textContext -> textContext.size /= 2), false, false);
-    textFieldListWidget.setFocused(textFieldListWidget.children().get(0));
-    rearrange();
-  }).dimensions(width / 2 - 50, 70, 120, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.apply_double_line_template.description"))).build();
-
-  @ApiStatus.AvailableSince("0.1.6")
-  public final ButtonWidget applyLeftArrowTemplateButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.apply_left_arrow_template"), (ButtonWidget button) -> {
-    BlockEntityWithText entity = AbstractSignBlockEditScreen.this.entity;
-    final TextContext textContext0 = entity.createDefaultTextContext();
-    textContext0.extra = PatternSpecialDrawable.fromName(textContext0, "al");
-    textContext0.size = 8;
-    textContext0.offsetX = -4;
-    textContext0.absolute = true;
-    AbstractSignBlockEditScreen.this.addTextField(0, textContext0, false, false);
-    final TextContext textContext1 = entity.createDefaultTextContext();
-    textContext1.offsetX = 8;
-    textContext1.horizontalAlign = HorizontalAlign.LEFT;
-    AbstractSignBlockEditScreen.this.addTextField(1, textContext1, false);
-    final TextContext textContext2 = entity.createDefaultTextContext();
-    textContext2.offsetX = 8;
-    textContext2.horizontalAlign = HorizontalAlign.LEFT;
-    textContext2.size /= 2;
-    AbstractSignBlockEditScreen.this.addTextField(2, textContext2, false);
-    textFieldListWidget.setFocused(textFieldListWidget.children().get(1));
-    rearrange();
-  }).dimensions(width / 2 - 150, 70, 120, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.apply_left_arrow_template.description"))).build();
-
-  @ApiStatus.AvailableSince("0.1.6")
-  public final ButtonWidget applyRightArrowTemplateButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.apply_right_arrow_template"), (ButtonWidget button) -> {
-    BlockEntityWithText entity = AbstractSignBlockEditScreen.this.entity;
-    final TextContext textContext0 = entity.createDefaultTextContext();
-    textContext0.extra = PatternSpecialDrawable.fromName(textContext0, "ar");
-    textContext0.size = 8;
-    textContext0.offsetX = 4;
-    textContext0.absolute = true;
-    AbstractSignBlockEditScreen.this.addTextField(0, textContext0, false);
-    final TextContext textContext1 = entity.createDefaultTextContext();
-    textContext1.offsetX = -8;
-    textContext1.horizontalAlign = HorizontalAlign.RIGHT;
-    AbstractSignBlockEditScreen.this.addTextField(1, textContext1, false);
-    final TextContext textContext2 = entity.createDefaultTextContext();
-    textContext2.offsetX = -8;
-    textContext2.horizontalAlign = HorizontalAlign.RIGHT;
-    textContext2.size /= 2;
-    AbstractSignBlockEditScreen.this.addTextField(2, textContext2, false);
-    textFieldListWidget.setFocused(textFieldListWidget.children().get(1));
-    rearrange();
-  }).dimensions(width / 2 - 50, 70, 120, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.apply_right_arrow_template.description"))).build();
 
 
   /*

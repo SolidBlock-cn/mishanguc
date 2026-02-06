@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.data.recipe.RecipeExporter;
 import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.registry.RegistryWrapper;
+import org.jspecify.annotations.NonNull;
 
 public class MishangucDataGeneration implements DataGeneratorEntrypoint {
   @Override
@@ -14,7 +15,7 @@ public class MishangucDataGeneration implements DataGeneratorEntrypoint {
     pack.addProvider(MishangucBlockLootTableProvider::new);
     pack.addProvider((fabricDataOutput, completableFuture) -> new FabricRecipeProvider(fabricDataOutput, completableFuture) {
       @Override
-      protected RecipeGenerator getRecipeGenerator(RegistryWrapper.WrapperLookup wrapperLookup, RecipeExporter recipeExporter) {
+      protected @NonNull RecipeGenerator getRecipeGenerator(RegistryWrapper.@NonNull WrapperLookup wrapperLookup, @NonNull RecipeExporter recipeExporter) {
         return new MishangucRecipeGenerator(wrapperLookup, recipeExporter);
       }
 

@@ -425,7 +425,7 @@ public class CarryingToolItem extends BlockToolItem
     }
 
     if (state.redShape != null && state.orangePos != null) {
-      VertexRendering.drawOutline(matrices, vertexConsumer, state.redShape, state.orangePos.getX() - cameraPos.x, state.orangePos.getY() - cameraPos.y, state.orangePos.getZ() - cameraPos.z, OUTLINE_COLOR_ORANGE, MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
+      VertexRendering.drawOutline(matrices, vertexConsumer, state.orangeShape, state.orangePos.getX() - cameraPos.x, state.orangePos.getY() - cameraPos.y, state.orangePos.getZ() - cameraPos.z, OUTLINE_COLOR_ORANGE, MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
     }
 
     return false;

@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.client.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
+import org.jspecify.annotations.NonNull;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.MishangucBlock;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
@@ -25,7 +26,7 @@ public class MishangucModelProvider extends FabricModelProvider {
   }
 
   @Override
-  public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
+  public void generateBlockStateModels(@NonNull BlockStateModelGenerator blockStateModelGenerator) {
     MishangUtils.blocks().forEach(block -> {
       if (block instanceof MishangucBlock mishangucBlock) {
         mishangucBlock.registerModels(this, blockStateModelGenerator);

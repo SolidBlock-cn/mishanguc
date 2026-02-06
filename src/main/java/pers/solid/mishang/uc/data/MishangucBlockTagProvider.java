@@ -20,6 +20,7 @@ import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.DyeColor;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.MiningLevel;
@@ -655,7 +656,7 @@ public class MishangucBlockTagProvider extends FabricTagProvider.BlockTagProvide
   }
 
   @Override
-  protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
+  protected void configure(RegistryWrapper.@NonNull WrapperLookup wrapperLookup) {
     init();
     roads();
     signs();

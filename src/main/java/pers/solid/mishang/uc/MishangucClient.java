@@ -71,7 +71,7 @@ public class MishangucClient implements ClientModInitializer {
     registerNetworking();
 
     registerItemProperties();
-    
+
     SignPresets.loadAll();
 
     ClientCommandRegistrationCallback.EVENT.register(SignPresetCommand.INSTANCE);
