@@ -2,6 +2,15 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.6.0-beta.4
+
+- For Minecraft 1.21.10 and above: adjust text rendering to ensure special texts can also be treated as rendered text by mods like Iris, so the special texts can have some special attributes like normal texts when shaders are enabled.
+- For Minecraft 1.21.10 and above: fixed the issue of data generator fails to run.
+- Adjusted the `-texture` interaction logic in the signs: in the signs, even if a missing texture id is inputted, it can normally take effect, rendering black-purple checkerboards without outputting warns.
+- Added a special text type: `debug_text`, usage: input `-debug_text <any text content>` to test the rendering of text. Please no that the rendering position of text will not be sure to be correct.
+- Removed some redundant codes.
+- Fixed the issue that the game rules do not synchronize.
+
 ### 1.6.0-beta.3
 
 - Now it is possible to modify the text preset of signs. When editing the sign texts, if no text is added, all available presets will be displayed.
