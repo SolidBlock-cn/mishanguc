@@ -53,6 +53,13 @@ dependencies {
     if (project.hasProperty('imblocker_version') && !project.imblocker_version.isEmpty()) {
         modRuntimeOnly "maven.modrinth:imblocker-original:$project.imblocker_version"
     }
+
+    // 仅供在模组开发时测试与光影的兼容
+    modRuntimeOnly "maven.modrinth:sodium:mc1.21.11-0.8.3-fabric"
+    modRuntimeOnly "maven.modrinth:iris:1.10.5+1.21.11-fabric"
+    modImplementation("org.antlr:antlr4-runtime:4.13.1")
+    modImplementation("io.github.douira:glsl-transformer:3.0.0-pre3")
+    modImplementation("org.anarres:jcpp:1.4.14")
 }
 
 processResources {
