@@ -655,7 +655,7 @@ public class Mishanguc implements ModInitializer {
     registerNetworkingReceiver();
     registerFlammableAndFuels();
 
-    // 玩家踩在道路方块上时，予以加速。
+    MishangucRules.registerRuleChangeCallbacks();
     ColumnBuildingTool.registerTempMemoryEvents();
 
     registerCommands();
