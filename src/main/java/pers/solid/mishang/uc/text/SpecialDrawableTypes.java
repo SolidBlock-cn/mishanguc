@@ -2,15 +2,12 @@ package pers.solid.mishang.uc.text;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.Mishanguc;
 
-import java.io.IOException;
 import java.util.function.BiFunction;
 
 public final class SpecialDrawableTypes {
@@ -18,6 +15,8 @@ public final class SpecialDrawableTypes {
   }
 
   public static final SpecialDrawableType<SpecialDrawable> INVALID = register("invalid", (textContext, nbtCompound) -> SpecialDrawable.INVALID, (textContext, s) -> SpecialDrawable.INVALID);
+
+  public static final SpecialDrawableType<DebugTextSpecialDrawable> DEBUG_TEXT = register("debug_text", (textContext, nbtCompound) -> new DebugTextSpecialDrawable(nbtCompound.getString("text", "debug_text"), textContext), (textContext, s) -> new DebugTextSpecialDrawable(s, textContext));
 
   public static final SpecialDrawableType<RectSpecialDrawable> RECT = register("rect", RectSpecialDrawable::fromNbt, RectSpecialDrawable::fromStringArgs);
 
@@ -38,13 +37,7 @@ public final class SpecialDrawableTypes {
     if (identifier == null) {
       return null;
     } else if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-      // 考虑到输入过程中，还未输入完成时会抛出纹理不存在的错误，故在这里先进行抑制。
-      try (final ResourceTexture resourceTexture = new ResourceTexture(identifier)) {
-        resourceTexture.loadContents(MinecraftClient.getInstance().getResourceManager());
-        return new TextureSpecialDrawable(identifier, textContext);
-      } catch (IOException e) {
-        return null;
-      }
+      return new TextureSpecialDrawable(identifier, textContext);
     }
     return null;
   });
