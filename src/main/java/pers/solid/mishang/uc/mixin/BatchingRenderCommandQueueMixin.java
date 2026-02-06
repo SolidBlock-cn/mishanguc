@@ -28,6 +28,11 @@ import java.util.List;
 public abstract class BatchingRenderCommandQueueMixin implements RenderCommandQueueExtension, BatchingRenderCommandQueueExtension {
   @Shadow
   private boolean hasCommands;
+  /**
+   * 用于渲染 {@link SpecialDrawable} 的命令列表，会在 {@link net.minecraft.client.render.command.TextCommandRenderer TextCommandRenderer} 中执行。
+   *
+   * @see TextCommandRendererMixin
+   */
   @Unique
   private final List<SpecialDrawableCommand> specialDrawableCommands = new ArrayList<>();
 

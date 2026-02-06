@@ -8,6 +8,7 @@ import pers.solid.mishang.uc.text.SpecialDrawable;
 
 /**
  * 用于扩展 {@link RenderCommandQueue}，通过 {@link pers.solid.mishang.uc.mixin.RenderCommandQueueMixin RenderCommandQueueMixin} 实现。
+ *
  * @see RenderCommandQueue
  * @since Minecraft 1.21.10
  */

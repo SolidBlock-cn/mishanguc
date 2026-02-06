@@ -33,19 +33,14 @@ public record RectSpecialDrawable(float width, float height, @NotNull TextContex
     final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
     final TextRenderer.TextLayerType textLayerType = this.textContext.outlineColorType != OutlineColorType.NONE ? TextRenderer.TextLayerType.POLYGON_OFFSET : this.textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL;
     final TextRenderer.GlyphDrawer glyphDrawer = TextRenderer.GlyphDrawer.drawing(vertexConsumers, matricesEntry, textLayerType, light);
-    final EffectGlyph rectangleGlyph = ((TextRendererAccessor) textRenderer).getFonts()
-        .getRectangleGlyph();
+    final EffectGlyph rectangleGlyph = ((TextRendererAccessor) textRenderer).getFonts().getRectangleGlyph();
     if (this.textContext.outlineColorType != OutlineColorType.NONE) {
       // 绘制轮廓
       int outlineColor = this.textContext.outlineColorType == OutlineColorType.AUTO ? MishangUtils.toSignOutlineColor(color) : this.textContext.outlineColor;
       final int outlineAlpha = ((outlineColor & 0xfc000000) == 0) ? 255 : (outlineColor >> 24 & 0xFF);
-      glyphDrawer.drawRectangle(
-          rectangleGlyph
-              .create(x - 1, y - 1, (width + x) + 1, y + height + 1, 0, ColorHelper.withAlpha(outlineAlpha, outlineColor), 0, 0));
+      glyphDrawer.drawRectangle(rectangleGlyph.create(x - 1, y - 1, (width + x) + 1, y + height + 1, 0, ColorHelper.withAlpha(outlineAlpha, outlineColor), 0, 0));
     }
-    glyphDrawer.drawRectangle(
-        rectangleGlyph
-            .create(x, y, (width + x), height + y, this.textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, color, shadow ? ColorHelper.scaleRgb(color, 0.25f) : 0, 1));
+    glyphDrawer.drawRectangle(rectangleGlyph.create(x, y, (width + x), height + y, this.textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, color, shadow ? ColorHelper.scaleRgb(color, 0.25f) : 0, 1));
   }
 
 

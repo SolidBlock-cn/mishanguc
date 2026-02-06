@@ -34,8 +34,8 @@
     "MouseMixin",
     "OrderedRenderCommandQueueImplMixin",
     "RenderCommandQueueMixin",
-    "RenderDispatcherMixin",
     "ScreenMixin",
+    "TextCommandRendererMixin",
     "TextRendererAccessor"
   ],
   "injectors": {
