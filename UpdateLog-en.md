@@ -31,10 +31,10 @@ Note: Not all versions in this update log are already published. Please refer to
       - `description`: Text component.
     - `/mishanguc:signpreset delete <id>`: Delete a sign preset. If deleting a non-builtin sign preset, the file `<id>.json` will be tried to delete. If deleting a builtin sign preset, the file `<id>.json` will be created with an empty JSON, marking this builtin sign preset not to be loaded.
     - `/mishanguc:signpreset reset <id>`: Reset a sign preset. For non-builtin sign presets, it will be delected (equivalent to `/mishanguc:signpreset delete <id>` command). For builtin sign presets, no matter it is overridden or marked no to load, the file `<id>.json` will be deleted to restore the builtin sign preset.
-    - `/mishanguc:signpreset reset`: Reset all sign presets, and restore all builtin sign presets. All json files in `config/mishanguc_sign_presets` will be deleted.
+    - `/mishanguc:signpreset reset`: Reset all sign presets, and restore all builtin sign presets. All JSON files in `config/mishanguc_sign_presets` will be deleted.
   - Note: All presets will be automatically adjusted position when applied, even if not adjusted when saving. If you do not need to adjust, please set the relevant text lines to absolute mode.
   - The size of builtin sign presets is now 6 and 3 (for two lines) for all blocks. Formerly, the size of builtin sign presets is 8 and 4 for full wall sign blocks; note that the default text size will still depend on the sign itself, and for full wall sign the default text size is 8 and for other blocks it is 6.
-- Simplified the storage format for sign texts. For situations where text is white (by default) and there is no outline, the fields will be removed.
+- Simplified the data format for sign texts. For situations where text is white (by default) and there is no outline, the fields will be removed.
 - Improved the `-pattern` for sign texts. Now all pattern use canonical names while supporting some abbreviated names as aliases:
   - `empty`
   - `arrow-left`, alias: `al`
