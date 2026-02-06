@@ -18,8 +18,8 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.block.StandingSignBlock;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
@@ -46,7 +46,7 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
   INSTANCE;
 
   @Override
-  public void register(@NonNull CommandDispatcher<FabricClientCommandSource> dispatcher, @NonNull CommandRegistryAccess registryAccess) {
+  public void register(@NotNull CommandDispatcher<FabricClientCommandSource> dispatcher, @NotNull CommandRegistryAccess registryAccess) {
     dispatcher.register(literal("mishanguc:signpreset")
         .then(literal("path")
             .executes(commandContext -> {

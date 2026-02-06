@@ -3,14 +3,19 @@ package pers.solid.mishang.uc.text;
 import com.google.common.annotations.Beta;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+
+import java.util.Optional;
 
 /**
  * 表示一个纹理的特殊文本内容，用于渲染其纹理，一般来说这个纹理的宽度和高度是和文本的大小相同的。
@@ -21,10 +26,20 @@ import org.joml.Matrix4f;
 @Beta
 public record TextureSpecialDrawable(@NotNull Identifier identifier, @NotNull TextContext textContext) implements SpecialDrawable {
 
+  /**
+   * 说明：原版的文本的实现见于 {@link net.minecraft.client.texture.SpriteAtlasGlyphs.Glyph#draw(Matrix4f, VertexConsumer, int, float, float, float, int)}，此处的逻辑略有不同。
+   */
   @Environment(EnvType.CLIENT)
   @Override
   public void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y) {
-    final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getText(identifier));
+    final Optional<Resource> resource = MinecraftClient.getInstance().getResourceManager().getResource(identifier);
+    final RenderLayer layer;
+    if (resource.isEmpty()) {
+      layer = RenderLayer.getText(MissingSprite.getMissingSpriteId());
+    } else {
+      layer = RenderLayer.getText(identifier);
+    }
+    final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(layer);
 
     vertexConsumer.vertex(matricesEntry, 0, 8, -0).color(255, 255, 255, 255).texture(0.0f, 1.0f).light(light);
     vertexConsumer.vertex(matricesEntry, 8, 8, -0).color(255, 255, 255, 255).texture(1.0f, 1.0f).light(light);

@@ -18,7 +18,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TextCodecs;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.dynamic.Codecs;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
 
