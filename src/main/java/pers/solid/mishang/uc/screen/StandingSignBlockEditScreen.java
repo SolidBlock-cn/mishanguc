@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.screen;
 
 import com.google.common.collect.Lists;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.registry.RegistryWrapper;
@@ -14,6 +16,7 @@ import pers.solid.mishang.uc.util.TextBridge;
 import java.util.Collection;
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 @ApiStatus.AvailableSince("1.0.2")
 public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<StandingSignBlockEntity> {
 
