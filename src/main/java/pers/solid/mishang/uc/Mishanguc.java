@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
@@ -349,6 +350,11 @@ public class Mishanguc implements ModInitializer {
     PayloadTypeRegistry.playS2C().register(EditSignPayload.ID, EditSignPayload.CODEC);
     PayloadTypeRegistry.playS2C().register(GetBlockDataPayload.ID, GetBlockDataPayload.CODEC);
     PayloadTypeRegistry.playS2C().register(GetEntityDataPayload.ID, GetEntityDataPayload.CODEC);
+    ServerPlayerEvents.JOIN.register(serverPlayerEntity -> {
+      final GameRules gameRules = serverPlayerEntity.getWorld().getGameRules();
+      MishangucRules.sync(gameRules.get(MishangucRules.FORCE_PLACING_TOOL_ACCESS), (short) 0, serverPlayerEntity);
+      MishangucRules.sync(gameRules.get(MishangucRules.CARRYING_TOOL_ACCESS), (short) 1, serverPlayerEntity);
+    });
     PayloadTypeRegistry.playS2C().register(RuleChangedPayload.ID, RuleChangedPayload.CODEC);
   }
 
