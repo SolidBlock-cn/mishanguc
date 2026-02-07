@@ -14,6 +14,7 @@ import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Narratable;
+import net.minecraft.client.gui.ParentElement;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
@@ -33,6 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 import org.lwjgl.glfw.GLFW;
 import pers.solid.mishang.uc.Mishanguc;
+import pers.solid.mishang.uc.mixin.ContainerWidgetAccessor;
 import pers.solid.mishang.uc.text.SpecialDrawable;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -52,7 +54,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   /**
    * 被选中的多个项的列表，通常包含 {@link #selected} 的对象但不一定。一般通过 {@link Entry#setSelected(boolean)} 来修改。
    */
-  protected final @NotNull List<@NotNull Entry> selectedEntries = new ArrayList<>();
+  protected final @NotNull Set<@NotNull Entry> selectedEntries = new HashSet<>();
   private final AbstractSignBlockEditScreen<?> signBlockEditScreen;
   public boolean simplified;
   /**
@@ -86,6 +88,24 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
       super.setHeight(height);
     }
     this.heightForBackground = height;
+  }
+
+  /**
+   * 类似于 {@link #setFocused(Element)}，但是支持在调用 {@link #setSelected(Entry, boolean, boolean)} 时指定参数。
+   */
+  public void setFocused(@Nullable Entry focused, boolean multiSel, boolean contSel) {
+    Entry entry = this.getFocused();
+    if (entry != focused && entry instanceof ParentElement parentElement) {
+      parentElement.setFocused(null);
+    }
+
+    ((ContainerWidgetAccessor) this).setFocusedElement(focused);
+    final List<Entry> children = children();
+    int i = children.indexOf(focused);
+    if (i >= 0) {
+      Entry entry2 = children.get(i);
+      this.setSelected(entry2, multiSel, contSel);
+    }
   }
 
   /**
@@ -148,19 +168,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
         }
       } else if (multiSel && selectedEntries.contains(entry)) {
         // 在多选模式下，如果再次选中同一个，则失掉这个选择。
-        final int index = selectedEntries.indexOf(entry);
         entry.setSelected(false);
-        if (getFocused() == entry) {
-          super.setFocused(null);
-          if (!selectedEntries.isEmpty()) {
-            // 失掉一个多选后，如果还有一个多选，则选中其他选项。
-            if (selectedEntries.size() > index) {
-              super.setFocused(selectedEntries.get(index));
-            } else {
-              super.setFocused(selectedEntries.get(index - 1));
-            }
-          }
-        }
         if (getSelectedOrNull() == entry) {
           super.setSelected(null);
         }
@@ -189,7 +197,9 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
       }
     } else if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
       // 此时，children().isEmpty() 为 true
-      signBlockEditScreen.addTextField(0, false);
+      final Entry newEntry = addEmptyTextField(0);
+      TextFieldListWidget.this.setFocused(newEntry, false, false);
+      signBlockEditScreen.setFocused(TextFieldListWidget.this);
       return true;
     }
     if (selectedEntries.size() > 1) {
@@ -279,14 +289,31 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   }
 
   /**
-   * 添加一个文本框。
+   * 添加一个文本框。此方法执行时，不会设置任何的选择或聚焦。
    *
-   * @param index 添加的文本的位置，可以设置为 -1，表示添加到最后一个。
+   * @param index       添加的文本的位置，可以设置为 -1，表示添加到最后一个。
+   * @param textContext 需要添加的 {@link TextContext}。
+   * @param isExisting  是否为现有的，如果是，则不会将 {@link AbstractSignBlockEditScreen#changed} 设为 <code>true</code>。
    */
-  public void addTextField(int index, @NotNull TextContext textContext, boolean isExisting, boolean multiSel) {
+  public Entry addTextField(int index, @NotNull TextContext textContext, boolean isExisting) {
     if (!isExisting) {
       signBlockEditScreen.changed = true;
     }
+    final Entry newEntry = createEntry(textContext);
+    final int newIndex = addEntry(newEntry);
+    if (index != -1) {
+      final List<Entry> rawChildren = children();
+      rawChildren.remove(newIndex);
+      rawChildren.add(index, newEntry);
+    }
+    setScrollY(getScrollY()); // 此处会调用私有方法 recalculateAllChildrenPositions
+
+    signBlockEditScreen.updateTextHoldersVisibility();
+
+    return newEntry;
+  }
+
+  private @NotNull Entry createEntry(@NotNull TextContext textContext) {
     final TextFieldWidget textFieldWidget = new TextFieldWidget(Objects.requireNonNull(signBlockEditScreen.getTextRenderer(), "textRenderer"), 2, 0, signBlockEditScreen.width - 4, 15, TextBridge.empty());
     textFieldWidget.setMaxLength(Integer.MAX_VALUE);
     if (textContext.extra != null) {
@@ -304,17 +331,6 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
       }
     }
     final Entry newEntry = new Entry(textFieldWidget, textContext);
-    final int newIndex = addEntry(newEntry);
-    if (index != -1) {
-      final List<Entry> rawChildren = this.children();
-      rawChildren.remove(newIndex);
-      rawChildren.add(index, newEntry);
-    }
-    setFocused(newEntry);
-    setScrollY(getScrollY()); // 此处会调用私有方法 recalculateAllChildrenPositions
-    if (!children().isEmpty()) {
-      signBlockEditScreen.setFocused(this);
-    }
     textFieldWidget.setChangedListener(s -> {
       final TextContext textContext1 = newEntry.textContext;
       final Matcher matcher = Pattern.compile("^-(\\w+?) (.+)$").matcher(s);
@@ -371,29 +387,32 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
       }
       signBlockEditScreen.changed = true;
     });
-
-    signBlockEditScreen.updateTextHoldersVisibility();
+    return newEntry;
   }
 
-  public void removeTextField(int index, boolean focusNearby) {
+  /**
+   * 添加一个新的文本框。
+   *
+   * @param index 添加到的位置，对应在数组或列表中的次序。
+   */
+
+  public Entry addEmptyTextField(int index) {
+    // 添加时，默认相当于上一行的。
+    final TextContext emptyTextContext = index > 0 ? children().get(index - 1).textContext.clone() : signBlockEditScreen.entity.createDefaultTextContext();
+    emptyTextContext.text = null;
+    emptyTextContext.extra = null;
+    return addTextField(index, emptyTextContext, false);
+  }
+
+  /**
+   * 移除一行文本。此方法执行时，不会自动选中相邻文本。
+   */
+  public void removeTextField(int index) {
     final List<Entry> children = children();
     final Entry removedEntry = children.get(index);
     removeEntry(removedEntry);
-    final TextFieldWidget removedWidget = removedEntry.textFieldWidget;
-    if (getSelectedOrNull() != null
-        && removedWidget == getSelectedOrNull().textFieldWidget) {
-      setSelected(null, true, false);
-    }
-    if (!children.isEmpty() && focusNearby) {
-      final Entry selectedEntry = children.get(MathHelper.clamp(index - 1, 0, children.size() - 1));
-      setSelected(selectedEntry, true, false);
-      setFocused(selectedEntry);
-    }
     // 删除一行元素后，对滚动数量进行一次 clamp，以避免出现过度滚动的情况。
     setScrollY(getScrollY()); // 此处会调用私有方法 recalculateAllChildrenPositions
-    if (!children().isEmpty()) {
-      signBlockEditScreen.setFocused(this);
-    }
 
     signBlockEditScreen.updateTextHoldersVisibility();
     signBlockEditScreen.changed = true;
@@ -406,9 +425,9 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
     // 确保按顺序排序
     final List<Entry> children = children();
-    final List<TextFieldListWidget.Entry> orderedCopy = children.stream().filter(entries::contains).toList();
+    final List<Entry> orderedCopy = children.stream().filter(entries::contains).toList();
 
-    for (TextFieldListWidget.Entry entry : orderedCopy) {
+    for (Entry entry : orderedCopy) {
       final int i = children.indexOf(entry);
       if (i < 0) {
         Mishanguc.MISHANG_LOGGER.warn("Unexpected entry which is not in children when moving up: {}", entry);
@@ -430,9 +449,9 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
     // 确保按倒序排序
     final List<Entry> children = children();
-    final List<TextFieldListWidget.Entry> reversedEntries = Lists.reverse(children).stream().filter(entries::contains).toList();
+    final List<Entry> reversedEntries = Lists.reverse(children).stream().filter(entries::contains).toList();
 
-    for (TextFieldListWidget.Entry entry : reversedEntries) {
+    for (Entry entry : reversedEntries) {
       final int i = children.indexOf(entry);
       if (i < 0) {
         Mishanguc.MISHANG_LOGGER.warn("Unexpected entry which is not in children when moving down: {}", entry);
@@ -506,14 +525,17 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
           if (index + 1 < children.size()) {
             TextFieldListWidget.this.setFocused(children.get(index + 1));
           } else if (!children.isEmpty()) {
-            signBlockEditScreen.addTextField(index + 1, false);
+            final Entry entry = addEmptyTextField(index + 1);
+            TextFieldListWidget.this.setFocused(entry, false, false);
           }
         }
         case GLFW.GLFW_KEY_BACKSPACE -> {
           if (textFieldWidget.getText().isEmpty()) {
             final int index = TextFieldListWidget.this.children().indexOf(this);
             if (index >= 0) {
-              signBlockEditScreen.removeTextField(index, true);
+              TextFieldListWidget.this.removeTextField(index);
+              final Entry nearbyEntry = TextFieldListWidget.this.children().get(MathHelper.clamp(index - 1, 0, children().size() - 1));
+              TextFieldListWidget.this.setFocused(nearbyEntry, false, false);
             }
           }
         }
