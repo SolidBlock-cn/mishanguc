@@ -8,19 +8,21 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.MultilineText;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.input.KeyCodes;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.ScreenTexts;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
@@ -58,9 +60,9 @@ import java.util.stream.Stream;
  * }</pre>
  *
  * @param <T> 方块实体的类型。
- * @see net.minecraft.client.gui.screen.ingame.SignEditScreen
- * @see net.minecraft.client.network.ClientPlayerEntity#openEditSignScreen
- * @see net.minecraft.server.network.ServerPlayerEntity#openEditSignScreen
+ * @see SignEditScreen
+ * @see ClientPlayerEntity#openEditSignScreen
+ * @see ServerPlayerEntity#openEditSignScreen
  */
 @Environment(EnvType.CLIENT)
 public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText> extends Screen {
@@ -200,7 +202,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     setFocused(textFieldListWidget);
   }).dimensions(0, 35, 200, 20).build();
 
-  public final SignPresetGridWidget signPresets = SignPresetGridWidget.createAllWidgets(this);
+  public final SignPresetGridWidget signPresets = SignPresetGridWidget.createAllWidgets(this, MinecraftClient.getInstance(), height - 140, 72);
 
 
   /*
@@ -789,10 +791,11 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     for (ButtonWidget textHolder : getTextHolders()) {
       this.addDrawableChild(textHolder);
     }
-    signPresets.refreshPositions();
-    signPresets.forEachElement(widget -> this.addDrawableChild((Element & Drawable & Selectable) widget));
+    addDrawableChild(signPresets);
+    signPresets.setHeight(height - 140);
     signPresets.setX(width / 2 - signPresets.getWidth() / 2);
-    signPresets.setY(70);
+    signPresets.setY(72);
+    signPresets.setScrollY(signPresets.getScrollY());
   }
 
   /**
@@ -803,11 +806,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     for (ButtonWidget textHolder : getTextHolders()) {
       textHolder.visible = visible;
     }
-    signPresets.forEachElement(widget -> {
-      if (widget instanceof ClickableWidget clickableWidget) {
-        clickableWidget.visible = visible;
-      }
-    });
+    signPresets.visible = visible;
 
     // 同时也需要更新 textFieldListWidget 的可见性
     textFieldListWidget.active = !visible;
@@ -884,7 +883,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         return true;
       }
       if (element.mouseClicked(mouseX, mouseY, button)) {
-        if (element == textFieldListWidget || element instanceof TextFieldWidget) {
+        if (element instanceof EntryListWidget<?> entryListWidget && entryListWidget.visible || element instanceof TextFieldWidget) {
           this.setFocused(element);
         } else {
           setFocused(textFieldListWidget);
