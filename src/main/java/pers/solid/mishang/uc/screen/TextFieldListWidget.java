@@ -575,8 +575,10 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
             final int index = TextFieldListWidget.this.children().indexOf(this);
             if (index >= 0) {
               TextFieldListWidget.this.removeTextField(index);
-              final Entry nearbyEntry = TextFieldListWidget.this.children().get(MathHelper.clamp(index - 1, 0, children().size() - 1));
-              TextFieldListWidget.this.setFocused(nearbyEntry, false, false);
+              if (!children().isEmpty()) {
+                final Entry nearbyEntry = TextFieldListWidget.this.children().get(MathHelper.clamp(index - 1, 0, children().size() - 1));
+                TextFieldListWidget.this.setFocused(nearbyEntry, false, false);
+              }
             }
           }
         }
