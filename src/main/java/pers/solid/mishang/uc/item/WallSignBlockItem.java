@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * 类似于一般的方块物品，但是会读取 BlockEntityTag 中的内容来显示文字。
  *
- * @see pers.solid.mishang.uc.blockentity.WallSignBlockEntity#readNbt
+ * @see pers.solid.mishang.uc.blockentity.WallSignBlockEntity#readData
  */
 public class WallSignBlockItem extends NamedBlockItem implements WithMishangTooltip {
   public WallSignBlockItem(Block block, Settings settings) {
