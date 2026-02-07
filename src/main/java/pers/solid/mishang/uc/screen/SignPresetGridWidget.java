@@ -33,7 +33,7 @@ public class SignPresetGridWidget extends GridWidget {
     return new ButtonWidget.Builder(signPreset.name(), button -> {
       for (TextContext textContext : signPreset.textContexts()) {
         final TextContext newTextContext = textContext.clone();
-        screen.textFieldListWidget.addTextField(-1, newTextContext, false, false);
+        screen.addTextField(-1, newTextContext, false, false);
       }
       final List<TextFieldListWidget.Entry> children = screen.textFieldListWidget.children();
       final int initialFocus = signPreset.initialFocus();

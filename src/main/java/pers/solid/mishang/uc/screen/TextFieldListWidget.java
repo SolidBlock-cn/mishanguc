@@ -82,9 +82,9 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
 
   /**
    * 设置当前 TextFieldListScreen 的已选中的文本框。
-   * @implNote 此对象的 {@link #selected} 一般不是 null，而 {@link #focused} 会在此对象（{@link TextFieldListWidget}）失焦时变成 {@code null}。
    *
    * @param entry 需要选中的 {@link Entry}。
+   * @implNote 此对象的 {@link #selected} 一般不是 null，而 {@link #focused} 会在此对象（{@link TextFieldListWidget}）失焦时变成 {@code null}。
    * @see AbstractSignBlockEditScreen#setFocused(Element)
    */
   @Override

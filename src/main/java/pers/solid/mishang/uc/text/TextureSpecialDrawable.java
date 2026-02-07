@@ -3,16 +3,21 @@ package pers.solid.mishang.uc.text;
 import com.google.common.annotations.Beta;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+
+import java.util.Optional;
 
 /**
  * 表示一个纹理的特殊文本内容，用于渲染其纹理，一般来说这个纹理的宽度和高度是和文本的大小相同的。
@@ -26,7 +31,14 @@ public record TextureSpecialDrawable(@NotNull Identifier identifier, @NotNull Te
   @Override
   @Environment(EnvType.CLIENT)
   public void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, float x, float y) {
-    final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getText(identifier));
+    final Optional<Resource> resource = MinecraftClient.getInstance().getResourceManager().getResource(identifier);
+    final RenderLayer layer;
+    if (resource.isEmpty()) {
+      layer = RenderLayer.getText(MissingSprite.getMissingSpriteId());
+    } else {
+      layer = RenderLayer.getText(identifier);
+    }
+    final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(layer);
     final Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
 
     vertexConsumer.vertex(matrix4f, 0, 8, -0).color(255, 255, 255, 255).texture(0.0f, 1.0f).light(light);
