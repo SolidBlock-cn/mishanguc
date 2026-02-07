@@ -398,10 +398,15 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
       setSelected(null, true, false);
     }
     if (!children.isEmpty() && focusNearby) {
-      setSelected(children.get(MathHelper.clamp(index - 1, 0, children.size() - 1)), true, false);
+      final Entry selectedEntry = children.get(MathHelper.clamp(index - 1, 0, children.size() - 1));
+      setSelected(selectedEntry, true, false);
+      setFocused(selectedEntry);
     }
     // 删除一行元素后，对滚动数量进行一次 clamp，以避免出现过度滚动的情况。
-    setScrollY(getScrollY());
+    setScrollY(getScrollY()); // 此处会调用私有方法 recalculateAllChildrenPositions
+    if (!children().isEmpty()) {
+      signBlockEditScreen.setFocused(this);
+    }
 
     signBlockEditScreen.updateTextHoldersVisibility();
     signBlockEditScreen.changed = true;
