@@ -12,6 +12,7 @@
     "BucketItemAccessor",
     "ChunkHolderAccessor",
     "ClickEventMixin",
+    "ContainerWidgetAccessor",
     "FenceBlockMixin",
     "ItemUsageContextInvoker",
     "NbtCompoundAccessor",

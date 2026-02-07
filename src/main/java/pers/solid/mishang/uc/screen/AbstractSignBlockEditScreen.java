@@ -26,6 +26,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -102,20 +103,29 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    */
   public final ButtonWidget addTextButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.add_text"), button1 -> {
     if (textFieldListWidget.selectedEntries.isEmpty()) {
-      addTextField(-1, false);
+      final TextFieldListWidget.Entry newEntry = textFieldListWidget.addEmptyTextField(-1);
+      textFieldListWidget.setFocused(newEntry, false, false);
     } else {
       final List<TextFieldListWidget.Entry> selectedCopy = Lists.reverse(textFieldListWidget.children()).stream().filter(textFieldListWidget.selectedEntries::contains).toList();
+      final TextFieldListWidget.Entry previouslySelected = textFieldListWidget.getSelectedOrNull();
       for (TextFieldListWidget.Entry selectedEntry : selectedCopy) {
         selectedEntry.setSelected(false);
       }
+      textFieldListWidget.setFocused(null, false, false);
       for (TextFieldListWidget.Entry entry : selectedCopy) {
         final int i = textFieldListWidget.children().indexOf(entry);
         if (i < 0) {
           Mishanguc.MISHANG_LOGGER.warn("Unexpected entry which is not in children when adding text: {}", entry);
           continue;
         }
-        addTextField(i + 1, true);
+        final TextFieldListWidget.Entry newEntry = textFieldListWidget.addEmptyTextField(i + 1);
+        if (entry == previouslySelected) {
+          textFieldListWidget.setFocused(newEntry, true, false);
+        } else {
+          newEntry.setSelected(true);
+        }
       }
+      setFocused(textFieldListWidget);
     }
   }).position(width / 2 - 120 - 100, 5).size(80, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.add_text.description").append(ScreenTexts.LINE_BREAK).append(MishangUtils.describeShortcut(TextBridge.literal("Ctrl + Shift + ").append(TextBridge.translatable("message.mishanguc.keyboard_shortcut.equal")))))).build();
 
@@ -128,6 +138,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
 
     final List<TextFieldListWidget.Entry> selectedCopy = Lists.reverse(textFieldListWidget.children()).stream().filter(textFieldListWidget.selectedEntries::contains).toList();
+    final TextFieldListWidget.Entry previouslySelected = textFieldListWidget.getSelectedOrNull();
     for (TextFieldListWidget.Entry selectedEntry : textFieldListWidget.selectedEntries) {
       selectedEntry.setFocused(false);
     }
@@ -136,7 +147,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     for (TextFieldListWidget.Entry entry : selectedCopy) {
       final int index = textFieldListWidget.children().indexOf(entry);
       if (index >= 0) {
-        removeTextField(index, true);
+        textFieldListWidget.removeTextField(index);
+        if (!textFieldListWidget.children().isEmpty()) {
+          final TextFieldListWidget.Entry nearbyEntry = textFieldListWidget.children().get(MathHelper.clamp(index - 1, 0, children().size() - 1));
+          if (entry == previouslySelected) {
+            textFieldListWidget.setFocused(nearbyEntry, true, false);
+          }
+          nearbyEntry.setSelected(true);
+        }
       }
     }
   }).dimensions(width / 2 + 120 - 100, 5, 80, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.remove_text.description").append(ScreenTexts.LINE_BREAK).append(MishangUtils.describeShortcut(TextBridge.literal("Ctrl + Shift + ").append(TextBridge.translatable("message.mishanguc.keyboard_shortcut.minus")))))).build();
@@ -158,7 +176,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public final ButtonWidget clearButton = new ButtonWidget.Builder(BUTTON_CLEAR_MESSAGE, button -> {
     if (button.getMessage() == BUTTON_CLEAR_CONFIRM_MESSAGE) {
       for (int i = AbstractSignBlockEditScreen.this.textFieldListWidget.children().size() - 1; i >= 0; i--) {
-        removeTextField(i, true);
+        textFieldListWidget.removeTextField(i);
       }
       button.setMessage(BUTTON_CLEAR_MESSAGE);
       button.setTooltip(Tooltip.of(BUTTON_CLEAR_DESCRIPTION_MESSAGE));
@@ -179,9 +197,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    * 没有添加文本时，显示的一条“点击此处添加文本”的消息。文本添加后，该按钮将消失。
    */
   public final ButtonWidget placeHolder = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.add_first_text"), button -> {
-    addTextField(0, false);
+    final TextFieldListWidget.Entry newEntry = textFieldListWidget.addEmptyTextField(0);
+    textFieldListWidget.setFocused(newEntry, false, false);
     setFocused(textFieldListWidget);
-    textFieldListWidget.setFocused(textFieldListWidget.children().get(0));
   }).dimensions(0, 35, 200, 20).build();
 
   public final SignPresetGridWidget signPresets = SignPresetGridWidget.createAllWidgets(this);
@@ -734,7 +752,10 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     // 添加文本框
     if (initialTexts != null) {
       for (TextContext initialText : initialTexts) {
-        addTextField(-1, initialText.clone(), true);
+        textFieldListWidget.addTextField(-1, initialText.clone(), true);
+      }
+      if (!textFieldListWidget.children().isEmpty()) {
+        textFieldListWidget.setFocused(textFieldListWidget.children().getLast());
       }
       initialTexts = null;
     }
@@ -824,43 +845,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   }
 
   /**
-   * 添加一个新的文本框。
-   *
-   * @param index    添加到的位置，对应在数组或列表中的次序。
-   * @param multiSel 是否允许多选，即选中新文本框之后不影响已选中的部分。
-   */
-  public void addTextField(int index, boolean multiSel) {
-    // 添加时，默认相当于上一行的。
-    final TextContext emptyTextContext = index > 0 ? textFieldListWidget.children().get(index - 1).textContext.clone() : entity.createDefaultTextContext();
-    emptyTextContext.text = null;
-    emptyTextContext.extra = null;
-    addTextField(index, emptyTextContext, false, multiSel);
-  }
-
-  /**
-   * 添加一个文本框。
-   *
-   * @param index       添加到的位置，对应在数组或列表中的次序。
-   * @param textContext 需要添加的 {@link TextContext}。
-   * @param isExisting  是否为现有的，如果是，则不会将 {@link #changed} 设为 <code>true</code>。
-   */
-  public void addTextField(int index, @NotNull TextContext textContext, boolean isExisting) {
-    addTextField(index, textContext, isExisting, false);
-  }
-
-  /**
-   * 添加一个文本框。
-   *
-   * @param index       添加到的位置，对应在数组或列表中的次序。
-   * @param textContext 需要添加的 {@link TextContext}。
-   * @param isExisting  是否为现有的，如果是，则不会将 {@link #changed} 设为 <code>true</code>。
-   * @param multiSel    如果为 {@code true}，则将之前的和新的均设置为已选中，否则仅将新的设置为已选中，之前的均解除选择。
-   */
-  public void addTextField(int index, @NotNull TextContext textContext, boolean isExisting, boolean multiSel) {
-    textFieldListWidget.addTextField(index, textContext, isExisting, multiSel);
-  }
-
-  /**
    * 切换底部按钮的显示。显示高级按钮，或者取消高级按钮的显示。
    */
   private void arrangeToolboxButtons() {
@@ -885,17 +869,6 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       widget.visible = true;
       widget.setPosition(widget.getX() + width / 2 - accumulatedWidth / 2, y);
     }
-  }
-
-  /**
-   * 移除一个文本框。
-   *
-   * @param index       移除的文本框的位置。
-   * @param focusNearby 移除后对焦到附近的文本。
-   * @see #addTextField(int, TextContext, boolean, boolean)
-   */
-  public void removeTextField(int index, boolean focusNearby) {
-    textFieldListWidget.removeTextField(index, focusNearby);
   }
 
   @Override
@@ -934,6 +907,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         clickableWidget.visible = clickableWidget == floatButtonWidget;
       }
     }
+    textFieldListWidget.visible = true;
     isAcceptingCustomValue = true;
     customValueTextField.setEditableColor(0xffe0e0e0);
     customValueTextField.setSuggestion(null);
@@ -1069,12 +1043,10 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     final boolean previousSimplified = textFieldListWidget.simplified;
     final int previousCuttingHeight = textFieldListWidget.cuttingHeight;
     final List<TextFieldListWidget.Entry> selectedEntriesCopy = List.copyOf(textFieldListWidget.selectedEntries);
-//    final List<TextFieldListWidget.Entry> textFieldListChildren = textFieldListWidget.children();
     super.clearAndInit();
     setFocused(previousFocused);
     textFieldListWidget.setScrollY(scrollAmountBeforeClear);
-    textFieldListWidget.setSelected(previouslyWidgetSelected);
-//    textFieldListWidget.replaceEntries(textFieldListChildren);
+    textFieldListWidget.setSelected(previouslyWidgetSelected, false, false);
     textFieldListWidget.selectedEntries.clear();
     textFieldListWidget.selectedEntries.addAll(selectedEntriesCopy);
     textFieldListWidget.cuttingHeight = previousCuttingHeight;
@@ -1121,13 +1093,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       } else if (keyCode == GLFW.GLFW_KEY_KP_ADD) {
         addTextButton.onPress(input);
         return true;
-      } else if (keyCode == GLFW.GLFW_KEY_E && !isAcceptingCustomValue) {
+      } else if (keyCode == GLFW.GLFW_KEY_E && !isAcceptingCustomValue && !hidden) {
         final Element focused = getFocused();
         if (focused instanceof FloatButtonWidget floatButtonWidget && focused != horizontalAlignButton && focused != verticalAlignButton) {
           customValueStartAccepting(floatButtonWidget);
         } else {
           setCustomValueButton.onPress(input);
         }
+        return true;
       }
     } else if (input.hasCtrl() && input.hasShift() && !input.hasAlt()) {
       if (keyCode == GLFW.GLFW_KEY_EQUAL) {
@@ -1160,7 +1133,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         }
       }
     } else if (getFocused() == null && (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER)) {
-      addTextField(-1, false);
+      final TextFieldListWidget.Entry newEntry = textFieldListWidget.addEmptyTextField(-1);
+      textFieldListWidget.setFocused(newEntry, false, false);
+      setFocused(textFieldListWidget);
       return true;
     } else if (textFieldListWidget.simplified && getFocused() == hideButton && input.hasShift()) {
       if (keyCode == GLFW.GLFW_KEY_UP) {
