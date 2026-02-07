@@ -86,7 +86,7 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
                 textContext -> {
                   final TextContext flip = textContext.clone().flip();
                   // 留意添加到的位置是列表末尾。
-                  addTextField(-1, flip, false);
+                  textFieldListWidget.addTextField(-1, flip, false);
                 });
           }).dimensions(this.width / 2 - 100,
           90,
