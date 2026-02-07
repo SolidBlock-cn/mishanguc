@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
@@ -46,6 +48,7 @@ public final class MishangucRules {
     return GameRuleRegistry.register("mishanguc:" + name, GameRules.Category.MISC, ruleType);
   }
 
+  @Environment(EnvType.CLIENT)
   static void handle(RuleChangedPayload payload, ClientPlayNetworking.Context context) {
     context.client().execute(() -> {
       switch (payload.type()) {
