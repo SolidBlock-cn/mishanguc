@@ -2,14 +2,13 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
-### 1.6.0
-
-#### Update of this version
+### 1.6.0-beta.5
 
 - Fixed the version that the game rules do not change when entering the world.
 - Fixed the issue that, in versions above 1.21.10, when shader is enabled, when no ordinary text is rendered, the special text of this mod is not treated as text, causing it to be rendered dimly.
+- Fixed the issue of using Ctrl + E to set custom value will cause the texts invisible.
 
-#### 1.6.0-beta.4
+### 1.6.0-beta.4
 
 - For Minecraft 1.21.10 and above: adjust text rendering to ensure special texts can also be treated as rendered text by mods like Iris, so the special texts can have some special attributes like normal texts when shaders are enabled.
 - For Minecraft 1.21.10 and above: fixed the issue of data generator fails to run.
@@ -18,7 +17,7 @@ Note: Not all versions in this update log are already published. Please refer to
 - Removed some redundant codes.
 - Fixed the issue that the game rules do not synchronize.
 
-#### 1.6.0-beta.3
+### 1.6.0-beta.3
 
 - Now it is possible to modify the text preset of signs. When editing the sign texts, if no text is added, all available presets will be displayed.
   - There are currently 6 builtin sign presets:
@@ -91,11 +90,11 @@ Note: Not all versions in this update log are already published. Please refer to
   - When the mod stores patterns in the chunk data, canonical names (such as `arrow-left`) are used not, the abbreviated names (such as `al`) of chunk data stored when using old version mod will be converted automatically and it will no longer be compatible to old version mods. Therefore, it is recommended to make a backup when entering the world with the new version mod.
 - Now the texts in the sign supports `-nbt`, similar to `-json`, but it represents text components using NBT, and the syntax has some small differences from JSON. The texts specified with `-json` will be automatically converted to `-nbt`.
 
-#### 1.6.0-beta.2
+### 1.6.0-beta.2
 
 - Fixed the issue that the server cannot start.
 
-#### 1.6.0-beta.1
+### 1.6.0-beta.1
 
 - Updated to 1.21.10 and 1.21.11.
 - Fixed the issue that the text in the sign edit screen does not display in some cases.
