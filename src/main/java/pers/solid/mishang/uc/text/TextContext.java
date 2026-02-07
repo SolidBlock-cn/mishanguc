@@ -48,6 +48,7 @@ public class TextContext implements Cloneable {
       return Collections.singletonList(textContext);
     }, ei -> ei.map(Collections::singletonList, textContexts -> textContexts)), x -> x.size() == 1 ? Either.right(Either.left(x.get(0))) : Either.right(Either.right(x)));
   }
+
   public static final PacketCodec<RegistryByteBuf, TextContext> PACKET_CODEC = PacketCodec.of((value, buf) -> buf.writeNbt(value.createNbt(buf.getRegistryManager())), buf -> TextContext.fromNbt(buf.readNbt(), buf.getRegistryManager()));
 
   /**
