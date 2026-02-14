@@ -134,7 +134,7 @@ public interface SpecialDrawable extends Cloneable {
   }
 
   /**
-   * 根据已有的 id 和参数返回对象，用于告示牌编辑界面中。如果在文本框中输入 {@code -rect 2 3}，则会调用 {@code fromStringArgs(specialDrawable, "rect", "2 3")}。
+   * 根据已有的 id 和参数返回对象，用于告示牌编辑界面中。如果在文本框中输入 {@code -rect 2 3}，则会调用 {@code fromStringArgs(textContext, "rect", "2 3")}。
    */
   static @Nullable SpecialDrawable fromStringArgs(TextContext textContext, String id, String args) {
     if (id == null) return null;
@@ -159,9 +159,9 @@ public interface SpecialDrawable extends Cloneable {
   }
 
   /**
-   * 由于该对象需要确保其对应的 TextContext 对应，因此 {@link TextContext#clone()} 中需要复制此对象并将其 specialDrawable 字段设为复制后的 specialDrawable。
+   * 由于该对象需要确保其对应的 TextContext 对应，因此 {@link TextContext#clone()} 中需要复制此对象并将其 textContext 字段设为复制后的 textContext。
    *
-   * @param textContext 新的 TextContext 对象。通常来说，应该确保返回的对象是（或者将会是）specialDrawable 的 {@link TextContext#extra} 字段，同时返回的这个 SpecialDrawable 对象的 specialDrawable 字段应该是该参数。
+   * @param textContext 新的 TextContext 对象。通常来说，应该确保返回的对象是（或者将会是）textContext 的 {@link TextContext#extra} 字段，同时返回的这个 SpecialDrawable 对象的 textContext 字段应该是该参数。
    * @return 新的 SpecialDrawable 字段。
    */
   @Contract(value = "_ -> new", pure = true)
