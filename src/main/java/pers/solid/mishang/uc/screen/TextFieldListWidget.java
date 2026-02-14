@@ -28,10 +28,7 @@ import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.packrat.PackratParser;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnmodifiableView;
+import org.jetbrains.annotations.*;
 import org.lwjgl.glfw.GLFW;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.mixin.ContainerWidgetAccessor;
@@ -426,8 +423,26 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     final List<Entry> children = children();
     final Entry removedEntry = children.get(index);
     removeEntry(removedEntry);
+    removedEntry.setSelected(false);
     // 删除一行元素后，对滚动数量进行一次 clamp，以避免出现过度滚动的情况。
     setScrollY(getScrollY()); // 此处会调用私有方法 recalculateAllChildrenPositions
+
+    signBlockEditScreen.updateContentVisibility();
+    signBlockEditScreen.changed = true;
+  }
+
+  /**
+   * 清除所有文本，仅存在于 1.21.10 之后版本。
+   *
+   * @implNote 对于之前版本，
+   */
+  @ApiStatus.AvailableSince("mc1.21.10")
+  public void clearTextFields() {
+    clearEntries();
+    for (Entry selectedEntry : selectedEntries) {
+      selectedEntry.textFieldWidget.setFocused(false);
+    }
+    selectedEntries.clear();
 
     signBlockEditScreen.updateContentVisibility();
     signBlockEditScreen.changed = true;
