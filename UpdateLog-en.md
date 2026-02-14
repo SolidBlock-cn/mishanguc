@@ -2,6 +2,162 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.6.0-beta.5
+
+- Fixed the version that the game rules do not change when entering the world.
+- Fixed the issue that, in versions above 1.21.10, when shader is enabled, when no ordinary text is rendered, the special text of this mod is not treated as text, causing it to be rendered dimly.
+- Fixed the issue of using Ctrl + E to set custom value will cause the texts invisible.
+- Improved simplified mode. Now when simplified mode is enabled, it is no longer required to press Shift for adjusting height or disabling simplified mode.
+- Fixed the issue that the Tab key may also navigate to invisible button elements when there are texts already.
+
+### 1.6.0-beta.4
+
+- For Minecraft 1.21.10 and above: adjust text rendering to ensure special texts can also be treated as rendered text by mods like Iris, so the special texts can have some special attributes like normal texts when shaders are enabled.
+- For Minecraft 1.21.10 and above: fixed the issue of data generator fails to run.
+- Adjusted the `-texture` interaction logic in the signs: in the signs, even if a missing texture id is inputted, it can normally take effect, rendering black-purple checkerboards without outputting warns.
+- Added a special text type: `debug_text`, usage: input `-debug_text <any text content>` to test the rendering of text. Please no that the rendering position of text will not be sure to be correct.
+- Removed some redundant codes.
+- Fixed the issue that the game rules do not synchronize.
+
+### 1.6.0-beta.3
+
+- Now it is possible to modify the text preset of signs. When editing the sign texts, if no text is added, all available presets will be displayed.
+  - There are currently 6 builtin sign presets:
+    - left arrow + 1 line of text (`left_arrow_one_line`)
+    - 1 line of text (`one_line`)
+    - right arrow + 1 line of text (`right_arrow_one_line`)
+    - left arrow + 2 lines of text (`left_arrow_two_lines`)
+    - 2 lines of text (`two_lines`)
+    - right arrow + 2 lines of text (`right_arrow_two_lines`)
+    - The "two lines of text" in the presets above, are one line with size 6, and one line with size 3. The arrows can be used in direction indicates such as subway.
+  - The sign presets (excluding builtin) are store in `configs/mishanguc_sign_presets/<id>.json`, while "id" is anything that can be used as a filename, can contain Chinese, but cannot contain some special characters, and does not support subfolders. Each file is a `json` format, and supports the following fields:
+    - `order`: Integer, optional, by default 0. Used to control the order when displaying sign presets. The lower value, the higher priority. The order of the six builtin presets are respectively integers from -6 to -1.
+    - `name`: Text component. Optional. The display name of the preset in the interface. If not specified, the translation key `signPreset.mishanguc.<id>.name` will be used, and the id will be displayed directly as a fallback if the translation key does not exist.
+    - `description`: Text component. Optional. The description of the preset. In the sign edit screen, when the cursor is hovered on the button, of the button gets focus, the description will be displayed if it exists.
+    - `text_contexts`: The text list. Required. The format of each format is equivalent to the format of each text in the sign.
+    - `initial_focus`: Integer. Optional. By default, 0. This value indicates which line of text will be automatically selected when the preset is applied. For example, if the value of `initial_focus` is 2, upon applying the preset the third line of text will be automatically selected. The value of this field must be lower than the amount of elements of text list, but when the text list is empty (amount is 0), this value can be 0.
+  - Added corresponding commands to handle sign presets. All commands are executed on the client side, not the server side, and it takes affect immediately after execution and relevant files will be updated. All IO operations of files will be executed on a separate thread.
+    - `/mishanguc:signpreset path`: Show the path where the sign presets are stored. When the path exist, click the relevant message to show in Explorer.
+    - `/mishanguc:signpreset list`: Show a list of all current presets.
+    - `/mishanguc:signpreset reload`: Reload sign presets from the disk. Note: `/reload` command will not reload sign presets.
+    - `/mishanguc:signpreset save <id> [args]`: Store the sign presets. When executing, you need to locate your crosshair on a sign block of Mishang Urban Construction mod. You can specify some extra arguments (`[args]`), in the NBT object format, supporting the following fields:
+      - `force`: False by default. If true, when the sign preset file of the same name exist, or when the builtin preset exists with the same name, it will still normally saved. If false, the command will noe execute. Besides, when the sign text is empty (no a single line), if `force` is false, the command will also not be executed.
+      - `order`: Integer.
+      - `initial_focus`: Integer.
+      - `name`: Text component.
+      - `description`: Text component.
+    - `/mishanguc:signpreset delete <id>`: Delete a sign preset. If deleting a non-builtin sign preset, the file `<id>.json` will be tried to delete. If deleting a builtin sign preset, the file `<id>.json` will be created with an empty JSON, marking this builtin sign preset not to be loaded.
+    - `/mishanguc:signpreset reset <id>`: Reset a sign preset. For non-builtin sign presets, it will be delected (equivalent to `/mishanguc:signpreset delete <id>` command). For builtin sign presets, no matter it is overridden or marked no to load, the file `<id>.json` will be deleted to restore the builtin sign preset.
+    - `/mishanguc:signpreset reset`: Reset all sign presets, and restore all builtin sign presets. All JSON files in `config/mishanguc_sign_presets` will be deleted.
+  - Note: All presets will be automatically adjusted position when applied, even if not adjusted when saving. If you do not need to adjust, please set the relevant text lines to absolute mode.
+  - The size of builtin sign presets is now 6 and 3 (for two lines) for all blocks. Formerly, the size of builtin sign presets is 8 and 4 for full wall sign blocks; note that the default text size will still depend on the sign itself, and for full wall sign the default text size is 8 and for other blocks it is 6.
+- Simplified the data format for sign texts. For situations where text is white (by default) and there is no outline, the fields will be removed.
+- Improved the `-pattern` for sign texts. Now all pattern use canonical names while supporting some abbreviated names as aliases:
+  - `empty`
+  - `arrow-left`, alias: `al`
+  - `arrow-right`, alias: `ar`
+  - `arrow-up`, alias: `arrow-top`, `au`, `at`
+  - `arrow-down`, alias: `arrow-bottom`, `ad`, `ab`
+  - `arrow-left-thin`
+  - `arrow-right-thin`
+  - `arrow-up-thin`
+  - `arrow-down-thin`
+  - `arrow-left-up`, alias: `arrow-left-top`, `alu`, `alt`
+  - `arrow-right-up`, alias: `arrow-right-top`, `aru`, `art`
+  - `arrow-left-down`, alias: `arrow-left-bottom`, `ald`, `alb`
+  - `arrow-right-down`, alias: `arrow-right-bottom`, `ard`, `arb`
+  - `arrow-left-turn-up`, alias: `altu`
+  - `arrow-right-turn-up`, alias: `artu`
+  - `arrow-left-turn-down`, alias: `altd`
+  - `arrow-right-turn-down`, alias: `artd`
+  - `arrow-left-right`, alias: `alr`
+  - `arrow-up-down`, alias: `aud`
+  - `circle-small`, alias: `small-circle`
+  - `circle-medium`, alias: `medium-circle`, `circle`, `O`
+  - `ban`
+  - `u-turn-left-down`, alias: `u-turn-left-bottom`, `uld`, `ulb`
+  - `u-turn-right-down`, alias: `u-turn-right-bottom`, `urd`, `urb`
+  - `u-turn-left-up`, alias: `u-turn-right-top`, `ulu`, `ult`
+  - `u-turn-right-up`, alias: `u-turn-right-top`, `uru`, `urt`
+  - `cross-small`, alias: `small-scross`
+  - `cross-medium`, alias: `medium-cross`, `cross`, `X`
+  - `cross-large`, alias: `large-cross`
+  - `square-small`, alias: `small-square`
+  - `square-medium`, alias: `medium-square`, `square`
+  - `square-large`, alias: `large-square`
+  - `square-slant-small`, alias: `small-slant-square`
+  - `square-slant-medium`, alias: `medium-slant-square`
+  - `square-slant-large`, alias: `large-slant-square`
+  - Note: Specifying custom patterns is not supported. To use more complicated patterns, it is recommended to use `-texture` format, or use the vanilla sprite component (example: `-nbt {sprite: xxx}`).
+  - When the mod stores patterns in the chunk data, canonical names (such as `arrow-left`) are used not, the abbreviated names (such as `al`) of chunk data stored when using old version mod will be converted automatically and it will no longer be compatible to old version mods. Therefore, it is recommended to make a backup when entering the world with the new version mod.
+- Now the texts in the sign supports `-nbt`, similar to `-json`, but it represents text components using NBT, and the syntax has some small differences from JSON. The texts specified with `-json` will be automatically converted to `-nbt`.
+
+### 1.6.0-beta.2
+
+- Fixed the issue that the server cannot start.
+
+### 1.6.0-beta.1
+
+- Updated to 1.21.10 and 1.21.11.
+- Fixed the issue that the text in the sign edit screen does not display in some cases.
+- Fixed the operating logic and display effect in the sign edit screen.
+- Fixed the issue that the block entity data is not updated when the block is placed with some tools like Force Placing Tool and the block is from the offhand block or the block specified by the Carrying Tool in the offhand.
+- Fixed the issue that Carry Tools do not handle data components of block entities correctly.
+- Fixed the issue of wrong operating logic of the text outline control button on the sign edit screen.
+- The shader option in the sign edit screen is no longer seen as not recommended enabling.
+
+### 1.5.3
+
+- For versions 1.21,4 and above, fixed the issue that custom-colored sign bars are not tinted dynamically in the inventory.
+- Other updates see the changelog for 1.5.2, 1.5.1 and 1.5.0.
+
+### 1.5.2
+
+- Now all standing signs and sign bars have the block tag `#wall_post_override` so that the standing signs placed on the walls make the wall posts visible.
+
+### 1.5.1
+
+- Optimized the parsing of JSON text.
+- When typing special texts in the sign, if the content is invalid (for example, `-json` with an invalid JSON text), the text field will be now displayed red.
+- Fixed the issue that the side texture of road blocks with straight line and two bevel angle lines will disappear on some occasions.
+- Fixed the issue that in the sign edit interface, the underline button changes the italic of text by mistake.
+
+### 1.5.0
+
+- Compatible with 1.21.6.
+- Fixed the issue of incorrect texture in 1.21.5.
+- Fixed the issue that the X-rotation of text cannot be set correctly.
+- Adjusted the name of some contents.
+- Fixed the issue of typing JSON prefixed with "`-json`" in the sign and opening the edit interface will cause a space character missed and result in incorrect parsing.
+
+### 1.4.9
+
+- Fixed the incorrect texture of the side of some road blocks.
+
+### 1.4.8
+
+- Fixed the issue of incompatibility with Sinytra Connector.
+
+### 1.4.7
+
+- Now in 1.21.5, the tooltips of various blocks and items can be hidden according to the field `hidden_components` in the item component `tooltip_display`.
+- Fixed the issue that the item component `mishanguc:includes_fluid` is misspelled as `mishanguc:includes_field`. If there are items defined this item component manually, that item component will be ignored.
+
+### 1.4.6
+
+- Fixed the issue that some custom-colored signs are rendered in incorrect models in the inventory.
+
+### 1.4.5
+
+- Adjusted the placing rule of the wall light block and corner light block. The light can be placed only when the block has a sides shape or collision at the center of the surface, avoiding placing the light on the side where the center is empty.
+- Fixed the incorrect behavior of hung sign bars.
+- Fixed the issue that in the sign edit screen, when there are too many edit boxes and some boxes are not displayed, those edit boxes not displayed will still influence the interaction of other buttons.
+- Introduced the utility of simplifying the sign edit screen. Hold Shift and click the "hide" button to enable or disable simplified ode. In simplified mode, even if there are many texts, the text editing interface will still display in a smaller area, leaving more room for displaying the actual effect while editing the text. To adjust the height of the text area, hold Shift down, hover the mouse on the "hide" button and scroll the mouse wheel, or when the "hide" button has a focus, hold Shift and press the up/down arrow key.
+
+### 1.4.4
+
+- Fixed the severe issue that the mod is unable to run in 1.21.1.
+
 ### 1.4.3
 
 - Fit 1.21.4.
@@ -143,6 +299,8 @@ This update is limited to 1.20.5. Changed the data structure to fit into item co
 - Honeycomb can be used to wax signs (those in this mod only). In Creative Mode, honeycomb can remove wax on sign. Wax cannot be removed under non-Creative Mode. Waxed signs cannot be edited, nor be made glow of removed the glow.
 - Using glowing inc sac can make texts on signs glow. Inc sac can remove the glow on the texts. Glowing texts will be displayed on max luminance in any dim places, but the outline of texts is not affected. When the texts are black or the sign is in bright places, glowing texts may not make an obvious difference. Glowing texts also do not affect the brightness level of blocks.
 - For hung sign and standing sign, text glowing and waxing are handled respectively on the two sides. Under non-Creative Mode, each success operation will consume one honeycomb, inc sac or glowing inc sac.
+- Adjusted some language files, especially Traditional Chinese (Hong Kong SAR).
+- Fixed the compatibility issue with Sinytra Connector.
 
 ### 1.2.7
 
