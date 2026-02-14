@@ -308,7 +308,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     }
     setScrollY(getScrollY()); // 此处会调用私有方法 recalculateAllChildrenPositions
 
-    signBlockEditScreen.updateTextHoldersVisibility();
+    signBlockEditScreen.updateContentVisibility();
 
     return newEntry;
   }
@@ -414,7 +414,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     // 删除一行元素后，对滚动数量进行一次 clamp，以避免出现过度滚动的情况。
     setScrollY(getScrollY()); // 此处会调用私有方法 recalculateAllChildrenPositions
 
-    signBlockEditScreen.updateTextHoldersVisibility();
+    signBlockEditScreen.updateContentVisibility();
     signBlockEditScreen.changed = true;
   }
 
