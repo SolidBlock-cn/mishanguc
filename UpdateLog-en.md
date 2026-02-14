@@ -2,6 +2,242 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.6.0-beta.5
+
+- Fixed the version that the game rules do not change when entering the world.
+- Fixed the issue that, in versions above 1.21.10, when shader is enabled, when no ordinary text is rendered, the special text of this mod is not treated as text, causing it to be rendered dimly.
+- Fixed the issue of using Ctrl + E to set custom value will cause the texts invisible.
+- Improved simplified mode. Now when simplified mode is enabled, it is no longer required to press Shift for adjusting height or disabling simplified mode.
+- Fixed the issue that the Tab key may also navigate to invisible button elements when there are texts already.
+
+### 1.6.0-beta.4
+
+- For Minecraft 1.21.10 and above: adjust text rendering to ensure special texts can also be treated as rendered text by mods like Iris, so the special texts can have some special attributes like normal texts when shaders are enabled.
+- For Minecraft 1.21.10 and above: fixed the issue of data generator fails to run.
+- Adjusted the `-texture` interaction logic in the signs: in the signs, even if a missing texture id is inputted, it can normally take effect, rendering black-purple checkerboards without outputting warns.
+- Added a special text type: `debug_text`, usage: input `-debug_text <any text content>` to test the rendering of text. Please no that the rendering position of text will not be sure to be correct.
+- Removed some redundant codes.
+- Fixed the issue that the game rules do not synchronize.
+
+### 1.6.0-beta.3
+
+- Now it is possible to modify the text preset of signs. When editing the sign texts, if no text is added, all available presets will be displayed.
+  - There are currently 6 builtin sign presets:
+    - left arrow + 1 line of text (`left_arrow_one_line`)
+    - 1 line of text (`one_line`)
+    - right arrow + 1 line of text (`right_arrow_one_line`)
+    - left arrow + 2 lines of text (`left_arrow_two_lines`)
+    - 2 lines of text (`two_lines`)
+    - right arrow + 2 lines of text (`right_arrow_two_lines`)
+    - The "two lines of text" in the presets above, are one line with size 6, and one line with size 3. The arrows can be used in direction indicates such as subway.
+  - The sign presets (excluding builtin) are store in `configs/mishanguc_sign_presets/<id>.json`, while "id" is anything that can be used as a filename, can contain Chinese, but cannot contain some special characters, and does not support subfolders. Each file is a `json` format, and supports the following fields:
+    - `order`: Integer, optional, by default 0. Used to control the order when displaying sign presets. The lower value, the higher priority. The order of the six builtin presets are respectively integers from -6 to -1.
+    - `name`: Text component. Optional. The display name of the preset in the interface. If not specified, the translation key `signPreset.mishanguc.<id>.name` will be used, and the id will be displayed directly as a fallback if the translation key does not exist.
+    - `description`: Text component. Optional. The description of the preset. In the sign edit screen, when the cursor is hovered on the button, of the button gets focus, the description will be displayed if it exists.
+    - `text_contexts`: The text list. Required. The format of each format is equivalent to the format of each text in the sign.
+    - `initial_focus`: Integer. Optional. By default, 0. This value indicates which line of text will be automatically selected when the preset is applied. For example, if the value of `initial_focus` is 2, upon applying the preset the third line of text will be automatically selected. The value of this field must be lower than the amount of elements of text list, but when the text list is empty (amount is 0), this value can be 0.
+  - Added corresponding commands to handle sign presets. All commands are executed on the client side, not the server side, and it takes affect immediately after execution and relevant files will be updated. All IO operations of files will be executed on a separate thread.
+    - `/mishanguc:signpreset path`: Show the path where the sign presets are stored. When the path exist, click the relevant message to show in Explorer.
+    - `/mishanguc:signpreset list`: Show a list of all current presets.
+    - `/mishanguc:signpreset reload`: Reload sign presets from the disk. Note: `/reload` command will not reload sign presets.
+    - `/mishanguc:signpreset save <id> [args]`: Store the sign presets. When executing, you need to locate your crosshair on a sign block of Mishang Urban Construction mod. You can specify some extra arguments (`[args]`), in the NBT object format, supporting the following fields:
+      - `force`: False by default. If true, when the sign preset file of the same name exist, or when the builtin preset exists with the same name, it will still normally saved. If false, the command will noe execute. Besides, when the sign text is empty (no a single line), if `force` is false, the command will also not be executed.
+      - `order`: Integer.
+      - `initial_focus`: Integer.
+      - `name`: Text component.
+      - `description`: Text component.
+    - `/mishanguc:signpreset delete <id>`: Delete a sign preset. If deleting a non-builtin sign preset, the file `<id>.json` will be tried to delete. If deleting a builtin sign preset, the file `<id>.json` will be created with an empty JSON, marking this builtin sign preset not to be loaded.
+    - `/mishanguc:signpreset reset <id>`: Reset a sign preset. For non-builtin sign presets, it will be delected (equivalent to `/mishanguc:signpreset delete <id>` command). For builtin sign presets, no matter it is overridden or marked no to load, the file `<id>.json` will be deleted to restore the builtin sign preset.
+    - `/mishanguc:signpreset reset`: Reset all sign presets, and restore all builtin sign presets. All JSON files in `config/mishanguc_sign_presets` will be deleted.
+  - Note: All presets will be automatically adjusted position when applied, even if not adjusted when saving. If you do not need to adjust, please set the relevant text lines to absolute mode.
+  - The size of builtin sign presets is now 6 and 3 (for two lines) for all blocks. Formerly, the size of builtin sign presets is 8 and 4 for full wall sign blocks; note that the default text size will still depend on the sign itself, and for full wall sign the default text size is 8 and for other blocks it is 6.
+- Simplified the data format for sign texts. For situations where text is white (by default) and there is no outline, the fields will be removed.
+- Improved the `-pattern` for sign texts. Now all pattern use canonical names while supporting some abbreviated names as aliases:
+  - `empty`
+  - `arrow-left`, alias: `al`
+  - `arrow-right`, alias: `ar`
+  - `arrow-up`, alias: `arrow-top`, `au`, `at`
+  - `arrow-down`, alias: `arrow-bottom`, `ad`, `ab`
+  - `arrow-left-thin`
+  - `arrow-right-thin`
+  - `arrow-up-thin`
+  - `arrow-down-thin`
+  - `arrow-left-up`, alias: `arrow-left-top`, `alu`, `alt`
+  - `arrow-right-up`, alias: `arrow-right-top`, `aru`, `art`
+  - `arrow-left-down`, alias: `arrow-left-bottom`, `ald`, `alb`
+  - `arrow-right-down`, alias: `arrow-right-bottom`, `ard`, `arb`
+  - `arrow-left-turn-up`, alias: `altu`
+  - `arrow-right-turn-up`, alias: `artu`
+  - `arrow-left-turn-down`, alias: `altd`
+  - `arrow-right-turn-down`, alias: `artd`
+  - `arrow-left-right`, alias: `alr`
+  - `arrow-up-down`, alias: `aud`
+  - `circle-small`, alias: `small-circle`
+  - `circle-medium`, alias: `medium-circle`, `circle`, `O`
+  - `ban`
+  - `u-turn-left-down`, alias: `u-turn-left-bottom`, `uld`, `ulb`
+  - `u-turn-right-down`, alias: `u-turn-right-bottom`, `urd`, `urb`
+  - `u-turn-left-up`, alias: `u-turn-right-top`, `ulu`, `ult`
+  - `u-turn-right-up`, alias: `u-turn-right-top`, `uru`, `urt`
+  - `cross-small`, alias: `small-scross`
+  - `cross-medium`, alias: `medium-cross`, `cross`, `X`
+  - `cross-large`, alias: `large-cross`
+  - `square-small`, alias: `small-square`
+  - `square-medium`, alias: `medium-square`, `square`
+  - `square-large`, alias: `large-square`
+  - `square-slant-small`, alias: `small-slant-square`
+  - `square-slant-medium`, alias: `medium-slant-square`
+  - `square-slant-large`, alias: `large-slant-square`
+  - Note: Specifying custom patterns is not supported. To use more complicated patterns, it is recommended to use `-texture` format, or use the vanilla sprite component (example: `-nbt {sprite: xxx}`).
+  - When the mod stores patterns in the chunk data, canonical names (such as `arrow-left`) are used not, the abbreviated names (such as `al`) of chunk data stored when using old version mod will be converted automatically and it will no longer be compatible to old version mods. Therefore, it is recommended to make a backup when entering the world with the new version mod.
+- Now the texts in the sign supports `-nbt`, similar to `-json`, but it represents text components using NBT, and the syntax has some small differences from JSON. The texts specified with `-json` will be automatically converted to `-nbt`.
+
+### 1.6.0-beta.2
+
+- Fixed the issue that the server cannot start.
+
+### 1.6.0-beta.1
+
+- Updated to 1.21.10 and 1.21.11.
+- Fixed the issue that the text in the sign edit screen does not display in some cases.
+- Fixed the operating logic and display effect in the sign edit screen.
+- Fixed the issue that the block entity data is not updated when the block is placed with some tools like Force Placing Tool and the block is from the offhand block or the block specified by the Carrying Tool in the offhand.
+- Fixed the issue that Carry Tools do not handle data components of block entities correctly.
+- Fixed the issue of wrong operating logic of the text outline control button on the sign edit screen.
+- The shader option in the sign edit screen is no longer seen as not recommended enabling.
+
+### 1.5.3
+
+- For versions 1.21,4 and above, fixed the issue that custom-colored sign bars are not tinted dynamically in the inventory.
+- Other updates see the changelog for 1.5.2, 1.5.1 and 1.5.0.
+
+### 1.5.2
+
+- Now all standing signs and sign bars have the block tag `#wall_post_override` so that the standing signs placed on the walls make the wall posts visible.
+
+### 1.5.1
+
+- Optimized the parsing of JSON text.
+- When typing special texts in the sign, if the content is invalid (for example, `-json` with an invalid JSON text), the text field will be now displayed red.
+- Fixed the issue that the side texture of road blocks with straight line and two bevel angle lines will disappear on some occasions.
+- Fixed the issue that in the sign edit interface, the underline button changes the italic of text by mistake.
+
+### 1.5.0
+
+- Compatible with 1.21.6.
+- Fixed the issue of incorrect texture in 1.21.5.
+- Fixed the issue that the X-rotation of text cannot be set correctly.
+- Adjusted the name of some contents.
+- Fixed the issue of typing JSON prefixed with "`-json`" in the sign and opening the edit interface will cause a space character missed and result in incorrect parsing.
+
+### 1.4.9
+
+- Fixed the incorrect texture of the side of some road blocks.
+
+### 1.4.8
+
+- Fixed the issue of incompatibility with Sinytra Connector.
+
+### 1.4.7
+
+- Now in 1.21.5, the tooltips of various blocks and items can be hidden according to the field `hidden_components` in the item component `tooltip_display`.
+- Fixed the issue that the item component `mishanguc:includes_fluid` is misspelled as `mishanguc:includes_field`. If there are items defined this item component manually, that item component will be ignored.
+
+### 1.4.6
+
+- Fixed the issue that some custom-colored signs are rendered in incorrect models in the inventory.
+
+### 1.4.5
+
+- Adjusted the placing rule of the wall light block and corner light block. The light can be placed only when the block has a sides shape or collision at the center of the surface, avoiding placing the light on the side where the center is empty.
+- Fixed the incorrect behavior of hung sign bars.
+- Fixed the issue that in the sign edit screen, when there are too many edit boxes and some boxes are not displayed, those edit boxes not displayed will still influence the interaction of other buttons.
+- Introduced the utility of simplifying the sign edit screen. Hold Shift and click the "hide" button to enable or disable simplified ode. In simplified mode, even if there are many texts, the text editing interface will still display in a smaller area, leaving more room for displaying the actual effect while editing the text. To adjust the height of the text area, hold Shift down, hover the mouse on the "hide" button and scroll the mouse wheel, or when the "hide" button has a focus, hold Shift and press the up/down arrow key.
+
+### 1.4.4
+
+- Fixed the severe issue that the mod is unable to run in 1.21.1.
+
+### 1.4.3
+
+- Fit 1.21.4.
+- Fixed the issue that blocks in this mod incorrectly influence mobs' pathfinding.
+- Fixed the wrong name of column light blocks in versions since 1.21.3.
+- Fixed the issue that Color Tool can convert nether wood planks into custom-colored planks (which can be flamed). Now only vanilla flammable planks (not including bamboo planks) can be converted.
+- Fixed the issue that Color Tool can convert wall sign blocks of block such as logs into custom-colored plank wall signs. Now only wall signs of vanilla flammable planks can be converted.
+
+### 1.4.2
+
+- Fit 1.21.3.
+- Fixed the issue of incorrect top textures in wooden hung signs.
+- Fixed the incorrect english for `block.mishanguc.glass_dark_oak_handrail`.
+- Now specifying opacity is supported when setting custom text or outline color, and the following hex formats are supported: `#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`. For example, `#f80` and `#ff8800` means orange, `#0ff8` and `#00ffff88` means translucent cyan.
+    - When displaying the hex format of transparent color, the two bits indicating alpha are also displayed at the end.
+    - Please note, when texts in translucent colors are bolded, or texts are outlined in translucent colors, z-fighting may happen.
+    - The opacities of outline and the text are separate. When the outline color is auto-decided, the same opacity as the text will be used. When the outline color is specified colors, it will not be affected by text opacity.
+    - Translucent texts may make anything translucent things behind the text (such as stained glass, water, cloud) disappear, so please use cautiously.
+- Fixed the severe issue that some tags disappear.
+- Fixed the issue that colored corner handrail only drops one item.
+- When holding a colored handrail block, if you place a corner block by adding to an existing same block, you can place successfully only when the color is consistent (the color of the item in hand is identical to the existing block, or when holding the item that has auto colors, the color automatically determined according to the context is identical to the existing block), to avoid replacing the color of the existing handrail block.
+- Fixed the issue that the slabs of light and road blocks only drop one.
+- When using Text Copy Tool to copy the text in blocks of this mod to vanilla signs, if the copied content does not meet the number of the lines in the vanilla sign, the remaining lines of the vanilla sign will be cleared. If it exceeds, the concrete ignored text content will be displayed in the message.
+- When using Text Copy Tool to copy the text in blocks of this mod to vanilla signs, warnings about custom colors will no longer be made.
+- Fixed the issue that error happens when texts in such forms like `-pattern` or `-rect` with outline is rendered. To be consistent with ordinary texts, shadows will never be rendered when outline exists.
+- Added a field `outlineColorType` to sign texts, of which values can be `auto`, `none` or `custom`, fixing the issue that when the outline color is exactly `#fffffeff` or `#ffffffff`, will be identified as none or auto.
+
+### 1.4.1
+
+- Fixed the issue that road painting recipes are lost.
+
+### 1.4.0
+
+- No longer depends on Better Runtime Resource Pack mod.
+- Fixed the issue of crash when on-stair handrail blocks are above handrail blocks.
+- Added full light blocks, light stairs, etc., into block and item tag `#mishanguc:lights`.
+- Added all stairs into block and item tag `#minecraft:stairs`.
+- When determining shape upon placing handrail blocks, only stairs of bottom half (regular direction) will affect the handrail's shape, position and direction, and stairs of top half (upside-down direction) will not affect anymore.
+- Added more handrail blocks.
+    - Added glowing variants for glass handrails of iron, gold, emerald, diamond, netherite and lapiz, which requires a colored light block when dyeing. (At present, there are no such blocks without custom coloring. You can color them in white.)
+    - Added glass bamboo handrails with custom coloring, and various handrails of stripped wood and stripped bamboo. These handrails support custom coloring.
+    - Added packed ice and blue ice handrails with custom coloring, which requires colored snow blocks when crafting. Non-custom-colored blocks require ordinary snow blocks when crafting.
+- The Color of custom-colored blocks can be changed through dyes.
+- When modifying block colors with color tools or dye, sounds will be played.
+- Fixed the issue that when a wall sign block is next to a full wall sign block, some sides are accidentally invisible.
+- (For 1.20.5 and above) Added more color tools, which have different opacity or mixture type.
+    - Opacity is controlled by component `mishanguc:opacity`, where the type is float. Provided in the creative inventory are tools with opacity 0.5, 0.25 and 0.1.
+    - Mixture type is controlled by component `mishanguc:color_mixture_type`, and supports the following values:
+        - `normal` (default): Normally changes block color.
+        - `random`: Randomly sets block color.
+        - `invert`: Sets block color to an opposite color.
+        - `hue`: Set the hue of block color to the hue of a specified color, and saturation and luminosity remains.
+        - `hue_and_saturation`: Set the hue and saturation of block color to hue and saturation of a specified color, and luminosity remains.
+        - `hue_rotate`: Rotates the hue of block color. When using while holding Shift, the rotation will be in an opposite direction.
+        - `saturation_change`: Increases the saturation of block color. When using while holding Shift, the saturation will be decreased.
+        - `brightness_change`: Increases the luminosity of block color. When using while holding Shift, the luminosity will be decreased.
+        - In the inventory, except for `normal` which provides multiple tools with different opacity, each of the above provides one tool.
+    - Amount of modification applied to color is controlled by component `mishanguc:color_change_amount`, where the type is float, and is used to specify the amount of modification to hue, saturation or luminosity. In the items in creative inventory, hue rotation amount is 1/24 by default, and saturation and luminosity's modification amount is 0.1 by default.
+    - Note: Non-custom-colored blocks which can be converted to custom-colored blocks, when converting custom-colored blocks, takes the *map color* of the original block as an initial color, so it is normal its color differs from the color presented in custom-colored blocks.
+    - Note: If you decrease the saturation to 0 (gray) with color tool that modifies saturation, or change the luminosity to 0 (black) or 1 (white) with color tool that modifies luminosity, then the color's hue will be 0 or 1 (red), and saturation will be 0. For example, if you decrease the saturation to 0, and then increase it, it will only be red. If you change luminosity to 0 or 1 and then increase or decrease it, it will be only gray.
+- Now you can select multiple lines when editing signs.
+    - Select text box while holding Ctrl to multi-select. Select selected text box while holding Ctrl to deselect it.
+    - Select text box while holding Shift to select continuous multiple text boxes at once.
+    - It is supported to operate multiple lines at ones, including adding, deleting, modifying styles or inputting text. If you increase or decrease their size, position coordinate, rotation, the modification is applied relatively to multiple lines. For properties such as color, or setting custom values, multiple lines will be set the same value.
+    - The Tab-key behavior when selecting multiple lines may be unstable.
+- Fixed the issue that players in Adventure Mode using slab tools with `CanDestroy` NBT tag (or component) cannot destroy blocks correctly.
+
+### 1.3.5-beta.2
+
+- Fixed the issue that modification caused by color tool modifying a block color may not be saved.
+
+### 1.3.5-beta.1
+
+- Fixed the potential block entity issue that results from colored glass handrail blocks.
+
+### 1.3.4
+
+- Fixed the issue that tp tools may fail to teleport.
+- Fixed the issue that some tools cannot operate blocks at a far distance after modifying attributes.
+
 ### 1.3.3
 
 - Fixed the issue that the tooltip of 'rearrange' button and 'clear' button in the sign edit screen is incorrect.
@@ -38,7 +274,7 @@ Note: Not all versions in this update log are already published. Please refer to
     - Now you can craft road blocks and light blocks into slabs in a stonecutter.
     - All road blocks and slabs with marks can be crafted in a crafting table from base road blocks or slabs and corresponding dyes (supporting dye tags in Fabric Conventional Tags).
     - In the crafting recipe of slab tool, stone has been adjusted to item tag `#c:stones` from Fabric Conventional Tags.
-    - Added recipes for handrail blocks. Simple handrails can be crafted from the base block in the stonecutter (including non-stone blocks). Glass handrails needs to be crafted in the crafting table.
+    - Added recipes for handrail blocks. Simple handrails can be crafted from the base block in the stonecutter (including non-stone blocks). Glass handrails need to be crafted on the crafting table.
     - Now you can craft a road mark block from a white dye in a stonecutter.
 - Adjusted and fixed tags.
     - Fixed the issue that block tag `#mishanguc:lights` lacks some light blocks.
@@ -47,7 +283,7 @@ Note: Not all versions in this update log are already published. Please refer to
     - Fixed some missing mineable block tags.
     - Added some blocks to tags of Fabric Conventional Tags, such as some tags for dyed blocks.
 - Now you can wash out the lines of a road block or slab in a cauldron (consuming one level water).
-- Fixed the issue that when breaking with an omnipotent tool the block may not be dropped.
+- Fixed the issue that when breaking with an omnipotent tool, the block may not be dropped.
 - Now some of the items of this mod can be enchanted directly.
 
 ### 1.3.1-beta.1
@@ -56,18 +292,20 @@ Updated to fit 1.20.5 and 1.20.6.
 
 ### 1.3.1-alpha.1
 
-This update is limited for 1.20.5. Changed the data structure to fit into item component forms. There are many contents undone in this version.
+This update is limited to 1.20.5. Changed the data structure to fit into item component forms. There are many contents undone in this version.
 
 ### 1.3.0
 
-- Honeycomb can be used to wax signs (those in this mod only). In Creative Mode, honeycomb can remove wax on sign. Wax cannot be removed under non-Creative Mode. Waxed signs cannot be edited, nor be made glow of remove glow.
-- Using glowing inc sac can make texts on signs glow. Inc sac can remove the glow on the texts. Glowing texts will be displayed on max luminance in any dim places, but outline of texts is not affected. When the texts are black or the sign is in bright places, glowing texts may not make obvious difference. Glowing texts also do not affect brightness level of blocks.
+- Honeycomb can be used to wax signs (those in this mod only). In Creative Mode, honeycomb can remove wax on sign. Wax cannot be removed under non-Creative Mode. Waxed signs cannot be edited, nor be made glow of removed the glow.
+- Using glowing inc sac can make texts on signs glow. Inc sac can remove the glow on the texts. Glowing texts will be displayed on max luminance in any dim places, but the outline of texts is not affected. When the texts are black or the sign is in bright places, glowing texts may not make an obvious difference. Glowing texts also do not affect the brightness level of blocks.
 - For hung sign and standing sign, text glowing and waxing are handled respectively on the two sides. Under non-Creative Mode, each success operation will consume one honeycomb, inc sac or glowing inc sac.
+- Adjusted some language files, especially Traditional Chinese (Hong Kong SAR).
+- Fixed the compatibility issue with Sinytra Connector.
 
 ### 1.2.7
 
 - Fixed the issue of exceptions on dedicated server with Fabric Loader above 0.15.
-- Swapped the buttons on the sign edit screen of rearrange and clear.
+- Swapped the buttons on the sign edit screen of rearranging and clear.
 
 ### 1.2.6
 
@@ -91,7 +329,7 @@ This update is limited for 1.20.5. Changed the data structure to fit into item c
 - Added nether wood framed glass handrails (including those with plank texture decoration and those with customizable colored decoration).
 - Added the obsidian framed and crying obsidian framed handrails with decorations in different textures.
 - Added glass handrails with frame of stone, cobblestone, mossy cobblestone, lapis, packed ice and blue ice.
-- In the sign edit screen, when there is no texts added, press Enter to add texts.
+- In the sign edit screen, when there are no texts added, press Enter to add texts.
 - Adjusted the display in the sign edit screen, avoiding scroll bars occupying the place of text fields, and fixing the issue that user cannot scroll by dragging the scrollbar.
 
 ### 1.2.3
@@ -99,11 +337,11 @@ This update is limited for 1.20.5. Changed the data structure to fit into item c
 - Fixed the issue that handrail blocks on upside-down stairs are also displayed in the form of stairs.
 - Adjusted the edit screen of signs. Optimized the content and display of tooltips of buttons.
     - The numbers now support custom values, including text color and outline color.
-    - Adjusted the display of hex color values. When alpha channel exists, the hex color displays 8 digits instead of 6.
+    - Adjusted the display of hex color values. When an alpha channel exists, the hex color displays 8 digits instead of 6.
     - When editing the text color and outline color, similar to the custom text color in previous versions, color names and hex colors are supported. Besides, for outline colors, now special keywords `auto` and `none` are supported. Text color names and the special keywords above now support displaying suggestions.
     - The tooltip of buttons contains shortcuts.
     - Supports hiding the GUI to preview changes on the sign.
-    - When using mouse wheels to adjust text size, X scale or Y scale, mouse wheel scrolling up leads to sizing up or scaling up now, which conforms the user convention.
+    - When using mouse wheels to adjust text size, X scale or Y scale, mouse wheel scrolling up leads to sizing up or scaling up now, which conforms to the user convention.
     - Within the tooltip of the buttons, numbers that equal to integer values do not show decimal parts.
 - Adjusted the display of some items in the creative inventory. Some adjustable parameters are not added repetitively, saving more room.
 - Fast building tools now display its size of range in the name.
@@ -158,11 +396,11 @@ About the keyboard control added in 1.19.4: Minecraft added the keyboard-only co
 
 ### 1.1.0
 
-Updated following content:
+Updated the following content:
 
 - Added features related to block light.
-- Adjusted the order of light blocks。
-- Now same and connected strip light can have invisible face culled.
+- Adjusted the order of light blocks.
+- Now the same and connected strip light can have invisible face culled.
 - Adjusted the outline shape of large wall light and light tube to encompass the whole look.
 - Added thick stripped light; in former versions there were only stripp light tubes.
 - Added medium wall lights and light tubes.
@@ -186,15 +424,15 @@ Updated following content:
 
 ### 1.0.4
 
-Updated following content:
+Updated the following content:
 
 - Handrail blocks may connect to fences, fence gates, walls and glass panes.
-- Adjusted the display format of message of Text Copy Tool.
+- Adjusted the display format of messages of Text Copy Tool.
 - Slab tools can break down blocks into non-vanilla slabs.
 - Added blocks made of block of bamboo, bamboo planks, and bamboo mosaic, which require the 1.20 feature data packs of Minecraft to be enabled.
 - Color tools can more smartly handle text styles, including styles in the vanilla signs.
 
-Fixed following issues:
+Fixed the following issues:
 
 - Some road blocks have wrong textures.
 - Some handrail blocks may incorrectly make their textures hidden when connecting.
@@ -202,7 +440,7 @@ Fixed following issues:
 
 ### 1.0.3
 
-Fixed following issues:
+Fixed the following issues:
 
 - Client and server sides may differ when breaking with slab tool.
 - The default text size of wall signs is incorrect.
@@ -212,7 +450,7 @@ Fixed following issues:
 
 ### 1.0.2
 
-Updated following content:
+Updated the following content:
 
 - Glowing hung signs and glowing wall signs with customizable colors.
 - Added more signs with custom colors, and optimized the source.
@@ -221,16 +459,16 @@ Updated following content:
 - Road with bevel angle double or thick line.
 - Set the texture of bar part of ice hung sign to blue ice.
 
-Fixed following issues:
+Fixed the following issues:
 
 - Tinting a terracotta hung sign bar with a color tool converts it into a sign instead of sign bar.
-- If an opaque sign block connects with a translucent sign, the opaque fase will be incorrectly invisible.
+- If an opaque sign block connects with a translucent sign, the opaque face will be incorrectly invisible.
 - Some wrong code in the hung sign models.
-- Incorrect configuration of auto lines of road.
+- Incorrect configuration of auto lines of roads.
 
 ### 1.0.1
 
-Fixed following issues:
+Fixed the following issues:
 
 - When fetching NBT with a data tag tool, clicking the "expand" in the result does not work.
 - Typo in Chinese translation.
@@ -240,7 +478,7 @@ Fixed following issues:
 
 ### 1.0.0
 
-Updated following content:
+Updated the following content:
 
 - Adjusted the texture of carrying tool.
 - Added game rules to specify which players are those only who can use force placing tool, explosion tool or carrying tool. When the player has no permission to use, the player will get informed.
@@ -249,18 +487,18 @@ Updated following content:
 - Non-OPs cannot handle operator blocks with most items in this mod.
 - Growth tool no longer works as bone meal.
 
-Fixed following issues:
+Fixed the following issues:
 
 - In 1.16.5, when placing force placing tools and fast building tools, block entities are not correctly updated.
 
 ### 0.2.4
 
-Updated following content:
+Updated the following content:
 
 - Added introduction (tooltip) for road blocks, and fixed some too ambiguous names.
-- Modified the notice on player entering world.
-- Added more road blocks, such as road with different straight and bevel lines, and half double line.
-    - Added a "bevel_top" property for road with straight and bevel lines of different colors.
+- Modified the notice on player entering a world.
+- Added more road blocks, such as roads with different straight and bevel lines, and half-double line.
+    - Added a "bevel_top" property for roads with straight and bevel lines of different colors.
 - Slab tools can handle road blocks of this mod.
 - Added text describing the lines for road blocks, as well as a tooltip of speed-up on the road.
 - Resorted roads and their slab blocks.
@@ -269,28 +507,28 @@ Updated following content:
 - When breaking a handrail block composed of two ones, no longer leave one.
 - Added more colored blocks, including colored leaves, colored andesite.
 - Adjusted the durability of tp tool, and the durability worn on each tp depends on the distance moved.
-- Adjusted and optimized the generation logic of automatic line on road, in order to handle some blocks newly added.
+- Adjusted and optimized the generation logic of automatic line on roads, in order to handle some blocks newly added.
 - Added framed glass handrail blocks, allowing custom tinting. Adjusted the culling between handrail blocks.
 - Adjusted the display of handrail blocks in inventory.
 - Changed item id: black_stone_hung_sign → blackstone_hung_sign.
-- Added some vanilla colored blocks to vanilla tags. For example, colored wool can be sheared and can dampen vibrations like vanilla wools.
+- Added some vanilla-colored blocks to vanilla tags. For example, colored wool can be sheared and can dampen vibrations like vanilla wools.
 
-Fixed following issues:
+Fixed the following issues:
 
 - Tools needed when breaking block are not well configured.
 - Force-placing tool and fast-building tool do not sync data when replacing block entities with the same block state.
-- The item model of color tool is not based on handheld item model.
+- The item model of color tool is not based on a handheld item model.
 
 ### 0.2.3
 
-Updated following content:
+Updated the following content:
 
 - Added colored blocks. Colored blocks can be tinted any color; the color on placed depends on where placed. If picked with pressing your mouse wheel, the color of that item will be fixed.
     - Colored signs and sign bars are included.
     - Colored glasses do not tint beacon beams.
     - Colored ice becomes simple water after smelting.
     - Relevant block and item tag `mishanguc:colored` is also added.
-    - Colored block displays its nearest `MapColor` when displaying on map.
+    - Colored block displays its nearest `MapColor` when displaying on a map.
 - Some block items can be burnt in furnace.
 - Changed the id of hung sign block entity type, with the limited compatibility for the old ID.
 - When adding a text in the text edit screen, if any text is selected, the added text format is the same as the selected one, instead of default format.
@@ -304,31 +542,31 @@ Updated following content:
 - When holding text copy tool, outlines will not be drawn for blocks that do not support text copying.
 - Added color tool, which can be used to pick color from block and apply the color on the block.
 
-Fixed following issues:
+Fixed the following issues:
 
 - In the text edit screen, the display may differ when moving selection.
 - Cannot edit the custom color of texts.
 - Potential error when adding or removing text.
 - When the text color is dark, the text color tooltip in the text-editing screen may look unclear.
-- When copying text from back, if there is no text on the back, crashes might be caused.
+- When copying text from the back, if there is no text on the back, crashes might be caused.
 - Text fields on the text edit screen are not correctly rendered.
 - The Tab order in the text edit screen is not correct.
 
 ### 0.2.1
 
-Updated following content:
+Updated the following content:
 
 - Text copy tools now displays its copied content in the item name.
 - Adjusted the outline shape of hung signs and hung sign bars, which is slightly wider than their collision box, but narrower than former outline shape when holding hung signs or hung sign bars. Now the outline shape will not be wider when you hold a hung sign or bar than when not.
 
-Fixed following issues:
+Fixed the following issues:
 
 - Hung sign and hung sign bar blocks are not mirrored correctly.
 - When holding some tools, the ShapeContext is ignored when drawing outline.
 
 ### 0.2.0
 
-Updated following content:
+Updated the following content:
 
 - Licence switched to LGPLv3.
 - Use BRRP as the dependency, instead of former ARRP.
@@ -348,17 +586,17 @@ Updated following content:
 - All items are not stackable now.
 - When operating on blocks with rotating tools or mirroring tools, if the operated block is the same as that before the operation, the operation is regarded fail.
 - The model of fast building tool can be affected by its properties. If the matching range is larger, the texture is deeper.
-- Adjusted the display of mod info. It displays only when player logs into the world, and will not display again when the player respawns or switches dimension.
+- Adjusted the display of mod info. It displays only when a player logs into the world, and will not display again when the player respawns or switches dimension.
 - No longer allow ID checker tools and data tag tools have effect when in Spectator Mode. Now when you hit entities in Spectator Mode holding this item, you will spectate it as in other cases.
 - Optimized the rendering of text.
 - (For versions above 1.19) Added hung sign, sign bar, wall sing and handrail for made of mangrove.
 
-Fixed following issues:
+Fixed the following issues:
 
 - When displaying values of enum properties using block state tool, the result is not the result of `StringIdentifiable#asString`, but directly the name of enum value in the code.
 - When placing a sign bar above a hung sign, the sign bars above it do not update.
-- When running on a dedicated server, switching the matching rule of fast building tool causes crash.
-- The height of display range of full wall sign block is not correct.
+- When running on a dedicated server, switching the matching rule of fast building tool causes crashes.
+- The height of the display range of full wall sign block is not correct.
 - Fast building tool does not correctly draw the outline of fluid.
 - Slab tool may drop abnormally when mining.
 - Adventure Mode players can edit hung signs.
@@ -366,7 +604,7 @@ Fixed following issues:
 
 ### 0.1.7
 
-Updated following content:
+Updated the following content:
 
 - Added more types of signs, such as wooden signs, ice signs.
 - Added handrails. Handrails have multiple styles.
@@ -392,40 +630,40 @@ Updated following content:
   ** After updating the mod before entering the world, remember to back up the world.
 - Added yellow and cyan light blocks, and added stripped light blocks with a background.
 - Adjusted the models of light blocks in the inventory.
-- Optimized the process of runtime data generation (including resource pack and data pack). Now more data is generated on runtime. Some block states, due to limitations of ARRP mod, still stores json files in mod file.
+- Optimized the process of runtime data generation (including resource pack and data pack). Now more data is generated on runtime. Some block states, due to limitations of ARRP mod, still store JSON files in a mod file.
 - Added more block tags.
 - Fixed the issue that data tag tool has no tooltip.
 - As the heavenly Mojang annotates Block.getName as `@Environment(EnvType.CLIENT)` (only versions before 1.16.5), some tools were switched to client-side usage.
     - Data tag tool still uses server data, but server sends the NBT now, instead of the prettified text.
-- Now sign blocks support json texts. You can type `-json <a json>` in a text box, e.g., `-json {color:red,text:Hi}`.
+- Now sign blocks support JSON texts. You can type `-json <a json>` in a text box, e.g., `-json {color:red,text:Hi}`.
 - Added text copy tool, which can be used to copy and paste texts, and allows copy and paste between vanilla signs and mod signs.
 - Added the button to flip texts in a sign edit screen, which can be used to flip one line or all lines of text.
 - Improved the logic of road connection state debugging tool. Now can view line types.
 - Improved some translations according to word-usage and format of vanilla language files.
 
-Fixed following issues:
+Fixed the following issues:
 
 - Force placing tool and fast building tool may not correctly handle waterlogging, and may not see item tags on the offhand item.
 - Force placing tool can remove entity even if you are not in Creative Mode.
 - When setting formats for sign text lines, formats may be applied to text itself when rendering.
-- In multiplayer mode, some NBT prettified text may lose clicking actions when transmitted to client side, as these clicking action is defined by the mod and cannot be serialized.
+- In multiplayer mode, some NBT prettified text may lose clicking actions when transmitted to the client side, as these clicking action is defined by the mod and cannot be serialized.
 - Some data of signs may be stored even if there is no text.
 
 ### 0.1.6
 
-Updated following content:
+Updated the following content:
 
 - Invisible glowing signs.
 - For Minecraft version Minecraft 1.17 and above, you can set text outlines.
-- Improved sign edit screen. You can adjust the order of lines, and cancel the edit.
+- Improved sign edit screen. You can adjust the order of lines and cancel the edit.
 - Adjusted the logic of rearranging texts. Now each line keeps a margin above and below, the size of which equals to 1/8 of the line.
 - Magma creams can be used to quickly rearrange texts.
 - Added zh-tw and zh-hk.
 - Adjusted the default text size of wall sign blocks.
-- Fast building tools allows quickly switching matching mode.
+- Fast building tools allow quickly switching matching mode.
 - No items will drop when using force placing tool to break a chest.
 
-Fixed following issues:
+Fixed the following issues:
 
 - In game modes except Creative, the fast-building tool and force-placing tool are still available.
 - In Survival mode, holding some tools and left-click may execute multiple times.
@@ -437,12 +675,12 @@ Fixed following issues:
 
 ### 0.1.5
 
-Updated following content:
+Updated the following content:
 
 - ID checker tool can now be used to see biome iD.
 - Optimized the NBT display when triggered.
 
-Fixed following issues:
+Fixed the following issues:
 
 - Some tools are executed on both client and server side.
 - Game instance starts normally when ARRP is not installed.

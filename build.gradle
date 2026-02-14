@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.7-SNAPSHOT'
+    id 'fabric-loom' version '1.15-SNAPSHOT'
     id 'maven-publish'
 
     id "com.modrinth.minotaur" version "2.+"
@@ -8,6 +8,7 @@ plugins {
 }
 
 import com.modrinth.minotaur.dependencies.ModDependency
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
 base {
     archivesName = project.archives_base_name
@@ -22,9 +23,20 @@ repositories {
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
 
-    // BRRP. This is stored locally.
-    mavenLocal()
-    maven { url "https://maven.terraformersmc.com/releases/" }
+    // Mods on Modrinth
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
+    // Mod Menu 模组
+    maven { url 'https://maven.terraformersmc.com/releases/' }
     maven { url 'https://jitpack.io' }
 }
 
@@ -38,11 +50,11 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    def brrp_mc_version = project.hasProperty("brrp_mc_version") ? project.brrp_mc_version : project.minecraft_version
+    def brrp_mc_version = project.properties.getOrDefault "brrp_mc_version", project.minecraft_version
+    modImplementation rootProject.files("../brrp-fabric-${project.brrp_version}-${brrp_mc_version}.jar")
 
-    // BRRP.
-    modImplementation("pers.solid:brrp-fabric:${project.brrp_version}-${brrp_mc_version}") {
-        transitive false
+    if (project.hasProperty('imblocker_version') && !project.imblocker_version.isEmpty()) {
+        modRuntimeOnly "maven.modrinth:imblocker-original:$project.imblocker_version"
     }
 }
 
@@ -94,6 +106,15 @@ publishing {
     }
 }
 
+
+loom {
+    runs {
+        client {
+            programArg "-username=Solid"
+        }
+    }
+}
+
 /**
  * 从 UpdateLog-en.md 中提取更新日志
  */
@@ -120,17 +141,17 @@ println "当前版本（${project.mod_version}）更新记录："
 final var content = getUpdateLog(project.mod_version)
 println content
 
-tasks.register('curseforge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
-    def getenv = System.getenv("CURSEFORGE_TOKEN")
-    println("CurseForge 令牌: $getenv")
-    if (getenv) apiToken = getenv
+tasks.register('curseforge', TaskPublishCurseForge) {
+    def curseforgeToken = System.getenv("CURSEFORGE_TOKEN")
+    println("CurseForge 令牌: ${curseforgeToken instanceof String ? curseforgeToken.replaceAll("^(.+?)(.{0,6})\$", (s, a, b) -> a.replaceAll(".", "*") + b) : curseforgeToken}")
+    if (curseforgeToken) apiToken = curseforgeToken
 
     def mainFile = upload('583071', remapJar)
     mainFile.changelog = content
     mainFile.changelogType = 'markdown'
     mainFile.releaseType = project.mod_version.contains('-') ? 'beta' : 'release'
 
-    for (final def v in (project.supported_minecraft_versions.split(','))) {
+    for (final def v in ((project.supported_minecraft_versions as String).split(','))) {
         mainFile.addGameVersion v
     }
 
@@ -139,7 +160,7 @@ tasks.register('curseforge', net.darkhax.curseforgegradle.TaskPublishCurseForge)
 }
 
 modrinth {
-    println "Modrinth 令牌：${token.get()}"
+    println "Modrinth 令牌：${token.get() instanceof String ? token.get().replaceAll("^(.+?)(.{0,6})\$", (s, a, b) -> a.replaceAll(".", "*") + b) : token.get()}"
 
     projectId = "rItLmRo4" // 迷上城建模组的 Modrinth ID
     versionNumber = project.mod_version + '-' + project.minecraft_version
@@ -158,13 +179,13 @@ modrinth {
 }
 
 githubRelease {
-    def getenv = System.getenv("GITHUB_TOKEN")
-    println "GitHub 令牌: $getenv"
-    if (getenv) token = getenv
+    def githubToken = System.getenv("GITHUB_TOKEN")
+    println "GitHub 令牌: ${githubToken instanceof String ? githubToken.replaceAll("^(.+?)(.{0,6})\$", (s, a, b) -> a.replaceAll(".", "*") + b) : githubToken}"
+    if (githubToken) token = githubToken
     owner = "SolidBlock-cn"
     repo = "mishanguc"
     tagName = "v$project.mod_version"
-    targetCommitish = "1.20.2"
+    targetCommitish = "1.20.1"
     body = content
     draft = true
     prerelease = false
