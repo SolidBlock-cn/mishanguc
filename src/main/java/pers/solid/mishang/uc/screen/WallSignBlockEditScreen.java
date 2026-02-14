@@ -10,7 +10,6 @@ import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public class WallSignBlockEditScreen extends AbstractSignBlockEditScreen<WallSignBlockEntity> {
@@ -20,9 +19,9 @@ public class WallSignBlockEditScreen extends AbstractSignBlockEditScreen<WallSig
   private final @Unmodifiable List<TextContext> backedUpTextContexts;
 
   public WallSignBlockEditScreen(RegistryWrapper.WrapperLookup registryLookup, WallSignBlockEntity entity, BlockPos blockPos) {
-    super(registryLookup, entity, blockPos, entity.textContexts.stream().map(TextContext::clone).collect(Collectors.toList()));
+    super(registryLookup, entity, blockPos, entity.textContexts);
     this.backedUpTextContexts = entity.textContexts;
-    entity.textContexts = textContextsEditing;
+    entity.textContexts = textFieldListWidget.getTextContexts();
   }
 
   @Override
@@ -30,7 +29,7 @@ public class WallSignBlockEditScreen extends AbstractSignBlockEditScreen<WallSig
     super.removed();
     if (changed) {
       // 固化 entity.textContexts
-      entity.textContexts = ImmutableList.copyOf(entity.textContexts);
+      entity.textContexts = ImmutableList.copyOf(textFieldListWidget.getTextContexts());
     } else {
       entity.textContexts = backedUpTextContexts;
     }

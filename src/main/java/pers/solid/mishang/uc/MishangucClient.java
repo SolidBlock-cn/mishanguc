@@ -5,6 +5,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
@@ -38,6 +39,7 @@ import pers.solid.mishang.uc.networking.GetEntityDataPayload;
 import pers.solid.mishang.uc.networking.RuleChangedPayload;
 import pers.solid.mishang.uc.render.*;
 import pers.solid.mishang.uc.screen.HungSignBlockEditScreen;
+import pers.solid.mishang.uc.screen.SignPresets;
 import pers.solid.mishang.uc.screen.StandingSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
@@ -68,6 +70,10 @@ public class MishangucClient implements ClientModInitializer {
     registerNetworking();
 
     registerItemProperties();
+
+    SignPresets.loadAll();
+
+    ClientCommandRegistrationCallback.EVENT.register(SignPresetCommand.INSTANCE);
 
     ItemTooltipCallback.EVENT.register((itemStack, tooltipContext, tooltipType, list) -> {
       if (itemStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof WithMishangTooltip withMishangTooltip) {
