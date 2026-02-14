@@ -98,25 +98,12 @@ public class SignPresetGridWidget extends ElementListWidget<SignPresetGridWidget
     }
 
     @Override
-    public void setX(int x) {
-      super.setX(x);
-      for (int i = 0; i < buttons.size(); i++) {
-        buttons.get(i).setX(x + i * 150);
-      }
-    }
-
-    @Override
-    public void setY(int y) {
-      super.setY(y);
-      for (ButtonWidget button : buttons) {
+    public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickProgress) {
+      for (int i = 0, buttonsSize = buttons.size(); i < buttonsSize; i++) {
+        ButtonWidget button = buttons.get(i);
+        button.setX(x + i * 150);
         button.setY(y);
-      }
-    }
-
-    @Override
-    public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-      for (ButtonWidget button : buttons) {
-        button.render(context, mouseX, mouseY, deltaTicks);
+        button.render(context, mouseX, mouseY, tickProgress);
       }
     }
   }
