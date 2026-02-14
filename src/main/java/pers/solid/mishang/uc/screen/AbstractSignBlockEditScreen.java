@@ -179,9 +179,11 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    */
   public final ButtonWidget clearButton = new ButtonWidget.Builder(BUTTON_CLEAR_MESSAGE, button -> {
     if (button.getMessage() == BUTTON_CLEAR_CONFIRM_MESSAGE) {
-      for (int i = AbstractSignBlockEditScreen.this.textFieldListWidget.children().size() - 1; i >= 0; i--) {
-        textFieldListWidget.removeTextField(i);
-      }
+      textFieldListWidget.selectedEntries.clear();
+      textFieldListWidget.children().clear();
+      textFieldListWidget.setScrollY(textFieldListWidget.getScrollY());
+      updateContentVisibility();
+      changed = true;
       button.setMessage(BUTTON_CLEAR_MESSAGE);
       button.setTooltip(Tooltip.of(BUTTON_CLEAR_DESCRIPTION_MESSAGE));
     } else {
