@@ -77,7 +77,7 @@ public interface SpecialDrawableType<S extends SpecialDrawable> {
   S fromNbt(TextContext textContext, @NotNull NbtCompound nbt);
 
   /**
-   * 根据已有的参数（字符串形式的）返回对象，通常用于告示牌编辑界面中。如果在文本框中输入 {@code -rect 2 3}，则会调用 {@code fromStringArgs(specialDrawable, "2 3")}。
+   * 根据已有的参数（字符串形式的）返回对象，通常用于告示牌编辑界面中。如果在文本框中输入 {@code -rect 2 3}，则会调用 {@code fromStringArgs(textContext, "2 3")}。
    */
   @Contract(pure = true)
   S fromStringArgs(TextContext textContext, String args);

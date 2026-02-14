@@ -224,7 +224,7 @@ public class TextContext implements Cloneable {
   }
 
   /**
-   * 从一个 NBT 复合标签中读取数据，写入当前的 specialDrawable 中。
+   * 从一个 NBT 复合标签中读取数据，写入当前的 textContext 中。
    *
    * @param nbt NBT 复合标签。
    */
