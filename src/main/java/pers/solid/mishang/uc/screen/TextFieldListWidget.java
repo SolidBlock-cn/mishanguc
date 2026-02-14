@@ -417,8 +417,23 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     final List<Entry> children = children();
     final Entry removedEntry = children.get(index);
     removeEntry(removedEntry);
+    removedEntry.setSelected(false);
     // 删除一行元素后，对滚动数量进行一次 clamp，以避免出现过度滚动的情况。
     setScrollY(getScrollY()); // 此处会调用私有方法 recalculateAllChildrenPositions
+
+    signBlockEditScreen.updateContentVisibility();
+    signBlockEditScreen.changed = true;
+  }
+
+  /**
+   * 清除所有文本。
+   */
+  public void clearTextFields() {
+    clearEntries();
+    for (Entry selectedEntry : selectedEntries) {
+      selectedEntry.textFieldWidget.setFocused(false);
+    }
+    selectedEntries.clear();
 
     signBlockEditScreen.updateContentVisibility();
     signBlockEditScreen.changed = true;
