@@ -289,7 +289,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
       final BlockPos blockPos = payload.blockPos();
       final boolean isTop = payload.isTop();
       final ServerPlayerEntity player = context.player();
-      player.server.execute(() -> {
+      player.getServer().execute(() -> {
         if (!player.canInteractWithBlockAt(blockPos, 0)) {
           return;
         }

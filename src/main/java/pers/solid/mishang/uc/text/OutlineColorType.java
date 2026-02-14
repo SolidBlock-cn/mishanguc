@@ -10,7 +10,6 @@ public enum OutlineColorType implements StringIdentifiable {
   AUTO("auto"),
   CUSTOM("custom");
 
-  @SuppressWarnings("deprecation")
   public static final StringIdentifiable.EnumCodec<OutlineColorType> CODEC = StringIdentifiable.createCodec(OutlineColorType::values);
 
   private final String name;

@@ -5,6 +5,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -33,6 +34,7 @@ import pers.solid.mishang.uc.networking.GetEntityDataPayload;
 import pers.solid.mishang.uc.networking.RuleChangedPayload;
 import pers.solid.mishang.uc.render.*;
 import pers.solid.mishang.uc.screen.HungSignBlockEditScreen;
+import pers.solid.mishang.uc.screen.SignPresets;
 import pers.solid.mishang.uc.screen.StandingSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
 
@@ -62,6 +64,10 @@ public class MishangucClient implements ClientModInitializer {
     registerNetworking();
 
     registerItemProperties();
+
+    SignPresets.loadAll();
+
+    ClientCommandRegistrationCallback.EVENT.register(SignPresetCommand.INSTANCE);
   }
 
   private static void registerItemProperties() {
