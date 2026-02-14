@@ -7,6 +7,7 @@ Note: Not all versions in this update log are already published. Please refer to
 - Fixed the version that the game rules do not change when entering the world.
 - Fixed the issue that, in versions above 1.21.10, when shader is enabled, when no ordinary text is rendered, the special text of this mod is not treated as text, causing it to be rendered dimly.
 - Fixed the issue of using Ctrl + E to set custom value will cause the texts invisible.
+- Improved simplified mode. Now when simplified mode is enabled, it is no longer required to press Shift for adjusting height or disabling simplified mode.
 
 ### 1.6.0-beta.4
 
