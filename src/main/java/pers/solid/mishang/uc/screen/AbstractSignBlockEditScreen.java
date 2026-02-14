@@ -828,10 +828,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       textHolder.visible = visible;
     }
     signPresets.visible = visible;
+    for (SignPresetGridWidget.Entry textHolder : signPresets.children()) {
+      for (ButtonWidget button : textHolder.buttons) {
+        button.visible = visible;
+      }
+    }
 
     // 同时也需要更新 textFieldListWidget 的可见性
     textFieldListWidget.active = !visible;
-    signPresets.active = !visible;
   }
 
   public static final Text HIDDEN_TEXT_NOTE = TextBridge.translatable("message.mishanguc.hide_gui.note");
