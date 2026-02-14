@@ -255,7 +255,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     int j = entry.getY();
     int k = i + entry.getWidth();
     int l = j + entry.getHeight();
-    context.fill(i + 1, j, k - 1, l, 0xe0ffffff);
+    context.fill(i + 1, j - 1, k - 1, l, 0xe0ffffff);
   }
 
   @Contract(pure = true)
@@ -547,7 +547,6 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     @Override
     public void setHeight(int height) {
       super.setHeight(height);
-      textFieldWidget.setHeight(getContentHeight());
     }
 
     @Override
