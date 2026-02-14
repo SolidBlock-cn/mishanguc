@@ -13,7 +13,6 @@ import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
 
-import java.util.Collection;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
@@ -34,11 +33,10 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
   protected void init() {
     super.init();
     entity.editedSide = isFront;
-    copyFromBackButton.setX(width / 2 - 100);
   }
 
   @Override
-  protected Collection<ButtonWidget> getTextHolders() {
+  protected List<ButtonWidget> getTextHolders() {
     return List.of(placeHolder, copyFromBackButton);
   }
 
@@ -69,5 +67,5 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
           // 留意添加到的位置是列表末尾。
           textFieldListWidget.addTextField(-1, flip, false);
         });
-  }).dimensions(this.width / 2 - 100, 90, 200, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.copy_from_back.description"))).build();
+  }).dimensions(this.width / 2 - 80, 35, 160, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.copy_from_back.description"))).build();
 }

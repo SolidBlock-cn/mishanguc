@@ -49,7 +49,6 @@ import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -743,7 +742,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     if (!isAcceptingCustomValue && !isSelectingButtonToSetCustom) {
       this.addSelectableChild(textFieldListWidget);
     }
+
     initTextHolders();
+    initSignPresets();
 
     /// 下方第三行
     final Stream<ClickableWidget> stream = Streams.concat(Arrays.stream(toolbox1), Arrays.stream(toolbox2), Arrays.stream(toolbox3));
@@ -765,11 +766,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       }
       initialTexts = null;
     }
-    updateTextHoldersVisibility();
+    updateContentVisibility();
 
     arrangeToolboxButtons();
-
-    placeHolder.setX(width / 2 - 100);
 
     if (isAcceptingCustomValue) {
       customValueTextField.setY(height - 40);
@@ -789,14 +788,24 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     }
   }
 
-  protected Collection<ButtonWidget> getTextHolders() {
+  protected List<ButtonWidget> getTextHolders() {
     return List.of(placeHolder);
   }
 
   protected void initTextHolders() {
-    for (ButtonWidget textHolder : getTextHolders()) {
+    final List<ButtonWidget> textHolders = getTextHolders();
+    for (ButtonWidget textHolder : textHolders) {
       this.addDrawableChild(textHolder);
     }
+    if (textHolders.size() == 1) {
+      textHolders.get(0).setDimensionsAndPosition(200, 20, width / 2 - 100, 35);
+    } else if (textHolders.size() >= 2) {
+      textHolders.get(0).setDimensionsAndPosition(160, 20, width / 2 - 160, 35);
+      textHolders.get(1).setDimensionsAndPosition(160, 20, width / 2, 35);
+    }
+  }
+
+  protected void initSignPresets() {
     addDrawableChild(signPresets);
     signPresets.setHeight(height - 140);
     signPresets.setX(width / 2 - signPresets.getWidth() / 2);
@@ -805,9 +814,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   }
 
   /**
-   * 更新初始屏幕（未添加文本时的按钮）与文本编辑框的可见性。初始化界面以及增删文本时，均调用此方法。
+   * 更新初始屏幕（未添加文本时的按钮，包括告示牌预设界面）与文本编辑框的可见性。初始化界面以及增删文本时，均调用此方法。
    */
-  protected void updateTextHoldersVisibility() {
+  protected void updateContentVisibility() {
     final boolean visible = textFieldListWidget.children().isEmpty();
     for (ButtonWidget textHolder : getTextHolders()) {
       textHolder.visible = visible;
@@ -816,6 +825,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
 
     // 同时也需要更新 textFieldListWidget 的可见性
     textFieldListWidget.active = !visible;
+    signPresets.active = !visible;
   }
 
   public static final Text HIDDEN_TEXT_NOTE = TextBridge.translatable("message.mishanguc.hide_gui.note");
