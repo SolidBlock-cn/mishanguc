@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
@@ -323,6 +324,12 @@ public class Mishanguc implements ModInitializer {
     PayloadTypeRegistry.playS2C().register(EditSignPayload.ID, EditSignPayload.CODEC);
     PayloadTypeRegistry.playS2C().register(GetBlockDataPayload.ID, GetBlockDataPayload.CODEC);
     PayloadTypeRegistry.playS2C().register(GetEntityDataPayload.ID, GetEntityDataPayload.CODEC);
+    ServerPlayConnectionEvents.JOIN.register((serverPlayNetworkHandler, packetSender, minecraftServer) -> {
+      final ServerPlayerEntity serverPlayerEntity = serverPlayNetworkHandler.player;
+      final GameRules gameRules = serverPlayerEntity.getServer().getGameRules();
+      MishangucRules.sync(gameRules.get(MishangucRules.FORCE_PLACING_TOOL_ACCESS), (short) 0, serverPlayerEntity);
+      MishangucRules.sync(gameRules.get(MishangucRules.CARRYING_TOOL_ACCESS), (short) 1, serverPlayerEntity);
+    });
     PayloadTypeRegistry.playS2C().register(RuleChangedPayload.ID, RuleChangedPayload.CODEC);
   }
 

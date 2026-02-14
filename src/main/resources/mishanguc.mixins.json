@@ -4,8 +4,6 @@
   "package": "pers.solid.mishang.uc.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "AbstractBlockAccessor",
-    "AbstractBlockSettingsAccessor",
     "AbstractBlockStateMixin",
     "AreaHelperMixin",
     "BeaconBlockEntityAccessor",
@@ -26,6 +24,7 @@
   ],
   "client": [
     "BetterClientPlayerInteractionManagerMixin",
+    "ContainerWidgetAccessor",
     "GameRendererMixin",
     "ScreenMixin",
     "TextRendererAccessor",
