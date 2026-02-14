@@ -57,10 +57,6 @@ public abstract class BlockMatchingRule implements StringIdentifiable {
         }
       }.register("any");
 
-  public static @Nullable BlockMatchingRule fromString(String name) {
-    return REGISTRY.get(Identifier.of(name));
-  }
-
   public abstract boolean match(@NotNull BlockState state1, @NotNull BlockState state2);
 
   public BlockMatchingRule register(Identifier identifier) {

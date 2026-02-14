@@ -331,7 +331,7 @@ public class MishangUtils {
   }
 
   /**
-   * 接收一个整数形式的颜色，考虑到 Minecraft 可能存在带有 alpha 通道的颜色，因此当检测到有 alpha 通道时，格式化为 #aarrggbb 的格式，否则格式化为 #rrggbb 的格式。
+   * 接收一个整数形式的颜色，考虑到 Minecraft 可能存在带有 alpha 通道的颜色，因此当检测到有 alpha 通道时，格式化为 #rrggbbaa 的格式，否则格式化为 #rrggbb 的格式。
    */
   public static String formatColorHex(int color) {
     final int alpha = (color >> 24) & 0xff;

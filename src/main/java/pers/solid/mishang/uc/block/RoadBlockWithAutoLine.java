@@ -72,7 +72,7 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
               && direction2.right().map(cornerDirection -> cornerDirection.hasDirection(direction)).orElse(false)) {
             // 使用双斜线搭配直线的情况
             return (yellow ? ROAD_WITH_YS_AND_BI_BA_LINE : ROAD_WITH_WS_AND_BI_BA_LINE).getDefaultState()
-                .with(ROAD_WITH_WS_AND_BI_BA_LINE.FACING, direction);
+                .with(RoadWithTwoBevelAngleLines.FACING, direction);
           }
         }
         return (yellow ? ROAD_WITH_YELLOW_CROSS_LINE : ROAD_WITH_WHITE_CROSS_LINE).getDefaultState();
