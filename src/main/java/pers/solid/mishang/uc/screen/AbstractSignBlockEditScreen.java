@@ -646,30 +646,36 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   /**
    * 下方第三行：隐藏界面
    */
-  public final BooleanButtonWidget hideButton = new BooleanButtonWidget(0, height - 25, 40, 20, TextBridge.translatable("message.mishanguc.hide_gui"), booleanButtonWidget -> hidden || (hasShiftDown() ? textFieldListWidget.simplified : hidden), value -> {
-    if (!hidden && hasShiftDown()) {
-      textFieldListWidget.setSimplified(!textFieldListWidget.simplified);
+  public final BooleanButtonWidget hideButton = new BooleanButtonWidget(0, height - 25, 40, 20, TextBridge.translatable("message.mishanguc.hide_gui"), booleanButtonWidget -> hidden || textFieldListWidget.isSimplified(), value -> {
+    if (textFieldListWidget.isSimplified()) {
+      textFieldListWidget.setSimplified(false);
+    } else if (!hidden && hasShiftDown()) {
+      textFieldListWidget.setSimplified(true);
     } else {
       hidden = value;
     }
   }, EMPTY_PRESS_ACTION)
-      .setSummaryTextSupplier(() -> (hasShiftDown() && !hidden) ? Text.translatable("message.mishanguc.simplify") : TextBridge.translatable("message.mishanguc.hide_gui"))
+      .setSummaryTextSupplier(() -> (hasShiftDown() && !hidden || textFieldListWidget.isSimplified()) ? Text.translatable("message.mishanguc.simplify") : TextBridge.translatable("message.mishanguc.hide_gui"))
       .setRenderedNameSupplier(value -> {
         if (hidden) {
           // 在隐藏模式下，显示“显示”按钮
           return TextBridge.translatable("message.mishanguc.hide_gui.show");
-        } else if (hasShiftDown()) {
-          return textFieldListWidget.simplified ? TextBridge.translatable("message.mishanguc.simplify.disable") : TextBridge.translatable("message.mishanguc.simplify.enable");
+        } else if (hasShiftDown() || textFieldListWidget.isSimplified()) {
+          return textFieldListWidget.isSimplified() ? TextBridge.translatable("message.mishanguc.simplify.disable") : TextBridge.translatable("message.mishanguc.simplify.enable");
         } else {
           return TextBridge.translatable("message.mishanguc.hide_gui.hide");
         }
       })
-      .setTooltipSupplier(value -> ((hidden || !hasShiftDown())
-          ? TextBridge.translatable("message.mishanguc.hide_gui.tooltip").append(ScreenTexts.LINE_BREAK)
-          : textFieldListWidget.simplified ? Text.translatable("message.mishanguc.simplify.height", textFieldListWidget.cuttingHeight).append(ScreenTexts.LINE_BREAK) : Text.empty()
-      )
-          .append(TextBridge.translatable("message.mishanguc.simplify.tooltip")
-              .formatted(Formatting.GRAY)));
+      .setTooltipSupplier(value -> {
+        if (!hidden && hasShiftDown() || textFieldListWidget.isSimplified()) {
+          return Text.empty()
+              .append(Text.translatable("message.mishanguc.simplify.height", textFieldListWidget.cuttingHeight).withColor(0xffd0d0d0))
+              .append(ScreenTexts.LINE_BREAK)
+              .append(TextBridge.translatable("message.mishanguc.simplify.tooltip").formatted(Formatting.GRAY));
+        } else {
+          return TextBridge.translatable("message.mishanguc.hide_gui.tooltip").formatted(Formatting.GRAY);
+        }
+      });
 
   public final ClickableWidget[] toolboxTop = new ClickableWidget[]{addTextButton, removeTextButton, moveUpButton, moveDownButton, clearButton};
   public final ClickableWidget[] toolbox1 = new ClickableWidget[]{boldButton, italicButton, underlineButton, strikethroughButton, obfuscatedButton, shadeButton, sizeButton, offsetXButton, offsetYButton, offsetZButton, colorButton, outlineColorButton};
@@ -763,6 +769,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     updateContentVisibility();
 
     arrangeToolboxButtons();
+    hideButton.updateTooltip();
 
     if (isAcceptingCustomValue) {
       customValueTextField.setY(height - 40);
@@ -1047,7 +1054,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     final double scrollAmountBeforeClear = textFieldListWidget.getScrollY();
     final Element previousFocused = getFocused();
     final TextFieldListWidget.Entry previouslyWidgetSelected = textFieldListWidget.getSelectedOrNull();
-    final boolean previousSimplified = textFieldListWidget.simplified;
+    final boolean previousSimplified = textFieldListWidget.isSimplified();
     final int previousCuttingHeight = textFieldListWidget.cuttingHeight;
     final List<TextFieldListWidget.Entry> selectedEntriesCopy = List.copyOf(textFieldListWidget.selectedEntries);
     super.clearAndInit();
@@ -1143,7 +1150,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       textFieldListWidget.setFocused(newEntry, false, false);
       setFocused(textFieldListWidget);
       return true;
-    } else if (textFieldListWidget.simplified && getFocused() == hideButton && hasShiftDown()) {
+    } else if (textFieldListWidget.isSimplified() && getFocused() == hideButton) {
       if (keyCode == GLFW.GLFW_KEY_UP) {
         textFieldListWidget.increaseHeight(-8);
         hideButton.updateTooltip();
@@ -1169,7 +1176,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   @Override
   public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
     // 在启用了简化模式时，对着隐藏按钮并按下 Shift 键滚动时，可调节高度。
-    if (textFieldListWidget.simplified && hideButton.isHovered() && hasShiftDown()) {
+    if (textFieldListWidget.isSimplified() && hideButton.isHovered()) {
       textFieldListWidget.increaseHeight((int) verticalAmount * -4);
       hideButton.updateTooltip();
       return true;
