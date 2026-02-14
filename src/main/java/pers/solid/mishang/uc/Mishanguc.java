@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.gamerule.v1.rule.EnumRule;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
@@ -24,6 +25,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
@@ -312,6 +314,12 @@ public class Mishanguc implements ModInitializer {
       });
     });
     ServerPlayNetworking.registerGlobalReceiver(new Identifier("mishanguc", "slab_tool"), SlabToolItem.Handler.INSTANCE);
+    ServerPlayConnectionEvents.JOIN.register((serverPlayNetworkHandler, packetSender, minecraftServer) -> {
+      final ServerPlayerEntity serverPlayerEntity = serverPlayNetworkHandler.player;
+      final GameRules gameRules = serverPlayerEntity.getServer().getGameRules();
+      MishangucRules.sync(gameRules.get(MishangucRules.FORCE_PLACING_TOOL_ACCESS), (short) 0, serverPlayerEntity);
+      MishangucRules.sync(gameRules.get(MishangucRules.CARRYING_TOOL_ACCESS), (short) 1, serverPlayerEntity);
+    });
   }
 
   private static void registerEvents() {

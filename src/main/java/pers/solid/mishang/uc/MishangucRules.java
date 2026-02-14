@@ -1,5 +1,8 @@
 package pers.solid.mishang.uc;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.gamerule.v1.rule.DoubleRule;
@@ -60,6 +63,7 @@ public final class MishangucRules {
     return GameRuleRegistry.register("mishanguc:" + name, GameRules.Category.MISC, ruleType);
   }
 
+  @Environment(EnvType.CLIENT)
   static void handle(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
     final short type = buf.readShort();
     final ToolAccess value = type == 0 || type == 1 ? buf.readEnumConstant(ToolAccess.class) : null;

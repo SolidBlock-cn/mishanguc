@@ -1,7 +1,7 @@
 package pers.solid.mishang.uc.text;
 
-import com.google.common.collect.ImmutableBiMap;
 import com.google.gson.JsonParseException;
+import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.chars.Char2CharArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2CharMap;
 import net.fabricmc.api.EnvType;
@@ -20,7 +20,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.HorizontalAlign;
@@ -34,6 +37,8 @@ import java.util.Collection;
  * 对 {@link net.minecraft.text.Text} 的简单包装与扩展，允许设置对齐属性、尺寸等参数，以便渲染时使用。同时还提供对象与 NBT、JSON 之间的转换。
  */
 public class TextContext implements Cloneable {
+  public static final Codec<TextContext> CODEC = NbtCompound.CODEC.xmap(TextContext::fromNbt, TextContext::createNbt);
+
   /**
    * 用于 {@link #flip()} 方法中，左右替换字符串。
    */
@@ -48,19 +53,6 @@ public class TextContext implements Cloneable {
             map.put('↘', '↙');
             map.put('↙', '↘');
           });
-
-  /**
-   * 用于 {@link #flip()} 方法中，替换 {@link PatternSpecialDrawable} 中的样式。
-   */
-  @ApiStatus.AvailableSince("0.2.0")
-  @Unmodifiable
-  private static final ImmutableBiMap<String, String> flipPatternNameReplacement = new ImmutableBiMap.Builder<String, String>()
-      .put("al", "ar")
-      .put("alt", "art")
-      .put("alb", "arb")
-      .put("ulb", "urb")
-      .put("ult", "urt")
-      .build();
 
   /**
    * 文本内容。该字段对应 NBT 中的两种情况：<br>
@@ -524,12 +516,19 @@ public class TextContext implements Cloneable {
       }
       text = TextBridge.literal(stringBuilder.toString());
     }
-    if (extra instanceof final PatternSpecialDrawable patternTextSpecial) {
-      final String shapeName = patternTextSpecial.shapeName();
-      if (flipPatternNameReplacement.containsKey(shapeName)) {
-        extra = PatternSpecialDrawable.fromName(this, flipPatternNameReplacement.get(shapeName));
-      } else if (flipPatternNameReplacement.inverse().containsKey(shapeName)) {
-        extra = PatternSpecialDrawable.fromName(this, flipPatternNameReplacement.inverse().get(shapeName));
+    if (extra instanceof final PatternSpecialDrawable patternSpecialDrawable) {
+      final RectanglePattern rectanglePattern = patternSpecialDrawable.rectanglePattern();
+      String patternName = rectanglePattern.name();
+      @Nullable RectanglePattern newPattern = null;
+      if (patternName.contains("left") && !patternName.contains("right")) {
+        patternName = patternName.replace("left", "right");
+        newPattern = RectanglePatterns.get(patternName);
+      } else if (patternName.contains("right") && !patternName.contains("left")) {
+        patternName = patternName.replace("right", "left");
+        newPattern = RectanglePatterns.get(patternName);
+      }
+      if (newPattern != null) {
+        extra = new PatternSpecialDrawable(this, newPattern);
       }
     }
     return this;

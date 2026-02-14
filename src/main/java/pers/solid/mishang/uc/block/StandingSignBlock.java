@@ -283,9 +283,9 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     final VoxelShape bodyShape = switch (state.get(ROTATION)) {
       case 0, 8 -> SHAPE_NS;
       case 1, 7, 9, 15 -> SHAPE_NS_WIDE;
-      default -> SHAPE_CENTER;
       case 3, 5, 11, 13 -> SHAPE_WE_WIDE;
       case 4, 12 -> SHAPE_WE;
+      default -> SHAPE_CENTER;
     };
     return state.get(DOWN) ? VoxelShapes.union(bodyShape, BAR_SHAPE) : bodyShape;
   }

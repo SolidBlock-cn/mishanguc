@@ -5,10 +5,8 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
 import net.minecraft.block.WoodType;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.annotations.Translucent;
@@ -16,8 +14,6 @@ import pers.solid.mishang.uc.block.ColoredGlowingStandingSignBlock;
 import pers.solid.mishang.uc.block.ColoredStandingSignBlock;
 import pers.solid.mishang.uc.block.GlowingStandingSignBlock;
 import pers.solid.mishang.uc.block.StandingSignBlock;
-import pers.solid.mishang.uc.mixin.AbstractBlockAccessor;
-import pers.solid.mishang.uc.mixin.AbstractBlockSettingsAccessor;
 
 /**
  * <h1>直立的告示牌方块</h1>
@@ -86,7 +82,7 @@ public final class StandingSignBlocks extends MishangucBlocks {
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final StandingSignBlock BAMBOO_STANDING_SIGN = new StandingSignBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))));
+  public static final StandingSignBlock BAMBOO_STANDING_SIGN = new StandingSignBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(MapColor.DARK_GREEN));
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @MiningLevel(MiningLevel.Tool.AXE)
   public static final StandingSignBlock BAMBOO_PLANK_STANDING_SIGN = new StandingSignBlock(Blocks.BAMBOO_PLANKS, FabricBlockSettings.copyOf(Blocks.BAMBOO_PLANKS));

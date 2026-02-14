@@ -1,6 +1,8 @@
 package pers.solid.mishang.uc.screen;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.util.math.BlockPos;
@@ -10,9 +12,9 @@ import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
 
-import java.util.Collection;
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 @ApiStatus.AvailableSince("1.0.2")
 public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<StandingSignBlockEntity> {
 
@@ -20,22 +22,21 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
   private final List<TextContext> backedUpTexts;
 
   public StandingSignBlockEditScreen(StandingSignBlockEntity entity, BlockPos blockPos, boolean isFront) {
-    super(entity, blockPos, Lists.newArrayList(entity.getTextsOnSide(isFront).stream().map(TextContext::clone).iterator()));
+    super(entity, blockPos, entity.getTextsOnSide(isFront));
     this.isFront = isFront;
     this.backedUpTexts = entity.getTextsOnSide(isFront);
-    entity.setTextsOnSide(isFront, textContextsEditing);
+    entity.setTextsOnSide(isFront, textFieldListWidget.getTextContexts());
   }
 
   @Override
   protected void init() {
     super.init();
     entity.editedSide = isFront;
-    copyFromBackButton.setX(width / 2 - 100);
   }
 
   @Override
-  protected Collection<ButtonWidget> getTextHolders() {
-    return List.of(placeHolder, applyLeftArrowTemplateButton, applyDoubleLineTemplateButton, applyRightArrowTemplateButton, copyFromBackButton);
+  protected List<ButtonWidget> getTextHolders() {
+    return List.of(placeHolder, copyFromBackButton);
   }
 
   @Override
@@ -44,7 +45,7 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
     entity.editedSide = null;
     if (changed) {
       // 固化 texts 字段
-      entity.setTextsOnSide(isFront, textContextsEditing);
+      entity.setTextsOnSide(isFront, ImmutableList.copyOf(textFieldListWidget.getTextContexts()));
     } else {
       entity.setTextsOnSide(isFront, backedUpTexts);
     }
@@ -63,7 +64,7 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
         textContext -> {
           final TextContext flip = textContext.clone().flip();
           // 留意添加到的位置是列表末尾。
-          addTextField(textContextsEditing.size(), flip, false);
+          textFieldListWidget.addTextField(-1, flip, false);
         });
-  }).dimensions(this.width / 2 - 100, 90, 200, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.copy_from_back.description"))).build();
+  }).dimensions(this.width / 2 - 80, 35, 160, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.copy_from_back.description"))).build();
 }

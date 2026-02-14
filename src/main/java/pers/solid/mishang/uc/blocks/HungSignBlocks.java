@@ -3,6 +3,8 @@ package pers.solid.mishang.uc.blocks;
 import com.google.common.annotations.Beta;
 import com.google.common.collect.ImmutableMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.mixin.object.builder.AbstractBlockAccessor;
+import net.fabricmc.fabric.mixin.object.builder.AbstractBlockSettingsAccessor;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
 import net.minecraft.state.property.Properties;
@@ -14,8 +16,6 @@ import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.data.MishangucRecipeProvider;
-import pers.solid.mishang.uc.mixin.AbstractBlockAccessor;
-import pers.solid.mishang.uc.mixin.AbstractBlockSettingsAccessor;
 
 import java.util.Map;
 
@@ -96,7 +96,7 @@ public final class HungSignBlocks extends MishangucBlocks {
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final HungSignBlock BAMBOO_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(((AbstractBlockSettingsAccessor) ((AbstractBlockAccessor) Blocks.BAMBOO_BLOCK).getSettings()).getMapColorProvider().apply(Blocks.BAMBOO_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X))));
+  public static final HungSignBlock BAMBOO_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_BLOCK, FabricBlockSettings.copyOf(Blocks.BAMBOO_BLOCK).mapColor(MapColor.DARK_GREEN));
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @MiningLevel(MiningLevel.Tool.AXE)
   public static final HungSignBlock BAMBOO_PLANK_HUNG_SIGN = new HungSignBlock(Blocks.BAMBOO_PLANKS, FabricBlockSettings.copyOf(Blocks.BAMBOO_PLANKS));
