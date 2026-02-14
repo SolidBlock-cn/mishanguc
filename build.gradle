@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.11-SNAPSHOT'
+    id 'fabric-loom' version '1.15-SNAPSHOT'
     id 'maven-publish'
 
     id "com.modrinth.minotaur" version "2.+"
@@ -140,9 +140,9 @@ final var content = getUpdateLog(project.mod_version)
 println content
 
 tasks.register('curseforge', TaskPublishCurseForge) {
-    def getenv = System.getenv("CURSEFORGE_TOKEN")
-    println("CurseForge 令牌: $getenv")
-    if (getenv) apiToken = getenv
+    def curseforgeToken = System.getenv("CURSEFORGE_TOKEN")
+    println("CurseForge 令牌: ${curseforgeToken instanceof String ? curseforgeToken.replaceAll("^(.+?)(.{0,6})\$", (s, a, b) -> a.replaceAll(".", "*") + b) : curseforgeToken}")
+    if (curseforgeToken) apiToken = curseforgeToken
 
     def mainFile = upload('583071', remapJar)
     mainFile.changelog = content
@@ -158,7 +158,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
 }
 
 modrinth {
-    println "Modrinth 令牌：${token.get()}"
+    println "Modrinth 令牌：${token.get() instanceof String ? token.get().replaceAll("^(.+?)(.{0,6})\$", (s, a, b) -> a.replaceAll(".", "*") + b) : token.get()}"
 
     projectId = "rItLmRo4" // 迷上城建模组的 Modrinth ID
     versionNumber = project.mod_version + '-' + project.minecraft_version
@@ -176,13 +176,13 @@ modrinth {
 }
 
 githubRelease {
-    def getenv = System.getenv("GITHUB_TOKEN")
-    println "GitHub 令牌: $getenv"
-    if (getenv) token = getenv
+    def githubToken = System.getenv("GITHUB_TOKEN")
+    println "GitHub 令牌: ${githubToken instanceof String ? githubToken.replaceAll("^(.+?)(.{0,6})\$", (s, a, b) -> a.replaceAll(".", "*") + b) : githubToken}"
+    if (githubToken) token = githubToken
     owner = "SolidBlock-cn"
     repo = "mishanguc"
     tagName = "v$project.mod_version"
-    targetCommitish = "1.20.2"
+    targetCommitish = "1.20.1"
     body = content
     draft = true
     prerelease = false
