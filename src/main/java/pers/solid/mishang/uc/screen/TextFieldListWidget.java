@@ -28,6 +28,7 @@ import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.packrat.PackratParser;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -59,7 +60,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
    */
   protected final @NotNull Set<@NotNull Entry> selectedEntries = new HashSet<>();
   private final AbstractSignBlockEditScreen<?> signBlockEditScreen;
-  public boolean simplified;
+  private boolean simplified;
   /**
    * 用于显示时渲染背景时的高度。通常情况下与 {@link #height} 保持一致，但简化模式下会使用不一致的值。{@link #setHeight(int)} 方法会同步更新此字段的值。
    */
@@ -258,6 +259,11 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     int k = i + entry.getWidth();
     int l = j + entry.getHeight();
     context.fill(i + 1, j, k - 1, l, 0xe0ffffff);
+  }
+
+  @Contract(pure = true)
+  protected boolean isSimplified() {
+    return simplified;
   }
 
   protected void setSimplified(boolean simplified) {
