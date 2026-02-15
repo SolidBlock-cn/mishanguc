@@ -130,8 +130,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           newEntry.setSelected(true);
         }
       }
-      setFocused(textFieldListWidget);
     }
+    setFocused(textFieldListWidget);
   }).position(width / 2 - 120 - 100, 5).size(80, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.add_text.description").append(ScreenTexts.LINE_BREAK).append(MishangUtils.describeShortcut(TextBridge.literal("Ctrl + Shift + ").append(TextBridge.translatable("message.mishanguc.keyboard_shortcut.equal")))))).build();
 
   /**
