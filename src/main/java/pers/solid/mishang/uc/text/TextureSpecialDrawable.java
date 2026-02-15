@@ -14,9 +14,11 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.path.PathUtil;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
+import java.nio.file.Path;
 import java.util.Optional;
 
 /**
@@ -27,6 +29,26 @@ import java.util.Optional;
  */
 @Beta
 public record TextureSpecialDrawable(@NotNull Identifier identifier, @NotNull TextContext textContext) implements SpecialDrawable {
+  public TextureSpecialDrawable {
+    validateIdentifier(identifier);
+  }
+
+  /**
+   * 检验路径是否有效，如果无效，抛出异常。注意：不检查资源是否存在。可以存储指定不存在资源的对象，但路径不能是无效的。
+   */
+  public static void validateIdentifier(Identifier identifier) throws IllegalArgumentException {
+    PathUtil.split(identifier.getPath()).ifError(error -> {throw new IllegalArgumentException(error.message());});
+    var ignore = Path.of(identifier.getNamespace());
+  }
+
+  public static boolean isValidIdentifier(Identifier identifier) {
+    try {
+      validateIdentifier(identifier);
+      return true;
+    } catch (IllegalArgumentException e) {
+      return false;
+    }
+  }
 
   @Override
   @Environment(EnvType.CLIENT)
