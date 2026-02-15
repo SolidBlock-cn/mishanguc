@@ -818,9 +818,21 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       textHolder.visible = visible;
     }
     signPresets.visible = visible;
+    if (!visible) {
+      // 在 1.21.3 以下版本，此语句是为了避免预设列表元素隐藏后如果重新显示，仍会聚集到原来的元素，导致 Tab 键导航操作不一致。
+      if (signPresets.getSelectedOrNull() != null) {
+        signPresets.getSelectedOrNull().setFocused(null);
+      }
+      signPresets.setSelected(null);
+      signPresets.setFocused(null);
+    }
     for (SignPresetGridWidget.Entry textHolder : signPresets.children()) {
       for (ButtonWidget button : textHolder.buttons) {
         button.visible = visible;
+        if (!visible) {
+          // 在 1.21.3 以下版本，选中一个按钮并应用预设后，按钮会持续保持聚集，即使其不显示。
+          button.setFocused(false);
+        }
       }
     }
 
