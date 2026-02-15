@@ -31,13 +31,13 @@ public final class SpecialDrawableTypes {
 
   public static final SpecialDrawableType<TextureSpecialDrawable> TEXTURE = register("texture", (textContext, nbt) -> {
     final Identifier texture = Identifier.tryParse(nbt.getString("texture", null));
-    return texture != null ? new TextureSpecialDrawable(texture, textContext) : null;
+    return texture != null && TextureSpecialDrawable.isValidIdentifier(texture) ? new TextureSpecialDrawable(texture, textContext) : null;
   }, (textContext, args) -> {
     final Identifier identifier = Identifier.tryParse(args);
     if (identifier == null) {
       return null;
     } else if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-      return new TextureSpecialDrawable(identifier, textContext);
+      return TextureSpecialDrawable.isValidIdentifier(identifier) ? new TextureSpecialDrawable(identifier, textContext) : null;
     }
     return null;
   });
