@@ -28,7 +28,10 @@ import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.packrat.PackratParser;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnmodifiableView;
 import org.lwjgl.glfw.GLFW;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.mixin.ContainerWidgetAccessor;
@@ -432,11 +435,8 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   }
 
   /**
-   * 清除所有文本，仅存在于 1.21.10 之后版本。
-   *
-   * @implNote 对于之前版本，
+   * 清除所有文本。
    */
-  @ApiStatus.AvailableSince("mc1.21.10")
   public void clearTextFields() {
     clearEntries();
     for (Entry selectedEntry : selectedEntries) {
