@@ -2,6 +2,8 @@ package pers.solid.mishang.uc;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.DataResult;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -11,8 +13,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.NbtCompoundArgumentType;
+import net.minecraft.command.argument.TextArgumentType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.registry.RegistryOps;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
@@ -103,7 +108,7 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
                 .executes(commandContext -> executeDelete(commandContext, false)))));
   }
 
-  private static int executeSave(CommandContext<FabricClientCommandSource> commandContext, @Nullable NbtCompound args) {
+  private static int executeSave(CommandContext<FabricClientCommandSource> commandContext, @Nullable NbtCompound args) throws CommandSyntaxException {
     final boolean force;
     final int order;
     final int initialFocus;
@@ -154,8 +159,27 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
 
     final List<TextContext> textContextsCopy = textContexts.stream().map(TextContext::clone).toList();
     final String id = getString(commandContext, "id");
-    final Optional<Text> name = args == null ? Optional.empty() : TextCodecs.CODEC.parse(NbtOps.INSTANCE, args.getCompound("name")).result();
-    final Optional<Text> description = args == null ? Optional.empty() : TextCodecs.CODEC.parse(NbtOps.INSTANCE, args.getCompound("description")).result();
+    final RegistryOps<NbtElement> nbtOps = source.getRegistryManager().getOps(NbtOps.INSTANCE);
+    final Optional<Text> name;
+    if (args == null || !args.contains("name")) {
+      name = Optional.empty();
+    } else {
+      final DataResult<Text> result = TextCodecs.STRINGIFIED_CODEC.parse(nbtOps, args.get("name"));
+      if (result instanceof DataResult.Error<Text> error) {
+        throw TextArgumentType.INVALID_COMPONENT_EXCEPTION.create(error.message());
+      }
+      name = result.result();
+    }
+    final Optional<Text> description;
+    if (args == null || !args.contains("description")) {
+      description = Optional.empty();
+    } else {
+      final DataResult<Text> result = TextCodecs.STRINGIFIED_CODEC.parse(nbtOps, args.get("description"));
+      if (result instanceof DataResult.Error<Text> error) {
+        throw TextArgumentType.INVALID_COMPONENT_EXCEPTION.create(error.message());
+      }
+      description = result.result();
+    }
     if (initialFocus < 0 || (initialFocus >= textContextsCopy.size() && initialFocus > 0)) {
       source.sendError(Text.translatable("message.mishanguc.signPreset.save.initial_focus_invalid", initialFocus, textContextsCopy.size()));
       return -1;
