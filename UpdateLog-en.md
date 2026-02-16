@@ -2,6 +2,11 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.6.0-beta.6
+
+- Now when typing special texts in the sign edit screen, if the typed content is invalid, besides showing the text field in red, a tooltip will also be showing indicating the error.
+- Fixed the issue that, in the command suggestions when typing sign preset names, names containing special characters (such as symbols, space) will cause the command to be invalid. Now the suggestions will add quotation marks around sign preset names.
+
 ### 1.6.0-beta.5
 
 - Fixed the version that the game rules do not change when entering the world.
