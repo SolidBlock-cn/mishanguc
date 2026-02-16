@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.Runnables;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.JsonOps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,10 +22,7 @@ import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.PlainTextContent;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextCodecs;
+import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Contract;
@@ -346,10 +344,8 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
         final String name = matcher.group(1);
         final String value = matcher.group(2);
         switch (name) {
-          case "literal":
-            textContext1.text = TextBridge.literal(value);
-            break;
-          case "json":
+          case "literal" -> textContext1.text = TextBridge.literal(value);
+          case "json" -> {
             try {
               final JsonElement jsonElement = TextContext.GSON.fromJson(value, JsonElement.class);
               textContext1.text = (MutableText) TextCodecs.CODEC.parse(signBlockEditScreen.registryLookup.getOps(JsonOps.INSTANCE), jsonElement).getOrThrow();
@@ -357,18 +353,25 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
               textFieldWidget.setEditableColor(0xffff5555);
               textFieldWidget.setTooltip(Tooltip.of(Text.literal(e.getMessage())));
             }
-            break;
-          default:
-            final SpecialDrawable specialDrawable = SpecialDrawable.fromStringArgs(textContext1, name, value);
-            if (specialDrawable == null) {
-              textContext1.extra = null;
-              textContext1.text = TextBridge.literal(s);
-            } else if (specialDrawable != SpecialDrawable.INVALID) {
-              textContext1.extra = specialDrawable;
-              textContext1.text = TextBridge.literal("");
-            } else { // 如果为 INVALID 则文本为红色。
+          }
+          default -> {
+            final SpecialDrawable specialDrawable;
+            try {
+              specialDrawable = SpecialDrawable.fromStringArgs(textContext1, name, value);
+              if (specialDrawable == SpecialDrawable.INVALID) { // 如果为 INVALID 则文本为红色。
+                textFieldWidget.setEditableColor(0xffff5555);
+              } else if (specialDrawable != null) {
+                textContext1.extra = specialDrawable;
+                textContext1.text = TextBridge.empty();
+              } else {
+                textContext1.extra = null;
+                textContext1.text = TextBridge.literal(s);
+              }
+            } catch (CommandSyntaxException e) {
               textFieldWidget.setEditableColor(0xffff5555);
+              textFieldWidget.setTooltip(Tooltip.of(Texts.toText(e.getRawMessage())));
             }
+          }
         }
       } else {
         textContext1.extra = null;

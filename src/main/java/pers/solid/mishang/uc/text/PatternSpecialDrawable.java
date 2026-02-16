@@ -15,6 +15,7 @@ import net.minecraft.text.Style;
 import net.minecraft.util.math.ColorHelper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.mixin.TextRendererAccessor;
@@ -111,7 +112,7 @@ public record PatternSpecialDrawable(TextContext textContext, RectanglePattern r
   }
 
   @Contract(value = "_,_ -> new", pure = true)
-  public static PatternSpecialDrawable fromNbt(TextContext textContext, NbtCompound nbt) {
+  public static @Nullable PatternSpecialDrawable fromNbt(TextContext textContext, NbtCompound nbt) {
     final String shapeName = nbt.getString("shapeName");
     return fromName(textContext, shapeName);
   }
@@ -122,8 +123,10 @@ public record PatternSpecialDrawable(TextContext textContext, RectanglePattern r
     nbt.putString("shapeName", rectanglePattern.name());
   }
 
-  public static PatternSpecialDrawable fromName(TextContext textContext, String shapeName) {
-    return new PatternSpecialDrawable(textContext, RectanglePatterns.getOrDefault(shapeName, RectanglePatterns.EMPTY));
+  public static @Nullable PatternSpecialDrawable fromName(TextContext textContext, String shapeName) {
+    final RectanglePattern pattern = RectanglePatterns.get(shapeName);
+    if (pattern == null) return null;
+    return new PatternSpecialDrawable(textContext, pattern);
   }
 
   @Override

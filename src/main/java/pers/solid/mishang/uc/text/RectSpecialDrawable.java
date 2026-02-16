@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.text;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.BakedGlyph;
@@ -66,22 +67,30 @@ public record RectSpecialDrawable(float width, float height, @NotNull TextContex
     return SpecialDrawableTypes.RECT;
   }
 
-  public static RectSpecialDrawable fromNbt(@NotNull TextContext textContext, @NotNull NbtCompound nbt) {
+  public static @NotNull RectSpecialDrawable fromNbt(@NotNull TextContext textContext, @NotNull NbtCompound nbt) {
     return new RectSpecialDrawable(nbt.getFloat("width"), nbt.getFloat("height"), textContext);
   }
 
-  public static RectSpecialDrawable fromStringArgs(TextContext textContext, String args) {
-    final RectSpecialDrawable rect;
+  public static @NotNull RectSpecialDrawable fromStringArgs(@NotNull TextContext textContext, @NotNull String args) throws CommandSyntaxException {
     final String[] split = args.split(" ");
-    if (split.length < 2) return null;
-    try {
-      final float width = Float.parseFloat(split[0]);
-      final float height = Float.parseFloat(split[1]);
-      rect = new RectSpecialDrawable(width, height, textContext);
-    } catch (NumberFormatException e) {
-      return null;
+    if (split.length < 2) {
+      throw new CommandSyntaxException(null, TextBridge.translatable("special_drawable.rect.too_few", 2, split.length));
+    } else if (split.length > 2) {
+      throw new CommandSyntaxException(null, TextBridge.translatable("special_drawable.rect.too_many", 2, split.length));
     }
-    return rect;
+    final float width;
+    try {
+      width = Float.parseFloat(split[0]);
+    } catch (NumberFormatException e) {
+      throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.readerInvalidFloat().create(split[0]);
+    }
+    final float height;
+    try {
+      height = Float.parseFloat(split[1]);
+    } catch (NumberFormatException e) {
+      throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.readerInvalidFloat().create(split[1]);
+    }
+    return new RectSpecialDrawable(width, height, textContext);
   }
 
   @Override
