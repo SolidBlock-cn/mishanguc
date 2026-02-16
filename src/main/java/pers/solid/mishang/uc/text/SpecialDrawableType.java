@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.text;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registry;
@@ -74,11 +75,11 @@ public interface SpecialDrawableType<S extends SpecialDrawable> {
    * @return 该类型的 SpecialDrawable 对象。
    */
   @Contract(pure = true)
-  S fromNbt(TextContext textContext, @NotNull NbtCompound nbt);
+  @Nullable S fromNbt(@NotNull TextContext textContext, @NotNull NbtCompound nbt);
 
   /**
    * 根据已有的参数（字符串形式的）返回对象，通常用于告示牌编辑界面中。如果在文本框中输入 {@code -rect 2 3}，则会调用 {@code fromStringArgs(textContext, "2 3")}。
    */
   @Contract(pure = true)
-  S fromStringArgs(TextContext textContext, String args);
+  @NotNull S fromStringArgs(@NotNull TextContext textContext, @NotNull String args) throws CommandSyntaxException;
 }
