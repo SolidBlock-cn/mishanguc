@@ -48,7 +48,7 @@ public final class SignPresets {
   /**
    * 在命令中提供告示牌预设 id 的建议。
    */
-  public static final SuggestionProvider<FabricClientCommandSource> SUGGEST_KEYS = (commandContext, suggestionsBuilder) -> CommandSource.suggestMatching(REGISTRY.keySet().stream().map(NbtString::escapeUnquoted), suggestionsBuilder);
+  public static final SuggestionProvider<FabricClientCommandSource> SUGGEST_KEYS = (commandContext, suggestionsBuilder) -> CommandSource.suggestMatching(REGISTRY.keySet().stream().map(NbtString::escape), suggestionsBuilder);
   /**
    * 在命令中提供告示牌预设 id 包括内置预设 id（可能实际已从注册表中移除）的建议。
    */
