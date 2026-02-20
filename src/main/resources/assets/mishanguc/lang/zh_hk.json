@@ -816,6 +816,7 @@
   "message.mishanguc.hide_gui.show": "顯示",
   "message.mishanguc.hide_gui.tooltip": "隱藏所有螢幕元素，以便清晰地預覽。按住Shift並啟動此按鈕可啟用簡化模式，編輯方塊將渲染在更狹小的空間內，留下更多空間讓你查看在世界中的實際效果，同時依然可以編輯。",
   "message.mishanguc.horizontal_align": "水平對齊",
+  "message.mishanguc.invalid_json": "無效的JSON",
   "message.mishanguc.italic": "斜體",
   "message.mishanguc.keyboard_shortcut.composed": "捷徑：%s。",
   "message.mishanguc.keyboard_shortcut.equal": "等號",
