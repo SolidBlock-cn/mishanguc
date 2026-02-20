@@ -220,7 +220,7 @@ public class TextContext implements Cloneable {
       try {
         text = Text.Serializer.fromLenientJson(textJson);
       } catch (JsonParseException e) {
-        text = TextBridge.translatable("message.mishanguc.invalid_json", e.getMessage());
+        text = TextBridge.translatable("message.mishanguc.invalid_json").formatted(Formatting.RED);
       }
     } else if (nbtText instanceof NbtString) {
       text = TextBridge.literal(nbtText.asString());

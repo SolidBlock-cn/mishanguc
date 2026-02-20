@@ -793,6 +793,7 @@
   "message.mishanguc.hide_gui.show": "显示",
   "message.mishanguc.hide_gui.tooltip": "隐藏所有屏幕元素，以便清晰地预览。按住Shift并激活此按钮可启用简化模式，编辑框将渲染在更狭小的空间内，留下更多空间让你查看在世界中的实际效果，同时依然可以编辑。",
   "message.mishanguc.horizontal_align": "水平对齐",
+  "message.mishanguc.invalid_json": "无效的JSON",
   "message.mishanguc.italic": "斜体",
   "message.mishanguc.keyboard_shortcut.composed": "快捷键：%s。",
   "message.mishanguc.keyboard_shortcut.equal": "等号",
