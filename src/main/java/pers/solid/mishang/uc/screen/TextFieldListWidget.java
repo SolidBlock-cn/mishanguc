@@ -102,6 +102,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     if (i >= 0) {
       Entry entry2 = children.get(i);
       this.setSelected(entry2, multiSel, contSel);
+      this.ensureVisible(entry2); // 无论如何均调用此 ensureVisible
     }
   }
 
@@ -128,13 +129,6 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   public void setSelected(@Nullable TextFieldListWidget.Entry entry, boolean multiSel, boolean contSel) {
     final Entry prevSelected = getSelectedOrNull();
     super.setSelected(entry);
-
-    if (entry != null) {
-      if (!this.client.getNavigationType().isKeyboard()) {
-        // 在 isKeyboard() 的情况下， super.setFocused 就已经调用了 ensureVisible，故不再看重复调用。
-        this.ensureVisible(getSelectedOrNull());
-      }
-    }
 
     if (entry == prevSelected && MinecraftClient.getInstance().getNavigationType().isKeyboard()) {
       // 通常是从其他地方通过键盘焦点返回此处的情形，不执行操作。
