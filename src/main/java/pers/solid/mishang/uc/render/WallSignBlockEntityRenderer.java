@@ -19,10 +19,7 @@ import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.block.WallSignBlock;
@@ -64,6 +61,7 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
   @Override
   public void render(WallSignBlockEntityRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState) {
     final Block block = state.blockState.getBlock();
+    final BlockPos pos = state.pos;
     // 若方块为隐形方块，且玩家手中拿着该方块，则显示该方块轮廓。
     final ClientPlayerEntity player = MinecraftClient.getInstance().player;
     if (INVISIBLE_BLOCKS.contains(block) && player != null) {
@@ -75,9 +73,9 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
             matrices,
             vertexConsumer,
             state.voxelShape,
-            0,
-            0,
-            0,
+            pos.getX() - cameraState.pos.x,
+            pos.getY() - cameraState.pos.y,
+            pos.getZ() - cameraState.pos.z,
             ColorHelper.fromFloats(0.9f, glowing ? 0.9f : 0.3f,
                 0.8f,
                 glowing ? 0.3f : 0.9f)));
