@@ -1071,21 +1071,29 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   protected void clearAndInit() {
     final double scrollAmountBeforeClear = textFieldListWidget.getScrollAmount();
     final Element previousFocused = getFocused();
-    final TextFieldListWidget.Entry previouslyWidgetSelected = textFieldListWidget.getSelectedOrNull();
+    final TextFieldListWidget.Entry previousTextFieldsSelected = textFieldListWidget.getSelectedOrNull();
+    final TextFieldListWidget.Entry previousTextFieldsFocused = textFieldListWidget.getFocused();
     final boolean previousSimplified = textFieldListWidget.isSimplified();
     final int previousCuttingHeight = textFieldListWidget.cuttingHeight;
     final List<TextFieldListWidget.Entry> selectedEntriesCopy = List.copyOf(textFieldListWidget.selectedEntries);
+    final SignPresetGridWidget.Entry previousSignPresetsFocused = signPresets.getFocused();
+    final Element previousSignPresetsFocusedElement = previousSignPresetsFocused == null ? null : previousSignPresetsFocused.getFocused();
     super.clearAndInit();
     setFocused(previousFocused);
     textFieldListWidget.setScrollAmount(scrollAmountBeforeClear);
-    textFieldListWidget.setSelected(previouslyWidgetSelected, false, false);
+    textFieldListWidget.setSelected(previousTextFieldsSelected, false, false);
+    textFieldListWidget.setFocused(previousTextFieldsFocused, false, false);
     textFieldListWidget.selectedEntries.clear();
     textFieldListWidget.selectedEntries.addAll(selectedEntriesCopy);
     textFieldListWidget.cuttingHeight = previousCuttingHeight;
     textFieldListWidget.setSimplified(previousSimplified);
     textFieldListWidget.increaseHeight(0);
     for (TextFieldListWidget.Entry selectedEntry : textFieldListWidget.selectedEntries) {
-      selectedEntry.setFocused(true);
+      selectedEntry.setSelected(true);
+    }
+    signPresets.setFocused(previousSignPresetsFocused);
+    if (previousSignPresetsFocused != null) {
+      previousSignPresetsFocused.setFocused(previousSignPresetsFocusedElement);
     }
   }
 

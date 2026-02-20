@@ -22,7 +22,6 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.*;
 import org.lwjgl.glfw.GLFW;
@@ -45,8 +44,6 @@ import java.util.regex.Pattern;
  */
 @Environment(EnvType.CLIENT)
 public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextFieldListWidget.Entry> {
-
-  private static final Identifier background = new Identifier("textures/gui/inworld_menu_background.png");
   /**
    * 被选中的多个项的列表，通常包含 {@link #selected} 的对象但不一定。一般通过 {@link Entry#setSelected(boolean)} 来修改。
    */
@@ -74,18 +71,6 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     this.setRenderHeader(false, 0);
     this.setRenderSelection(false);
     this.heightForBackground = bottom - top;
-  }
-
-  /**
-   * 在设置高度的同时，会同时更新自身的高度。注意即使是在 simplified 模式下，参数 {@code height} 的值仍应是完整的高度，如 {@link #heightForBackground}，而非 {@link #cuttingHeight} 的值，通常也不应该传入 {@link #height}。
-   */
-  @Override
-  public void updateSize(int width, int height, int top, int bottom) {
-    super.updateSize(width, height, top, bottom);
-    this.heightForBackground = bottom - top;
-    for (Entry child : children()) {
-      child.textFieldWidget.setWidth(width - 4);
-    }
   }
 
   /**
@@ -227,6 +212,25 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     return width;
   }
 
+  /**
+   * 在设置高度的同时，会同时更新自身的高度。注意即使是在 simplified 模式下，参数 {@code height} 的值仍应是完整的高度，如 {@link #heightForBackground}，而非 {@link #cuttingHeight} 的值，通常也不应该传入 {@link #height}。
+   */
+  @Override
+  public void updateSize(int width, int height, int top, int bottom) {
+    super.updateSize(width, height, top, bottom);
+    this.heightForBackground = bottom - top;
+    setWidth(width);
+  }
+
+  public void setWidth(int width) {
+    this.width = width;
+    final boolean scrollbarVisible = getMaxScroll() > 0;
+    final int elementWidth = width - (scrollbarVisible ? 10 : 4);
+    for (Entry child : children()) {
+      child.textFieldWidget.setWidth(elementWidth);
+    }
+  }
+
   @Override
   protected int getScrollbarPositionX() {
     return width - 6;
@@ -313,6 +317,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
       rawChildren.add(index, newEntry);
     }
     setScrollAmount(getScrollAmount()); // 此处会调用私有方法 recalculateAllChildrenPositions
+    setWidth(width); // 重新设置其宽度
 
     signBlockEditScreen.updateContentVisibility();
 
@@ -407,6 +412,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     removedEntry.setSelected(false);
     // 删除一行元素后，对滚动数量进行一次 clamp，以避免出现过度滚动的情况。
     setScrollAmount(getScrollAmount()); // 此处会调用私有方法 recalculateAllChildrenPositions
+    setWidth(width); // 重新设置其宽度
 
     signBlockEditScreen.updateContentVisibility();
     signBlockEditScreen.changed = true;
