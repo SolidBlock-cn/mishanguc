@@ -1,8 +1,6 @@
 package pers.solid.mishang.uc.blockentity;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonElement;
-import com.mojang.serialization.JsonOps;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.component.ComponentMap;
@@ -10,8 +8,6 @@ import net.minecraft.component.ComponentsAccess;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.TextCodecs;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +18,6 @@ import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
 import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @see pers.solid.mishang.uc.block.WallSignBlock
@@ -57,15 +52,7 @@ public class WallSignBlockEntity extends BlockEntityWithText {
   @Override
   protected void readData(ReadView view) {
     super.readData(view);
-    final Optional<String> textJson = view.getOptionalString("textJson");
-    if (textJson.isPresent()) {
-      // 此部分仅用于兼容
-      final TextContext defaultTextContext = createDefaultTextContext();
-      defaultTextContext.text = (MutableText) TextCodecs.CODEC.parse(JsonOps.INSTANCE, TextContext.GSON.fromJson(textJson.get(), JsonElement.class)).getOrThrow();
-      textContexts = ImmutableList.of(defaultTextContext);
-    } else {
-      textContexts = view.read("text", TextContext.createListCodec(this::createDefaultTextContext)).orElseGet(ImmutableList::of);
-    }
+    textContexts = view.read("text", TextContext.createListCodec(this::createDefaultTextContext)).orElseGet(ImmutableList::of);
 
     glowing = view.getBoolean("glowing", false);
     waxed = view.getBoolean("waxed", false);
