@@ -816,6 +816,7 @@
   "message.mishanguc.hide_gui.show": "Show",
   "message.mishanguc.hide_gui.tooltip": "Hide all screen elements so as to preview clearly. Activate this button while pressing Shift to enable simplified mode, where the edit boxes are rendered in a more narrow space, leaving more room to let you see the real effect in world while still enabling you to edit.",
   "message.mishanguc.horizontal_align": "H-align",
+  "message.mishanguc.invalid_json": "Invalid JSON",
   "message.mishanguc.italic": "Italic",
   "message.mishanguc.keyboard_shortcut.composed": "Shortcut: %s.",
   "message.mishanguc.keyboard_shortcut.equal": "Equal",

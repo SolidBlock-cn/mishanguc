@@ -231,8 +231,8 @@ public class TextContext implements Cloneable {
         } else {
           text = Text.Serialization.fromLenientJson(textJson, registryLookup);
         }
-      } catch (JsonParseException e) {
-        text = TextBridge.translatable("message.mishanguc.invalid_json", e.getMessage());
+      } catch (JsonParseException | IllegalStateException e) {
+        text = TextBridge.translatable("message.mishanguc.invalid_json").formatted(Formatting.RED);
       }
     } else if (nbtText instanceof NbtString) {
       text = TextBridge.literal(nbtText.asString());
