@@ -227,19 +227,6 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     return width;
   }
 
-  /**
-   * 在屏幕尺寸改变时，其文本框的宽度也应当同步改变。
-   */
-  @Override
-  public void setWidth(int width) {
-    super.setWidth(width);
-    final boolean scrollbarVisible = overflows();
-    final int elementWidth = width - (scrollbarVisible ? 10 : 4);
-    for (Entry child : children()) {
-      child.textFieldWidget.setWidth(elementWidth);
-    }
-  }
-
   @Override
   public int getRowTop(int index) {
     return super.getRowTop(index) - 2;
@@ -326,8 +313,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
       rawChildren.remove(newIndex);
       rawChildren.add(index, newEntry);
     }
-    setScrollY(getScrollY()); // 此处会调用私有方法 recalculateAllChildrenPositions
-    setWidth(getWidth()); // 重新设置其宽度
+    setScrollY(getScrollY()); // 此处会调用私有方法 recalculateAllChildrenPositions，重新设置其宽度
 
     signBlockEditScreen.updateContentVisibility();
 
@@ -439,8 +425,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     removeEntry(removedEntry);
     removedEntry.setSelected(false);
     // 删除一行元素后，对滚动数量进行一次 clamp，以避免出现过度滚动的情况。
-    setScrollY(getScrollY()); // 此处会调用私有方法 recalculateAllChildrenPositions
-    setWidth(getWidth()); // 重新设置其宽度
+    setScrollY(getScrollY()); // 此处会调用私有方法 recalculateAllChildrenPositions，重新设置其宽度
 
     signBlockEditScreen.updateContentVisibility();
     signBlockEditScreen.changed = true;
@@ -553,7 +538,9 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     @Override
     public void setWidth(int width) {
       super.setWidth(width);
-      textFieldWidget.setWidth(getContentWidth());
+      final boolean scrollbarVisible = overflows();
+      final int elementWidth = getContentWidth() - (scrollbarVisible ? 6 : 0);
+      textFieldWidget.setWidth(elementWidth);
     }
 
     @Override
