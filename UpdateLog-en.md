@@ -5,7 +5,8 @@ Note: Not all versions in this update log are already published. Please refer to
 ### 1.6.0-beta.6
 
 - Now when typing special texts in the sign edit screen, if the typed content is invalid, besides showing the text field in red, a tooltip will also be showing indicating the error.
-- Fixed the issue that, in the command suggestions when typing sign preset names, names containing special characters (such as symbols, space) will cause the command to be invalid. Now the suggestions will add quotation marks around sign preset names.
+- Fixed the issue that, in the command suggestions when typing sign preset names, names containing special characters (such as symbols, space) will cause the command to be invalid. Now the suggestions will add quotation marks around sign preset names.=
+- Improved the operation of sign edit screen, and the width of text fields will be automatically determined based on whether the scroll bar is rendered.
 
 ### 1.6.0-beta.5
 
