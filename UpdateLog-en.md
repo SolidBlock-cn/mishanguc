@@ -8,6 +8,7 @@ Note: Not all versions in this update log are already published. Please refer to
 - Fixed the issue that, in the command suggestions when typing sign preset names, names containing special characters (such as symbols, space) will cause the command to be invalid. Now the suggestions will add quotation marks around sign preset names.=
 - Improved the operation of sign edit screen, and the width of text fields will be automatically determined based on whether the scroll bar is rendered.
 - Fixed the issue that when the field `textJson` of NBT of text is invalid, the translation key of the returned text component `message.mishanguc.invalid_json` does not exist. Besides, this text will be displayed in red.
+- Fixed the outline rendering issue of invisible signs when holding invisible signs in hand in versions 1.21.10.
 
 ### 1.6.0-beta.5
 
