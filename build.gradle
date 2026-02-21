@@ -8,6 +8,7 @@ plugins {
 }
 
 import com.modrinth.minotaur.dependencies.ModDependency
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
 base {
     archivesName = project.archives_base_name
@@ -22,7 +23,20 @@ repositories {
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
 
-    maven { url "https://maven.terraformersmc.com/releases/" }
+    // Mods on Modrinth
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
+    // Mod Menu 模组
+    maven { url 'https://maven.terraformersmc.com/releases/' }
     maven { url 'https://jitpack.io' }
 }
 
@@ -35,6 +49,10 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+    if (project.hasProperty('imblocker_version') && !project.imblocker_version.isEmpty()) {
+        modRuntimeOnly "maven.modrinth:imblocker-original:$project.imblocker_version"
+    }
 }
 
 processResources {
@@ -85,6 +103,15 @@ publishing {
     }
 }
 
+
+loom {
+    runs {
+        client {
+            programArg "-username=Solid"
+        }
+    }
+}
+
 /**
  * 从 UpdateLog-en.md 中提取更新日志
  */
@@ -111,7 +138,7 @@ println "当前版本（${project.mod_version}）更新记录："
 final var content = getUpdateLog(project.mod_version)
 println content
 
-tasks.register('curseforge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+tasks.register('curseforge', TaskPublishCurseForge) {
     def curseforgeToken = System.getenv("CURSEFORGE_TOKEN")
     println("CurseForge 令牌: ${curseforgeToken instanceof String ? curseforgeToken.replaceAll("^(.+?)(.{0,6})\$", (s, a, b) -> a.replaceAll(".", "*") + b) : curseforgeToken}")
     if (curseforgeToken) apiToken = curseforgeToken
@@ -121,12 +148,12 @@ tasks.register('curseforge', net.darkhax.curseforgegradle.TaskPublishCurseForge)
     mainFile.changelogType = 'markdown'
     mainFile.releaseType = project.mod_version.contains('-') ? 'beta' : 'release'
 
-    for (final def v in (project.supported_minecraft_versions.split(','))) {
+    for (final def v in ((project.supported_minecraft_versions as String).split(','))) {
         mainFile.addGameVersion v
     }
 
     mainFile.addRelations 'requiredDependency', 'fabric-api'
-    def sourcesFile = mainFile.withAdditionalFile(sourcesJar)
+    mainFile.withAdditionalFile(sourcesJar)
 }
 
 modrinth {

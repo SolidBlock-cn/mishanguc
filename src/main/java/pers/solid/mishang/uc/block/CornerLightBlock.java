@@ -16,9 +16,11 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
@@ -79,11 +81,12 @@ public class CornerLightBlock extends HorizontalFacingBlock
   @SuppressWarnings("deprecation")
   @Override
   public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-    Direction direction = state.get(FACING).getOpposite();
-    BlockPos blockPos = pos.offset(direction);
-    return world
-        .getBlockState(blockPos)
-        .isSideSolidFullSquare(world, blockPos, direction.getOpposite());
+    final Direction facing = state.get(FACING);
+    final Direction backDirection = facing.getOpposite();
+    final BlockPos backPos = pos.offset(backDirection);
+    final VoxelShape centerShape = Block.createCuboidShape(7, 7, 7, 9, 9, 9);
+    final BlockState backState = world.getBlockState(backPos);
+    return !VoxelShapes.matchesAnywhere(backState.getSidesShape(world, backPos).getFace(facing), centerShape, BooleanBiFunction.ONLY_SECOND) || !VoxelShapes.matchesAnywhere(backState.getCollisionShape(world, backPos).getFace(facing), centerShape, BooleanBiFunction.ONLY_SECOND);
   }
 
   @SuppressWarnings("deprecation")

@@ -244,7 +244,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
           x = 180;
           y = (int) facing.asRotation() + 180;
         } else {
-          Mishanguc.MISHANG_LOGGER.error(String.format("Unknown state to generate models: facing=%s,direction=%s", facing.asString(), direction.asString()));
+          Mishanguc.MISHANG_LOGGER.error("Unknown state to generate models: facing={},direction={}", facing.asString(), direction.asString());
           continue;
         }
         blockStateSupplier.with(When.create().set(FACING, facing).set(DIRECTION_TO_PROPERTY.get(direction), true), BlockStateVariant.create().put(MODEL, modelName).put(MishangUtils.INT_X_VARIANT, x).put(MishangUtils.INT_Y_VARIANT, y));

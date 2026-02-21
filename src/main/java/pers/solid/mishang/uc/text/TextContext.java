@@ -228,7 +228,7 @@ public class TextContext implements Cloneable {
       try {
         text = Text.Serializer.fromLenientJson(textJson);
       } catch (JsonParseException e) {
-        text = TextBridge.translatable("message.mishanguc.invalid_json", e.getMessage());
+        text = TextBridge.translatable("message.mishanguc.invalid_json").formatted(Formatting.RED);
       }
     } else if (nbtText instanceof NbtString) {
       text = TextBridge.literal(nbtText.asString());
@@ -448,9 +448,9 @@ public class TextContext implements Cloneable {
     if (rotationX != 0) nbt.putFloat("rotationX", rotationX);
     else nbt.remove("rotationX");
     if (rotationY != 0) nbt.putFloat("rotationY", rotationY);
-    else nbt.remove("rotationX");
+    else nbt.remove("rotationY");
     if (rotationZ != 0) nbt.putFloat("rotationZ", rotationZ);
-    else nbt.remove("rotationX");
+    else nbt.remove("rotationZ");
     if (scaleX != 1) {
       nbt.putFloat("scaleX", scaleX);
     } else {
