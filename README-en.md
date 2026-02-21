@@ -23,7 +23,9 @@ Detailed information of this mod can be seen in [GitHub](https://github.com/Soli
 
 This mod **depends on Fabric API**, and since mod version 1.4.0, **no longer** depends on [BRRP](https://github.com/SolidBlock-cn/BRRP)** (Better Runtime Resource Pack) mod.
 
-Only Fabric version. There's no Forge version of this mod. The update log can be seen [here](UpdateLog-en.md)
+Only Fabric version. There's no Forge version of this mod.
+
+Please also refer to [the update log](UpdateLog-en.md)
 
 This mod is published under the LGPLv3 license, which you must follow when propagating this mod.
 
