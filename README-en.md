@@ -23,7 +23,9 @@ Detailed information of this mod can be seen in [GitHub](https://github.com/Soli
 
 This mod **relies on Fabric API and [BRRP](https://github.com/SolidBlock-cn/BRRP)** (Better Runtime Resource Pack) mod. Please do make sure that BRRP is installed when installing this mod, or the game will not start. BRRP is a branch of [ARRP](https://github.com/Devan-Kerman/ARRP) (Advanced Runtime Resource Pack).
 
-Only Fabric version. There's no Forge version of this mod. The update log can be seen [here](UpdateLog-en.md)
+Only Fabric version. There's no Forge version of this mod.
+
+Please also refer to [the update log](UpdateLog-en.md)
 
 This mod is published under the LGPLv3 license, which you must follow when propagating this mod.
 

@@ -2,13 +2,40 @@
 
 注意：更新记录中的版本并不一定都已发布。具体请以 CurseForge、Modrinth 中的下载页面或 GitHub 中的“releases”为准。
 
+### 1.6.0
+
+- 修复告示牌编辑界面的文本描边控制按钮的操作逻辑异常的问题。
+- 告示牌编辑界面中的文本阴影不再被视为不推荐开启。
+- 简化为告示牌文本的数据格式。对于颜色为白色（默认）以及没有文本描边的情形，移除相关字段。
+- 现在可以修改告示牌的文本预设了。在编辑告示牌的文本时，如果没有添加文本，则会显示所有可用的预设（详见 1.6.0-beta.3 的更新日志）。
+- 完善了告示牌文本中的 `-pattern`，现在的样式名称使用规范的名称，同时支持一些简略名称作为别称（详见 1.6.0-beta.3 的更新日志）。
+    - 模组现在在区块数据中存储样式时，会使用规范的名称（例如 `arrow-left`），在使用旧版模组时存储的区块数据中的简化的名称（例如 `al`）会被自动转换，因此不再兼容旧版模组。因此建议您在使用新版模组进入世界之前做好备份。
+- 现在告示牌中的文本支持 `-nbt`，类似于 `-json`，不过是用 NBT 表示文本组件，其语法与 JSON 存在一些区别。使用 `-json` 指定的文本将自动转化为 `-nbt` 的形式（仅限 1.21.5 及以上版本）。
+- 调整了告示牌 `-texture` 的交互逻辑：现在在告示牌中，即使输入不存在的纹理 id，也会正常生效，渲染为黑紫方格且这过程中不会在日志中输出警告。
+    - 与此模组相比，更推荐使用 sprite 文本组件，更稳定且支持资源包中的动态纹理。例如：`-nbt {sprite: 'block/lava_still'}`。
+- 增加了特殊文本类型：`debug_text`，用法：在告示牌文本框中输入 `-debug_text 任意文本内容` 即可进行测试文本的渲染效果。请注意此情况下不会确保文本的渲染位置正确（仅限 1.21.10 及以上版本）。
+- 修复游戏规则未及时同步的问题。
+- 修复在选中文本后使用 Ctrl + E 设置自定义值会导致文本不可见的问题。
+- 完善简化模式，现在在启用简化模式后，不再需要按住 Shift 即可调整高度或关闭简化模式。
+- 现在在告示牌编辑界面中输入特殊文本时，如果输入的内容无效，除了将文本框显示为红色之外，还会显示一个提示以表明错误。
+- 改善告示牌编辑界面的操作，现在文本框的宽度会根据是否渲染滚动条自动决定。
+- 修复当文本的 NBT 的 `textJson` 字段无效时，返回的文本组件的翻译键 `message.mishanguc.invalid_json` 不存在的问题。此外，该文本将显示为红色。
+
+### 1.6.0-beta.6
+
+- 现在在告示牌编辑界面中输入特殊文本时，如果输入的内容无效，除了将文本框显示为红色之外，还会显示一个提示以表明错误。
+- 修复了在输入告示牌预设名称的建议中，当名称包含特殊字符（例如符号、空格）时，会导致命令无效的问题。现在的建议给在告示牌名称加上引号。
+- 改善告示牌编辑界面的操作，现在文本框的宽度会根据是否渲染滚动条自动决定。
+- 修复当文本的 NBT 的 `textJson` 字段无效时，返回的文本组件的翻译键 `message.mishanguc.invalid_json` 不存在的问题。此外，该文本将显示为红色。
+- 修复在 1.21.10 以上版本中，隐形告示牌在手持隐形告示牌的情况下的轮廓渲染问题。
+
 ### 1.6.0-beta.5
 
 - 修复刚进入世界时游戏规则未被同步的问题。
 - 修复在 1.21.10 以上版本中，在开了光影时，当没有普通文本渲染时，本模组的特殊文本未被视为文本导致渲染暗淡的问题。
 - 修复在选中文本后使用 Ctrl + E 设置自定义值会导致文本不可见的问题。
-- 完善简化模式，现在在启用简化模式后，不再需要按住Shift即可调整高度或关闭简化模式。
-- 修复在已有文本的情况下，Tab键仍可能导航至不可见的按钮元素的问题
+- 完善简化模式，现在在启用简化模式后，不再需要按住 Shift 即可调整高度或关闭简化模式。
+- 修复在已有文本的情况下，Tab 键仍可能导航至不可见的按钮元素的问题
 
 ### 1.6.0-beta.4
 
@@ -22,73 +49,74 @@
 ### 1.6.0-beta.3
 
 - 现在可以修改告示牌的文本预设了。在编辑告示牌的文本时，如果没有添加文本，则会显示所有可用的预设。
-  - 目前有 6 个内置的告示牌预设：
-    - 左箭头 + 1 行文本（`left_arrow_one_line`）
-    - 1 行文本（`one_line`）
-    - 右箭头 + 1 行文本（`right_arrow_one_line`）
-    - 左箭头 + 2 行文本（`left_arrow_two_lines`）
-    - 2 行文本（`two_lines`）
-    - 右箭头 + 2 行文本（`right_arrow_two_lines`）
-    - 上述预设中的“两行文本”，均为 1 行大小为 6，1 行大小为 3。箭头可用于地铁等导向标志中。
-  - 告示牌预设（不含内置的）保存在 `configs/mishanguc_sign_presets/<id>.json` 中，其中“id”只需要能作文件名即可，可以有中文，但不能包含一些特殊字符，不支持子文件夹。每个文件都是 `json` 格式，并支持以下字段：
-    - `order`：整数，可选，默认为 0。用于控制显示在告示牌文本的预设的顺序。数值越低的越靠前。内置的六个预设的顺序分别为 -6 至 -1 的整数。
-    - `name`：文本组件，可选。预设在界面中的显示名称。如果未指定，将使用翻译键 `signPreset.mishanguc.<id>.name`，当翻译键不存在时直接显示其 id（作为 fallback）。
-    - `description`：文本组件，可选。预设的描述。在文本编辑界面中，鼠标悬浮在相应按钮上，或相应按钮获得焦点时，如果有描述，则会显示描述。
-    - `text_contexts`：文本的列表，必需。每个元素的格式等同于告示牌的每行文本的格式。
-    - `initial_focus`：整数，可选，默认为 0。此数值表示应用此预设后，会自动选择预设中的哪一行文本。例如，如果 `initial_focus` 的值为 2，那么应用该预设将自动选择预设的第 3 行文本。此字段的值必须小于文本列表的元素个数，但如果文本列表为空（个数为 0），此值可以为 0。
-  - 添加了相应命令以处理告示牌预设。所有命令均在客户端执行，不在服务器执行，执行后将即时生效并更新相应文件。所有的文件读写操作都将在单独线程进行。
-    - `/mishanguc:signpreset path`：显示告示牌预设保存的路径。当这个路径存在时，点击相应消息即可在资源管理器中显示。
-    - `/mishanguc:signpreset list`：显示当前所有预设的列表。
-    - `/mishanguc:signpreset reload`：从磁盘中重新加载告示牌预设。注意：原版的 `/reload` 命令不会加载告示牌预设。
-    - `/mishanguc:signpreset save <id> [参数]`：保存告示牌预设。执行时，需要将准星对准迷上城建的一个告示牌方块。可以指定一些额外参数（`[args]`），其格式为 NBT 对象，支持以下字段：
-      - `force`：默认为 false。若为 true，则当相同名称的告示牌预设文件已存在，或者有相同名称的内置预设时，仍会正常保存。若为 false，则命令不会执行。此外，当告示牌的文本为空（一行也没有）时，如果 `force` 为 false，则也不会执行。
-      - `order`：整数。
-      - `initial_focus`：整数。
-      - `name`：文本组件。
-      - `description`：文本组件。
-    - `/mishanguc:signpreset delete <id>`：删除一个告示牌预设。如果删除非内置的告示牌预设，则会尝试将 `<id>.json` 文件删除。如果删除内置的告示牌预设，则会创建一个 `<id>.json` 文件，其内容为空白 JSON，从而将该内置告示牌预设标记为不会加载。
-    - `/mishanguc:signpreset reset <id>`：重置一个告示牌预设。对于非内置的告示牌预设，会将其删除（相当于 `/mishanguc:signpreset delete <id>` 命令）。对于内置的告示牌预设，无论其是被覆盖还是被标记不会加载，则会删除 `<id>.json` 从而恢复内置的告示牌预设。
-    - `/mishanguc:signpreset reset`：重置所有告示牌预设，并恢复所有内置的告示牌预设。`config/mishanguc_sign_presets` 中的所有 json 文件将被删除。
-  - 请注意：所有告示牌预设在应用后都将被自动调整位置，即使在保存的时候是没有调整的。如果不需要调整，请将相应的文本行设置为绝对模式。
-  - 现在内置告示牌预设的文本大小对所有方块都是 6 和 3（对于两行文本），之前完整的墙上告示牌中的告示牌预设的大小为 8 和 4；注意默认文本大小仍会取决于告示牌本身，对于完整的墙上告示牌默认文本大小为 8，其他方块的是 6。
+    - 目前有 6 个内置的告示牌预设：
+        - 左箭头 + 1 行文本（`left_arrow_one_line`）
+        - 1 行文本（`one_line`）
+        - 右箭头 + 1 行文本（`right_arrow_one_line`）
+        - 左箭头 + 2 行文本（`left_arrow_two_lines`）
+        - 2 行文本（`two_lines`）
+        - 右箭头 + 2 行文本（`right_arrow_two_lines`）
+        - 上述预设中的“两行文本”，均为 1 行大小为 6，1 行大小为 3。箭头可用于地铁等导向标志中。
+    - 告示牌预设（不含内置的）保存在 `configs/mishanguc_sign_presets/<id>.json` 中，其中“id”只需要能作文件名即可，可以有中文，但不能包含一些特殊字符，不支持子文件夹。每个文件都是 `json` 格式，并支持以下字段：
+        - `order`：整数，可选，默认为 0。用于控制显示在告示牌文本的预设的顺序。数值越低的越靠前。内置的六个预设的顺序分别为 -6 至 -1 的整数。
+        - `name`：文本组件，可选。预设在界面中的显示名称。如果未指定，将使用翻译键 `signPreset.mishanguc.<id>.name`，当翻译键不存在时直接显示其 id（作为 fallback）。
+        - `description`：文本组件，可选。预设的描述。在文本编辑界面中，鼠标悬浮在相应按钮上，或相应按钮获得焦点时，如果有描述，则会显示描述。
+        - `text_contexts`：文本的列表，必需。每个元素的格式等同于告示牌的每行文本的格式。
+        - `initial_focus`：整数，可选，默认为 0。此数值表示应用此预设后，会自动选择预设中的哪一行文本。例如，如果 `initial_focus` 的值为 2，那么应用该预设将自动选择预设的第 3 行文本。此字段的值必须小于文本列表的元素个数，但如果文本列表为空（个数为 0），此值可以为 0。
+    - 添加了相应命令以处理告示牌预设。所有命令均在客户端执行，不在服务器执行，执行后将即时生效并更新相应文件。所有的文件读写操作都将在单独线程进行。
+        - `/mishanguc:signpreset path`：显示告示牌预设保存的路径。当这个路径存在时，点击相应消息即可在资源管理器中显示。
+        - `/mishanguc:signpreset list`：显示当前所有预设的列表。
+        - `/mishanguc:signpreset reload`：从磁盘中重新加载告示牌预设。注意：原版的 `/reload` 命令不会加载告示牌预设。
+        - `/mishanguc:signpreset save <id> [参数]`：保存告示牌预设。执行时，需要将准星对准迷上城建的一个告示牌方块。可以指定一些额外参数（`[参数]`），其格式为 NBT 对象，支持以下字段：
+            - `force`：默认为 false。若为 true，则当相同名称的告示牌预设文件已存在，或者有相同名称的内置预设时，仍会正常保存。若为 false，则命令不会执行。此外，当告示牌的文本为空（一行也没有）时，如果 `force` 为 false，则也不会执行。
+            - `order`：整数。
+            - `initial_focus`：整数。
+            - `name`：文本组件。
+            - `description`：文本组件。
+        - `/mishanguc:signpreset delete <id>`：删除一个告示牌预设。如果删除非内置的告示牌预设，则会尝试将 `<id>.json` 文件删除。如果删除内置的告示牌预设，则会创建一个 `<id>.json` 文件，其内容为空白 JSON，从而将该内置告示牌预设标记为不会加载。
+        - `/mishanguc:signpreset reset <id>`：重置一个告示牌预设。对于非内置的告示牌预设，会将其删除（相当于 `/mishanguc:signpreset delete <id>` 命令）。对于内置的告示牌预设，无论其是被覆盖还是被标记不会加载，则会删除 `<id>.json` 从而恢复内置的告示牌预设。
+        - `/mishanguc:signpreset reset`：重置所有告示牌预设，并恢复所有内置的告示牌预设。`config/mishanguc_sign_presets` 中的所有 json 文件将被删除。
+    - 请注意：所有告示牌预设在应用后都将被自动调整位置，即使在保存的时候是没有调整的。如果不需要调整，请将相应的文本行设置为绝对模式。
+    - 现在内置告示牌预设的文本大小对所有方块都是 6 和 3（对于两行文本），之前完整的墙上告示牌中的告示牌预设的大小为 8 和 4；注意默认文本大小仍会取决于告示牌本身，对于完整的墙上告示牌默认文本大小为 8，其他方块的是 6。
 - 简化为告示牌文本的数据格式。对于颜色为白色（默认）以及没有文本描边的情形，移除相关字段。
 - 完善了告示牌文本中的 `-pattern`，现在的样式名称使用规范的名称，同时支持一些简略名称作为别称：
-  - `empty`
-  - `arrow-left`，别称：`al`
-  - `arrow-right`，别称：`ar`
-  - `arrow-up`，别称：`arrow-top`、`au`、`at`
-  - `arrow-down`，别称：`arrow-bottom`、`ad`、`ab`
-  - `arrow-left-thin`
-  - `arrow-right-thin`
-  - `arrow-up-thin`
-  - `arrow-down-thin`
-  - `arrow-left-up`，别称：`arrow-left-top`、`alu`、`alt`
-  - `arrow-right-up`，别称：`arrow-right-top`、`aru`、`art`
-  - `arrow-left-down`，别称：`arrow-left-bottom`、`ald`、`alb`
-  - `arrow-right-down`，别称：`arrow-right-bottom`、`ard`、`arb`
-  - `arrow-left-turn-up`，别称：`altu`
-  - `arrow-right-turn-up`，别称：`artu`
-  - `arrow-left-turn-down`，别称：`altd`
-  - `arrow-right-turn-down`，别称：`artd`
-  - `arrow-left-right`，别称：`alr`
-  - `arrow-up-down`，别称：`aud`
-  - `circle-small`，别称：`small-circle`
-  - `circle-medium`，别称：`medium-circle`、`circle`、`O`
-  - `ban`
-  - `u-turn-left-down`，别称：`u-turn-left-bottom`、`uld`、`ulb`
-  - `u-turn-right-down`，别称：`u-turn-right-bottom`、`urd`、`urb`
-  - `u-turn-left-up`，别称：`u-turn-right-top`、`ulu`、`ult`
-  - `u-turn-right-up`，别称：`u-turn-right-top`、`uru`、`urt`
-  - `cross-small`，别称：`small-scross`
-  - `cross-medium`，别称：`medium-cross`、`cross`、`X`
-  - `cross-large`，别称：`large-cross`
-  - `square-small`，别称：`small-square`
-  - `square-medium`，别称：`medium-square`、`square`
-  - `square-large`，别称：`large-square`
-  - `square-slant-small`，别称：`small-slant-square`
-  - `square-slant-medium`，别称：`medium-slant-square`
-  - `square-slant-large`，别称：`large-slant-square`
-  - 注意：样式不支持自定义指定。如果需要使用更多复杂的样式，建议使用 `-texture` 格式，或原版的精灵图组件（示例：`-nbt {sprite: xxx}`）。此外，模组现在在区块数据中存储样式时，会使用规范的名称（例如 `arrow-left`），在使用旧版模组时存储的区块数据中的简化的名称（例如 `al`）会被自动转换，因此不再兼容旧版模组。因此建议您在使用新版模组进入世界之前做好备份。
+    - `empty`
+    - `arrow-left`，别称：`al`
+    - `arrow-right`，别称：`ar`
+    - `arrow-up`，别称：`arrow-top`、`au`、`at`
+    - `arrow-down`，别称：`arrow-bottom`、`ad`、`ab`
+    - `arrow-left-thin`
+    - `arrow-right-thin`
+    - `arrow-up-thin`
+    - `arrow-down-thin`
+    - `arrow-left-up`，别称：`arrow-left-top`、`alu`、`alt`
+    - `arrow-right-up`，别称：`arrow-right-top`、`aru`、`art`
+    - `arrow-left-down`，别称：`arrow-left-bottom`、`ald`、`alb`
+    - `arrow-right-down`，别称：`arrow-right-bottom`、`ard`、`arb`
+    - `arrow-left-turn-up`，别称：`altu`
+    - `arrow-right-turn-up`，别称：`artu`
+    - `arrow-left-turn-down`，别称：`altd`
+    - `arrow-right-turn-down`，别称：`artd`
+    - `arrow-left-right`，别称：`alr`
+    - `arrow-up-down`，别称：`aud`
+    - `circle-small`，别称：`small-circle`
+    - `circle-medium`，别称：`medium-circle`、`circle`、`O`
+    - `ban`
+    - `u-turn-left-down`，别称：`u-turn-left-bottom`、`uld`、`ulb`
+    - `u-turn-right-down`，别称：`u-turn-right-bottom`、`urd`、`urb`
+    - `u-turn-left-up`，别称：`u-turn-right-top`、`ulu`、`ult`
+    - `u-turn-right-up`，别称：`u-turn-right-top`、`uru`、`urt`
+    - `cross-small`，别称：`small-scross`
+    - `cross-medium`，别称：`medium-cross`、`cross`、`X`
+    - `cross-large`，别称：`large-cross`
+    - `square-small`，别称：`small-square`
+    - `square-medium`，别称：`medium-square`、`square`
+    - `square-large`，别称：`large-square`
+    - `square-slant-small`，别称：`small-slant-square`
+    - `square-slant-medium`，别称：`medium-slant-square`
+    - `square-slant-large`，别称：`large-slant-square`
+    - 注意：样式不支持自定义指定。如果需要使用更多复杂的样式，建议使用 `-texture` 格式，或原版的精灵图组件（示例：`-nbt {sprite: xxx}`）。
+    - 此外，模组现在在区块数据中存储样式时，会使用规范的名称（例如 `arrow-left`），在使用旧版模组时存储的区块数据中的简化的名称（例如 `al`）会被自动转换，因此不再兼容旧版模组。因此建议您在使用新版模组进入世界之前做好备份。
 - 现在告示牌中的文本支持 `-nbt`，类似于 `-json`，不过是用 NBT 表示文本组件，其语法与 JSON 存在一些区别。使用 `-json` 指定的文本将自动转化为 `-nbt` 的形式。
 
 ### 1.6.0-beta.2
@@ -156,6 +184,17 @@
 ### 1.4.4
 
 - 修复在 1.21.1 无法启动的严重问题。
+
+### 1.4.3.1
+
+仅适用于 1.19.4 的修复更新。
+
+- 调整了墙上的灯方块和角落灯方块的放置规则。仅方块表面的中间位置有侧面形状或碰撞时，可放置灯，从而避免将灯放置在中间为空的侧面（例如墙上的灯块的侧面）。
+- 修复部分道路方块侧面的纹理错误的问题。
+- 现在所有的直立告示牌和告示牌杆都拥有 `#wall_post_override` 方块标签，以便在墙上放置直立告示牌时显示柱子。
+- 修复当文本的 NBT 的 `textJson` 字段无效时，返回的文本组件的翻译键 `message.mishanguc.invalid_json` 不存在的问题。此外，该文本将显示为红色。
+- 修复无法正确设置文本的 X 旋转的问题。
+- 调整了一些内容的名称。
 
 ### 1.4.3
 
