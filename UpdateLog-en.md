@@ -2,10 +2,29 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.6.0
+
+- Fixed the issue of wrong operating logic of the text outline control button on the sign edit screen.
+- The shade option in the sign edit screen is no longer seen as not recommended enabling.
+- Simplified the data format for sign texts. For situations where text is white (by default) and there is no outline, the fields will be removed.Now it is possible to modify the text preset of signs. When editing the sign texts, if no text is added, all available presets will be displayed (see the update log for 1.6.0-beta.3 for details).
+- Improved the `-pattern` for sign texts. Now all pattern use canonical names while supporting some abbreviated names as aliases (see the update log for 1.6.0-beta.3 for details).
+    - When the mod stores patterns in the chunk data, canonical names (such as `arrow-left`) are used not, the abbreviated names (such as `al`) of chunk data stored when using old version mod will be converted automatically and it will no longer be compatible to old version mods. Therefore, it is recommended to make a backup when entering the world with the new version mod.
+- Now the texts in the sign supports `-nbt`, similar to `-json`, but it represents text components using NBT, and the syntax has some small differences from JSON. The texts specified with `-json` will be automatically converted to `-nbt` (for versions 1.21.5 and above).
+- Adjusted the `-texture` interaction logic in the signs: in the signs, even if a missing texture id is inputted, it can normally take effect, rendering black-purple checkerboards without outputting warns.
+    - Compared to the mod, it is preferred to use sprite text component, which is more stable and supports the animated textures in the resource pack. For example: `-nbt {sprite: 'block/lava_still'}`.
+- Added a special text type: `debug_text`, usage: input `-debug_text <any text content>` to test the rendering of text. Please no that the rendering position of text will not be sure to be correct (for versions 1.21.10 and above).
+- Fixed the issue that the game rules do not synchronize.
+- Fixed the issue of using Ctrl + E to set custom value will cause the texts invisible.
+- Improved simplified mode. Now when simplified mode is enabled, it is no longer required to press Shift for adjusting height or disabling simplified mode.
+- Now when typing special texts in the sign edit screen, if the typed content is invalid, besides showing the text field in red, a tooltip will also be showing indicating the error.
+- Improved the operation of sign edit screen, and the width of text fields will be automatically determined based on whether the scroll bar is rendered.
+- Fixed the issue that when the field `textJson` of NBT of text is invalid, the translation key of the returned text component `message.mishanguc.invalid_json` does not exist. Besides, this text will be displayed in red.
+- Fixed the outline rendering issue of invisible signs when holding invisible signs in hand in versions 1.21.10.
+
 ### 1.6.0-beta.6
 
 - Now when typing special texts in the sign edit screen, if the typed content is invalid, besides showing the text field in red, a tooltip will also be showing indicating the error.
-- Fixed the issue that, in the command suggestions when typing sign preset names, names containing special characters (such as symbols, space) will cause the command to be invalid. Now the suggestions will add quotation marks around sign preset names.=
+- Fixed the issue that, in the command suggestions when typing sign preset names, names containing special characters (such as symbols, space) will cause the command to be invalid. Now the suggestions will add quotation marks around sign preset names.
 - Improved the operation of sign edit screen, and the width of text fields will be automatically determined based on whether the scroll bar is rendered.
 - Fixed the issue that when the field `textJson` of NBT of text is invalid, the translation key of the returned text component `message.mishanguc.invalid_json` does not exist. Besides, this text will be displayed in red.
 
@@ -29,74 +48,74 @@ Note: Not all versions in this update log are already published. Please refer to
 ### 1.6.0-beta.3
 
 - Now it is possible to modify the text preset of signs. When editing the sign texts, if no text is added, all available presets will be displayed.
-  - There are currently 6 builtin sign presets:
-    - left arrow + 1 line of text (`left_arrow_one_line`)
-    - 1 line of text (`one_line`)
-    - right arrow + 1 line of text (`right_arrow_one_line`)
-    - left arrow + 2 lines of text (`left_arrow_two_lines`)
-    - 2 lines of text (`two_lines`)
-    - right arrow + 2 lines of text (`right_arrow_two_lines`)
-    - The "two lines of text" in the presets above, are one line with size 6, and one line with size 3. The arrows can be used in direction indicates such as subway.
-  - The sign presets (excluding builtin) are store in `configs/mishanguc_sign_presets/<id>.json`, while "id" is anything that can be used as a filename, can contain Chinese, but cannot contain some special characters, and does not support subfolders. Each file is a `json` format, and supports the following fields:
-    - `order`: Integer, optional, by default 0. Used to control the order when displaying sign presets. The lower value, the higher priority. The order of the six builtin presets are respectively integers from -6 to -1.
-    - `name`: Text component. Optional. The display name of the preset in the interface. If not specified, the translation key `signPreset.mishanguc.<id>.name` will be used, and the id will be displayed directly as a fallback if the translation key does not exist.
-    - `description`: Text component. Optional. The description of the preset. In the sign edit screen, when the cursor is hovered on the button, of the button gets focus, the description will be displayed if it exists.
-    - `text_contexts`: The text list. Required. The format of each format is equivalent to the format of each text in the sign.
-    - `initial_focus`: Integer. Optional. By default, 0. This value indicates which line of text will be automatically selected when the preset is applied. For example, if the value of `initial_focus` is 2, upon applying the preset the third line of text will be automatically selected. The value of this field must be lower than the amount of elements of text list, but when the text list is empty (amount is 0), this value can be 0.
-  - Added corresponding commands to handle sign presets. All commands are executed on the client side, not the server side, and it takes affect immediately after execution and relevant files will be updated. All IO operations of files will be executed on a separate thread.
-    - `/mishanguc:signpreset path`: Show the path where the sign presets are stored. When the path exist, click the relevant message to show in Explorer.
-    - `/mishanguc:signpreset list`: Show a list of all current presets.
-    - `/mishanguc:signpreset reload`: Reload sign presets from the disk. Note: `/reload` command will not reload sign presets.
-    - `/mishanguc:signpreset save <id> [args]`: Store the sign presets. When executing, you need to locate your crosshair on a sign block of Mishang Urban Construction mod. You can specify some extra arguments (`[args]`), in the NBT object format, supporting the following fields:
-      - `force`: False by default. If true, when the sign preset file of the same name exist, or when the builtin preset exists with the same name, it will still normally saved. If false, the command will noe execute. Besides, when the sign text is empty (no a single line), if `force` is false, the command will also not be executed.
-      - `order`: Integer.
-      - `initial_focus`: Integer.
-      - `name`: Text component.
-      - `description`: Text component.
-    - `/mishanguc:signpreset delete <id>`: Delete a sign preset. If deleting a non-builtin sign preset, the file `<id>.json` will be tried to delete. If deleting a builtin sign preset, the file `<id>.json` will be created with an empty JSON, marking this builtin sign preset not to be loaded.
-    - `/mishanguc:signpreset reset <id>`: Reset a sign preset. For non-builtin sign presets, it will be delected (equivalent to `/mishanguc:signpreset delete <id>` command). For builtin sign presets, no matter it is overridden or marked no to load, the file `<id>.json` will be deleted to restore the builtin sign preset.
-    - `/mishanguc:signpreset reset`: Reset all sign presets, and restore all builtin sign presets. All JSON files in `config/mishanguc_sign_presets` will be deleted.
-  - Note: All presets will be automatically adjusted position when applied, even if not adjusted when saving. If you do not need to adjust, please set the relevant text lines to absolute mode.
-  - The size of builtin sign presets is now 6 and 3 (for two lines) for all blocks. Formerly, the size of builtin sign presets is 8 and 4 for full wall sign blocks; note that the default text size will still depend on the sign itself, and for full wall sign the default text size is 8 and for other blocks it is 6.
+    - There are currently 6 builtin sign presets:
+        - left arrow + 1 line of text (`left_arrow_one_line`)
+        - 1 line of text (`one_line`)
+        - right arrow + 1 line of text (`right_arrow_one_line`)
+        - left arrow + 2 lines of text (`left_arrow_two_lines`)
+        - 2 lines of text (`two_lines`)
+        - right arrow + 2 lines of text (`right_arrow_two_lines`)
+        - The "two lines of text" in the presets above, are one line with size 6, and one line with size 3. The arrows can be used in direction indicates such as subway.
+    - The sign presets (excluding builtin) are store in `configs/mishanguc_sign_presets/<id>.json`, while "id" is anything that can be used as a filename, can contain Chinese, but cannot contain some special characters, and does not support subfolders. Each file is a `json` format, and supports the following fields:
+        - `order`: Integer, optional, by default 0. Used to control the order when displaying sign presets. The lower value, the higher priority. The order of the six builtin presets are respectively integers from -6 to -1.
+        - `name`: Text component. Optional. The display name of the preset in the interface. If not specified, the translation key `signPreset.mishanguc.<id>.name` will be used, and the id will be displayed directly as a fallback if the translation key does not exist.
+        - `description`: Text component. Optional. The description of the preset. In the sign edit screen, when the cursor is hovered on the button, of the button gets focus, the description will be displayed if it exists.
+        - `text_contexts`: The text list. Required. The format of each format is equivalent to the format of each text in the sign.
+        - `initial_focus`: Integer. Optional. By default, 0. This value indicates which line of text will be automatically selected when the preset is applied. For example, if the value of `initial_focus` is 2, upon applying the preset the third line of text will be automatically selected. The value of this field must be lower than the amount of elements of text list, but when the text list is empty (amount is 0), this value can be 0.
+    - Added corresponding commands to handle sign presets. All commands are executed on the client side, not the server side, and it takes affect immediately after execution and relevant files will be updated. All IO operations of files will be executed on a separate thread.
+        - `/mishanguc:signpreset path`: Show the path where the sign presets are stored. When the path exist, click the relevant message to show in Explorer.
+        - `/mishanguc:signpreset list`: Show a list of all current presets.
+        - `/mishanguc:signpreset reload`: Reload sign presets from the disk. Note: `/reload` command will not reload sign presets.
+        - `/mishanguc:signpreset save <id> [args]`: Store the sign presets. When executing, you need to locate your crosshair on a sign block of Mishang Urban Construction mod. You can specify some extra arguments (`[args]`), in the NBT object format, supporting the following fields:
+            - `force`: False by default. If true, when the sign preset file of the same name exist, or when the builtin preset exists with the same name, it will still normally saved. If false, the command will noe execute. Besides, when the sign text is empty (no a single line), if `force` is false, the command will also not be executed.
+            - `order`: Integer.
+            - `initial_focus`: Integer.
+            - `name`: Text component.
+            - `description`: Text component.
+        - `/mishanguc:signpreset delete <id>`: Delete a sign preset. If deleting a non-builtin sign preset, the file `<id>.json` will be tried to delete. If deleting a builtin sign preset, the file `<id>.json` will be created with an empty JSON, marking this builtin sign preset not to be loaded.
+        - `/mishanguc:signpreset reset <id>`: Reset a sign preset. For non-builtin sign presets, it will be delected (equivalent to `/mishanguc:signpreset delete <id>` command). For builtin sign presets, no matter it is overridden or marked no to load, the file `<id>.json` will be deleted to restore the builtin sign preset.
+        - `/mishanguc:signpreset reset`: Reset all sign presets, and restore all builtin sign presets. All JSON files in `config/mishanguc_sign_presets` will be deleted.
+    - Note: All presets will be automatically adjusted position when applied, even if not adjusted when saving. If you do not need to adjust, please set the relevant text lines to absolute mode.
+    - The size of builtin sign presets is now 6 and 3 (for two lines) for all blocks. Formerly, the size of builtin sign presets is 8 and 4 for full wall sign blocks; note that the default text size will still depend on the sign itself, and for full wall sign the default text size is 8 and for other blocks it is 6.
 - Simplified the data format for sign texts. For situations where text is white (by default) and there is no outline, the fields will be removed.
 - Improved the `-pattern` for sign texts. Now all pattern use canonical names while supporting some abbreviated names as aliases:
-  - `empty`
-  - `arrow-left`, alias: `al`
-  - `arrow-right`, alias: `ar`
-  - `arrow-up`, alias: `arrow-top`, `au`, `at`
-  - `arrow-down`, alias: `arrow-bottom`, `ad`, `ab`
-  - `arrow-left-thin`
-  - `arrow-right-thin`
-  - `arrow-up-thin`
-  - `arrow-down-thin`
-  - `arrow-left-up`, alias: `arrow-left-top`, `alu`, `alt`
-  - `arrow-right-up`, alias: `arrow-right-top`, `aru`, `art`
-  - `arrow-left-down`, alias: `arrow-left-bottom`, `ald`, `alb`
-  - `arrow-right-down`, alias: `arrow-right-bottom`, `ard`, `arb`
-  - `arrow-left-turn-up`, alias: `altu`
-  - `arrow-right-turn-up`, alias: `artu`
-  - `arrow-left-turn-down`, alias: `altd`
-  - `arrow-right-turn-down`, alias: `artd`
-  - `arrow-left-right`, alias: `alr`
-  - `arrow-up-down`, alias: `aud`
-  - `circle-small`, alias: `small-circle`
-  - `circle-medium`, alias: `medium-circle`, `circle`, `O`
-  - `ban`
-  - `u-turn-left-down`, alias: `u-turn-left-bottom`, `uld`, `ulb`
-  - `u-turn-right-down`, alias: `u-turn-right-bottom`, `urd`, `urb`
-  - `u-turn-left-up`, alias: `u-turn-right-top`, `ulu`, `ult`
-  - `u-turn-right-up`, alias: `u-turn-right-top`, `uru`, `urt`
-  - `cross-small`, alias: `small-scross`
-  - `cross-medium`, alias: `medium-cross`, `cross`, `X`
-  - `cross-large`, alias: `large-cross`
-  - `square-small`, alias: `small-square`
-  - `square-medium`, alias: `medium-square`, `square`
-  - `square-large`, alias: `large-square`
-  - `square-slant-small`, alias: `small-slant-square`
-  - `square-slant-medium`, alias: `medium-slant-square`
-  - `square-slant-large`, alias: `large-slant-square`
-  - Note: Specifying custom patterns is not supported. To use more complicated patterns, it is recommended to use `-texture` format, or use the vanilla sprite component (example: `-nbt {sprite: xxx}`).
-  - When the mod stores patterns in the chunk data, canonical names (such as `arrow-left`) are used not, the abbreviated names (such as `al`) of chunk data stored when using old version mod will be converted automatically and it will no longer be compatible to old version mods. Therefore, it is recommended to make a backup when entering the world with the new version mod.
+    - `empty`
+    - `arrow-left`, alias: `al`
+    - `arrow-right`, alias: `ar`
+    - `arrow-up`, alias: `arrow-top`, `au`, `at`
+    - `arrow-down`, alias: `arrow-bottom`, `ad`, `ab`
+    - `arrow-left-thin`
+    - `arrow-right-thin`
+    - `arrow-up-thin`
+    - `arrow-down-thin`
+    - `arrow-left-up`, alias: `arrow-left-top`, `alu`, `alt`
+    - `arrow-right-up`, alias: `arrow-right-top`, `aru`, `art`
+    - `arrow-left-down`, alias: `arrow-left-bottom`, `ald`, `alb`
+    - `arrow-right-down`, alias: `arrow-right-bottom`, `ard`, `arb`
+    - `arrow-left-turn-up`, alias: `altu`
+    - `arrow-right-turn-up`, alias: `artu`
+    - `arrow-left-turn-down`, alias: `altd`
+    - `arrow-right-turn-down`, alias: `artd`
+    - `arrow-left-right`, alias: `alr`
+    - `arrow-up-down`, alias: `aud`
+    - `circle-small`, alias: `small-circle`
+    - `circle-medium`, alias: `medium-circle`, `circle`, `O`
+    - `ban`
+    - `u-turn-left-down`, alias: `u-turn-left-bottom`, `uld`, `ulb`
+    - `u-turn-right-down`, alias: `u-turn-right-bottom`, `urd`, `urb`
+    - `u-turn-left-up`, alias: `u-turn-right-top`, `ulu`, `ult`
+    - `u-turn-right-up`, alias: `u-turn-right-top`, `uru`, `urt`
+    - `cross-small`, alias: `small-scross`
+    - `cross-medium`, alias: `medium-cross`, `cross`, `X`
+    - `cross-large`, alias: `large-cross`
+    - `square-small`, alias: `small-square`
+    - `square-medium`, alias: `medium-square`, `square`
+    - `square-large`, alias: `large-square`
+    - `square-slant-small`, alias: `small-slant-square`
+    - `square-slant-medium`, alias: `medium-slant-square`
+    - `square-slant-large`, alias: `large-slant-square`
+    - Note: Specifying custom patterns is not supported. To use more complicated patterns, it is recommended to use `-texture` format, or use the vanilla sprite component (example: `-nbt {sprite: xxx}`).
+    - When the mod stores patterns in the chunk data, canonical names (such as `arrow-left`) are used not, the abbreviated names (such as `al`) of chunk data stored when using old version mod will be converted automatically and it will no longer be compatible to old version mods. Therefore, it is recommended to make a backup when entering the world with the new version mod.
 - Now the texts in the sign supports `-nbt`, similar to `-json`, but it represents text components using NBT, and the syntax has some small differences from JSON. The texts specified with `-json` will be automatically converted to `-nbt`.
 
 ### 1.6.0-beta.2
@@ -111,7 +130,7 @@ Note: Not all versions in this update log are already published. Please refer to
 - Fixed the issue that the block entity data is not updated when the block is placed with some tools like Force Placing Tool and the block is from the offhand block or the block specified by the Carrying Tool in the offhand.
 - Fixed the issue that Carry Tools do not handle data components of block entities correctly.
 - Fixed the issue of wrong operating logic of the text outline control button on the sign edit screen.
-- The shader option in the sign edit screen is no longer seen as not recommended enabling.
+- The shade option in the sign edit screen is no longer seen as not recommended enabling.
 
 ### 1.5.3
 
