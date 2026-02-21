@@ -38,6 +38,7 @@ public abstract class BlockEntityWithText extends BlockEntity {
   public static final Text MESSAGE_GLOW_OFF = TextBridge.translatable("message.mishanguc.sign.glow_off");
   public static final Text MESSAGE_WAX_ON = TextBridge.translatable("message.mishanguc.sign.wax_on");
   public static final Text MESSAGE_WAX_OFF = TextBridge.translatable("message.mishanguc.sign.wax_off");
+  public static final PacketHandler PACKET_HANDLER = new PacketHandler();
 
   public BlockEntityWithText(BlockEntityType<?> type, BlockPos pos, BlockState state) {
     super(type, pos, state);
@@ -97,8 +98,6 @@ public abstract class BlockEntityWithText extends BlockEntity {
     markDirty();
     world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
   }
-
-  public static final PacketHandler PACKET_HANDLER = new PacketHandler();
 
   public static class PacketHandler implements ServerPlayNetworking.PlayChannelHandler {
     protected static final Logger LOGGER = LoggerFactory.getLogger(PacketHandler.class);

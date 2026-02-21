@@ -948,6 +948,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    */
   public void removeTextField(int index) {
     final List<TextFieldListWidget.Entry> children = textFieldListWidget.children();
+    if (index < 0 || index >= children.size()) {
+      return;
+    }
     final TextFieldWidget removedWidget = children.remove(index).textFieldWidget;
     final TextContext removedTextContext = contextToWidgetBiMap.inverse().get(removedWidget);
     if (textFieldListWidget.getSelectedOrNull() != null

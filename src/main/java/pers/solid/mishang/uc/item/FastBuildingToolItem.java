@@ -137,8 +137,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
 
   public @NotNull BlockMatchingRule getMatchingRule(ItemStack stack) {
     final NbtCompound tag = stack.getOrCreateNbt();
-    final BlockMatchingRule matchingRule =
-        BlockMatchingRule.fromString(tag.getString("MatchingRule"));
+    final BlockMatchingRule matchingRule = BlockMatchingRule.fromString(tag.getString("MatchingRule"));
     return matchingRule == null ? BlockMatchingRule.SAME_BLOCK : matchingRule;
   }
 

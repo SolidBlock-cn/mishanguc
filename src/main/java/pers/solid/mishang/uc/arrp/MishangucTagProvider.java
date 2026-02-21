@@ -35,6 +35,7 @@ public class MishangucTagProvider {
   protected final IdentifiedTagBuilder<Block> needsStoneTool = blockTagOnly(BlockTags.NEEDS_STONE_TOOL);
   protected final IdentifiedTagBuilder<Block> needsIronTool = blockTagOnly(BlockTags.NEEDS_IRON_TOOL);
   protected final IdentifiedTagBuilder<Block> needsDiamondTool = blockTagOnly(BlockTags.NEEDS_DIAMOND_TOOL);
+  protected final IdentifiedTagBuilder<Block> wallPostOverride = blockTagOnly(BlockTags.WALL_POST_OVERRIDE);
 
   protected IdentifiedTagBuilder<Block> blockTagOnly(TagKey<Block> blockTagKey) {
     final var tag = IdentifiedTagBuilder.createBlock(blockTagKey);
@@ -398,6 +399,10 @@ public class MishangucTagProvider {
         }
       }
     });
+
+    axeMineable.addTag(woodenStandingSigns);
+    pickaxeMineable.addTag(concreteStandingSigns, glowingConcreteStandingSigns, terracottaStandingSigns, glowingTerracottaStandingSigns);
+    wallPostOverride.addTag(standingSigns, glowingStandingSigns);
   }
 
   private void hungSignsAndBars() {
@@ -458,6 +463,11 @@ public class MishangucTagProvider {
         }
       }
     });
+
+    axeMineable.addTag(woodenHungSigns, woodenHungSignBars);
+    pickaxeMineable.addTag(concreteHungSigns, concreteHungSignBars, glowingConcreteHungSigns, terracottaHungSigns, terracottaHungSignBars, glowingTerracottaHungSigns);
+
+    wallPostOverride.addTag(hungSignBars);
   }
 
   private void wallSigns() {

@@ -156,7 +156,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     }
 
     mainFile.addRelations 'requiredDependency', 'fabric-api', 'better-runtime-resource-pack'
-    def sourcesFile = mainFile.withAdditionalFile(sourcesJar)
+    mainFile.withAdditionalFile(sourcesJar)
 }
 
 modrinth {

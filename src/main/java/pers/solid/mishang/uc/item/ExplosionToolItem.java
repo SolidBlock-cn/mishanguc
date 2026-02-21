@@ -113,11 +113,11 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       stacks.add(stack);
 
       stack = new ItemStack(this);
-      stack.getOrCreateNbt().putString("destructionType", "keep");
+      stack.getOrCreateNbt().putString("destructionType", "none");
       stacks.add(stack);
 
       stack = new ItemStack(this);
-      stack.getOrCreateNbt().putString("destructionType", "destroy_with_decay");
+      stack.getOrCreateNbt().putString("destructionType", "destroy");
       stacks.add(stack);
     }
   }

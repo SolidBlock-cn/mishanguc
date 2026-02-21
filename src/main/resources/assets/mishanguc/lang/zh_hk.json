@@ -201,7 +201,7 @@
   "block.mishanguc.hung_sign_bar": "懸掛嘅%s指示牌杆",
   "block.mishanguc.invisible_glowing_wall_sign": "牆上嘅隱形發光指示牌",
   "block.mishanguc.invisible_wall_sign": "牆上嘅隱形指示牌",
-  "block.mishanguc.lane_disabled_mark": "殘疾人專用停車位元標記",
+  "block.mishanguc.lane_disabled_mark": "殘障人士專用停車位標記",
   "block.mishanguc.lane_non_vehicle_mark": "非機動車道標記",
   "block.mishanguc.light_blue_decorated_iron_handrail": "淺藍色裝飾嘅鐵框架玻璃欄杆",
   "block.mishanguc.light_gray_decorated_iron_handrail": "淺灰色裝飾嘅鐵框架玻璃欄杆",
@@ -792,6 +792,7 @@
   "message.mishanguc.hide_gui.show": "顯示",
   "message.mishanguc.hide_gui.tooltip": "隱藏所有螢幕元素，以便清晰地預覽。",
   "message.mishanguc.horizontal_align": "水平對齊",
+  "message.mishanguc.invalid_json": "無效的JSON",
   "message.mishanguc.italic": "斜體",
   "message.mishanguc.keyboard_shortcut.composed": "捷徑：%s。",
   "message.mishanguc.keyboard_shortcut.equal": "等號",
@@ -832,6 +833,10 @@
   "message.mishanguc.set_custom_value.description.keyboard": "使用鍵盤操作時，選擇一個按鈕，然後按下快捷鍵即可為選擇的按鈕編輯值。",
   "message.mishanguc.shade": "陰影",
   "message.mishanguc.shade.description": "可能造成渲染問題，不建議開啟。",
+  "message.mishanguc.sign.glow_off": "告示牌已移除發光",
+  "message.mishanguc.sign.glow_on": "告示牌已發光，文本將喺黑暗中明亮顯示",
+  "message.mishanguc.sign.wax_off": "告示牌已脫蠟，僅創造模式玩家能夠脫蠟",
+  "message.mishanguc.sign.wax_on": "告示牌已塗蠟，將唔可編輯",
   "message.mishanguc.sign_edit": "編輯指示牌",
   "message.mishanguc.size": "大小",
   "message.mishanguc.strikethrough": "刪除線",
@@ -856,10 +861,5 @@
   "roadConnectionState.whether.probably_connected": "應當連接",
   "vertical_align.mishanguc.bottom": "底部對齊",
   "vertical_align.mishanguc.middle": "垂直居中",
-  "vertical_align.mishanguc.top": "頂部對齊",
-
-  "message.mishanguc.sign.glow_on": "告示牌已發光，文本將喺黑暗中明亮顯示",
-  "message.mishanguc.sign.glow_off": "告示牌已移除發光",
-  "message.mishanguc.sign.wax_on": "告示牌已塗蠟，將唔可編輯",
-  "message.mishanguc.sign.wax_off": "告示牌已脫蠟，僅創造模式玩家能夠脫蠟"
+  "vertical_align.mishanguc.top": "頂部對齊"
 }
