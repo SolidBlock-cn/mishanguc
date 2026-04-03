@@ -32,7 +32,7 @@
   ],
   "depends": {
     "fabricloader": "*",
-    "fabric": "*",
+    "fabric-api": "*",
     "minecraft": ">=1.20 <1.20.2"
   },
   "custom": {

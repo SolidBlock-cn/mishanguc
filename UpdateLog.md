@@ -2,6 +2,10 @@
 
 注意：更新记录中的版本并不一定都已发布。具体请以 CurseForge、Modrinth 中的下载页面或 GitHub 中的“releases”为准。
 
+### 1.6.1
+
+- 修复 `-pattern cross-large` 和 `-pattern square-slant-medium` 和 `-pattern square-slant-small` 错误的问题。
+
 ### 1.6.0
 
 - 修复告示牌编辑界面的文本描边控制按钮的操作逻辑异常的问题。
