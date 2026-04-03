@@ -230,7 +230,7 @@ public final class RectanglePatterns {
       {6, 6, 7, 7},
       {4, 2, 5, 3},
       {5, 1, 6, 2},
-      {6, 2, 7, 3},
+      {6, 0, 7, 1},
       {2, 4, 3, 5},
       {1, 5, 2, 6},
       {0, 6, 1, 7},
@@ -256,7 +256,7 @@ public final class RectanglePatterns {
   }, "large-square");
   public static final RectanglePattern SQUARE_SLANT_SMALL = register("square-slant-small", new float[][]{
       {3, 2, 4, 3},
-      {2, 3, 3, 2},
+      {2, 3, 3, 4},
       {4, 3, 5, 4},
       {3, 4, 4, 5}
   }, "small-slant-square");
@@ -267,7 +267,7 @@ public final class RectanglePatterns {
       {4, 2, 5, 3},
       {5, 3, 6, 4},
       {2, 4, 3, 5},
-      {4, 4, 6, 5},
+      {4, 4, 5, 5},
       {3, 5, 4, 6},
   }, "medium-slant-square");
   public static final RectanglePattern SQUARE_SLANT_LARGE = register("square-slant-large", new float[][]{
