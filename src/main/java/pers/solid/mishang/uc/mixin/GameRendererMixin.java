@@ -20,12 +20,11 @@ public class GameRendererMixin {
   private MinecraftClient client;
 
   @ModifyArg(
-      method = "findCrosshairTarget",
+      method = "findCrosshairTarget(Lnet/minecraft/entity/Entity;DDF)Lnet/minecraft/util/hit/HitResult;",
       at =
       @At(
           value = "INVOKE",
-          target =
-              "Lnet/minecraft/entity/Entity;raycast(DFZ)Lnet/minecraft/util/hit/HitResult;"),
+          target = "Lnet/minecraft/entity/Entity;raycast(DFZ)Lnet/minecraft/util/hit/HitResult;"),
       index = 2)
   private boolean modifyRaycastCall(boolean includeFluids) {
     //        return true;
