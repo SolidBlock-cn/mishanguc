@@ -2,6 +2,10 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.6.1
+
+- Fixed the issue of `-pattern cross-large` and `-pattern square-slant-medium` and `-pattern square-slant-small` being incorrect.
+
 ### 1.6.0
 
 - Fixed the issue of wrong operating logic of the text outline control button on the sign edit screen.
