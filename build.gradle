@@ -38,6 +38,12 @@ repositories {
     // Mod Menu 模组
     maven { url 'https://maven.terraformersmc.com/releases/' }
     maven { url 'https://jitpack.io' }
+
+
+    maven {
+        name = 'ParchmentMC'
+        url = 'https://maven.parchmentmc.org'
+    }
 }
 
 
