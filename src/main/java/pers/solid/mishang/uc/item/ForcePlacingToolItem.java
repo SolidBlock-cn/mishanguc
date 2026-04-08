@@ -5,16 +5,16 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.BlockOutlineRenderState;
-import net.minecraft.client.renderer.state.LevelRenderState;
+import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
+import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -51,7 +51,6 @@ import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.render.state.ForcePlacingToolState;
 import pers.solid.mishang.uc.render.state.MishangRenderStateProvider;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
-import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
@@ -107,29 +106,29 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   @Override
   public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     tooltip.add(
-        TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.1")
+        Component.translatable("item.mishanguc.force_placing_tool.tooltip.1")
             .withStyle(ChatFormatting.GRAY));
     tooltip.add(
-        TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.2")
+        Component.translatable("item.mishanguc.force_placing_tool.tooltip.2")
             .withStyle(ChatFormatting.GRAY));
     if (Boolean.TRUE.equals(includesFluid(stack)) && stack.getOrDefault(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT).shows(MishangucComponents.INCLUDES_FLUID)) {
       tooltip.add(
-          TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.fluids")
+          Component.translatable("item.mishanguc.force_placing_tool.tooltip.fluids")
               .withStyle(ChatFormatting.GRAY));
     }
     tooltip.add(
-        TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.3")
+        Component.translatable("item.mishanguc.force_placing_tool.tooltip.3")
             .withStyle(ChatFormatting.GRAY));
     if ((getFlags(stack) & 128) != 0) {
-      tooltip.add(TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.suspends_light")
+      tooltip.add(Component.translatable("item.mishanguc.force_placing_tool.tooltip.suspends_light")
           .withStyle(ChatFormatting.YELLOW));
     }
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable ForcePlacingToolState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
-    if (!hasAccess(player, context.world(), false)) {
+  public @Nullable ForcePlacingToolState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, LevelExtractionContext context, @Nullable HitResult result) {
+    if (!hasAccess(player, context.level(), false)) {
       // 只有在符合条件的情况下，才会绘制边框。
       return null;
     } else {
@@ -156,7 +155,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     final boolean includesFluid = this.includesFluid(stack, player.isShiftKeyDown());
     final BlockPlacementContext blockPlacementContext =
         new BlockPlacementContext(
-            context.world(),
+            context.level(),
             blockHitResult.getBlockPos(),
             player,
             stack,
@@ -188,15 +187,15 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   public boolean renderBlockOutline(
       Player player,
       ItemStack itemStack,
-      WorldRenderContext context,
+      LevelRenderContext context,
       BlockOutlineRenderState outlineRenderState) {
-    final LevelRenderState worldRenderState = context.worldState();
+    final LevelRenderState worldRenderState = context.levelState();
     if (!(worldRenderState.getData(MishangRenderStateProvider.MISHANG_BLOCK_OUTLINE) instanceof ForcePlacingToolState state)) {
       return true;
     }
 
-    final PoseStack matrices = context.matrices();
-    final VertexConsumer vertexConsumer = context.consumers().getBuffer(RenderTypes.lines());
+    final PoseStack matrices = context.poseStack();
+    final VertexConsumer vertexConsumer = context.bufferSource().getBuffer(RenderTypes.lines());
     final Vec3 cameraPos = worldRenderState.cameraRenderState.pos;
     double cameraX = cameraPos.x;
     double cameraY = cameraPos.y;
@@ -294,18 +293,18 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void renderBeforeOutline(LocalPlayer player, ItemStack stack, WorldRenderContext context) {
+  public void renderBeforeOutline(LocalPlayer player, ItemStack stack, LevelRenderContext context) {
     // 只在使用主手持有此物品时进行渲染。
-    final PoseStack matrices = context.matrices();
-    final MultiBufferSource consumers = context.consumers();
+    final PoseStack matrices = context.poseStack();
+    final MultiBufferSource consumers = context.bufferSource();
     if (consumers == null) return;
     final VertexConsumer vertexConsumer = consumers.getBuffer(RenderTypes.lines());
 
-    if (!(context.worldState().getData(MishangRenderStateProvider.MISHANG_BLOCK_OUTLINE) instanceof ForcePlacingToolState state)) {
+    if (!(context.levelState().getData(MishangRenderStateProvider.MISHANG_BLOCK_OUTLINE) instanceof ForcePlacingToolState state)) {
       return;
     }
 
-    final Vec3 cameraPos = context.worldState().cameraRenderState.pos;
+    final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
     if (state.hitEntityBoundingBox != null) {
       ShapeRenderer.renderShape(matrices, vertexConsumer, Shapes.create(state.hitEntityBoundingBox), -cameraPos.x, -cameraPos.y, -cameraPos.z, ARGB.colorFromFloat(0.8f, 1.0f, 0f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }

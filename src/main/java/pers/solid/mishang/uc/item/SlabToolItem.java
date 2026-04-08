@@ -9,8 +9,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.fabricmc.loader.api.FabricLoader;
@@ -20,7 +20,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.BlockOutlineRenderState;
+import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamilies;
@@ -65,7 +65,6 @@ import pers.solid.mishang.uc.networking.SlabToolPayload;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 import pers.solid.mishang.uc.render.state.MishangRenderState;
 import pers.solid.mishang.uc.render.state.SlabToolState;
-import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.lang.reflect.InvocationTargetException;
@@ -195,7 +194,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
 
   @Override
   public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-    tooltip.add(TextBridge.translatable("item.mishanguc.slab_tool.tooltip").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.slab_tool.tooltip").withStyle(ChatFormatting.GRAY));
   }
 
   /**
@@ -236,19 +235,19 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable MishangRenderState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  public @Nullable MishangRenderState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, LevelExtractionContext context, @Nullable HitResult result) {
     if (!(result instanceof final BlockHitResult blockHitResult) || hand != InteractionHand.MAIN_HAND) {
       return null;
     }
 
     boolean isTop = result.getLocation().y - (double) blockHitResult.getBlockPos().getY() > 0.5D;
-    BlockState blockState = context.world().getBlockState(blockHitResult.getBlockPos());
+    BlockState blockState = context.level().getBlockState(blockHitResult.getBlockPos());
     blockState = tryToDoubleSlab(blockState);
     if (blockState != null) {
       final SlabToolState state = new SlabToolState();
       // 渲染时需要使用的方块状态。
       final BlockState halfState = blockState.setValue(BlockStateProperties.SLAB_TYPE, isTop ? SlabType.TOP : SlabType.BOTTOM);
-      state.slabShape = halfState.getShape(context.world(), blockHitResult.getBlockPos(), CollisionContext.of(player));
+      state.slabShape = halfState.getShape(context.level(), blockHitResult.getBlockPos(), CollisionContext.of(player));
       return state;
     } else {
       return null;
@@ -257,16 +256,16 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
 
   @Environment(EnvType.CLIENT)
   @Override
-  public boolean renderBlockOutline(Player player, ItemStack itemStack, WorldRenderContext context, BlockOutlineRenderState outlineRenderState) {
-    if (!(context.worldState().getData(MISHANG_BLOCK_OUTLINE) instanceof SlabToolState state)) {
+  public boolean renderBlockOutline(Player player, ItemStack itemStack, LevelRenderContext context, BlockOutlineRenderState outlineRenderState) {
+    if (!(context.levelState().getData(MISHANG_BLOCK_OUTLINE) instanceof SlabToolState state)) {
       return true;
     }
-    final MultiBufferSource consumers = context.consumers();
+    final MultiBufferSource consumers = context.bufferSource();
     if (state.slabShape != null) {
       final BlockPos pos = outlineRenderState.pos();
-      final Vec3 cameraPos = context.worldState().cameraRenderState.pos;
+      final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
       ShapeRenderer.renderShape(
-          context.matrices(),
+          context.poseStack(),
           consumers.getBuffer(RenderTypes.LINES),
           state.slabShape,
           (double) pos.getX() - cameraPos.x(),

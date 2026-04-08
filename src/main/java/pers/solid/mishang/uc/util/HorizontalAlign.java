@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.util;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.Contract;
@@ -27,7 +28,7 @@ public enum HorizontalAlign implements StringRepresentable {
   }
 
   public MutableComponent getName() {
-    return TextBridge.translatable("horizontal_align.mishanguc." + getSerializedName());
+    return Component.translatable("horizontal_align.mishanguc." + getSerializedName());
   }
 
   /**

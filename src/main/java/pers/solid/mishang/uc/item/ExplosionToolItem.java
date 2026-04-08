@@ -36,7 +36,6 @@ import net.minecraft.world.phys.Vec3;
 import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.components.ExplosionToolComponent;
 import pers.solid.mishang.uc.components.MishangucComponents;
-import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
@@ -92,7 +91,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
   @Override
   public Component getName(ItemStack stack) {
     final ExplosionToolComponent component = stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT);
-    return TextBridge.translatable(getDescriptionId() + ".formatted", component.power(), TextBridge.translatable("item.mishanguc.explosion_tool.createFire." + component.createFire()), TextBridge.translatable("item.mishanguc.explosion_tool.destructionType." + component.destructionType().name().toLowerCase()));
+    return Component.translatable(getDescriptionId() + ".formatted", component.power(), Component.translatable("item.mishanguc.explosion_tool.createFire." + component.createFire()), Component.translatable("item.mishanguc.explosion_tool.destructionType." + component.destructionType().name().toLowerCase()));
   }
 
   public void appendToEntries(CreativeModeTab.Output stacks) {
@@ -116,11 +115,11 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
 
   @Override
   public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.1", TextBridge.keybind("key.use").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.2").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.3").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.4").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.5").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.explosion_tool.tooltip.1", Component.keybind("key.use").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.explosion_tool.tooltip.2").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.explosion_tool.tooltip.3").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.explosion_tool.tooltip.4").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.explosion_tool.tooltip.5").withStyle(ChatFormatting.GRAY));
   }
 
   @Override

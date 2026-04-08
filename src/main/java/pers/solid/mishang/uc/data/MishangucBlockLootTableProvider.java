@@ -1,19 +1,17 @@
 package pers.solid.mishang.uc.data;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootSubProvider;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.MishangucBlock;
 
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public class MishangucBlockLootTableProvider extends FabricBlockLootTableProvider {
-  protected MishangucBlockLootTableProvider(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
+public class MishangucBlockLootTableProvider extends FabricBlockLootSubProvider {
+  protected MishangucBlockLootTableProvider(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
     super(dataOutput, registryLookup);
   }
 
@@ -21,12 +19,11 @@ public class MishangucBlockLootTableProvider extends FabricBlockLootTableProvide
   public void generate() {
     for (Block block : MishangUtils.blocks()) {
       if (block instanceof MishangucBlock r) {
-        final Optional<ResourceKey<LootTable>> lootTableKey = block.getLootTable();
-        if (lootTableKey.isEmpty()) {
+        final LootTable.Builder lootTable = r.getLootTable(this);
+        if (lootTable == null) {
           continue;
         }
-        final LootTable.Builder lootTable = r.getLootTable(this);
-        map.put(lootTableKey.get(), lootTable);
+        add(block, lootTable);
       } else {
         throw new IllegalStateException();
       }

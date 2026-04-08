@@ -12,7 +12,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
-import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
 import net.minecraft.core.Direction;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -103,9 +103,9 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
   default void appendRoadTooltip(
       ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     Road.super.appendRoadTooltip(stack, context, tooltip, options);
-    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_joint_line_with_offset_side.1").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_joint_line_with_offset_side.2").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_joint_line_with_offset_side.3").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("block.mishanguc.tooltip.road_with_joint_line_with_offset_side.1").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("block.mishanguc.tooltip.road_with_joint_line_with_offset_side.2").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("block.mishanguc.tooltip.road_with_joint_line_with_offset_side.3").withStyle(ChatFormatting.GRAY));
   }
 
   int offsetLevel();
@@ -176,8 +176,8 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
 
     @Override
     public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
-      tooltip.add(TextBridge.translatable("lineType.jointWithOffsetSide.composed.1", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
-      tooltip.add(TextBridge.translatable("lineType.jointWithOffsetSide.composed.2", lineColorSide.getName(), lineTypeSide.getName()).withStyle(ChatFormatting.BLUE));
+      tooltip.add(Component.translatable("lineType.jointWithOffsetSide.composed.1", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
+      tooltip.add(Component.translatable("lineType.jointWithOffsetSide.composed.2", lineColorSide.getName(), lineTypeSide.getName()).withStyle(ChatFormatting.BLUE));
     }
 
     @Override

@@ -5,8 +5,8 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
@@ -32,7 +32,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static pers.solid.mishang.uc.MishangUtils.*;
 
-public class MishangucBlockTagProvider extends FabricTagProvider.BlockTagProvider {
+public class MishangucBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
   protected static final Map<DyeColor, TagKey<Block>> dyedBlockTags = ImmutableMap.<DyeColor, TagKey<Block>>builder()
       .put(DyeColor.BLACK, ConventionalBlockTags.BLACK_DYED)
       .put(DyeColor.BLUE, ConventionalBlockTags.BLUE_DYED)
@@ -62,7 +62,7 @@ public class MishangucBlockTagProvider extends FabricTagProvider.BlockTagProvide
   protected MishangucTagBuilder<Block> needsDiamondTool;
   protected final Multimap<DyeColor, Item> coloredItems = ArrayListMultimap.create();
 
-  protected MishangucBlockTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+  protected MishangucBlockTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
     super(output, registriesFuture);
     this.affiliate = new MishangucItemTagProvider(output, registriesFuture, this);
   }
@@ -115,7 +115,7 @@ public class MishangucBlockTagProvider extends FabricTagProvider.BlockTagProvide
 
     final var roads = blockTagWithItem("roads").addTag(roadBlocks, roadSlabs);
     pickaxeMineable.addTag(roads);
-    blockTagOnly(BlockTags.SNOW_LAYER_CANNOT_SURVIVE_ON).addTag(roads);
+    blockTagOnly(BlockTags.SUPPORT_OVERRIDE_SNOW_LAYER).addTag(roads);
   }
 
   protected void handrails() {

@@ -10,7 +10,7 @@ import com.mojang.serialization.JsonOps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -45,7 +45,6 @@ import pers.solid.mishang.uc.mixin.ContainerWidgetAccessor;
 import pers.solid.mishang.uc.mixin.EntryListWidgetAccessor;
 import pers.solid.mishang.uc.text.SpecialDrawable;
 import pers.solid.mishang.uc.text.TextContext;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -55,7 +54,7 @@ import static pers.solid.mishang.uc.screen.MishangScreenUtil.hasControlDown;
 import static pers.solid.mishang.uc.screen.MishangScreenUtil.hasShiftDown;
 
 /**
- * 文本框列表的屏幕。每个列表项都是一个文本框（实际上就是把 {@link EditBox} 包装成了 {@link pers.solid.mishang.uc.screen.TextFieldListWidget.Entry}。<p>
+ * 文本框列表的屏幕。每个列表项都是一个文本框（实际上就是把 {@link EditBox} 包装成了 {@link Entry}。<p>
  * 此类原本是 {@link AbstractSignBlockEditScreen} 的内部类，后面独立出来了。
  */
 @Environment(EnvType.CLIENT)
@@ -63,7 +62,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
 
   private static final Identifier background = Identifier.withDefaultNamespace("textures/gui/inworld_menu_background.png");
   /**
-   * 被选中的多个项的列表，通常包含 {@link #selected} 的对象但不一定。一般通过 {@link pers.solid.mishang.uc.screen.TextFieldListWidget.Entry#setSelected(boolean)} 来修改。
+   * 被选中的多个项的列表，通常包含 {@link #selected} 的对象但不一定。一般通过 {@link Entry#setSelected(boolean)} 来修改。
    */
   protected final Set<TextFieldListWidget.Entry> selectedEntries = new HashSet<>();
   private final AbstractSignBlockEditScreen<?> signBlockEditScreen;
@@ -79,7 +78,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
   /**
    * 在按住 Shift 进行多选时，多选起始的元素。在非 Shift 模式下进行任意选择后，此字段清空。
    */
-  private @Nullable pers.solid.mishang.uc.screen.TextFieldListWidget.Entry startContEntry;
+  private @Nullable Entry startContEntry;
 
   public TextFieldListWidget(AbstractSignBlockEditScreen<?> signBlockEditScreen,
                              Minecraft client, int width, int height, int y, int itemHeight) {
@@ -102,19 +101,19 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
   }
 
   /**
-   * 类似于 {@link #setFocused(GuiEventListener)}，但是支持在调用 {@link #setSelected(pers.solid.mishang.uc.screen.TextFieldListWidget.Entry, boolean, boolean)} 时指定参数。
+   * 类似于 {@link #setFocused(GuiEventListener)}，但是支持在调用 {@link #setSelected(Entry, boolean, boolean)} 时指定参数。
    */
-  public void setFocused(@Nullable pers.solid.mishang.uc.screen.TextFieldListWidget.Entry focused, boolean multiSel, boolean contSel) {
-    pers.solid.mishang.uc.screen.TextFieldListWidget.Entry entry = this.getFocused();
+  public void setFocused(@Nullable Entry focused, boolean multiSel, boolean contSel) {
+    Entry entry = this.getFocused();
     if (entry != focused && entry instanceof ContainerEventHandler parentElement) {
       parentElement.setFocused(null);
     }
 
     ((ContainerWidgetAccessor) this).setFocused(focused);
-    final List<pers.solid.mishang.uc.screen.TextFieldListWidget.Entry> children = children();
+    final List<Entry> children = children();
     int i = children.indexOf(focused);
     if (i >= 0) {
-      pers.solid.mishang.uc.screen.TextFieldListWidget.Entry entry2 = children.get(i);
+      Entry entry2 = children.get(i);
       this.setSelected(entry2, multiSel, contSel);
       this.scrollToEntry(entry2); // 无论如何均调用此 ensureVisible
     }
@@ -123,7 +122,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
   /**
    * 设置当前 TextFieldListScreen 的已选中的文本框。
    *
-   * @param entry 需要选中的 {@link pers.solid.mishang.uc.screen.TextFieldListWidget.Entry}。
+   * @param entry 需要选中的 {@link Entry}。
    * @implNote 此对象的 {@link #selected} 一般不是 null，而 {@link #focused} 会在此对象（{@link TextFieldListWidget}）失焦时变成 {@code null}。
    * @see AbstractSignBlockEditScreen#setFocused(GuiEventListener)
    */
@@ -135,19 +134,19 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
   /**
    * 设置当前 TextFieldListScreen 的已选中的文本框。
    *
-   * @param entry    需要选中的 {@link pers.solid.mishang.uc.screen.TextFieldListWidget.Entry}。
+   * @param entry    需要选中的 {@link Entry}。
    * @param multiSel 是否多选。如果为 {@code false}，则之前已经选中的其他元素将会未选中。
    * @param contSel  是否连续选。如果为 {@code true}，则将之前选中的和当前选中的均选中。
    * @see AbstractSignBlockEditScreen#setFocused(GuiEventListener)
    */
   public void setSelected(@Nullable TextFieldListWidget.Entry entry, boolean multiSel, boolean contSel) {
-    final pers.solid.mishang.uc.screen.TextFieldListWidget.Entry prevSelected = getSelected();
+    final Entry prevSelected = getSelected();
     super.setSelected(entry);
 
     if (entry == prevSelected && Minecraft.getInstance().getLastInputType().isKeyboard()) {
       // 通常是从其他地方通过键盘焦点返回此处的情形，不执行操作。
       Runnables.doNothing().run();
-    } else if (entry instanceof pers.solid.mishang.uc.screen.TextFieldListWidget.Entry) {
+    } else if (entry instanceof Entry) {
       if (contSel) {
         if (startContEntry == null) {
           startContEntry = prevSelected;
@@ -157,7 +156,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
       }
       final int contFrom = contSel ? children().indexOf(startContEntry) : -1;
       if (!multiSel) {
-        for (pers.solid.mishang.uc.screen.TextFieldListWidget.Entry selectedEntry : Set.copyOf(selectedEntries)) {
+        for (Entry selectedEntry : Set.copyOf(selectedEntries)) {
           selectedEntry.setSelected(false);
         }
       }
@@ -168,7 +167,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
         final int max = Math.max(contFrom, contUntil);
 
         for (int i = min; i <= max; i++) {
-          final pers.solid.mishang.uc.screen.TextFieldListWidget.Entry entry1 = children().get(i);
+          final Entry entry1 = children().get(i);
           entry1.setSelected(true);
         }
       } else if (multiSel && selectedEntries.contains(entry)) {
@@ -202,14 +201,14 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
       }
     } else if (input.isConfirmation()) {
       // 此时，children().isEmpty() 为 true
-      final pers.solid.mishang.uc.screen.TextFieldListWidget.Entry newEntry = addEmptyTextField(0);
+      final Entry newEntry = addEmptyTextField(0);
       TextFieldListWidget.this.setFocused(newEntry, false, false);
       signBlockEditScreen.setFocused(TextFieldListWidget.this);
       return true;
     }
     if (selectedEntries.size() > 1) {
       boolean success = false;
-      for (pers.solid.mishang.uc.screen.TextFieldListWidget.Entry selectedEntry : List.copyOf(selectedEntries)) {
+      for (Entry selectedEntry : List.copyOf(selectedEntries)) {
         success = selectedEntry.keyPressed(input) || success;
       }
       return success;
@@ -221,7 +220,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
   public boolean charTyped(CharacterEvent input) {
     if (selectedEntries.size() > 1) {
       boolean success = false;
-      for (pers.solid.mishang.uc.screen.TextFieldListWidget.Entry selectedEntry : selectedEntries) {
+      for (Entry selectedEntry : selectedEntries) {
         success = selectedEntry.charTyped(input) || success;
       }
       return success;
@@ -246,23 +245,23 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
 
   @Override
   public void updateWidgetNarration(NarrationElementOutput builder) {
-    builder.add(NarratedElementType.TITLE, TextBridge.translatable("narration.mishanguc.text_field_list"));
-    builder.add(NarratedElementType.USAGE, TextBridge.translatable("narration.mishanguc.text_field_list.usage"));
+    builder.add(NarratedElementType.TITLE, Component.translatable("narration.mishanguc.text_field_list"));
+    builder.add(NarratedElementType.USAGE, Component.translatable("narration.mishanguc.text_field_list.usage"));
     super.updateWidgetNarration(builder);
   }
 
   @Override
-  public void renderWidget(GuiGraphics guiGraphics, int i, int j, float f) {
-    super.renderWidget(guiGraphics, i, j, f);
+  public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    super.extractWidgetRenderState(graphics, mouseX, mouseY, a);
   }
 
   @Override
-  protected void renderSelection(GuiGraphics context, Entry entry, int color) {
+  protected void extractSelection(GuiGraphicsExtractor graphics, Entry entry, int outlineColor) {
     int i = entry.getX();
     int j = entry.getY();
     int k = i + entry.getWidth();
     int l = j + entry.getHeight();
-    context.fill(i + 1, j - 1, k - 1, l, 0xe0ffffff);
+    graphics.fill(i + 1, j - 1, k - 1, l, 0xe0ffffff);
   }
 
   @Contract(pure = true)
@@ -274,7 +273,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
     this.simplified = simplified;
     this.setHeight(heightForBackground);
     this.setScrollAmount(scrollAmount());
-    final pers.solid.mishang.uc.screen.TextFieldListWidget.Entry selectedOrNull = getSelected();
+    final Entry selectedOrNull = getSelected();
     if (selectedOrNull != null) {
       scrollToEntry(selectedOrNull);
     }
@@ -284,27 +283,28 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
     cuttingHeight = (Math.clamp(cuttingHeight + amount, 0, heightForBackground));
     this.setHeight(heightForBackground);
     setScrollAmount(scrollAmount()); // 更新滚动以避免滚动溢出
-    final pers.solid.mishang.uc.screen.TextFieldListWidget.Entry selectedOrNull = getSelected();
+    final Entry selectedOrNull = getSelected();
     if (selectedOrNull != null) {
       scrollToEntry(selectedOrNull);
     }
   }
 
-  protected void renderListSeparators(GuiGraphics context) {
-    super.renderListSeparators(context);
+  @Override
+  protected void extractListSeparators(GuiGraphicsExtractor graphics) {
+    super.extractListSeparators(graphics);
     if (simplified) {
       // 简化模式下，多显示一个。
       Identifier identifier2 = this.minecraft.level == null ? Screen.FOOTER_SEPARATOR : Screen.INWORLD_FOOTER_SEPARATOR;
-      context.blit(RenderPipelines.GUI_TEXTURED, identifier2, this.getX(), this.getY() + heightForBackground, 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
+      graphics.blit(RenderPipelines.GUI_TEXTURED, identifier2, this.getX(), this.getY() + heightForBackground, 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
     }
   }
 
 
   @Override
-  protected void renderListBackground(GuiGraphics context) {
+  protected void extractListBackground(GuiGraphicsExtractor graphics) {
     Identifier identifier = background;
-    context.blit(RenderPipelines.GUI_TEXTURED, identifier, this.getX(), 0, 0, 0, this.getWidth(), this.getY(), 32, 32);
-    context.blit(RenderPipelines.GUI_TEXTURED, identifier, this.getX(), getY() + heightForBackground, 0, 0, this.getWidth(), heightForBackground, 32, 32);
+    graphics.blit(RenderPipelines.GUI_TEXTURED, identifier, this.getX(), 0, 0, 0, this.getWidth(), this.getY(), 32, 32);
+    graphics.blit(RenderPipelines.GUI_TEXTURED, identifier, this.getX(), getY() + heightForBackground, 0, 0, this.getWidth(), heightForBackground, 32, 32);
   }
 
   /**
@@ -314,14 +314,14 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
    * @param textContext 需要添加的 {@link TextContext}。
    * @param isExisting  是否为现有的，如果是，则不会将 {@link AbstractSignBlockEditScreen#changed} 设为 <code>true</code>。
    */
-  public pers.solid.mishang.uc.screen.TextFieldListWidget.Entry addTextField(int index, TextContext textContext, boolean isExisting) {
+  public Entry addTextField(int index, TextContext textContext, boolean isExisting) {
     if (!isExisting) {
       signBlockEditScreen.changed = true;
     }
-    final pers.solid.mishang.uc.screen.TextFieldListWidget.Entry newEntry = createEntry(textContext);
+    final Entry newEntry = createEntry(textContext);
     final int newIndex = addEntry(newEntry);
     if (index != -1) {
-      @SuppressWarnings("unchecked") final List<pers.solid.mishang.uc.screen.TextFieldListWidget.Entry> rawChildren = ((EntryListWidgetAccessor<pers.solid.mishang.uc.screen.TextFieldListWidget.Entry>) this).getChildren();
+      @SuppressWarnings("unchecked") final List<Entry> rawChildren = ((EntryListWidgetAccessor<Entry>) this).getChildren();
       rawChildren.remove(newIndex);
       rawChildren.add(index, newEntry);
     }
@@ -332,8 +332,8 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
     return newEntry;
   }
 
-  private pers.solid.mishang.uc.screen.TextFieldListWidget.Entry createEntry(TextContext textContext) {
-    final EditBox textFieldWidget = new EditBox(Objects.requireNonNull(signBlockEditScreen.getFont(), "textRenderer"), 2, 0, signBlockEditScreen.width - 4, 15, TextBridge.empty());
+  private Entry createEntry(TextContext textContext) {
+    final EditBox textFieldWidget = new EditBox(Objects.requireNonNull(signBlockEditScreen.getFont(), "textRenderer"), 2, 0, signBlockEditScreen.width - 4, 15, Component.empty());
     textFieldWidget.setMaxLength(Integer.MAX_VALUE);
     if (textContext.extra != null) {
       textFieldWidget.setValue(String.format("-%s %s", textContext.extra.getId(), textContext.extra.asStringArgs()));
@@ -346,10 +346,10 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
           textFieldWidget.setValue(text);
         }
       } else {
-        textFieldWidget.setValue("-nbt " + ComponentSerialization.CODEC.encodeStart(signBlockEditScreen.registryLookup.createSerializationContext(NbtOps.INSTANCE), textContext.text).getOrThrow().toString());
+        textFieldWidget.setValue("-nbt " + ComponentSerialization.CODEC.encodeStart(signBlockEditScreen.registryLookup.createSerializationContext(NbtOps.INSTANCE), textContext.text).getOrThrow());
       }
     }
-    final pers.solid.mishang.uc.screen.TextFieldListWidget.Entry newEntry = new pers.solid.mishang.uc.screen.TextFieldListWidget.Entry(textFieldWidget, textContext);
+    final Entry newEntry = new Entry(textFieldWidget, textContext);
     textFieldWidget.setResponder(s -> {
       final TextContext textContext1 = newEntry.textContext;
       final Matcher matcher = Pattern.compile("^-(\\w+?) (.+)$").matcher(s);
@@ -359,7 +359,9 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
         final String name = matcher.group(1);
         final String value = matcher.group(2);
         switch (name) {
-          case "literal" -> textContext1.text = TextBridge.literal(value);
+          case "literal" -> {
+            textContext1.text = Component.literal(value);
+          }
           case "json" -> {
             try {
               final JsonElement jsonElement = TextContext.GSON.fromJson(value, JsonElement.class);
@@ -394,10 +396,10 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
                 textFieldWidget.setTextColor(0xffff5555);
               } else if (specialDrawable != null) {
                 textContext1.extra = specialDrawable;
-                textContext1.text = TextBridge.empty();
+                textContext1.text = Component.empty();
               } else {
                 textContext1.extra = null;
-                textContext1.text = TextBridge.literal(s);
+                textContext1.text = Component.literal(s);
               }
             } catch (CommandSyntaxException e) {
               textFieldWidget.setTextColor(0xffff5555);
@@ -407,7 +409,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
         }
       } else {
         textContext1.extra = null;
-        textContext1.text = TextBridge.literal(s);
+        textContext1.text = Component.literal(s);
       }
       signBlockEditScreen.changed = true;
     });
@@ -420,7 +422,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
    * @param index 添加到的位置，对应在数组或列表中的次序。
    */
 
-  public pers.solid.mishang.uc.screen.TextFieldListWidget.Entry addEmptyTextField(int index) {
+  public Entry addEmptyTextField(int index) {
     // 添加时，默认相当于上一行的。
     final TextContext emptyTextContext = index > 0 ? children().get(index - 1).textContext.clone() : signBlockEditScreen.entity.createDefaultTextContext();
     emptyTextContext.text = null;
@@ -432,8 +434,8 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
    * 移除一行文本。此方法执行时，不会自动选中相邻文本。
    */
   public void removeTextField(int index) {
-    final List<pers.solid.mishang.uc.screen.TextFieldListWidget.Entry> children = children();
-    final pers.solid.mishang.uc.screen.TextFieldListWidget.Entry removedEntry = children.get(index);
+    final List<Entry> children = children();
+    final Entry removedEntry = children.get(index);
     removeEntry(removedEntry);
     removedEntry.setSelected(false);
     // 删除一行元素后，对滚动数量进行一次 clamp，以避免出现过度滚动的情况。
@@ -448,7 +450,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
    */
   public void clearTextFields() {
     clearEntries();
-    for (pers.solid.mishang.uc.screen.TextFieldListWidget.Entry selectedEntry : selectedEntries) {
+    for (Entry selectedEntry : selectedEntries) {
       selectedEntry.textFieldWidget.setFocused(false);
     }
     selectedEntries.clear();
@@ -457,16 +459,16 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
     signBlockEditScreen.changed = true;
   }
 
-  public void moveUpEntries(Collection<pers.solid.mishang.uc.screen.TextFieldListWidget.Entry> entries) {
+  public void moveUpEntries(Collection<Entry> entries) {
     if (entries.isEmpty()) {
       return;
     }
 
     // 确保按顺序排序
-    final List<pers.solid.mishang.uc.screen.TextFieldListWidget.Entry> childrenCopy = children();
-    final List<pers.solid.mishang.uc.screen.TextFieldListWidget.Entry> orderedCopy = childrenCopy.stream().filter(entries::contains).toList();
+    final List<Entry> childrenCopy = children();
+    final List<Entry> orderedCopy = childrenCopy.stream().filter(entries::contains).toList();
 
-    for (pers.solid.mishang.uc.screen.TextFieldListWidget.Entry entry : orderedCopy) {
+    for (Entry entry : orderedCopy) {
       final int i = childrenCopy.indexOf(entry);
       if (i < 0) {
         Mishanguc.MISHANG_LOGGER.warn("Unexpected entry which is not in children when moving up: {}", entry);
@@ -479,16 +481,16 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
     }
   }
 
-  public void moveDownEntries(Collection<pers.solid.mishang.uc.screen.TextFieldListWidget.Entry> entries) {
+  public void moveDownEntries(Collection<Entry> entries) {
     if (entries.isEmpty()) {
       return;
     }
 
     // 确保按倒序排序
-    final List<pers.solid.mishang.uc.screen.TextFieldListWidget.Entry> childrenCopy = children();
-    final List<pers.solid.mishang.uc.screen.TextFieldListWidget.Entry> reversedEntries = Lists.reverse(childrenCopy).stream().filter(entries::contains).toList();
+    final List<Entry> childrenCopy = children();
+    final List<Entry> reversedEntries = Lists.reverse(childrenCopy).stream().filter(entries::contains).toList();
 
-    for (pers.solid.mishang.uc.screen.TextFieldListWidget.Entry entry : reversedEntries) {
+    for (Entry entry : reversedEntries) {
       final int i = childrenCopy.indexOf(entry);
       if (i < 0) {
         Mishanguc.MISHANG_LOGGER.warn("Unexpected entry which is not in children when moving down: {}", entry);
@@ -511,7 +513,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
    * 的子类，所以对该类进行了包装。
    */
   @Environment(EnvType.CLIENT)
-  public class Entry extends ObjectSelectionList.Entry<pers.solid.mishang.uc.screen.TextFieldListWidget.Entry> implements NarrationSupplier {
+  public class Entry extends ObjectSelectionList.Entry<Entry> implements NarrationSupplier {
     public final EditBox textFieldWidget;
     public final TextContext textContext;
 
@@ -524,7 +526,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
     public boolean equals(Object o) {
       if (this == o)
         return true;
-      if (!(o instanceof pers.solid.mishang.uc.screen.TextFieldListWidget.Entry entry))
+      if (!(o instanceof Entry entry))
         return false;
 
       return textFieldWidget.equals(entry.textFieldWidget);
@@ -550,7 +552,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
     @Override
     public void setWidth(int width) {
       super.setWidth(width);
-      final boolean scrollbarVisible = scrollbarVisible();
+      final boolean scrollbarVisible = scrollable();
       final int elementWidth = getContentWidth() - (scrollbarVisible ? 6 : 0);
       textFieldWidget.setWidth(elementWidth);
     }
@@ -571,8 +573,8 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
     }
 
     @Override
-    public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-      textFieldWidget.render(context, mouseX, mouseY, deltaTicks);
+    public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+      textFieldWidget.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
     }
 
     @Override
@@ -592,12 +594,12 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
     public boolean keyPressed(KeyEvent input) {
       switch (input.input()) {
         case GLFW.GLFW_KEY_ENTER -> {
-          final List<pers.solid.mishang.uc.screen.TextFieldListWidget.Entry> children = TextFieldListWidget.this.children();
+          final List<Entry> children = TextFieldListWidget.this.children();
           final int index = children.indexOf(this);
           if (index + 1 < children.size()) {
             TextFieldListWidget.this.setFocused(children.get(index + 1));
           } else if (!children.isEmpty()) {
-            final pers.solid.mishang.uc.screen.TextFieldListWidget.Entry entry = addEmptyTextField(index + 1);
+            final Entry entry = addEmptyTextField(index + 1);
             TextFieldListWidget.this.setFocused(entry, false, false);
           }
         }
@@ -607,7 +609,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
             if (index >= 0) {
               TextFieldListWidget.this.removeTextField(index);
               if (!children().isEmpty()) {
-                final pers.solid.mishang.uc.screen.TextFieldListWidget.Entry nearbyEntry = TextFieldListWidget.this.children().get(Mth.clamp(index - 1, 0, children().size() - 1));
+                final Entry nearbyEntry = TextFieldListWidget.this.children().get(Mth.clamp(index - 1, 0, children().size() - 1));
                 TextFieldListWidget.this.setFocused(nearbyEntry, false, false);
               }
             }

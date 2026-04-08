@@ -14,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.BlockGetter;
@@ -32,7 +33,6 @@ import pers.solid.mishang.uc.blockentity.FullWallSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.ModelHelper;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Map;
 
@@ -68,9 +68,7 @@ public class FullWallSignBlock extends WallSignBlock {
 
   @Override
   public MutableComponent getName() {
-    return baseBlock == null
-        ? super.getName()
-        : TextBridge.translatable("block.mishanguc.full_wall_sign", baseBlock.getName());
+    return baseBlock == null ? super.getName() : Component.translatable("block.mishanguc.full_wall_sign", baseBlock.getName());
   }
 
   @Override
@@ -111,7 +109,7 @@ public class FullWallSignBlock extends WallSignBlock {
       blockStateModelGenerator.blockStateOutput.accept(createBlockStates(ModelLocationUtils.getModelLocation(this)));
       return;
     }
-    final TextureMapping textures = TextureMapping.defaultTexture(ModelHelper.getTextureOf(baseBlock));
+    final TextureMapping textures = TextureMapping.defaultTexture(ModelHelper.getMaterialOf(baseBlock));
     final Identifier modelId = MishangucModels.FULL_WALL_SIGN.create(this, textures, blockStateModelGenerator.modelOutput);
     blockStateModelGenerator.blockStateOutput.accept(createBlockStates(modelId));
   }

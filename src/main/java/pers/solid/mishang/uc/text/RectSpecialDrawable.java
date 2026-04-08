@@ -9,12 +9,12 @@ import net.minecraft.client.gui.font.glyphs.EffectGlyph;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.ARGB;
 import org.joml.Matrix4f;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.mixin.TextRendererAccessor;
-import pers.solid.mishang.uc.util.TextBridge;
 
 /**
  * 长方形，可以指定其宽度和高度。
@@ -61,9 +61,9 @@ public record RectSpecialDrawable(float width, float height, TextContext textCon
   public static RectSpecialDrawable fromStringArgs(TextContext textContext, String args) throws CommandSyntaxException {
     final String[] split = args.split(" ");
     if (split.length < 2) {
-      throw new CommandSyntaxException(null, TextBridge.translatable("special_drawable.rect.too_few", 2, split.length));
+      throw new CommandSyntaxException(null, Component.translatable("special_drawable.rect.too_few", 2, split.length));
     } else if (split.length > 2) {
-      throw new CommandSyntaxException(null, TextBridge.translatable("special_drawable.rect.too_many", 2, split.length));
+      throw new CommandSyntaxException(null, Component.translatable("special_drawable.rect.too_many", 2, split.length));
     }
     final float width;
     try {
@@ -120,8 +120,8 @@ public record RectSpecialDrawable(float width, float height, TextContext textCon
 
   @Override
   public MutableComponent asStyledText() {
-    return TextBridge.empty()
-        .append(TextBridge.literal("■").withStyle(style -> style.withColor(textContext.color)))
+    return Component.empty()
+        .append(Component.literal("■").withStyle(style -> style.withColor(textContext.color)))
         .append(" (" + width + "×" + height + ")");
   }
 }

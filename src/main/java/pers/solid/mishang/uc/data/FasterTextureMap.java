@@ -8,7 +8,7 @@ import net.minecraft.client.data.models.model.TextureSlot;
 @Environment(EnvType.CLIENT)
 public class FasterTextureMap extends TextureMapping implements Cloneable {
   public FasterTextureMap varP(TextureSlot textureKey, String val) {
-    put(textureKey, MishangucModels.texture(val));
+    put(textureKey, MishangucModels.material(val));
     return this;
   }
 

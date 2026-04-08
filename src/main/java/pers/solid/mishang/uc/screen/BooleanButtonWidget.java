@@ -12,10 +12,10 @@ import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -95,8 +95,10 @@ public class BooleanButtonWidget extends Button.Plain implements TooltipUpdated 
   public void updateTooltip() {
     final Boolean value = getValue();
     final net.minecraft.network.chat.Component tooltip = tooltipSupplier == null ? null : tooltipSupplier.apply(value);
-    final MutableComponent content = value == null ? TextBridge.empty().append(getSummaryMessage()) : CommonComponents.optionStatus(getSummaryMessage(), value);
-    final MutableComponent narration = value == null ? TextBridge.empty() : TextBridge.translatable("narration.mishanguc.button.current_value", value ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF);
+    final MutableComponent content;
+    content = value == null ? Component.empty().append(getSummaryMessage()) : CommonComponents.optionStatus(getSummaryMessage(), value);
+    final MutableComponent narration;
+    narration = value == null ? Component.empty() : Component.translatable("narration.mishanguc.button.current_value", value ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF);
     if (tooltip != null) {
       content.append(CommonComponents.NEW_LINE).append(tooltip);
       narration.append(CommonComponents.NEW_LINE).append(tooltip);
@@ -158,11 +160,9 @@ public class BooleanButtonWidget extends Button.Plain implements TooltipUpdated 
   public net.minecraft.network.chat.Component getMessage() {
     final net.minecraft.network.chat.Component renderedName = renderedNameSupplier == null ? super.getMessage() : renderedNameSupplier.apply(getValue());
     final @Nullable Boolean value = getValue();
-    return value == null
-        ? renderedName
-        : TextBridge.empty()
-        .append(renderedName)
-        .withStyle(style -> style.withColor(value ? 0xb2ff96 : 0xffac96));
+    return value == null ? renderedName : Component.empty()
+                                          .append(renderedName)
+                                          .withStyle(style -> style.withColor(value ? 0xb2ff96 : 0xffac96));
   }
 
   @Override
@@ -175,9 +175,9 @@ public class BooleanButtonWidget extends Button.Plain implements TooltipUpdated 
   protected void defaultButtonNarrationText(NarrationElementOutput builder) {
     super.defaultButtonNarrationText(builder);
     if (getValue() == null) {
-      builder.add(NarratedElementType.USAGE, TextBridge.translatable("narration.mishanguc.button.null"));
+      builder.add(NarratedElementType.USAGE, Component.translatable("narration.mishanguc.button.null"));
     } else {
-      builder.add(NarratedElementType.USAGE, TextBridge.translatable("narration.mishanguc.button.boolean_usage"));
+      builder.add(NarratedElementType.USAGE, Component.translatable("narration.mishanguc.button.boolean_usage"));
     }
   }
 

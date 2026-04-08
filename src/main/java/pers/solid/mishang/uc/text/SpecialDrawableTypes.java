@@ -6,10 +6,10 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.IdentifierException;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
-import pers.solid.mishang.uc.util.TextBridge;
 
 public final class SpecialDrawableTypes {
   private SpecialDrawableTypes() {
@@ -24,7 +24,7 @@ public final class SpecialDrawableTypes {
   public static final SpecialDrawableType<PatternSpecialDrawable> PATTERN = register("pattern", PatternSpecialDrawable::fromNbt, (textContext, args) -> {
     final PatternSpecialDrawable pattern = PatternSpecialDrawable.fromName(textContext, args);
     if (pattern == null) {
-      throw new CommandSyntaxException(null, TextBridge.translatable("special_drawable.pattern.invalid_name", args));
+      throw new CommandSyntaxException(null, Component.translatable("special_drawable.pattern.invalid_name", args));
     } else {
       return pattern;
     }
@@ -44,7 +44,7 @@ public final class SpecialDrawableTypes {
       try {
         TextureSpecialDrawable.validateIdentifier(identifier);
       } catch (IllegalArgumentException e) {
-        throw new CommandSyntaxException(null, TextBridge.literal(e.getMessage()));
+        throw new CommandSyntaxException(null, Component.literal(e.getMessage()));
       }
       return new TextureSpecialDrawable(identifier, textContext);
     }

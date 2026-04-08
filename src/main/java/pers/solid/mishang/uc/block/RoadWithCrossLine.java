@@ -19,7 +19,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.data.FasterTextureMap;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
-import pers.solid.mishang.uc.util.*;
+import pers.solid.mishang.uc.util.EightHorizontalDirection;
+import pers.solid.mishang.uc.util.LineColor;
+import pers.solid.mishang.uc.util.LineType;
+import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.List;
 
@@ -40,7 +43,7 @@ public interface RoadWithCrossLine extends Road {
 
     @Override
     public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
-      tooltip.add(TextBridge.translatable("lineType.cross.composed", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
+      tooltip.add(Component.translatable("lineType.cross.composed", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
     }
 
     @Environment(EnvType.CLIENT)

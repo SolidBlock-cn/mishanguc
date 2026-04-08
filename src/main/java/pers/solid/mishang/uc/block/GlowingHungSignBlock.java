@@ -8,9 +8,11 @@ import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
@@ -23,23 +25,22 @@ import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.item.ColoredTintSource;
-import pers.solid.mishang.uc.util.TextBridge;
 
 public class GlowingHungSignBlock extends HungSignBlock {
   public static final MapCodec<GlowingHungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, GlowingHungSignBlock::new));
   @ApiStatus.AvailableSince("0.1.7")
-  protected static final Identifier DEFAULT_GLOW_TEXTURE = Mishanguc.id("block/white_light");
-  public Identifier glowTexture;
+  protected static final Material DEFAULT_GLOW_MATERIAL = new Material(Mishanguc.id("block/white_light"));
+  public Material glowMaterial;
 
   public GlowingHungSignBlock(@Nullable Block baseBlock, Properties settings) {
     super(baseBlock, settings.lightLevel(s -> 15));
-    this.glowTexture = DEFAULT_GLOW_TEXTURE;
+    this.glowMaterial = DEFAULT_GLOW_MATERIAL;
   }
 
   @Override
   public MutableComponent getName() {
     if (baseBlock != null) {
-      return TextBridge.translatable("block.mishanguc.glowing_hung_sign", baseBlock.getName());
+      return Component.translatable("block.mishanguc.glowing_hung_sign", baseBlock.getName());
     }
     return super.getName();
   }
@@ -47,11 +48,11 @@ public class GlowingHungSignBlock extends HungSignBlock {
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final Identifier texture = getBaseTexture();
-    final TextureMapping textures = TextureMapping.defaultTexture(texture);
-    if (barTexture != null) textures.put(MishangucTextureKeys.BAR, barTexture);
-    if (textureTop != null) textures.put(MishangucTextureKeys.TEXTURE_TOP, textureTop);
-    textures.put(MishangucTextureKeys.GLOW, glowTexture);
+    final Material material = getBaseMaterial();
+    final TextureMapping textures = TextureMapping.defaultTexture(material);
+    if (barMaterial != null) textures.put(MishangucTextureKeys.BAR, barMaterial);
+    if (materialTop != null) textures.put(MishangucTextureKeys.TEXTURE_TOP, materialTop);
+    textures.put(MishangucTextureKeys.GLOW, glowMaterial);
 
     final Identifier id = MishangucModels.GLOWING_HUNG_SIGN.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier bodyId = MishangucModels.GLOWING_HUNG_SIGN_BODY.create(this, textures, blockStateModelGenerator.modelOutput);

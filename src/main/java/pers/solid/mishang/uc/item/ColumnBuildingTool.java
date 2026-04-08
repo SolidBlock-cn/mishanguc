@@ -4,14 +4,14 @@ import it.unimi.dsi.fastutil.longs.LongObjectPair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.state.BlockOutlineRenderState;
+import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -47,7 +47,6 @@ import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.render.state.BuildingToolState;
 import pers.solid.mishang.uc.render.state.MishangRenderState;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
-import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
@@ -73,16 +72,16 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
 
   @Override
   public Component getName(ItemStack stack) {
-    return TextBridge.translatable("item.mishanguc.column_building_tool.format", getName(), Integer.toString(getLength(stack)));
+    return Component.translatable("item.mishanguc.column_building_tool.format", super.getName(stack), Integer.toString(getLength(stack)));
   }
 
   @Override
   public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-    tooltip.add(TextBridge.translatable("item.mishanguc.column_building_tool.tooltip.1").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.column_building_tool.tooltip.2").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.column_building_tool.tooltip.3").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.column_building_tool.tooltip.1").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.column_building_tool.tooltip.2").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.column_building_tool.tooltip.3").withStyle(ChatFormatting.GRAY));
     if (stack.getOrDefault(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT).shows(MishangucComponents.LENGTH)) {
-      tooltip.add(TextBridge.translatable("item.mishanguc.column_building_tool.tooltip.length", TextBridge.literal(Integer.toString(getLength(stack))).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY));
+      tooltip.add(Component.translatable("item.mishanguc.column_building_tool.tooltip.length", Component.literal(Integer.toString(getLength(stack))).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY));
     }
   }
 
@@ -182,7 +181,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable MishangRenderState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  public @Nullable MishangRenderState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, LevelExtractionContext context, @Nullable HitResult result) {
     if (!player.isCreative()) {
       // 只有在创造模式下，才会绘制边框。
       return null;
@@ -199,7 +198,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
       return null;
     }
     final BuildingToolState buildingToolState = new BuildingToolState();
-    final ClientLevel world = context.world();
+    final ClientLevel world = context.level();
     final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockHitResult.getBlockPos(), player, stack, raycast, includesFluid);
 
     // 绘制将要放置的方块。
@@ -246,7 +245,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
 
   @Environment(EnvType.CLIENT)
   @Override
-  public boolean renderBlockOutline(Player player, ItemStack itemStack, WorldRenderContext context, BlockOutlineRenderState outlineRenderState) {
+  public boolean renderBlockOutline(Player player, ItemStack itemStack, LevelRenderContext context, BlockOutlineRenderState outlineRenderState) {
     return BuildingToolState.render(context);
   }
 }

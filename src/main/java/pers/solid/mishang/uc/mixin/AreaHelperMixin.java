@@ -16,8 +16,8 @@ public abstract class AreaHelperMixin {
     return original || state.is(ColoredBlocks.COLORED_NETHER_PORTAL);
   }
 
-  @ModifyExpressionValue(method = "getDistanceUntilTop", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z"))
-  private static boolean redirectedPotentialHeight(boolean original, @Local(name = "blockState") BlockState blockState) {
+  @ModifyExpressionValue(method = "getDistanceUntilTop", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Ljava/lang/Object;)Z"))
+  private static boolean redirectedPotentialHeight(boolean original, @Local BlockState blockState) {
     return original || blockState.is(ColoredBlocks.COLORED_NETHER_PORTAL);
   }
 }

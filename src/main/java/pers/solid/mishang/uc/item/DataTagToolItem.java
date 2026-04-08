@@ -34,7 +34,6 @@ import pers.solid.mishang.uc.networking.GetBlockDataPayload;
 import pers.solid.mishang.uc.networking.GetEntityDataPayload;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.util.NbtPrettyPrinter;
-import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
@@ -47,7 +46,7 @@ public class DataTagToolItem extends BlockToolItemWithEntity implements Interact
 
   @Override
   public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-    tooltip.add(TextBridge.translatable("item.mishanguc.data_tag_tool.tooltip").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.data_tag_tool.tooltip").withStyle(ChatFormatting.GRAY));
   }
 
   @Override
@@ -129,15 +128,15 @@ public class DataTagToolItem extends BlockToolItemWithEntity implements Interact
         // 由于此处仅限客户端执行，因此可以放心调用 Block#getName。
         final CompoundTag blockData = payload.data();
         client.execute(() -> {
-          client.gui.getChat().addMessage(
-              TextBridge.translatable("debug.mishanguc.dataTag.block.header", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), block.getName().withStyle(ChatFormatting.BOLD))
+          client.gui.getChat().addClientSystemMessage(
+              Component.translatable("debug.mishanguc.dataTag.block.header", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), block.getName().withStyle(ChatFormatting.BOLD))
                   .withStyle(ChatFormatting.YELLOW));
-          client.gui.getChat().addMessage(NbtPrettyPrinter.serialize(blockData));
+          client.gui.getChat().addClientSystemMessage(NbtPrettyPrinter.serialize(blockData));
         });
       } else {
         // 此时认为该方块没有数据。
-        client.execute(() -> client.gui.getChat().addMessage(
-            TextBridge.translatable("debug.mishanguc.dataTag.block.null", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), block.getName().withStyle(ChatFormatting.BOLD))
+        client.execute(() -> client.gui.getChat().addClientSystemMessage(
+            Component.translatable("debug.mishanguc.dataTag.block.null", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), block.getName().withStyle(ChatFormatting.BOLD))
                 .withStyle(ChatFormatting.RED)));
       }
     }
@@ -155,10 +154,10 @@ public class DataTagToolItem extends BlockToolItemWithEntity implements Interact
       final BlockPos entityPos = payload.blockPos();
       final CompoundTag entityNbt = payload.entityNbt();
       final Minecraft client = context.client();
-      client.gui.getChat().addMessage(TextBridge.translatable("debug.mishanguc.dataTag.entity.entity", String.format(
-              "%s %s %s", entityPos.getX(), entityPos.getY(), entityPos.getZ()), TextBridge.literal("").append(entityName).withStyle(ChatFormatting.BOLD))
+      client.gui.getChat().addClientSystemMessage(Component.translatable("debug.mishanguc.dataTag.entity.entity", String.format(
+              "%s %s %s", entityPos.getX(), entityPos.getY(), entityPos.getZ()), Component.literal("").append(entityName).withStyle(ChatFormatting.BOLD))
           .withStyle(ChatFormatting.YELLOW));
-      client.gui.getChat().addMessage(NbtPrettyPrinter.serialize(entityNbt));
+      client.gui.getChat().addClientSystemMessage(NbtPrettyPrinter.serialize(entityNbt));
     }
   }
 }

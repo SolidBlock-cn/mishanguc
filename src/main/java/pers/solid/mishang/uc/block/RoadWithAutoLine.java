@@ -25,7 +25,6 @@ import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.util.EightHorizontalDirection;
 import pers.solid.mishang.uc.util.LineType;
 import pers.solid.mishang.uc.util.RoadConnectionState;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -120,10 +119,10 @@ public interface RoadWithAutoLine extends Road {
       ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     Road.super.appendRoadTooltip(stack, context, tooltip, options);
     tooltip.add(
-        TextBridge.translatable("block.mishanguc.tooltip.road_with_auto_line.1")
+        Component.translatable("block.mishanguc.tooltip.road_with_auto_line.1")
             .withStyle(ChatFormatting.GRAY));
     tooltip.add(
-        TextBridge.translatable("block.mishanguc.tooltip.road_with_auto_line.2")
+        Component.translatable("block.mishanguc.tooltip.road_with_auto_line.2")
             .withStyle(ChatFormatting.GRAY));
   }
 

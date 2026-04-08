@@ -31,7 +31,7 @@ public abstract class BeaconBlockEntityMixin {
   private static final TagKey<Block> TINTS_BEACON_BEAMS = TagKey.create(Registries.BLOCK, Mishanguc.id("tints_beacon_beams"));
 
   @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getBlock()Lnet/minecraft/world/level/block/Block;", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
-  private static void acceptColoredBlocksInTick(Level world, BlockPos pos, BlockState state, BeaconBlockEntity blockEntity, CallbackInfo ci, int i, int j, int k, BlockPos blockPos, @Nullable BeaconBeamOwner.Section beamSegment, int l, int m, BlockState blockState, @Share("is_colored") LocalBooleanRef localBooleanRef, @Local(name = "section") LocalRef<BeaconBeamOwner.Section> beamSegmentLocalRef) {
+  private static void acceptColoredBlocksInTick(Level world, BlockPos pos, BlockState state, BeaconBlockEntity blockEntity, CallbackInfo ci, int i, int j, int k, BlockPos blockPos, @Nullable BeaconBeamOwner.Section beamSegment, int l, int m, BlockState blockState, @Share("is_colored") LocalBooleanRef localBooleanRef, @Local(name = "section", ordinal = 0) LocalRef<BeaconBeamOwner.Section> beamSegmentLocalRef) {
     final List<BeaconBeamOwner.Section> checkingBeamSegments = ((BeaconBlockEntityAccessor) blockEntity).getCheckingBeamSegments();
     if (world.getBlockEntity(blockPos) instanceof ColoredBlockEntity coloredBlockEntity && blockState.is(TINTS_BEACON_BEAMS)) {
       localBooleanRef.set(true);

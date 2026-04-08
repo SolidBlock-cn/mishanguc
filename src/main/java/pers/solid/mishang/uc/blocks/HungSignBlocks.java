@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.blocks;
 
 import com.google.common.annotations.Beta;
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
@@ -10,7 +11,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.MiningLevel;
-import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.data.MishangucRecipeGenerator;
 
@@ -153,62 +153,62 @@ public final class HungSignBlocks extends MishangucBlocks {
   public static final HungSignBarBlock BAMBOO_HUNG_SIGN_BAR = registerBar("bamboo_hung_sign_bar", Blocks.BAMBOO_BLOCK, Block.Properties.ofFullCopy(Blocks.BAMBOO_BLOCK).mapColor(MapColor.PLANT));
 
   static {
-    OAK_WOOD_HUNG_SIGN.baseTexture = OAK_WOOD_HUNG_SIGN.barTexture = OAK_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/oak_log");
-    SPRUCE_WOOD_HUNG_SIGN.baseTexture = SPRUCE_WOOD_HUNG_SIGN.barTexture = SPRUCE_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/spruce_log");
-    BIRCH_WOOD_HUNG_SIGN.baseTexture = BIRCH_WOOD_HUNG_SIGN.barTexture = BIRCH_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/birch_log");
-    JUNGLE_WOOD_HUNG_SIGN.baseTexture = JUNGLE_WOOD_HUNG_SIGN.barTexture = JUNGLE_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/jungle_log");
-    ACACIA_WOOD_HUNG_SIGN.baseTexture = ACACIA_WOOD_HUNG_SIGN.barTexture = ACACIA_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/acacia_log");
-    CHERRY_WOOD_HUNG_SIGN.baseTexture = CHERRY_WOOD_HUNG_SIGN.barTexture = CHERRY_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/cherry_log");
-    DARK_OAK_WOOD_HUNG_SIGN.baseTexture = DARK_OAK_WOOD_HUNG_SIGN.barTexture = DARK_OAK_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/dark_oak_log");
-    PALE_OAK_WOOD_HUNG_SIGN.baseTexture = PALE_OAK_WOOD_HUNG_SIGN.barTexture = PALE_OAK_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/pale_oak_log");
-    MANGROVE_WOOD_HUNG_SIGN.baseTexture = MANGROVE_WOOD_HUNG_SIGN.barTexture = MANGROVE_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/mangrove_log");
-    CRIMSON_HYPHAE_HUNG_SIGN.baseTexture = CRIMSON_HYPHAE_HUNG_SIGN.barTexture = CRIMSON_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/crimson_stem");
-    WARPED_HYPHAE_HUNG_SIGN.baseTexture = WARPED_HYPHAE_HUNG_SIGN.barTexture = WARPED_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/warped_stem");
-    STRIPPED_OAK_WOOD_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_oak_log");
-    STRIPPED_SPRUCE_WOOD_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_spruce_log");
-    STRIPPED_BIRCH_WOOD_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_birch_log");
-    STRIPPED_JUNGLE_WOOD_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_jungle_log");
-    STRIPPED_ACACIA_WOOD_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_acacia_log");
-    STRIPPED_CHERRY_WOOD_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_cherry_log");
-    STRIPPED_DARK_OAK_WOOD_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_dark_oak_log");
-    STRIPPED_PALE_OAK_WOOD_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_pale_oak_log");
-    STRIPPED_MANGROVE_WOOD_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_mangrove_log");
-    STRIPPED_CRIMSON_HYPHAE_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_crimson_stem");
-    STRIPPED_WARPED_HYPHAE_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_warped_stem");
-    OAK_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/oak_log");
-    SPRUCE_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/spruce_log");
-    BIRCH_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/birch_log");
-    JUNGLE_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/jungle_log");
-    ACACIA_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/acacia_log");
-    CHERRY_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/cherry_log");
-    DARK_OAK_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/dark_oak_log");
-    PALE_OAK_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/pale_oak_log");
-    MANGROVE_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/mangrove_log");
-    CRIMSON_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/crimson_stem");
-    WARPED_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/warped_stem");
-    OAK_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/oak_log");
-    SPRUCE_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/spruce_log");
-    BIRCH_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/birch_log");
-    JUNGLE_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/jungle_log");
-    ACACIA_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/acacia_log");
-    CHERRY_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/cherry_log");
-    DARK_OAK_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/dark_oak_log");
-    PALE_OAK_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/pale_oak_log");
-    MANGROVE_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/mangrove_log");
-    CRIMSON_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/crimson_stem");
-    WARPED_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/warped_stem");
-    STRIPPED_OAK_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_oak_log");
-    STRIPPED_SPRUCE_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_spruce_log");
-    STRIPPED_BIRCH_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_birch_log");
-    STRIPPED_JUNGLE_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_jungle_log");
-    STRIPPED_ACACIA_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_acacia_log");
-    STRIPPED_CHERRY_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_cherry_log");
-    STRIPPED_DARK_OAK_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_dark_oak_log");
-    STRIPPED_PALE_OAK_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_pale_oak_log");
-    STRIPPED_MANGROVE_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_mangrove_log");
-    STRIPPED_CRIMSON_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_crimson_stem");
-    STRIPPED_WARPED_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_warped_stem");
-    BAMBOO_HUNG_SIGN.barTexture = BAMBOO_HUNG_SIGN.textureTop = BAMBOO_PLANK_HUNG_SIGN.barTexture = BAMBOO_PLANK_HUNG_SIGN.textureTop = BAMBOO_MOSAIC_HUNG_SIGN.barTexture = BAMBOO_MOSAIC_HUNG_SIGN.textureTop = BAMBOO_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/bamboo_block");
+    OAK_WOOD_HUNG_SIGN.baseMaterial = OAK_WOOD_HUNG_SIGN.barMaterial = OAK_HUNG_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/oak_log"));
+    SPRUCE_WOOD_HUNG_SIGN.baseMaterial = SPRUCE_WOOD_HUNG_SIGN.barMaterial = SPRUCE_HUNG_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/spruce_log"));
+    BIRCH_WOOD_HUNG_SIGN.baseMaterial = BIRCH_WOOD_HUNG_SIGN.barMaterial = BIRCH_HUNG_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/birch_log"));
+    JUNGLE_WOOD_HUNG_SIGN.baseMaterial = JUNGLE_WOOD_HUNG_SIGN.barMaterial = JUNGLE_HUNG_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/jungle_log"));
+    ACACIA_WOOD_HUNG_SIGN.baseMaterial = ACACIA_WOOD_HUNG_SIGN.barMaterial = ACACIA_HUNG_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/acacia_log"));
+    CHERRY_WOOD_HUNG_SIGN.baseMaterial = CHERRY_WOOD_HUNG_SIGN.barMaterial = CHERRY_HUNG_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/cherry_log"));
+    DARK_OAK_WOOD_HUNG_SIGN.baseMaterial = DARK_OAK_WOOD_HUNG_SIGN.barMaterial = DARK_OAK_HUNG_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/dark_oak_log"));
+    PALE_OAK_WOOD_HUNG_SIGN.baseMaterial = PALE_OAK_WOOD_HUNG_SIGN.barMaterial = PALE_OAK_HUNG_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/pale_oak_log"));
+    MANGROVE_WOOD_HUNG_SIGN.baseMaterial = MANGROVE_WOOD_HUNG_SIGN.barMaterial = MANGROVE_HUNG_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/mangrove_log"));
+    CRIMSON_HYPHAE_HUNG_SIGN.baseMaterial = CRIMSON_HYPHAE_HUNG_SIGN.barMaterial = CRIMSON_HUNG_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/crimson_stem"));
+    WARPED_HYPHAE_HUNG_SIGN.baseMaterial = WARPED_HYPHAE_HUNG_SIGN.barMaterial = WARPED_HUNG_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/warped_stem"));
+    STRIPPED_OAK_WOOD_HUNG_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_oak_log"));
+    STRIPPED_SPRUCE_WOOD_HUNG_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_spruce_log"));
+    STRIPPED_BIRCH_WOOD_HUNG_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_birch_log"));
+    STRIPPED_JUNGLE_WOOD_HUNG_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_jungle_log"));
+    STRIPPED_ACACIA_WOOD_HUNG_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_acacia_log"));
+    STRIPPED_CHERRY_WOOD_HUNG_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_cherry_log"));
+    STRIPPED_DARK_OAK_WOOD_HUNG_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_dark_oak_log"));
+    STRIPPED_PALE_OAK_WOOD_HUNG_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_pale_oak_log"));
+    STRIPPED_MANGROVE_WOOD_HUNG_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_mangrove_log"));
+    STRIPPED_CRIMSON_HYPHAE_HUNG_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_crimson_stem"));
+    STRIPPED_WARPED_HYPHAE_HUNG_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_warped_stem"));
+    OAK_HUNG_SIGN.materialTop = new Material(Identifier.withDefaultNamespace("block/oak_log"));
+    SPRUCE_HUNG_SIGN.materialTop = new Material(Identifier.withDefaultNamespace("block/spruce_log"));
+    BIRCH_HUNG_SIGN.materialTop = new Material(Identifier.withDefaultNamespace("block/birch_log"));
+    JUNGLE_HUNG_SIGN.materialTop = new Material(Identifier.withDefaultNamespace("block/jungle_log"));
+    ACACIA_HUNG_SIGN.materialTop = new Material(Identifier.withDefaultNamespace("block/acacia_log"));
+    CHERRY_HUNG_SIGN.materialTop = new Material(Identifier.withDefaultNamespace("block/cherry_log"));
+    DARK_OAK_HUNG_SIGN.materialTop = new Material(Identifier.withDefaultNamespace("block/dark_oak_log"));
+    PALE_OAK_HUNG_SIGN.materialTop = new Material(Identifier.withDefaultNamespace("block/pale_oak_log"));
+    MANGROVE_HUNG_SIGN.materialTop = new Material(Identifier.withDefaultNamespace("block/mangrove_log"));
+    CRIMSON_HUNG_SIGN.materialTop = new Material(Identifier.withDefaultNamespace("block/crimson_stem"));
+    WARPED_HUNG_SIGN.materialTop = new Material(Identifier.withDefaultNamespace("block/warped_stem"));
+    OAK_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/oak_log"));
+    SPRUCE_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/spruce_log"));
+    BIRCH_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/birch_log"));
+    JUNGLE_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/jungle_log"));
+    ACACIA_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/acacia_log"));
+    CHERRY_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/cherry_log"));
+    DARK_OAK_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/dark_oak_log"));
+    PALE_OAK_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/pale_oak_log"));
+    MANGROVE_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/mangrove_log"));
+    CRIMSON_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/crimson_stem"));
+    WARPED_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/warped_stem"));
+    STRIPPED_OAK_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/stripped_oak_log"));
+    STRIPPED_SPRUCE_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/stripped_spruce_log"));
+    STRIPPED_BIRCH_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/stripped_birch_log"));
+    STRIPPED_JUNGLE_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/stripped_jungle_log"));
+    STRIPPED_ACACIA_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/stripped_acacia_log"));
+    STRIPPED_CHERRY_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/stripped_cherry_log"));
+    STRIPPED_DARK_OAK_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/stripped_dark_oak_log"));
+    STRIPPED_PALE_OAK_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/stripped_pale_oak_log"));
+    STRIPPED_MANGROVE_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/stripped_mangrove_log"));
+    STRIPPED_CRIMSON_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/stripped_crimson_stem"));
+    STRIPPED_WARPED_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/stripped_warped_stem"));
+    BAMBOO_HUNG_SIGN.barMaterial = BAMBOO_HUNG_SIGN.materialTop = BAMBOO_PLANK_HUNG_SIGN.barMaterial = BAMBOO_PLANK_HUNG_SIGN.materialTop = BAMBOO_MOSAIC_HUNG_SIGN.barMaterial = BAMBOO_MOSAIC_HUNG_SIGN.materialTop = BAMBOO_HUNG_SIGN_BAR.material = new Material(Identifier.withDefaultNamespace("block/bamboo_block"));
   }
 
   // 混凝土告示牌部分
@@ -794,10 +794,10 @@ public final class HungSignBlocks extends MishangucBlocks {
   public static final HungSignBarBlock POLISHED_BLACKSTONE_HUNG_SIGN_BAR = registerBar("polished_blackstone_hung_sign_bar", Blocks.POLISHED_BLACKSTONE);
 
   static {
-    GLOWING_NETHERRACK_HUNG_SIGN.glowTexture = Identifier.withDefaultNamespace("block/lava_still");
-    GLOWING_NETHER_BRICK_HUNG_SIGN.glowTexture = Identifier.withDefaultNamespace("block/lava_still");
-    GLOWING_BLACKSTONE_HUNG_SIGN.glowTexture = Identifier.withDefaultNamespace("block/glowstone");
-    GLOWING_POLISHED_BLACKSTONE_HUNG_SIGN.glowTexture = Identifier.withDefaultNamespace("block/glowstone");
+    GLOWING_NETHERRACK_HUNG_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/lava_still"));
+    GLOWING_NETHER_BRICK_HUNG_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/lava_still"));
+    GLOWING_BLACKSTONE_HUNG_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/glowstone"));
+    GLOWING_POLISHED_BLACKSTONE_HUNG_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/glowstone"));
   }
 
   // 雪块
@@ -812,17 +812,16 @@ public final class HungSignBlocks extends MishangucBlocks {
   // 冰
 
   @ApiStatus.AvailableSince("0.1.7")
-  @Translucent
   public static final HungSignBlock ICE_HUNG_SIGN = register("ice_hung_sign", Blocks.ICE);
 
   static {
-    SNOW_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/snow");
-    SNOW_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/packed_ice");
-    SNOW_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/packed_ice");
-    GLOWING_SNOW_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/snow");
-    GLOWING_SNOW_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/packed_ice");
-    GLOWING_SNOW_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/packed_ice");
-    ICE_HUNG_SIGN.textureTop = ICE_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/blue_ice");
+    SNOW_HUNG_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/snow"));
+    SNOW_HUNG_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/packed_ice"));
+    SNOW_HUNG_SIGN.materialTop = new Material(Identifier.withDefaultNamespace("block/packed_ice"));
+    GLOWING_SNOW_HUNG_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/snow"));
+    GLOWING_SNOW_HUNG_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/packed_ice"));
+    GLOWING_SNOW_HUNG_SIGN.materialTop = new Material(Identifier.withDefaultNamespace("block/packed_ice"));
+    ICE_HUNG_SIGN.materialTop = ICE_HUNG_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/blue_ice"));
   }
 
   // 浮冰

@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.TextureSlot;
-import net.minecraft.resources.Identifier;
+import net.minecraft.client.resources.model.sprite.Material;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.block.GlassHandrailBlock;
 
@@ -102,8 +102,8 @@ public final class MishangucModels {
   public static final ModelTemplate COLORED_CUBE_ALL_WITHOUT_SHADE = createBlock("colored_cube_all_without_shade", TextureSlot.ALL);
 
 
-  public static Identifier texture(String path) {
-    return Mishanguc.id("block/" + path);
+  public static Material material(String path) {
+    return new Material(Mishanguc.id("block/" + path));
   }
 
   public static ModelTemplate createBlock(String name, TextureSlot... requiredTextureKeys) {

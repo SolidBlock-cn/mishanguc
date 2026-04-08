@@ -5,15 +5,15 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.BlockOutlineRenderState;
+import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.UUIDUtil;
@@ -59,7 +59,6 @@ import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.render.state.CarryingToolState;
 import pers.solid.mishang.uc.render.state.MishangRenderState;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
-import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
@@ -108,7 +107,7 @@ public class CarryingToolItem extends BlockToolItem
     if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
       return holdingEntity.name();
     } else {
-      return TextBridge.empty();
+      return Component.empty();
     }
   }
 
@@ -117,19 +116,19 @@ public class CarryingToolItem extends BlockToolItem
     final Component name = super.getName(stack);
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
-      return TextBridge.translatable("item.mishanguc.carrying_tool.holding", name, holdingEntity.name());
+      return Component.translatable("item.mishanguc.carrying_tool.holding", name, holdingEntity.name());
     } else if (carryingToolData instanceof CarryingToolData.HoldingBlockState holdingBlockState) {
-      return TextBridge.translatable("item.mishanguc.carrying_tool.holding", name, holdingBlockState.state().getBlock().getName());
+      return Component.translatable("item.mishanguc.carrying_tool.holding", name, holdingBlockState.state().getBlock().getName());
     } else {
-      return TextBridge.translatable("item.mishanguc.carrying_tool.empty", name);
+      return Component.translatable("item.mishanguc.carrying_tool.empty", name);
     }
   }
 
   @Override
   public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-    tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.1").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.2").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.3").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.carrying_tool.tooltip.1").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.carrying_tool.tooltip.2").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.carrying_tool.tooltip.3").withStyle(ChatFormatting.GRAY));
   }
 
 
@@ -147,7 +146,8 @@ public class CarryingToolItem extends BlockToolItem
         if (world.isClientSide()) {
           blockPlacementContext.playSound();
         } else {
-          player.displayClientMessage(TextBridge.translatable(player.isCreative() ? "item.mishanguc.carrying_tool.message.placed_creative" : "item.mishanguc.carrying_tool.message.placed", blockPlacementContext.stateToPlace.getBlock().getName()), true);
+          String key = player.isCreative() ? "item.mishanguc.carrying_tool.message.placed_creative" : "item.mishanguc.carrying_tool.message.placed";
+          player.sendOverlayMessage(Component.translatable(key, blockPlacementContext.stateToPlace.getBlock().getName()));
         }
         if (!player.isCreative()) {
           stack.remove(MishangucComponents.CARRYING_TOOL_DATA);
@@ -165,11 +165,12 @@ public class CarryingToolItem extends BlockToolItem
         entity.absSnapTo(pos.x, pos.y, pos.z);
         final boolean spawnEntity = world.addFreshEntity(entity);
         if (spawnEntity) {
-          player.displayClientMessage(TextBridge.translatable(player.isCreative() ? "item.mishanguc.carrying_tool.message.spawned_creative" : "item.mishanguc.carrying_tool.message.spawned", getEntityName(stack)), true);
+          String key = player.isCreative() ? "item.mishanguc.carrying_tool.message.spawned_creative" : "item.mishanguc.carrying_tool.message.spawned";
+          player.sendOverlayMessage(Component.translatable(key, getEntityName(stack)));
           if (!player.isCreative()) {
             stack.remove(MishangucComponents.CARRYING_TOOL_DATA);
           } else {
-            setHoldingEntityUUID(stack, Mth.createInsecureUUID());
+            setHoldingEntityUUID(stack, Mth.createInsecureUUID(player.getRandom()));
           }
           return InteractionResult.SUCCESS;
         } else {
@@ -188,7 +189,7 @@ public class CarryingToolItem extends BlockToolItem
         if (world.isClientSide()) {
           return InteractionResult.PASS;
         } else {
-          player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_placing").withStyle(ChatFormatting.RED), true);
+          player.sendOverlayMessage(Component.translatable("item.mishanguc.carrying_tool.message.no_placing").withStyle(ChatFormatting.RED));
           return InteractionResult.FAIL;
         }
       }
@@ -212,7 +213,7 @@ public class CarryingToolItem extends BlockToolItem
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     if (carryingToolData instanceof CarryingToolData.HoldingBlockState holdingBlockState && !player.isCreative()) {
       if (!world.isClientSide()) {
-        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.of(holdingBlockState.state().getBlock()).map(Block::getName).orElse(TextBridge.empty())).withStyle(ChatFormatting.RED), true);
+        player.sendOverlayMessage(Component.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.of(holdingBlockState.state().getBlock()).map(Block::getName).orElse(Component.empty())).withStyle(ChatFormatting.RED));
         return InteractionResult.FAIL;
       } else {
         return InteractionResult.CONSUME;
@@ -222,7 +223,7 @@ public class CarryingToolItem extends BlockToolItem
       if (world.isClientSide())
         return InteractionResult.CONSUME;
       else {
-        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", holdingEntity.name()).withStyle(ChatFormatting.RED), true);
+        player.sendOverlayMessage(Component.translatable("item.mishanguc.carrying_tool.message.no_picking", holdingEntity.name()).withStyle(ChatFormatting.RED));
         return InteractionResult.FAIL;
       }
     }
@@ -243,11 +244,11 @@ public class CarryingToolItem extends BlockToolItem
     }
     if (!world.isClientSide()) {
       if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
-        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.picked_overriding", holdingEntity.name()), true);
+        player.sendOverlayMessage(Component.translatable("item.mishanguc.carrying_tool.message.picked_overriding", holdingEntity.name()));
       } else if (carryingToolData instanceof CarryingToolData.HoldingBlockState holdingBlockState) {
-        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.picked_overriding", removed.getBlock().getName(), holdingBlockState.state().getBlock().getName()), true);
+        player.sendOverlayMessage(Component.translatable("item.mishanguc.carrying_tool.message.picked_overriding", removed.getBlock().getName(), holdingBlockState.state().getBlock().getName()));
       } else {
-        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick", removed.getBlock().getName()), true);
+        player.sendOverlayMessage(Component.translatable("item.mishanguc.carrying_tool.message.pick", removed.getBlock().getName()));
       }
     }
     return InteractionResult.SUCCESS;
@@ -284,7 +285,8 @@ public class CarryingToolItem extends BlockToolItem
         if (!user.isCreative()) {
           stack.remove(MishangucComponents.CARRYING_TOOL_DATA);
         }
-        user.displayClientMessage(TextBridge.translatable(user.isCreative() ? "item.mishanguc.carrying_tool.message.block_thrown_creative" : "item.mishanguc.carrying_tool.message.block_thrown", state.getBlock().getName()), true);
+        String key = user.isCreative() ? "item.mishanguc.carrying_tool.message.block_thrown_creative" : "item.mishanguc.carrying_tool.message.block_thrown";
+        user.sendOverlayMessage(Component.translatable(key, state.getBlock().getName()));
         return InteractionResult.SUCCESS;
       } else {
         return InteractionResult.FAIL;
@@ -299,11 +301,12 @@ public class CarryingToolItem extends BlockToolItem
         entity.setDeltaMovement(Vec3.directionFromRotation(user.getXRot(), user.getYRot()).scale(2).add(user.getDeltaMovement()));
         final boolean spawnEntity = world.addFreshEntity(entity);
         if (spawnEntity) {
-          user.displayClientMessage(TextBridge.translatable(user.isCreative() ? "item.mishanguc.carrying_tool.message.entity_thrown_creative" : "item.mishanguc.carrying_tool.message.entity_thrown", getEntityName(stack)), true);
+          String key = user.isCreative() ? "item.mishanguc.carrying_tool.message.entity_thrown_creative" : "item.mishanguc.carrying_tool.message.entity_thrown";
+          user.sendOverlayMessage(Component.translatable(key, getEntityName(stack)));
           if (!user.isCreative()) {
             stack.remove(MishangucComponents.CARRYING_TOOL_DATA);
           } else {
-            setHoldingEntityUUID(stack, Mth.createInsecureUUID());
+            setHoldingEntityUUID(stack, Mth.createInsecureUUID(world.getRandom()));
           }
           return InteractionResult.SUCCESS;
         } else {
@@ -327,31 +330,31 @@ public class CarryingToolItem extends BlockToolItem
       if (world.isClientSide()) {
         return InteractionResult.PASS;
       } else {
-        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_player").withStyle(ChatFormatting.RED), false);
+        player.sendSystemMessage(Component.translatable("item.mishanguc.carrying_tool.message.pick_player").withStyle(ChatFormatting.RED));
         return InteractionResult.FAIL;
       }
     } else if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity && !player.isCreative()) {
       if (world.isClientSide())
         return InteractionResult.SUCCESS;
       else {
-        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", holdingEntity.name()).withStyle(ChatFormatting.RED), true);
+        player.sendOverlayMessage(Component.translatable("item.mishanguc.carrying_tool.message.no_picking", holdingEntity.name()).withStyle(ChatFormatting.RED));
         return InteractionResult.FAIL;
       }
     } else if (carryingToolData instanceof CarryingToolData.HoldingBlockState holdingBlockState && !player.isCreative()) {
       if (world.isClientSide())
         return InteractionResult.SUCCESS;
       else {
-        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.ofNullable(holdingBlockState.state().getBlock()).map(Block::getName).orElse(TextBridge.empty())).withStyle(ChatFormatting.RED), true);
+        player.sendOverlayMessage(Component.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.ofNullable(holdingBlockState.state().getBlock()).map(Block::getName).orElse(Component.empty())).withStyle(ChatFormatting.RED));
         return InteractionResult.FAIL;
       }
     }
     if (world instanceof ServerLevel serverWorld) {
       if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
-        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity_overriding", entity.getName(), holdingEntity.name()), true);
+        player.sendOverlayMessage(Component.translatable("item.mishanguc.carrying_tool.message.pick_entity_overriding", entity.getName(), holdingEntity.name()));
       } else if (carryingToolData instanceof CarryingToolData.HoldingBlockState holdingBlockState) {
-        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity_overriding", entity.getName(), holdingBlockState.state().getBlock().getName()), true);
+        player.sendOverlayMessage(Component.translatable("item.mishanguc.carrying_tool.message.pick_entity_overriding", entity.getName(), holdingBlockState.state().getBlock().getName()));
       } else {
-        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity", entity.getName()), true);
+        player.sendOverlayMessage(Component.translatable("item.mishanguc.carrying_tool.message.pick_entity", entity.getName()));
       }
       final TagValueOutput nbtWriteView = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, entity.registryAccess());
       entity.saveWithoutId(nbtWriteView);
@@ -366,10 +369,10 @@ public class CarryingToolItem extends BlockToolItem
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable CarryingToolState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  public @Nullable CarryingToolState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, LevelExtractionContext context, @Nullable HitResult result) {
     final CarryingToolState state = new CarryingToolState();
 
-    final ClientLevel world = context.world();
+    final ClientLevel world = context.level();
     if (!hasAccess(player, world, true)) {
       return state;
     }
@@ -419,13 +422,13 @@ public class CarryingToolItem extends BlockToolItem
 
   @Environment(EnvType.CLIENT)
   @Override
-  public boolean renderBlockOutline(Player player, ItemStack itemStack, WorldRenderContext context, BlockOutlineRenderState outlineRenderState) {
-    final MishangRenderState data = context.worldState().getData(MISHANG_BLOCK_OUTLINE);
+  public boolean renderBlockOutline(Player player, ItemStack itemStack, LevelRenderContext context, BlockOutlineRenderState outlineRenderState) {
+    final MishangRenderState data = context.levelState().getData(MISHANG_BLOCK_OUTLINE);
     if (!(data instanceof CarryingToolState state)) return true;
 
-    final PoseStack matrices = context.matrices();
-    final VertexConsumer vertexConsumer = context.consumers().getBuffer(RenderTypes.lines());
-    final Vec3 cameraPos = context.worldState().cameraRenderState.pos;
+    final PoseStack matrices = context.poseStack();
+    final VertexConsumer vertexConsumer = context.bufferSource().getBuffer(RenderTypes.lines());
+    final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
 
     if (state.cyanShape != null && state.cyanPos != null) {
       ShapeRenderer.renderShape(matrices, vertexConsumer, state.cyanShape, state.cyanPos.getX() - cameraPos.x, state.cyanPos.getY() - cameraPos.y, state.cyanPos.getZ() - cameraPos.z, OUTLINE_COLOR_CYAN, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
@@ -448,14 +451,14 @@ public class CarryingToolItem extends BlockToolItem
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void renderBeforeOutline(LocalPlayer player, ItemStack stack, WorldRenderContext context) {
+  public void renderBeforeOutline(LocalPlayer player, ItemStack stack, LevelRenderContext context) {
     // 只在使用主手且有权限时持有此物品时进行渲染。
-    final MishangRenderState data = context.worldState().getData(MISHANG_BLOCK_OUTLINE);
+    final MishangRenderState data = context.levelState().getData(MISHANG_BLOCK_OUTLINE);
     if (!(data instanceof CarryingToolState state)) return;
 
-    final PoseStack matrices = context.matrices();
-    final VertexConsumer vertexConsumer = context.consumers().getBuffer(RenderTypes.lines());
-    final Vec3 cameraPos = context.worldState().cameraRenderState.pos;
+    final PoseStack matrices = context.poseStack();
+    final VertexConsumer vertexConsumer = context.bufferSource().getBuffer(RenderTypes.lines());
+    final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
 
     if (state.cyanEntityPos != null) {
       final float width = state.cyanEntityWidth;

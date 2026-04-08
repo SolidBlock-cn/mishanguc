@@ -12,7 +12,7 @@ import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
 import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -205,7 +205,7 @@ public class AutoConnectWallLightBlock extends WallLightBlock implements LightCo
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final TextureMapping textureMap = TextureMapping.singleSlot(MishangucTextureKeys.LIGHT, MishangucModels.texture(lightColor + "_light"));
+    final TextureMapping textureMap = TextureMapping.singleSlot(MishangucTextureKeys.LIGHT, MishangucModels.material(lightColor + "_light"));
     final Identifier modelId = MishangucModels.createBlock("wall_light_%s_decoration".formatted(shape), MishangucTextureKeys.LIGHT).create(this, textureMap, blockStateModelGenerator.modelOutput);
     final Identifier centerModelId = MishangucModels.createBlock("wall_light_%s_decoration_center".formatted(shape), "_center", MishangucTextureKeys.LIGHT).create(this, textureMap, blockStateModelGenerator.modelOutput);
     final Identifier connectionModelId = MishangucModels.createBlock("wall_light_%s_decoration_connection".formatted(shape), "_connection", MishangucTextureKeys.LIGHT).create(this, textureMap, blockStateModelGenerator.modelOutput);

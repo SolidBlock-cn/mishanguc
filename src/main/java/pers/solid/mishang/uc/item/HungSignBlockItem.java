@@ -1,13 +1,6 @@
 package pers.solid.mishang.uc.item;
 
 import com.google.common.collect.ImmutableList;
-import pers.solid.mishang.uc.components.MishangucComponents;
-import pers.solid.mishang.uc.text.TextContext;
-import pers.solid.mishang.uc.util.TextBridge;
-import pers.solid.mishang.uc.util.WithMishangTooltip;
-
-import java.util.List;
-import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -17,6 +10,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.block.Block;
+import pers.solid.mishang.uc.components.MishangucComponents;
+import pers.solid.mishang.uc.text.TextContext;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 类似于一般的方块物品，但是会读取 BlockEntityTag 中的内容来显示文字。
@@ -35,7 +34,7 @@ public class HungSignBlockItem extends NamedBlockItem implements WithMishangTool
     map.forEach(
         (direction, textContexts) -> {
           tooltip.add(
-              TextBridge.translatable("block.mishanguc.tooltip.hung_sign_block", TextBridge.translatable("direction.mishanguc." + direction.getSerializedName()))
+              Component.translatable("block.mishanguc.tooltip.hung_sign_block", Component.translatable("direction.mishanguc." + direction.getSerializedName()))
                   .withStyle(ChatFormatting.GRAY));
           textContexts.forEach(
               textContext -> {
@@ -59,10 +58,10 @@ public class HungSignBlockItem extends NamedBlockItem implements WithMishangTool
             }));
     final ImmutableList<Component> build = appendable.build();
     if (!build.isEmpty()) {
-      final MutableComponent appendableText = TextBridge.literal("");
+      final MutableComponent appendableText = Component.literal("");
       build.forEach(t -> appendableText.append(" ").append(t));
       text.append(
-          TextBridge.literal(" -" + appendableText.getString(20)).withStyle(ChatFormatting.GRAY));
+          Component.literal(" -" + appendableText.getString(20)).withStyle(ChatFormatting.GRAY));
     }
     return text;
   }

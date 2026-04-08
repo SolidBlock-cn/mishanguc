@@ -20,7 +20,6 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.util.ExtraCodecs;
 import org.jspecify.annotations.Nullable;
 import pers.solid.mishang.uc.text.TextContext;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -43,7 +42,7 @@ import java.util.function.UnaryOperator;
 @Environment(EnvType.CLIENT)
 public record SignPreset(int order, String id, Component name, @Nullable Component description, List<TextContext> textContexts, int initialFocus) {
   public SignPreset(int order, String id, List<TextContext> textContexts, int initialFocus) {
-    this(order, id, TextBridge.translatable("signPreset.mishanguc." + id + ".name"), TextBridge.translatable("signPreset.mishanguc." + id + ".description"), textContexts, initialFocus);
+    this(order, id, Component.translatable("signPreset.mishanguc." + id + ".name"), Component.translatable("signPreset.mishanguc." + id + ".description"), textContexts, initialFocus);
   }
 
   public Info asInfo() {

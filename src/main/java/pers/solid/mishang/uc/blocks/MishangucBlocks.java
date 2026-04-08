@@ -1,11 +1,9 @@
 package pers.solid.mishang.uc.blocks;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -14,9 +12,6 @@ import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.CustomId;
-import pers.solid.mishang.uc.annotations.Cutout;
-import pers.solid.mishang.uc.annotations.Translucent;
-import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.HungSignBlock;
 import pers.solid.mishang.uc.block.StandingSignBlock;
 import pers.solid.mishang.uc.block.WallSignBlock;
@@ -24,6 +19,7 @@ import pers.solid.mishang.uc.item.HungSignBlockItem;
 import pers.solid.mishang.uc.item.NamedBlockItem;
 import pers.solid.mishang.uc.item.StandingSignBlockItem;
 import pers.solid.mishang.uc.item.WallSignBlockItem;
+import pers.solid.mishang.uc.mixin.ItemsAccessor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -91,10 +87,6 @@ public class MishangucBlocks {
   protected static final BlockBehaviour.Properties PINK_LIGHT_SETTINGS = BlockBehaviour.Properties.of().mapColor(DyeColor.PINK).lightLevel(CONSTANT_15).strength(0.2f);
   @ApiStatus.AvailableSince("1.1.0")
   protected static final BlockBehaviour.Properties PINK_WALL_LIGHT_SETTINGS = BlockBehaviour.Properties.of().mapColor(DyeColor.PINK).lightLevel(CONSTANT_15).noCollision();
-  @ApiStatus.Internal
-  public static ObjectArrayList<Block> translucentBlocks = new ObjectArrayList<>();
-  @ApiStatus.Internal
-  public static ObjectArrayList<Block> cutoutBlocks = new ObjectArrayList<>();
 
   /**
    * 自动注册一个类中的所有静态常量字段的方块，同时创建并注册对应的物品。
@@ -119,17 +111,6 @@ public class MishangucBlocks {
           } else {
             path = field.getName().toLowerCase();
           }
-          if (field.isAnnotationPresent(Cutout.class)) {
-            cutoutBlocks.add(value);
-          } else if (field.isAnnotationPresent(Translucent.class)) {
-            translucentBlocks.add(value);
-            if (value instanceof HandrailBlock) {
-              translucentBlocks.add(((HandrailBlock) value).central());
-              translucentBlocks.add(((HandrailBlock) value).corner());
-              translucentBlocks.add(((HandrailBlock) value).outer());
-              translucentBlocks.add(((HandrailBlock) value).stair());
-            }
-          }
           final Item.Properties settings = new Item.Properties();
           if (path.contains("netherite")) {
             settings.fireResistant();
@@ -142,7 +123,7 @@ public class MishangucBlocks {
                   : value instanceof StandingSignBlock
                   ? StandingSignBlockItem::new
                   : NamedBlockItem::new;
-          Items.registerBlock(value, biFunction, settings);
+          ItemsAccessor.callRegisterBlock(value, biFunction, settings);
         } catch (IllegalAccessException e) {
           Mishanguc.MISHANG_LOGGER.error("Error when registering blocks:", e);
         }

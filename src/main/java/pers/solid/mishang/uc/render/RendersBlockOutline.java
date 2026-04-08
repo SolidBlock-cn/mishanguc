@@ -2,11 +2,11 @@ package pers.solid.mishang.uc.render;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.state.BlockOutlineRenderState;
+import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -15,9 +15,9 @@ import pers.solid.mishang.uc.render.state.MishangRenderStateProvider;
 
 /**
  * <p>物品实现此接口后，玩家拿着物品时就会调用 {@link #renderBlockOutline}。{@link #RENDERER} 是个匿名的 {@link
- * WorldRenderEvents.BeforeBlockOutline} 实例，并且会在 {@link MishangucClient} 中注册。
+ * LevelRenderEvents.BeforeBlockOutline} 实例，并且会在 {@link MishangucClient} 中注册。
  * <p>Item implements this interface, and when a player holds this item, {@link #renderBlockOutline}
- * will be called. The {@link #RENDERER} is in an anonymous {@link WorldRenderEvents.BeforeBlockOutline}
+ * will be called. The {@link #RENDERER} is in an anonymous {@link LevelRenderEvents.BeforeBlockOutline}
  * instance, and was registered in {@link MishangucClient}.
  * <p>自 1.21.10 开始，渲染时需要使用通过 {@link MishangRenderStateProvider#getMishangRenderState} 返回的 render state。
  * <p>Since 1.21.10, the render state returned through {@link MishangRenderStateProvider#getMishangRenderState} has been needed when rendering.
@@ -31,9 +31,9 @@ import pers.solid.mishang.uc.render.state.MishangRenderStateProvider;
 public interface RendersBlockOutline extends MishangRenderStateProvider {
 
   @Environment(EnvType.CLIENT)
-  WorldRenderEvents.BeforeBlockOutline RENDERER = (worldRenderContext, outlineRenderState) -> {
+  LevelRenderEvents.BeforeBlockOutline RENDERER = (worldRenderContext, outlineRenderState) -> {
     final LocalPlayer player = Minecraft.getInstance().player;
-    final ItemStack stack = worldRenderContext.worldState().getData(MishangRenderStateProvider.HAND_STACK);
+    final ItemStack stack = worldRenderContext.levelState().getData(MishangRenderStateProvider.HAND_STACK);
     if (stack == null) return true;
     if (player == null) return true;
     final Item item = stack.getItem();
@@ -46,8 +46,8 @@ public interface RendersBlockOutline extends MishangRenderStateProvider {
 
 
   /**
-   * <p>玩家持有该物品的物品堆时，进行渲染。将会被 {@link #RENDERER} 中的 {@link WorldRenderEvents.BeforeBlockOutline#beforeBlockOutline} 调用。
-   * <p>Render when a player holds an item stack of this item. Called in {@link WorldRenderEvents.BeforeBlockOutline#beforeBlockOutline} of {@link #RENDERER}.
+   * <p>玩家持有该物品的物品堆时，进行渲染。将会被 {@link #RENDERER} 中的 {@link LevelRenderEvents.BeforeBlockOutline#beforeBlockOutline} 调用。
+   * <p>Render when a player holds an item stack of this item. Called in {@link LevelRenderEvents.BeforeBlockOutline#beforeBlockOutline} of {@link #RENDERER}.
    * <p>子类覆盖此方法时，必须注解 <code>@{@link Environment}({@link EnvType#CLIENT})</code>。
    * <p><code>@{@link Environment}({@link EnvType#CLIENT})</code> must be annotated when overridden by
    * subtype methods.
@@ -58,6 +58,6 @@ public interface RendersBlockOutline extends MishangRenderStateProvider {
   boolean renderBlockOutline(
       Player player,
       ItemStack itemStack,
-      WorldRenderContext context,
+      LevelRenderContext context,
       BlockOutlineRenderState outlineRenderState);
 }

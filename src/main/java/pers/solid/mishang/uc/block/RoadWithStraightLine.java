@@ -29,7 +29,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import pers.solid.mishang.uc.data.FasterTextureMap;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
-import pers.solid.mishang.uc.util.*;
+import pers.solid.mishang.uc.util.EightHorizontalDirection;
+import pers.solid.mishang.uc.util.LineColor;
+import pers.solid.mishang.uc.util.LineType;
+import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.List;
 
@@ -79,10 +82,10 @@ public interface RoadWithStraightLine extends Road {
       ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     Road.super.appendRoadTooltip(stack, context, tooltip, options);
     tooltip.add(
-        TextBridge.translatable("block.mishanguc.tooltip.road_with_straight_line.1")
+        Component.translatable("block.mishanguc.tooltip.road_with_straight_line.1")
             .withStyle(ChatFormatting.GRAY));
     tooltip.add(
-        TextBridge.translatable("block.mishanguc.tooltip.road_with_straight_line.2")
+        Component.translatable("block.mishanguc.tooltip.road_with_straight_line.2")
             .withStyle(ChatFormatting.GRAY));
   }
 
@@ -97,7 +100,7 @@ public interface RoadWithStraightLine extends Road {
 
     @Override
     public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
-      tooltip.add(TextBridge.translatable("lineType.straight.composed", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
+      tooltip.add(Component.translatable("lineType.straight.composed", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
     }
 
     @Environment(EnvType.CLIENT)

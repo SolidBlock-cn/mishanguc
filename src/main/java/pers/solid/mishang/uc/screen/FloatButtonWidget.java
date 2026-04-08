@@ -16,13 +16,13 @@ import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -71,7 +71,9 @@ public class FloatButtonWidget extends Button.Plain implements TooltipUpdated {
    */
   public float max = Float.POSITIVE_INFINITY;
 
-  public static final Float2ObjectFunction<MutableComponent> DEFAULT_VALUE_NARRATOR = value -> TextBridge.literal(MishangUtils.numberToString(value));
+  public static final Float2ObjectFunction<MutableComponent> DEFAULT_VALUE_NARRATOR = value -> {
+    return Component.literal(MishangUtils.numberToString(value));
+  };
   private Float2ObjectFunction<MutableComponent> valueToText = DEFAULT_VALUE_NARRATOR;
 
   public FloatButtonWidget(int x, int y, int width, int height, net.minecraft.network.chat.Component message, Function<FloatButtonWidget, Float> valueGetter, ValueConsumer valueSetter, OnPress onPress) {
@@ -86,9 +88,9 @@ public class FloatButtonWidget extends Button.Plain implements TooltipUpdated {
     final Float value = getValue();
     if (value != null) {
       final MutableComponent valueText = valueToText.get(value.floatValue());
-      setTooltip(Tooltip.create(CommonComponents.optionNameValue(getSummaryMessage(), valueText), TextBridge.translatable("narration.mishanguc.button.current_value", valueText)));
+      setTooltip(Tooltip.create(CommonComponents.optionNameValue(getSummaryMessage(), valueText), Component.translatable("narration.mishanguc.button.current_value", valueText)));
     } else {
-      setTooltip(Tooltip.create(getSummaryMessage(), TextBridge.empty()));
+      setTooltip(Tooltip.create(getSummaryMessage(), Component.empty()));
     }
   }
 
@@ -130,11 +132,11 @@ public class FloatButtonWidget extends Button.Plain implements TooltipUpdated {
   }
 
   @Override
-  protected void renderDefaultLabel(ActiveTextCollector drawer) {
+  protected void extractDefaultLabel(ActiveTextCollector output) {
     // 对应 1.21.10 之前的 drawScrollableText
     if (!sliderFocused || Util.getMillis() % 1000 > 500) {
       // 在 sliderFocused 的情况下，文字应该闪烁
-      super.renderDefaultLabel(drawer);
+      super.extractDefaultLabel(output);
     }
   }
 
@@ -218,7 +220,7 @@ public class FloatButtonWidget extends Button.Plain implements TooltipUpdated {
     if (value == null || value == defaultValue) {
       return super.getMessage();
     } else {
-      return TextBridge.empty().append(super.getMessage()).withStyle(ChatFormatting.ITALIC);
+      return Component.empty().append(super.getMessage()).withStyle(ChatFormatting.ITALIC);
     }
   }
 
@@ -261,11 +263,11 @@ public class FloatButtonWidget extends Button.Plain implements TooltipUpdated {
   protected void defaultButtonNarrationText(NarrationElementOutput builder) {
     super.defaultButtonNarrationText(builder);
     if (getValue() == null) {
-      builder.add(NarratedElementType.USAGE, TextBridge.translatable("narration.mishanguc.button.null"));
+      builder.add(NarratedElementType.USAGE, Component.translatable("narration.mishanguc.button.null"));
     } else if (sliderFocused) {
-      builder.add(NarratedElementType.USAGE, TextBridge.translatable("narration.mishanguc.button.float_usage.focused"));
+      builder.add(NarratedElementType.USAGE, Component.translatable("narration.mishanguc.button.float_usage.focused"));
     } else {
-      builder.add(NarratedElementType.USAGE, TextBridge.translatable("narration.mishanguc.button.float_usage"));
+      builder.add(NarratedElementType.USAGE, Component.translatable("narration.mishanguc.button.float_usage"));
     }
   }
 

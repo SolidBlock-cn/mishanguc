@@ -22,7 +22,7 @@ public interface SpecialDrawableType<S extends SpecialDrawable> {
   /**
    * SpecialDrawableType 的注册表。
    */
-  MappedRegistry<SpecialDrawableType<? extends SpecialDrawable>> REGISTRY = FabricRegistryBuilder.createSimple(REGISTRY_KEY).buildAndRegister();
+  MappedRegistry<SpecialDrawableType<? extends SpecialDrawable>> REGISTRY = FabricRegistryBuilder.create(REGISTRY_KEY).buildAndRegister();
 
   /**
    * 根据已注册的 id 查询对象，如果不存在则返回 {@code null}。

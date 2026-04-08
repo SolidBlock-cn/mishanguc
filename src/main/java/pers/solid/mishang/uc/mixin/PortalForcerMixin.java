@@ -10,8 +10,8 @@ import pers.solid.mishang.uc.Mishanguc;
 
 @Mixin(PortalForcer.class)
 public abstract class PortalForcerMixin {
-  @ModifyReturnValue(method = "method_22389", at = @At("RETURN"))
-  private static boolean acceptColoredPortal(boolean original, Holder<PoiType> holder) {
-    return original || holder.is(Mishanguc.id("nether_portal"));
+  @ModifyReturnValue(method = "lambda$findClosestPortalPosition$0", at = @At("RETURN"))
+  private static boolean acceptColoredPortal(boolean original, Holder<PoiType> type) {
+    return original || type.is(Mishanguc.id("nether_portal"));
   }
 }

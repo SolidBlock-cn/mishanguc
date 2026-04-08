@@ -1,17 +1,18 @@
 package pers.solid.mishang.uc.item;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.BlockOutlineRenderState;
+import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentMap;
@@ -32,7 +33,7 @@ import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 import pers.solid.mishang.uc.render.state.BlockToolState;
 import pers.solid.mishang.uc.render.state.MishangRenderState;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+
 import java.util.Objects;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBlockOutline.class)
@@ -133,10 +134,10 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable MishangRenderState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  public @Nullable MishangRenderState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, LevelExtractionContext context, @Nullable HitResult result) {
     final BlockToolState state = new BlockToolState();
 
-    final ClientLevel world = context.world();
+    final ClientLevel world = context.level();
 
     if (result instanceof BlockHitResult blockHitResult && includesFluid(stack, player.isShiftKeyDown())) {
       final BlockPos blockPos = blockHitResult.getBlockPos();
@@ -152,19 +153,19 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
   public boolean renderBlockOutline(
       Player player,
       ItemStack itemStack,
-      WorldRenderContext context,
+      LevelRenderContext context,
       BlockOutlineRenderState outlineRenderState) {
-    final MultiBufferSource consumers = context.consumers();
+    final MultiBufferSource consumers = context.bufferSource();
     if (consumers == null) return true;
     final VertexConsumer vertexConsumer = consumers.getBuffer(RenderTypes.LINES);
-    final Vec3 cameraPos = context.worldState().cameraRenderState.pos;
+    final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
     final BlockPos blockPos = outlineRenderState.pos();
 
-    if (!(context.worldState().getData(MISHANG_BLOCK_OUTLINE) instanceof final BlockToolState state)) {
+    if (!(context.levelState().getData(MISHANG_BLOCK_OUTLINE) instanceof final BlockToolState state)) {
       return false;
     }
     ShapeRenderer.renderShape(
-        context.matrices(),
+        context.poseStack(),
         vertexConsumer,
         outlineRenderState.shape(),
         blockPos.getX() - cameraPos.x(),
@@ -174,7 +175,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
         Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     if (state.lightGreenPos != null && state.lightGreenShape != null) {
       ShapeRenderer.renderShape(
-          context.matrices(),
+          context.poseStack(),
           vertexConsumer,
           state.lightGreenShape,
           blockPos.getX() - cameraPos.x(),

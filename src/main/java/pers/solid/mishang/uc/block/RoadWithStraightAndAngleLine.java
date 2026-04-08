@@ -10,7 +10,7 @@ import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.data.recipes.RecipeBuilder;
@@ -40,7 +40,10 @@ import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
 import pers.solid.mishang.uc.data.FasterTextureMap;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
-import pers.solid.mishang.uc.util.*;
+import pers.solid.mishang.uc.util.HorizontalCornerDirection;
+import pers.solid.mishang.uc.util.LineColor;
+import pers.solid.mishang.uc.util.LineType;
+import pers.solid.mishang.uc.util.RoadConnectionState;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -131,7 +134,7 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       final BlockPos blockPos = ctx.getClickedPos();
       final BlockPos neighborPos = blockPos.relative(direction);
       final Level world = ctx.getLevel();
-      return updateShape(placementState, world, world, blockPos, direction, neighborPos, world.getBlockState(neighborPos), world.random);
+      return updateShape(placementState, world, world, blockPos, direction, neighborPos, world.getBlockState(neighborPos), world.getRandom());
     }
 
     @Override
@@ -251,10 +254,10 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
     @Override
     public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
       if (lineColor == lineColorSide && lineType == lineTypeSide) {
-        tooltip.add(TextBridge.translatable("lineType.straightAndAngle.same", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("lineType.straightAndAngle.same", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
       } else {
-        tooltip.add(TextBridge.translatable("lineType.straightAndAngle.straight", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
-        tooltip.add(TextBridge.translatable("lineType.straightAndAngle.bevel", lineColorSide.getName(), lineTypeSide.getName()).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("lineType.straightAndAngle.straight", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("lineType.straightAndAngle.bevel", lineColorSide.getName(), lineTypeSide.getName()).withStyle(ChatFormatting.BLUE));
       }
     }
 

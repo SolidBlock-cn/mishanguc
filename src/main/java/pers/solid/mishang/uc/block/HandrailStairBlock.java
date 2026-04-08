@@ -11,6 +11,7 @@ import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
@@ -40,7 +41,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.mixin.BlockStateModelGeneratorAccessor;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -257,7 +257,7 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
   @Override
   public MutableComponent getName() {
     final Block block = baseBlock();
-    return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.handrail_stair", block.getName());
+    return block == null ? super.getName() : Component.translatable("block.mishanguc.handrail_stair", block.getName());
   }
 
   @Override

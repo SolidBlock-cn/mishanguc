@@ -15,7 +15,7 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.fabricmc.fabric.api.registry.FuelRegistryEvents;
+import net.fabricmc.fabric.api.registry.FuelValueEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -324,14 +324,14 @@ public class Mishanguc implements ModInitializer {
     flammableBlockRegistry.add(ColoredBlocks.COLORED_WOOL, 30, 60);
     fuelRegistry.put(ColoredBlocks.COLORED_WOOL, 100);
 
-    FuelRegistryEvents.BUILD.register((builder, context) -> fuelRegistry.forEach(builder::add));
+    FuelValueEvents.BUILD.register((builder, context) -> fuelRegistry.forEach(builder::add));
   }
 
   private static void registerNetworkingReceiver() {
     // 注册服务器接收
-    PayloadTypeRegistry.playC2S().register(SignEditFinishPayload.ID, SignEditFinishPayload.CODEC);
+    PayloadTypeRegistry.serverboundPlay().register(SignEditFinishPayload.ID, SignEditFinishPayload.CODEC);
     ServerPlayNetworking.registerGlobalReceiver(SignEditFinishPayload.ID, BlockEntityWithText.PACKET_HANDLER);
-    PayloadTypeRegistry.playC2S().register(ItemScrollPayload.ID, ItemScrollPayload.CODEC);
+    PayloadTypeRegistry.serverboundPlay().register(ItemScrollPayload.ID, ItemScrollPayload.CODEC);
     ServerPlayNetworking.registerGlobalReceiver(ItemScrollPayload.ID, (payload, context) -> {
       final int selectedSlot = payload.selectedSlot();
       final double scrollAmount = payload.scrollAmount();
@@ -343,17 +343,17 @@ public class Mishanguc implements ModInitializer {
         }
       });
     });
-    PayloadTypeRegistry.playC2S().register(SlabToolPayload.ID, SlabToolPayload.CODEC);
+    PayloadTypeRegistry.serverboundPlay().register(SlabToolPayload.ID, SlabToolPayload.CODEC);
     ServerPlayNetworking.registerGlobalReceiver(SlabToolPayload.ID, SlabToolItem.Handler.INSTANCE);
-    PayloadTypeRegistry.playS2C().register(EditSignPayload.ID, EditSignPayload.CODEC);
-    PayloadTypeRegistry.playS2C().register(GetBlockDataPayload.ID, GetBlockDataPayload.CODEC);
-    PayloadTypeRegistry.playS2C().register(GetEntityDataPayload.ID, GetEntityDataPayload.CODEC);
+    PayloadTypeRegistry.clientboundPlay().register(EditSignPayload.ID, EditSignPayload.CODEC);
+    PayloadTypeRegistry.clientboundPlay().register(GetBlockDataPayload.ID, GetBlockDataPayload.CODEC);
+    PayloadTypeRegistry.clientboundPlay().register(GetEntityDataPayload.ID, GetEntityDataPayload.CODEC);
     ServerPlayerEvents.JOIN.register(serverPlayerEntity -> {
       final GameRules gameRules = serverPlayerEntity.level().getGameRules();
       MishangucRules.sync(serverPlayerEntity, (short) 0, gameRules.get(MishangucRules.FORCE_PLACING_TOOL_ACCESS));
       MishangucRules.sync(serverPlayerEntity, (short) 1, gameRules.get(MishangucRules.CARRYING_TOOL_ACCESS));
     });
-    PayloadTypeRegistry.playS2C().register(RuleChangedPayload.ID, RuleChangedPayload.CODEC);
+    PayloadTypeRegistry.clientboundPlay().register(RuleChangedPayload.ID, RuleChangedPayload.CODEC);
   }
 
   private static void registerEvents() {

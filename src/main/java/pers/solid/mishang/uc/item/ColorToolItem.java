@@ -1,18 +1,5 @@
 package pers.solid.mishang.uc.item;
 
-import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.block.ColoredBlock;
-import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
-import pers.solid.mishang.uc.components.MishangucComponents;
-import pers.solid.mishang.uc.util.ColorMixtureType;
-import pers.solid.mishang.uc.util.TextBridge;
-import pers.solid.mishang.uc.util.WithMishangTooltip;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,6 +23,18 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.block.ColoredBlock;
+import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
+import pers.solid.mishang.uc.components.MishangucComponents;
+import pers.solid.mishang.uc.util.ColorMixtureType;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class ColorToolItem extends BlockToolItem implements MishangucItem, WithMishangTooltip {
   public ColorToolItem(Properties settings, @Nullable Boolean includesFluid) {
@@ -49,18 +48,18 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
     final ColorMixtureType mixtureType = stack.getOrDefault(MishangucComponents.COLOR_MIXTURE_TYPE, ColorMixtureType.NORMAL);
     final List<Component> propertyTexts = new ArrayList<>();
     if (!opacity.equals(1f)) {
-      propertyTexts.add(TextBridge.translatable("item.mishanguc.color_tool.properties.opacity", String.format("%.2f", opacity)));
+      propertyTexts.add(Component.translatable("item.mishanguc.color_tool.properties.opacity", String.format("%.2f", opacity)));
     }
     if (color != null) {
-      propertyTexts.add(TextBridge.translatable("item.mishanguc.color_tool.properties.color", MishangUtils.describeColor(color)));
+      propertyTexts.add(Component.translatable("item.mishanguc.color_tool.properties.color", MishangUtils.describeColor(color)));
     }
     if (mixtureType != ColorMixtureType.NORMAL) {
-      propertyTexts.add(TextBridge.translatable("item.mishanguc.color_tool.properties.mixture_type", mixtureType.getName()));
+      propertyTexts.add(Component.translatable("item.mishanguc.color_tool.properties.mixture_type", mixtureType.getName()));
     }
     if (propertyTexts.isEmpty()) {
       return super.getName(stack);
     } else {
-      return TextBridge.translatable("item.mishanguc.color_tool.properties", super.getName(stack), ComponentUtils.formatList(propertyTexts, ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR));
+      return Component.translatable("item.mishanguc.color_tool.properties", super.getName(stack), ComponentUtils.formatList(propertyTexts, ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR));
     }
   }
 
@@ -70,32 +69,30 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
     final Integer color = stack.get(MishangucComponents.COLOR);
     final ColorMixtureType mixtureType = stack.getOrDefault(MishangucComponents.COLOR_MIXTURE_TYPE, ColorMixtureType.NORMAL);
     if (mixtureType.requiresTargetColor()) {
-      tooltip.add(TextBridge.translatable("item.mishanguc.color_tool.tooltip.1", TextBridge.keybind("key.attack").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
+      tooltip.add(Component.translatable("item.mishanguc.color_tool.tooltip.1", Component.keybind("key.attack").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
     }
     switch (mixtureType) {
-      case HUE_ROTATE -> tooltip.add(TextBridge.translatable("item.mishanguc.color_tool.tooltip.hue_rotate", TextBridge.keybind("key.use").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
-      case SATURATION_CHANGE -> tooltip.add(TextBridge.translatable("item.mishanguc.color_tool.tooltip.saturation", TextBridge.keybind("key.use").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
-      case BRIGHTNESS_CHANGE -> tooltip.add(TextBridge.translatable("item.mishanguc.color_tool.tooltip.brightness", TextBridge.keybind("key.use").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
-      default -> tooltip.add(TextBridge.translatable("item.mishanguc.color_tool.tooltip.2", TextBridge.keybind("key.use").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
+      case HUE_ROTATE -> tooltip.add(Component.translatable("item.mishanguc.color_tool.tooltip.hue_rotate", Component.keybind("key.use").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
+      case SATURATION_CHANGE -> tooltip.add(Component.translatable("item.mishanguc.color_tool.tooltip.saturation", Component.keybind("key.use").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
+      case BRIGHTNESS_CHANGE -> tooltip.add(Component.translatable("item.mishanguc.color_tool.tooltip.brightness", Component.keybind("key.use").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
+      default -> tooltip.add(Component.translatable("item.mishanguc.color_tool.tooltip.2", Component.keybind("key.use").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
     }
     if (mixtureType.hasInvertEffect()) {
-      tooltip.add(TextBridge.translatable("item.mishanguc.color_tool.tooltip.invert_when_sneaking").withStyle(ChatFormatting.GRAY));
+      tooltip.add(Component.translatable("item.mishanguc.color_tool.tooltip.invert_when_sneaking").withStyle(ChatFormatting.GRAY));
     }
     if (color != null && displayComponent.shows(MishangucComponents.COLOR)) {
       // 此时该对象已经定义了颜色。
       Color colorObject = new Color(color);
-      tooltip.add(TextBridge.translatable("block.mishanguc.colored_block.tooltip.color",
-          MishangUtils.describeColor(color)
-      ).withStyle(ChatFormatting.GRAY));
-      tooltip.add(TextBridge.translatable("block.mishanguc.colored_block.tooltip.color_components", colorObject.getRed(), colorObject.getGreen(), colorObject.getBlue(), colorObject.getAlpha()).withStyle(ChatFormatting.GRAY));
+      tooltip.add(Component.translatable("block.mishanguc.colored_block.tooltip.color", MishangUtils.describeColor(color)).withStyle(ChatFormatting.GRAY));
+      tooltip.add(Component.translatable("block.mishanguc.colored_block.tooltip.color_components", colorObject.getRed(), colorObject.getGreen(), colorObject.getBlue(), colorObject.getAlpha()).withStyle(ChatFormatting.GRAY));
     }
 
     final Float opacity = stack.getOrDefault(MishangucComponents.OPACITY, 1f);
     if (!opacity.equals(1f) && displayComponent.shows(MishangucComponents.OPACITY)) {
-      tooltip.add(TextBridge.translatable("item.mishanguc.color_tool.tooltip.opacity", opacity).withStyle(ChatFormatting.GRAY));
+      tooltip.add(Component.translatable("item.mishanguc.color_tool.tooltip.opacity", opacity).withStyle(ChatFormatting.GRAY));
     }
     if (displayComponent.shows(MishangucComponents.COLOR_MIXTURE_TYPE)) {
-      tooltip.add(TextBridge.translatable("item.mishanguc.color_tool.tooltip.mixture_type", mixtureType.getName()).withStyle(ChatFormatting.GRAY));
+      tooltip.add(Component.translatable("item.mishanguc.color_tool.tooltip.mixture_type", mixtureType.getName()).withStyle(ChatFormatting.GRAY));
     }
   }
 
@@ -107,7 +104,7 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
     final ColorMixtureType mixtureType = stack.getOrDefault(MishangucComponents.COLOR_MIXTURE_TYPE, ColorMixtureType.NORMAL);
     if (color == null && mixtureType.requiresTargetColor()) {
       if (!world.isClientSide()) {
-        player.displayClientMessage(TextBridge.translatable("item.mishanguc.color_tool.message.no_data").withStyle(ChatFormatting.RED), true);
+        player.sendOverlayMessage(Component.translatable("item.mishanguc.color_tool.message.no_data").withStyle(ChatFormatting.RED));
         return InteractionResult.FAIL;
       }
       return InteractionResult.PASS;
@@ -169,14 +166,14 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
         if (!world.isClientSide()) {
           world.sendBlockUpdated(blockPos, blockEntity.getBlockState(), blockEntity.getBlockState(), Block.UPDATE_CLIENTS);
           world.playSound(null, blockPos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-          player.displayClientMessage(TextBridge.translatable("item.mishanguc.color_tool.message.success_set", MishangUtils.describeColor(mixed)), true);
+          player.sendOverlayMessage(Component.translatable("item.mishanguc.color_tool.message.success_set", MishangUtils.describeColor(mixed)));
         }
       }
       stack.hurtAndBreak(1, player, hand.asEquipmentSlot());
       return InteractionResult.SUCCESS;
     } else {
       if (!world.isClientSide()) {
-        player.displayClientMessage(TextBridge.translatable("item.mishanguc.color_tool.message.not_colored").withStyle(ChatFormatting.RED), true);
+        player.sendOverlayMessage(Component.translatable("item.mishanguc.color_tool.message.not_colored").withStyle(ChatFormatting.RED));
         return InteractionResult.FAIL;
       }
       return InteractionResult.PASS;
@@ -199,7 +196,7 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
     }
     stack.set(MishangucComponents.COLOR, color);
     if (!world.isClientSide()) {
-      player.displayClientMessage(TextBridge.translatable("item.mishanguc.color_tool.message.success_copied", MishangUtils.describeColor(color)), true);
+      player.sendOverlayMessage(Component.translatable("item.mishanguc.color_tool.message.success_copied", MishangUtils.describeColor(color)));
     }
     return null;
   }

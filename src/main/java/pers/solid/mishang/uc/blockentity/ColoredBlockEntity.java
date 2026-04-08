@@ -1,6 +1,6 @@
 package pers.solid.mishang.uc.blockentity;
 
-import net.fabricmc.fabric.api.blockview.v2.RenderDataBlockEntity;
+import net.fabricmc.fabric.api.blockgetter.v2.RenderDataBlockEntity;
 import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.Nullable;
 

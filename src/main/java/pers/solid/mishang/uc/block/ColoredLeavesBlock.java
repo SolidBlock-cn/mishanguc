@@ -9,6 +9,7 @@ import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -72,14 +73,14 @@ public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock {
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final Identifier modelId = ModelTemplates.LEAVES.create(this, TextureMapping.cube(texture), blockStateModelGenerator.modelOutput);
+    final Identifier modelId = ModelTemplates.LEAVES.create(this, TextureMapping.cube(new Material(texture)), blockStateModelGenerator.modelOutput);
     blockStateModelGenerator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(this, BlockModelGenerators.plainVariant(modelId)));
     blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.tintedModel(modelId, ColoredTintSource.INSTANCE));
   }
 
 
   @Override
-  public LootTable.Builder getLootTable(BlockLootSubProvider blockLootTableGenerator) {
+  public @Nullable LootTable.Builder getLootTable(BlockLootSubProvider blockLootTableGenerator) {
     if (lootBuilder == null) return null;
     return (lootBuilder.apply(this, blockLootTableGenerator).apply(COPY_COLOR_LOOT_FUNCTION));
   }

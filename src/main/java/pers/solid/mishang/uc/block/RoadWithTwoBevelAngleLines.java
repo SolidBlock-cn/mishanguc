@@ -55,9 +55,9 @@ public interface RoadWithTwoBevelAngleLines extends Road {
   @Override
   default void appendRoadTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     Road.super.appendRoadTooltip(stack, context, tooltip, options);
-    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_bi_bevel_angle_line.1").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_bi_bevel_angle_line.2").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_bi_bevel_angle_line.3").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("block.mishanguc.tooltip.road_with_bi_bevel_angle_line.1").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("block.mishanguc.tooltip.road_with_bi_bevel_angle_line.2").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("block.mishanguc.tooltip.road_with_bi_bevel_angle_line.3").withStyle(ChatFormatting.GRAY));
   }
 
   @Override
@@ -112,7 +112,7 @@ public interface RoadWithTwoBevelAngleLines extends Road {
 
     @Override
     public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
-      tooltip.add(TextBridge.translatable("lineType.biBevelAngleLine", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
+      tooltip.add(Component.translatable("lineType.biBevelAngleLine", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
     }
 
     @Override
@@ -165,7 +165,7 @@ public interface RoadWithTwoBevelAngleLines extends Road {
 
     @Override
     public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
-      tooltip.add(TextBridge.translatable("lineType.biBevelAngleLine", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
+      tooltip.add(Component.translatable("lineType.biBevelAngleLine", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
     }
 
     @Override

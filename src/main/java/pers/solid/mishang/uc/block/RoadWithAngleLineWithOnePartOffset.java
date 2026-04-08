@@ -10,14 +10,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
-import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
 import net.minecraft.core.Direction;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.*;
+import net.minecraft.util.Util;
 import net.minecraft.world.item.Item.TooltipContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -95,10 +95,10 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
       ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     RoadWithAngleLine.super.appendRoadTooltip(stack, context, tooltip, options);
     tooltip.add(
-        TextBridge.translatable("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.1")
+        Component.translatable("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.1")
             .withStyle(ChatFormatting.GRAY));
     tooltip.add(
-        TextBridge.translatable("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.2")
+        Component.translatable("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.2")
             .withStyle(ChatFormatting.GRAY));
   }
 

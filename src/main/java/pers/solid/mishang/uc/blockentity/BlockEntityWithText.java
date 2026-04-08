@@ -29,17 +29,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.networking.SignEditFinishPayload;
 import pers.solid.mishang.uc.text.TextContext;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.HashMap;
 import java.util.List;
 
 public abstract class BlockEntityWithText extends BlockEntity {
 
-  public static final Component MESSAGE_GLOW_ON = TextBridge.translatable("message.mishanguc.sign.glow_on");
-  public static final Component MESSAGE_GLOW_OFF = TextBridge.translatable("message.mishanguc.sign.glow_off");
-  public static final Component MESSAGE_WAX_ON = TextBridge.translatable("message.mishanguc.sign.wax_on");
-  public static final Component MESSAGE_WAX_OFF = TextBridge.translatable("message.mishanguc.sign.wax_off");
+  public static final Component MESSAGE_GLOW_ON;
+  public static final Component MESSAGE_GLOW_OFF;
+  public static final Component MESSAGE_WAX_ON;
+  public static final Component MESSAGE_WAX_OFF;
+
+  static {
+    MESSAGE_GLOW_ON = Component.translatable("message.mishanguc.sign.glow_on");
+    MESSAGE_GLOW_OFF = Component.translatable("message.mishanguc.sign.glow_off");
+    MESSAGE_WAX_ON = Component.translatable("message.mishanguc.sign.wax_on");
+    MESSAGE_WAX_OFF = Component.translatable("message.mishanguc.sign.wax_off");
+  }
+
   public static final PacketHandler PACKET_HANDLER = new PacketHandler();
 
   public BlockEntityWithText(BlockEntityType<?> type, BlockPos pos, BlockState state) {

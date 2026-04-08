@@ -3,12 +3,12 @@ package pers.solid.mishang.uc.item;
 import it.unimi.dsi.fastutil.longs.LongObjectPair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.state.BlockOutlineRenderState;
+import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -40,7 +40,6 @@ import pers.solid.mishang.uc.render.state.BuildingToolState;
 import pers.solid.mishang.uc.render.state.MishangRenderState;
 import pers.solid.mishang.uc.util.BlockMatchingRule;
 import pers.solid.mishang.uc.util.BlockPlacementContext;
-import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.Iterator;
@@ -129,9 +128,9 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
 
   @Override
   public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-    tooltip.add(TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.1")
+    tooltip.add(Component.translatable("item.mishanguc.fast_building_tool.tooltip.1")
         .withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.2").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.fast_building_tool.tooltip.2").withStyle(ChatFormatting.GRAY));
   }
 
   protected ItemStack createStack(int range, BlockMatchingRule blockMatchingRule) {
@@ -150,13 +149,13 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
   @Override
   public Component getName(ItemStack stack) {
     final FastBuildingToolData data = stack.getOrDefault(MishangucComponents.FAST_BUILDING_TOOL_DATA, FastBuildingToolData.DEFAULT);
-    return TextBridge.translatable("item.mishanguc.fast_building_tool.format", getName(), Integer.toString(data.range()), data.matchingRule().getName());
+    return Component.translatable("item.mishanguc.fast_building_tool.format", super.getName(stack), Integer.toString(data.range()), data.matchingRule().getName()); // check item name todo
   }
 
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable MishangRenderState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  public @Nullable MishangRenderState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, LevelExtractionContext context, @Nullable HitResult result) {
     if (!player.isCreative()) {
       // 只有在创造模式下，才会绘制边框。
       return null;
@@ -175,7 +174,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
       return null;
     }
     final BuildingToolState buildingToolState = new BuildingToolState();
-    final ClientLevel world = context.world();
+    final ClientLevel world = context.level();
     final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockHitResult.getBlockPos(), player, stack, raycast, includesFluid);
     final CollisionContext shapeContext = CollisionContext.of(player);
     for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, raycast.getBlockPos(), raycast.getDirection(), range)) {
@@ -203,7 +202,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
   public boolean renderBlockOutline(
       Player player,
       ItemStack itemStack,
-      WorldRenderContext context,
+      LevelRenderContext context,
       BlockOutlineRenderState outlineRenderState) {
     return BuildingToolState.render(context);
   }
@@ -218,7 +217,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
     final BlockMatchingRule newRule = RULES_TO_CYCLE.byId(j);
     if (newRule != null) {
       stack.set(MishangucComponents.FAST_BUILDING_TOOL_DATA, new FastBuildingToolData(data.range(), newRule));
-      final MutableComponent text = TextBridge.literal("[ ");
+      final MutableComponent text = Component.literal("[ ");
       for (Iterator<BlockMatchingRule> iterator = RULES_TO_CYCLE.iterator(); iterator.hasNext(); ) {
         BlockMatchingRule rule = iterator.next();
         final MutableComponent name = rule.getName();
@@ -227,7 +226,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
         if (iterator.hasNext()) text.append(" | ");
       }
       text.append(" ]");
-      player.displayClientMessage(text, true);
+      player.sendOverlayMessage(text);
     }
   }
 }

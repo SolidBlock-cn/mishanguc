@@ -11,8 +11,10 @@ import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -22,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.item.ColoredTintSource;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -30,34 +31,34 @@ import java.util.function.Function;
 @ApiStatus.AvailableSince("0.2.4")
 public class GlassHandrailBlock extends HandrailBlock {
   public static final MapCodec<GlassHandrailBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_block").forGetter(GlassHandrailBlock::baseBlock), propertiesCodec()).apply(instance, (block, settings1) -> new GlassHandrailBlock(block, settings1, null, null, BuiltInRegistries.BLOCK.getKey(block), false)));
-  public final Identifier decorationTexture;
+  public final Material decorationMaterial;
   private final CentralBlock central;
   private final CornerBlock corner;
   private final StairBlock stair;
   private final OuterBlock outer;
   private final Block baseBlock;
-  private final Identifier frameTexture;
+  private final Material frameMaterial;
 
-  public GlassHandrailBlock(Block baseBlock, Properties settings, String frameTexture, String decorationTexture, Identifier identifier) {
-    this(baseBlock, settings, frameTexture, decorationTexture, identifier, true);
+  public GlassHandrailBlock(Block baseBlock, Properties settings, String frameMaterial, String decorationMaterial, Identifier identifier) {
+    this(baseBlock, settings, frameMaterial, decorationMaterial, identifier, true);
   }
 
-  protected GlassHandrailBlock(Block baseBlock, Properties settings, String frameTexture, String decorationTexture, Identifier identifier, boolean createAffiliateBlocks) {
+  protected GlassHandrailBlock(Block baseBlock, Properties settings, String frameMaterial, String decorationMaterial, Identifier identifier, boolean createAffiliateBlocks) {
     super(settings.noOcclusion().setId(ResourceKey.create(Registries.BLOCK, identifier)));
     this.baseBlock = baseBlock;
-    this.frameTexture = frameTexture == null ? null : Identifier.parse(frameTexture);
-    this.decorationTexture = decorationTexture == null ? null : Identifier.parse(decorationTexture);
+    this.frameMaterial = frameMaterial == null ? null : new Material(Identifier.parse(frameMaterial));
+    this.decorationMaterial = decorationMaterial == null ? null : new Material(Identifier.parse(decorationMaterial));
     this.central = createAffiliateBlocks ? new CentralBlock(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_central")))) : null;
     this.corner = createAffiliateBlocks ? new CornerBlock(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_corner")))) : null;
     this.stair = createAffiliateBlocks ? new StairBlock(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_stair")))) : null;
     this.outer = createAffiliateBlocks ? new OuterBlock(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_outer")))) : null;
   }
 
-  protected GlassHandrailBlock(Block baseBlock, Properties settings, String frameTexture, String decorationTexture, BiFunction<GlassHandrailBlock, Properties, CentralBlock> centralProvider, BiFunction<GlassHandrailBlock, Properties, CornerBlock> cornerProvider, BiFunction<GlassHandrailBlock, Properties, StairBlock> stairProvider, BiFunction<GlassHandrailBlock, Properties, OuterBlock> outerProvider, Identifier identifier) {
+  protected GlassHandrailBlock(Block baseBlock, Properties settings, String frameMaterial, String decorationMaterial, BiFunction<GlassHandrailBlock, Properties, CentralBlock> centralProvider, BiFunction<GlassHandrailBlock, Properties, CornerBlock> cornerProvider, BiFunction<GlassHandrailBlock, Properties, StairBlock> stairProvider, BiFunction<GlassHandrailBlock, Properties, OuterBlock> outerProvider, Identifier identifier) {
     super(settings.noOcclusion().setId(ResourceKey.create(Registries.BLOCK, identifier)));
     this.baseBlock = baseBlock;
-    this.frameTexture = Identifier.parse(frameTexture);
-    this.decorationTexture = Identifier.parse(decorationTexture);
+    this.frameMaterial = new Material(Identifier.parse(frameMaterial));
+    this.decorationMaterial = new Material(Identifier.parse(decorationMaterial));
     central = centralProvider.apply(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_central"))));
     corner = cornerProvider.apply(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_corner"))));
     stair = stairProvider.apply(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_stair"))));
@@ -85,7 +86,7 @@ public class GlassHandrailBlock extends HandrailBlock {
   @Environment(EnvType.CLIENT)
   @Override
   public TextureMapping getTextures() {
-    return new TextureMapping().put(TextureKeys.FRAME, frameTexture).put(TextureKeys.GLASS, Mishanguc.id("block/glass_unframed")).put(TextureKeys.DECORATION, decorationTexture);
+    return new TextureMapping().put(TextureKeys.FRAME, frameMaterial).put(TextureKeys.GLASS, new Material(Mishanguc.id("block/glass_unframed"))).put(TextureKeys.DECORATION, decorationMaterial);
   }
 
   @Override
@@ -137,7 +138,7 @@ public class GlassHandrailBlock extends HandrailBlock {
 
     @Override
     public MutableComponent getName() {
-      return TextBridge.translatable("block.mishanguc.handrail_central", baseHandrail.getName());
+      return Component.translatable("block.mishanguc.handrail_central", baseHandrail.getName());
     }
 
     @Environment(EnvType.CLIENT)
@@ -165,7 +166,7 @@ public class GlassHandrailBlock extends HandrailBlock {
 
     @Override
     public MutableComponent getName() {
-      return TextBridge.translatable("block.mishanguc.handrail_corner", baseHandrail.getName());
+      return Component.translatable("block.mishanguc.handrail_corner", baseHandrail.getName());
     }
 
     @Environment(EnvType.CLIENT)
@@ -190,7 +191,7 @@ public class GlassHandrailBlock extends HandrailBlock {
 
     @Override
     public MutableComponent getName() {
-      return TextBridge.translatable("block.mishanguc.handrail_stair", baseHandrail.getName());
+      return Component.translatable("block.mishanguc.handrail_stair", baseHandrail.getName());
     }
 
     @Environment(EnvType.CLIENT)
@@ -221,7 +222,7 @@ public class GlassHandrailBlock extends HandrailBlock {
 
     @Override
     public MutableComponent getName() {
-      return TextBridge.translatable("block.mishanguc.handrail_outer", baseHandrail.getName());
+      return Component.translatable("block.mishanguc.handrail_outer", baseHandrail.getName());
     }
 
     @Environment(EnvType.CLIENT)

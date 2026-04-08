@@ -2,8 +2,8 @@ package pers.solid.mishang.uc.data;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMap;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -27,7 +27,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static pers.solid.mishang.uc.MishangUtils.*;
 
-public class MishangucItemTagProvider extends FabricTagProvider.ItemTagProvider {
+public class MishangucItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
   protected static final Map<DyeColor, TagKey<Item>> dyedItemTags = ImmutableMap.<DyeColor, TagKey<Item>>builder()
       .put(DyeColor.BLACK, ConventionalItemTags.BLACK_DYED)
       .put(DyeColor.BLUE, ConventionalItemTags.BLUE_DYED)
@@ -48,7 +48,7 @@ public class MishangucItemTagProvider extends FabricTagProvider.ItemTagProvider 
       .build();
   private final MishangucBlockTagProvider blockTagProvider;
 
-  public MishangucItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture, MishangucBlockTagProvider blockTagProvider) {
+  public MishangucItemTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> completableFuture, MishangucBlockTagProvider blockTagProvider) {
     super(output, completableFuture, blockTagProvider);
     this.blockTagProvider = blockTagProvider;
   }

@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -25,7 +26,7 @@ import java.util.Set;
 public abstract class BlockMatchingRule implements StringRepresentable {
   public static final ResourceKey<Registry<BlockMatchingRule>> REGISTRY_KEY =
       ResourceKey.createRegistryKey(Mishanguc.id("block_matching_rule"));
-  public static final MappedRegistry<BlockMatchingRule> REGISTRY = FabricRegistryBuilder.createSimple(REGISTRY_KEY).buildAndRegister();
+  public static final MappedRegistry<BlockMatchingRule> REGISTRY = FabricRegistryBuilder.create(REGISTRY_KEY).buildAndRegister();
   public static final BlockMatchingRule SAME_STATE =
       new BlockMatchingRule() {
         @Override
@@ -83,7 +84,7 @@ public abstract class BlockMatchingRule implements StringRepresentable {
   }
 
   public MutableComponent getName() {
-    return TextBridge.translatable(Util.makeDescriptionId("blockMatchingRule", REGISTRY.getKey(this)));
+    return Component.translatable(Util.makeDescriptionId("blockMatchingRule", REGISTRY.getKey(this)));
   }
 
   /**

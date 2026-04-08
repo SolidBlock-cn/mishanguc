@@ -5,7 +5,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Blocks;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.MiningLevel;
-import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.util.ModelReference;
 import pers.solid.mishang.uc.util.TextureMapReference;
@@ -123,20 +122,16 @@ public final class ColoredBlocks extends MishangucBlocks {
 
   public static final ColoredSlabBlock COLORED_END_STONE_BRICK_SLAB = register("colored_end_stone_brick_slab", settings -> new ColoredSlabBlock(COLORED_END_STONE_BRICKS, settings), Blocks.END_STONE_BRICK_SLAB);
 
-  @Translucent
   @MiningLevel(MiningLevel.Tool.NONE)
   public static final ColoredNetherPortalBlock COLORED_NETHER_PORTAL = register("colored_nether_portal", ColoredNetherPortalBlock::new, Blocks.NETHER_PORTAL);
 
   @MiningLevel(MiningLevel.Tool.NONE)
   public static final ColoredCubeBlock COLORED_LIGHT = register("colored_light", settings -> new ColoredCubeBlock(settings, ModelReference.COLORED_CUBE_ALL_WITHOUT_SHADE, TextureMapReference.all(Identifier.parse("mishanguc:block/white_light"))), WHITE_LIGHT_SETTINGS);
-  @Translucent
   @MiningLevel(MiningLevel.Tool.NONE)
   public static final ColoredGlassBlock COLORED_GLASS = register("colored_glass", settings -> new ColoredGlassBlock(settings, TextureMapReference.all(Identifier.withDefaultNamespace("block/white_stained_glass"))), Blocks.WHITE_STAINED_GLASS);
-  @Translucent
 
   @MiningLevel(MiningLevel.Tool.NONE)
   public static final ColoredGlassPaneBlock COLORED_GLASS_PANE = register("colored_glass_pane", settings -> new ColoredGlassPaneBlock(Identifier.withDefaultNamespace("block/white_stained_glass"), Identifier.withDefaultNamespace("block/white_stained_glass_pane_top"), settings), Blocks.WHITE_STAINED_GLASS_PANE);
-  @Translucent
   public static final ColoredIceBlock COLORED_ICE = register("colored_ice", settings -> new ColoredIceBlock(settings, TextureMapReference.all(Identifier.parse("mishanguc:block/pale_ice"))), Blocks.ICE);
   @MiningLevel(MiningLevel.Tool.SHOVEL)
   public static final ColoredCubeBlock COLORED_SNOW_BLOCK = register("colored_snow_block", settings -> ColoredCubeBlock.cubeAll(settings, "block/snow"), Blocks.SNOW_BLOCK);

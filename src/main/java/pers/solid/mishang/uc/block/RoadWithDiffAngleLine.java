@@ -9,7 +9,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
-import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
 import net.minecraft.core.Direction;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -32,7 +32,6 @@ import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.util.HorizontalCornerDirection;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.List;
 
@@ -91,8 +90,8 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
 
     @Override
     public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
-      tooltip.add(TextBridge.translatable("lineType.diffAngleLine.composed.1", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
-      tooltip.add(TextBridge.translatable("lineType.diffAngleLine.composed.2", lineColor2.getName(), lineType2.getName()).withStyle(ChatFormatting.BLUE));
+      tooltip.add(Component.translatable("lineType.diffAngleLine.composed.1", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
+      tooltip.add(Component.translatable("lineType.diffAngleLine.composed.2", lineColor2.getName(), lineType2.getName()).withStyle(ChatFormatting.BLUE));
     }
 
     @Override

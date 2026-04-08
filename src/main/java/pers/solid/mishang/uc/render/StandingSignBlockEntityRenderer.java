@@ -9,8 +9,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -26,8 +25,7 @@ public record StandingSignBlockEntityRenderer<T extends StandingSignBlockEntity>
   public void submit(StandingBlockEntityRenderState state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState) {
     final BooleanSet glowing = state.glowing;
     matrices.translate(0.5, 0.75, 0.5);
-    final BlockState blockState = state.blockState;
-    final int rotation = blockState.getValue(StandingSignBlock.ROTATION);
+    final int rotation = state.rotation;
     matrices.mulPose(Axis.YP.rotationDegrees(-rotation * 22.5f));
     matrices.scale(1 / 16f, -1 / 16f, 1 / 16f);
 
@@ -58,5 +56,6 @@ public record StandingSignBlockEntityRenderer<T extends StandingSignBlockEntity>
     state.frontTexts = blockEntity.frontTexts;
     state.height = blockEntity.getHeight();
     state.glowing = blockEntity.glowing;
+    state.rotation = blockEntity.getBlockState().getValue(StandingSignBlock.ROTATION);
   }
 }

@@ -3,7 +3,6 @@ package pers.solid.mishang.uc;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.gamerule.v1.CustomGameRuleCategory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleBuilder;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -16,12 +15,12 @@ import net.minecraft.server.permissions.Permissions;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.gamerules.GameRule;
+import net.minecraft.world.level.gamerules.GameRuleCategory;
 import net.minecraft.world.level.gamerules.GameRules;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.networking.RuleChangedPayload;
-import pers.solid.mishang.uc.util.TextBridge;
 
 /**
  * 迷上城建模组新增加的游戏规则。
@@ -30,7 +29,7 @@ import pers.solid.mishang.uc.util.TextBridge;
  */
 @ApiStatus.AvailableSince("1.0.0")
 public final class MishangucRules {
-  public static final CustomGameRuleCategory MISHANG_CATEGORY = new CustomGameRuleCategory(Mishanguc.id("mishanguc"), Component.translatable("modmenu.nameTranslation.mishanguc"));
+  public static final GameRuleCategory MISHANG_CATEGORY = GameRuleCategory.register(Mishanguc.id("mishanguc"));
 
   public static final GameRule<ToolAccess> FORCE_PLACING_TOOL_ACCESS = GameRuleBuilder.forEnum(ToolAccess.CREATIVE_ONLY)
       .category(MISHANG_CATEGORY)
@@ -112,13 +111,13 @@ public final class MishangucRules {
     public boolean hasAccess(Player player, boolean warn) {
       final boolean hasAccess = hasAccess(player);
       if (warn && !hasAccess && !player.level().isClientSide()) {
-        player.displayClientMessage(createWarnText(), true);
+        player.sendOverlayMessage(createWarnText());
       }
       return hasAccess;
     }
 
     public MutableComponent createWarnText() {
-      return TextBridge.translatable("message.tool_access", TextBridge.translatable("message.tool_access." + getSerializedName())).withStyle(ChatFormatting.RED);
+      return Component.translatable("message.tool_access", Component.translatable("message.tool_access." + getSerializedName())).withStyle(ChatFormatting.RED);
     }
   }
 }

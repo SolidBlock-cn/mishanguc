@@ -15,4 +15,5 @@ public class StandingBlockEntityRenderState extends BlockEntityRenderState {
   public List<TextContext> frontTexts = ImmutableList.of();
   public List<TextContext> backTexts = ImmutableList.of();
   public float height;
+  public int rotation;
 }

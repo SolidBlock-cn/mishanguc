@@ -4,12 +4,12 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.apache.commons.lang3.Strings;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.item.NamedBlockItem;
+import pers.solid.mishang.uc.mixin.ItemsAccessor;
 
 import java.util.List;
 
@@ -46,6 +46,6 @@ public final class RoadSlabBlocks extends MishangucBlocks {
   }
 
   static void registerAll() {
-    SLABS.forEach(slab -> Items.registerBlock(slab, NamedBlockItem::new));
+    SLABS.forEach(slab -> ItemsAccessor.callRegisterBlock(slab, NamedBlockItem::new));
   }
 }

@@ -14,7 +14,8 @@ import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -63,7 +64,6 @@ import pers.solid.mishang.uc.item.ColoredTintSource;
 import pers.solid.mishang.uc.mixin.BlockStateModelGeneratorAccessor;
 import pers.solid.mishang.uc.networking.EditSignPayload;
 import pers.solid.mishang.uc.render.WallSignBlockEntityRenderer;
-import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
@@ -102,7 +102,7 @@ public class WallSignBlock extends FaceAttachedHorizontalDirectionalBlock implem
           SHAPES_WHEN_FLOOR,
           AttachFace.WALL,
           SHAPES_WHEN_WALL);
-  public final Block baseBlock;
+  public final @Nullable Block baseBlock;
   /**
    * 告示牌自身的纹理。默认为 {@code null}，可在后期修改。若为 {@code null}，则直接根据其基础方块 {@link #baseBlock} 推断纹理。
    */
@@ -161,15 +161,13 @@ public class WallSignBlock extends FaceAttachedHorizontalDirectionalBlock implem
 
   @Override
   public MutableComponent getName() {
-    return baseBlock == null
-        ? super.getName()
-        : TextBridge.translatable("block.mishanguc.wall_sign", baseBlock.getName());
+    return baseBlock == null ? super.getName() : Component.translatable("block.mishanguc.wall_sign", baseBlock.getName());
   }
 
   @Override
   public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-    tooltip.add(TextBridge.translatable("block.mishanguc.wall_sign.tooltip.1").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("block.mishanguc.wall_sign.tooltip.2").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("block.mishanguc.wall_sign.tooltip.1").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("block.mishanguc.wall_sign.tooltip.2").withStyle(ChatFormatting.GRAY));
   }
 
   @Override
@@ -193,7 +191,7 @@ public class WallSignBlock extends FaceAttachedHorizontalDirectionalBlock implem
       // 这种情况下，告示牌被占用，玩家无权编辑。
       // In this case, the sign is occupied, and the player has no editing
       // permission.
-      player.displayClientMessage(TextBridge.translatable("message.mishanguc.no_editing_permission.occupied", editor.getName()), false);
+      player.sendOverlayMessage(Component.translatable("message.mishanguc.no_editing_permission.occupied", editor.getName()));
       return InteractionResult.FAIL;
     }
     // 此时告示牌已被编辑。
@@ -218,14 +216,14 @@ public class WallSignBlock extends FaceAttachedHorizontalDirectionalBlock implem
         // 处理告示牌的涂蜡。
         if (!entity.waxed) {
           entity.waxed = true;
-          player.displayClientMessage(BlockEntityWithText.MESSAGE_WAX_ON, true);
+          player.sendOverlayMessage(BlockEntityWithText.MESSAGE_WAX_ON);
           world.levelEvent(null, LevelEvent.PARTICLES_AND_SOUND_WAX_ON, entity.getBlockPos(), 0);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stack.shrink(1);
           return InteractionResult.SUCCESS;
         } else if (player.isCreative()) {
           entity.waxed = false;
-          player.displayClientMessage(BlockEntityWithText.MESSAGE_WAX_OFF, true);
+          player.sendOverlayMessage(BlockEntityWithText.MESSAGE_WAX_OFF);
           world.levelEvent(null, LevelEvent.PARTICLES_WAX_OFF, entity.getBlockPos(), 0);
           entity.markDirtyAndUpdate();
           return InteractionResult.SUCCESS;
@@ -243,7 +241,7 @@ public class WallSignBlock extends FaceAttachedHorizontalDirectionalBlock implem
       } else if (stack.getItem() instanceof GlowInkSacItem) {
         if (!entity.glowing) {
           entity.glowing = true;
-          player.displayClientMessage(BlockEntityWithText.MESSAGE_GLOW_ON, true);
+          player.sendOverlayMessage(BlockEntityWithText.MESSAGE_GLOW_ON);
           world.playSound(null, entity.getBlockPos(), SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stack.shrink(1);
@@ -252,7 +250,7 @@ public class WallSignBlock extends FaceAttachedHorizontalDirectionalBlock implem
       } else if (stack.getItem() instanceof InkSacItem) {
         if (entity.glowing) {
           entity.glowing = false;
-          player.displayClientMessage(BlockEntityWithText.MESSAGE_GLOW_OFF, true);
+          player.sendOverlayMessage(BlockEntityWithText.MESSAGE_GLOW_OFF);
           world.playSound(null, entity.getBlockPos(), SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stack.shrink(1);
@@ -273,7 +271,7 @@ public class WallSignBlock extends FaceAttachedHorizontalDirectionalBlock implem
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final TextureMapping textures = TextureMapping.defaultTexture(getBaseTexture());
+    final TextureMapping textures = TextureMapping.defaultTexture(getBaseMaterial());
     final Identifier modelId = MishangucModels.WALL_SIGN.create(this, textures, blockStateModelGenerator.modelOutput);
     blockStateModelGenerator.blockStateOutput.accept(createBlockStates(modelId));
     if (this instanceof ColoredBlock) {
@@ -297,9 +295,9 @@ public class WallSignBlock extends FaceAttachedHorizontalDirectionalBlock implem
   }
 
   @Environment(EnvType.CLIENT)
-  public Identifier getBaseTexture() {
-    if (texture != null) return texture;
-    return ModelHelper.getTextureOf(baseBlock == null ? this : baseBlock);
+  public Material getBaseMaterial() {
+    if (texture != null) return new Material(texture);
+    return ModelHelper.getMaterialOf(baseBlock == null ? this : baseBlock);
   }
 
   private @Nullable String getRecipeGroup() {

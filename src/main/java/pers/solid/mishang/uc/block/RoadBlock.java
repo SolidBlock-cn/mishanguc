@@ -8,6 +8,7 @@ import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeBuilder;
@@ -23,6 +24,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jspecify.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.util.LineColor;
 import pers.solid.mishang.uc.util.LineType;
@@ -47,7 +49,7 @@ public class RoadBlock extends AbstractRoadBlock {
   @Environment(EnvType.CLIENT)
   @Override
   protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockModelGenerators blockStateModelGenerator) {
-    final TextureMapping textures = TextureMapping.cube(texture);
+    final TextureMapping textures = TextureMapping.cube(new Material(texture));
     final Identifier modelId;
     if (road instanceof SlabBlock) {
       modelId = ModelTemplates.SLAB_BOTTOM.create(road, textures, blockStateModelGenerator.modelOutput);
@@ -69,7 +71,7 @@ public class RoadBlock extends AbstractRoadBlock {
   }
 
   @Override
-  public RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
+  public @Nullable RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
     if (lineColor != LineColor.NONE) return null;
     final TagKey<Item> tag = TagKey.create(Registries.ITEM, Mishanguc.id("road_materials"));
     return recipeGenerator.shaped(RecipeCategory.BUILDING_BLOCKS, this, 9)
@@ -85,7 +87,7 @@ public class RoadBlock extends AbstractRoadBlock {
   }
 
   @Override
-  public RecipeBuilder getPaintingRecipe(Block base, Block self, RecipeProvider recipeGenerator) {
+  public @Nullable RecipeBuilder getPaintingRecipe(Block base, Block self, RecipeProvider recipeGenerator) {
     if (lineColor == LineColor.NONE) return null;
     return recipeGenerator.shaped(RecipeCategory.BUILDING_BLOCKS, self)
         .pattern("***")

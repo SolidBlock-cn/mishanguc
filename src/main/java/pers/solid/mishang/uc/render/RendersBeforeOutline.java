@@ -2,8 +2,8 @@ package pers.solid.mishang.uc.render;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.Item;
@@ -23,16 +23,16 @@ public interface RendersBeforeOutline extends MishangRenderStateProvider {
    *
    * @param player  执行此渲染的客户端玩家。
    * @param stack   玩家持有此物品的手，可以用来指定只有玩家使用特定的手持有此物品时才会进行渲染。
-   * @param context 当前渲染场景中的参数，参见 {@link WorldRenderEvents#BEFORE_DEBUG_RENDER}。
+   * @param context 当前渲染场景中的参数，参见 {@link LevelRenderEvents#BEFORE_GIZMOS}。
    */
-  void renderBeforeOutline(LocalPlayer player, ItemStack stack, WorldRenderContext context);
+  void renderBeforeOutline(LocalPlayer player, ItemStack stack, LevelRenderContext context);
 
-  WorldRenderEvents.DebugRender DEBUG_RENDER = context -> {
+  LevelRenderEvents.BeforeGizmos DEBUG_RENDER = context -> {
     final LocalPlayer player = Minecraft.getInstance().player;
-    if (context.worldState() == null) {
+    if (context.levelState() == null) {
       return;// 不知道为什么这里会是 null，但是确实发生了
     }
-    final ItemStack stack = context.worldState().getData(MishangRenderStateProvider.HAND_STACK);
+    final ItemStack stack = context.levelState().getData(MishangRenderStateProvider.HAND_STACK);
     if (stack == null) return;
     if (player == null) return;
     final Item item = stack.getItem();

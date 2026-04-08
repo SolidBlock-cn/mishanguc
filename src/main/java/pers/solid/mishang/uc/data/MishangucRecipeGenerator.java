@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -240,14 +241,14 @@ public class MishangucRecipeGenerator extends RecipeProvider {
   private void addRoadPalingRecipes() {
     // 将带有标线的道路重置为不带标线的道路。
     final TagKey<Item> roadBlocks = TagKey.create(Registries.ITEM, Mishanguc.id("road_blocks"));
-    SingleItemRecipeBuilder.stonecutting(tag(roadBlocks), RecipeCategory.BUILDING_BLOCKS, RoadBlocks.ROAD_BLOCK)
+    SingleItemRecipeBuilder.stonecutting(tag(roadBlocks), RecipeCategory.BUILDING_BLOCKS, RoadBlocks.ROAD_BLOCK, 1)
         .unlockedBy("has_road_block", has(roadBlocks))
-        .save(output, ResourceKey.create(Registries.RECIPE, RecipeBuilder.getDefaultRecipeId(RoadBlocks.ROAD_BLOCK).withSuffix("_from_paling")));
+        .save(output, ResourceKey.create(Registries.RECIPE, RecipeBuilder.getDefaultRecipeId(new ItemStackTemplate(RoadBlocks.ROAD_BLOCK.asItem())).identifier().withSuffix("_from_paling")));
     final TagKey<Item> roadSlabs = TagKey.create(Registries.ITEM, Mishanguc.id("road_slabs"));
     final AbstractRoadSlabBlock roadSlabBlock = RoadSlabBlocks.BLOCK_TO_SLABS.get(RoadBlocks.ROAD_BLOCK);
-    SingleItemRecipeBuilder.stonecutting(tag(roadSlabs), RecipeCategory.BUILDING_BLOCKS, roadSlabBlock)
+    SingleItemRecipeBuilder.stonecutting(tag(roadSlabs), RecipeCategory.BUILDING_BLOCKS, roadSlabBlock, 1)
         .unlockedBy("has_road_slab", has(roadSlabs))
-        .save(output, ResourceKey.create(Registries.RECIPE, RecipeBuilder.getDefaultRecipeId(roadSlabBlock).withSuffix("_from_paling")));
+        .save(output, ResourceKey.create(Registries.RECIPE, RecipeBuilder.getDefaultRecipeId(new ItemStackTemplate(roadSlabBlock.asItem())).identifier().withSuffix("_from_paling")));
   }
 
   public static @Nullable String getCustomRecipeCategory(Item outputItem) {

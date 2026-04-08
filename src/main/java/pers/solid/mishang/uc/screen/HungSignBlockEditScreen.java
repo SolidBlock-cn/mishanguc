@@ -9,10 +9,10 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.HashMap;
 import java.util.List;
@@ -67,9 +67,9 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
   /**
    * 从背面复制文本的按钮。复制过程中会进行镜像。
    */
-  public final Button copyFromBackButton =
-      new Button.Builder(
-          TextBridge.translatable("message.mishanguc.copy_from_back"),
+  public final Button copyFromBackButton
+      = new Button.Builder(
+      Component.translatable("message.mishanguc.copy_from_back"),
           button -> {
             final HungSignBlockEntity entity = this.entity;
             if (entity.editedSide == null) {
@@ -85,5 +85,5 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
                   // 留意添加到的位置是列表末尾。
                   textFieldListWidget.addTextField(-1, flip, false);
                 });
-          }).bounds(this.width / 2 - 80, 35, 160, 20).tooltip(Tooltip.create(TextBridge.translatable("message.mishanguc.copy_from_back.description"))).build();
+          }).bounds(this.width / 2 - 80, 35, 160, 20).tooltip(Tooltip.create(Component.translatable("message.mishanguc.copy_from_back.description"))).build();
 }

@@ -10,7 +10,8 @@ import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
-import net.minecraft.client.renderer.block.model.Variant;
+import net.minecraft.client.renderer.block.dispatch.Variant;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.network.chat.Component;
@@ -103,7 +104,7 @@ public class ColoredCubeBlock extends Block implements ColoredBlock {
 
   @Environment(EnvType.CLIENT)
   @Override
-  public Identifier getTexture(TextureSlot key) {
+  public Material getMaterial(TextureSlot key) {
     return textures.getTextureMap().get(key);
   }
 }

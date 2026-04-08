@@ -4,11 +4,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.FabricRenderState;
 import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.state.LevelRenderState;
+import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -35,10 +35,10 @@ public interface MishangRenderStateProvider {
   RenderStateDataKey<MishangRenderState> MISHANG_BLOCK_OUTLINE = RenderStateDataKey.create(() -> "mishanguc:block_outline");
 
 
-  WorldRenderEvents.AfterBlockOutlineExtraction MISHANG_EXTRACTION = (context, result) -> {
+  LevelRenderEvents.AfterBlockOutlineExtraction MISHANG_EXTRACTION = (context, result) -> {
     final LocalPlayer player = Minecraft.getInstance().player;
     if (player == null) return;
-    final LevelRenderState worldRenderState = context.worldState();
+    final LevelRenderState worldRenderState = context.levelState();
     worldRenderState.setData(HAND_STACK, null);
     for (final InteractionHand hand : new InteractionHand[]{InteractionHand.MAIN_HAND, InteractionHand.OFF_HAND}) {
       final ItemStack stackInHand = player.getItemInHand(hand);
@@ -59,7 +59,7 @@ public interface MishangRenderStateProvider {
    * @param stack  玩家手中触发了此渲染逻辑的物品堆。
    */
   @Nullable
-  default MishangRenderState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  default MishangRenderState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, LevelExtractionContext context, @Nullable HitResult result) {
     return null;
   }
 }

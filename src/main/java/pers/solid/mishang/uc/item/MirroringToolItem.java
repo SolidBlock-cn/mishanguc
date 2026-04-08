@@ -1,11 +1,5 @@
 package pers.solid.mishang.uc.item;
 
-import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.components.MishangucComponents;
-import pers.solid.mishang.uc.util.TextBridge;
-import pers.solid.mishang.uc.util.WithMishangTooltip;
-
-import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,6 +23,11 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.components.MishangucComponents;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
+
+import java.util.List;
 
 public class MirroringToolItem extends BlockToolItem implements MishangucItem, WithMishangTooltip {
   public MirroringToolItem(Properties settings, @Nullable Boolean includesFluid) {
@@ -85,16 +84,16 @@ public class MirroringToolItem extends BlockToolItem implements MishangucItem, W
   @Override
   public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     tooltip.add(
-        TextBridge.translatable("item.mishanguc.mirroring_tool.tooltip").withStyle(ChatFormatting.GRAY));
+        Component.translatable("item.mishanguc.mirroring_tool.tooltip").withStyle(ChatFormatting.GRAY));
     final Boolean includesFluid = includesFluid(stack);
     if (stack.getOrDefault(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT).shows(MishangucComponents.INCLUDES_FLUID)) {
       if (includesFluid == null) {
         tooltip.add(
-            TextBridge.translatable("item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking")
+            Component.translatable("item.mishanguc.block_tool.tooltip.includesFluidWhileSneaking")
                 .withStyle(ChatFormatting.GRAY));
       } else if (includesFluid) {
         tooltip.add(
-            TextBridge.translatable("item.mishanguc.block_tool.tooltip.includesFluid")
+            Component.translatable("item.mishanguc.block_tool.tooltip.includesFluid")
                 .withStyle(ChatFormatting.GRAY));
       }
     }

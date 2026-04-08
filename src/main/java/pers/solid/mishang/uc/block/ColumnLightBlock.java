@@ -120,7 +120,7 @@ public class ColumnLightBlock extends Block implements SimpleWaterloggedBlock, M
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final TextureMapping textures = TextureMapping.singleSlot(MishangucTextureKeys.LIGHT, MishangucModels.texture(lightColor + "_light"));
+    final TextureMapping textures = TextureMapping.singleSlot(MishangucTextureKeys.LIGHT, MishangucModels.material(lightColor + "_light"));
     final Identifier modelId = getModelType().create(this, textures, blockStateModelGenerator.modelOutput);
     blockStateModelGenerator.blockStateOutput.accept(MultiVariantGenerator.dispatch(this, BlockModelGenerators.plainVariant(modelId))
         .with(PropertyDispatch.modify(AXIS)

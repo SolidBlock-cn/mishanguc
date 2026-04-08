@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
 
 public interface TextureMapReference {
@@ -23,7 +24,7 @@ public interface TextureMapReference {
       @Environment(EnvType.CLIENT)
       @Override
       public TextureMapping getTextureMap() {
-        return TextureMapping.cube(texture);
+        return TextureMapping.cube(new Material(texture));
       }
     };
   }
@@ -33,7 +34,7 @@ public interface TextureMapReference {
       @Environment(EnvType.CLIENT)
       @Override
       public TextureMapping getTextureMap() {
-        return TextureMapping.singleSlot(TextureSlot.TOP, (topTexture)).put(TextureSlot.SIDE, (sideTexture)).put(TextureSlot.BOTTOM, bottomTexture);
+        return TextureMapping.singleSlot(TextureSlot.TOP, new Material(topTexture)).put(TextureSlot.SIDE, new Material(sideTexture)).put(TextureSlot.BOTTOM, new Material(bottomTexture));
       }
     };
   }
@@ -43,7 +44,7 @@ public interface TextureMapReference {
       @Environment(EnvType.CLIENT)
       @Override
       public TextureMapping getTextureMap() {
-        return TextureMapping.column(side, end);
+        return TextureMapping.column(new Material(side), new Material(end));
       }
     };
   }

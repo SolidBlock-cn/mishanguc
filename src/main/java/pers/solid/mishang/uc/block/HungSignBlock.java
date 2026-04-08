@@ -12,6 +12,7 @@ import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerato
 import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -60,7 +61,6 @@ import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 import pers.solid.mishang.uc.networking.EditSignPayload;
 import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.text.TextContext;
-import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.*;
@@ -109,21 +109,21 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
   public final @Nullable Block baseBlock;
 
   /**
-   * 基础方块的纹理。{@link #getBaseTexture()} 会使用到此值。如果此值为 {@code null}，则根据 {@link #baseBlock} 来推断纹理。<br>
+   * 基础方块的纹理。{@link #getBaseMaterial()} 会使用到此值。如果此值为 {@code null}，则根据 {@link #baseBlock} 来推断纹理。<br>
    * 非 final，可直接进行修改。
    */
   @ApiStatus.AvailableSince("0.1.7")
-  public @Nullable Identifier baseTexture;
+  public @Nullable Material baseMaterial;
   /**
    * 告示牌杆的纹理。可能为 {@code null}。生成模型时，可直接作为 null 传入，转化为 json 时会被忽略。
    */
   @ApiStatus.AvailableSince("0.1.7")
-  public @Nullable Identifier barTexture;
+  public @Nullable Material barMaterial;
   /**
    * 告示牌顶部的纹理。可能为 {@code null}。生成模型时，可直接作为 null 传入，转化为 json 时会被忽略。
    */
   @ApiStatus.AvailableSince("0.1.7")
-  public @Nullable Identifier textureTop;
+  public @Nullable Material materialTop;
 
   public HungSignBlock(@Nullable Block baseBlock, Properties settings) {
     super(settings);
@@ -158,7 +158,7 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
                 ? blockState.getValue(AXIS)
                 : ctx.getHorizontalDirection().getAxis())
         .setValue(WATERLOGGED, world.getFluidState(blockPos).getType() == Fluids.WATER)
-        .updateShape(world, world, blockPos, Direction.UP, blockPos.above(), world.getBlockState(blockPos.above()), world.random);
+        .updateShape(world, world, blockPos, Direction.UP, blockPos.above(), world.getBlockState(blockPos.above()), world.getRandom());
   }
 
   @Override
@@ -212,7 +212,7 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
 
   @Override
   protected VoxelShape getOcclusionShape(BlockState state) {
-    return getCollisionShape(state, EmptyBlockAndTintGetter.INSTANCE, BlockPos.ZERO, CollisionContext.empty());
+    return getCollisionShape(state, EmptyBlockGetter.INSTANCE, BlockPos.ZERO, CollisionContext.empty());
   }
 
   @Override
@@ -333,7 +333,7 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
     if (editor != null && editor != player) {
       // 这种情况下，告示牌被占用，玩家无权编辑。
       // In this case, the sign is occupied, and the player has no editing permission.
-      player.displayClientMessage(TextBridge.translatable("message.mishanguc.no_editing_permission.occupied", editor.getName()), false);
+      player.sendOverlayMessage(Component.translatable("message.mishanguc.no_editing_permission.occupied", editor.getName()));
       return InteractionResult.FAIL;
     }
     entity.editedSide = side;
@@ -363,14 +363,14 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
         // 处理告示牌的涂蜡
         if (!entity.waxed.contains(side)) {
           entity.waxed = addToSet(entity.waxed, side);
-          player.displayClientMessage(BlockEntityWithText.MESSAGE_WAX_ON, true);
+          player.sendOverlayMessage(BlockEntityWithText.MESSAGE_WAX_ON);
           world.levelEvent(null, LevelEvent.PARTICLES_AND_SOUND_WAX_ON, entity.getBlockPos(), 0);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stack.shrink(1);
           return InteractionResult.SUCCESS;
         } else if (player.isCreative()) {
           entity.waxed = removeFromSet(entity.waxed, side);
-          player.displayClientMessage(BlockEntityWithText.MESSAGE_WAX_OFF, true);
+          player.sendOverlayMessage(BlockEntityWithText.MESSAGE_WAX_OFF);
           world.levelEvent(null, LevelEvent.PARTICLES_WAX_OFF, entity.getBlockPos(), 0);
           entity.markDirtyAndUpdate();
           return InteractionResult.SUCCESS;
@@ -389,7 +389,7 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
       } else if (stack.getItem() instanceof GlowInkSacItem) {
         if (!entity.glowing.contains(side)) {
           entity.glowing = addToSet(entity.glowing, side);
-          player.displayClientMessage(BlockEntityWithText.MESSAGE_GLOW_ON, true);
+          player.sendOverlayMessage(BlockEntityWithText.MESSAGE_GLOW_ON);
           world.playSound(null, entity.getBlockPos(), SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stack.shrink(1);
@@ -398,7 +398,7 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
       } else if (stack.getItem() instanceof InkSacItem) {
         if (entity.glowing.contains(side)) {
           entity.glowing = removeFromSet(entity.glowing, side);
-          player.displayClientMessage(BlockEntityWithText.MESSAGE_GLOW_OFF, true);
+          player.sendOverlayMessage(BlockEntityWithText.MESSAGE_GLOW_OFF);
           world.playSound(null, entity.getBlockPos(), SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stack.shrink(1);
@@ -413,30 +413,30 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
   @Override
   public MutableComponent getName() {
     if (baseBlock != null) {
-      return TextBridge.translatable("block.mishanguc.hung_sign", baseBlock.getName());
+      return Component.translatable("block.mishanguc.hung_sign", baseBlock.getName());
     }
     return super.getName();
   }
 
   @Override
   public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-    tooltip.add(TextBridge.translatable("block.mishanguc.hung_sign.tooltip.1").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("block.mishanguc.hung_sign.tooltip.2").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("block.mishanguc.hung_sign.tooltip.1").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("block.mishanguc.hung_sign.tooltip.2").withStyle(ChatFormatting.GRAY));
   }
 
   @Environment(EnvType.CLIENT)
-  public Identifier getBaseTexture() {
-    if (baseTexture != null) return baseTexture;
-    return ModelHelper.getTextureOf(baseBlock == null ? this : baseBlock);
+  public Material getBaseMaterial() {
+    if (baseMaterial != null) return baseMaterial;
+    return ModelHelper.getMaterialOf(baseBlock == null ? this : baseBlock);
   }
 
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final Identifier texture = getBaseTexture();
-    final TextureMapping textures = TextureMapping.defaultTexture(texture);
-    if (barTexture != null) textures.put(MishangucTextureKeys.BAR, barTexture);
-    if (textureTop != null) textures.put(MishangucTextureKeys.TEXTURE_TOP, textureTop);
+    final Material material = getBaseMaterial();
+    final TextureMapping textures = TextureMapping.defaultTexture(material);
+    if (barMaterial != null) textures.put(MishangucTextureKeys.BAR, barMaterial);
+    if (materialTop != null) textures.put(MishangucTextureKeys.TEXTURE_TOP, materialTop);
 
     final Identifier id = MishangucModels.HUNG_SIGN.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier bodyId = MishangucModels.HUNG_SIGN_BODY.create(this, textures, blockStateModelGenerator.modelOutput);

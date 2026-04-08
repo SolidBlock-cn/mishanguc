@@ -12,7 +12,7 @@ import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -153,7 +153,7 @@ public class CornerLightBlock extends HorizontalDirectionalBlock
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final TextureMapping textures = TextureMapping.singleSlot(MishangucTextureKeys.LIGHT, MishangucModels.texture(lightColor + "_light"));
+    final TextureMapping textures = TextureMapping.singleSlot(MishangucTextureKeys.LIGHT, MishangucModels.material(lightColor + "_light"));
     final Identifier modelId = getModelType().create(this, textures, blockStateModelGenerator.modelOutput);
     blockStateModelGenerator.blockStateOutput.accept(MultiVariantGenerator.dispatch(this, BlockModelGenerators.plainVariant(modelId)).with(PropertyDispatch.modify(BLOCK_HALF, FACING).generate((blockHalf, direction) -> {
       if (blockHalf == Half.BOTTOM) {

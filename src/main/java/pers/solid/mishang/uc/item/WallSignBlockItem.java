@@ -1,12 +1,6 @@
 package pers.solid.mishang.uc.item;
 
 import com.google.common.collect.ImmutableList;
-import pers.solid.mishang.uc.components.MishangucComponents;
-import pers.solid.mishang.uc.text.TextContext;
-import pers.solid.mishang.uc.util.TextBridge;
-import pers.solid.mishang.uc.util.WithMishangTooltip;
-
-import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -15,6 +9,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.block.Block;
+import pers.solid.mishang.uc.components.MishangucComponents;
+import pers.solid.mishang.uc.text.TextContext;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
+
+import java.util.List;
 
 /**
  * 类似于一般的方块物品，但是会读取 BlockEntityTag 中的内容来显示文字。
@@ -38,7 +37,7 @@ public class WallSignBlockItem extends NamedBlockItem implements WithMishangTool
             .iterator());
     if (!texts.isEmpty()) {
       tooltip.add(
-          TextBridge.translatable("block.mishanguc.tooltip.wall_sign_block")
+          Component.translatable("block.mishanguc.tooltip.wall_sign_block")
               .withStyle(ChatFormatting.GRAY));
       tooltip.addAll(texts);
     }
@@ -55,10 +54,10 @@ public class WallSignBlockItem extends NamedBlockItem implements WithMishangTool
             .limit(20)
             .iterator());
     if (!texts.isEmpty()) {
-      MutableComponent appendable = TextBridge.empty();
+      MutableComponent appendable = Component.empty();
       texts.forEach(t -> appendable.append(" ").append(t));
       text.append(
-          TextBridge.literal(" -" + appendable.getString(25)).withStyle(ChatFormatting.GRAY));
+          Component.literal(" -" + appendable.getString(25)).withStyle(ChatFormatting.GRAY));
     }
     return text;
   }

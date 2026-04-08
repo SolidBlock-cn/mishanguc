@@ -9,7 +9,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerator;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
-import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
 import net.minecraft.core.Direction;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -89,12 +89,12 @@ public interface RoadWithOffsetStraightLine extends Road {
     Road.super.appendRoadTooltip(stack, context, tooltip, options);
     final int offsetLevel = offsetLevel();
     if (offsetLevel == 114514) {
-      tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_white_and_yellow_double_line.1").withStyle(ChatFormatting.GRAY));
-      tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_white_and_yellow_double_line.2").withStyle(ChatFormatting.GRAY));
-      tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_white_and_yellow_double_line.3").withStyle(ChatFormatting.GRAY));
+      tooltip.add(Component.translatable("block.mishanguc.tooltip.road_with_white_and_yellow_double_line.1").withStyle(ChatFormatting.GRAY));
+      tooltip.add(Component.translatable("block.mishanguc.tooltip.road_with_white_and_yellow_double_line.2").withStyle(ChatFormatting.GRAY));
+      tooltip.add(Component.translatable("block.mishanguc.tooltip.road_with_white_and_yellow_double_line.3").withStyle(ChatFormatting.GRAY));
     } else {
       tooltip.add(
-          TextBridge.translatable("block.mishanguc.tooltip.road_with_offset_straight_line")
+          Component.translatable("block.mishanguc.tooltip.road_with_offset_straight_line")
               .withStyle(ChatFormatting.GRAY));
     }
   }
@@ -121,10 +121,10 @@ public interface RoadWithOffsetStraightLine extends Road {
     @Override
     public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
       if (offsetLevel == 0) {
-        tooltip.add(TextBridge.translatable("tbd")
+        tooltip.add(Component.translatable("tbd")
             .withStyle(ChatFormatting.BLUE));
       } else {
-        tooltip.add(TextBridge.translatable("lineType.offsetStraight.composed", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("lineType.offsetStraight.composed", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
       }
     }
 

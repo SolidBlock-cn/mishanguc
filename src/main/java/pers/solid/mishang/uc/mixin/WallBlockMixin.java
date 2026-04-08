@@ -12,7 +12,7 @@ import pers.solid.mishang.uc.block.HandrailCentralBlock;
 @Mixin(WallBlock.class)
 public class WallBlockMixin {
   @Inject(method = "connectsTo", at = @At("RETURN"), cancellable = true)
-  private void modifiedShouldConnect(BlockState state, boolean sideSolid, Direction direction, CallbackInfoReturnable<Boolean> cir) {
+  private void modifiedShouldConnect(BlockState state, boolean faceSolid, Direction direction, CallbackInfoReturnable<Boolean> cir) {
     if (HandrailCentralBlock.connectsHandrailTo(direction, state)) cir.setReturnValue(true);
   }
 }

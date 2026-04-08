@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -11,6 +12,7 @@ import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.network.chat.Component;
@@ -31,14 +33,22 @@ import pers.solid.mishang.uc.item.ColoredTintSource;
 import java.util.List;
 
 public class ColoredGlassPaneBlock extends IronBarsBlock implements ColoredBlock {
-  public static final MapCodec<ColoredGlassPaneBlock> CODEC = simpleCodec(settings1 -> new ColoredGlassPaneBlock(null, null, settings1));
-  private final Identifier paneTexture;
-  private final Identifier edgeTexture;
+  public static final MapCodec<ColoredGlassPaneBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
+      Material.CODEC.fieldOf("pane_material").forGetter(b -> b.paneMaterial),
+      Material.CODEC.fieldOf("edge_material").forGetter(b -> b.edgeMaterial),
+      propertiesCodec()
+  ).apply(i, ColoredGlassPaneBlock::new));
+  private final Material paneMaterial;
+  private final Material edgeMaterial;
 
-  public ColoredGlassPaneBlock(Identifier paneTexture, Identifier edgeTexture, Properties settings) {
-    super(settings);
-    this.paneTexture = paneTexture;
-    this.edgeTexture = edgeTexture;
+  public ColoredGlassPaneBlock(Identifier paneIdentifier, Identifier edgeIdentifier, Properties properties) {
+    this(new Material(paneIdentifier), new Material(edgeIdentifier), properties);
+  }
+
+  public ColoredGlassPaneBlock(Material paneMaterial, Material edgeMaterial, Properties properties) {
+    super(properties);
+    this.paneMaterial = paneMaterial;
+    this.edgeMaterial = edgeMaterial;
   }
 
   @Override
@@ -59,7 +69,7 @@ public class ColoredGlassPaneBlock extends IronBarsBlock implements ColoredBlock
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    TextureMapping textures = TextureMapping.singleSlot(TextureSlot.PANE, paneTexture).put(TextureSlot.EDGE, edgeTexture);
+    TextureMapping textures = TextureMapping.singleSlot(TextureSlot.PANE, paneMaterial).put(TextureSlot.EDGE, edgeMaterial);
     final Identifier postId = MishangucModels.TEMPLATE_COLORED_GLASS_PANE_POST.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier sideId = MishangucModels.TEMPLATE_COLORED_GLASS_PANE_SIDE.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier SideAltId = MishangucModels.TEMPLATE_COLORED_GLASS_PANE_SIDE_ALT.create(this, textures, blockStateModelGenerator.modelOutput);
@@ -67,7 +77,7 @@ public class ColoredGlassPaneBlock extends IronBarsBlock implements ColoredBlock
     final Identifier nosideAltId = MishangucModels.TEMPLATE_COLORED_GLASS_PANE_NOSIDE_ALT.create(this, textures, blockStateModelGenerator.modelOutput);
 
     blockStateModelGenerator.blockStateOutput.accept(createBlockStates(postId, sideId, SideAltId, nosideId, nosideAltId));
-    final Identifier itemModelId = ModelTemplates.FLAT_ITEM.create(asItem(), TextureMapping.layer0(paneTexture), blockStateModelGenerator.modelOutput);
+    final Identifier itemModelId = ModelTemplates.FLAT_ITEM.create(asItem(), TextureMapping.layer0(paneMaterial), blockStateModelGenerator.modelOutput);
     blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.tintedModel(itemModelId, ColoredTintSource.INSTANCE));
   }
 

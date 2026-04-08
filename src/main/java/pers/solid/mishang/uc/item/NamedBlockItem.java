@@ -16,7 +16,6 @@ import pers.solid.mishang.uc.block.ColoredGlassHandrailBlock;
 import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
-import pers.solid.mishang.uc.util.TextBridge;
 
 /**
  * <p>类似于 {@link BlockItem}，但是名称会调用 {@link Block#getName()}。</p>
@@ -35,11 +34,11 @@ public class NamedBlockItem extends BlockItem {
     if (getBlock() instanceof ColoredBlock) {
       final Integer color = stack.get(MishangucComponents.COLOR);
       if (color != null) {
-        return TextBridge.translatable("block.mishanguc.colored_block.color", block.getName(), MishangUtils.describeColor(color));
+        return Component.translatable("block.mishanguc.colored_block.color", block.getName(), MishangUtils.describeColor(color));
       } else if (getBlock() instanceof ColoredGlassHandrailBlock) {
-        return TextBridge.translatable("block.mishanguc.colored_block.auto_color_decoration", block.getName());
+        return Component.translatable("block.mishanguc.colored_block.auto_color_decoration", block.getName());
       } else {
-        return TextBridge.translatable("block.mishanguc.colored_block.auto_color", block.getName());
+        return Component.translatable("block.mishanguc.colored_block.auto_color", block.getName());
       }
     }
     return block.getName();

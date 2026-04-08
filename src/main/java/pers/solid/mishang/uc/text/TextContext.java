@@ -30,7 +30,6 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.HorizontalAlign;
-import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.VerticalAlign;
 
 import java.util.Arrays;
@@ -243,7 +242,7 @@ public class TextContext implements Cloneable {
           text = (MutableComponent) ComponentSerialization.CODEC.parse(registryLookup.createSerializationContext(JsonOps.INSTANCE), jsonElement).getOrThrow();
         }
       } catch (JsonParseException | IllegalStateException e) {
-        text = TextBridge.translatable("message.mishanguc.invalid_json").withStyle(ChatFormatting.RED);
+        text = Component.translatable("message.mishanguc.invalid_json").withStyle(ChatFormatting.RED);
       }
     } else if (nbt.contains("text")) {
       text = (MutableComponent) nbt.read("text", ComponentSerialization.CODEC, registryLookup == null ? NbtOps.INSTANCE : registryLookup.createSerializationContext(NbtOps.INSTANCE)).orElseGet(() -> Component.literal(nbt.get("text").toString()).withStyle(ChatFormatting.RED));
@@ -506,7 +505,8 @@ public class TextContext implements Cloneable {
   }
 
   public MutableComponent asStyledText() {
-    final MutableComponent text = this.text == null ? TextBridge.empty() : this.text.copy();
+    final MutableComponent text;
+    text = this.text == null ? Component.empty() : this.text.copy();
     if (bold) text.withStyle(ChatFormatting.BOLD);
     if (italic) text.withStyle(ChatFormatting.ITALIC);
     if (underline) text.withStyle(ChatFormatting.UNDERLINE);
@@ -534,7 +534,7 @@ public class TextContext implements Cloneable {
           stringBuilder.setCharAt(i, flipStringReplacement.get(c));
         }
       }
-      text = TextBridge.literal(stringBuilder.toString());
+      text = Component.literal(stringBuilder.toString());
     }
     if (extra instanceof final PatternSpecialDrawable patternSpecialDrawable) {
       final RectanglePattern rectanglePattern = patternSpecialDrawable.rectanglePattern();

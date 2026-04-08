@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "pers.solid.mishang.uc.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "mixins": [
     "AbstractBlockStateMixin",
     "AreaHelperMixin",
@@ -14,6 +14,7 @@
     "ClickEventMixin",
     "ContainerWidgetAccessor",
     "FenceBlockMixin",
+    "ItemsAccessor",
     "ItemUsageContextInvoker",
     "NbtCompoundAccessor",
     "NetherPortalBlockMixin",
@@ -21,6 +22,9 @@
     "PoiTypesAccessor",
     "PortalForcerMixin",
     "RecipeJsonBuilderMixins",
+    "RecipeJsonBuilderMixins$Shaped",
+    "RecipeJsonBuilderMixins$Shapeless",
+    "RecipeJsonBuilderMixins$SingleItem",
     "WallBlockMixin"
   ],
   "client": [

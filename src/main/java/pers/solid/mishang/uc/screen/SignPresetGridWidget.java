@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.Tooltip;
@@ -67,15 +67,6 @@ public class SignPresetGridWidget extends ContainerObjectSelectionList<SignPrese
   }
 
   @Override
-  protected void renderListBackground(GuiGraphics context) {
-  }
-
-  @Override
-  protected void renderListSeparators(GuiGraphics context) {
-
-  }
-
-  @Override
   public int getRowWidth() {
     return 450;
   }
@@ -114,9 +105,9 @@ public class SignPresetGridWidget extends ContainerObjectSelectionList<SignPrese
     }
 
     @Override
-    public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+    public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float a) {
       for (Button button : buttons) {
-        button.render(context, mouseX, mouseY, deltaTicks);
+        button.extractRenderState(graphics, mouseX, mouseY, a);
       }
     }
   }

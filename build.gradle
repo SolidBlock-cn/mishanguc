@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.15-SNAPSHOT'
+    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
     id 'maven-publish'
 
     id "com.modrinth.minotaur" version "2.+"
@@ -44,28 +44,27 @@ repositories {
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.layered() {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.21.11:2025.12.20@zip")
-    }
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
     // Mod Menu
-    modApi "com.terraformersmc:modmenu:$project.modmenu_version"
+    api "com.terraformersmc:modmenu:$project.modmenu_version"
 
     if (project.hasProperty('imblocker_version') && !project.imblocker_version.isEmpty()) {
-        modRuntimeOnly "maven.modrinth:imblocker-original:$project.imblocker_version"
+        runtimeOnly "maven.modrinth:imblocker-original:$project.imblocker_version"
     }
 
+    // Mod Menu
+    implementation "com.terraformersmc:modmenu:$project.modmenu_version"
+
     // 仅供在模组开发时测试与光影的兼容
-    modRuntimeOnly "maven.modrinth:sodium:mc1.21.11-0.8.3-fabric"
-    modRuntimeOnly "maven.modrinth:iris:1.10.5+1.21.11-fabric"
-    modImplementation("org.antlr:antlr4-runtime:4.13.1")
-    modImplementation("io.github.douira:glsl-transformer:3.0.0-pre3")
-    modImplementation("org.anarres:jcpp:1.4.14")
+    runtimeOnly "maven.modrinth:sodium:mc26.1.1-0.8.9-fabric"
+    runtimeOnly "maven.modrinth:iris:1.10.9+26.1-fabric"
+    implementation("org.antlr:antlr4-runtime:4.13.1")
+    implementation("io.github.douira:glsl-transformer:3.0.0-pre3")
+    implementation("org.anarres:jcpp:1.4.14")
 }
 
 processResources {
@@ -77,12 +76,12 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 21
+    it.options.release = 25
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.
@@ -156,7 +155,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     println("CurseForge 令牌: ${curseforgeToken instanceof String ? curseforgeToken.replaceAll("^(.+?)(.{0,6})\$", (s, a, b) -> a.replaceAll(".", "*") + b) : curseforgeToken}")
     if (curseforgeToken) apiToken = curseforgeToken
 
-    def mainFile = upload('583071', remapJar)
+    def mainFile = upload('583071', jar)
     mainFile.changelog = content
     mainFile.changelogType = 'markdown'
     mainFile.releaseType = project.mod_version.contains('-') ? 'beta' : 'release'
@@ -175,7 +174,7 @@ modrinth {
     projectId = "rItLmRo4" // 迷上城建模组的 Modrinth ID
     versionNumber = project.mod_version + '-' + project.minecraft_version
     versionType = project.mod_version.contains('-') ? 'beta' : 'release'  // until release of MC
-    uploadFile = remapJar
+    uploadFile = jar
     gameVersions = Arrays.asList(project.supported_minecraft_versions.split(','))
 
     changelog = content
@@ -194,11 +193,11 @@ githubRelease {
     owner = "SolidBlock-cn"
     repo = "mishanguc"
     tagName = "v$project.mod_version"
-    targetCommitish = "1.21.11"
+    targetCommitish = "26.1"
     body = content
     draft = true
     prerelease = false
-    releaseAssets remapJar, remapSourcesJar
+    releaseAssets jar, sourcesJar
     allowUploadToExisting = true
     apiEndpoint = "https://api.github.com"
 }

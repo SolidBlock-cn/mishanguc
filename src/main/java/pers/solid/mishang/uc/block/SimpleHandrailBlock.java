@@ -11,12 +11,14 @@ import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.SingleItemRecipeBuilder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -26,7 +28,6 @@ import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.data.MishangucModels;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -44,19 +45,19 @@ public class SimpleHandrailBlock extends HandrailBlock {
   /**
    * 该方块对应的中间位置版本。
    */
-  public final CentralBlock central;
+  public final @Nullable CentralBlock central;
   /**
    * 该方块对应的角落位置版本。
    */
-  public final CornerBlock corner;
+  public final @Nullable CornerBlock corner;
   /**
    * 该方块对应的楼梯扶手方块。
    */
-  public final StairBlock stair;
+  public final @Nullable StairBlock stair;
   /**
    * 该方块对应的外角方块。
    */
-  public final OuterBlock outer;
+  public final @Nullable OuterBlock outer;
 
   /**
    * 栏杆的纹理。若为 {@code null}，则默认根据 {@link #baseBlock} 推断纹理。
@@ -65,11 +66,11 @@ public class SimpleHandrailBlock extends HandrailBlock {
   /**
    * 栏杆顶部部分的纹理。
    */
-  public @Nullable Identifier top;
+  public @Nullable Material top;
   /**
    * 栏杆底部部分的纹理。
    */
-  public @Nullable Identifier bottom;
+  public @Nullable Material bottom;
 
   public SimpleHandrailBlock(@Nullable Block baseBlock, Properties settings, Identifier identifier) {
     this(baseBlock, settings, identifier, true);
@@ -97,7 +98,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
   @Environment(EnvType.CLIENT)
   @Override
   public TextureMapping getTextures() {
-    return TextureMapping.cube(getTexture()).put(TextureSlot.TOP, top).put(TextureSlot.BOTTOM, bottom);
+    return TextureMapping.cube(getMaterial()).put(TextureSlot.TOP, top).put(TextureSlot.BOTTOM, bottom);
   }
 
   @Override
@@ -128,14 +129,14 @@ public class SimpleHandrailBlock extends HandrailBlock {
   /**
    * @return 该方块的基础纹理变量。
    */
-  protected Identifier getTexture() {
-    return texture == null ? TextureMapping.getBlockTexture(baseBlock) : texture;
+  protected Material getMaterial() {
+    return texture == null ? TextureMapping.getBlockTexture(baseBlock) : new Material(texture);
   }
 
   @Override
   public MutableComponent getName() {
     if (baseBlock != null) {
-      return TextBridge.translatable("block.mishanguc.simple_handrail", baseBlock.getName());
+      return Component.translatable("block.mishanguc.simple_handrail", baseBlock.getName());
     } else return super.getName();
   }
 
@@ -167,7 +168,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public MutableComponent getName() {
       final Block block = baseBlock();
-      return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_central", block.getName());
+      return block == null ? super.getName() : Component.translatable("block.mishanguc.simple_handrail_central", block.getName());
     }
 
     @Override
@@ -193,7 +194,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public MutableComponent getName() {
       final Block block = baseBlock();
-      return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_corner", block.getName());
+      return block == null ? super.getName() : Component.translatable("block.mishanguc.simple_handrail_corner", block.getName());
     }
 
     @Override
@@ -225,7 +226,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public MutableComponent getName() {
       final Block block = baseBlock();
-      return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_stair", block.getName());
+      return block == null ? super.getName() : Component.translatable("block.mishanguc.simple_handrail_stair", block.getName());
     }
 
     @Override
@@ -251,7 +252,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     @Override
     public MutableComponent getName() {
       final Block block = baseBlock();
-      return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_outer", block.getName());
+      return block == null ? super.getName() : Component.translatable("block.mishanguc.simple_handrail_outer", block.getName());
     }
 
     @Override
@@ -260,6 +261,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     }
   }
 
+  @Nullable
   private String getRecipeGroup() {
     if (baseBlock instanceof ColoredBlock) return null;
     if (MishangUtils.isConcrete(baseBlock)) return "mishanguc:simple_concrete_handrail";

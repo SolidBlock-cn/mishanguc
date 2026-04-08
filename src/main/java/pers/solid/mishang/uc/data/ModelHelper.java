@@ -9,8 +9,8 @@ import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
-import net.minecraft.client.renderer.block.model.*;
-import net.minecraft.client.resources.model.WeightedVariants;
+import net.minecraft.client.renderer.block.dispatch.*;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.level.block.Block;
@@ -35,13 +35,13 @@ public final class ModelHelper {
     return MultiVariantGenerator.dispatch(block, BlockModelGenerators.plainVariant(modelIdentifier)).with(PropertyDispatch.modify(MishangucProperties.HORIZONTAL_CORNER_FACING).generate(direction -> VariantMutator.Y_ROT.withValue(direction.asAxisRotationCCW45()).then(VariantMutator.UV_LOCK.withValue(uvlock))));
   }
 
-  public static BlockModelDefinition composeStateForSlab(BlockModelDefinition modelForFull) {
-    final Optional<BlockModelDefinition.SimpleModelSelectors> simpleModels = modelForFull.simpleModels();
-    final Optional<BlockModelDefinition.SimpleModelSelectors> newSimpleModels;
+  public static BlockStateModelDispatcher composeStateForSlab(BlockStateModelDispatcher modelForFull) {
+    final Optional<BlockStateModelDispatcher.SimpleModelSelectors> simpleModels = modelForFull.simpleModels();
+    final Optional<BlockStateModelDispatcher.SimpleModelSelectors> newSimpleModels;
     if (simpleModels.isEmpty()) {
       newSimpleModels = Optional.empty();
     } else {
-      final BlockModelDefinition.SimpleModelSelectors variants = simpleModels.get();
+      final BlockStateModelDispatcher.SimpleModelSelectors variants = simpleModels.get();
       final Map<String, BlockStateModel.Unbaked> models = variants.models();
       final ImmutableMap.Builder<String, BlockStateModel.Unbaked> newModelsBuilder = new ImmutableMap.Builder<>();
 
@@ -53,11 +53,11 @@ public final class ModelHelper {
         newModelsBuilder.put(key.isEmpty() ? "type=double" : key + ",type=double", transformUnbakedModel(unbaked, modelVariant -> modelVariant.withModel(modelVariant.modelLocation().withPath(s -> s.endsWith("_slab") ? s.replace("_slab", "_block") : s.replace("_slab", "")))));
       }
 
-      newSimpleModels = Optional.of(new BlockModelDefinition.SimpleModelSelectors(newModelsBuilder.build()));
+      newSimpleModels = Optional.of(new BlockStateModelDispatcher.SimpleModelSelectors(newModelsBuilder.build()));
     }
 
     // mubltipart 的部分，目前不用动
-    return new BlockModelDefinition(newSimpleModels, modelForFull.multiPart());
+    return new BlockStateModelDispatcher(newSimpleModels, modelForFull.multiPart());
   }
 
   public static BlockStateModel.Unbaked transformUnbakedModel(BlockStateModel.Unbaked unbaked, UnaryOperator<Variant> operator) {
@@ -74,9 +74,9 @@ public final class ModelHelper {
     return new Forwarding(stateForFull);
   }
 
-  public static Identifier getTextureOf(Block block) {
+  public static Material getMaterialOf(Block block) {
     if (block instanceof MishangucBlock mishangucBlock) {
-      return mishangucBlock.getTexture(TextureSlot.TEXTURE);
+      return mishangucBlock.getMaterial(TextureSlot.TEXTURE);
     } else {
       return TextureMapping.getBlockTexture(block);
     }
@@ -96,7 +96,7 @@ public final class ModelHelper {
     }
 
     @Override
-    public BlockModelDefinition create() {
+    public BlockStateModelDispatcher create() {
       return composeStateForSlab(stateForFull.create());
     }
   }

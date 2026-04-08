@@ -2,7 +2,7 @@ package pers.solid.mishang.uc.render.state;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.longs.LongObjectPair;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.ShapeRenderer;
@@ -21,22 +21,22 @@ public class BuildingToolState implements MishangRenderState {
   public final List<LongObjectPair<VoxelShape>> orangeShapes = new ArrayList<>();
   public boolean showVanillaOutline = false;
 
-  public static boolean render(WorldRenderContext context) {
-    if (!(context.worldState().getData(MishangRenderStateProvider.MISHANG_BLOCK_OUTLINE) instanceof BuildingToolState state)) {
+  public static boolean render(LevelRenderContext context) {
+    if (!(context.levelState().getData(MishangRenderStateProvider.MISHANG_BLOCK_OUTLINE) instanceof BuildingToolState state)) {
       return true;
     }
-    final MultiBufferSource consumers = context.consumers();
+    final MultiBufferSource consumers = context.bufferSource();
     if (consumers == null) return true;
     final VertexConsumer vertexConsumer = consumers.getBuffer(RenderTypes.lines());
 
     final BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
-    final Vec3 cameraPos = context.worldState().cameraRenderState.pos;
+    final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
 
     for (LongObjectPair<VoxelShape> pair : state.cyanShapes) {
       mutable.set(pair.leftLong());
 
       ShapeRenderer.renderShape(
-          context.matrices(),
+          context.poseStack(),
           vertexConsumer,
           pair.right(),
           mutable.getX() - cameraPos.x(),
@@ -52,7 +52,7 @@ public class BuildingToolState implements MishangRenderState {
       mutable.set(pair.leftLong());
 
       ShapeRenderer.renderShape(
-          context.matrices(),
+          context.poseStack(),
           vertexConsumer,
           pair.right(),
           mutable.getX() - cameraPos.x(),
@@ -68,7 +68,7 @@ public class BuildingToolState implements MishangRenderState {
       mutable.set(pair.leftLong());
 
       ShapeRenderer.renderShape(
-          context.matrices(),
+          context.poseStack(),
           vertexConsumer,
           pair.right(),
           mutable.getX() - cameraPos.x(),
@@ -84,7 +84,7 @@ public class BuildingToolState implements MishangRenderState {
       mutable.set(pair.leftLong());
 
       ShapeRenderer.renderShape(
-          context.matrices(),
+          context.poseStack(),
           vertexConsumer,
           pair.right(),
           mutable.getX() - cameraPos.x(),

@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
@@ -75,10 +74,10 @@ public class RotatingToolItem extends BlockToolItem implements MishangucItem, Wi
   @Override
   public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     tooltip.add(
-        TextBridge.translatable("item.mishanguc.rotating_tool.tooltip.1")
+        Component.translatable("item.mishanguc.rotating_tool.tooltip.1")
             .withStyle(ChatFormatting.GRAY));
     tooltip.add(
-        TextBridge.translatable("item.mishanguc.rotating_tool.tooltip.2")
+        Component.translatable("item.mishanguc.rotating_tool.tooltip.2")
             .withStyle(ChatFormatting.GRAY));
   }
 

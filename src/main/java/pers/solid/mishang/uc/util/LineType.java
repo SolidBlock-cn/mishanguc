@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.util;
 
 import com.mojang.serialization.Codec;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.Contract;
@@ -36,6 +37,6 @@ public enum LineType implements StringRepresentable {
 
   @Contract(" -> new")
   public MutableComponent getName() {
-    return TextBridge.translatable("lineType." + name);
+    return Component.translatable("lineType." + name);
   }
 }

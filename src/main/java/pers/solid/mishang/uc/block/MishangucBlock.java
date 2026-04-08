@@ -6,34 +6,39 @@ import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.SingleItemRecipeBuilder;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
+import org.jetbrains.annotations.Nullable;
 
 public interface MishangucBlock {
+  @Nullable
   default LootTable.Builder getLootTable(BlockLootSubProvider blockLootTableGenerator) {
     return blockLootTableGenerator.createSingleItemTable((ItemLike) this);
   }
 
+  @Nullable
   default RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
     return null;
   }
 
+  @Nullable
   default SingleItemRecipeBuilder getStonecuttingRecipe(RecipeProvider recipeGenerator) {
     return null;
   }
 
   default ResourceKey<Recipe<?>> getStonecuttingRecipeKey() {
-    return ResourceKey.create(Registries.RECIPE, RecipeBuilder.getDefaultRecipeId((ItemLike) this).withSuffix("_from_stonecutting"));
+    return ResourceKey.create(Registries.RECIPE, RecipeBuilder.getDefaultRecipeId(new ItemStackTemplate(((ItemLike) this).asItem())).identifier().withSuffix("_from_stonecutting"));
   }
 
   default boolean shouldWriteStonecuttingRecipe() {
@@ -57,10 +62,11 @@ public interface MishangucBlock {
   void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator);
 
   @Environment(EnvType.CLIENT)
-  default Identifier getTexture(TextureSlot key) {
+  default Material getMaterial(TextureSlot key) {
     return TextureMapping.getBlockTexture(((Block) this));
   }
 
+  @Nullable
   default String customRecipeCategory() {
     return null;
   }

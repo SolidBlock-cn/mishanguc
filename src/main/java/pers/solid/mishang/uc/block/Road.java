@@ -20,10 +20,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
@@ -160,12 +157,13 @@ public interface Road extends MishangucBlock, WithMishangTooltip {
   @ApiStatus.AvailableSince("0.2.4")
   void appendDescriptionTooltip(List<Component> tooltip, Item.TooltipContext context);
 
+  @Nullable
   default RecipeBuilder getPaintingRecipe(Block base, Block self, RecipeProvider recipeGenerator) {
     return null;
   }
 
   default ResourceKey<Recipe<?>> getPaintingRecipeKey() {
-    return ResourceKey.create(Registries.RECIPE, RecipeBuilder.getDefaultRecipeId((ItemLike) this).withSuffix("_from_painting"));
+    return ResourceKey.create(Registries.RECIPE, RecipeBuilder.getDefaultRecipeId(new ItemStackTemplate(((ItemLike) this).asItem())).identifier().withSuffix("_from_painting"));
   }
 
   default @Nullable String getRecipeGroup() {

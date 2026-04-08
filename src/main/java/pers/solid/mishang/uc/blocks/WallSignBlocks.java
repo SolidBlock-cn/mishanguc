@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.blocks;
 
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
@@ -9,7 +10,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.MiningLevel;
-import pers.solid.mishang.uc.annotations.Translucent;
 import pers.solid.mishang.uc.block.*;
 
 /**
@@ -472,10 +472,10 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final GlowingWallSignBlock GLOWING_POLISHED_BLACKSTONE_WALL_SIGN = registerGlowing("glowing_polished_blackstone_wall_sign", Blocks.POLISHED_BLACKSTONE);
 
   static {
-    GLOWING_NETHERRACK_WALL_SIGN.glowTexture = Identifier.withDefaultNamespace("block/lava_still");
-    GLOWING_NETHER_BRICK_WALL_SIGN.glowTexture = Identifier.withDefaultNamespace("block/lava_still");
-    GLOWING_BLACKSTONE_WALL_SIGN.glowTexture = Identifier.withDefaultNamespace("block/glowstone");
-    GLOWING_POLISHED_BLACKSTONE_WALL_SIGN.glowTexture = Identifier.withDefaultNamespace("block/glowstone");
+    GLOWING_NETHERRACK_WALL_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/lava_still"));
+    GLOWING_NETHER_BRICK_WALL_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/lava_still"));
+    GLOWING_BLACKSTONE_WALL_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/glowstone"));
+    GLOWING_POLISHED_BLACKSTONE_WALL_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/glowstone"));
   }
 
   // 雪
@@ -487,7 +487,6 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final GlowingWallSignBlock GLOWING_SNOW_WALL_SIGN = registerGlowing("glowing_snow_wall_sign", Blocks.SNOW_BLOCK);
   // 冰
   @ApiStatus.AvailableSince("0.1.7")
-  @Translucent
   public static final WallSignBlock ICE_WALL_SIGN = register("ice_wall_sign", Blocks.ICE);
   @ApiStatus.AvailableSince("0.1.7")
   public static final WallSignBlock PACKED_ICE_WALL_SIGN = register("packed_ice_wall_sign", Blocks.PACKED_ICE);

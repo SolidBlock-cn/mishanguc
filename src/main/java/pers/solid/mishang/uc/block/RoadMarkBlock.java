@@ -14,7 +14,8 @@ import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.data.recipes.RecipeBuilder;
@@ -56,15 +57,15 @@ public class RoadMarkBlock extends Block implements SimpleWaterloggedBlock, Mish
   public static final VoxelShape SHAPE_ON_SLAB_X = box(0, -8, 2, 16, -7, 14);
   public static final VoxelShape SHAPE_ON_SLAB_Z = box(2, -8, 0, 14, -7, 16);
   public static final BooleanProperty ON_SLAB = BooleanProperty.create("on_slab");
-  protected final Identifier texture;
+  protected final Material material;
   private static final VoxelShape SHAPE_TOP_MASK = box(0, 15.5, 0, 16, 16, 16);
   private static final VoxelShape SHAPE_SLAB_TOP_MASK = box(0, 7.5, 0, 16, 8, 16);
 
-  public static final MapCodec<RoadMarkBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(Identifier.CODEC.fieldOf("texture").forGetter(b -> b.texture), propertiesCodec()).apply(i, RoadMarkBlock::new));
+  public static final MapCodec<RoadMarkBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(Material.CODEC.fieldOf("texture").forGetter(b -> b.material), propertiesCodec()).apply(i, RoadMarkBlock::new));
 
-  public RoadMarkBlock(Identifier texture, Properties settings) {
+  public RoadMarkBlock(Material material, Properties settings) {
     super(settings);
-    this.texture = texture;
+    this.material = material;
     registerDefaultState(defaultBlockState()
         .setValue(BlockStateProperties.WATERLOGGED, false)
         .setValue(ON_SLAB, false));
@@ -129,11 +130,11 @@ public class RoadMarkBlock extends Block implements SimpleWaterloggedBlock, Mish
   }
 
   public static RoadMarkBlock createAxisFacing(Identifier texture, Properties settings) {
-    return new AxisFacing(texture, settings);
+    return new AxisFacing(new Material(texture), settings);
   }
 
   public static RoadMarkBlock createDirectionalFacing(Identifier texture, Properties settings) {
-    return new DirectionalFacing(texture, settings);
+    return new DirectionalFacing(new Material(texture), settings);
   }
 
   @Override
@@ -143,21 +144,21 @@ public class RoadMarkBlock extends Block implements SimpleWaterloggedBlock, Mish
 
   @Override
   public RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
-    return SingleItemRecipeBuilder.stonecutting(recipeGenerator.tag(ConventionalItemTags.WHITE_DYES), RecipeCategory.DECORATIONS, this)
+    return SingleItemRecipeBuilder.stonecutting(recipeGenerator.tag(ConventionalItemTags.WHITE_DYES), RecipeCategory.DECORATIONS, this, 1)
         .unlockedBy("has_white_dye", recipeGenerator.has(ConventionalItemTags.WHITE_DYES));
   }
 
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final TextureMapping textures = TextureMapping.cube(texture);
+    final TextureMapping textures = TextureMapping.cube(material);
     final Identifier modelId = MishangucModels.ROAD_MARK.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier onSlabModelId = MishangucModels.ROAD_MARK_ON_SLAB.create(this, textures, blockStateModelGenerator.modelOutput);
     blockStateModelGenerator.blockStateOutput.accept(MultiVariantGenerator.dispatch(this)
         .with(PropertyDispatch.initial(ON_SLAB)
             .select(false, BlockModelGenerators.plainVariant(modelId))
             .select(true, BlockModelGenerators.plainVariant(onSlabModelId))));
-    final Identifier itemModelId = ModelTemplates.FLAT_HANDHELD_ITEM.create(asItem(), TextureMapping.layer0(texture), blockStateModelGenerator.modelOutput);
+    final Identifier itemModelId = ModelTemplates.FLAT_HANDHELD_ITEM.create(asItem(), TextureMapping.layer0(material), blockStateModelGenerator.modelOutput);
     blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.plainModel(itemModelId));
   }
 
@@ -167,11 +168,11 @@ public class RoadMarkBlock extends Block implements SimpleWaterloggedBlock, Mish
   }
 
   protected static class AxisFacing extends RoadMarkBlock {
-    public static final MapCodec<AxisFacing> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(Identifier.CODEC.fieldOf("texture").forGetter(b -> b.texture), propertiesCodec()).apply(i, AxisFacing::new));
+    public static final MapCodec<AxisFacing> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(Material.CODEC.fieldOf("texture").forGetter(b -> b.material), propertiesCodec()).apply(i, AxisFacing::new));
     public static final EnumProperty<FourHorizontalAxis> AXIS = EnumProperty.create("axis", FourHorizontalAxis.class);
 
-    protected AxisFacing(Identifier texture, Properties settings) {
-      super(texture, settings);
+    protected AxisFacing(Material material, Properties settings) {
+      super(material, settings);
       registerDefaultState(defaultBlockState().setValue(AXIS, FourHorizontalAxis.X));
     }
 
@@ -218,7 +219,7 @@ public class RoadMarkBlock extends Block implements SimpleWaterloggedBlock, Mish
     @Environment(EnvType.CLIENT)
     @Override
     public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-      final TextureMapping textures = TextureMapping.cube(texture);
+      final TextureMapping textures = TextureMapping.cube(material);
       final Identifier modelId = MishangucModels.ROAD_MARK.create(this, textures, blockStateModelGenerator.modelOutput);
       final Identifier rotatedModelId = MishangucModels.ROAD_MARK_ROTATED.create(this, textures, blockStateModelGenerator.modelOutput);
       final Identifier onSlabModelId = MishangucModels.ROAD_MARK_ON_SLAB.create(this, textures, blockStateModelGenerator.modelOutput);
@@ -233,7 +234,7 @@ public class RoadMarkBlock extends Block implements SimpleWaterloggedBlock, Mish
           .select(true, FourHorizontalAxis.Z, BlockModelGenerators.plainVariant(onSlabModelId).with(BlockModelGenerators.NOP))
           .select(true, FourHorizontalAxis.NE_SW, BlockModelGenerators.plainVariant(onSlabRotatedModelId).with(BlockModelGenerators.NOP));
       blockStateModelGenerator.blockStateOutput.accept(MultiVariantGenerator.dispatch(this).with(map));
-      final Identifier itemModelId = ModelTemplates.FLAT_HANDHELD_ITEM.create(ModelLocationUtils.getModelLocation(asItem()), TextureMapping.layer0(texture), blockStateModelGenerator.modelOutput);
+      final Identifier itemModelId = ModelTemplates.FLAT_HANDHELD_ITEM.create(ModelLocationUtils.getModelLocation(asItem()), TextureMapping.layer0(material), blockStateModelGenerator.modelOutput);
       blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.plainModel(itemModelId));
     }
 
@@ -244,11 +245,11 @@ public class RoadMarkBlock extends Block implements SimpleWaterloggedBlock, Mish
   }
 
   protected static class DirectionalFacing extends RoadMarkBlock {
-    public static final MapCodec<DirectionalFacing> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(Identifier.CODEC.fieldOf("texture").forGetter(b -> b.texture), propertiesCodec()).apply(i, DirectionalFacing::new));
+    public static final MapCodec<DirectionalFacing> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(Material.CODEC.fieldOf("texture").forGetter(b -> b.material), propertiesCodec()).apply(i, DirectionalFacing::new));
     public static final EnumProperty<EightHorizontalDirection> FACING = EnumProperty.create("facing", EightHorizontalDirection.class);
 
-    public DirectionalFacing(Identifier texture, Properties settings) {
-      super(texture, settings);
+    public DirectionalFacing(Material material, Properties settings) {
+      super(material, settings);
       registerDefaultState(defaultBlockState().setValue(FACING, EightHorizontalDirection.SOUTH));
     }
 
@@ -295,7 +296,7 @@ public class RoadMarkBlock extends Block implements SimpleWaterloggedBlock, Mish
     @Environment(EnvType.CLIENT)
     @Override
     public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-      final TextureMapping textures = TextureMapping.cube(texture);
+      final TextureMapping textures = TextureMapping.cube(material);
       final Identifier modelId = MishangucModels.ROAD_MARK.create(this, textures, blockStateModelGenerator.modelOutput);
       final Identifier rotatedModelId = MishangucModels.ROAD_MARK_ROTATED.create(this, textures, blockStateModelGenerator.modelOutput);
       final Identifier onSlabModelId = MishangucModels.ROAD_MARK_ON_SLAB.create(this, textures, blockStateModelGenerator.modelOutput);
@@ -317,7 +318,7 @@ public class RoadMarkBlock extends Block implements SimpleWaterloggedBlock, Mish
         map.select(true, direction, BlockModelGenerators.plainVariant(rotated ? onSlabRotatedModelId : onSlabModelId).with(VariantMutator.Y_ROT.withValue(axisRotation)));
       }
       blockStateModelGenerator.blockStateOutput.accept(MultiVariantGenerator.dispatch(this).with(map));
-      final Identifier itemModelId = ModelTemplates.FLAT_HANDHELD_ITEM.create(ModelLocationUtils.getModelLocation(asItem()), TextureMapping.layer0(texture), blockStateModelGenerator.modelOutput);
+      final Identifier itemModelId = ModelTemplates.FLAT_HANDHELD_ITEM.create(ModelLocationUtils.getModelLocation(asItem()), TextureMapping.layer0(material), blockStateModelGenerator.modelOutput);
       blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.plainModel(itemModelId));
     }
 

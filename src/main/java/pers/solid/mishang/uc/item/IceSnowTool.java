@@ -28,7 +28,6 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import pers.solid.mishang.uc.components.MishangucComponents;
-import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
@@ -41,17 +40,17 @@ public class IceSnowTool extends Item implements MishangucItem, DispenseItemBeha
 
   @Override
   public Component getName(ItemStack stack) {
-    return TextBridge.translatable("item.mishanguc.ice_snow_tool.format", getName(), Integer.toString(getStrength(stack)));
+    return Component.translatable("item.mishanguc.ice_snow_tool.format", super.getName(stack), Integer.toString(getStrength(stack)));
   }
 
   @Override
   public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-    tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.1").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.2").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.3").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.4").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.ice_snow_tool.tooltip.1").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.ice_snow_tool.tooltip.2").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.ice_snow_tool.tooltip.3").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.ice_snow_tool.tooltip.4").withStyle(ChatFormatting.GRAY));
     if (stack.getOrDefault(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT).shows(MishangucComponents.STRENGTH)) {
-      tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.strength", TextBridge.literal(Integer.toString(getStrength(stack))).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY));
+      tooltip.add(Component.translatable("item.mishanguc.ice_snow_tool.tooltip.strength", Component.literal(Integer.toString(getStrength(stack))).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY));
     }
   }
 
@@ -83,7 +82,7 @@ public class IceSnowTool extends Item implements MishangucItem, DispenseItemBeha
     final int range = getRange(strength);
     final BlockPos centerBlockPos = BlockPos.containing(pos);
     for (final BlockPos blockPos : BlockPos.withinManhattan(centerBlockPos, range, 0, range)) {
-      if (world.random.nextFloat() > probability) {
+      if (world.getRandom().nextFloat() > probability) {
         continue;
       }
 
@@ -122,7 +121,7 @@ public class IceSnowTool extends Item implements MishangucItem, DispenseItemBeha
     final float probability = getProbability(strength);
     final int range = getRange(strength);
     for (BlockPos blockPos : BlockPos.withinManhattan(BlockPos.containing(pos), range, range, range)) {
-      if (world.random.nextFloat() > probability) {
+      if (world.getRandom().nextFloat() > probability) {
         continue;
       }
 

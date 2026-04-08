@@ -5,8 +5,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -38,10 +38,10 @@ public abstract class BlockToolItemWithEntity extends BlockToolItem implements R
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable BlockToolStateWithEntity getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  public @Nullable BlockToolStateWithEntity getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, LevelExtractionContext context, @Nullable HitResult result) {
     final BlockToolStateWithEntity state = new BlockToolStateWithEntity();
 
-    final ClientLevel world = context.world();
+    final ClientLevel world = context.level();
 
     if (result instanceof BlockHitResult blockHitResult && includesFluid(stack, player.isShiftKeyDown())) {
       final BlockPos blockPos = blockHitResult.getBlockPos();
@@ -57,18 +57,18 @@ public abstract class BlockToolItemWithEntity extends BlockToolItem implements R
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void renderBeforeOutline(LocalPlayer player, ItemStack stack, WorldRenderContext context) {
-    if (!(context.worldState().getData(MISHANG_BLOCK_OUTLINE) instanceof BlockToolStateWithEntity state)) {
+  public void renderBeforeOutline(LocalPlayer player, ItemStack stack, LevelRenderContext context) {
+    if (!(context.levelState().getData(MISHANG_BLOCK_OUTLINE) instanceof BlockToolStateWithEntity state)) {
       return;
     }
     if (state.greenEntityShape == null) {
       return;
     }
-    final PoseStack matrices = context.matrices();
-    final MultiBufferSource consumers = context.consumers();
+    final PoseStack matrices = context.poseStack();
+    final MultiBufferSource consumers = context.bufferSource();
     if (consumers == null) return;
     final VertexConsumer vertexConsumer = consumers.getBuffer(RenderTypes.lines());
-    final Vec3 cameraPos = context.worldState().cameraRenderState.pos;
+    final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
     ShapeRenderer.renderShape(matrices, vertexConsumer, state.greenEntityShape, -cameraPos.x, -cameraPos.y, -cameraPos.z, ARGB.colorFromFloat(0.8f, 0f, 1f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth());
   }
 }

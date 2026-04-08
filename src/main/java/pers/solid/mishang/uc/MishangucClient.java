@@ -7,13 +7,13 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.color.item.ItemTintSources;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperties;
 import net.minecraft.client.renderer.item.properties.select.SelectItemModelProperties;
@@ -24,13 +24,11 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import org.apache.commons.lang3.Validate;
-import pers.solid.mishang.uc.block.AbstractRoadBlock;
 import pers.solid.mishang.uc.block.ColoredBlock;
 import pers.solid.mishang.uc.block.StandingSignBlock;
 import pers.solid.mishang.uc.blockentity.*;
-import pers.solid.mishang.uc.blocks.MishangucBlocks;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.item.*;
 import pers.solid.mishang.uc.networking.EditSignPayload;
@@ -45,6 +43,7 @@ import pers.solid.mishang.uc.screen.StandingSignBlockEditScreen;
 import pers.solid.mishang.uc.screen.WallSignBlockEditScreen;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Environment(EnvType.CLIENT)
@@ -136,40 +135,44 @@ public class MishangucClient implements ClientModInitializer {
     // 注册方块和颜色
     final Block[] coloredBlocks = MishangUtils.blocks().stream().filter(Predicates.instanceOf(ColoredBlock.class))
         .toArray(Block[]::new);
-    ColorProviderRegistry.BLOCK.register(
-        (state, world, pos, tintIndex) -> {
-          if (world == null || pos == null) return -1;
-          BlockEntity entity = world.getBlockEntity(pos);
-          // 考虑到玩家掉落产生粒子时，坐标会向上偏离一格。
-          if (entity == null) entity = world.getBlockEntity(pos.below());
-          if (entity instanceof ColoredBlockEntity coloredBlockEntity) {
-            return coloredBlockEntity.getColor();
-          } else {
-            // 考虑到坐标本身的位置没有方块颜色，因此根据附近坐标来推断方块颜色。
-            // 受部分渲染器影响，方块颜色会与周围插值，故需确保有自定义颜色的方块周围也会带有相同的自定义颜色。
-            int accumulatedNum = 0;
-            int accumulatedRed = 0;
-            int accumulatedGreen = 0;
-            int accumulatedBlue = 0;
-            for (BlockPos outPos : BlockPos.withinManhattan(pos, 1, 1, 1)) {
-              if (outPos.equals(pos)) continue;
-              if (world.getBlockEntity(outPos) instanceof ColoredBlockEntity coloredBlockEntity) {
-                final int color = coloredBlockEntity.getColor();
-                accumulatedNum += 1;
-                accumulatedRed += color >> 16 & 255;
-                accumulatedGreen += color >> 8 & 255;
-                accumulatedBlue += color & 255;
-              }
-            }
-            if (accumulatedNum > 0) {
-              return (accumulatedRed / accumulatedNum << 16) + (accumulatedGreen / accumulatedNum << 8) + accumulatedBlue / accumulatedNum;
-            } else {
-              return -1;
+    BlockColorRegistry.register(List.of(new BlockTintSource() {
+      @Override
+      public int color(BlockState state) {
+        return state.getBlock().defaultMapColor().col;
+      }
+
+      @Override
+      public int colorInWorld(BlockState state, BlockAndTintGetter level, BlockPos pos) {
+        BlockEntity entity = level.getBlockEntity(pos);
+        // 考虑到玩家掉落产生粒子时，坐标会向上偏离一格。
+        if (entity == null) entity = level.getBlockEntity(pos.below());
+        if (entity instanceof ColoredBlockEntity coloredBlockEntity) {
+          return coloredBlockEntity.getColor();
+        } else {
+          // 考虑到坐标本身的位置没有方块颜色，因此根据附近坐标来推断方块颜色。
+          // 受部分渲染器影响，方块颜色会与周围插值，故需确保有自定义颜色的方块周围也会带有相同的自定义颜色。
+          int accumulatedNum = 0;
+          int accumulatedRed = 0;
+          int accumulatedGreen = 0;
+          int accumulatedBlue = 0;
+          for (BlockPos outPos : BlockPos.withinManhattan(pos, 1, 1, 1)) {
+            if (outPos.equals(pos)) continue;
+            if (level.getBlockEntity(outPos) instanceof ColoredBlockEntity coloredBlockEntity) {
+              final int color = coloredBlockEntity.getColor();
+              accumulatedNum += 1;
+              accumulatedRed += color >> 16 & 255;
+              accumulatedGreen += color >> 8 & 255;
+              accumulatedBlue += color & 255;
             }
           }
-        },
-        coloredBlocks
-    );
+          if (accumulatedNum > 0) {
+            return (accumulatedRed / accumulatedNum << 16) + (accumulatedGreen / accumulatedNum << 8) + accumulatedBlue / accumulatedNum;
+          } else {
+            return -1;
+          }
+        }
+      }
+    }), coloredBlocks);
   }
 
   private static void registerBlockEntityRenderers() {
@@ -185,21 +188,11 @@ public class MishangucClient implements ClientModInitializer {
 
   private static void registerRenderEvents() {
     // 注册方块外观描绘
-    WorldRenderEvents.AFTER_BLOCK_OUTLINE_EXTRACTION.register(MishangRenderStateProvider.MISHANG_EXTRACTION);
-    WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register(RendersBlockOutline.RENDERER);
-    WorldRenderEvents.BEFORE_DEBUG_RENDER.register(RendersBeforeOutline.DEBUG_RENDER);
+    LevelRenderEvents.AFTER_BLOCK_OUTLINE_EXTRACTION.register(MishangRenderStateProvider.MISHANG_EXTRACTION);
+    LevelRenderEvents.BEFORE_BLOCK_OUTLINE.register(RendersBlockOutline.RENDERER);
+    LevelRenderEvents.BEFORE_GIZMOS.register(RendersBeforeOutline.DEBUG_RENDER);
   }
 
   private static void registerBlockLayers() {
-    // 设置相应的 BlockLayer
-    Validate.notEmpty(MishangucBlocks.translucentBlocks).forEach(block -> BlockRenderLayerMap.putBlock(block, ChunkSectionLayer.TRANSLUCENT));
-    Validate.notEmpty(MishangucBlocks.cutoutBlocks).forEach(block -> {
-      BlockRenderLayerMap.putBlock(block, ChunkSectionLayer.CUTOUT);
-      if (block instanceof AbstractRoadBlock roadBlock && roadBlock.getRoadSlab() != null) {
-        BlockRenderLayerMap.putBlock(roadBlock.getRoadSlab(), ChunkSectionLayer.CUTOUT);
-      }
-    });
-    MishangucBlocks.translucentBlocks = null;
-    MishangucBlocks.cutoutBlocks = null;
   }
 }

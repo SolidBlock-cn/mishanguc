@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
@@ -16,7 +17,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import pers.solid.mishang.uc.render.RenderCommandQueueExtension;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Collection;
 
@@ -167,6 +167,6 @@ public interface SpecialDrawable extends Cloneable {
   SpecialDrawable cloneWithNewTextContext(TextContext textContext);
 
   default MutableComponent asStyledText() {
-    return TextBridge.literal(getType().getId().getPath() + " " + asStringArgs());
+    return Component.literal(getType().getId().getPath() + " " + asStringArgs());
   }
 }

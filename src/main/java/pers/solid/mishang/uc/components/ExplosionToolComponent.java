@@ -2,9 +2,6 @@ package pers.solid.mishang.uc.components;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import pers.solid.mishang.uc.util.TextBridge;
-
-import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -16,6 +13,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.Explosion;
+
+import java.util.function.Consumer;
 
 public record ExplosionToolComponent(float power, boolean createFire, Explosion.BlockInteraction destructionType) implements TooltipProvider {
   public static final ExplosionToolComponent DEFAULT = new ExplosionToolComponent(4, false, Explosion.BlockInteraction.DESTROY);
@@ -36,9 +35,9 @@ public record ExplosionToolComponent(float power, boolean createFire, Explosion.
 
   @Override
   public void addToTooltip(Item.TooltipContext context, Consumer<Component> textConsumer, TooltipFlag type, DataComponentGetter components) {
-    textConsumer.accept(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.power", TextBridge.literal(String.valueOf(power)).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY));
-    textConsumer.accept(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.createFire", createFire ? CommonComponents.GUI_YES.copy().withStyle(ChatFormatting.GREEN) : CommonComponents.GUI_NO.copy().withStyle(ChatFormatting.RED)).withStyle(ChatFormatting.GRAY));
-    textConsumer.accept(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.destructionType", TextBridge.translatable("item.mishanguc.explosion_tool.destructionType." + destructionType.name().toLowerCase()).withStyle(style -> style.withColor(0x779999))).withStyle(ChatFormatting.GRAY));
+    textConsumer.accept(Component.translatable("item.mishanguc.explosion_tool.tooltip.power", Component.literal(String.valueOf(power)).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY));
+    textConsumer.accept(Component.translatable("item.mishanguc.explosion_tool.tooltip.createFire", createFire ? CommonComponents.GUI_YES.copy().withStyle(ChatFormatting.GREEN) : CommonComponents.GUI_NO.copy().withStyle(ChatFormatting.RED)).withStyle(ChatFormatting.GRAY));
+    textConsumer.accept(Component.translatable("item.mishanguc.explosion_tool.tooltip.destructionType", Component.translatable("item.mishanguc.explosion_tool.destructionType." + destructionType.name().toLowerCase()).withStyle(style -> style.withColor(0x779999))).withStyle(ChatFormatting.GRAY));
   }
 
   public ExplosionToolComponent withPower(float power) {

@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.util;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.ApiStatus;
@@ -37,7 +38,7 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
     return new RoadConnectionState(WhetherConnected.NOT_CONNECTED, LineColor.NONE, null, LineType.NORMAL, null);
   }
 
-  public static RoadConnectionState of(boolean whetherConnected, LineColor lineColor, EightHorizontalDirection direction, LineType lineType, LineOffset lineOffset) {
+  public static RoadConnectionState of(boolean whetherConnected, LineColor lineColor, EightHorizontalDirection direction, LineType lineType, @Nullable LineOffset lineOffset) {
     return new RoadConnectionState(whetherConnected ? WhetherConnected.CONNECTED : WhetherConnected.NOT_CONNECTED, lineColor, direction, lineType, lineOffset);
   }
 
@@ -47,22 +48,22 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
 
   public static MutableComponent text(@Nullable Direction direction) {
     if (direction == null) {
-      return TextBridge.translatable("direction.mishanguc.none");
+      return Component.translatable("direction.mishanguc.none");
     }
-    return TextBridge.translatable("direction.mishanguc." + direction.getSerializedName());
+    return Component.translatable("direction.mishanguc." + direction.getSerializedName());
   }
 
   public static MutableComponent text(@Nullable HorizontalCornerDirection direction) {
     if (direction == null) {
-      return TextBridge.translatable("direction.mishanguc.none");
+      return Component.translatable("direction.mishanguc.none");
     } else {
-      return TextBridge.translatable("direction.mishanguc." + direction.getSerializedName());
+      return Component.translatable("direction.mishanguc." + direction.getSerializedName());
     }
   }
 
   public static MutableComponent text(@Nullable Either<Direction, HorizontalCornerDirection> direction) {
     if (direction == null) {
-      return TextBridge.translatable("direction.mishanguc.none");
+      return Component.translatable("direction.mishanguc.none");
     } else {
       return direction.map(RoadConnectionState::text, RoadConnectionState::text);
     }
@@ -73,7 +74,7 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
   }
 
   public static MutableComponent text(WhetherConnected whetherConnected) {
-    return TextBridge.translatable("roadConnectionState.whether." + whetherConnected.getSerializedName()).withStyle(switch (whetherConnected) {
+    return Component.translatable("roadConnectionState.whether." + whetherConnected.getSerializedName()).withStyle(switch (whetherConnected) {
       case NOT_CONNECTED -> ChatFormatting.RED;
       case CONNECTED -> ChatFormatting.GREEN;
       default -> ChatFormatting.YELLOW;
@@ -119,6 +120,7 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
 
   @Contract(pure = true)
   @ApiStatus.AvailableSince("1.1.0")
+  @Nullable
   public Direction offsetDirection() {
     return lineOffset == null ? null : lineOffset.offsetDirection();
   }

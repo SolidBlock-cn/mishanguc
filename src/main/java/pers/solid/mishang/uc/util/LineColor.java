@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.util;
 
 import com.mojang.serialization.Codec;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
@@ -31,7 +32,7 @@ public enum LineColor implements StringRepresentable {
   }
 
   public MutableComponent getName() {
-    return TextBridge.translatable("lineColor.mishanguc." + name);
+    return Component.translatable("lineColor.mishanguc." + name);
   }
 
   public TagKey<Item> getIngredient() {

@@ -1,9 +1,5 @@
 package pers.solid.mishang.uc.item;
 
-import pers.solid.mishang.uc.util.TextBridge;
-import pers.solid.mishang.uc.util.WithMishangTooltip;
-
-import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -19,6 +15,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
+
+import java.util.List;
 
 public class TpToolItem extends Item implements MishangucItem, WithMishangTooltip {
   public TpToolItem(Properties settings) {
@@ -27,7 +26,7 @@ public class TpToolItem extends Item implements MishangucItem, WithMishangToolti
 
   @Override
   public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-    tooltip.add(TextBridge.translatable("item.mishanguc.tp_tool.tooltip", TextBridge.keybind("key.use").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.tp_tool.tooltip", Component.keybind("key.use").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
   }
 
   @Override

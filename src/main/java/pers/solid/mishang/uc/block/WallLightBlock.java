@@ -163,7 +163,7 @@ public class WallLightBlock extends DirectionalBlock implements SimpleWaterlogge
   }
 
   protected TextureMapping getTextureMap() {
-    return TextureMapping.singleSlot(MishangucTextureKeys.LIGHT, MishangucModels.texture(lightColor + "_light"));
+    return TextureMapping.singleSlot(MishangucTextureKeys.LIGHT, MishangucModels.material(lightColor + "_light"));
   }
 
   public ModelTemplate getModelType() {

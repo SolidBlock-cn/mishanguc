@@ -17,7 +17,8 @@ import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -68,7 +69,6 @@ import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.item.ColoredTintSource;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 import pers.solid.mishang.uc.networking.EditSignPayload;
-import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
@@ -106,7 +106,7 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
   }
 
   public final @Nullable Block baseBlock;
-  public @Nullable Identifier baseTexture, barTexture;
+  public @Nullable Material baseMaterial, barMaterial;
 
   public StandingSignBlock(@Nullable Block baseBlock, Properties settings) {
     super(settings);
@@ -179,9 +179,9 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
   }
 
   @Environment(EnvType.CLIENT)
-  public Identifier getBaseTexture() {
-    if (baseTexture != null) return baseTexture;
-    return ModelHelper.getTextureOf(baseBlock == null ? this : baseBlock);
+  public Material getBaseMaterial() {
+    if (baseMaterial != null) return baseMaterial;
+    return ModelHelper.getMaterialOf(baseBlock == null ? this : baseBlock);
   }
 
   @Override
@@ -229,20 +229,20 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
 
   @Override
   public MutableComponent getName() {
-    if (baseBlock != null) return TextBridge.translatable("block.mishanguc.standing_sign", baseBlock.getName());
+    if (baseBlock != null) return Component.translatable("block.mishanguc.standing_sign", baseBlock.getName());
     return super.getName();
   }
 
   @Override
   public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-    tooltip.add(TextBridge.translatable("block.mishanguc.standing_sign.tooltip.1").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("block.mishanguc.standing_sign.tooltip.2").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("block.mishanguc.standing_sign.tooltip.1").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("block.mishanguc.standing_sign.tooltip.2").withStyle(ChatFormatting.GRAY));
   }
 
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final TextureMapping textures = TextureMapping.defaultTexture(getBaseTexture()).put(MishangucTextureKeys.BAR, barTexture);
+    final TextureMapping textures = TextureMapping.defaultTexture(getBaseMaterial()).put(MishangucTextureKeys.BAR, barMaterial);
     final Identifier modelId = MishangucModels.STANDING_SIGN.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier r1ModelId = MishangucModels.STANDING_SIGN_1.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier r2ModelId = MishangucModels.STANDING_SIGN_2.create(this, textures, blockStateModelGenerator.modelOutput);
@@ -385,7 +385,7 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
     final Player editor = entity.getEditor();
     if (editor != null && editor != player) {
       // 这种情况下，告示牌被占用，玩家无权编辑。
-      player.displayClientMessage(TextBridge.translatable("message.mishanguc.no_editing_permission.occupied", editor.getName()), false);
+      player.sendOverlayMessage(Component.translatable("message.mishanguc.no_editing_permission.occupied", editor.getName()));
       return InteractionResult.FAIL;
     }
     entity.editedSide = isFront;
@@ -417,14 +417,14 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
         // 处理告示牌的涂蜡。
         if (!entity.waxed.contains(isFront.booleanValue())) {
           entity.waxed = addToSet(entity.waxed, isFront);
-          player.displayClientMessage(BlockEntityWithText.MESSAGE_WAX_ON, true);
+          player.sendOverlayMessage(BlockEntityWithText.MESSAGE_WAX_ON);
           world.levelEvent(null, LevelEvent.PARTICLES_AND_SOUND_WAX_ON, entity.getBlockPos(), 0);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stackInHand.shrink(1);
           return InteractionResult.SUCCESS;
         } else if (player.isCreative()) {
           entity.waxed = removeFromSet(entity.waxed, isFront);
-          player.displayClientMessage(BlockEntityWithText.MESSAGE_WAX_OFF, true);
+          player.sendOverlayMessage(BlockEntityWithText.MESSAGE_WAX_OFF);
           world.levelEvent(null, LevelEvent.PARTICLES_WAX_OFF, entity.getBlockPos(), 0);
           entity.markDirtyAndUpdate();
           return InteractionResult.SUCCESS;
@@ -442,7 +442,7 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
       } else if (stackInHand.getItem() instanceof GlowInkSacItem) {
         if (!entity.glowing.contains(isFront.booleanValue())) {
           entity.glowing = addToSet(entity.glowing, isFront);
-          player.displayClientMessage(BlockEntityWithText.MESSAGE_GLOW_ON, true);
+          player.sendOverlayMessage(BlockEntityWithText.MESSAGE_GLOW_ON);
           world.playSound(null, entity.getBlockPos(), SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stackInHand.shrink(1);
@@ -451,7 +451,7 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
       } else if (stackInHand.getItem() instanceof InkSacItem) {
         if (entity.glowing.contains(isFront.booleanValue())) {
           entity.glowing = removeFromSet(entity.glowing, isFront);
-          player.displayClientMessage(BlockEntityWithText.MESSAGE_GLOW_OFF, true);
+          player.sendOverlayMessage(BlockEntityWithText.MESSAGE_GLOW_OFF);
           world.playSound(null, entity.getBlockPos(), SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stackInHand.shrink(1);

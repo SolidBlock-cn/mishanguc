@@ -10,6 +10,7 @@ import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerato
 import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -17,6 +18,7 @@ import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.SingleItemRecipeBuilder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
@@ -40,7 +42,6 @@ import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.item.ColoredTintSource;
-import pers.solid.mishang.uc.util.TextBridge;
 
 import java.util.Map;
 
@@ -76,7 +77,7 @@ public class HungSignBarBlock extends Block implements SimpleWaterloggedBlock, M
   /**
    * 告示牌杆的纹理。若为 {@code null}，则根据其 {@link #baseBlock} 的 id 来推断。
    */
-  public Identifier texture;
+  public @Nullable Material material;
 
   public HungSignBarBlock(@Nullable Block baseBlock, Properties settings) {
     super(settings);
@@ -258,7 +259,7 @@ public class HungSignBarBlock extends Block implements SimpleWaterloggedBlock, M
   @Override
   public MutableComponent getName() {
     if (baseBlock != null) {
-      return TextBridge.translatable("block.mishanguc.hung_sign_bar", baseBlock.getName());
+      return Component.translatable("block.mishanguc.hung_sign_bar", baseBlock.getName());
     }
     return super.getName();
   }
@@ -266,7 +267,7 @@ public class HungSignBarBlock extends Block implements SimpleWaterloggedBlock, M
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final TextureMapping textures = TextureMapping.defaultTexture(getBaseTexture());
+    final TextureMapping textures = TextureMapping.defaultTexture(getBaseMaterial());
     final Identifier modelId = MishangucModels.HUNG_SIGN_BAR.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier centralModelId = MishangucModels.HUNG_SIGN_BAR_CENTRAL.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier edgeModelId = MishangucModels.HUNG_SIGN_BAR_EDGE.create(this, textures, blockStateModelGenerator.modelOutput);
@@ -293,9 +294,9 @@ public class HungSignBarBlock extends Block implements SimpleWaterloggedBlock, M
         .with(BlockModelGenerators.condition().term(AXIS, Direction.Axis.X).term(LEFT, false).term(RIGHT, false), BlockModelGenerators.plainVariant(edgeModelId).with(BlockModelGenerators.UV_LOCK).with(BlockModelGenerators.Y_ROT_270));
   }
 
-  public Identifier getBaseTexture() {
-    if (texture != null) return texture;
-    return ModelHelper.getTextureOf(baseBlock == null ? this : baseBlock);
+  public Material getBaseMaterial() {
+    if (material != null) return material;
+    return ModelHelper.getMaterialOf(baseBlock == null ? this : baseBlock);
   }
 
   private @Nullable String getRecipeGroup() {

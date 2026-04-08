@@ -9,7 +9,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
-import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
 import net.minecraft.core.Direction;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.data.FasterTextureMap;
@@ -82,10 +83,10 @@ public interface RoadWithAngleLine extends Road {
       ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     Road.super.appendRoadTooltip(stack, context, tooltip, options);
     tooltip.add(
-        TextBridge.translatable("block.mishanguc.tooltip.road_with_angle_line.1")
+        Component.translatable("block.mishanguc.tooltip.road_with_angle_line.1")
             .withStyle(ChatFormatting.GRAY));
     tooltip.add(
-        TextBridge.translatable("block.mishanguc.tooltip.road_with_angle_line.2")
+        Component.translatable("block.mishanguc.tooltip.road_with_angle_line.2")
             .withStyle(ChatFormatting.GRAY));
   }
 
@@ -100,14 +101,14 @@ public interface RoadWithAngleLine extends Road {
 
 
     private final boolean isBevel;
-    protected final String lineSide;
-    protected final String lineTop;
+    protected final @Nullable String lineSide;
+    protected final @Nullable String lineTop;
 
-    public Impl(Properties settings, LineColor lineColor, LineType lineType, boolean isBevel, String lineTop) {
+    public Impl(Properties settings, LineColor lineColor, LineType lineType, boolean isBevel, @Nullable String lineTop) {
       this(settings, lineColor, lineType, MishangUtils.composeStraightLineTexture(lineColor, lineType), isBevel, lineTop);
     }
 
-    public Impl(Properties settings, LineColor lineColor, LineType lineType, String lineSide, boolean isBevel, String lineTop) {
+    public Impl(Properties settings, LineColor lineColor, LineType lineType, @Nullable String lineSide, boolean isBevel, @Nullable String lineTop) {
       super(settings, lineColor, lineType);
       this.isBevel = isBevel;
       this.lineSide = lineSide;
@@ -130,11 +131,11 @@ public interface RoadWithAngleLine extends Road {
     @Override
     public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
       if (isBevel()) {
-        tooltip.add(TextBridge.translatable("lineType.angle.bevel").withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("lineType.angle.bevel").withStyle(ChatFormatting.BLUE));
       } else {
-        tooltip.add(TextBridge.translatable("lineType.angle.right").withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("lineType.angle.right").withStyle(ChatFormatting.BLUE));
       }
-      tooltip.add(TextBridge.translatable("lineType.angle.composed", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
+      tooltip.add(Component.translatable("lineType.angle.composed", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
     }
 
     @Override

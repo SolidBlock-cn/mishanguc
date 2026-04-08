@@ -31,12 +31,12 @@ public abstract class ScreenMixin {
           value = "INVOKE",
           shift = At.Shift.AFTER),
       cancellable = true)
-  private static void handleTextClickMixin(ClickEvent clickEvent, Minecraft minecraft, Screen screen, CallbackInfo ci) {
-    if (clickEvent instanceof TextClickEvent(Component text) && minecraft.player != null) {
-      minecraft.player.displayClientMessage(text, false);
+  private static void handleTextClickMixin(ClickEvent event, Minecraft minecraft, Screen activeScreen, CallbackInfo ci) {
+    if (event instanceof TextClickEvent(Component text) && minecraft.player != null) {
+      minecraft.player.sendSystemMessage(text);
       ci.cancel();
-    } else if (clickEvent instanceof NbtClickEvent(Tag nbt) && minecraft.player != null) {
-      minecraft.player.displayClientMessage(NbtPrettyPrinter.serialize(nbt), false);
+    } else if (event instanceof NbtClickEvent(Tag nbt) && minecraft.player != null) {
+      minecraft.player.sendSystemMessage(NbtPrettyPrinter.serialize(nbt));
       ci.cancel();
     }
   }

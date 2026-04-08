@@ -42,8 +42,8 @@ import java.util.stream.Stream;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 import static com.mojang.brigadier.arguments.StringArgumentType.string;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.argument;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal;
 
 @Environment(EnvType.CLIENT)
 public enum SignPresetCommand implements ClientCommandRegistrationCallback {
@@ -127,7 +127,7 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
       source.sendError(Component.translatable("message.mishanguc.signPreset.save.not_sign"));
       return -1;
     }
-    final ClientLevel world = source.getWorld();
+    final ClientLevel world = source.getLevel();
     final BlockPos blockPos = blockHitResult.getBlockPos();
     final BlockEntity blockEntity = world.getBlockEntity(blockPos);
 

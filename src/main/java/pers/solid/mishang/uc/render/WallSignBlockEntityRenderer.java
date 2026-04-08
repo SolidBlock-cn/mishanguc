@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.ARGB;
@@ -59,20 +59,24 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
     state.textContexts = blockEntity.textContexts;
     state.glowing = blockEntity.glowing;
     state.height = blockEntity.getHeight();
-    state.voxelShape = state.blockState.getShape(blockEntity.getLevel(), state.blockPos, CollisionContext.of(Minecraft.getInstance().player));
+    final BlockState blockState = blockEntity.getBlockState();
+    state.voxelShape = blockState.getShape(blockEntity.getLevel(), state.blockPos, CollisionContext.of(Minecraft.getInstance().player));
+    state.face = blockState.getValue(WallSignBlock.FACE);
+    state.facing = blockState.getValue(WallSignBlock.FACING);
+    state.invisible = INVISIBLE_BLOCKS.contains(blockState.getBlock());
+    state.isGlowingBlock = blockState.is(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN);
   }
 
   @Override
   public void submit(WallSignBlockEntityRenderState state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState) {
-    final Block block = state.blockState.getBlock();
     final BlockPos pos = state.blockPos;
     // 若方块为隐形方块，且玩家手中拿着该方块，则显示该方块轮廓。
     final LocalPlayer player = Minecraft.getInstance().player;
-    if (INVISIBLE_BLOCKS.contains(block) && player != null) {
+    if (state.invisible && player != null) {
       final Item mainHandStackItem = player.getMainHandItem().getItem();
       if (mainHandStackItem instanceof final BlockItem blockItem
           && INVISIBLE_BLOCKS.contains(blockItem.getBlock())) {
-        boolean glowing = state.blockState.is(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN);
+        boolean glowing = state.isGlowingBlock;
         queue.submitCustomGeometry(matrices, RenderTypes.LINES, (matricesEntry, vertexConsumer) -> ShapeRenderer.renderShape(
             matrices,
             vertexConsumer,
@@ -89,9 +93,8 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
     }
 
     matrices.translate(0.5, 0.5, 0.5);
-    final BlockState blockState = state.blockState;
-    final Direction facing = blockState.getValue(WallSignBlock.FACING);
-    final AttachFace face = blockState.getValue(WallSignBlock.FACE);
+    final Direction facing = state.facing;
+    final AttachFace face = state.face;
     matrices.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
     matrices.mulPose(
         Axis.XP.rotationDegrees(
@@ -100,7 +103,7 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
       matrices.mulPose(Axis.ZP.rotationDegrees(180));
     }
     matrices.scale(1 / 16f, -1 / 16f, 1 / 16f);
-    matrices.translate(0, 0, (INVISIBLE_BLOCKS.contains(block) ? -8 : -7) + .0125);
+    matrices.translate(0, 0, (state.invisible ? -8 : -7) + .0125);
     for (TextContext textContext : state.textContexts) {
       textContext.draw(
           ctx.font(), matrices, queue, state.glowing ? 15728880 : state.lightCoords, 16, state.height);

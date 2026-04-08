@@ -16,4 +16,5 @@ public class HungSignBlockEntityRenderState extends BlockEntityRenderState {
   public @Unmodifiable Map<Direction, @Unmodifiable List<TextContext>> texts;
   public @Unmodifiable Set<Direction> glowing;
   public float height;
+  public Direction.Axis axis;
 }
