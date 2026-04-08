@@ -13,7 +13,7 @@ import net.darkhax.curseforgegradle.TaskPublishCurseForge
 base {
     archivesName = project.archives_base_name
 }
-version = project.mod_version + '-' + project.minecraft_version
+version = project.mod_version + '+mc' + project.minecraft_version
 group = project.maven_group
 
 repositories {
@@ -170,7 +170,7 @@ modrinth {
     println "Modrinth 令牌：${token.get() instanceof String ? token.get().replaceAll("^(.+?)(.{0,6})\$", (s, a, b) -> a.replaceAll(".", "*") + b) : token.get()}"
 
     projectId = "rItLmRo4" // 迷上城建模组的 Modrinth ID
-    versionNumber = project.mod_version + '-' + project.minecraft_version
+    versionNumber = project.mod_version + '+mc' + project.minecraft_version
     versionType = project.mod_version.contains('-') ? 'beta' : 'release'  // until release of MC
     uploadFile = remapJar
     gameVersions = Arrays.asList(project.supported_minecraft_versions.split(','))
@@ -192,6 +192,7 @@ githubRelease {
     repo = "mishanguc"
     tagName = "v$project.mod_version"
     targetCommitish = "1.21.10"
+    releaseName = "v$project.mod_version"
     body = content
     draft = true
     prerelease = false
