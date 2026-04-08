@@ -1,6 +1,5 @@
 {
   "type": "minecraft:stonecutting",
-  "group": "mishanguc:simple_wood_handrail",
   "ingredient": "minecraft:mangrove_wood",
   "result": {
     "count": 5,

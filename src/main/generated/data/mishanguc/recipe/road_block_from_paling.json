@@ -2,7 +2,6 @@
   "type": "minecraft:stonecutting",
   "ingredient": "#mishanguc:road_blocks",
   "result": {
-    "count": 1,
     "id": "mishanguc:road_block"
   }
 }

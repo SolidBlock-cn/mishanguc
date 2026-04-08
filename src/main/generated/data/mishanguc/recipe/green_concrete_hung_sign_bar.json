@@ -1,6 +1,5 @@
 {
   "type": "minecraft:stonecutting",
-  "group": "mishanguc:concrete_hung_sign_bar",
   "ingredient": "minecraft:green_concrete",
   "result": {
     "count": 20,

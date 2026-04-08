@@ -1,6 +1,5 @@
 {
   "type": "minecraft:stonecutting",
-  "group": "mishanguc:wood_hung_sign_bar",
   "ingredient": "minecraft:crimson_hyphae",
   "result": {
     "count": 20,
