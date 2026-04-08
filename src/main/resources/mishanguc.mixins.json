@@ -16,7 +16,8 @@
     "NbtCompoundAccessor",
     "NetherPortalBlockMixin",
     "PaneBlockMixin",
-    "PointOfInterestTypesMixin",
+    "PoiTypesAccessor",
+    "PortalForcerMixin",
     "RecipeJsonBuilderMixins",
     "WallBlockMixin",
     "WorldChunkMixin"
