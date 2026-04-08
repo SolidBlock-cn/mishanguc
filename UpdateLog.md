@@ -2,6 +2,11 @@
 
 注意：更新记录中的版本并不一定都已发布。具体请以 CurseForge、Modrinth 中的下载页面或 GitHub 中的“releases”为准。
 
+### 1.6.2
+
+- 支持 26.1 新版本。
+- 修复兴趣点类型不支持染色的下界传送门方块，导致通过染色的下界传送门进入并返回后会生成新的未染色的下界传送门的问题。
+
 ### 1.6.1
 
 - 修复 `-pattern cross-large` 和 `-pattern square-slant-medium` 和 `-pattern square-slant-small` 错误的问题。
