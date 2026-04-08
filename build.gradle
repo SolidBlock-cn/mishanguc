@@ -194,6 +194,7 @@ githubRelease {
     repo = "mishanguc"
     tagName = "v$project.mod_version"
     targetCommitish = "26.1"
+    releaseName = "v$project.mod_version"
     body = content
     draft = true
     prerelease = false
