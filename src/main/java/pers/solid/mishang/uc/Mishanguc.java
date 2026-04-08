@@ -17,7 +17,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistryEvents;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -28,7 +27,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -52,6 +50,7 @@ import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
 import pers.solid.mishang.uc.blockentity.MishangucBlockEntities;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.*;
+import pers.solid.mishang.uc.mixin.PoiTypesAccessor;
 import pers.solid.mishang.uc.networking.*;
 import pers.solid.mishang.uc.text.SpecialDrawableTypes;
 import pers.solid.mishang.uc.util.BlockMatchingRule;
@@ -668,7 +667,7 @@ public class Mishanguc implements ModInitializer {
     registerColoredBlocks();
     registerColorfulBlocks();
 
-    Registry.register(BuiltInRegistries.POINT_OF_INTEREST_TYPE, ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, id("nether_portal")), new PoiType(ImmutableSet.copyOf(ColoredBlocks.COLORED_NETHER_PORTAL.getStateDefinition().getPossibleStates()), 0, 1));
+    PoiTypesAccessor.callRegister(BuiltInRegistries.POINT_OF_INTEREST_TYPE, ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, id("nether_portal")), ImmutableSet.copyOf(ColoredBlocks.COLORED_NETHER_PORTAL.getStateDefinition().getPossibleStates()), 0, 1);
   }
 
   private static void registerColorfulBlocks() {

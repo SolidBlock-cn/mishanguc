@@ -2,6 +2,11 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.6.2
+
+- Support the new version 26.1.
+- Fixed the issue that point of interest types not supporting colored nether portal blocks causing generating a new uncolored nether portal after entering and returning from a colored nether portal.
+
 ### 1.6.1
 
 - Fixed the issue of `-pattern cross-large` and `-pattern square-slant-medium` and `-pattern square-slant-small` being incorrect.
