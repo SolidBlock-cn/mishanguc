@@ -1,16 +1,16 @@
 package pers.solid.mishang.uc.networking;
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
 import pers.solid.mishang.uc.Mishanguc;
 
-public record GetBlockDataPayload(Identifier blockId, BlockPos blockPos, boolean hasData, NbtCompound data) implements CustomPayload {
-  public static final Id<GetBlockDataPayload> ID = new CustomPayload.Id<>(Mishanguc.id("get_block_data"));
-  public static final PacketCodec<PacketByteBuf, GetBlockDataPayload> CODEC = PacketCodec.of((value, buf) -> {
+public record GetBlockDataPayload(Identifier blockId, BlockPos blockPos, boolean hasData, CompoundTag data) implements CustomPacketPayload {
+  public static final Type<GetBlockDataPayload> ID = new CustomPacketPayload.Type<>(Mishanguc.id("get_block_data"));
+  public static final StreamCodec<FriendlyByteBuf, GetBlockDataPayload> CODEC = StreamCodec.ofMember((value, buf) -> {
     buf.writeIdentifier(value.blockId).writeBlockPos(value.blockPos).writeBoolean(value.hasData);
     if (value.hasData) {
       buf.writeNbt(value.data);
@@ -27,7 +27,7 @@ public record GetBlockDataPayload(Identifier blockId, BlockPos blockPos, boolean
   });
 
   @Override
-  public Id<? extends CustomPayload> getId() {
+  public Type<? extends CustomPacketPayload> type() {
     return ID;
   }
 }

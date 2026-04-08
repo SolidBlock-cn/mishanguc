@@ -2,37 +2,37 @@ package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.mojang.math.Quadrant;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.client.data.BlockStateModelGenerator;
-import net.minecraft.client.data.BlockStateVariantMap;
-import net.minecraft.client.data.VariantsBlockModelDefinitionCreator;
-import net.minecraft.client.render.model.json.ModelVariantOperator;
-import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.recipe.RecipeGenerator;
-import net.minecraft.data.recipe.ShapedRecipeJsonBuilder;
-import net.minecraft.item.Item.TooltipContext;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
-import net.minecraft.text.Text;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.AxisRotation;
-import net.minecraft.util.math.Direction;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
+import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.core.Direction;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item.TooltipContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
@@ -55,13 +55,13 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
   /**
    * 道路方块中，正中直线所在的轴。
    */
-  Property<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
+  Property<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
   @Override
   LineColor getLineColor(BlockState blockState, Direction direction);
 
   @Override
-  default void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
+  default void appendRoadProperties(StateDefinition.Builder<Block, BlockState> builder) {
     Road.super.appendRoadProperties(builder);
     builder.add(FACING, AXIS);
   }
@@ -69,43 +69,43 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
   @Override
   default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
     return RoadConnectionState.of(
-        state.get(FACING).hasDirection(direction) || state.get(AXIS).test(direction),
+        state.getValue(FACING).hasDirection(direction) || state.getValue(AXIS).test(direction),
         getLineColor(state, direction),
         EightHorizontalDirection.of(direction.getOpposite()),
         getLineType(state, direction),
-        state.get(AXIS).test(direction) ? null : new LineOffset(state.get(FACING).getDirectionInAxis(state.get(AXIS)), offsetLevel()));
+        state.getValue(AXIS).test(direction) ? null : new LineOffset(state.getValue(FACING).getDirectionInAxis(state.getValue(AXIS)), offsetLevel()));
   }
 
   @Override
-  default BlockState mirrorRoad(BlockState state, BlockMirror mirror) {
-    return state.with(FACING, state.get(FACING).mirror(mirror));
+  default BlockState mirrorRoad(BlockState state, Mirror mirror) {
+    return state.setValue(FACING, state.getValue(FACING).mirror(mirror));
   }
 
   @Override
-  default BlockState rotateRoad(BlockState state, BlockRotation rotation) {
-    final Direction.Axis axis = state.get(AXIS);
+  default BlockState rotateRoad(BlockState state, Rotation rotation) {
+    final Direction.Axis axis = state.getValue(AXIS);
     return state
-        .with(FACING, state.get(FACING).rotate(rotation))
-        .with(AXIS, MishangUtils.rotateAxis(rotation, axis));
+        .setValue(FACING, state.getValue(FACING).rotate(rotation))
+        .setValue(AXIS, MishangUtils.rotateAxis(rotation, axis));
   }
 
   @Override
-  default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
-    final HorizontalCornerDirection facing = HorizontalCornerDirection.fromRotation(ctx.getPlayerYaw());
+  default BlockState withPlacementState(BlockState state, BlockPlaceContext ctx) {
+    final HorizontalCornerDirection facing = HorizontalCornerDirection.fromRotation(ctx.getRotation());
     return state
-        .with(
+        .setValue(
             FACING,
-            ctx.getPlayer() != null && ctx.getPlayer().isSneaking() ? facing.getOpposite() : facing)
-        .with(AXIS, ctx.getHorizontalPlayerFacing().getAxis());
+            ctx.getPlayer() != null && ctx.getPlayer().isShiftKeyDown() ? facing.getOpposite() : facing)
+        .setValue(AXIS, ctx.getHorizontalDirection().getAxis());
   }
 
   @Override
   default void appendRoadTooltip(
-      ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+      ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     Road.super.appendRoadTooltip(stack, context, tooltip, options);
-    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_joint_line_with_offset_side.1").formatted(Formatting.GRAY));
-    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_joint_line_with_offset_side.2").formatted(Formatting.GRAY));
-    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_joint_line_with_offset_side.3").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_joint_line_with_offset_side.1").withStyle(ChatFormatting.GRAY));
+    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_joint_line_with_offset_side.2").withStyle(ChatFormatting.GRAY));
+    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_joint_line_with_offset_side.3").withStyle(ChatFormatting.GRAY));
   }
 
   int offsetLevel();
@@ -117,26 +117,26 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
     protected final String lineSide2;
     protected final String lineTop;
     private final int offsetLevel;
-    public static final MapCodec<Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), lineColorFieldCodec(), LineColor.CODEC.fieldOf("line_color_side").forGetter(b -> b.lineColorSide), lineTypeFieldCodec(), LineType.CODEC.fieldOf("line_type_side").forGetter(b -> b.lineTypeSide), Codec.INT.fieldOf("offset_leve").forGetter(b -> b.offsetLevel)).apply(i, (settings, lineColor, lineColorSide, lineType, lineTypeSide, offsetLevel) -> new Impl(settings, lineColor, lineColorSide, lineType, lineTypeSide, null, offsetLevel)));
+    public static final MapCodec<Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(propertiesCodec(), lineColorFieldCodec(), LineColor.CODEC.fieldOf("line_color_side").forGetter(b -> b.lineColorSide), lineTypeFieldCodec(), LineType.CODEC.fieldOf("line_type_side").forGetter(b -> b.lineTypeSide), Codec.INT.fieldOf("offset_leve").forGetter(b -> b.offsetLevel)).apply(i, (settings, lineColor, lineColorSide, lineType, lineTypeSide, offsetLevel) -> new Impl(settings, lineColor, lineColorSide, lineType, lineTypeSide, null, offsetLevel)));
 
     /**
      * 由不带偏移的 T 字形道路映射到带有偏移的 T 字形道路的映射。这里的偏移，是指的只有半边的那条线路的偏移。
      */
     public static final BiMap<RoadWithJointLine.Impl, RoadWithJointLineWithOffsetSide.Impl> OFFSET_ROADS = HashBiMap.create();
 
-    public Impl(Settings settings, RoadWithJointLine.Impl block, String lineTop, int offsetLevel) {
+    public Impl(Properties settings, RoadWithJointLine.Impl block, String lineTop, int offsetLevel) {
       this(settings, block.lineColor, block.lineColorSide, block.lineType, block.lineTypeSide, lineTop, offsetLevel);
       OFFSET_ROADS.put(block, this);
     }
 
-    public Impl(Settings settings, LineColor lineColor, LineColor lineColorSide, LineType lineType, LineType lineTypeSide, String lineTop, int offsetLevel) {
+    public Impl(Properties settings, LineColor lineColor, LineColor lineColorSide, LineType lineType, LineType lineTypeSide, String lineTop, int offsetLevel) {
       super(settings, lineColor, lineType);
       this.lineColorSide = lineColorSide;
       this.lineTypeSide = lineTypeSide;
       this.lineTop = lineTop;
       this.offsetLevel = offsetLevel;
       lineSide = MishangUtils.composeStraightLineTexture(lineColor, lineType);
-      lineSide2 = lineColorSide.asString() + "_offset_straight_line";
+      lineSide2 = lineColorSide.getSerializedName() + "_offset_straight_line";
     }
 
     @Override
@@ -146,43 +146,43 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
 
     @Environment(EnvType.CLIENT)
     @Override
-    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
+    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockModelGenerators blockStateModelGenerator) {
       final FasterTextureMap textures = new FasterTextureMap().base("asphalt").lineSide(lineSide).lineSide2(lineSide2).lineTop(lineTop);
       final Identifier modelId = road.uploadModel("_with_joint_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_SIDE2, MishangucTextureKeys.LINE_TOP);
       final Identifier mirroredModelId = road.uploadModel("_with_joint_line_mirrored", "_mirrored", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_SIDE2, MishangucTextureKeys.LINE_TOP);
-      final var map = BlockStateVariantMap.models(FACING, AXIS);
+      final var map = PropertyDispatch.initial(FACING, AXIS);
       // 一侧的短线所朝向的方向。
-      for (Direction direction : Direction.Type.HORIZONTAL) {
-        final @NotNull Direction offsetDirection1 = direction.rotateYClockwise();
+      for (Direction direction : Direction.Plane.HORIZONTAL) {
+        final @NotNull Direction offsetDirection1 = direction.getClockWise();
         // direction 的右偏方向
         final @NotNull HorizontalCornerDirection facing1 = HorizontalCornerDirection.fromDirections(direction, offsetDirection1);
-        final @NotNull Direction offsetDirection2 = direction.rotateYCounterclockwise();
+        final @NotNull Direction offsetDirection2 = direction.getCounterClockWise();
         // direction 的左偏方向
         final @NotNull HorizontalCornerDirection facing2 = HorizontalCornerDirection.fromDirections(direction, offsetDirection2);
-        final AxisRotation axisRotation = switch (direction) {
-          case WEST -> AxisRotation.R90;
-          case NORTH -> AxisRotation.R180;
-          case EAST -> AxisRotation.R270;
-          default -> AxisRotation.R0;
+        final Quadrant axisRotation = switch (direction) {
+          case WEST -> Quadrant.R90;
+          case NORTH -> Quadrant.R180;
+          case EAST -> Quadrant.R270;
+          default -> Quadrant.R0;
         };
         map
-            .register(facing1, offsetDirection1.getAxis(),
-                BlockStateModelGenerator.createWeightedVariant(modelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)))
-            .register(facing2, offsetDirection2.getAxis(),
-                BlockStateModelGenerator.createWeightedVariant(mirroredModelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
+            .select(facing1, offsetDirection1.getAxis(),
+                BlockModelGenerators.plainVariant(modelId).with(VariantMutator.Y_ROT.withValue(axisRotation)))
+            .select(facing2, offsetDirection2.getAxis(),
+                BlockModelGenerators.plainVariant(mirroredModelId).with(VariantMutator.Y_ROT.withValue(axisRotation)));
       }
-      blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockModelDefinitionCreator.of(road).with(map)));
+      blockStateModelGenerator.blockStateOutput.accept(road.composeState(MultiVariantGenerator.dispatch(road).with(map)));
     }
 
     @Override
-    public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
-      tooltip.add(TextBridge.translatable("lineType.jointWithOffsetSide.composed.1", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
-      tooltip.add(TextBridge.translatable("lineType.jointWithOffsetSide.composed.2", lineColorSide.getName(), lineTypeSide.getName()).formatted(Formatting.BLUE));
+    public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
+      tooltip.add(TextBridge.translatable("lineType.jointWithOffsetSide.composed.1", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
+      tooltip.add(TextBridge.translatable("lineType.jointWithOffsetSide.composed.2", lineColorSide.getName(), lineTypeSide.getName()).withStyle(ChatFormatting.BLUE));
     }
 
     @Override
     public LineColor getLineColor(BlockState state, Direction direction) {
-      if (state.get(FACING).hasDirection(direction) && !state.get(AXIS).test(direction)) {
+      if (state.getValue(FACING).hasDirection(direction) && !state.getValue(AXIS).test(direction)) {
         return lineColorSide;
       }
       return super.getLineColor(state, direction);
@@ -190,35 +190,35 @@ public interface RoadWithJointLineWithOffsetSide extends Road {
 
     @Override
     public LineType getLineType(BlockState state, Direction direction) {
-      if (state.get(FACING).hasDirection(direction) && !state.get(AXIS).test(direction)) {
+      if (state.getValue(FACING).hasDirection(direction) && !state.getValue(AXIS).test(direction)) {
         return lineTypeSide;
       }
       return super.getLineType(state, direction);
     }
 
     @Override
-    protected MapCodec<? extends Impl> getCodec() {
+    protected MapCodec<? extends Impl> codec() {
       return CODEC;
     }
 
     @Override
-    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
+    public RecipeBuilder getPaintingRecipe(Block base, Block self, RecipeProvider recipeGenerator) {
       if (lineTypeSide != LineType.NORMAL) {
-        throw new UnsupportedOperationException(String.format("Recipe for the block [lineTypeSide=%s] is not supported", lineTypeSide.asString()));
+        throw new UnsupportedOperationException(String.format("Recipe for the block [lineTypeSide=%s] is not supported", lineTypeSide.getSerializedName()));
       }
       Block base2 = RoadBlocks.getRoadBlockWithLine(lineColor, lineType);
       if (base instanceof SlabBlock) {
         base2 = ((AbstractRoadBlock) base2).getRoadSlab();
       }
-      final ShapedRecipeJsonBuilder recipe = recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
+      final ShapedRecipeBuilder recipe = recipeGenerator.shaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern("a  ")
           .pattern("XXX")
-          .input('a', lineColorSide.getIngredient())
-          .input('X', base2)
-          .criterion("has_" + lineColorSide.asString() + "_paint", recipeGenerator.conditionsFromTag(lineColorSide.getIngredient()))
-          .criterion(RecipeGenerator.hasItem(base2), recipeGenerator.conditionsFromItem(base2));
+          .define('a', lineColorSide.getIngredient())
+          .define('X', base2)
+          .unlockedBy("has_" + lineColorSide.getSerializedName() + "_paint", recipeGenerator.has(lineColorSide.getIngredient()))
+          .unlockedBy(RecipeProvider.getHasName(base2), recipeGenerator.has(base2));
       if (lineColorSide != lineColor) {
-        recipe.criterion("has_" + lineColor.asString() + "_paint", recipeGenerator.conditionsFromTag(lineColor.getIngredient()));
+        recipe.unlockedBy("has_" + lineColor.getSerializedName() + "_paint", recipeGenerator.has(lineColor.getIngredient()));
       }
       return recipe;
     }

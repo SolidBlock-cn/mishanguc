@@ -1,19 +1,18 @@
 package pers.solid.mishang.uc.text;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.text.MutableText;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import pers.solid.mishang.uc.render.RenderCommandQueueExtension;
@@ -34,27 +33,27 @@ public interface SpecialDrawable extends Cloneable {
   SpecialDrawable INVALID = new SpecialDrawable() {
     @Environment(EnvType.CLIENT)
     @Override
-    public void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, OrderedRenderCommandQueue queue, int light, float x, float y) {
+    public void drawExtra(Font textRenderer, PoseStack matrixStack, SubmitNodeCollector queue, int light, float x, float y) {
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y) {
+    public void drawInternal(Matrix4f matricesEntry, MultiBufferSource.BufferSource vertexConsumers, int light, float x, float y) {
 
     }
 
     @Override
-    public @NotNull String getId() {
+    public String getId() {
       return "invalid";
     }
 
     @Override
-    public @NotNull SpecialDrawableType<SpecialDrawable> getType() {
+    public SpecialDrawableType<SpecialDrawable> getType() {
       return SpecialDrawableTypes.INVALID;
     }
 
     @Override
-    public SpecialDrawable cloneWithNewTextContext(@NotNull TextContext textContext) {
+    public SpecialDrawable cloneWithNewTextContext(TextContext textContext) {
       return INVALID;
     }
   };
@@ -65,12 +64,12 @@ public interface SpecialDrawable extends Cloneable {
    * <p>实现此方法时，必须注解 {@code @Environment(EnvType.CLIENT)}。</p>
    */
   @Environment(EnvType.CLIENT)
-  default void drawExtra(TextRenderer textRenderer, MatrixStack matrixStack, OrderedRenderCommandQueue queue, int light, float x, float y) {
+  default void drawExtra(Font textRenderer, PoseStack matrixStack, SubmitNodeCollector queue, int light, float x, float y) {
     ((RenderCommandQueueExtension) queue).submitSpecialDrawable$mishang(matrixStack, this, light, x, y);
   }
 
   @Environment(EnvType.CLIENT)
-  void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y);
+  void drawInternal(Matrix4f matricesEntry, MultiBufferSource.BufferSource vertexConsumers, int light, float x, float y);
 
   /**
    * 这一类 SpecialDrawable 对象的 id，通常是一个字符串，并且应该要被 {@link #fromNbt} 和 {@link #fromStringArgs} 识别。同一类对象返回的 id 应该相同，因此覆盖此方法时，通常是返回一个常量。
@@ -78,7 +77,7 @@ public interface SpecialDrawable extends Cloneable {
    * @return 这一类 SpecialDrawable 对象的 id。
    */
   @Contract(pure = true)
-  default @NotNull String getId() {
+  default String getId() {
     final Identifier id = getType().getId();
     if (id.getNamespace().equals("mishanguc")) {
       return id.getPath();
@@ -95,16 +94,15 @@ public interface SpecialDrawable extends Cloneable {
    */
   @Contract(pure = true)
   @ApiStatus.AvailableSince("0.2.4")
-  @NotNull
   SpecialDrawableType<? extends SpecialDrawable> getType();
 
   @Contract(mutates = "param1")
-  default void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+  default void writeNbt(CompoundTag nbt, HolderLookup.Provider registryLookup) {
     nbt.putString("id", getId());
   }
 
-  default NbtCompound createNbt(RegistryWrapper.WrapperLookup registryLookup) {
-    final NbtCompound nbt = new NbtCompound();
+  default CompoundTag createNbt(HolderLookup.Provider registryLookup) {
+    final CompoundTag nbt = new CompoundTag();
     writeNbt(nbt, registryLookup);
     return nbt;
   }
@@ -113,8 +111,8 @@ public interface SpecialDrawable extends Cloneable {
    * 根据已有的 TextContext 对象和一段 nbt，返回一个新的 SpecialDrawable 对象。通常来说，先识别该 nbt 中的 {@code id} 标签（通常与各个子类的 {@link #getId()} 方法相同），然后再形成对应的对象。
    */
   @Contract("_, _ -> new")
-  static @Nullable SpecialDrawable fromNbt(TextContext textContext, @NotNull NbtCompound nbt) {
-    final String id = nbt.getString("id", null);
+  static @Nullable SpecialDrawable fromNbt(TextContext textContext, CompoundTag nbt) {
+    final String id = nbt.getStringOr("id", null);
     if (id == null) {
       return null;
     }
@@ -166,9 +164,9 @@ public interface SpecialDrawable extends Cloneable {
    */
   @Contract(value = "_ -> new", pure = true)
   @ApiStatus.Internal
-  SpecialDrawable cloneWithNewTextContext(@NotNull TextContext textContext);
+  SpecialDrawable cloneWithNewTextContext(TextContext textContext);
 
-  default @NotNull MutableText asStyledText() {
+  default MutableComponent asStyledText() {
     return TextBridge.literal(getType().getId().getPath() + " " + asStringArgs());
   }
 }

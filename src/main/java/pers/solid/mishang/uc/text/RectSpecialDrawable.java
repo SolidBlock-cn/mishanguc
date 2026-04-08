@@ -3,15 +3,14 @@ package pers.solid.mishang.uc.text;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.EffectGlyph;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.text.MutableText;
-import net.minecraft.util.math.ColorHelper;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.font.glyphs.EffectGlyph;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.ARGB;
 import org.joml.Matrix4f;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.mixin.TextRendererAccessor;
@@ -24,42 +23,42 @@ import pers.solid.mishang.uc.util.TextBridge;
  * @param height 长方形的高度，若为 8 则与文本大小的高度相同。
  * @since 0.2.1 将此类改成了记录。
  */
-public record RectSpecialDrawable(float width, float height, @NotNull TextContext textContext) implements SpecialDrawable {
+public record RectSpecialDrawable(float width, float height, TextContext textContext) implements SpecialDrawable {
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y) {
+  public void drawInternal(Matrix4f matricesEntry, MultiBufferSource.BufferSource vertexConsumers, int light, float x, float y) {
     final int color = textContext.color;
     final boolean shadow = this.textContext.outlineColorType == OutlineColorType.NONE && this.textContext.shadow;
-    final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-    final TextRenderer.TextLayerType textLayerType = this.textContext.outlineColorType != OutlineColorType.NONE ? TextRenderer.TextLayerType.POLYGON_OFFSET : this.textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL;
-    final TextRenderer.GlyphDrawer glyphDrawer = TextRenderer.GlyphDrawer.drawing(vertexConsumers, matricesEntry, textLayerType, light);
-    final EffectGlyph rectangleGlyph = ((TextRendererAccessor) textRenderer).getFonts().getRectangleGlyph();
+    final Font textRenderer = Minecraft.getInstance().font;
+    final Font.DisplayMode textLayerType = this.textContext.outlineColorType != OutlineColorType.NONE ? Font.DisplayMode.POLYGON_OFFSET : this.textContext.seeThrough ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL;
+    final Font.GlyphVisitor glyphDrawer = Font.GlyphVisitor.forMultiBufferSource(vertexConsumers, matricesEntry, textLayerType, light);
+    final EffectGlyph rectangleGlyph = ((TextRendererAccessor) textRenderer).getProvider().effect();
     if (this.textContext.outlineColorType != OutlineColorType.NONE) {
       // 绘制轮廓
       int outlineColor = this.textContext.outlineColorType == OutlineColorType.AUTO ? MishangUtils.toSignOutlineColor(color) : this.textContext.outlineColor;
       final int outlineAlpha = ((outlineColor & 0xfc000000) == 0) ? 255 : (outlineColor >> 24 & 0xFF);
-      glyphDrawer.drawRectangle(rectangleGlyph.create(x - 1, y - 1, (width + x) + 1, y + height + 1, 0, ColorHelper.withAlpha(outlineAlpha, outlineColor), 0, 0));
+      glyphDrawer.acceptEffect(rectangleGlyph.createEffect(x - 1, y - 1, (width + x) + 1, y + height + 1, 0, ARGB.color(outlineAlpha, outlineColor), 0, 0));
     }
-    glyphDrawer.drawRectangle(rectangleGlyph.create(x, y, (width + x), height + y, this.textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, color, shadow ? ColorHelper.scaleRgb(color, 0.25f) : 0, 1));
+    glyphDrawer.acceptEffect(rectangleGlyph.createEffect(x, y, (width + x), height + y, this.textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, color, shadow ? ARGB.scaleRGB(color, 0.25f) : 0, 1));
   }
 
 
   @Override
-  public @NotNull String getId() {
+  public String getId() {
     return "rect";
   }
 
   @Override
-  public @NotNull SpecialDrawableType<RectSpecialDrawable> getType() {
+  public SpecialDrawableType<RectSpecialDrawable> getType() {
     return SpecialDrawableTypes.RECT;
   }
 
-  public static @NotNull RectSpecialDrawable fromNbt(@NotNull TextContext textContext, @NotNull NbtCompound nbt) {
-    return new RectSpecialDrawable(nbt.getFloat("width", 0f), nbt.getFloat("height", 0f), textContext);
+  public static RectSpecialDrawable fromNbt(TextContext textContext, CompoundTag nbt) {
+    return new RectSpecialDrawable(nbt.getFloatOr("width", 0f), nbt.getFloatOr("height", 0f), textContext);
   }
 
-  public static @NotNull RectSpecialDrawable fromStringArgs(@NotNull TextContext textContext, @NotNull String args) throws CommandSyntaxException {
+  public static RectSpecialDrawable fromStringArgs(TextContext textContext, String args) throws CommandSyntaxException {
     final String[] split = args.split(" ");
     if (split.length < 2) {
       throw new CommandSyntaxException(null, TextBridge.translatable("special_drawable.rect.too_few", 2, split.length));
@@ -82,7 +81,7 @@ public record RectSpecialDrawable(float width, float height, @NotNull TextContex
   }
 
   @Override
-  public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+  public void writeNbt(CompoundTag nbt, HolderLookup.Provider registryLookup) {
     SpecialDrawable.super.writeNbt(nbt, registryLookup);
     nbt.putFloat("width", width);
     nbt.putFloat("height", height);
@@ -115,14 +114,14 @@ public record RectSpecialDrawable(float width, float height, @NotNull TextContex
   }
 
   @Override
-  public SpecialDrawable cloneWithNewTextContext(@NotNull TextContext textContext) {
+  public SpecialDrawable cloneWithNewTextContext(TextContext textContext) {
     return new RectSpecialDrawable(width, height, textContext);
   }
 
   @Override
-  public @NotNull MutableText asStyledText() {
+  public MutableComponent asStyledText() {
     return TextBridge.empty()
-        .append(TextBridge.literal("■").styled(style -> style.withColor(textContext.color)))
+        .append(TextBridge.literal("■").withStyle(style -> style.withColor(textContext.color)))
         .append(" (" + width + "×" + height + ")");
   }
 }

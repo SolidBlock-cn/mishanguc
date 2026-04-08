@@ -2,16 +2,15 @@ package pers.solid.mishang.uc.text;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.EffectGlyph;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.text.MutableText;
-import net.minecraft.util.math.ColorHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.font.glyphs.EffectGlyph;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import pers.solid.mishang.uc.MishangUtils;
@@ -29,12 +28,12 @@ public record PatternSpecialDrawable(TextContext textContext, RectanglePattern r
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y) {
+  public void drawInternal(Matrix4f matricesEntry, MultiBufferSource.BufferSource vertexConsumers, int light, float x, float y) {
     int color = this.textContext.color;
-    final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+    final Font textRenderer = Minecraft.getInstance().font;
     final float sizeMultiplier = 1;
-    final TextRenderer.TextLayerType textLayerType = this.textContext.outlineColorType != OutlineColorType.NONE ? TextRenderer.TextLayerType.POLYGON_OFFSET : this.textContext.seeThrough ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL;
-    final TextRenderer.GlyphDrawer glyphDrawer = TextRenderer.GlyphDrawer.drawing(vertexConsumers, matricesEntry, textLayerType, light);
+    final Font.DisplayMode textLayerType = this.textContext.outlineColorType != OutlineColorType.NONE ? Font.DisplayMode.POLYGON_OFFSET : this.textContext.seeThrough ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL;
+    final Font.GlyphVisitor glyphDrawer = Font.GlyphVisitor.forMultiBufferSource(vertexConsumers, matricesEntry, textLayerType, light);
 
     // 文本是否存在阴影。
     final boolean shadow = this.textContext.outlineColorType == OutlineColorType.NONE && this.textContext.shadow;
@@ -53,18 +52,18 @@ public record PatternSpecialDrawable(TextContext textContext, RectanglePattern r
       mainRectangles.add(new float[]{minX, minY, maxX, maxY});
     }
 
-    final EffectGlyph rectangleGlyph = ((TextRendererAccessor) textRenderer).getFonts()
-        .getRectangleGlyph();
+    final EffectGlyph rectangleGlyph = ((TextRendererAccessor) textRenderer).getProvider()
+        .effect();
     if (outlineRectangles != null) {
       int outlineColor = this.textContext.outlineColorType == OutlineColorType.AUTO ? MishangUtils.toSignOutlineColor(color) : this.textContext.outlineColor;
       final int outlineAlpha = ((outlineColor & 0xFC000000) == 0) ? 255 : (outlineColor >> 24 & 0xFF);
-      outlineColor = ColorHelper.withAlpha(outlineAlpha, outlineColor);
+      outlineColor = ARGB.color(outlineAlpha, outlineColor);
       for (float[] rectangle : outlineRectangles) {
-        glyphDrawer.drawRectangle(rectangleGlyph.create(rectangle[0], rectangle[1], rectangle[2], rectangle[3], 0, outlineColor, 0, 0));
+        glyphDrawer.acceptEffect(rectangleGlyph.createEffect(rectangle[0], rectangle[1], rectangle[2], rectangle[3], 0, outlineColor, 0, 0));
       }
     }
     for (float[] rectangle : mainRectangles) {
-      glyphDrawer.drawRectangle(rectangleGlyph.create(rectangle[0], rectangle[1], rectangle[2], rectangle[3], this.textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, color, shadow ? ColorHelper.scaleRgb(color, 0.25f) : 0, 1));
+      glyphDrawer.acceptEffect(rectangleGlyph.createEffect(rectangle[0], rectangle[1], rectangle[2], rectangle[3], this.textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, color, shadow ? ARGB.scaleRGB(color, 0.25f) : 0, 1));
     }
   }
 
@@ -79,17 +78,17 @@ public record PatternSpecialDrawable(TextContext textContext, RectanglePattern r
   }
 
   @Override
-  public @NotNull String getId() {
+  public String getId() {
     return "pattern";
   }
 
   @Override
-  public @NotNull SpecialDrawableType<PatternSpecialDrawable> getType() {
+  public SpecialDrawableType<PatternSpecialDrawable> getType() {
     return SpecialDrawableTypes.PATTERN;
   }
 
   @Override
-  public SpecialDrawable cloneWithNewTextContext(@NotNull TextContext textContext) {
+  public SpecialDrawable cloneWithNewTextContext(TextContext textContext) {
     return new PatternSpecialDrawable(textContext, rectanglePattern);
   }
 
@@ -99,13 +98,13 @@ public record PatternSpecialDrawable(TextContext textContext, RectanglePattern r
   }
 
   @Contract(value = "_,_ -> new", pure = true)
-  public static @Nullable PatternSpecialDrawable fromNbt(TextContext textContext, NbtCompound nbt) {
-    final String shapeName = nbt.getString("shapeName", null);
+  public static @Nullable PatternSpecialDrawable fromNbt(TextContext textContext, CompoundTag nbt) {
+    final String shapeName = nbt.getStringOr("shapeName", null);
     return fromName(textContext, shapeName);
   }
 
   @Override
-  public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+  public void writeNbt(CompoundTag nbt, HolderLookup.Provider registryLookup) {
     SpecialDrawable.super.writeNbt(nbt, registryLookup);
     nbt.putString("shapeName", rectanglePattern.name());
   }
@@ -117,7 +116,7 @@ public record PatternSpecialDrawable(TextContext textContext, RectanglePattern r
   }
 
   @Override
-  public @NotNull MutableText asStyledText() {
-    return SpecialDrawable.super.asStyledText().styled(style -> style.withColor(textContext.color));
+  public MutableComponent asStyledText() {
+    return SpecialDrawable.super.asStyledText().withStyle(style -> style.withColor(textContext.color));
   }
 }

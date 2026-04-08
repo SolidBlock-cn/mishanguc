@@ -8,23 +8,21 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.command.argument.NbtCompoundArgumentType;
-import net.minecraft.command.argument.TextArgumentType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.arguments.ComponentArgument;
+import net.minecraft.commands.arguments.CompoundTagArgument;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.registry.RegistryOps;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.*;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import org.jspecify.annotations.NonNull;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.*;
+import net.minecraft.resources.RegistryOps;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import org.jspecify.annotations.Nullable;
 import pers.solid.mishang.uc.block.StandingSignBlock;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
@@ -52,43 +50,43 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
   INSTANCE;
 
   @Override
-  public void register(@NonNull CommandDispatcher<FabricClientCommandSource> dispatcher, @NonNull CommandRegistryAccess registryAccess) {
+  public void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext registryAccess) {
     dispatcher.register(literal("mishanguc:signpreset")
         .then(literal("path")
             .executes(commandContext -> {
-              commandContext.getSource().sendFeedback(Text.translatable("message.mishanguc.signPreset.path", Text.literal(SignPresets.PATH.getFileName().toString()).styled(style -> style
-                  .withUnderline(true)
-                  .withColor(Formatting.YELLOW)
-                  .withHoverEvent(new HoverEvent.ShowText(Text.translatable("message.mishanguc.signPreset.save.success.click_to_open")))
+              commandContext.getSource().sendFeedback(Component.translatable("message.mishanguc.signPreset.path", Component.literal(SignPresets.PATH.getFileName().toString()).withStyle(style -> style
+                  .withUnderlined(true)
+                  .withColor(ChatFormatting.YELLOW)
+                  .withHoverEvent(new HoverEvent.ShowText(Component.translatable("message.mishanguc.signPreset.save.success.click_to_open")))
                   .withClickEvent(new ClickEvent.OpenFile(SignPresets.PATH)))));
               return 1;
             }))
         .then(literal("list")
             .executes(commandContext -> {
               final Collection<SignPreset> values = SignPresets.streamValues().toList();
-              commandContext.getSource().sendFeedback(Text.translatable("message.mishanguc.signPreset.list", Texts.join(values, Texts.DEFAULT_SEPARATOR_TEXT, signPreset -> signPreset.name().copy().formatted(Formatting.YELLOW).styled(style -> {
-                final MutableText text = Text.empty();
-                final Text description = signPreset.description();
+              commandContext.getSource().sendFeedback(Component.translatable("message.mishanguc.signPreset.list", ComponentUtils.formatList(values, ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR, signPreset -> signPreset.name().copy().withStyle(ChatFormatting.YELLOW).withStyle(style -> {
+                final MutableComponent text = Component.empty();
+                final Component description = signPreset.description();
                 if (description != null) {
                   text.append(description);
-                  text.append(ScreenTexts.LINE_BREAK);
+                  text.append(CommonComponents.NEW_LINE);
                 }
                 return style
-                    .withHoverEvent(new HoverEvent.ShowText(text.append(Text.translatable("message.mishanguc.signPreset.list.id_info", signPreset.name()).formatted(Formatting.GRAY))));
+                    .withHoverEvent(new HoverEvent.ShowText(text.append(Component.translatable("message.mishanguc.signPreset.list.id_info", signPreset.name()).withStyle(ChatFormatting.GRAY))));
               }))));
               return values.size();
             }))
         .then(literal("reload")
             .executes(commandContext -> {
               final FabricClientCommandSource source = commandContext.getSource();
-              final MinecraftClient client = source.getClient();
-              source.sendFeedback(Text.translatable("message.mishanguc.signPreset.list.reload"));
+              final Minecraft client = source.getClient();
+              source.sendFeedback(Component.translatable("message.mishanguc.signPreset.list.reload"));
               final Thread thread = new Thread(() -> {
                 final int i = SignPresets.loadAll();
                 if (i >= 0) {
-                  client.execute(() -> source.sendFeedback(Text.translatable("message.mishanguc.signPreset.list.reload.success", i)));
+                  client.execute(() -> source.sendFeedback(Component.translatable("message.mishanguc.signPreset.list.reload.success", i)));
                 } else {
-                  client.execute(() -> source.sendFeedback(Text.translatable("message.mishanguc.signPreset.list.reload.error", Text.literal(SignPresets.PATH.toString()).styled(style -> style.withClickEvent(new ClickEvent.OpenFile(SignPresets.PATH))))));
+                  client.execute(() -> source.sendFeedback(Component.translatable("message.mishanguc.signPreset.list.reload.error", Component.literal(SignPresets.PATH.toString()).withStyle(style -> style.withClickEvent(new ClickEvent.OpenFile(SignPresets.PATH))))));
                 }
               });
               thread.start();
@@ -97,8 +95,8 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
         .then(literal("save")
             .then(argument("id", string())
                 .executes(commandContext -> executeSave(commandContext, null))
-                .then(argument("args", NbtCompoundArgumentType.nbtCompound())
-                    .executes(commandContext -> executeSave(commandContext, NbtCompoundArgumentType.getNbtCompound(commandContext, "args"))))))
+                .then(argument("args", CompoundTagArgument.compoundTag())
+                    .executes(commandContext -> executeSave(commandContext, CompoundTagArgument.getCompoundTag(commandContext, "args"))))))
         .then(literal("delete")
             .then(argument("id", string()).suggests(SignPresets.SUGGEST_KEYS)
                 .executes(commandContext -> executeDelete(commandContext, true))))
@@ -108,15 +106,15 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
                 .executes(commandContext -> executeDelete(commandContext, false)))));
   }
 
-  private static int executeSave(CommandContext<FabricClientCommandSource> commandContext, @Nullable NbtCompound args) throws CommandSyntaxException {
+  private static int executeSave(CommandContext<FabricClientCommandSource> commandContext, @Nullable CompoundTag args) throws CommandSyntaxException {
     final boolean force;
     final int order;
     final int initialFocus;
 
     if (args != null) {
-      force = args.getBoolean("force", false);
-      order = args.getInt("order", 0);
-      initialFocus = args.getInt("initial_focus", 0);
+      force = args.getBooleanOr("force", false);
+      order = args.getIntOr("order", 0);
+      initialFocus = args.getIntOr("initial_focus", 0);
     } else {
       force = false;
       order = 0;
@@ -124,12 +122,12 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
     }
 
     final FabricClientCommandSource source = commandContext.getSource();
-    final HitResult hitResult = source.getClient().crosshairTarget;
+    final HitResult hitResult = source.getClient().hitResult;
     if (!(hitResult instanceof BlockHitResult blockHitResult)) {
-      source.sendError(Text.translatable("message.mishanguc.signPreset.save.not_sign"));
+      source.sendError(Component.translatable("message.mishanguc.signPreset.save.not_sign"));
       return -1;
     }
-    final ClientWorld world = source.getWorld();
+    final ClientLevel world = source.getWorld();
     final BlockPos blockPos = blockHitResult.getBlockPos();
     final BlockEntity blockEntity = world.getBlockEntity(blockPos);
 
@@ -141,47 +139,47 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
         textContexts = hitSide == null ? null : standingSignBlockEntity.getTextsOnSide(hitSide);
       }
       case HungSignBlockEntity hungSignBlockEntity -> {
-        textContexts = hungSignBlockEntity.texts.get(blockHitResult.getSide());
+        textContexts = hungSignBlockEntity.texts.get(blockHitResult.getDirection());
       }
       case null, default -> {
-        source.sendError(Text.translatable("message.mishanguc.signPreset.save.not_sign"));
+        source.sendError(Component.translatable("message.mishanguc.signPreset.save.not_sign"));
         return -1;
       }
     }
 
     if (textContexts == null) {
-      source.sendError(Text.translatable("message.mishanguc.signPreset.save.fail.no_text"));
+      source.sendError(Component.translatable("message.mishanguc.signPreset.save.fail.no_text"));
       return -2;
     } else if (!force && textContexts.isEmpty()) {
-      source.sendError(Text.translatable("message.mishanguc.signPreset.save.fail.empty_text"));
+      source.sendError(Component.translatable("message.mishanguc.signPreset.save.fail.empty_text"));
       return -1;
     }
 
     final List<TextContext> textContextsCopy = textContexts.stream().map(TextContext::clone).toList();
     final String id = getString(commandContext, "id");
-    final RegistryOps<NbtElement> nbtOps = source.getRegistryManager().getOps(NbtOps.INSTANCE);
-    final Optional<Text> name;
+    final RegistryOps<Tag> nbtOps = source.registryAccess().createSerializationContext(NbtOps.INSTANCE);
+    final Optional<Component> name;
     if (args == null || !args.contains("name")) {
       name = Optional.empty();
     } else {
-      final DataResult<Text> result = TextCodecs.CODEC.parse(nbtOps, args.get("name"));
-      if (result instanceof DataResult.Error<Text> error) {
-        throw TextArgumentType.INVALID_COMPONENT_EXCEPTION.create(error.message());
+      final DataResult<Component> result = ComponentSerialization.CODEC.parse(nbtOps, args.get("name"));
+      if (result instanceof DataResult.Error<Component> error) {
+        throw ComponentArgument.ERROR_INVALID_COMPONENT.create(error.message());
       }
       name = result.result();
     }
-    final Optional<Text> description;
+    final Optional<Component> description;
     if (args == null || !args.contains("description")) {
       description = Optional.empty();
     } else {
-      final DataResult<Text> result = TextCodecs.CODEC.parse(nbtOps, args.get("description"));
-      if (result instanceof DataResult.Error<Text> error) {
-        throw TextArgumentType.INVALID_COMPONENT_EXCEPTION.create(error.message());
+      final DataResult<Component> result = ComponentSerialization.CODEC.parse(nbtOps, args.get("description"));
+      if (result instanceof DataResult.Error<Component> error) {
+        throw ComponentArgument.ERROR_INVALID_COMPONENT.create(error.message());
       }
       description = result.result();
     }
     if (initialFocus < 0 || (initialFocus >= textContextsCopy.size() && initialFocus > 0)) {
-      source.sendError(Text.translatable("message.mishanguc.signPreset.save.initial_focus_invalid", initialFocus, textContextsCopy.size()));
+      source.sendError(Component.translatable("message.mishanguc.signPreset.save.initial_focus_invalid", initialFocus, textContextsCopy.size()));
       return -1;
     }
     final Thread thread = new Thread(() -> {
@@ -189,7 +187,7 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
       info.save(id, source, force);
     });
     thread.start();
-    source.sendFeedback(Text.translatable("message.mishanguc.signPreset.save.start"));
+    source.sendFeedback(Component.translatable("message.mishanguc.signPreset.save.start"));
     return 1;
   }
 
@@ -198,7 +196,7 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
     final String id = getString(commandContext, "id");
     final SignPreset signPreset = SignPresets.getOrBuiltin(id);
     if (signPreset == null) {
-      source.sendError(Text.translatable("message.mishanguc.signPreset.delete.not_exist", id));
+      source.sendError(Component.translatable("message.mishanguc.signPreset.delete.not_exist", id));
       return -1;
     }
 
@@ -207,13 +205,13 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
       info.delete(id, source, hideIdBuiltin);
     });
     thread.start();
-    source.sendFeedback(Text.translatable("message.mishanguc.signPreset.delete.start", signPreset.name()));
+    source.sendFeedback(Component.translatable("message.mishanguc.signPreset.delete.start", signPreset.name()));
     return 1;
   }
 
   private static int executeResetAll(CommandContext<FabricClientCommandSource> commandContext) {
     final FabricClientCommandSource source = commandContext.getSource();
-    final MinecraftClient client = source.getClient();
+    final Minecraft client = source.getClient();
     final Thread thread = new Thread(() -> {
       try (final Stream<Path> stream = Files.walk(SignPresets.PATH)) {
         stream
@@ -227,15 +225,15 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
                 SignPresets.LOGGER.error("Failed to delete sign preset {}", path, e);
               }
             });
-        client.execute(() -> source.sendFeedback(Text.translatable("message.mishanguc.signPreset.reset.success")));
+        client.execute(() -> source.sendFeedback(Component.translatable("message.mishanguc.signPreset.reset.success")));
         SignPresets.resetToBuiltin();
       } catch (IOException e) {
         SignPresets.LOGGER.error("Failed to delete sign presets", e);
-        client.execute(() -> source.sendError(Text.translatable("message.mishanguc.signPreset.reset.fail.unknown")));
+        client.execute(() -> source.sendError(Component.translatable("message.mishanguc.signPreset.reset.fail.unknown")));
       }
     });
     thread.start();
-    source.sendFeedback(Text.translatable("message.mishanguc.signPreset.reset.start"));
+    source.sendFeedback(Component.translatable("message.mishanguc.signPreset.reset.start"));
     return 1;
   }
 }

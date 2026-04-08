@@ -5,30 +5,34 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
-import net.minecraft.block.*;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.state.OutlineRenderState;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.command.DefaultPermissions;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.state.BlockOutlineRenderState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permissions;
+import net.minecraft.util.CrudeIncrementalIntIdentityHashBiMap;
+import net.minecraft.util.Mth;
 import net.minecraft.util.Util;
-import net.minecraft.util.collection.Int2ObjectBiMap;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.GameMasterBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.components.FastBuildingToolData;
 import pers.solid.mishang.uc.components.MishangucComponents;
@@ -49,29 +53,29 @@ import java.util.List;
  */
 public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollInteraction, WithMishangTooltip {
 
-  private static final Int2ObjectBiMap<BlockMatchingRule> RULES_TO_CYCLE = Util.make(Int2ObjectBiMap.create(4), map -> {
+  private static final CrudeIncrementalIntIdentityHashBiMap<BlockMatchingRule> RULES_TO_CYCLE = Util.make(CrudeIncrementalIntIdentityHashBiMap.create(4), map -> {
     map.add(BlockMatchingRule.SAME_STATE);
     map.add(BlockMatchingRule.SAME_BLOCK);
     map.add(BlockMatchingRule.SAME_MATERIAL);
     map.add(BlockMatchingRule.ANY);
   });
 
-  public FastBuildingToolItem(Settings settings, @Nullable Boolean includesFluid) {
+  public FastBuildingToolItem(Properties settings, @Nullable Boolean includesFluid) {
     super(settings.component(MishangucComponents.FAST_BUILDING_TOOL_DATA, FastBuildingToolData.DEFAULT), includesFluid);
   }
 
   @Override
-  public ActionResult useOnBlock(
-      ItemStack stack, PlayerEntity player,
-      World world,
+  public InteractionResult useOnBlock(
+      ItemStack stack, Player player,
+      Level world,
       BlockHitResult blockHitResult,
-      Hand hand,
+      InteractionHand hand,
       boolean fluidIncluded) {
     if (!player.isCreative()) {
       // 仅限创造模式玩家使用。
-      return ActionResult.PASS;
+      return InteractionResult.PASS;
     }
-    final Direction side = blockHitResult.getSide();
+    final Direction side = blockHitResult.getDirection();
     final BlockPos centerBlockPos = blockHitResult.getBlockPos();
     final BlockState centerState = world.getBlockState(centerBlockPos);
     final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(
@@ -86,7 +90,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
         final BlockPlacementContext offsetBlockPlacementContext =
             new BlockPlacementContext(blockPlacementContext, pos);
         if (offsetBlockPlacementContext.canPlace() && offsetBlockPlacementContext.canReplace()) {
-          if (!world.isClient()) {
+          if (!world.isClientSide()) {
             offsetBlockPlacementContext.setBlockState(0b1011);
             offsetBlockPlacementContext.setBlockEntity();
           }
@@ -95,56 +99,56 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
         }
       }
     } // end for
-    return ActionResult.SUCCESS;
+    return InteractionResult.SUCCESS;
   }
 
   @Override
-  public ActionResult beginAttackBlock(
-      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+  public InteractionResult beginAttackBlock(
+      ItemStack stack, Player player, Level world, InteractionHand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!player.isCreative()) {
       // 仅限创造模式玩家使用。
-      return ActionResult.PASS;
+      return InteractionResult.PASS;
     }
-    if (!world.isClient()) {
+    if (!world.isClientSide()) {
       final FastBuildingToolData data = stack.getOrDefault(MishangucComponents.FAST_BUILDING_TOOL_DATA, FastBuildingToolData.DEFAULT);
       final int range = data.range();
       final BlockMatchingRule matchingRule = data.matchingRule();
       for (BlockPos pos1 : matchingRule.getPlainValidBlockPoss(world, pos, direction, range)) {
-        if (world.getBlockState(pos1).getBlock() instanceof OperatorBlock && !player.getPermissions().hasPermission(DefaultPermissions.GAMEMASTERS)) {
+        if (world.getBlockState(pos1).getBlock() instanceof GameMasterBlock && !player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)) {
           // 非管理员不应该破坏管理方块。
         } else if (fluidIncluded) {
-          world.setBlockState(pos1, Blocks.AIR.getDefaultState());
+          world.setBlockAndUpdate(pos1, Blocks.AIR.defaultBlockState());
         } else {
           world.removeBlock(pos1, false);
         }
       }
     }
-    world.syncWorldEvent(player, 2001, pos, Block.getRawIdFromState(world.getBlockState(pos)));
-    return ActionResult.SUCCESS;
+    world.levelEvent(player, 2001, pos, Block.getId(world.getBlockState(pos)));
+    return InteractionResult.SUCCESS;
   }
 
   @Override
-  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     tooltip.add(TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.1")
-        .formatted(Formatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.2").formatted(Formatting.GRAY));
+        .withStyle(ChatFormatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.fast_building_tool.tooltip.2").withStyle(ChatFormatting.GRAY));
   }
 
   protected ItemStack createStack(int range, BlockMatchingRule blockMatchingRule) {
-    final ItemStack stack = getDefaultStack();
+    final ItemStack stack = getDefaultInstance();
     stack.set(MishangucComponents.FAST_BUILDING_TOOL_DATA, new FastBuildingToolData(range, blockMatchingRule));
     return stack;
   }
 
-  public void appendToEntries(ItemGroup.Entries stacks) {
-    stacks.add(createStack(1, BlockMatchingRule.SAME_BLOCK));
-    stacks.add(createStack(16, BlockMatchingRule.SAME_BLOCK));
-    stacks.add(createStack(32, BlockMatchingRule.SAME_BLOCK));
-    stacks.add(createStack(64, BlockMatchingRule.SAME_BLOCK));
+  public void appendToEntries(CreativeModeTab.Output stacks) {
+    stacks.accept(createStack(1, BlockMatchingRule.SAME_BLOCK));
+    stacks.accept(createStack(16, BlockMatchingRule.SAME_BLOCK));
+    stacks.accept(createStack(32, BlockMatchingRule.SAME_BLOCK));
+    stacks.accept(createStack(64, BlockMatchingRule.SAME_BLOCK));
   }
 
   @Override
-  public Text getName(ItemStack stack) {
+  public Component getName(ItemStack stack) {
     final FastBuildingToolData data = stack.getOrDefault(MishangucComponents.FAST_BUILDING_TOOL_DATA, FastBuildingToolData.DEFAULT);
     return TextBridge.translatable("item.mishanguc.fast_building_tool.format", getName(), Integer.toString(data.range()), data.matchingRule().getName());
   }
@@ -152,15 +156,15 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable MishangRenderState getMishangRenderState(ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  public @Nullable MishangRenderState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
     if (!player.isCreative()) {
       // 只有在创造模式下，才会绘制边框。
       return null;
-    } else if (hand == Hand.OFF_HAND && player.getMainHandStack().getItem() instanceof BlockItem) {
+    } else if (hand == InteractionHand.OFF_HAND && player.getMainHandItem().getItem() instanceof BlockItem) {
       // 当玩家副手持有物品，主手持有方块时，直接跳过，不绘制。
       return null;
     }
-    final boolean includesFluid = this.includesFluid(stack, player.isSneaking());
+    final boolean includesFluid = this.includesFluid(stack, player.isShiftKeyDown());
     final FastBuildingToolData data = stack.getOrDefault(MishangucComponents.FAST_BUILDING_TOOL_DATA, FastBuildingToolData.DEFAULT);
     final BlockMatchingRule matchingRule = data.matchingRule();
     final int range = data.range();
@@ -171,20 +175,20 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
       return null;
     }
     final BuildingToolState buildingToolState = new BuildingToolState();
-    final ClientWorld world = context.world();
+    final ClientLevel world = context.world();
     final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockHitResult.getBlockPos(), player, stack, raycast, includesFluid);
-    final ShapeContext shapeContext = ShapeContext.of(player);
-    for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, raycast.getBlockPos(), raycast.getSide(), range)) {
+    final CollisionContext shapeContext = CollisionContext.of(player);
+    for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, raycast.getBlockPos(), raycast.getDirection(), range)) {
       final BlockState state = world.getBlockState(pos);
       final BlockPlacementContext offsetBlockPlacementContext = new BlockPlacementContext(blockPlacementContext, pos);
       if (offsetBlockPlacementContext.canPlace() && offsetBlockPlacementContext.canReplace()) {
-        buildingToolState.cyanShapes.add(LongObjectPair.of(offsetBlockPlacementContext.posToPlace.asLong(), offsetBlockPlacementContext.stateToPlace.getOutlineShape(world, offsetBlockPlacementContext.posToPlace, shapeContext)));
+        buildingToolState.cyanShapes.add(LongObjectPair.of(offsetBlockPlacementContext.posToPlace.asLong(), offsetBlockPlacementContext.stateToPlace.getShape(world, offsetBlockPlacementContext.posToPlace, shapeContext)));
         if (includesFluid) {
           buildingToolState.blueShapes.add(LongObjectPair.of(offsetBlockPlacementContext.posToPlace.asLong(), offsetBlockPlacementContext.stateToPlace.getFluidState().getShape(world, offsetBlockPlacementContext.posToPlace)));
         }
       }
-      if (hand == Hand.MAIN_HAND && !(state.getBlock() instanceof OperatorBlock && !player.getPermissions().hasPermission(DefaultPermissions.GAMEMASTERS))) {
-        buildingToolState.redShapes.add(LongObjectPair.of(pos.asLong(), state.getOutlineShape(world, pos, shapeContext)));
+      if (hand == InteractionHand.MAIN_HAND && !(state.getBlock() instanceof GameMasterBlock && !player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))) {
+        buildingToolState.redShapes.add(LongObjectPair.of(pos.asLong(), state.getShape(world, pos, shapeContext)));
         if (includesFluid) {
           buildingToolState.orangeShapes.add(LongObjectPair.of(pos.asLong(), state.getFluidState().getShape(world, pos)));
         }
@@ -197,33 +201,33 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
   @Environment(EnvType.CLIENT)
   @Override
   public boolean renderBlockOutline(
-      PlayerEntity player,
+      Player player,
       ItemStack itemStack,
       WorldRenderContext context,
-      OutlineRenderState outlineRenderState) {
+      BlockOutlineRenderState outlineRenderState) {
     return BuildingToolState.render(context);
   }
 
   @Override
-  public void onScroll(int selectedSlot, double scrollAmount, ServerPlayerEntity player, ItemStack stack) {
+  public void onScroll(int selectedSlot, double scrollAmount, ServerPlayer player, ItemStack stack) {
     final FastBuildingToolData data = stack.getOrDefault(MishangucComponents.FAST_BUILDING_TOOL_DATA, FastBuildingToolData.DEFAULT);
     final BlockMatchingRule currentRule = data.matchingRule();
-    final int i = RULES_TO_CYCLE.getRawId(currentRule);
+    final int i = RULES_TO_CYCLE.getId(currentRule);
     if (i == -1) return;
-    final int j = (int) MathHelper.floorMod(i - scrollAmount, RULES_TO_CYCLE.size());
-    final BlockMatchingRule newRule = RULES_TO_CYCLE.get(j);
+    final int j = (int) Mth.positiveModulo(i - scrollAmount, RULES_TO_CYCLE.size());
+    final BlockMatchingRule newRule = RULES_TO_CYCLE.byId(j);
     if (newRule != null) {
       stack.set(MishangucComponents.FAST_BUILDING_TOOL_DATA, new FastBuildingToolData(data.range(), newRule));
-      final MutableText text = TextBridge.literal("[ ");
+      final MutableComponent text = TextBridge.literal("[ ");
       for (Iterator<BlockMatchingRule> iterator = RULES_TO_CYCLE.iterator(); iterator.hasNext(); ) {
         BlockMatchingRule rule = iterator.next();
-        final MutableText name = rule.getName();
-        if (rule == newRule) name.formatted(Formatting.YELLOW, Formatting.UNDERLINE);
+        final MutableComponent name = rule.getName();
+        if (rule == newRule) name.withStyle(ChatFormatting.YELLOW, ChatFormatting.UNDERLINE);
         text.append(name);
         if (iterator.hasNext()) text.append(" | ");
       }
       text.append(" ]");
-      player.sendMessage(text, true);
+      player.displayClientMessage(text, true);
     }
   }
 }

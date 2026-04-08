@@ -16,32 +16,31 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistryEvents;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.pattern.CachedBlockPosition;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.poi.PointOfInterestType;
-import net.minecraft.world.rule.GameRules;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.pattern.BlockInWorld;
+import net.minecraft.world.level.gamerules.GameRules;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import org.apache.commons.lang3.Validate;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.block.ColoredBlock;
@@ -74,13 +73,13 @@ public class Mishanguc implements ModInitializer {
           (listeners) ->
               (player, world, hand, pos, direction) -> {
                 for (AttackBlockCallback event : listeners) {
-                  ActionResult result = event.interact(player, world, hand, pos, direction);
+                  InteractionResult result = event.interact(player, world, hand, pos, direction);
 
-                  if (result != ActionResult.PASS) {
+                  if (result != InteractionResult.PASS) {
                     return result;
                   }
                 }
-                return ActionResult.PASS;
+                return InteractionResult.PASS;
               });
 
   public static final Event<AttackBlockCallback> PROGRESS_ATTACK_BLOCK_EVENT =
@@ -89,22 +88,22 @@ public class Mishanguc implements ModInitializer {
           (listeners) ->
               (player, world, hand, pos, direction) -> {
                 for (AttackBlockCallback event : listeners) {
-                  ActionResult result = event.interact(player, world, hand, pos, direction);
-                  if (result != ActionResult.PASS) {
+                  InteractionResult result = event.interact(player, world, hand, pos, direction);
+                  if (result != InteractionResult.PASS) {
                     return result;
                   }
                 }
-                return ActionResult.PASS;
+                return InteractionResult.PASS;
               });
 
-  private static final @NotNull Identifier EXAMPLE_ID = Identifier.of("mishanguc", "");
+  private static final Identifier EXAMPLE_ID = Identifier.fromNamespaceAndPath("mishanguc", "");
 
   /**
    * 创建使用本模组命名空间（{@code mishanguc}）的 ID。此方法可以提高不同版本之间的兼容性，同时在部分版本中避免命名空间的冗余校验。
    *
    * @return 使用本模组命名空间（{@code mishanguc}）的 ID。
    */
-  public static @NotNull Identifier id(@NotNull String path) {
+  public static Identifier id(String path) {
     return EXAMPLE_ID.withPath(path);
   }
 
@@ -337,9 +336,9 @@ public class Mishanguc implements ModInitializer {
     ServerPlayNetworking.registerGlobalReceiver(ItemScrollPayload.ID, (payload, context) -> {
       final int selectedSlot = payload.selectedSlot();
       final double scrollAmount = payload.scrollAmount();
-      final ServerPlayerEntity player = context.player();
-      player.getEntityWorld().getServer().execute(() -> {
-        final ItemStack stack = player.getInventory().getStack(selectedSlot);
+      final ServerPlayer player = context.player();
+      player.level().getServer().execute(() -> {
+        final ItemStack stack = player.getInventory().getItem(selectedSlot);
         if (stack.getItem() instanceof HotbarScrollInteraction interaction) {
           interaction.onScroll(selectedSlot, scrollAmount, player, stack);
         }
@@ -351,9 +350,9 @@ public class Mishanguc implements ModInitializer {
     PayloadTypeRegistry.playS2C().register(GetBlockDataPayload.ID, GetBlockDataPayload.CODEC);
     PayloadTypeRegistry.playS2C().register(GetEntityDataPayload.ID, GetEntityDataPayload.CODEC);
     ServerPlayerEvents.JOIN.register(serverPlayerEntity -> {
-      final GameRules gameRules = serverPlayerEntity.getEntityWorld().getGameRules();
-      MishangucRules.sync(serverPlayerEntity, (short) 0, gameRules.getValue(MishangucRules.FORCE_PLACING_TOOL_ACCESS));
-      MishangucRules.sync(serverPlayerEntity, (short) 1, gameRules.getValue(MishangucRules.CARRYING_TOOL_ACCESS));
+      final GameRules gameRules = serverPlayerEntity.level().getGameRules();
+      MishangucRules.sync(serverPlayerEntity, (short) 0, gameRules.get(MishangucRules.FORCE_PLACING_TOOL_ACCESS));
+      MishangucRules.sync(serverPlayerEntity, (short) 1, gameRules.get(MishangucRules.CARRYING_TOOL_ACCESS));
     });
     PayloadTypeRegistry.playS2C().register(RuleChangedPayload.ID, RuleChangedPayload.CODEC);
   }
@@ -363,117 +362,117 @@ public class Mishanguc implements ModInitializer {
     BEGIN_ATTACK_BLOCK_EVENT.register(
         // 仅限客户端执行
         (player, world, hand, pos, direction) -> {
-          if (!world.isClient() || player.isSpectator()) {
-            return ActionResult.PASS;
+          if (!world.isClientSide() || player.isSpectator()) {
+            return InteractionResult.PASS;
           }
-          final ItemStack stack = player.getMainHandStack();
+          final ItemStack stack = player.getMainHandItem();
           final Item item = stack.getItem();
           if (item instanceof final BlockToolItem blockToolItem) {
-            return blockToolItem.beginAttackBlock(stack, player, world, hand, pos, direction, blockToolItem.includesFluid(stack, player.isSneaking()));
+            return blockToolItem.beginAttackBlock(stack, player, world, hand, pos, direction, blockToolItem.includesFluid(stack, player.isShiftKeyDown()));
           } else {
-            return ActionResult.PASS;
+            return InteractionResult.PASS;
           }
         });
 
     PROGRESS_ATTACK_BLOCK_EVENT.register(
         // 仅限客户端执行
         (player, world, hand, pos, direction) -> {
-          if (!world.isClient() || player.isSpectator()) {
-            return ActionResult.PASS;
+          if (!world.isClientSide() || player.isSpectator()) {
+            return InteractionResult.PASS;
           }
-          final ItemStack stack = player.getStackInHand(hand);
+          final ItemStack stack = player.getItemInHand(hand);
           final Item item = stack.getItem();
           if (item instanceof final BlockToolItem blockToolItem) {
-            final BlockHitResult hitResult = (BlockHitResult) player.raycast(5, 0, blockToolItem.includesFluid(stack, player.isSneaking()));
-            return blockToolItem.progressAttackBlock(player, world, hand, hitResult.getBlockPos(), hitResult.getSide(), blockToolItem.includesFluid(stack, player.isSneaking()));
+            final BlockHitResult hitResult = (BlockHitResult) player.pick(5, 0, blockToolItem.includesFluid(stack, player.isShiftKeyDown()));
+            return blockToolItem.progressAttackBlock(player, world, hand, hitResult.getBlockPos(), hitResult.getDirection(), blockToolItem.includesFluid(stack, player.isShiftKeyDown()));
           } else {
-            return ActionResult.PASS;
+            return InteractionResult.PASS;
           }
         });
     AttackBlockCallback.EVENT.register(
         // 仅限服务器执行
         (player, world, hand, pos, direction) -> {
-          if (world.isClient() || player.isSpectator()) {
-            return ActionResult.PASS;
+          if (world.isClientSide() || player.isSpectator()) {
+            return InteractionResult.PASS;
           }
-          final ItemStack stack = player.getStackInHand(hand);
+          final ItemStack stack = player.getItemInHand(hand);
           final Item item = stack.getItem();
           if (item instanceof final BlockToolItem blockToolItem) {
-            return blockToolItem.beginAttackBlock(stack, player, world, hand, pos, direction, blockToolItem.includesFluid(stack, player.isSneaking()));
+            return blockToolItem.beginAttackBlock(stack, player, world, hand, pos, direction, blockToolItem.includesFluid(stack, player.isShiftKeyDown()));
           } else {
-            return ActionResult.PASS;
+            return InteractionResult.PASS;
           }
         });
     UseBlockCallback.EVENT.register(
         (player, world, hand, hitResult) -> {
-          if (player.isSpectator()) return ActionResult.PASS;
-          final ItemStack stackInHand = player.getStackInHand(hand);
+          if (player.isSpectator()) return InteractionResult.PASS;
+          final ItemStack stackInHand = player.getItemInHand(hand);
           final Item item = stackInHand.getItem();
-          if (!player.getAbilities().allowModifyWorld && !stackInHand.canPlaceOn(new CachedBlockPosition(world, hitResult.getBlockPos(), false))) {
-            return ActionResult.PASS;
+          if (!player.getAbilities().mayBuild && !stackInHand.canPlaceOnBlockInAdventureMode(new BlockInWorld(world, hitResult.getBlockPos(), false))) {
+            return InteractionResult.PASS;
           }
           if (item instanceof final BlockToolItem blockToolItem) {
-            return blockToolItem.useOnBlock(stackInHand, player, world, hitResult, hand, blockToolItem.includesFluid(stackInHand, player.isSneaking()));
+            return blockToolItem.useOnBlock(stackInHand, player, world, hitResult, hand, blockToolItem.includesFluid(stackInHand, player.isShiftKeyDown()));
           } else {
-            return ActionResult.PASS;
+            return InteractionResult.PASS;
           }
         });
     AttackEntityCallback.EVENT.register(
         (player, world, hand, entity, hitResult) -> {
-          if (player.isSpectator()) return ActionResult.PASS;
-          final ItemStack stackInHand = player.getStackInHand(hand);
+          if (player.isSpectator()) return InteractionResult.PASS;
+          final ItemStack stackInHand = player.getItemInHand(hand);
           final Item item = stackInHand.getItem();
           if (item instanceof final InteractsWithEntity interactsWithEntity) {
             return interactsWithEntity.attackEntityCallback(player, world, hand, entity, hitResult);
           } else {
-            return ActionResult.PASS;
+            return InteractionResult.PASS;
           }
         });
     UseEntityCallback.EVENT.register(
         (player, world, hand, entity, hitResult) -> {
-          if (player.isSpectator()) return ActionResult.PASS;
-          final ItemStack stackInHand = player.getStackInHand(hand);
+          if (player.isSpectator()) return InteractionResult.PASS;
+          final ItemStack stackInHand = player.getItemInHand(hand);
           final Item item = stackInHand.getItem();
           if (item instanceof final InteractsWithEntity interactsWithEntity) {
             return interactsWithEntity.useEntityCallback(player, world, hand, entity, hitResult);
           } else {
-            return ActionResult.PASS;
+            return InteractionResult.PASS;
           }
         });
 
     UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-      if (player.isSpectator()) return ActionResult.PASS;
-      final ItemStack stack = player.getStackInHand(hand);
+      if (player.isSpectator()) return InteractionResult.PASS;
+      final ItemStack stack = player.getItemInHand(hand);
       final BlockPos blockPos = hitResult.getBlockPos();
       final BlockState blockState = world.getBlockState(blockPos);
-      if (!blockState.isOf(Blocks.WATER_CAULDRON)) {
-        return ActionResult.PASS;
+      if (!blockState.is(Blocks.WATER_CAULDRON)) {
+        return InteractionResult.PASS;
       }
       return Road.CLEAN_ROAD_BLOCK.interact(blockState, world, blockPos, player, hand, stack);
     });
 
     UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
       if (player.isSpectator()) {
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
       }
       if (hitResult.getType() == HitResult.Type.BLOCK && hitResult instanceof BlockHitResult blockHitResult) {
         final BlockPos blockPos = blockHitResult.getBlockPos();
         final BlockEntity blockEntity = world.getBlockEntity(blockPos);
         if (blockEntity instanceof ColoredBlockEntity coloredBlockEntity) {
           for (Map.Entry<DyeColor, TagKey<Item>> entry : MishangUtils.DYE_ITEM_TAGS.get().entrySet()) {
-            final ItemStack stack = player.getStackInHand(hand);
-            if (stack.isIn(entry.getValue())) {
-              coloredBlockEntity.setColor(entry.getKey().getEntityColor());
-              blockEntity.markDirty();
-              world.updateListeners(blockPos, blockEntity.getCachedState(), blockEntity.getCachedState(), Block.NOTIFY_LISTENERS);
-              stack.decrementUnlessCreative(1, player);
-              world.playSound(null, blockPos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-              return ActionResult.SUCCESS;
+            final ItemStack stack = player.getItemInHand(hand);
+            if (stack.is(entry.getValue())) {
+              coloredBlockEntity.setColor(entry.getKey().getTextureDiffuseColor());
+              blockEntity.setChanged();
+              world.sendBlockUpdated(blockPos, blockEntity.getBlockState(), blockEntity.getBlockState(), Block.UPDATE_CLIENTS);
+              stack.consume(1, player);
+              world.playSound(null, blockPos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+              return InteractionResult.SUCCESS;
             }
           }
         }
       }
-      return ActionResult.PASS;
+      return InteractionResult.PASS;
     });
   }
 
@@ -599,16 +598,16 @@ public class Mishanguc implements ModInitializer {
       blockMap.put(block.stair(), HandrailBlocks.COLORED_DECORATED_IRON_HANDRAIL.stair());
     }
 
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("concrete_hung_signs")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("glowing_concrete_hung_signs")), HungSignBlocks.COLORED_GLOWING_CONCRETE_HUNG_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("concrete_hung_sign_bars")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN_BAR);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("terracotta_hung_signs")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("glowing_terracotta_hung_signs")), HungSignBlocks.COLORED_GLOWING_TERRACOTTA_HUNG_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("terracotta_hung_sign_bars")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN_BAR);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("concrete_standing_signs")), StandingSignBlocks.COLORED_CONCRETE_STANDING_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("terracotta_standing_signs")), StandingSignBlocks.COLORED_TERRACOTTA_STANDING_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("glowing_concrete_standing_signs")), StandingSignBlocks.COLORED_GLOWING_CONCRETE_STANDING_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("glowing_terracotta_standing_signs")), StandingSignBlocks.COLORED_GLOWING_TERRACOTTA_STANDING_SIGN);
+    tagMap.put(TagKey.create(Registries.BLOCK, id("concrete_hung_signs")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN);
+    tagMap.put(TagKey.create(Registries.BLOCK, id("glowing_concrete_hung_signs")), HungSignBlocks.COLORED_GLOWING_CONCRETE_HUNG_SIGN);
+    tagMap.put(TagKey.create(Registries.BLOCK, id("concrete_hung_sign_bars")), HungSignBlocks.COLORED_CONCRETE_HUNG_SIGN_BAR);
+    tagMap.put(TagKey.create(Registries.BLOCK, id("terracotta_hung_signs")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN);
+    tagMap.put(TagKey.create(Registries.BLOCK, id("glowing_terracotta_hung_signs")), HungSignBlocks.COLORED_GLOWING_TERRACOTTA_HUNG_SIGN);
+    tagMap.put(TagKey.create(Registries.BLOCK, id("terracotta_hung_sign_bars")), HungSignBlocks.COLORED_TERRACOTTA_HUNG_SIGN_BAR);
+    tagMap.put(TagKey.create(Registries.BLOCK, id("concrete_standing_signs")), StandingSignBlocks.COLORED_CONCRETE_STANDING_SIGN);
+    tagMap.put(TagKey.create(Registries.BLOCK, id("terracotta_standing_signs")), StandingSignBlocks.COLORED_TERRACOTTA_STANDING_SIGN);
+    tagMap.put(TagKey.create(Registries.BLOCK, id("glowing_concrete_standing_signs")), StandingSignBlocks.COLORED_GLOWING_CONCRETE_STANDING_SIGN);
+    tagMap.put(TagKey.create(Registries.BLOCK, id("glowing_terracotta_standing_signs")), StandingSignBlocks.COLORED_GLOWING_TERRACOTTA_STANDING_SIGN);
 
     blockMap.put(HungSignBlocks.STONE_HUNG_SIGN, HungSignBlocks.COLORED_STONE_HUNG_SIGN);
     blockMap.put(HungSignBlocks.GLOWING_STONE_HUNG_SIGN, HungSignBlocks.COLORED_GLOWING_STONE_HUNG_SIGN);
@@ -624,10 +623,10 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(HungSignBlocks.IRON_HUNG_SIGN_BAR, HungSignBlocks.COLORED_IRON_HUNG_SIGN_BAR);
 
     List.of(WallSignBlocks.OAK_WALL_SIGN, WallSignBlocks.SPRUCE_WALL_SIGN, WallSignBlocks.BIRCH_WALL_SIGN, WallSignBlocks.JUNGLE_WALL_SIGN, WallSignBlocks.ACACIA_WALL_SIGN, WallSignBlocks.CHERRY_WALL_SIGN, WallSignBlocks.DARK_OAK_WALL_SIGN, WallSignBlocks.PALE_OAK_WALL_SIGN, WallSignBlocks.MANGROVE_WALL_SIGN).forEach(b -> blockMap.put(b, WallSignBlocks.COLORED_WOODEN_WALL_SIGN));
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("concrete_wall_signs")), WallSignBlocks.COLORED_CONCRETE_WALL_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("terracotta_wall_signs")), WallSignBlocks.COLORED_TERRACOTTA_WALL_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("glowing_concrete_wall_signs")), WallSignBlocks.COLORED_GLOWING_CONCRETE_WALL_SIGN);
-    tagMap.put(TagKey.of(RegistryKeys.BLOCK, id("glowing_terracotta_wall_signs")), WallSignBlocks.COLORED_GLOWING_TERRACOTTA_WALL_SIGN);
+    tagMap.put(TagKey.create(Registries.BLOCK, id("concrete_wall_signs")), WallSignBlocks.COLORED_CONCRETE_WALL_SIGN);
+    tagMap.put(TagKey.create(Registries.BLOCK, id("terracotta_wall_signs")), WallSignBlocks.COLORED_TERRACOTTA_WALL_SIGN);
+    tagMap.put(TagKey.create(Registries.BLOCK, id("glowing_concrete_wall_signs")), WallSignBlocks.COLORED_GLOWING_CONCRETE_WALL_SIGN);
+    tagMap.put(TagKey.create(Registries.BLOCK, id("glowing_terracotta_wall_signs")), WallSignBlocks.COLORED_GLOWING_TERRACOTTA_WALL_SIGN);
 
     blockMap.put(WallSignBlocks.STONE_WALL_SIGN, WallSignBlocks.COLORED_STONE_WALL_SIGN);
     blockMap.put(WallSignBlocks.GLOWING_STONE_WALL_SIGN, WallSignBlocks.COLORED_GLOWING_STONE_WALL_SIGN);
@@ -669,7 +668,7 @@ public class Mishanguc implements ModInitializer {
     registerColoredBlocks();
     registerColorfulBlocks();
 
-    Registry.register(Registries.POINT_OF_INTEREST_TYPE, RegistryKey.of(RegistryKeys.POINT_OF_INTEREST_TYPE, id("nether_portal")), new PointOfInterestType(ImmutableSet.copyOf(ColoredBlocks.COLORED_NETHER_PORTAL.getStateManager().getStates()), 0, 1));
+    Registry.register(BuiltInRegistries.POINT_OF_INTEREST_TYPE, ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, id("nether_portal")), new PoiType(ImmutableSet.copyOf(ColoredBlocks.COLORED_NETHER_PORTAL.getStateDefinition().getPossibleStates()), 0, 1));
   }
 
   private static void registerColorfulBlocks() {

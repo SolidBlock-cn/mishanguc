@@ -2,19 +2,19 @@ package pers.solid.mishang.uc.util;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.data.TextureKey;
-import net.minecraft.client.data.TextureMap;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.resources.Identifier;
 
 public interface TextureMapReference {
   @Environment(EnvType.CLIENT)
-  TextureMap getTextureMap();
+  TextureMapping getTextureMap();
 
   TextureMapReference EMPTY = new TextureMapReference() {
     @Environment(EnvType.CLIENT)
     @Override
-    public TextureMap getTextureMap() {
-      return new TextureMap();
+    public TextureMapping getTextureMap() {
+      return new TextureMapping();
     }
   };
 
@@ -22,8 +22,8 @@ public interface TextureMapReference {
     return new TextureMapReference() {
       @Environment(EnvType.CLIENT)
       @Override
-      public TextureMap getTextureMap() {
-        return TextureMap.all(texture);
+      public TextureMapping getTextureMap() {
+        return TextureMapping.cube(texture);
       }
     };
   }
@@ -32,8 +32,8 @@ public interface TextureMapReference {
     return new TextureMapReference() {
       @Environment(EnvType.CLIENT)
       @Override
-      public TextureMap getTextureMap() {
-        return TextureMap.of(TextureKey.TOP, (topTexture)).put(TextureKey.SIDE, (sideTexture)).put(TextureKey.BOTTOM, bottomTexture);
+      public TextureMapping getTextureMap() {
+        return TextureMapping.singleSlot(TextureSlot.TOP, (topTexture)).put(TextureSlot.SIDE, (sideTexture)).put(TextureSlot.BOTTOM, bottomTexture);
       }
     };
   }
@@ -42,8 +42,8 @@ public interface TextureMapReference {
     return new TextureMapReference() {
       @Environment(EnvType.CLIENT)
       @Override
-      public TextureMap getTextureMap() {
-        return TextureMap.sideEnd(side, end);
+      public TextureMapping getTextureMap() {
+        return TextureMapping.column(side, end);
       }
     };
   }

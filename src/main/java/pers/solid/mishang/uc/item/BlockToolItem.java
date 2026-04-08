@@ -5,35 +5,34 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderLayers;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.VertexRendering;
-import net.minecraft.client.render.state.OutlineRenderState;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.component.ComponentMap;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.ShapeRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.BlockOutlineRenderState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.util.ARGB;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 import pers.solid.mishang.uc.render.state.BlockToolState;
 import pers.solid.mishang.uc.render.state.MishangRenderState;
-
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import java.util.Objects;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBlockOutline.class)
@@ -45,10 +44,10 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
    * sneaking".
    */
   protected final @Nullable Boolean includesFluid;
-  private static final int OUTLINE_COLOR_MIDORI = ColorHelper.fromFloats(0.8f, 0, 1, 0);
-  private static final int OUTLINE_COLOR_MIDORI_LIGHT = ColorHelper.fromFloats(0.5f, 0, 1, 0.5f);
+  private static final int OUTLINE_COLOR_MIDORI = ARGB.colorFromFloat(0.8f, 0, 1, 0);
+  private static final int OUTLINE_COLOR_MIDORI_LIGHT = ARGB.colorFromFloat(0.5f, 0, 1, 0.5f);
 
-  public BlockToolItem(Settings settings, @Nullable Boolean includesFluid) {
+  public BlockToolItem(Properties settings, @Nullable Boolean includesFluid) {
     super(settings);
     this.includesFluid = includesFluid;
   }
@@ -62,11 +61,11 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
    * executes, and performs raycast that may include fluids.<br>
    * 会在服务端和客户端同时执行。Executes both on the client and server side.
    *
-   * @see Item#useOnBlock(ItemUsageContext)
+   * @see Item#useOn(UseOnContext)
    */
   @Override
-  public ActionResult useOnBlock(ItemUsageContext context) {
-    return ActionResult.PASS;
+  public InteractionResult useOn(UseOnContext context) {
+    return InteractionResult.PASS;
   }
 
   /**
@@ -75,22 +74,22 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
    * when it performs raycast and get the {@link BlockHitResult} that may be of a fluid.
    * 会在服务端和客户端同时执行。Executes both on the client and server side.
    *
-   * @see #raycast
-   * @see Item#use(World, PlayerEntity, Hand)
+   * @see #getPlayerPOVHitResult
+   * @see Item#use(Level, Player, InteractionHand)
    */
   @Override
-  public ActionResult use(World world, PlayerEntity user, Hand hand) {
+  public InteractionResult use(Level world, Player user, InteractionHand hand) {
     return super.use(world, user, hand);
   }
 
   /**
    * 使用此物品右键单击物品时的反应。 The reaction when right-clicking the block with the item.
    */
-  public abstract ActionResult useOnBlock(
-      ItemStack stack, PlayerEntity player,
-      World world,
+  public abstract InteractionResult useOnBlock(
+      ItemStack stack, Player player,
+      Level world,
       BlockHitResult blockHitResult,
-      Hand hand,
+      InteractionHand hand,
       boolean fluidIncluded);
 
   /**
@@ -98,17 +97,17 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
    *
    * @see Mishanguc#BEGIN_ATTACK_BLOCK_EVENT
    */
-  public abstract ActionResult beginAttackBlock(
-      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded);
+  public abstract InteractionResult beginAttackBlock(
+      ItemStack stack, Player player, Level world, InteractionHand hand, BlockPos pos, Direction direction, boolean fluidIncluded);
 
   /**
    * 使用此物品中途破坏方块时的反应。
    *
    * @see Mishanguc#PROGRESS_ATTACK_BLOCK_EVENT
    */
-  public ActionResult progressAttackBlock(
-      PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    return ActionResult.FAIL;
+  public InteractionResult progressAttackBlock(
+      Player player, Level world, InteractionHand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    return InteractionResult.FAIL;
   }
 
   public boolean includesFluid(ItemStack stack, boolean def) {
@@ -123,8 +122,8 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
    * @return Whether it can detect fluid. May be {@code null}able, which means it depends.
    */
   public @Nullable Boolean includesFluid(ItemStack stack) {
-    final ComponentMap components = stack.getComponents();
-    if (!components.contains(MishangucComponents.INCLUDES_FLUID)) {
+    final DataComponentMap components = stack.getComponents();
+    if (!components.has(MishangucComponents.INCLUDES_FLUID)) {
       return this.includesFluid;
     } else {
       return components.get(MishangucComponents.INCLUDES_FLUID);
@@ -134,12 +133,12 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable MishangRenderState getMishangRenderState(ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  public @Nullable MishangRenderState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
     final BlockToolState state = new BlockToolState();
 
-    final ClientWorld world = context.world();
+    final ClientLevel world = context.world();
 
-    if (result instanceof BlockHitResult blockHitResult && includesFluid(stack, player.isSneaking())) {
+    if (result instanceof BlockHitResult blockHitResult && includesFluid(stack, player.isShiftKeyDown())) {
       final BlockPos blockPos = blockHitResult.getBlockPos();
       state.lightGreenShape = world.getFluidState(blockPos).getShape(world, blockPos);
       state.lightGreenPos = blockPos;
@@ -151,38 +150,38 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
   @Environment(EnvType.CLIENT)
   @Override
   public boolean renderBlockOutline(
-      PlayerEntity player,
+      Player player,
       ItemStack itemStack,
       WorldRenderContext context,
-      OutlineRenderState outlineRenderState) {
-    final VertexConsumerProvider consumers = context.consumers();
+      BlockOutlineRenderState outlineRenderState) {
+    final MultiBufferSource consumers = context.consumers();
     if (consumers == null) return true;
-    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayers.LINES);
-    final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
+    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderTypes.LINES);
+    final Vec3 cameraPos = context.worldState().cameraRenderState.pos;
     final BlockPos blockPos = outlineRenderState.pos();
 
     if (!(context.worldState().getData(MISHANG_BLOCK_OUTLINE) instanceof final BlockToolState state)) {
       return false;
     }
-    VertexRendering.drawOutline(
+    ShapeRenderer.renderShape(
         context.matrices(),
         vertexConsumer,
         outlineRenderState.shape(),
-        blockPos.getX() - cameraPos.getX(),
-        blockPos.getY() - cameraPos.getY(),
-        blockPos.getZ() - cameraPos.getZ(),
+        blockPos.getX() - cameraPos.x(),
+        blockPos.getY() - cameraPos.y(),
+        blockPos.getZ() - cameraPos.z(),
         OUTLINE_COLOR_MIDORI,
-        MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
+        Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     if (state.lightGreenPos != null && state.lightGreenShape != null) {
-      VertexRendering.drawOutline(
+      ShapeRenderer.renderShape(
           context.matrices(),
           vertexConsumer,
           state.lightGreenShape,
-          blockPos.getX() - cameraPos.getX(),
-          blockPos.getY() - cameraPos.getY(),
-          blockPos.getZ() - cameraPos.getZ(),
+          blockPos.getX() - cameraPos.x(),
+          blockPos.getY() - cameraPos.y(),
+          blockPos.getZ() - cameraPos.z(),
           OUTLINE_COLOR_MIDORI_LIGHT,
-          MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
+          Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
     return false;
   }

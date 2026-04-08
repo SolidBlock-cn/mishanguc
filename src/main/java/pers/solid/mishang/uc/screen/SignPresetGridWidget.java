@@ -2,54 +2,54 @@ package pers.solid.mishang.uc.screen;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import pers.solid.mishang.uc.text.TextContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class SignPresetGridWidget extends ElementListWidget<SignPresetGridWidget.Entry> {
-  public SignPresetGridWidget(MinecraftClient minecraftClient, int width, int height, int y, int itemHeight) {
+public class SignPresetGridWidget extends ContainerObjectSelectionList<SignPresetGridWidget.Entry> {
+  public SignPresetGridWidget(Minecraft minecraftClient, int width, int height, int y, int itemHeight) {
     super(minecraftClient, width, height, y, itemHeight);
   }
 
-  public static SignPresetGridWidget createAllWidgets(AbstractSignBlockEditScreen<?> screen, MinecraftClient minecraftClient, int height, int y) {
+  public static SignPresetGridWidget createAllWidgets(AbstractSignBlockEditScreen<?> screen, Minecraft minecraftClient, int height, int y) {
     final SignPresetGridWidget gridWidget = new SignPresetGridWidget(minecraftClient, 480, height, y, 20);
-    final List<ButtonWidget> widgets = new ArrayList<>(3);
+    final List<Button> widgets = new ArrayList<>(3);
     SignPresets.streamValues().forEach(value -> {
-      final ButtonWidget widgetForPreset = createWidgetForPreset(screen, value);
+      final Button widgetForPreset = createWidgetForPreset(screen, value);
       widgets.add(widgetForPreset);
       if (widgets.size() >= 3) {
-        gridWidget.addEntry(new Entry(List.copyOf(widgets)));
+        gridWidget.addEntry(new pers.solid.mishang.uc.screen.SignPresetGridWidget.Entry(List.copyOf(widgets)));
         widgets.clear();
       }
     });
     if (!widgets.isEmpty()) {
-      gridWidget.addEntry(new Entry(List.copyOf(widgets)));
+      gridWidget.addEntry(new pers.solid.mishang.uc.screen.SignPresetGridWidget.Entry(List.copyOf(widgets)));
     }
     return gridWidget;
   }
 
-  public static ButtonWidget createWidgetForPreset(AbstractSignBlockEditScreen<?> screen, SignPreset signPreset) {
-    Text description = signPreset.description();
-    final MutableText idText = Text.translatable("message.mishanguc.signPreset.list.id_info", signPreset.id()).formatted(Formatting.GRAY);
+  public static Button createWidgetForPreset(AbstractSignBlockEditScreen<?> screen, SignPreset signPreset) {
+    Component description = signPreset.description();
+    final MutableComponent idText = Component.translatable("message.mishanguc.signPreset.list.id_info", signPreset.id()).withStyle(ChatFormatting.GRAY);
     if (description != null) {
-      description = Text.empty().append(description).append(ScreenTexts.LINE_BREAK).append(idText);
+      description = Component.empty().append(description).append(CommonComponents.NEW_LINE).append(idText);
     } else {
       description = idText;
     }
-    return new ButtonWidget.Builder(signPreset.name(), button -> {
+    return new Button.Builder(signPreset.name(), button -> {
       for (TextContext textContext : signPreset.textContexts()) {
         final TextContext newTextContext = textContext.clone();
         screen.textFieldListWidget.addTextField(-1, newTextContext, false);
@@ -61,17 +61,17 @@ public class SignPresetGridWidget extends ElementListWidget<SignPresetGridWidget
         screen.textFieldListWidget.setFocused(children.get(initialFocus), false, false);
       }
       screen.rearrange();
-    }).dimensions(0, 0, 150, 20)
-        .tooltip(Tooltip.of(description))
+    }).bounds(0, 0, 150, 20)
+        .tooltip(Tooltip.create(description))
         .build();
   }
 
   @Override
-  protected void drawMenuListBackground(DrawContext context) {
+  protected void renderListBackground(GuiGraphics context) {
   }
 
   @Override
-  protected void drawHeaderAndFooterSeparators(DrawContext context) {
+  protected void renderListSeparators(GuiGraphics context) {
 
   }
 
@@ -80,20 +80,20 @@ public class SignPresetGridWidget extends ElementListWidget<SignPresetGridWidget
     return 450;
   }
 
-  public static class Entry extends ElementListWidget.Entry<Entry> {
-    public final List<ButtonWidget> buttons;
+  public static class Entry extends ContainerObjectSelectionList.Entry<pers.solid.mishang.uc.screen.SignPresetGridWidget.Entry> {
+    public final List<Button> buttons;
 
-    public Entry(List<ButtonWidget> buttons) {
+    public Entry(List<Button> buttons) {
       this.buttons = buttons;
     }
 
     @Override
-    public List<? extends Selectable> selectableChildren() {
+    public List<? extends NarratableEntry> narratables() {
       return buttons;
     }
 
     @Override
-    public List<? extends Element> children() {
+    public List<? extends GuiEventListener> children() {
       return buttons;
     }
 
@@ -108,14 +108,14 @@ public class SignPresetGridWidget extends ElementListWidget<SignPresetGridWidget
     @Override
     public void setY(int y) {
       super.setY(y);
-      for (ButtonWidget button : buttons) {
+      for (Button button : buttons) {
         button.setY(y);
       }
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-      for (ButtonWidget button : buttons) {
+    public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+      for (Button button : buttons) {
         button.render(context, mouseX, mouseY, deltaTicks);
       }
     }

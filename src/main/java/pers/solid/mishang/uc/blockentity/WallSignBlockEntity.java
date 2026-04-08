@@ -1,16 +1,15 @@
 package pers.solid.mishang.uc.blockentity;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.component.ComponentMap;
-import net.minecraft.component.ComponentsAccess;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.components.MishangucComponents;
@@ -28,9 +27,8 @@ public class WallSignBlockEntity extends BlockEntityWithText {
   /**
    * 正在编辑该告示牌的玩家。若为 <code>null</code>，则表示该告示牌为空闲模式。
    */
-  public @Nullable PlayerEntity editor;
+  public @Nullable Player editor;
 
-  @NotNull
   public @Unmodifiable List<TextContext> textContexts = ImmutableList.of();
   /**
    * 告示牌的文本是否正在发光，不影响文本的颜色和描边，只影响文本显示时的所使用的亮度。
@@ -50,39 +48,39 @@ public class WallSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  protected void readData(ReadView view) {
-    super.readData(view);
+  protected void loadAdditional(ValueInput view) {
+    super.loadAdditional(view);
     textContexts = view.read("text", TextContext.createListCodec(this::createDefaultTextContext)).orElseGet(ImmutableList::of);
 
-    glowing = view.getBoolean("glowing", false);
-    waxed = view.getBoolean("waxed", false);
+    glowing = view.getBooleanOr("glowing", false);
+    waxed = view.getBooleanOr("waxed", false);
   }
 
   @Override
-  protected void writeData(WriteView view) {
-    super.writeData(view);
-    view.put("text", TextContext.createListCodec(this::createDefaultTextContext), textContexts);
+  protected void saveAdditional(ValueOutput view) {
+    super.saveAdditional(view);
+    view.store("text", TextContext.createListCodec(this::createDefaultTextContext), textContexts);
     view.putBoolean("glowing", glowing);
     view.putBoolean("waxed", waxed);
   }
 
   @Override
-  protected void readComponents(ComponentsAccess components) {
-    super.readComponents(components);
+  protected void applyImplicitComponents(DataComponentGetter components) {
+    super.applyImplicitComponents(components);
     textContexts = components.getOrDefault(MishangucComponents.TEXTS, ImmutableList.of());
   }
 
   @Override
-  protected void addComponents(ComponentMap.Builder componentMapBuilder) {
-    super.addComponents(componentMapBuilder);
-    componentMapBuilder.add(MishangucComponents.TEXTS, textContexts);
+  protected void collectImplicitComponents(DataComponentMap.Builder componentMapBuilder) {
+    super.collectImplicitComponents(componentMapBuilder);
+    componentMapBuilder.set(MishangucComponents.TEXTS, textContexts);
   }
 
   @SuppressWarnings("deprecation")
   @Override
-  public void removeFromCopiedStackData(WriteView view) {
-    super.removeFromCopiedStackData(view);
-    view.remove("text");
+  public void removeComponentsFromTag(ValueOutput view) {
+    super.removeComponentsFromTag(view);
+    view.discard("text");
   }
 
   @Override
@@ -96,12 +94,12 @@ public class WallSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  public @Nullable PlayerEntity getEditor() {
+  public @Nullable Player getEditor() {
     return editor;
   }
 
   @Override
-  public void setEditor(@Nullable PlayerEntity editor) {
+  public void setEditor(@Nullable Player editor) {
     this.editor = editor;
   }
 }

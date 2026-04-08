@@ -4,26 +4,30 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.data.*;
-import net.minecraft.data.loottable.BlockLootTableGenerator;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.loot.LootTable;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.particle.ParticleUtil;
-import net.minecraft.particle.TintedParticleEffect;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.dynamic.Codecs;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ModelProvider;
+import net.minecraft.client.data.models.model.ItemModelUtils;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.ParticleUtils;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
@@ -34,61 +38,61 @@ import java.util.function.BiFunction;
 
 @ApiStatus.AvailableSince("0.2.4")
 public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock {
-  private final @Nullable BiFunction<Block, BlockLootTableGenerator, LootTable.Builder> lootBuilder;
+  private final @Nullable BiFunction<Block, BlockLootSubProvider, LootTable.Builder> lootBuilder;
   private final Identifier texture;
 
-  public static final MapCodec<ColoredLeavesBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codecs.rangedInclusiveFloat(0.0F, 1.0F).fieldOf("leaf_particle_chance").forGetter((block) -> block.leafParticleChance), createSettingsCodec(), Identifier.CODEC.fieldOf("texture").forGetter(o -> o.texture)).apply(instance, (chance, settings1, s) -> new ColoredLeavesBlock(chance, settings1, null, s)));
+  public static final MapCodec<ColoredLeavesBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(ExtraCodecs.floatRange(0.0F, 1.0F).fieldOf("leaf_particle_chance").forGetter((block) -> block.leafParticleChance), propertiesCodec(), Identifier.CODEC.fieldOf("texture").forGetter(o -> o.texture)).apply(instance, (chance, settings1, s) -> new ColoredLeavesBlock(chance, settings1, null, s)));
 
-  public ColoredLeavesBlock(float leaveParticleChance, Settings settings, @Nullable BiFunction<Block, BlockLootTableGenerator, LootTable.Builder> lootBuilder, Identifier texture) {
+  public ColoredLeavesBlock(float leaveParticleChance, Properties settings, @Nullable BiFunction<Block, BlockLootSubProvider, LootTable.Builder> lootBuilder, Identifier texture) {
     super(leaveParticleChance, settings);
     this.lootBuilder = lootBuilder;
     this.texture = texture;
   }
 
-  public ColoredLeavesBlock(float leafParticleChance, Settings settings, @Nullable BiFunction<Block, BlockLootTableGenerator, LootTable.Builder> lootBuilder, String texture) {
-    this(leafParticleChance, settings, lootBuilder, Identifier.of(texture));
+  public ColoredLeavesBlock(float leafParticleChance, Properties settings, @Nullable BiFunction<Block, BlockLootSubProvider, LootTable.Builder> lootBuilder, String texture) {
+    this(leafParticleChance, settings, lootBuilder, Identifier.parse(texture));
   }
 
   @Override
-  public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData) {
-    return getColoredPickStack(world, pos, state, includeData, super::getPickStack);
+  public ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state, boolean includeData) {
+    return getColoredPickStack(world, pos, state, includeData, super::getCloneItemStack);
   }
 
   @Override
-  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     ColoredBlock.appendColorTooltip(stack, tooltip);
   }
 
   @Nullable
   @Override
-  public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+  public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
     return new SimpleColoredBlockEntity(pos, state);
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
-    final Identifier modelId = Models.LEAVES.upload(this, TextureMap.all(texture), blockStateModelGenerator.modelCollector);
-    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(this, BlockStateModelGenerator.createWeightedVariant(modelId)));
-    blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(modelId, ColoredTintSource.INSTANCE));
+  public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
+    final Identifier modelId = ModelTemplates.LEAVES.create(this, TextureMapping.cube(texture), blockStateModelGenerator.modelOutput);
+    blockStateModelGenerator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(this, BlockModelGenerators.plainVariant(modelId)));
+    blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.tintedModel(modelId, ColoredTintSource.INSTANCE));
   }
 
 
   @Override
-  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+  public LootTable.Builder getLootTable(BlockLootSubProvider blockLootTableGenerator) {
     if (lootBuilder == null) return null;
     return (lootBuilder.apply(this, blockLootTableGenerator).apply(COPY_COLOR_LOOT_FUNCTION));
   }
 
   @Override
-  public MapCodec<? extends ColoredLeavesBlock> getCodec() {
+  public MapCodec<? extends ColoredLeavesBlock> codec() {
     return CODEC;
   }
 
   @Override
-  protected void spawnLeafParticle(World world, BlockPos pos, Random random) {
-    TintedParticleEffect entityEffectParticleEffect = TintedParticleEffect.create(ParticleTypes.TINTED_LEAVES, world.getBlockColor(pos));
-    ParticleUtil.spawnParticle(world, pos, random, entityEffectParticleEffect);
+  protected void spawnFallingLeavesParticle(Level world, BlockPos pos, RandomSource random) {
+    ColorParticleOption entityEffectParticleEffect = ColorParticleOption.create(ParticleTypes.TINTED_LEAVES, world.getClientLeafTintColor(pos));
+    ParticleUtils.spawnParticleBelow(world, pos, random, entityEffectParticleEffect);
     // 检查彩色树叶的颗粒颜色
   }
 }

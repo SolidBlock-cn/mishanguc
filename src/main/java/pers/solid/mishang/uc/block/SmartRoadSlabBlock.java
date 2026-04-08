@@ -4,32 +4,35 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.data.BlockModelDefinitionCreator;
-import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.recipe.RecipeGenerator;
-import net.minecraft.data.recipe.StonecuttingRecipeJsonBuilder;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.Registries;
-import net.minecraft.state.StateManager;
-import net.minecraft.text.Text;
-import net.minecraft.util.*;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.block.WireOrientation;
-import net.minecraft.world.tick.ScheduledTickView;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.SingleItemRecipeBuilder;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.Util;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.redstone.Orientation;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.util.LineColor;
@@ -44,11 +47,11 @@ import java.util.List;
  * @param <T> 基础方块类型。
  */
 public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoadSlabBlock {
-  public static final MapCodec<SmartRoadSlabBlock<?>> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(o -> o.baseBlock), createSettingsCodec()).apply(instance, (block, settings) -> new SmartRoadSlabBlock<>((AbstractRoadBlock) block, settings)));
+  public static final MapCodec<SmartRoadSlabBlock<?>> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_block").forGetter(o -> o.baseBlock), propertiesCodec()).apply(instance, (block, settings) -> new SmartRoadSlabBlock<>((AbstractRoadBlock) block, settings)));
   private static Block cachedBaseBlock;
   public final T baseBlock;
 
-  public SmartRoadSlabBlock(T baseBlock, Settings settings) {
+  public SmartRoadSlabBlock(T baseBlock, Properties settings) {
     super(baseBlock, Util.make(() -> {
       cachedBaseBlock = baseBlock;
       return settings;
@@ -57,11 +60,11 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
   }
 
   @Override
-  public void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-    super.appendProperties(builder);
+  public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    super.createBlockStateDefinition(builder);
     // 由于该方法是在构造方法中执行的，所以可能存在 null 的情况。
     (baseBlock == null ? cachedBaseBlock : baseBlock)
-        .getStateManager()
+        .getStateDefinition()
         .getProperties()
         .forEach(builder::add);
   }
@@ -77,64 +80,64 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
   }
 
   @Override
-  public void appendDescriptionTooltip(List<Text> tooltip, Item.TooltipContext context) {
+  public void appendDescriptionTooltip(List<Component> tooltip, Item.TooltipContext context) {
     baseBlock.appendDescriptionTooltip(tooltip, context);
   }
 
   @Nullable
   @Override
-  public BlockState getPlacementState(ItemPlacementContext ctx) {
-    BlockPos blockPos = ctx.getBlockPos();
-    BlockState blockState = ctx.getWorld().getBlockState(blockPos);
-    if (blockState.isOf(this)) {
-      return super.getPlacementState(ctx);
+  public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+    BlockPos blockPos = ctx.getClickedPos();
+    BlockState blockState = ctx.getLevel().getBlockState(blockPos);
+    if (blockState.is(this)) {
+      return super.getStateForPlacement(ctx);
     } else {
-      return baseBlock.withPlacementState(super.getPlacementState(ctx), ctx);
+      return baseBlock.withPlacementState(super.getStateForPlacement(ctx), ctx);
     }
   }
 
   @Override
-  public BlockState rotate(BlockState state, BlockRotation rotation) {
+  public BlockState rotate(BlockState state, Rotation rotation) {
     return baseBlock.rotate(state, rotation);
   }
 
   @Override
-  public BlockState mirror(BlockState state, BlockMirror mirror) {
+  public BlockState mirror(BlockState state, Mirror mirror) {
     return baseBlock.mirror(state, mirror);
   }
 
   @Override
-  public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-    ActionResult result = super.onUse(state, world, pos, player, hit);
-    if (result == ActionResult.FAIL) {
+  public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
+    InteractionResult result = super.useWithoutItem(state, world, pos, player, hit);
+    if (result == InteractionResult.FAIL) {
       return result;
     }
     return onUseRoad(state, world, pos, player, hit);
   }
 
   @Override
-  protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-    final ActionResult result = super.onUseWithItem(stack, state, world, pos, player, hand, hit);
-    if (result instanceof ActionResult.Fail) {
+  protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    final InteractionResult result = super.useItemOn(stack, state, world, pos, player, hand, hit);
+    if (result instanceof InteractionResult.Fail) {
       return result;
     }
     return onUseRoadWithItem(stack, state, world, pos, player, hand, hit);
   }
 
   @Override
-  protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, @Nullable WireOrientation wireOrientation, boolean notify) {
-    baseBlock.neighborUpdate(state, world, pos, sourceBlock, wireOrientation, notify);
+  protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, @Nullable Orientation wireOrientation, boolean notify) {
+    baseBlock.neighborChanged(state, world, pos, sourceBlock, wireOrientation, notify);
   }
 
   @Override
-  protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
-    return getStateWithProperties(baseBlock.getStateWithProperties(state).getStateForNeighborUpdate(world, tickView, pos, direction, neighborPos, neighborState, random))
-        .with(TYPE, state.get(TYPE))
-        .with(WATERLOGGED, state.get(WATERLOGGED));
+  protected BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+    return withPropertiesOf(baseBlock.withPropertiesOf(state).updateShape(world, tickView, pos, direction, neighborPos, neighborState, random))
+        .setValue(TYPE, state.getValue(TYPE))
+        .setValue(WATERLOGGED, state.getValue(WATERLOGGED));
   }
 
   @Override
-  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     super.getMishangTooltip(stack, context, tooltip, options);
     appendDescriptionTooltip(tooltip, context);
     appendRoadTooltip(stack, context, tooltip, options);
@@ -151,24 +154,24 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
   }
 
   @Override
-  public StonecuttingRecipeJsonBuilder getStonecuttingRecipe(RecipeGenerator recipeGenerator) {
-    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), RecipeCategory.BUILDING_BLOCKS, this, 2)
-        .criterion(RecipeGenerator.hasItem(baseBlock), recipeGenerator.conditionsFromItem(baseBlock));
+  public SingleItemRecipeBuilder getStonecuttingRecipe(RecipeProvider recipeGenerator) {
+    return SingleItemRecipeBuilder.stonecutting(Ingredient.of(baseBlock), RecipeCategory.BUILDING_BLOCKS, this, 2)
+        .unlockedBy(RecipeProvider.getHasName(baseBlock), recipeGenerator.has(baseBlock));
   }
 
   @Override
-  public MapCodec<? extends SmartRoadSlabBlock<?>> getCodec() {
+  public MapCodec<? extends SmartRoadSlabBlock<?>> codec() {
     return CODEC;
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
+  public RecipeBuilder getPaintingRecipe(Block base, Block self, RecipeProvider recipeGenerator) {
     return baseBlock.getPaintingRecipe(base, this, recipeGenerator);
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public BlockModelDefinitionCreator composeState(@NotNull BlockModelDefinitionCreator stateForFull) {
+  public BlockModelDefinitionGenerator composeState(BlockModelDefinitionGenerator stateForFull) {
     return ModelHelper.composeStateForSlab(stateForFull);
   }
 }

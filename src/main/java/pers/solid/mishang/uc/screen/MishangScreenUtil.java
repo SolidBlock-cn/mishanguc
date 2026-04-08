@@ -1,10 +1,10 @@
 package pers.solid.mishang.uc.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.Window;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.Window;
+import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -13,17 +13,17 @@ import org.lwjgl.glfw.GLFW;
 @Environment(EnvType.CLIENT)
 public final class MishangScreenUtil {
   public static boolean hasShiftDown() {
-    final Window window = MinecraftClient.getInstance().getWindow();
-    return InputUtil.isKeyPressed(window, GLFW.GLFW_KEY_LEFT_SHIFT) || InputUtil.isKeyPressed(window, GLFW.GLFW_KEY_RIGHT_SHIFT);
+    final Window window = Minecraft.getInstance().getWindow();
+    return InputConstants.isKeyDown(window, GLFW.GLFW_KEY_LEFT_SHIFT) || InputConstants.isKeyDown(window, GLFW.GLFW_KEY_RIGHT_SHIFT);
   }
 
   public static boolean hasControlDown() {
-    final Window window = MinecraftClient.getInstance().getWindow();
-    return InputUtil.isKeyPressed(window, GLFW.GLFW_KEY_LEFT_CONTROL) || InputUtil.isKeyPressed(window, GLFW.GLFW_KEY_RIGHT_CONTROL);
+    final Window window = Minecraft.getInstance().getWindow();
+    return InputConstants.isKeyDown(window, GLFW.GLFW_KEY_LEFT_CONTROL) || InputConstants.isKeyDown(window, GLFW.GLFW_KEY_RIGHT_CONTROL);
   }
 
   public static boolean hasAltDown() {
-    final Window window = MinecraftClient.getInstance().getWindow();
-    return InputUtil.isKeyPressed(window, GLFW.GLFW_KEY_LEFT_ALT) || InputUtil.isKeyPressed(window, GLFW.GLFW_KEY_RIGHT_ALT);
+    final Window window = Minecraft.getInstance().getWindow();
+    return InputConstants.isKeyDown(window, GLFW.GLFW_KEY_LEFT_ALT) || InputConstants.isKeyDown(window, GLFW.GLFW_KEY_RIGHT_ALT);
   }
 }

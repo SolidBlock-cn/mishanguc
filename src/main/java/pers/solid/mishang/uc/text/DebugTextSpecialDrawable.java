@@ -1,34 +1,33 @@
 package pers.solid.mishang.uc.text;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import org.joml.Matrix4f;
 
-public record DebugTextSpecialDrawable(@NotNull String text, @NotNull TextContext textContext) implements SpecialDrawable {
+public record DebugTextSpecialDrawable(String text, TextContext textContext) implements SpecialDrawable {
   @Override
-  public void drawInternal(Matrix4f matricesEntry, VertexConsumerProvider.Immediate vertexConsumers, int light, float x, float y) {
-    final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-    textRenderer.draw(text, x, y, textContext.color, textContext.shadow, matricesEntry, vertexConsumers, TextRenderer.TextLayerType.NORMAL, 0, light);
+  public void drawInternal(Matrix4f matricesEntry, MultiBufferSource.BufferSource vertexConsumers, int light, float x, float y) {
+    final Font textRenderer = Minecraft.getInstance().font;
+    textRenderer.drawInBatch(text, x, y, textContext.color, textContext.shadow, matricesEntry, vertexConsumers, Font.DisplayMode.NORMAL, 0, light);
   }
 
   @Override
-  public @NotNull SpecialDrawableType<DebugTextSpecialDrawable> getType() {
+  public SpecialDrawableType<DebugTextSpecialDrawable> getType() {
     return SpecialDrawableTypes.DEBUG_TEXT;
   }
 
   @Override
-  public SpecialDrawable cloneWithNewTextContext(@NotNull TextContext textContext) {
+  public SpecialDrawable cloneWithNewTextContext(TextContext textContext) {
     return new DebugTextSpecialDrawable(text, textContext);
   }
 
   @Override
-  public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+  public void writeNbt(CompoundTag nbt, HolderLookup.Provider registryLookup) {
     SpecialDrawable.super.writeNbt(nbt, registryLookup);
     nbt.putString("text", text);
   }
@@ -39,7 +38,7 @@ public record DebugTextSpecialDrawable(@NotNull String text, @NotNull TextContex
   }
 
   @Override
-  public @NotNull MutableText asStyledText() {
-    return Text.literal("debug_text: ").append(text);
+  public MutableComponent asStyledText() {
+    return Component.literal("debug_text: ").append(text);
   }
 }

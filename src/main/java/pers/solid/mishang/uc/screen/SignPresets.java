@@ -11,9 +11,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.command.CommandSource;
-import net.minecraft.nbt.NbtString;
+import net.minecraft.client.Minecraft;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.util.Util;
 import org.apache.commons.io.file.PathUtils;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -48,11 +48,11 @@ public final class SignPresets {
   /**
    * 在命令中提供告示牌预设 id 的建议。
    */
-  public static final SuggestionProvider<FabricClientCommandSource> SUGGEST_KEYS = (commandContext, suggestionsBuilder) -> CommandSource.suggestMatching(REGISTRY.keySet().stream().map(NbtString::escape), suggestionsBuilder);
+  public static final SuggestionProvider<FabricClientCommandSource> SUGGEST_KEYS = (commandContext, suggestionsBuilder) -> SharedSuggestionProvider.suggest(REGISTRY.keySet().stream().map(StringTag::quoteAndEscape), suggestionsBuilder);
   /**
    * 在命令中提供告示牌预设 id 包括内置预设 id（可能实际已从注册表中移除）的建议。
    */
-  public static final SuggestionProvider<FabricClientCommandSource> SUGGEST_KEYS_AND_BUILTIN = (commandContext, suggestionsBuilder) -> CommandSource.suggestMatching(Stream.concat(REGISTRY.keySet().stream(), BUILTIN.keySet().stream()).distinct().map(NbtString::escape), suggestionsBuilder);
+  public static final SuggestionProvider<FabricClientCommandSource> SUGGEST_KEYS_AND_BUILTIN = (commandContext, suggestionsBuilder) -> SharedSuggestionProvider.suggest(Stream.concat(REGISTRY.keySet().stream(), BUILTIN.keySet().stream()).distinct().map(StringTag::quoteAndEscape), suggestionsBuilder);
 
   // region text entries
   private static final TextContext DEFAULT_TEXT = new TextContext();
@@ -148,7 +148,7 @@ public final class SignPresets {
                 if (parse.isSuccess()) {
                   counter.increment();
                 }
-                parse.ifSuccess(info -> MinecraftClient.getInstance().execute(() -> register(info.create(id))));
+                parse.ifSuccess(info -> Minecraft.getInstance().execute(() -> register(info.create(id))));
                 parse.ifError(error -> LOGGER.warn("Failed to parse sign preset JSON for {}: {}", path.getFileName(), error.message()));
               } catch (Throwable e) {
                 LOGGER.error("Error reading file {}", path, e);

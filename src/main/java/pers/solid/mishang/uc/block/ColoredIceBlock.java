@@ -3,22 +3,21 @@ package pers.solid.mishang.uc.block;
 import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IceBlock;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.data.BlockStateModelGenerator;
-import net.minecraft.client.data.ItemModels;
-import net.minecraft.client.data.ModelProvider;
-import net.minecraft.data.loottable.BlockLootTableGenerator;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.loot.LootTable;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.WorldView;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ModelProvider;
+import net.minecraft.client.data.models.model.ItemModelUtils;
+import net.minecraft.core.BlockPos;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.IceBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootTable;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.item.ColoredTintSource;
@@ -27,46 +26,45 @@ import pers.solid.mishang.uc.util.TextureMapReference;
 import java.util.List;
 
 public class ColoredIceBlock extends IceBlock implements ColoredBlock {
-  public static final MapCodec<ColoredIceBlock> CODEC = createCodec(settings1 -> new ColoredIceBlock(settings1, TextureMapReference.EMPTY));
+  public static final MapCodec<ColoredIceBlock> CODEC = simpleCodec(settings1 -> new ColoredIceBlock(settings1, TextureMapReference.EMPTY));
 
   private final TextureMapReference textures;
 
-  public ColoredIceBlock(Settings settings, TextureMapReference textures) {
+  public ColoredIceBlock(Properties settings, TextureMapReference textures) {
     super(settings);
     this.textures = textures;
   }
 
   @Override
-  public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData) {
-    return getColoredPickStack(world, pos, state, includeData, super::getPickStack);
+  public ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state, boolean includeData) {
+    return getColoredPickStack(world, pos, state, includeData, super::getCloneItemStack);
   }
 
   @Override
-  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     ColoredBlock.appendColorTooltip(stack, tooltip);
   }
 
-  @NotNull
   @Override
-  public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+  public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
     return new SimpleColoredBlockEntity(pos, state);
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
-    final Identifier modelId = MishangucModels.COLORED_CUBE_ALL.upload(this, textures.getTextureMap(), blockStateModelGenerator.modelCollector);
-    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(this, BlockStateModelGenerator.createWeightedVariant(modelId)));
-    blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(modelId, ColoredTintSource.INSTANCE));
+  public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
+    final Identifier modelId = MishangucModels.COLORED_CUBE_ALL.create(this, textures.getTextureMap(), blockStateModelGenerator.modelOutput);
+    blockStateModelGenerator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(this, BlockModelGenerators.plainVariant(modelId)));
+    blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.tintedModel(modelId, ColoredTintSource.INSTANCE));
   }
 
   @Override
-  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
-    return blockLootTableGenerator.dropsWithSilkTouch(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  public LootTable.Builder getLootTable(BlockLootSubProvider blockLootTableGenerator) {
+    return blockLootTableGenerator.createSilkTouchOnlyTable(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override
-  public MapCodec<? extends ColoredIceBlock> getCodec() {
+  public MapCodec<? extends ColoredIceBlock> codec() {
     return CODEC;
   }
 }

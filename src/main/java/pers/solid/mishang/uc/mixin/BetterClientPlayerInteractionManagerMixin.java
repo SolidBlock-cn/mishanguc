@@ -2,16 +2,16 @@ package pers.solid.mishang.uc.mixin;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.network.SequencedPacketCreator;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.GameMode;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.multiplayer.prediction.PredictiveAction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.GameType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,35 +26,35 @@ import pers.solid.mishang.uc.Mishanguc;
  * 该 mixin 具有两个特点：一是在客户端结果不返回 PASS 时也会发送 packet，这样可以让服务器也执行，二是分类开始破坏和中途破坏两个情况。
  */
 @Environment(EnvType.CLIENT)
-@Mixin(ClientPlayerInteractionManager.class)
+@Mixin(MultiPlayerGameMode.class)
 public abstract class BetterClientPlayerInteractionManagerMixin {
 
   @Shadow
   @Final
-  private MinecraftClient client;
+  private Minecraft minecraft;
   @Shadow
-  private GameMode gameMode;
+  private GameType localPlayerMode;
 
   @Shadow
-  protected abstract void sendSequencedPacket(ClientWorld world, SequencedPacketCreator packetCreator);
+  protected abstract void startPrediction(ClientLevel world, PredictiveAction packetCreator);
 
   @Inject(
       at = {@At(
           value = "INVOKE",
-          target = "Lnet/minecraft/client/network/ClientPlayerEntity;getAbilities()Lnet/minecraft/entity/player/PlayerAbilities;",
+          target = "Lnet/minecraft/client/player/LocalPlayer;getAbilities()Lnet/minecraft/world/entity/player/Abilities;",
           ordinal = 0
       )},
-      method = "attackBlock",
+      method = "startDestroyBlock",
       cancellable = true)
-  public void attackBlock(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> info) {
-    ActionResult result =
+  public void attackBlock(BlockPos loc, Direction face, CallbackInfoReturnable<Boolean> info) {
+    InteractionResult result =
         Mishanguc.BEGIN_ATTACK_BLOCK_EVENT
             .invoker()
-            .interact(client.player, client.world, Hand.MAIN_HAND, pos, direction);
+            .interact(minecraft.player, minecraft.level, InteractionHand.MAIN_HAND, loc, face);
 
-    if (result != ActionResult.PASS) {
-      sendSequencedPacket(this.client.world, (sequence) -> new PlayerActionC2SPacket(PlayerActionC2SPacket.Action.START_DESTROY_BLOCK, pos, direction, sequence));
-      info.setReturnValue(result == ActionResult.SUCCESS);
+    if (result != InteractionResult.PASS) {
+      startPrediction(this.minecraft.level, (sequence) -> new ServerboundPlayerActionPacket(ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, loc, face, sequence));
+      info.setReturnValue(result == InteractionResult.SUCCESS);
       info.cancel();
     }
   }
@@ -62,23 +62,23 @@ public abstract class BetterClientPlayerInteractionManagerMixin {
   @Inject(
       at = {@At(
           value = "INVOKE",
-          target = "Lnet/minecraft/client/network/ClientPlayerEntity;getAbilities()Lnet/minecraft/entity/player/PlayerAbilities;",
+          target = "Lnet/minecraft/client/player/LocalPlayer;getAbilities()Lnet/minecraft/world/entity/player/Abilities;",
           ordinal = 0
       )},
-      method = "updateBlockBreakingProgress",
+      method = "continueDestroyBlock",
       cancellable = true)
   public void method_2902(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> info) {
-    if (!gameMode.isCreative()) {
+    if (!localPlayerMode.isCreative()) {
       return;
     }
 
-    ActionResult result =
+    InteractionResult result =
         Mishanguc.PROGRESS_ATTACK_BLOCK_EVENT
             .invoker()
-            .interact(client.player, client.world, Hand.MAIN_HAND, pos, direction);
+            .interact(minecraft.player, minecraft.level, InteractionHand.MAIN_HAND, pos, direction);
 
-    if (result != ActionResult.PASS) {
-      info.setReturnValue(result == ActionResult.SUCCESS);
+    if (result != InteractionResult.PASS) {
+      info.setReturnValue(result == InteractionResult.SUCCESS);
       info.cancel();
     }
   }
@@ -86,15 +86,15 @@ public abstract class BetterClientPlayerInteractionManagerMixin {
   /**
    * 在原版MC中，处理破坏过程中，仍有可能执行 attackBlock。当玩家持有此类物品时，不再击打方块。这种情况通常在生存模式出现。
    */
-  @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;attackBlock(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z", ordinal = 0), method = "updateBlockBreakingProgress", cancellable = true)
+  @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;startDestroyBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;)Z", ordinal = 0), method = "continueDestroyBlock", cancellable = true)
   public void doNotAttack(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
-    ActionResult result =
+    InteractionResult result =
         Mishanguc.PROGRESS_ATTACK_BLOCK_EVENT
             .invoker()
-            .interact(client.player, client.world, Hand.MAIN_HAND, pos, direction);
+            .interact(minecraft.player, minecraft.level, InteractionHand.MAIN_HAND, pos, direction);
 
-    if (result != ActionResult.PASS) {
-      cir.setReturnValue(result == ActionResult.SUCCESS);
+    if (result != InteractionResult.PASS) {
+      cir.setReturnValue(result == InteractionResult.SUCCESS);
       cir.cancel();
     }
   }
