@@ -1,33 +1,38 @@
 package pers.solid.mishang.uc.item;
 
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.dispenser.DispenserBehavior;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.network.packet.s2c.play.ExplosionS2CPacket;
-import net.minecraft.particle.BlockParticleEffect;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityFlagsPredicate;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.collection.Pool;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.*;
-import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionImpl;
-import net.minecraft.world.rule.GameRules;
+import net.minecraft.ChatFormatting;
+import net.minecraft.advancements.criterion.EntityFlagsPredicate;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.core.particles.ExplosionParticleInfo;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundExplodePacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.util.random.WeightedList;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerExplosion;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.gamerules.GameRules;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import pers.solid.mishang.uc.MishangucRules;
 import pers.solid.mishang.uc.components.ExplosionToolComponent;
 import pers.solid.mishang.uc.components.MishangucComponents;
@@ -37,132 +42,132 @@ import pers.solid.mishang.uc.util.WithMishangTooltip;
 import java.util.List;
 import java.util.Optional;
 
-public class ExplosionToolItem extends Item implements HotbarScrollInteraction, DispenserBehavior, WithMishangTooltip {
-  public ExplosionToolItem(Settings settings) {
+public class ExplosionToolItem extends Item implements HotbarScrollInteraction, DispenseItemBehavior, WithMishangTooltip {
+  public ExplosionToolItem(Properties settings) {
     super(settings.component(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT));
     DispenserBlock.registerBehavior(this, this);
   }
 
   @Override
-  public ActionResult use(World world, PlayerEntity user, Hand hand) {
-    final ItemStack stack = user.getStackInHand(hand);
-    final HitResult raycast = user.raycast(128, 0, user.isSneaking());
+  public InteractionResult use(Level world, Player user, InteractionHand hand) {
+    final ItemStack stack = user.getItemInHand(hand);
+    final HitResult raycast = user.pick(128, 0, user.isShiftKeyDown());
     if (raycast.getType() == HitResult.Type.MISS) {
-      return ActionResult.FAIL;
+      return InteractionResult.FAIL;
     }
-    if (!(world instanceof ServerWorld serverWorld)) {
-      return ActionResult.PASS;
+    if (!(world instanceof ServerLevel serverWorld)) {
+      return InteractionResult.PASS;
     }
-    if (!serverWorld.getGameRules().getValue(MishangucRules.EXPLOSION_TOOL_ACCESS).hasAccess(user, true)) {
-      return ActionResult.PASS;
+    if (!serverWorld.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).hasAccess(user, true)) {
+      return InteractionResult.PASS;
     }
-    final Vec3d pos = raycast.getPos();
-    final boolean backup = serverWorld.getGameRules().getValue(GameRules.DO_TILE_DROPS);
+    final Vec3 pos = raycast.getLocation();
+    final boolean backup = serverWorld.getGameRules().get(GameRules.BLOCK_DROPS);
     if (user.isCreative()) {
       // 创造模式下，将游戏规则临时设为不掉落。
-      serverWorld.getGameRules().setValue(GameRules.DO_TILE_DROPS, false, null);
+      serverWorld.getGameRules().set(GameRules.BLOCK_DROPS, false, null);
     }
     final ExplosionToolComponent component = stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT);
 
-    Explosion.DestructionType destructionType = component.destructionType();
+    Explosion.BlockInteraction destructionType = component.destructionType();
 
-    ExplosionImpl explosionImpl = new ExplosionImpl(serverWorld, user, user.isSneaking() ? world.getDamageSources().explosion(null) : null, null, pos, component.power(), component.createFire(), destructionType);
+    ServerExplosion explosionImpl = new ServerExplosion(serverWorld, user, user.isShiftKeyDown() ? world.damageSources().explosion(null) : null, null, pos, component.power(), component.createFire(), destructionType);
     final int blocksCount = explosionImpl.explode();
-    ParticleEffect particleEffect = ParticleTypes.EXPLOSION;
+    ParticleOptions particleEffect = ParticleTypes.EXPLOSION;
 
-    for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers()) {
-      if (serverPlayerEntity.squaredDistanceTo(pos) < 4096.0) {
-        Optional<Vec3d> optional = Optional.ofNullable(explosionImpl.getKnockbackByPlayer().get(serverPlayerEntity));
-        serverPlayerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos, explosionImpl.getPower(), blocksCount, optional, particleEffect, SoundEvents.ENTITY_GENERIC_EXPLODE, EXPLOSION_BLOCK_PARTICLES));
+    for (ServerPlayer serverPlayerEntity : serverWorld.players()) {
+      if (serverPlayerEntity.distanceToSqr(pos) < 4096.0) {
+        Optional<Vec3> optional = Optional.ofNullable(explosionImpl.getHitPlayers().get(serverPlayerEntity));
+        serverPlayerEntity.connection.send(new ClientboundExplodePacket(pos, explosionImpl.radius(), blocksCount, optional, particleEffect, SoundEvents.GENERIC_EXPLODE, EXPLOSION_BLOCK_PARTICLES));
       }
     }
 
-    stack.damage((int) component.power(), user, hand.getEquipmentSlot());
+    stack.hurtAndBreak((int) component.power(), user, hand.asEquipmentSlot());
     if (user.isCreative()) {
-      serverWorld.getGameRules().setValue(GameRules.DO_TILE_DROPS, backup, null);
+      serverWorld.getGameRules().set(GameRules.BLOCK_DROPS, backup, null);
     }
-    return ActionResult.SUCCESS_SERVER;
+    return InteractionResult.SUCCESS_SERVER;
   }
 
   @Override
-  public Text getName(ItemStack stack) {
+  public Component getName(ItemStack stack) {
     final ExplosionToolComponent component = stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT);
-    return TextBridge.translatable(getTranslationKey() + ".formatted", component.power(), TextBridge.translatable("item.mishanguc.explosion_tool.createFire." + component.createFire()), TextBridge.translatable("item.mishanguc.explosion_tool.destructionType." + component.destructionType().name().toLowerCase()));
+    return TextBridge.translatable(getDescriptionId() + ".formatted", component.power(), TextBridge.translatable("item.mishanguc.explosion_tool.createFire." + component.createFire()), TextBridge.translatable("item.mishanguc.explosion_tool.destructionType." + component.destructionType().name().toLowerCase()));
   }
 
-  public void appendToEntries(ItemGroup.Entries stacks) {
-    stacks.add(new ItemStack(this));
+  public void appendToEntries(CreativeModeTab.Output stacks) {
+    stacks.accept(new ItemStack(this));
     ItemStack stack = new ItemStack(this);
-    stack.set(MishangucComponents.EXPLOSION_TOOL_DATA, new ExplosionToolComponent(4, true, Explosion.DestructionType.DESTROY));
-    stacks.add(stack);
+    stack.set(MishangucComponents.EXPLOSION_TOOL_DATA, new ExplosionToolComponent(4, true, Explosion.BlockInteraction.DESTROY));
+    stacks.accept(stack);
 
     stack = new ItemStack(this);
-    stack.set(MishangucComponents.EXPLOSION_TOOL_DATA, new ExplosionToolComponent(4, false, Explosion.DestructionType.KEEP));
-    stacks.add(stack);
+    stack.set(MishangucComponents.EXPLOSION_TOOL_DATA, new ExplosionToolComponent(4, false, Explosion.BlockInteraction.KEEP));
+    stacks.accept(stack);
 
     stack = new ItemStack(this);
-    stack.set(MishangucComponents.EXPLOSION_TOOL_DATA, new ExplosionToolComponent(4, false, Explosion.DestructionType.DESTROY_WITH_DECAY));
-    stacks.add(stack);
+    stack.set(MishangucComponents.EXPLOSION_TOOL_DATA, new ExplosionToolComponent(4, false, Explosion.BlockInteraction.DESTROY_WITH_DECAY));
+    stacks.accept(stack);
 
     stack = new ItemStack(this);
-    stack.set(MishangucComponents.EXPLOSION_TOOL_DATA, new ExplosionToolComponent(4, false, Explosion.DestructionType.TRIGGER_BLOCK));
-    stacks.add(stack);
+    stack.set(MishangucComponents.EXPLOSION_TOOL_DATA, new ExplosionToolComponent(4, false, Explosion.BlockInteraction.TRIGGER_BLOCK));
+    stacks.accept(stack);
   }
 
   @Override
-  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
-    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.1", TextBridge.keybind("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.2").formatted(Formatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.3").formatted(Formatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.4").formatted(Formatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.5").formatted(Formatting.GRAY));
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
+    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.1", TextBridge.keybind("key.use").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.2").withStyle(ChatFormatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.3").withStyle(ChatFormatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.4").withStyle(ChatFormatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.explosion_tool.tooltip.5").withStyle(ChatFormatting.GRAY));
   }
 
   @Override
-  public void onScroll(int selectedSlot, double scrollAmount, ServerPlayerEntity player, ItemStack stack) {
+  public void onScroll(int selectedSlot, double scrollAmount, ServerPlayer player, ItemStack stack) {
     final boolean creative = player.isCreative();
-    final float power = MathHelper.clamp(stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT).power() - (float) scrollAmount, creative ? -128 : 0, creative ? 128 : 64);
-    stack.apply(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT, c -> c.withPower(power));
+    final float power = Mth.clamp(stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT).power() - (float) scrollAmount, creative ? -128 : 0, creative ? 128 : 64);
+    stack.update(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT, c -> c.withPower(power));
   }
 
   /**
-   * @see World#EXPLOSION_BLOCK_PARTICLES
+   * @see Level#DEFAULT_EXPLOSION_BLOCK_PARTICLES
    */
-  private static final Pool<BlockParticleEffect> EXPLOSION_BLOCK_PARTICLES = Pool.<BlockParticleEffect>builder()
-      .add(new BlockParticleEffect(ParticleTypes.POOF, 0.5F, 1.0F))
-      .add(new BlockParticleEffect(ParticleTypes.SMOKE, 1.0F, 1.0F))
+  private static final WeightedList<ExplosionParticleInfo> EXPLOSION_BLOCK_PARTICLES = WeightedList.<ExplosionParticleInfo>builder()
+      .add(new ExplosionParticleInfo(ParticleTypes.POOF, 0.5F, 1.0F))
+      .add(new ExplosionParticleInfo(ParticleTypes.SMOKE, 1.0F, 1.0F))
       .build();
 
   @Override
-  public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
-    final ServerWorld serverWorld = pointer.world();
-    if (!serverWorld.getGameRules().getValue(MishangucRules.EXPLOSION_TOOL_ACCESS).hasAccess(null)) {
+  public ItemStack dispense(BlockSource pointer, ItemStack stack) {
+    final ServerLevel serverWorld = pointer.level();
+    if (!serverWorld.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).hasAccess(null)) {
       return stack;
     }
     final BlockPos basePos = pointer.pos();
-    final Direction direction = pointer.state().get(DispenserBlock.FACING);
+    final Direction direction = pointer.state().getValue(DispenserBlock.FACING);
     final ExplosionToolComponent component = stack.getOrDefault(MishangucComponents.EXPLOSION_TOOL_DATA, ExplosionToolComponent.DEFAULT);
     for (int i = 1; i < 33; i++) {
-      final BlockPos pos = basePos.offset(direction, i);
+      final BlockPos pos = basePos.relative(direction, i);
       if (serverWorld.getBlockState(pos).getCollisionShape(serverWorld, pos).isEmpty()
-          && serverWorld.getEntitiesByClass(Entity.class, new Box(pos), EntityPredicates.EXCEPT_SPECTATOR.and(Entity::canHit).and(EntityFlagsPredicate.Builder.create().sneaking(false).build()::test)).isEmpty()
+          && serverWorld.getEntitiesOfClass(Entity.class, new AABB(pos), EntitySelector.NO_SPECTATORS.and(Entity::isPickable).and(EntityFlagsPredicate.Builder.flags().setCrouching(false).build()::matches)).isEmpty()
       ) {
         continue;
       }
 
-      Explosion.DestructionType destructionType = component.destructionType();
+      Explosion.BlockInteraction destructionType = component.destructionType();
 
-      ExplosionImpl explosionImpl = new ExplosionImpl(serverWorld, null, serverWorld.getDamageSources().explosion(null), null, pos.toCenterPos(), component.power(), component.createFire(), destructionType);
+      ServerExplosion explosionImpl = new ServerExplosion(serverWorld, null, serverWorld.damageSources().explosion(null), null, pos.getCenter(), component.power(), component.createFire(), destructionType);
       final int blockCount = explosionImpl.explode();
-      ParticleEffect particleEffect = ParticleTypes.EXPLOSION;
+      ParticleOptions particleEffect = ParticleTypes.EXPLOSION;
 
-      for (ServerPlayerEntity serverPlayerEntity : serverWorld.getPlayers()) {
-        if (serverPlayerEntity.squaredDistanceTo(pos.toCenterPos()) < 4096.0) {
-          Optional<Vec3d> optional = Optional.ofNullable(explosionImpl.getKnockbackByPlayer().get(serverPlayerEntity));
-          serverPlayerEntity.networkHandler.sendPacket(new ExplosionS2CPacket(pos.toCenterPos(), explosionImpl.getPower(), blockCount, optional, particleEffect, SoundEvents.ENTITY_GENERIC_EXPLODE, EXPLOSION_BLOCK_PARTICLES));
+      for (ServerPlayer serverPlayerEntity : serverWorld.players()) {
+        if (serverPlayerEntity.distanceToSqr(pos.getCenter()) < 4096.0) {
+          Optional<Vec3> optional = Optional.ofNullable(explosionImpl.getHitPlayers().get(serverPlayerEntity));
+          serverPlayerEntity.connection.send(new ClientboundExplodePacket(pos.getCenter(), explosionImpl.radius(), blockCount, optional, particleEffect, SoundEvents.GENERIC_EXPLODE, EXPLOSION_BLOCK_PARTICLES));
         }
       }
-      stack.damage((int) component.power(), serverWorld, null, item -> {});
+      stack.hurtAndBreak((int) component.power(), serverWorld, null, item -> {});
     }
     return stack;
   }

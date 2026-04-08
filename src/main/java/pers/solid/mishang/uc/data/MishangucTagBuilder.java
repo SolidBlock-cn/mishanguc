@@ -1,18 +1,17 @@
 package pers.solid.mishang.uc.data;
 
-import net.minecraft.data.tag.ProvidedTagBuilder;
-import net.minecraft.registry.tag.TagKey;
-
 import java.util.Arrays;
+import net.minecraft.data.tags.TagAppender;
+import net.minecraft.tags.TagKey;
 
 /**
- * @since 1.21.6 随原版进行了变更，由直接继承改变了实现 {@link ProvidedTagBuilder}，其底层实现方式为对 {@link #parent} 字段进行操作。
+ * @since 1.21.6 随原版进行了变更，由直接继承改变了实现 {@link TagAppender}，其底层实现方式为对 {@link #parent} 字段进行操作。
  */
-public class MishangucTagBuilder<T> implements ProvidedTagBuilder<T, T> {
+public class MishangucTagBuilder<T> implements TagAppender<T, T> {
   private final TagKey<T> tagKey;
-  private final ProvidedTagBuilder<T, T> parent;
+  private final TagAppender<T, T> parent;
 
-  protected MishangucTagBuilder(TagKey<T> tagKey, ProvidedTagBuilder<T, T> parent) {
+  protected MishangucTagBuilder(TagKey<T> tagKey, TagAppender<T, T> parent) {
     this.tagKey = tagKey;
     this.parent = parent;
   }
@@ -29,7 +28,7 @@ public class MishangucTagBuilder<T> implements ProvidedTagBuilder<T, T> {
   }
 
   @Override
-  public ProvidedTagBuilder<T, T> addOptional(T value) {
+  public TagAppender<T, T> addOptional(T value) {
     parent.addOptional(value);
     return this;
   }
@@ -59,7 +58,7 @@ public class MishangucTagBuilder<T> implements ProvidedTagBuilder<T, T> {
   }
 
   @Override
-  public ProvidedTagBuilder<T, T> addOptionalTag(TagKey<T> tag) {
+  public TagAppender<T, T> addOptionalTag(TagKey<T> tag) {
     parent.addOptionalTag(tag);
     return this;
   }

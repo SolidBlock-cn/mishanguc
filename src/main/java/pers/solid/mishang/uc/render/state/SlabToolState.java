@@ -1,6 +1,6 @@
 package pers.solid.mishang.uc.render.state;
 
-import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class SlabToolState implements MishangRenderState {
   public VoxelShape slabShape;

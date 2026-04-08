@@ -1,56 +1,56 @@
 package pers.solid.mishang.uc.item;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
 import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 public class TpToolItem extends Item implements MishangucItem, WithMishangTooltip {
-  public TpToolItem(Settings settings) {
+  public TpToolItem(Properties settings) {
     super(settings);
   }
 
   @Override
-  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
-    tooltip.add(TextBridge.translatable("item.mishanguc.tp_tool.tooltip", TextBridge.keybind("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
+    tooltip.add(TextBridge.translatable("item.mishanguc.tp_tool.tooltip", TextBridge.keybind("key.use").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
   }
 
   @Override
-  public ActionResult use(World world, PlayerEntity user, Hand hand) {
-    final ActionResult data = super.use(world, user, hand);
-    if (world.isClient()) return data;
-    final Vec3d oldPos = user.getEntityPos();
-    final HitResult raycast = user.raycast(256, 0, user.isSneaking());
+  public InteractionResult use(Level world, Player user, InteractionHand hand) {
+    final InteractionResult data = super.use(world, user, hand);
+    if (world.isClientSide()) return data;
+    final Vec3 oldPos = user.position();
+    final HitResult raycast = user.pick(256, 0, user.isShiftKeyDown());
     if (raycast.getType() == HitResult.Type.MISS) {
-      return ActionResult.FAIL;
+      return InteractionResult.FAIL;
     }
-    final Vec3d pos = raycast.getPos();
+    final Vec3 pos = raycast.getLocation();
     user.fallDistance = 0;
 
     // 原先这里是 teleport，并将 particleEffect 设置为 true。
     // 由于自 1.21 开始，这种传送可能会失败，所以调整了传送方式。
-    user.requestTeleport(pos.x, pos.y, pos.z);
-    world.sendEntityStatus(user, (byte) 46);
+    user.teleportTo(pos.x, pos.y, pos.z);
+    world.broadcastEntityEvent(user, (byte) 46);
 
-    world.emitGameEvent(GameEvent.TELEPORT, pos, GameEvent.Emitter.of(user));
-    world.sendEntityStatus(user, (byte) 46);
-    world.playSound(null, pos.x, pos.y, pos.z, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
-    user.getStackInHand(hand).damage((int) MathHelper.sqrt((float) (MathHelper.square(oldPos.x - pos.x) + MathHelper.square(oldPos.y - pos.y) + MathHelper.square(oldPos.z - pos.z))), user, hand.getEquipmentSlot());
-    return ActionResult.SUCCESS;
+    world.gameEvent(GameEvent.TELEPORT, pos, GameEvent.Context.of(user));
+    world.broadcastEntityEvent(user, (byte) 46);
+    world.playSound(null, pos.x, pos.y, pos.z, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.PLAYERS, 1.0F, 1.0F);
+    user.getItemInHand(hand).hurtAndBreak((int) Mth.sqrt((float) (Mth.square(oldPos.x - pos.x) + Mth.square(oldPos.y - pos.y) + Mth.square(oldPos.z - pos.z))), user, hand.asEquipmentSlot());
+    return InteractionResult.SUCCESS;
   }
 }

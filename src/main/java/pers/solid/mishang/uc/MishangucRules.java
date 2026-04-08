@@ -7,16 +7,16 @@ import net.fabricmc.fabric.api.gamerule.v1.CustomGameRuleCategory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleBuilder;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.command.DefaultPermissions;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.world.rule.GameRule;
-import net.minecraft.world.rule.GameRules;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permissions;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.gamerules.GameRule;
+import net.minecraft.world.level.gamerules.GameRules;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +30,7 @@ import pers.solid.mishang.uc.util.TextBridge;
  */
 @ApiStatus.AvailableSince("1.0.0")
 public final class MishangucRules {
-  public static final CustomGameRuleCategory MISHANG_CATEGORY = new CustomGameRuleCategory(Mishanguc.id("mishanguc"), Text.translatable("modmenu.nameTranslation.mishanguc"));
+  public static final CustomGameRuleCategory MISHANG_CATEGORY = new CustomGameRuleCategory(Mishanguc.id("mishanguc"), Component.translatable("modmenu.nameTranslation.mishanguc"));
 
   public static final GameRule<ToolAccess> FORCE_PLACING_TOOL_ACCESS = GameRuleBuilder.forEnum(ToolAccess.CREATIVE_ONLY)
       .category(MISHANG_CATEGORY)
@@ -53,12 +53,12 @@ public final class MishangucRules {
   }
 
   private static void sync(MinecraftServer server, short type, ToolAccess newValue) {
-    for (ServerPlayerEntity serverPlayerEntity : server.getPlayerManager().getPlayerList()) {
+    for (ServerPlayer serverPlayerEntity : server.getPlayerList().getPlayers()) {
       sync(serverPlayerEntity, type, newValue);
     }
   }
 
-  static void sync(ServerPlayerEntity serverPlayerEntity, short type, ToolAccess newValue) {
+  static void sync(ServerPlayer serverPlayerEntity, short type, ToolAccess newValue) {
     ServerPlayNetworking.send(serverPlayerEntity, new RuleChangedPayload(type, newValue));
   }
 
@@ -66,33 +66,33 @@ public final class MishangucRules {
   @Environment(EnvType.CLIENT)
   static void handle(RuleChangedPayload payload, ClientPlayNetworking.Context context) {
     context.client().execute(() -> {
-      switch (payload.type()) {
+      switch (payload.ruleType()) {
         case 0 -> MishangucClient.CLIENT_FORCE_PLACING_TOOL_ACCESS.set(payload.toolAccess());
         case 1 -> MishangucClient.CLIENT_CARRYING_TOOL_ACCESS.set(payload.toolAccess());
       }
     });
   }
 
-  public enum ToolAccess implements StringIdentifiable {
+  public enum ToolAccess implements StringRepresentable {
     ALL {
       @Override
-      public boolean hasAccess(@Nullable PlayerEntity player) {
+      public boolean hasAccess(@Nullable Player player) {
         return true;
       }
     }, CREATIVE_ONLY {
       @Override
-      public boolean hasAccess(@Nullable PlayerEntity player) {
+      public boolean hasAccess(@Nullable Player player) {
         return player != null && player.isCreative();
       }
     }, OP_ONLY {
       @Override
-      public boolean hasAccess(@Nullable PlayerEntity player) {
-        return player != null && player.getPermissions().hasPermission(DefaultPermissions.GAMEMASTERS);
+      public boolean hasAccess(@Nullable Player player) {
+        return player != null && player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
       }
     }, CREATIVE_OP_ONLY {
       @Override
-      public boolean hasAccess(@Nullable PlayerEntity player) {
-        return player != null && player.isCreative() && player.getPermissions().hasPermission(DefaultPermissions.GAMEMASTERS);
+      public boolean hasAccess(@Nullable Player player) {
+        return player != null && player.isCreative() && player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
       }
     };
     private final String name;
@@ -102,23 +102,23 @@ public final class MishangucRules {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
       return name;
     }
 
     @Contract(pure = true)
-    public abstract boolean hasAccess(@Nullable PlayerEntity player);
+    public abstract boolean hasAccess(@Nullable Player player);
 
-    public boolean hasAccess(PlayerEntity player, boolean warn) {
+    public boolean hasAccess(Player player, boolean warn) {
       final boolean hasAccess = hasAccess(player);
-      if (warn && !hasAccess && !player.getEntityWorld().isClient()) {
-        player.sendMessage(createWarnText(), true);
+      if (warn && !hasAccess && !player.level().isClientSide()) {
+        player.displayClientMessage(createWarnText(), true);
       }
       return hasAccess;
     }
 
-    public MutableText createWarnText() {
-      return TextBridge.translatable("message.tool_access", TextBridge.translatable("message.tool_access." + asString())).formatted(Formatting.RED);
+    public MutableComponent createWarnText() {
+      return TextBridge.translatable("message.tool_access", TextBridge.translatable("message.tool_access." + getSerializedName())).withStyle(ChatFormatting.RED);
     }
   }
 }

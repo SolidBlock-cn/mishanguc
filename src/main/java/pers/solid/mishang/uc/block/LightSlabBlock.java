@@ -4,24 +4,19 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.client.data.BlockStateModelGenerator;
-import net.minecraft.client.data.ModelIds;
-import net.minecraft.client.data.ModelProvider;
-import net.minecraft.client.data.TextureMap;
-import net.minecraft.data.loottable.BlockLootTableGenerator;
-import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.recipe.RecipeGenerator;
-import net.minecraft.data.recipe.ShapedRecipeJsonBuilder;
-import net.minecraft.data.recipe.StonecuttingRecipeJsonBuilder;
-import net.minecraft.loot.LootTable;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ModelProvider;
+import net.minecraft.client.data.models.model.ModelLocationUtils;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.data.recipes.*;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.data.MishangucModels;
 
 @ApiStatus.AvailableSince("1.1.0")
@@ -29,29 +24,29 @@ public class LightSlabBlock extends SlabBlock implements MishangucBlock {
   public final Block baseBlock;
   public static final MapCodec<LightSlabBlock> CODEC = RecordCodecBuilder.mapCodec(
       i -> i.group(
-          Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(b -> b.baseBlock),
-          createSettingsCodec()
+          BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_block").forGetter(b -> b.baseBlock),
+          propertiesCodec()
       ).apply(i, LightSlabBlock::new)
   );
 
-  public LightSlabBlock(@NotNull Block baseBlock, Settings settings) {
+  public LightSlabBlock(Block baseBlock, Properties settings) {
     super(settings);
     this.baseBlock = baseBlock;
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
-    final Identifier bottomModelId = MishangucModels.LIGHT_SLAB.upload(this, TextureMap.all(baseBlock), blockStateModelGenerator.modelCollector);
-    final Identifier topModelId = MishangucModels.LIGHT_SLAB_TOP.upload(this, TextureMap.all(baseBlock), blockStateModelGenerator.modelCollector);
-    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createSlabBlockState(this, BlockStateModelGenerator.createWeightedVariant(bottomModelId), BlockStateModelGenerator.createWeightedVariant(topModelId), BlockStateModelGenerator.createWeightedVariant(ModelIds.getBlockModelId(baseBlock))));
-    blockStateModelGenerator.registerParentedItemModel(this, bottomModelId);
+  public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
+    final Identifier bottomModelId = MishangucModels.LIGHT_SLAB.create(this, TextureMapping.cube(baseBlock), blockStateModelGenerator.modelOutput);
+    final Identifier topModelId = MishangucModels.LIGHT_SLAB_TOP.create(this, TextureMapping.cube(baseBlock), blockStateModelGenerator.modelOutput);
+    blockStateModelGenerator.blockStateOutput.accept(BlockModelGenerators.createSlab(this, BlockModelGenerators.plainVariant(bottomModelId), BlockModelGenerators.plainVariant(topModelId), BlockModelGenerators.plainVariant(ModelLocationUtils.getModelLocation(baseBlock))));
+    blockStateModelGenerator.registerSimpleItemModel(this, bottomModelId);
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
-    return ((ShapedRecipeJsonBuilder) recipeGenerator.createSlabRecipe(RecipeCategory.BUILDING_BLOCKS, this, Ingredient.ofItems(baseBlock)))
-        .criterion(RecipeGenerator.hasItem(baseBlock), recipeGenerator.conditionsFromItem(baseBlock));
+  public RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
+    return ((ShapedRecipeBuilder) recipeGenerator.slabBuilder(RecipeCategory.BUILDING_BLOCKS, this, Ingredient.of(baseBlock)))
+        .unlockedBy(RecipeProvider.getHasName(baseBlock), recipeGenerator.has(baseBlock));
   }
 
   @Override
@@ -60,18 +55,18 @@ public class LightSlabBlock extends SlabBlock implements MishangucBlock {
   }
 
   @Override
-  public StonecuttingRecipeJsonBuilder getStonecuttingRecipe(RecipeGenerator recipeGenerator) {
-    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), RecipeCategory.DECORATIONS, this, 2)
-        .criterion(RecipeGenerator.hasItem(baseBlock), recipeGenerator.conditionsFromItem(baseBlock));
+  public SingleItemRecipeBuilder getStonecuttingRecipe(RecipeProvider recipeGenerator) {
+    return SingleItemRecipeBuilder.stonecutting(Ingredient.of(baseBlock), RecipeCategory.DECORATIONS, this, 2)
+        .unlockedBy(RecipeProvider.getHasName(baseBlock), recipeGenerator.has(baseBlock));
   }
 
   @Override
-  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
-    return blockLootTableGenerator.slabDrops(this);
+  public LootTable.Builder getLootTable(BlockLootSubProvider blockLootTableGenerator) {
+    return blockLootTableGenerator.createSlabItemTable(this);
   }
 
   @Override
-  public MapCodec<? extends LightSlabBlock> getCodec() {
+  public MapCodec<? extends LightSlabBlock> codec() {
     return CODEC;
   }
 

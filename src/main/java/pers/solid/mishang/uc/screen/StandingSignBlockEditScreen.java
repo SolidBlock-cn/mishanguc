@@ -3,12 +3,11 @@ package pers.solid.mishang.uc.screen;
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -22,7 +21,7 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
   private final boolean isFront;
   private final List<TextContext> backedUpTexts;
 
-  public StandingSignBlockEditScreen(RegistryWrapper.WrapperLookup registryLookup, StandingSignBlockEntity entity, BlockPos blockPos, boolean isFront) {
+  public StandingSignBlockEditScreen(HolderLookup.Provider registryLookup, StandingSignBlockEntity entity, BlockPos blockPos, boolean isFront) {
     super(registryLookup, entity, blockPos, entity.getTextsOnSide(isFront));
     this.isFront = isFront;
     this.backedUpTexts = entity.getTextsOnSide(isFront);
@@ -36,7 +35,7 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
   }
 
   @Override
-  protected List<ButtonWidget> getTextHolders() {
+  protected List<Button> getTextHolders() {
     return List.of(placeHolder, copyFromBackButton);
   }
 
@@ -53,12 +52,12 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
   }
 
 
-  public final ButtonWidget copyFromBackButton = new ButtonWidget.Builder(TextBridge.translatable("message.mishanguc.copy_from_back"), button -> {
+  public final Button copyFromBackButton = new Button.Builder(TextBridge.translatable("message.mishanguc.copy_from_back"), button -> {
     final StandingSignBlockEntity entity = this.entity;
     if (entity.editedSide == null) {
       return;
     }
-    final List<@NotNull TextContext> otherSide = entity.getTextsOnSide(!entity.editedSide);
+    final List<TextContext> otherSide = entity.getTextsOnSide(!entity.editedSide);
     if (otherSide == null)
       return;
     otherSide.forEach(
@@ -67,5 +66,5 @@ public class StandingSignBlockEditScreen extends AbstractSignBlockEditScreen<Sta
           // 留意添加到的位置是列表末尾。
           textFieldListWidget.addTextField(-1, flip, false);
         });
-  }).dimensions(this.width / 2 - 80, 35, 160, 20).tooltip(Tooltip.of(TextBridge.translatable("message.mishanguc.copy_from_back.description"))).build();
+  }).bounds(this.width / 2 - 80, 35, 160, 20).tooltip(Tooltip.create(TextBridge.translatable("message.mishanguc.copy_from_back.description"))).build();
 }

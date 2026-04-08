@@ -2,7 +2,7 @@ package pers.solid.mishang.uc.util;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.data.Model;
+import net.minecraft.client.data.models.model.ModelTemplate;
 import pers.solid.mishang.uc.data.MishangucModels;
 
 public enum ModelReference {
@@ -12,7 +12,7 @@ public enum ModelReference {
   COLORED_CUBE_ALL_WITHOUT_SHADE;
 
   @Environment(EnvType.CLIENT)
-  public final Model getModel() {
+  public final ModelTemplate getModel() {
     return switch (this) {
       case COLORED_CUBE_ALL -> MishangucModels.COLORED_CUBE_ALL;
       case COLORED_CUBE_BOTTOM_TOP -> MishangucModels.COLORED_CUBE_BOTTOM_TOP;

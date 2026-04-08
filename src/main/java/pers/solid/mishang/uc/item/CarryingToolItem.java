@@ -1,40 +1,55 @@
 package pers.solid.mishang.uc.item;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderLayers;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexRendering;
-import net.minecraft.client.render.state.OutlineRenderState;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.command.DefaultPermissions;
-import net.minecraft.entity.*;
-import net.minecraft.entity.boss.dragon.EnderDragonPart;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.storage.NbtWriteView;
-import net.minecraft.text.Text;
-import net.minecraft.util.*;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.*;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.ShapeRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.BlockOutlineRenderState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.permissions.Permissions;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.Mth;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragonPart;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TypedEntityData;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.GameMasterBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangucClient;
 import pers.solid.mishang.uc.MishangucRules;
@@ -55,17 +70,17 @@ import java.util.UUID;
 public class CarryingToolItem extends BlockToolItem
     implements MishangucItem, InteractsWithEntity, RendersBeforeOutline, WithMishangTooltip {
 
-  private static final int OUTLINE_COLOR_CYAN = ColorHelper.fromFloats(0.8f, 0, 1, 1);
-  private static final int OUTLINE_COLOR_AO = ColorHelper.fromFloats(0.5f, 0, 0.5f, 1);
-  private static final int OUTLINE_COLOR_AKA = ColorHelper.fromFloats(0.8f, 1, 0, 0);
-  private static final int OUTLINE_COLOR_ORANGE = ColorHelper.fromFloats(0.5f, 1, 0.5f, 0);
+  private static final int OUTLINE_COLOR_CYAN = ARGB.colorFromFloat(0.8f, 0, 1, 1);
+  private static final int OUTLINE_COLOR_AO = ARGB.colorFromFloat(0.5f, 0, 0.5f, 1);
+  private static final int OUTLINE_COLOR_AKA = ARGB.colorFromFloat(0.8f, 1, 0, 0);
+  private static final int OUTLINE_COLOR_ORANGE = ARGB.colorFromFloat(0.5f, 1, 0.5f, 0);
 
-  public CarryingToolItem(Settings settings, @Nullable Boolean includesFluid) {
+  public CarryingToolItem(Properties settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
 
   @Contract(pure = true)
-  public static @Nullable BlockState getHoldingBlockState(@NotNull ItemStack stack, WorldView world) {
+  public static @Nullable BlockState getHoldingBlockState(ItemStack stack, LevelReader world) {
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     return carryingToolData instanceof CarryingToolData.HoldingBlockState holdingBlockState ? holdingBlockState.state() : null;
   }
@@ -76,19 +91,19 @@ public class CarryingToolItem extends BlockToolItem
   @Contract(mutates = "param1")
   private static void setHoldingEntityUUID(ItemStack stack, UUID uuid) {
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
-    final NbtCompound entityTag = carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity ? holdingEntity.entityTag().orElse(null) : null;
+    final CompoundTag entityTag = carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity ? holdingEntity.entityTag().orElse(null) : null;
     if (entityTag != null) {
-      entityTag.put("UUID", Uuids.INT_STREAM_CODEC, uuid);
+      entityTag.store("UUID", UUIDUtil.CODEC, uuid);
     }
   }
 
   @Contract(pure = true)
-  public static @Nullable Entity createHoldingEntity(@NotNull CarryingToolData.HoldingEntity data, ServerWorld world, PlayerEntity player) {
+  public static @Nullable Entity createHoldingEntity(CarryingToolData.HoldingEntity data, ServerLevel world, Player player) {
     final EntityType<?> entityType = data.entityType();
-    return entityType.create(world, entity -> data.entityTag().ifPresent(nbtCompound -> TypedEntityData.create(entityType, nbtCompound).applyToEntity(entity)), player.getBlockPos(), SpawnReason.EVENT, false, false);
+    return entityType.create(world, entity -> data.entityTag().ifPresent(nbtCompound -> TypedEntityData.of(entityType, nbtCompound).loadInto(entity)), player.blockPosition(), EntitySpawnReason.EVENT, false, false);
   }
 
-  private static Text getEntityName(@NotNull ItemStack stack) {
+  private static Component getEntityName(ItemStack stack) {
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
       return holdingEntity.name();
@@ -98,8 +113,8 @@ public class CarryingToolItem extends BlockToolItem
   }
 
   @Override
-  public Text getName(ItemStack stack) {
-    final Text name = super.getName(stack);
+  public Component getName(ItemStack stack) {
+    final Component name = super.getName(stack);
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
       return TextBridge.translatable("item.mishanguc.carrying_tool.holding", name, holdingEntity.name());
@@ -111,17 +126,17 @@ public class CarryingToolItem extends BlockToolItem
   }
 
   @Override
-  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
-    tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.1").formatted(Formatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.2").formatted(Formatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.3").formatted(Formatting.GRAY));
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
+    tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.1").withStyle(ChatFormatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.2").withStyle(ChatFormatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.carrying_tool.tooltip.3").withStyle(ChatFormatting.GRAY));
   }
 
 
   @Override
-  public ActionResult useOnBlock(ItemStack stack, PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
+  public InteractionResult useOnBlock(ItemStack stack, Player player, Level world, BlockHitResult blockHitResult, InteractionHand hand, boolean fluidIncluded) {
     if (!hasAccess(player, world, true)) {
-      return ActionResult.PASS;
+      return InteractionResult.PASS;
     }
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     if (carryingToolData instanceof CarryingToolData.HoldingBlockState) {
@@ -129,173 +144,173 @@ public class CarryingToolItem extends BlockToolItem
       if (blockPlacementContext.canPlace()) {
         blockPlacementContext.setBlockState(3);
         blockPlacementContext.setBlockEntity();
-        if (world.isClient()) {
+        if (world.isClientSide()) {
           blockPlacementContext.playSound();
         } else {
-          player.sendMessage(TextBridge.translatable(player.isCreative() ? "item.mishanguc.carrying_tool.message.placed_creative" : "item.mishanguc.carrying_tool.message.placed", blockPlacementContext.stateToPlace.getBlock().getName()), true);
+          player.displayClientMessage(TextBridge.translatable(player.isCreative() ? "item.mishanguc.carrying_tool.message.placed_creative" : "item.mishanguc.carrying_tool.message.placed", blockPlacementContext.stateToPlace.getBlock().getName()), true);
         }
         if (!player.isCreative()) {
           stack.remove(MishangucComponents.CARRYING_TOOL_DATA);
         }
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
       } else {
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
       }
     } else if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
-      if (world instanceof ServerWorld serverWorld) {
+      if (world instanceof ServerLevel serverWorld) {
         final Entity entity = createHoldingEntity(holdingEntity, serverWorld, player);
         if (entity == null)
-          return ActionResult.PASS;
-        final Vec3d pos = blockHitResult.getPos();
-        entity.updatePosition(pos.x, pos.y, pos.z);
-        final boolean spawnEntity = world.spawnEntity(entity);
+          return InteractionResult.PASS;
+        final Vec3 pos = blockHitResult.getLocation();
+        entity.absSnapTo(pos.x, pos.y, pos.z);
+        final boolean spawnEntity = world.addFreshEntity(entity);
         if (spawnEntity) {
-          player.sendMessage(TextBridge.translatable(player.isCreative() ? "item.mishanguc.carrying_tool.message.spawned_creative" : "item.mishanguc.carrying_tool.message.spawned", getEntityName(stack)), true);
+          player.displayClientMessage(TextBridge.translatable(player.isCreative() ? "item.mishanguc.carrying_tool.message.spawned_creative" : "item.mishanguc.carrying_tool.message.spawned", getEntityName(stack)), true);
           if (!player.isCreative()) {
             stack.remove(MishangucComponents.CARRYING_TOOL_DATA);
           } else {
-            setHoldingEntityUUID(stack, MathHelper.randomUuid());
+            setHoldingEntityUUID(stack, Mth.createInsecureUUID());
           }
-          return ActionResult.SUCCESS;
+          return InteractionResult.SUCCESS;
         } else {
-          return ActionResult.FAIL;
+          return InteractionResult.FAIL;
         }
       } else {
         // 客户端部分。
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
       }
     } else {
       final BlockState blockState = world.getBlockState(blockHitResult.getBlockPos());
-      final ActionResult actionResult = blockState.onUse(world, player, blockHitResult);
-      if (actionResult.isAccepted()) {
+      final InteractionResult actionResult = blockState.useWithoutItem(world, player, blockHitResult);
+      if (actionResult.consumesAction()) {
         return actionResult;
       } else {
-        if (world.isClient()) {
-          return ActionResult.PASS;
+        if (world.isClientSide()) {
+          return InteractionResult.PASS;
         } else {
-          player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_placing").formatted(Formatting.RED), true);
-          return ActionResult.FAIL;
+          player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_placing").withStyle(ChatFormatting.RED), true);
+          return InteractionResult.FAIL;
         }
       }
     }
   }
 
 
-  private boolean hasAccess(PlayerEntity player, World world, boolean warn) {
-    if (!(world instanceof ServerWorld serverWorld)) {
+  private boolean hasAccess(Player player, Level world, boolean warn) {
+    if (!(world instanceof ServerLevel serverWorld)) {
       return MishangucClient.CLIENT_CARRYING_TOOL_ACCESS.get().hasAccess(player);
     } else {
-      final MishangucRules.ToolAccess toolAccess = serverWorld.getGameRules().getValue(MishangucRules.CARRYING_TOOL_ACCESS);
+      final MishangucRules.ToolAccess toolAccess = serverWorld.getGameRules().get(MishangucRules.CARRYING_TOOL_ACCESS);
       return toolAccess.hasAccess(player, warn);
     }
   }
 
   @Override
-  public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+  public InteractionResult beginAttackBlock(ItemStack stack, Player player, Level world, InteractionHand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!hasAccess(player, world, true))
-      return ActionResult.PASS;
+      return InteractionResult.PASS;
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     if (carryingToolData instanceof CarryingToolData.HoldingBlockState holdingBlockState && !player.isCreative()) {
-      if (!world.isClient()) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.of(holdingBlockState.state().getBlock()).map(Block::getName).orElse(TextBridge.empty())).formatted(Formatting.RED), true);
-        return ActionResult.FAIL;
+      if (!world.isClientSide()) {
+        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.of(holdingBlockState.state().getBlock()).map(Block::getName).orElse(TextBridge.empty())).withStyle(ChatFormatting.RED), true);
+        return InteractionResult.FAIL;
       } else {
-        return ActionResult.CONSUME;
+        return InteractionResult.CONSUME;
       }
     }
     if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity && !player.isCreative()) {
-      if (world.isClient())
-        return ActionResult.CONSUME;
+      if (world.isClientSide())
+        return InteractionResult.CONSUME;
       else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", holdingEntity.name()).formatted(Formatting.RED), true);
-        return ActionResult.FAIL;
+        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", holdingEntity.name()).withStyle(ChatFormatting.RED), true);
+        return InteractionResult.FAIL;
       }
     }
     final BlockState removed = world.getBlockState(pos);
-    if (removed.getBlock() instanceof OperatorBlock && !player.getPermissions().hasPermission(DefaultPermissions.GAMEMASTERS)) {
-      return ActionResult.FAIL;
+    if (removed.getBlock() instanceof GameMasterBlock && !player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)) {
+      return InteractionResult.FAIL;
     }
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     if (blockEntity != null) {
-      stack.set(MishangucComponents.CARRYING_TOOL_DATA, new CarryingToolData.HoldingBlockState(removed, Optional.of(blockEntity.createComponentlessNbt(world.getRegistryManager()))));
+      stack.set(MishangucComponents.CARRYING_TOOL_DATA, new CarryingToolData.HoldingBlockState(removed, Optional.of(blockEntity.saveCustomOnly(world.registryAccess()))));
     } else {
       stack.set(MishangucComponents.CARRYING_TOOL_DATA, new CarryingToolData.HoldingBlockState(removed, Optional.empty()));
     }
     world.removeBlockEntity(pos);
-    world.setBlockState(pos, Blocks.AIR.getDefaultState());
-    if (world.isClient()) {
-      world.syncWorldEvent(2001, pos, Block.getRawIdFromState(removed));
+    world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+    if (world.isClientSide()) {
+      world.levelEvent(2001, pos, Block.getId(removed));
     }
-    if (!world.isClient()) {
+    if (!world.isClientSide()) {
       if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.picked_overriding", holdingEntity.name()), true);
+        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.picked_overriding", holdingEntity.name()), true);
       } else if (carryingToolData instanceof CarryingToolData.HoldingBlockState holdingBlockState) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.picked_overriding", removed.getBlock().getName(), holdingBlockState.state().getBlock().getName()), true);
+        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.picked_overriding", removed.getBlock().getName(), holdingBlockState.state().getBlock().getName()), true);
       } else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick", removed.getBlock().getName()), true);
+        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick", removed.getBlock().getName()), true);
       }
     }
-    return ActionResult.SUCCESS;
+    return InteractionResult.SUCCESS;
   }
 
 
   @Override
-  public ActionResult use(World world, PlayerEntity user, Hand hand) {
-    final ActionResult use = super.use(world, user, hand);
-    if (use.isAccepted() || !hasAccess(user, world, true)) {
+  public InteractionResult use(Level world, Player user, InteractionHand hand) {
+    final InteractionResult use = super.use(world, user, hand);
+    if (use.consumesAction() || !hasAccess(user, world, true)) {
       return use;
     }
-    final ItemStack stack = user.getStackInHand(hand);
+    final ItemStack stack = user.getItemInHand(hand);
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
-    if (carryingToolData instanceof CarryingToolData.HoldingBlockState(BlockState state, Optional<NbtCompound> blockEntityTag)) {
-      if (state.getBlock() instanceof OperatorBlock && !user.getPermissions().hasPermission(DefaultPermissions.GAMEMASTERS)) {
-        return ActionResult.FAIL;
+    if (carryingToolData instanceof CarryingToolData.HoldingBlockState(BlockState state, Optional<CompoundTag> blockEntityTag)) {
+      if (state.getBlock() instanceof GameMasterBlock && !user.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)) {
+        return InteractionResult.FAIL;
       }
-      if (world.isClient()) {
-        return ActionResult.SUCCESS;
+      if (world.isClientSide()) {
+        return InteractionResult.SUCCESS;
       }
       final FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(EntityType.FALLING_BLOCK, world);
-      NbtCompound nbt = new NbtCompound();
-      nbt.put("BlockState", BlockState.CODEC, state);
-      TypedEntityData.create(fallingBlockEntity.getType(), nbt).applyToEntity(fallingBlockEntity);
-      final Vec3d eyePos = user.getEyePos();
-      fallingBlockEntity.updatePositionAndAngles(eyePos.x, eyePos.y, eyePos.z, user.getYaw(), user.getPitch());
-      fallingBlockEntity.setVelocity(Vec3d.fromPolar(user.getPitch(), user.getYaw()).multiply(2).add(user.getVelocity()));
+      CompoundTag nbt = new CompoundTag();
+      nbt.store("BlockState", BlockState.CODEC, state);
+      TypedEntityData.of(fallingBlockEntity.getType(), nbt).loadInto(fallingBlockEntity);
+      final Vec3 eyePos = user.getEyePosition();
+      fallingBlockEntity.absSnapTo(eyePos.x, eyePos.y, eyePos.z, user.getYRot(), user.getXRot());
+      fallingBlockEntity.setDeltaMovement(Vec3.directionFromRotation(user.getXRot(), user.getYRot()).scale(2).add(user.getDeltaMovement()));
       fallingBlockEntity.dropItem = true;
-      fallingBlockEntity.blockEntityData = blockEntityTag.orElse(null);
-      fallingBlockEntity.setHurtEntities(state.getBlock().getBlastResistance(), Integer.MAX_VALUE);
-      final boolean spawnEntity = world.spawnEntity(fallingBlockEntity);
+      fallingBlockEntity.blockData = blockEntityTag.orElse(null);
+      fallingBlockEntity.setHurtsEntities(state.getBlock().getExplosionResistance(), Integer.MAX_VALUE);
+      final boolean spawnEntity = world.addFreshEntity(fallingBlockEntity);
       if (spawnEntity) {
         if (!user.isCreative()) {
           stack.remove(MishangucComponents.CARRYING_TOOL_DATA);
         }
-        user.sendMessage(TextBridge.translatable(user.isCreative() ? "item.mishanguc.carrying_tool.message.block_thrown_creative" : "item.mishanguc.carrying_tool.message.block_thrown", state.getBlock().getName()), true);
-        return ActionResult.SUCCESS;
+        user.displayClientMessage(TextBridge.translatable(user.isCreative() ? "item.mishanguc.carrying_tool.message.block_thrown_creative" : "item.mishanguc.carrying_tool.message.block_thrown", state.getBlock().getName()), true);
+        return InteractionResult.SUCCESS;
       } else {
-        return ActionResult.FAIL;
+        return InteractionResult.FAIL;
       }
     } else if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
-      if (world instanceof ServerWorld serverWorld) {
+      if (world instanceof ServerLevel serverWorld) {
         final Entity entity = createHoldingEntity(holdingEntity, serverWorld, user);
         if (entity == null)
           return use;
-        final Vec3d pos = user.getEntityPos();
-        entity.updatePositionAndAngles(pos.x, pos.y, pos.z, user.getYaw(), user.getPitch());
-        entity.setVelocity(Vec3d.fromPolar(user.getPitch(), user.getYaw()).multiply(2).add(user.getVelocity()));
-        final boolean spawnEntity = world.spawnEntity(entity);
+        final Vec3 pos = user.position();
+        entity.absSnapTo(pos.x, pos.y, pos.z, user.getYRot(), user.getXRot());
+        entity.setDeltaMovement(Vec3.directionFromRotation(user.getXRot(), user.getYRot()).scale(2).add(user.getDeltaMovement()));
+        final boolean spawnEntity = world.addFreshEntity(entity);
         if (spawnEntity) {
-          user.sendMessage(TextBridge.translatable(user.isCreative() ? "item.mishanguc.carrying_tool.message.entity_thrown_creative" : "item.mishanguc.carrying_tool.message.entity_thrown", getEntityName(stack)), true);
+          user.displayClientMessage(TextBridge.translatable(user.isCreative() ? "item.mishanguc.carrying_tool.message.entity_thrown_creative" : "item.mishanguc.carrying_tool.message.entity_thrown", getEntityName(stack)), true);
           if (!user.isCreative()) {
             stack.remove(MishangucComponents.CARRYING_TOOL_DATA);
           } else {
-            setHoldingEntityUUID(stack, MathHelper.randomUuid());
+            setHoldingEntityUUID(stack, Mth.createInsecureUUID());
           }
-          return ActionResult.SUCCESS;
+          return InteractionResult.SUCCESS;
         } else {
-          return ActionResult.FAIL;
+          return InteractionResult.FAIL;
         }
       } else {
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
       }
     } else {
       return use;
@@ -303,58 +318,58 @@ public class CarryingToolItem extends BlockToolItem
   }
 
   @Override
-  public @NotNull ActionResult attackEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
+  public InteractionResult attackEntityCallback(Player player, Level world, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult) {
     if (!hasAccess(player, world, true) || player.isSpectator())
-      return ActionResult.PASS;
-    final ItemStack stack = player.getStackInHand(hand);
+      return InteractionResult.PASS;
+    final ItemStack stack = player.getItemInHand(hand);
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
-    if (entity instanceof PlayerEntity) {
-      if (world.isClient()) {
-        return ActionResult.PASS;
+    if (entity instanceof Player) {
+      if (world.isClientSide()) {
+        return InteractionResult.PASS;
       } else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_player").formatted(Formatting.RED), false);
-        return ActionResult.FAIL;
+        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_player").withStyle(ChatFormatting.RED), false);
+        return InteractionResult.FAIL;
       }
     } else if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity && !player.isCreative()) {
-      if (world.isClient())
-        return ActionResult.SUCCESS;
+      if (world.isClientSide())
+        return InteractionResult.SUCCESS;
       else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", holdingEntity.name()).formatted(Formatting.RED), true);
-        return ActionResult.FAIL;
+        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", holdingEntity.name()).withStyle(ChatFormatting.RED), true);
+        return InteractionResult.FAIL;
       }
     } else if (carryingToolData instanceof CarryingToolData.HoldingBlockState holdingBlockState && !player.isCreative()) {
-      if (world.isClient())
-        return ActionResult.SUCCESS;
+      if (world.isClientSide())
+        return InteractionResult.SUCCESS;
       else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.ofNullable(holdingBlockState.state().getBlock()).map(Block::getName).orElse(TextBridge.empty())).formatted(Formatting.RED), true);
-        return ActionResult.FAIL;
+        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.ofNullable(holdingBlockState.state().getBlock()).map(Block::getName).orElse(TextBridge.empty())).withStyle(ChatFormatting.RED), true);
+        return InteractionResult.FAIL;
       }
     }
-    if (world instanceof ServerWorld serverWorld) {
+    if (world instanceof ServerLevel serverWorld) {
       if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity_overriding", entity.getName(), holdingEntity.name()), true);
+        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity_overriding", entity.getName(), holdingEntity.name()), true);
       } else if (carryingToolData instanceof CarryingToolData.HoldingBlockState holdingBlockState) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity_overriding", entity.getName(), holdingBlockState.state().getBlock().getName()), true);
+        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity_overriding", entity.getName(), holdingBlockState.state().getBlock().getName()), true);
       } else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity", entity.getName()), true);
+        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_entity", entity.getName()), true);
       }
-      final NbtWriteView nbtWriteView = NbtWriteView.create(ErrorReporter.EMPTY, entity.getRegistryManager());
-      entity.writeData(nbtWriteView);
-      stack.set(MishangucComponents.CARRYING_TOOL_DATA, new CarryingToolData.HoldingEntity(entity.getType(), Optional.of(nbtWriteView.getNbt()), entity.getName(), entity.getWidth(), entity.getHeight()));
+      final TagValueOutput nbtWriteView = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, entity.registryAccess());
+      entity.saveWithoutId(nbtWriteView);
+      stack.set(MishangucComponents.CARRYING_TOOL_DATA, new CarryingToolData.HoldingEntity(entity.getType(), Optional.of(nbtWriteView.buildResult()), entity.getName(), entity.getBbWidth(), entity.getBbHeight()));
       entity.remove(Entity.RemovalReason.DISCARDED);
       if (entity instanceof EnderDragonPart enderDragonPart) {
-        enderDragonPart.owner.kill(serverWorld);
+        enderDragonPart.parentMob.kill(serverWorld);
       }
     }
-    return ActionResult.SUCCESS;
+    return InteractionResult.SUCCESS;
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable CarryingToolState getMishangRenderState(ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  public @Nullable CarryingToolState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
     final CarryingToolState state = new CarryingToolState();
 
-    final ClientWorld world = context.world();
+    final ClientLevel world = context.world();
     if (!hasAccess(player, world, true)) {
       return state;
     }
@@ -362,41 +377,41 @@ public class CarryingToolItem extends BlockToolItem
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
 
     if (result instanceof BlockHitResult blockHitResult) {
-      final boolean includesFluid = this.includesFluid(stack, player.isSneaking());
+      final boolean includesFluid = this.includesFluid(stack, player.isShiftKeyDown());
       final BlockPos pos = blockHitResult.getBlockPos();
 
       if (carryingToolData instanceof CarryingToolData.HoldingBlockState) {
         final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, pos, player, stack, blockHitResult, includesFluid);
         if (blockPlacementContext.canPlace()) {
-          state.cyanShape = blockPlacementContext.stateToPlace.getOutlineShape(world, blockPlacementContext.posToPlace, ShapeContext.of(player));
+          state.cyanShape = blockPlacementContext.stateToPlace.getShape(world, blockPlacementContext.posToPlace, CollisionContext.of(player));
           state.cyanPos = blockPlacementContext.posToPlace;
           state.blueShape = blockPlacementContext.stateToPlace.getFluidState().getShape(blockPlacementContext.world, blockPlacementContext.posToPlace);
           state.bluePos = blockPlacementContext.posToPlace;
         }
       }
-      if (hand == Hand.MAIN_HAND && (carryingToolData == null || player.isCreative())) {
+      if (hand == InteractionHand.MAIN_HAND && (carryingToolData == null || player.isCreative())) {
         final BlockState hitState = world.getBlockState(pos);
         // 只有当主手持有此物品时，才绘制红色边框。
-        state.redShape = hitState.getOutlineShape(world, pos, ShapeContext.of(player));
+        state.redShape = hitState.getShape(world, pos, CollisionContext.of(player));
         state.redPos = pos;
         state.orangeShape = hitState.getFluidState().getShape(world, pos);
         state.orangePos = pos;
       }
     }
-    if (hand != Hand.MAIN_HAND || player.isSpectator()) { // hasAccess 已经在前面检查过
+    if (hand != InteractionHand.MAIN_HAND || player.isSpectator()) { // hasAccess 已经在前面检查过
       return state;
     }
     if (result != null && result.getType() == HitResult.Type.BLOCK && carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
       state.cyanEntityWidth = holdingEntity.width();
       state.cyanEntityHeight = holdingEntity.height();
-      state.cyanEntityPos = result.getPos();
+      state.cyanEntityPos = result.getLocation();
     }
     if (!player.isCreative() && (carryingToolData != null)) {
       return state;
     }
     if (result instanceof EntityHitResult entityHitResult) {
       final Entity entity = entityHitResult.getEntity();
-      state.redEntityShape = VoxelShapes.cuboid(entity.getBoundingBox());
+      state.redEntityShape = Shapes.create(entity.getBoundingBox());
     }
 
     return state;
@@ -404,28 +419,28 @@ public class CarryingToolItem extends BlockToolItem
 
   @Environment(EnvType.CLIENT)
   @Override
-  public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext context, OutlineRenderState outlineRenderState) {
+  public boolean renderBlockOutline(Player player, ItemStack itemStack, WorldRenderContext context, BlockOutlineRenderState outlineRenderState) {
     final MishangRenderState data = context.worldState().getData(MISHANG_BLOCK_OUTLINE);
     if (!(data instanceof CarryingToolState state)) return true;
 
-    final MatrixStack matrices = context.matrices();
-    final VertexConsumer vertexConsumer = context.consumers().getBuffer(RenderLayers.lines());
-    final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
+    final PoseStack matrices = context.matrices();
+    final VertexConsumer vertexConsumer = context.consumers().getBuffer(RenderTypes.lines());
+    final Vec3 cameraPos = context.worldState().cameraRenderState.pos;
 
     if (state.cyanShape != null && state.cyanPos != null) {
-      VertexRendering.drawOutline(matrices, vertexConsumer, state.cyanShape, state.cyanPos.getX() - cameraPos.x, state.cyanPos.getY() - cameraPos.y, state.cyanPos.getZ() - cameraPos.z, OUTLINE_COLOR_CYAN, MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
+      ShapeRenderer.renderShape(matrices, vertexConsumer, state.cyanShape, state.cyanPos.getX() - cameraPos.x, state.cyanPos.getY() - cameraPos.y, state.cyanPos.getZ() - cameraPos.z, OUTLINE_COLOR_CYAN, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
 
     if (state.blueShape != null && state.bluePos != null) {
-      VertexRendering.drawOutline(matrices, vertexConsumer, state.blueShape, state.bluePos.getX() - cameraPos.x, state.bluePos.getY() - cameraPos.y, state.bluePos.getZ() - cameraPos.z, OUTLINE_COLOR_AO, MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
+      ShapeRenderer.renderShape(matrices, vertexConsumer, state.blueShape, state.bluePos.getX() - cameraPos.x, state.bluePos.getY() - cameraPos.y, state.bluePos.getZ() - cameraPos.z, OUTLINE_COLOR_AO, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
 
     if (state.redShape != null && state.redPos != null) {
-      VertexRendering.drawOutline(matrices, vertexConsumer, state.redShape, state.redPos.getX() - cameraPos.x, state.redPos.getY() - cameraPos.y, state.redPos.getZ() - cameraPos.z, OUTLINE_COLOR_AKA, MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
+      ShapeRenderer.renderShape(matrices, vertexConsumer, state.redShape, state.redPos.getX() - cameraPos.x, state.redPos.getY() - cameraPos.y, state.redPos.getZ() - cameraPos.z, OUTLINE_COLOR_AKA, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
 
     if (state.redShape != null && state.orangePos != null) {
-      VertexRendering.drawOutline(matrices, vertexConsumer, state.orangeShape, state.orangePos.getX() - cameraPos.x, state.orangePos.getY() - cameraPos.y, state.orangePos.getZ() - cameraPos.z, OUTLINE_COLOR_ORANGE, MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
+      ShapeRenderer.renderShape(matrices, vertexConsumer, state.orangeShape, state.orangePos.getX() - cameraPos.x, state.orangePos.getY() - cameraPos.y, state.orangePos.getZ() - cameraPos.z, OUTLINE_COLOR_ORANGE, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
 
     return false;
@@ -433,23 +448,23 @@ public class CarryingToolItem extends BlockToolItem
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void renderBeforeOutline(ClientPlayerEntity player, ItemStack stack, WorldRenderContext context) {
+  public void renderBeforeOutline(LocalPlayer player, ItemStack stack, WorldRenderContext context) {
     // 只在使用主手且有权限时持有此物品时进行渲染。
     final MishangRenderState data = context.worldState().getData(MISHANG_BLOCK_OUTLINE);
     if (!(data instanceof CarryingToolState state)) return;
 
-    final MatrixStack matrices = context.matrices();
-    final VertexConsumer vertexConsumer = context.consumers().getBuffer(RenderLayers.lines());
-    final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
+    final PoseStack matrices = context.matrices();
+    final VertexConsumer vertexConsumer = context.consumers().getBuffer(RenderTypes.lines());
+    final Vec3 cameraPos = context.worldState().cameraRenderState.pos;
 
     if (state.cyanEntityPos != null) {
       final float width = state.cyanEntityWidth;
       final float height = state.cyanEntityHeight;
-      final Vec3d pos = state.cyanEntityPos;
-      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(pos.x - width / 2, pos.y, pos.z - width / 2, pos.x + width / 2, pos.y + height, pos.z + width / 2), -cameraPos.x, -cameraPos.y, -cameraPos.z, OUTLINE_COLOR_CYAN, MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
+      final Vec3 pos = state.cyanEntityPos;
+      ShapeRenderer.renderShape(matrices, vertexConsumer, Shapes.box(pos.x - width / 2, pos.y, pos.z - width / 2, pos.x + width / 2, pos.y + height, pos.z + width / 2), -cameraPos.x, -cameraPos.y, -cameraPos.z, OUTLINE_COLOR_CYAN, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
     if (state.redEntityShape != null) {
-      VertexRendering.drawOutline(matrices, vertexConsumer, state.redEntityShape, -cameraPos.x, -cameraPos.y, -cameraPos.z, OUTLINE_COLOR_AKA, MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
+      ShapeRenderer.renderShape(matrices, vertexConsumer, state.redEntityShape, -cameraPos.x, -cameraPos.y, -cameraPos.z, OUTLINE_COLOR_AKA, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
   }
 }

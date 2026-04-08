@@ -3,17 +3,17 @@ package pers.solid.mishang.uc.data;
 import com.google.common.collect.ImmutableMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.client.data.*;
-import net.minecraft.client.render.model.BlockStateModel;
-import net.minecraft.client.render.model.SimpleBlockStateModel;
-import net.minecraft.client.render.model.WeightedBlockStateModel;
-import net.minecraft.client.render.model.json.BlockModelDefinition;
-import net.minecraft.client.render.model.json.ModelVariant;
-import net.minecraft.client.render.model.json.ModelVariantOperator;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.Pool;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerator;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.resources.model.WeightedVariants;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.random.WeightedList;
+import net.minecraft.world.level.block.Block;
 import pers.solid.mishang.uc.MishangucProperties;
 import pers.solid.mishang.uc.block.MishangucBlock;
 
@@ -31,18 +31,17 @@ public final class ModelHelper {
    * @param uvlock          是否锁定纹理。
    * @return 方块状态。
    */
-  @NotNull
-  public static BlockModelDefinitionCreator stateForHorizontalCornerFacingBlock(@NotNull Block block, @NotNull Identifier modelIdentifier, boolean uvlock) {
-    return VariantsBlockModelDefinitionCreator.of(block, BlockStateModelGenerator.createWeightedVariant(modelIdentifier)).apply(BlockStateVariantMap.operations(MishangucProperties.HORIZONTAL_CORNER_FACING).generate(direction -> ModelVariantOperator.ROTATION_Y.withValue(direction.asAxisRotationCCW45()).then(ModelVariantOperator.UV_LOCK.withValue(uvlock))));
+  public static BlockModelDefinitionGenerator stateForHorizontalCornerFacingBlock(Block block, Identifier modelIdentifier, boolean uvlock) {
+    return MultiVariantGenerator.dispatch(block, BlockModelGenerators.plainVariant(modelIdentifier)).with(PropertyDispatch.modify(MishangucProperties.HORIZONTAL_CORNER_FACING).generate(direction -> VariantMutator.Y_ROT.withValue(direction.asAxisRotationCCW45()).then(VariantMutator.UV_LOCK.withValue(uvlock))));
   }
 
-  public static BlockModelDefinition composeStateForSlab(@NotNull BlockModelDefinition modelForFull) {
-    final Optional<BlockModelDefinition.Variants> simpleModels = modelForFull.simpleModels();
-    final Optional<BlockModelDefinition.Variants> newSimpleModels;
+  public static BlockModelDefinition composeStateForSlab(BlockModelDefinition modelForFull) {
+    final Optional<BlockModelDefinition.SimpleModelSelectors> simpleModels = modelForFull.simpleModels();
+    final Optional<BlockModelDefinition.SimpleModelSelectors> newSimpleModels;
     if (simpleModels.isEmpty()) {
       newSimpleModels = Optional.empty();
     } else {
-      final BlockModelDefinition.Variants variants = simpleModels.get();
+      final BlockModelDefinition.SimpleModelSelectors variants = simpleModels.get();
       final Map<String, BlockStateModel.Unbaked> models = variants.models();
       final ImmutableMap.Builder<String, BlockStateModel.Unbaked> newModelsBuilder = new ImmutableMap.Builder<>();
 
@@ -50,55 +49,55 @@ public final class ModelHelper {
         final String key = entry.getKey();
         final BlockStateModel.Unbaked unbaked = entry.getValue();
         newModelsBuilder.put(key.isEmpty() ? "type=bottom" : key + ",type=bottom", unbaked);
-        newModelsBuilder.put(key.isEmpty() ? "type=top" : key + ",type=top", transformUnbakedModel(unbaked, modelVariant -> modelVariant.withModel(modelVariant.modelId().withSuffixedPath("_top"))));
-        newModelsBuilder.put(key.isEmpty() ? "type=double" : key + ",type=double", transformUnbakedModel(unbaked, modelVariant -> modelVariant.withModel(modelVariant.modelId().withPath(s -> s.endsWith("_slab") ? s.replace("_slab", "_block") : s.replace("_slab", "")))));
+        newModelsBuilder.put(key.isEmpty() ? "type=top" : key + ",type=top", transformUnbakedModel(unbaked, modelVariant -> modelVariant.withModel(modelVariant.modelLocation().withSuffix("_top"))));
+        newModelsBuilder.put(key.isEmpty() ? "type=double" : key + ",type=double", transformUnbakedModel(unbaked, modelVariant -> modelVariant.withModel(modelVariant.modelLocation().withPath(s -> s.endsWith("_slab") ? s.replace("_slab", "_block") : s.replace("_slab", "")))));
       }
 
-      newSimpleModels = Optional.of(new BlockModelDefinition.Variants(newModelsBuilder.build()));
+      newSimpleModels = Optional.of(new BlockModelDefinition.SimpleModelSelectors(newModelsBuilder.build()));
     }
 
     // mubltipart 的部分，目前不用动
-    return new BlockModelDefinition(newSimpleModels, modelForFull.multipartModel());
+    return new BlockModelDefinition(newSimpleModels, modelForFull.multiPart());
   }
 
-  public static BlockStateModel.Unbaked transformUnbakedModel(BlockStateModel.Unbaked unbaked, UnaryOperator<ModelVariant> operator) {
-    if (unbaked instanceof SimpleBlockStateModel.Unbaked(ModelVariant variant)) {
-      return new SimpleBlockStateModel.Unbaked(operator.apply(variant));
-    } else if (unbaked instanceof WeightedBlockStateModel.Unbaked(Pool<BlockStateModel.Unbaked> entries)) {
-      return new WeightedBlockStateModel.Unbaked(entries.transform(unbaked1 -> transformUnbakedModel(unbaked1, operator)));
+  public static BlockStateModel.Unbaked transformUnbakedModel(BlockStateModel.Unbaked unbaked, UnaryOperator<Variant> operator) {
+    if (unbaked instanceof SingleVariant.Unbaked(Variant variant)) {
+      return new SingleVariant.Unbaked(operator.apply(variant));
+    } else if (unbaked instanceof WeightedVariants.Unbaked(WeightedList<BlockStateModel.Unbaked> entries)) {
+      return new WeightedVariants.Unbaked(entries.map(unbaked1 -> transformUnbakedModel(unbaked1, operator)));
     } else {
       return unbaked;
     }
   }
 
-  public static BlockModelDefinitionCreator composeStateForSlab(@NotNull BlockModelDefinitionCreator stateForFull) {
+  public static BlockModelDefinitionGenerator composeStateForSlab(BlockModelDefinitionGenerator stateForFull) {
     return new Forwarding(stateForFull);
   }
 
   public static Identifier getTextureOf(Block block) {
     if (block instanceof MishangucBlock mishangucBlock) {
-      return mishangucBlock.getTexture(TextureKey.TEXTURE);
+      return mishangucBlock.getTexture(TextureSlot.TEXTURE);
     } else {
-      return TextureMap.getId(block);
+      return TextureMapping.getBlockTexture(block);
     }
   }
 
   @Environment(EnvType.CLIENT)
-  private static class Forwarding implements BlockModelDefinitionCreator {
-    private final @NotNull BlockModelDefinitionCreator stateForFull;
+  private static class Forwarding implements BlockModelDefinitionGenerator {
+    private final BlockModelDefinitionGenerator stateForFull;
 
-    public Forwarding(@NotNull BlockModelDefinitionCreator stateForFull) {
+    public Forwarding(BlockModelDefinitionGenerator stateForFull) {
       this.stateForFull = stateForFull;
     }
 
     @Override
-    public Block getBlock() {
-      return stateForFull.getBlock();
+    public Block block() {
+      return stateForFull.block();
     }
 
     @Override
-    public BlockModelDefinition createBlockModelDefinition() {
-      return composeStateForSlab(stateForFull.createBlockModelDefinition());
+    public BlockModelDefinition create() {
+      return composeStateForSlab(stateForFull.create());
     }
   }
 }

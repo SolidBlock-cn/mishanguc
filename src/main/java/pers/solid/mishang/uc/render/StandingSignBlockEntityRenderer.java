@@ -1,17 +1,17 @@
 package pers.solid.mishang.uc.render;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.booleans.BooleanSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.command.ModelCommandRenderer;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.block.StandingSignBlock;
@@ -20,30 +20,30 @@ import pers.solid.mishang.uc.text.TextContext;
 
 @ApiStatus.AvailableSince("1.0.2")
 @Environment(EnvType.CLIENT)
-public record StandingSignBlockEntityRenderer<T extends StandingSignBlockEntity>(BlockEntityRendererFactory.Context ctx) implements BlockEntityRenderer<T, StandingBlockEntityRenderState> {
+public record StandingSignBlockEntityRenderer<T extends StandingSignBlockEntity>(BlockEntityRendererProvider.Context ctx) implements BlockEntityRenderer<T, StandingBlockEntityRenderState> {
 
   @Override
-  public void render(StandingBlockEntityRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState) {
+  public void submit(StandingBlockEntityRenderState state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState) {
     final BooleanSet glowing = state.glowing;
     matrices.translate(0.5, 0.75, 0.5);
     final BlockState blockState = state.blockState;
-    final int rotation = blockState.get(StandingSignBlock.ROTATION);
-    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-rotation * 22.5f));
+    final int rotation = blockState.getValue(StandingSignBlock.ROTATION);
+    matrices.mulPose(Axis.YP.rotationDegrees(-rotation * 22.5f));
     matrices.scale(1 / 16f, -1 / 16f, 1 / 16f);
 
-    matrices.push();
+    matrices.pushPose();
     matrices.translate(0, 0, 0.5125);
     for (TextContext textContext : state.frontTexts) {
-      textContext.draw(ctx.textRenderer(), matrices, queue, glowing.contains(true) ? 15728880 : state.lightmapCoordinates, 16, state.height);
+      textContext.draw(ctx.font(), matrices, queue, glowing.contains(true) ? 15728880 : state.lightCoords, 16, state.height);
     }
-    matrices.pop();
-    matrices.push();
+    matrices.popPose();
+    matrices.pushPose();
     matrices.translate(0, 0, -0.5125);
-    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+    matrices.mulPose(Axis.YP.rotationDegrees(180));
     for (TextContext textContext : state.backTexts) {
-      textContext.draw(ctx.textRenderer(), matrices, queue, glowing.contains(true) ? 15728880 : state.lightmapCoordinates, 16, state.height);
+      textContext.draw(ctx.font(), matrices, queue, glowing.contains(true) ? 15728880 : state.lightCoords, 16, state.height);
     }
-    matrices.pop();
+    matrices.popPose();
   }
 
   @Override
@@ -52,8 +52,8 @@ public record StandingSignBlockEntityRenderer<T extends StandingSignBlockEntity>
   }
 
   @Override
-  public void updateRenderState(T blockEntity, StandingBlockEntityRenderState state, float tickProgress, Vec3d cameraPos, @Nullable ModelCommandRenderer.CrumblingOverlayCommand crumblingOverlay) {
-    BlockEntityRenderer.super.updateRenderState(blockEntity, state, tickProgress, cameraPos, crumblingOverlay);
+  public void extractRenderState(T blockEntity, StandingBlockEntityRenderState state, float tickProgress, Vec3 cameraPos, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
+    BlockEntityRenderer.super.extractRenderState(blockEntity, state, tickProgress, cameraPos, crumblingOverlay);
     state.backTexts = blockEntity.backTexts;
     state.frontTexts = blockEntity.frontTexts;
     state.height = blockEntity.getHeight();

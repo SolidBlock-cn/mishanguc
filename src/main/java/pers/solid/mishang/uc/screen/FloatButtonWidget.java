@@ -1,25 +1,24 @@
 package pers.solid.mishang.uc.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
 import it.unimi.dsi.fastutil.floats.Float2ObjectFunction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.DrawnTextConsumer;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.input.AbstractInput;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.MutableText;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ActiveTextCollector;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import pers.solid.mishang.uc.MishangUtils;
@@ -35,7 +34,7 @@ import static pers.solid.mishang.uc.screen.MishangScreenUtil.*;
  * 用于处理浮点数的按钮。按下鼠标时增大，但是按住 shift 则会减小。滚动鼠标滚轮也会减小。
  */
 @Environment(EnvType.CLIENT)
-public class FloatButtonWidget extends ButtonWidget.Text implements TooltipUpdated {
+public class FloatButtonWidget extends Button.Plain implements TooltipUpdated {
   private final Function<FloatButtonWidget, @Nullable Float> valueGetter;
   private final ValueConsumer valueSetter;
   private boolean sliderFocused;
@@ -72,11 +71,11 @@ public class FloatButtonWidget extends ButtonWidget.Text implements TooltipUpdat
    */
   public float max = Float.POSITIVE_INFINITY;
 
-  public static final Float2ObjectFunction<MutableText> DEFAULT_VALUE_NARRATOR = value -> TextBridge.literal(MishangUtils.numberToString(value));
-  private Float2ObjectFunction<MutableText> valueToText = DEFAULT_VALUE_NARRATOR;
+  public static final Float2ObjectFunction<MutableComponent> DEFAULT_VALUE_NARRATOR = value -> TextBridge.literal(MishangUtils.numberToString(value));
+  private Float2ObjectFunction<MutableComponent> valueToText = DEFAULT_VALUE_NARRATOR;
 
-  public FloatButtonWidget(int x, int y, int width, int height, net.minecraft.text.Text message, Function<FloatButtonWidget, Float> valueGetter, ValueConsumer valueSetter, PressAction onPress) {
-    super(x, y, width, height, message, onPress, ButtonWidget.DEFAULT_NARRATION_SUPPLIER);
+  public FloatButtonWidget(int x, int y, int width, int height, net.minecraft.network.chat.Component message, Function<FloatButtonWidget, Float> valueGetter, ValueConsumer valueSetter, OnPress onPress) {
+    super(x, y, width, height, message, onPress, Button.DEFAULT_NARRATION);
     this.valueGetter = valueGetter;
     this.valueSetter = valueSetter;
     updateTooltip();
@@ -86,10 +85,10 @@ public class FloatButtonWidget extends ButtonWidget.Text implements TooltipUpdat
   public void updateTooltip() {
     final Float value = getValue();
     if (value != null) {
-      final MutableText valueText = valueToText.get(value.floatValue());
-      setTooltip(Tooltip.of(ScreenTexts.composeGenericOptionText(getSummaryMessage(), valueText), TextBridge.translatable("narration.mishanguc.button.current_value", valueText)));
+      final MutableComponent valueText = valueToText.get(value.floatValue());
+      setTooltip(Tooltip.create(CommonComponents.optionNameValue(getSummaryMessage(), valueText), TextBridge.translatable("narration.mishanguc.button.current_value", valueText)));
     } else {
-      setTooltip(Tooltip.of(getSummaryMessage(), TextBridge.empty()));
+      setTooltip(Tooltip.create(getSummaryMessage(), TextBridge.empty()));
     }
   }
 
@@ -131,33 +130,33 @@ public class FloatButtonWidget extends ButtonWidget.Text implements TooltipUpdat
   }
 
   @Override
-  protected void drawLabel(DrawnTextConsumer drawer) {
+  protected void renderDefaultLabel(ActiveTextCollector drawer) {
     // 对应 1.21.10 之前的 drawScrollableText
-    if (!sliderFocused || Util.getMeasuringTimeMs() % 1000 > 500) {
+    if (!sliderFocused || Util.getMillis() % 1000 > 500) {
       // 在 sliderFocused 的情况下，文字应该闪烁
-      super.drawLabel(drawer);
+      super.renderDefaultLabel(drawer);
     }
   }
 
   @Override
-  public void onPress(AbstractInput input) {
-    if (input instanceof Click click) {
+  public void onPress(InputWithModifiers input) {
+    if (input instanceof MouseButtonEvent click) {
       final int button = click.button();
       switch (button) { // 这种情况下直接采用了 onPress，所以直接略。
         case 0, 1 -> setValue(value -> value
-            + (input.hasShift() || button == 1 ? -1 : 1)
+            + (input.hasShiftDown() || button == 1 ? -1 : 1)
             * step
-            * (input.hasCtrl() ? 8 : 1)
-            * (input.hasAlt() ? 0.125f : 1));
+            * (input.hasControlDown() ? 8 : 1)
+            * (input.hasAltDown() ? 0.125f : 1));
         case 2 -> setAllSameValue(defaultValue);
       }
     }
   }
 
   @Override
-  public boolean mouseClicked(Click click, boolean doubled) {
+  public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
     if (this.active && this.visible && isMouseOver(click.x(), click.y())) {
-      this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+      this.playDownSound(Minecraft.getInstance().getSoundManager());
       onPress(click);
       return true;
     }
@@ -177,16 +176,16 @@ public class FloatButtonWidget extends ButtonWidget.Text implements TooltipUpdat
   }
 
   /**
-   * @see net.minecraft.client.gui.widget.SliderWidget#keyPressed
+   * @see net.minecraft.client.gui.components.AbstractSliderButton#keyPressed
    */
 
-  public boolean keyPressed(KeyInput input) {
-    if (!input.isEnterOrSpace()) {
+  public boolean keyPressed(KeyEvent input) {
+    if (!input.isSelection()) {
       if (this.sliderFocused) {
         boolean decreases = input.isLeft() || input.isDown();
-        final var window = MinecraftClient.getInstance().getWindow();
-        if (input.isLeft() && InputUtil.isKeyPressed(window, GLFW.GLFW_KEY_RIGHT)
-            || input.isRight() && InputUtil.isKeyPressed(window, InputUtil.GLFW_KEY_LEFT)) {
+        final var window = Minecraft.getInstance().getWindow();
+        if (input.isLeft() && InputConstants.isKeyDown(window, GLFW.GLFW_KEY_RIGHT)
+            || input.isRight() && InputConstants.isKeyDown(window, InputConstants.KEY_LEFT)) {
           // 当同时按下左右时，设为默认值。
           setAllSameValue(defaultValue);
           return true;
@@ -194,40 +193,40 @@ public class FloatButtonWidget extends ButtonWidget.Text implements TooltipUpdat
           final float multiplier = input.isRight() || input.isLeft() ? rightArrowStepMultiplier : upArrowStepMultiplier;
           float sign = decreases ? -1.0F : 1.0F;
           setValue(value -> value + sign
-              * (input.hasShift() ? -1 : 1)
-              * (input.hasCtrl() ? 8 : 1)
+              * (input.hasShiftDown() ? -1 : 1)
+              * (input.hasControlDown() ? 8 : 1)
               * step * multiplier
-              * (input.hasAlt() ? 0.125f : 1));
+              * (input.hasAltDown() ? 0.125f : 1));
           return true;
         }
       }
       return false;
     } else {
       this.sliderFocused = getValue() != null && !this.sliderFocused;
-      this.playDownSound(MinecraftClient.getInstance().getSoundManager());
+      this.playDownSound(Minecraft.getInstance().getSoundManager());
       return true;
     }
   }
 
   @Override
-  public net.minecraft.text.Text getMessage() {
+  public net.minecraft.network.chat.Component getMessage() {
     final Float value = getValue();
     if (renderedNameSupplier != null) {
-      final net.minecraft.text.Text apply = renderedNameSupplier.apply(value, valueToText.apply(value));
+      final net.minecraft.network.chat.Component apply = renderedNameSupplier.apply(value, valueToText.apply(value));
       if (apply != null) return apply;
     }
     if (value == null || value == defaultValue) {
       return super.getMessage();
     } else {
-      return TextBridge.empty().append(super.getMessage()).formatted(Formatting.ITALIC);
+      return TextBridge.empty().append(super.getMessage()).withStyle(ChatFormatting.ITALIC);
     }
   }
 
   @Environment(EnvType.CLIENT)
-  public interface NameRenderer extends BiFunction<@Nullable Float, net.minecraft.text.Text, net.minecraft.text.@Nullable Text> {
+  public interface NameRenderer extends BiFunction<@Nullable Float, net.minecraft.network.chat.Component, net.minecraft.network.chat.@Nullable Component> {
     @Override
     @Nullable
-    net.minecraft.text.Text apply(@Nullable Float value, net.minecraft.text.Text valueText);
+    net.minecraft.network.chat.Component apply(@Nullable Float value, net.minecraft.network.chat.Component valueText);
   }
 
   public NameRenderer renderedNameSupplier = null;
@@ -238,12 +237,12 @@ public class FloatButtonWidget extends ButtonWidget.Text implements TooltipUpdat
   }
 
 
-  public net.minecraft.text.Text getSummaryMessage() {
+  public net.minecraft.network.chat.Component getSummaryMessage() {
     return super.getMessage();
   }
 
   /**
-   * @see net.minecraft.client.gui.widget.SliderWidget#setFocused(boolean)
+   * @see net.minecraft.client.gui.components.AbstractSliderButton#setFocused(boolean)
    */
   public void setFocused(boolean focused) {
     super.setFocused(focused);
@@ -254,31 +253,31 @@ public class FloatButtonWidget extends ButtonWidget.Text implements TooltipUpdat
   }
 
   @Override
-  protected MutableText getNarrationMessage() {
-    return getNarrationMessage(getSummaryMessage());
+  protected MutableComponent createNarrationMessage() {
+    return wrapDefaultNarrationMessage(getSummaryMessage());
   }
 
   @Override
-  protected void appendDefaultNarrations(NarrationMessageBuilder builder) {
-    super.appendDefaultNarrations(builder);
+  protected void defaultButtonNarrationText(NarrationElementOutput builder) {
+    super.defaultButtonNarrationText(builder);
     if (getValue() == null) {
-      builder.put(NarrationPart.USAGE, TextBridge.translatable("narration.mishanguc.button.null"));
+      builder.add(NarratedElementType.USAGE, TextBridge.translatable("narration.mishanguc.button.null"));
     } else if (sliderFocused) {
-      builder.put(NarrationPart.USAGE, TextBridge.translatable("narration.mishanguc.button.float_usage.focused"));
+      builder.add(NarratedElementType.USAGE, TextBridge.translatable("narration.mishanguc.button.float_usage.focused"));
     } else {
-      builder.put(NarrationPart.USAGE, TextBridge.translatable("narration.mishanguc.button.float_usage"));
+      builder.add(NarratedElementType.USAGE, TextBridge.translatable("narration.mishanguc.button.float_usage"));
     }
   }
 
   @Contract(value = "_ -> this", mutates = "this")
-  protected FloatButtonWidget nameValueAs(Float2ObjectFunction<MutableText> valueToText) {
+  protected FloatButtonWidget nameValueAs(Float2ObjectFunction<MutableComponent> valueToText) {
     this.valueToText = valueToText;
     return this;
   }
 
   @FunctionalInterface
-  public interface ValueConsumer extends BiConsumer<Float2FloatFunction, @NotNull Float> {
+  public interface ValueConsumer extends BiConsumer<Float2FloatFunction, Float> {
     @Override
-    void accept(Float2FloatFunction valueFunction, @NotNull Float original);
+    void accept(Float2FloatFunction valueFunction, Float original);
   }
 }

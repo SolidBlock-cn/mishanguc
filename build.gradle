@@ -44,11 +44,17 @@ repositories {
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.21.11:2025.12.20@zip")
+    }
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+    // Mod Menu
+    modApi "com.terraformersmc:modmenu:$project.modmenu_version"
 
     if (project.hasProperty('imblocker_version') && !project.imblocker_version.isEmpty()) {
         modRuntimeOnly "maven.modrinth:imblocker-original:$project.imblocker_version"

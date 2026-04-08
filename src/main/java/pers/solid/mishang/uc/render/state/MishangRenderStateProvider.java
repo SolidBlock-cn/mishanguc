@@ -6,13 +6,13 @@ import net.fabricmc.fabric.api.client.rendering.v1.FabricRenderState;
 import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.state.WorldRenderState;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.state.LevelRenderState;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 
@@ -36,12 +36,12 @@ public interface MishangRenderStateProvider {
 
 
   WorldRenderEvents.AfterBlockOutlineExtraction MISHANG_EXTRACTION = (context, result) -> {
-    final ClientPlayerEntity player = MinecraftClient.getInstance().player;
+    final LocalPlayer player = Minecraft.getInstance().player;
     if (player == null) return;
-    final WorldRenderState worldRenderState = context.worldState();
+    final LevelRenderState worldRenderState = context.worldState();
     worldRenderState.setData(HAND_STACK, null);
-    for (final Hand hand : new Hand[]{Hand.MAIN_HAND, Hand.OFF_HAND}) {
-      final ItemStack stackInHand = player.getStackInHand(hand);
+    for (final InteractionHand hand : new InteractionHand[]{InteractionHand.MAIN_HAND, InteractionHand.OFF_HAND}) {
+      final ItemStack stackInHand = player.getItemInHand(hand);
       final Item item = stackInHand.getItem();
       if (item instanceof final MishangRenderStateProvider mishangRenderStateProvider) {
         worldRenderState.setData(HAND_STACK, stackInHand);
@@ -59,7 +59,7 @@ public interface MishangRenderStateProvider {
    * @param stack  玩家手中触发了此渲染逻辑的物品堆。
    */
   @Nullable
-  default MishangRenderState getMishangRenderState(ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  default MishangRenderState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
     return null;
   }
 }

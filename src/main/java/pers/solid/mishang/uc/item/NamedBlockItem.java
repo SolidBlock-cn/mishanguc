@@ -1,15 +1,15 @@
 package pers.solid.mishang.uc.item;
 
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.ColoredBlock;
 import pers.solid.mishang.uc.block.ColoredGlassHandrailBlock;
@@ -24,13 +24,13 @@ import pers.solid.mishang.uc.util.TextBridge;
  */
 public class NamedBlockItem extends BlockItem {
 
-  public NamedBlockItem(Block block, Settings settings) {
+  public NamedBlockItem(Block block, Properties settings) {
     super(block, settings);
   }
 
 
   @Override
-  public Text getName(ItemStack stack) {
+  public Component getName(ItemStack stack) {
     final Block block = getBlock();
     if (getBlock() instanceof ColoredBlock) {
       final Integer color = stack.get(MishangucComponents.COLOR);
@@ -45,36 +45,36 @@ public class NamedBlockItem extends BlockItem {
     return block.getName();
   }
 
-  public static int getDependentColor(ItemPlacementContext context) {
-    final World world = context.getWorld();
+  public static int getDependentColor(BlockPlaceContext context) {
+    final Level world = context.getLevel();
     final int dependentColor;
     final BlockPos dependingPos = ((ItemUsageContextInvoker) context).invokeGetHitResult().getBlockPos();
     if (world.getBlockEntity(dependingPos) instanceof ColoredBlockEntity dependingColoredBlockEntity) {
       dependentColor = dependingColoredBlockEntity.getColor();
     } else {
-      dependentColor = world.getBlockState(dependingPos).getMapColor(world, dependingPos).color;
+      dependentColor = world.getBlockState(dependingPos).getMapColor(world, dependingPos).col;
     }
     return dependentColor;
   }
 
   @Override
-  protected boolean place(ItemPlacementContext context, BlockState state) {
-    final ItemStack stack = context.getStack();
+  protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
+    final ItemStack stack = context.getItemInHand();
     if (getBlock() instanceof ColoredBlock) {
       final Integer color = stack.get(MishangucComponents.COLOR);
-      final World world = context.getWorld();
+      final Level world = context.getLevel();
       int dependentColor = -1;
       if (color == null) {
         dependentColor = getDependentColor(context);
       }
-      final boolean place = super.place(context, state);
-      final BlockEntity placedEntity = world.getBlockEntity(context.getBlockPos());
+      final boolean place = super.placeBlock(context, state);
+      final BlockEntity placedEntity = world.getBlockEntity(context.getClickedPos());
       if (color == null && placedEntity instanceof final ColoredBlockEntity placedColoredBlockEntity) {
         placedColoredBlockEntity.setColor(dependentColor);
       }
       return place;
     } else {
-      return super.place(context, state);
+      return super.placeBlock(context, state);
     }
   }
 }

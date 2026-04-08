@@ -2,12 +2,12 @@ package pers.solid.mishang.uc.data;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.data.TextureKey;
-import net.minecraft.client.data.TextureMap;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TextureSlot;
 
 @Environment(EnvType.CLIENT)
-public class FasterTextureMap extends TextureMap implements Cloneable {
-  public FasterTextureMap varP(TextureKey textureKey, String val) {
+public class FasterTextureMap extends TextureMapping implements Cloneable {
+  public FasterTextureMap varP(TextureSlot textureKey, String val) {
     put(textureKey, MishangucModels.texture(val));
     return this;
   }
@@ -21,7 +21,7 @@ public class FasterTextureMap extends TextureMap implements Cloneable {
   }
 
   public FasterTextureMap particle(String val) {
-    return varP(TextureKey.PARTICLE, val);
+    return varP(TextureSlot.PARTICLE, val);
   }
 
   public FasterTextureMap lineSide(String val) {

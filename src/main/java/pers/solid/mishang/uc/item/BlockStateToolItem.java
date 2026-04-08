@@ -1,25 +1,24 @@
 package pers.solid.mishang.uc.item;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.TooltipDisplayComponent;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Property;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -30,32 +29,32 @@ import java.util.List;
 
 public class BlockStateToolItem extends BlockToolItem implements MishangucItem, WithMishangTooltip {
 
-  public BlockStateToolItem(Settings settings, @Nullable Boolean includesFluid) {
+  public BlockStateToolItem(Properties settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
 
   public static void broadcastProperties(
-      BlockPos blockPos, PlayerEntity player, BlockState blockState) {
+      BlockPos blockPos, Player player, BlockState blockState) {
     // 吐槽：为什么 Block#getName 要注解为 @Environment(EnvType.CLIENT)，导致这些东西都只能在客户端使用。
     final Collection<Property<?>> properties = blockState.getProperties();
     if (properties.isEmpty()) {
-      player.sendMessage(
-          TextBridge.translatable("debug.mishanguc.blockStates.none", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getBlock().getName().formatted(Formatting.BOLD))
-              .formatted(Formatting.RED),
+      player.displayClientMessage(
+          TextBridge.translatable("debug.mishanguc.blockStates.none", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getBlock().getName().withStyle(ChatFormatting.BOLD))
+              .withStyle(ChatFormatting.RED),
           false);
     } else {
-      player.sendMessage(
-          TextBridge.translatable("debug.mishanguc.blockStates", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getBlock().getName().formatted(Formatting.BOLD))
-              .formatted(Formatting.YELLOW),
+      player.displayClientMessage(
+          TextBridge.translatable("debug.mishanguc.blockStates", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), blockState.getBlock().getName().withStyle(ChatFormatting.BOLD))
+              .withStyle(ChatFormatting.YELLOW),
           false);
     }
     for (Property<?> property : properties) {
-      final MutableText value = getFormattedValue(blockState, property);
-      player.sendMessage(
+      final MutableComponent value = getFormattedValue(blockState, property);
+      player.displayClientMessage(
           TextBridge.literal("  ")
               .append(
                   TextBridge.literal(property.getName())
-                      .styled(style -> style.withColor(0xcccccc)))
+                      .withStyle(style -> style.withColor(0xcccccc)))
               .append(" = ")
               .append(value),
           false);
@@ -63,76 +62,75 @@ public class BlockStateToolItem extends BlockToolItem implements MishangucItem, 
   }
 
   /**
-   * 本方法的目的是考虑到泛型。如果内联，则 {@link Property#name(Comparable)} 会因为泛型而存在问题。
+   * 本方法的目的是考虑到泛型。如果内联，则 {@link Property#getName(Comparable)} 会因为泛型而存在问题。
    */
-  @NotNull
-  private static <T extends Comparable<T>> MutableText getFormattedValue(BlockState blockState, Property<T> property) {
-    final T propertyValue = blockState.get(property);
-    final MutableText value = TextBridge.literal(property.name(propertyValue));
+  private static <T extends Comparable<T>> MutableComponent getFormattedValue(BlockState blockState, Property<T> property) {
+    final T propertyValue = blockState.getValue(property);
+    final MutableComponent value = TextBridge.literal(property.getName(propertyValue));
     if (property instanceof BooleanProperty) {
-      value.formatted(propertyValue == Boolean.TRUE ? Formatting.GREEN : Formatting.RED);
-    } else if (property instanceof IntProperty) {
-      value.styled(style -> style.withColor(0x00eedd));
+      value.withStyle(propertyValue == Boolean.TRUE ? ChatFormatting.GREEN : ChatFormatting.RED);
+    } else if (property instanceof IntegerProperty) {
+      value.withStyle(style -> style.withColor(0x00eedd));
     }
     return value;
   }
 
   @Override
-  public ActionResult useOnBlock(
-      ItemStack stack, PlayerEntity player,
-      World world,
+  public InteractionResult useOnBlock(
+      ItemStack stack, Player player,
+      Level world,
       BlockHitResult blockHitResult,
-      Hand hand,
+      InteractionHand hand,
       boolean fluidIncluded) {
-    if (world.isClient()) {
+    if (world.isClientSide()) {
       return getBlockStateOf(player, world, blockHitResult.getBlockPos(), fluidIncluded);
     } else {
-      return ActionResult.SUCCESS;
+      return InteractionResult.SUCCESS;
     }
   }
 
   @Override
-  public ActionResult beginAttackBlock(
-      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    if (!world.isClient()) return ActionResult.SUCCESS;
+  public InteractionResult beginAttackBlock(
+      ItemStack stack, Player player, Level world, InteractionHand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    if (!world.isClientSide()) return InteractionResult.SUCCESS;
     return getBlockStateOf(player, world, pos, fluidIncluded);
   }
 
-  public ActionResult getBlockStateOf(
-      PlayerEntity player, World world, BlockPos blockPos, boolean fluidIncluded) {
+  public InteractionResult getBlockStateOf(
+      Player player, Level world, BlockPos blockPos, boolean fluidIncluded) {
     BlockState blockState = world.getBlockState(blockPos);
     broadcastProperties(blockPos, player, blockState);
     if (fluidIncluded) {
       final FluidState fluidState = world.getFluidState(blockPos);
-      final int fluidLevel = fluidState.getLevel();
+      final int fluidLevel = fluidState.getAmount();
       if (fluidLevel != 0) {
-        player.sendMessage(
+        player.displayClientMessage(
             TextBridge.literal("  ")
                 .append(
                     TextBridge.translatable("debug.mishanguc.blockStates.fluidLevel")
-                        .styled(style -> style.withColor(0xcccccc)))
+                        .withStyle(style -> style.withColor(0xcccccc)))
                 .append(" = ")
                 .append(String.valueOf(fluidLevel)),
             false);
       }
     }
-    return ActionResult.SUCCESS;
+    return InteractionResult.SUCCESS;
   }
 
   @Override
-  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     tooltip.add(
-        TextBridge.translatable("item.mishanguc.block_state_tool.tooltip").formatted(Formatting.GRAY));
+        TextBridge.translatable("item.mishanguc.block_state_tool.tooltip").withStyle(ChatFormatting.GRAY));
     final Boolean includesFluid = includesFluid(stack);
-    if (stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.INCLUDES_FLUID)) {
+    if (stack.getOrDefault(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT).shows(MishangucComponents.INCLUDES_FLUID)) {
       if (includesFluid == null) {
         tooltip.add(
             TextBridge.translatable("item.mishanguc.block_state_tool.tooltip.includesFluidWhileSneaking")
-                .formatted(Formatting.GRAY));
+                .withStyle(ChatFormatting.GRAY));
       } else if (includesFluid) {
         tooltip.add(
             TextBridge.translatable("item.mishanguc.block_state_tool.tooltip.includesFluid")
-                .formatted(Formatting.GRAY));
+                .withStyle(ChatFormatting.GRAY));
       }
     }
   }

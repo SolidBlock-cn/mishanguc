@@ -3,11 +3,10 @@ package pers.solid.mishang.uc.text;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.InvalidIdentifierException;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.IdentifierException;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -18,7 +17,7 @@ public final class SpecialDrawableTypes {
 
   public static final SpecialDrawableType<SpecialDrawable> INVALID = register("invalid", (textContext, nbtCompound) -> SpecialDrawable.INVALID, (textContext, s) -> SpecialDrawable.INVALID);
 
-  public static final SpecialDrawableType<DebugTextSpecialDrawable> DEBUG_TEXT = register("debug_text", (textContext, nbtCompound) -> new DebugTextSpecialDrawable(nbtCompound.getString("text", "debug_text"), textContext), (textContext, s) -> new DebugTextSpecialDrawable(s, textContext));
+  public static final SpecialDrawableType<DebugTextSpecialDrawable> DEBUG_TEXT = register("debug_text", (textContext, nbtCompound) -> new DebugTextSpecialDrawable(nbtCompound.getStringOr("text", "debug_text"), textContext), (textContext, s) -> new DebugTextSpecialDrawable(s, textContext));
 
   public static final SpecialDrawableType<RectSpecialDrawable> RECT = register("rect", RectSpecialDrawable::fromNbt, RectSpecialDrawable::fromStringArgs);
 
@@ -32,14 +31,14 @@ public final class SpecialDrawableTypes {
   });
 
   public static final SpecialDrawableType<TextureSpecialDrawable> TEXTURE = register("texture", (textContext, nbt) -> {
-    final Identifier texture = Identifier.tryParse(nbt.getString("texture", null));
+    final Identifier texture = Identifier.tryParse(nbt.getStringOr("texture", null));
     return texture != null && TextureSpecialDrawable.isValidIdentifier(texture) ? new TextureSpecialDrawable(texture, textContext) : null;
   }, (textContext, args) -> {
     final Identifier identifier;
     try {
-      identifier = Identifier.of(args);
-    } catch (InvalidIdentifierException e) {
-      throw Identifier.COMMAND_EXCEPTION.create();
+      identifier = Identifier.parse(args);
+    } catch (IdentifierException e) {
+      throw Identifier.ERROR_INVALID.create();
     }
     if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
       try {
@@ -63,12 +62,12 @@ public final class SpecialDrawableTypes {
   private record Simple<S extends SpecialDrawable>(FromNbt<S> fromNbt, FromStringArgs<S> fromStringArgs) implements SpecialDrawableType<S> {
 
     @Override
-    public @Nullable S fromNbt(@NotNull TextContext textContext, @NotNull NbtCompound nbt) {
+    public @Nullable S fromNbt(TextContext textContext, CompoundTag nbt) {
       return fromNbt.fromNbt(textContext, nbt);
     }
 
     @Override
-    public @NotNull S fromStringArgs(@NotNull TextContext textContext, @NotNull String args) throws CommandSyntaxException {
+    public S fromStringArgs(TextContext textContext, String args) throws CommandSyntaxException {
       return fromStringArgs.fromStringArgs(textContext, args);
     }
   }
@@ -79,11 +78,11 @@ public final class SpecialDrawableTypes {
 
   @FunctionalInterface
   public interface FromNbt<S extends SpecialDrawable> {
-    @Nullable S fromNbt(@NotNull TextContext textContext, @NotNull NbtCompound nbt);
+    @Nullable S fromNbt(TextContext textContext, CompoundTag nbt);
   }
 
   @FunctionalInterface
   public interface FromStringArgs<S> {
-    @NotNull S fromStringArgs(@NotNull TextContext textContext, @NotNull String args) throws CommandSyntaxException;
+    S fromStringArgs(TextContext textContext, String args) throws CommandSyntaxException;
   }
 }

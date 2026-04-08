@@ -4,23 +4,19 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.fabricmc.fabric.api.tag.convention.v2.TagUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.recipe.RecipeExporter;
-import net.minecraft.data.recipe.RecipeGenerator;
-import net.minecraft.data.recipe.StonecuttingRecipeJsonBuilder;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.Items;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.recipes.*;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.Mishanguc;
@@ -32,13 +28,13 @@ import pers.solid.mishang.uc.item.MishangucItem;
 
 import java.util.List;
 
-public class MishangucRecipeGenerator extends RecipeGenerator {
+public class MishangucRecipeGenerator extends RecipeProvider {
 
-  protected MishangucRecipeGenerator(RegistryWrapper.WrapperLookup registries, RecipeExporter exporter) {
+  protected MishangucRecipeGenerator(HolderLookup.Provider registries, RecipeOutput exporter) {
     super(registries, exporter);
   }
 
-  public void generate() {
+  public void buildRecipes() {
     addRegularRecipes();
     addSpecialRecipes();
   }
@@ -46,16 +42,16 @@ public class MishangucRecipeGenerator extends RecipeGenerator {
   private void addRegularRecipes() {
     for (Block block : MishangUtils.blocks()) {
       if (block instanceof MishangucBlock r) {
-        r.writeRecipes(this, exporter);
+        r.writeRecipes(this, output);
       } else {
         throw new IllegalStateException();
       }
     }
     for (Item item : MishangUtils.items()) {
       if (item instanceof MishangucItem i) {
-        final CraftingRecipeJsonBuilder craftingRecipe = i.getCraftingRecipe(this);
+        final RecipeBuilder craftingRecipe = i.getCraftingRecipe(this);
         if (craftingRecipe != null) {
-          craftingRecipe.offerTo(exporter);
+          craftingRecipe.save(this.output);
         }
       }
     }
@@ -77,21 +73,21 @@ public class MishangucRecipeGenerator extends RecipeGenerator {
     addRecipeForGlassHandrail(HandrailBlocks.COLORED_DECORATED_MOSSY_COBBLESTONE_HANDRAIL, Items.MOSSY_COBBLESTONE, ColoredBlocks.COLORED_CONCRETE, Items.MOSSY_COBBLESTONE, 6, null);
 
     HandrailBlocks.DECORATED_IRON_HANDRAILS.forEach((dyeColor, glassHandrailBlock) -> {
-      final TagKey<Item> dyeKey = TagKey.of(RegistryKeys.ITEM, Identifier.of(TagUtil.C_TAG_NAMESPACE, "dyes/" + dyeColor.asString()));
-      createShaped(RecipeCategory.DECORATIONS, glassHandrailBlock, 4)
+      final TagKey<Item> dyeKey = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(TagUtil.C_TAG_NAMESPACE, "dyes/" + dyeColor.getSerializedName()));
+      shaped(RecipeCategory.DECORATIONS, glassHandrailBlock, 4)
           .pattern("XXX")
           .pattern("oMo")
           .pattern("nnn")
-          .input('X', ConventionalItemTags.IRON_INGOTS)
-          .input('o', Items.GLASS_PANE)
-          .input('M', dyeKey)
-          .input('n', Items.IRON_NUGGET)
-          .criterion("has_iron_ingot", conditionsFromTag(ConventionalItemTags.IRON_INGOTS))
-          .criterion(RecipeGenerator.hasItem(Items.GLASS_PANE), conditionsFromItem(Items.GLASS_PANE))
-          .criterion("has_dye", conditionsFromTag(dyeKey))
-          .criterion(RecipeGenerator.hasItem(Items.IRON_NUGGET), conditionsFromItem(Items.IRON_NUGGET))
+          .define('X', ConventionalItemTags.IRON_INGOTS)
+          .define('o', Items.GLASS_PANE)
+          .define('M', dyeKey)
+          .define('n', Items.IRON_NUGGET)
+          .unlockedBy("has_iron_ingot", has(ConventionalItemTags.IRON_INGOTS))
+          .unlockedBy(RecipeProvider.getHasName(Items.GLASS_PANE), has(Items.GLASS_PANE))
+          .unlockedBy("has_dye", has(dyeKey))
+          .unlockedBy(RecipeProvider.getHasName(Items.IRON_NUGGET), has(Items.IRON_NUGGET))
           .group("mishanguc:decorated_iron_handrail")
-          .offerTo(exporter);
+          .save(this.output);
     });
 
     addRecipeForGlassHandrail(HandrailBlocks.COLORED_DECORATED_IRON_HANDRAIL, ConventionalItemTags.IRON_INGOTS, "has_iron_ingot", ColoredBlocks.COLORED_CONCRETE, Items.IRON_NUGGET, 4);
@@ -126,8 +122,8 @@ public class MishangucRecipeGenerator extends RecipeGenerator {
         HandrailBlocks.GLASS_CRIMSON_HANDRAIL,
         HandrailBlocks.GLASS_WARPED_HANDRAIL)) {
       final Item wood = output.baseBlock().asItem();
-      final Identifier woodId = Registries.ITEM.getId(wood);
-      final Item planks = Registries.ITEM.get(woodId.withPath(woodId.getPath().replace("wood", "planks").replace("hyphae", "planks")));
+      final Identifier woodId = BuiltInRegistries.ITEM.getKey(wood);
+      final Item planks = BuiltInRegistries.ITEM.getValue(woodId.withPath(woodId.getPath().replace("wood", "planks").replace("hyphae", "planks")));
       Preconditions.checkState(wood != planks);
       addRecipeForGlassHandrail(output, wood, planks, Items.STICK, 6, "glass_wooden_handrail");
     }
@@ -172,86 +168,86 @@ public class MishangucRecipeGenerator extends RecipeGenerator {
     addRecipeForGlassHandrail(HandrailBlocks.COLORED_DECORATED_CRYING_OBSIDIAN_HANDRAIL, Items.CRYING_OBSIDIAN, ColoredBlocks.COLORED_CONCRETE, Items.CRYING_OBSIDIAN, 8, null);
   }
 
-  private void addRecipeForGlassHandrail(GlassHandrailBlock output, ItemConvertible frame, ItemConvertible decoration, ItemConvertible base, int outputCount, @Nullable String group) {
-    createShaped(RecipeCategory.DECORATIONS, output, outputCount)
+  private void addRecipeForGlassHandrail(GlassHandrailBlock output, ItemLike frame, ItemLike decoration, ItemLike base, int outputCount, @Nullable String group) {
+    shaped(RecipeCategory.DECORATIONS, output, outputCount)
         .pattern("XXX")
         .pattern("oMo")
         .pattern("nnn")
-        .input('X', frame)
-        .input('o', Items.GLASS_PANE)
-        .input('M', decoration)
-        .input('n', base)
-        .criterion(hasItem(frame), conditionsFromItem(frame))
-        .criterion(hasItem(Items.GLASS_PANE), conditionsFromItem(Items.GLASS_PANE))
-        .criterion(hasItem(decoration), conditionsFromItem(decoration))
-        .criterion(hasItem(base), conditionsFromItem(base))
+        .define('X', frame)
+        .define('o', Items.GLASS_PANE)
+        .define('M', decoration)
+        .define('n', base)
+        .unlockedBy(getHasName(frame), has(frame))
+        .unlockedBy(getHasName(Items.GLASS_PANE), has(Items.GLASS_PANE))
+        .unlockedBy(getHasName(decoration), has(decoration))
+        .unlockedBy(getHasName(base), has(base))
         .group(group)
-        .offerTo(exporter);
+        .save(this.output);
   }
 
-  private void addRecipeForGlassHandrail(GlassHandrailBlock output, TagKey<Item> frame, String frameCriterionName, ItemConvertible decoration, ItemConvertible base, int outputCount) {
-    createShaped(RecipeCategory.DECORATIONS, output, outputCount)
+  private void addRecipeForGlassHandrail(GlassHandrailBlock output, TagKey<Item> frame, String frameCriterionName, ItemLike decoration, ItemLike base, int outputCount) {
+    shaped(RecipeCategory.DECORATIONS, output, outputCount)
         .pattern("XXX")
         .pattern("oMo")
         .pattern("nnn")
-        .input('X', frame)
-        .input('o', Items.GLASS_PANE)
-        .input('M', decoration)
-        .input('n', base)
-        .criterion(frameCriterionName, conditionsFromTag(frame))
-        .criterion(hasItem(Items.GLASS_PANE), conditionsFromItem(Items.GLASS_PANE))
-        .criterion(hasItem(decoration), conditionsFromItem(decoration))
-        .criterion(hasItem(base), conditionsFromItem(base))
-        .offerTo(exporter);
+        .define('X', frame)
+        .define('o', Items.GLASS_PANE)
+        .define('M', decoration)
+        .define('n', base)
+        .unlockedBy(frameCriterionName, has(frame))
+        .unlockedBy(getHasName(Items.GLASS_PANE), has(Items.GLASS_PANE))
+        .unlockedBy(getHasName(decoration), has(decoration))
+        .unlockedBy(getHasName(base), has(base))
+        .save(this.output);
   }
 
-  private void addRecipeForGlassHandrail(GlassHandrailBlock output, TagKey<Item> frame, String frameCriterionName, ItemConvertible decoration, int outputCount) {
-    createShaped(RecipeCategory.DECORATIONS, output, outputCount)
+  private void addRecipeForGlassHandrail(GlassHandrailBlock output, TagKey<Item> frame, String frameCriterionName, ItemLike decoration, int outputCount) {
+    shaped(RecipeCategory.DECORATIONS, output, outputCount)
         .pattern("XXX")
         .pattern("oMo")
         .pattern("XXX")
-        .input('X', frame)
-        .input('o', Items.GLASS_PANE)
-        .input('M', decoration)
-        .criterion(frameCriterionName, conditionsFromTag(frame))
-        .criterion(hasItem(Items.GLASS_PANE), conditionsFromItem(Items.GLASS_PANE))
-        .criterion(hasItem(decoration), conditionsFromItem(decoration))
-        .offerTo(exporter);
+        .define('X', frame)
+        .define('o', Items.GLASS_PANE)
+        .define('M', decoration)
+        .unlockedBy(frameCriterionName, has(frame))
+        .unlockedBy(getHasName(Items.GLASS_PANE), has(Items.GLASS_PANE))
+        .unlockedBy(getHasName(decoration), has(decoration))
+        .save(this.output);
   }
 
   private void addRecipesForInvisibleSigns() {
     // 隐形告示牌是合成其他告示牌的基础。
-    createShaped(RecipeCategory.DECORATIONS, WallSignBlocks.INVISIBLE_WALL_SIGN, 9)
+    shaped(RecipeCategory.DECORATIONS, WallSignBlocks.INVISIBLE_WALL_SIGN, 9)
         .pattern(".#.")
         .pattern("#o#")
         .pattern(".#.")
-        .input('.', Items.IRON_NUGGET)
-        .input('#', Items.FEATHER)
-        .input('o', Items.GOLD_INGOT)
-        .criterion("has_iron_nugget", conditionsFromItem(Items.IRON_NUGGET))
-        .criterion("has_feather", conditionsFromItem(Items.FEATHER))
-        .criterion("has_gold_ingot", conditionsFromItem(Items.GOLD_INGOT))
-        .offerTo(exporter);
-    createShaped(RecipeCategory.DECORATIONS, WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN, 3)
+        .define('.', Items.IRON_NUGGET)
+        .define('#', Items.FEATHER)
+        .define('o', Items.GOLD_INGOT)
+        .unlockedBy("has_iron_nugget", has(Items.IRON_NUGGET))
+        .unlockedBy("has_feather", has(Items.FEATHER))
+        .unlockedBy("has_gold_ingot", has(Items.GOLD_INGOT))
+        .save(this.output);
+    shaped(RecipeCategory.DECORATIONS, WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN, 3)
         .pattern("---")
         .pattern("###")
-        .input('-', Items.GLOWSTONE_DUST)
-        .input('#', WallSignBlocks.INVISIBLE_WALL_SIGN)
-        .criterion("has_base_block", conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN))
-        .offerTo(exporter);
+        .define('-', Items.GLOWSTONE_DUST)
+        .define('#', WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .unlockedBy("has_base_block", has(WallSignBlocks.INVISIBLE_WALL_SIGN))
+        .save(this.output);
   }
 
   private void addRoadPalingRecipes() {
     // 将带有标线的道路重置为不带标线的道路。
-    final TagKey<Item> roadBlocks = TagKey.of(RegistryKeys.ITEM, Mishanguc.id("road_blocks"));
-    StonecuttingRecipeJsonBuilder.createStonecutting(ingredientFromTag(roadBlocks), RecipeCategory.BUILDING_BLOCKS, RoadBlocks.ROAD_BLOCK)
-        .criterion("has_road_block", conditionsFromTag(roadBlocks))
-        .offerTo(exporter, RegistryKey.of(RegistryKeys.RECIPE, CraftingRecipeJsonBuilder.getItemId(RoadBlocks.ROAD_BLOCK).withSuffixedPath("_from_paling")));
-    final TagKey<Item> roadSlabs = TagKey.of(RegistryKeys.ITEM, Mishanguc.id("road_slabs"));
+    final TagKey<Item> roadBlocks = TagKey.create(Registries.ITEM, Mishanguc.id("road_blocks"));
+    SingleItemRecipeBuilder.stonecutting(tag(roadBlocks), RecipeCategory.BUILDING_BLOCKS, RoadBlocks.ROAD_BLOCK)
+        .unlockedBy("has_road_block", has(roadBlocks))
+        .save(output, ResourceKey.create(Registries.RECIPE, RecipeBuilder.getDefaultRecipeId(RoadBlocks.ROAD_BLOCK).withSuffix("_from_paling")));
+    final TagKey<Item> roadSlabs = TagKey.create(Registries.ITEM, Mishanguc.id("road_slabs"));
     final AbstractRoadSlabBlock roadSlabBlock = RoadSlabBlocks.BLOCK_TO_SLABS.get(RoadBlocks.ROAD_BLOCK);
-    StonecuttingRecipeJsonBuilder.createStonecutting(ingredientFromTag(roadSlabs), RecipeCategory.BUILDING_BLOCKS, roadSlabBlock)
-        .criterion("has_road_slab", conditionsFromTag(roadSlabs))
-        .offerTo(exporter, RegistryKey.of(RegistryKeys.RECIPE, CraftingRecipeJsonBuilder.getItemId(roadSlabBlock).withSuffixedPath("_from_paling")));
+    SingleItemRecipeBuilder.stonecutting(tag(roadSlabs), RecipeCategory.BUILDING_BLOCKS, roadSlabBlock)
+        .unlockedBy("has_road_slab", has(roadSlabs))
+        .save(output, ResourceKey.create(Registries.RECIPE, RecipeBuilder.getDefaultRecipeId(roadSlabBlock).withSuffix("_from_paling")));
   }
 
   public static @Nullable String getCustomRecipeCategory(Item outputItem) {

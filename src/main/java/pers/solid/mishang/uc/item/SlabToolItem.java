@@ -14,46 +14,46 @@ import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.enums.SlabType;
-import net.minecraft.block.pattern.CachedBlockPosition;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderLayers;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.VertexRendering;
-import net.minecraft.client.render.state.OutlineRenderState;
-import net.minecraft.data.family.BlockFamilies;
-import net.minecraft.data.family.BlockFamily;
-import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.recipe.RecipeGenerator;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.TypedEntityData;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.Registries;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.ShapeRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.BlockOutlineRenderState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.BlockFamilies;
+import net.minecraft.data.BlockFamily;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ARGB;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TypedEntityData;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.pattern.BlockInWorld;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jetbrains.annotations.ApiStatus;
@@ -83,10 +83,10 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
    * 从原版的 {@link BlockFamilies} 提取的方块至台阶方块的映射。
    */
   @ApiStatus.AvailableSince("0.1.3")
-  protected static final BiMap<Block, Block> BLOCK_TO_SLAB = BlockFamilies.getFamilies()
-      .filter(blockFamily -> blockFamily.getVariant(BlockFamily.Variant.SLAB) != null)
+  protected static final BiMap<Block, Block> BLOCK_TO_SLAB = BlockFamilies.getAllFamilies()
+      .filter(blockFamily -> blockFamily.get(BlockFamily.Variant.SLAB) != null)
       .map(blockFamily -> {
-        final Block variant = blockFamily.getVariant(BlockFamily.Variant.SLAB);
+        final Block variant = blockFamily.get(BlockFamily.Variant.SLAB);
         final Block baseBlock = blockFamily.getBaseBlock();
         return baseBlock == null || variant == null ? null : Maps.immutableEntry(baseBlock, variant);
       })
@@ -95,9 +95,9 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
   /**
    * @since 1.0.3 用于协调处理 canMine 与 performBreak。服务器不知道客户端的 crosshairTarget，需要由客户端发送。服务器先判断为允许挖掘，再根据这里面的内容还原该方块。
    */
-  private static final Map<Pair<ServerWorld, BlockPos>, Runnable> SERVER_BLOCK_BREAKING_BRIDGE = new Object2ObjectOpenHashMap<>();
+  private static final Map<Pair<ServerLevel, BlockPos>, Runnable> SERVER_BLOCK_BREAKING_BRIDGE = new Object2ObjectOpenHashMap<>();
 
-  public SlabToolItem(Settings settings) {
+  public SlabToolItem(Properties settings) {
     super(settings);
   }
 
@@ -109,8 +109,8 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
    * @return 台阶方块的方块状态。
    */
   protected static BlockState toDoubleSlab(BlockState baseBlockState, Block slabBlock) {
-    final BlockState slabState = slabBlock.getStateWithProperties(baseBlockState);
-    return slabState.contains(Properties.SLAB_TYPE) ? slabState.with(Properties.SLAB_TYPE, SlabType.DOUBLE) : slabState;
+    final BlockState slabState = slabBlock.withPropertiesOf(baseBlockState);
+    return slabState.hasProperty(BlockStateProperties.SLAB_TYPE) ? slabState.setValue(BlockStateProperties.SLAB_TYPE, SlabType.DOUBLE) : slabState;
   }
 
   /**
@@ -128,65 +128,65 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
         state = toDoubleSlab(state, slab);
       } else {
         // 尝试根据方块的 id 来判断对应的台阶方块。
-        final Identifier id = Registries.BLOCK.getId(block);
+        final Identifier id = BuiltInRegistries.BLOCK.getKey(block);
         final String idPath = id.getPath();
-        final Identifier slabId = Identifier.of(id.getNamespace(), idPath + "_slab");
-        if (Registries.BLOCK.containsId(slabId)) {
-          state = toDoubleSlab(state, Registries.BLOCK.get(slabId));
+        final Identifier slabId = Identifier.fromNamespaceAndPath(id.getNamespace(), idPath + "_slab");
+        if (BuiltInRegistries.BLOCK.containsKey(slabId)) {
+          state = toDoubleSlab(state, BuiltInRegistries.BLOCK.getValue(slabId));
         } else {
           final Identifier slabId2;
           if (idPath.endsWith("_bricks") || idPath.endsWith("_tiles")) {
-            slabId2 = Identifier.of(id.getNamespace(), idPath.substring(0, idPath.length() - 1) + "_slab");
+            slabId2 = Identifier.fromNamespaceAndPath(id.getNamespace(), idPath.substring(0, idPath.length() - 1) + "_slab");
           } else if (idPath.endsWith("_planks")) {
-            slabId2 = Identifier.of(id.getNamespace(), idPath.substring(0, idPath.length() - 7) + "_slab");
+            slabId2 = Identifier.fromNamespaceAndPath(id.getNamespace(), idPath.substring(0, idPath.length() - 7) + "_slab");
           } else {
             slabId2 = null;
           }
-          if (slabId2 != null && Registries.BLOCK.containsId(slabId2)) {
-            state = toDoubleSlab(state, Registries.BLOCK.get(slabId2));
+          if (slabId2 != null && BuiltInRegistries.BLOCK.containsKey(slabId2)) {
+            state = toDoubleSlab(state, BuiltInRegistries.BLOCK.getValue(slabId2));
           }
         }
       }
     }
-    if (state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
+    if (state.hasProperty(BlockStateProperties.SLAB_TYPE) && state.getValue(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE) {
       return state;
     } else {
       return null;
     }
   }
 
-  private static boolean performBreak(World world, BlockPos pos, PlayerEntity user, boolean isTop) {
+  private static boolean performBreak(Level world, BlockPos pos, Player user, boolean isTop) {
     BlockState state = world.getBlockState(pos);
     final Block block = state.getBlock();
     final BlockState doubleSlabState = tryToDoubleSlab(state);
     if (doubleSlabState != null) {
       state = doubleSlabState;
     }
-    if (state.contains(Properties.SLAB_TYPE) && state.get(Properties.SLAB_TYPE) == SlabType.DOUBLE) {
+    if (state.hasProperty(BlockStateProperties.SLAB_TYPE) && state.getValue(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE) {
       final SlabType slabTypeToSet = isTop ? SlabType.BOTTOM : SlabType.TOP;
       final SlabType slabTypeBroken = isTop ? SlabType.TOP : SlabType.BOTTOM;
       // 破坏方块
       final BlockEntity blockEntity = world.getBlockEntity(pos);
-      final NbtCompound nbt;
+      final CompoundTag nbt;
       if (blockEntity != null) {
-        nbt = blockEntity.createNbt(world.getRegistryManager());
+        nbt = blockEntity.saveWithoutMetadata(world.registryAccess());
         world.removeBlockEntity(pos);
       } else {
         nbt = null;
       }
-      final boolean bl1 = world.setBlockState(pos, state.with(Properties.SLAB_TYPE, slabTypeToSet));
+      final boolean bl1 = world.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.SLAB_TYPE, slabTypeToSet));
       final BlockEntity newBlockEntity = world.getBlockEntity(pos);
       if (newBlockEntity != null && nbt != null) {
-        TypedEntityData.create(newBlockEntity, nbt).applyToBlockEntity(newBlockEntity, world.getRegistryManager());
+        TypedEntityData.of(newBlockEntity, nbt).loadInto(newBlockEntity, world.registryAccess());
       }
-      final BlockState brokenState = state.with(Properties.SLAB_TYPE, slabTypeBroken);
-      block.onBreak(world, pos, brokenState, user);
+      final BlockState brokenState = state.setValue(BlockStateProperties.SLAB_TYPE, slabTypeBroken);
+      block.playerWillDestroy(world, pos, brokenState, user);
       if (bl1) {
-        block.onBroken(world, pos, brokenState);
+        block.destroy(world, pos, brokenState);
         if (!user.isCreative()) {
-          block.afterBreak(world, user, pos, brokenState, world.getBlockEntity(pos), user.getMainHandStack().copy());
+          block.playerDestroy(world, user, pos, brokenState, world.getBlockEntity(pos), user.getMainHandItem().copy());
         }
-        user.getStackInHand(Hand.MAIN_HAND).damage(1, user, EquipmentSlot.MAINHAND);
+        user.getItemInHand(InteractionHand.MAIN_HAND).hurtAndBreak(1, user, EquipmentSlot.MAINHAND);
       }
       return bl1;
     }
@@ -194,8 +194,8 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
   }
 
   @Override
-  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
-    tooltip.add(TextBridge.translatable("item.mishanguc.slab_tool.tooltip").formatted(Formatting.GRAY));
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
+    tooltip.add(TextBridge.translatable("item.mishanguc.slab_tool.tooltip").withStyle(ChatFormatting.GRAY));
   }
 
   /**
@@ -206,13 +206,13 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
 
 
   @Override
-  public boolean canMine(ItemStack stack, BlockState state, World world, BlockPos pos, LivingEntity user) {
+  public boolean canDestroyBlock(ItemStack stack, BlockState state, Level world, BlockPos pos, LivingEntity user) {
     // 处理双台阶的情况。
-    if (world.isClient() && user instanceof ClientPlayerEntity) {
-      final HitResult raycast = MinecraftClient.getInstance().crosshairTarget;
+    if (world.isClientSide() && user instanceof LocalPlayer) {
+      final HitResult raycast = Minecraft.getInstance().hitResult;
       if (!(raycast instanceof BlockHitResult) || raycast.getType() == HitResult.Type.MISS) return false;
-      boolean isTop = raycast.getPos().y - (double) ((BlockHitResult) raycast).getBlockPos().getY() > 0.5D;
-      final boolean bl1 = performBreak(world, pos, ((PlayerEntity) user), isTop);
+      boolean isTop = raycast.getLocation().y - (double) ((BlockHitResult) raycast).getBlockPos().getY() > 0.5D;
+      final boolean bl1 = performBreak(world, pos, ((Player) user), isTop);
       ClientPlayNetworking.send(new SlabToolPayload(pos, isTop));
       return !bl1;
     } else {
@@ -228,7 +228,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
       } else {
         // 服务器还没有执行 performBreak。可能它根本就不是台阶，也有可能是本来就在 canMine 完成之后再执行 performBreak。
         final boolean b = tryToDoubleSlab(state) == null;
-        if (remove == null && !b) SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of((ServerWorld) world, pos), CAN_MINE_CALLED_FIRST);
+        if (remove == null && !b) SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of((ServerLevel) world, pos), CAN_MINE_CALLED_FIRST);
         return b;
       }
     }
@@ -236,19 +236,19 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable MishangRenderState getMishangRenderState(ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
-    if (!(result instanceof final BlockHitResult blockHitResult) || hand != Hand.MAIN_HAND) {
+  public @Nullable MishangRenderState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+    if (!(result instanceof final BlockHitResult blockHitResult) || hand != InteractionHand.MAIN_HAND) {
       return null;
     }
 
-    boolean isTop = result.getPos().y - (double) blockHitResult.getBlockPos().getY() > 0.5D;
+    boolean isTop = result.getLocation().y - (double) blockHitResult.getBlockPos().getY() > 0.5D;
     BlockState blockState = context.world().getBlockState(blockHitResult.getBlockPos());
     blockState = tryToDoubleSlab(blockState);
     if (blockState != null) {
       final SlabToolState state = new SlabToolState();
       // 渲染时需要使用的方块状态。
-      final BlockState halfState = blockState.with(Properties.SLAB_TYPE, isTop ? SlabType.TOP : SlabType.BOTTOM);
-      state.slabShape = halfState.getOutlineShape(context.world(), blockHitResult.getBlockPos(), ShapeContext.of(player));
+      final BlockState halfState = blockState.setValue(BlockStateProperties.SLAB_TYPE, isTop ? SlabType.TOP : SlabType.BOTTOM);
+      state.slabShape = halfState.getShape(context.world(), blockHitResult.getBlockPos(), CollisionContext.of(player));
       return state;
     } else {
       return null;
@@ -257,41 +257,41 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
 
   @Environment(EnvType.CLIENT)
   @Override
-  public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext context, OutlineRenderState outlineRenderState) {
+  public boolean renderBlockOutline(Player player, ItemStack itemStack, WorldRenderContext context, BlockOutlineRenderState outlineRenderState) {
     if (!(context.worldState().getData(MISHANG_BLOCK_OUTLINE) instanceof SlabToolState state)) {
       return true;
     }
-    final VertexConsumerProvider consumers = context.consumers();
+    final MultiBufferSource consumers = context.consumers();
     if (state.slabShape != null) {
       final BlockPos pos = outlineRenderState.pos();
-      final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
-      VertexRendering.drawOutline(
+      final Vec3 cameraPos = context.worldState().cameraRenderState.pos;
+      ShapeRenderer.renderShape(
           context.matrices(),
-          consumers.getBuffer(RenderLayers.LINES),
+          consumers.getBuffer(RenderTypes.LINES),
           state.slabShape,
-          (double) pos.getX() - cameraPos.getX(),
-          (double) pos.getY() - cameraPos.getY(),
-          (double) pos.getZ() - cameraPos.getZ(),
-          ColorHelper.fromFloats(0.4f, 0.0F,
+          (double) pos.getX() - cameraPos.x(),
+          (double) pos.getY() - cameraPos.y(),
+          (double) pos.getZ() - cameraPos.z(),
+          ARGB.colorFromFloat(0.4f, 0.0F,
               0.0F,
               0.0F),
-          MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
+          Minecraft.getInstance().getWindow().getAppropriateLineWidth());
       return false;
     }
     return true;
   }
 
   @Override
-  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
-    return recipeGenerator.createShaped(RecipeCategory.TOOLS, this)
+  public RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
+    return recipeGenerator.shaped(RecipeCategory.TOOLS, this)
         .pattern("SCS")
         .pattern(" | ")
         .pattern(" | ")
-        .input('S', Items.SHEARS)
-        .input('C', ConventionalItemTags.STONES)
-        .input('|', Items.STICK)
-        .criterion("has_shears", recipeGenerator.conditionsFromItem(Items.SHEARS))
-        .criterion("has_stone", recipeGenerator.conditionsFromTag(ConventionalItemTags.STONES));
+        .define('S', Items.SHEARS)
+        .define('C', ConventionalItemTags.STONES)
+        .define('|', Items.STICK)
+        .unlockedBy("has_shears", recipeGenerator.has(Items.SHEARS))
+        .unlockedBy("has_stone", recipeGenerator.has(ConventionalItemTags.STONES));
   }
 
   @ApiStatus.AvailableSince("1.0.3")
@@ -300,27 +300,27 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
 
 
     /**
-     * @see #canMine(ItemStack, BlockState, World, BlockPos, LivingEntity)
+     * @see #canDestroyBlock(ItemStack, BlockState, Level, BlockPos, LivingEntity)
      */
     @Override
     public void receive(SlabToolPayload payload, ServerPlayNetworking.Context context) {
       final BlockPos blockPos = payload.blockPos();
       final boolean isTop = payload.isTop();
-      final ServerPlayerEntity player = context.player();
-      player.getEntityWorld().getServer().execute(() -> {
-        if (!player.canInteractWithBlockAt(blockPos, 0)) {
+      final ServerPlayer player = context.player();
+      player.level().getServer().execute(() -> {
+        if (!player.isWithinBlockInteractionRange(blockPos, 0)) {
           return;
         }
-        final ItemStack stack = player.getMainHandStack();
-        if (!(stack.getItem() instanceof SlabToolItem) || !(player.getAbilities().allowModifyWorld || stack.canBreak(new CachedBlockPosition(player.getEntityWorld(), blockPos, false)))) {
+        final ItemStack stack = player.getMainHandItem();
+        if (!(stack.getItem() instanceof SlabToolItem) || !(player.getAbilities().mayBuild || stack.canBreakBlockInAdventureMode(new BlockInWorld(player.level(), blockPos, false)))) {
           return;
         }
-        final Runnable remove = SERVER_BLOCK_BREAKING_BRIDGE.remove(Pair.of(player.getEntityWorld(), blockPos));
+        final Runnable remove = SERVER_BLOCK_BREAKING_BRIDGE.remove(Pair.of(player.level(), blockPos));
         if (remove == CAN_MINE_CALLED_FIRST) {
-          performBreak(player.getEntityWorld(), blockPos, player, isTop);
-        } else if (tryToDoubleSlab(player.getEntityWorld().getBlockState(blockPos)) != null) {
+          performBreak(player.level(), blockPos, player, isTop);
+        } else if (tryToDoubleSlab(player.level().getBlockState(blockPos)) != null) {
           // 收到封包之后，送到 canMine 中执行。
-          SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of(player.getEntityWorld(), blockPos), (PacketReceivedFirst) () -> performBreak(player.getEntityWorld(), blockPos, player, isTop));
+          SERVER_BLOCK_BREAKING_BRIDGE.put(Pair.of(player.level(), blockPos), (PacketReceivedFirst) () -> performBreak(player.level(), blockPos, player, isTop));
         }
       });
     }

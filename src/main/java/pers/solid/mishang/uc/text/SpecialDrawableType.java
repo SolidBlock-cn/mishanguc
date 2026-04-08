@@ -2,15 +2,14 @@ package pers.solid.mishang.uc.text;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.SimpleRegistry;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.InvalidIdentifierException;
+import net.minecraft.IdentifierException;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
 
@@ -19,30 +18,30 @@ import pers.solid.mishang.uc.Mishanguc;
  */
 @ApiStatus.AvailableSince("0.2.4")
 public interface SpecialDrawableType<S extends SpecialDrawable> {
-  RegistryKey<Registry<SpecialDrawableType<? extends SpecialDrawable>>> REGISTRY_KEY = RegistryKey.ofRegistry(Mishanguc.id("special_drawable_type"));
+  ResourceKey<Registry<SpecialDrawableType<? extends SpecialDrawable>>> REGISTRY_KEY = ResourceKey.createRegistryKey(Mishanguc.id("special_drawable_type"));
   /**
    * SpecialDrawableType 的注册表。
    */
-  SimpleRegistry<SpecialDrawableType<? extends SpecialDrawable>> REGISTRY = FabricRegistryBuilder.createSimple(REGISTRY_KEY).buildAndRegister();
+  MappedRegistry<SpecialDrawableType<? extends SpecialDrawable>> REGISTRY = FabricRegistryBuilder.createSimple(REGISTRY_KEY).buildAndRegister();
 
   /**
    * 根据已注册的 id 查询对象，如果不存在则返回 {@code null}。
    */
   static @Nullable SpecialDrawableType<? extends SpecialDrawable> fromId(Identifier id) {
-    return REGISTRY.get(id);
+    return REGISTRY.getValue(id);
   }
 
   /**
    * 根据已注册的 id 查询对象。这个 id 字符串如果没有指定命名空间，则默认为 {@code mishanguc}。
    *
    * @return null 如果 id 有效但并不存在。
-   * @throws InvalidIdentifierException 如果这个 id 是无效的。
+   * @throws IdentifierException 如果这个 id 是无效的。
    */
-  static @Nullable SpecialDrawableType<? extends SpecialDrawable> fromId(String id) throws InvalidIdentifierException {
+  static @Nullable SpecialDrawableType<? extends SpecialDrawable> fromId(String id) throws IdentifierException {
     int i = id.indexOf(':');
     if (i >= 0) {
       // id 中有冒号的情况，使用指定的命名空间。
-      return fromId(Identifier.of(id));
+      return fromId(Identifier.parse(id));
     } else {
       // id 中没有冒号的情况，使用默认命名空间。
       return fromId(Mishanguc.id(id));
@@ -57,7 +56,7 @@ public interface SpecialDrawableType<S extends SpecialDrawable> {
   static @Nullable SpecialDrawableType<? extends SpecialDrawable> tryFromId(String id) {
     try {
       return fromId(id);
-    } catch (InvalidIdentifierException ignore) {
+    } catch (IdentifierException ignore) {
       return null;
     }
   }
@@ -66,7 +65,7 @@ public interface SpecialDrawableType<S extends SpecialDrawable> {
    * 根据注册表查询该对象的 id。如果不存在，则返回 {@code null}。
    */
   default Identifier getId() {
-    return REGISTRY.getId(this);
+    return REGISTRY.getKey(this);
   }
 
   /**
@@ -75,11 +74,11 @@ public interface SpecialDrawableType<S extends SpecialDrawable> {
    * @return 该类型的 SpecialDrawable 对象。
    */
   @Contract(pure = true)
-  @Nullable S fromNbt(@NotNull TextContext textContext, @NotNull NbtCompound nbt);
+  @Nullable S fromNbt(TextContext textContext, CompoundTag nbt);
 
   /**
    * 根据已有的参数（字符串形式的）返回对象，通常用于告示牌编辑界面中。如果在文本框中输入 {@code -rect 2 3}，则会调用 {@code fromStringArgs(textContext, "2 3")}。
    */
   @Contract(pure = true)
-  @NotNull S fromStringArgs(@NotNull TextContext textContext, @NotNull String args) throws CommandSyntaxException;
+  S fromStringArgs(TextContext textContext, String args) throws CommandSyntaxException;
 }

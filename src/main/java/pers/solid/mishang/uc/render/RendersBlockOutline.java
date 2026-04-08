@@ -4,12 +4,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.state.OutlineRenderState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.state.BlockOutlineRenderState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import pers.solid.mishang.uc.MishangucClient;
 import pers.solid.mishang.uc.render.state.MishangRenderStateProvider;
 
@@ -32,7 +32,7 @@ public interface RendersBlockOutline extends MishangRenderStateProvider {
 
   @Environment(EnvType.CLIENT)
   WorldRenderEvents.BeforeBlockOutline RENDERER = (worldRenderContext, outlineRenderState) -> {
-    final ClientPlayerEntity player = MinecraftClient.getInstance().player;
+    final LocalPlayer player = Minecraft.getInstance().player;
     final ItemStack stack = worldRenderContext.worldState().getData(MishangRenderStateProvider.HAND_STACK);
     if (stack == null) return true;
     if (player == null) return true;
@@ -56,8 +56,8 @@ public interface RendersBlockOutline extends MishangRenderStateProvider {
    */
   @Environment(EnvType.CLIENT)
   boolean renderBlockOutline(
-      PlayerEntity player,
+      Player player,
       ItemStack itemStack,
       WorldRenderContext context,
-      OutlineRenderState outlineRenderState);
+      BlockOutlineRenderState outlineRenderState);
 }

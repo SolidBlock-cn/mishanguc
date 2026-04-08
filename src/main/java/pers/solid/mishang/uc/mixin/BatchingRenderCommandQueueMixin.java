@@ -1,11 +1,11 @@
 package pers.solid.mishang.uc.mixin;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.command.BatchingRenderCommandQueue;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.OrderedText;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.SubmitNodeCollection;
+import net.minecraft.util.FormattedCharSequence;
 import org.joml.Matrix4f;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,16 +26,16 @@ import java.util.List;
  * @since Minecraft 1.21.10
  */
 @Environment(EnvType.CLIENT)
-@Mixin(BatchingRenderCommandQueue.class)
+@Mixin(SubmitNodeCollection.class)
 public abstract class BatchingRenderCommandQueueMixin implements RenderCommandQueueExtension, BatchingRenderCommandQueueExtension {
   @Shadow
-  private boolean hasCommands;
+  private boolean wasUsed;
 
   @Shadow
-  public abstract void submitText(MatrixStack matrices, float x, float y, OrderedText text, boolean dropShadow, TextRenderer.TextLayerType layerType, int light, int color, int backgroundColor, int outlineColor);
+  public abstract void submitText(PoseStack poseStack, float x, float y, FormattedCharSequence string, boolean dropShadow, Font.DisplayMode displayMode, int packedLight, int color, int backgroundColor, int outlineColor);
 
   /**
-   * 用于渲染 {@link SpecialDrawable} 的命令列表，会在 {@link net.minecraft.client.render.command.TextCommandRenderer TextCommandRenderer} 中执行。
+   * 用于渲染 {@link SpecialDrawable} 的命令列表，会在 {@link net.minecraft.client.renderer.feature.TextFeatureRenderer TextCommandRenderer} 中执行。
    *
    * @see TextCommandRendererMixin
    */
@@ -43,13 +43,13 @@ public abstract class BatchingRenderCommandQueueMixin implements RenderCommandQu
   private final List<SpecialDrawableCommand> specialDrawableCommands = new ArrayList<>();
 
   @Override
-  public void submitSpecialDrawable$mishang(MatrixStack matrixStack, SpecialDrawable specialDrawable, int light, float x, float y) {
-    this.hasCommands = true;
-    submitText(matrixStack, x, y, OrderedText.EMPTY, false, TextRenderer.TextLayerType.NORMAL, light, 0, 0, 0);
-    specialDrawableCommands.add(new SpecialDrawableCommand(new Matrix4f(matrixStack.peek().getPositionMatrix()), specialDrawable, light, x, y));
+  public void submitSpecialDrawable$mishang(PoseStack matrixStack, SpecialDrawable specialDrawable, int light, float x, float y) {
+    this.wasUsed = true;
+    submitText(matrixStack, x, y, FormattedCharSequence.EMPTY, false, Font.DisplayMode.NORMAL, light, 0, 0, 0);
+    specialDrawableCommands.add(new SpecialDrawableCommand(new Matrix4f(matrixStack.last().pose()), specialDrawable, light, x, y));
   }
 
-  @Inject(method = "clear", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/command/BatchingRenderCommandQueue;leashCommands:Ljava/util/List;", opcode = Opcodes.GETFIELD))
+  @Inject(method = "clear", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/SubmitNodeCollection;leashSubmits:Ljava/util/List;", opcode = Opcodes.GETFIELD))
   private void clearSpecialDrawable(CallbackInfo ci) {
     specialDrawableCommands.clear();
   }

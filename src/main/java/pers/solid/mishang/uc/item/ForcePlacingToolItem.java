@@ -1,49 +1,48 @@
 package pers.solid.mishang.uc.item;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderLayers;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.VertexRendering;
-import net.minecraft.client.render.state.OutlineRenderState;
-import net.minecraft.client.render.state.WorldRenderState;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.TooltipDisplayComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.boss.dragon.EnderDragonPart;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.ShapeRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.BlockOutlineRenderState;
+import net.minecraft.client.renderer.state.LevelRenderState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ARGB;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragonPart;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangucClient;
 import pers.solid.mishang.uc.MishangucRules;
@@ -60,45 +59,45 @@ import java.util.List;
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
 public class ForcePlacingToolItem extends BlockToolItem implements InteractsWithEntity, RendersBeforeOutline, WithMishangTooltip {
 
-  public ForcePlacingToolItem(Settings settings, @Nullable Boolean includesFluid) {
+  public ForcePlacingToolItem(Properties settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
 
   @Override
-  public ActionResult useOnBlock(
-      ItemStack stack, PlayerEntity player,
-      World world,
+  public InteractionResult useOnBlock(
+      ItemStack stack, Player player,
+      Level world,
       BlockHitResult blockHitResult,
-      Hand hand,
+      InteractionHand hand,
       boolean fluidIncluded) {
     if (!hasAccess(player, world, true)) {
       // 仅限特定情况下使用。
-      return ActionResult.PASS;
+      return InteractionResult.PASS;
     }
-    BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockHitResult.getBlockPos(), player, player.getStackInHand(hand), blockHitResult, fluidIncluded);
+    BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockHitResult.getBlockPos(), player, player.getItemInHand(hand), blockHitResult, fluidIncluded);
     blockPlacementContext.playSound();
     // 放置方块。对客户端和服务器均生效。
     int flags = getFlags(stack);
     blockPlacementContext.setBlockState(flags);
     blockPlacementContext.setBlockEntity();
-    return ActionResult.SUCCESS;
+    return InteractionResult.SUCCESS;
   }
 
   @Override
-  public ActionResult beginAttackBlock(
-      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+  public InteractionResult beginAttackBlock(
+      ItemStack stack, Player player, Level world, InteractionHand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!hasAccess(player, world, true)) {
       // 仅限特定情况下使用。
-      return ActionResult.PASS;
+      return InteractionResult.PASS;
     }
     final BlockState blockState = world.getBlockState(pos);
-    world.syncWorldEvent(player, 2001, pos, Block.getRawIdFromState(world.getBlockState(pos)));
+    world.levelEvent(player, 2001, pos, Block.getId(world.getBlockState(pos)));
     FluidState fluidState = blockState.getFluidState();
     // 在破坏时，直接先将其内容清除。
     world.removeBlockEntity(pos);
     int flags = getFlags(stack);
-    world.setBlockState(pos, fluidIncluded ? Blocks.AIR.getDefaultState() : fluidState.getBlockState(), flags);
-    return ActionResult.SUCCESS;
+    world.setBlock(pos, fluidIncluded ? Blocks.AIR.defaultBlockState() : fluidState.createLegacyBlock(), flags);
+    return InteractionResult.SUCCESS;
   }
 
   private static int getFlags(ItemStack stack) {
@@ -106,36 +105,36 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   }
 
   @Override
-  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     tooltip.add(
         TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.1")
-            .formatted(Formatting.GRAY));
+            .withStyle(ChatFormatting.GRAY));
     tooltip.add(
         TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.2")
-            .formatted(Formatting.GRAY));
-    if (Boolean.TRUE.equals(includesFluid(stack)) && stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.INCLUDES_FLUID)) {
+            .withStyle(ChatFormatting.GRAY));
+    if (Boolean.TRUE.equals(includesFluid(stack)) && stack.getOrDefault(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT).shows(MishangucComponents.INCLUDES_FLUID)) {
       tooltip.add(
           TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.fluids")
-              .formatted(Formatting.GRAY));
+              .withStyle(ChatFormatting.GRAY));
     }
     tooltip.add(
         TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.3")
-            .formatted(Formatting.GRAY));
+            .withStyle(ChatFormatting.GRAY));
     if ((getFlags(stack) & 128) != 0) {
       tooltip.add(TextBridge.translatable("item.mishanguc.force_placing_tool.tooltip.suspends_light")
-          .formatted(Formatting.YELLOW));
+          .withStyle(ChatFormatting.YELLOW));
     }
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public @Nullable ForcePlacingToolState getMishangRenderState(ClientPlayerEntity player, Hand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
+  public @Nullable ForcePlacingToolState getMishangRenderState(LocalPlayer player, InteractionHand hand, ItemStack stack, WorldExtractionContext context, @Nullable HitResult result) {
     if (!hasAccess(player, context.world(), false)) {
       // 只有在符合条件的情况下，才会绘制边框。
       return null;
     } else {
-      final Item item = player.getMainHandStack().getItem();
-      if (hand == Hand.OFF_HAND && (item instanceof BlockItem || item instanceof CarryingToolItem)) {
+      final Item item = player.getMainHandItem().getItem();
+      if (hand == InteractionHand.OFF_HAND && (item instanceof BlockItem || item instanceof CarryingToolItem)) {
         // 当玩家副手持有物品，主手持有方块时，直接跳过，不绘制。
         return null;
       }
@@ -154,7 +153,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       return state;
     }
 
-    final boolean includesFluid = this.includesFluid(stack, player.isSneaking());
+    final boolean includesFluid = this.includesFluid(stack, player.isShiftKeyDown());
     final BlockPlacementContext blockPlacementContext =
         new BlockPlacementContext(
             context.world(),
@@ -164,16 +163,16 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
             blockHitResult,
             includesFluid);
 
-    state.cyanShape = blockPlacementContext.stateToPlace.getOutlineShape(blockPlacementContext.world, blockPlacementContext.posToPlace, ShapeContext.of(player));
+    state.cyanShape = blockPlacementContext.stateToPlace.getShape(blockPlacementContext.world, blockPlacementContext.posToPlace, CollisionContext.of(player));
     state.cyanPos = blockPlacementContext.posToPlace;
 
     if (includesFluid) {
       state.blueShape = blockPlacementContext.stateToPlace.getFluidState().getShape(blockPlacementContext.world, blockPlacementContext.posToPlace);
       state.bluePos = blockPlacementContext.posToPlace;
     }
-    if (hand == Hand.MAIN_HAND) {
+    if (hand == InteractionHand.MAIN_HAND) {
       // 只有当主手持有此物品时，才绘制红色边框。
-      state.redShape = blockPlacementContext.hitState.getOutlineShape(blockPlacementContext.world, blockPlacementContext.blockPos, ShapeContext.of(player));
+      state.redShape = blockPlacementContext.hitState.getShape(blockPlacementContext.world, blockPlacementContext.blockPos, CollisionContext.of(player));
       state.redPos = blockPlacementContext.blockPos;
       if (includesFluid) {
         state.yellowShape = blockPlacementContext.hitState.getFluidState().getShape(blockPlacementContext.world, blockPlacementContext.blockPos);
@@ -187,128 +186,128 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   @Environment(EnvType.CLIENT)
   @Override
   public boolean renderBlockOutline(
-      PlayerEntity player,
+      Player player,
       ItemStack itemStack,
       WorldRenderContext context,
-      OutlineRenderState outlineRenderState) {
-    final WorldRenderState worldRenderState = context.worldState();
+      BlockOutlineRenderState outlineRenderState) {
+    final LevelRenderState worldRenderState = context.worldState();
     if (!(worldRenderState.getData(MishangRenderStateProvider.MISHANG_BLOCK_OUTLINE) instanceof ForcePlacingToolState state)) {
       return true;
     }
 
-    final MatrixStack matrices = context.matrices();
-    final VertexConsumer vertexConsumer = context.consumers().getBuffer(RenderLayers.lines());
-    final Vec3d cameraPos = worldRenderState.cameraRenderState.pos;
+    final PoseStack matrices = context.matrices();
+    final VertexConsumer vertexConsumer = context.consumers().getBuffer(RenderTypes.lines());
+    final Vec3 cameraPos = worldRenderState.cameraRenderState.pos;
     double cameraX = cameraPos.x;
     double cameraY = cameraPos.y;
     double cameraZ = cameraPos.z;
     if (state.cyanShape != null && state.cyanPos != null) {
-      VertexRendering.drawOutline(
+      ShapeRenderer.renderShape(
           matrices,
           vertexConsumer,
           state.cyanShape,
           state.cyanPos.getX() - cameraX,
           state.cyanPos.getY() - cameraY,
           state.cyanPos.getZ() - cameraZ,
-          ColorHelper.fromFloats(0.8f, 0,
+          ARGB.colorFromFloat(0.8f, 0,
               1,
               1),
-          MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
+          Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
 
     if (state.blueShape != null && state.bluePos != null) {
-      VertexRendering.drawOutline(
+      ShapeRenderer.renderShape(
           matrices,
           vertexConsumer,
           state.blueShape,
           state.bluePos.getX() - cameraX,
           state.bluePos.getY() - cameraY,
           state.bluePos.getZ() - cameraZ,
-          ColorHelper.fromFloats(0.5f, 0,
+          ARGB.colorFromFloat(0.5f, 0,
               0.5f,
               1),
-          MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
+          Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
     if (state.redShape != null && state.redPos != null) {
-      VertexRendering.drawOutline(
+      ShapeRenderer.renderShape(
           matrices,
           vertexConsumer,
           state.redShape,
           state.redPos.getX() - cameraX,
           state.redPos.getY() - cameraY,
           state.redPos.getZ() - cameraZ,
-          ColorHelper.fromFloats(0.8f, 1,
+          ARGB.colorFromFloat(0.8f, 1,
               0,
               0),
-          MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
+          Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
     if (state.yellowShape != null && state.yellowPos != null) {
-      VertexRendering.drawOutline(
+      ShapeRenderer.renderShape(
           matrices,
           vertexConsumer,
           state.yellowShape,
           state.yellowPos.getX() - cameraX,
           state.yellowPos.getY() - cameraY,
           state.yellowPos.getZ() - cameraZ,
-          ColorHelper.fromFloats(0.5f, 1,
+          ARGB.colorFromFloat(0.5f, 1,
               0.5f,
               0),
-          MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
+          Minecraft.getInstance().getWindow().getAppropriateLineWidth());
 
     }
     return false;
   }
 
   @Override
-  public @NotNull ActionResult attackEntityCallback(
-      PlayerEntity player,
-      World world,
-      Hand hand,
+  public InteractionResult attackEntityCallback(
+      Player player,
+      Level world,
+      InteractionHand hand,
       Entity entity,
       @Nullable EntityHitResult hitResult) {
-    if (!hasAccess(player, world, true)) return ActionResult.PASS;
-    if (world instanceof ServerWorld serverWorld) {
-      if (entity instanceof PlayerEntity) {
+    if (!hasAccess(player, world, true)) return InteractionResult.PASS;
+    if (world instanceof ServerLevel serverWorld) {
+      if (entity instanceof Player) {
         entity.kill(serverWorld);
       } else {
         entity.remove(Entity.RemovalReason.KILLED);
       }
       if (entity instanceof EnderDragonPart enderDragonPart) {
-        enderDragonPart.owner.kill(serverWorld);
+        enderDragonPart.parentMob.kill(serverWorld);
       }
     }
-    return ActionResult.SUCCESS;
+    return InteractionResult.SUCCESS;
   }
 
   /**
    * 玩家是否有权使用此物品。
    */
   @ApiStatus.AvailableSince("1.0.0")
-  private static boolean hasAccess(PlayerEntity player, World world, boolean warn) {
-    if (!(world instanceof ServerWorld serverWorld)) {
+  private static boolean hasAccess(Player player, Level world, boolean warn) {
+    if (!(world instanceof ServerLevel serverWorld)) {
       return MishangucClient.CLIENT_FORCE_PLACING_TOOL_ACCESS.get().hasAccess(player);
     } else {
-      final MishangucRules.ToolAccess toolAccess = serverWorld.getGameRules().getValue(MishangucRules.FORCE_PLACING_TOOL_ACCESS);
+      final MishangucRules.ToolAccess toolAccess = serverWorld.getGameRules().get(MishangucRules.FORCE_PLACING_TOOL_ACCESS);
       return toolAccess.hasAccess(player, warn);
     }
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void renderBeforeOutline(ClientPlayerEntity player, ItemStack stack, WorldRenderContext context) {
+  public void renderBeforeOutline(LocalPlayer player, ItemStack stack, WorldRenderContext context) {
     // 只在使用主手持有此物品时进行渲染。
-    final MatrixStack matrices = context.matrices();
-    final VertexConsumerProvider consumers = context.consumers();
+    final PoseStack matrices = context.matrices();
+    final MultiBufferSource consumers = context.consumers();
     if (consumers == null) return;
-    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayers.lines());
+    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderTypes.lines());
 
     if (!(context.worldState().getData(MishangRenderStateProvider.MISHANG_BLOCK_OUTLINE) instanceof ForcePlacingToolState state)) {
       return;
     }
 
-    final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
+    final Vec3 cameraPos = context.worldState().cameraRenderState.pos;
     if (state.hitEntityBoundingBox != null) {
-      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(state.hitEntityBoundingBox), -cameraPos.x, -cameraPos.y, -cameraPos.z, ColorHelper.fromFloats(0.8f, 1.0f, 0f, 0f), MinecraftClient.getInstance().getWindow().getMinimumLineWidth());
+      ShapeRenderer.renderShape(matrices, vertexConsumer, Shapes.create(state.hitEntityBoundingBox), -cameraPos.x, -cameraPos.y, -cameraPos.z, ARGB.colorFromFloat(0.8f, 1.0f, 0f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
   }
 }

@@ -9,18 +9,16 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
-import net.minecraft.block.Block;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.block.StairsBlock;
-import net.minecraft.item.Item;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.DyeColor;
-import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NonNull;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.MiningLevel;
@@ -35,7 +33,7 @@ import java.util.concurrent.CompletableFuture;
 import static pers.solid.mishang.uc.MishangUtils.*;
 
 public class MishangucBlockTagProvider extends FabricTagProvider.BlockTagProvider {
-  protected static final Map<DyeColor, @NotNull TagKey<Block>> dyedBlockTags = ImmutableMap.<DyeColor, TagKey<Block>>builder()
+  protected static final Map<DyeColor, TagKey<Block>> dyedBlockTags = ImmutableMap.<DyeColor, TagKey<Block>>builder()
       .put(DyeColor.BLACK, ConventionalBlockTags.BLACK_DYED)
       .put(DyeColor.BLUE, ConventionalBlockTags.BLUE_DYED)
       .put(DyeColor.BROWN, ConventionalBlockTags.BROWN_DYED)
@@ -53,7 +51,7 @@ public class MishangucBlockTagProvider extends FabricTagProvider.BlockTagProvide
       .put(DyeColor.WHITE, ConventionalBlockTags.WHITE_DYED)
       .put(DyeColor.YELLOW, ConventionalBlockTags.YELLOW_DYED)
       .build();
-  public final @NotNull MishangucItemTagProvider affiliate;
+  public final MishangucItemTagProvider affiliate;
   protected final Map<TagKey<Block>, TagKey<Item>> blockTagsWithItem = new HashMap<>();
   protected MishangucTagBuilder<Block> pickaxeMineable;
   protected MishangucTagBuilder<Block> shovelMineable;
@@ -64,7 +62,7 @@ public class MishangucBlockTagProvider extends FabricTagProvider.BlockTagProvide
   protected MishangucTagBuilder<Block> needsDiamondTool;
   protected final Multimap<DyeColor, Item> coloredItems = ArrayListMultimap.create();
 
-  protected MishangucBlockTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+  protected MishangucBlockTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
     super(output, registriesFuture);
     this.affiliate = new MishangucItemTagProvider(output, registriesFuture, this);
   }
@@ -78,28 +76,28 @@ public class MishangucBlockTagProvider extends FabricTagProvider.BlockTagProvide
   }
 
   protected MishangucTagBuilder<Block> blockTagOnly(String path) {
-    return getMishangucTagBuilder(TagKey.of(RegistryKeys.BLOCK, Mishanguc.id(path)));
+    return getMishangucTagBuilder(TagKey.create(Registries.BLOCK, Mishanguc.id(path)));
   }
 
   protected MishangucTagBuilder<Block> blockTagWithItem(TagKey<Block> blockTagKey, TagKey<Item> itemTagKey) {
-    Preconditions.checkArgument(blockTagKey.id().equals(itemTagKey.id()));
+    Preconditions.checkArgument(blockTagKey.location().equals(itemTagKey.location()));
     final var tag = getMishangucTagBuilder(blockTagKey);
     blockTagsWithItem.put(blockTagKey, itemTagKey);
     return tag;
   }
 
   protected MishangucTagBuilder<Block> blockTagWithItem(String path) {
-    final TagKey<Block> tagKey = TagKey.of(RegistryKeys.BLOCK, Mishanguc.id(path));
+    final TagKey<Block> tagKey = TagKey.create(Registries.BLOCK, Mishanguc.id(path));
     final var tag = getMishangucTagBuilder(tagKey);
-    blockTagsWithItem.put(tagKey, TagKey.of(RegistryKeys.ITEM, Mishanguc.id(path)));
+    blockTagsWithItem.put(tagKey, TagKey.create(Registries.ITEM, Mishanguc.id(path)));
     return tag;
   }
 
   protected void init() {
-    pickaxeMineable = blockTagOnly(BlockTags.PICKAXE_MINEABLE);
-    shovelMineable = blockTagOnly(BlockTags.SHOVEL_MINEABLE);
-    axeMineable = blockTagOnly(BlockTags.AXE_MINEABLE);
-    hoeMineable = blockTagOnly(BlockTags.HOE_MINEABLE);
+    pickaxeMineable = blockTagOnly(BlockTags.MINEABLE_WITH_PICKAXE);
+    shovelMineable = blockTagOnly(BlockTags.MINEABLE_WITH_SHOVEL);
+    axeMineable = blockTagOnly(BlockTags.MINEABLE_WITH_AXE);
+    hoeMineable = blockTagOnly(BlockTags.MINEABLE_WITH_HOE);
     needsStoneTool = blockTagOnly(BlockTags.NEEDS_STONE_TOOL);
     needsIronTool = blockTagOnly(BlockTags.NEEDS_IRON_TOOL);
     needsDiamondTool = blockTagOnly(BlockTags.NEEDS_DIAMOND_TOOL);
@@ -656,7 +654,7 @@ public class MishangucBlockTagProvider extends FabricTagProvider.BlockTagProvide
   }
 
   @Override
-  protected void configure(RegistryWrapper.@NonNull WrapperLookup wrapperLookup) {
+  protected void addTags(HolderLookup.Provider wrapperLookup) {
     init();
     roads();
     signs();
@@ -664,7 +662,7 @@ public class MishangucBlockTagProvider extends FabricTagProvider.BlockTagProvide
     handrails();
     coloredBlocks();
 
-    blockTagWithItem(BlockTags.STAIRS, ItemTags.STAIRS).add(blocks().stream().filter(block -> block instanceof StairsBlock).toArray(Block[]::new));
+    blockTagWithItem(BlockTags.STAIRS, ItemTags.STAIRS).add(blocks().stream().filter(block -> block instanceof StairBlock).toArray(Block[]::new));
     blockTagWithItem(BlockTags.SLABS, ItemTags.SLABS).add(blocks().stream().filter(block -> block instanceof SlabBlock).toArray(Block[]::new));
 
     blockTagOnly("incorrect_for_omnipotent_tool");

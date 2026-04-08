@@ -5,16 +5,14 @@ import com.google.common.collect.ImmutableMap;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.DyeColor;
-import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NonNull;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.block.ColoredBlock;
@@ -30,7 +28,7 @@ import java.util.concurrent.CompletableFuture;
 import static pers.solid.mishang.uc.MishangUtils.*;
 
 public class MishangucItemTagProvider extends FabricTagProvider.ItemTagProvider {
-  protected static final Map<DyeColor, @NotNull TagKey<Item>> dyedItemTags = ImmutableMap.<DyeColor, TagKey<Item>>builder()
+  protected static final Map<DyeColor, TagKey<Item>> dyedItemTags = ImmutableMap.<DyeColor, TagKey<Item>>builder()
       .put(DyeColor.BLACK, ConventionalItemTags.BLACK_DYED)
       .put(DyeColor.BLUE, ConventionalItemTags.BLUE_DYED)
       .put(DyeColor.BROWN, ConventionalItemTags.BROWN_DYED)
@@ -50,7 +48,7 @@ public class MishangucItemTagProvider extends FabricTagProvider.ItemTagProvider 
       .build();
   private final MishangucBlockTagProvider blockTagProvider;
 
-  public MishangucItemTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture, @NotNull MishangucBlockTagProvider blockTagProvider) {
+  public MishangucItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture, MishangucBlockTagProvider blockTagProvider) {
     super(output, completableFuture, blockTagProvider);
     this.blockTagProvider = blockTagProvider;
   }
@@ -114,7 +112,7 @@ public class MishangucItemTagProvider extends FabricTagProvider.ItemTagProvider 
   }
 
   @Override
-  protected void configure(RegistryWrapper.@NonNull WrapperLookup lookup) {
+  protected void addTags(HolderLookup.Provider lookup) {
     tools();
     handrailItems();
     coloredItems();
@@ -131,6 +129,6 @@ public class MishangucItemTagProvider extends FabricTagProvider.ItemTagProvider 
   }
 
   protected MishangucTagBuilder<Item> itemTag(String path) {
-    return getMishangucTagBuilder(TagKey.of(RegistryKeys.ITEM, Mishanguc.id(path)));
+    return getMishangucTagBuilder(TagKey.create(Registries.ITEM, Mishanguc.id(path)));
   }
 }

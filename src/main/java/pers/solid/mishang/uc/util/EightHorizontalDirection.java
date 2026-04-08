@@ -2,19 +2,18 @@ package pers.solid.mishang.uc.util;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Either;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public enum EightHorizontalDirection implements StringIdentifiable {
+public enum EightHorizontalDirection implements StringRepresentable {
   SOUTH(Direction.SOUTH),
   SOUTH_WEST(HorizontalCornerDirection.SOUTH_WEST, FourHorizontalAxis.NE_SW),
   WEST(Direction.WEST),
@@ -37,38 +36,38 @@ public enum EightHorizontalDirection implements StringIdentifiable {
 
   public final FourHorizontalAxis axis;
 
-  EightHorizontalDirection(@NotNull Direction vanillaDirection) {
+  EightHorizontalDirection(Direction vanillaDirection) {
     either = Either.left(vanillaDirection);
     this.axis = FourHorizontalAxis.of(vanillaDirection.getAxis());
   }
 
-  EightHorizontalDirection(@NotNull HorizontalCornerDirection cornerDirection, FourHorizontalAxis axis) {
+  EightHorizontalDirection(HorizontalCornerDirection cornerDirection, FourHorizontalAxis axis) {
     either = Either.right(cornerDirection);
     this.axis = axis;
   }
 
-  public static @NotNull EightHorizontalDirection of(@NotNull Direction direction) {
+  public static EightHorizontalDirection of(Direction direction) {
     return DIRECTIONS.get(direction);
   }
 
-  public static @NotNull EightHorizontalDirection of(@NotNull HorizontalCornerDirection cornerDirection) {
+  public static EightHorizontalDirection of(HorizontalCornerDirection cornerDirection) {
     return CORNER_DIRECTIONS.get(cornerDirection);
   }
 
-  public EightHorizontalDirection rotate(BlockRotation rotation) {
+  public EightHorizontalDirection rotate(Rotation rotation) {
     return either.map(direction -> of(rotation.rotate(direction)), cornerDirection -> of(cornerDirection.rotate(rotation)));
   }
 
-  public EightHorizontalDirection mirror(BlockMirror mirror) {
-    return either.map(direction -> of(mirror.apply(direction)), cornerDirection -> of(cornerDirection.mirror(mirror)));
+  public EightHorizontalDirection mirror(Mirror mirror) {
+    return either.map(direction -> of(mirror.mirror(direction)), cornerDirection -> of(cornerDirection.mirror(mirror)));
   }
 
   public float asRotation() {
-    return either.map(Direction::getPositiveHorizontalDegrees, cornerDirection -> (float) cornerDirection.asRotation());
+    return either.map(Direction::toYRot, cornerDirection -> (float) cornerDirection.asRotation());
   }
 
   public static EightHorizontalDirection fromRotation(float rotation) {
-    return VALUES.get(MathHelper.floor(rotation / 45 + 0.5) & 7);
+    return VALUES.get(Mth.floor(rotation / 45 + 0.5) & 7);
   }
 
   public Optional<Direction> left() {
@@ -80,7 +79,7 @@ public enum EightHorizontalDirection implements StringIdentifiable {
   }
 
   @Override
-  public String asString() {
-    return either.map(Direction::asString, HorizontalCornerDirection::asString);
+  public String getSerializedName() {
+    return either.map(Direction::getSerializedName, HorizontalCornerDirection::getSerializedName);
   }
 }
