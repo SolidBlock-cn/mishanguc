@@ -2,6 +2,10 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.6.3-beta.2
+
+- Fixed the issue that text copy tool may use offhand items.
+
 ### 1.6.3-beta.1
 
 - Optimized operation of carrying items on both hands: when using Growth Tool, Carrying Tool, Tp Tool and Color Tool, any items on offhand (including blocks) will not be used.
