@@ -122,7 +122,7 @@ public class CarryingToolItem extends BlockToolItem
   @Override
   public ActionResult useOnBlock(ItemStack stack, PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
     if (!hasAccess(player, world, true)) {
-      return ActionResult.PASS;
+      return ActionResult.CONSUME;
     }
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     if (carryingToolData instanceof CarryingToolData.HoldingBlockState) {
@@ -193,8 +193,9 @@ public class CarryingToolItem extends BlockToolItem
 
   @Override
   public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    if (!hasAccess(player, world, true))
-      return ActionResult.PASS;
+    if (!hasAccess(player, world, true)) {
+      return ActionResult.FAIL;
+    }
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     if (carryingToolData instanceof CarryingToolData.HoldingBlockState holdingBlockState && !player.isCreative()) {
       if (!world.isClient) {
@@ -244,7 +245,7 @@ public class CarryingToolItem extends BlockToolItem
   public ActionResult use(World world, PlayerEntity user, Hand hand) {
     final ActionResult use = super.use(world, user, hand);
     if (use.isAccepted() || !hasAccess(user, world, true)) {
-      return use;
+      return ActionResult.FAIL;
     }
     final ItemStack stack = user.getStackInHand(hand);
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
