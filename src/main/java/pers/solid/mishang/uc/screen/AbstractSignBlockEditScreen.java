@@ -1265,4 +1265,8 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       finishEditing();
     }
   }
+
+  @Override
+  public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+  }
 }

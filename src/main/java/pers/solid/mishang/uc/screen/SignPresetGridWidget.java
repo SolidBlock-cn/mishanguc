@@ -67,6 +67,14 @@ public class SignPresetGridWidget extends ContainerObjectSelectionList<SignPrese
   }
 
   @Override
+  protected void extractListBackground(GuiGraphicsExtractor graphics) {
+  }
+
+  @Override
+  protected void extractListSeparators(GuiGraphicsExtractor graphics) {
+  }
+
+  @Override
   public int getRowWidth() {
     return 450;
   }
