@@ -4,6 +4,10 @@ Note: Not all versions in this update log are already published. Please refer to
 
 ### 1.6.3-beta.2
 
+- Fixed the issue that explosion tool may use offhand items.
+
+### 1.6.3-beta.2
+
 - Fixed the issue that text copy tool may use offhand items.
 
 ### 1.6.3-beta.1
