@@ -172,7 +172,7 @@ modrinth {
     println "Modrinth 令牌：${token.get() instanceof String ? token.get().replaceAll("^(.+?)(.{0,6})\$", (s, a, b) -> a.replaceAll(".", "*") + b) : token.get()}"
 
     projectId = "rItLmRo4" // 迷上城建模组的 Modrinth ID
-    versionNumber = project.mod_version + '-' + project.minecraft_version
+    versionNumber = project.mod_version + '+mc' + project.minecraft_version
     versionType = project.mod_version.contains('-') ? 'beta' : 'release'  // until release of MC
     uploadFile = jar
     gameVersions = Arrays.asList(project.supported_minecraft_versions.split(','))
