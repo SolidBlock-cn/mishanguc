@@ -110,7 +110,7 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
         player.displayClientMessage(TextBridge.translatable("item.mishanguc.color_tool.message.no_data").withStyle(ChatFormatting.RED), true);
         return InteractionResult.FAIL;
       }
-      return InteractionResult.PASS;
+      return InteractionResult.CONSUME;
     }
 
     int prevColorRgb = 0; // the initial value should not usually be used.
@@ -179,7 +179,7 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
         player.displayClientMessage(TextBridge.translatable("item.mishanguc.color_tool.message.not_colored").withStyle(ChatFormatting.RED), true);
         return InteractionResult.FAIL;
       }
-      return InteractionResult.PASS;
+      return InteractionResult.CONSUME;
     }
   }
 
