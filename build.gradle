@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.15-SNAPSHOT'
+    id 'fabric-loom' version '1.16-SNAPSHOT'
     id 'maven-publish'
 
     id "com.modrinth.minotaur" version "2.+"
@@ -49,6 +49,9 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+    // Mod Menu
+    modApi "com.terraformersmc:modmenu:$project.modmenu_version"
 
     if (project.hasProperty('imblocker_version') && !project.imblocker_version.isEmpty()) {
         modRuntimeOnly "maven.modrinth:imblocker-original:$project.imblocker_version"
