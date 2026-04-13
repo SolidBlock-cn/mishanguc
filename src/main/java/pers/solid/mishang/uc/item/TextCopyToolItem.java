@@ -196,8 +196,6 @@ public class TextCopyToolItem extends BlockToolItem implements MishangucItem, Wi
           return InteractionResult.SUCCESS;
         }
       } else {
-        if (world.isClientSide())
-          return InteractionResult.PASS;
         // 点击的方块不是可以识别的告示牌方块。
         player.displayClientMessage(TextBridge.translatable("item.mishanguc.text_copy_tool.message.fail.not_sign").withStyle(ChatFormatting.RED), true);
         return InteractionResult.FAIL;
