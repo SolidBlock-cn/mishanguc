@@ -53,7 +53,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
   @Override
   public ActionResult use(World world, PlayerEntity user, Hand hand) {
     final ActionResult use = super.use(world, user, hand);
-    if (world.isClient()) return use;
+    if (world.isClient()) return ActionResult.SUCCESS;
     final HitResult raycast = user.raycast(64, 0, true);
     if (raycast.getType() == HitResult.Type.MISS) {
       return ActionResult.FAIL;
@@ -61,7 +61,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
     final Vec3d center = raycast.getPos();
     final int damage = apply(world, center, !user.isSneaking());
     user.getStackInHand(hand).damage(damage, user, hand.getEquipmentSlot());
-    return use;
+    return ActionResult.SUCCESS;
   }
 
   @Override
