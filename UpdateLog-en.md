@@ -7,10 +7,12 @@ Note: Not all versions in this update log are already published. Please refer to
 - Support the new version 26.1.
 - Fixed the issue that point of interest types not supporting colored nether portal blocks causing generating a new uncolored nether portal after entering and returning from a colored nether portal.
 - Fixed the issue of sign edit screen containing backgrounds in versions since 26.1.
+- Now in 26.1, when holding a golden dandelion in offhand, using Growth Tool on an age-lockable living entity may set or unset its age lock (setting to baby to lock age, and setting to adult to unlock age).
 
 ### 1.6.2-beta.2
 
 - Fixed the issue of sign edit screen containing backgrounds in versions since 26.1.
+- Now in 26.1, when holding a golden dandelion in offhand, using Growth Tool on an age-lockable living entity may set or unset its age lock (setting to baby to lock age, and setting to adult to unlock age).
 
 ### 1.6.2-beta.1
 

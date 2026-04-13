@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "AbstractBlockStateMixin",
+    "AgeableMobAccessor",
     "AreaHelperMixin",
     "BeaconBlockEntityAccessor",
     "BeaconBlockEntityAccessor$BeamSegmentAccessor",
