@@ -26,6 +26,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
+import pers.solid.mishang.uc.item.ColoredTintSource;
 
 import java.util.List;
 
@@ -70,7 +71,7 @@ public class ColoredNetherPortalBlock extends NetherPortalBlock implements Color
             PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_AXIS)
                 .select(Direction.Axis.X, BlockModelGenerators.plainVariant(nsId))
                 .select(Direction.Axis.Z, BlockModelGenerators.plainVariant(ewId))));
-    blockStateModelGenerator.registerSimpleItemModel(this, nsId);
+    blockStateModelGenerator.registerSimpleTintedItemModel(this, nsId, ColoredTintSource.INSTANCE);
   }
 
   @Override
