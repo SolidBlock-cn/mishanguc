@@ -198,7 +198,7 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
     if (!world.isClientSide()) {
       player.sendOverlayMessage(Component.translatable("item.mishanguc.color_tool.message.success_copied", MishangUtils.describeColor(color)));
     }
-    return null;
+    return InteractionResult.SUCCESS;
   }
 
   public void appendToEntries(CreativeModeTab.Output entries) {
