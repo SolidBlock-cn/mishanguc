@@ -12,7 +12,7 @@ import pers.solid.mishang.uc.blocks.ColoredBlocks;
 @Mixin(NetherPortal.class)
 public abstract class AreaHelperMixin {
   @ModifyReturnValue(method = "validStateInsidePortal", at = @At("RETURN"))
-  private static boolean validColoredPortal(boolean original, @Local(argsOnly = true, name = "state", ordinal = 0) BlockState state) {
+  private static boolean validColoredPortal(boolean original, @Local(argsOnly = true, ordinal = 0) BlockState state) {
     return original || state.isOf(ColoredBlocks.COLORED_NETHER_PORTAL);
   }
 
