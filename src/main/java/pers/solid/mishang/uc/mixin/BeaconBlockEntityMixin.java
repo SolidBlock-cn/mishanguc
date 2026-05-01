@@ -8,6 +8,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BeaconBeamOwner;
@@ -35,7 +36,7 @@ public abstract class BeaconBlockEntityMixin {
     final List<BeaconBeamOwner.Section> checkingBeamSegments = ((BeaconBlockEntityAccessor) blockEntity).getCheckingBeamSegments();
     if (world.getBlockEntity(blockPos) instanceof ColoredBlockEntity coloredBlockEntity && blockState.is(TINTS_BEACON_BEAMS)) {
       localBooleanRef.set(true);
-      int color = coloredBlockEntity.getColor();
+      int color = ARGB.opaque(coloredBlockEntity.getColor());
       if (checkingBeamSegments.size() <= 1) {
         beamSegment = new BeaconBeamOwner.Section(color);
         beamSegmentLocalRef.set(beamSegment);
@@ -54,7 +55,7 @@ public abstract class BeaconBlockEntityMixin {
           final int r = (r1 + r2) / 2;
           final int g = (g1 + g2) / 2;
           final int b = (b1 + b2) / 2;
-          beamSegment = new BeaconBeamOwner.Section((r << 4) + (g << 2) + b);
+          beamSegment = new BeaconBeamOwner.Section(ARGB.color(255, r, g, b));
           beamSegmentLocalRef.set(beamSegment);
           checkingBeamSegments.add(beamSegment);
         }
