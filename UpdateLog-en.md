@@ -2,7 +2,13 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
-### 1.6.3-beta.2
+### 1.6.3-beta.4
+
+- Fixed the issue that the mixins of this mod may not run.
+- Improved the rendering of beacon beams. Now all beacon beam colors caused by colored blocks of this mod have alpha 255. Before this, the beacon beams may not be rendered correctly with shaders on.
+- Fixed the issue that colored stone and colored nether portal are not correctly tinted in the inventory. The issue is because this mod did not correctly use item model mappings introduced in Minecraft 1.21.4.
+
+### 1.6.3-beta.3
 
 - Fixed the issue that explosion tool may use offhand items.
 

@@ -84,15 +84,16 @@ public class ColoredCubeBlock extends Block implements ColoredBlock {
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
     final TextureMapping textureMap = textures.getTextureMap();
+    final Identifier modelId;
     if (this == ColoredBlocks.COLORED_STONE) {
-      final Identifier modelId = MishangucModels.COLORED_CUBE_ALL.create(this, textureMap, blockStateModelGenerator.modelOutput);
+      modelId = MishangucModels.COLORED_CUBE_ALL.create(this, textureMap, blockStateModelGenerator.modelOutput);
       final Identifier mirroredModelId = MishangucModels.COLORED_CUBE_MIRRORED_ALL.create(this, textureMap, blockStateModelGenerator.modelOutput);
 
       blockStateModelGenerator.blockStateOutput.accept(MultiVariantGenerator.dispatch(this, BlockModelGenerators.createRotatedVariants(new Variant(modelId), new Variant(mirroredModelId))));
-      return;
+    } else {
+      modelId = model.getModel().create(this, textureMap, blockStateModelGenerator.modelOutput);
+      blockStateModelGenerator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(this, BlockModelGenerators.plainVariant(modelId)));
     }
-    final Identifier modelId = model.getModel().create(this, textureMap, blockStateModelGenerator.modelOutput);
-    blockStateModelGenerator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(this, BlockModelGenerators.plainVariant(modelId)));
     blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.tintedModel(modelId, ColoredTintSource.INSTANCE));
   }
 

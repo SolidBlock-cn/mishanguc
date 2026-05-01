@@ -46,16 +46,7 @@ public abstract class BeaconBlockEntityMixin {
         if (color == beamSegmentColor) {
           ((BeaconBlockEntityAccessor.BeamSegmentAccessor) beamSegment).invokeIncreaseHeight();
         } else {
-          final int r1 = (beamSegmentColor >> 4) & 0xff;
-          final int g1 = (beamSegmentColor >> 2) & 0xff;
-          final int b1 = (beamSegmentColor) & 0xff;
-          final int r2 = (color >> 4) & 0xff;
-          final int g2 = (color >> 2) & 0xff;
-          final int b2 = (color) & 0xff;
-          final int r = (r1 + r2) / 2;
-          final int g = (g1 + g2) / 2;
-          final int b = (b1 + b2) / 2;
-          beamSegment = new BeaconBeamOwner.Section(ARGB.color(255, r, g, b));
+          beamSegment = new BeaconBeamOwner.Section(ARGB.average(beamSegmentColor, color));
           beamSegmentLocalRef.set(beamSegment);
           checkingBeamSegments.add(beamSegment);
         }
