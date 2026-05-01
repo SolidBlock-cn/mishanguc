@@ -19,7 +19,7 @@ public abstract class MouseMixin {
    * 当玩家手持快速建造工具并潜行时，不进行滑动，同时修改快速建造工具的类型。
    */
   @WrapOperation(method = "onScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/ScrollWheelHandler;getNextScrollWheelSelection(DII)I"))
-  private int lockSelection(double yOffset, int selected, int selectionSize, Operation<Integer> original, @Local(name = "inventory") Inventory inventory) {
+  private int lockSelection(double yOffset, int selected, int selectionSize, Operation<Integer> original, @Local Inventory inventory) {
     final ItemStack mainHandStack = inventory.getSelectedItem();
     if (mainHandStack.getItem() instanceof HotbarScrollInteraction interaction && interaction.shouldLockScroll(selected, yOffset)) {
       return selected;
