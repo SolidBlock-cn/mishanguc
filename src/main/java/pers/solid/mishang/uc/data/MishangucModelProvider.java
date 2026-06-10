@@ -16,6 +16,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.MishangucBlock;
+import pers.solid.mishang.uc.blocks.StandingSignBlocks;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.item.*;
 import pers.solid.mishang.uc.util.ColorMixtureType;

@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.item.ColoredTintSource;
+import pers.solid.mishang.uc.util.LogicMaterial;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -31,13 +32,13 @@ import java.util.function.Function;
 @ApiStatus.AvailableSince("0.2.4")
 public class GlassHandrailBlock extends HandrailBlock {
   public static final MapCodec<GlassHandrailBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_block").forGetter(GlassHandrailBlock::baseBlock), propertiesCodec()).apply(instance, (block, settings1) -> new GlassHandrailBlock(block, settings1, null, null, BuiltInRegistries.BLOCK.getKey(block), false)));
-  public final Material decorationMaterial;
+  public final LogicMaterial decorationMaterial;
   private final CentralBlock central;
   private final CornerBlock corner;
   private final StairBlock stair;
   private final OuterBlock outer;
   private final Block baseBlock;
-  private final Material frameMaterial;
+  private final LogicMaterial frameMaterial;
 
   public GlassHandrailBlock(Block baseBlock, Properties settings, String frameMaterial, String decorationMaterial, Identifier identifier) {
     this(baseBlock, settings, frameMaterial, decorationMaterial, identifier, true);
@@ -46,8 +47,8 @@ public class GlassHandrailBlock extends HandrailBlock {
   protected GlassHandrailBlock(Block baseBlock, Properties settings, String frameMaterial, String decorationMaterial, Identifier identifier, boolean createAffiliateBlocks) {
     super(settings.noOcclusion().setId(ResourceKey.create(Registries.BLOCK, identifier)));
     this.baseBlock = baseBlock;
-    this.frameMaterial = frameMaterial == null ? null : new Material(Identifier.parse(frameMaterial));
-    this.decorationMaterial = decorationMaterial == null ? null : new Material(Identifier.parse(decorationMaterial));
+    this.frameMaterial = frameMaterial == null ? null : new LogicMaterial(Identifier.parse(frameMaterial));
+    this.decorationMaterial = decorationMaterial == null ? null : new LogicMaterial(Identifier.parse(decorationMaterial));
     this.central = createAffiliateBlocks ? new CentralBlock(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_central")))) : null;
     this.corner = createAffiliateBlocks ? new CornerBlock(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_corner")))) : null;
     this.stair = createAffiliateBlocks ? new StairBlock(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_stair")))) : null;
@@ -57,8 +58,8 @@ public class GlassHandrailBlock extends HandrailBlock {
   protected GlassHandrailBlock(Block baseBlock, Properties settings, String frameMaterial, String decorationMaterial, BiFunction<GlassHandrailBlock, Properties, CentralBlock> centralProvider, BiFunction<GlassHandrailBlock, Properties, CornerBlock> cornerProvider, BiFunction<GlassHandrailBlock, Properties, StairBlock> stairProvider, BiFunction<GlassHandrailBlock, Properties, OuterBlock> outerProvider, Identifier identifier) {
     super(settings.noOcclusion().setId(ResourceKey.create(Registries.BLOCK, identifier)));
     this.baseBlock = baseBlock;
-    this.frameMaterial = new Material(Identifier.parse(frameMaterial));
-    this.decorationMaterial = new Material(Identifier.parse(decorationMaterial));
+    this.frameMaterial = new LogicMaterial(Identifier.parse(frameMaterial));
+    this.decorationMaterial = new LogicMaterial(Identifier.parse(decorationMaterial));
     central = centralProvider.apply(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_central"))));
     corner = cornerProvider.apply(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_corner"))));
     stair = stairProvider.apply(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_stair"))));
@@ -86,7 +87,7 @@ public class GlassHandrailBlock extends HandrailBlock {
   @Environment(EnvType.CLIENT)
   @Override
   public TextureMapping getTextures() {
-    return new TextureMapping().put(TextureKeys.FRAME, frameMaterial).put(TextureKeys.GLASS, new Material(Mishanguc.id("block/glass_unframed"))).put(TextureKeys.DECORATION, decorationMaterial);
+    return new TextureMapping().put(TextureKeys.FRAME, frameMaterial.toClientMaterial()).put(TextureKeys.GLASS, new Material(Mishanguc.id("block/glass_unframed"))).put(TextureKeys.DECORATION, decorationMaterial.toClientMaterial());
   }
 
   @Override

@@ -25,12 +25,13 @@ import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.item.ColoredTintSource;
+import pers.solid.mishang.uc.util.LogicMaterial;
 
 public class GlowingHungSignBlock extends HungSignBlock {
   public static final MapCodec<GlowingHungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, GlowingHungSignBlock::new));
   @ApiStatus.AvailableSince("0.1.7")
-  protected static final Material DEFAULT_GLOW_MATERIAL = new Material(Mishanguc.id("block/white_light"));
-  public Material glowMaterial;
+  protected static final LogicMaterial DEFAULT_GLOW_MATERIAL = new LogicMaterial(Mishanguc.id("block/white_light"));
+  public LogicMaterial glowMaterial;
 
   public GlowingHungSignBlock(@Nullable Block baseBlock, Properties settings) {
     super(baseBlock, settings.lightLevel(s -> 15));
@@ -50,9 +51,9 @@ public class GlowingHungSignBlock extends HungSignBlock {
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
     final Material material = getBaseMaterial();
     final TextureMapping textures = TextureMapping.defaultTexture(material);
-    if (barMaterial != null) textures.put(MishangucTextureKeys.BAR, barMaterial);
-    if (materialTop != null) textures.put(MishangucTextureKeys.TEXTURE_TOP, materialTop);
-    textures.put(MishangucTextureKeys.GLOW, glowMaterial);
+    if (barMaterial != null) textures.put(MishangucTextureKeys.BAR, barMaterial.toClientMaterial());
+    if (materialTop != null) textures.put(MishangucTextureKeys.TEXTURE_TOP, materialTop.toClientMaterial());
+    textures.put(MishangucTextureKeys.GLOW, glowMaterial.toClientMaterial());
 
     final Identifier id = MishangucModels.GLOWING_HUNG_SIGN.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier bodyId = MishangucModels.GLOWING_HUNG_SIGN_BODY.create(this, textures, blockStateModelGenerator.modelOutput);

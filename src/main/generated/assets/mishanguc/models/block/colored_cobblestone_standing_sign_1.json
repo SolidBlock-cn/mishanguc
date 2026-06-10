@@ -1,7 +1,0 @@
-{
-  "parent": "mishanguc:block/standing_sign_1",
-  "textures": {
-    "bar": "mishanguc:block/pale_cobblestone",
-    "texture": "mishanguc:block/pale_cobblestone"
-  }
-}

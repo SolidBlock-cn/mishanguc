@@ -61,6 +61,7 @@ import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 import pers.solid.mishang.uc.networking.EditSignPayload;
 import pers.solid.mishang.uc.render.HungSignBlockEntityRenderer;
 import pers.solid.mishang.uc.text.TextContext;
+import pers.solid.mishang.uc.util.LogicMaterial;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.*;
@@ -113,17 +114,17 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
    * 非 final，可直接进行修改。
    */
   @ApiStatus.AvailableSince("0.1.7")
-  public @Nullable Material baseMaterial;
+  public @Nullable LogicMaterial baseMaterial;
   /**
    * 告示牌杆的纹理。可能为 {@code null}。生成模型时，可直接作为 null 传入，转化为 json 时会被忽略。
    */
   @ApiStatus.AvailableSince("0.1.7")
-  public @Nullable Material barMaterial;
+  public @Nullable LogicMaterial barMaterial;
   /**
    * 告示牌顶部的纹理。可能为 {@code null}。生成模型时，可直接作为 null 传入，转化为 json 时会被忽略。
    */
   @ApiStatus.AvailableSince("0.1.7")
-  public @Nullable Material materialTop;
+  public @Nullable LogicMaterial materialTop;
 
   public HungSignBlock(@Nullable Block baseBlock, Properties settings) {
     super(settings);
@@ -426,7 +427,7 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
 
   @Environment(EnvType.CLIENT)
   public Material getBaseMaterial() {
-    if (baseMaterial != null) return baseMaterial;
+    if (baseMaterial != null) return baseMaterial.toClientMaterial();
     return ModelHelper.getMaterialOf(baseBlock == null ? this : baseBlock);
   }
 
@@ -435,8 +436,8 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
     final Material material = getBaseMaterial();
     final TextureMapping textures = TextureMapping.defaultTexture(material);
-    if (barMaterial != null) textures.put(MishangucTextureKeys.BAR, barMaterial);
-    if (materialTop != null) textures.put(MishangucTextureKeys.TEXTURE_TOP, materialTop);
+    if (barMaterial != null) textures.put(MishangucTextureKeys.BAR, barMaterial.toClientMaterial());
+    if (materialTop != null) textures.put(MishangucTextureKeys.TEXTURE_TOP, materialTop.toClientMaterial());
 
     final Identifier id = MishangucModels.HUNG_SIGN.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier bodyId = MishangucModels.HUNG_SIGN_BODY.create(this, textures, blockStateModelGenerator.modelOutput);

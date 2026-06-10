@@ -25,14 +25,15 @@ import pers.solid.mishang.uc.blocks.WallSignBlocks;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.item.ColoredTintSource;
+import pers.solid.mishang.uc.util.LogicMaterial;
 
 /**
  * 发光的直立告示牌。
  */
 public class GlowingStandingSignBlock extends StandingSignBlock {
   public static final MapCodec<GlowingStandingSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, GlowingStandingSignBlock::new));
-  protected static final Material DEFAULT_GLOW_MATERIAL = new Material(Mishanguc.id("block/white_light"));
-  public Material glowMaterial = DEFAULT_GLOW_MATERIAL;
+  protected static final LogicMaterial DEFAULT_GLOW_MATERIAL = new LogicMaterial(Mishanguc.id("block/white_light"));
+  public LogicMaterial glowMaterial = DEFAULT_GLOW_MATERIAL;
 
   public GlowingStandingSignBlock(Block baseBlock, Properties settings) {
     super(baseBlock, settings.lightLevel(x -> 15));
@@ -47,7 +48,10 @@ public class GlowingStandingSignBlock extends StandingSignBlock {
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final TextureMapping textures = TextureMapping.defaultTexture(getBaseMaterial()).put(MishangucTextureKeys.BAR, barMaterial).put(MishangucTextureKeys.GLOW, glowMaterial);
+    if (barMaterial==null) {
+      return;
+    }
+    final TextureMapping textures = TextureMapping.defaultTexture(getBaseMaterial()).put(MishangucTextureKeys.BAR, barMaterial.toClientMaterial()).put(MishangucTextureKeys.GLOW, glowMaterial.toClientMaterial());
     final Identifier modelId = MishangucModels.GLOWING_STANDING_SIGN.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier r1ModelId = MishangucModels.GLOWING_STANDING_SIGN_1.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier r2ModelId = MishangucModels.GLOWING_STANDING_SIGN_2.create(this, textures, blockStateModelGenerator.modelOutput);

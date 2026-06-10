@@ -1,8 +1,0 @@
-{
-  "parent": "mishanguc:block/glowing_standing_sign_2",
-  "textures": {
-    "bar": "minecraft:block/blackstone",
-    "glow": "minecraft:block/glowstone",
-    "texture": "minecraft:block/blackstone"
-  }
-}

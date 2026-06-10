@@ -29,23 +29,24 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.item.ColoredTintSource;
+import pers.solid.mishang.uc.util.LogicMaterial;
 
 import java.util.List;
 
 public class ColoredGlassPaneBlock extends IronBarsBlock implements ColoredBlock {
   public static final MapCodec<ColoredGlassPaneBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-      Material.CODEC.fieldOf("pane_material").forGetter(b -> b.paneMaterial),
-      Material.CODEC.fieldOf("edge_material").forGetter(b -> b.edgeMaterial),
+      LogicMaterial.CODEC.fieldOf("pane_material").forGetter(b -> b.paneMaterial),
+      LogicMaterial.CODEC.fieldOf("edge_material").forGetter(b -> b.edgeMaterial),
       propertiesCodec()
   ).apply(i, ColoredGlassPaneBlock::new));
-  private final Material paneMaterial;
-  private final Material edgeMaterial;
+  private final LogicMaterial paneMaterial;
+  private final LogicMaterial edgeMaterial;
 
   public ColoredGlassPaneBlock(Identifier paneIdentifier, Identifier edgeIdentifier, Properties properties) {
-    this(new Material(paneIdentifier), new Material(edgeIdentifier), properties);
+    this(new LogicMaterial(paneIdentifier), new LogicMaterial(edgeIdentifier), properties);
   }
 
-  public ColoredGlassPaneBlock(Material paneMaterial, Material edgeMaterial, Properties properties) {
+  public ColoredGlassPaneBlock(LogicMaterial paneMaterial, LogicMaterial edgeMaterial, Properties properties) {
     super(properties);
     this.paneMaterial = paneMaterial;
     this.edgeMaterial = edgeMaterial;
@@ -69,7 +70,7 @@ public class ColoredGlassPaneBlock extends IronBarsBlock implements ColoredBlock
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    TextureMapping textures = TextureMapping.singleSlot(TextureSlot.PANE, paneMaterial).put(TextureSlot.EDGE, edgeMaterial);
+    TextureMapping textures = TextureMapping.singleSlot(TextureSlot.PANE, paneMaterial.toClientMaterial()).put(TextureSlot.EDGE, edgeMaterial.toClientMaterial());
     final Identifier postId = MishangucModels.TEMPLATE_COLORED_GLASS_PANE_POST.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier sideId = MishangucModels.TEMPLATE_COLORED_GLASS_PANE_SIDE.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier SideAltId = MishangucModels.TEMPLATE_COLORED_GLASS_PANE_SIDE_ALT.create(this, textures, blockStateModelGenerator.modelOutput);
@@ -77,7 +78,7 @@ public class ColoredGlassPaneBlock extends IronBarsBlock implements ColoredBlock
     final Identifier nosideAltId = MishangucModels.TEMPLATE_COLORED_GLASS_PANE_NOSIDE_ALT.create(this, textures, blockStateModelGenerator.modelOutput);
 
     blockStateModelGenerator.blockStateOutput.accept(createBlockStates(postId, sideId, SideAltId, nosideId, nosideAltId));
-    final Identifier itemModelId = ModelTemplates.FLAT_ITEM.create(asItem(), TextureMapping.layer0(paneMaterial), blockStateModelGenerator.modelOutput);
+    final Identifier itemModelId = ModelTemplates.FLAT_ITEM.create(asItem(), TextureMapping.layer0(paneMaterial.toClientMaterial()), blockStateModelGenerator.modelOutput);
     blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.tintedModel(itemModelId, ColoredTintSource.INSTANCE));
   }
 

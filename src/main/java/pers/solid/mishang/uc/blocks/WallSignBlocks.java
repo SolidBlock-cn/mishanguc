@@ -11,6 +11,7 @@ import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.block.*;
+import pers.solid.mishang.uc.util.LogicMaterial;
 
 /**
  * <h1>墙上的告示牌方块</h1>
@@ -472,10 +473,10 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final GlowingWallSignBlock GLOWING_POLISHED_BLACKSTONE_WALL_SIGN = registerGlowing("glowing_polished_blackstone_wall_sign", Blocks.POLISHED_BLACKSTONE);
 
   static {
-    GLOWING_NETHERRACK_WALL_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/lava_still"));
-    GLOWING_NETHER_BRICK_WALL_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/lava_still"));
-    GLOWING_BLACKSTONE_WALL_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/glowstone"));
-    GLOWING_POLISHED_BLACKSTONE_WALL_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/glowstone"));
+    GLOWING_NETHERRACK_WALL_SIGN.glowMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/lava_still"));
+    GLOWING_NETHER_BRICK_WALL_SIGN.glowMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/lava_still"));
+    GLOWING_BLACKSTONE_WALL_SIGN.glowMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/glowstone"));
+    GLOWING_POLISHED_BLACKSTONE_WALL_SIGN.glowMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/glowstone"));
   }
 
   // 雪

@@ -13,7 +13,6 @@
     "BucketItemAccessor",
     "ChunkHolderAccessor",
     "ClickEventMixin",
-    "ContainerWidgetAccessor",
     "FenceBlockMixin",
     "ItemsAccessor",
     "ItemUsageContextInvoker",
@@ -39,7 +38,8 @@
     "RenderCommandQueueMixin",
     "ScreenMixin",
     "TextCommandRendererMixin",
-    "TextRendererAccessor"
+    "TextRendererAccessor",
+    "ContainerWidgetAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

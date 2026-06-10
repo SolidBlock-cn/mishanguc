@@ -15,6 +15,7 @@ import pers.solid.mishang.uc.block.ColoredGlowingStandingSignBlock;
 import pers.solid.mishang.uc.block.ColoredStandingSignBlock;
 import pers.solid.mishang.uc.block.GlowingStandingSignBlock;
 import pers.solid.mishang.uc.block.StandingSignBlock;
+import pers.solid.mishang.uc.util.LogicMaterial;
 
 /**
  * <h1>直立的告示牌方块</h1>
@@ -71,6 +72,10 @@ public final class StandingSignBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("1.2.4")
   public static final StandingSignBlock STRIPPED_WARPED_HYPHAE_STANDING_SIGN = register("stripped_warped_hyphae_standing_sign", Blocks.STRIPPED_WARPED_HYPHAE);
 
+  static {
+
+  }
+
   public static final StandingSignBlock OAK_STANDING_SIGN = register("oak_standing_sign", Blocks.OAK_PLANKS);
   public static final StandingSignBlock SPRUCE_STANDING_SIGN = register("spruce_standing_sign", Blocks.SPRUCE_PLANKS);
   public static final StandingSignBlock BIRCH_STANDING_SIGN = register("birch_standing_sign", Blocks.BIRCH_PLANKS);
@@ -95,29 +100,29 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final StandingSignBlock BAMBOO_MOSAIC_STANDING_SIGN = register("bamboo_mosaic_standing_sign", Blocks.BAMBOO_MOSAIC, Block.Properties.ofFullCopy(Blocks.BAMBOO_MOSAIC));
 
   static {
-    OAK_WOOD_STANDING_SIGN.baseMaterial = OAK_STANDING_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/oak_log"));
-    SPRUCE_WOOD_STANDING_SIGN.baseMaterial = SPRUCE_STANDING_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/spruce_log"));
-    BIRCH_WOOD_STANDING_SIGN.baseMaterial = BIRCH_STANDING_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/birch_log"));
-    JUNGLE_WOOD_STANDING_SIGN.baseMaterial = JUNGLE_STANDING_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/jungle_log"));
-    ACACIA_WOOD_STANDING_SIGN.baseMaterial = ACACIA_STANDING_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/acacia_log"));
-    CHERRY_WOOD_STANDING_SIGN.baseMaterial = CHERRY_STANDING_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/cherry_log"));
-    DARK_OAK_WOOD_STANDING_SIGN.baseMaterial = DARK_OAK_STANDING_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/dark_oak_log"));
-    PALE_OAK_WOOD_STANDING_SIGN.baseMaterial = PALE_OAK_STANDING_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/pale_oak_log"));
-    MANGROVE_WOOD_STANDING_SIGN.baseMaterial = MANGROVE_STANDING_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/mangrove_log"));
-    CRIMSON_HYPHAE_STANDING_SIGN.baseMaterial = CRIMSON_STANDING_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/crimson_stem"));
-    WARPED_HYPHAE_STANDING_SIGN.baseMaterial = WARPED_STANDING_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/warped_stem"));
-    STRIPPED_OAK_WOOD_STANDING_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_oak_log"));
-    STRIPPED_SPRUCE_WOOD_STANDING_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_spruce_log"));
-    STRIPPED_BIRCH_WOOD_STANDING_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_birch_log"));
-    STRIPPED_JUNGLE_WOOD_STANDING_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_jungle_log"));
-    STRIPPED_ACACIA_WOOD_STANDING_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_acacia_log"));
-    STRIPPED_CHERRY_WOOD_STANDING_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_cherry_log"));
-    STRIPPED_DARK_OAK_WOOD_STANDING_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_dark_oak_log"));
-    STRIPPED_PALE_OAK_WOOD_STANDING_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_pale_oak_log"));
-    STRIPPED_MANGROVE_WOOD_STANDING_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_mangrove_log"));
-    STRIPPED_CRIMSON_HYPHAE_STANDING_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_crimson_stem"));
-    STRIPPED_WARPED_HYPHAE_STANDING_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/stripped_warped_stem"));
-    BAMBOO_PLANK_STANDING_SIGN.barMaterial = BAMBOO_MOSAIC_STANDING_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/bamboo_block"));
+    OAK_WOOD_STANDING_SIGN.baseMaterial = OAK_WOOD_STANDING_SIGN.barMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/oak_log"));
+    SPRUCE_WOOD_STANDING_SIGN.baseMaterial = SPRUCE_WOOD_STANDING_SIGN.barMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/spruce_log"));
+    BIRCH_WOOD_STANDING_SIGN.baseMaterial = BIRCH_WOOD_STANDING_SIGN.barMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/birch_log"));
+    JUNGLE_WOOD_STANDING_SIGN.baseMaterial = JUNGLE_WOOD_STANDING_SIGN.barMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/jungle_log"));
+    ACACIA_WOOD_STANDING_SIGN.baseMaterial = ACACIA_WOOD_STANDING_SIGN.barMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/acacia_log"));
+    CHERRY_WOOD_STANDING_SIGN.baseMaterial = CHERRY_WOOD_STANDING_SIGN.barMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/cherry_log"));
+    DARK_OAK_WOOD_STANDING_SIGN.baseMaterial = DARK_OAK_WOOD_STANDING_SIGN.barMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/dark_oak_log"));
+    PALE_OAK_WOOD_STANDING_SIGN.baseMaterial = PALE_OAK_WOOD_STANDING_SIGN.barMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/pale_oak_log"));
+    MANGROVE_WOOD_STANDING_SIGN.baseMaterial = MANGROVE_WOOD_STANDING_SIGN.barMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/mangrove_log"));
+    CRIMSON_HYPHAE_STANDING_SIGN.baseMaterial = CRIMSON_HYPHAE_STANDING_SIGN.barMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/crimson_stem"));
+    WARPED_HYPHAE_STANDING_SIGN.baseMaterial = WARPED_HYPHAE_STANDING_SIGN.barMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/warped_stem"));
+    STRIPPED_OAK_WOOD_STANDING_SIGN.baseMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/stripped_oak_log"));
+    STRIPPED_SPRUCE_WOOD_STANDING_SIGN.baseMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/stripped_spruce_log"));
+    STRIPPED_BIRCH_WOOD_STANDING_SIGN.baseMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/stripped_birch_log"));
+    STRIPPED_JUNGLE_WOOD_STANDING_SIGN.baseMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/stripped_jungle_log"));
+    STRIPPED_ACACIA_WOOD_STANDING_SIGN.baseMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/stripped_acacia_log"));
+    STRIPPED_CHERRY_WOOD_STANDING_SIGN.baseMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/stripped_cherry_log"));
+    STRIPPED_DARK_OAK_WOOD_STANDING_SIGN.baseMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/stripped_dark_oak_log"));
+    STRIPPED_PALE_OAK_WOOD_STANDING_SIGN.baseMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/stripped_pale_oak_log"));
+    STRIPPED_MANGROVE_WOOD_STANDING_SIGN.baseMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/stripped_mangrove_log"));
+    STRIPPED_CRIMSON_HYPHAE_STANDING_SIGN.baseMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/stripped_crimson_stem"));
+    STRIPPED_WARPED_HYPHAE_STANDING_SIGN.baseMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/stripped_warped_stem"));
+    BAMBOO_PLANK_STANDING_SIGN.barMaterial = BAMBOO_MOSAIC_STANDING_SIGN.barMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/bamboo_block"));
   }
 
   public static final ImmutableMap<WoodType, StandingSignBlock> WOODEN_SIGNS = new ImmutableMap.Builder<WoodType, StandingSignBlock>()
@@ -187,6 +192,10 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final StandingSignBlock GREEN_TERRACOTTA_STANDING_SIGN = register("green_terracotta_standing_sign", Blocks.GREEN_TERRACOTTA);
   public static final StandingSignBlock RED_TERRACOTTA_STANDING_SIGN = register("red_terracotta_standing_sign", Blocks.RED_TERRACOTTA);
   public static final StandingSignBlock BLACK_TERRACOTTA_STANDING_SIGN = register("black_terracotta_standing_sign", Blocks.BLACK_TERRACOTTA);
+
+  static {
+
+  }
 
   public static final ColoredStandingSignBlock COLORED_TERRACOTTA_STANDING_SIGN = registerColored("colored_terracotta_standing_sign", ColoredBlocks.COLORED_TERRACOTTA);
 
@@ -358,10 +367,10 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final GlowingStandingSignBlock GLOWING_POLISHED_BLACKSTONE_STANDING_SIGN = registerGlowing("glowing_polished_blackstone_standing_sign", Blocks.POLISHED_BLACKSTONE);
 
   static {
-    GLOWING_NETHERRACK_STANDING_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/lava_still"));
-    GLOWING_NETHER_BRICK_STANDING_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/lava_still"));
-    GLOWING_BLACKSTONE_STANDING_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/glowstone"));
-    GLOWING_POLISHED_BLACKSTONE_STANDING_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/glowstone"));
+    GLOWING_NETHERRACK_STANDING_SIGN.glowMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/lava_still"));
+    GLOWING_NETHER_BRICK_STANDING_SIGN.glowMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/lava_still"));
+    GLOWING_BLACKSTONE_STANDING_SIGN.glowMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/glowstone"));
+    GLOWING_POLISHED_BLACKSTONE_STANDING_SIGN.glowMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/glowstone"));
   }
 
 
@@ -378,11 +387,11 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final GlowingStandingSignBlock GLOWING_BLUE_ICE_STANDING_SIGN = registerGlowing("glowing_blue_ice_standing_sign", Blocks.BLUE_ICE);
 
   static {
-    SNOW_STANDING_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/snow"));
-    SNOW_STANDING_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/packed_ice"));
-    GLOWING_SNOW_STANDING_SIGN.baseMaterial = new Material(Identifier.withDefaultNamespace("block/snow"));
-    GLOWING_SNOW_STANDING_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/packed_ice"));
-    ICE_STANDING_SIGN.barMaterial = new Material(Identifier.withDefaultNamespace("block/blue_ice"));
+    SNOW_STANDING_SIGN.baseMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/snow"));
+    SNOW_STANDING_SIGN.barMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/packed_ice"));
+    GLOWING_SNOW_STANDING_SIGN.baseMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/snow"));
+    GLOWING_SNOW_STANDING_SIGN.barMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/packed_ice"));
+    ICE_STANDING_SIGN.barMaterial = new LogicMaterial(Identifier.withDefaultNamespace("block/blue_ice"));
   }
 
   private static StandingSignBlock register(String name, Block baseBlock, BlockBehaviour.Properties settings) {

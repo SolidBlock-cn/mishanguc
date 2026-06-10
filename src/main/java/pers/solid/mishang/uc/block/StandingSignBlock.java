@@ -59,6 +59,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
 import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
@@ -69,6 +71,7 @@ import pers.solid.mishang.uc.data.ModelHelper;
 import pers.solid.mishang.uc.item.ColoredTintSource;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
 import pers.solid.mishang.uc.networking.EditSignPayload;
+import pers.solid.mishang.uc.util.LogicMaterial;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
@@ -99,6 +102,7 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
   protected static final VoxelShape CULLING_SHAPE = box(7.5, 0, 7.5, 8.5, 8, 8.5);
   protected static final VoxelShape BAR_SHAPE = box(6.5, 0, 6.5, 9.5, 8, 9.5);
   protected static final RecordCodecBuilder<? extends StandingSignBlock, Block> BASE_BLOCK_CODEC = BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_block").forGetter(b -> b.baseBlock);
+  private static final Logger log = LoggerFactory.getLogger(StandingSignBlock.class);
 
   @SuppressWarnings("unchecked")
   protected static <B extends StandingSignBlock> RecordCodecBuilder<B, Block> baseBlockCodec() {
@@ -106,7 +110,7 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
   }
 
   public final @Nullable Block baseBlock;
-  public @Nullable Material baseMaterial, barMaterial;
+  public @Nullable LogicMaterial baseMaterial, barMaterial;
 
   public StandingSignBlock(@Nullable Block baseBlock, Properties settings) {
     super(settings);
@@ -180,7 +184,7 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
 
   @Environment(EnvType.CLIENT)
   public Material getBaseMaterial() {
-    if (baseMaterial != null) return baseMaterial;
+    if (baseMaterial != null) return baseMaterial.toClientMaterial();
     return ModelHelper.getMaterialOf(baseBlock == null ? this : baseBlock);
   }
 
@@ -239,10 +243,15 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
     tooltip.add(Component.translatable("block.mishanguc.standing_sign.tooltip.2").withStyle(ChatFormatting.GRAY));
   }
 
+  @SuppressWarnings("deprecation")
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final TextureMapping textures = TextureMapping.defaultTexture(getBaseMaterial()).put(MishangucTextureKeys.BAR, barMaterial);
+    if (barMaterial==null) {
+      log.error("Block {}'s barMaterial is null", this.builtInRegistryHolder().key());
+      return;
+    }
+    final TextureMapping textures = TextureMapping.defaultTexture(getBaseMaterial()).put(MishangucTextureKeys.BAR, barMaterial.toClientMaterial());
     final Identifier modelId = MishangucModels.STANDING_SIGN.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier r1ModelId = MishangucModels.STANDING_SIGN_1.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier r2ModelId = MishangucModels.STANDING_SIGN_2.create(this, textures, blockStateModelGenerator.modelOutput);
