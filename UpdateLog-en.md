@@ -5,6 +5,7 @@ Note: Not all versions in this update log are already published. Please refer to
 ### 1.6.3-beta.5
 
 - Now the dyeing logic of color tool runs only on the server.
+- Fixed the issue of failure of launching server in versions 26.1 and above.
 
 ### 1.6.3-beta.4
 
