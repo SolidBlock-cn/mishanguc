@@ -66,11 +66,11 @@ public class SimpleHandrailBlock extends HandrailBlock {
   /**
    * 栏杆顶部部分的纹理。
    */
-  public @Nullable Material top;
+  public @Nullable Identifier top;
   /**
    * 栏杆底部部分的纹理。
    */
-  public @Nullable Material bottom;
+  public @Nullable Identifier bottom;
 
   public SimpleHandrailBlock(@Nullable Block baseBlock, Properties settings, Identifier identifier) {
     this(baseBlock, settings, identifier, true);
@@ -98,7 +98,14 @@ public class SimpleHandrailBlock extends HandrailBlock {
   @Environment(EnvType.CLIENT)
   @Override
   public TextureMapping getTextures() {
-    return TextureMapping.cube(getMaterial()).put(TextureSlot.TOP, top).put(TextureSlot.BOTTOM, bottom);
+    final TextureMapping textures = TextureMapping.cube(getMaterial());
+    if (top != null) {
+      textures.put(TextureSlot.TOP, new Material(top));
+    }
+    if (bottom != null) {
+      textures.put(TextureSlot.BOTTOM, new Material(bottom));
+    }
+    return textures;
   }
 
   @Override

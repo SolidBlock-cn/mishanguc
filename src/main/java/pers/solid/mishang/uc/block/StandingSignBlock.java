@@ -98,15 +98,19 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
   protected static final VoxelShape SHAPE_CENTER = box(2.5, 8, 2.5, 13.5, 16, 13.5);
   protected static final VoxelShape CULLING_SHAPE = box(7.5, 0, 7.5, 8.5, 8, 8.5);
   protected static final VoxelShape BAR_SHAPE = box(6.5, 0, 6.5, 9.5, 8, 9.5);
-  protected static final RecordCodecBuilder<? extends StandingSignBlock, Block> BASE_BLOCK_CODEC = BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_block").forGetter(b -> b.baseBlock);
+  protected static final RecordCodecBuilder<? extends StandingSignBlock, Optional<Block>> BASE_BLOCK_CODEC = BuiltInRegistries.BLOCK.byNameCodec().optionalFieldOf("base_block").forGetter(b -> Optional.ofNullable(b.baseBlock));
 
   @SuppressWarnings("unchecked")
-  protected static <B extends StandingSignBlock> RecordCodecBuilder<B, Block> baseBlockCodec() {
-    return (RecordCodecBuilder<B, Block>) BASE_BLOCK_CODEC;
+  protected static <B extends StandingSignBlock> RecordCodecBuilder<B, Optional<Block>> baseBlockCodec() {
+    return (RecordCodecBuilder<B, Optional<Block>>) BASE_BLOCK_CODEC;
   }
 
   public final @Nullable Block baseBlock;
-  public @Nullable Material baseMaterial, barMaterial;
+  public @Nullable Identifier baseTexture, barTexture;
+
+  protected StandingSignBlock(Optional<Block> baseBlock, Properties settings) {
+    this(baseBlock.orElse(null), settings);
+  }
 
   public StandingSignBlock(@Nullable Block baseBlock, Properties settings) {
     super(settings);
@@ -180,7 +184,7 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
 
   @Environment(EnvType.CLIENT)
   public Material getBaseMaterial() {
-    if (baseMaterial != null) return baseMaterial;
+    if (baseTexture != null) return new Material(baseTexture);
     return ModelHelper.getMaterialOf(baseBlock == null ? this : baseBlock);
   }
 
@@ -242,7 +246,10 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final TextureMapping textures = TextureMapping.defaultTexture(getBaseMaterial()).put(MishangucTextureKeys.BAR, barMaterial);
+    final TextureMapping textures = TextureMapping.defaultTexture(getBaseMaterial());
+    if (barTexture != null) {
+      textures.put(MishangucTextureKeys.BAR, new Material(barTexture));
+    }
     final Identifier modelId = MishangucModels.STANDING_SIGN.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier r1ModelId = MishangucModels.STANDING_SIGN_1.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier r2ModelId = MishangucModels.STANDING_SIGN_2.create(this, textures, blockStateModelGenerator.modelOutput);
@@ -251,7 +258,10 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
     final Identifier barredR1ModelId = MishangucModels.STANDING_SIGN_BARRED_1.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier barredR2ModelId = MishangucModels.STANDING_SIGN_BARRED_2.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier barredR3ModelId = MishangucModels.STANDING_SIGN_BARRED_3.create(this, textures, blockStateModelGenerator.modelOutput);
-    blockStateModelGenerator.blockStateOutput.accept(createBlockStates(modelId, r1ModelId, r2ModelId, r3ModelId, barredModelId, barredR1ModelId, barredR2ModelId, barredR3ModelId));
+    final BlockModelDefinitionGenerator blockStates = createBlockStates(modelId, r1ModelId, r2ModelId, r3ModelId, barredModelId, barredR1ModelId, barredR2ModelId, barredR3ModelId);
+    if (blockStates != null) {
+      blockStateModelGenerator.blockStateOutput.accept(blockStates);
+    }
 
     if (this instanceof ColoredBlock) {
       blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.tintedModel(barredModelId, ColoredTintSource.INSTANCE, ColoredTintSource.INSTANCE));
@@ -294,7 +304,7 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
   }
 
   @Override
-  public RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
+  public @Nullable RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
     if (baseBlock == null) return null;
     return recipeGenerator.shaped(RecipeCategory.DECORATIONS, this, 4)
         .pattern("---")

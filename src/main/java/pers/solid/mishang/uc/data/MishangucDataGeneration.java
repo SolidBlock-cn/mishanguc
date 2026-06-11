@@ -20,7 +20,7 @@ public class MishangucDataGeneration implements DataGeneratorEntrypoint {
 
       @Override
       public String getName() {
-        return "";
+        return "Recipes";
       }
     });
     pack.addProvider(MishangucModelProvider::new);

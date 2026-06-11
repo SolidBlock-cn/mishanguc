@@ -77,7 +77,7 @@ public class HungSignBarBlock extends Block implements SimpleWaterloggedBlock, M
   /**
    * 告示牌杆的纹理。若为 {@code null}，则根据其 {@link #baseBlock} 的 id 来推断。
    */
-  public @Nullable Material material;
+  public @Nullable Identifier texture;
 
   public HungSignBarBlock(@Nullable Block baseBlock, Properties settings) {
     super(settings);
@@ -295,7 +295,7 @@ public class HungSignBarBlock extends Block implements SimpleWaterloggedBlock, M
   }
 
   public Material getBaseMaterial() {
-    if (material != null) return material;
+    if (texture != null) return new Material(texture);
     return ModelHelper.getMaterialOf(baseBlock == null ? this : baseBlock);
   }
 

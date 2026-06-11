@@ -29,11 +29,11 @@ import pers.solid.mishang.uc.item.ColoredTintSource;
 public class GlowingWallSignBlock extends WallSignBlock {
   public static final MapCodec<GlowingWallSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec(), propertiesCodec()).apply(instance, GlowingWallSignBlock::new));
   @ApiStatus.AvailableSince("0.1.7")
-  protected static final Material DEFAULT_GLOW_MATERIAL = new Material(Mishanguc.id("block/white_light"));
+  protected static final Identifier DEFAULT_GLOW_TEXTURE = Mishanguc.id("block/white_light");
   /**
-   * 告示牌发光部分的纹理。默认为 {@link #DEFAULT_GLOW_MATERIAL}。
+   * 告示牌发光部分的纹理。默认为 {@link #DEFAULT_GLOW_TEXTURE}。
    */
-  public @Nullable Material glowMaterial = DEFAULT_GLOW_MATERIAL;
+  public Identifier glowTexture = DEFAULT_GLOW_TEXTURE;
 
   public GlowingWallSignBlock(@Nullable Block baseBlock, Properties settings) {
     super(baseBlock, settings.lightLevel(value -> 15));
@@ -69,7 +69,7 @@ public class GlowingWallSignBlock extends WallSignBlock {
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final TextureMapping textures = TextureMapping.defaultTexture(getBaseMaterial()).put(MishangucTextureKeys.GLOW, glowMaterial);
+    final TextureMapping textures = TextureMapping.defaultTexture(getBaseMaterial()).put(MishangucTextureKeys.GLOW, new Material(glowTexture));
     final Identifier modelId = MishangucModels.GLOWING_WALL_SIGN.create(this, textures, blockStateModelGenerator.modelOutput);
     blockStateModelGenerator.blockStateOutput.accept(createBlockStates(modelId));
     if (this instanceof ColoredBlock) {

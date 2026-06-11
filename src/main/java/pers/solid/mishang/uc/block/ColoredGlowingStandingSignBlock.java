@@ -17,11 +17,16 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.ColoredStandingSignBlockEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ColoredGlowingStandingSignBlock extends GlowingStandingSignBlock implements ColoredBlock {
   public static final MapCodec<ColoredGlowingStandingSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, ColoredGlowingStandingSignBlock::new));
 
-  public ColoredGlowingStandingSignBlock(Block baseBlock, Properties settings) {
+  protected ColoredGlowingStandingSignBlock(Optional<Block> baseBlock, Properties settings) {
+    this(baseBlock.orElse(null), settings);
+  }
+
+  public ColoredGlowingStandingSignBlock(@Nullable Block baseBlock, Properties settings) {
     super(baseBlock, settings);
   }
 

@@ -91,19 +91,19 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
   private static final VoxelShape SHAPE_Z =
       Shapes.or(
           box(0, 5, 7.5, 16, 14, 8.5), box(0, 12, 7.25, 16, 13, 8.75));
-  private static final Map<Direction, @Nullable VoxelShape> BAR_SHAPES =
+  private static final Map<Direction, VoxelShape> BAR_SHAPES =
       MishangUtils.createHorizontalDirectionToShape(7.5, 13, 11, 8.5, 16, 12);
-  private static final Map<Direction, @Nullable VoxelShape> BAR_SHAPES_EDGE =
+  private static final Map<Direction, VoxelShape> BAR_SHAPES_EDGE =
       MishangUtils.createHorizontalDirectionToShape(7.5, 13, 13, 8.5, 16, 14);
   private static final VoxelShape SHAPE_WIDENED_X = box(6.5, 5, 0, 9.5, 16, 16);
   private static final VoxelShape SHAPE_WIDENED_Z = box(0, 5, 6.5, 16, 16, 9.5);
-  protected static final RecordCodecBuilder<HungSignBlock, Block> BASE_BLOCK_CODEC = BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_block").forGetter(b -> b.baseBlock);
+  protected static final RecordCodecBuilder<HungSignBlock, Optional<Block>> BASE_BLOCK_CODEC = BuiltInRegistries.BLOCK.byNameCodec().optionalFieldOf("base_block").forGetter(b -> Optional.ofNullable(b.baseBlock));
 
   public static final MapCodec<HungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, HungSignBlock::new));
 
   @SuppressWarnings("unchecked")
-  protected static <B extends HungSignBlock> RecordCodecBuilder<B, Block> baseBlockCodec() {
-    return (RecordCodecBuilder<B, Block>) BASE_BLOCK_CODEC;
+  protected static <B extends HungSignBlock> RecordCodecBuilder<B, Optional<Block>> baseBlockCodec() {
+    return (RecordCodecBuilder<B, Optional<Block>>) BASE_BLOCK_CODEC;
   }
 
   public final @Nullable Block baseBlock;
@@ -113,17 +113,21 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
    * 非 final，可直接进行修改。
    */
   @ApiStatus.AvailableSince("0.1.7")
-  public @Nullable Material baseMaterial;
+  public @Nullable Identifier baseTexture;
   /**
    * 告示牌杆的纹理。可能为 {@code null}。生成模型时，可直接作为 null 传入，转化为 json 时会被忽略。
    */
   @ApiStatus.AvailableSince("0.1.7")
-  public @Nullable Material barMaterial;
+  public @Nullable Identifier barTexture;
   /**
    * 告示牌顶部的纹理。可能为 {@code null}。生成模型时，可直接作为 null 传入，转化为 json 时会被忽略。
    */
   @ApiStatus.AvailableSince("0.1.7")
-  public @Nullable Material materialTop;
+  public @Nullable Identifier textureTop;
+
+  protected HungSignBlock(Optional<Block> baseBlock, Properties settings) {
+    this(baseBlock.orElse(null), settings);
+  }
 
   public HungSignBlock(@Nullable Block baseBlock, Properties settings) {
     super(settings);
@@ -184,20 +188,16 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
     switch (axis) {
       case X:
         if (!left && !right)
-          return Shapes.or(
-              SHAPE_X, BAR_SHAPES_EDGE.get(Direction.SOUTH), BAR_SHAPES_EDGE.get(Direction.NORTH));
+          return Shapes.or(SHAPE_X, BAR_SHAPES_EDGE.get(Direction.SOUTH), BAR_SHAPES_EDGE.get(Direction.NORTH));
         else
-          return Shapes.or(
-              SHAPE_X,
+          return Shapes.or(SHAPE_X,
               !left ? BAR_SHAPES.get(Direction.SOUTH) : Shapes.empty(),
               !right ? BAR_SHAPES.get(Direction.NORTH) : Shapes.empty());
       case Z:
         if (!left && !right)
-          return Shapes.or(
-              SHAPE_Z, BAR_SHAPES_EDGE.get(Direction.WEST), BAR_SHAPES_EDGE.get(Direction.EAST));
+          return Shapes.or(SHAPE_Z, BAR_SHAPES_EDGE.get(Direction.WEST), BAR_SHAPES_EDGE.get(Direction.EAST));
         else
-          return Shapes.or(
-              SHAPE_Z,
+          return Shapes.or(SHAPE_Z,
               !left ? BAR_SHAPES.get(Direction.WEST) : Shapes.empty(),
               !right ? BAR_SHAPES.get(Direction.EAST) : Shapes.empty());
       default:
@@ -426,7 +426,7 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
 
   @Environment(EnvType.CLIENT)
   public Material getBaseMaterial() {
-    if (baseMaterial != null) return baseMaterial;
+    if (baseTexture != null) return new Material(baseTexture);
     return ModelHelper.getMaterialOf(baseBlock == null ? this : baseBlock);
   }
 
@@ -435,8 +435,8 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
     final Material material = getBaseMaterial();
     final TextureMapping textures = TextureMapping.defaultTexture(material);
-    if (barMaterial != null) textures.put(MishangucTextureKeys.BAR, barMaterial);
-    if (materialTop != null) textures.put(MishangucTextureKeys.TEXTURE_TOP, materialTop);
+    if (barTexture != null) textures.put(MishangucTextureKeys.BAR, new Material(barTexture));
+    if (textureTop != null) textures.put(MishangucTextureKeys.TEXTURE_TOP, new Material(textureTop));
 
     final Identifier id = MishangucModels.HUNG_SIGN.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier bodyId = MishangucModels.HUNG_SIGN_BODY.create(this, textures, blockStateModelGenerator.modelOutput);
@@ -480,7 +480,7 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
   }
 
   @Override
-  public RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
+  public @Nullable RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
     if (baseBlock == null) return null;
     return recipeGenerator.shaped(RecipeCategory.DECORATIONS, this, 6)
         .pattern("-#-")

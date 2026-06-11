@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.blocks;
 
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
@@ -9,6 +8,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.block.*;
 
@@ -472,10 +472,10 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final GlowingWallSignBlock GLOWING_POLISHED_BLACKSTONE_WALL_SIGN = registerGlowing("glowing_polished_blackstone_wall_sign", Blocks.POLISHED_BLACKSTONE);
 
   static {
-    GLOWING_NETHERRACK_WALL_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/lava_still"));
-    GLOWING_NETHER_BRICK_WALL_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/lava_still"));
-    GLOWING_BLACKSTONE_WALL_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/glowstone"));
-    GLOWING_POLISHED_BLACKSTONE_WALL_SIGN.glowMaterial = new Material(Identifier.withDefaultNamespace("block/glowstone"));
+    GLOWING_NETHERRACK_WALL_SIGN.glowTexture = Identifier.withDefaultNamespace("block/lava_still");
+    GLOWING_NETHER_BRICK_WALL_SIGN.glowTexture = Identifier.withDefaultNamespace("block/lava_still");
+    GLOWING_BLACKSTONE_WALL_SIGN.glowTexture = Identifier.withDefaultNamespace("block/glowstone");
+    GLOWING_POLISHED_BLACKSTONE_WALL_SIGN.glowTexture = Identifier.withDefaultNamespace("block/glowstone");
   }
 
   // 雪
@@ -619,7 +619,7 @@ public final class WallSignBlocks extends MishangucBlocks {
     return register(name, baseBlock, BlockBehaviour.Properties.ofFullCopy(baseBlock));
   }
 
-  private static FullWallSignBlock registerFull(String name, Block baseBlock, BlockBehaviour.Properties settings) {
+  private static FullWallSignBlock registerFull(String name, @Nullable Block baseBlock, BlockBehaviour.Properties settings) {
     return MishangucBlocks.register(name, settings1 -> new FullWallSignBlock(baseBlock, settings1), settings);
   }
 

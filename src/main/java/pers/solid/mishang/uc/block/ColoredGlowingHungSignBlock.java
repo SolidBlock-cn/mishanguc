@@ -13,14 +13,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootTable;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.ColoredHungSignBlockEntity;
 
 import java.util.List;
 
 public class ColoredGlowingHungSignBlock extends GlowingHungSignBlock implements ColoredBlock {
-  public static final MapCodec<ColoredGlowingHungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, ColoredGlowingHungSignBlock::new));
+  public static final MapCodec<ColoredGlowingHungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, (block, properties) -> new ColoredGlowingHungSignBlock(block.orElse(null), properties)));
 
-  public ColoredGlowingHungSignBlock(Block baseBlock, Properties settings) {
+  public ColoredGlowingHungSignBlock(@Nullable Block baseBlock, Properties settings) {
     super(baseBlock, settings);
   }
 

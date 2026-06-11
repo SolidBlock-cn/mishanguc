@@ -114,7 +114,7 @@ public class MishangUtils {
     return map;
   }
 
-  public static Map<Direction, @Nullable VoxelShape> createHorizontalDirectionToShape(
+  public static Map<Direction, VoxelShape> createHorizontalDirectionToShape(
       double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
     final Map<Direction, VoxelShape> map = new EnumMap<>(Direction.class);
     map.put(Direction.SOUTH, Block.box(minX, minY, minZ, maxX, maxY, maxZ));

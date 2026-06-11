@@ -26,15 +26,21 @@ import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.item.ColoredTintSource;
 
+import java.util.Optional;
+
 public class GlowingHungSignBlock extends HungSignBlock {
   public static final MapCodec<GlowingHungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, GlowingHungSignBlock::new));
   @ApiStatus.AvailableSince("0.1.7")
-  protected static final Material DEFAULT_GLOW_MATERIAL = new Material(Mishanguc.id("block/white_light"));
-  public Material glowMaterial;
+  protected static final Identifier DEFAULT_GLOW_TEXTURE = Mishanguc.id("block/white_light");
+  public Identifier glowTexture;
+
+  protected GlowingHungSignBlock(Optional<Block> baseBlock, Properties settings) {
+    this(baseBlock.orElse(null), settings);
+  }
 
   public GlowingHungSignBlock(@Nullable Block baseBlock, Properties settings) {
     super(baseBlock, settings.lightLevel(s -> 15));
-    this.glowMaterial = DEFAULT_GLOW_MATERIAL;
+    this.glowTexture = DEFAULT_GLOW_TEXTURE;
   }
 
   @Override
@@ -50,9 +56,9 @@ public class GlowingHungSignBlock extends HungSignBlock {
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
     final Material material = getBaseMaterial();
     final TextureMapping textures = TextureMapping.defaultTexture(material);
-    if (barMaterial != null) textures.put(MishangucTextureKeys.BAR, barMaterial);
-    if (materialTop != null) textures.put(MishangucTextureKeys.TEXTURE_TOP, materialTop);
-    textures.put(MishangucTextureKeys.GLOW, glowMaterial);
+    if (barTexture != null) textures.put(MishangucTextureKeys.BAR, new Material(barTexture));
+    if (textureTop != null) textures.put(MishangucTextureKeys.TEXTURE_TOP, new Material(textureTop));
+    textures.put(MishangucTextureKeys.GLOW, new Material(glowTexture));
 
     final Identifier id = MishangucModels.GLOWING_HUNG_SIGN.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier bodyId = MishangucModels.GLOWING_HUNG_SIGN_BODY.create(this, textures, blockStateModelGenerator.modelOutput);
@@ -77,7 +83,7 @@ public class GlowingHungSignBlock extends HungSignBlock {
   }
 
   @Override
-  public RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
+  public @Nullable RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
     if (baseBlock == null) return null;
     return recipeGenerator.shaped(RecipeCategory.DECORATIONS, this, 6)
         .pattern("-#-")

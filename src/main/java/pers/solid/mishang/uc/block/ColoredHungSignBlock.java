@@ -14,15 +14,16 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootTable;
+import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.ColoredHungSignBlockEntity;
 
 import java.util.List;
 
 @Beta
 public class ColoredHungSignBlock extends HungSignBlock implements ColoredBlock {
-  public static final MapCodec<ColoredHungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, ColoredHungSignBlock::new));
+  public static final MapCodec<ColoredHungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, (block, properties) -> new ColoredHungSignBlock(block.orElse(null), properties)));
 
-  public ColoredHungSignBlock(Block baseBlock, Properties settings) {
+  public ColoredHungSignBlock(@Nullable Block baseBlock, Properties settings) {
     super(baseBlock, settings);
   }
 

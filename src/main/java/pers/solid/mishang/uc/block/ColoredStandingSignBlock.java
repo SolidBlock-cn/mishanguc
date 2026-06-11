@@ -19,9 +19,9 @@ import pers.solid.mishang.uc.blockentity.ColoredStandingSignBlockEntity;
 import java.util.List;
 
 public class ColoredStandingSignBlock extends StandingSignBlock implements ColoredBlock {
-  public static final MapCodec<ColoredStandingSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, ColoredStandingSignBlock::new));
+  public static final MapCodec<ColoredStandingSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, (block, properties) -> new ColoredStandingSignBlock(block.orElse(null), properties)));
 
-  public ColoredStandingSignBlock(Block baseBlock, Properties settings) {
+  public ColoredStandingSignBlock(@Nullable Block baseBlock, Properties settings) {
     super(baseBlock, settings);
   }
 

@@ -31,34 +31,34 @@ import java.util.function.Function;
 @ApiStatus.AvailableSince("0.2.4")
 public class GlassHandrailBlock extends HandrailBlock {
   public static final MapCodec<GlassHandrailBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_block").forGetter(GlassHandrailBlock::baseBlock), propertiesCodec()).apply(instance, (block, settings1) -> new GlassHandrailBlock(block, settings1, null, null, BuiltInRegistries.BLOCK.getKey(block), false)));
-  public final Material decorationMaterial;
+  public final Identifier decorationTexture;
   private final CentralBlock central;
   private final CornerBlock corner;
   private final StairBlock stair;
   private final OuterBlock outer;
   private final Block baseBlock;
-  private final Material frameMaterial;
+  private final Identifier frameTexture;
 
-  public GlassHandrailBlock(Block baseBlock, Properties settings, String frameMaterial, String decorationMaterial, Identifier identifier) {
-    this(baseBlock, settings, frameMaterial, decorationMaterial, identifier, true);
+  public GlassHandrailBlock(Block baseBlock, Properties settings, String frameTexture, String decorationTexture, Identifier identifier) {
+    this(baseBlock, settings, frameTexture, decorationTexture, identifier, true);
   }
 
-  protected GlassHandrailBlock(Block baseBlock, Properties settings, String frameMaterial, String decorationMaterial, Identifier identifier, boolean createAffiliateBlocks) {
+  protected GlassHandrailBlock(Block baseBlock, Properties settings, String frameTexture, String decorationTexture, Identifier identifier, boolean createAffiliateBlocks) {
     super(settings.noOcclusion().setId(ResourceKey.create(Registries.BLOCK, identifier)));
     this.baseBlock = baseBlock;
-    this.frameMaterial = frameMaterial == null ? null : new Material(Identifier.parse(frameMaterial));
-    this.decorationMaterial = decorationMaterial == null ? null : new Material(Identifier.parse(decorationMaterial));
+    this.frameTexture = frameTexture == null ? null : Identifier.parse(frameTexture);
+    this.decorationTexture = decorationTexture == null ? null : Identifier.parse(decorationTexture);
     this.central = createAffiliateBlocks ? new CentralBlock(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_central")))) : null;
     this.corner = createAffiliateBlocks ? new CornerBlock(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_corner")))) : null;
     this.stair = createAffiliateBlocks ? new StairBlock(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_stair")))) : null;
     this.outer = createAffiliateBlocks ? new OuterBlock(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_outer")))) : null;
   }
 
-  protected GlassHandrailBlock(Block baseBlock, Properties settings, String frameMaterial, String decorationMaterial, BiFunction<GlassHandrailBlock, Properties, CentralBlock> centralProvider, BiFunction<GlassHandrailBlock, Properties, CornerBlock> cornerProvider, BiFunction<GlassHandrailBlock, Properties, StairBlock> stairProvider, BiFunction<GlassHandrailBlock, Properties, OuterBlock> outerProvider, Identifier identifier) {
+  protected GlassHandrailBlock(Block baseBlock, Properties settings, String frameTexture, String decorationTexture, BiFunction<GlassHandrailBlock, Properties, CentralBlock> centralProvider, BiFunction<GlassHandrailBlock, Properties, CornerBlock> cornerProvider, BiFunction<GlassHandrailBlock, Properties, StairBlock> stairProvider, BiFunction<GlassHandrailBlock, Properties, OuterBlock> outerProvider, Identifier identifier) {
     super(settings.noOcclusion().setId(ResourceKey.create(Registries.BLOCK, identifier)));
     this.baseBlock = baseBlock;
-    this.frameMaterial = new Material(Identifier.parse(frameMaterial));
-    this.decorationMaterial = new Material(Identifier.parse(decorationMaterial));
+    this.frameTexture = Identifier.parse(frameTexture);
+    this.decorationTexture = Identifier.parse(decorationTexture);
     central = centralProvider.apply(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_central"))));
     corner = cornerProvider.apply(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_corner"))));
     stair = stairProvider.apply(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_stair"))));
@@ -86,7 +86,7 @@ public class GlassHandrailBlock extends HandrailBlock {
   @Environment(EnvType.CLIENT)
   @Override
   public TextureMapping getTextures() {
-    return new TextureMapping().put(TextureKeys.FRAME, frameMaterial).put(TextureKeys.GLASS, new Material(Mishanguc.id("block/glass_unframed"))).put(TextureKeys.DECORATION, decorationMaterial);
+    return new TextureMapping().put(TextureKeys.FRAME, new Material(frameTexture)).put(TextureKeys.GLASS, new Material(Mishanguc.id("block/glass_unframed"))).put(TextureKeys.DECORATION, new Material(decorationTexture));
   }
 
   @Override

@@ -6,6 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
+import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerator;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.resources.model.sprite.Material;
@@ -26,15 +27,21 @@ import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.item.ColoredTintSource;
 
+import java.util.Optional;
+
 /**
  * 发光的直立告示牌。
  */
 public class GlowingStandingSignBlock extends StandingSignBlock {
   public static final MapCodec<GlowingStandingSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, GlowingStandingSignBlock::new));
-  protected static final Material DEFAULT_GLOW_MATERIAL = new Material(Mishanguc.id("block/white_light"));
-  public Material glowMaterial = DEFAULT_GLOW_MATERIAL;
+  protected static final Identifier DEFAULT_GLOW_TEXTURE = Mishanguc.id("block/white_light");
+  public Identifier glowTexture = DEFAULT_GLOW_TEXTURE;
 
-  public GlowingStandingSignBlock(Block baseBlock, Properties settings) {
+  protected GlowingStandingSignBlock(Optional<Block> baseBlock, Properties settings) {
+    this(baseBlock.orElse(null), settings);
+  }
+
+  public GlowingStandingSignBlock(@Nullable Block baseBlock, Properties settings) {
     super(baseBlock, settings.lightLevel(x -> 15));
   }
 
@@ -47,7 +54,11 @@ public class GlowingStandingSignBlock extends StandingSignBlock {
   @Environment(EnvType.CLIENT)
   @Override
   public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final TextureMapping textures = TextureMapping.defaultTexture(getBaseMaterial()).put(MishangucTextureKeys.BAR, barMaterial).put(MishangucTextureKeys.GLOW, glowMaterial);
+    final TextureMapping textures = TextureMapping.defaultTexture(getBaseMaterial());
+    if (barTexture != null) {
+      textures.put(MishangucTextureKeys.BAR, new Material(barTexture));
+    }
+    textures.put(MishangucTextureKeys.GLOW, new Material(glowTexture));
     final Identifier modelId = MishangucModels.GLOWING_STANDING_SIGN.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier r1ModelId = MishangucModels.GLOWING_STANDING_SIGN_1.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier r2ModelId = MishangucModels.GLOWING_STANDING_SIGN_2.create(this, textures, blockStateModelGenerator.modelOutput);
@@ -56,7 +67,10 @@ public class GlowingStandingSignBlock extends StandingSignBlock {
     final Identifier barredR1ModelId = MishangucModels.GLOWING_STANDING_SIGN_BARRED_1.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier barredR2ModelId = MishangucModels.GLOWING_STANDING_SIGN_BARRED_2.create(this, textures, blockStateModelGenerator.modelOutput);
     final Identifier barredR3ModelId = MishangucModels.GLOWING_STANDING_SIGN_BARRED_3.create(this, textures, blockStateModelGenerator.modelOutput);
-    blockStateModelGenerator.blockStateOutput.accept(createBlockStates(modelId, r1ModelId, r2ModelId, r3ModelId, barredModelId, barredR1ModelId, barredR2ModelId, barredR3ModelId));
+    final BlockModelDefinitionGenerator blockStates = createBlockStates(modelId, r1ModelId, r2ModelId, r3ModelId, barredModelId, barredR1ModelId, barredR2ModelId, barredR3ModelId);
+    if (blockStates != null) {
+      blockStateModelGenerator.blockStateOutput.accept(blockStates);
+    }
 
     if (this instanceof ColoredBlock) {
       blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.tintedModel(barredModelId, ColoredTintSource.INSTANCE, ColoredTintSource.INSTANCE));
@@ -76,7 +90,7 @@ public class GlowingStandingSignBlock extends StandingSignBlock {
   }
 
   @Override
-  public RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
+  public @Nullable RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
     if (baseBlock == null) return null;
     return recipeGenerator.shaped(RecipeCategory.BUILDING_BLOCKS, this, 4)
         .pattern("---")
