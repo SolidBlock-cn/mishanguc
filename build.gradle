@@ -38,6 +38,12 @@ repositories {
     // Mod Menu 模组
     maven { url 'https://maven.terraformersmc.com/releases/' }
     maven { url 'https://jitpack.io' }
+
+
+    maven {
+        name = 'ParchmentMC'
+        url = 'https://maven.parchmentmc.org'
+    }
 }
 
 
@@ -49,9 +55,6 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-
-    // Mod Menu
-    modApi "com.terraformersmc:modmenu:$project.modmenu_version"
 
     if (project.hasProperty('imblocker_version') && !project.imblocker_version.isEmpty()) {
         modRuntimeOnly "maven.modrinth:imblocker-original:$project.imblocker_version"
