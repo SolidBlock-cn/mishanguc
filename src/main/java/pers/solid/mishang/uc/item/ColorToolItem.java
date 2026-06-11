@@ -1,18 +1,5 @@
 package pers.solid.mishang.uc.item;
 
-import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.block.ColoredBlock;
-import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
-import pers.solid.mishang.uc.components.MishangucComponents;
-import pers.solid.mishang.uc.util.ColorMixtureType;
-import pers.solid.mishang.uc.util.TextBridge;
-import pers.solid.mishang.uc.util.WithMishangTooltip;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,6 +23,19 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.block.ColoredBlock;
+import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
+import pers.solid.mishang.uc.components.MishangucComponents;
+import pers.solid.mishang.uc.util.ColorMixtureType;
+import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class ColorToolItem extends BlockToolItem implements MishangucItem, WithMishangTooltip {
   public ColorToolItem(Properties settings, @Nullable Boolean includesFluid) {
@@ -115,6 +115,7 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
 
     int prevColorRgb = 0; // the initial value should not usually be used.
     if (!(blockEntity instanceof ColoredBlockEntity coloredBlockEntity)) {
+
       final BlockState blockState = world.getBlockState(blockPos);
       final Block block = blockState.getBlock();
       final Block coloredBlock;
@@ -151,26 +152,26 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
 
       if (mixtureType != ColorMixtureType.RANDOM || !world.isClientSide()) {
         // 处于客户端时，且类型为随机时，不执行。
-        if (opacity.equals(1f)) {
-          coloredBlockEntity.setColor(mixed = target);
-        } else {
-          final Color prevColor = new Color(prevColorRgb);
-          final Color targetColor = new Color(target);
-          final Color mixedColor = new Color(
-              Mth.lerpInt(opacity, prevColor.getRed(), targetColor.getRed()),
-              Mth.lerpInt(opacity, prevColor.getGreen(), targetColor.getGreen()),
-              Mth.lerpInt(opacity, prevColor.getBlue(), targetColor.getBlue()),
-              0
-          );
-          mixed = mixedColor.getRGB();
-          coloredBlockEntity.setColor(mixed);
-        }
-        blockEntity.setChanged();
         if (!world.isClientSide()) {
+          if (opacity.equals(1f)) {
+            coloredBlockEntity.setColor(mixed = target);
+          } else {
+            final Color prevColor = new Color(prevColorRgb);
+            final Color targetColor = new Color(target);
+            final Color mixedColor = new Color(
+                Mth.lerpInt(opacity, prevColor.getRed(), targetColor.getRed()),
+                Mth.lerpInt(opacity, prevColor.getGreen(), targetColor.getGreen()),
+                Mth.lerpInt(opacity, prevColor.getBlue(), targetColor.getBlue()),
+                0
+            );
+            mixed = mixedColor.getRGB();
+            coloredBlockEntity.setColor(mixed);
+          }
           world.sendBlockUpdated(blockPos, blockEntity.getBlockState(), blockEntity.getBlockState(), Block.UPDATE_CLIENTS);
           world.playSound(null, blockPos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
           player.displayClientMessage(TextBridge.translatable("item.mishanguc.color_tool.message.success_set", MishangUtils.describeColor(mixed)), true);
         }
+        blockEntity.setChanged();
       }
       stack.hurtAndBreak(1, player, hand.asEquipmentSlot());
       return InteractionResult.SUCCESS;
