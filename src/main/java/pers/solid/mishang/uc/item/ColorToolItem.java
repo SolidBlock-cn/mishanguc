@@ -112,6 +112,7 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
 
     int prevColorRgb = 0; // the initial value should not usually be used.
     if (!(blockEntity instanceof ColoredBlockEntity coloredBlockEntity)) {
+
       final BlockState blockState = world.getBlockState(blockPos);
       final Block block = blockState.getBlock();
       final Block coloredBlock;
@@ -148,26 +149,26 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
 
       if (mixtureType != ColorMixtureType.RANDOM || !world.isClientSide()) {
         // 处于客户端时，且类型为随机时，不执行。
-        if (opacity.equals(1f)) {
-          coloredBlockEntity.setColor(mixed = target);
-        } else {
-          final Color prevColor = new Color(prevColorRgb);
-          final Color targetColor = new Color(target);
-          final Color mixedColor = new Color(
-              Mth.lerpInt(opacity, prevColor.getRed(), targetColor.getRed()),
-              Mth.lerpInt(opacity, prevColor.getGreen(), targetColor.getGreen()),
-              Mth.lerpInt(opacity, prevColor.getBlue(), targetColor.getBlue()),
-              0
-          );
-          mixed = mixedColor.getRGB();
-          coloredBlockEntity.setColor(mixed);
-        }
-        blockEntity.setChanged();
         if (!world.isClientSide()) {
+          if (opacity.equals(1f)) {
+            coloredBlockEntity.setColor(mixed = target);
+          } else {
+            final Color prevColor = new Color(prevColorRgb);
+            final Color targetColor = new Color(target);
+            final Color mixedColor = new Color(
+                Mth.lerpInt(opacity, prevColor.getRed(), targetColor.getRed()),
+                Mth.lerpInt(opacity, prevColor.getGreen(), targetColor.getGreen()),
+                Mth.lerpInt(opacity, prevColor.getBlue(), targetColor.getBlue()),
+                0
+            );
+            mixed = mixedColor.getRGB();
+            coloredBlockEntity.setColor(mixed);
+          }
           world.sendBlockUpdated(blockPos, blockEntity.getBlockState(), blockEntity.getBlockState(), Block.UPDATE_CLIENTS);
           world.playSound(null, blockPos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
           player.sendOverlayMessage(Component.translatable("item.mishanguc.color_tool.message.success_set", MishangUtils.describeColor(mixed)));
         }
+        blockEntity.setChanged();
       }
       stack.hurtAndBreak(1, player, hand.asEquipmentSlot());
       return InteractionResult.SUCCESS;
