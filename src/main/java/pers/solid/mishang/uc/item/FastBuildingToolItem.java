@@ -149,7 +149,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
   @Override
   public Component getName(ItemStack stack) {
     final FastBuildingToolData data = stack.getOrDefault(MishangucComponents.FAST_BUILDING_TOOL_DATA, FastBuildingToolData.DEFAULT);
-    return Component.translatable("item.mishanguc.fast_building_tool.format", super.getName(stack), Integer.toString(data.range()), data.matchingRule().getName()); // check item name todo
+    return Component.translatable("item.mishanguc.fast_building_tool.format", super.getName(stack), Integer.toString(data.range()), data.matchingRule().getName());
   }
 
 
