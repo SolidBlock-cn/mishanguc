@@ -3,15 +3,14 @@ package pers.solid.mishang.uc.block;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.registry.Registries;
-import net.minecraft.state.property.Property;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import net.minecraft.world.block.WireOrientation;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.redstone.Orientation;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.util.RoadConnectionState;
 
@@ -19,41 +18,41 @@ import java.util.EnumMap;
 
 public class RoadSlabBlockWithAutoLine extends SmartRoadSlabBlock<RoadBlockWithAutoLine>
     implements RoadWithAutoLine {
-  public static final MapCodec<RoadSlabBlockWithAutoLine> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(Registries.BLOCK.getCodec().flatXmap(block -> block instanceof RoadBlockWithAutoLine roadBlockWithAutoLine ? DataResult.success(roadBlockWithAutoLine) : DataResult.error(() -> block + " must be instance of " + RoadBlockWithAutoLine.class.getName()), DataResult::success).fieldOf("base_block").forGetter(b -> b.baseBlock), createSettingsCodec()).apply(i, RoadSlabBlockWithAutoLine::new));
+  public static final MapCodec<RoadSlabBlockWithAutoLine> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(BuiltInRegistries.BLOCK.byNameCodec().flatXmap(block -> block instanceof RoadBlockWithAutoLine roadBlockWithAutoLine ? DataResult.success(roadBlockWithAutoLine) : DataResult.error(() -> block + " must be instance of " + RoadBlockWithAutoLine.class.getName()), DataResult::success).fieldOf("base_block").forGetter(b -> b.baseBlock), propertiesCodec()).apply(i, RoadSlabBlockWithAutoLine::new));
 
-  public RoadSlabBlockWithAutoLine(RoadBlockWithAutoLine baseBlock, Settings settings) {
+  public RoadSlabBlockWithAutoLine(RoadBlockWithAutoLine baseBlock, Properties settings) {
     super(baseBlock, settings);
   }
 
   @Override
-  public @NotNull BlockState makeState(
+  public BlockState makeState(
       EnumMap<Direction, RoadConnectionState> connectionStateMap, BlockState defaultState) {
     final BlockState baseState = baseBlock.makeState(connectionStateMap, defaultState);
     AbstractRoadBlock block = (AbstractRoadBlock) baseState.getBlock();
-    BlockState state = block.getRoadSlab().getDefaultState();
+    BlockState state = block.getRoadSlab().defaultBlockState();
     for (Property<?> property : baseState.getProperties()) {
-      if (state.contains(property)) {
+      if (state.hasProperty(property)) {
         state = sendProperty(baseState, state, property);
       }
     }
     return state
-        .with(WATERLOGGED, defaultState.get(WATERLOGGED))
-        .with(TYPE, defaultState.get(TYPE));
+        .setValue(WATERLOGGED, defaultState.getValue(WATERLOGGED))
+        .setValue(TYPE, defaultState.getValue(TYPE));
   }
 
   @Override
-  protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, @Nullable WireOrientation wireOrientation, boolean notify) {
-    super.neighborUpdate(state, world, pos, sourceBlock, wireOrientation, notify);
+  protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, @Nullable Orientation wireOrientation, boolean notify) {
+    super.neighborChanged(state, world, pos, sourceBlock, wireOrientation, notify);
     neighborRoadUpdate(state, world, pos, sourceBlock, wireOrientation, notify);
   }
 
   private <T extends Comparable<T>> BlockState sendProperty(
       BlockState fromState, BlockState toState, Property<T> property) {
-    return toState.with(property, fromState.get(property));
+    return toState.setValue(property, fromState.getValue(property));
   }
 
   @Override
-  public MapCodec<? extends RoadSlabBlockWithAutoLine> getCodec() {
+  public MapCodec<? extends RoadSlabBlockWithAutoLine> codec() {
     return CODEC;
   }
 }

@@ -6,9 +6,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.minecraft.client.data.*;
-import net.minecraft.item.Item;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.model.ItemModelUtils;
+import net.minecraft.client.data.models.model.ModelLocationUtils;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.block.MishangucBlock;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
@@ -25,7 +30,7 @@ public class MishangucModelProvider extends FabricModelProvider {
   }
 
   @Override
-  public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
+  public void generateBlockStateModels(BlockModelGenerators blockStateModelGenerator) {
     MishangUtils.blocks().forEach(block -> {
       if (block instanceof MishangucBlock mishangucBlock) {
         mishangucBlock.registerModels(this, blockStateModelGenerator);
@@ -34,53 +39,53 @@ public class MishangucModelProvider extends FabricModelProvider {
   }
 
   @Override
-  public void generateItemModels(ItemModelGenerator itemModelGenerator) {
-    itemModelGenerator.register(WallSignBlocks.INVISIBLE_WALL_SIGN.asItem(), Models.HANDHELD);
-    itemModelGenerator.register(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN.asItem(), Models.HANDHELD);
+  public void generateItemModels(ItemModelGenerators itemModelGenerator) {
+    itemModelGenerator.generateFlatItem(WallSignBlocks.INVISIBLE_WALL_SIGN.asItem(), ModelTemplates.FLAT_HANDHELD_ITEM);
+    itemModelGenerator.generateFlatItem(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN.asItem(), ModelTemplates.FLAT_HANDHELD_ITEM);
 
-    itemModelGenerator.register(MishangucItems.BLOCK_STATE_TOOL, Models.HANDHELD);
-    itemModelGenerator.register(MishangucItems.FLUID_STATE_TOOL, Models.HANDHELD);
+    itemModelGenerator.generateFlatItem(MishangucItems.BLOCK_STATE_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
+    itemModelGenerator.generateFlatItem(MishangucItems.FLUID_STATE_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
     registerCarryingTool(itemModelGenerator, MishangucItems.CARRYING_TOOL);
     registerColorTool(itemModelGenerator, MishangucItems.COLOR_TOOL);
-    itemModelGenerator.register(MishangucItems.COLUMN_BUILDING_TOOL, Models.HANDHELD);
-    itemModelGenerator.register(MishangucItems.DATA_TAG_TOOL, Models.HANDHELD);
+    itemModelGenerator.generateFlatItem(MishangucItems.COLUMN_BUILDING_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
+    itemModelGenerator.generateFlatItem(MishangucItems.DATA_TAG_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
     registerExplosionToolVariants(itemModelGenerator, MishangucItems.EXPLOSION_TOOL);
-    itemModelGenerator.register(MishangucItems.FORCE_PLACING_TOOL, Models.HANDHELD);
-    itemModelGenerator.register(MishangucItems.FLUID_FORCE_PLACING_TOOL, Models.HANDHELD);
-    itemModelGenerator.register(MishangucItems.GROWTH_TOOL, Models.HANDHELD);
-    itemModelGenerator.register(MishangucItems.ICE_SNOW_TOOL, Models.HANDHELD);
-    itemModelGenerator.register(MishangucItems.ID_CHECKER_TOOL, Models.HANDHELD);
-    itemModelGenerator.register(MishangucItems.FLUID_ID_CHECKER_TOOL, Models.HANDHELD);
-    itemModelGenerator.register(MishangucItems.MIRRORING_TOOL, Models.HANDHELD);
-    itemModelGenerator.register(MishangucItems.OMNIPOTENT_TOOL, Models.HANDHELD);
-    itemModelGenerator.register(MishangucItems.ROAD_CONNECTION_STATE_DEBUGGING_TOOL, Models.HANDHELD);
-    itemModelGenerator.register(MishangucItems.ROAD_TOOL, Models.HANDHELD);
-    itemModelGenerator.register(MishangucItems.ROTATING_TOOL, Models.HANDHELD);
-    itemModelGenerator.register(MishangucItems.SLAB_TOOL, Models.HANDHELD);
-    itemModelGenerator.register(MishangucItems.TEXT_COPY_TOOL, Models.HANDHELD);
-    itemModelGenerator.register(MishangucItems.TP_TOOL, Models.HANDHELD);
+    itemModelGenerator.generateFlatItem(MishangucItems.FORCE_PLACING_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
+    itemModelGenerator.generateFlatItem(MishangucItems.FLUID_FORCE_PLACING_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
+    itemModelGenerator.generateFlatItem(MishangucItems.GROWTH_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
+    itemModelGenerator.generateFlatItem(MishangucItems.ICE_SNOW_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
+    itemModelGenerator.generateFlatItem(MishangucItems.ID_CHECKER_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
+    itemModelGenerator.generateFlatItem(MishangucItems.FLUID_ID_CHECKER_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
+    itemModelGenerator.generateFlatItem(MishangucItems.MIRRORING_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
+    itemModelGenerator.generateFlatItem(MishangucItems.OMNIPOTENT_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
+    itemModelGenerator.generateFlatItem(MishangucItems.ROAD_CONNECTION_STATE_DEBUGGING_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
+    itemModelGenerator.generateFlatItem(MishangucItems.ROAD_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
+    itemModelGenerator.generateFlatItem(MishangucItems.ROTATING_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
+    itemModelGenerator.generateFlatItem(MishangucItems.SLAB_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
+    itemModelGenerator.generateFlatItem(MishangucItems.TEXT_COPY_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
+    itemModelGenerator.generateFlatItem(MishangucItems.TP_TOOL, ModelTemplates.FLAT_HANDHELD_ITEM);
     registerFastBuildingTool(itemModelGenerator, MishangucItems.FAST_BUILDING_TOOL);
   }
 
-  private void registerFastBuildingTool(ItemModelGenerator itemModelGenerator, Item item) {
-    final Identifier modelId = Models.HANDHELD.upload(item, TextureMap.layer0(item), itemModelGenerator.modelCollector);
-    final Identifier darkModelId = Models.HANDHELD.upload(ModelIds.getItemSubModelId(item, "_dark"), TextureMap.layer0(TextureMap.getSubId(item, "_dark")), itemModelGenerator.modelCollector);
+  private void registerFastBuildingTool(ItemModelGenerators itemModelGenerator, Item item) {
+    final Identifier modelId = ModelTemplates.FLAT_HANDHELD_ITEM.create(item, TextureMapping.layer0(item), itemModelGenerator.modelOutput);
+    final Identifier darkModelId = ModelTemplates.FLAT_HANDHELD_ITEM.create(ModelLocationUtils.getModelLocation(item, "_dark"), TextureMapping.layer0(TextureMapping.getItemTexture(item, "_dark")), itemModelGenerator.modelOutput);
 
-    itemModelGenerator.output.accept(item, ItemModels.rangeDispatch(FastBuildingRangeProperty.INSTANCE, 1 / 64f, ItemModels.basic(modelId), ItemModels.rangeDispatchEntry(ItemModels.basic(darkModelId), 0.5f)));
+    itemModelGenerator.itemModelOutput.accept(item, ItemModelUtils.rangeSelect(FastBuildingRangeProperty.INSTANCE, 1 / 64f, ItemModelUtils.plainModel(modelId), ItemModelUtils.override(ItemModelUtils.plainModel(darkModelId), 0.5f)));
   }
 
-  private void registerCarryingTool(ItemModelGenerator itemModelGenerator, Item item) {
-    final Identifier modelId = Models.HANDHELD.upload(item, TextureMap.layer0(item), itemModelGenerator.modelCollector);
-    final Identifier withBlock = Models.HANDHELD.upload(ModelIds.getItemSubModelId(item, "_with_block"), TextureMap.layer0(TextureMap.getSubId(item, "_with_block")), itemModelGenerator.modelCollector);
-    final Identifier withEntity = Models.HANDHELD.upload(ModelIds.getItemSubModelId(item, "_with_entity"), TextureMap.layer0(TextureMap.getSubId(item, "_with_entity")), itemModelGenerator.modelCollector);
-    itemModelGenerator.output.accept(item, ItemModels.select(CarryingToolTypeProperty.INSTANCE,
-        ItemModels.basic(modelId),
-        ItemModels.switchCase((short) 0, ItemModels.basic(withBlock)),
-        ItemModels.switchCase((short) 1, ItemModels.basic(withEntity))
+  private void registerCarryingTool(ItemModelGenerators itemModelGenerator, Item item) {
+    final Identifier modelId = ModelTemplates.FLAT_HANDHELD_ITEM.create(item, TextureMapping.layer0(item), itemModelGenerator.modelOutput);
+    final Identifier withBlock = ModelTemplates.FLAT_HANDHELD_ITEM.create(ModelLocationUtils.getModelLocation(item, "_with_block"), TextureMapping.layer0(TextureMapping.getItemTexture(item, "_with_block")), itemModelGenerator.modelOutput);
+    final Identifier withEntity = ModelTemplates.FLAT_HANDHELD_ITEM.create(ModelLocationUtils.getModelLocation(item, "_with_entity"), TextureMapping.layer0(TextureMapping.getItemTexture(item, "_with_entity")), itemModelGenerator.modelOutput);
+    itemModelGenerator.itemModelOutput.accept(item, ItemModelUtils.select(CarryingToolTypeProperty.INSTANCE,
+        ItemModelUtils.plainModel(modelId),
+        ItemModelUtils.when((short) 0, ItemModelUtils.plainModel(withBlock)),
+        ItemModelUtils.when((short) 1, ItemModelUtils.plainModel(withEntity))
     ));
   }
 
-  private void registerExplosionToolVariants(ItemModelGenerator itemModelGenerator, Item item) {
+  private void registerExplosionToolVariants(ItemModelGenerators itemModelGenerator, Item item) {
     record ExplosionToolEntry(String suffix, float power, boolean createFire) {}
     final List<ExplosionToolEntry> entries = List.of(
         new ExplosionToolEntry("", 0, false),
@@ -99,26 +104,26 @@ public class MishangucModelProvider extends FabricModelProvider {
         new ExplosionToolEntry("_128_fire", 128, true)
     );
     for (final ExplosionToolEntry entry : entries) {
-      Models.HANDHELD.upload(ModelIds.getItemSubModelId(item, entry.suffix), TextureMap.layer0(TextureMap.getSubId(item, entry.suffix)), itemModelGenerator.modelCollector);
+      ModelTemplates.FLAT_HANDHELD_ITEM.create(ModelLocationUtils.getModelLocation(item, entry.suffix), TextureMapping.layer0(TextureMapping.getItemTexture(item, entry.suffix)), itemModelGenerator.modelOutput);
     }
-    itemModelGenerator.output.accept(item, ItemModels.condition(ExplosionCreateFireProperty.INSTANCE,
-        ItemModels.rangeDispatch(ExplosionPowerProperty.INSTANCE,
-            ItemModels.basic(ModelIds.getItemSubModelId(item, "_fire")),
+    itemModelGenerator.itemModelOutput.accept(item, ItemModelUtils.conditional(ExplosionCreateFireProperty.INSTANCE,
+        ItemModelUtils.rangeSelect(ExplosionPowerProperty.INSTANCE,
+            ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item, "_fire")),
             entries.stream()
                 .filter(ExplosionToolEntry::createFire)
                 .filter(entry -> entry.power != 0)
-                .map(entry -> ItemModels.rangeDispatchEntry(ItemModels.basic(ModelIds.getItemSubModelId(item, entry.suffix)), entry.power))
+                .map(entry -> ItemModelUtils.override(ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item, entry.suffix)), entry.power))
                 .toList()),
-        ItemModels.rangeDispatch(ExplosionPowerProperty.INSTANCE,
-            ItemModels.basic(ModelIds.getItemModelId(item)),
+        ItemModelUtils.rangeSelect(ExplosionPowerProperty.INSTANCE,
+            ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item)),
             entries.stream()
                 .filter(Predicates.not(ExplosionToolEntry::createFire))
                 .filter(entry -> entry.power != 0)
-                .map(entry -> ItemModels.rangeDispatchEntry(ItemModels.basic(ModelIds.getItemSubModelId(item, entry.suffix)), entry.power))
+                .map(entry -> ItemModelUtils.override(ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item, entry.suffix)), entry.power))
                 .toList())));
   }
 
-  private void registerColorTool(ItemModelGenerator itemModelGenerator, Item item) {
+  private void registerColorTool(ItemModelGenerators itemModelGenerator, Item item) {
     final List<FloatObjectPair<String>> opacities = List.of(
         FloatObjectPair.of(0.1f, "_opacity_10"),
         FloatObjectPair.of(0.25f, "_opacity_25"),
@@ -126,24 +131,24 @@ public class MishangucModelProvider extends FabricModelProvider {
         FloatObjectPair.of(0.75f, "_opacity_75")
     );
     for (FloatObjectPair<String> opacity : opacities) {
-      Models.HANDHELD.upload(ModelIds.getItemSubModelId(item, opacity.right()), TextureMap.layer0(TextureMap.getSubId(item, opacity.right())), itemModelGenerator.modelCollector);
+      ModelTemplates.FLAT_HANDHELD_ITEM.create(ModelLocationUtils.getModelLocation(item, opacity.right()), TextureMapping.layer0(TextureMapping.getItemTexture(item, opacity.right())), itemModelGenerator.modelOutput);
     }
     for (ColorMixtureType colorMixtureType : ColorMixtureType.values()) {
       if (colorMixtureType == ColorMixtureType.NORMAL) continue;
-      Models.HANDHELD.upload(ModelIds.getItemSubModelId(item, "_" + colorMixtureType.asString()), TextureMap.layer0(TextureMap.getSubId(item, "_" + colorMixtureType.asString())), itemModelGenerator.modelCollector);
+      ModelTemplates.FLAT_HANDHELD_ITEM.create(ModelLocationUtils.getModelLocation(item, "_" + colorMixtureType.getSerializedName()), TextureMapping.layer0(TextureMapping.getItemTexture(item, "_" + colorMixtureType.getSerializedName())), itemModelGenerator.modelOutput);
     }
 
-    itemModelGenerator.output.accept(item, ItemModels.select(ColorMixtureTypeProperty.INSTANCE,
-        ItemModels.rangeDispatch(TransparencyPropertyProperty.INSTANCE,
-            ItemModels.basic(ModelIds.getItemModelId(item)),
+    itemModelGenerator.itemModelOutput.accept(item, ItemModelUtils.select(ColorMixtureTypeProperty.INSTANCE,
+        ItemModelUtils.rangeSelect(TransparencyPropertyProperty.INSTANCE,
+            ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item)),
             opacities.stream()
-                .map(pair -> ItemModels.rangeDispatchEntry(ItemModels.basic(ModelIds.getItemSubModelId(item, pair.right())), 1 - pair.leftFloat()))
+                .map(pair -> ItemModelUtils.override(ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item, pair.right())), 1 - pair.leftFloat()))
                 .toList()),
         Arrays.stream(ColorMixtureType.values())
             .filter(colorMixtureType -> colorMixtureType != ColorMixtureType.NORMAL)
-            .map(colorMixtureType -> ItemModels.switchCase(colorMixtureType, ItemModels.basic(ModelIds.getItemSubModelId(item, "_" + colorMixtureType.asString()))))
+            .map(colorMixtureType -> ItemModelUtils.when(colorMixtureType, ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item, "_" + colorMixtureType.getSerializedName()))))
             .toList()));
 
-    Models.HANDHELD.upload(ModelIds.getItemModelId(item), TextureMap.layer0(item), itemModelGenerator.modelCollector);
+    ModelTemplates.FLAT_HANDHELD_ITEM.create(ModelLocationUtils.getModelLocation(item), TextureMapping.layer0(item), itemModelGenerator.modelOutput);
   }
 }

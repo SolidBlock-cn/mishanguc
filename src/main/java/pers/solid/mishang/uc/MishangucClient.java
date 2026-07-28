@@ -10,21 +10,21 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.BlockRenderLayer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.client.render.item.property.bool.BooleanProperties;
-import net.minecraft.client.render.item.property.numeric.NumericProperties;
-import net.minecraft.client.render.item.property.select.SelectProperties;
-import net.minecraft.client.render.item.tint.TintSourceTypes;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.TooltipDisplayComponent;
-import net.minecraft.item.BlockItem;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.item.ItemTintSources;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties;
+import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperties;
+import net.minecraft.client.renderer.item.properties.select.SelectItemModelProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.BlockHitResult;
 import org.apache.commons.lang3.Validate;
 import pers.solid.mishang.uc.block.AbstractRoadBlock;
 import pers.solid.mishang.uc.block.ColoredBlock;
@@ -86,21 +86,21 @@ public class MishangucClient implements ClientModInitializer {
     });
 
     ItemTooltipCallback.EVENT.register((itemStack, tooltipContext, tooltipType, list) -> {
-      TooltipDisplayComponent tooltipDisplayComponent = itemStack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT);
-      itemStack.appendComponentTooltip(MishangucComponents.CARRYING_TOOL_DATA, tooltipContext, tooltipDisplayComponent, list::add, tooltipType);
-      itemStack.appendComponentTooltip(MishangucComponents.EXPLOSION_TOOL_DATA, tooltipContext, tooltipDisplayComponent, list::add, tooltipType);
-      itemStack.appendComponentTooltip(MishangucComponents.FAST_BUILDING_TOOL_DATA, tooltipContext, tooltipDisplayComponent, list::add, tooltipType);
+      TooltipDisplay tooltipDisplayComponent = itemStack.getOrDefault(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT);
+      itemStack.addToTooltip(MishangucComponents.CARRYING_TOOL_DATA, tooltipContext, tooltipDisplayComponent, list::add, tooltipType);
+      itemStack.addToTooltip(MishangucComponents.EXPLOSION_TOOL_DATA, tooltipContext, tooltipDisplayComponent, list::add, tooltipType);
+      itemStack.addToTooltip(MishangucComponents.FAST_BUILDING_TOOL_DATA, tooltipContext, tooltipDisplayComponent, list::add, tooltipType);
     });
   }
 
   private static void registerItemProperties() {
-    SelectProperties.ID_MAPPER.put(Mishanguc.id("color_mixture_type"), ColorMixtureTypeProperty.TYPE);
-    SelectProperties.ID_MAPPER.put(Mishanguc.id("carrying_tool_type"), CarryingToolTypeProperty.TYPE);
-    NumericProperties.ID_MAPPER.put(Mishanguc.id("transparency"), TransparencyPropertyProperty.CODEC);
-    NumericProperties.ID_MAPPER.put(Mishanguc.id("explosion_power"), ExplosionPowerProperty.CODEC);
-    BooleanProperties.ID_MAPPER.put(Mishanguc.id("explosion_create_fire"), ExplosionCreateFireProperty.CODEC);
-    NumericProperties.ID_MAPPER.put(Mishanguc.id("fast_building_range"), FastBuildingRangeProperty.CODEC);
-    TintSourceTypes.ID_MAPPER.put(Mishanguc.id("color"), ColoredTintSource.CODEC);
+    SelectItemModelProperties.ID_MAPPER.put(Mishanguc.id("color_mixture_type"), ColorMixtureTypeProperty.TYPE);
+    SelectItemModelProperties.ID_MAPPER.put(Mishanguc.id("carrying_tool_type"), CarryingToolTypeProperty.TYPE);
+    RangeSelectItemModelProperties.ID_MAPPER.put(Mishanguc.id("transparency"), TransparencyPropertyProperty.CODEC);
+    RangeSelectItemModelProperties.ID_MAPPER.put(Mishanguc.id("explosion_power"), ExplosionPowerProperty.CODEC);
+    ConditionalItemModelProperties.ID_MAPPER.put(Mishanguc.id("explosion_create_fire"), ExplosionCreateFireProperty.CODEC);
+    RangeSelectItemModelProperties.ID_MAPPER.put(Mishanguc.id("fast_building_range"), FastBuildingRangeProperty.CODEC);
+    ItemTintSources.ID_MAPPER.put(Mishanguc.id("color"), ColoredTintSource.CODEC);
   }
 
   private static void registerNetworking() {
@@ -110,20 +110,20 @@ public class MishangucClient implements ClientModInitializer {
         EditSignPayload.ID,
         (payload, context) -> {
           final BlockPos blockPos = payload.blockPos();
-          final MinecraftClient client = context.client();
-          final BlockEntity blockEntity = client.world != null ? client.world.getBlockEntity(blockPos) : null;
+          final Minecraft client = context.client();
+          final BlockEntity blockEntity = client.level != null ? client.level.getBlockEntity(blockPos) : null;
           if (blockEntity instanceof final HungSignBlockEntity hungSignBlockEntity) {
             final Direction direction = payload.direction().orElseThrow();
             client.execute(() ->
-                client.setScreen(new HungSignBlockEditScreen(client.world.getRegistryManager(), blockPos, direction, hungSignBlockEntity)));
+                client.setScreen(new HungSignBlockEditScreen(client.level.registryAccess(), blockPos, direction, hungSignBlockEntity)));
           } else if (blockEntity instanceof final WallSignBlockEntity wallSignBlockEntity) {
             client.execute(() ->
-                client.setScreen(new WallSignBlockEditScreen(client.world.getRegistryManager(), wallSignBlockEntity, blockPos)));
+                client.setScreen(new WallSignBlockEditScreen(client.level.registryAccess(), wallSignBlockEntity, blockPos)));
           } else if (blockEntity instanceof final StandingSignBlockEntity standingSignBlockEntity) {
             final BlockHitResult blockHitResult = payload.blockHitResult().orElseThrow();
-            final Boolean isFront = StandingSignBlock.getHitSide(blockEntity.getCachedState(), blockHitResult);
+            final Boolean isFront = StandingSignBlock.getHitSide(blockEntity.getBlockState(), blockHitResult);
             if (isFront != null) {
-              client.execute(() -> client.setScreen(new StandingSignBlockEditScreen(client.world.getRegistryManager(), standingSignBlockEntity, blockPos, isFront)));
+              client.execute(() -> client.setScreen(new StandingSignBlockEditScreen(client.level.registryAccess(), standingSignBlockEntity, blockPos, isFront)));
             }
           }
         });
@@ -141,7 +141,7 @@ public class MishangucClient implements ClientModInitializer {
           if (world == null || pos == null) return -1;
           BlockEntity entity = world.getBlockEntity(pos);
           // 考虑到玩家掉落产生粒子时，坐标会向上偏离一格。
-          if (entity == null) entity = world.getBlockEntity(pos.down());
+          if (entity == null) entity = world.getBlockEntity(pos.below());
           if (entity instanceof ColoredBlockEntity coloredBlockEntity) {
             return coloredBlockEntity.getColor();
           } else {
@@ -151,7 +151,7 @@ public class MishangucClient implements ClientModInitializer {
             int accumulatedRed = 0;
             int accumulatedGreen = 0;
             int accumulatedBlue = 0;
-            for (BlockPos outPos : BlockPos.iterateOutwards(pos, 1, 1, 1)) {
+            for (BlockPos outPos : BlockPos.withinManhattan(pos, 1, 1, 1)) {
               if (outPos.equals(pos)) continue;
               if (world.getBlockEntity(outPos) instanceof ColoredBlockEntity coloredBlockEntity) {
                 final int color = coloredBlockEntity.getColor();
@@ -174,13 +174,13 @@ public class MishangucClient implements ClientModInitializer {
 
   private static void registerBlockEntityRenderers() {
     // 注册方块实体渲染器
-    BlockEntityRendererFactories.register(MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY, HungSignBlockEntityRenderer::new);
-    BlockEntityRendererFactories.register(MishangucBlockEntities.COLORED_HUNG_SIGN_BLOCK_ENTITY, HungSignBlockEntityRenderer::new);
-    BlockEntityRendererFactories.register(MishangucBlockEntities.WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
-    BlockEntityRendererFactories.register(MishangucBlockEntities.COLORED_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
-    BlockEntityRendererFactories.register(MishangucBlockEntities.FULL_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer<FullWallSignBlockEntity>::new);
-    BlockEntityRendererFactories.register(MishangucBlockEntities.STANDING_SIGN_BLOCK_ENTITY, StandingSignBlockEntityRenderer::new);
-    BlockEntityRendererFactories.register(MishangucBlockEntities.COLORED_STANDING_SIGN_BLOCK_ENTITY, StandingSignBlockEntityRenderer::new);
+    BlockEntityRenderers.register(MishangucBlockEntities.HUNG_SIGN_BLOCK_ENTITY, HungSignBlockEntityRenderer::new);
+    BlockEntityRenderers.register(MishangucBlockEntities.COLORED_HUNG_SIGN_BLOCK_ENTITY, HungSignBlockEntityRenderer::new);
+    BlockEntityRenderers.register(MishangucBlockEntities.WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
+    BlockEntityRenderers.register(MishangucBlockEntities.COLORED_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer::new);
+    BlockEntityRenderers.register(MishangucBlockEntities.FULL_WALL_SIGN_BLOCK_ENTITY, WallSignBlockEntityRenderer<FullWallSignBlockEntity>::new);
+    BlockEntityRenderers.register(MishangucBlockEntities.STANDING_SIGN_BLOCK_ENTITY, StandingSignBlockEntityRenderer::new);
+    BlockEntityRenderers.register(MishangucBlockEntities.COLORED_STANDING_SIGN_BLOCK_ENTITY, StandingSignBlockEntityRenderer::new);
   }
 
   private static void registerRenderEvents() {
@@ -192,11 +192,11 @@ public class MishangucClient implements ClientModInitializer {
 
   private static void registerBlockLayers() {
     // 设置相应的 BlockLayer
-    Validate.notEmpty(MishangucBlocks.translucentBlocks).forEach(block -> BlockRenderLayerMap.putBlock(block, BlockRenderLayer.TRANSLUCENT));
+    Validate.notEmpty(MishangucBlocks.translucentBlocks).forEach(block -> BlockRenderLayerMap.putBlock(block, ChunkSectionLayer.TRANSLUCENT));
     Validate.notEmpty(MishangucBlocks.cutoutBlocks).forEach(block -> {
-      BlockRenderLayerMap.putBlock(block, BlockRenderLayer.CUTOUT);
+      BlockRenderLayerMap.putBlock(block, ChunkSectionLayer.CUTOUT);
       if (block instanceof AbstractRoadBlock roadBlock && roadBlock.getRoadSlab() != null) {
-        BlockRenderLayerMap.putBlock(roadBlock.getRoadSlab(), BlockRenderLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(roadBlock.getRoadSlab(), ChunkSectionLayer.CUTOUT);
       }
     });
     MishangucBlocks.translucentBlocks = null;

@@ -2,10 +2,9 @@ package pers.solid.mishang.uc.blocks;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.MapColor;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.Cutout;
 import pers.solid.mishang.uc.block.RoadMarkBlock;
@@ -15,7 +14,7 @@ import pers.solid.mishang.uc.block.RoadMarkBlock;
  */
 @ApiStatus.AvailableSince("1.1.0")
 public class RoadMarkBlocks extends MishangucBlocks {
-  private static final Block.Settings ROAD_MARK_SETTINGS = AbstractBlock.Settings.create().strength(0.5f).mapColor(MapColor.WHITE).nonOpaque().noCollision();
+  private static final BlockBehaviour.Properties ROAD_MARK_SETTINGS = BlockBehaviour.Properties.of().strength(0.5f).mapColor(MapColor.SNOW).noOcclusion().noCollision();
   @Cutout
   public static final RoadMarkBlock ARROW_STRAIGHT_MARK = directional("arrow_straight_mark", "arrow_straight");
   @Cutout
@@ -58,11 +57,11 @@ public class RoadMarkBlocks extends MishangucBlocks {
   public static final RoadMarkBlock LANE_NON_VEHICLE_MARK = directional("lane_non_vehicle_mark", "lane_non_vehicle");
 
   private static RoadMarkBlock directional(String idPath, String textureName) {
-    return register(idPath, settings -> RoadMarkBlock.createDirectionalFacing(Identifier.of("mishanguc:block/" + textureName), settings), ROAD_MARK_SETTINGS);
+    return register(idPath, settings -> RoadMarkBlock.createDirectionalFacing(Identifier.parse("mishanguc:block/" + textureName), settings), ROAD_MARK_SETTINGS);
   }
 
   private static RoadMarkBlock axis(String idPath, String textureName) {
-    return register(idPath, settings -> RoadMarkBlock.createAxisFacing(Identifier.of("mishanguc:block/" + textureName), settings), ROAD_MARK_SETTINGS);
+    return register(idPath, settings -> RoadMarkBlock.createAxisFacing(Identifier.parse("mishanguc:block/" + textureName), settings), ROAD_MARK_SETTINGS);
   }
 
   /**

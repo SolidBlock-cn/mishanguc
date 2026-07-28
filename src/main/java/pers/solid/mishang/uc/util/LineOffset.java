@@ -1,6 +1,6 @@
 package pers.solid.mishang.uc.util;
 
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Range;
 

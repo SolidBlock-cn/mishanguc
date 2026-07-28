@@ -1,38 +1,38 @@
 package pers.solid.mishang.uc.block;
 
+import com.mojang.math.Quadrant;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.client.data.BlockStateModelGenerator;
-import net.minecraft.client.data.BlockStateVariantMap;
-import net.minecraft.client.data.TextureMap;
-import net.minecraft.client.data.VariantsBlockModelDefinitionCreator;
-import net.minecraft.client.render.model.json.ModelVariantOperator;
-import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.recipe.RecipeGenerator;
-import net.minecraft.item.Item.TooltipContext;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.text.Text;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.AxisRotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.tick.ScheduledTickView;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item.TooltipContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
@@ -49,7 +49,7 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
   BooleanProperty BEVEL_TOP = MishangucProperties.BEVEL_TOP;
 
   @Override
-  default void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
+  default void appendRoadProperties(StateDefinition.Builder<Block, BlockState> builder) {
     RoadWithAngleLine.super.appendRoadProperties(builder);
     RoadWithStraightLine.super.appendRoadProperties(builder);
   }
@@ -62,31 +62,31 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
   }
 
   @Override
-  default BlockState mirrorRoad(BlockState state, BlockMirror mirror) {
+  default BlockState mirrorRoad(BlockState state, Mirror mirror) {
     return RoadWithAngleLine.super.mirrorRoad(state, mirror);
   }
 
   @Override
-  default BlockState rotateRoad(BlockState state, BlockRotation rotation) {
+  default BlockState rotateRoad(BlockState state, Rotation rotation) {
     return RoadWithStraightLine.super.rotateRoad(
         RoadWithAngleLine.super.rotateRoad(state, rotation), rotation);
   }
 
   @Override
-  default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
+  default BlockState withPlacementState(BlockState state, BlockPlaceContext ctx) {
     return RoadWithStraightLine.super.withPlacementState(
         RoadWithAngleLine.super.withPlacementState(state, ctx), ctx);
   }
 
   @Override
   default void appendRoadTooltip(
-      ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+      ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     RoadWithAngleLine.super.appendRoadTooltip(stack, context, tooltip, options);
     RoadWithStraightLine.super.appendRoadTooltip(stack, context, tooltip, options);
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithStraightAndAngleLine {
-    public static final MapCodec<RoadWithStraightAndAngleLine.Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), lineColorFieldCodec(), LineColor.CODEC.fieldOf("line_color_side").forGetter(b -> b.lineColorSide), lineTypeFieldCodec(), LineType.CODEC.fieldOf("line_type_side").forGetter(b -> b.lineTypeSide)).apply(i, RoadWithStraightAndAngleLine.Impl::new));
+    public static final MapCodec<RoadWithStraightAndAngleLine.Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(propertiesCodec(), lineColorFieldCodec(), LineColor.CODEC.fieldOf("line_color_side").forGetter(b -> b.lineColorSide), lineTypeFieldCodec(), LineType.CODEC.fieldOf("line_type_side").forGetter(b -> b.lineTypeSide)).apply(i, RoadWithStraightAndAngleLine.Impl::new));
     /**
      * 用于构造函数，道路是否拥有 {@link #BEVEL_TOP} 属性。在构造函数调用之前就应该被计算。
      */
@@ -94,7 +94,7 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
     private final LineColor lineColorSide;
     private final LineType lineTypeSide;
 
-    public Impl(Settings settings, LineColor lineColor, LineColor lineColorSide, LineType lineType, LineType lineTypeSide) {
+    public Impl(Properties settings, LineColor lineColor, LineColor lineColorSide, LineType lineType, LineType lineTypeSide) {
       super(settings, lineColor, ((Supplier<LineType>) () -> {
         hasBevelTopProperty = lineColor != lineColorSide;
         return lineType;
@@ -102,11 +102,11 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       this.lineColorSide = lineColorSide;
       this.lineTypeSide = lineTypeSide;
       if (hasBevelTopProperty) {
-        setDefaultState(getDefaultState().with(BEVEL_TOP, false));
+        registerDefaultState(defaultBlockState().setValue(BEVEL_TOP, false));
       }
     }
 
-    public Impl(Settings settings, LineColor lineColor, LineType lineType) {
+    public Impl(Properties settings, LineColor lineColor, LineType lineType) {
       this(settings, lineColor, lineColor, lineType, lineType);
     }
 
@@ -116,7 +116,7 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
     }
 
     @Override
-    public void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
+    public void appendRoadProperties(StateDefinition.Builder<Block, BlockState> builder) {
       RoadWithStraightAndAngleLine.super.appendRoadProperties(builder);
       if (hasBevelTopProperty) {
         builder.add(BEVEL_TOP);
@@ -124,45 +124,45 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
     }
 
     @Override
-    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-      final BlockState placementState = super.getPlacementState(ctx);
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext ctx) {
+      final BlockState placementState = super.getStateForPlacement(ctx);
       if (placementState == null) return null;
-      final Direction direction = placementState.get(FACING).getDirectionInAxis(placementState.get(AXIS));
-      final BlockPos blockPos = ctx.getBlockPos();
-      final BlockPos neighborPos = blockPos.offset(direction);
-      final World world = ctx.getWorld();
-      return getStateForNeighborUpdate(placementState, world, world, blockPos, direction, neighborPos, world.getBlockState(neighborPos), world.random);
+      final Direction direction = placementState.getValue(FACING).getDirectionInAxis(placementState.getValue(AXIS));
+      final BlockPos blockPos = ctx.getClickedPos();
+      final BlockPos neighborPos = blockPos.relative(direction);
+      final Level world = ctx.getLevel();
+      return updateShape(placementState, world, world, blockPos, direction, neighborPos, world.getBlockState(neighborPos), world.random);
     }
 
     @Override
-    protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
-      BlockState stateForNeighborUpdate = super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
-      if (stateForNeighborUpdate.contains(BEVEL_TOP) && stateForNeighborUpdate.get(AXIS).test(direction) && stateForNeighborUpdate.get(FACING).hasDirection(direction)) {
+    protected BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+      BlockState stateForNeighborUpdate = super.updateShape(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+      if (stateForNeighborUpdate.hasProperty(BEVEL_TOP) && stateForNeighborUpdate.getValue(AXIS).test(direction) && stateForNeighborUpdate.getValue(FACING).hasDirection(direction)) {
         // 如果连接的那个方块在连接部分的道路标线与当前道路的斜线部分颜色一致，那么 bevel_top = true。
         final Block neighborBlock = neighborState.getBlock();
         final boolean bevelTop = neighborBlock instanceof Road road && road.getLineColor(neighborState, direction.getOpposite()) == lineColorSide;
         if (bevelTop) {
-          return stateForNeighborUpdate.with(BEVEL_TOP, true);
+          return stateForNeighborUpdate.setValue(BEVEL_TOP, true);
         } else {
-          final BlockPos up = neighborPos.up();
+          final BlockPos up = neighborPos.above();
           final BlockState upState = world.getBlockState(up);
           if (upState.getBlock() instanceof Road road && road.getLineColor(upState, direction.getOpposite()) == lineColorSide) {
-            return stateForNeighborUpdate.with(BEVEL_TOP, true);
+            return stateForNeighborUpdate.setValue(BEVEL_TOP, true);
           }
-          final BlockPos down = neighborPos.down();
+          final BlockPos down = neighborPos.below();
           final BlockState downState = world.getBlockState(down);
           if (downState.getBlock() instanceof Road road && road.getLineColor(downState, direction.getOpposite()) == lineColorSide) {
-            return stateForNeighborUpdate.with(BEVEL_TOP, true);
+            return stateForNeighborUpdate.setValue(BEVEL_TOP, true);
           }
         }
-        return stateForNeighborUpdate.with(BEVEL_TOP, false);
+        return stateForNeighborUpdate.setValue(BEVEL_TOP, false);
       }
       return stateForNeighborUpdate;
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
+    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockModelGenerators blockStateModelGenerator) {
       final String lineTopStraight = MishangUtils.composeStraightLineTexture(lineColor, lineType);
       final String lineTopAngle = MishangUtils.composeAngleLineTexture(lineColorSide, LineType.NORMAL, true);
       final String lineSide = lineTopStraight;
@@ -177,8 +177,8 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       final Identifier mirroredModelId = road.uploadModel("_with_straight_and_angle_line_mirrored", "_mirrored", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_TOP, MishangucTextureKeys.LINE_TOP2, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_SIDE2);
 
       final Identifier beveledTopModelId, beveledTopMirroredModelId;
-      if (stateManager.getProperties().contains(BEVEL_TOP)) {
-        TextureMap textures2 = new FasterTextureMap()
+      if (stateDefinition.getProperties().contains(BEVEL_TOP)) {
+        TextureMapping textures2 = new FasterTextureMap()
             .base("asphalt")
             .lineTop(lineTopStraight)
             .lineTop2(lineTopAngle)
@@ -193,48 +193,48 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       }
 
       final boolean hasBevelTop = lineColor != lineColorSide;
-      final var map1 = hasBevelTop ? null : BlockStateVariantMap.models(AXIS, FACING);
-      final var map2 = hasBevelTop ? BlockStateVariantMap.models(AXIS, FACING, BEVEL_TOP) : null;
-      for (Direction direction : Direction.Type.HORIZONTAL) {
-        final AxisRotation axisRotation = switch (direction) {
-          case WEST -> AxisRotation.R90;
-          case NORTH -> AxisRotation.R180;
-          case EAST -> AxisRotation.R270;
-          default -> AxisRotation.R0;
+      final var map1 = hasBevelTop ? null : PropertyDispatch.initial(AXIS, FACING);
+      final var map2 = hasBevelTop ? PropertyDispatch.initial(AXIS, FACING, BEVEL_TOP) : null;
+      for (Direction direction : Direction.Plane.HORIZONTAL) {
+        final Quadrant axisRotation = switch (direction) {
+          case WEST -> Quadrant.R90;
+          case NORTH -> Quadrant.R180;
+          case EAST -> Quadrant.R270;
+          default -> Quadrant.R0;
         };
-        final AxisRotation axisRotationCCW90 = switch (direction) {
-          case WEST -> AxisRotation.R0;
-          case NORTH -> AxisRotation.R90;
-          case EAST -> AxisRotation.R180;
-          default -> AxisRotation.R270;
+        final Quadrant axisRotationCCW90 = switch (direction) {
+          case WEST -> Quadrant.R0;
+          case NORTH -> Quadrant.R90;
+          case EAST -> Quadrant.R180;
+          default -> Quadrant.R270;
         };
         final Direction.Axis axis = direction.getAxis();
-        final @NotNull HorizontalCornerDirection facing1 = HorizontalCornerDirection.fromDirections(direction, direction.rotateYClockwise());
-        final @NotNull HorizontalCornerDirection facing2 = HorizontalCornerDirection.fromDirections(direction, direction.rotateYCounterclockwise());
+        final @NotNull HorizontalCornerDirection facing1 = HorizontalCornerDirection.fromDirections(direction, direction.getClockWise());
+        final @NotNull HorizontalCornerDirection facing2 = HorizontalCornerDirection.fromDirections(direction, direction.getCounterClockWise());
         if (hasBevelTop) {
-          map2.register(axis, facing1, false,
-              BlockStateModelGenerator.createWeightedVariant(modelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
-          map2.register(axis, facing1, true,
-              BlockStateModelGenerator.createWeightedVariant(beveledTopModelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
-          map2.register(axis, facing2, false,
-              BlockStateModelGenerator.createWeightedVariant(mirroredModelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotationCCW90)));
-          map2.register(axis, facing2, true,
-              BlockStateModelGenerator.createWeightedVariant(beveledTopMirroredModelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotationCCW90)));
+          map2.select(axis, facing1, false,
+              BlockModelGenerators.plainVariant(modelId).with(VariantMutator.Y_ROT.withValue(axisRotation)));
+          map2.select(axis, facing1, true,
+              BlockModelGenerators.plainVariant(beveledTopModelId).with(VariantMutator.Y_ROT.withValue(axisRotation)));
+          map2.select(axis, facing2, false,
+              BlockModelGenerators.plainVariant(mirroredModelId).with(VariantMutator.Y_ROT.withValue(axisRotationCCW90)));
+          map2.select(axis, facing2, true,
+              BlockModelGenerators.plainVariant(beveledTopMirroredModelId).with(VariantMutator.Y_ROT.withValue(axisRotationCCW90)));
         } else {
-          map1.register(
+          map1.select(
               axis, facing1,
-              BlockStateModelGenerator.createWeightedVariant(modelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
-          map1.register(
+              BlockModelGenerators.plainVariant(modelId).with(VariantMutator.Y_ROT.withValue(axisRotation)));
+          map1.select(
               axis, facing2,
-              BlockStateModelGenerator.createWeightedVariant(mirroredModelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotationCCW90)));
+              BlockModelGenerators.plainVariant(mirroredModelId).with(VariantMutator.Y_ROT.withValue(axisRotationCCW90)));
         }
       }
-      blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockModelDefinitionCreator.of(road).with(hasBevelTop ? map2 : map1)));
+      blockStateModelGenerator.blockStateOutput.accept(road.composeState(MultiVariantGenerator.dispatch(road).with(hasBevelTop ? map2 : map1)));
     }
 
     @Override
     public LineColor getLineColor(BlockState state, Direction direction) {
-      if (state.get(FACING).hasDirection(direction) && (state.contains(BEVEL_TOP) && state.get(BEVEL_TOP) || !state.get(AXIS).test(direction))) {
+      if (state.getValue(FACING).hasDirection(direction) && (state.hasProperty(BEVEL_TOP) && state.getValue(BEVEL_TOP) || !state.getValue(AXIS).test(direction))) {
         return lineColorSide;
       }
       return super.getLineColor(state, direction);
@@ -242,29 +242,29 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
 
     @Override
     public LineType getLineType(BlockState state, Direction direction) {
-      if (state.get(FACING).hasDirection(direction) && !state.get(AXIS).test(direction)) {
+      if (state.getValue(FACING).hasDirection(direction) && !state.getValue(AXIS).test(direction)) {
         return lineTypeSide;
       }
       return super.getLineType(state, direction);
     }
 
     @Override
-    public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
+    public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
       if (lineColor == lineColorSide && lineType == lineTypeSide) {
-        tooltip.add(TextBridge.translatable("lineType.straightAndAngle.same", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
+        tooltip.add(TextBridge.translatable("lineType.straightAndAngle.same", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
       } else {
-        tooltip.add(TextBridge.translatable("lineType.straightAndAngle.straight", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
-        tooltip.add(TextBridge.translatable("lineType.straightAndAngle.bevel", lineColorSide.getName(), lineTypeSide.getName()).formatted(Formatting.BLUE));
+        tooltip.add(TextBridge.translatable("lineType.straightAndAngle.straight", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
+        tooltip.add(TextBridge.translatable("lineType.straightAndAngle.bevel", lineColorSide.getName(), lineTypeSide.getName()).withStyle(ChatFormatting.BLUE));
       }
     }
 
     @Override
-    protected MapCodec<? extends RoadWithStraightAndAngleLine.Impl> getCodec() {
+    protected MapCodec<? extends RoadWithStraightAndAngleLine.Impl> codec() {
       return CODEC;
     }
 
     @Override
-    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
+    public RecipeBuilder getPaintingRecipe(Block base, Block self, RecipeProvider recipeGenerator) {
       if (lineTypeSide != LineType.NORMAL) {
         throw new UnsupportedOperationException();
       }
@@ -272,14 +272,14 @@ public interface RoadWithStraightAndAngleLine extends RoadWithAngleLine, RoadWit
       if (base instanceof SlabBlock) {
         base2 = ((AbstractRoadBlock) base2).getRoadSlab();
       }
-      return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
+      return recipeGenerator.shaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern(" *X")
           .pattern("*X ")
           .pattern("X  ")
-          .input('*', lineColorSide.getIngredient())
-          .input('X', base2)
-          .criterion("has_paint", recipeGenerator.conditionsFromTag(lineColorSide.getIngredient()))
-          .criterion(RecipeGenerator.hasItem(base2), recipeGenerator.conditionsFromItem(base2));
+          .define('*', lineColorSide.getIngredient())
+          .define('X', base2)
+          .unlockedBy("has_paint", recipeGenerator.has(lineColorSide.getIngredient()))
+          .unlockedBy(RecipeProvider.getHasName(base2), recipeGenerator.has(base2));
     }
   }
 }

@@ -5,30 +5,29 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.data.BlockModelDefinitionCreator;
-import net.minecraft.client.data.BlockStateModelGenerator;
-import net.minecraft.client.data.VariantsBlockModelDefinitionCreator;
-import net.minecraft.client.render.model.json.ModelVariantOperator;
-import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.recipe.RecipeGenerator;
-import net.minecraft.item.Item.TooltipContext;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerator;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.core.Direction;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item.TooltipContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.data.FasterTextureMap;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.mixin.BlockStateModelGeneratorAccessor;
@@ -43,10 +42,10 @@ public interface RoadWithOffsetStraightLine extends Road {
   /**
    * 道路偏移直线所偏移的反方向。例如道路有一条南北方向的向西偏移的直线，则该道路朝向东。
    */
-  EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
+  EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
   @Override
-  default void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
+  default void appendRoadProperties(StateDefinition.Builder<Block, BlockState> builder) {
     Road.super.appendRoadProperties(builder);
     builder.add(FACING);
   }
@@ -56,100 +55,100 @@ public interface RoadWithOffsetStraightLine extends Road {
     return RoadConnectionState.or(
         Road.super.getConnectionStateOf(state, direction),
         RoadConnectionState.of(
-            direction.getAxis() != state.get(FACING).getAxis(),
+            direction.getAxis() != state.getValue(FACING).getAxis(),
             getLineColor(state, direction),
             EightHorizontalDirection.of(direction),
             getLineType(state, direction),
-            new LineOffset(state.get(FACING).getOpposite(), offsetLevel())));
+            new LineOffset(state.getValue(FACING).getOpposite(), offsetLevel())));
   }
 
   @Override
-  default BlockState mirrorRoad(BlockState state, BlockMirror mirror) {
-    return Road.super.mirrorRoad(state, mirror).with(FACING, mirror.apply(state.get(FACING)));
+  default BlockState mirrorRoad(BlockState state, Mirror mirror) {
+    return Road.super.mirrorRoad(state, mirror).setValue(FACING, mirror.mirror(state.getValue(FACING)));
   }
 
   @Override
-  default BlockState rotateRoad(BlockState state, BlockRotation rotation) {
-    return Road.super.rotateRoad(state, rotation).with(FACING, rotation.rotate(state.get(FACING)));
+  default BlockState rotateRoad(BlockState state, Rotation rotation) {
+    return Road.super.rotateRoad(state, rotation).setValue(FACING, rotation.rotate(state.getValue(FACING)));
   }
 
   @Override
-  default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
+  default BlockState withPlacementState(BlockState state, BlockPlaceContext ctx) {
     return Road.super
         .withPlacementState(state, ctx)
-        .with(
+        .setValue(
             FACING,
-            ctx.getPlayer() != null && ctx.getPlayer().isSneaking()
-                ? ctx.getHorizontalPlayerFacing().rotateYCounterclockwise()
-                : ctx.getHorizontalPlayerFacing().rotateYClockwise());
+            ctx.getPlayer() != null && ctx.getPlayer().isShiftKeyDown()
+                ? ctx.getHorizontalDirection().getCounterClockWise()
+                : ctx.getHorizontalDirection().getClockWise());
   }
 
   @Override
   default void appendRoadTooltip(
-      ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+      ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
     Road.super.appendRoadTooltip(stack, context, tooltip, options);
     final int offsetLevel = offsetLevel();
     if (offsetLevel == 114514) {
-      tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_white_and_yellow_double_line.1").formatted(Formatting.GRAY));
-      tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_white_and_yellow_double_line.2").formatted(Formatting.GRAY));
-      tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_white_and_yellow_double_line.3").formatted(Formatting.GRAY));
+      tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_white_and_yellow_double_line.1").withStyle(ChatFormatting.GRAY));
+      tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_white_and_yellow_double_line.2").withStyle(ChatFormatting.GRAY));
+      tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_white_and_yellow_double_line.3").withStyle(ChatFormatting.GRAY));
     } else {
       tooltip.add(
           TextBridge.translatable("block.mishanguc.tooltip.road_with_offset_straight_line")
-              .formatted(Formatting.GRAY));
+              .withStyle(ChatFormatting.GRAY));
     }
   }
 
   @Environment(EnvType.CLIENT)
-  default @NotNull BlockModelDefinitionCreator createBlockStates(Block block, Identifier modelId) {
-    return VariantsBlockModelDefinitionCreator.of(block, BlockStateModelGenerator.createWeightedVariant(modelId).apply(ModelVariantOperator.UV_LOCK.withValue(false))).apply(BlockStateModelGeneratorAccessor.getEAST_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS()); // 检查一下是否确实为 east_default
+  default BlockModelDefinitionGenerator createBlockStates(Block block, Identifier modelId) {
+    return MultiVariantGenerator.dispatch(block, BlockModelGenerators.plainVariant(modelId).with(VariantMutator.UV_LOCK.withValue(false))).with(BlockStateModelGeneratorAccessor.getROTATION_TORCH()); // 检查一下是否确实为 east_default
   }
 
   @Contract(pure = true)
   int offsetLevel();
 
   class Impl extends AbstractRoadBlock implements RoadWithOffsetStraightLine {
-    public static final MapCodec<Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), lineColorFieldCodec(), lineTypeFieldCodec(), Codec.INT.fieldOf("offset_level").forGetter(b -> b.offsetLevel)).apply(i, (settings, lineColor, lineTYpe, offsetLevel) -> new Impl(settings, lineColor, lineTYpe, null, offsetLevel)));
+    public static final MapCodec<Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(propertiesCodec(), lineColorFieldCodec(), lineTypeFieldCodec(), Codec.INT.fieldOf("offset_level").forGetter(b -> b.offsetLevel)).apply(i, (settings, lineColor, lineTYpe, offsetLevel) -> new Impl(settings, lineColor, lineTYpe, null, offsetLevel)));
     private final String lineTexture;
     private final int offsetLevel;
 
-    public Impl(Settings settings, LineColor lineColor, LineType lineType, String lineTexture, int offsetLevel) {
+    public Impl(Properties settings, LineColor lineColor, LineType lineType, String lineTexture, int offsetLevel) {
       super(settings, lineColor, lineType);
       this.lineTexture = lineTexture;
       this.offsetLevel = offsetLevel;
     }
 
     @Override
-    public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
+    public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
       if (offsetLevel == 0) {
         tooltip.add(TextBridge.translatable("tbd")
-            .formatted(Formatting.BLUE));
+            .withStyle(ChatFormatting.BLUE));
       } else {
-        tooltip.add(TextBridge.translatable("lineType.offsetStraight.composed", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
+        tooltip.add(TextBridge.translatable("lineType.offsetStraight.composed", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
       }
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
+    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockModelGenerators blockStateModelGenerator) {
       final FasterTextureMap textures = new FasterTextureMap().base("asphalt").lineSide(lineTexture).lineTop(lineTexture);
       final Identifier modelId = road.uploadModel("_with_straight_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_TOP);
-      blockStateModelGenerator.blockStateCollector.accept(road.composeState(createBlockStates(road, modelId)));
+      blockStateModelGenerator.blockStateOutput.accept(road.composeState(createBlockStates(road, modelId)));
     }
 
     @Override
-    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
+    public RecipeBuilder getPaintingRecipe(Block base, Block self, RecipeProvider recipeGenerator) {
       if (offsetLevel == 114514) {
-        return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
+        return recipeGenerator.shaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
             .pattern("w y")
             .pattern("XXX")
             .pattern("w y")
-            .input('w', LineColor.WHITE.getIngredient())
-            .input('y', LineColor.YELLOW.getIngredient())
-            .input('X', base)
-            .criterion("has_white_paint", recipeGenerator.conditionsFromTag(LineColor.WHITE.getIngredient()))
-            .criterion("has_yellow_paint", recipeGenerator.conditionsFromTag(LineColor.YELLOW.getIngredient()))
-            .criterion(RecipeGenerator.hasItem(base), recipeGenerator.conditionsFromItem(base));
+            .define('w', LineColor.WHITE.getIngredient())
+            .define('y', LineColor.YELLOW.getIngredient())
+            .define('X', base)
+            .unlockedBy("has_white_paint", recipeGenerator.has(LineColor.WHITE.getIngredient()))
+            .unlockedBy("has_yellow_paint", recipeGenerator.has(LineColor.YELLOW.getIngredient()))
+            .unlockedBy(RecipeProvider.getHasName(base), recipeGenerator.has(base));
       } else {
         final String[] patterns = switch (offsetLevel) {
           case 2 -> new String[]{
@@ -164,14 +163,14 @@ public interface RoadWithOffsetStraightLine extends Road {
           };
           default -> throw new IllegalStateException("Unexpected value: " + offsetLevel);
         };
-        return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
+        return recipeGenerator.shaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
             .pattern(patterns[0])
             .pattern(patterns[1])
             .pattern(patterns[2])
-            .input('*', lineColor.getIngredient())
-            .input('X', base)
-            .criterion("has_paint", recipeGenerator.conditionsFromTag(lineColor.getIngredient()))
-            .criterion(RecipeGenerator.hasItem(base), recipeGenerator.conditionsFromItem(base));
+            .define('*', lineColor.getIngredient())
+            .define('X', base)
+            .unlockedBy("has_paint", recipeGenerator.has(lineColor.getIngredient()))
+            .unlockedBy(RecipeProvider.getHasName(base), recipeGenerator.has(base));
       }
     }
 
@@ -181,7 +180,7 @@ public interface RoadWithOffsetStraightLine extends Road {
     }
 
     @Override
-    protected MapCodec<? extends Impl> getCodec() {
+    protected MapCodec<? extends Impl> codec() {
       return CODEC;
     }
   }

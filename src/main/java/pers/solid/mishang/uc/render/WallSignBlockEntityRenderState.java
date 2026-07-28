@@ -3,8 +3,8 @@ package pers.solid.mishang.uc.render;
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.block.entity.state.BlockEntityRenderState;
-import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.text.TextContext;
 

@@ -1,13 +1,12 @@
 package pers.solid.mishang.uc.util;
 
 import com.mojang.datafixers.util.Either;
-import net.minecraft.text.MutableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.Direction;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -46,22 +45,22 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
     return state1.compareTo(state2) > 0 ? state1 : state2;
   }
 
-  public static MutableText text(@Nullable Direction direction) {
+  public static MutableComponent text(@Nullable Direction direction) {
     if (direction == null) {
       return TextBridge.translatable("direction.mishanguc.none");
     }
-    return TextBridge.translatable("direction.mishanguc." + direction.asString());
+    return TextBridge.translatable("direction.mishanguc." + direction.getSerializedName());
   }
 
-  public static MutableText text(@Nullable HorizontalCornerDirection direction) {
+  public static MutableComponent text(@Nullable HorizontalCornerDirection direction) {
     if (direction == null) {
       return TextBridge.translatable("direction.mishanguc.none");
     } else {
-      return TextBridge.translatable("direction.mishanguc." + direction.asString());
+      return TextBridge.translatable("direction.mishanguc." + direction.getSerializedName());
     }
   }
 
-  public static MutableText text(@Nullable Either<Direction, HorizontalCornerDirection> direction) {
+  public static MutableComponent text(@Nullable Either<Direction, HorizontalCornerDirection> direction) {
     if (direction == null) {
       return TextBridge.translatable("direction.mishanguc.none");
     } else {
@@ -69,27 +68,27 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
     }
   }
 
-  public static MutableText text(@Nullable EightHorizontalDirection direction) {
+  public static MutableComponent text(@Nullable EightHorizontalDirection direction) {
     return direction == null ? text((Direction) null) : text(direction.either);
   }
 
-  public static MutableText text(@NotNull WhetherConnected whetherConnected) {
-    return TextBridge.translatable("roadConnectionState.whether." + whetherConnected.asString()).formatted(switch (whetherConnected) {
-      case NOT_CONNECTED -> Formatting.RED;
-      case CONNECTED -> Formatting.GREEN;
-      default -> Formatting.YELLOW;
+  public static MutableComponent text(WhetherConnected whetherConnected) {
+    return TextBridge.translatable("roadConnectionState.whether." + whetherConnected.getSerializedName()).withStyle(switch (whetherConnected) {
+      case NOT_CONNECTED -> ChatFormatting.RED;
+      case CONNECTED -> ChatFormatting.GREEN;
+      default -> ChatFormatting.YELLOW;
     });
   }
 
-  public static MutableText text(@NotNull LineColor lineColor) {
-    return lineColor.getName().formatted(switch (lineColor) {
-      case WHITE -> Formatting.WHITE;
-      case YELLOW -> Formatting.YELLOW;
-      default -> Formatting.GRAY;
+  public static MutableComponent text(LineColor lineColor) {
+    return lineColor.getName().withStyle(switch (lineColor) {
+      case WHITE -> ChatFormatting.WHITE;
+      case YELLOW -> ChatFormatting.YELLOW;
+      default -> ChatFormatting.GRAY;
     });
   }
 
-  public static MutableText text(@NotNull LineType lineType) {
+  public static MutableComponent text(LineType lineType) {
     return lineType.getName();
   }
 
@@ -109,7 +108,7 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
   }
 
   @Override
-  public int compareTo(@NotNull RoadConnectionState o) {
+  public int compareTo(RoadConnectionState o) {
     return whetherConnected.compareTo(o.whetherConnected);
   }
 
@@ -130,7 +129,7 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
     return lineOffset == null ? 0 : lineOffset.level();
   }
 
-  public enum WhetherConnected implements StringIdentifiable {
+  public enum WhetherConnected implements StringRepresentable {
     NOT_CONNECTED("not_connected"),
     MAY_CONNECT("may_connect"),
     CONNECTED("connected");
@@ -142,7 +141,7 @@ public record RoadConnectionState(WhetherConnected whetherConnected, LineColor l
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
       return this.id;
     }
   }

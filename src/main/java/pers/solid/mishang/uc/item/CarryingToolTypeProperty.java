@@ -4,22 +4,22 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.item.property.select.SelectProperty;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemDisplayContext;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.item.properties.select.SelectItemModelProperty;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.components.CarryingToolData;
 import pers.solid.mishang.uc.components.MishangucComponents;
 
 @Environment(EnvType.CLIENT)
-public enum CarryingToolTypeProperty implements SelectProperty<Short> {
+public enum CarryingToolTypeProperty implements SelectItemModelProperty<Short> {
   INSTANCE;
-  public static final SelectProperty.Type<CarryingToolTypeProperty, Short> TYPE = Type.create(MapCodec.unit(INSTANCE), Codec.SHORT);
+  public static final SelectItemModelProperty.Type<CarryingToolTypeProperty, Short> TYPE = Type.create(MapCodec.unit(INSTANCE), Codec.SHORT);
 
   @Override
-  public @Nullable Short getValue(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity user, int seed, ItemDisplayContext displayContext) {
+  public @Nullable Short get(ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity user, int seed, ItemDisplayContext displayContext) {
     final CarryingToolData data = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     if (data == null) {
       return null;
@@ -34,7 +34,7 @@ public enum CarryingToolTypeProperty implements SelectProperty<Short> {
   }
 
   @Override
-  public Type<? extends SelectProperty<Short>, Short> getType() {
+  public Type<? extends SelectItemModelProperty<Short>, Short> type() {
     return TYPE;
   }
 }

@@ -3,8 +3,8 @@ package pers.solid.mishang.uc.item;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import pers.solid.mishang.uc.networking.ItemScrollPayload;
 import pers.solid.mishang.uc.screen.MishangScreenUtil;
 
@@ -37,5 +37,5 @@ public interface HotbarScrollInteraction {
    * @param scrollAmount 滚动的数量，由封包决定。
    * @param player       滚动了该物品的玩家。
    */
-  void onScroll(int selectedSlot, double scrollAmount, ServerPlayerEntity player, ItemStack stack);
+  void onScroll(int selectedSlot, double scrollAmount, ServerPlayer player, ItemStack stack);
 }

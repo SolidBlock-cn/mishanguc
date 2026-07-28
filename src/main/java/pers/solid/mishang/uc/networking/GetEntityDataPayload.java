@@ -1,21 +1,21 @@
 package pers.solid.mishang.uc.networking;
 
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextCodecs;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import pers.solid.mishang.uc.Mishanguc;
 
-public record GetEntityDataPayload(Text entityName, BlockPos blockPos, NbtCompound entityNbt) implements CustomPayload {
-  public static final Id<GetEntityDataPayload> ID = new CustomPayload.Id<>(Mishanguc.id("get_entity"));
-  public static final PacketCodec<PacketByteBuf, GetEntityDataPayload> CODEC = PacketCodec.of((value, buf) -> buf.writeNbt(TextCodecs.CODEC.encodeStart(NbtOps.INSTANCE, value.entityName).getOrThrow()).writeBlockPos(value.blockPos).writeNbt(value.entityNbt), buf -> new GetEntityDataPayload(TextCodecs.CODEC.parse(NbtOps.INSTANCE, buf.readNbt()).getOrThrow(), buf.readBlockPos(), buf.readNbt()));
+public record GetEntityDataPayload(Component entityName, BlockPos blockPos, CompoundTag entityNbt) implements CustomPacketPayload {
+  public static final Type<GetEntityDataPayload> ID = new CustomPacketPayload.Type<>(Mishanguc.id("get_entity"));
+  public static final StreamCodec<FriendlyByteBuf, GetEntityDataPayload> CODEC = StreamCodec.ofMember((value, buf) -> buf.writeNbt(ComponentSerialization.CODEC.encodeStart(NbtOps.INSTANCE, value.entityName).getOrThrow()).writeBlockPos(value.blockPos).writeNbt(value.entityNbt), buf -> new GetEntityDataPayload(ComponentSerialization.CODEC.parse(NbtOps.INSTANCE, buf.readNbt()).getOrThrow(), buf.readBlockPos(), buf.readNbt()));
 
   @Override
-  public Id<? extends CustomPayload> getId() {
+  public Type<? extends CustomPacketPayload> type() {
     return ID;
   }
 }
