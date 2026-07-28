@@ -105,7 +105,7 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
     final Integer color = stack.get(MishangucComponents.COLOR);
     final ColorMixtureType mixtureType = stack.getOrDefault(MishangucComponents.COLOR_MIXTURE_TYPE, ColorMixtureType.NORMAL);
     if (color == null && mixtureType.requiresTargetColor()) {
-      if (!world.isClient) {
+      if (!world.isClient()) {
         player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.no_data").formatted(Formatting.RED), true);
         return ActionResult.FAIL;
       }
@@ -114,6 +114,7 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
 
     int prevColorRgb = 0; // the initial value should not usually be used.
     if (!(blockEntity instanceof ColoredBlockEntity coloredBlockEntity)) {
+
       final BlockState blockState = world.getBlockState(blockPos);
       final Block block = blockState.getBlock();
       final Block coloredBlock;
@@ -127,7 +128,7 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
             .orElse(null);
       }
 
-      if (coloredBlock != null && (mixtureType != ColorMixtureType.RANDOM || !world.isClient)) {
+      if (coloredBlock != null && (mixtureType != ColorMixtureType.RANDOM || !world.isClient())) {
         prevColorRgb = blockState.getMapColor(world, blockPos).color;
         final BlockState coloredState = coloredBlock.getStateWithProperties(blockState);
         world.setBlockState(blockPos, coloredState);
@@ -148,37 +149,30 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
       final float amount = stack.getOrDefault(MishangucComponents.COLOR_CHANGE_AMOUNT, 0.05f) * (player.isSneaking() ? -1 : 1);
       final int target = mixtureType.handle(prevColorRgb, color == null ? 0 : color, amount, world.getRandom());
 
-      if (mixtureType != ColorMixtureType.RANDOM || !world.isClient) {
+      if (mixtureType != ColorMixtureType.RANDOM || !world.isClient()) {
         // 处于客户端时，且类型为随机时，不执行。
         if (opacity.equals(1f)) {
           coloredBlockEntity.setColor(mixed = target);
         } else {
           final Color prevColor = new Color(prevColorRgb);
           final Color targetColor = new Color(target);
-          final Color mixedColor = new Color(
-              MathHelper.lerp(opacity, prevColor.getRed(), targetColor.getRed()),
-              MathHelper.lerp(opacity, prevColor.getGreen(), targetColor.getGreen()),
-              MathHelper.lerp(opacity, prevColor.getBlue(), targetColor.getBlue()),
-              0
-          );
+          final Color mixedColor = new Color(MathHelper.lerp(opacity, prevColor.getRed(), targetColor.getRed()), MathHelper.lerp(opacity, prevColor.getGreen(), targetColor.getGreen()), MathHelper.lerp(opacity, prevColor.getBlue(), targetColor.getBlue()), 0);
           mixed = mixedColor.getRGB();
           coloredBlockEntity.setColor(mixed);
         }
-        blockEntity.markDirty();
-        if (!world.isClient) {
-          world.updateListeners(blockPos, blockEntity.getCachedState(), blockEntity.getCachedState(), Block.NOTIFY_LISTENERS);
-          world.playSound(null, blockPos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-          player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.success_set", MishangUtils.describeColor(mixed)), true);
-        }
+        world.updateListeners(blockPos, blockEntity.getCachedState(), blockEntity.getCachedState(), Block.NOTIFY_LISTENERS);
+        world.playSound(null, blockPos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.success_set", MishangUtils.describeColor(mixed)), true);
       }
+      blockEntity.markDirty();
       stack.damage(1, player, LivingEntity.getSlotForHand(hand));
       return ActionResult.SUCCESS;
     } else {
-      if (!world.isClient) {
+      if (!world.isClient()) {
         player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.not_colored").formatted(Formatting.RED), true);
         return ActionResult.FAIL;
       }
-      return ActionResult.CONSUME;
+      return ActionResult.SUCCESS;
     }
   }
 
@@ -197,7 +191,7 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
       color = blockState.getMapColor(world, pos).color;
     }
     stack.set(MishangucComponents.COLOR, color);
-    if (!world.isClient) {
+    if (!world.isClient()) {
       player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.success_copied", MishangUtils.describeColor(color)), true);
     }
     return ActionResult.SUCCESS;
