@@ -50,14 +50,12 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     this.baseHandrail = baseBlock;
   }
 
-  @Override
-  protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
-    if (state.get(WATERLOGGED)) {
-      tickView.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+  public HandrailCentralBlock(@NotNull T baseBlock, Settings settings) {
+    this(baseBlock, 2f, 16f, 2f, 16f, 16f, settings);
     }
-    BlockState stateForNeighborUpdate = super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
-    stateForNeighborUpdate = updateSideStates(stateForNeighborUpdate, world, pos);
-    return stateForNeighborUpdate;
+
+  public HandrailCentralBlock(@NotNull T baseBlock) {
+    this(baseBlock, AbstractBlock.Settings.copy(baseBlock));
   }
 
   public static boolean connectsTo(BlockState state, Direction direction, BlockState neighborState, WorldView world, BlockPos pos, BlockPos neighborPos) {
@@ -77,6 +75,46 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
     return neighborState.getBlock() instanceof HandrailStairBlock && neighborState.get(HandrailStairBlock.POSITION) == HandrailStairBlock.Position.CENTER && neighborState.get(HandrailStairBlock.FACING).getAxis() == direction.getAxis() || neighborState.getBlock() instanceof HandrailCentralBlock;
   }
 
+  public static BlockState updateSideStates(BlockState state, WorldView world, BlockPos blockPos) {
+    Direction mayBeOnlyInitialConnected = null;
+    Direction mayBeOnlyConnected = null;
+    int initialConnectedNumber = 0;
+    int connectedNumber = 0;
+    for (Map.Entry<Direction, BooleanProperty> entry : FACING_PROPERTIES.entrySet()) {
+      Direction facing = entry.getKey();
+      BooleanProperty property = entry.getValue();
+      if (state.get(property)) {
+        mayBeOnlyInitialConnected = facing;
+        initialConnectedNumber += 1;
+      }
+      final BlockPos neighborPos = blockPos.offset(facing);
+      final boolean connectsTo = connectsTo(state, facing, world.getBlockState(neighborPos), world, blockPos, neighborPos);
+      state = state.with(property, connectsTo);
+      if (connectsTo) {
+        mayBeOnlyConnected = facing;
+        connectedNumber += 1;
+      }
+    }
+    if (connectedNumber == 1) {
+      state = state.with(FACING_PROPERTIES.get(mayBeOnlyConnected.getOpposite()), true);
+    } else if (connectedNumber == 0 && mayBeOnlyInitialConnected != null && initialConnectedNumber <= 2) {
+      state = state
+          .with(FACING_PROPERTIES.get(mayBeOnlyInitialConnected), true)
+          .with(FACING_PROPERTIES.get(mayBeOnlyInitialConnected.getOpposite()), true);
+    }
+    return state;
+  }
+
+  @Override
+  protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
+    if (state.get(WATERLOGGED)) {
+      tickView.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+    }
+    BlockState stateForNeighborUpdate = super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+    stateForNeighborUpdate = updateSideStates(stateForNeighborUpdate, world, pos);
+    return stateForNeighborUpdate;
+  }
+
   @Override
   public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
     final Block block = stateFrom.getBlock();
@@ -85,14 +123,6 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
           && handrails.connectsIn(stateFrom, direction.getOpposite(), null);
     }
     return super.isSideInvisible(state, stateFrom, direction);
-  }
-
-  public HandrailCentralBlock(@NotNull T baseBlock, Settings settings) {
-    this(baseBlock, 1f, 1f, 16f, 16f, 16f, settings);
-  }
-
-  public HandrailCentralBlock(@NotNull T baseBlock) {
-    this(baseBlock, AbstractBlock.Settings.copy(baseBlock));
   }
 
   @Override
@@ -149,36 +179,6 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
       }
     }
     return placementState.with(WATERLOGGED, waterlogged);
-  }
-
-  public static BlockState updateSideStates(BlockState state, WorldView world, BlockPos blockPos) {
-    Direction mayBeOnlyInitialConnected = null;
-    Direction mayBeOnlyConnected = null;
-    int initialConnectedNumber = 0;
-    int connectedNumber = 0;
-    for (Map.Entry<Direction, BooleanProperty> entry : FACING_PROPERTIES.entrySet()) {
-      Direction facing = entry.getKey();
-      BooleanProperty property = entry.getValue();
-      if (state.get(property)) {
-        mayBeOnlyInitialConnected = facing;
-        initialConnectedNumber += 1;
-      }
-      final BlockPos neighborPos = blockPos.offset(facing);
-      final boolean connectsTo = connectsTo(state, facing, world.getBlockState(neighborPos), world, blockPos, neighborPos);
-      state = state.with(property, connectsTo);
-      if (connectsTo) {
-        mayBeOnlyConnected = facing;
-        connectedNumber += 1;
-      }
-    }
-    if (connectedNumber == 1) {
-      state = state.with(FACING_PROPERTIES.get(mayBeOnlyConnected.getOpposite()), true);
-    } else if (connectedNumber == 0 && mayBeOnlyInitialConnected != null && initialConnectedNumber <= 2) {
-      state = state
-          .with(FACING_PROPERTIES.get(mayBeOnlyInitialConnected), true)
-          .with(FACING_PROPERTIES.get(mayBeOnlyInitialConnected.getOpposite()), true);
-    }
-    return state;
   }
 
   @Environment(EnvType.CLIENT)
