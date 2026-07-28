@@ -5,6 +5,7 @@ Note: Not all versions in this update log are already published. Please refer to
 ### 1.6.4
 
 - Fixed the issue of wrong outline shape of handrail block of the central shape.
+- Improved the implementation of color tool.
 
 ### 1.6.4-beta.1
 
