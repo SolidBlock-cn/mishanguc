@@ -171,6 +171,8 @@ tasks.register('curseforge', TaskPublishCurseForge) {
         mainFile.addGameVersion v
     }
 
+    mainFile.addEnvironment 'Client', 'Server'
+
     mainFile.addRelations 'requiredDependency', 'fabric-api'
     mainFile.withAdditionalFile(sourcesJar)
 }
