@@ -231,6 +231,17 @@ Note: Not all versions in this update log are already published. Please refer to
 
 - Fixed the severe issue that the mod is unable to run in 1.21.1.
 
+### 1.4.3.1
+
+The fix update exclusive for 1.19.4.
+
+- Adjusted the placing rule of the wall light block and corner light block. The light can be placed only when the block has a sides shape or collision at the center of the surface, avoiding placing the light on the side where the center is empty.
+- Fixed the incorrect texture of the side of some road blocks.
+- Now all standing signs and sign bars have the block tag `#wall_post_override` so that the standing signs placed on the walls make the wall posts visible.
+- Fixed the issue that when the field `textJson` of NBT of text is invalid, the translation key of the returned text component `message.mishanguc.invalid_json` does not exist. Besides, this text will be displayed in red.
+- Fixed the issue that the X-rotation of text cannot be set correctly.
+- Adjusted the name of some contents.
+
 ### 1.4.3
 
 - Fit 1.21.4.
@@ -310,6 +321,18 @@ Note: Not all versions in this update log are already published. Please refer to
 
 - Fixed the issue that tp tools may fail to teleport.
 - Fixed the issue that some tools cannot operate blocks at a far distance after modifying attributes.
+
+### 1.3.3.1-beta.1
+
+The fix update exclusive for 1.19.4.
+
+- Adjusted the placing rule of the wall light block and corner light block. The light can be placed only when the block has a sides shape or collision at the center of the surface, avoiding placing the light on the side where the center is empty.
+- Now all standing signs and sign bars have the block tag `#wall_post_override` so that the standing signs placed on the walls make the wall posts visible.
+- Fixed the issue that when the field `textJson` of NBT of text is invalid, the translation key of the returned text component `message.mishanguc.invalid_json` does not exist. Besides, this text will be displayed in red.
+- Fixed the issue that the X-rotation of text cannot be set correctly.
+- Adjusted the name of some contents.
+- Fixed the issue that the block tag `#leaves` is invalid for containing cherry which does not exist in 1.19.2.
+- Fixed the issue that the type of explosion tools in the creative mode inventory is invalid in this version.
 
 ### 1.3.3
 
