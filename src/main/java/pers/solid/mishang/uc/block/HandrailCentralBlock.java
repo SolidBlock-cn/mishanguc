@@ -41,8 +41,8 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
    */
   public final @NotNull T baseHandrail;
 
-  protected HandrailCentralBlock(@NotNull T baseBlock, float radius1, float radius2, float boundingHeight1, float boundingHeight2, float collisionHeight, Settings settings) {
-    super(radius1, radius2, boundingHeight1, boundingHeight2, collisionHeight, settings);
+  protected HandrailCentralBlock(@NotNull T baseBlock, float postWidth, float postHeight, float wallWidth, float wallHeight, float collisionHeight, Settings settings) {
+    super(postWidth, postHeight, wallWidth, wallHeight, collisionHeight, settings);
     this.setDefaultState(getDefaultState()
         .with(WEST, true).with(EAST, true)
         .with(NORTH, false).with(SOUTH, false)
@@ -54,7 +54,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
     if (state.get(WATERLOGGED)) {
       tickView.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-    }
+  }
     BlockState stateForNeighborUpdate = super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
     stateForNeighborUpdate = updateSideStates(stateForNeighborUpdate, world, pos);
     return stateForNeighborUpdate;
@@ -71,7 +71,6 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
       return neighborState.isIn(BlockTags.FENCES) || (neighborState.getBlock() instanceof FenceGateBlock && FenceGateBlock.canWallConnect(neighborState, direction)) || neighborState.isIn(BlockTags.WALLS) || neighborState.getBlock() instanceof PaneBlock;
     }
   }
-
 
   public static boolean connectsHandrailTo(Direction direction, BlockState neighborState) {
     return neighborState.getBlock() instanceof HandrailStairBlock && neighborState.get(HandrailStairBlock.POSITION) == HandrailStairBlock.Position.CENTER && neighborState.get(HandrailStairBlock.FACING).getAxis() == direction.getAxis() || neighborState.getBlock() instanceof HandrailCentralBlock;
@@ -99,7 +98,6 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
   public Item asItem() {
     return baseHandrail.asItem();
   }
-
 
   @Override
   protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
