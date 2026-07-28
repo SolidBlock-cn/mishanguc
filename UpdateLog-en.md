@@ -2,6 +2,18 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.6.4
+
+- Fixed the issue of wrong outline shape of handrail block of the central shape.
+
+### 1.6.4-beta.1
+
+- Fixed the issue of wrong outline shape of handrail block of the central shape.
+
+### 1.6.3-beta.6
+
+- Improved the implementation of color tool.
+
 ### 1.6.3-beta.5
 
 - Now the dyeing logic of color tool runs only on the server.
