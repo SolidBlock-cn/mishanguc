@@ -1,18 +1,18 @@
 package pers.solid.mishang.uc.networking;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.packet.CustomPayload;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.MishangucRules;
 
-public record RuleChangedPayload(short ruleType, MishangucRules.ToolAccess toolAccess) implements CustomPacketPayload {
-  public static final Type<RuleChangedPayload> ID = new CustomPacketPayload.Type<>(Mishanguc.id("rule_changed"));
+public record RuleChangedPayload(short type, MishangucRules.ToolAccess toolAccess) implements CustomPayload {
+  public static final Id<RuleChangedPayload> ID = new CustomPayload.Id<>(Mishanguc.id("rule_changed"));
 
   @Override
-  public Type<RuleChangedPayload> type() {
+  public Id<RuleChangedPayload> getId() {
     return ID;
   }
 
-  public static final StreamCodec<FriendlyByteBuf, RuleChangedPayload> CODEC = StreamCodec.ofMember((value, buf) -> buf.writeShort(value.ruleType).writeEnum(value.toolAccess), buf -> new RuleChangedPayload(buf.readShort(), buf.readEnum(MishangucRules.ToolAccess.class)));
+  public static final PacketCodec<PacketByteBuf, RuleChangedPayload> CODEC = PacketCodec.of((value, buf) -> buf.writeShort(value.type).writeEnumConstant(value.toolAccess), buf -> new RuleChangedPayload(buf.readShort(), buf.readEnumConstant(MishangucRules.ToolAccess.class)));
 }

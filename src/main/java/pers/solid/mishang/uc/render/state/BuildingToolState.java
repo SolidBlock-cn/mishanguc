@@ -1,16 +1,16 @@
 package pers.solid.mishang.uc.render.state;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.longs.LongObjectPair;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.ShapeRenderer;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.ARGB;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.VertexRendering;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ColorHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,76 +25,72 @@ public class BuildingToolState implements MishangRenderState {
     if (!(context.worldState().getData(MishangRenderStateProvider.MISHANG_BLOCK_OUTLINE) instanceof BuildingToolState state)) {
       return true;
     }
-    final MultiBufferSource consumers = context.consumers();
+    final VertexConsumerProvider consumers = context.consumers();
     if (consumers == null) return true;
-    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderTypes.lines());
+    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.LINES);
 
-    final BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
-    final Vec3 cameraPos = context.worldState().cameraRenderState.pos;
+    final BlockPos.Mutable mutable = new BlockPos.Mutable();
+    final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
 
     for (LongObjectPair<VoxelShape> pair : state.cyanShapes) {
       mutable.set(pair.leftLong());
 
-      ShapeRenderer.renderShape(
+      VertexRendering.drawOutline(
           context.matrices(),
           vertexConsumer,
           pair.right(),
-          mutable.getX() - cameraPos.x(),
-          mutable.getY() - cameraPos.y(),
-          mutable.getZ() - cameraPos.z(),
-          ARGB.colorFromFloat(0.8f,
+          mutable.getX() - cameraPos.getX(),
+          mutable.getY() - cameraPos.getY(),
+          mutable.getZ() - cameraPos.getZ(),
+          ColorHelper.fromFloats(0.8f,
               0,
               1,
-              1),
-          Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+              1));
     }
     for (LongObjectPair<VoxelShape> pair : state.blueShapes) {
       mutable.set(pair.leftLong());
 
-      ShapeRenderer.renderShape(
+      VertexRendering.drawOutline(
           context.matrices(),
           vertexConsumer,
           pair.right(),
-          mutable.getX() - cameraPos.x(),
-          mutable.getY() - cameraPos.y(),
-          mutable.getZ() - cameraPos.z(),
-          ARGB.colorFromFloat(0.5f,
+          mutable.getX() - cameraPos.getX(),
+          mutable.getY() - cameraPos.getY(),
+          mutable.getZ() - cameraPos.getZ(),
+          ColorHelper.fromFloats(0.5f,
               0,
               0.5f,
-              1),
-          Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+              1));
     }
     for (LongObjectPair<VoxelShape> pair : state.redShapes) {
       mutable.set(pair.leftLong());
 
-      ShapeRenderer.renderShape(
+      VertexRendering.drawOutline(
           context.matrices(),
           vertexConsumer,
           pair.right(),
-          mutable.getX() - cameraPos.x(),
-          mutable.getY() - cameraPos.y(),
-          mutable.getZ() - cameraPos.z(),
-          ARGB.colorFromFloat(0.5f,
+          mutable.getX() - cameraPos.getX(),
+          mutable.getY() - cameraPos.getY(),
+          mutable.getZ() - cameraPos.getZ(),
+          ColorHelper.fromFloats(0.5f,
               1,
               0,
-              0),
-          Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+              0));
     }
     for (LongObjectPair<VoxelShape> pair : state.orangeShapes) {
       mutable.set(pair.leftLong());
 
-      ShapeRenderer.renderShape(
+      VertexRendering.drawOutline(
           context.matrices(),
           vertexConsumer,
           pair.right(),
-          mutable.getX() - cameraPos.x(),
-          mutable.getY() - cameraPos.y(),
-          mutable.getZ() - cameraPos.z(),
-          ARGB.colorFromFloat(0.8f,
+          mutable.getX() - cameraPos.getX(),
+          mutable.getY() - cameraPos.getY(),
+          mutable.getZ() - cameraPos.getZ(),
+          ColorHelper.fromFloats(0.8f,
               1f,
               0.5f,
-              0),
-          Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+              0));
     }
 
     return state.showVanillaOutline;

@@ -2,15 +2,16 @@ package pers.solid.mishang.uc.util;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.util.StringRepresentable;
+import net.minecraft.text.MutableText;
+import net.minecraft.util.StringIdentifiable;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * 文本的水平对齐方式。
  */
-public enum HorizontalAlign implements StringRepresentable {
+public enum HorizontalAlign implements StringIdentifiable {
   LEFT,
   CENTER,
   RIGHT;
@@ -22,19 +23,19 @@ public enum HorizontalAlign implements StringRepresentable {
   }
 
   @Override
-  public String getSerializedName() {
+  public String asString() {
     return M.get(this);
   }
 
-  public MutableComponent getName() {
-    return TextBridge.translatable("horizontal_align.mishanguc." + getSerializedName());
+  public MutableText getName() {
+    return TextBridge.translatable("horizontal_align.mishanguc." + asString());
   }
 
   /**
    * 左右交换，居中的不变。
    */
   @Contract(pure = true)
-  public HorizontalAlign flip() {
+  public @NotNull HorizontalAlign flip() {
     return switch (this) {
       case LEFT -> RIGHT;
       case RIGHT -> LEFT;

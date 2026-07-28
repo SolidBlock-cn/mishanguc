@@ -1,12 +1,12 @@
 package pers.solid.mishang.uc.blocks;
 
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.MapColor;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.MapColor;
+import net.minecraft.util.DyeColor;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.annotations.Translucent;
@@ -22,10 +22,10 @@ public final class WallSignBlocks extends MishangucBlocks {
    * 隐形的告示牌。
    */
   @MiningLevel(MiningLevel.Tool.NONE)
-  public static final FullWallSignBlock INVISIBLE_WALL_SIGN = registerFull("invisible_wall_sign", null, Block.Properties.of().mapColor(MapColor.NONE).noCollision().strength(0, 1f));
+  public static final FullWallSignBlock INVISIBLE_WALL_SIGN = registerFull("invisible_wall_sign", null, Block.Settings.create().mapColor(MapColor.CLEAR).noCollision().strength(0, 1f));
 
   @MiningLevel(MiningLevel.Tool.NONE)
-  public static final FullWallSignBlock INVISIBLE_GLOWING_WALL_SIGN = registerFull("invisible_glowing_wall_sign", null, Block.Properties.of().mapColor(MapColor.NONE).noCollision().lightLevel(x -> 15).strength(0, 1f));
+  public static final FullWallSignBlock INVISIBLE_GLOWING_WALL_SIGN = registerFull("invisible_glowing_wall_sign", null, Block.Settings.create().mapColor(MapColor.CLEAR).noCollision().luminance(x -> 15).strength(0, 1f));
 
   // 木质
   @ApiStatus.AvailableSince("1.2.4")
@@ -67,35 +67,35 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final WallSignBlock STRIPPED_PALE_OAK_WOOD_WALL_SIGN = register("stripped_pale_oak_wood_wall_sign", Blocks.STRIPPED_PALE_OAK_WOOD);
 
   @ApiStatus.AvailableSince("1.2.4")
-  public static final WallSignBlock STRIPPED_MANGROVE_WOOD_WALL_SIGN = register("stripped_mangrove_wood_wall_sign", Blocks.STRIPPED_MANGROVE_WOOD, Block.Properties.ofFullCopy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.COLOR_RED));
+  public static final WallSignBlock STRIPPED_MANGROVE_WOOD_WALL_SIGN = register("stripped_mangrove_wood_wall_sign", Blocks.STRIPPED_MANGROVE_WOOD, Block.Settings.copy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED));
 
   public static final WallSignBlock STRIPPED_CRIMSON_HYPHAE_WALL_SIGN = register("stripped_crimson_hyphae_wall_sign", Blocks.STRIPPED_CRIMSON_HYPHAE);
 
   public static final WallSignBlock STRIPPED_WARPED_HYPHAE_WALL_SIGN = register("stripped_warped_hyphae_wall_sign", Blocks.STRIPPED_WARPED_HYPHAE);
 
   static {
-    OAK_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/oak_log");
-    SPRUCE_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/spruce_log");
-    BIRCH_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/birch_log");
-    JUNGLE_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/jungle_log");
-    ACACIA_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/acacia_log");
-    CHERRY_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/cherry_log");
-    DARK_OAK_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/dark_oak_log");
-    PALE_OAK_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/pale_oak_log");
-    MANGROVE_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/mangrove_log");
-    CRIMSON_HYPHAE_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/crimson_stem");
-    WARPED_HYPHAE_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/warped_stem");
-    STRIPPED_OAK_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_oak_log");
-    STRIPPED_SPRUCE_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_spruce_log");
-    STRIPPED_BIRCH_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_birch_log");
-    STRIPPED_JUNGLE_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_jungle_log");
-    STRIPPED_ACACIA_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_acacia_log");
-    STRIPPED_CHERRY_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_cherry_log");
-    STRIPPED_DARK_OAK_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_dark_oak_log");
-    STRIPPED_PALE_OAK_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_pale_oak_log");
-    STRIPPED_MANGROVE_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_mangrove_log");
-    STRIPPED_CRIMSON_HYPHAE_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_crimson_stem");
-    STRIPPED_WARPED_HYPHAE_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_warped_stem");
+    OAK_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/oak_log");
+    SPRUCE_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/spruce_log");
+    BIRCH_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/birch_log");
+    JUNGLE_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/jungle_log");
+    ACACIA_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/acacia_log");
+    CHERRY_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/cherry_log");
+    DARK_OAK_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/dark_oak_log");
+    PALE_OAK_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/pale_oak_log");
+    MANGROVE_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/mangrove_log");
+    CRIMSON_HYPHAE_WALL_SIGN.texture = Identifier.ofVanilla("block/crimson_stem");
+    WARPED_HYPHAE_WALL_SIGN.texture = Identifier.ofVanilla("block/warped_stem");
+    STRIPPED_OAK_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_oak_log");
+    STRIPPED_SPRUCE_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_spruce_log");
+    STRIPPED_BIRCH_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_birch_log");
+    STRIPPED_JUNGLE_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_jungle_log");
+    STRIPPED_ACACIA_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_acacia_log");
+    STRIPPED_CHERRY_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_cherry_log");
+    STRIPPED_DARK_OAK_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_dark_oak_log");
+    STRIPPED_PALE_OAK_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_pale_oak_log");
+    STRIPPED_MANGROVE_WOOD_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_mangrove_log");
+    STRIPPED_CRIMSON_HYPHAE_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_crimson_stem");
+    STRIPPED_WARPED_HYPHAE_WALL_SIGN.texture = Identifier.ofVanilla("block/stripped_warped_stem");
   }
 
   public static final WallSignBlock OAK_WALL_SIGN = register("oak_wall_sign", Blocks.OAK_PLANKS);
@@ -123,15 +123,15 @@ public final class WallSignBlocks extends MishangucBlocks {
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final WallSignBlock BAMBOO_WALL_SIGN = register("bamboo_wall_sign", Blocks.BAMBOO_BLOCK, Block.Properties.ofFullCopy(Blocks.BAMBOO_BLOCK).mapColor(MapColor.PLANT));
+  public static final WallSignBlock BAMBOO_WALL_SIGN = register("bamboo_wall_sign", Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(MapColor.DARK_GREEN));
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final WallSignBlock BAMBOO_PLANK_WALL_SIGN = register("bamboo_plank_wall_sign", Blocks.BAMBOO_PLANKS, Block.Properties.ofFullCopy(Blocks.BAMBOO_PLANKS));
+  public static final WallSignBlock BAMBOO_PLANK_WALL_SIGN = register("bamboo_plank_wall_sign", Blocks.BAMBOO_PLANKS, Block.Settings.copy(Blocks.BAMBOO_PLANKS));
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final WallSignBlock BAMBOO_MOSAIC_WALL_SIGN = register("bamboo_mosaic_wall_sign", Blocks.BAMBOO_MOSAIC, Block.Properties.ofFullCopy(Blocks.BAMBOO_MOSAIC));
+  public static final WallSignBlock BAMBOO_MOSAIC_WALL_SIGN = register("bamboo_mosaic_wall_sign", Blocks.BAMBOO_MOSAIC, Block.Settings.copy(Blocks.BAMBOO_MOSAIC));
 
   @ApiStatus.AvailableSince("0.2.2")
   public static final ColoredWallSignBlock COLORED_WOODEN_WALL_SIGN = registerColored("colored_wooden_wall_sign", ColoredBlocks.COLORED_PLANKS);
@@ -472,10 +472,10 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final GlowingWallSignBlock GLOWING_POLISHED_BLACKSTONE_WALL_SIGN = registerGlowing("glowing_polished_blackstone_wall_sign", Blocks.POLISHED_BLACKSTONE);
 
   static {
-    GLOWING_NETHERRACK_WALL_SIGN.glowTexture = Identifier.withDefaultNamespace("block/lava_still");
-    GLOWING_NETHER_BRICK_WALL_SIGN.glowTexture = Identifier.withDefaultNamespace("block/lava_still");
-    GLOWING_BLACKSTONE_WALL_SIGN.glowTexture = Identifier.withDefaultNamespace("block/glowstone");
-    GLOWING_POLISHED_BLACKSTONE_WALL_SIGN.glowTexture = Identifier.withDefaultNamespace("block/glowstone");
+    GLOWING_NETHERRACK_WALL_SIGN.glowTexture = Identifier.ofVanilla("block/lava_still");
+    GLOWING_NETHER_BRICK_WALL_SIGN.glowTexture = Identifier.ofVanilla("block/lava_still");
+    GLOWING_BLACKSTONE_WALL_SIGN.glowTexture = Identifier.ofVanilla("block/glowstone");
+    GLOWING_POLISHED_BLACKSTONE_WALL_SIGN.glowTexture = Identifier.ofVanilla("block/glowstone");
   }
 
   // 雪
@@ -499,8 +499,8 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final GlowingWallSignBlock GLOWING_BLUE_ICE_WALL_SIGN = registerGlowing("glowing_blue_ice_wall_sign", Blocks.BLUE_ICE);
 
   static {
-    SNOW_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/snow");
-    GLOWING_SNOW_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/snow");
+    SNOW_WALL_SIGN.texture = Identifier.ofVanilla("block/snow");
+    GLOWING_SNOW_WALL_SIGN.texture = Identifier.ofVanilla("block/snow");
   }
 
   // 完整的混凝土
@@ -612,31 +612,31 @@ public final class WallSignBlocks extends MishangucBlocks {
   private WallSignBlocks() {
   }
 
-  private static WallSignBlock register(String name, Block baseBlock, BlockBehaviour.Properties settings) {
+  private static WallSignBlock register(String name, Block baseBlock, AbstractBlock.Settings settings) {
     return MishangucBlocks.register(name, settings1 -> new WallSignBlock(baseBlock, settings1), settings);
   }
 
   private static WallSignBlock register(String name, Block baseBlock) {
-    return register(name, baseBlock, BlockBehaviour.Properties.ofFullCopy(baseBlock));
+    return register(name, baseBlock, AbstractBlock.Settings.copy(baseBlock));
   }
 
-  private static FullWallSignBlock registerFull(String name, Block baseBlock, BlockBehaviour.Properties settings) {
+  private static FullWallSignBlock registerFull(String name, Block baseBlock, AbstractBlock.Settings settings) {
     return MishangucBlocks.register(name, settings1 -> new FullWallSignBlock(baseBlock, settings1), settings);
   }
 
   private static FullWallSignBlock registerFull(String name, Block baseBlock) {
-    return registerFull(name, baseBlock, BlockBehaviour.Properties.ofFullCopy(baseBlock));
+    return registerFull(name, baseBlock, AbstractBlock.Settings.copy(baseBlock));
   }
 
   private static GlowingWallSignBlock registerGlowing(String name, Block baseBlock) {
-    return MishangucBlocks.register(name, settings1 -> new GlowingWallSignBlock(baseBlock, settings1), BlockBehaviour.Properties.ofFullCopy(baseBlock));
+    return MishangucBlocks.register(name, settings1 -> new GlowingWallSignBlock(baseBlock, settings1), AbstractBlock.Settings.copy(baseBlock));
   }
 
   private static ColoredWallSignBlock registerColored(String name, Block baseBlock) {
-    return MishangucBlocks.register(name, settings -> new ColoredWallSignBlock(baseBlock, settings), BlockBehaviour.Properties.ofFullCopy(baseBlock));
+    return MishangucBlocks.register(name, settings -> new ColoredWallSignBlock(baseBlock, settings), AbstractBlock.Settings.copy(baseBlock));
   }
 
   private static ColoredGlowingWallSignBlock registerColoredGlowing(String name, Block baseBlock) {
-    return MishangucBlocks.register(name, settings -> new ColoredGlowingWallSignBlock(baseBlock, settings), BlockBehaviour.Properties.ofFullCopy(baseBlock));
+    return MishangucBlocks.register(name, settings -> new ColoredGlowingWallSignBlock(baseBlock, settings), AbstractBlock.Settings.copy(baseBlock));
   }
 }

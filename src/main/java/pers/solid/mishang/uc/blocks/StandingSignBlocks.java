@@ -1,13 +1,9 @@
 package pers.solid.mishang.uc.blocks;
 
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.properties.WoodType;
-import net.minecraft.world.level.material.MapColor;
+import net.minecraft.block.*;
+import net.minecraft.util.DyeColor;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.annotations.Translucent;
@@ -65,7 +61,7 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final StandingSignBlock STRIPPED_DARK_OAK_WOOD_STANDING_SIGN = register("stripped_dark_oak_wood_standing_sign", Blocks.STRIPPED_DARK_OAK_WOOD);
   public static final StandingSignBlock STRIPPED_PALE_OAK_WOOD_STANDING_SIGN = register("stripped_pale_oak_wood_standing_sign", Blocks.STRIPPED_PALE_OAK_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
-  public static final StandingSignBlock STRIPPED_MANGROVE_WOOD_STANDING_SIGN = register("stripped_mangrove_wood_standing_sign", Blocks.STRIPPED_MANGROVE_WOOD, Block.Properties.ofFullCopy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.COLOR_RED));
+  public static final StandingSignBlock STRIPPED_MANGROVE_WOOD_STANDING_SIGN = register("stripped_mangrove_wood_standing_sign", Blocks.STRIPPED_MANGROVE_WOOD, Block.Settings.copy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.RED));
   @ApiStatus.AvailableSince("1.2.4")
   public static final StandingSignBlock STRIPPED_CRIMSON_HYPHAE_STANDING_SIGN = register("stripped_crimson_hyphae_standing_sign", Blocks.STRIPPED_CRIMSON_HYPHAE);
   @ApiStatus.AvailableSince("1.2.4")
@@ -86,38 +82,38 @@ public final class StandingSignBlocks extends MishangucBlocks {
 
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final StandingSignBlock BAMBOO_STANDING_SIGN = register("bamboo_standing_sign", Blocks.BAMBOO_BLOCK, Block.Properties.ofFullCopy(Blocks.BAMBOO_BLOCK).mapColor(MapColor.PLANT));
+  public static final StandingSignBlock BAMBOO_STANDING_SIGN = register("bamboo_standing_sign", Blocks.BAMBOO_BLOCK, Block.Settings.copy(Blocks.BAMBOO_BLOCK).mapColor(MapColor.DARK_GREEN));
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final StandingSignBlock BAMBOO_PLANK_STANDING_SIGN = register("bamboo_plank_standing_sign", Blocks.BAMBOO_PLANKS, Block.Properties.ofFullCopy(Blocks.BAMBOO_PLANKS));
+  public static final StandingSignBlock BAMBOO_PLANK_STANDING_SIGN = register("bamboo_plank_standing_sign", Blocks.BAMBOO_PLANKS, Block.Settings.copy(Blocks.BAMBOO_PLANKS));
   @ApiStatus.AvailableSince("1.0.4-mc1.19.3")
   @MiningLevel(MiningLevel.Tool.AXE)
-  public static final StandingSignBlock BAMBOO_MOSAIC_STANDING_SIGN = register("bamboo_mosaic_standing_sign", Blocks.BAMBOO_MOSAIC, Block.Properties.ofFullCopy(Blocks.BAMBOO_MOSAIC));
+  public static final StandingSignBlock BAMBOO_MOSAIC_STANDING_SIGN = register("bamboo_mosaic_standing_sign", Blocks.BAMBOO_MOSAIC, Block.Settings.copy(Blocks.BAMBOO_MOSAIC));
 
   static {
-    OAK_WOOD_STANDING_SIGN.baseTexture = OAK_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/oak_log");
-    SPRUCE_WOOD_STANDING_SIGN.baseTexture = SPRUCE_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/spruce_log");
-    BIRCH_WOOD_STANDING_SIGN.baseTexture = BIRCH_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/birch_log");
-    JUNGLE_WOOD_STANDING_SIGN.baseTexture = JUNGLE_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/jungle_log");
-    ACACIA_WOOD_STANDING_SIGN.baseTexture = ACACIA_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/acacia_log");
-    CHERRY_WOOD_STANDING_SIGN.baseTexture = CHERRY_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/cherry_log");
-    DARK_OAK_WOOD_STANDING_SIGN.baseTexture = DARK_OAK_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/dark_oak_log");
-    PALE_OAK_WOOD_STANDING_SIGN.baseTexture = PALE_OAK_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/pale_oak_log");
-    MANGROVE_WOOD_STANDING_SIGN.baseTexture = MANGROVE_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/mangrove_log");
-    CRIMSON_HYPHAE_STANDING_SIGN.baseTexture = CRIMSON_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/crimson_stem");
-    WARPED_HYPHAE_STANDING_SIGN.baseTexture = WARPED_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/warped_stem");
-    STRIPPED_OAK_WOOD_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_oak_log");
-    STRIPPED_SPRUCE_WOOD_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_spruce_log");
-    STRIPPED_BIRCH_WOOD_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_birch_log");
-    STRIPPED_JUNGLE_WOOD_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_jungle_log");
-    STRIPPED_ACACIA_WOOD_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_acacia_log");
-    STRIPPED_CHERRY_WOOD_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_cherry_log");
-    STRIPPED_DARK_OAK_WOOD_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_dark_oak_log");
-    STRIPPED_PALE_OAK_WOOD_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_pale_oak_log");
-    STRIPPED_MANGROVE_WOOD_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_mangrove_log");
-    STRIPPED_CRIMSON_HYPHAE_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_crimson_stem");
-    STRIPPED_WARPED_HYPHAE_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_warped_stem");
-    BAMBOO_PLANK_STANDING_SIGN.barTexture = BAMBOO_MOSAIC_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/bamboo_block");
+    OAK_WOOD_STANDING_SIGN.baseTexture = OAK_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/oak_log");
+    SPRUCE_WOOD_STANDING_SIGN.baseTexture = SPRUCE_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/spruce_log");
+    BIRCH_WOOD_STANDING_SIGN.baseTexture = BIRCH_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/birch_log");
+    JUNGLE_WOOD_STANDING_SIGN.baseTexture = JUNGLE_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/jungle_log");
+    ACACIA_WOOD_STANDING_SIGN.baseTexture = ACACIA_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/acacia_log");
+    CHERRY_WOOD_STANDING_SIGN.baseTexture = CHERRY_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/cherry_log");
+    DARK_OAK_WOOD_STANDING_SIGN.baseTexture = DARK_OAK_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/dark_oak_log");
+    PALE_OAK_WOOD_STANDING_SIGN.baseTexture = PALE_OAK_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/pale_oak_log");
+    MANGROVE_WOOD_STANDING_SIGN.baseTexture = MANGROVE_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/mangrove_log");
+    CRIMSON_HYPHAE_STANDING_SIGN.baseTexture = CRIMSON_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/crimson_stem");
+    WARPED_HYPHAE_STANDING_SIGN.baseTexture = WARPED_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/warped_stem");
+    STRIPPED_OAK_WOOD_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_oak_log");
+    STRIPPED_SPRUCE_WOOD_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_spruce_log");
+    STRIPPED_BIRCH_WOOD_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_birch_log");
+    STRIPPED_JUNGLE_WOOD_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_jungle_log");
+    STRIPPED_ACACIA_WOOD_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_acacia_log");
+    STRIPPED_CHERRY_WOOD_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_cherry_log");
+    STRIPPED_DARK_OAK_WOOD_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_dark_oak_log");
+    STRIPPED_PALE_OAK_WOOD_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_pale_oak_log");
+    STRIPPED_MANGROVE_WOOD_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_mangrove_log");
+    STRIPPED_CRIMSON_HYPHAE_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_crimson_stem");
+    STRIPPED_WARPED_HYPHAE_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/stripped_warped_stem");
+    BAMBOO_PLANK_STANDING_SIGN.barTexture = BAMBOO_MOSAIC_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/bamboo_block");
   }
 
   public static final ImmutableMap<WoodType, StandingSignBlock> WOODEN_SIGNS = new ImmutableMap.Builder<WoodType, StandingSignBlock>()
@@ -358,10 +354,10 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final GlowingStandingSignBlock GLOWING_POLISHED_BLACKSTONE_STANDING_SIGN = registerGlowing("glowing_polished_blackstone_standing_sign", Blocks.POLISHED_BLACKSTONE);
 
   static {
-    GLOWING_NETHERRACK_STANDING_SIGN.glowTexture = Identifier.withDefaultNamespace("block/lava_still");
-    GLOWING_NETHER_BRICK_STANDING_SIGN.glowTexture = Identifier.withDefaultNamespace("block/lava_still");
-    GLOWING_BLACKSTONE_STANDING_SIGN.glowTexture = Identifier.withDefaultNamespace("block/glowstone");
-    GLOWING_POLISHED_BLACKSTONE_STANDING_SIGN.glowTexture = Identifier.withDefaultNamespace("block/glowstone");
+    GLOWING_NETHERRACK_STANDING_SIGN.glowTexture = Identifier.ofVanilla("block/lava_still");
+    GLOWING_NETHER_BRICK_STANDING_SIGN.glowTexture = Identifier.ofVanilla("block/lava_still");
+    GLOWING_BLACKSTONE_STANDING_SIGN.glowTexture = Identifier.ofVanilla("block/glowstone");
+    GLOWING_POLISHED_BLACKSTONE_STANDING_SIGN.glowTexture = Identifier.ofVanilla("block/glowstone");
   }
 
 
@@ -379,30 +375,30 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final GlowingStandingSignBlock GLOWING_BLUE_ICE_STANDING_SIGN = registerGlowing("glowing_blue_ice_standing_sign", Blocks.BLUE_ICE);
 
   static {
-    SNOW_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/snow");
-    SNOW_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/packed_ice");
-    GLOWING_SNOW_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/snow");
-    GLOWING_SNOW_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/packed_ice");
-    ICE_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/blue_ice");
+    SNOW_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/snow");
+    SNOW_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/packed_ice");
+    GLOWING_SNOW_STANDING_SIGN.baseTexture = Identifier.ofVanilla("block/snow");
+    GLOWING_SNOW_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/packed_ice");
+    ICE_STANDING_SIGN.barTexture = Identifier.ofVanilla("block/blue_ice");
   }
 
-  private static StandingSignBlock register(String name, Block baseBlock, BlockBehaviour.Properties settings) {
+  private static StandingSignBlock register(String name, Block baseBlock, AbstractBlock.Settings settings) {
     return MishangucBlocks.register(name, settings1 -> new StandingSignBlock(baseBlock, settings1), settings);
   }
 
   private static StandingSignBlock register(String name, Block baseBlock) {
-    return register(name, baseBlock, BlockBehaviour.Properties.ofFullCopy(baseBlock));
+    return register(name, baseBlock, AbstractBlock.Settings.copy(baseBlock));
   }
 
   private static GlowingStandingSignBlock registerGlowing(String name, Block baseBlock) {
-    return MishangucBlocks.register(name, settings -> new GlowingStandingSignBlock(baseBlock, settings), BlockBehaviour.Properties.ofFullCopy(baseBlock));
+    return MishangucBlocks.register(name, settings -> new GlowingStandingSignBlock(baseBlock, settings), AbstractBlock.Settings.copy(baseBlock));
   }
 
   private static ColoredStandingSignBlock registerColored(String name, Block baseBlock) {
-    return MishangucBlocks.register(name, settings -> new ColoredStandingSignBlock(baseBlock, settings), BlockBehaviour.Properties.ofFullCopy(baseBlock));
+    return MishangucBlocks.register(name, settings -> new ColoredStandingSignBlock(baseBlock, settings), AbstractBlock.Settings.copy(baseBlock));
   }
 
   private static ColoredGlowingStandingSignBlock registerColoredGlowing(String name, Block baseBlock) {
-    return MishangucBlocks.register(name, settings -> new ColoredGlowingStandingSignBlock(baseBlock, settings), BlockBehaviour.Properties.ofFullCopy(baseBlock));
+    return MishangucBlocks.register(name, settings -> new ColoredGlowingStandingSignBlock(baseBlock, settings), AbstractBlock.Settings.copy(baseBlock));
   }
 }

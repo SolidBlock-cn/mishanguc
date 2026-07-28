@@ -4,18 +4,18 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
-import net.minecraft.core.Direction;
-import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Item.TooltipContext;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.VariantsBlockModelDefinitionCreator;
+import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.recipe.RecipeGenerator;
+import net.minecraft.item.Item.TooltipContext;
+import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.data.FasterTextureMap;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
@@ -32,43 +32,43 @@ public interface RoadWithCrossLine extends Road {
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithCrossLine {
-    public static final MapCodec<Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(propertiesCodec(), lineColorFieldCodec()).apply(i, Impl::new));
+    public static final MapCodec<Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), lineColorFieldCodec()).apply(i, Impl::new));
 
-    public Impl(Properties settings, LineColor lineColor) {
+    public Impl(Settings settings, LineColor lineColor) {
       super(settings, lineColor, LineType.NORMAL);
     }
 
     @Override
-    public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
-      tooltip.add(TextBridge.translatable("lineType.cross.composed", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
+    public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
+      tooltip.add(TextBridge.translatable("lineType.cross.composed", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockModelGenerators blockStateModelGenerator) {
+    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
       final FasterTextureMap textures = new FasterTextureMap().base("asphalt")
           .lineSide(MishangUtils.composeStraightLineTexture(lineColor, LineType.NORMAL))
-          .lineTop(lineColor.getSerializedName() + "_cross_line");
+          .lineTop(lineColor.asString() + "_cross_line");
       final Identifier modelId = road.uploadModel("_with_cross_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_TOP);
-      blockStateModelGenerator.blockStateOutput.accept(road.composeState(MultiVariantGenerator.dispatch(road, BlockModelGenerators.createRotatedVariants(BlockModelGenerators.plainModel(modelId)))));
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockModelDefinitionCreator.of(road, BlockStateModelGenerator.modelWithYRotation(BlockStateModelGenerator.createModelVariant(modelId)))));
     }
 
 
     @Override
-    protected MapCodec<? extends Impl> codec() {
+    protected MapCodec<? extends Impl> getCodec() {
       return CODEC;
     }
 
     @Override
-    public RecipeBuilder getPaintingRecipe(Block base, Block self, RecipeProvider recipeGenerator) {
-      return recipeGenerator.shaped(RecipeCategory.BUILDING_BLOCKS, self, 4)
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
+      return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 4)
           .pattern("*X*")
           .pattern("X*X")
           .pattern("*X*")
-          .define('*', lineColor.getIngredient())
-          .define('X', base)
-          .unlockedBy("has_ingredient", recipeGenerator.has(lineColor.getIngredient()))
-          .unlockedBy(RecipeProvider.getHasName(base), recipeGenerator.has(base));
+          .input('*', lineColor.getIngredient())
+          .input('X', base)
+          .criterion("has_ingredient", recipeGenerator.conditionsFromTag(lineColor.getIngredient()))
+          .criterion(RecipeGenerator.hasItem(base), recipeGenerator.conditionsFromItem(base));
     }
   }
 }

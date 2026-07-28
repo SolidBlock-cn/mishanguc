@@ -1,14 +1,14 @@
 package pers.solid.mishang.uc.mixin;
 
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.Map;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 
-@Mixin(CompoundTag.class)
+@Mixin(NbtCompound.class)
 public interface NbtCompoundAccessor {
-  @Accessor("tags")
-  Map<String, Tag> getEntries();
+  @Accessor("entries")
+  Map<String, NbtElement> getEntries();
 }

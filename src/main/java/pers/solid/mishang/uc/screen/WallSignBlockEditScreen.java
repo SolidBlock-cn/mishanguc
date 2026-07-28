@@ -3,8 +3,8 @@ package pers.solid.mishang.uc.screen;
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
@@ -18,7 +18,7 @@ public class WallSignBlockEditScreen extends AbstractSignBlockEditScreen<WallSig
    */
   private final @Unmodifiable List<TextContext> backedUpTextContexts;
 
-  public WallSignBlockEditScreen(HolderLookup.Provider registryLookup, WallSignBlockEntity entity, BlockPos blockPos) {
+  public WallSignBlockEditScreen(RegistryWrapper.WrapperLookup registryLookup, WallSignBlockEntity entity, BlockPos blockPos) {
     super(registryLookup, entity, blockPos, entity.textContexts);
     this.backedUpTextContexts = entity.textContexts;
     entity.textContexts = textFieldListWidget.getTextContexts();

@@ -1,30 +1,30 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.math.Quadrant;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
-import net.minecraft.client.data.models.blockstates.PropertyDispatch;
-import net.minecraft.client.renderer.block.model.VariantMutator;
-import net.minecraft.core.Direction;
-import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Item.TooltipContext;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.BlockStateVariantMap;
+import net.minecraft.client.data.VariantsBlockModelDefinitionCreator;
+import net.minecraft.client.render.model.json.ModelVariantOperator;
+import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.recipe.RecipeGenerator;
+import net.minecraft.data.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.item.Item.TooltipContext;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
+import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.AxisRotation;
+import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.data.FasterTextureMap;
@@ -43,36 +43,36 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
   /**
    * 直角上该坐标轴上的边视为第二个边，另一个方向的边则视为第一个边。
    */
-  EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
+  EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
 
   @Override
-  default void appendRoadProperties(StateDefinition.Builder<Block, BlockState> builder) {
+  default void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
     RoadWithAngleLine.super.appendRoadProperties(builder);
     builder.add(AXIS);
   }
 
   @Override
-  default BlockState rotateRoad(BlockState state, Rotation rotation) {
+  default BlockState rotateRoad(BlockState state, BlockRotation rotation) {
     return RoadWithAngleLine.super
         .rotateRoad(state, rotation)
-        .setValue(AXIS, MishangUtils.rotateAxis(rotation, state.getValue(AXIS)));
+        .with(AXIS, MishangUtils.rotateAxis(rotation, state.get(AXIS)));
   }
 
   @Override
-  default BlockState withPlacementState(BlockState state, BlockPlaceContext ctx) {
+  default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
     return RoadWithAngleLine.super
         .withPlacementState(state, ctx)
-        .setValue(AXIS, ctx.getHorizontalDirection().getAxis());
+        .with(AXIS, ctx.getHorizontalPlayerFacing().getAxis());
   }
 
   class Impl extends RoadWithAngleLine.Impl implements RoadWithDiffAngleLine {
-    public static final MapCodec<RoadWithDiffAngleLine.Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(propertiesCodec(), lineColorFieldCodec(), LineColor.CODEC.fieldOf("line_color2").forGetter(b -> b.lineColor2), lineTypeFieldCodec(), LineType.CODEC.fieldOf("line_type2").forGetter(b -> b.lineType2), RoadWithAngleLine.isBevelCodec()).apply(i, (settings, lineColor, lineColor2, lineType, lineType2, isBevel) -> new RoadWithDiffAngleLine.Impl(settings, lineColor, lineColor2, lineType, lineType2, isBevel, null, null)));
+    public static final MapCodec<RoadWithDiffAngleLine.Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), lineColorFieldCodec(), LineColor.CODEC.fieldOf("line_color2").forGetter(b -> b.lineColor2), lineTypeFieldCodec(), LineType.CODEC.fieldOf("line_type2").forGetter(b -> b.lineType2), RoadWithAngleLine.isBevelCodec()).apply(i, (settings, lineColor, lineColor2, lineType, lineType2, isBevel) -> new RoadWithDiffAngleLine.Impl(settings, lineColor, lineColor2, lineType, lineType2, isBevel, null, null)));
     public final LineColor lineColor2;
     public final LineType lineType2;
     private final String lineSide2;
 
     public Impl(
-        Properties settings,
+        Settings settings,
         LineColor lineColor,
         LineColor lineColor2,
         LineType lineType,
@@ -86,56 +86,56 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
 
     @Override
     public LineColor getLineColor(BlockState state, Direction direction) {
-      return state.getValue(AXIS) == direction.getAxis() ? lineColor2 : lineColor;
+      return state.get(AXIS) == direction.getAxis() ? lineColor2 : lineColor;
     }
 
     @Override
-    public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
-      tooltip.add(TextBridge.translatable("lineType.diffAngleLine.composed.1", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
-      tooltip.add(TextBridge.translatable("lineType.diffAngleLine.composed.2", lineColor2.getName(), lineType2.getName()).withStyle(ChatFormatting.BLUE));
+    public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
+      tooltip.add(TextBridge.translatable("lineType.diffAngleLine.composed.1", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
+      tooltip.add(TextBridge.translatable("lineType.diffAngleLine.composed.2", lineColor2.getName(), lineType2.getName()).formatted(Formatting.BLUE));
     }
 
     @Override
     public LineType getLineType(BlockState state, Direction direction) {
-      return state.getValue(AXIS) == direction.getAxis() ? lineType2 : lineType;
+      return state.get(AXIS) == direction.getAxis() ? lineType2 : lineType;
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockModelGenerators blockStateModelGenerator) {
+    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
       final FasterTextureMap textures = new FasterTextureMap().base("asphalt").lineSide(lineSide).lineSide2(lineSide2).lineTop(lineTop);
       final Identifier id = road.uploadModel("_with_angle_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_SIDE2, MishangucTextureKeys.LINE_TOP);
       final Identifier mirroredId = road.uploadModel("_with_angle_line_mirrored", "_mirrored", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_SIDE2, MishangucTextureKeys.LINE_TOP);
-      final var map = PropertyDispatch.initial(FACING, AXIS);
+      final var map = BlockStateVariantMap.models(FACING, AXIS);
       // 一侧的短线所朝向的方向。
-      for (Direction direction : Direction.Plane.HORIZONTAL) {
-        final @NotNull Direction offsetDirection1 = direction.getClockWise();
+      for (Direction direction : Direction.Type.HORIZONTAL) {
+        final @NotNull Direction offsetDirection1 = direction.rotateYClockwise();
         // direction 的右偏方向
         final @NotNull HorizontalCornerDirection facing1 = HorizontalCornerDirection.fromDirections(direction, offsetDirection1);
-        final @NotNull Direction offsetDirection2 = direction.getCounterClockWise();
+        final @NotNull Direction offsetDirection2 = direction.rotateYCounterclockwise();
         // direction 的左偏方向
         final @NotNull HorizontalCornerDirection facing2 = HorizontalCornerDirection.fromDirections(direction, offsetDirection2);
 
-        final Quadrant axisRotation = switch (direction) {
-          case WEST -> Quadrant.R90;
-          case NORTH -> Quadrant.R180;
-          case EAST -> Quadrant.R270;
-          default -> Quadrant.R0;
+        final AxisRotation axisRotation = switch (direction) {
+          case WEST -> AxisRotation.R90;
+          case NORTH -> AxisRotation.R180;
+          case EAST -> AxisRotation.R270;
+          default -> AxisRotation.R0;
         };
         map
-            .select(
+            .register(
                 facing1, direction.getAxis(),
-                BlockModelGenerators.plainVariant(id).with(VariantMutator.Y_ROT.withValue(axisRotation)))
-            .select(
+                BlockStateModelGenerator.createWeightedVariant(id).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)))
+            .register(
                 facing2, direction.getAxis(),
-                BlockModelGenerators.plainVariant(mirroredId)
-                    .with(VariantMutator.Y_ROT.withValue(axisRotation)));
+                BlockStateModelGenerator.createWeightedVariant(mirroredId)
+                    .apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
       }
-      blockStateModelGenerator.blockStateOutput.accept(road.composeState(MultiVariantGenerator.dispatch(road).with(map)));
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockModelDefinitionCreator.of(road).with(map)));
     }
 
     @Override
-    protected MapCodec<? extends RoadWithDiffAngleLine.Impl> codec() {
+    protected MapCodec<? extends RoadWithDiffAngleLine.Impl> getCodec() {
       return CODEC;
     }
 
@@ -174,23 +174,23 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
           return NORMAL_PATTERN;
         }
       }
-      throw new IllegalArgumentException(String.format("Cannot determine patterns for [%s, %s]", lineType.getSerializedName(), lineType2.getSerializedName()));
+      throw new IllegalArgumentException(String.format("Cannot determine patterns for [%s, %s]", lineType.asString(), lineType2.asString()));
     }
 
     @Override
-    public RecipeBuilder getPaintingRecipe(Block base, Block self, RecipeProvider recipeGenerator) {
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
       final String[] composePattern = composePattern(lineType, lineType2);
-      final ShapedRecipeBuilder recipe = recipeGenerator.shaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
+      final ShapedRecipeJsonBuilder recipe = recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern(composePattern[0])
           .pattern(composePattern[1])
           .pattern(composePattern[2])
-          .define('a', lineColor.getIngredient())
-          .define('b', lineColor2.getIngredient())
-          .define('X', base)
-          .unlockedBy("has_" + lineColor.getSerializedName() + "_paint", recipeGenerator.has(lineColor.getIngredient()))
-          .unlockedBy(RecipeProvider.getHasName(base), recipeGenerator.has(base));
+          .input('a', lineColor.getIngredient())
+          .input('b', lineColor2.getIngredient())
+          .input('X', base)
+          .criterion("has_" + lineColor.asString() + "_paint", recipeGenerator.conditionsFromTag(lineColor.getIngredient()))
+          .criterion(RecipeGenerator.hasItem(base), recipeGenerator.conditionsFromItem(base));
       if (lineColor != lineColor2) {
-        recipe.unlockedBy("has_" + lineColor2.getSerializedName() + "_paint", recipeGenerator.has(lineColor2.getIngredient()));
+        recipe.criterion("has_" + lineColor2.asString() + "_paint", recipeGenerator.conditionsFromTag(lineColor2.getIngredient()));
       }
       return recipe;
     }

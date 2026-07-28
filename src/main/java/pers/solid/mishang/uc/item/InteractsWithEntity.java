@@ -1,11 +1,12 @@
 package pers.solid.mishang.uc.item;
 
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -23,13 +24,14 @@ public interface InteractsWithEntity {
    * @return 回调结果。如果不为 pass，则实体会受到默认的攻击。
    * @see net.fabricmc.fabric.api.event.player.AttackEntityCallback
    */
-  default InteractionResult attackEntityCallback(
-      Player player,
-      Level world,
-      InteractionHand hand,
+  @NotNull
+  default ActionResult attackEntityCallback(
+      PlayerEntity player,
+      World world,
+      Hand hand,
       Entity entity,
       @Nullable EntityHitResult hitResult) {
-    return InteractionResult.PASS;
+    return ActionResult.PASS;
   }
 
   /**
@@ -43,12 +45,13 @@ public interface InteractsWithEntity {
    * @return 回调结果。如果不为 pass，则实体会触发默认的“使用”操作。
    * @see net.fabricmc.fabric.api.event.player.UseEntityCallback
    */
-  default InteractionResult useEntityCallback(
-      Player player,
-      Level world,
-      InteractionHand hand,
+  @NotNull
+  default ActionResult useEntityCallback(
+      PlayerEntity player,
+      World world,
+      Hand hand,
       Entity entity,
       @Nullable EntityHitResult hitResult) {
-    return InteractionResult.PASS;
+    return ActionResult.PASS;
   }
 }

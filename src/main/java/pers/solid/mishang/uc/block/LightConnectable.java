@@ -1,10 +1,10 @@
 package pers.solid.mishang.uc.block;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.WorldAccess;
 
 /**
  * 适用于墙上的（包括角落的）灯方块的接口，以判断该方块在某个面上的特定方向是否存在连接。
@@ -21,15 +21,15 @@ public interface LightConnectable extends MishangucBlock {
   boolean isConnectedIn(BlockState blockState, Direction facing, Direction direction);
 
   /**
-   * 放置方块后，将与之不毗邻但可能产生连接的 {@link AutoConnectWallLightBlock} 进行连接。该方法将会由 {@link Block#updateIndirectNeighbourShapes} 调用。
+   * 放置方块后，将与之不毗邻但可能产生连接的 {@link AutoConnectWallLightBlock} 进行连接。该方法将会由 {@link Block#prepare} 调用。
    *
-   * @see WallLightBlock#updateIndirectNeighbourShapes(BlockState, LevelAccessor, BlockPos, int, int)
-   * @see CornerLightBlock#updateIndirectNeighbourShapes(BlockState, LevelAccessor, BlockPos, int, int)
+   * @see WallLightBlock#prepare(BlockState, WorldAccess, BlockPos, int, int)
+   * @see CornerLightBlock#prepare(BlockState, WorldAccess, BlockPos, int, int)
    */
   @SuppressWarnings({"AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc"})
   default void prepareConnection(
       BlockState state,
-      LevelAccessor world,
+      WorldAccess world,
       BlockPos pos,
       int flags,
       int maxUpdateDepth,
@@ -37,18 +37,18 @@ public interface LightConnectable extends MishangucBlock {
     if (state.getBlock() instanceof final LightConnectable lightConnectable) {
       for (Direction direction : Direction.values()) {
         if (lightConnectable.isConnectedIn(state, facing, direction)) {
-          final BlockPos neighborPos2 = pos.relative(direction).relative(facing.getOpposite());
+          final BlockPos neighborPos2 = pos.offset(direction).offset(facing.getOpposite());
           final BlockState neighborState2 = world.getBlockState(neighborPos2);
           if (neighborState2.getBlock() instanceof AutoConnectWallLightBlock) {
-            Block.updateOrDestroy(
+            Block.replace(
                 neighborState2,
-                neighborState2.updateShape(
+                neighborState2.getStateForNeighborUpdate(
                     world,
                     world,
                     neighborPos2,
                     facing,
                     pos,
-                    world.getBlockState(neighborPos2.relative(facing)),
+                    world.getBlockState(neighborPos2.offset(facing)),
                     world.getRandom()),
                 world,
                 neighborPos2,

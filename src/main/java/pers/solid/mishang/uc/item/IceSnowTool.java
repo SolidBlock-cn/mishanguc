@@ -1,127 +1,126 @@
 package pers.solid.mishang.uc.item;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.dispenser.BlockSource;
-import net.minecraft.core.dispenser.DispenseItemBehavior;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.attribute.EnvironmentAttributes;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gamerules.GameRules;
-import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.block.*;
+import net.minecraft.block.dispenser.DispenserBehavior;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPointer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.Heightmap;
+import net.minecraft.world.LightType;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 
-public class IceSnowTool extends Item implements MishangucItem, DispenseItemBehavior, HotbarScrollInteraction, WithMishangTooltip {
-  public IceSnowTool(Properties settings) {
+public class IceSnowTool extends Item implements MishangucItem, DispenserBehavior, HotbarScrollInteraction, WithMishangTooltip {
+  public IceSnowTool(Settings settings) {
     super(settings.component(MishangucComponents.STRENGTH, 4));
     DispenserBlock.registerBehavior(this, this);
   }
 
   @Override
-  public Component getName(ItemStack stack) {
+  public Text getName(ItemStack stack) {
     return TextBridge.translatable("item.mishanguc.ice_snow_tool.format", getName(), Integer.toString(getStrength(stack)));
   }
 
   @Override
-  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-    tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.1").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.2").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.3").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.4").withStyle(ChatFormatting.GRAY));
-    if (stack.getOrDefault(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT).shows(MishangucComponents.STRENGTH)) {
-      tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.strength", TextBridge.literal(Integer.toString(getStrength(stack))).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GRAY));
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+    tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.1").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.2").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.3").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.4").formatted(Formatting.GRAY));
+    if (stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.STRENGTH)) {
+      tooltip.add(TextBridge.translatable("item.mishanguc.ice_snow_tool.tooltip.strength", TextBridge.literal(Integer.toString(getStrength(stack))).formatted(Formatting.YELLOW)).formatted(Formatting.GRAY));
     }
   }
 
   @Override
-  public InteractionResult use(Level world, Player user, InteractionHand hand) {
-    final ItemStack stack = user.getItemInHand(hand);
-    if (!(world instanceof ServerLevel serverWorld))
-      return InteractionResult.SUCCESS;
-    final HitResult hitResult = user.pick(64, 0, false);
+  public ActionResult use(World world, PlayerEntity user, Hand hand) {
+    final ItemStack stack = user.getStackInHand(hand);
+    if (!(world instanceof ServerWorld serverWorld))
+      return ActionResult.SUCCESS;
+    final HitResult hitResult = user.raycast(64, 0, false);
     if (hitResult.getType() == HitResult.Type.MISS)
-      return InteractionResult.FAIL;
-    final Vec3 pos = hitResult.getLocation();
+      return ActionResult.FAIL;
+    final Vec3d pos = hitResult.getPos();
     final int strength = getStrength(stack);
-    if (user.isShiftKeyDown()) {
+    if (user.isSneaking()) {
       applyHeat(serverWorld, pos, strength);
     } else {
       applyIce(serverWorld, pos, strength);
     }
-    stack.hurtAndBreak(strength + 1, user, hand.asEquipmentSlot());
-    return InteractionResult.SUCCESS;
+    stack.damage(strength + 1, user, hand.getEquipmentSlot());
+    return ActionResult.SUCCESS;
   }
 
   /**
    * @see IceBlock
-   * @see ServerLevel#tickChunk
+   * @see ServerWorld#tickChunk
    */
-  public void applyIce(ServerLevel world, Vec3 pos, int strength) {
+  public void applyIce(@NotNull ServerWorld world, @NotNull Vec3d pos, int strength) {
     final float probability = getProbability(strength);
     final int range = getRange(strength);
-    final BlockPos centerBlockPos = BlockPos.containing(pos);
-    for (final BlockPos blockPos : BlockPos.withinManhattan(centerBlockPos, range, 0, range)) {
+    final BlockPos centerBlockPos = BlockPos.ofFloored(pos);
+    for (final BlockPos blockPos : BlockPos.iterateOutwards(centerBlockPos, range, 0, range)) {
       if (world.random.nextFloat() > probability) {
         continue;
       }
 
-      final BlockPos topBlockPos = world.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos);
+      final BlockPos topBlockPos = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, blockPos);
 
       // 结冰
-      final boolean isInsufficientBlockLight = world.getBrightness(LightLayer.BLOCK, topBlockPos) < 10;
-      final BlockPos waterBlockPos = topBlockPos.below();
+      final boolean isInsufficientBlockLight = world.getLightLevel(LightType.BLOCK, topBlockPos) < 10;
+      final BlockPos waterBlockPos = topBlockPos.down();
       final boolean isWaterInRange = centerBlockPos.getY() - range <= waterBlockPos.getY() && blockPos.getY() <= centerBlockPos.getY() + range;
-      final boolean isWater = isWaterInRange && isInsufficientBlockLight && world.getBlockState(waterBlockPos).getBlock() instanceof LiquidBlock && world.getFluidState(waterBlockPos).getType() == Fluids.WATER;
+      final boolean isWater = isWaterInRange && isInsufficientBlockLight && world.getBlockState(waterBlockPos).getBlock() instanceof FluidBlock && world.getFluidState(waterBlockPos).getFluid() == Fluids.WATER;
       if (isWater) {
-        world.setBlockAndUpdate(waterBlockPos, Blocks.ICE.defaultBlockState());
+        world.setBlockState(waterBlockPos, Blocks.ICE.getDefaultState());
       }
 
       // 模拟降雪
       final boolean isSnowInRange = centerBlockPos.getY() - range <= topBlockPos.getY() && topBlockPos.getY() <= centerBlockPos.getY() + range;
-      final int snowAccumulationHeight = world.getGameRules().get(GameRules.MAX_SNOW_ACCUMULATION_HEIGHT);
-      if (snowAccumulationHeight > 0 && isInsufficientBlockLight && isSnowInRange && Blocks.SNOW.defaultBlockState().canSurvive(world, topBlockPos)) {
+      final int snowAccumulationHeight = world.getGameRules().getInt(GameRules.SNOW_ACCUMULATION_HEIGHT);
+      if (snowAccumulationHeight > 0 && isInsufficientBlockLight && isSnowInRange && Blocks.SNOW.getDefaultState().canPlaceAt(world, topBlockPos)) {
         final BlockState blockState = world.getBlockState(topBlockPos);
-        if (blockState.is(Blocks.SNOW)) {
-          int layers = blockState.getValue(SnowLayerBlock.LAYERS);
+        if (blockState.isOf(Blocks.SNOW)) {
+          int layers = blockState.get(SnowBlock.LAYERS);
           if (layers < Math.min(snowAccumulationHeight, 8)) {
-            BlockState blockState2 = blockState.setValue(SnowLayerBlock.LAYERS, layers + 1);
-            Block.pushEntitiesUp(blockState, blockState2, world, topBlockPos);
-            world.setBlockAndUpdate(topBlockPos, blockState2);
+            BlockState blockState2 = blockState.with(SnowBlock.LAYERS, layers + 1);
+            Block.pushEntitiesUpBeforeBlockChange(blockState, blockState2, world, topBlockPos);
+            world.setBlockState(topBlockPos, blockState2);
           }
         } else if (blockState.isAir()) {
-          world.setBlockAndUpdate(topBlockPos, Blocks.SNOW.defaultBlockState());
+          world.setBlockState(topBlockPos, Blocks.SNOW.getDefaultState());
         }
       }
     }
-    world.sendParticles(ParticleTypes.SNOWFLAKE, pos.x, pos.y, pos.z, (int) Math.pow((range * 2 + 1), 3) / 16, range, range, range, 0);
+    world.spawnParticles(ParticleTypes.SNOWFLAKE, pos.x, pos.y, pos.z, (int) Math.pow((range * 2 + 1), 3) / 16, range, range, range, 0);
   }
 
-  public void applyHeat(ServerLevel world, Vec3 pos, int strength) {
+  public void applyHeat(@NotNull ServerWorld world, @NotNull Vec3d pos, int strength) {
     final float probability = getProbability(strength);
     final int range = getRange(strength);
-    for (BlockPos blockPos : BlockPos.withinManhattan(BlockPos.containing(pos), range, range, range)) {
+    for (BlockPos blockPos : BlockPos.iterateOutwards(BlockPos.ofFloored(pos), range, range, range)) {
       if (world.random.nextFloat() > probability) {
         continue;
       }
@@ -129,28 +128,28 @@ public class IceSnowTool extends Item implements MishangucItem, DispenseItemBeha
       // 结冰
       final BlockState blockState = world.getBlockState(blockPos);
       if (blockState.getBlock() instanceof IceBlock) {
-        if (world.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, pos)) {
+        if (world.getDimension().ultrawarm()) {
           world.removeBlock(blockPos, false);
         } else {
-          world.setBlockAndUpdate(blockPos, IceBlock.meltsInto());
-          world.neighborChanged(blockPos, IceBlock.meltsInto().getBlock(), null);
+          world.setBlockState(blockPos, IceBlock.getMeltedState());
+          world.updateNeighbor(blockPos, IceBlock.getMeltedState().getBlock(), null);
         }
       }
 
       // 模拟降雪
-      if (blockState.is(Blocks.SNOW)) {
-        SnowLayerBlock.dropResources(blockState, world, blockPos);
+      if (blockState.isOf(Blocks.SNOW)) {
+        SnowBlock.dropStacks(blockState, world, blockPos);
         world.removeBlock(blockPos, false);
       }
     }
-    world.sendParticles(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, (int) Math.pow((range * 2 + 1), 3) / 16, range, range, range, 0);
+    world.spawnParticles(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, (int) Math.pow((range * 2 + 1), 3) / 16, range, range, range, 0);
   }
 
   @Override
-  public ItemStack dispense(BlockSource pointer, ItemStack stack) {
+  public ItemStack dispense(BlockPointer pointer, ItemStack stack) {
     final int strength = getStrength(stack);
-    applyIce(pointer.level(), pointer.pos().relative(pointer.state().getValue(DispenserBlock.FACING), getRange(strength)).getCenter(), strength);
-    stack.hurtAndBreak(strength + 1, pointer.level(), null, item -> {});
+    applyIce(pointer.world(), pointer.pos().offset(pointer.state().get(DispenserBlock.FACING), getRange(strength)).toCenterPos(), strength);
+    stack.damage(strength + 1, pointer.world(), null, item -> {});
     return stack;
   }
 
@@ -159,17 +158,17 @@ public class IceSnowTool extends Item implements MishangucItem, DispenseItemBeha
   }
 
   public static float getProbability(int strength) {
-    return Mth.clamp(0.7f + strength * 0.1f, 0.7f, 1f);
+    return MathHelper.clamp(0.7f + strength * 0.1f, 0.7f, 1f);
   }
 
   public static int getRange(int strength) {
-    return Mth.clamp(4 + strength * strength / 2, 4, 64);
+    return MathHelper.clamp(4 + strength * strength / 2, 4, 64);
   }
 
   @Override
-  public void onScroll(int selectedSlot, double scrollAmount, ServerPlayer player, ItemStack stack) {
+  public void onScroll(int selectedSlot, double scrollAmount, ServerPlayerEntity player, ItemStack stack) {
     final int strength = getStrength(stack);
-    final int newStrength = Mth.positiveModulo(strength - (int) scrollAmount, 8);
+    final int newStrength = MathHelper.floorMod(strength - (int) scrollAmount, 8);
     stack.set(MishangucComponents.STRENGTH, newStrength);
   }
 }

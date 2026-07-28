@@ -5,30 +5,31 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
-import net.minecraft.server.commands.data.BlockDataAccessor;
-import net.minecraft.server.commands.data.EntityDataAccessor;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.command.BlockDataObject;
+import net.minecraft.command.EntityDataObject;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.networking.GetBlockDataPayload;
 import pers.solid.mishang.uc.networking.GetEntityDataPayload;
@@ -41,76 +42,76 @@ import java.util.List;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
 public class DataTagToolItem extends BlockToolItemWithEntity implements InteractsWithEntity, RendersBeforeOutline, WithMishangTooltip {
-  public DataTagToolItem(Properties settings, @Nullable Boolean includesFluid) {
+  public DataTagToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
 
   @Override
-  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-    tooltip.add(TextBridge.translatable("item.mishanguc.data_tag_tool.tooltip").withStyle(ChatFormatting.GRAY));
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+    tooltip.add(TextBridge.translatable("item.mishanguc.data_tag_tool.tooltip").formatted(Formatting.GRAY));
   }
 
   @Override
-  public InteractionResult useOnBlock(
-      ItemStack stack, Player player,
-      Level world,
+  public ActionResult useOnBlock(
+      ItemStack stack, PlayerEntity player,
+      World world,
       BlockHitResult blockHitResult,
-      InteractionHand hand,
+      Hand hand,
       boolean fluidIncluded) {
-    if (!world.isClientSide()) {
-      return getBlockDataOf((ServerPlayer) player, (ServerLevel) world, blockHitResult.getBlockPos());
+    if (!world.isClient()) {
+      return getBlockDataOf((ServerPlayerEntity) player, (ServerWorld) world, blockHitResult.getBlockPos());
     } else {
-      return InteractionResult.SUCCESS;
+      return ActionResult.SUCCESS;
     }
   }
 
   @Override
-  public InteractionResult beginAttackBlock(
-      ItemStack stack, Player player, Level world, InteractionHand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    if (!world.isClientSide()) return getBlockDataOf((ServerPlayer) player, (ServerLevel) world, pos);
-    else return InteractionResult.SUCCESS;
+  public ActionResult beginAttackBlock(
+      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    if (!world.isClient()) return getBlockDataOf((ServerPlayerEntity) player, (ServerWorld) world, pos);
+    else return ActionResult.SUCCESS;
   }
 
-  public InteractionResult getBlockDataOf(ServerPlayer player, ServerLevel world, BlockPos blockPos) {
+  public ActionResult getBlockDataOf(ServerPlayerEntity player, ServerWorld world, BlockPos blockPos) {
     final @Nullable BlockEntity blockEntity = world.getBlockEntity(blockPos);
-    Identifier blockId = BuiltInRegistries.BLOCK.getKey(world.getBlockState(blockPos).getBlock());
+    Identifier blockId = Registries.BLOCK.getId(world.getBlockState(blockPos).getBlock());
     if (blockEntity == null) {
       ServerPlayNetworking.send(player, new GetBlockDataPayload(blockId, blockPos, false, null));
     } else {
-      final BlockDataAccessor blockDataObject = new BlockDataAccessor(world.getBlockEntity(blockPos), blockPos);
-      ServerPlayNetworking.send(player, new GetBlockDataPayload(blockId, blockPos, true, blockDataObject.getData()));
+      final BlockDataObject blockDataObject = new BlockDataObject(world.getBlockEntity(blockPos), blockPos);
+      ServerPlayNetworking.send(player, new GetBlockDataPayload(blockId, blockPos, true, blockDataObject.getNbt()));
     }
-    return InteractionResult.SUCCESS;
+    return ActionResult.SUCCESS;
   }
 
-  public InteractionResult getEntityDataOf(ServerPlayer player, Entity entity) {
-    final EntityDataAccessor entityDataObject = new EntityDataAccessor(entity);
-    final CompoundTag nbt = entityDataObject.getData();
-    ServerPlayNetworking.send(player, new GetEntityDataPayload(entity.getName(), entity.blockPosition(), nbt));
-    return InteractionResult.SUCCESS;
-  }
-
-  @Override
-  public InteractionResult attackEntityCallback(
-      Player player,
-      Level world,
-      InteractionHand hand,
-      Entity entity,
-      @Nullable EntityHitResult hitResult) {
-    if (player.isSpectator()) return InteractionResult.PASS;
-    else if (!world.isClientSide()) return getEntityDataOf((ServerPlayer) player, entity);
-    else return InteractionResult.SUCCESS;
+  public ActionResult getEntityDataOf(ServerPlayerEntity player, Entity entity) {
+    final EntityDataObject entityDataObject = new EntityDataObject(entity);
+    final NbtCompound nbt = entityDataObject.getNbt();
+    ServerPlayNetworking.send(player, new GetEntityDataPayload(entity.getName(), entity.getBlockPos(), nbt));
+    return ActionResult.SUCCESS;
   }
 
   @Override
-  public InteractionResult useEntityCallback(
-      Player player,
-      Level world,
-      InteractionHand hand,
+  public @NotNull ActionResult attackEntityCallback(
+      PlayerEntity player,
+      World world,
+      Hand hand,
       Entity entity,
       @Nullable EntityHitResult hitResult) {
-    if (!world.isClientSide() && !player.isSpectator()) return getEntityDataOf((ServerPlayer) player, entity);
-    else return InteractionResult.SUCCESS;
+    if (player.isSpectator()) return ActionResult.PASS;
+    else if (!world.isClient()) return getEntityDataOf((ServerPlayerEntity) player, entity);
+    else return ActionResult.SUCCESS;
+  }
+
+  @Override
+  public @NotNull ActionResult useEntityCallback(
+      PlayerEntity player,
+      World world,
+      Hand hand,
+      Entity entity,
+      @Nullable EntityHitResult hitResult) {
+    if (!world.isClient() && !player.isSpectator()) return getEntityDataOf((ServerPlayerEntity) player, entity);
+    else return ActionResult.SUCCESS;
   }
 
   /**
@@ -123,22 +124,22 @@ public class DataTagToolItem extends BlockToolItemWithEntity implements Interact
       final Identifier blockId = payload.blockId();
       final BlockPos blockPos = payload.blockPos();
       final boolean hasData = payload.hasData();
-      final Block block = BuiltInRegistries.BLOCK.getValue(blockId);
-      final Minecraft client = context.client();
+      final Block block = Registries.BLOCK.get(blockId);
+      final MinecraftClient client = context.client();
       if (hasData) {
         // 由于此处仅限客户端执行，因此可以放心调用 Block#getName。
-        final CompoundTag blockData = payload.data();
+        final NbtCompound blockData = payload.data();
         client.execute(() -> {
-          client.gui.getChat().addMessage(
-              TextBridge.translatable("debug.mishanguc.dataTag.block.header", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), block.getName().withStyle(ChatFormatting.BOLD))
-                  .withStyle(ChatFormatting.YELLOW));
-          client.gui.getChat().addMessage(NbtPrettyPrinter.serialize(blockData));
+          client.inGameHud.getChatHud().addMessage(
+              TextBridge.translatable("debug.mishanguc.dataTag.block.header", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), block.getName().formatted(Formatting.BOLD))
+                  .formatted(Formatting.YELLOW));
+          client.inGameHud.getChatHud().addMessage(NbtPrettyPrinter.serialize(blockData));
         });
       } else {
         // 此时认为该方块没有数据。
-        client.execute(() -> client.gui.getChat().addMessage(
-            TextBridge.translatable("debug.mishanguc.dataTag.block.null", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), block.getName().withStyle(ChatFormatting.BOLD))
-                .withStyle(ChatFormatting.RED)));
+        client.execute(() -> client.inGameHud.getChatHud().addMessage(
+            TextBridge.translatable("debug.mishanguc.dataTag.block.null", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), block.getName().formatted(Formatting.BOLD))
+                .formatted(Formatting.RED)));
       }
     }
   }
@@ -151,14 +152,14 @@ public class DataTagToolItem extends BlockToolItemWithEntity implements Interact
   public static class EntityDataReceiver implements ClientPlayNetworking.PlayPayloadHandler<GetEntityDataPayload> {
     @Override
     public void receive(GetEntityDataPayload payload, ClientPlayNetworking.Context context) {
-      final Component entityName = payload.entityName();
+      final Text entityName = payload.entityName();
       final BlockPos entityPos = payload.blockPos();
-      final CompoundTag entityNbt = payload.entityNbt();
-      final Minecraft client = context.client();
-      client.gui.getChat().addMessage(TextBridge.translatable("debug.mishanguc.dataTag.entity.entity", String.format(
-              "%s %s %s", entityPos.getX(), entityPos.getY(), entityPos.getZ()), TextBridge.literal("").append(entityName).withStyle(ChatFormatting.BOLD))
-          .withStyle(ChatFormatting.YELLOW));
-      client.gui.getChat().addMessage(NbtPrettyPrinter.serialize(entityNbt));
+      final NbtCompound entityNbt = payload.entityNbt();
+      final MinecraftClient client = context.client();
+      client.inGameHud.getChatHud().addMessage(TextBridge.translatable("debug.mishanguc.dataTag.entity.entity", String.format(
+              "%s %s %s", entityPos.getX(), entityPos.getY(), entityPos.getZ()), TextBridge.literal("").append(entityName).formatted(Formatting.BOLD))
+          .formatted(Formatting.YELLOW));
+      client.inGameHud.getChatHud().addMessage(NbtPrettyPrinter.serialize(entityNbt));
     }
   }
 }

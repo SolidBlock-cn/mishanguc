@@ -5,26 +5,27 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.ModelProvider;
-import net.minecraft.client.data.models.model.ModelLocationUtils;
-import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.TransparentBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.AttachFace;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
+import net.minecraft.block.TransparentBlock;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.enums.BlockFace;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.ModelIds;
+import net.minecraft.client.data.ModelProvider;
+import net.minecraft.client.data.TextureMap;
+import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.recipe.RecipeGenerator;
+import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.text.MutableText;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.MishangUtils;
@@ -37,7 +38,7 @@ import pers.solid.mishang.uc.util.TextBridge;
 import java.util.Map;
 
 public class FullWallSignBlock extends WallSignBlock {
-  public static final MapCodec<FullWallSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec(), propertiesCodec()).apply(instance, FullWallSignBlock::new));
+  public static final MapCodec<FullWallSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec(), createSettingsCodec()).apply(instance, FullWallSignBlock::new));
 
   public static final Map<Direction, VoxelShape> SHAPES_WHEN_WALL =
       MishangUtils.createHorizontalDirectionToShape(0, 0, 0, 16, 16, 1);
@@ -47,40 +48,40 @@ public class FullWallSignBlock extends WallSignBlock {
       MishangUtils.createHorizontalDirectionToShape(0, 15, 0, 16, 16, 16);
 
   @Unmodifiable
-  public static final Map<AttachFace, Map<Direction, VoxelShape>>
+  public static final Map<BlockFace, Map<Direction, VoxelShape>>
       SHAPE_PER_WALL_MOUNT_LOCATION =
       ImmutableMap.of(
-          AttachFace.CEILING,
+          BlockFace.CEILING,
           SHAPES_WHEN_CEILING,
-          AttachFace.FLOOR,
+          BlockFace.FLOOR,
           SHAPES_WHEN_FLOOR,
-          AttachFace.WALL,
+          BlockFace.WALL,
           SHAPES_WHEN_WALL);
 
-  public FullWallSignBlock(@Nullable Block baseBlock, Properties settings) {
+  public FullWallSignBlock(@Nullable Block baseBlock, Settings settings) {
     super(baseBlock, settings);
   }
 
   @ApiStatus.AvailableSince("0.1.7")
-  public FullWallSignBlock(Block baseBlock) {
-    this(baseBlock, Block.Properties.ofFullCopy(baseBlock));
+  public FullWallSignBlock(@NotNull Block baseBlock) {
+    this(baseBlock, Block.Settings.copy(baseBlock));
   }
 
   @Override
-  public MutableComponent getName() {
+  public MutableText getName() {
     return baseBlock == null
         ? super.getName()
         : TextBridge.translatable("block.mishanguc.full_wall_sign", baseBlock.getName());
   }
 
   @Override
-  public VoxelShape getShape(
-      BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-    return SHAPE_PER_WALL_MOUNT_LOCATION.get(state.getValue(FACE)).get(state.getValue(FACING));
+  public VoxelShape getOutlineShape(
+      BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    return SHAPE_PER_WALL_MOUNT_LOCATION.get(state.get(FACE)).get(state.get(FACING));
   }
 
   @Override
-  public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+  public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
     return new FullWallSignBlockEntity(pos, state);
   }
 
@@ -92,33 +93,33 @@ public class FullWallSignBlock extends WallSignBlock {
   }
 
   @Override
-  public @Nullable RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
+  public @Nullable CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
     if (baseBlock == null) return null;
-    return recipeGenerator.shaped(RecipeCategory.DECORATIONS, this, 4)
+    return recipeGenerator.createShaped(RecipeCategory.DECORATIONS, this, 4)
         .pattern("-#-")
         .pattern("###")
         .pattern("-#-")
-        .define('#', baseBlock).define('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
-        .unlockedBy("has_base_block", recipeGenerator.has(baseBlock))
-        .unlockedBy("has_sign", recipeGenerator.has(WallSignBlocks.INVISIBLE_WALL_SIGN))
+        .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_WALL_SIGN)
+        .criterion("has_base_block", recipeGenerator.conditionsFromItem(baseBlock))
+        .criterion("has_sign", recipeGenerator.conditionsFromItem(WallSignBlocks.INVISIBLE_WALL_SIGN))
         .group(getRecipeGroup());
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     if (this == WallSignBlocks.INVISIBLE_WALL_SIGN || this == WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN) {
-      blockStateModelGenerator.blockStateOutput.accept(createBlockStates(ModelLocationUtils.getModelLocation(this)));
+      blockStateModelGenerator.blockStateCollector.accept(createBlockStates(ModelIds.getBlockModelId(this)));
       return;
     }
-    final TextureMapping textures = TextureMapping.defaultTexture(ModelHelper.getTextureOf(baseBlock));
-    final Identifier modelId = MishangucModels.FULL_WALL_SIGN.create(this, textures, blockStateModelGenerator.modelOutput);
-    blockStateModelGenerator.blockStateOutput.accept(createBlockStates(modelId));
+    final TextureMap textures = TextureMap.texture(ModelHelper.getTextureOf(baseBlock));
+    final Identifier modelId = MishangucModels.FULL_WALL_SIGN.upload(this, textures, blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId));
   }
 
   @Override
-  public boolean skipRendering(BlockState state, BlockState stateFrom, Direction direction) {
-    if (direction.getAxis().isHorizontal() && state.getBlock() instanceof FullWallSignBlock && stateFrom.getBlock() instanceof FullWallSignBlock wallSignBlockFrom && state.getValue(FACING) == stateFrom.getValue(FACING) && direction.getAxis() != state.getValue(FACING).getAxis()) {
+  public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
+    if (direction.getAxis().isHorizontal() && state.getBlock() instanceof FullWallSignBlock && stateFrom.getBlock() instanceof FullWallSignBlock wallSignBlockFrom && state.get(FACING) == stateFrom.get(FACING) && direction.getAxis() != state.get(FACING).getAxis()) {
       if (wallSignBlockFrom.baseBlock instanceof TransparentBlock) {
         if (baseBlock instanceof TransparentBlock) {
           // 自身和相邻方块都为透明方块，则双方均为同一方块时隐藏。
@@ -134,7 +135,7 @@ public class FullWallSignBlock extends WallSignBlock {
   }
 
   @Override
-  protected MapCodec<? extends FullWallSignBlock> codec() {
+  protected MapCodec<? extends FullWallSignBlock> getCodec() {
     return CODEC;
   }
 }

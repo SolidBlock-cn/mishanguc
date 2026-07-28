@@ -2,11 +2,11 @@ package pers.solid.mishang.uc.util;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.util.StringRepresentable;
+import net.minecraft.text.MutableText;
+import net.minecraft.util.StringIdentifiable;
 import org.jetbrains.annotations.Nullable;
 
-public enum VerticalAlign implements StringRepresentable {
+public enum VerticalAlign implements StringIdentifiable {
   TOP,
   MIDDLE,
   BOTTOM;
@@ -18,11 +18,11 @@ public enum VerticalAlign implements StringRepresentable {
   }
 
   @Override
-  public String getSerializedName() {
+  public String asString() {
     return M.get(this);
   }
 
-  public MutableComponent getName() {
-    return TextBridge.translatable("vertical_align.mishanguc." + getSerializedName());
+  public MutableText getName() {
+    return TextBridge.translatable("vertical_align.mishanguc." + asString());
   }
 }

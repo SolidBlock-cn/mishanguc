@@ -5,24 +5,20 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.ModelProvider;
-import net.minecraft.client.data.models.model.ItemModelUtils;
-import net.minecraft.client.data.models.model.ModelLocationUtils;
-import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.client.data.models.model.TextureSlot;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.SingleItemRecipeBuilder;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.data.*;
+import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.recipe.RecipeGenerator;
+import net.minecraft.data.recipe.StonecuttingRecipeJsonBuilder;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.text.MutableText;
+import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.data.MishangucModels;
@@ -35,7 +31,7 @@ import java.util.function.Function;
  * 简单的栏杆方块。基本上都是采用相同的纹理，如有使用也可以采用不同的纹理。其形状都是最基本的图形。
  */
 public class SimpleHandrailBlock extends HandrailBlock {
-  public static final MapCodec<SimpleHandrailBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_block").forGetter(b -> b.baseBlock), propertiesCodec()).apply(instance, (block, settings1) -> new SimpleHandrailBlock(block, settings1, BuiltInRegistries.BLOCK.getKey(block), false)));
+  public static final MapCodec<SimpleHandrailBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(b -> b.baseBlock), createSettingsCodec()).apply(instance, (block, settings1) -> new SimpleHandrailBlock(block, settings1, Registries.BLOCK.getId(block), false)));
   /**
    * 该栏杆的基础方块。
    */
@@ -71,33 +67,33 @@ public class SimpleHandrailBlock extends HandrailBlock {
    */
   public @Nullable Identifier bottom;
 
-  public SimpleHandrailBlock(@Nullable Block baseBlock, Properties settings, Identifier identifier) {
+  public SimpleHandrailBlock(@Nullable Block baseBlock, Settings settings, Identifier identifier) {
     this(baseBlock, settings, identifier, true);
   }
 
-  protected SimpleHandrailBlock(@Nullable Block baseBlock, Properties settings, Identifier identifier, boolean createAffiliatedBlocks) {
-    super(settings.noOcclusion().setId(ResourceKey.create(Registries.BLOCK, identifier)));
+  protected SimpleHandrailBlock(@Nullable Block baseBlock, Settings settings, Identifier identifier, boolean createAffiliatedBlocks) {
+    super(settings.nonOpaque().registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier)));
     this.baseBlock = baseBlock;
-    this.central = createAffiliatedBlocks ? new CentralBlock(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_central")))) : null;
-    this.corner = createAffiliatedBlocks ? new CornerBlock(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_corner")))) : null;
-    this.stair = createAffiliatedBlocks ? new StairBlock(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_stair")))) : null;
-    this.outer = createAffiliatedBlocks ? new OuterBlock(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_outer")))) : null;
+    this.central = createAffiliatedBlocks ? new CentralBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_central")))) : null;
+    this.corner = createAffiliatedBlocks ? new CornerBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_corner")))) : null;
+    this.stair = createAffiliatedBlocks ? new StairBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_stair")))) : null;
+    this.outer = createAffiliatedBlocks ? new OuterBlock(this, Settings.copy(this).registryKey(RegistryKey.of(RegistryKeys.BLOCK, identifier.withSuffixedPath("_outer")))) : null;
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final TextureMapping textures = getTextures();
-    final Identifier modelId = MishangucModels.SIMPLE_HANDRAIL.create(this, textures, blockStateModelGenerator.modelOutput);
-    final Identifier itemModelId = MishangucModels.SIMPLE_HANDRAIL_INVENTORY.create(ModelLocationUtils.getModelLocation(asItem()), textures, blockStateModelGenerator.modelOutput);
-    blockStateModelGenerator.blockStateOutput.accept(createBlockStates(modelId));
-    blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.plainModel(itemModelId));
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final TextureMap textures = getTextures();
+    final Identifier modelId = MishangucModels.SIMPLE_HANDRAIL.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier itemModelId = MishangucModels.SIMPLE_HANDRAIL_INVENTORY.upload(ModelIds.getItemModelId(asItem()), textures, blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId));
+    blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.basic(itemModelId));
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public TextureMapping getTextures() {
-    return TextureMapping.cube(getTexture()).put(TextureSlot.TOP, top).put(TextureSlot.BOTTOM, bottom);
+  public @NotNull TextureMap getTextures() {
+    return TextureMap.all(getTexture()).put(TextureKey.TOP, top).put(TextureKey.BOTTOM, bottom);
   }
 
   @Override
@@ -129,49 +125,49 @@ public class SimpleHandrailBlock extends HandrailBlock {
    * @return 该方块的基础纹理变量。
    */
   protected Identifier getTexture() {
-    return texture == null ? TextureMapping.getBlockTexture(baseBlock) : texture;
+    return texture == null ? TextureMap.getId(baseBlock) : texture;
   }
 
   @Override
-  public MutableComponent getName() {
+  public MutableText getName() {
     if (baseBlock != null) {
       return TextBridge.translatable("block.mishanguc.simple_handrail", baseBlock.getName());
     } else return super.getName();
   }
 
-  protected static <B extends Block> MapCodec<B> createSubCodec(Function<B, SimpleHandrailBlock> baseGetter, BiFunction<SimpleHandrailBlock, Properties, B> function) {
-    return RecordCodecBuilder.mapCodec(instance -> instance.group(BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_rail").flatXmap(block -> block instanceof SimpleHandrailBlock simpleHandrailBlock ? DataResult.success(simpleHandrailBlock) : DataResult.error(() -> block + "not instance of SimpleHandrailBlock"), DataResult::success).forGetter(baseGetter), propertiesCodec()).apply(instance, function));
+  protected static <B extends Block> MapCodec<B> createSubCodec(Function<B, SimpleHandrailBlock> baseGetter, BiFunction<SimpleHandrailBlock, Settings, B> function) {
+    return RecordCodecBuilder.mapCodec(instance -> instance.group(Registries.BLOCK.getCodec().fieldOf("base_rail").flatXmap(block -> block instanceof SimpleHandrailBlock simpleHandrailBlock ? DataResult.success(simpleHandrailBlock) : DataResult.error(() -> block + "not instance of SimpleHandrailBlock"), DataResult::success).forGetter(baseGetter), createSettingsCodec()).apply(instance, function));
   }
 
   @Override
-  protected MapCodec<? extends SimpleHandrailBlock> codec() {
+  protected MapCodec<? extends SimpleHandrailBlock> getCodec() {
     return CODEC;
   }
 
   public static class CentralBlock extends HandrailCentralBlock<SimpleHandrailBlock> {
     public static final MapCodec<CentralBlock> CODEC = createSubCodec(b -> b.baseHandrail, CentralBlock::new);
 
-    public CentralBlock(SimpleHandrailBlock baseBlock, Properties settings) {
+    public CentralBlock(@NotNull SimpleHandrailBlock baseBlock, Settings settings) {
       super(baseBlock, settings);
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-      final Identifier postModelId = MishangucModels.SIMPLE_HANDRAIL_POST.create(this, baseHandrail.getTextures(), blockStateModelGenerator.modelOutput);
-      final Identifier sideModelId = MishangucModels.SIMPLE_HANDRAIL_SIDE.create(this, baseHandrail.getTextures(), blockStateModelGenerator.modelOutput);
-      final Identifier postSideModelId = MishangucModels.SIMPLE_HANDRAIL_POST_SIDE.create(this, baseHandrail.getTextures(), blockStateModelGenerator.modelOutput);
-      blockStateModelGenerator.blockStateOutput.accept(createBlockStates(postModelId, postSideModelId, sideModelId));
+    public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+      final Identifier postModelId = MishangucModels.SIMPLE_HANDRAIL_POST.upload(this, baseHandrail.getTextures(), blockStateModelGenerator.modelCollector);
+      final Identifier sideModelId = MishangucModels.SIMPLE_HANDRAIL_SIDE.upload(this, baseHandrail.getTextures(), blockStateModelGenerator.modelCollector);
+      final Identifier postSideModelId = MishangucModels.SIMPLE_HANDRAIL_POST_SIDE.upload(this, baseHandrail.getTextures(), blockStateModelGenerator.modelCollector);
+      blockStateModelGenerator.blockStateCollector.accept(createBlockStates(postModelId, postSideModelId, sideModelId));
     }
 
     @Override
-    public MutableComponent getName() {
+    public MutableText getName() {
       final Block block = baseBlock();
       return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_central", block.getName());
     }
 
     @Override
-    protected MapCodec<? extends CentralBlock> codec() {
+    protected MapCodec<? extends CentralBlock> getCodec() {
       return CODEC;
     }
   }
@@ -179,25 +175,25 @@ public class SimpleHandrailBlock extends HandrailBlock {
   public static class CornerBlock extends HandrailCornerBlock<SimpleHandrailBlock> {
     public static final MapCodec<CornerBlock> CODEC = createSubCodec(b -> b.baseHandrail, CornerBlock::new);
 
-    public CornerBlock(SimpleHandrailBlock baseHandrail, Properties settings) {
+    public CornerBlock(@NotNull SimpleHandrailBlock baseHandrail, Settings settings) {
       super(baseHandrail, settings);
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-      final Identifier modelId = MishangucModels.SIMPLE_HANDRAIL_CORNER.create(this, baseHandrail.getTextures(), blockStateModelGenerator.modelOutput);
-      blockStateModelGenerator.blockStateOutput.accept(createBlockStates(modelId));
+    public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+      final Identifier modelId = MishangucModels.SIMPLE_HANDRAIL_CORNER.upload(this, baseHandrail.getTextures(), blockStateModelGenerator.modelCollector);
+      blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId));
     }
 
     @Override
-    public MutableComponent getName() {
+    public MutableText getName() {
       final Block block = baseBlock();
       return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_corner", block.getName());
     }
 
     @Override
-    protected MapCodec<? extends CornerBlock> codec() {
+    protected MapCodec<? extends CornerBlock> getCodec() {
       return CODEC;
     }
   }
@@ -205,31 +201,31 @@ public class SimpleHandrailBlock extends HandrailBlock {
   public static class StairBlock extends HandrailStairBlock<SimpleHandrailBlock> {
     public static final MapCodec<StairBlock> CODEC = createSubCodec(b -> b.baseHandrail, StairBlock::new);
 
-    public StairBlock(SimpleHandrailBlock baseRail, Properties settings) {
+    public StairBlock(@NotNull SimpleHandrailBlock baseRail, Settings settings) {
       super(baseRail, settings);
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-      final TextureMapping textures = baseHandrail.getTextures();
-      final Identifier baseModelId = MishangucModels.createBlock("simple_handrail_stair_middle_center", TextureSlot.TEXTURE, TextureSlot.TOP, TextureSlot.BOTTOM).create(this, textures, blockStateModelGenerator.modelOutput);
+    public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+      final TextureMap textures = baseHandrail.getTextures();
+      final Identifier baseModelId = MishangucModels.createBlock("simple_handrail_stair_middle_center", TextureKey.TEXTURE, TextureKey.TOP, TextureKey.BOTTOM).upload(this, textures, blockStateModelGenerator.modelCollector);
       for (Shape shape : Shape.values()) {
         for (Position position : Position.values()) {
-          MishangucModels.createBlock(String.format("simple_handrail_stair_%s_%s", shape.getSerializedName(), position.getSerializedName()), "_" + shape.getSerializedName() + "_" + position.getSerializedName(), TextureSlot.TEXTURE, TextureSlot.TOP, TextureSlot.BOTTOM).create(this, textures, blockStateModelGenerator.modelOutput);
+          MishangucModels.createBlock(String.format("simple_handrail_stair_%s_%s", shape.asString(), position.asString()), "_" + shape.asString() + "_" + position.asString(), TextureKey.TEXTURE, TextureKey.TOP, TextureKey.BOTTOM).upload(this, textures, blockStateModelGenerator.modelCollector);
         }
       }
-      blockStateModelGenerator.blockStateOutput.accept(createBlockStates(baseModelId));
+      blockStateModelGenerator.blockStateCollector.accept(createBlockStates(baseModelId));
     }
 
     @Override
-    public MutableComponent getName() {
+    public MutableText getName() {
       final Block block = baseBlock();
       return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_stair", block.getName());
     }
 
     @Override
-    protected MapCodec<? extends StairBlock> codec() {
+    protected MapCodec<? extends StairBlock> getCodec() {
       return CODEC;
     }
   }
@@ -237,25 +233,25 @@ public class SimpleHandrailBlock extends HandrailBlock {
   public static class OuterBlock extends HandrailOuterBlock<SimpleHandrailBlock> {
     public static final MapCodec<OuterBlock> CODEC = createSubCodec(b -> b.baseHandrail, OuterBlock::new);
 
-    public OuterBlock(SimpleHandrailBlock baseRail, Properties settings) {
+    public OuterBlock(@NotNull SimpleHandrailBlock baseRail, Settings settings) {
       super(baseRail, settings);
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-      final Identifier modelId = MishangucModels.SIMPLE_HANDRAIL_OUTER.create(this, baseHandrail.getTextures(), blockStateModelGenerator.modelOutput);
-      blockStateModelGenerator.blockStateOutput.accept(createBlockStates(modelId));
+    public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+      final Identifier modelId = MishangucModels.SIMPLE_HANDRAIL_OUTER.upload(this, baseHandrail.getTextures(), blockStateModelGenerator.modelCollector);
+      blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId));
     }
 
     @Override
-    public MutableComponent getName() {
+    public MutableText getName() {
       final Block block = baseBlock();
       return block == null ? super.getName() : TextBridge.translatable("block.mishanguc.simple_handrail_outer", block.getName());
     }
 
     @Override
-    protected MapCodec<? extends OuterBlock> codec() {
+    protected MapCodec<? extends OuterBlock> getCodec() {
       return CODEC;
     }
   }
@@ -274,9 +270,9 @@ public class SimpleHandrailBlock extends HandrailBlock {
   }
 
   @Override
-  public RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
-    return SingleItemRecipeBuilder.stonecutting(Ingredient.of(baseBlock), RecipeCategory.DECORATIONS, this, 5)
-        .unlockedBy(RecipeProvider.getHasName(baseBlock), recipeGenerator.has(baseBlock))
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
+    return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(baseBlock), RecipeCategory.DECORATIONS, this, 5)
+        .criterion(RecipeGenerator.hasItem(baseBlock), recipeGenerator.conditionsFromItem(baseBlock))
         .group(getRecipeGroup());
   }
 }

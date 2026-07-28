@@ -2,9 +2,9 @@ package pers.solid.mishang.uc.render.state;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.shape.VoxelShape;
 
 @Environment(EnvType.CLIENT)
 public class ForcePlacingToolState implements MishangRenderState {
@@ -16,7 +16,7 @@ public class ForcePlacingToolState implements MishangRenderState {
   public BlockPos redPos;
   public VoxelShape yellowShape;
   public BlockPos yellowPos;
-  public AABB hitEntityBoundingBox;
+  public Box hitEntityBoundingBox;
 
   @Override
   public void clear() {

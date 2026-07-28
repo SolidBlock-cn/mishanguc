@@ -3,32 +3,28 @@ package pers.solid.mishang.uc.block;
 import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerator;
-import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.Identifier;
+import net.minecraft.block.*;
+import net.minecraft.block.enums.BlockHalf;
+import net.minecraft.client.data.BlockModelDefinitionCreator;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.TextureMap;
+import net.minecraft.entity.ai.pathing.NavigationType;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.StairBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.Half;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucProperties;
@@ -52,43 +48,43 @@ import java.util.Map;
  *   <p>五种栏杆方块共用同一个物品，物品放置时根据其位置和情形决定栏杆的形态。
  * <p>关于使用该方块的列表，请参见 {@link pers.solid.mishang.uc.blocks.HandrailBlocks}。
  */
-public abstract class HandrailBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock, MishangucBlock, Handrails {
+public abstract class HandrailBlock extends HorizontalFacingBlock implements Waterloggable, MishangucBlock, Handrails {
   /**
    * 该方块是否含水。
    */
-  public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+  public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
   public static final Map<Direction, VoxelShape> SHAPES = MishangUtils.createHorizontalDirectionToShape(0, 0, 0.5, 16, 16, 2.5);
 
-  public HandrailBlock(Properties settings) {
+  public HandrailBlock(Settings settings) {
     super(settings);
-    registerDefaultState(defaultBlockState().setValue(FACING, Direction.SOUTH).setValue(WATERLOGGED, false));
+    setDefaultState(getDefaultState().with(FACING, Direction.SOUTH).with(WATERLOGGED, false));
   }
 
   @Override
-  protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-    super.createBlockStateDefinition(builder);
+  protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    super.appendProperties(builder);
     builder.add(FACING, WATERLOGGED);
   }
 
   @Nullable
   @Override
-  public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-    final BlockState state = super.getStateForPlacement(ctx);
-    final Level world = ctx.getLevel();
-    final BlockPos blockPos = ctx.getClickedPos();
+  public BlockState getPlacementState(ItemPlacementContext ctx) {
+    final BlockState state = super.getPlacementState(ctx);
+    final World world = ctx.getWorld();
+    final BlockPos blockPos = ctx.getBlockPos();
     final BlockState stateToReplace = world.getBlockState(blockPos);
-    final Direction facingToReplace = stateToReplace.getBlock() instanceof HandrailBlock ? stateToReplace.getValue(FACING) : null;
+    final Direction facingToReplace = stateToReplace.getBlock() instanceof HandrailBlock ? stateToReplace.get(FACING) : null;
     if (state == null) return null;
-    final Direction playerFacing = ctx.getHorizontalDirection();
-    final Vec3 hitPos = ctx.getClickLocation();
+    final Direction playerFacing = ctx.getHorizontalPlayerFacing();
+    final Vec3d hitPos = ctx.getHitPos();
     final Direction.Axis axis = playerFacing.getAxis();
     assert axis != Direction.Axis.Y;
-    final BlockState stateBelow = world.getBlockState(blockPos.below());
-    final boolean waterlogged = world.getFluidState(blockPos).getType() == Fluids.WATER;
+    final BlockState stateBelow = world.getBlockState(blockPos.down());
+    final boolean waterlogged = world.getFluidState(blockPos).getFluid() == Fluids.WATER;
     // 如果底下是楼梯方块，则放置该楼梯扶手方块。
-    if (stateBelow.getBlock() instanceof StairBlock && stateBelow.hasProperty(StairBlock.FACING) && stateBelow.hasProperty(StairBlock.HALF) && stateBelow.getValue(StairBlock.HALF) == Half.BOTTOM) {
-      return stair().getStateForPlacement(ctx);
+    if (stateBelow.getBlock() instanceof StairsBlock && stateBelow.contains(StairsBlock.FACING) && stateBelow.contains(StairsBlock.HALF) && stateBelow.get(StairsBlock.HALF) == BlockHalf.BOTTOM) {
+      return stair().getPlacementState(ctx);
     }
 
     // facing 的计算方法：和玩家水平视角方向平行，具体取决于玩家放置的位置。若玩家放置于中间的位置，则放置对应的中心版本。
@@ -96,50 +92,50 @@ public abstract class HandrailBlock extends HorizontalDirectionalBlock implement
     if (axis == Direction.Axis.Z) {
       final double diff = hitPos.z - blockPos.getZ();
       if (0.3 < diff && diff < 0.7) {
-        return central().getStateForPlacement(ctx);
+        return central().getPlacementState(ctx);
       }
       facing = diff < 0.5 ? Direction.SOUTH : Direction.NORTH;
     } else {
       final double diff = hitPos.x - blockPos.getX();
       if (0.3 < diff && diff < 0.7) {
-        return central().getStateForPlacement(ctx);
+        return central().getPlacementState(ctx);
       }
       facing = diff < 0.5 ? Direction.EAST : Direction.WEST;
     }
 
 
     // 检测毗邻位置会不会有楼梯方块。
-    final BlockState stateInCW = world.getBlockState(blockPos.relative(facing.getClockWise()));
-    final boolean isStairsInCW = stateInCW.getBlock() instanceof StairBlock && stateInCW.hasProperty(StairBlock.FACING) && stateInCW.getValue(StairBlock.FACING) == facing.getClockWise() && stateInCW.hasProperty(StairBlock.HALF) && stateInCW.getValue(StairBlock.HALF) == Half.BOTTOM;
-    final BlockState stateInCCW = world.getBlockState(blockPos.relative(facing.getCounterClockWise()));
-    final boolean isStairsInCCW = stateInCCW.getBlock() instanceof StairBlock && stateInCCW.hasProperty(StairBlock.FACING) && stateInCCW.getValue(StairBlock.FACING) == facing.getCounterClockWise() && stateInCCW.hasProperty(StairBlock.HALF) && stateInCCW.getValue(StairBlock.HALF) == Half.BOTTOM;
+    final BlockState stateInCW = world.getBlockState(blockPos.offset(facing.rotateYClockwise()));
+    final boolean isStairsInCW = stateInCW.getBlock() instanceof StairsBlock && stateInCW.contains(StairsBlock.FACING) && stateInCW.get(StairsBlock.FACING) == facing.rotateYClockwise() && stateInCW.contains(StairsBlock.HALF) && stateInCW.get(StairsBlock.HALF) == BlockHalf.BOTTOM;
+    final BlockState stateInCCW = world.getBlockState(blockPos.offset(facing.rotateYCounterclockwise()));
+    final boolean isStairsInCCW = stateInCCW.getBlock() instanceof StairsBlock && stateInCCW.contains(StairsBlock.FACING) && stateInCCW.get(StairsBlock.FACING) == facing.rotateYCounterclockwise() && stateInCCW.contains(StairsBlock.HALF) && stateInCCW.get(StairsBlock.HALF) == BlockHalf.BOTTOM;
 
     // 检测放置时是否可以称为外部角落的版本。
-    final BlockState stateInOpposite = world.getBlockState(blockPos.relative(facing, -1));
-    final boolean isConnectedInCW = stateInCW.getBlock() instanceof final Handrails handrails && handrails.connectsIn(stateInCW, facing.getCounterClockWise(), facing);
-    final boolean isConnectedInCCW = stateInCCW.getBlock() instanceof final Handrails handrails && handrails.connectsIn(stateInCCW, facing.getClockWise(), facing);
+    final BlockState stateInOpposite = world.getBlockState(blockPos.offset(facing, -1));
+    final boolean isConnectedInCW = stateInCW.getBlock() instanceof final Handrails handrails && handrails.connectsIn(stateInCW, facing.rotateYCounterclockwise(), facing);
+    final boolean isConnectedInCCW = stateInCCW.getBlock() instanceof final Handrails handrails && handrails.connectsIn(stateInCCW, facing.rotateYClockwise(), facing);
 
     // 若该方块贴近的方块可连接，且两侧只有一个可以与之连接，则生成一个外部方块。
     if (stateInOpposite.getBlock() instanceof Handrails handrails) {
-      final boolean canConnectOuterInCW = isConnectedInCW && handrails.connectsIn(stateInOpposite, facing, facing.getCounterClockWise());
-      final boolean canConnectOuterInCCW = isConnectedInCCW && handrails.connectsIn(stateInOpposite, facing, facing.getClockWise());
+      final boolean canConnectOuterInCW = isConnectedInCW && handrails.connectsIn(stateInOpposite, facing, facing.rotateYCounterclockwise());
+      final boolean canConnectOuterInCCW = isConnectedInCCW && handrails.connectsIn(stateInOpposite, facing, facing.rotateYClockwise());
       if (canConnectOuterInCW != canConnectOuterInCCW) {
-        final BlockState outerState = outer().defaultBlockState();
+        final BlockState outerState = outer().getDefaultState();
         return outerState
-            .setValue(HandrailOuterBlock.FACING, HorizontalCornerDirection.fromDirections(facing.getOpposite(), canConnectOuterInCW ? facing.getClockWise() : facing.getCounterClockWise()))
-            .setValue(WATERLOGGED, waterlogged);
+            .with(HandrailOuterBlock.FACING, HorizontalCornerDirection.fromDirections(facing.getOpposite(), canConnectOuterInCW ? facing.rotateYClockwise() : facing.rotateYCounterclockwise()))
+            .with(WATERLOGGED, waterlogged);
       }
     }
 
     // 若该方块两侧只有一个连接了楼梯，则生成一个楼梯方块。
     if (isStairsInCW != isStairsInCCW) {
-      final BlockState placementState = stair().defaultBlockState();
+      final BlockState placementState = stair().getDefaultState();
       if (placementState == null) return null;
-      final Direction stairFacing = isStairsInCW ? facing.getClockWise() : facing.getCounterClockWise();
+      final Direction stairFacing = isStairsInCW ? facing.rotateYClockwise() : facing.rotateYCounterclockwise();
       return placementState
-          .setValue(HandrailStairBlock.FACING, stairFacing)
-          .setValue(HandrailStairBlock.SHAPE, HandrailStairBlock.Shape.BOTTOM)
-          .setValue(HandrailStairBlock.POSITION, Util.make(() -> {
+          .with(HandrailStairBlock.FACING, stairFacing)
+          .with(HandrailStairBlock.SHAPE, HandrailStairBlock.Shape.BOTTOM)
+          .with(HandrailStairBlock.POSITION, Util.make(() -> {
             final double diff = switch (stairFacing) {
               case SOUTH -> hitPos.x - blockPos.getX();
               case NORTH -> blockPos.getX() + 1 - hitPos.x;
@@ -149,26 +145,26 @@ public abstract class HandrailBlock extends HorizontalDirectionalBlock implement
             };
             return diff < 0.3 ? HandrailStairBlock.Position.RIGHT : diff < 0.7 ? HandrailStairBlock.Position.CENTER : HandrailStairBlock.Position.LEFT;
           }))
-          .setValue(WATERLOGGED, waterlogged);
+          .with(WATERLOGGED, waterlogged);
     }
 
     final @Nullable HorizontalCornerDirection possibleCornerDirection = facingToReplace == null ? null : HorizontalCornerDirection.fromDirections(facing, facingToReplace, null);
     if (possibleCornerDirection != null) {
-      return corner().defaultBlockState()
-          .setValue(MishangucProperties.HORIZONTAL_CORNER_FACING, possibleCornerDirection)
-          .setValue(WATERLOGGED, stateToReplace.getValue(WATERLOGGED));
+      return corner().getDefaultState()
+          .with(MishangucProperties.HORIZONTAL_CORNER_FACING, possibleCornerDirection)
+          .with(WATERLOGGED, stateToReplace.get(WATERLOGGED));
     }
-    return state.setValue(FACING, facing).setValue(WATERLOGGED, waterlogged);
+    return state.with(FACING, facing).with(WATERLOGGED, waterlogged);
   }
 
   @Override
-  public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
-    final ItemStack stack = context.getItemInHand();
+  public boolean canReplace(BlockState state, ItemPlacementContext context) {
+    final ItemStack stack = context.getStack();
     if (state.getBlock().asItem() != stack.getItem()) return false;
-    final BlockPos blockPos = context.getClickedPos();
+    final BlockPos blockPos = context.getBlockPos();
     if (this instanceof ColoredBlock) {
       // 对于染色方块，如果颜色不一致，不可以替换。
-      final Level world = context.getLevel();
+      final World world = context.getWorld();
       if (world.getBlockEntity(blockPos) instanceof ColoredBlockEntity entity) {
         final int colorToReplace = entity.getColor();
         final Integer colorToSet = stack.get(MishangucComponents.COLOR);
@@ -179,9 +175,9 @@ public abstract class HandrailBlock extends HorizontalDirectionalBlock implement
         }
       }
     }
-    final Direction facing = state.getValue(FACING);
-    final Direction playerFacing = context.getHorizontalDirection();
-    final Vec3 hitPos = context.getClickLocation();
+    final Direction facing = state.get(FACING);
+    final Direction playerFacing = context.getHorizontalPlayerFacing();
+    final Vec3d hitPos = context.getHitPos();
     final Direction.Axis axis = playerFacing.getAxis();
     assert axis != Direction.Axis.Y;
     final Direction possibleNewFacing;
@@ -196,28 +192,28 @@ public abstract class HandrailBlock extends HorizontalDirectionalBlock implement
   }
 
   @Override
-  public boolean skipRendering(BlockState state, BlockState stateFrom, Direction direction) {
+  public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
     final Block block = stateFrom.getBlock();
     if (direction.getAxis().isHorizontal() && block instanceof final Handrails handrails) {
       return block.asItem() == asItem()
-          && handrails.connectsIn(stateFrom, direction.getOpposite(), state.getValue(FACING));
+          && handrails.connectsIn(stateFrom, direction.getOpposite(), state.get(FACING));
     }
-    return super.skipRendering(state, stateFrom, direction);
+    return super.isSideInvisible(state, stateFrom, direction);
   }
 
   @Override
   public FluidState getFluidState(BlockState state) {
-    return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
   }
 
   @Environment(EnvType.CLIENT)
-  public BlockModelDefinitionGenerator createBlockStates(Identifier modelId) {
-    return BlockModelGenerators.createSimpleBlock(this, BlockModelGenerators.plainVariant(modelId)).with((BlockStateModelGeneratorAccessor.getROTATION_HORIZONTAL_FACING_ALT())).with(BlockModelGenerators.UV_LOCK);
+  public @NotNull BlockModelDefinitionCreator createBlockStates(Identifier modelId) {
+    return BlockStateModelGenerator.createSingletonBlockState(this, BlockStateModelGenerator.createWeightedVariant(modelId)).apply((BlockStateModelGeneratorAccessor.getSOUTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS())).apply(BlockStateModelGenerator.UV_LOCK);
   }
 
   @Override
-  public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-    return SHAPES.get(state.getValue(FACING));
+  public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    return SHAPES.get(state.get(FACING));
   }
 
   /**
@@ -226,7 +222,7 @@ public abstract class HandrailBlock extends HorizontalDirectionalBlock implement
    * @return 该方块的纹理变量组合。
    */
   @Environment(EnvType.CLIENT)
-  public abstract TextureMapping getTextures();
+  public abstract @NotNull TextureMap getTextures();
 
   /**
    * 该方块对应的中心版本。
@@ -264,15 +260,15 @@ public abstract class HandrailBlock extends HorizontalDirectionalBlock implement
   public abstract @Nullable Block baseBlock();
 
   @Override
-  public boolean connectsIn(BlockState blockState, Direction direction, @Nullable Direction offsetFacing) {
-    return offsetFacing != null && blockState.getValue(FACING) == offsetFacing && direction.getAxis() != offsetFacing.getAxis();
+  public boolean connectsIn(@NotNull BlockState blockState, @NotNull Direction direction, @Nullable Direction offsetFacing) {
+    return offsetFacing != null && blockState.get(FACING) == offsetFacing && direction.getAxis() != offsetFacing.getAxis();
   }
 
   @Override
-  protected abstract MapCodec<? extends HandrailBlock> codec();
+  protected abstract MapCodec<? extends HandrailBlock> getCodec();
 
   @Override
-  protected boolean isPathfindable(BlockState state, PathComputationType type) {
+  protected boolean canPathfindThrough(BlockState state, NavigationType type) {
     return false;
   }
 }

@@ -4,17 +4,17 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.ModelProvider;
-import net.minecraft.client.data.models.model.ItemModelUtils;
-import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.ItemModels;
+import net.minecraft.client.data.ModelProvider;
+import net.minecraft.client.data.TextureMap;
+import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.recipe.RecipeGenerator;
+import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.text.MutableText;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
@@ -26,18 +26,18 @@ import pers.solid.mishang.uc.item.ColoredTintSource;
 import pers.solid.mishang.uc.util.TextBridge;
 
 public class GlowingHungSignBlock extends HungSignBlock {
-  public static final MapCodec<GlowingHungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, GlowingHungSignBlock::new));
+  public static final MapCodec<GlowingHungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), createSettingsCodec()).apply(instance, GlowingHungSignBlock::new));
   @ApiStatus.AvailableSince("0.1.7")
   protected static final Identifier DEFAULT_GLOW_TEXTURE = Mishanguc.id("block/white_light");
   public Identifier glowTexture;
 
-  public GlowingHungSignBlock(@Nullable Block baseBlock, Properties settings) {
-    super(baseBlock, settings.lightLevel(s -> 15));
+  public GlowingHungSignBlock(@Nullable Block baseBlock, Settings settings) {
+    super(baseBlock, settings.luminance(s -> 15));
     this.glowTexture = DEFAULT_GLOW_TEXTURE;
   }
 
   @Override
-  public MutableComponent getName() {
+  public MutableText getName() {
     if (baseBlock != null) {
       return TextBridge.translatable("block.mishanguc.glowing_hung_sign", baseBlock.getName());
     }
@@ -46,21 +46,21 @@ public class GlowingHungSignBlock extends HungSignBlock {
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
     final Identifier texture = getBaseTexture();
-    final TextureMapping textures = TextureMapping.defaultTexture(texture);
+    final TextureMap textures = TextureMap.texture(texture);
     if (barTexture != null) textures.put(MishangucTextureKeys.BAR, barTexture);
     if (textureTop != null) textures.put(MishangucTextureKeys.TEXTURE_TOP, textureTop);
     textures.put(MishangucTextureKeys.GLOW, glowTexture);
 
-    final Identifier id = MishangucModels.GLOWING_HUNG_SIGN.create(this, textures, blockStateModelGenerator.modelOutput);
-    final Identifier bodyId = MishangucModels.GLOWING_HUNG_SIGN_BODY.create(this, textures, blockStateModelGenerator.modelOutput);
-    final Identifier topBarId = MishangucModels.HUNG_SIGN_TOP_BAR.create(this, textures, blockStateModelGenerator.modelOutput);
-    final Identifier topBarEdgeId = MishangucModels.HUNG_SIGN_TOP_BAR_EDGE.create(this, textures, blockStateModelGenerator.modelOutput);
+    final Identifier id = MishangucModels.GLOWING_HUNG_SIGN.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier bodyId = MishangucModels.GLOWING_HUNG_SIGN_BODY.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier topBarId = MishangucModels.HUNG_SIGN_TOP_BAR.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier topBarEdgeId = MishangucModels.HUNG_SIGN_TOP_BAR_EDGE.upload(this, textures, blockStateModelGenerator.modelCollector);
 
-    blockStateModelGenerator.blockStateOutput.accept(createBlockStates(bodyId, topBarId, topBarEdgeId));
+    blockStateModelGenerator.blockStateCollector.accept(createBlockStates(bodyId, topBarId, topBarEdgeId));
     if (this instanceof ColoredBlock) {
-      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.tintedModel(id, ColoredTintSource.INSTANCE, ColoredTintSource.INSTANCE));
+      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(id, ColoredTintSource.INSTANCE, ColoredTintSource.INSTANCE));
     }
   }
 
@@ -76,20 +76,20 @@ public class GlowingHungSignBlock extends HungSignBlock {
   }
 
   @Override
-  public RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
     if (baseBlock == null) return null;
-    return recipeGenerator.shaped(RecipeCategory.DECORATIONS, this, 6)
+    return recipeGenerator.createShaped(RecipeCategory.DECORATIONS, this, 6)
         .pattern("-#-")
         .pattern("-#-")
         .pattern("-#-")
-        .define('#', baseBlock).define('-', WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
-        .unlockedBy("has_base_block", recipeGenerator.has(baseBlock))
-        .unlockedBy("has_sign", recipeGenerator.has(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN))
+        .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN)
+        .criterion("has_base_block", recipeGenerator.conditionsFromItem(baseBlock))
+        .criterion("has_sign", recipeGenerator.conditionsFromItem(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN))
         .group(getRecipeGroup());
   }
 
   @Override
-  protected MapCodec<? extends GlowingHungSignBlock> codec() {
+  protected MapCodec<? extends GlowingHungSignBlock> getCodec() {
     return CODEC;
   }
 }

@@ -1,27 +1,28 @@
 package pers.solid.mishang.uc.item;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
+import net.minecraft.block.BlockState;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Unit;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ToolMaterial;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -30,59 +31,59 @@ import pers.solid.mishang.uc.util.WithMishangTooltip;
 import java.util.List;
 
 public class OmnipotentToolItem extends Item implements MishangucItem, InteractsWithEntity, WithMishangTooltip {
-  protected static final ToolMaterial MATERIAL = new ToolMaterial(TagKey.create(Registries.BLOCK, Mishanguc.id("incorrect_for_omnipotent_tool")), Integer.MAX_VALUE, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Integer.MAX_VALUE, TagKey.create(Registries.ITEM, Mishanguc.id("omnipotent_repair_items")));
+  protected static final ToolMaterial MATERIAL = new ToolMaterial(TagKey.of(RegistryKeys.BLOCK, Mishanguc.id("incorrect_for_omnipotent_tool")), Integer.MAX_VALUE, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Integer.MAX_VALUE, TagKey.of(RegistryKeys.ITEM, Mishanguc.id("omnipotent_repair_items")));
 
-  public OmnipotentToolItem(Properties settings) {
-    super(settings.tool(MATERIAL, BlockTags.MINEABLE_WITH_PICKAXE, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, 0f).component(DataComponents.UNBREAKABLE, Unit.INSTANCE));
+  public OmnipotentToolItem(Settings settings) {
+    super(settings.tool(MATERIAL, BlockTags.PICKAXE_MINEABLE, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, 0f).component(DataComponentTypes.UNBREAKABLE, Unit.INSTANCE));
   }
 
   @Override
-  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-    tooltip.add(TextBridge.translatable("item.mishanguc.omnipotent_tool.tooltip.1", TextBridge.keybind("key.attack").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.omnipotent_tool.tooltip.2", TextBridge.keybind("key.use").withStyle(style -> style.withColor(0xdddddd))).withStyle(ChatFormatting.GRAY));
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+    tooltip.add(TextBridge.translatable("item.mishanguc.omnipotent_tool.tooltip.1", TextBridge.keybind("key.attack").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("item.mishanguc.omnipotent_tool.tooltip.2", TextBridge.keybind("key.use").styled(style -> style.withColor(0xdddddd))).formatted(Formatting.GRAY));
   }
 
   @Override
-  public boolean mineBlock(ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity miner) {
-    if (world instanceof ServerLevel serverWorld) {
-      serverWorld.sendParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 32, 0.5, 0.5, 0.5, 0);
+  public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
+    if (world instanceof ServerWorld serverWorld) {
+      serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 32, 0.5, 0.5, 0.5, 0);
     }
-    return super.mineBlock(stack, world, state, pos, miner);
+    return super.postMine(stack, world, state, pos, miner);
   }
 
   @Override
-  public InteractionResult useEntityCallback(Player player, Level world, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult) {
+  public @NotNull ActionResult useEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
     if (entity instanceof LivingEntity livingEntity) {
       livingEntity.heal(Float.POSITIVE_INFINITY);
-      if (world instanceof ServerLevel serverWorld) {
-        serverWorld.sendParticles(ParticleTypes.HAPPY_VILLAGER, entity.getX(), entity.getY(), entity.getZ(), 32, 0.5, 0.5, 0.5, 0.5);
+      if (world instanceof ServerWorld serverWorld) {
+        serverWorld.spawnParticles(ParticleTypes.HAPPY_VILLAGER, entity.getX(), entity.getY(), entity.getZ(), 32, 0.5, 0.5, 0.5, 0.5);
       }
     }
-    return InteractionResult.SUCCESS;
+    return ActionResult.SUCCESS;
   }
 
   @Override
-  public InteractionResult attackEntityCallback(Player player, Level world, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult) {
-    if (world instanceof ServerLevel serverWorld) {
-      serverWorld.sendParticles(ParticleTypes.LARGE_SMOKE, entity.getX(), entity.getY(), entity.getZ(), 32, 0.5, 0.5, 0.5, 0.5);
+  public @NotNull ActionResult attackEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
+    if (world instanceof ServerWorld serverWorld) {
+      serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE, entity.getX(), entity.getY(), entity.getZ(), 32, 0.5, 0.5, 0.5, 0.5);
     }
-    return InteractionResult.PASS;
+    return ActionResult.PASS;
   }
 
   @Override
-  public ItemStack getDefaultInstance() {
-    final ItemStack defaultStack = super.getDefaultInstance();
-    defaultStack.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
+  public ItemStack getDefaultStack() {
+    final ItemStack defaultStack = super.getDefaultStack();
+    defaultStack.set(DataComponentTypes.UNBREAKABLE, Unit.INSTANCE);
     return defaultStack;
   }
 
   @Override
-  public float getDestroySpeed(ItemStack stack, BlockState state) {
+  public float getMiningSpeed(ItemStack stack, BlockState state) {
     return Float.POSITIVE_INFINITY;
   }
 
   @Override
-  public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
+  public boolean isCorrectForDrops(ItemStack stack, BlockState state) {
     return true;
   }
 }

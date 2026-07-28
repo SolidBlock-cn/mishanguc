@@ -1,11 +1,11 @@
 package pers.solid.mishang.uc.blockentity;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponentGetter;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.block.BlockState;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.ComponentsAccess;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
+import net.minecraft.util.math.BlockPos;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.components.MishangucComponents;
 
@@ -20,36 +20,36 @@ public class ColoredHungSignBlockEntity extends HungSignBlockEntity implements C
   }
 
   @Override
-  protected void loadAdditional(ValueInput view) {
-    super.loadAdditional(view);
+  protected void readData(ReadView view) {
+    super.readData(view);
     color = view.read("color", MishangUtils.COLOR_CODEC).orElse(0);
-    if (level != null && level.isClientSide()) {
-      level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
+    if (world != null && world.isClient()) {
+      world.updateListeners(pos, this.getCachedState(), this.getCachedState(), 3);
     }
   }
 
   @Override
-  protected void saveAdditional(ValueOutput view) {
-    super.saveAdditional(view);
-    view.store("color", MishangUtils.COLOR_CODEC, color);
+  protected void writeData(WriteView view) {
+    super.writeData(view);
+    view.put("color", MishangUtils.COLOR_CODEC, color);
   }
 
   @Override
-  protected void applyImplicitComponents(DataComponentGetter components) {
-    super.applyImplicitComponents(components);
+  protected void readComponents(ComponentsAccess components) {
+    super.readComponents(components);
     color = components.getOrDefault(MishangucComponents.COLOR, color);
   }
 
   @Override
-  protected void collectImplicitComponents(DataComponentMap.Builder componentMapBuilder) {
-    super.collectImplicitComponents(componentMapBuilder);
-    componentMapBuilder.set(MishangucComponents.COLOR, color);
+  protected void addComponents(ComponentMap.Builder componentMapBuilder) {
+    super.addComponents(componentMapBuilder);
+    componentMapBuilder.add(MishangucComponents.COLOR, color);
   }
 
   @Override
-  public void removeComponentsFromTag(ValueOutput view) {
-    super.removeComponentsFromTag(view);
-    view.discard("color");
+  public void removeFromCopiedStackData(WriteView view) {
+    super.removeFromCopiedStackData(view);
+    view.remove("color");
   }
 
   @Override

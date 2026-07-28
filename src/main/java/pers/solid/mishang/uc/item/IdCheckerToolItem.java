@@ -2,30 +2,27 @@ package pers.solid.mishang.uc.item;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.EnvironmentInterface;
-import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
-import net.minecraft.util.Util;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.text.Text;
+import net.minecraft.util.*;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
@@ -36,33 +33,33 @@ import java.util.List;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
 public class IdCheckerToolItem extends BlockToolItemWithEntity implements InteractsWithEntity, RendersBeforeOutline, WithMishangTooltip {
-  public IdCheckerToolItem(Properties settings, @Nullable Boolean includesFluid) {
+  public IdCheckerToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
 
-  public InteractionResult getIdOf(Player player, Level world, BlockPos blockPos) {
+  public ActionResult getIdOf(PlayerEntity player, World world, BlockPos blockPos) {
     BlockState blockState = world.getBlockState(blockPos);
     if (player != null) {
       final Block block = blockState.getBlock();
-      final Identifier identifier = BuiltInRegistries.BLOCK.getKey(block);
-      final int rawId = BuiltInRegistries.BLOCK.getId(block);
-      player.displayClientMessage(
+      final Identifier identifier = Registries.BLOCK.getId(block);
+      final int rawId = Registries.BLOCK.getRawId(block);
+      player.sendMessage(
           TextBridge.literal("")
               .append(TextBridge.translatable("debug.mishanguc.blockId.header", String.format(
                       "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-                  .withStyle(ChatFormatting.YELLOW)), false);
+                  .formatted(Formatting.YELLOW)), false);
       broadcastId(player, block.getName(), identifier, rawId);
-      return InteractionResult.SUCCESS;
+      return ActionResult.SUCCESS;
     }
-    return InteractionResult.SUCCESS;
+    return ActionResult.SUCCESS;
   }
 
   /**
    * 发送一个方块、实体或其他事物的id。
    */
   private void broadcastId(
-      Player player, Component name, @Nullable Identifier identifier, int rawId) {
-    player.displayClientMessage(
+      PlayerEntity player, Text name, @Nullable Identifier identifier, int rawId) {
+    player.sendMessage(
         TextBridge.literal("  ").append(TextBridge.translatable("debug.mishanguc.id.name", name))
             .append("\n  ")
             .append(TextBridge.translatable("debug.mishanguc.id.id", identifier == null
@@ -73,39 +70,39 @@ public class IdCheckerToolItem extends BlockToolItemWithEntity implements Intera
   }
 
   @Override
-  public InteractionResult useOnBlock(
-      ItemStack stack, Player player,
-      Level world,
+  public ActionResult useOnBlock(
+      ItemStack stack, PlayerEntity player,
+      World world,
       BlockHitResult blockHitResult,
-      InteractionHand hand,
+      Hand hand,
       boolean fluidIncluded) {
-    if (world.isClientSide()) return getIdOf(player, world, blockHitResult.getBlockPos());
-    else return InteractionResult.SUCCESS;
+    if (world.isClient()) return getIdOf(player, world, blockHitResult.getBlockPos());
+    else return ActionResult.SUCCESS;
   }
 
   @Override
-  public InteractionResult beginAttackBlock(
-      ItemStack stack, Player player, Level world, InteractionHand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    if (world.isClientSide()) return getIdOf(player, world, pos);
-    else return InteractionResult.SUCCESS;
+  public ActionResult beginAttackBlock(
+      ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
+    if (world.isClient()) return getIdOf(player, world, pos);
+    else return ActionResult.SUCCESS;
   }
 
   @Override
-  public InteractionResult use(Level world, Player user, InteractionHand hand) {
-    if (world.isClientSide()) {
-      final BlockPos blockPos = user.blockPosition();
-      final Biome biome = user.level().getBiome(blockPos).value();
-      final Registry<Biome> biomes = world.registryAccess().lookupOrThrow(Registries.BIOME);
-      final Identifier identifier = biomes.getKey(biome);
-      final int rawId = biomes.getId(biome);
-      user.displayClientMessage(
+  public ActionResult use(World world, PlayerEntity user, Hand hand) {
+    if (world.isClient()) {
+      final BlockPos blockPos = user.getBlockPos();
+      final Biome biome = user.getEntityWorld().getBiome(blockPos).value();
+      final Registry<Biome> biomes = world.getRegistryManager().getOrThrow(RegistryKeys.BIOME);
+      final Identifier identifier = biomes.getId(biome);
+      final int rawId = biomes.getRawId(biome);
+      user.sendMessage(
           TextBridge.literal("").append(
               TextBridge.translatable("debug.mishanguc.biomeId.header", String.format(
                       "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-                  .withStyle(ChatFormatting.YELLOW)), false);
+                  .formatted(Formatting.YELLOW)), false);
       broadcastId(
           user,
-          TextBridge.translatable(Util.makeDescriptionId("biome", identifier)),
+          TextBridge.translatable(Util.createTranslationKey("biome", identifier)),
           identifier,
           rawId);
     }
@@ -113,55 +110,55 @@ public class IdCheckerToolItem extends BlockToolItemWithEntity implements Intera
   }
 
   @Override
-  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     tooltip.add(
         TextBridge.translatable("item.mishanguc.id_checker_tool.tooltip.1")
-            .withStyle(ChatFormatting.GRAY));
+            .formatted(Formatting.GRAY));
     final @Nullable Boolean includesFluid = includesFluid(stack);
-    if (stack.getOrDefault(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT).shows(MishangucComponents.INCLUDES_FLUID)) {
+    if (stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).shouldDisplay(MishangucComponents.INCLUDES_FLUID)) {
       if (includesFluid == null) {
         tooltip.add(
             TextBridge.translatable("item.mishanguc.id_checker_tool.tooltip.2")
-                .withStyle(ChatFormatting.GRAY));
+                .formatted(Formatting.GRAY));
       } else if (includesFluid) {
         tooltip.add(
             TextBridge.translatable("item.mishanguc.id_checker_tool.tooltip.3")
-                .withStyle(ChatFormatting.GRAY));
+                .formatted(Formatting.GRAY));
       }
     }
   }
 
   @Override
-  public InteractionResult attackEntityCallback(
-      Player player,
-      Level world,
-      InteractionHand hand,
+  public @NotNull ActionResult attackEntityCallback(
+      PlayerEntity player,
+      World world,
+      Hand hand,
       Entity entity,
       @Nullable EntityHitResult hitResult) {
     return useEntityCallback(player, world, hand, entity, hitResult);
   }
 
   @Override
-  public InteractionResult useEntityCallback(
-      Player player,
-      Level world,
-      InteractionHand hand,
+  public @NotNull ActionResult useEntityCallback(
+      PlayerEntity player,
+      World world,
+      Hand hand,
       Entity entity,
       @Nullable EntityHitResult hitResult) {
-    if (player.isSpectator()) return InteractionResult.PASS;
-    if (!world.isClientSide()) return InteractionResult.SUCCESS;
-    final BlockPos blockPos = entity.blockPosition();
-    player.displayClientMessage(
+    if (player.isSpectator()) return ActionResult.PASS;
+    if (!world.isClient()) return ActionResult.SUCCESS;
+    final BlockPos blockPos = entity.getBlockPos();
+    player.sendMessage(
         TextBridge.literal("").append(
             TextBridge.translatable("debug.mishanguc.entityId.header", String.format(
                     "%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-                .withStyle(ChatFormatting.YELLOW)), false);
+                .formatted(Formatting.YELLOW)), false);
     final EntityType<?> type = entity.getType();
     broadcastId(
         player,
         entity.getName(),
-        BuiltInRegistries.ENTITY_TYPE.getKey(type),
-        BuiltInRegistries.ENTITY_TYPE.getId(type));
-    return InteractionResult.SUCCESS;
+        Registries.ENTITY_TYPE.getId(type),
+        Registries.ENTITY_TYPE.getRawId(type));
+    return ActionResult.SUCCESS;
   }
 }

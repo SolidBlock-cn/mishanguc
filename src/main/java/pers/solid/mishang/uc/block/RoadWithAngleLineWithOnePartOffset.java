@@ -1,34 +1,30 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.math.Quadrant;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
-import net.minecraft.client.data.models.blockstates.PropertyDispatch;
-import net.minecraft.client.renderer.block.model.VariantMutator;
-import net.minecraft.core.Direction;
-import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.BlockStateVariantMap;
+import net.minecraft.client.data.VariantsBlockModelDefinitionCreator;
+import net.minecraft.client.render.model.json.ModelVariantOperator;
+import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.recipe.RecipeGenerator;
+import net.minecraft.item.Item.TooltipContext;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.*;
-import net.minecraft.world.item.Item.TooltipContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.util.math.AxisRotation;
+import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.data.FasterTextureMap;
 import pers.solid.mishang.uc.data.MishangucTextureKeys;
@@ -40,28 +36,28 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
   /**
    * 该道路方块的直角两边中，哪个轴上的保持中心（另一个轴的将会偏移）。
    */
-  EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
+  EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
 
   @Override
-  default void appendRoadProperties(StateDefinition.Builder<Block, BlockState> builder) {
+  default void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
     RoadWithAngleLine.super.appendRoadProperties(builder);
     builder.add(AXIS);
   }
 
   @Override
-  default BlockState mirrorRoad(BlockState state, Mirror mirror) {
+  default BlockState mirrorRoad(BlockState state, BlockMirror mirror) {
     return RoadWithAngleLine.super.mirrorRoad(state, mirror);
   }
 
   @Override
-  default BlockState rotateRoad(BlockState state, Rotation rotation) {
+  default BlockState rotateRoad(BlockState state, BlockRotation rotation) {
     return RoadWithAngleLine.super
         .rotateRoad(state, rotation)
-        .setValue(
+        .with(
             AXIS,
             Util.make(
                 () -> {
-                  final Direction.Axis axis = state.getValue(AXIS);
+                  final Direction.Axis axis = state.get(AXIS);
                   return switch (rotation) {
                     case COUNTERCLOCKWISE_90, CLOCKWISE_90 -> switch (axis) {
                       case X -> (Direction.Axis.Z);
@@ -76,40 +72,40 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
   @Override
   default RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
     final RoadConnectionState connectionState = RoadWithAngleLine.super.getConnectionStateOf(state, direction);
-    if (connectionState.mayConnect() && direction.getAxis() != state.getValue(AXIS)) {
-      return connectionState.createWithOffset(LineOffset.of(state.getValue(FACING).getDirectionInAxis(direction.getClockWise().getAxis()).getOpposite(), offsetOutwards()));
+    if (connectionState.mayConnect() && direction.getAxis() != state.get(AXIS)) {
+      return connectionState.createWithOffset(LineOffset.of(state.get(FACING).getDirectionInAxis(direction.rotateYClockwise().getAxis()).getOpposite(), offsetOutwards()));
     } else {
       return connectionState;
     }
   }
 
   @Override
-  default BlockState withPlacementState(BlockState state, BlockPlaceContext ctx) {
+  default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
     return RoadWithAngleLine.super
         .withPlacementState(state, ctx)
-        .setValue(AXIS, ctx.getHorizontalDirection().getAxis());
+        .with(AXIS, ctx.getHorizontalPlayerFacing().getAxis());
   }
 
   @Override
   default void appendRoadTooltip(
-      ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
+      ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     RoadWithAngleLine.super.appendRoadTooltip(stack, context, tooltip, options);
     tooltip.add(
         TextBridge.translatable("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.1")
-            .withStyle(ChatFormatting.GRAY));
+            .formatted(Formatting.GRAY));
     tooltip.add(
         TextBridge.translatable("block.mishanguc.tooltip.road_with_angle_line_with_one_part_offset.2")
-            .withStyle(ChatFormatting.GRAY));
+            .formatted(Formatting.GRAY));
   }
 
   int offsetOutwards();
 
   class Impl extends RoadWithAngleLine.Impl implements RoadWithAngleLineWithOnePartOffset {
-    public static final MapCodec<RoadWithAngleLineWithOnePartOffset.Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(propertiesCodec(), lineColorFieldCodec(), RoadWithAngleLine.isBevelCodec(), Codec.INT.fieldOf("offset_outwards").forGetter(b -> b.offsetOutwards)).apply(i, (settings, lineColor, isBevel, offsetOutwards) -> new RoadWithAngleLineWithOnePartOffset.Impl(settings, lineColor, isBevel, null, null, offsetOutwards)));
+    public static final MapCodec<RoadWithAngleLineWithOnePartOffset.Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(createSettingsCodec(), lineColorFieldCodec(), RoadWithAngleLine.isBevelCodec(), Codec.INT.fieldOf("offset_outwards").forGetter(b -> b.offsetOutwards)).apply(i, (settings, lineColor, isBevel, offsetOutwards) -> new RoadWithAngleLineWithOnePartOffset.Impl(settings, lineColor, isBevel, null, null, offsetOutwards)));
     private final String lineSide2;
     private final int offsetOutwards;
 
-    public Impl(Properties settings, LineColor lineColor, boolean isBevel, String lineSide, String lineTop, int offsetOutwards) {
+    public Impl(Settings settings, LineColor lineColor, boolean isBevel, String lineSide, String lineTop, int offsetOutwards) {
       super(settings, lineColor, LineType.NORMAL, lineSide, isBevel, lineTop);
       this.lineSide2 = MishangUtils.composeStraightLineTexture(lineColor, LineType.NORMAL);
       this.offsetOutwards = offsetOutwards;
@@ -122,56 +118,56 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
 
     @Environment(EnvType.CLIENT)
     @Override
-    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockModelGenerators blockStateModelGenerator) {
+    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
       final FasterTextureMap textures = new FasterTextureMap().base("asphalt")
           .lineSide(lineSide)
           .lineSide2(lineSide2)
           .lineTop(lineTop);
       final Identifier modelId = road.uploadModel("_with_angle_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_SIDE2, MishangucTextureKeys.LINE_TOP);
       final Identifier mirroredModelId = road.uploadModel("_with_angle_line_mirrored", "_mirrored", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_SIDE2, MishangucTextureKeys.LINE_TOP);
-      final var map = PropertyDispatch.initial(FACING, AXIS);
-      for (Direction direction : Direction.Plane.HORIZONTAL) {
+      final var map = BlockStateVariantMap.models(FACING, AXIS);
+      for (Direction direction : Direction.Type.HORIZONTAL) {
         // direction：正中线所朝的方向
-        final Direction offsetDirection1 = direction.getClockWise();
-        final Direction offsetDirection2 = direction.getCounterClockWise();
+        final Direction offsetDirection1 = direction.rotateYClockwise();
+        final Direction offsetDirection2 = direction.rotateYCounterclockwise();
 
 
-        final Quadrant axisRotation = switch (direction) {
-          case WEST -> Quadrant.R90;
-          case NORTH -> Quadrant.R180;
-          case EAST -> Quadrant.R270;
-          default -> Quadrant.R0;
+        final AxisRotation axisRotation = switch (direction) {
+          case WEST -> AxisRotation.R90;
+          case NORTH -> AxisRotation.R180;
+          case EAST -> AxisRotation.R270;
+          default -> AxisRotation.R0;
         };
-        map.select(
+        map.register(
             HorizontalCornerDirection.fromDirections(direction, offsetDirection1),
             direction.getAxis(),
-            BlockModelGenerators.plainVariant(modelId).with(VariantMutator.Y_ROT.withValue(axisRotation)));
-        map.select(
+            BlockStateModelGenerator.createWeightedVariant(modelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
+        map.register(
             HorizontalCornerDirection.fromDirections(direction, offsetDirection2),
             direction.getAxis(),
-            BlockModelGenerators.plainVariant(mirroredModelId).with(VariantMutator.Y_ROT.withValue(axisRotation)));
+            BlockStateModelGenerator.createWeightedVariant(mirroredModelId).apply(ModelVariantOperator.ROTATION_Y.withValue(axisRotation)));
       }
-      blockStateModelGenerator.blockStateOutput.accept(road.composeState(MultiVariantGenerator.dispatch(road).with(map)));
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(VariantsBlockModelDefinitionCreator.of(road).with(map)));
     }
 
     @Override
-    protected MapCodec<? extends RoadWithAngleLineWithOnePartOffset.Impl> codec() {
+    protected MapCodec<? extends RoadWithAngleLineWithOnePartOffset.Impl> getCodec() {
       return CODEC;
     }
 
     @Override
-    public RecipeBuilder getPaintingRecipe(Block base, Block self, RecipeProvider recipeGenerator) {
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
       if (isBevel()) {
         throw new UnsupportedOperationException("Recipes for bevel line with one part offset is not supported!");
       }
-      return recipeGenerator.shaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
+      return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern("  *")
           .pattern("*XX")
           .pattern(" X ")
-          .define('*', lineColor.getIngredient())
-          .define('X', base)
-          .unlockedBy("has_paint", recipeGenerator.has(lineColor.getIngredient()))
-          .unlockedBy(RecipeProvider.getHasName(base), recipeGenerator.has(base));
+          .input('*', lineColor.getIngredient())
+          .input('X', base)
+          .criterion("has_paint", recipeGenerator.conditionsFromTag(lineColor.getIngredient()))
+          .criterion(RecipeGenerator.hasItem(base), recipeGenerator.conditionsFromItem(base));
     }
   }
 }

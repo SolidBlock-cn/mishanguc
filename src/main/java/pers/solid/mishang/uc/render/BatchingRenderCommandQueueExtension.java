@@ -2,11 +2,12 @@ package pers.solid.mishang.uc.render;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.SubmitNodeCollection;
+import net.minecraft.client.render.command.BatchingRenderCommandQueue;
+
 import java.util.List;
 
 /**
- * @see SubmitNodeCollection
+ * @see BatchingRenderCommandQueue
  * @since Minecraft 1.21.10
  */
 @Environment(EnvType.CLIENT)

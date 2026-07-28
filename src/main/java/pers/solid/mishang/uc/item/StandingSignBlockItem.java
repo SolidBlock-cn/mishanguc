@@ -1,6 +1,14 @@
 package pers.solid.mishang.uc.item;
 
 import com.google.common.collect.Collections2;
+import net.minecraft.block.Block;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.text.TextContext;
 import pers.solid.mishang.uc.util.TextBridge;
@@ -8,47 +16,39 @@ import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 import java.util.stream.Stream;
-import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
-import net.minecraft.world.level.block.Block;
 
 public class StandingSignBlockItem extends NamedBlockItem implements WithMishangTooltip {
-  public StandingSignBlockItem(Block block, Properties settings) {
+  public StandingSignBlockItem(Block block, Settings settings) {
     super(block, settings);
   }
 
   @Override
-  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-    final TooltipDisplay displayComponent = stack.getOrDefault(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT);
+  public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+    final TooltipDisplayComponent displayComponent = stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT);
     final List<TextContext> frontTexts = stack.getOrDefault(MishangucComponents.FRONT_TEXTS, List.of());
-    if (!frontTexts.isEmpty() && displayComponent.shows(MishangucComponents.FRONT_TEXTS)) {
-      tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.standing_sign_block_front").withStyle(ChatFormatting.GRAY));
+    if (!frontTexts.isEmpty() && displayComponent.shouldDisplay(MishangucComponents.FRONT_TEXTS)) {
+      tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.standing_sign_block_front").formatted(Formatting.GRAY));
       tooltip.addAll(Collections2.transform(frontTexts, TextContext::asStyledText));
     }
     final List<TextContext> backTexts = stack.getOrDefault(MishangucComponents.BACK_TEXTS, List.of());
-    if (!backTexts.isEmpty() && displayComponent.shows(MishangucComponents.BACK_TEXTS)) {
-      tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.standing_sign_block_back").withStyle(ChatFormatting.GRAY));
+    if (!backTexts.isEmpty() && displayComponent.shouldDisplay(MishangucComponents.BACK_TEXTS)) {
+      tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.standing_sign_block_back").formatted(Formatting.GRAY));
       tooltip.addAll(Collections2.transform(backTexts, TextContext::asStyledText));
     }
   }
 
 
   @Override
-  public Component getName(ItemStack stack) {
-    final MutableComponent text = super.getName(stack).copy();
+  public Text getName(ItemStack stack) {
+    final MutableText text = super.getName(stack).copy();
     final List<TextContext> frontTexts = stack.getOrDefault(MishangucComponents.FRONT_TEXTS, List.of());
     final List<TextContext> backTexts = stack.getOrDefault(MishangucComponents.BACK_TEXTS, List.of());
-    final List<MutableComponent> texts = Stream.concat(frontTexts.stream(), backTexts.stream()).map(TextContext::asStyledText).limit(20).toList();
+    final List<MutableText> texts = Stream.concat(frontTexts.stream(), backTexts.stream()).map(TextContext::asStyledText).limit(20).toList();
     if (!texts.isEmpty()) {
-      MutableComponent appendable = TextBridge.empty();
+      MutableText appendable = TextBridge.empty();
       texts.forEach(t -> appendable.append(" ").append(t));
       text.append(
-          TextBridge.literal(" -" + appendable.getString(25)).withStyle(ChatFormatting.GRAY));
+          TextBridge.literal(" -" + appendable.asTruncatedString(25)).formatted(Formatting.GRAY));
     }
     return text;
   }

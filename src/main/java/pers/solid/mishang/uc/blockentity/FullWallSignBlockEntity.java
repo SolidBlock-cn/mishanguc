@@ -1,7 +1,7 @@
 package pers.solid.mishang.uc.blockentity;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
 import pers.solid.mishang.uc.text.TextContext;
 
 public class FullWallSignBlockEntity extends WallSignBlockEntity {

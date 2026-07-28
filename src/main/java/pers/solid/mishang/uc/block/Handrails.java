@@ -1,9 +1,10 @@
 package pers.solid.mishang.uc.block;
 
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -25,7 +26,7 @@ public interface Handrails extends MishangucBlock {
    * @param offsetFacing 该方块需要连接时，连接位置的偏移。通常应该是水平方向且与 direction 垂直。若为 {@code null}，则表示不便宜。
    * @return 该方块是否能往旁边连接。
    */
-  boolean connectsIn(BlockState blockState, Direction direction, @Nullable Direction offsetFacing);
+  boolean connectsIn(@NotNull BlockState blockState, @NotNull Direction direction, @Nullable Direction offsetFacing);
 
   @Override
   default String customRecipeCategory() {

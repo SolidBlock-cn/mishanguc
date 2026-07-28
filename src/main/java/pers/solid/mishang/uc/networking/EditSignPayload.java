@@ -1,23 +1,23 @@
 package pers.solid.mishang.uc.networking;
 
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import pers.solid.mishang.uc.Mishanguc;
 
 import java.util.Optional;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.world.phys.BlockHitResult;
 
-public record EditSignPayload(BlockPos blockPos, Optional<Direction> direction, Optional<BlockHitResult> blockHitResult) implements CustomPacketPayload {
-  public static final Type<EditSignPayload> ID = new CustomPacketPayload.Type<>(Mishanguc.id("edit_sign"));
+public record EditSignPayload(BlockPos blockPos, Optional<Direction> direction, Optional<BlockHitResult> blockHitResult) implements CustomPayload {
+  public static final Id<EditSignPayload> ID = new CustomPayload.Id<>(Mishanguc.id("edit_sign"));
 
-  public static final StreamCodec<FriendlyByteBuf, EditSignPayload> CODEC = StreamCodec.ofMember((value, buf) -> {
+  public static final PacketCodec<PacketByteBuf, EditSignPayload> CODEC = PacketCodec.of((value, buf) -> {
     buf.writeBlockPos(value.blockPos);
     if (value.direction.isPresent()) {
       buf.writeBoolean(true);
-      buf.writeEnum(value.direction.get());
+      buf.writeEnumConstant(value.direction.get());
     } else {
       buf.writeBoolean(false);
       if (value.blockHitResult.isPresent()) {
@@ -31,7 +31,7 @@ public record EditSignPayload(BlockPos blockPos, Optional<Direction> direction, 
     final BlockPos blockPos = buf.readBlockPos();
     final boolean directionPresent = buf.readBoolean();
     if (directionPresent) {
-      return new EditSignPayload(blockPos, Optional.of(buf.readEnum(Direction.class)), Optional.empty());
+      return new EditSignPayload(blockPos, Optional.of(buf.readEnumConstant(Direction.class)), Optional.empty());
     } else {
       final boolean hitPresent = buf.readBoolean();
       if (hitPresent) {
@@ -43,7 +43,7 @@ public record EditSignPayload(BlockPos blockPos, Optional<Direction> direction, 
   });
 
   @Override
-  public Type<? extends CustomPacketPayload> type() {
+  public Id<? extends CustomPayload> getId() {
     return ID;
   }
 }

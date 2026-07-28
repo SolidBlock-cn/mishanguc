@@ -2,41 +2,41 @@ package pers.solid.mishang.uc.util;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.text.Text;
+import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.function.ValueLists;
+import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Contract;
 
 import java.awt.*;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.util.ByIdMap;
-import net.minecraft.util.RandomSource;
-import net.minecraft.util.StringRepresentable;
 
 /**
  * 颜色工具的混合类型，仅用于颜色工具。可以设置方块的颜色，或者设置随机颜色，也可以修改颜色的特定部分。
  */
-public enum ColorMixtureType implements StringRepresentable {
+public enum ColorMixtureType implements StringIdentifiable {
   NORMAL("normal") {
     @Override
-    public int handle(int original, int target, float amount, RandomSource random) {
+    public int handle(int original, int target, float amount, Random random) {
       return target;
     }
   },
   RANDOM("random") {
     @Override
-    public int handle(int original, int target, float amount, RandomSource random) {
+    public int handle(int original, int target, float amount, Random random) {
       return random.nextInt(0x1000000);
     }
   },
   INVERT("invert") {
     @Override
-    public int handle(int original, int target, float amount, RandomSource random) {
+    public int handle(int original, int target, float amount, Random random) {
       return 0xffffff - (0xffffff & original);
     }
   },
   HUE("hue") {
     @Override
-    public int handle(int original, int target, float amount, RandomSource random) {
+    public int handle(int original, int target, float amount, Random random) {
       final Color originalColor = new Color(original);
       final Color targetColor = new Color(target);
       final float[] originalHsl = ColorUtils.rgbToHsl(originalColor.getRed(), originalColor.getGreen(), originalColor.getBlue());
@@ -46,7 +46,7 @@ public enum ColorMixtureType implements StringRepresentable {
   },
   HUE_AND_SATURATION("hue_and_saturation") {
     @Override
-    public int handle(int original, int target, float amount, RandomSource random) {
+    public int handle(int original, int target, float amount, Random random) {
       final Color originalColor = new Color(original);
       final Color targetColor = new Color(target);
       final float[] originalHsl = ColorUtils.rgbToHsl(originalColor.getRed(), originalColor.getGreen(), originalColor.getBlue());
@@ -56,7 +56,7 @@ public enum ColorMixtureType implements StringRepresentable {
   },
   HUE_ROTATE("hue_rotate") {
     @Override
-    public int handle(int original, int target, float amount, RandomSource random) {
+    public int handle(int original, int target, float amount, Random random) {
       final Color originalColor = new Color(original);
       final float[] originalHsl = ColorUtils.rgbToHsl(originalColor.getRed(), originalColor.getGreen(), originalColor.getBlue());
       return ColorUtils.hslToRgb(originalHsl[0] + amount, originalHsl[1], originalHsl[2]) & 0xffffff;
@@ -64,7 +64,7 @@ public enum ColorMixtureType implements StringRepresentable {
   },
   SATURATION_CHANGE("saturation_change") {
     @Override
-    public int handle(int original, int target, float amount, RandomSource random) {
+    public int handle(int original, int target, float amount, Random random) {
       final Color originalColor = new Color(original);
       final float[] originalHsl = ColorUtils.rgbToHsl(originalColor.getRed(), originalColor.getGreen(), originalColor.getBlue());
       return ColorUtils.hslToRgb(originalHsl[0], Math.clamp(originalHsl[1] + amount, 0f, 1f), originalHsl[2]) & 0xffffff;
@@ -72,26 +72,26 @@ public enum ColorMixtureType implements StringRepresentable {
   },
   BRIGHTNESS_CHANGE("brightness_change") {
     @Override
-    public int handle(int original, int target, float amount, RandomSource random) {
+    public int handle(int original, int target, float amount, Random random) {
       final Color originalColor = new Color(original);
       final float[] originalHsl = ColorUtils.rgbToHsl(originalColor.getRed(), originalColor.getGreen(), originalColor.getBlue());
       return ColorUtils.hslToRgb(originalHsl[0], originalHsl[1], Math.clamp(originalHsl[2] + amount, 0f, 1f)) & 0xffffff;
     }
   };
 
-  public static final Codec<ColorMixtureType> CODEC = StringRepresentable.fromEnum(ColorMixtureType::values);
-  public static final StreamCodec<ByteBuf, ColorMixtureType> PACKET_CODEC = ByteBufCodecs.idMapper(ByIdMap.continuous(ColorMixtureType::ordinal, values(), ByIdMap.OutOfBoundsStrategy.WRAP), Enum::ordinal);
+  public static final Codec<ColorMixtureType> CODEC = StringIdentifiable.createCodec(ColorMixtureType::values);
+  public static final PacketCodec<ByteBuf, ColorMixtureType> PACKET_CODEC = PacketCodecs.indexed(ValueLists.createIndexToValueFunction(ColorMixtureType::ordinal, values(), ValueLists.OutOfBoundsHandling.WRAP), Enum::ordinal);
 
   private final String name;
-  private final Component translatableName;
+  private final Text translatableName;
 
   ColorMixtureType(String name) {
     this.name = name;
-    this.translatableName = Component.translatable("item.mishanguc.color_tool.mixture_type." + name);
+    this.translatableName = Text.translatable("item.mishanguc.color_tool.mixture_type." + name);
   }
 
   @Override
-  public String getSerializedName() {
+  public String asString() {
     return name;
   }
 
@@ -104,9 +104,9 @@ public enum ColorMixtureType implements StringRepresentable {
    * @param random   仅限于 {{@link #RANDOM}}。
    * @return 修改后的颜色，以 rgb 的形式。
    */
-  public abstract int handle(int original, int target, float amount, RandomSource random);
+  public abstract int handle(int original, int target, float amount, Random random);
 
-  public Component getName() {
+  public Text getName() {
     return translatableName;
   }
 

@@ -4,85 +4,87 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.ModelProvider;
-import net.minecraft.client.data.models.model.ItemModelUtils;
-import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.loot.BlockLootSubProvider;
-import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.StairBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.StairsBlock;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.ItemModels;
+import net.minecraft.client.data.ModelProvider;
+import net.minecraft.client.data.TextureMap;
+import net.minecraft.data.loottable.BlockLootTableGenerator;
+import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.recipe.RecipeGenerator;
+import net.minecraft.data.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.loot.LootTable;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.Registries;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.item.ColoredTintSource;
 
 import java.util.List;
 
-public class ColoredStairsBlock extends StairBlock implements ColoredBlock {
+public class ColoredStairsBlock extends StairsBlock implements ColoredBlock {
   public static final MapCodec<ColoredStairsBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-      BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_block").forGetter(o -> o.baseBlock),
-      propertiesCodec()
+      Registries.BLOCK.getCodec().fieldOf("base_block").forGetter(o -> o.baseBlock),
+      createSettingsCodec()
   ).apply(i, ColoredStairsBlock::new));
-  public final Block baseBlock;
+  public final @NotNull Block baseBlock;
 
-  public ColoredStairsBlock(Block baseBlock, Properties settings) {
-    super(baseBlock.defaultBlockState(), settings);
+  public ColoredStairsBlock(@NotNull Block baseBlock, Settings settings) {
+    super(baseBlock.getDefaultState(), settings);
     this.baseBlock = baseBlock;
   }
 
   @Override
-  public ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state, boolean includeData) {
-    return getColoredPickStack(world, pos, state, includeData, super::getCloneItemStack);
+  public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData) {
+    return getColoredPickStack(world, pos, state, includeData, super::getPickStack);
   }
 
   @Override
-  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
     ColoredBlock.appendColorTooltip(stack, tooltip);
   }
 
+  @NotNull
   @Override
-  public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+  public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
     return new SimpleColoredBlockEntity(pos, state);
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final TextureMapping textureMap = baseBlock instanceof ColoredCubeBlock coloredCubeBlock ? coloredCubeBlock.textures.getTextureMap() : TextureMapping.cube(this);
-    final Identifier regularModelId = MishangucModels.COLORED_STAIRS.create(this, textureMap, blockStateModelGenerator.modelOutput);
-    final Identifier innerModelId = MishangucModels.COLORED_INNER_STAIRS.create(this, textureMap, blockStateModelGenerator.modelOutput);
-    final Identifier outerModelId = MishangucModels.COLORED_OUTER_STAIRS.create(this, textureMap, blockStateModelGenerator.modelOutput);
-    blockStateModelGenerator.blockStateOutput.accept(BlockModelGenerators.createStairs(this, BlockModelGenerators.plainVariant(innerModelId), BlockModelGenerators.plainVariant(regularModelId), BlockModelGenerators.plainVariant(outerModelId)));
-    blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.tintedModel(regularModelId, ColoredTintSource.INSTANCE));
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final TextureMap textureMap = baseBlock instanceof ColoredCubeBlock coloredCubeBlock ? coloredCubeBlock.textures.getTextureMap() : TextureMap.all(this);
+    final Identifier regularModelId = MishangucModels.COLORED_STAIRS.upload(this, textureMap, blockStateModelGenerator.modelCollector);
+    final Identifier innerModelId = MishangucModels.COLORED_INNER_STAIRS.upload(this, textureMap, blockStateModelGenerator.modelCollector);
+    final Identifier outerModelId = MishangucModels.COLORED_OUTER_STAIRS.upload(this, textureMap, blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.blockStateCollector.accept(BlockStateModelGenerator.createStairsBlockState(this, BlockStateModelGenerator.createWeightedVariant(innerModelId), BlockStateModelGenerator.createWeightedVariant(regularModelId), BlockStateModelGenerator.createWeightedVariant(outerModelId)));
+    blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(regularModelId, ColoredTintSource.INSTANCE));
   }
 
   @Override
-  public LootTable.Builder getLootTable(BlockLootSubProvider blockLootTableGenerator) {
-    return blockLootTableGenerator.createSingleItemTable(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override
-  public RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
-    return ((ShapedRecipeBuilder) recipeGenerator.stairBuilder(this, Ingredient.of(baseBlock)))
-        .unlockedBy(RecipeProvider.getHasName(baseBlock), recipeGenerator.has(baseBlock));
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
+    return ((ShapedRecipeJsonBuilder) recipeGenerator.createStairsRecipe(this, Ingredient.ofItems(baseBlock)))
+        .criterion(RecipeGenerator.hasItem(baseBlock), recipeGenerator.conditionsFromItem(baseBlock));
   }
 
   @Override
-  public MapCodec<? extends ColoredStairsBlock> codec() {
+  public MapCodec<? extends ColoredStairsBlock> getCodec() {
     return CODEC;
   }
 }

@@ -1,26 +1,26 @@
 package pers.solid.mishang.uc.item;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty;
-import net.minecraft.world.entity.ItemOwner;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.render.item.property.numeric.NumericProperty;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.HeldItemContext;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.components.ExplosionToolComponent;
 import pers.solid.mishang.uc.components.MishangucComponents;
 
-public enum ExplosionPowerProperty implements RangeSelectItemModelProperty {
+public enum ExplosionPowerProperty implements NumericProperty {
   INSTANCE;
   public static final MapCodec<ExplosionPowerProperty> CODEC = MapCodec.unit(INSTANCE);
 
   @Override
-  public float get(ItemStack stack, @Nullable ClientLevel world, @Nullable ItemOwner context, int seed) {
+  public float getValue(ItemStack stack, @Nullable ClientWorld world, @Nullable HeldItemContext context, int seed) {
     final ExplosionToolComponent component = stack.get(MishangucComponents.EXPLOSION_TOOL_DATA);
     return component == null ? 0 : component.power();
   }
 
   @Override
-  public MapCodec<? extends RangeSelectItemModelProperty> type() {
+  public MapCodec<? extends NumericProperty> getCodec() {
     return CODEC;
   }
 }

@@ -2,63 +2,63 @@ package pers.solid.mishang.uc.block;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.ModelProvider;
-import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.client.data.models.model.TextureSlot;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.data.loot.BlockLootSubProvider;
-import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.SingleItemRecipeBuilder;
-import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.block.Block;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.ModelProvider;
+import net.minecraft.client.data.TextureKey;
+import net.minecraft.client.data.TextureMap;
+import net.minecraft.data.loottable.BlockLootTableGenerator;
+import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.recipe.RecipeExporter;
+import net.minecraft.data.recipe.RecipeGenerator;
+import net.minecraft.data.recipe.StonecuttingRecipeJsonBuilder;
+import net.minecraft.item.ItemConvertible;
+import net.minecraft.loot.LootTable;
+import net.minecraft.recipe.Recipe;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.Identifier;
 
 public interface MishangucBlock {
-  default LootTable.Builder getLootTable(BlockLootSubProvider blockLootTableGenerator) {
-    return blockLootTableGenerator.createSingleItemTable((ItemLike) this);
+  default LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    return blockLootTableGenerator.drops((ItemConvertible) this);
   }
 
-  default RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
+  default CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
     return null;
   }
 
-  default SingleItemRecipeBuilder getStonecuttingRecipe(RecipeProvider recipeGenerator) {
+  default StonecuttingRecipeJsonBuilder getStonecuttingRecipe(RecipeGenerator recipeGenerator) {
     return null;
   }
 
-  default ResourceKey<Recipe<?>> getStonecuttingRecipeKey() {
-    return ResourceKey.create(Registries.RECIPE, RecipeBuilder.getDefaultRecipeId((ItemLike) this).withSuffix("_from_stonecutting"));
+  default RegistryKey<Recipe<?>> getStonecuttingRecipeKey() {
+    return RegistryKey.of(RegistryKeys.RECIPE, CraftingRecipeJsonBuilder.getItemId((ItemConvertible) this).withSuffixedPath("_from_stonecutting"));
   }
 
   default boolean shouldWriteStonecuttingRecipe() {
     return false;
   }
 
-  default void writeRecipes(RecipeProvider recipeGenerator, RecipeOutput exporter) {
-    final RecipeBuilder craftingRecipe = getCraftingRecipe(recipeGenerator);
+  default void writeRecipes(RecipeGenerator recipeGenerator, RecipeExporter exporter) {
+    final CraftingRecipeJsonBuilder craftingRecipe = getCraftingRecipe(recipeGenerator);
     if (craftingRecipe != null) {
-      craftingRecipe.save(exporter);
+      craftingRecipe.offerTo(exporter);
     }
     if (shouldWriteStonecuttingRecipe()) {
-      final SingleItemRecipeBuilder stonecuttingRecipe = getStonecuttingRecipe(recipeGenerator);
+      final StonecuttingRecipeJsonBuilder stonecuttingRecipe = getStonecuttingRecipe(recipeGenerator);
       if (stonecuttingRecipe != null) {
-        stonecuttingRecipe.save(exporter, getStonecuttingRecipeKey());
+        stonecuttingRecipe.offerTo(exporter, getStonecuttingRecipeKey());
       }
     }
   }
 
   @Environment(EnvType.CLIENT)
-  void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator);
+  void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator);
 
   @Environment(EnvType.CLIENT)
-  default Identifier getTexture(TextureSlot key) {
-    return TextureMapping.getBlockTexture(((Block) this));
+  default Identifier getTexture(TextureKey key) {
+    return TextureMap.getId(((Block) this));
   }
 
   default String customRecipeCategory() {

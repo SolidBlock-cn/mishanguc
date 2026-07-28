@@ -2,13 +2,13 @@ package pers.solid.mishang.uc.mixin;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.Font;
+import net.minecraft.client.font.TextRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Environment(EnvType.CLIENT)
-@Mixin(Font.class)
+@Mixin(TextRenderer.class)
 public interface TextRendererAccessor {
   @Accessor
-  Font.Provider getProvider();
+  TextRenderer.GlyphsProvider getFonts();
 }

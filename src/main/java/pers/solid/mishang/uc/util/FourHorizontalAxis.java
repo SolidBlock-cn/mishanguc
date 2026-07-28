@@ -1,16 +1,17 @@
 package pers.solid.mishang.uc.util;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.util.BlockRotation;
+import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.math.Direction;
+
 import java.util.List;
 import java.util.function.Predicate;
-import net.minecraft.core.Direction;
-import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.level.block.Rotation;
 
 /**
  * @see Direction.Axis
  */
-public enum FourHorizontalAxis implements StringRepresentable, Predicate<EightHorizontalDirection> {
+public enum FourHorizontalAxis implements StringIdentifiable, Predicate<EightHorizontalDirection> {
   X,
   NW_SE,
   Z,
@@ -20,7 +21,7 @@ public enum FourHorizontalAxis implements StringRepresentable, Predicate<EightHo
   public static final List<FourHorizontalAxis> VALUES = ImmutableList.copyOf(values());
 
   @Override
-  public String getSerializedName() {
+  public String asString() {
     return name;
   }
 
@@ -40,7 +41,7 @@ public enum FourHorizontalAxis implements StringRepresentable, Predicate<EightHo
     return eightHorizontalDirection != null && eightHorizontalDirection.axis == this;
   }
 
-  public FourHorizontalAxis rotate(Rotation rotation) {
+  public FourHorizontalAxis rotate(BlockRotation rotation) {
     return switch (rotation) {
       case CLOCKWISE_90 -> VALUES.get((ordinal() + 2) & 3);
       case COUNTERCLOCKWISE_90 -> VALUES.get((ordinal() - 2) & 3);

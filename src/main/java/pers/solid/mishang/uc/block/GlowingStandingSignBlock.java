@@ -4,18 +4,19 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.ModelProvider;
-import net.minecraft.client.data.models.model.ItemModelUtils;
-import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.ItemModels;
+import net.minecraft.client.data.ModelProvider;
+import net.minecraft.client.data.TextureMap;
+import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.recipe.RecipeGenerator;
+import net.minecraft.item.Items;
+import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.text.MutableText;
+import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.Mishanguc;
@@ -29,38 +30,38 @@ import pers.solid.mishang.uc.util.TextBridge;
  * 发光的直立告示牌。
  */
 public class GlowingStandingSignBlock extends StandingSignBlock {
-  public static final MapCodec<GlowingStandingSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, GlowingStandingSignBlock::new));
+  public static final MapCodec<GlowingStandingSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), createSettingsCodec()).apply(instance, GlowingStandingSignBlock::new));
   protected static final Identifier DEFAULT_GLOW_TEXTURE = Mishanguc.id("block/white_light");
   public Identifier glowTexture = DEFAULT_GLOW_TEXTURE;
 
-  public GlowingStandingSignBlock(Block baseBlock, Properties settings) {
-    super(baseBlock, settings.lightLevel(x -> 15));
+  public GlowingStandingSignBlock(@NotNull Block baseBlock, Settings settings) {
+    super(baseBlock, settings.luminance(x -> 15));
   }
 
   @Override
-  public MutableComponent getName() {
+  public MutableText getName() {
     if (baseBlock != null) return TextBridge.translatable("block.mishanguc.glowing_standing_sign", baseBlock.getName());
     return super.getName();
   }
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final TextureMapping textures = TextureMapping.defaultTexture(getBaseTexture()).put(MishangucTextureKeys.BAR, barTexture).put(MishangucTextureKeys.GLOW, glowTexture);
-    final Identifier modelId = MishangucModels.GLOWING_STANDING_SIGN.create(this, textures, blockStateModelGenerator.modelOutput);
-    final Identifier r1ModelId = MishangucModels.GLOWING_STANDING_SIGN_1.create(this, textures, blockStateModelGenerator.modelOutput);
-    final Identifier r2ModelId = MishangucModels.GLOWING_STANDING_SIGN_2.create(this, textures, blockStateModelGenerator.modelOutput);
-    final Identifier r3ModelId = MishangucModels.GLOWING_STANDING_SIGN_3.create(this, textures, blockStateModelGenerator.modelOutput);
-    final Identifier barredModelId = MishangucModels.GLOWING_STANDING_SIGN_BARRED.create(this, textures, blockStateModelGenerator.modelOutput);
-    final Identifier barredR1ModelId = MishangucModels.GLOWING_STANDING_SIGN_BARRED_1.create(this, textures, blockStateModelGenerator.modelOutput);
-    final Identifier barredR2ModelId = MishangucModels.GLOWING_STANDING_SIGN_BARRED_2.create(this, textures, blockStateModelGenerator.modelOutput);
-    final Identifier barredR3ModelId = MishangucModels.GLOWING_STANDING_SIGN_BARRED_3.create(this, textures, blockStateModelGenerator.modelOutput);
-    blockStateModelGenerator.blockStateOutput.accept(createBlockStates(modelId, r1ModelId, r2ModelId, r3ModelId, barredModelId, barredR1ModelId, barredR2ModelId, barredR3ModelId));
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final TextureMap textures = TextureMap.texture(getBaseTexture()).put(MishangucTextureKeys.BAR, barTexture).put(MishangucTextureKeys.GLOW, glowTexture);
+    final Identifier modelId = MishangucModels.GLOWING_STANDING_SIGN.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier r1ModelId = MishangucModels.GLOWING_STANDING_SIGN_1.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier r2ModelId = MishangucModels.GLOWING_STANDING_SIGN_2.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier r3ModelId = MishangucModels.GLOWING_STANDING_SIGN_3.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier barredModelId = MishangucModels.GLOWING_STANDING_SIGN_BARRED.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier barredR1ModelId = MishangucModels.GLOWING_STANDING_SIGN_BARRED_1.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier barredR2ModelId = MishangucModels.GLOWING_STANDING_SIGN_BARRED_2.upload(this, textures, blockStateModelGenerator.modelCollector);
+    final Identifier barredR3ModelId = MishangucModels.GLOWING_STANDING_SIGN_BARRED_3.upload(this, textures, blockStateModelGenerator.modelCollector);
+    blockStateModelGenerator.blockStateCollector.accept(createBlockStates(modelId, r1ModelId, r2ModelId, r3ModelId, barredModelId, barredR1ModelId, barredR2ModelId, barredR3ModelId));
 
     if (this instanceof ColoredBlock) {
-      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.tintedModel(barredModelId, ColoredTintSource.INSTANCE, ColoredTintSource.INSTANCE));
+      blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModels.tinted(barredModelId, ColoredTintSource.INSTANCE, ColoredTintSource.INSTANCE));
     } else {
-      blockStateModelGenerator.registerSimpleItemModel(this, barredModelId);
+      blockStateModelGenerator.registerParentedItemModel(this, barredModelId);
     }
   }
 
@@ -75,20 +76,20 @@ public class GlowingStandingSignBlock extends StandingSignBlock {
   }
 
   @Override
-  public RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
     if (baseBlock == null) return null;
-    return recipeGenerator.shaped(RecipeCategory.BUILDING_BLOCKS, this, 4)
+    return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, this, 4)
         .pattern("---")
         .pattern("###")
         .pattern(" | ")
-        .define('#', baseBlock).define('-', WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN).define('|', Items.STICK)
-        .unlockedBy("has_base_block", recipeGenerator.has(baseBlock))
-        .unlockedBy("has_sign", recipeGenerator.has(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN))
+        .input('#', baseBlock).input('-', WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN).input('|', Items.STICK)
+        .criterion("has_base_block", recipeGenerator.conditionsFromItem(baseBlock))
+        .criterion("has_sign", recipeGenerator.conditionsFromItem(WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN))
         .group(getRecipeGroup());
   }
 
   @Override
-  protected MapCodec<? extends GlowingStandingSignBlock> codec() {
+  protected MapCodec<? extends GlowingStandingSignBlock> getCodec() {
     return CODEC;
   }
 }

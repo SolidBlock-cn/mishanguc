@@ -1,17 +1,17 @@
 package pers.solid.mishang.uc.blockentity;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentGetter;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.ComponentsAccess;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
+import net.minecraft.util.math.BlockPos;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.components.MishangucComponents;
 
@@ -33,46 +33,46 @@ public class SimpleColoredBlockEntity extends BlockEntity implements ColoredBloc
   }
 
   @Override
-  protected void loadAdditional(ValueInput view) {
-    super.loadAdditional(view);
+  protected void readData(ReadView view) {
+    super.readData(view);
     color = view.read("color", MishangUtils.COLOR_CODEC).orElse(0);
-    if (level != null && level.isClientSide()) {
-      level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
+    if (world != null && world.isClient()) {
+      world.updateListeners(pos, this.getCachedState(), this.getCachedState(), 3);
     }
   }
 
 
   @Override
-  protected void saveAdditional(ValueOutput view) {
-    super.saveAdditional(view);
-    view.store("color", MishangUtils.COLOR_CODEC, color);
+  protected void writeData(WriteView view) {
+    super.writeData(view);
+    view.put("color", MishangUtils.COLOR_CODEC, color);
   }
 
   @Override
-  protected void applyImplicitComponents(DataComponentGetter components) {
-    super.applyImplicitComponents(components);
+  protected void readComponents(ComponentsAccess components) {
+    super.readComponents(components);
     color = components.getOrDefault(MishangucComponents.COLOR, color);
   }
 
   @Override
-  protected void collectImplicitComponents(DataComponentMap.Builder componentMapBuilder) {
-    super.collectImplicitComponents(componentMapBuilder);
-    componentMapBuilder.set(MishangucComponents.COLOR, color);
+  protected void addComponents(ComponentMap.Builder componentMapBuilder) {
+    super.addComponents(componentMapBuilder);
+    componentMapBuilder.add(MishangucComponents.COLOR, color);
   }
 
   @SuppressWarnings("deprecation")
   @Override
-  public void removeComponentsFromTag(ValueOutput view) {
-    view.discard("color");
+  public void removeFromCopiedStackData(WriteView view) {
+    view.remove("color");
   }
 
   @Override
-  public Packet<ClientGamePacketListener> getUpdatePacket() {
-    return ClientboundBlockEntityDataPacket.create(this);
+  public Packet<ClientPlayPacketListener> toUpdatePacket() {
+    return BlockEntityUpdateS2CPacket.create(this);
   }
 
   @Override
-  public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
-    return saveWithoutMetadata(registryLookup);
+  public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+    return createNbt(registryLookup);
   }
 }

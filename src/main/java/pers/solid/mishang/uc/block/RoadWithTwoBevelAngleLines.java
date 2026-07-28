@@ -5,28 +5,28 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.core.Direction;
-import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Item.TooltipContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.SlabBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.SlabBlock;
+import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.TextureMap;
+import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.recipe.RecipeGenerator;
+import net.minecraft.item.Item.TooltipContext;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.blocks.RoadBlocks;
@@ -44,64 +44,64 @@ import java.util.List;
  */
 @ApiStatus.AvailableSince("1.1.0")
 public interface RoadWithTwoBevelAngleLines extends Road {
-  EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
+  EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
 
   @Override
-  default void appendRoadProperties(StateDefinition.Builder<Block, BlockState> builder) {
+  default void appendRoadProperties(StateManager.Builder<Block, BlockState> builder) {
     Road.super.appendRoadProperties(builder);
     builder.add(FACING);
   }
 
   @Override
-  default void appendRoadTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
+  default void appendRoadTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
     Road.super.appendRoadTooltip(stack, context, tooltip, options);
-    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_bi_bevel_angle_line.1").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_bi_bevel_angle_line.2").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_bi_bevel_angle_line.3").withStyle(ChatFormatting.GRAY));
+    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_bi_bevel_angle_line.1").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_bi_bevel_angle_line.2").formatted(Formatting.GRAY));
+    tooltip.add(TextBridge.translatable("block.mishanguc.tooltip.road_with_bi_bevel_angle_line.3").formatted(Formatting.GRAY));
   }
 
   @Override
-  default BlockState rotateRoad(BlockState state, Rotation rotation) {
-    return Road.super.rotateRoad(state, rotation).setValue(FACING, rotation.rotate(state.getValue(FACING)));
+  default BlockState rotateRoad(BlockState state, BlockRotation rotation) {
+    return Road.super.rotateRoad(state, rotation).with(FACING, rotation.rotate(state.get(FACING)));
   }
 
   @Override
-  default BlockState mirrorRoad(BlockState state, Mirror mirror) {
-    return Road.super.mirrorRoad(state, mirror).setValue(FACING, mirror.mirror(state.getValue(FACING)));
+  default BlockState mirrorRoad(BlockState state, BlockMirror mirror) {
+    return Road.super.mirrorRoad(state, mirror).with(FACING, mirror.apply(state.get(FACING)));
   }
 
   @Override
-  default BlockState withPlacementState(BlockState state, BlockPlaceContext ctx) {
-    final Direction playerFacing = ctx.getHorizontalDirection();
-    return Road.super.withPlacementState(state, ctx).setValue(FACING, ctx.getPlayer() != null && ctx.getPlayer().isShiftKeyDown() ? playerFacing.getOpposite() : playerFacing);
+  default BlockState withPlacementState(BlockState state, ItemPlacementContext ctx) {
+    final Direction playerFacing = ctx.getHorizontalPlayerFacing();
+    return Road.super.withPlacementState(state, ctx).with(FACING, ctx.getPlayer() != null && ctx.getPlayer().isSneaking() ? playerFacing.getOpposite() : playerFacing);
   }
 
-  static <B extends AbstractRoadBlock & RoadWithTwoBevelAngleLines> MapCodec<B> createCodec(RecordCodecBuilder<B, BlockBehaviour.Properties> settingsCodec, Function3<BlockBehaviour.Properties, LineColor, LineType, B> function) {
+  static <B extends AbstractRoadBlock & RoadWithTwoBevelAngleLines> MapCodec<B> createCodec(RecordCodecBuilder<B, AbstractBlock.Settings> settingsCodec, Function3<AbstractBlock.Settings, LineColor, LineType, B> function) {
     return RecordCodecBuilder.mapCodec(i -> i.group(settingsCodec, AbstractRoadBlock.lineColorFieldCodec(), AbstractRoadBlock.lineTypeFieldCodec()).apply(i, function));
   }
 
   class ImplWithTwoLayerTexture extends AbstractRoadBlock implements RoadWithTwoBevelAngleLines {
-    public static final MapCodec<ImplWithTwoLayerTexture> CODEC = RoadWithTwoBevelAngleLines.createCodec(propertiesCodec(), ImplWithTwoLayerTexture::new);
+    public static final MapCodec<ImplWithTwoLayerTexture> CODEC = RoadWithTwoBevelAngleLines.createCodec(createSettingsCodec(), ImplWithTwoLayerTexture::new);
 
-    public ImplWithTwoLayerTexture(Properties settings, LineColor lineColor, LineType lineType) {
+    public ImplWithTwoLayerTexture(Settings settings, LineColor lineColor, LineType lineType) {
       super(settings, lineColor, lineType);
-      registerDefaultState(defaultBlockState().setValue(FACING, Direction.SOUTH));
+      setDefaultState(getDefaultState().with(FACING, Direction.SOUTH));
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockModelGenerators blockStateModelGenerator) {
-      TextureMapping textures = new FasterTextureMap()
+    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
+      TextureMap textures = new FasterTextureMap()
           .base("asphalt")
           .lineTop(MishangUtils.composeAngleLineTexture(lineColor, lineType, true))
           .lineSide(MishangUtils.composeStraightLineTexture(lineColor, lineType));
       final Identifier modelId = road.uploadModel("_with_bi_angle_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_TOP, MishangucTextureKeys.LINE_SIDE);
-      blockStateModelGenerator.blockStateOutput.accept(road.composeState(BlockModelGenerators.createSimpleBlock(road, BlockModelGenerators.plainVariant(modelId)).with(BlockStateModelGeneratorAccessor.getROTATION_HORIZONTAL_FACING_ALT())));
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(BlockStateModelGenerator.createSingletonBlockState(road, BlockStateModelGenerator.createWeightedVariant(modelId)).apply(BlockStateModelGeneratorAccessor.getSOUTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS())));
     }
 
     @Override
     public RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
-      final Direction facing = state.getValue(FACING);
+      final Direction facing = state.get(FACING);
       if (facing == direction) {
         return new RoadConnectionState(RoadConnectionState.WhetherConnected.CONNECTED, lineColor, EightHorizontalDirection.of(direction), lineType);
       } else if (facing != direction.getOpposite()) {
@@ -111,51 +111,51 @@ public interface RoadWithTwoBevelAngleLines extends Road {
     }
 
     @Override
-    public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
-      tooltip.add(TextBridge.translatable("lineType.biBevelAngleLine", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
+    public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
+      tooltip.add(TextBridge.translatable("lineType.biBevelAngleLine", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
     }
 
     @Override
-    protected MapCodec<? extends ImplWithTwoLayerTexture> codec() {
+    protected MapCodec<? extends ImplWithTwoLayerTexture> getCodec() {
       return CODEC;
     }
 
     @Override
-    public RecipeBuilder getPaintingRecipe(Block base, Block self, RecipeProvider recipeGenerator) {
-      return recipeGenerator.shaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
+      return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern(" **")
           .pattern("** ")
           .pattern("XXX")
-          .define('*', lineColor.getIngredient())
-          .define('X', base)
-          .unlockedBy("has_paint", recipeGenerator.has(lineColor.getIngredient()))
-          .unlockedBy(RecipeProvider.getHasName(base), recipeGenerator.has(base));
+          .input('*', lineColor.getIngredient())
+          .input('X', base)
+          .criterion("has_paint", recipeGenerator.conditionsFromTag(lineColor.getIngredient()))
+          .criterion(RecipeGenerator.hasItem(base), recipeGenerator.conditionsFromItem(base));
     }
   }
 
   class ImplWithThreeLayerTexture extends AbstractRoadBlock implements RoadWithTwoBevelAngleLines {
-    public static final MapCodec<ImplWithThreeLayerTexture> CODEC = RoadWithTwoBevelAngleLines.createCodec(propertiesCodec(), ImplWithThreeLayerTexture::new);
+    public static final MapCodec<ImplWithThreeLayerTexture> CODEC = RoadWithTwoBevelAngleLines.createCodec(createSettingsCodec(), ImplWithThreeLayerTexture::new);
 
-    public ImplWithThreeLayerTexture(Properties settings, LineColor lineColor, LineType lineType) {
+    public ImplWithThreeLayerTexture(Settings settings, LineColor lineColor, LineType lineType) {
       super(settings, lineColor, lineType);
-      registerDefaultState(defaultBlockState().setValue(FACING, Direction.SOUTH));
+      setDefaultState(getDefaultState().with(FACING, Direction.SOUTH));
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockModelGenerators blockStateModelGenerator) {
-      final TextureMapping textures = new FasterTextureMap()
+    protected <B extends Block & Road> void registerBaseOrSlabModels(B road, BlockStateModelGenerator blockStateModelGenerator) {
+      final TextureMap textures = new FasterTextureMap()
           .base("asphalt")
           .lineTop(MishangUtils.composeStraightLineTexture(lineColor, lineType))
           .lineSide(MishangUtils.composeStraightLineTexture(lineColor, lineType))
           .lineTop2(MishangUtils.composeAngleLineTexture(lineColor, lineType, true));
       final Identifier modelId = road.uploadModel("_with_straight_and_bi_angle_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_TOP, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_TOP2);
-      blockStateModelGenerator.blockStateOutput.accept(road.composeState(BlockModelGenerators.createSimpleBlock(road, BlockModelGenerators.plainVariant(modelId)).with(BlockStateModelGeneratorAccessor.getROTATION_HORIZONTAL_FACING_ALT())));
+      blockStateModelGenerator.blockStateCollector.accept(road.composeState(BlockStateModelGenerator.createSingletonBlockState(road, BlockStateModelGenerator.createWeightedVariant(modelId)).apply(BlockStateModelGeneratorAccessor.getSOUTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS())));
     }
 
     @Override
     public RoadConnectionState getConnectionStateOf(BlockState state, Direction direction) {
-      final Direction facing = state.getValue(FACING);
+      final Direction facing = state.get(FACING);
       if (facing == direction || facing == direction.getOpposite()) {
         return new RoadConnectionState(RoadConnectionState.WhetherConnected.CONNECTED, lineColor, EightHorizontalDirection.of(direction), lineType);
       } else {
@@ -164,29 +164,29 @@ public interface RoadWithTwoBevelAngleLines extends Road {
     }
 
     @Override
-    public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
-      tooltip.add(TextBridge.translatable("lineType.biBevelAngleLine", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
+    public void appendDescriptionTooltip(List<Text> tooltip, TooltipContext options) {
+      tooltip.add(TextBridge.translatable("lineType.biBevelAngleLine", lineColor.getName(), lineType.getName()).formatted(Formatting.BLUE));
     }
 
     @Override
-    protected MapCodec<? extends ImplWithThreeLayerTexture> codec() {
+    protected MapCodec<? extends ImplWithThreeLayerTexture> getCodec() {
       return CODEC;
     }
 
     @Override
-    public RecipeBuilder getPaintingRecipe(Block base, Block self, RecipeProvider recipeGenerator) {
+    public CraftingRecipeJsonBuilder getPaintingRecipe(Block base, Block self, RecipeGenerator recipeGenerator) {
       Block base2 = RoadBlocks.getRoadBlockWithLine(lineColor, lineType);
       if (base instanceof SlabBlock) {
         base2 = ((AbstractRoadBlock) base2).getRoadSlab();
       }
-      return recipeGenerator.shaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
+      return recipeGenerator.createShaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
           .pattern(" *X")
           .pattern("*X*")
           .pattern("X* ")
-          .define('*', lineColor.getIngredient())
-          .define('X', base2)
-          .unlockedBy("has_paint", recipeGenerator.has(lineColor.getIngredient()))
-          .unlockedBy(RecipeProvider.getHasName(base2), recipeGenerator.has(base2));
+          .input('*', lineColor.getIngredient())
+          .input('X', base2)
+          .criterion("has_paint", recipeGenerator.conditionsFromTag(lineColor.getIngredient()))
+          .criterion(RecipeGenerator.hasItem(base2), recipeGenerator.conditionsFromItem(base2));
     }
   }
 }

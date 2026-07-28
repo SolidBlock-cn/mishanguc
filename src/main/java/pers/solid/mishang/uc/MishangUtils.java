@@ -10,25 +10,26 @@ import com.mojang.serialization.Decoder;
 import com.mojang.serialization.DynamicOps;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
-import net.minecraft.ChatFormatting;
-import net.minecraft.core.Direction;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextColor;
-import net.minecraft.tags.TagKey;
-import net.minecraft.util.ARGB;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.registry.tag.TagKey;
+import net.minecraft.state.property.Property;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
+import net.minecraft.util.BlockRotation;
+import net.minecraft.util.DyeColor;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.math.ColorHelper;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import pers.solid.mishang.uc.block.HandrailBlock;
@@ -97,33 +98,33 @@ public class MishangUtils {
   }
 
   @SuppressWarnings("SuspiciousNameCombination")
-  public static EnumMap<Direction, VoxelShape> createDirectionToShape(
+  public static EnumMap<Direction, @NotNull VoxelShape> createDirectionToShape(
       double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
     final EnumMap<Direction, VoxelShape> map = new EnumMap<>(Direction.class);
-    map.put(Direction.UP, Block.box(minX, minY, minZ, maxX, maxY, maxZ));
+    map.put(Direction.UP, Block.createCuboidShape(minX, minY, minZ, maxX, maxY, maxZ));
     map.put(
         Direction.DOWN,
-        Block.box(16 - maxX, 16 - maxY, 16 - maxZ, 16 - minX, 16 - minY, 16 - minZ));
-    map.put(Direction.EAST, Block.box(minY, minZ, minX, maxY, maxZ, maxX));
+        Block.createCuboidShape(16 - maxX, 16 - maxY, 16 - maxZ, 16 - minX, 16 - minY, 16 - minZ));
+    map.put(Direction.EAST, Block.createCuboidShape(minY, minZ, minX, maxY, maxZ, maxX));
     map.put(
         Direction.WEST,
-        Block.box(16 - maxY, 16 - maxZ, 16 - maxX, 16 - minY, 16 - minZ, 16 - minX));
-    map.put(Direction.SOUTH, Block.box(minX, minZ, minY, maxX, maxZ, maxY));
+        Block.createCuboidShape(16 - maxY, 16 - maxZ, 16 - maxX, 16 - minY, 16 - minZ, 16 - minX));
+    map.put(Direction.SOUTH, Block.createCuboidShape(minX, minZ, minY, maxX, maxZ, maxY));
     map.put(
         Direction.NORTH,
-        Block.box(16 - maxX, 16 - maxZ, 16 - maxY, 16 - minX, 16 - minZ, 16 - minY));
+        Block.createCuboidShape(16 - maxX, 16 - maxZ, 16 - maxY, 16 - minX, 16 - minZ, 16 - minY));
     return map;
   }
 
   public static Map<Direction, @Nullable VoxelShape> createHorizontalDirectionToShape(
       double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
     final Map<Direction, VoxelShape> map = new EnumMap<>(Direction.class);
-    map.put(Direction.SOUTH, Block.box(minX, minY, minZ, maxX, maxY, maxZ));
-    map.put(Direction.WEST, Block.box(16 - maxZ, minY, minX, 16 - minZ, maxY, maxX));
+    map.put(Direction.SOUTH, Block.createCuboidShape(minX, minY, minZ, maxX, maxY, maxZ));
+    map.put(Direction.WEST, Block.createCuboidShape(16 - maxZ, minY, minX, 16 - minZ, maxY, maxX));
     map.put(
         Direction.NORTH,
-        Block.box(16 - maxX, minY, 16 - maxZ, 16 - minX, maxY, 16 - minZ));
-    map.put(Direction.EAST, Block.box(minZ, minY, 16 - maxX, maxZ, maxY, 16 - minX));
+        Block.createCuboidShape(16 - maxX, minY, 16 - maxZ, 16 - minX, maxY, 16 - minZ));
+    map.put(Direction.EAST, Block.createCuboidShape(minZ, minY, 16 - maxX, maxZ, maxY, 16 - minX));
     return map;
   }
 
@@ -135,7 +136,7 @@ public class MishangUtils {
     for (Direction direction : Direction.values()) {
       final VoxelShape first = firstDirectionToShape.get(direction);
       if (first != null) {
-        map.put(direction, Shapes.or(
+        map.put(direction, VoxelShapes.union(
             first,
             Arrays.stream(directionToShapes)
                 .filter(Objects::nonNull)
@@ -154,7 +155,7 @@ public class MishangUtils {
    */
   public static @Nullable DyeColor colorBySignColor(int signColor) {
     for (DyeColor color : DyeColor.values()) {
-      if (color.getTextColor() == signColor) {
+      if (color.getSignColor() == signColor) {
         return color;
       }
     }
@@ -168,7 +169,7 @@ public class MishangUtils {
    * @return 发光后颜色的整数值。
    */
   private static int toSignOutlineColor(DyeColor color) {
-    return toSignOutlineColor(color.getTextColor());
+    return toSignOutlineColor(color.getSignColor());
   }
 
   /**
@@ -181,16 +182,16 @@ public class MishangUtils {
     if ((color & 0xffffff) == 0) {
       return (color & 0xff000000) | 0xf0ebcc;
     }
-    int j = (int) ((double) ARGB.red(color) * 0.4);
-    int k = (int) ((double) ARGB.green(color) * 0.4);
-    int l = (int) ((double) ARGB.blue(color) * 0.4);
-    return ARGB.color(ARGB.alpha(color), j, k, l);
+    int j = (int) ((double) ColorHelper.getRed(color) * 0.4);
+    int k = (int) ((double) ColorHelper.getGreen(color) * 0.4);
+    int l = (int) ((double) ColorHelper.getBlue(color) * 0.4);
+    return ColorHelper.getArgb(ColorHelper.getAlpha(color), j, k, l);
   }
 
   @ApiStatus.AvailableSince("0.2.0")
   @ApiStatus.Internal
-  private static @Unmodifiable ImmutableList<Block> blocksInternal() {
-    final ImmutableList<Block> build = Streams.concat(
+  private static @Unmodifiable ImmutableList<@NotNull Block> blocksInternal() {
+    final ImmutableList<@NotNull Block> build = Streams.concat(
         instanceStream(RoadBlocks.class, Block.class),
         RoadSlabBlocks.SLABS.stream(),
         instanceStream(RoadMarkBlocks.class, Block.class),
@@ -265,7 +266,7 @@ public class MishangUtils {
     return instanceEntryStream(fieldStream(containerClass), castToClass);
   }
 
-  public static <T> Stream<T> instanceStream(Class<?> containerClass, Class<T> castToClass) {
+  public static <T> Stream<@NotNull T> instanceStream(Class<?> containerClass, Class<T> castToClass) {
     return instanceEntryStream(containerClass, castToClass).map(Map.Entry::getValue);
   }
 
@@ -301,7 +302,7 @@ public class MishangUtils {
   /**
    * 对一个坐标轴进行旋转。
    */
-  public static Direction.Axis rotateAxis(Rotation rotation, Direction.Axis axis) {
+  public static Direction.Axis rotateAxis(BlockRotation rotation, Direction.Axis axis) {
     return switch (rotation) {
       case COUNTERCLOCKWISE_90, CLOCKWISE_90 -> switch (axis) {
         case X -> Direction.Axis.Z;
@@ -313,16 +314,16 @@ public class MishangUtils {
   }
 
   public static <T extends Comparable<T>> BlockState with(BlockState state, Property<T> property, String name) {
-    return property.getValue(name).map(value -> state.setValue(property, value)).orElse(state);
+    return property.parse(name).map(value -> state.with(property, value)).orElse(state);
   }
 
   @ApiStatus.AvailableSince("0.2.1")
-  public static MutableComponent describeColor(int color) {
+  public static MutableText describeColor(int color) {
     return describeColor(color, TextBridge.literal(formatColorHex(color)));
   }
 
-  public static MutableComponent describeColor(int color, Component text) {
-    return TextBridge.empty().append(TextBridge.literal("■").withStyle(style -> style.withColor(color))).append(text);
+  public static MutableText describeColor(int color, Text text) {
+    return TextBridge.empty().append(TextBridge.literal("■").styled(style -> style.withColor(color))).append(text);
   }
 
   /**
@@ -336,7 +337,7 @@ public class MishangUtils {
   /**
    * 从字符串获取颜色，可以是支持的颜色名称，或者十六进制的格式。例如，{@code "red"} 或 {@code "#fab"}。
    */
-  public static DataResult<Integer> parseColor(String s) {
+  public static @NotNull DataResult<Integer> parseColor(String s) {
     if (s.startsWith("#")) {
       try {
         final String hexPart = s.substring(1);
@@ -348,19 +349,19 @@ public class MishangUtils {
             g = i >> 8 & 0xf;
             b = i >> 4 & 0xf;
             a = i & 0xf;
-            return DataResult.success(ARGB.color(a * 17, r * 17, g * 17, b * 17));
+            return DataResult.success(ColorHelper.getArgb(a * 17, r * 17, g * 17, b * 17));
           }
           case 3 -> {
             final int r, g, b;
             r = i >> 8 & 0xf;
             g = i >> 4 & 0xf;
             b = i & 0xf;
-            return DataResult.success(ARGB.color(255, r * 17, g * 17, b * 17));
+            return DataResult.success(ColorHelper.getArgb(255, r * 17, g * 17, b * 17));
           }
           case 8 -> {
             final int rgb = i >> 8 & 0xffffff;
             final int a = i & 0xff;
-            return DataResult.success(ARGB.color(a, rgb));
+            return DataResult.success(ColorHelper.withAlpha(a, rgb));
           }
           case 6 -> {
             return DataResult.success(i & 0xffffff | 0xff000000);
@@ -373,29 +374,29 @@ public class MishangUtils {
         return DataResult.error(() -> "Cannot parse number value: " + s);
       }
     } else {
-      return TextColor.parseColor(s).map(textColor -> textColor.getValue() | 0xff000000);
+      return TextColor.parse(s).map(textColor -> textColor.getRgb() | 0xff000000);
     }
   }
 
-  public static MutableComponent describeShortcut(Component shortcut) {
-    return TextBridge.translatable("message.mishanguc.keyboard_shortcut.composed", shortcut).withStyle(ChatFormatting.GRAY);
+  public static MutableText describeShortcut(Text shortcut) {
+    return TextBridge.translatable("message.mishanguc.keyboard_shortcut.composed", shortcut).formatted(Formatting.GRAY);
   }
 
   @ApiStatus.AvailableSince("0.2.4")
   public static String composeStraightLineTexture(LineColor lineColor, LineType lineType) {
     if (lineType == LineType.NORMAL) {
-      return lineColor.getSerializedName() + "_straight_line";
+      return lineColor.asString() + "_straight_line";
     } else {
-      return lineColor.getSerializedName() + "_straight_" + lineType.getSerializedName() + "_line";
+      return lineColor.asString() + "_straight_" + lineType.asString() + "_line";
     }
   }
 
   public static String composeAngleLineTexture(LineColor lineColor, LineType lineType, boolean bevel) {
-    return lineColor.getSerializedName() + "_" + (lineType == LineType.NORMAL ? "" : lineColor.getSerializedName() + "_") + (bevel ? "bevel" : "right") + "_angle_line";
+    return lineColor.asString() + "_" + (lineType == LineType.NORMAL ? "" : lineColor.asString() + "_") + (bevel ? "bevel" : "right") + "_angle_line";
   }
 
-  public static final Codec<Integer> COLOR_CODEC = Codec.INT.xmap(integer -> ARGB.alpha(integer) < 1 ? ARGB.opaque(integer) : integer, Function.identity()).mapResult(new Codec.ResultFunction<>() {
-    public static final Decoder<Integer> COLOR_CODEC_STRING = Codec.STRING.flatMap(s -> TextColor.parseColor(s).map(TextColor::getValue));
+  public static final Codec<Integer> COLOR_CODEC = Codec.INT.xmap(integer -> ColorHelper.getAlpha(integer) < 1 ? ColorHelper.fullAlpha(integer) : integer, Function.identity()).mapResult(new Codec.ResultFunction<>() {
+    public static final Decoder<Integer> COLOR_CODEC_STRING = Codec.STRING.flatMap(s -> TextColor.parse(s).map(TextColor::getRgb));
     public static final Codec<Integer> COLOR_CODEC_LIST = Codec.list(Codec.INT).flatXmap(integers -> {
       if (integers.size() < 3 || integers.size() > 4) {
         return DataResult.<Integer>error(() -> "The length of the list that indicates a color should be 3 or 4, but got " + integers.size());
@@ -420,11 +421,11 @@ public class MishangUtils {
         }
         if (ops.getMapValues(input).isSuccess()) {
           final DataResult<T> signResult = ops.get(input, "signColor");
-          if (signResult.isSuccess()) return signResult.flatMap(t -> DyeColor.CODEC.map(DyeColor::getTextColor).decode(ops, t));
+          if (signResult.isSuccess()) return signResult.flatMap(t -> DyeColor.CODEC.map(DyeColor::getSignColor).decode(ops, t));
           final DataResult<T> fireworkResult = ops.get(input, "fireworkColor");
           if (fireworkResult.isSuccess()) return fireworkResult.flatMap(t -> DyeColor.CODEC.map(DyeColor::getFireworkColor).decode(ops, t));
           final DataResult<T> mapResult = ops.get(input, "mapColor");
-          if (mapResult.isSuccess()) return mapResult.flatMap(t -> DyeColor.CODEC.map(dyeColor -> dyeColor.getMapColor().col).decode(ops, t));
+          if (mapResult.isSuccess()) return mapResult.flatMap(t -> DyeColor.CODEC.map(dyeColor -> dyeColor.getMapColor().color).decode(ops, t));
           return DataResult.error(() -> "Missing field: singColor, fireworkColor or mapColor");
         }
 
@@ -438,7 +439,7 @@ public class MishangUtils {
     }
   });
 
-  public static int readColorFromNbtElement(Tag nbtColor) {
+  public static int readColorFromNbtElement(NbtElement nbtColor) {
     return COLOR_CODEC.decode(NbtOps.INSTANCE, nbtColor).result().map(Pair::getFirst).orElse(0);
   }
 

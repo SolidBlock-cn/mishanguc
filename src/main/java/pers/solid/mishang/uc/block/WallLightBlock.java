@@ -7,40 +7,35 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.ModelProvider;
-import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
-import net.minecraft.client.data.models.blockstates.PropertyDispatch;
-import net.minecraft.client.data.models.model.ModelTemplate;
-import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.SingleItemRecipeBuilder;
-import net.minecraft.resources.Identifier;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.block.*;
+import net.minecraft.client.data.*;
+import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
+import net.minecraft.data.recipe.RecipeGenerator;
+import net.minecraft.data.recipe.StonecuttingRecipeJsonBuilder;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.Items;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.Registries;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.function.BooleanBiFunction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
+import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.NotNull;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.data.MishangucModels;
@@ -48,14 +43,14 @@ import pers.solid.mishang.uc.data.MishangucTextureKeys;
 
 import java.util.Map;
 
-public class WallLightBlock extends DirectionalBlock implements SimpleWaterloggedBlock, MishangucBlock {
-  public static final MapCodec<WallLightBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.STRING.fieldOf("light_color").forGetter(b -> b.lightColor), propertiesCodec(), Codec.BOOL.fieldOf("large_shape").forGetter(b -> b.largeShape)).apply(instance, WallLightBlock::new));
-  protected static final BooleanProperty WEST = BlockStateProperties.WEST;
-  protected static final BooleanProperty EAST = BlockStateProperties.EAST;
-  protected static final BooleanProperty SOUTH = BlockStateProperties.SOUTH;
-  protected static final BooleanProperty NORTH = BlockStateProperties.NORTH;
-  protected static final BooleanProperty UP = BlockStateProperties.UP;
-  protected static final BooleanProperty DOWN = BlockStateProperties.DOWN;
+public class WallLightBlock extends FacingBlock implements Waterloggable, MishangucBlock {
+  public static final MapCodec<WallLightBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.STRING.fieldOf("light_color").forGetter(b -> b.lightColor), createSettingsCodec(), Codec.BOOL.fieldOf("large_shape").forGetter(b -> b.largeShape)).apply(instance, WallLightBlock::new));
+  protected static final BooleanProperty WEST = Properties.WEST;
+  protected static final BooleanProperty EAST = Properties.EAST;
+  protected static final BooleanProperty SOUTH = Properties.SOUTH;
+  protected static final BooleanProperty NORTH = Properties.NORTH;
+  protected static final BooleanProperty UP = Properties.UP;
+  protected static final BooleanProperty DOWN = Properties.DOWN;
   protected static final BiMap<Direction, BooleanProperty> DIRECTION_TO_PROPERTY = new ImmutableBiMap.Builder<Direction, BooleanProperty>()
       .put(Direction.WEST, WEST)
       .put(Direction.EAST, EAST)
@@ -69,79 +64,79 @@ public class WallLightBlock extends DirectionalBlock implements SimpleWaterlogge
   public final String lightColor;
   protected final boolean largeShape;
 
-  public WallLightBlock(String lightColor, Properties settings, boolean largeShape) {
+  public WallLightBlock(String lightColor, Settings settings, boolean largeShape) {
     super(settings);
     this.lightColor = lightColor;
     this.largeShape = largeShape;
-    this.registerDefaultState(defaultBlockState()
-        .setValue(BlockStateProperties.WATERLOGGED, false)
-        .setValue(FACING, Direction.UP));
+    this.setDefaultState(getDefaultState()
+        .with(Properties.WATERLOGGED, false)
+        .with(FACING, Direction.UP));
   }
 
   @Override
-  public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
-    final Direction facing = state.getValue(FACING);
+  public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+    final Direction facing = state.get(FACING);
     final Direction backDirection = facing.getOpposite();
-    final BlockPos backPos = pos.relative(backDirection);
-    final VoxelShape centerShape = Block.box(7, 7, 7, 9, 9, 9);
+    final BlockPos backPos = pos.offset(backDirection);
+    final VoxelShape centerShape = Block.createCuboidShape(7, 7, 7, 9, 9, 9);
     final BlockState backState = world.getBlockState(backPos);
-    return !Shapes.joinIsNotEmpty(backState.getBlockSupportShape(world, backPos).getFaceShape(facing), centerShape, BooleanOp.ONLY_SECOND) || !Shapes.joinIsNotEmpty(backState.getCollisionShape(world, backPos).getFaceShape(facing), centerShape, BooleanOp.ONLY_SECOND);
+    return !VoxelShapes.matchesAnywhere(backState.getSidesShape(world, backPos).getFace(facing), centerShape, BooleanBiFunction.ONLY_SECOND) || !VoxelShapes.matchesAnywhere(backState.getCollisionShape(world, backPos).getFace(facing), centerShape, BooleanBiFunction.ONLY_SECOND);
   }
 
   @Override
-  protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-    builder.add(FACING, BlockStateProperties.WATERLOGGED);
+  protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    builder.add(FACING, Properties.WATERLOGGED);
   }
 
   @Override
-  protected BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
-    if (state.getValue(BlockStateProperties.WATERLOGGED)) {
-      tickView.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+  protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
+    if (state.get(Properties.WATERLOGGED)) {
+      tickView.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
-    return super.updateShape(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+    return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
   }
 
   @Override
-  public BlockState rotate(BlockState state, Rotation rotation) {
-    return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
+  public BlockState rotate(BlockState state, BlockRotation rotation) {
+    return state.with(FACING, rotation.rotate(state.get(FACING)));
   }
 
   @Override
-  public BlockState mirror(BlockState state, Mirror mirror) {
-    return state.setValue(FACING, mirror.mirror(state.getValue(FACING)));
+  public BlockState mirror(BlockState state, BlockMirror mirror) {
+    return state.with(FACING, mirror.apply(state.get(FACING)));
   }
 
   @Override
-  public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-    Direction direction = ctx.getClickedFace();
+  public BlockState getPlacementState(ItemPlacementContext ctx) {
+    Direction direction = ctx.getSide();
     BlockState blockState =
-        ctx.getLevel().getBlockState(ctx.getClickedPos().relative(direction.getOpposite()));
-    if (blockState.is(this)) {
-      blockState.getValue(FACING);
+        ctx.getWorld().getBlockState(ctx.getBlockPos().offset(direction.getOpposite()));
+    if (blockState.isOf(this)) {
+      blockState.get(FACING);
     }
-    return this.defaultBlockState()
-        .setValue(FACING, direction)
-        .setValue(BlockStateProperties.WATERLOGGED,
-            ctx.getLevel().getBlockState(ctx.getClickedPos()).getFluidState().getType()
+    return this.getDefaultState()
+        .with(FACING, direction)
+        .with(Properties.WATERLOGGED,
+            ctx.getWorld().getBlockState(ctx.getBlockPos()).getFluidState().getFluid()
                 == Fluids.WATER);
   }
 
   @Override
   public FluidState getFluidState(BlockState state) {
-    return state.getValue(BlockStateProperties.WATERLOGGED)
-        ? Fluids.WATER.getSource(false)
+    return state.get(Properties.WATERLOGGED)
+        ? Fluids.WATER.getStill(false)
         : super.getFluidState(state);
   }
 
   @Override
-  public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-    return (largeShape ? LARGE_SHAPE_PER_DIRECTION : SHAPE_PER_DIRECTION).get(state.getValue(FACING));
+  public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    return (largeShape ? LARGE_SHAPE_PER_DIRECTION : SHAPE_PER_DIRECTION).get(state.get(FACING));
   }
 
   @Override
-  public void updateIndirectNeighbourShapes(BlockState state, LevelAccessor world, BlockPos pos, int flags, int maxUpdateDepth) {
-    super.updateIndirectNeighbourShapes(state, world, pos, flags, maxUpdateDepth);
-    final Direction facing = state.getValue(FACING);
+  public void prepare(BlockState state, WorldAccess world, BlockPos pos, int flags, int maxUpdateDepth) {
+    super.prepare(state, world, pos, flags, maxUpdateDepth);
+    final Direction facing = state.get(FACING);
     if (this instanceof final LightConnectable lightConnectable) {
       lightConnectable.prepareConnection(state, world, pos, flags, maxUpdateDepth, facing);
     }
@@ -149,29 +144,29 @@ public class WallLightBlock extends DirectionalBlock implements SimpleWaterlogge
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void registerModels(ModelProvider modelProvider, BlockModelGenerators blockStateModelGenerator) {
-    final Identifier id = getModelType().create(this, getTextureMap(), blockStateModelGenerator.modelOutput);
-    final var map = PropertyDispatch.modify(FACING);
-    map.select(Direction.UP, BlockModelGenerators.NOP);
-    map.select(Direction.DOWN, BlockModelGenerators.X_ROT_180);
-    map.select(Direction.SOUTH, BlockModelGenerators.X_ROT_270.then(BlockModelGenerators.NOP));
-    map.select(Direction.WEST, BlockModelGenerators.X_ROT_270.then(BlockModelGenerators.Y_ROT_90));
-    map.select(Direction.NORTH, BlockModelGenerators.X_ROT_270.then(BlockModelGenerators.Y_ROT_180));
-    map.select(Direction.EAST, BlockModelGenerators.X_ROT_270.then(BlockModelGenerators.Y_ROT_270));
-    blockStateModelGenerator.blockStateOutput.accept(MultiVariantGenerator.dispatch(this, BlockModelGenerators.plainVariant(id)).with(map).with(BlockModelGenerators.UV_LOCK));
-    blockStateModelGenerator.registerSimpleItemModel(this, id);
+  public void registerModels(ModelProvider modelProvider, BlockStateModelGenerator blockStateModelGenerator) {
+    final Identifier id = getModelType().upload(this, getTextureMap(), blockStateModelGenerator.modelCollector);
+    final var map = BlockStateVariantMap.operations(FACING);
+    map.register(Direction.UP, BlockStateModelGenerator.NO_OP);
+    map.register(Direction.DOWN, BlockStateModelGenerator.ROTATE_X_180);
+    map.register(Direction.SOUTH, BlockStateModelGenerator.ROTATE_X_270.then(BlockStateModelGenerator.NO_OP));
+    map.register(Direction.WEST, BlockStateModelGenerator.ROTATE_X_270.then(BlockStateModelGenerator.ROTATE_Y_90));
+    map.register(Direction.NORTH, BlockStateModelGenerator.ROTATE_X_270.then(BlockStateModelGenerator.ROTATE_Y_180));
+    map.register(Direction.EAST, BlockStateModelGenerator.ROTATE_X_270.then(BlockStateModelGenerator.ROTATE_Y_270));
+    blockStateModelGenerator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(this, BlockStateModelGenerator.createWeightedVariant(id)).apply(map).apply(BlockStateModelGenerator.UV_LOCK));
+    blockStateModelGenerator.registerParentedItemModel(this, id);
   }
 
-  protected TextureMapping getTextureMap() {
-    return TextureMapping.singleSlot(MishangucTextureKeys.LIGHT, MishangucModels.texture(lightColor + "_light"));
+  protected TextureMap getTextureMap() {
+    return TextureMap.of(MishangucTextureKeys.LIGHT, MishangucModels.texture(lightColor + "_light"));
   }
 
-  public ModelTemplate getModelType() {
+  public Model getModelType() {
     return getModelType("");
   }
 
-  public ModelTemplate getModelType(String suffix) {
-    final Identifier identifier = BuiltInRegistries.BLOCK.getKey(this);
+  public Model getModelType(String suffix) {
+    final Identifier identifier = Registries.BLOCK.getId(this);
     String path = identifier.getPath() + suffix;
     final int i = lightColor.length();
     if (path.startsWith(lightColor) && path.charAt(i) == '_') {
@@ -183,8 +178,8 @@ public class WallLightBlock extends DirectionalBlock implements SimpleWaterlogge
   }
 
   @Override
-  public RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
-    final Identifier itemId = BuiltInRegistries.ITEM.getKey(asItem());
+  public CraftingRecipeJsonBuilder getCraftingRecipe(RecipeGenerator recipeGenerator) {
+    final Identifier itemId = Registries.ITEM.getId(asItem());
     final String itemPath = itemId.getPath();
     if (itemPath.endsWith("_tube")) {
       // 灯管方式采用切石的方式合成，这里直接作为主要的合成方式。
@@ -205,27 +200,27 @@ public class WallLightBlock extends DirectionalBlock implements SimpleWaterlogge
       } else {
         throw new IllegalStateException(String.format("Can't generate recipes: Cannot determine the type of %s according to its id", this));
       }
-      return SingleItemRecipeBuilder.stonecutting(Ingredient.of(fullLight), RecipeCategory.DECORATIONS, this, outputCount)
-          .unlockedBy(RecipeProvider.getHasName(fullLight), recipeGenerator.has(fullLight));
+      return StonecuttingRecipeJsonBuilder.createStonecutting(Ingredient.ofItems(fullLight), RecipeCategory.DECORATIONS, this, outputCount)
+          .criterion(RecipeGenerator.hasItem(fullLight), recipeGenerator.conditionsFromItem(fullLight));
     } else {
       // 非灯管方块，采用与混凝土的合成。
-      final Identifier tubeId = itemId.withSuffix("_tube");
-      final @NotNull Item tube = BuiltInRegistries.ITEM.getOptional(tubeId).orElseThrow(() -> new IllegalArgumentException(String.format("Can't generate recipes: %s does not have a corresponding tube block (with id [%s])", this, tubeId)));
-      return recipeGenerator.shapeless(RecipeCategory.DECORATIONS, this, 1)
-          .requires(tube)
-          .requires(Items.GRAY_CONCRETE)
-          .unlockedBy(RecipeProvider.getHasName(tube), recipeGenerator.has(tube));
+      final Identifier tubeId = itemId.withSuffixedPath("_tube");
+      final @NotNull Item tube = Registries.ITEM.getOptionalValue(tubeId).orElseThrow(() -> new IllegalArgumentException(String.format("Can't generate recipes: %s does not have a corresponding tube block (with id [%s])", this, tubeId)));
+      return recipeGenerator.createShapeless(RecipeCategory.DECORATIONS, this, 1)
+          .input(tube)
+          .input(Items.GRAY_CONCRETE)
+          .criterion(RecipeGenerator.hasItem(tube), recipeGenerator.conditionsFromItem(tube));
     }
   }
 
   @Override
-  protected MapCodec<? extends WallLightBlock> codec() {
+  protected MapCodec<? extends WallLightBlock> getCodec() {
     return CODEC;
   }
 
-  public static Item getBaseLight(String namespace, String lightColor, Block self) {
-    final Identifier fullLightId = Identifier.fromNamespaceAndPath(namespace, lightColor + "_light");
-    return BuiltInRegistries.ITEM.getOptional(fullLightId).orElseThrow(() -> new IllegalArgumentException(String.format("Can't generate recipes: %s does not have a corresponding base light block (with id [%s])", self, fullLightId)));
+  public static @NotNull Item getBaseLight(String namespace, String lightColor, Block self) {
+    final Identifier fullLightId = Identifier.of(namespace, lightColor + "_light");
+    return Registries.ITEM.getOptionalValue(fullLightId).orElseThrow(() -> new IllegalArgumentException(String.format("Can't generate recipes: %s does not have a corresponding base light block (with id [%s])", self, fullLightId)));
   }
 
   @Override

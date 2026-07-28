@@ -1,16 +1,12 @@
 package pers.solid.mishang.uc.blocks;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MapColor;
+import net.minecraft.block.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.DyeColor;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.CustomId;
@@ -40,57 +36,57 @@ public class MishangucBlocks {
   /**
    * 绝大多数柏油路方块共用的方块设置。
    */
-  protected static final BlockBehaviour.Properties ROAD_SETTINGS =
-      BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(0.5F);
+  protected static final AbstractBlock.Settings ROAD_SETTINGS =
+      AbstractBlock.Settings.create().mapColor(MapColor.GRAY).strength(0.5F);
   /**
    * 具有白色标线的道路方块使用的方块设置。
    */
-  protected static final BlockBehaviour.Properties WHITE_ROAD_SETTINGS = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(0.5F).mapColor(MapColor.SNOW);
+  protected static final AbstractBlock.Settings WHITE_ROAD_SETTINGS = AbstractBlock.Settings.create().mapColor(MapColor.GRAY).strength(0.5F).mapColor(MapColor.WHITE);
   /**
    * 具有黄色标线的道路方块使用的方块设置。
    */
-  protected static final BlockBehaviour.Properties YELLOW_ROAD_SETTINGS = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(0.5F).mapColor(MapColor.COLOR_YELLOW);
+  protected static final AbstractBlock.Settings YELLOW_ROAD_SETTINGS = AbstractBlock.Settings.create().mapColor(MapColor.GRAY).strength(0.5F).mapColor(MapColor.YELLOW);
 
   /**
    * 绝大多数白色光方块共用的方块设置。
    */
-  protected static final BlockBehaviour.Properties WHITE_LIGHT_SETTINGS =
-      BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).lightLevel(CONSTANT_15).strength(0.2f);
+  protected static final AbstractBlock.Settings WHITE_LIGHT_SETTINGS =
+      AbstractBlock.Settings.create().mapColor(MapColor.WHITE).luminance(CONSTANT_15).strength(0.2f);
   /**
    * 墙上的白色灯等方块等用到的方块设置。与{@link #WHITE_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。
    */
-  protected static final BlockBehaviour.Properties WHITE_WALL_LIGHT_SETTINGS =
-      BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).lightLevel(CONSTANT_15).strength(0.2f).noCollision();
+  protected static final AbstractBlock.Settings WHITE_WALL_LIGHT_SETTINGS =
+      AbstractBlock.Settings.create().mapColor(MapColor.WHITE).luminance(CONSTANT_15).strength(0.2f).noCollision();
   /**
    * 绝大多数黄色光方块共用的方块设置。
    */
-  protected static final BlockBehaviour.Properties YELLOW_LIGHT_SETTINGS = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).lightLevel(CONSTANT_15).strength(0.2f);
+  protected static final AbstractBlock.Settings YELLOW_LIGHT_SETTINGS = AbstractBlock.Settings.create().mapColor(MapColor.YELLOW).luminance(CONSTANT_15).strength(0.2f);
   /**
    * 墙上的黄色灯等方块等用到的方块设置。与{@link #YELLOW_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。
    */
-  protected static final BlockBehaviour.Properties YELLOW_WALL_LIGHT_SETTINGS =
-      BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).lightLevel(CONSTANT_15).strength(0.2f).noCollision();
+  protected static final AbstractBlock.Settings YELLOW_WALL_LIGHT_SETTINGS =
+      AbstractBlock.Settings.create().mapColor(MapColor.YELLOW).luminance(CONSTANT_15).strength(0.2f).noCollision();
   /**
    * 绝大多数青色光方块共用的方块设置。
    */
-  protected static final BlockBehaviour.Properties CYAN_LIGHT_SETTINGS = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_CYAN).lightLevel(CONSTANT_15).strength(0.2f);
+  protected static final AbstractBlock.Settings CYAN_LIGHT_SETTINGS = AbstractBlock.Settings.create().mapColor(MapColor.CYAN).luminance(CONSTANT_15).strength(0.2f);
   /**
    * 墙上的青色灯等方块等用到的方块设置。与{@link #YELLOW_LIGHT_SETTINGS}相比，该方块设置具有{@code noCollision}属性。
    */
-  protected static final BlockBehaviour.Properties CYAN_WALL_LIGHT_SETTINGS =
-      BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_CYAN).lightLevel(CONSTANT_15).strength(0.2f).noCollision();
+  protected static final AbstractBlock.Settings CYAN_WALL_LIGHT_SETTINGS =
+      AbstractBlock.Settings.create().mapColor(MapColor.CYAN).luminance(CONSTANT_15).strength(0.2f).noCollision();
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final BlockBehaviour.Properties ORANGE_LIGHT_SETTINGS = BlockBehaviour.Properties.of().mapColor(DyeColor.ORANGE).lightLevel(CONSTANT_15).strength(0.2f);
+  protected static final AbstractBlock.Settings ORANGE_LIGHT_SETTINGS = AbstractBlock.Settings.create().mapColor(DyeColor.ORANGE).luminance(CONSTANT_15).strength(0.2f);
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final BlockBehaviour.Properties ORANGE_WALL_LIGHT_SETTINGS = BlockBehaviour.Properties.of().mapColor(DyeColor.ORANGE).lightLevel(CONSTANT_15).strength(0.2f).noCollision();
+  protected static final AbstractBlock.Settings ORANGE_WALL_LIGHT_SETTINGS = AbstractBlock.Settings.create().mapColor(DyeColor.ORANGE).luminance(CONSTANT_15).strength(0.2f).noCollision();
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final BlockBehaviour.Properties GREEN_LIGHT_SETTINGS = BlockBehaviour.Properties.of().mapColor(DyeColor.GREEN).lightLevel(CONSTANT_15).strength(0.2f);
+  protected static final AbstractBlock.Settings GREEN_LIGHT_SETTINGS = AbstractBlock.Settings.create().mapColor(DyeColor.GREEN).luminance(CONSTANT_15).strength(0.2f);
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final BlockBehaviour.Properties GREEN_WALL_LIGHT_SETTINGS = BlockBehaviour.Properties.of().mapColor(DyeColor.GREEN).lightLevel(CONSTANT_15).noCollision();
+  protected static final AbstractBlock.Settings GREEN_WALL_LIGHT_SETTINGS = AbstractBlock.Settings.create().mapColor(DyeColor.GREEN).luminance(CONSTANT_15).noCollision();
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final BlockBehaviour.Properties PINK_LIGHT_SETTINGS = BlockBehaviour.Properties.of().mapColor(DyeColor.PINK).lightLevel(CONSTANT_15).strength(0.2f);
+  protected static final AbstractBlock.Settings PINK_LIGHT_SETTINGS = AbstractBlock.Settings.create().mapColor(DyeColor.PINK).luminance(CONSTANT_15).strength(0.2f);
   @ApiStatus.AvailableSince("1.1.0")
-  protected static final BlockBehaviour.Properties PINK_WALL_LIGHT_SETTINGS = BlockBehaviour.Properties.of().mapColor(DyeColor.PINK).lightLevel(CONSTANT_15).noCollision();
+  protected static final AbstractBlock.Settings PINK_WALL_LIGHT_SETTINGS = AbstractBlock.Settings.create().mapColor(DyeColor.PINK).luminance(CONSTANT_15).noCollision();
   @ApiStatus.Internal
   public static ObjectArrayList<Block> translucentBlocks = new ObjectArrayList<>();
   @ApiStatus.Internal
@@ -130,11 +126,11 @@ public class MishangucBlocks {
               translucentBlocks.add(((HandrailBlock) value).stair());
             }
           }
-          final Item.Properties settings = new Item.Properties();
+          final Item.Settings settings = new Item.Settings();
           if (path.contains("netherite")) {
-            settings.fireResistant();
+            settings.fireproof();
           }
-          final BiFunction<Block, Item.Properties, Item> biFunction =
+          final BiFunction<Block, Item.Settings, Item> biFunction =
               value instanceof HungSignBlock
                   ? HungSignBlockItem::new
                   : value instanceof WallSignBlock
@@ -142,7 +138,7 @@ public class MishangucBlocks {
                   : value instanceof StandingSignBlock
                   ? StandingSignBlockItem::new
                   : NamedBlockItem::new;
-          Items.registerBlock(value, biFunction, settings);
+          Items.register(value, biFunction, settings);
         } catch (IllegalAccessException e) {
           Mishanguc.MISHANG_LOGGER.error("Error when registering blocks:", e);
         }
@@ -162,17 +158,17 @@ public class MishangucBlocks {
     registerAll(ColoredBlocks.class);
   }
 
-  public static <T extends Block> T register(String name, Function<BlockBehaviour.Properties, T> factory) {
-    return register(name, factory, BlockBehaviour.Properties.of());
+  public static <T extends Block> T register(String name, Function<AbstractBlock.Settings, T> factory) {
+    return register(name, factory, AbstractBlock.Settings.create());
   }
 
   @SuppressWarnings("unchecked")
-  public static <T extends Block> T register(String name, Function<BlockBehaviour.Properties, T> factory, BlockBehaviour.Properties settings) {
-    final Block block = Blocks.register(ResourceKey.create(Registries.BLOCK, Mishanguc.id(name)), factory::apply, settings);
+  public static <T extends Block> T register(String name, Function<AbstractBlock.Settings, T> factory, AbstractBlock.Settings settings) {
+    final Block block = Blocks.register(RegistryKey.of(RegistryKeys.BLOCK, Mishanguc.id(name)), factory::apply, settings);
     return (T) block;
   }
 
-  public static <T extends Block> T register(String name, Function<BlockBehaviour.Properties, T> factory, Block copySettingsFrom) {
-    return register(name, factory, BlockBehaviour.Properties.ofFullCopy(copySettingsFrom));
+  public static <T extends Block> T register(String name, Function<AbstractBlock.Settings, T> factory, Block copySettingsFrom) {
+    return register(name, factory, AbstractBlock.Settings.copy(copySettingsFrom));
   }
 }

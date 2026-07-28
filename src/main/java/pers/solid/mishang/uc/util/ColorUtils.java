@@ -1,6 +1,6 @@
 package pers.solid.mishang.uc.util;
 
-import net.minecraft.util.Mth;
+import net.minecraft.util.math.MathHelper;
 import pers.solid.mishang.uc.Mishanguc;
 
 /**
@@ -56,9 +56,9 @@ public final class ColorUtils {
       blue = (int) (MaxRGB * luminosity + 0.5f);
     } else {
       y = 2f * luminosity - v;
-      hue = Mth.positiveModulo(hue, 1);
-      x = y + (v - y) * (6.0f * hue - Mth.floor(6.0f * hue));
-      z = v - (v - y) * (6.0f * hue - Mth.floor(6.0f * hue));
+      hue = MathHelper.floorMod(hue, 1);
+      x = y + (v - y) * (6.0f * hue - MathHelper.floor(6.0f * hue));
+      z = v - (v - y) * (6.0f * hue - MathHelper.floor(6.0f * hue));
       switch ((int) (6.0f * hue)) {
         case 1:
           r = z;

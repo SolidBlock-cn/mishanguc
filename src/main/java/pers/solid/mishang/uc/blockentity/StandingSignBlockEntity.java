@@ -5,20 +5,17 @@ import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.booleans.BooleanArraySet;
 import it.unimi.dsi.fastutil.booleans.BooleanSet;
 import it.unimi.dsi.fastutil.booleans.BooleanSets;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponentGetter;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.ComponentsAccess;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.Util;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Range;
+import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.*;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.text.TextContext;
 
@@ -38,16 +35,16 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
    * 前面的文字，也就是放置时朝着玩家的这一面。
    * 通常情况下，是不可变的。当客户端正在进行编辑时，客户端的该字段是可变的。
    */
-  public List<TextContext> frontTexts = ImmutableList.of();
+  public @NotNull List<TextContext> frontTexts = ImmutableList.of();
   /**
    * 后面的文字，也就是放置时背对玩家的这一面。
    * 通常情况下，是不可变的。当客户端正在进行编辑时，客户端的该字段是可变的。
    */
-  public List<TextContext> backTexts = ImmutableList.of();
+  public @NotNull List<TextContext> backTexts = ImmutableList.of();
   /**
    * 正在编辑该告示牌的玩家。
    */
-  private @Nullable Player editor;
+  private @Nullable PlayerEntity editor;
   /**
    * 告示牌被编辑的那一侧。{@code true} 表示 front，{@code false} 表示 back，{@code null} 表示未被编辑。
    */
@@ -65,13 +62,13 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  protected void loadAdditional(ValueInput view) {
-    super.loadAdditional(view);
+  protected void readData(ReadView view) {
+    super.readData(view);
     final Codec<List<TextContext>> listCodec = TextContext.createListCodec(this::createDefaultTextContext);
     frontTexts = view.read("frontTexts", listCodec).orElseGet(ImmutableList::of);
     backTexts = view.read("backTexts", listCodec).orElseGet(ImmutableList::of);
-    final boolean frontWaxed = view.getBooleanOr("frontWaxed", false);
-    final boolean backWaxed = view.getBooleanOr("backWaxed", false);
+    final boolean frontWaxed = view.getBoolean("frontWaxed", false);
+    final boolean backWaxed = view.getBoolean("backWaxed", false);
     if (!frontWaxed && !backWaxed) {
       waxed = BooleanSets.emptySet();
     } else {
@@ -79,8 +76,8 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
       if (frontWaxed) waxed.add(true);
       if (backWaxed) waxed.add(false);
     }
-    final boolean frontGlowing = view.getBooleanOr("frontGlowing", false);
-    final boolean backGlowing = view.getBooleanOr("backGlowing", false);
+    final boolean frontGlowing = view.getBoolean("frontGlowing", false);
+    final boolean backGlowing = view.getBoolean("backGlowing", false);
     if (!frontGlowing && !backGlowing) {
       glowing = BooleanSets.emptySet();
     } else {
@@ -91,11 +88,11 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  protected void saveAdditional(ValueOutput view) {
-    super.saveAdditional(view);
+  protected void writeData(WriteView view) {
+    super.writeData(view);
     final Codec<List<TextContext>> listCodec = TextContext.createListCodec(this::createDefaultTextContext);
-    view.store("frontTexts", listCodec, frontTexts);
-    view.store("backTexts", listCodec, backTexts);
+    view.put("frontTexts", listCodec, frontTexts);
+    view.put("backTexts", listCodec, backTexts);
     view.putBoolean("frontWaxed", waxed.contains(true));
     view.putBoolean("backWaxed", waxed.contains(false));
     view.putBoolean("frontGlowing", glowing.contains(true));
@@ -103,25 +100,25 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  protected void applyImplicitComponents(DataComponentGetter components) {
-    super.applyImplicitComponents(components);
+  protected void readComponents(ComponentsAccess components) {
+    super.readComponents(components);
     frontTexts = components.getOrDefault(MishangucComponents.FRONT_TEXTS, ImmutableList.of());
     backTexts = components.getOrDefault(MishangucComponents.BACK_TEXTS, ImmutableList.of());
   }
 
   @Override
-  protected void collectImplicitComponents(DataComponentMap.Builder componentMapBuilder) {
-    super.collectImplicitComponents(componentMapBuilder);
-    componentMapBuilder.set(MishangucComponents.FRONT_TEXTS, frontTexts);
-    componentMapBuilder.set(MishangucComponents.BACK_TEXTS, backTexts);
+  protected void addComponents(ComponentMap.Builder componentMapBuilder) {
+    super.addComponents(componentMapBuilder);
+    componentMapBuilder.add(MishangucComponents.FRONT_TEXTS, frontTexts);
+    componentMapBuilder.add(MishangucComponents.BACK_TEXTS, backTexts);
   }
 
   @SuppressWarnings("deprecation")
   @Override
-  public void removeComponentsFromTag(ValueOutput view) {
-    super.removeComponentsFromTag(view);
-    view.discard("frontTexts");
-    view.discard("backTexts");
+  public void removeFromCopiedStackData(WriteView view) {
+    super.removeFromCopiedStackData(view);
+    view.remove("frontTexts");
+    view.remove("backTexts");
   }
 
   @Override
@@ -135,17 +132,17 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
   }
 
   @Override
-  public @Nullable Player getEditor() {
+  public @Nullable PlayerEntity getEditor() {
     return editor;
   }
 
   @Override
-  public void setEditor(@Nullable Player editor) {
+  public void setEditor(@Nullable PlayerEntity editor) {
     this.editor = editor;
   }
 
-  public ClientboundBlockEntityDataPacket getUpdatePacket() {
-    return ClientboundBlockEntityDataPacket.create(this);
+  public BlockEntityUpdateS2CPacket toUpdatePacket() {
+    return BlockEntityUpdateS2CPacket.create(this);
   }
 
   /**
@@ -165,7 +162,7 @@ public class StandingSignBlockEntity extends BlockEntityWithText {
    * @param texts   文本列表，将直接用作字段。
    */
   @Contract(mutates = "this")
-  public void setTextsOnSide(boolean isFront, List<TextContext> texts) {
+  public void setTextsOnSide(boolean isFront, @NotNull List<TextContext> texts) {
     if (isFront) frontTexts = texts;
     else backTexts = texts;
   }

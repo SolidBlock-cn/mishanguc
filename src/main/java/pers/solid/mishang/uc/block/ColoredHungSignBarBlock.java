@@ -2,59 +2,60 @@ package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.BlockPos;
-import net.minecraft.data.loot.BlockLootSubProvider;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockEntityProvider;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.data.loottable.BlockLootTableGenerator;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.loot.LootTable;
+import net.minecraft.state.StateManager;
+import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 
 import java.util.List;
 
-public class ColoredHungSignBarBlock extends HungSignBarBlock implements EntityBlock, ColoredBlock {
-  public static final MapCodec<ColoredHungSignBarBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec(), propertiesCodec()).apply(instance, ColoredHungSignBarBlock::new));
+public class ColoredHungSignBarBlock extends HungSignBarBlock implements BlockEntityProvider, ColoredBlock {
+  public static final MapCodec<ColoredHungSignBarBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec(), createSettingsCodec()).apply(instance, ColoredHungSignBarBlock::new));
 
-  public ColoredHungSignBarBlock(Block baseBlock, Properties settings) {
+  public ColoredHungSignBarBlock(@NotNull Block baseBlock, Settings settings) {
     super(baseBlock, settings);
   }
 
   @Nullable
   @Override
-  public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+  public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
     return new SimpleColoredBlockEntity(pos, state);
   }
 
   @Override
-  protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-    super.createBlockStateDefinition(builder);
+  protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    super.appendProperties(builder);
   }
 
   @Override
-  public ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state, boolean includeData) {
-    return getColoredPickStack(world, pos, state, includeData, super::getCloneItemStack);
+  public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData) {
+    return getColoredPickStack(world, pos, state, includeData, super::getPickStack);
   }
 
   @Override
-  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
+  public void getMishangTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
     ColoredBlock.appendColorTooltip(stack, tooltip);
   }
 
   @Override
-  public LootTable.Builder getLootTable(BlockLootSubProvider blockLootTableGenerator) {
-    return blockLootTableGenerator.createSingleItemTable(this).apply(COPY_COLOR_LOOT_FUNCTION);
+  public LootTable.Builder getLootTable(BlockLootTableGenerator blockLootTableGenerator) {
+    return blockLootTableGenerator.drops(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
   @Override
-  protected MapCodec<? extends ColoredHungSignBarBlock> codec() {
+  protected MapCodec<? extends ColoredHungSignBarBlock> getCodec() {
     return CODEC;
   }
 }

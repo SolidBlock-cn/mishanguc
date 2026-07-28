@@ -1,14 +1,15 @@
 package pers.solid.mishang.uc.util;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.util.StringRepresentable;
+import net.minecraft.text.MutableText;
+import net.minecraft.util.StringIdentifiable;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 道路标线类型，可以是：普通、粗线、双线等，暂无虚线。道路标线的偏移不在此范围内。
  */
-public enum LineType implements StringRepresentable {
+public enum LineType implements StringIdentifiable {
   /**
    * 普通标线。
    */
@@ -23,19 +24,19 @@ public enum LineType implements StringRepresentable {
   THICK;
 
   private final String name;
-  public static final Codec<LineType> CODEC = StringRepresentable.fromEnum(LineType::values);
+  public static final Codec<LineType> CODEC = StringIdentifiable.createCodec(LineType::values);
 
   LineType() {
     name = name().toLowerCase();
   }
 
   @Override
-  public String getSerializedName() {
+  public String asString() {
     return name;
   }
 
   @Contract(" -> new")
-  public MutableComponent getName() {
+  public @NotNull MutableText getName() {
     return TextBridge.translatable("lineType." + name);
   }
 }

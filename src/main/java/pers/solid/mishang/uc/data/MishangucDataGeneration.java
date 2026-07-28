@@ -3,9 +3,9 @@ package pers.solid.mishang.uc.data;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipe.RecipeExporter;
+import net.minecraft.data.recipe.RecipeGenerator;
+import net.minecraft.registry.RegistryWrapper;
 
 public class MishangucDataGeneration implements DataGeneratorEntrypoint {
   @Override
@@ -14,7 +14,7 @@ public class MishangucDataGeneration implements DataGeneratorEntrypoint {
     pack.addProvider(MishangucBlockLootTableProvider::new);
     pack.addProvider((fabricDataOutput, completableFuture) -> new FabricRecipeProvider(fabricDataOutput, completableFuture) {
       @Override
-      protected RecipeProvider createRecipeProvider(HolderLookup.Provider wrapperLookup, RecipeOutput recipeExporter) {
+      protected RecipeGenerator getRecipeGenerator(RegistryWrapper.WrapperLookup wrapperLookup, RecipeExporter recipeExporter) {
         return new MishangucRecipeGenerator(wrapperLookup, recipeExporter);
       }
 
