@@ -52,6 +52,7 @@ public class SignPresetGridWidget extends ElementListWidget<SignPresetGridWidget
     return new ButtonWidget.Builder(signPreset.name(), button -> {
       for (TextContext textContext : signPreset.textContexts()) {
         final TextContext newTextContext = textContext.clone();
+        newTextContext.size = (screen.entity.createDefaultTextContext().size * newTextContext.size / 8);
         screen.textFieldListWidget.addTextField(-1, newTextContext, false);
       }
       final List<TextFieldListWidget.Entry> children = screen.textFieldListWidget.children();
