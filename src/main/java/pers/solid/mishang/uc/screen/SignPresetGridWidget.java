@@ -31,12 +31,12 @@ public class SignPresetGridWidget extends ContainerObjectSelectionList<SignPrese
       final Button widgetForPreset = createWidgetForPreset(screen, value);
       widgets.add(widgetForPreset);
       if (widgets.size() >= 3) {
-        gridWidget.addEntry(new pers.solid.mishang.uc.screen.SignPresetGridWidget.Entry(List.copyOf(widgets)));
+        gridWidget.addEntry(new SignPresetGridWidget.Entry(List.copyOf(widgets)));
         widgets.clear();
       }
     });
     if (!widgets.isEmpty()) {
-      gridWidget.addEntry(new pers.solid.mishang.uc.screen.SignPresetGridWidget.Entry(List.copyOf(widgets)));
+      gridWidget.addEntry(new SignPresetGridWidget.Entry(List.copyOf(widgets)));
     }
     return gridWidget;
   }
@@ -52,6 +52,7 @@ public class SignPresetGridWidget extends ContainerObjectSelectionList<SignPrese
     return new Button.Builder(signPreset.name(), button -> {
       for (TextContext textContext : signPreset.textContexts()) {
         final TextContext newTextContext = textContext.clone();
+        newTextContext.size = (screen.entity.createDefaultTextContext().size * newTextContext.size / 8);
         screen.textFieldListWidget.addTextField(-1, newTextContext, false);
       }
       final List<TextFieldListWidget.Entry> children = screen.textFieldListWidget.children();
@@ -80,7 +81,7 @@ public class SignPresetGridWidget extends ContainerObjectSelectionList<SignPrese
     return 450;
   }
 
-  public static class Entry extends ContainerObjectSelectionList.Entry<pers.solid.mishang.uc.screen.SignPresetGridWidget.Entry> {
+  public static class Entry extends ContainerObjectSelectionList.Entry<SignPresetGridWidget.Entry> {
     public final List<Button> buttons;
 
     public Entry(List<Button> buttons) {

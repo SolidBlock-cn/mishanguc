@@ -72,7 +72,7 @@ public enum SignPresetCommand implements ClientCommandRegistrationCallback {
                   text.append(CommonComponents.NEW_LINE);
                 }
                 return style
-                    .withHoverEvent(new HoverEvent.ShowText(text.append(Component.translatable("message.mishanguc.signPreset.list.id_info", signPreset.name()).withStyle(ChatFormatting.GRAY))));
+                    .withHoverEvent(new HoverEvent.ShowText(text.append(Component.translatable("message.mishanguc.signPreset.list.id_info", signPreset.id()).withStyle(ChatFormatting.GRAY))));
               }))));
               return values.size();
             }))
