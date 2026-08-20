@@ -2,6 +2,12 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.6.5
+
+- Fixed the issue that the default text size in the texture presets is 8 and 4 instead of 6 and 3.
+- Fixed the issue that the tooltips of presets are names instead of theirs IDs in the `/mishanguc:signpreset list` command.
+- Fixed the issue of incorrect focus in the sign edit screen in 26.1.2 when adding and removing text lines.
+
 ### 1.6.4
 
 - Fixed the issue of wrong outline shape of handrail block of the central shape.

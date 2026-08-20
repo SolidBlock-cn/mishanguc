@@ -52,7 +52,7 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Hori
 
   public HandrailCentralBlock(@NotNull T baseBlock, Settings settings) {
     this(baseBlock, 2f, 16f, 2f, 16f, 16f, settings);
-    }
+  }
 
   public HandrailCentralBlock(@NotNull T baseBlock) {
     this(baseBlock, AbstractBlock.Settings.copy(baseBlock));
