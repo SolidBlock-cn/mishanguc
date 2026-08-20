@@ -104,19 +104,16 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
   /**
    * 类似于 {@link #setFocused(GuiEventListener)}，但是支持在调用 {@link #setSelected(pers.solid.mishang.uc.screen.TextFieldListWidget.Entry, boolean, boolean)} 时指定参数。
    */
-  public void setFocused(@Nullable pers.solid.mishang.uc.screen.TextFieldListWidget.Entry focused, boolean multiSel, boolean contSel) {
+  public void setFocusedAndSelected(@Nullable pers.solid.mishang.uc.screen.TextFieldListWidget.Entry focused, boolean multiSel, boolean contSel) {
     pers.solid.mishang.uc.screen.TextFieldListWidget.Entry entry = this.getFocused();
     if (entry != focused && entry instanceof ContainerEventHandler parentElement) {
       parentElement.setFocused(null);
     }
 
-    ((ContainerWidgetAccessor) this).setFocused(focused);
-    final List<pers.solid.mishang.uc.screen.TextFieldListWidget.Entry> children = children();
-    int i = children.indexOf(focused);
-    if (i >= 0) {
-      pers.solid.mishang.uc.screen.TextFieldListWidget.Entry entry2 = children.get(i);
-      this.setSelected(entry2, multiSel, contSel);
-      this.scrollToEntry(entry2); // 无论如何均调用此 ensureVisible
+    ((ContainerWidgetAccessor) this).setFocusedRaw(focused);
+    this.setSelected(focused, multiSel, contSel);
+    if (focused != null) {
+      this.scrollToEntry(focused);
     }
   }
 
@@ -203,7 +200,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
     } else if (input.isConfirmation()) {
       // 此时，children().isEmpty() 为 true
       final pers.solid.mishang.uc.screen.TextFieldListWidget.Entry newEntry = addEmptyTextField(0);
-      TextFieldListWidget.this.setFocused(newEntry, false, false);
+      TextFieldListWidget.this.setFocusedAndSelected(newEntry, false, false);
       signBlockEditScreen.setFocused(TextFieldListWidget.this);
       return true;
     }
@@ -598,7 +595,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
             TextFieldListWidget.this.setFocused(children.get(index + 1));
           } else if (!children.isEmpty()) {
             final pers.solid.mishang.uc.screen.TextFieldListWidget.Entry entry = addEmptyTextField(index + 1);
-            TextFieldListWidget.this.setFocused(entry, false, false);
+            TextFieldListWidget.this.setFocusedAndSelected(entry, false, false);
           }
         }
         case GLFW.GLFW_KEY_BACKSPACE -> {
@@ -608,7 +605,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
               TextFieldListWidget.this.removeTextField(index);
               if (!children().isEmpty()) {
                 final pers.solid.mishang.uc.screen.TextFieldListWidget.Entry nearbyEntry = TextFieldListWidget.this.children().get(Mth.clamp(index - 1, 0, children().size() - 1));
-                TextFieldListWidget.this.setFocused(nearbyEntry, false, false);
+                TextFieldListWidget.this.setFocusedAndSelected(nearbyEntry, false, false);
               }
             }
           }

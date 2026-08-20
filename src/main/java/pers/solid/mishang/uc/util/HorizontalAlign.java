@@ -21,6 +21,12 @@ public enum HorizontalAlign implements StringRepresentable {
     return M.inverse().get(name);
   }
 
+  @Contract(value = "_, !null -> !null", pure = true)
+  public static @Nullable HorizontalAlign byName(String name, @Nullable HorizontalAlign defaultValue) {
+    final HorizontalAlign value = byName(name);
+    return value == null ? defaultValue : value;
+  }
+
   @Override
   public String getSerializedName() {
     return M.get(this);

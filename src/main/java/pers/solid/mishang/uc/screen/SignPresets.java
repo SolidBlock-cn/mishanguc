@@ -55,39 +55,39 @@ public final class SignPresets {
   public static final SuggestionProvider<FabricClientCommandSource> SUGGEST_KEYS_AND_BUILTIN = (commandContext, suggestionsBuilder) -> SharedSuggestionProvider.suggest(Stream.concat(REGISTRY.keySet().stream(), BUILTIN.keySet().stream()).distinct().map(StringTag::quoteAndEscape), suggestionsBuilder);
 
   // region text entries
-  private static final TextContext DEFAULT_TEXT = new TextContext();
-  private static final TextContext HALF_SIZE_TEXT = Util.make(new TextContext(), textContext -> {
-    textContext.size /= 2;
-  });
+  private static final TextContext DEFAULT_TEXT = Util.make(new TextContext(), textContext -> textContext.size = 6);
+  private static final TextContext HALF_SIZE_TEXT = Util.make(new TextContext(), textContext -> textContext.size = 3);
   private static final TextContext ARROW_LEFT = Util.make(new TextContext(), textContext -> {
-    textContext.size += 2;
+    textContext.size = 8;
     textContext.extra = new PatternSpecialDrawable(textContext, RectanglePatterns.ARROW_LEFT);
     textContext.offsetX = -4;
     textContext.absolute = true;
   });
   private static final TextContext DEFAULT_TEXT_LEFT = Util.make(new TextContext(), textContext -> {
+    textContext.size = 6;
     textContext.offsetX = 8;
     textContext.horizontalAlign = HorizontalAlign.LEFT;
   });
   private static final TextContext HALF_SIZE_TEXT_LEFT = Util.make(new TextContext(), textContext -> {
     textContext.offsetX = 8;
     textContext.horizontalAlign = HorizontalAlign.LEFT;
-    textContext.size /= 2;
+    textContext.size = 3;
   });
   private static final TextContext ARROW_RIGHT = Util.make(new TextContext(), textContext -> {
-    textContext.size += 2;
+    textContext.size = 8;
     textContext.extra = new PatternSpecialDrawable(textContext, RectanglePatterns.ARROW_RIGHT);
     textContext.offsetX = 4;
     textContext.absolute = true;
   });
   private static final TextContext DEFAULT_TEXT_RIGHT = Util.make(new TextContext(), textContext -> {
+    textContext.size = 6;
     textContext.offsetX = -8;
     textContext.horizontalAlign = HorizontalAlign.RIGHT;
   });
   private static final TextContext HALF_SIZE_TEXT_RIGHT = Util.make(new TextContext(), textContext -> {
     textContext.offsetX = -8;
     textContext.horizontalAlign = HorizontalAlign.RIGHT;
-    textContext.size /= 2;
+    textContext.size = 3;
   });
   //endregion text entries
 
