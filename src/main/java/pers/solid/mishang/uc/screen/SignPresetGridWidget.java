@@ -52,14 +52,13 @@ public class SignPresetGridWidget extends ElementListWidget<SignPresetGridWidget
     return new ButtonWidget.Builder(signPreset.name(), button -> {
       for (TextContext textContext : signPreset.textContexts()) {
         final TextContext newTextContext = textContext.clone();
-        newTextContext.size = (screen.entity.createDefaultTextContext().size * newTextContext.size / 8);
         screen.textFieldListWidget.addTextField(-1, newTextContext, false);
       }
       final List<TextFieldListWidget.Entry> children = screen.textFieldListWidget.children();
       final int initialFocus = signPreset.initialFocus();
       if (initialFocus >= 0 && initialFocus < children.size()) {
         screen.setFocused(screen.textFieldListWidget);
-        screen.textFieldListWidget.setFocused(children.get(initialFocus), false, false);
+        screen.textFieldListWidget.setFocusedAndSelected(children.get(initialFocus), false, false);
       }
       screen.rearrange();
     }).dimensions(0, 0, 150, 20)

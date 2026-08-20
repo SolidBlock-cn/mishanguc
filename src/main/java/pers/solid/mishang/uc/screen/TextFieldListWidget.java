@@ -97,19 +97,16 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
   /**
    * 类似于 {@link #setFocused(Element)}，但是支持在调用 {@link #setSelected(Entry, boolean, boolean)} 时指定参数。
    */
-  public void setFocused(@Nullable Entry focused, boolean multiSel, boolean contSel) {
+  public void setFocusedAndSelected(@Nullable Entry focused, boolean multiSel, boolean contSel) {
     Entry entry = this.getFocused();
     if (entry != focused && entry instanceof ParentElement parentElement) {
       parentElement.setFocused(null);
     }
 
-    ((ContainerWidgetAccessor) this).setFocusedElement(focused);
-    final List<Entry> children = children();
-    int i = children.indexOf(focused);
-    if (i >= 0) {
-      Entry entry2 = children.get(i);
-      this.setSelected(entry2, multiSel, contSel);
-      this.scrollTo(entry2); // 无论如何均调用此 ensureVisible
+    ((ContainerWidgetAccessor) this).setFocusedRaw(focused);
+    this.setSelected(focused, multiSel, contSel);
+    if (focused != null) {
+      this.scrollTo(focused);
     }
   }
 
@@ -196,7 +193,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
     } else if (input.isEnter()) {
       // 此时，children().isEmpty() 为 true
       final Entry newEntry = addEmptyTextField(0);
-      TextFieldListWidget.this.setFocused(newEntry, false, false);
+      TextFieldListWidget.this.setFocusedAndSelected(newEntry, false, false);
       signBlockEditScreen.setFocused(TextFieldListWidget.this);
       return true;
     }
@@ -586,7 +583,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
             TextFieldListWidget.this.setFocused(children.get(index + 1));
           } else if (!children.isEmpty()) {
             final Entry entry = addEmptyTextField(index + 1);
-            TextFieldListWidget.this.setFocused(entry, false, false);
+            TextFieldListWidget.this.setFocusedAndSelected(entry, false, false);
           }
         }
         case GLFW.GLFW_KEY_BACKSPACE -> {
@@ -596,7 +593,7 @@ public class TextFieldListWidget extends AlwaysSelectedEntryListWidget<TextField
               TextFieldListWidget.this.removeTextField(index);
               if (!children().isEmpty()) {
                 final Entry nearbyEntry = TextFieldListWidget.this.children().get(MathHelper.clamp(index - 1, 0, children().size() - 1));
-                TextFieldListWidget.this.setFocused(nearbyEntry, false, false);
+                TextFieldListWidget.this.setFocusedAndSelected(nearbyEntry, false, false);
               }
             }
           }
