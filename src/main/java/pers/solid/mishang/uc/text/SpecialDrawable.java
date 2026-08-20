@@ -85,11 +85,11 @@ public interface SpecialDrawable extends Cloneable {
   SpecialDrawableType<? extends SpecialDrawable> getType();
 
   @Contract(mutates = "param1")
-  default void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+  default void writeNbt(NbtCompound nbt, RegistryWrapper.@Nullable WrapperLookup registryLookup) {
     nbt.putString("id", getId());
   }
 
-  default NbtCompound createNbt(RegistryWrapper.WrapperLookup registryLookup) {
+  default NbtCompound createNbt(RegistryWrapper.@Nullable WrapperLookup registryLookup) {
     final NbtCompound nbt = new NbtCompound();
     writeNbt(nbt, registryLookup);
     return nbt;
@@ -100,7 +100,7 @@ public interface SpecialDrawable extends Cloneable {
    */
   @Contract("_, _ -> new")
   static @Nullable SpecialDrawable fromNbt(TextContext textContext, @NotNull NbtCompound nbt) {
-    final String id = nbt.getString("id");
+    final @Nullable String id = nbt.getString("id");
     if (id == null) {
       return null;
     }
@@ -123,7 +123,7 @@ public interface SpecialDrawable extends Cloneable {
   /**
    * 根据已有的 id 和参数返回对象，用于告示牌编辑界面中。如果在文本框中输入 {@code -rect 2 3}，则会调用 {@code fromStringArgs(textContext, "rect", "2 3")}。
    */
-  static @Nullable SpecialDrawable fromStringArgs(TextContext textContext, String id, String args) throws CommandSyntaxException {
+  static @Nullable SpecialDrawable fromStringArgs(TextContext textContext, @Nullable String id, String args) throws CommandSyntaxException {
     if (id == null) return null;
     final SpecialDrawableType<? extends SpecialDrawable> type = SpecialDrawableType.tryFromId(id);
     if (type == null) return null;
