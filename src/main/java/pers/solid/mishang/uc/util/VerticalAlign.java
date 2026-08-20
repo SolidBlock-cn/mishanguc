@@ -21,7 +21,7 @@ public enum VerticalAlign implements StringRepresentable {
   @Contract(value = "_, !null -> !null", pure = true)
   public static @Nullable VerticalAlign byName(String name, @Nullable VerticalAlign defaultValue) {
     final VerticalAlign value = byName(name);
-    return value == null ? defaultValue : null;
+    return value == null ? defaultValue : value;
   }
 
   @Override
