@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableBiMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 public enum VerticalAlign implements StringRepresentable {
@@ -16,6 +17,12 @@ public enum VerticalAlign implements StringRepresentable {
 
   public static @Nullable VerticalAlign byName(String name) {
     return M.inverse().get(name);
+  }
+
+  @Contract(value = "_, !null -> !null", pure = true)
+  public static @Nullable VerticalAlign byName(String name, @Nullable VerticalAlign defaultValue) {
+    final VerticalAlign value = byName(name);
+    return value == null ? defaultValue : null;
   }
 
   @Override

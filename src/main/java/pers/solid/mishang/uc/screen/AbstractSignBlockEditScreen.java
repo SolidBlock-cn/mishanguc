@@ -55,7 +55,7 @@ import static pers.solid.mishang.uc.screen.MishangScreenUtil.hasShiftDown;
  * 放置后如需打开此屏幕，使用
  *
  * <pre>{@code
- * this.client.setScreen(new TextPadEditScreen(entity))
+ * this.client.setScreen(new AbstractSignBlockEditScreen(entity))
  * }</pre>
  *
  * @param <T> 方块实体的类型。
@@ -126,14 +126,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     addTextButton = new Button.Builder(Component.translatable("message.mishanguc.add_text"), button1 -> {
       if (textFieldListWidget.selectedEntries.isEmpty()) {
         final TextFieldListWidget.Entry newEntry = textFieldListWidget.addEmptyTextField(-1);
-        textFieldListWidget.setFocused(newEntry, false, false);
+        textFieldListWidget.setFocusedAndSelected(newEntry, false, false);
       } else {
         final List<TextFieldListWidget.Entry> selectedCopy = Lists.reverse(textFieldListWidget.children()).stream().filter(textFieldListWidget.selectedEntries::contains).toList();
         final TextFieldListWidget.Entry previouslySelected = textFieldListWidget.getSelected();
         for (TextFieldListWidget.Entry selectedEntry : selectedCopy) {
           selectedEntry.setSelected(false);
         }
-        textFieldListWidget.setFocused(null, false, false);
+        textFieldListWidget.setFocusedAndSelected(null, false, false);
         for (TextFieldListWidget.Entry entry : selectedCopy) {
           final int i = textFieldListWidget.children().indexOf(entry);
           if (i < 0) {
@@ -142,7 +142,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           }
           final TextFieldListWidget.Entry newEntry = textFieldListWidget.addEmptyTextField(i + 1);
           if (entry == previouslySelected) {
-            textFieldListWidget.setFocused(newEntry, true, false);
+            textFieldListWidget.setFocusedAndSelected(newEntry, true, false);
           } else {
             newEntry.setSelected(true);
           }
@@ -169,7 +169,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           if (!textFieldListWidget.children().isEmpty()) {
             final TextFieldListWidget.Entry nearbyEntry = textFieldListWidget.children().get(Mth.clamp(index - 1, 0, children().size() - 1));
             if (entry == previouslySelected) {
-              textFieldListWidget.setFocused(nearbyEntry, true, false);
+              textFieldListWidget.setFocusedAndSelected(nearbyEntry, true, false);
             }
             nearbyEntry.setSelected(true);
           }
@@ -206,7 +206,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
    */
   public final Button placeHolder = new Button.Builder(Component.translatable("message.mishanguc.add_first_text"), button -> {
     final TextFieldListWidget.Entry newEntry = textFieldListWidget.addEmptyTextField(0);
-    textFieldListWidget.setFocused(newEntry, false, false);
+    textFieldListWidget.setFocusedAndSelected(newEntry, false, false);
     setFocused(textFieldListWidget);
   }).bounds(0, 35, 200, 20).build();
 
@@ -1122,7 +1122,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
     setFocused(previousFocused);
     textFieldListWidget.setScrollAmount(scrollAmountBeforeClear);
     textFieldListWidget.setSelected(previousTextFieldsSelected, false, false);
-    textFieldListWidget.setFocused(previousTextFieldsFocused, false, false);
+    textFieldListWidget.setFocusedAndSelected(previousTextFieldsFocused, false, false);
     textFieldListWidget.selectedEntries.clear();
     textFieldListWidget.selectedEntries.addAll(selectedEntriesCopy);
     textFieldListWidget.cuttingHeight = previousCuttingHeight;
@@ -1214,7 +1214,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       }
     } else if (getFocused() == null && (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER)) {
       final TextFieldListWidget.Entry newEntry = textFieldListWidget.addEmptyTextField(-1);
-      textFieldListWidget.setFocused(newEntry, false, false);
+      textFieldListWidget.setFocusedAndSelected(newEntry, false, false);
       setFocused(textFieldListWidget);
       return true;
     } else if (textFieldListWidget.isSimplified() && getFocused() == hideButton) {
