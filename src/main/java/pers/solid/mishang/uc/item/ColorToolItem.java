@@ -131,7 +131,7 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
       if (coloredBlock != null && (mixtureType != ColorMixtureType.RANDOM || !world.isClient())) {
         prevColorRgb = blockState.getMapColor(world, blockPos).color;
         final BlockState coloredState = coloredBlock.getStateWithProperties(blockState);
-        world.setBlockState(blockPos, coloredState);
+        world.setBlockState(blockPos, coloredState, Block.NOTIFY_NEIGHBORS);
         final BlockEntity oldBlockEntity = blockEntity;
         blockEntity = world.getBlockEntity(blockPos);
         if (oldBlockEntity != null && blockEntity != null) {
