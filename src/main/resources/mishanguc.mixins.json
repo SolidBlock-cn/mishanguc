@@ -17,8 +17,7 @@
     "NetherPortalBlockMixin",
     "PaneBlockMixin",
     "PlayerInventoryMixin",
-    "PoiTypesAccessor",
-    "PortalForcerMixin",
+    "PointOfInterestTypesMixin",
     "RecipeJsonBuilderMixins",
     "WallBlockMixin",
     "WorldChunkMixin"
