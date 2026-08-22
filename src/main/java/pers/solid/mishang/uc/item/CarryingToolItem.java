@@ -199,7 +199,7 @@ public class CarryingToolItem extends BlockToolItem
   @Override
   public ActionResult useOnBlock(ItemStack stack, PlayerEntity player, World world, BlockHitResult blockHitResult, Hand hand, boolean fluidIncluded) {
     if (!hasAccess(player, world, true)) {
-      return ActionResult.PASS;
+      return ActionResult.CONSUME;
     }
     if (hasHoldingBlockState(stack)) {
       final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockHitResult.getBlockPos(), player, stack, blockHitResult, fluidIncluded);
@@ -269,8 +269,9 @@ public class CarryingToolItem extends BlockToolItem
 
   @Override
   public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
-    if (!hasAccess(player, world, true))
-      return ActionResult.PASS;
+    if (!hasAccess(player, world, true)) {
+      return ActionResult.FAIL;
+    }
     final Block alreadyHolding = getHoldingBlock(stack);
     if (alreadyHolding != null && !player.isCreative()) {
       if (!world.isClient) {
@@ -322,7 +323,7 @@ public class CarryingToolItem extends BlockToolItem
   public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
     final TypedActionResult<ItemStack> use = super.use(world, user, hand);
     if (use.getResult().isAccepted() || !hasAccess(user, world, true)) {
-      return use;
+      return TypedActionResult.fail(use.getValue());
     }
     final ItemStack stack = user.getStackInHand(hand);
     final BlockState holdingBlockState = getHoldingBlockState(stack, world);

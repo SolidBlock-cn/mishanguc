@@ -69,7 +69,7 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem {
         player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.no_data").formatted(Formatting.RED), true);
         return ActionResult.FAIL;
       }
-      return ActionResult.PASS;
+      return ActionResult.CONSUME;
     }
     if (!(blockEntity instanceof ColoredBlockEntity)) {
       final BlockState blockState = world.getBlockState(blockPos);
@@ -87,7 +87,7 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem {
 
       if (coloredBlock != null) {
         final BlockState coloredState = coloredBlock.getStateWithProperties(blockState);
-        world.setBlockState(blockPos, coloredState);
+        world.setBlockState(blockPos, coloredState, Block.NOTIFY_NEIGHBORS);
         final BlockEntity oldBlockEntity = blockEntity;
         blockEntity = world.getBlockEntity(blockPos);
         if (oldBlockEntity != null && blockEntity != null) {
@@ -104,14 +104,15 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem {
       if (!world.isClient) {
         player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.success_set", MishangUtils.describeColor(color)), true);
       }
+      blockEntity.markDirty();
       stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
       return ActionResult.success(world.isClient);
     } else {
-      if (!world.isClient) {
+      if (!world.isClient()) {
         player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.not_colored").formatted(Formatting.RED), true);
         return ActionResult.FAIL;
       }
-      return ActionResult.PASS;
+      return ActionResult.SUCCESS;
     }
   }
 
@@ -128,6 +129,6 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem {
     if (!world.isClient) {
       player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.success_copied", MishangUtils.describeColor(color)), true);
     }
-    return null;
+    return ActionResult.SUCCESS;
   }
 }

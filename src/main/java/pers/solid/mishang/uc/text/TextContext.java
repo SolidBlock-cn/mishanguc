@@ -159,18 +159,18 @@ public class TextContext implements Cloneable {
    * <p>请注意，渲染时文本的上述样式是需要考虑的，但不会直接写入 text 字段的值中，因此需要本地创建一个 {@code formattedText}。但如果每一帧都实例化一次 {@link #formattedText} 将消耗大量内存，影响性能，因此只会在样式或者文本被更改时，更新 {@code formattedText}。
    */
   @ApiStatus.AvailableSince("0.2.1")
-  private transient boolean[] cachedStyles = null;
+  private transient boolean @Nullable [] cachedStyles = null;
   /**
    * 该字段用来检测 {@link #text} 字段是否发生改变。如果发生改变了，则该字段与 {@link #text} 将会不相等，此时将会调用 {@link #reformatText()} 重新生成 {@link #formattedText}，同时将此字段更新为 {@link #text} 的值。
    */
   @ApiStatus.AvailableSince("0.2.1")
-  private transient Text cachedText = null;
+  private transient @Nullable Text cachedText = null;
   /**
    * <p>将 {@link #text} 应用 {@link #bold} 等格式后的文本对象。注意：上述格式并不会直接写入 {@link #text} 对象中。
    * <p>渲染时，会直接使用此对象，而不直接使用 {@link #text} 对象。在每帧渲染时，如果 {@link #text} 或 {@link #bold} 等字段发生改变了，则会调用 {@link #reformatText()} 重新生成此字段的值。请注意：并不是每一帧都这么做，否则将会消耗大量内存。
    */
   @ApiStatus.AvailableSince("0.2.1")
-  private transient MutableText formattedText = null;
+  private transient @Nullable MutableText formattedText = null;
 
   /**
    * 从一个 NBT 元素创建一个新的 TextContext 对象，并使用默认值。
@@ -227,14 +227,8 @@ public class TextContext implements Cloneable {
     } else {
       text = null;
     }
-    horizontalAlign = HorizontalAlign.byName(nbt.getString("horizontalAlign"));
-    if (horizontalAlign == null) {
-      horizontalAlign = HorizontalAlign.CENTER;
-    }
-    verticalAlign = VerticalAlign.byName(nbt.getString("verticalAlign"));
-    if (verticalAlign == null) {
-      verticalAlign = VerticalAlign.MIDDLE;
-    }
+    horizontalAlign = HorizontalAlign.byName(nbt.getString("horizontalAlign"), HorizontalAlign.CENTER);
+    verticalAlign = VerticalAlign.byName(nbt.getString("verticalAlign"), VerticalAlign.MIDDLE);
     if (nbt.contains("color")) {
       color = MishangUtils.readColorFromNbtElement(nbt.get("color"));
     }
@@ -301,14 +295,14 @@ public class TextContext implements Cloneable {
 
     // 处理文本在 x 和 y 方向的对齐
     float x = 0;
-    switch (horizontalAlign == null ? HorizontalAlign.CENTER : horizontalAlign) {
+    switch (horizontalAlign) {
       case LEFT -> matrixStack.translate(-width / 2, 0, 0);
       case CENTER -> matrixStack.translate(-getWidth(textRenderer, orderedText) / 4, 0, 0);
       case RIGHT -> matrixStack.translate(width / 2 - getWidth(textRenderer, orderedText) / 2, 0, 0);
       default -> throw new IllegalStateException("Unexpected value: " + horizontalAlign);
     }
     float y = 0;
-    switch (verticalAlign == null ? VerticalAlign.MIDDLE : verticalAlign) {
+    switch (verticalAlign) {
       case TOP -> matrixStack.translate(0, -height / 2, 0);
       case MIDDLE -> matrixStack.translate(0, -getHeight() / 4, 0);
       case BOTTOM -> matrixStack.translate(0, height / 2 - getHeight() / 2, 0);

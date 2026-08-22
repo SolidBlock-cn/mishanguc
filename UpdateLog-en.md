@@ -2,6 +2,55 @@
 
 Note: Not all versions in this update log are already published. Please refer to relevant pages in CurseForge and Modrinth, or the "releases" section in the GitHub.
 
+### 1.6.5
+
+- Fixed the issue that the default text size in the texture presets is 8 and 4 instead of 6 and 3.
+- Fixed the issue that the tooltips of presets are names instead of theirs IDs in the `/mishanguc:signpreset list` command.
+- Fixed the issue of incorrect focus in the sign edit screen in 26.1.2 when adding and removing text lines.
+
+### 1.6.4
+
+- Fixed the issue of wrong outline shape of handrail block of the central shape.
+- Improved the implementation of color tool.
+
+### 1.6.4-beta.1
+
+- Fixed the issue of wrong outline shape of handrail block of the central shape.
+
+### 1.6.3-beta.6
+
+- Improved the implementation of color tool.
+
+### 1.6.3-beta.5
+
+- Now the dyeing logic of color tool runs only on the server.
+- Fixed the issue of failure of launching server in versions 26.1 and above.
+
+### 1.6.3-beta.4
+
+- Fixed the issue that the mixins of this mod may not run.
+- Improved the rendering of beacon beams. Now all beacon beam colors caused by colored blocks of this mod have alpha 255. Before this, the beacon beams may not be rendered correctly with shaders on.
+- Fixed the issue that colored stone and colored nether portal are not correctly tinted in the inventory. The issue is because this mod did not correctly use item model mappings introduced in Minecraft 1.21.4.
+
+### 1.6.3-beta.3
+
+- Fixed the issue that explosion tool may use offhand items.
+
+### 1.6.3-beta.2
+
+- Fixed the issue that text copy tool may use offhand items.
+
+### 1.6.3-beta.1
+
+- Optimized operation of carrying items on both hands: when using Growth Tool, Carrying Tool, Tp Tool and Color Tool, any items on offhand (including blocks) will not be used.
+- Fixed the issue of sign edit screen containing backgrounds in versions since 26.1.
+- Now in 26.1, when holding a golden dandelion in offhand, using Growth Tool on an age-lockable living entity may set or unset its age lock (setting to baby to lock age, and setting to adult to unlock age).
+
+### 1.6.2-beta.1
+
+- Support the new version 26.1.
+- Fixed the issue that point of interest types not supporting colored nether portal blocks causing generating a new uncolored nether portal after entering and returning from a colored nether portal.
+
 ### 1.6.1
 
 - Fixed the issue of `-pattern cross-large` and `-pattern square-slant-medium` and `-pattern square-slant-small` being incorrect.
@@ -189,6 +238,17 @@ Note: Not all versions in this update log are already published. Please refer to
 
 - Fixed the severe issue that the mod is unable to run in 1.21.1.
 
+### 1.4.3.1
+
+The fix update exclusive for 1.19.4.
+
+- Adjusted the placing rule of the wall light block and corner light block. The light can be placed only when the block has a sides shape or collision at the center of the surface, avoiding placing the light on the side where the center is empty.
+- Fixed the incorrect texture of the side of some road blocks.
+- Now all standing signs and sign bars have the block tag `#wall_post_override` so that the standing signs placed on the walls make the wall posts visible.
+- Fixed the issue that when the field `textJson` of NBT of text is invalid, the translation key of the returned text component `message.mishanguc.invalid_json` does not exist. Besides, this text will be displayed in red.
+- Fixed the issue that the X-rotation of text cannot be set correctly.
+- Adjusted the name of some contents.
+
 ### 1.4.3
 
 - Fit 1.21.4.
@@ -268,6 +328,18 @@ Note: Not all versions in this update log are already published. Please refer to
 
 - Fixed the issue that tp tools may fail to teleport.
 - Fixed the issue that some tools cannot operate blocks at a far distance after modifying attributes.
+
+### 1.3.3.1-beta.1
+
+The fix update exclusive for 1.19.4.
+
+- Adjusted the placing rule of the wall light block and corner light block. The light can be placed only when the block has a sides shape or collision at the center of the surface, avoiding placing the light on the side where the center is empty.
+- Now all standing signs and sign bars have the block tag `#wall_post_override` so that the standing signs placed on the walls make the wall posts visible.
+- Fixed the issue that when the field `textJson` of NBT of text is invalid, the translation key of the returned text component `message.mishanguc.invalid_json` does not exist. Besides, this text will be displayed in red.
+- Fixed the issue that the X-rotation of text cannot be set correctly.
+- Adjusted the name of some contents.
+- Fixed the issue that the block tag `#leaves` is invalid for containing cherry which does not exist in 1.19.2.
+- Fixed the issue that the type of explosion tools in the creative mode inventory is invalid in this version.
 
 ### 1.3.3
 
