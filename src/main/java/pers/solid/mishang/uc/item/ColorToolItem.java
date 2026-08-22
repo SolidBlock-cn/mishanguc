@@ -99,11 +99,8 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem {
     final Integer color = stack.get(MishangucComponents.COLOR);
     final ColorMixtureType mixtureType = stack.getOrDefault(MishangucComponents.COLOR_MIXTURE_TYPE, ColorMixtureType.NORMAL);
     if (color == null && mixtureType.requiresTargetColor()) {
-      if (!world.isClient()) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.no_data").formatted(Formatting.RED), true);
-        return ActionResult.FAIL;
-      }
-      return ActionResult.CONSUME;
+      player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.no_data").formatted(Formatting.RED), true);
+      return ActionResult.FAIL;
     }
 
     int prevColorRgb = 0; // the initial value should not usually be used.
