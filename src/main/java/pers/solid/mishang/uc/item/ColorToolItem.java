@@ -65,11 +65,8 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem {
     BlockEntity blockEntity = world.getBlockEntity(blockPos);
     final NbtCompound nbt = stack.getNbt();
     if (nbt == null || !nbt.contains("color")) {
-      if (!world.isClient) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.no_data").formatted(Formatting.RED), true);
-        return ActionResult.FAIL;
-      }
-      return ActionResult.CONSUME;
+      player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.no_data").formatted(Formatting.RED), true);
+      return ActionResult.FAIL;
     }
     if (!(blockEntity instanceof ColoredBlockEntity)) {
       final BlockState blockState = world.getBlockState(blockPos);
