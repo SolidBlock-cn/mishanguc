@@ -22,6 +22,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
@@ -36,6 +39,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.poi.PointOfInterestType;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -643,6 +647,8 @@ public class Mishanguc implements ModInitializer {
     registerCommands();
     registerColoredBlocks();
     registerColorfulBlocks();
+
+    Registry.register(Registries.POINT_OF_INTEREST_TYPE, RegistryKey.of(RegistryKeys.POINT_OF_INTEREST_TYPE, id("nether_portal")), new PointOfInterestType(ImmutableSet.copyOf(ColoredBlocks.COLORED_NETHER_PORTAL.getStateManager().getStates()), 0, 1));
   }
 
   private static void registerColorfulBlocks() {

@@ -58,7 +58,7 @@ public class SignPresetGridWidget extends ElementListWidget<SignPresetGridWidget
       final int initialFocus = signPreset.initialFocus();
       if (initialFocus >= 0 && initialFocus < children.size()) {
         screen.setFocused(screen.textFieldListWidget);
-        screen.textFieldListWidget.setFocused(children.get(initialFocus), false, false);
+        screen.textFieldListWidget.setFocusedAndSelected(children.get(initialFocus), false, false);
       }
       screen.rearrange();
     }).dimensions(0, 0, 150, 20)
