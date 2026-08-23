@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "#": "minecraft:cinnabar",
+    "-": "mishanguc:invisible_glowing_wall_sign"
+  },
+  "pattern": [
+    "-#-",
+    "-#-",
+    "-#-"
+  ],
+  "result": {
+    "count": 6,
+    "id": "mishanguc:glowing_cinnabar_hung_sign"
+  }
+}

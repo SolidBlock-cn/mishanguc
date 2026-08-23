@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": "minecraft:cinnabar",
+    "-": "mishanguc:invisible_glowing_wall_sign",
+    "|": "minecraft:stick"
+  },
+  "pattern": [
+    "---",
+    "###",
+    " | "
+  ],
+  "result": {
+    "count": 4,
+    "id": "mishanguc:glowing_cinnabar_standing_sign"
+  }
+}
