@@ -64,13 +64,6 @@ dependencies {
 
     // Mod Menu
     implementation "com.terraformersmc:modmenu:$project.modmenu_version"
-
-    // 仅供在模组开发时测试与光影的兼容
-    runtimeOnly "maven.modrinth:sodium:mc26.1.1-0.8.9-fabric"
-    runtimeOnly "maven.modrinth:iris:1.10.9+26.1-fabric"
-    implementation("org.antlr:antlr4-runtime:4.13.1")
-    implementation("io.github.douira:glsl-transformer:3.0.0-pre3")
-    implementation("org.anarres:jcpp:1.4.14")
 }
 
 processResources {
@@ -201,7 +194,7 @@ githubRelease {
     owner = "SolidBlock-cn"
     repo = "mishanguc"
     tagName = "v$project.mod_version"
-    targetCommitish = "26.1"
+    targetCommitish = "26.2"
     releaseName = "v$project.mod_version"
     body = content
     draft = true
