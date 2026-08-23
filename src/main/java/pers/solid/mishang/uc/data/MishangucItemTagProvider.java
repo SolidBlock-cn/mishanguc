@@ -121,6 +121,9 @@ public class MishangucItemTagProvider extends FabricTagsProvider.ItemTagsProvide
     final MishangucTagBuilder<Item> colored = itemTag("colored"); // 因为涉及染色栏杆的要特殊处理，所以这里先这样。
     MishangUtils.blocks().stream().filter(Predicates.instanceOf(ColoredBlock.class)).map(Block::asItem).distinct().forEach(colored::add);
 
+    final MishangucTagBuilder<Item> slowBouncy = itemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_SLOW_BOUNCY);
+    slowBouncy.addTag(TagKey.create(Registries.ITEM, Mishanguc.id("road_blocks")));
+
     itemTag("omnipotent_repair_items").add(Items.BEDROCK);
     itemTag("road_materials").add(Items.CONCRETE.white(), Items.CONCRETE.gray(), Items.CONCRETE.lightGray(), Items.CONCRETE.black());
   }

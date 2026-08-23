@@ -223,6 +223,13 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final StandingSignBlock POLISHED_BLACKSTONE_STANDING_SIGN = register("polished_blackstone_standing_sign", Blocks.POLISHED_BLACKSTONE);
   public static final GlowingStandingSignBlock GLOWING_POLISHED_BLACKSTONE_STANDING_SIGN = registerGlowing("glowing_polished_blackstone_standing_sign", Blocks.POLISHED_BLACKSTONE);
 
+  // 硫黄和朱砂
+  public static final StandingSignBlock SULFUR_STANDING_SIGN = register("sulfur_standing_sign", Blocks.SULFUR);
+  public static final GlowingStandingSignBlock GLOWING_SULFUR_STANDING_SIGN = registerGlowing("glowing_sulfur_standing_sign", Blocks.SULFUR);
+
+  public static final StandingSignBlock CINNABAR_STANDING_SIGN = register("cinnabar_standing_sign", Blocks.CINNABAR);
+  public static final GlowingStandingSignBlock GLOWING_CINNABAR_STANDING_SIGN = registerColoredGlowing("glowing_cinnabar_standing_sign", Blocks.CINNABAR);
+
   static {
     GLOWING_NETHERRACK_STANDING_SIGN.glowTexture = Identifier.withDefaultNamespace("block/lava_still");
     GLOWING_NETHER_BRICK_STANDING_SIGN.glowTexture = Identifier.withDefaultNamespace("block/lava_still");

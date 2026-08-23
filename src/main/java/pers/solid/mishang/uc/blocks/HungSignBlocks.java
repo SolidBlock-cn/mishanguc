@@ -528,6 +528,14 @@ public final class HungSignBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBarBlock BLUE_ICE_HUNG_SIGN_BAR = registerBar("blue_ice_hung_sign_bar", Blocks.BLUE_ICE);
 
+  // 硫黄和朱砂
+  public static final HungSignBlock SULFUR_HUNG_SIGN = register("sulfur_hung_sign", Blocks.SULFUR);
+  public static final GlowingHungSignBlock GLOWING_SULFUR_HUNG_SIGN = registerGlowing("glowing_sulfur_hung_sign", Blocks.SULFUR);
+  public static final HungSignBarBlock SULFUR_HUNG_SIGN_BAR = registerBar("sulfur_hung_sign_bar", Blocks.SULFUR);
+  public static final HungSignBlock CINNABAR_HUNG_SIGN = register("cinnabar_hung_sign", Blocks.CINNABAR);
+  public static final GlowingHungSignBlock GLOWING_CINNABAR_HUNG_SIGN = registerGlowing("glowing_cinnabar_hung_sign", Blocks.CINNABAR);
+  public static final HungSignBarBlock CINNABAR_HUNG_SIGN_BAR = registerBar("cinnabar_hung_sign_bar", Blocks.CINNABAR);
+
   public static HungSignBlock register(String name, Block baseBlock, BlockBehaviour.Properties settings) {
     return MishangucBlocks.register(name, settings1 -> new HungSignBlock(baseBlock, settings1), settings);
   }

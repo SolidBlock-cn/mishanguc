@@ -295,6 +295,13 @@ public final class WallSignBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.1.7")
   public static final GlowingWallSignBlock GLOWING_BLUE_ICE_WALL_SIGN = registerGlowing("glowing_blue_ice_wall_sign", Blocks.BLUE_ICE);
 
+  // 硫黄和朱砂
+  public static final WallSignBlock SULFUR_WALL_SIGN = register("sulfur_wall_sign", Blocks.SULFUR);
+  public static final GlowingWallSignBlock GLOWING_SULFUR_WALL_SIGN = registerGlowing("glowing_sulfur_wall_sign", Blocks.SULFUR);
+
+  public static final WallSignBlock CINNABAR_WALL_SIGN = register("cinnabar_wall_sign", Blocks.CINNABAR);
+  public static final GlowingWallSignBlock GLOWING_CINNABAR_WALL_SIGN = registerGlowing("glowing_cinnabar_wall_sign", Blocks.CINNABAR);
+
   static {
     SNOW_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/snow");
     GLOWING_SNOW_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/snow");
