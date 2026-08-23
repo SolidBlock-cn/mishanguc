@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.monster.cubemob.AbstractCubeMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -82,35 +83,39 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
     final ItemStack offhandStack = player == null ? ItemStack.EMPTY : player.getOffhandItem();
     for (Entity entity : world.getEntitiesOfClass(Entity.class, AABB.ofSize(center, 9, 9, 9))) {
       switch (entity) {
-//        case AbstractCubeMob abstractCubeMob -> {
-//          final int prevSize = abstractCubeMob.getSize();
-//          if (isPositive) {
-//            abstractCubeMob.setSize(Math.clamp(prevSize, 16, prevSize * 2), false);
-//          } else {
-//            abstractCubeMob.setSize(prevSize / 2, false);
-//          }
-//          createParticle(world, entity.position(), isPositive);
-//          damage += 1;
-//        }
-        // todo 检查对岩浆怪、史莱姆、硫方怪是否适用，以及对硫方怪的冻龄。
-        case AgeableMob passiveEntity -> {
-          if (AgeableMob.canUseGoldenDandelion(offhandStack, true, 0, passiveEntity) && passiveEntity.isAgeLocked() == isPositive) {
-            AgeableMob.setAgeLocked(passiveEntity, passiveEntity::isAgeLocked, player, offhandStack, mob -> {
-              if (!(mob instanceof AgeableMob ageableMob)) return;
-              ((AgeableMobAccessor) ageableMob).callSetAgeLockedData();
+        case AgeableMob ageableMob -> {
+          boolean shouldDamage = false;
+          if (ageableMob instanceof AbstractCubeMob abstractCubeMob) {
+            final int prevSize = abstractCubeMob.getSize();
+            if (isPositive) {
+              abstractCubeMob.setSize(Math.clamp(prevSize + 1, 1, 8), false);
+            } else {
+              abstractCubeMob.setSize(Math.max(0, prevSize - 1), false);
+            }
+            createParticle(world, entity.position(), isPositive);
+            shouldDamage = true;
+          }
+          if (AgeableMob.canUseGoldenDandelion(offhandStack, true, 0, ageableMob) && ageableMob.isAgeLocked() == isPositive) {
+            AgeableMob.setAgeLocked(ageableMob, ageableMob::isAgeLocked, player, offhandStack, mob -> {
+              if (!(mob instanceof AgeableMob ageableMob0)) return;
+              ((AgeableMobAccessor) ageableMob0).callSetAgeLockedData();
             });
 
-            final boolean isAgeLocked = passiveEntity.isAgeLocked();
+            final boolean isAgeLocked = ageableMob.isAgeLocked();
             float yParticleOffset = isAgeLocked ? 0.2F : 0.0F;
-            Vec3 spawnPosition = new Vec3(passiveEntity.getRandomX(1.0F), passiveEntity.getRandomY(0.2) + (double) passiveEntity.getBbHeight() + (double) yParticleOffset, passiveEntity.getRandomZ(1.0F));
+            Vec3 spawnPosition = new Vec3(ageableMob.getRandomX(1.0F), ageableMob.getRandomY(0.2) + (double) ageableMob.getBbHeight() + (double) yParticleOffset, ageableMob.getRandomZ(1.0F));
             if (world instanceof ServerLevel serverLevel) {
               serverLevel.sendParticles(isAgeLocked ? ParticleTypes.PAUSE_MOB_GROWTH : ParticleTypes.RESET_MOB_GROWTH, spawnPosition.x, spawnPosition.y, spawnPosition.z, 16, 1, 1, 1, 0);
             }
           } else {
             createParticle(world, entity.position(), isPositive);
           }
-          if (passiveEntity.isBaby() == isPositive) {
-            passiveEntity.setAge(isPositive ? 0 : AgeableMob.BABY_START_AGE);
+          if (ageableMob.isBaby() == isPositive) {
+            ageableMob.setAge(isPositive ? 0 : AgeableMob.BABY_START_AGE);
+            shouldDamage = true;
+          }
+
+          if (shouldDamage) {
             damage += 1;
           }
         }
