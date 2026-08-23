@@ -4,6 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.SlimeEntity;
@@ -52,7 +53,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
   @Override
   public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
     final TypedActionResult<ItemStack> use = super.use(world, user, hand);
-    if (world.isClient) return TypedActionResult.success(use.getValue());
+    if (world.isClient) return TypedActionResult.pass(use.getValue());
     final HitResult raycast = user.raycast(64, 0, true);
     if (raycast.getType() == HitResult.Type.MISS) {
       return TypedActionResult.fail(use.getValue());
@@ -60,7 +61,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
     final Vec3d center = raycast.getPos();
     final int damage = apply(world, center, !user.isSneaking());
     user.getStackInHand(hand).damage(damage, user, playerEntity -> playerEntity.sendToolBreakStatus(hand));
-    return TypedActionResult.success(use.getValue());
+    return damage > 0 ? TypedActionResult.success(use.getValue()) : TypedActionResult.fail(use.getValue());
   }
 
   @Override
@@ -85,20 +86,26 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
         }
       }
     }
-    for (Entity entity : world.getNonSpectatingEntities(Entity.class, Box.of(center, 9, 9, 9))) {
-      if (entity instanceof PassiveEntity passiveEntity && passiveEntity.getBreedingAge() < 0) {
-        passiveEntity.setBreedingAge(isPositive ? 0 : PassiveEntity.BABY_AGE);
-        createParticle(world, entity.getPos(), isPositive);
-        damage += 1;
-      } else if (entity instanceof SlimeEntity slimeEntity) {
+    final List<Entity> entities = world.getNonSpectatingEntities(Entity.class, Box.of(center, 9, 9, 9));
+    for (Entity entity : entities) {
+      if (entity instanceof SlimeEntity slimeEntity) {
         final int prevSize = slimeEntity.getSize();
+        final int newSize;
         if (isPositive) {
-          slimeEntity.setSize(Math.min(prevSize * 2, Math.max(prevSize, 16)), false);
+          newSize = Math.min(prevSize + 1, 8);
         } else {
-          slimeEntity.setSize(prevSize / 2, false);
+          newSize = Math.max(1, prevSize - 1);
         }
-        createParticle(world, entity.getPos(), isPositive);
-        damage += 1;
+        if (prevSize != newSize) {
+          slimeEntity.setSize(newSize, true);
+          createParticle(world, entity.getPos(), isPositive);
+        }
+      } else if (entity instanceof PassiveEntity passiveEntity) {
+        if (passiveEntity.isBaby() == isPositive) {
+          passiveEntity.setBreedingAge(isPositive ? 0 : PassiveEntity.BABY_AGE);
+          createParticle(world, entity.getPos(), isPositive);
+          damage += 1;
+        }
       } else if (entity instanceof MobEntity mobEntity) {
         if (mobEntity.isBaby() == isPositive) {
           mobEntity.setBaby(!isPositive);
@@ -119,13 +126,10 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
 
   @Override
   public @NotNull ActionResult useEntityCallback(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
-    final ActionResult actionResult = InteractsWithEntity.super.useEntityCallback(player, world, hand, entity, hitResult);
-    if (actionResult == ActionResult.PASS && !world.isClient) {
-      final int damage = apply(world, hitResult == null ? entity.getPos() : hitResult.getPos(), !player.isSneaking());
-      player.getStackInHand(hand).damage(damage, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
-      return ActionResult.SUCCESS;
-    }
-    return actionResult;
+    if (player instanceof ClientPlayerEntity) return ActionResult.CONSUME;
+    final int damage = apply(world, hitResult == null ? entity.getPos() : hitResult.getPos(), !player.isSneaking());
+    player.getStackInHand(hand).damage(damage, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
+    return damage > 0 ? ActionResult.SUCCESS : ActionResult.FAIL;
   }
 
   @Override
