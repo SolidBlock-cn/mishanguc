@@ -430,7 +430,7 @@ public class CarryingToolItem extends BlockToolItem
       poseStack.popPose();
     }
 
-    if (state.redShape != null && state.orangePos != null) {
+    if (state.orangeShape != null && state.orangePos != null) {
       poseStack.pushPose();
       poseStack.translate(state.orangePos.getX() - cameraX, state.orangePos.getY() - cameraY, state.orangePos.getZ() - cameraZ);
       context.submitNodeCollector().submitShapeOutline(poseStack, state.orangeShape, RenderTypes.lines(), OUTLINE_COLOR_ORANGE, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), outlineRenderState.isTranslucent());
