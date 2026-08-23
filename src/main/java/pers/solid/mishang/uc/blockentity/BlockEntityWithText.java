@@ -123,7 +123,7 @@ public abstract class BlockEntityWithText extends BlockEntity {
           entity.setEditor(null);
           final @Unmodifiable ImmutableList<TextContext> textContexts = nbt != null
               ? nbt.getList("texts").stream().flatMap(ListTag::stream)
-                .map(e -> TextContext.fromNbt(e, entity.createDefaultTextContext(), context.player().registryAccess()))
+              .map(e -> TextContext.fromNbt(e, entity.createDefaultTextContext(), context.player().registryAccess()))
               .collect(ImmutableList.toImmutableList())
               : null;
           if (editorAllowed != player) {

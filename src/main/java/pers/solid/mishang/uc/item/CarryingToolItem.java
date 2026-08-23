@@ -314,8 +314,8 @@ public class CarryingToolItem extends BlockToolItem
     final ItemStack stack = player.getItemInHand(hand);
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     if (entity instanceof Player) {
-        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_player").withStyle(ChatFormatting.RED), false);
-        return InteractionResult.FAIL;
+      player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_player").withStyle(ChatFormatting.RED), false);
+      return InteractionResult.FAIL;
     } else if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity && !player.isCreative()) {
       player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", holdingEntity.name()).withStyle(ChatFormatting.RED), true);
       return InteractionResult.FAIL;

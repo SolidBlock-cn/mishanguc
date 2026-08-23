@@ -1,11 +1,12 @@
 package pers.solid.mishang.uc.util;
 
 import com.google.common.collect.ImmutableList;
-import java.util.List;
-import java.util.function.Predicate;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.Rotation;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @see Direction.Axis

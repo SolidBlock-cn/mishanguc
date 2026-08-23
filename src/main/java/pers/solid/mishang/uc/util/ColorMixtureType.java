@@ -2,15 +2,15 @@ package pers.solid.mishang.uc.util;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
-import org.jetbrains.annotations.Contract;
-
-import java.awt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.Contract;
+
+import java.awt.*;
 
 /**
  * 颜色工具的混合类型，仅用于颜色工具。可以设置方块的颜色，或者设置随机颜色，也可以修改颜色的特定部分。

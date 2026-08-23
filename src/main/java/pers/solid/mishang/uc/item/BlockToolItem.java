@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.item;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
@@ -32,7 +33,7 @@ import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.render.RendersBlockOutline;
 import pers.solid.mishang.uc.render.state.BlockToolState;
 import pers.solid.mishang.uc.render.state.MishangRenderState;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+
 import java.util.Objects;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBlockOutline.class)

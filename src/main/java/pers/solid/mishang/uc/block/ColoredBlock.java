@@ -3,14 +3,6 @@ package pers.solid.mishang.uc.block;
 import com.mojang.datafixers.util.Function4;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import pers.solid.mishang.uc.MishangUtils;
-import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
-import pers.solid.mishang.uc.components.MishangucComponents;
-import pers.solid.mishang.uc.util.TextBridge;
-import pers.solid.mishang.uc.util.WithMishangTooltip;
-
-import java.awt.*;
-import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -28,6 +20,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import pers.solid.mishang.uc.MishangUtils;
+import pers.solid.mishang.uc.blockentity.ColoredBlockEntity;
+import pers.solid.mishang.uc.components.MishangucComponents;
+import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
+
+import java.awt.*;
+import java.util.List;
 
 /**
  * <p>所有带有颜色的方块应有的接口。其对应的方块实体应该实现 {@link pers.solid.mishang.uc.blockentity.ColoredBlockEntity}。

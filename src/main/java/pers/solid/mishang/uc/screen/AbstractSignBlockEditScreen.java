@@ -103,14 +103,14 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public final Button addTextButton = new Button.Builder(TextBridge.translatable("message.mishanguc.add_text"), button1 -> {
     if (textFieldListWidget.selectedEntries.isEmpty()) {
       final TextFieldListWidget.Entry newEntry = textFieldListWidget.addEmptyTextField(-1);
-        textFieldListWidget.setFocusedAndSelected(newEntry, false, false);
+      textFieldListWidget.setFocusedAndSelected(newEntry, false, false);
     } else {
       final List<TextFieldListWidget.Entry> selectedCopy = Lists.reverse(textFieldListWidget.children()).stream().filter(textFieldListWidget.selectedEntries::contains).toList();
       final TextFieldListWidget.Entry previouslySelected = textFieldListWidget.getSelected();
       for (TextFieldListWidget.Entry selectedEntry : selectedCopy) {
         selectedEntry.setSelected(false);
       }
-        textFieldListWidget.setFocusedAndSelected(null, false, false);
+      textFieldListWidget.setFocusedAndSelected(null, false, false);
       for (TextFieldListWidget.Entry entry : selectedCopy) {
         final int i = textFieldListWidget.children().indexOf(entry);
         if (i < 0) {
@@ -119,7 +119,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         }
         final TextFieldListWidget.Entry newEntry = textFieldListWidget.addEmptyTextField(i + 1);
         if (entry == previouslySelected) {
-            textFieldListWidget.setFocusedAndSelected(newEntry, true, false);
+          textFieldListWidget.setFocusedAndSelected(newEntry, true, false);
         } else {
           newEntry.setSelected(true);
         }
@@ -150,7 +150,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         if (!textFieldListWidget.children().isEmpty()) {
           final TextFieldListWidget.Entry nearbyEntry = textFieldListWidget.children().get(Mth.clamp(index - 1, 0, children().size() - 1));
           if (entry == previouslySelected) {
-              textFieldListWidget.setFocusedAndSelected(nearbyEntry, true, false);
+            textFieldListWidget.setFocusedAndSelected(nearbyEntry, true, false);
           }
           nearbyEntry.setSelected(true);
         }

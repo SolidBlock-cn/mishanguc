@@ -1,8 +1,9 @@
 package pers.solid.mishang.uc.data;
 
-import java.util.Arrays;
 import net.minecraft.data.tags.TagAppender;
 import net.minecraft.tags.TagKey;
+
+import java.util.Arrays;
 
 /**
  * @since 1.21.6 随原版进行了变更，由直接继承改变了实现 {@link TagAppender}，其底层实现方式为对 {@link #parent} 字段进行操作。

@@ -1,5 +1,13 @@
 package pers.solid.mishang.uc.item;
 
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.Mishanguc;
@@ -11,14 +19,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Rarity;
 
 public final class MishangucItems {
 

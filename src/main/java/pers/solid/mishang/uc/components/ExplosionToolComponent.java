@@ -2,9 +2,6 @@ package pers.solid.mishang.uc.components;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import pers.solid.mishang.uc.util.TextBridge;
-
-import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -16,6 +13,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.Explosion;
+import pers.solid.mishang.uc.util.TextBridge;
+
+import java.util.function.Consumer;
 
 public record ExplosionToolComponent(float power, boolean createFire, Explosion.BlockInteraction destructionType) implements TooltipProvider {
   public static final ExplosionToolComponent DEFAULT = new ExplosionToolComponent(4, false, Explosion.BlockInteraction.DESTROY);

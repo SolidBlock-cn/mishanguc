@@ -3,10 +3,6 @@ package pers.solid.mishang.uc.components;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import pers.solid.mishang.uc.util.TextBridge;
-
-import java.util.Optional;
-import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -22,6 +18,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.block.state.BlockState;
+import pers.solid.mishang.uc.util.TextBridge;
+
+import java.util.Optional;
+import java.util.function.Consumer;
 
 public sealed interface CarryingToolData extends TooltipProvider {
   short type();

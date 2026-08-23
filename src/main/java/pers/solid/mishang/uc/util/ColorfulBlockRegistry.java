@@ -1,10 +1,10 @@
 package pers.solid.mishang.uc.util;
 
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.Block;
 import org.apache.commons.lang3.Validate;
 
 import java.util.*;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.block.Block;
 
 public final class ColorfulBlockRegistry {
   private static final Map<Block, Map<DyeColor, ? extends Block>> WHITE_TO_COLORFUL_INTERNAL = new HashMap<>();

@@ -1,12 +1,5 @@
 package pers.solid.mishang.uc.item;
 
-import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.block.Road;
-import pers.solid.mishang.uc.util.RoadConnectionState;
-import pers.solid.mishang.uc.util.TextBridge;
-import pers.solid.mishang.uc.util.WithMishangTooltip;
-
-import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,6 +13,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.block.Road;
+import pers.solid.mishang.uc.util.RoadConnectionState;
+import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
+
+import java.util.List;
 
 public class RoadConnectionStateDebuggingToolItem extends BlockToolItem implements MishangucItem, WithMishangTooltip {
 
