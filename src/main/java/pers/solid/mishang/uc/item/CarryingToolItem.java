@@ -420,7 +420,7 @@ public class CarryingToolItem extends BlockToolItem
       ShapeRenderer.renderShape(matrices, vertexConsumer, state.redShape, state.redPos.getX() - cameraPos.x, state.redPos.getY() - cameraPos.y, state.redPos.getZ() - cameraPos.z, OUTLINE_COLOR_AKA, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
 
-    if (state.redShape != null && state.orangePos != null) {
+    if (state.orangeShape != null && state.orangePos != null) {
       ShapeRenderer.renderShape(matrices, vertexConsumer, state.orangeShape, state.orangePos.getX() - cameraPos.x, state.orangePos.getY() - cameraPos.y, state.orangePos.getZ() - cameraPos.z, OUTLINE_COLOR_ORANGE, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
 
