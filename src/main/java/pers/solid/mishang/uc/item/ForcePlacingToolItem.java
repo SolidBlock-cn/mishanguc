@@ -7,6 +7,7 @@ import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
@@ -20,6 +21,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.TickRateManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragonPart;
 import net.minecraft.world.entity.player.Player;
@@ -135,7 +137,12 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     final ForcePlacingToolState state = new ForcePlacingToolState();
 
     if (result instanceof EntityHitResult entityHitResult) {
-      state.hitEntityBoundingBox = entityHitResult.getEntity().getBoundingBox();
+      final Entity entity = entityHitResult.getEntity();
+      final DeltaTracker deltaTracker = Minecraft.getInstance().getDeltaTracker();
+      final TickRateManager tickRateManager = context.level().tickRateManager();
+      float entityPartialTicks = deltaTracker.getGameTimeDeltaPartialTick(!tickRateManager.isEntityFrozen(entity));
+      state.hitEntityPos = entity.getPosition(entityPartialTicks);
+      state.hitEntityBoundingBox = entity.getBoundingBox().move(state.hitEntityPos.subtract(entity.position()));
     }
 
     final BlockHitResult blockHitResult;
@@ -297,10 +304,10 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     }
 
     final Vec3 cameraPos = context.levelState().cameraRenderState.pos; // 检查 cameraPos 是否需要
-    if (state.hitEntityBoundingBox != null) {
+    if (state.hitEntityPos != null && state.hitEntityBoundingBox != null) {
       poseStack.pushPose();
-      poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-      context.submitNodeCollector().submitShapeOutline(poseStack, Shapes.create(state.hitEntityBoundingBox), RenderTypes.lines(), ARGB.colorFromFloat(0.8f, 1.0f, 0f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain
+      poseStack.translate(state.hitEntityPos.x - cameraPos.x, state.hitEntityPos.y - cameraPos.y, state.hitEntityPos.z - cameraPos.z);
+      context.submitNodeCollector().submitShapeOutline(poseStack, Shapes.create(state.hitEntityBoundingBox.move(-state.hitEntityPos.x, -state.hitEntityPos.y, -state.hitEntityPos.z)), RenderTypes.lines(), ARGB.colorFromFloat(0.8f, 1.0f, 0f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain
       poseStack.popPose();
     }
   }

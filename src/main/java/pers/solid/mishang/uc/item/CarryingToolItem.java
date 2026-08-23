@@ -7,6 +7,7 @@ import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -24,6 +25,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.TickRateManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
@@ -69,8 +71,8 @@ public class CarryingToolItem extends BlockToolItem
     implements MishangucItem, InteractsWithEntity, RendersBeforeOutline, WithMishangTooltip {
 
   private static final int OUTLINE_COLOR_CYAN = ARGB.colorFromFloat(0.8f, 0, 1, 1);
-  private static final int OUTLINE_COLOR_AO = ARGB.colorFromFloat(0.5f, 0, 0.5f, 1);
-  private static final int OUTLINE_COLOR_AKA = ARGB.colorFromFloat(0.8f, 1, 0, 0);
+  private static final int OUTLINE_COLOR_BLUE = ARGB.colorFromFloat(0.5f, 0, 0.5f, 1);
+  private static final int OUTLINE_COLOR_RED = ARGB.colorFromFloat(0.8f, 1, 0, 0);
   private static final int OUTLINE_COLOR_ORANGE = ARGB.colorFromFloat(0.5f, 1, 0.5f, 0);
 
   public CarryingToolItem(Properties settings, @Nullable Boolean includesFluid) {
@@ -381,6 +383,8 @@ public class CarryingToolItem extends BlockToolItem
     if (hand != InteractionHand.MAIN_HAND || player.isSpectator()) { // hasAccess 已经在前面检查过
       return state;
     }
+
+
     if (result != null && result.getType() == HitResult.Type.BLOCK && carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
       state.cyanEntityWidth = holdingEntity.width();
       state.cyanEntityHeight = holdingEntity.height();
@@ -389,9 +393,14 @@ public class CarryingToolItem extends BlockToolItem
     if (!player.isCreative() && (carryingToolData != null)) {
       return state;
     }
+
+    final DeltaTracker deltaTracker = Minecraft.getInstance().getDeltaTracker();
+    final TickRateManager tickRateManager = context.level().tickRateManager();
     if (result instanceof EntityHitResult entityHitResult) {
       final Entity entity = entityHitResult.getEntity();
-      state.redEntityShape = Shapes.create(entity.getBoundingBox());
+      state.redEntityPos = entity.position();
+      float entityPartialTicks = deltaTracker.getGameTimeDeltaPartialTick(!tickRateManager.isEntityFrozen(entity));
+      state.redEntityBoundingBox = entity.getBoundingBox().move(entity.getPosition(entityPartialTicks).subtract(entity.position()));
     }
 
     return state;
@@ -419,14 +428,14 @@ public class CarryingToolItem extends BlockToolItem
     if (state.blueShape != null && state.bluePos != null) {
       poseStack.pushPose();
       poseStack.translate(state.bluePos.getX() - cameraX, state.bluePos.getY() - cameraY, state.bluePos.getZ() - cameraZ);
-      context.submitNodeCollector().submitShapeOutline(poseStack, state.blueShape, RenderTypes.lines(), OUTLINE_COLOR_AO, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), outlineRenderState.isTranslucent());
+      context.submitNodeCollector().submitShapeOutline(poseStack, state.blueShape, RenderTypes.lines(), OUTLINE_COLOR_BLUE, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), outlineRenderState.isTranslucent());
       poseStack.popPose();
     }
 
     if (state.redShape != null && state.redPos != null) {
       poseStack.pushPose();
       poseStack.translate(state.redPos.getX() - cameraX, state.redPos.getY() - cameraY, state.redPos.getZ() - cameraZ);
-      context.submitNodeCollector().submitShapeOutline(poseStack, state.redShape, RenderTypes.lines(), OUTLINE_COLOR_AKA, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), outlineRenderState.isTranslucent());
+      context.submitNodeCollector().submitShapeOutline(poseStack, state.redShape, RenderTypes.lines(), OUTLINE_COLOR_RED, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), outlineRenderState.isTranslucent());
       poseStack.popPose();
     }
 
@@ -455,15 +464,14 @@ public class CarryingToolItem extends BlockToolItem
       final float height = state.cyanEntityHeight;
       final Vec3 pos = state.cyanEntityPos;
       poseStack.pushPose();
-      poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-      // todo 检查当坐标较大时，这个形状是否正常显示
-      context.submitNodeCollector().submitShapeOutline(poseStack, Shapes.box(pos.x - width / 2, pos.y, pos.z - width / 2, pos.x + width / 2, pos.y + height, pos.z + width / 2), RenderTypes.lines(), OUTLINE_COLOR_CYAN, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain 参数（下同）
+      poseStack.translate(pos.x - cameraPos.x, pos.y - cameraPos.y, pos.z - cameraPos.z);
+      context.submitNodeCollector().submitShapeOutline(poseStack, Shapes.box(-width / 2, 0, -width / 2, width / 2, height, width / 2), RenderTypes.lines(), OUTLINE_COLOR_CYAN, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain 参数（下同）
       poseStack.popPose();
     }
-    if (state.redEntityShape != null) {
+    if (state.redEntityBoundingBox != null) {
       poseStack.pushPose();
-      poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-      context.submitNodeCollector().submitShapeOutline(poseStack, state.redEntityShape, RenderTypes.lines(), OUTLINE_COLOR_AKA, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true);
+      poseStack.translate(state.redEntityPos.x - cameraPos.x, state.redEntityPos.y - cameraPos.y, state.redEntityPos.z - cameraPos.z);
+      context.submitNodeCollector().submitShapeOutline(poseStack, Shapes.create(state.redEntityBoundingBox.move(-state.redEntityPos.x, -state.redEntityPos.y, -state.redEntityPos.z)), RenderTypes.lines(), OUTLINE_COLOR_RED, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true);
       poseStack.popPose();
     }
   }
