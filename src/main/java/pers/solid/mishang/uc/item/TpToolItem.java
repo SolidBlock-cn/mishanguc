@@ -1,9 +1,5 @@
 package pers.solid.mishang.uc.item;
 
-import pers.solid.mishang.uc.util.TextBridge;
-import pers.solid.mishang.uc.util.WithMishangTooltip;
-
-import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -19,6 +15,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import pers.solid.mishang.uc.util.TextBridge;
+import pers.solid.mishang.uc.util.WithMishangTooltip;
+
+import java.util.List;
 
 public class TpToolItem extends Item implements MishangucItem, WithMishangTooltip {
   public TpToolItem(Properties settings) {
@@ -32,7 +32,6 @@ public class TpToolItem extends Item implements MishangucItem, WithMishangToolti
 
   @Override
   public InteractionResult use(Level world, Player user, InteractionHand hand) {
-    final InteractionResult data = super.use(world, user, hand);
     if (world.isClientSide()) return InteractionResult.CONSUME;
     final Vec3 oldPos = user.position();
     final HitResult raycast = user.pick(256, 0, user.isShiftKeyDown());

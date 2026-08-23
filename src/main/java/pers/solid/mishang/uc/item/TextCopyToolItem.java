@@ -154,8 +154,7 @@ public class TextCopyToolItem extends BlockToolItem implements MishangucItem, Wi
         stack.hurtAndBreak(1, player, hand.asEquipmentSlot());
         return InteractionResult.SUCCESS;
       } else if (blockEntity instanceof HungSignBlockEntity hungSignBlockEntity) {
-        if (world.isClientSide())
-          return InteractionResult.SUCCESS;
+        if (world.isClientSide()) return InteractionResult.SUCCESS;
         final Direction hitSide = blockHitResult.getDirection();
         final Direction.Axis axis = blockState.getValue(HungSignBlock.AXIS);
         if (!axis.test(hitSide)) {
@@ -181,8 +180,7 @@ public class TextCopyToolItem extends BlockToolItem implements MishangucItem, Wi
         stack.hurtAndBreak(1, player, hand.asEquipmentSlot());
         return InteractionResult.SUCCESS;
       } else if (blockEntity instanceof StandingSignBlockEntity standingSignBlockEntity) {
-        if (world.isClientSide())
-          return InteractionResult.SUCCESS;
+        if (world.isClientSide()) return InteractionResult.SUCCESS;
         final Boolean isFront = StandingSignBlock.getHitSide(blockState, blockHitResult);
         if (isFront != null) {
           standingSignBlockEntity.setTextsOnSide(isFront, textContexts);
