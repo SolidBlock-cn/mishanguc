@@ -105,11 +105,8 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem {
       stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
       return ActionResult.success(world.isClient);
     } else {
-      if (!world.isClient()) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.not_colored").formatted(Formatting.RED), true);
-        return ActionResult.FAIL;
-      }
-      return ActionResult.SUCCESS;
+      player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.not_colored").formatted(Formatting.RED), true);
+      return ActionResult.FAIL;
     }
   }
 
