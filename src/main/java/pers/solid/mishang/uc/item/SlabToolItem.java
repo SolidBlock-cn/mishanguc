@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.item;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.Maps;
+import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
@@ -261,8 +262,12 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
     if (state.slabShape != null) {
       final BlockPos pos = outlineRenderState.pos();
       final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
+      final PoseStack poseStack = context.poseStack();
+
+      poseStack.pushPose();
+      poseStack.translate(pos.getX() - cameraPos.x, pos.getY() - cameraPos.y, pos.getZ() - cameraPos.z);
       context.submitNodeCollector().submitShapeOutline(
-          context.poseStack(),
+          poseStack,
           state.slabShape,
           RenderTypes.lines(),
           ARGB.colorFromFloat(0.4f, 0.0F,
@@ -270,6 +275,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
               0.0F),
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
           outlineRenderState.isTranslucent());
+      poseStack.popPose();
       return false;
     }
     return true;

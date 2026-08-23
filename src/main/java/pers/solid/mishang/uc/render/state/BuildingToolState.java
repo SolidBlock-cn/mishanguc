@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.render.state;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.longs.LongObjectPair;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.client.Minecraft;
@@ -26,12 +27,15 @@ public class BuildingToolState implements MishangRenderState {
 
     final BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
     final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
+    final PoseStack poseStack = context.poseStack();
 
     for (LongObjectPair<VoxelShape> pair : state.cyanShapes) {
       mutable.set(pair.leftLong());
 
+      poseStack.pushPose();
+      poseStack.translate(mutable.getX() - cameraPos.x, mutable.getY() - cameraPos.y, mutable.getZ() - cameraPos.z);
       context.submitNodeCollector().submitShapeOutline(
-          context.poseStack(),
+          poseStack,
           pair.right(),
           RenderTypes.lines(),
           ARGB.colorFromFloat(0.8f,
@@ -40,12 +44,15 @@ public class BuildingToolState implements MishangRenderState {
               1),
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
           true);// todo 检查 afterTerrain 参数（下同）
+      poseStack.popPose();
     }
     for (LongObjectPair<VoxelShape> pair : state.blueShapes) {
       mutable.set(pair.leftLong());
 
+      poseStack.pushPose();
+      poseStack.translate(mutable.getX() - cameraPos.x, mutable.getY() - cameraPos.y, mutable.getZ() - cameraPos.z);
       context.submitNodeCollector().submitShapeOutline(
-          context.poseStack(),
+          poseStack,
           pair.right(),
           RenderTypes.lines(),
           ARGB.colorFromFloat(0.5f,
@@ -54,12 +61,15 @@ public class BuildingToolState implements MishangRenderState {
               1),
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
           true);
+      poseStack.popPose();
     }
     for (LongObjectPair<VoxelShape> pair : state.redShapes) {
       mutable.set(pair.leftLong());
 
+      poseStack.pushPose();
+      poseStack.translate(mutable.getX() - cameraPos.x, mutable.getY() - cameraPos.y, mutable.getZ() - cameraPos.z);
       context.submitNodeCollector().submitShapeOutline(
-          context.poseStack(),
+          poseStack,
           pair.right(),
           RenderTypes.lines(),
           ARGB.colorFromFloat(0.5f,
@@ -68,12 +78,15 @@ public class BuildingToolState implements MishangRenderState {
               0),
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
           true);
+      poseStack.popPose();
     }
     for (LongObjectPair<VoxelShape> pair : state.orangeShapes) {
       mutable.set(pair.leftLong());
 
+      poseStack.pushPose();
+      poseStack.translate(mutable.getX() - cameraPos.x, mutable.getY() - cameraPos.y, mutable.getZ() - cameraPos.z);
       context.submitNodeCollector().submitShapeOutline(
-          context.poseStack(),
+          poseStack,
           pair.right(),
           RenderTypes.lines(),
           ARGB.colorFromFloat(0.8f,
@@ -82,6 +95,7 @@ public class BuildingToolState implements MishangRenderState {
               0),
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
           true);
+      poseStack.popPose();
     }
 
     return state.showVanillaOutline;

@@ -403,23 +403,38 @@ public class CarryingToolItem extends BlockToolItem
     final MishangRenderState data = context.levelState().getData(MISHANG_BLOCK_OUTLINE);
     if (!(data instanceof CarryingToolState state)) return true;
 
-    final PoseStack matrices = context.poseStack();
+    final PoseStack poseStack = context.poseStack();
     final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
+    final double cameraX = cameraPos.x;
+    final double cameraY = cameraPos.y;
+    final double cameraZ = cameraPos.z;
 
     if (state.cyanShape != null && state.cyanPos != null) {
-      context.submitNodeCollector().submitShapeOutline(matrices, state.cyanShape, RenderTypes.lines(), OUTLINE_COLOR_CYAN, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), outlineRenderState.isTranslucent());
+      poseStack.pushPose();
+      poseStack.translate(state.cyanPos.getX() - cameraX, state.cyanPos.getY() - cameraY, state.cyanPos.getZ() - cameraZ);
+      context.submitNodeCollector().submitShapeOutline(poseStack, state.cyanShape, RenderTypes.lines(), OUTLINE_COLOR_CYAN, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), outlineRenderState.isTranslucent());
+      poseStack.popPose();
     }
 
     if (state.blueShape != null && state.bluePos != null) {
-      context.submitNodeCollector().submitShapeOutline(matrices, state.blueShape, RenderTypes.lines(), OUTLINE_COLOR_AO, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), outlineRenderState.isTranslucent());
+      poseStack.pushPose();
+      poseStack.translate(state.bluePos.getX() - cameraX, state.bluePos.getY() - cameraY, state.bluePos.getZ() - cameraZ);
+      context.submitNodeCollector().submitShapeOutline(poseStack, state.blueShape, RenderTypes.lines(), OUTLINE_COLOR_AO, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), outlineRenderState.isTranslucent());
+      poseStack.popPose();
     }
 
     if (state.redShape != null && state.redPos != null) {
-      context.submitNodeCollector().submitShapeOutline(matrices, state.redShape, RenderTypes.lines(), OUTLINE_COLOR_AKA, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), outlineRenderState.isTranslucent());
+      poseStack.pushPose();
+      poseStack.translate(state.redPos.getX() - cameraX, state.redPos.getY() - cameraY, state.redPos.getZ() - cameraZ);
+      context.submitNodeCollector().submitShapeOutline(poseStack, state.redShape, RenderTypes.lines(), OUTLINE_COLOR_AKA, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), outlineRenderState.isTranslucent());
+      poseStack.popPose();
     }
 
     if (state.redShape != null && state.orangePos != null) {
-      context.submitNodeCollector().submitShapeOutline(matrices, state.orangeShape, RenderTypes.lines(), OUTLINE_COLOR_ORANGE, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), outlineRenderState.isTranslucent());
+      poseStack.pushPose();
+      poseStack.translate(state.orangePos.getX() - cameraX, state.orangePos.getY() - cameraY, state.orangePos.getZ() - cameraZ);
+      context.submitNodeCollector().submitShapeOutline(poseStack, state.orangeShape, RenderTypes.lines(), OUTLINE_COLOR_ORANGE, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), outlineRenderState.isTranslucent());
+      poseStack.popPose();
     }
 
     return false;
@@ -432,17 +447,24 @@ public class CarryingToolItem extends BlockToolItem
     final MishangRenderState data = context.levelState().getData(MISHANG_BLOCK_OUTLINE);
     if (!(data instanceof CarryingToolState state)) return;
 
-    final PoseStack matrices = context.poseStack();
+    final PoseStack poseStack = context.poseStack();
     final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
 
     if (state.cyanEntityPos != null) {
       final float width = state.cyanEntityWidth;
       final float height = state.cyanEntityHeight;
       final Vec3 pos = state.cyanEntityPos;
-      context.submitNodeCollector().submitShapeOutline(matrices, Shapes.box(pos.x - width / 2, pos.y, pos.z - width / 2, pos.x + width / 2, pos.y + height, pos.z + width / 2), RenderTypes.lines(), OUTLINE_COLOR_CYAN, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain 参数（下同）
+      poseStack.pushPose();
+      poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+      // todo 检查当坐标较大时，这个形状是否正常显示
+      context.submitNodeCollector().submitShapeOutline(poseStack, Shapes.box(pos.x - width / 2, pos.y, pos.z - width / 2, pos.x + width / 2, pos.y + height, pos.z + width / 2), RenderTypes.lines(), OUTLINE_COLOR_CYAN, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain 参数（下同）
+      poseStack.popPose();
     }
     if (state.redEntityShape != null) {
-      context.submitNodeCollector().submitShapeOutline(matrices, state.redEntityShape, RenderTypes.lines(), OUTLINE_COLOR_AKA, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true);
+      poseStack.pushPose();
+      poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+      context.submitNodeCollector().submitShapeOutline(poseStack, state.redEntityShape, RenderTypes.lines(), OUTLINE_COLOR_AKA, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true);
+      poseStack.popPose();
     }
   }
 }

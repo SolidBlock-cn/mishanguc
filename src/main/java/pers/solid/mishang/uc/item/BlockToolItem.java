@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.item;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
@@ -153,22 +154,27 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
       LevelRenderContext context,
       BlockOutlineRenderState outlineRenderState) {
     final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
-    final BlockPos blockPos = outlineRenderState.pos(); // todo 这两个变量不需要了？
+    final BlockPos blockPos = outlineRenderState.pos();
+    final PoseStack poseStack = context.poseStack();
 
     if (!(context.levelState().getData(MISHANG_BLOCK_OUTLINE) instanceof final BlockToolState state)) {
       return false;
     }
+
+    poseStack.pushPose();
+    poseStack.translate(blockPos.getX() - cameraPos.x, blockPos.getY() - cameraPos.y, blockPos.getZ() - cameraPos.z);
+
     context.submitNodeCollector().submitShapeOutline(
-        context.poseStack(),
+        poseStack,
         outlineRenderState.shape(),
         RenderTypes.lines(),
         OUTLINE_COLOR_GREEN,
         Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
-        outlineRenderState.isTranslucent() // todo 检查这里的 NPE
+        outlineRenderState.isTranslucent()
     );
     if (state.lightGreenPos != null && state.lightGreenShape != null) {
       context.submitNodeCollector().submitShapeOutline(
-          context.poseStack(),
+          poseStack,
           state.lightGreenShape,
           RenderTypes.lines(),
           OUTLINE_COLOR_LIGHT_GREEN,
@@ -176,6 +182,8 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
           true
       );
     }
+
+    poseStack.popPose();
     return false;
   }
 }

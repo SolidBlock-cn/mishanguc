@@ -61,8 +61,11 @@ public abstract class BlockToolItemWithEntity extends BlockToolItem implements R
     if (state.greenEntityShape == null) {
       return;
     }
-    final PoseStack matrices = context.poseStack();
+    final PoseStack poseStack = context.poseStack();
     final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
-    context.submitNodeCollector().submitShapeOutline(matrices, state.greenEntityShape, RenderTypes.lines(), ARGB.colorFromFloat(0.8f, 0f, 1f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain 参数
+    poseStack.pushPose();
+    poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+    context.submitNodeCollector().submitShapeOutline(poseStack, state.greenEntityShape, RenderTypes.lines(), ARGB.colorFromFloat(0.8f, 0f, 1f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain 参数
+    poseStack.popPose();
   }
 }

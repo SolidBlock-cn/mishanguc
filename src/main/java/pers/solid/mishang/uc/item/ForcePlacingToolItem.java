@@ -191,14 +191,16 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       return true;
     }
 
-    final PoseStack matrices = context.poseStack();
+    final PoseStack poseStack = context.poseStack();
     final Vec3 cameraPos = worldRenderState.cameraRenderState.pos;
     double cameraX = cameraPos.x;
     double cameraY = cameraPos.y;
     double cameraZ = cameraPos.z;
     if (state.cyanShape != null && state.cyanPos != null) {
+      poseStack.pushPose();
+      poseStack.translate(state.cyanPos.getX() - cameraX, state.cyanPos.getY() - cameraY, state.cyanPos.getZ() - cameraZ);
       context.submitNodeCollector().submitShapeOutline(
-          matrices,
+          poseStack,
           state.cyanShape,
           RenderTypes.lines(),
           ARGB.colorFromFloat(0.8f, 0,
@@ -206,11 +208,14 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
               1),
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
           outlineRenderState.isTranslucent());
+      poseStack.popPose();
     }
 
     if (state.blueShape != null && state.bluePos != null) {
+      poseStack.pushPose();
+      poseStack.translate(state.bluePos.getX() - cameraX, state.bluePos.getY() - cameraY, state.bluePos.getZ() - cameraZ);
       context.submitNodeCollector().submitShapeOutline(
-          matrices,
+          poseStack,
           state.blueShape,
           RenderTypes.lines(),
           ARGB.colorFromFloat(0.5f, 0,
@@ -218,10 +223,13 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
               1),
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
           outlineRenderState.isTranslucent());
+      poseStack.popPose();
     }
     if (state.redShape != null && state.redPos != null) {
+      poseStack.pushPose();
+      poseStack.translate(state.redPos.getX() - cameraX, state.redPos.getY() - cameraY, state.redPos.getZ() - cameraZ);
       context.submitNodeCollector().submitShapeOutline(
-          matrices,
+          poseStack,
           state.redShape,
           RenderTypes.lines(),
           ARGB.colorFromFloat(0.8f, 1,
@@ -229,10 +237,13 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
               0),
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
           outlineRenderState.isTranslucent());
+      poseStack.popPose();
     }
     if (state.yellowShape != null && state.yellowPos != null) {
+      poseStack.pushPose();
+      poseStack.translate(state.yellowPos.getX() - cameraX, state.yellowPos.getY() - cameraY, state.yellowPos.getZ() - cameraZ);
       context.submitNodeCollector().submitShapeOutline(
-          matrices,
+          poseStack,
           state.yellowShape,
           RenderTypes.lines(),
           ARGB.colorFromFloat(0.5f, 1,
@@ -240,7 +251,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
               0),
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
           outlineRenderState.isTranslucent());
-
+      poseStack.popPose();
     }
     return false;
   }
@@ -283,7 +294,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   @Override
   public void renderBeforeOutline(LocalPlayer player, ItemStack stack, LevelRenderContext context) {
     // 只在使用主手持有此物品时进行渲染。
-    final PoseStack matrices = context.poseStack();
+    final PoseStack poseStack = context.poseStack();
 
     if (!(context.levelState().getData(MishangRenderStateProvider.MISHANG_BLOCK_OUTLINE) instanceof ForcePlacingToolState state)) {
       return;
@@ -291,7 +302,10 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
 
     final Vec3 cameraPos = context.levelState().cameraRenderState.pos; // 检查 cameraPos 是否需要
     if (state.hitEntityBoundingBox != null) {
-      context.submitNodeCollector().submitShapeOutline(matrices, Shapes.create(state.hitEntityBoundingBox), RenderTypes.lines(), ARGB.colorFromFloat(0.8f, 1.0f, 0f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain
+      poseStack.pushPose();
+      poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+      context.submitNodeCollector().submitShapeOutline(poseStack, Shapes.create(state.hitEntityBoundingBox), RenderTypes.lines(), ARGB.colorFromFloat(0.8f, 1.0f, 0f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain
+      poseStack.popPose();
     }
   }
 }
