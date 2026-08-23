@@ -4,13 +4,13 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import net.minecraft.network.chat.ClickEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import pers.solid.mishang.uc.util.NbtClickEvent;
 import pers.solid.mishang.uc.util.TextClickEvent;
 
 import java.util.function.Function;
-import net.minecraft.network.chat.ClickEvent;
 
 @Mixin(ClickEvent.class)
 public interface ClickEventMixin {

@@ -1,14 +1,14 @@
 package pers.solid.mishang.uc.networking;
 
-import pers.solid.mishang.uc.Mishanguc;
-
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.phys.BlockHitResult;
+import pers.solid.mishang.uc.Mishanguc;
+
+import java.util.Optional;
 
 public record EditSignPayload(BlockPos blockPos, Optional<Direction> direction, Optional<BlockHitResult> blockHitResult) implements CustomPacketPayload {
   public static final Type<EditSignPayload> ID = new CustomPacketPayload.Type<>(Mishanguc.id("edit_sign"));

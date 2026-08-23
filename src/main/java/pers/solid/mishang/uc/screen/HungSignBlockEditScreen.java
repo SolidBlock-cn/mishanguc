@@ -70,20 +70,20 @@ public class HungSignBlockEditScreen extends AbstractSignBlockEditScreen<HungSig
   public final Button copyFromBackButton
       = new Button.Builder(
       Component.translatable("message.mishanguc.copy_from_back"),
-          button -> {
-            final HungSignBlockEntity entity = this.entity;
-            if (entity.editedSide == null) {
-              return;
-            }
-            final List<TextContext> otherSide =
-                entity.texts.get(entity.editedSide.getOpposite());
-            if (otherSide == null)
-              return;
-            otherSide.forEach(
-                textContext -> {
-                  final TextContext flip = textContext.clone().flip();
-                  // 留意添加到的位置是列表末尾。
-                  textFieldListWidget.addTextField(-1, flip, false);
-                });
-          }).bounds(this.width / 2 - 80, 35, 160, 20).tooltip(Tooltip.create(Component.translatable("message.mishanguc.copy_from_back.description"))).build();
+      button -> {
+        final HungSignBlockEntity entity = this.entity;
+        if (entity.editedSide == null) {
+          return;
+        }
+        final List<TextContext> otherSide =
+            entity.texts.get(entity.editedSide.getOpposite());
+        if (otherSide == null)
+          return;
+        otherSide.forEach(
+            textContext -> {
+              final TextContext flip = textContext.clone().flip();
+              // 留意添加到的位置是列表末尾。
+              textFieldListWidget.addTextField(-1, flip, false);
+            });
+      }).bounds(this.width / 2 - 80, 35, 160, 20).tooltip(Tooltip.create(Component.translatable("message.mishanguc.copy_from_back.description"))).build();
 }

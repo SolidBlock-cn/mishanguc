@@ -187,7 +187,7 @@ public class CarryingToolItem extends BlockToolItem
       if (actionResult.consumesAction()) {
         return actionResult;
       } else {
-          player.sendOverlayMessage(Component.translatable("item.mishanguc.carrying_tool.message.no_placing").withStyle(ChatFormatting.RED));
+        player.sendOverlayMessage(Component.translatable("item.mishanguc.carrying_tool.message.no_placing").withStyle(ChatFormatting.RED));
         return InteractionResult.FAIL;
       }
     }
@@ -317,8 +317,8 @@ public class CarryingToolItem extends BlockToolItem
     final ItemStack stack = player.getItemInHand(hand);
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     if (entity instanceof Player) {
-        player.sendSystemMessage(Component.translatable("item.mishanguc.carrying_tool.message.pick_player").withStyle(ChatFormatting.RED));
-        return InteractionResult.FAIL;
+      player.sendSystemMessage(Component.translatable("item.mishanguc.carrying_tool.message.pick_player").withStyle(ChatFormatting.RED));
+      return InteractionResult.FAIL;
     } else if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity && !player.isCreative()) {
       player.sendOverlayMessage(Component.translatable("item.mishanguc.carrying_tool.message.no_picking", holdingEntity.name()).withStyle(ChatFormatting.RED));
       return InteractionResult.FAIL;

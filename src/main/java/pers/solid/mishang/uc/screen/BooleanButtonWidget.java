@@ -161,8 +161,8 @@ public class BooleanButtonWidget extends Button.Plain implements TooltipUpdated 
     final net.minecraft.network.chat.Component renderedName = renderedNameSupplier == null ? super.getMessage() : renderedNameSupplier.apply(getValue());
     final @Nullable Boolean value = getValue();
     return value == null ? renderedName : Component.empty()
-                                          .append(renderedName)
-                                          .withStyle(style -> style.withColor(value ? 0xb2ff96 : 0xffac96));
+        .append(renderedName)
+        .withStyle(style -> style.withColor(value ? 0xb2ff96 : 0xffac96));
   }
 
   @Override
