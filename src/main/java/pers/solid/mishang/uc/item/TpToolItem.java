@@ -31,7 +31,6 @@ public class TpToolItem extends Item implements MishangucItem, WithMishangToolti
 
   @Override
   public InteractionResult use(Level world, Player user, InteractionHand hand) {
-    final InteractionResult data = super.use(world, user, hand);
     if (world.isClientSide()) return InteractionResult.CONSUME;
     final Vec3 oldPos = user.position();
     final HitResult raycast = user.pick(256, 0, user.isShiftKeyDown());

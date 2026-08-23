@@ -103,11 +103,8 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
     final Integer color = stack.get(MishangucComponents.COLOR);
     final ColorMixtureType mixtureType = stack.getOrDefault(MishangucComponents.COLOR_MIXTURE_TYPE, ColorMixtureType.NORMAL);
     if (color == null && mixtureType.requiresTargetColor()) {
-      if (!world.isClientSide()) {
-        player.sendOverlayMessage(Component.translatable("item.mishanguc.color_tool.message.no_data").withStyle(ChatFormatting.RED));
-        return InteractionResult.FAIL;
-      }
-      return InteractionResult.CONSUME;
+      player.sendOverlayMessage(Component.translatable("item.mishanguc.color_tool.message.no_data").withStyle(ChatFormatting.RED));
+      return InteractionResult.FAIL;
     }
 
     int prevColorRgb = 0; // the initial value should not usually be used.
@@ -126,7 +123,11 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
             .orElse(null);
       }
 
-      if (coloredBlock != null && (mixtureType != ColorMixtureType.RANDOM || !world.isClientSide())) {
+      if (coloredBlock != null) {
+        if (mixtureType == ColorMixtureType.RANDOM && world.isClientSide()) {
+          // 当颜色为随机时，客户端不执行，转交至服务器执行。
+          return InteractionResult.SUCCESS;
+        }
         prevColorRgb = blockState.getMapColor(world, blockPos).col;
         final BlockState coloredState = coloredBlock.withPropertiesOf(blockState);
         world.setBlock(blockPos, coloredState, Block.UPDATE_NEIGHBORS);
@@ -147,8 +148,10 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
       final float amount = stack.getOrDefault(MishangucComponents.COLOR_CHANGE_AMOUNT, 0.05f) * (player.isShiftKeyDown() ? -1 : 1);
       final int target = mixtureType.handle(prevColorRgb, color == null ? 0 : color, amount, world.getRandom());
 
-      if (mixtureType != ColorMixtureType.RANDOM || !world.isClientSide()) {
-        // 处于客户端时，且类型为随机时，不执行。
+      if (mixtureType == ColorMixtureType.RANDOM && world.isClientSide()) {
+        // 当颜色为随机时，客户端不执行，转交至服务器执行。
+        return InteractionResult.SUCCESS;
+      } else {
         if (opacity.equals(1f)) {
           coloredBlockEntity.setColor(mixed = target);
         } else {
@@ -166,11 +169,8 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem, WithM
       stack.hurtAndBreak(1, player, hand.asEquipmentSlot());
       return InteractionResult.SUCCESS;
     } else {
-      if (!world.isClientSide()) {
-        player.sendOverlayMessage(Component.translatable("item.mishanguc.color_tool.message.not_colored").withStyle(ChatFormatting.RED));
-        return InteractionResult.FAIL;
-      }
-      return InteractionResult.SUCCESS;
+      player.sendOverlayMessage(Component.translatable("item.mishanguc.color_tool.message.not_colored").withStyle(ChatFormatting.RED));
+      return InteractionResult.FAIL;
     }
   }
 
