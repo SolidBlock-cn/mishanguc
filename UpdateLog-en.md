@@ -7,6 +7,7 @@ Note: Not all versions in this update log are already published. Please refer to
 - Fixed the issue that the default text size in the texture presets is 8 and 4 instead of 6 and 3.
 - Fixed the issue that the tooltips of presets are names instead of theirs IDs in the `/mishanguc:signpreset list` command.
 - Fixed the issue of incorrect focus in the sign edit screen in 26.1.2 when adding and removing text lines.
+- Further optimized the implementation of Color Tool, Text Copy Tool and Carrying Tool. Now the judgment logic is executed on the client, and will neither perform hand-swinging nor send to server when it fails. The execution on the server will still execute the judgment logic.
 
 ### 1.6.4
 

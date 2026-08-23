@@ -119,7 +119,11 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem {
             .orElse(null);
       }
 
-      if (coloredBlock != null && (mixtureType != ColorMixtureType.RANDOM || !world.isClient())) {
+      if (coloredBlock != null) {
+        if (mixtureType == ColorMixtureType.RANDOM && world.isClient()) {
+          // 当颜色为随机时，客户端不执行，转交至服务器执行。
+          return ActionResult.SUCCESS;
+        }
         prevColorRgb = blockState.getMapColor(world, blockPos).color;
         final BlockState coloredState = coloredBlock.getStateWithProperties(blockState);
         world.setBlockState(blockPos, coloredState, Block.NOTIFY_NEIGHBORS);
@@ -140,8 +144,10 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem {
       final float amount = stack.getOrDefault(MishangucComponents.COLOR_CHANGE_AMOUNT, 0.05f) * (player.isSneaking() ? -1 : 1);
       final int target = mixtureType.handle(prevColorRgb, color == null ? 0 : color, amount, world.getRandom());
 
-      if (mixtureType != ColorMixtureType.RANDOM || !world.isClient()) {
-        // 处于客户端时，且类型为随机时，不执行。
+      if (mixtureType == ColorMixtureType.RANDOM && world.isClient()) {
+        // 当颜色为随机时，客户端不执行，转交至服务器执行。
+        return ActionResult.SUCCESS;
+      } else {
         if (opacity.equals(1f)) {
           coloredBlockEntity.setColor(mixed = target);
         } else {
@@ -159,11 +165,8 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem {
       stack.damage(1, player, LivingEntity.getSlotForHand(hand));
       return ActionResult.success(world.isClient);
     } else {
-      if (!world.isClient()) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.not_colored").formatted(Formatting.RED), true);
-        return ActionResult.FAIL;
-      }
-      return ActionResult.SUCCESS;
+      player.sendMessage(TextBridge.translatable("item.mishanguc.color_tool.message.not_colored").formatted(Formatting.RED), true);
+      return ActionResult.FAIL;
     }
   }
 

@@ -148,8 +148,9 @@ public class CarryingToolItem extends BlockToolItem
     } else if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
       if (world instanceof ServerWorld serverWorld) {
         final Entity entity = createHoldingEntity(holdingEntity, serverWorld, player);
-        if (entity == null)
+        if (entity == null) {
           return ActionResult.PASS;
+        }
         final Vec3d pos = blockHitResult.getPos();
         entity.updatePosition(pos.x, pos.y, pos.z);
         final boolean spawnEntity = world.spawnEntity(entity);
@@ -174,12 +175,8 @@ public class CarryingToolItem extends BlockToolItem
       if (actionResult.isAccepted()) {
         return actionResult;
       } else {
-        if (world.isClient) {
-          return ActionResult.PASS;
-        } else {
-          player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_placing").formatted(Formatting.RED), true);
-          return ActionResult.FAIL;
-        }
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_placing").formatted(Formatting.RED), true);
+        return ActionResult.FAIL;
       }
     }
   }
@@ -201,20 +198,12 @@ public class CarryingToolItem extends BlockToolItem
     }
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     if (carryingToolData instanceof CarryingToolData.HoldingBlockState holdingBlockState && !player.isCreative()) {
-      if (!world.isClient) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.of(holdingBlockState.state().getBlock()).map(Block::getName).orElse(TextBridge.empty())).formatted(Formatting.RED), true);
-        return ActionResult.FAIL;
-      } else {
-        return ActionResult.CONSUME;
-      }
+      player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.of(holdingBlockState.state().getBlock()).map(Block::getName).orElse(TextBridge.empty())).formatted(Formatting.RED), true);
+      return ActionResult.FAIL;
     }
     if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity && !player.isCreative()) {
-      if (world.isClient)
-        return ActionResult.CONSUME;
-      else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", holdingEntity.name()).formatted(Formatting.RED), true);
-        return ActionResult.FAIL;
-      }
+      player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", holdingEntity.name()).formatted(Formatting.RED), true);
+      return ActionResult.FAIL;
     }
     final BlockState removed = world.getBlockState(pos);
     if (removed.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2)) {
@@ -314,26 +303,14 @@ public class CarryingToolItem extends BlockToolItem
     final ItemStack stack = player.getStackInHand(hand);
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     if (entity instanceof PlayerEntity) {
-      if (world.isClient) {
-        return ActionResult.PASS;
-      } else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_player").formatted(Formatting.RED));
-        return ActionResult.FAIL;
-      }
+      player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_player").formatted(Formatting.RED));
+      return ActionResult.FAIL;
     } else if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity && !player.isCreative()) {
-      if (world.isClient)
-        return ActionResult.SUCCESS;
-      else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", holdingEntity.name()).formatted(Formatting.RED), true);
-        return ActionResult.FAIL;
-      }
+      player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", holdingEntity.name()).formatted(Formatting.RED), true);
+      return ActionResult.FAIL;
     } else if (carryingToolData instanceof CarryingToolData.HoldingBlockState holdingBlockState && !player.isCreative()) {
-      if (world.isClient)
-        return ActionResult.SUCCESS;
-      else {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.ofNullable(holdingBlockState.state().getBlock()).map(Block::getName).orElse(TextBridge.empty())).formatted(Formatting.RED), true);
-        return ActionResult.FAIL;
-      }
+      player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.no_picking", Optional.ofNullable(holdingBlockState.state().getBlock()).map(Block::getName).orElse(TextBridge.empty())).formatted(Formatting.RED), true);
+      return ActionResult.FAIL;
     }
     if (!world.isClient) {
       if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
