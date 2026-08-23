@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "M": "minecraft:snow_block",
     "X": "minecraft:packed_ice",

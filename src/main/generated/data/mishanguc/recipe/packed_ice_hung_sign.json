@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "group": "mishanguc:ice_hung_sign",
   "key": {
     "#": "minecraft:packed_ice",

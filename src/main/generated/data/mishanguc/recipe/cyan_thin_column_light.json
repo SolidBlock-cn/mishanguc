@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
     "mishanguc:cyan_thin_column_light_tube",
     "minecraft:gray_concrete"

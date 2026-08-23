@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "M": "mishanguc:colored_light",
     "X": "#c:ingots/gold",

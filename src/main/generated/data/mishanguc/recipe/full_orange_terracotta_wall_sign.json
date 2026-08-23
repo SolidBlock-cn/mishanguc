@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "group": "mishanguc:full_terracotta_wall_sign",
   "key": {
     "#": "minecraft:orange_terracotta",

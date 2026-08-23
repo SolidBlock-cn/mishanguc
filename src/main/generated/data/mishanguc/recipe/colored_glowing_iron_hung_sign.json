@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "#": "mishanguc:colored_iron_block",
     "-": "mishanguc:invisible_glowing_wall_sign"

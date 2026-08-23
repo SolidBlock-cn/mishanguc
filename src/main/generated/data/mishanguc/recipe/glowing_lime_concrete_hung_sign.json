@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "group": "mishanguc:glowing_concrete_hung_sign",
   "key": {
     "#": "minecraft:lime_concrete",

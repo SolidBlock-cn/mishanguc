@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "group": "mishanguc:glowing_ice_hung_sign",
   "key": {
     "#": "minecraft:blue_ice",

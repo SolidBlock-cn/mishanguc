@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "group": "mishanguc:glowing_concrete_wall_sign",
   "key": {
     "#": "minecraft:red_concrete",

@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "group": "mishanguc:decorated_iron_handrail",
   "key": {
     "M": "#c:dyes/orange",

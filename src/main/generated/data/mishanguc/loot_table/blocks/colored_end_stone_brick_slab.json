@@ -11,13 +11,11 @@
   ],
   "pools": [
     {
-      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
           "functions": [
             {
-              "add": false,
               "conditions": [
                 {
                   "block": "mishanguc:colored_end_stone_brick_slab",

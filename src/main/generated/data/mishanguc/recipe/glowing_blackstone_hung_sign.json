@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "#": "minecraft:blackstone",
     "-": "mishanguc:invisible_glowing_wall_sign"

@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "group": "mishanguc:concrete_wall_sign",
   "key": {
     "#": "minecraft:blue_concrete",

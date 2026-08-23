@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "M": "minecraft:bamboo_planks",
     "X": "minecraft:bamboo_block",

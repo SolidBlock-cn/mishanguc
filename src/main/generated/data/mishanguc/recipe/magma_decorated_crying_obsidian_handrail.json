@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "M": "minecraft:magma_block",
     "X": "minecraft:crying_obsidian",

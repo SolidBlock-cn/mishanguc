@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
     "mishanguc:pink_medium_wall_light_tube",
     "minecraft:gray_concrete"

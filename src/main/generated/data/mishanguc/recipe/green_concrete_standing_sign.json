@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "group": "mishanguc:concrete_standing_sign",
   "key": {
     "#": "minecraft:green_concrete",

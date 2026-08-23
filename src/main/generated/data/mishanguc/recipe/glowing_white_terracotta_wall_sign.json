@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "group": "mishanguc:glowing_terracotta_wall_sign",
   "key": {
     "#": "minecraft:white_terracotta",

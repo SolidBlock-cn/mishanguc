@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "group": "colored_decorated_wooden_handrail",
   "key": {
     "M": "mishanguc:colored_planks",

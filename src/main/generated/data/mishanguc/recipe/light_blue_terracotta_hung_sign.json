@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "group": "mishanguc:terracotta_hung_sign",
   "key": {
     "#": "minecraft:light_blue_terracotta",

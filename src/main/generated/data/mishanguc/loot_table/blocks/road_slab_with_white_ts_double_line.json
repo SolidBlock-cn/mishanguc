@@ -2,13 +2,11 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
           "functions": [
             {
-              "add": false,
               "conditions": [
                 {
                   "block": "mishanguc:road_slab_with_white_ts_double_line",
