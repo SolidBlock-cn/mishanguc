@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.item;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
@@ -25,7 +26,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import pers.solid.mishang.uc.util.TextBridge;
 import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.Collections;
@@ -40,14 +40,14 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
 
   @Override
   public void getMishangTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-    tooltip.add(TextBridge.translatable("item.mishanguc.growth_tool.tooltip.1").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.growth_tool.tooltip.2").withStyle(ChatFormatting.GRAY));
-    tooltip.add(TextBridge.translatable("item.mishanguc.growth_tool.tooltip.3").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.growth_tool.tooltip.1").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.growth_tool.tooltip.2").withStyle(ChatFormatting.GRAY));
+    tooltip.add(Component.translatable("item.mishanguc.growth_tool.tooltip.3").withStyle(ChatFormatting.GRAY));
   }
 
   @Override
   public InteractionResult use(Level world, Player user, InteractionHand hand) {
-    if (world.isClientSide()) return InteractionResult.SUCCESS;
+    if (world.isClientSide()) return InteractionResult.PASS;
     final HitResult raycast = user.pick(64, 0, true);
     if (raycast.getType() == HitResult.Type.MISS) {
       return InteractionResult.FAIL;
@@ -55,7 +55,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
     final Vec3 center = raycast.getLocation();
     final int damage = apply(world, center, !user.isShiftKeyDown());
     user.getItemInHand(hand).hurtAndBreak(damage, user, hand.asEquipmentSlot());
-    return InteractionResult.SUCCESS;
+    return damage > 0 ? InteractionResult.SUCCESS_SERVER : InteractionResult.FAIL;
   }
 
   @Override
@@ -80,20 +80,26 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
         }
       }
     }
-    for (Entity entity : world.getEntitiesOfClass(Entity.class, AABB.ofSize(center, 9, 9, 9))) {
-      if (entity instanceof AgeableMob passiveEntity && passiveEntity.getAge() < 0) {
-        passiveEntity.setAge(isPositive ? 0 : AgeableMob.BABY_START_AGE);
-        createParticle(world, entity.position(), isPositive);
-        damage += 1;
-      } else if (entity instanceof Slime slimeEntity) {
+    final List<Entity> entities = world.getEntitiesOfClass(Entity.class, AABB.ofSize(center, 9, 9, 9));
+    for (Entity entity : entities) {
+      if (entity instanceof Slime slimeEntity) {
         final int prevSize = slimeEntity.getSize();
+        final int newSize;
         if (isPositive) {
-          slimeEntity.setSize(Math.min(prevSize * 2, Math.max(prevSize, 16)), false);
+          newSize = Math.min(prevSize + 1, 8);
         } else {
-          slimeEntity.setSize(prevSize / 2, false);
+          newSize = Math.max(1, prevSize - 1);
         }
-        createParticle(world, entity.position(), isPositive);
-        damage += 1;
+        if (prevSize != newSize) {
+          slimeEntity.setSize(newSize, true);
+          createParticle(world, entity.position(), isPositive);
+        }
+      } else if (entity instanceof AgeableMob passiveEntity) {
+        if (passiveEntity.isBaby() == isPositive) {
+          passiveEntity.setAge(isPositive ? 0 : AgeableMob.BABY_START_AGE);
+          createParticle(world, entity.position(), isPositive);
+          damage += 1;
+        }
       } else if (entity instanceof Mob mobEntity) {
         if (mobEntity.isBaby() == isPositive) {
           mobEntity.setBaby(!isPositive);
@@ -114,13 +120,14 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
 
   @Override
   public InteractionResult useEntityCallback(Player player, Level world, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult) {
-    final InteractionResult actionResult = InteractsWithEntity.super.useEntityCallback(player, world, hand, entity, hitResult);
-    if (actionResult == InteractionResult.PASS && !world.isClientSide()) {
-      final int damage = apply(world, hitResult == null ? entity.position() : hitResult.getLocation(), !player.isShiftKeyDown());
-      player.getItemInHand(hand).hurtAndBreak(damage, player, hand.asEquipmentSlot());
-      return InteractionResult.SUCCESS;
+    if (player instanceof LocalPlayer) return InteractionResult.CONSUME;
+    final int damage = apply(player.level(), entity.position(), !player.isShiftKeyDown());
+    player.getItemInHand(hand).hurtAndBreak(damage, player, hand.asEquipmentSlot());
+    if (damage > 0) {
+      // 由于在 Fabric API 中，返回 SUCCESS_SERVER 并不会使玩家真正挥手，故这里手动调用以特殊处理。
+      player.swing(hand, true);
     }
-    return actionResult;
+    return damage > 0 ? InteractionResult.SUCCESS : InteractionResult.FAIL;
   }
 
   @Override
