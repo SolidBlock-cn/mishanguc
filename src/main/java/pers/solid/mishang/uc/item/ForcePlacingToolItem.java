@@ -116,10 +116,6 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     tooltip.add(
         Component.translatable("item.mishanguc.force_placing_tool.tooltip.3")
             .withStyle(ChatFormatting.GRAY));
-    if ((getFlags(stack) & 128) != 0) {
-      tooltip.add(Component.translatable("item.mishanguc.force_placing_tool.tooltip.suspends_light")
-          .withStyle(ChatFormatting.YELLOW));
-    }
   }
 
   @Environment(EnvType.CLIENT)
