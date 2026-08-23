@@ -44,6 +44,7 @@ import pers.solid.mishang.uc.util.VerticalAlign;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -771,7 +772,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public void cancelEditing() {
     changed = false;
     if (this.minecraft != null) {
-      this.minecraft.setScreen(null);
+      this.minecraft.setScreenAndShow(null);
     }
   }
 
@@ -999,7 +1000,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         if (text.isEmpty()) {
           customValueTextField.setSuggestion(null);
         } else {
-          Arrays.stream(ChatFormatting.values()).filter(ChatFormatting::isColor).map(ChatFormatting::getSerializedName).filter(name -> name.startsWith(text)).findAny().ifPresentOrElse(name -> customValueTextField.setSuggestion(name.substring(text.length())), () -> customValueTextField.setSuggestion(null));
+          Arrays.stream(ChatFormatting.values()).filter(chatFormatting -> chatFormatting.ordinal() < 16).map(chatFormatting -> chatFormatting.name().toLowerCase(Locale.ROOT)).filter(name -> name.startsWith(text)).findAny().ifPresentOrElse(name -> customValueTextField.setSuggestion(name.substring(text.length())), () -> customValueTextField.setSuggestion(null));
         }
         final Integer parse = MishangUtils.parseColor(text).result().orElse(null);
         if (parse == null) {
@@ -1032,7 +1033,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         if (text.isEmpty()) {
           customValueTextField.setSuggestion(null);
         } else {
-          Streams.concat(Stream.of("auto", "none"), Arrays.stream(ChatFormatting.values()).filter(ChatFormatting::isColor).map(ChatFormatting::getSerializedName)).filter(name -> name.startsWith(text)).findAny().ifPresentOrElse(name -> customValueTextField.setSuggestion(name.substring(text.length())), () -> customValueTextField.setSuggestion(null));
+          Streams.concat(Stream.of("auto", "none"), Arrays.stream(ChatFormatting.values()).filter(chatFormatting -> chatFormatting.ordinal() < 16).map(chatFormatting -> chatFormatting.name().toLowerCase(Locale.ROOT))).filter(name -> name.startsWith(text)).findAny().ifPresentOrElse(name -> customValueTextField.setSuggestion(name.substring(text.length())), () -> customValueTextField.setSuggestion(null));
         }
         if (text.equals("auto")) {
           for (TextFieldListWidget.Entry entry : textFieldListWidget.selectedEntries) {
@@ -1254,7 +1255,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   private void finishEditing() {
     this.entity.setChanged();
     if (this.minecraft != null) {
-      this.minecraft.setScreen(null);
+      this.minecraft.setScreenAndShow(null);
     }
   }
 

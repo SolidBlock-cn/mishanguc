@@ -5,8 +5,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.feature.TextFeatureRenderer;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -38,7 +38,7 @@ public interface SpecialDrawable extends Cloneable {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void drawInternal(Matrix4f matricesEntry, MultiBufferSource.BufferSource vertexConsumers, int light, float x, float y) {
+    public void drawInternal(Matrix4f matricesEntry, TextFeatureRenderer textFeatureRenderer, int light, float x, float y) {
 
     }
 
@@ -69,7 +69,7 @@ public interface SpecialDrawable extends Cloneable {
   }
 
   @Environment(EnvType.CLIENT)
-  void drawInternal(Matrix4f matricesEntry, MultiBufferSource.BufferSource vertexConsumers, int light, float x, float y);
+  void drawInternal(Matrix4f matricesEntry, TextFeatureRenderer textFeatureRenderer, int light, float x, float y);
 
   /**
    * 这一类 SpecialDrawable 对象的 id，通常是一个字符串，并且应该要被 {@link #fromNbt} 和 {@link #fromStringArgs} 识别。同一类对象返回的 id 应该相同，因此覆盖此方法时，通常是返回一个常量。

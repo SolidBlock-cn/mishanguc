@@ -105,12 +105,12 @@ public class MirroringToolItem extends BlockToolItem implements MishangucItem, W
         .pattern("CNL")
         .pattern(" | ")
         .pattern(" | ")
-        .define('C', Items.CYAN_DYE)
+        .define('C', Items.DYE.cyan())
         .define('N', Items.NETHERITE_INGOT)
-        .define('L', Items.LIME_DYE)
+        .define('L', Items.DYE.lime())
         .define('|', Items.STICK)
-        .unlockedBy("has_cyan_dye", recipeGenerator.has(Items.CYAN_DYE))
+        .unlockedBy("has_cyan_dye", recipeGenerator.has(Items.DYE.cyan()))
         .unlockedBy("has_netherite_ingot", recipeGenerator.has(Items.NETHERITE_INGOT))
-        .unlockedBy("has_lime_dye", recipeGenerator.has(Items.LIME_DYE));
+        .unlockedBy("has_lime_dye", recipeGenerator.has(Items.DYE.lime()));
   }
 }

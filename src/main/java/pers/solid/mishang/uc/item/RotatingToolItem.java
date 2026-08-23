@@ -87,10 +87,10 @@ public class RotatingToolItem extends BlockToolItem implements MishangucItem, Wi
         .pattern("DND")
         .pattern(" | ")
         .pattern(" | ")
-        .define('D', Items.PINK_DYE)
+        .define('D', Items.DYE.pink())
         .define('N', Items.NETHERITE_INGOT)
         .define('|', Items.STICK)
-        .unlockedBy("has_pink_dye", recipeGenerator.has(Items.PINK_DYE))
+        .unlockedBy("has_pink_dye", recipeGenerator.has(Items.DYE.pink()))
         .unlockedBy("has_netherite_ingot", recipeGenerator.has(Items.NETHERITE_INGOT));
   }
 }

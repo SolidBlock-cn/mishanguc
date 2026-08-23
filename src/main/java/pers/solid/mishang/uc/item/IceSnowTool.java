@@ -148,7 +148,7 @@ public class IceSnowTool extends Item implements MishangucItem, DispenseItemBeha
   @Override
   public ItemStack dispense(BlockSource pointer, ItemStack stack) {
     final int strength = getStrength(stack);
-    applyIce(pointer.level(), pointer.pos().relative(pointer.state().getValue(DispenserBlock.FACING), getRange(strength)).getCenter(), strength);
+    applyIce(pointer.level(), Vec3.atCenterOf(pointer.pos().relative(pointer.state().getValue(DispenserBlock.FACING), getRange(strength))), strength);
     stack.hurtAndBreak(strength + 1, pointer.level(), null, item -> {});
     return stack;
   }

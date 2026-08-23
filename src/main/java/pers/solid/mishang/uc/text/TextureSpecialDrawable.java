@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.feature.TextFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
@@ -15,6 +15,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.util.FileUtil;
 import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
 
 import java.nio.file.Path;
 import java.util.Optional;
@@ -49,11 +50,11 @@ public record TextureSpecialDrawable(Identifier identifier, TextContext textCont
   }
 
   /**
-   * 说明：原版的文本的实现见于 {@link net.minecraft.client.gui.font.AtlasGlyphProvider.Instance#renderSprite(Matrix4f, VertexConsumer, int, float, float, float, int)}，此处的逻辑略有不同。
+   * 说明：原版的文本的实现见于 {@link net.minecraft.client.gui.font.AtlasGlyphProvider.Instance#renderSprite(Matrix4fc, VertexConsumer, int, float, float, float, int)}，此处的逻辑略有不同。
    */
   @Environment(EnvType.CLIENT)
   @Override
-  public void drawInternal(Matrix4f matricesEntry, MultiBufferSource.BufferSource vertexConsumers, int light, float x, float y) {
+  public void drawInternal(Matrix4f matricesEntry, TextFeatureRenderer textFeatureRenderer, int light, float x, float y) {
     final Optional<Resource> resource = Minecraft.getInstance().getResourceManager().getResource(identifier);
     final RenderType layer;
     if (resource.isEmpty()) {
@@ -61,12 +62,13 @@ public record TextureSpecialDrawable(Identifier identifier, TextContext textCont
     } else {
       layer = RenderTypes.text(identifier);
     }
-    final VertexConsumer vertexConsumer = vertexConsumers.getBuffer(layer);
 
-    vertexConsumer.addVertex(matricesEntry, 0, 8, -0).setColor(255, 255, 255, 255).setUv(0.0f, 1.0f).setLight(light);
-    vertexConsumer.addVertex(matricesEntry, 8, 8, -0).setColor(255, 255, 255, 255).setUv(1.0f, 1.0f).setLight(light);
-    vertexConsumer.addVertex(matricesEntry, 8, 0, -0).setColor(255, 255, 255, 255).setUv(1.0f, 0.0f).setLight(light);
-    vertexConsumer.addVertex(matricesEntry, 0, 0, -0).setColor(255, 255, 255, 255).setUv(0.0f, 0.0f).setLight(light);
+    // todo 需要一个 buffer 对象，其类型为 VertexConsumer
+
+//    buffer.addVertex(matricesEntry, 0, 8, -0).setColor(255, 255, 255, 255).setUv(0.0f, 1.0f).setLight(light);
+//    buffer.addVertex(matricesEntry, 8, 8, -0).setColor(255, 255, 255, 255).setUv(1.0f, 1.0f).setLight(light);
+//    buffer.addVertex(matricesEntry, 8, 0, -0).setColor(255, 255, 255, 255).setUv(1.0f, 0.0f).setLight(light);
+//    buffer.addVertex(matricesEntry, 0, 0, -0).setColor(255, 255, 255, 255).setUv(0.0f, 0.0f).setLight(light);
   }
 
   @Override

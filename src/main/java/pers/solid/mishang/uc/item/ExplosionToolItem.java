@@ -1,7 +1,7 @@
 package pers.solid.mishang.uc.item;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.advancements.criterion.EntityFlagsPredicate;
+import net.minecraft.advancements.predicates.entity.EntityFlagsPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
@@ -156,14 +156,14 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
 
       Explosion.BlockInteraction destructionType = component.destructionType();
 
-      ServerExplosion explosionImpl = new ServerExplosion(serverWorld, null, serverWorld.damageSources().explosion(null), null, pos.getCenter(), component.power(), component.createFire(), destructionType);
+      ServerExplosion explosionImpl = new ServerExplosion(serverWorld, null, serverWorld.damageSources().explosion(null), null, Vec3.atCenterOf(pos), component.power(), component.createFire(), destructionType);
       final int blockCount = explosionImpl.explode();
       ParticleOptions particleEffect = ParticleTypes.EXPLOSION;
 
       for (ServerPlayer serverPlayerEntity : serverWorld.players()) {
-        if (serverPlayerEntity.distanceToSqr(pos.getCenter()) < 4096.0) {
+        if (serverPlayerEntity.distanceToSqr(Vec3.atCenterOf(pos)) < 4096.0) {
           Optional<Vec3> optional = Optional.ofNullable(explosionImpl.getHitPlayers().get(serverPlayerEntity));
-          serverPlayerEntity.connection.send(new ClientboundExplodePacket(pos.getCenter(), explosionImpl.radius(), blockCount, optional, particleEffect, SoundEvents.GENERIC_EXPLODE, EXPLOSION_BLOCK_PARTICLES));
+          serverPlayerEntity.connection.send(new ClientboundExplodePacket(Vec3.atCenterOf(pos), explosionImpl.radius(), blockCount, optional, particleEffect, SoundEvents.GENERIC_EXPLODE, EXPLOSION_BLOCK_PARTICLES));
         }
       }
       stack.hurtAndBreak((int) component.power(), serverWorld, null, item -> {});

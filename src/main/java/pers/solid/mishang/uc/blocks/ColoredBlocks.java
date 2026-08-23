@@ -18,14 +18,14 @@ import pers.solid.mishang.uc.util.TextureMapReference;
 
 public final class ColoredBlocks extends MishangucBlocks {
   @MiningLevel(MiningLevel.Tool.NONE)
-  public static final ColoredCubeBlock COLORED_WOOL = register("colored_wool", settings -> ColoredCubeBlock.cubeAll(settings, "block/white_wool"), Blocks.WHITE_WOOL);
-  public static final ColoredCubeBlock COLORED_TERRACOTTA = register("colored_terracotta", settings -> ColoredCubeBlock.cubeAll(settings, "block/white_terracotta"), Blocks.WHITE_TERRACOTTA);
+  public static final ColoredCubeBlock COLORED_WOOL = register("colored_wool", settings -> ColoredCubeBlock.cubeAll(settings, "block/white_wool"), Blocks.WOOL.white());
+  public static final ColoredCubeBlock COLORED_TERRACOTTA = register("colored_terracotta", settings -> ColoredCubeBlock.cubeAll(settings, "block/white_terracotta"), Blocks.WOOL.white());
 
   public static final ColoredStairsBlock COLORED_TERRACOTTA_STAIRS = register("colored_terracotta_stairs", settings -> new ColoredStairsBlock(COLORED_TERRACOTTA, settings), COLORED_TERRACOTTA);
 
   public static final ColoredSlabBlock COLORED_TERRACOTTA_SLAB = register("colored_terracotta_slab", settings -> new ColoredSlabBlock(COLORED_TERRACOTTA, settings), COLORED_TERRACOTTA);
 
-  public static final ColoredCubeBlock COLORED_CONCRETE = register("colored_concrete", settings -> ColoredCubeBlock.cubeAll(settings, "block/white_concrete"), Blocks.WHITE_CONCRETE);
+  public static final ColoredCubeBlock COLORED_CONCRETE = register("colored_concrete", settings -> ColoredCubeBlock.cubeAll(settings, "block/white_concrete"), Blocks.CONCRETE.white());
 
   public static final ColoredStairsBlock COLORED_CONCRETE_STAIRS = register("colored_concrete_stairs", settings -> new ColoredStairsBlock(COLORED_CONCRETE, settings), COLORED_CONCRETE);
 
@@ -128,10 +128,10 @@ public final class ColoredBlocks extends MishangucBlocks {
   @MiningLevel(MiningLevel.Tool.NONE)
   public static final ColoredCubeBlock COLORED_LIGHT = register("colored_light", settings -> new ColoredCubeBlock(settings, ModelReference.COLORED_CUBE_ALL_WITHOUT_SHADE, TextureMapReference.all(Identifier.parse("mishanguc:block/white_light"))), WHITE_LIGHT_SETTINGS);
   @MiningLevel(MiningLevel.Tool.NONE)
-  public static final ColoredGlassBlock COLORED_GLASS = register("colored_glass", settings -> new ColoredGlassBlock(settings, TextureMapReference.all(Identifier.withDefaultNamespace("block/white_stained_glass"))), Blocks.WHITE_STAINED_GLASS);
+  public static final ColoredGlassBlock COLORED_GLASS = register("colored_glass", settings -> new ColoredGlassBlock(settings, TextureMapReference.all(Identifier.withDefaultNamespace("block/white_stained_glass"))), Blocks.STAINED_GLASS.white());
 
   @MiningLevel(MiningLevel.Tool.NONE)
-  public static final ColoredGlassPaneBlock COLORED_GLASS_PANE = register("colored_glass_pane", settings -> new ColoredGlassPaneBlock(Identifier.withDefaultNamespace("block/white_stained_glass"), Identifier.withDefaultNamespace("block/white_stained_glass_pane_top"), settings), Blocks.WHITE_STAINED_GLASS_PANE);
+  public static final ColoredGlassPaneBlock COLORED_GLASS_PANE = register("colored_glass_pane", settings -> new ColoredGlassPaneBlock(Identifier.withDefaultNamespace("block/white_stained_glass"), Identifier.withDefaultNamespace("block/white_stained_glass_pane_top"), settings), Blocks.STAINED_GLASS.white());
   public static final ColoredIceBlock COLORED_ICE = register("colored_ice", settings -> new ColoredIceBlock(settings, TextureMapReference.all(Identifier.parse("mishanguc:block/pale_ice"))), Blocks.ICE);
   @MiningLevel(MiningLevel.Tool.SHOVEL)
   public static final ColoredCubeBlock COLORED_SNOW_BLOCK = register("colored_snow_block", settings -> ColoredCubeBlock.cubeAll(settings, "block/snow"), Blocks.SNOW_BLOCK);

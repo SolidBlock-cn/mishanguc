@@ -46,6 +46,6 @@ public final class RoadSlabBlocks extends MishangucBlocks {
   }
 
   static void registerAll() {
-    SLABS.forEach(slab -> ItemsAccessor.callRegisterBlock(slab, NamedBlockItem::new));
+    SLABS.forEach(slab -> ItemsAccessor.callRegisterBlock(blockItemId(slab), slab, NamedBlockItem::new));
   }
 }

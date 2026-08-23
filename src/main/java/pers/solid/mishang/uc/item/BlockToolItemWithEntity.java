@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
@@ -10,8 +9,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
@@ -65,10 +62,7 @@ public abstract class BlockToolItemWithEntity extends BlockToolItem implements R
       return;
     }
     final PoseStack matrices = context.poseStack();
-    final MultiBufferSource consumers = context.bufferSource();
-    if (consumers == null) return;
-    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderTypes.lines());
     final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
-    ShapeRenderer.renderShape(matrices, vertexConsumer, state.greenEntityShape, -cameraPos.x, -cameraPos.y, -cameraPos.z, ARGB.colorFromFloat(0.8f, 0f, 1f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+    context.submitNodeCollector().submitShapeOutline(matrices, state.greenEntityShape, RenderTypes.lines(), ARGB.colorFromFloat(0.8f, 0f, 1f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain 参数
   }
 }

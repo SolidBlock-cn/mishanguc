@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockTintSource;
@@ -114,15 +115,15 @@ public class MishangucClient implements ClientModInitializer {
           if (blockEntity instanceof final HungSignBlockEntity hungSignBlockEntity) {
             final Direction direction = payload.direction().orElseThrow();
             client.execute(() ->
-                client.setScreen(new HungSignBlockEditScreen(client.level.registryAccess(), blockPos, direction, hungSignBlockEntity)));
+                client.setScreenAndShow(new HungSignBlockEditScreen(client.level.registryAccess(), blockPos, direction, hungSignBlockEntity)));
           } else if (blockEntity instanceof final WallSignBlockEntity wallSignBlockEntity) {
             client.execute(() ->
-                client.setScreen(new WallSignBlockEditScreen(client.level.registryAccess(), wallSignBlockEntity, blockPos)));
+                client.setScreenAndShow(new WallSignBlockEditScreen(client.level.registryAccess(), wallSignBlockEntity, blockPos)));
           } else if (blockEntity instanceof final StandingSignBlockEntity standingSignBlockEntity) {
             final BlockHitResult blockHitResult = payload.blockHitResult().orElseThrow();
             final Boolean isFront = StandingSignBlock.getHitSide(blockEntity.getBlockState(), blockHitResult);
             if (isFront != null) {
-              client.execute(() -> client.setScreen(new StandingSignBlockEditScreen(client.level.registryAccess(), standingSignBlockEntity, blockPos, isFront)));
+              client.execute(() -> client.setScreenAndShow(new StandingSignBlockEditScreen(client.level.registryAccess(), standingSignBlockEntity, blockPos, isFront)));
             }
           }
         });
@@ -188,7 +189,7 @@ public class MishangucClient implements ClientModInitializer {
 
   private static void registerRenderEvents() {
     // 注册方块外观描绘
-    LevelRenderEvents.AFTER_BLOCK_OUTLINE_EXTRACTION.register(MishangRenderStateProvider.MISHANG_EXTRACTION);
+    LevelExtractionEvents.AFTER_BLOCK_OUTLINE_EXTRACTION.register(MishangRenderStateProvider.MISHANG_EXTRACTION);
     LevelRenderEvents.BEFORE_BLOCK_OUTLINE.register(RendersBlockOutline.RENDERER);
     LevelRenderEvents.BEFORE_GIZMOS.register(RendersBeforeOutline.DEBUG_RENDER);
   }

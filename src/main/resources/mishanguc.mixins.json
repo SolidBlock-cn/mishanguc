@@ -38,7 +38,7 @@
     "OrderedRenderCommandQueueImplMixin",
     "RenderCommandQueueMixin",
     "ScreenMixin",
-    "TextCommandRendererMixin",
+    "TextFeatureRendererMixin",
     "TextRendererAccessor"
   ],
   "injectors": {

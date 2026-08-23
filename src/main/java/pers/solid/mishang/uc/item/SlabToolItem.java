@@ -17,8 +17,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
 import net.minecraft.core.BlockPos;
@@ -260,21 +258,18 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
     if (!(context.levelState().getData(MISHANG_BLOCK_OUTLINE) instanceof SlabToolState state)) {
       return true;
     }
-    final MultiBufferSource consumers = context.bufferSource();
     if (state.slabShape != null) {
       final BlockPos pos = outlineRenderState.pos();
       final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
-      ShapeRenderer.renderShape(
+      context.submitNodeCollector().submitShapeOutline(
           context.poseStack(),
-          consumers.getBuffer(RenderTypes.LINES),
           state.slabShape,
-          (double) pos.getX() - cameraPos.x(),
-          (double) pos.getY() - cameraPos.y(),
-          (double) pos.getZ() - cameraPos.z(),
+          RenderTypes.lines(),
           ARGB.colorFromFloat(0.4f, 0.0F,
               0.0F,
               0.0F),
-          Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+          Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
+          outlineRenderState.isTranslucent());
       return false;
     }
     return true;

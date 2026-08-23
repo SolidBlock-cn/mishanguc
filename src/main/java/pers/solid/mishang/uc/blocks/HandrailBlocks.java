@@ -3,9 +3,9 @@ package pers.solid.mishang.uc.blocks;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ColorCollection;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.ApiStatus;
@@ -16,8 +16,6 @@ import pers.solid.mishang.uc.block.GlassHandrailBlock;
 import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.SimpleHandrailBlock;
 
-import java.util.EnumMap;
-import java.util.Map;
 
 /**
  * 本模组中的所有栏杆方块。
@@ -29,90 +27,12 @@ public final class HandrailBlocks extends MishangucBlocks {
 
   // 简单的混凝土栏杆
 
-  public static final SimpleHandrailBlock SIMPLE_WHITE_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_white_concrete_handrail", Blocks.WHITE_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_ORANGE_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_orange_concrete_handrail", Blocks.ORANGE_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_MAGENTA_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_magenta_concrete_handrail", Blocks.MAGENTA_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_LIGHT_BLUE_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_light_blue_concrete_handrail", Blocks.LIGHT_BLUE_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_YELLOW_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_yellow_concrete_handrail", Blocks.YELLOW_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_LIME_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_lime_concrete_handrail", Blocks.LIME_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_PINK_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_pink_concrete_handrail", Blocks.PINK_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_GRAY_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_gray_concrete_handrail", Blocks.GRAY_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_LIGHT_GRAY_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_light_gray_concrete_handrail", Blocks.LIGHT_GRAY_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_CYAN_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_cyan_concrete_handrail", Blocks.CYAN_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_PURPLE_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_purple_concrete_handrail", Blocks.PURPLE_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_BLUE_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_blue_concrete_handrail", Blocks.BLUE_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_BROWN_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_brown_concrete_handrail", Blocks.BROWN_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_GREEN_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_green_concrete_handrail", Blocks.GREEN_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_RED_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_red_concrete_handrail", Blocks.RED_CONCRETE);
-  public static final SimpleHandrailBlock SIMPLE_BLACK_CONCRETE_HANDRAIL = registerSimpleHandrail("simple_black_concrete_handrail", Blocks.BLACK_CONCRETE);
-
-  /**
-   * 颜色及其对应的简单混凝土栏杆组成的映射。
-   */
-  public static final Map<DyeColor, SimpleHandrailBlock> SIMPLE_CONCRETE_HANDRAILS = new EnumMap<>(DyeColor.class);
-
-  static {
-    SIMPLE_CONCRETE_HANDRAILS.put(DyeColor.WHITE, SIMPLE_WHITE_CONCRETE_HANDRAIL);
-    SIMPLE_CONCRETE_HANDRAILS.put(DyeColor.ORANGE, SIMPLE_ORANGE_CONCRETE_HANDRAIL);
-    SIMPLE_CONCRETE_HANDRAILS.put(DyeColor.MAGENTA, SIMPLE_MAGENTA_CONCRETE_HANDRAIL);
-    SIMPLE_CONCRETE_HANDRAILS.put(DyeColor.LIGHT_BLUE, SIMPLE_LIGHT_BLUE_CONCRETE_HANDRAIL);
-    SIMPLE_CONCRETE_HANDRAILS.put(DyeColor.YELLOW, SIMPLE_YELLOW_CONCRETE_HANDRAIL);
-    SIMPLE_CONCRETE_HANDRAILS.put(DyeColor.LIME, SIMPLE_LIME_CONCRETE_HANDRAIL);
-    SIMPLE_CONCRETE_HANDRAILS.put(DyeColor.PINK, SIMPLE_PINK_CONCRETE_HANDRAIL);
-    SIMPLE_CONCRETE_HANDRAILS.put(DyeColor.GRAY, SIMPLE_GRAY_CONCRETE_HANDRAIL);
-    SIMPLE_CONCRETE_HANDRAILS.put(DyeColor.LIGHT_GRAY, SIMPLE_LIGHT_GRAY_CONCRETE_HANDRAIL);
-    SIMPLE_CONCRETE_HANDRAILS.put(DyeColor.CYAN, SIMPLE_CYAN_CONCRETE_HANDRAIL);
-    SIMPLE_CONCRETE_HANDRAILS.put(DyeColor.PURPLE, SIMPLE_PURPLE_CONCRETE_HANDRAIL);
-    SIMPLE_CONCRETE_HANDRAILS.put(DyeColor.BLUE, SIMPLE_BLUE_CONCRETE_HANDRAIL);
-    SIMPLE_CONCRETE_HANDRAILS.put(DyeColor.BROWN, SIMPLE_BROWN_CONCRETE_HANDRAIL);
-    SIMPLE_CONCRETE_HANDRAILS.put(DyeColor.GREEN, SIMPLE_GREEN_CONCRETE_HANDRAIL);
-    SIMPLE_CONCRETE_HANDRAILS.put(DyeColor.RED, SIMPLE_RED_CONCRETE_HANDRAIL);
-    SIMPLE_CONCRETE_HANDRAILS.put(DyeColor.BLACK, SIMPLE_BLACK_CONCRETE_HANDRAIL);
-  }
+  public static final ColorCollection<SimpleHandrailBlock> SIMPLE_CONCRETE_HANDRAIL = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> registerSimpleHandrail("simple_" + s + "_concrete_handrail", Blocks.CONCRETE.pick(dyeColor)));
 
 
   // 简单的陶瓦栏杆
 
-  public static final SimpleHandrailBlock SIMPLE_WHITE_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_white_terracotta_handrail", Blocks.WHITE_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_ORANGE_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_orange_terracotta_handrail", Blocks.ORANGE_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_MAGENTA_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_magenta_terracotta_handrail", Blocks.MAGENTA_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_LIGHT_BLUE_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_light_blue_terracotta_handrail", Blocks.LIGHT_BLUE_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_YELLOW_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_yellow_terracotta_handrail", Blocks.YELLOW_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_LIME_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_lime_terracotta_handrail", Blocks.LIME_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_PINK_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_pink_terracotta_handrail", Blocks.PINK_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_GRAY_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_gray_terracotta_handrail", Blocks.GRAY_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_LIGHT_GRAY_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_light_gray_terracotta_handrail", Blocks.LIGHT_GRAY_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_CYAN_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_cyan_terracotta_handrail", Blocks.CYAN_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_PURPLE_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_purple_terracotta_handrail", Blocks.PURPLE_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_BLUE_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_blue_terracotta_handrail", Blocks.BLUE_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_BROWN_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_brown_terracotta_handrail", Blocks.BROWN_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_GREEN_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_green_terracotta_handrail", Blocks.GREEN_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_RED_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_red_terracotta_handrail", Blocks.RED_TERRACOTTA);
-  public static final SimpleHandrailBlock SIMPLE_BLACK_TERRACOTTA_HANDRAIL = registerSimpleHandrail("simple_black_terracotta_handrail", Blocks.BLACK_TERRACOTTA);
-
-  /**
-   * 颜色及其对应的简单陶瓦栏杆组成的映射。
-   */
-  public static final Map<DyeColor, SimpleHandrailBlock> SIMPLE_TERRACOTTA_HANDRAILS = new EnumMap<>(DyeColor.class);
-
-  static {
-    SIMPLE_TERRACOTTA_HANDRAILS.put(DyeColor.WHITE, SIMPLE_WHITE_TERRACOTTA_HANDRAIL);
-    SIMPLE_TERRACOTTA_HANDRAILS.put(DyeColor.ORANGE, SIMPLE_ORANGE_TERRACOTTA_HANDRAIL);
-    SIMPLE_TERRACOTTA_HANDRAILS.put(DyeColor.MAGENTA, SIMPLE_MAGENTA_TERRACOTTA_HANDRAIL);
-    SIMPLE_TERRACOTTA_HANDRAILS.put(DyeColor.LIGHT_BLUE, SIMPLE_LIGHT_BLUE_TERRACOTTA_HANDRAIL);
-    SIMPLE_TERRACOTTA_HANDRAILS.put(DyeColor.YELLOW, SIMPLE_YELLOW_TERRACOTTA_HANDRAIL);
-    SIMPLE_TERRACOTTA_HANDRAILS.put(DyeColor.LIME, SIMPLE_LIME_TERRACOTTA_HANDRAIL);
-    SIMPLE_TERRACOTTA_HANDRAILS.put(DyeColor.PINK, SIMPLE_PINK_TERRACOTTA_HANDRAIL);
-    SIMPLE_TERRACOTTA_HANDRAILS.put(DyeColor.GRAY, SIMPLE_GRAY_TERRACOTTA_HANDRAIL);
-    SIMPLE_TERRACOTTA_HANDRAILS.put(DyeColor.LIGHT_GRAY, SIMPLE_LIGHT_GRAY_TERRACOTTA_HANDRAIL);
-    SIMPLE_TERRACOTTA_HANDRAILS.put(DyeColor.CYAN, SIMPLE_CYAN_TERRACOTTA_HANDRAIL);
-    SIMPLE_TERRACOTTA_HANDRAILS.put(DyeColor.PURPLE, SIMPLE_PURPLE_TERRACOTTA_HANDRAIL);
-    SIMPLE_TERRACOTTA_HANDRAILS.put(DyeColor.BLUE, SIMPLE_BLUE_TERRACOTTA_HANDRAIL);
-    SIMPLE_TERRACOTTA_HANDRAILS.put(DyeColor.BROWN, SIMPLE_BROWN_TERRACOTTA_HANDRAIL);
-    SIMPLE_TERRACOTTA_HANDRAILS.put(DyeColor.GREEN, SIMPLE_GREEN_TERRACOTTA_HANDRAIL);
-    SIMPLE_TERRACOTTA_HANDRAILS.put(DyeColor.RED, SIMPLE_RED_TERRACOTTA_HANDRAIL);
-    SIMPLE_TERRACOTTA_HANDRAILS.put(DyeColor.BLACK, SIMPLE_BLACK_TERRACOTTA_HANDRAIL);
-  }
+  public static final ColorCollection<SimpleHandrailBlock> SIMPLE_DYED_TERRACOTTA_HANDRAIL = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> registerSimpleHandrail("simple_" + s + "_terracotta_handrail", Blocks.DYED_TERRACOTTA.pick(dyeColor)));
 
   // 冰雪。
   public static final SimpleHandrailBlock SIMPLE_ICE_HANDRAIL = registerSimpleHandrail("simple_ice_handrail", Blocks.ICE);
@@ -179,54 +99,15 @@ public final class HandrailBlocks extends MishangucBlocks {
     SIMPLE_BAMBOO_HANDRAIL.texture = Identifier.withDefaultNamespace("block/bamboo_block");
   }
 
-  // 染色玻璃。
-
   @MiningLevel(MiningLevel.Tool.SHOVEL)
   public static final SimpleHandrailBlock SIMPLE_DIRT_HANDRAIL = registerSimpleHandrail("simple_dirt_handrail", Blocks.DIRT);
   public static final SimpleHandrailBlock SIMPLE_STONE_HANDRAIL = registerSimpleHandrail("simple_stone_handrail", Blocks.STONE);
   public static final SimpleHandrailBlock SIMPLE_COBBLESTONE_HANDRAIL = registerSimpleHandrail("simple_cobblestone_handrail", Blocks.COBBLESTONE);
   public static final SimpleHandrailBlock SIMPLE_MOSSY_COBBLESTONE_HANDRAIL = registerSimpleHandrail("simple_mossy_cobblestone_handrail", Blocks.MOSSY_COBBLESTONE);
 
-  public static final SimpleHandrailBlock SIMPLE_WHITE_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_white_stained_glass_handrail", Blocks.WHITE_STAINED_GLASS);
-  public static final SimpleHandrailBlock SIMPLE_ORANGE_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_orange_stained_glass_handrail", Blocks.ORANGE_STAINED_GLASS);
-  public static final SimpleHandrailBlock SIMPLE_MAGENTA_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_magenta_stained_glass_handrail", Blocks.MAGENTA_STAINED_GLASS);
-  public static final SimpleHandrailBlock SIMPLE_LIGHT_BLUE_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_light_blue_stained_glass_handrail", Blocks.LIGHT_BLUE_STAINED_GLASS);
-  public static final SimpleHandrailBlock SIMPLE_YELLOW_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_yellow_stained_glass_handrail", Blocks.YELLOW_STAINED_GLASS);
-  public static final SimpleHandrailBlock SIMPLE_LIME_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_lime_stained_glass_handrail", Blocks.LIME_STAINED_GLASS);
-  public static final SimpleHandrailBlock SIMPLE_PINK_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_pink_stained_glass_handrail", Blocks.PINK_STAINED_GLASS);
-  public static final SimpleHandrailBlock SIMPLE_GRAY_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_gray_stained_glass_handrail", Blocks.GRAY_STAINED_GLASS);
-  public static final SimpleHandrailBlock SIMPLE_LIGHT_GRAY_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_light_gray_stained_glass_handrail", Blocks.LIGHT_GRAY_STAINED_GLASS);
-  public static final SimpleHandrailBlock SIMPLE_CYAN_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_cyan_stained_glass_handrail", Blocks.CYAN_STAINED_GLASS);
-  public static final SimpleHandrailBlock SIMPLE_PURPLE_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_purple_stained_glass_handrail", Blocks.PURPLE_STAINED_GLASS);
-  public static final SimpleHandrailBlock SIMPLE_BLUE_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_blue_stained_glass_handrail", Blocks.BLUE_STAINED_GLASS);
-  public static final SimpleHandrailBlock SIMPLE_BROWN_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_brown_stained_glass_handrail", Blocks.BROWN_STAINED_GLASS);
-  public static final SimpleHandrailBlock SIMPLE_GREEN_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_green_stained_glass_handrail", Blocks.GREEN_STAINED_GLASS);
-  public static final SimpleHandrailBlock SIMPLE_RED_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_red_stained_glass_handrail", Blocks.RED_STAINED_GLASS);
-  public static final SimpleHandrailBlock SIMPLE_BLACK_STAINED_GLASS_HANDRAIL = registerSimpleHandrail("simple_black_stained_glass_handrail", Blocks.BLACK_STAINED_GLASS);
+  // 染色玻璃。
 
-  /**
-   * 颜色及其对应的染色玻璃栏杆组成的映射。
-   */
-  public static final Map<DyeColor, SimpleHandrailBlock> SIMPLE_STAINED_GLASS_HANDRAILS = new EnumMap<>(DyeColor.class);
-
-  static {
-    SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.WHITE, SIMPLE_WHITE_STAINED_GLASS_HANDRAIL);
-    SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.ORANGE, SIMPLE_ORANGE_STAINED_GLASS_HANDRAIL);
-    SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.MAGENTA, SIMPLE_MAGENTA_STAINED_GLASS_HANDRAIL);
-    SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.LIGHT_BLUE, SIMPLE_LIGHT_BLUE_STAINED_GLASS_HANDRAIL);
-    SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.YELLOW, SIMPLE_YELLOW_STAINED_GLASS_HANDRAIL);
-    SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.LIME, SIMPLE_LIME_STAINED_GLASS_HANDRAIL);
-    SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.PINK, SIMPLE_PINK_STAINED_GLASS_HANDRAIL);
-    SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.GRAY, SIMPLE_GRAY_STAINED_GLASS_HANDRAIL);
-    SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.LIGHT_GRAY, SIMPLE_LIGHT_GRAY_STAINED_GLASS_HANDRAIL);
-    SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.CYAN, SIMPLE_CYAN_STAINED_GLASS_HANDRAIL);
-    SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.PURPLE, SIMPLE_PURPLE_STAINED_GLASS_HANDRAIL);
-    SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.BLUE, SIMPLE_BLUE_STAINED_GLASS_HANDRAIL);
-    SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.BROWN, SIMPLE_BROWN_STAINED_GLASS_HANDRAIL);
-    SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.GREEN, SIMPLE_GREEN_STAINED_GLASS_HANDRAIL);
-    SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.RED, SIMPLE_RED_STAINED_GLASS_HANDRAIL);
-    SIMPLE_STAINED_GLASS_HANDRAILS.put(DyeColor.BLACK, SIMPLE_BLACK_STAINED_GLASS_HANDRAIL);
-  }
+  public static final ColorCollection<SimpleHandrailBlock> SIMPLE_STAINED_GLASS_HANDRAIL = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> registerSimpleHandrail("simple_" + s + "_stained_glass_handrail", Blocks.STAINED_GLASS.pick(dyeColor)));
 
   @ApiStatus.AvailableSince("1.2.4")
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_STONE_HANDRAIL = registerColoredGlassHandrail("colored_decorated_stone_handrail", Blocks.STONE, Block.Properties.ofFullCopy(Blocks.STONE).strength(2.5f, 6f), "block/stone", "block/white_concrete");
@@ -235,82 +116,14 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("1.2.4")
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_MOSSY_COBBLESTONE_HANDRAIL = registerColoredGlassHandrail("colored_decorated_mossy_cobblestone_handrail", Blocks.MOSSY_COBBLESTONE, Block.Properties.ofFullCopy(Blocks.COBBLESTONE).strength(2.5f, 6f), "block/mossy_cobblestone", "block/white_concrete");
 
-  @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock WHITE_DECORATED_IRON_HANDRAIL = registerGlassHandrail("white_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(2.5f, 6f).mapColor(DyeColor.WHITE), "block/iron_block", "block/white_concrete");
-  @ApiStatus.AvailableSince("0.2.4")
-  @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock ORANGE_DECORATED_IRON_HANDRAIL = registerGlassHandrail("orange_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.ORANGE), "block/iron_block", "block/orange_concrete");
-  @ApiStatus.AvailableSince("0.2.4")
-  @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock MAGENTA_DECORATED_IRON_HANDRAIL = registerGlassHandrail("magenta_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.MAGENTA), "block/iron_block", "block/magenta_concrete");
-  @ApiStatus.AvailableSince("0.2.4")
-  @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock LIGHT_BLUE_DECORATED_IRON_HANDRAIL = registerGlassHandrail("light_blue_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.LIGHT_BLUE), "block/iron_block", "block/light_blue_concrete");
-  @ApiStatus.AvailableSince("0.2.4")
-  @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock YELLOW_DECORATED_IRON_HANDRAIL = registerGlassHandrail("yellow_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.YELLOW), "block/iron_block", "block/yellow_concrete");
-  @ApiStatus.AvailableSince("0.2.4")
-  @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock LIME_DECORATED_IRON_HANDRAIL = registerGlassHandrail("lime_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.LIME), "block/iron_block", "block/lime_concrete");
-  @ApiStatus.AvailableSince("0.2.4")
-  @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock PINK_DECORATED_IRON_HANDRAIL = registerGlassHandrail("pink_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.PINK), "block/iron_block", "block/pink_concrete");
-  @ApiStatus.AvailableSince("0.2.4")
-  @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock GRAY_DECORATED_IRON_HANDRAIL = registerGlassHandrail("gray_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.GRAY), "block/iron_block", "block/gray_concrete");
-  @ApiStatus.AvailableSince("0.2.4")
-  @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock LIGHT_GRAY_DECORATED_IRON_HANDRAIL = registerGlassHandrail("light_gray_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.LIGHT_GRAY), "block/iron_block", "block/light_gray_concrete");
-  @ApiStatus.AvailableSince("0.2.4")
-  @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock CYAN_DECORATED_IRON_HANDRAIL = registerGlassHandrail("cyan_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.CYAN), "block/iron_block", "block/cyan_concrete");
-  @ApiStatus.AvailableSince("0.2.4")
-  @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock PURPLE_DECORATED_IRON_HANDRAIL = registerGlassHandrail("purple_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.PURPLE), "block/iron_block", "block/purple_concrete");
-  @ApiStatus.AvailableSince("0.2.4")
-  @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock BLUE_DECORATED_IRON_HANDRAIL = registerGlassHandrail("blue_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.BLUE), "block/iron_block", "block/blue_concrete");
-  @ApiStatus.AvailableSince("0.2.4")
-  @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock BROWN_DECORATED_IRON_HANDRAIL = registerGlassHandrail("brown_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.BROWN), "block/iron_block", "block/brown_concrete");
-  @ApiStatus.AvailableSince("0.2.4")
-  @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock GREEN_DECORATED_IRON_HANDRAIL = registerGlassHandrail("green_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.GREEN), "block/iron_block", "block/green_concrete");
-  @ApiStatus.AvailableSince("0.2.4")
-  @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock RED_DECORATED_IRON_HANDRAIL = registerGlassHandrail("red_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.RED), "block/iron_block", "block/red_concrete");
-  @ApiStatus.AvailableSince("0.2.4")
-  @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final GlassHandrailBlock BLACK_DECORATED_IRON_HANDRAIL = registerGlassHandrail("black_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(WHITE_DECORATED_IRON_HANDRAIL).mapColor(DyeColor.BLACK), "block/iron_block", "block/black_concrete");
-
-  public static final EnumMap<DyeColor, GlassHandrailBlock> DECORATED_IRON_HANDRAILS = new EnumMap<>(DyeColor.class);
-
-  static {
-    DECORATED_IRON_HANDRAILS.put(DyeColor.WHITE, WHITE_DECORATED_IRON_HANDRAIL);
-    DECORATED_IRON_HANDRAILS.put(DyeColor.ORANGE, ORANGE_DECORATED_IRON_HANDRAIL);
-    DECORATED_IRON_HANDRAILS.put(DyeColor.MAGENTA, MAGENTA_DECORATED_IRON_HANDRAIL);
-    DECORATED_IRON_HANDRAILS.put(DyeColor.LIGHT_BLUE, LIGHT_BLUE_DECORATED_IRON_HANDRAIL);
-    DECORATED_IRON_HANDRAILS.put(DyeColor.YELLOW, YELLOW_DECORATED_IRON_HANDRAIL);
-    DECORATED_IRON_HANDRAILS.put(DyeColor.LIME, LIME_DECORATED_IRON_HANDRAIL);
-    DECORATED_IRON_HANDRAILS.put(DyeColor.PINK, PINK_DECORATED_IRON_HANDRAIL);
-    DECORATED_IRON_HANDRAILS.put(DyeColor.GRAY, GRAY_DECORATED_IRON_HANDRAIL);
-    DECORATED_IRON_HANDRAILS.put(DyeColor.LIGHT_GRAY, LIGHT_GRAY_DECORATED_IRON_HANDRAIL);
-    DECORATED_IRON_HANDRAILS.put(DyeColor.CYAN, CYAN_DECORATED_IRON_HANDRAIL);
-    DECORATED_IRON_HANDRAILS.put(DyeColor.PURPLE, PURPLE_DECORATED_IRON_HANDRAIL);
-    DECORATED_IRON_HANDRAILS.put(DyeColor.BLUE, BLUE_DECORATED_IRON_HANDRAIL);
-    DECORATED_IRON_HANDRAILS.put(DyeColor.BROWN, BROWN_DECORATED_IRON_HANDRAIL);
-    DECORATED_IRON_HANDRAILS.put(DyeColor.GREEN, GREEN_DECORATED_IRON_HANDRAIL);
-    DECORATED_IRON_HANDRAILS.put(DyeColor.RED, RED_DECORATED_IRON_HANDRAIL);
-    DECORATED_IRON_HANDRAILS.put(DyeColor.BLACK, BLACK_DECORATED_IRON_HANDRAIL);
-  }
-
+  public static final ColorCollection<GlassHandrailBlock> DECORATED_IRON_HANDRAIL = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> registerGlassHandrail(s + "_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(2.5f, 6f).mapColor(dyeColor), "block/iron_block", "block/" + s + "_concrete"));
   /**
    * 可自定义染色的栏杆方块。
    */
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final ColoredGlassHandrailBlock COLORED_DECORATED_IRON_HANDRAIL = registerColoredGlassHandrail("colored_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(WHITE_DECORATED_IRON_HANDRAIL), "block/iron_block", "block/white_concrete");
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_IRON_HANDRAIL = registerColoredGlassHandrail("colored_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(2.5f, 6f), "block/iron_block", "block/white_concrete");
 
   /**
    * 可自定义染色的金栏杆方块。
@@ -335,7 +148,7 @@ public final class HandrailBlocks extends MishangucBlocks {
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_LAPIS_HANDRAIL = registerColoredGlassHandrail("colored_decorated_lapis_handrail", Blocks.LAPIS_BLOCK, Block.Properties.ofFullCopy(Blocks.LAPIS_BLOCK).strength(2.5f, 6f), "block/lapis_block", "block/white_concrete");
   @ApiStatus.AvailableSince("1.4.0")
   @MiningLevel(level = MiningLevel.Level.STONE)
-  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_IRON_HANDRAIL = registerColoredGlassHandrail("glowing_colored_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(WHITE_DECORATED_IRON_HANDRAIL).lightLevel(x -> 15), "block/iron_block", "mishanguc:block/white_light");
+  public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_IRON_HANDRAIL = registerColoredGlassHandrail("glowing_colored_decorated_iron_handrail", Blocks.IRON_BLOCK, Block.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(2.5f, 6f).lightLevel(x -> 15), "block/iron_block", "mishanguc:block/white_light");
   @ApiStatus.AvailableSince("1.4.0")
   @MiningLevel(level = MiningLevel.Level.IRON)
   public static final ColoredGlassHandrailBlock GLOWING_COLORED_DECORATED_GOLD_HANDRAIL = registerColoredGlassHandrail("glowing_colored_decorated_gold_handrail", Blocks.GOLD_BLOCK, Block.Properties.ofFullCopy(Blocks.GOLD_BLOCK).strength(1.5f, 6f).lightLevel(x -> 15), "block/gold_block", "mishanguc:block/white_light");

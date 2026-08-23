@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.FabricRenderState;
 import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
@@ -35,7 +35,7 @@ public interface MishangRenderStateProvider {
   RenderStateDataKey<MishangRenderState> MISHANG_BLOCK_OUTLINE = RenderStateDataKey.create(() -> "mishanguc:block_outline");
 
 
-  LevelRenderEvents.AfterBlockOutlineExtraction MISHANG_EXTRACTION = (context, result) -> {
+  LevelExtractionEvents.AfterBlockOutlineExtraction MISHANG_EXTRACTION = (context, result) -> {
     final LocalPlayer player = Minecraft.getInstance().player;
     if (player == null) return;
     final LevelRenderState worldRenderState = context.levelState();

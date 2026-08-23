@@ -1,10 +1,9 @@
 package pers.solid.mishang.uc.blocks;
 
-import com.google.common.collect.ImmutableMap;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ColorCollection;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.ApiStatus;
@@ -137,226 +136,25 @@ public final class WallSignBlocks extends MishangucBlocks {
   public static final ColoredWallSignBlock COLORED_WOODEN_WALL_SIGN = registerColored("colored_wooden_wall_sign", ColoredBlocks.COLORED_PLANKS);
 
   // 混凝土
-
-  public static final WallSignBlock WHITE_CONCRETE_WALL_SIGN = register("white_concrete_wall_sign", Blocks.WHITE_CONCRETE);
-
-  public static final WallSignBlock ORANGE_CONCRETE_WALL_SIGN = register("orange_concrete_wall_sign", Blocks.ORANGE_CONCRETE);
-
-  public static final WallSignBlock MAGENTA_CONCRETE_WALL_SIGN = register("magenta_concrete_wall_sign", Blocks.MAGENTA_CONCRETE);
-
-  public static final WallSignBlock LIGHT_BLUE_CONCRETE_WALL_SIGN = register("light_blue_concrete_wall_sign", Blocks.LIGHT_BLUE_CONCRETE);
-
-  public static final WallSignBlock YELLOW_CONCRETE_WALL_SIGN = register("yellow_concrete_wall_sign", Blocks.YELLOW_CONCRETE);
-
-  public static final WallSignBlock LIME_CONCRETE_WALL_SIGN = register("lime_concrete_wall_sign", Blocks.LIME_CONCRETE);
-
-  public static final WallSignBlock PINK_CONCRETE_WALL_SIGN = register("pink_concrete_wall_sign", Blocks.PINK_CONCRETE);
-
-  public static final WallSignBlock GRAY_CONCRETE_WALL_SIGN = register("gray_concrete_wall_sign", Blocks.GRAY_CONCRETE);
-
-  public static final WallSignBlock LIGHT_GRAY_CONCRETE_WALL_SIGN = register("light_gray_concrete_wall_sign", Blocks.LIGHT_GRAY_CONCRETE);
-
-  public static final WallSignBlock CYAN_CONCRETE_WALL_SIGN = register("cyan_concrete_wall_sign", Blocks.CYAN_CONCRETE);
-
-  public static final WallSignBlock PURPLE_CONCRETE_WALL_SIGN = register("purple_concrete_wall_sign", Blocks.PURPLE_CONCRETE);
-
-  public static final WallSignBlock BLUE_CONCRETE_WALL_SIGN = register("blue_concrete_wall_sign", Blocks.BLUE_CONCRETE);
-
-  public static final WallSignBlock BROWN_CONCRETE_WALL_SIGN = register("brown_concrete_wall_sign", Blocks.BROWN_CONCRETE);
-
-  public static final WallSignBlock GREEN_CONCRETE_WALL_SIGN = register("green_concrete_wall_sign", Blocks.GREEN_CONCRETE);
-
-  public static final WallSignBlock RED_CONCRETE_WALL_SIGN = register("red_concrete_wall_sign", Blocks.RED_CONCRETE);
-
-  public static final WallSignBlock BLACK_CONCRETE_WALL_SIGN = register("black_concrete_wall_sign", Blocks.BLACK_CONCRETE);
-
-  public static final ImmutableMap<DyeColor, WallSignBlock> CONCRETE_WALL_SIGNS = new ImmutableMap.Builder<DyeColor, WallSignBlock>()
-      .put(DyeColor.WHITE, WHITE_CONCRETE_WALL_SIGN)
-      .put(DyeColor.ORANGE, ORANGE_CONCRETE_WALL_SIGN)
-      .put(DyeColor.MAGENTA, MAGENTA_CONCRETE_WALL_SIGN)
-      .put(DyeColor.LIGHT_BLUE, LIGHT_BLUE_CONCRETE_WALL_SIGN)
-      .put(DyeColor.YELLOW, YELLOW_CONCRETE_WALL_SIGN)
-      .put(DyeColor.LIME, LIME_CONCRETE_WALL_SIGN)
-      .put(DyeColor.PINK, PINK_CONCRETE_WALL_SIGN)
-      .put(DyeColor.GRAY, GRAY_CONCRETE_WALL_SIGN)
-      .put(DyeColor.LIGHT_GRAY, LIGHT_GRAY_CONCRETE_WALL_SIGN)
-      .put(DyeColor.CYAN, CYAN_CONCRETE_WALL_SIGN)
-      .put(DyeColor.PURPLE, PURPLE_CONCRETE_WALL_SIGN)
-      .put(DyeColor.BLUE, BLUE_CONCRETE_WALL_SIGN)
-      .put(DyeColor.BROWN, BROWN_CONCRETE_WALL_SIGN)
-      .put(DyeColor.GREEN, GREEN_CONCRETE_WALL_SIGN)
-      .put(DyeColor.RED, RED_CONCRETE_WALL_SIGN)
-      .put(DyeColor.BLACK, BLACK_CONCRETE_WALL_SIGN)
-      .build();
+  public static final ColorCollection<WallSignBlock> CONCRETE_WALL_SIGN = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> register(s + "_concrete_wall_sign", Blocks.CONCRETE.pick(dyeColor)));
 
   @ApiStatus.AvailableSince("0.2.2")
   public static final ColoredWallSignBlock COLORED_CONCRETE_WALL_SIGN = registerColored("colored_concrete_wall_sign", ColoredBlocks.COLORED_CONCRETE);
 
+  public static final ColorCollection<WallSignBlock> DYED_TERRACOTTA_WALL_SIGN = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> register(s + "_terracotta_wall_sign", Blocks.DYED_TERRACOTTA.pick(dyeColor)));
+
   // 陶瓦
-
-  public static final WallSignBlock WHITE_TERRACOTTA_WALL_SIGN = register("white_terracotta_wall_sign", Blocks.WHITE_TERRACOTTA);
-
-  public static final WallSignBlock ORANGE_TERRACOTTA_WALL_SIGN = register("orange_terracotta_wall_sign", Blocks.ORANGE_TERRACOTTA);
-
-  public static final WallSignBlock MAGENTA_TERRACOTTA_WALL_SIGN = register("magenta_terracotta_wall_sign", Blocks.MAGENTA_TERRACOTTA);
-
-  public static final WallSignBlock LIGHT_BLUE_TERRACOTTA_WALL_SIGN = register("light_blue_terracotta_wall_sign", Blocks.LIGHT_BLUE_TERRACOTTA);
-
-  public static final WallSignBlock YELLOW_TERRACOTTA_WALL_SIGN = register("yellow_terracotta_wall_sign", Blocks.YELLOW_TERRACOTTA);
-
-  public static final WallSignBlock LIME_TERRACOTTA_WALL_SIGN = register("lime_terracotta_wall_sign", Blocks.LIME_TERRACOTTA);
-
-  public static final WallSignBlock PINK_TERRACOTTA_WALL_SIGN = register("pink_terracotta_wall_sign", Blocks.PINK_TERRACOTTA);
-
-  public static final WallSignBlock GRAY_TERRACOTTA_WALL_SIGN = register("gray_terracotta_wall_sign", Blocks.GRAY_TERRACOTTA);
-
-  public static final WallSignBlock LIGHT_GRAY_TERRACOTTA_WALL_SIGN = register("light_gray_terracotta_wall_sign", Blocks.LIGHT_GRAY_TERRACOTTA);
-
-  public static final WallSignBlock CYAN_TERRACOTTA_WALL_SIGN = register("cyan_terracotta_wall_sign", Blocks.CYAN_TERRACOTTA);
-
-  public static final WallSignBlock PURPLE_TERRACOTTA_WALL_SIGN = register("purple_terracotta_wall_sign", Blocks.PURPLE_TERRACOTTA);
-
-  public static final WallSignBlock BLUE_TERRACOTTA_WALL_SIGN = register("blue_terracotta_wall_sign", Blocks.BLUE_TERRACOTTA);
-
-  public static final WallSignBlock BROWN_TERRACOTTA_WALL_SIGN = register("brown_terracotta_wall_sign", Blocks.BROWN_TERRACOTTA);
-
-  public static final WallSignBlock GREEN_TERRACOTTA_WALL_SIGN = register("green_terracotta_wall_sign", Blocks.GREEN_TERRACOTTA);
-
-  public static final WallSignBlock RED_TERRACOTTA_WALL_SIGN = register("red_terracotta_wall_sign", Blocks.RED_TERRACOTTA);
-
-  public static final WallSignBlock BLACK_TERRACOTTA_WALL_SIGN = register("black_terracotta_wall_sign", Blocks.BLACK_TERRACOTTA);
-
-  public static final ImmutableMap<DyeColor, WallSignBlock> TERRACOTTA_WALL_SIGNS = new ImmutableMap.Builder<DyeColor, WallSignBlock>()
-      .put(DyeColor.WHITE, WHITE_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.ORANGE, ORANGE_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.MAGENTA, MAGENTA_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.LIGHT_BLUE, LIGHT_BLUE_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.YELLOW, YELLOW_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.LIME, LIME_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.PINK, PINK_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.GRAY, GRAY_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.LIGHT_GRAY, LIGHT_GRAY_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.CYAN, CYAN_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.PURPLE, PURPLE_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.BLUE, BLUE_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.BROWN, BROWN_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.GREEN, GREEN_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.RED, RED_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.BLACK, BLACK_TERRACOTTA_WALL_SIGN)
-      .build();
+  public static final ColorCollection<GlowingWallSignBlock> GLOWING_CONCRETE_WALL_SIGN = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> registerGlowing("glowing_" + s + "_concrete_wall_sign", Blocks.CONCRETE.pick(dyeColor)));
 
   @ApiStatus.AvailableSince("0.2.2")
   public static final ColoredWallSignBlock COLORED_TERRACOTTA_WALL_SIGN = registerColored("colored_terracotta_wall_sign", ColoredBlocks.COLORED_TERRACOTTA);
 
   // 发光的混凝土
-
-  public static final GlowingWallSignBlock GLOWING_WHITE_CONCRETE_WALL_SIGN = registerGlowing("glowing_white_concrete_wall_sign", Blocks.WHITE_CONCRETE);
-
-  public static final GlowingWallSignBlock GLOWING_ORANGE_CONCRETE_WALL_SIGN = registerGlowing("glowing_orange_concrete_wall_sign", Blocks.ORANGE_CONCRETE);
-
-  public static final GlowingWallSignBlock GLOWING_MAGENTA_CONCRETE_WALL_SIGN = registerGlowing("glowing_magenta_concrete_wall_sign", Blocks.MAGENTA_CONCRETE);
-
-  public static final GlowingWallSignBlock GLOWING_LIGHT_BLUE_CONCRETE_WALL_SIGN = registerGlowing("glowing_light_blue_concrete_wall_sign", Blocks.LIGHT_BLUE_CONCRETE);
-
-  public static final GlowingWallSignBlock GLOWING_YELLOW_CONCRETE_WALL_SIGN = registerGlowing("glowing_yellow_concrete_wall_sign", Blocks.YELLOW_CONCRETE);
-
-  public static final GlowingWallSignBlock GLOWING_LIME_CONCRETE_WALL_SIGN = registerGlowing("glowing_lime_concrete_wall_sign", Blocks.LIME_CONCRETE);
-
-  public static final GlowingWallSignBlock GLOWING_PINK_CONCRETE_WALL_SIGN = registerGlowing("glowing_pink_concrete_wall_sign", Blocks.PINK_CONCRETE);
-
-  public static final GlowingWallSignBlock GLOWING_GRAY_CONCRETE_WALL_SIGN = registerGlowing("glowing_gray_concrete_wall_sign", Blocks.GRAY_CONCRETE);
-
-  public static final GlowingWallSignBlock GLOWING_LIGHT_GRAY_CONCRETE_WALL_SIGN = registerGlowing("glowing_light_gray_concrete_wall_sign", Blocks.LIGHT_GRAY_CONCRETE);
-
-  public static final GlowingWallSignBlock GLOWING_CYAN_CONCRETE_WALL_SIGN = registerGlowing("glowing_cyan_concrete_wall_sign", Blocks.CYAN_CONCRETE);
-
-  public static final GlowingWallSignBlock GLOWING_PURPLE_CONCRETE_WALL_SIGN = registerGlowing("glowing_purple_concrete_wall_sign", Blocks.PURPLE_CONCRETE);
-
-  public static final GlowingWallSignBlock GLOWING_BLUE_CONCRETE_WALL_SIGN = registerGlowing("glowing_blue_concrete_wall_sign", Blocks.BLUE_CONCRETE);
-
-  public static final GlowingWallSignBlock GLOWING_BROWN_CONCRETE_WALL_SIGN = registerGlowing("glowing_brown_concrete_wall_sign", Blocks.BROWN_CONCRETE);
-
-  public static final GlowingWallSignBlock GLOWING_GREEN_CONCRETE_WALL_SIGN = registerGlowing("glowing_green_concrete_wall_sign", Blocks.GREEN_CONCRETE);
-
-  public static final GlowingWallSignBlock GLOWING_RED_CONCRETE_WALL_SIGN = registerGlowing("glowing_red_concrete_wall_sign", Blocks.RED_CONCRETE);
-
-  public static final GlowingWallSignBlock GLOWING_BLACK_CONCRETE_WALL_SIGN = registerGlowing("glowing_black_concrete_wall_sign", Blocks.BLACK_CONCRETE);
-
-  public static final ImmutableMap<DyeColor, GlowingWallSignBlock> GLOWING_CONCRETE_WALL_SIGNS = new ImmutableMap.Builder<DyeColor, GlowingWallSignBlock>()
-      .put(DyeColor.WHITE, GLOWING_WHITE_CONCRETE_WALL_SIGN)
-      .put(DyeColor.ORANGE, GLOWING_ORANGE_CONCRETE_WALL_SIGN)
-      .put(DyeColor.MAGENTA, GLOWING_MAGENTA_CONCRETE_WALL_SIGN)
-      .put(DyeColor.LIGHT_BLUE, GLOWING_LIGHT_BLUE_CONCRETE_WALL_SIGN)
-      .put(DyeColor.YELLOW, GLOWING_YELLOW_CONCRETE_WALL_SIGN)
-      .put(DyeColor.LIME, GLOWING_LIME_CONCRETE_WALL_SIGN)
-      .put(DyeColor.PINK, GLOWING_PINK_CONCRETE_WALL_SIGN)
-      .put(DyeColor.GRAY, GLOWING_GRAY_CONCRETE_WALL_SIGN)
-      .put(DyeColor.LIGHT_GRAY, GLOWING_LIGHT_GRAY_CONCRETE_WALL_SIGN)
-      .put(DyeColor.CYAN, GLOWING_CYAN_CONCRETE_WALL_SIGN)
-      .put(DyeColor.PURPLE, GLOWING_PURPLE_CONCRETE_WALL_SIGN)
-      .put(DyeColor.BLUE, GLOWING_BLUE_CONCRETE_WALL_SIGN)
-      .put(DyeColor.BROWN, GLOWING_BROWN_CONCRETE_WALL_SIGN)
-      .put(DyeColor.GREEN, GLOWING_GREEN_CONCRETE_WALL_SIGN)
-      .put(DyeColor.RED, GLOWING_RED_CONCRETE_WALL_SIGN)
-      .put(DyeColor.BLACK, GLOWING_BLACK_CONCRETE_WALL_SIGN)
-      .build();
-
   @ApiStatus.AvailableSince("1.0.2")
   public static final ColoredGlowingWallSignBlock COLORED_GLOWING_CONCRETE_WALL_SIGN = registerColoredGlowing("colored_glowing_concrete_wall_sign", ColoredBlocks.COLORED_CONCRETE);
+  public static final ColorCollection<GlowingWallSignBlock> GLOWING_DYED_TERRACOTTA_WALL_SIGN = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> registerGlowing("glowing_" + s + "_terracotta_wall_sign", Blocks.DYED_TERRACOTTA.pick(dyeColor)));
 
   // 发光的陶瓦
-
-  public static final GlowingWallSignBlock GLOWING_WHITE_TERRACOTTA_WALL_SIGN = registerGlowing("glowing_white_terracotta_wall_sign", Blocks.WHITE_TERRACOTTA);
-
-  public static final GlowingWallSignBlock GLOWING_ORANGE_TERRACOTTA_WALL_SIGN = registerGlowing("glowing_orange_terracotta_wall_sign", Blocks.ORANGE_TERRACOTTA);
-
-  public static final GlowingWallSignBlock GLOWING_MAGENTA_TERRACOTTA_WALL_SIGN = registerGlowing("glowing_magenta_terracotta_wall_sign", Blocks.MAGENTA_TERRACOTTA);
-
-  public static final GlowingWallSignBlock GLOWING_LIGHT_BLUE_TERRACOTTA_WALL_SIGN = registerGlowing("glowing_light_blue_terracotta_wall_sign", Blocks.LIGHT_BLUE_TERRACOTTA);
-
-  public static final GlowingWallSignBlock GLOWING_YELLOW_TERRACOTTA_WALL_SIGN = registerGlowing("glowing_yellow_terracotta_wall_sign", Blocks.YELLOW_TERRACOTTA);
-
-  public static final GlowingWallSignBlock GLOWING_LIME_TERRACOTTA_WALL_SIGN = registerGlowing("glowing_lime_terracotta_wall_sign", Blocks.LIME_TERRACOTTA);
-
-  public static final GlowingWallSignBlock GLOWING_PINK_TERRACOTTA_WALL_SIGN = registerGlowing("glowing_pink_terracotta_wall_sign", Blocks.PINK_TERRACOTTA);
-
-  public static final GlowingWallSignBlock GLOWING_GRAY_TERRACOTTA_WALL_SIGN = registerGlowing("glowing_gray_terracotta_wall_sign", Blocks.GRAY_TERRACOTTA);
-
-  public static final GlowingWallSignBlock GLOWING_LIGHT_GRAY_TERRACOTTA_WALL_SIGN = registerGlowing("glowing_light_gray_terracotta_wall_sign", Blocks.LIGHT_GRAY_TERRACOTTA);
-
-  public static final GlowingWallSignBlock GLOWING_CYAN_TERRACOTTA_WALL_SIGN = registerGlowing("glowing_cyan_terracotta_wall_sign", Blocks.CYAN_TERRACOTTA);
-
-  public static final GlowingWallSignBlock GLOWING_PURPLE_TERRACOTTA_WALL_SIGN = registerGlowing("glowing_purple_terracotta_wall_sign", Blocks.PURPLE_TERRACOTTA);
-
-  public static final GlowingWallSignBlock GLOWING_BLUE_TERRACOTTA_WALL_SIGN = registerGlowing("glowing_blue_terracotta_wall_sign", Blocks.BLUE_TERRACOTTA);
-
-  public static final GlowingWallSignBlock GLOWING_BROWN_TERRACOTTA_WALL_SIGN = registerGlowing("glowing_brown_terracotta_wall_sign", Blocks.BROWN_TERRACOTTA);
-
-  public static final GlowingWallSignBlock GLOWING_GREEN_TERRACOTTA_WALL_SIGN = registerGlowing("glowing_green_terracotta_wall_sign", Blocks.GREEN_TERRACOTTA);
-
-  public static final GlowingWallSignBlock GLOWING_RED_TERRACOTTA_WALL_SIGN = registerGlowing("glowing_red_terracotta_wall_sign", Blocks.RED_TERRACOTTA);
-
-  public static final GlowingWallSignBlock GLOWING_BLACK_TERRACOTTA_WALL_SIGN = registerGlowing("glowing_black_terracotta_wall_sign", Blocks.BLACK_TERRACOTTA);
-
-  public static final ImmutableMap<DyeColor, GlowingWallSignBlock> GLOWING_TERRACOTTA_WALL_SIGNS = new ImmutableMap.Builder<DyeColor, GlowingWallSignBlock>()
-      .put(DyeColor.WHITE, GLOWING_WHITE_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.ORANGE, GLOWING_ORANGE_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.MAGENTA, GLOWING_MAGENTA_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.LIGHT_BLUE, GLOWING_LIGHT_BLUE_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.YELLOW, GLOWING_YELLOW_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.LIME, GLOWING_LIME_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.PINK, GLOWING_PINK_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.GRAY, GLOWING_GRAY_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.LIGHT_GRAY, GLOWING_LIGHT_GRAY_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.CYAN, GLOWING_CYAN_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.PURPLE, GLOWING_PURPLE_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.BLUE, GLOWING_BLUE_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.BROWN, GLOWING_BROWN_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.GREEN, GLOWING_GREEN_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.RED, GLOWING_RED_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.BLACK, GLOWING_BLACK_TERRACOTTA_WALL_SIGN)
-      .build();
-
   @ApiStatus.AvailableSince("1.0.2")
   public static final ColoredGlowingWallSignBlock COLORED_GLOWING_TERRACOTTA_WALL_SIGN = registerColoredGlowing("colored_glowing_terracotta_wall_sign", ColoredBlocks.COLORED_TERRACOTTA);
 
@@ -504,109 +302,11 @@ public final class WallSignBlocks extends MishangucBlocks {
 
   // 完整的混凝土
 
-  public static final FullWallSignBlock FULL_WHITE_CONCRETE_WALL_SIGN = registerFull("full_white_concrete_wall_sign", Blocks.WHITE_CONCRETE);
-
-  public static final FullWallSignBlock FULL_ORANGE_CONCRETE_WALL_SIGN = registerFull("full_orange_concrete_wall_sign", Blocks.ORANGE_CONCRETE);
-
-  public static final FullWallSignBlock FULL_MAGENTA_CONCRETE_WALL_SIGN = registerFull("full_magenta_concrete_wall_sign", Blocks.MAGENTA_CONCRETE);
-
-  public static final FullWallSignBlock FULL_LIGHT_BLUE_CONCRETE_WALL_SIGN = registerFull("full_light_blue_concrete_wall_sign", Blocks.LIGHT_BLUE_CONCRETE);
-
-  public static final FullWallSignBlock FULL_YELLOW_CONCRETE_WALL_SIGN = registerFull("full_yellow_concrete_wall_sign", Blocks.YELLOW_CONCRETE);
-
-  public static final FullWallSignBlock FULL_LIME_CONCRETE_WALL_SIGN = registerFull("full_lime_concrete_wall_sign", Blocks.LIME_CONCRETE);
-
-  public static final FullWallSignBlock FULL_PINK_CONCRETE_WALL_SIGN = registerFull("full_pink_concrete_wall_sign", Blocks.PINK_CONCRETE);
-
-  public static final FullWallSignBlock FULL_GRAY_CONCRETE_WALL_SIGN = registerFull("full_gray_concrete_wall_sign", Blocks.GRAY_CONCRETE);
-
-  public static final FullWallSignBlock FULL_LIGHT_GRAY_CONCRETE_WALL_SIGN = registerFull("full_light_gray_concrete_wall_sign", Blocks.LIGHT_GRAY_CONCRETE);
-
-  public static final FullWallSignBlock FULL_CYAN_CONCRETE_WALL_SIGN = registerFull("full_cyan_concrete_wall_sign", Blocks.CYAN_CONCRETE);
-
-  public static final FullWallSignBlock FULL_PURPLE_CONCRETE_WALL_SIGN = registerFull("full_purple_concrete_wall_sign", Blocks.PURPLE_CONCRETE);
-
-  public static final FullWallSignBlock FULL_BLUE_CONCRETE_WALL_SIGN = registerFull("full_blue_concrete_wall_sign", Blocks.BLUE_CONCRETE);
-
-  public static final FullWallSignBlock FULL_BROWN_CONCRETE_WALL_SIGN = registerFull("full_brown_concrete_wall_sign", Blocks.BROWN_CONCRETE);
-
-  public static final FullWallSignBlock FULL_GREEN_CONCRETE_WALL_SIGN = registerFull("full_green_concrete_wall_sign", Blocks.GREEN_CONCRETE);
-
-  public static final FullWallSignBlock FULL_RED_CONCRETE_WALL_SIGN = registerFull("full_red_concrete_wall_sign", Blocks.RED_CONCRETE);
-
-  public static final FullWallSignBlock FULL_BLACK_CONCRETE_WALL_SIGN = registerFull("full_black_concrete_wall_sign", Blocks.BLACK_CONCRETE);
-
-  public static final ImmutableMap<DyeColor, FullWallSignBlock> FULL_CONCRETE_WALL_SIGNS = new ImmutableMap.Builder<DyeColor, FullWallSignBlock>()
-      .put(DyeColor.WHITE, FULL_WHITE_CONCRETE_WALL_SIGN)
-      .put(DyeColor.ORANGE, FULL_ORANGE_CONCRETE_WALL_SIGN)
-      .put(DyeColor.MAGENTA, FULL_MAGENTA_CONCRETE_WALL_SIGN)
-      .put(DyeColor.LIGHT_BLUE, FULL_LIGHT_BLUE_CONCRETE_WALL_SIGN)
-      .put(DyeColor.YELLOW, FULL_YELLOW_CONCRETE_WALL_SIGN)
-      .put(DyeColor.LIME, FULL_LIME_CONCRETE_WALL_SIGN)
-      .put(DyeColor.PINK, FULL_PINK_CONCRETE_WALL_SIGN)
-      .put(DyeColor.GRAY, FULL_GRAY_CONCRETE_WALL_SIGN)
-      .put(DyeColor.LIGHT_GRAY, FULL_LIGHT_GRAY_CONCRETE_WALL_SIGN)
-      .put(DyeColor.CYAN, FULL_CYAN_CONCRETE_WALL_SIGN)
-      .put(DyeColor.PURPLE, FULL_PURPLE_CONCRETE_WALL_SIGN)
-      .put(DyeColor.BLUE, FULL_BLUE_CONCRETE_WALL_SIGN)
-      .put(DyeColor.BROWN, FULL_BROWN_CONCRETE_WALL_SIGN)
-      .put(DyeColor.GREEN, FULL_GREEN_CONCRETE_WALL_SIGN)
-      .put(DyeColor.RED, FULL_RED_CONCRETE_WALL_SIGN)
-      .put(DyeColor.BLACK, FULL_BLACK_CONCRETE_WALL_SIGN)
-      .build();
+  public static final ColorCollection<FullWallSignBlock> FULL_CONCRETE_WALL_SIGN = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> registerFull("full_" + s + "_concrete_wall_sign", Blocks.CONCRETE.pick(dyeColor)));
 
   // 完整的陶瓦
 
-  public static final FullWallSignBlock FULL_WHITE_TERRACOTTA_WALL_SIGN = registerFull("full_white_terracotta_wall_sign", Blocks.WHITE_TERRACOTTA);
-
-  public static final FullWallSignBlock FULL_ORANGE_TERRACOTTA_WALL_SIGN = registerFull("full_orange_terracotta_wall_sign", Blocks.ORANGE_TERRACOTTA);
-
-  public static final FullWallSignBlock FULL_MAGENTA_TERRACOTTA_WALL_SIGN = registerFull("full_magenta_terracotta_wall_sign", Blocks.MAGENTA_TERRACOTTA);
-
-  public static final FullWallSignBlock FULL_LIGHT_BLUE_TERRACOTTA_WALL_SIGN = registerFull("full_light_blue_terracotta_wall_sign", Blocks.LIGHT_BLUE_TERRACOTTA);
-
-  public static final FullWallSignBlock FULL_YELLOW_TERRACOTTA_WALL_SIGN = registerFull("full_yellow_terracotta_wall_sign", Blocks.YELLOW_TERRACOTTA);
-
-  public static final FullWallSignBlock FULL_LIME_TERRACOTTA_WALL_SIGN = registerFull("full_lime_terracotta_wall_sign", Blocks.LIME_TERRACOTTA);
-
-  public static final FullWallSignBlock FULL_PINK_TERRACOTTA_WALL_SIGN = registerFull("full_pink_terracotta_wall_sign", Blocks.PINK_TERRACOTTA);
-
-  public static final FullWallSignBlock FULL_GRAY_TERRACOTTA_WALL_SIGN = registerFull("full_gray_terracotta_wall_sign", Blocks.GRAY_TERRACOTTA);
-
-  public static final FullWallSignBlock FULL_LIGHT_GRAY_TERRACOTTA_WALL_SIGN = registerFull("full_light_gray_terracotta_wall_sign", Blocks.LIGHT_GRAY_TERRACOTTA);
-
-  public static final FullWallSignBlock FULL_CYAN_TERRACOTTA_WALL_SIGN = registerFull("full_cyan_terracotta_wall_sign", Blocks.CYAN_TERRACOTTA);
-
-  public static final FullWallSignBlock FULL_PURPLE_TERRACOTTA_WALL_SIGN = registerFull("full_purple_terracotta_wall_sign", Blocks.PURPLE_TERRACOTTA);
-
-  public static final FullWallSignBlock FULL_BLUE_TERRACOTTA_WALL_SIGN = registerFull("full_blue_terracotta_wall_sign", Blocks.BLUE_TERRACOTTA);
-
-  public static final FullWallSignBlock FULL_BROWN_TERRACOTTA_WALL_SIGN = registerFull("full_brown_terracotta_wall_sign", Blocks.BROWN_TERRACOTTA);
-
-  public static final FullWallSignBlock FULL_GREEN_TERRACOTTA_WALL_SIGN = registerFull("full_green_terracotta_wall_sign", Blocks.GREEN_TERRACOTTA);
-
-  public static final FullWallSignBlock FULL_RED_TERRACOTTA_WALL_SIGN = registerFull("full_red_terracotta_wall_sign", Blocks.RED_TERRACOTTA);
-
-  public static final FullWallSignBlock FULL_BLACK_TERRACOTTA_WALL_SIGN = registerFull("full_black_terracotta_wall_sign", Blocks.BLACK_TERRACOTTA);
-
-  public static final ImmutableMap<DyeColor, FullWallSignBlock> FULL_TERRACOTTA_WALL_SIGNS = new ImmutableMap.Builder<DyeColor, FullWallSignBlock>()
-      .put(DyeColor.WHITE, FULL_WHITE_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.ORANGE, FULL_ORANGE_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.MAGENTA, FULL_MAGENTA_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.LIGHT_BLUE, FULL_LIGHT_BLUE_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.YELLOW, FULL_YELLOW_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.LIME, FULL_LIME_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.PINK, FULL_PINK_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.GRAY, FULL_GRAY_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.LIGHT_GRAY, FULL_LIGHT_GRAY_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.CYAN, FULL_CYAN_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.PURPLE, FULL_PURPLE_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.BLUE, FULL_BLUE_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.BROWN, FULL_BROWN_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.GREEN, FULL_GREEN_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.RED, FULL_RED_TERRACOTTA_WALL_SIGN)
-      .put(DyeColor.BLACK, FULL_BLACK_TERRACOTTA_WALL_SIGN)
-      .build();
+  public static final ColorCollection<FullWallSignBlock> FULL_DYED_TERRACOTTA_WALL_SIGN = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> registerFull("full_" + s + "_terracotta_wall_sign", Blocks.DYED_TERRACOTTA.pick(dyeColor)));
 
   private WallSignBlocks() {
   }

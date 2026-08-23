@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.item;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
@@ -9,8 +8,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
 import net.minecraft.core.BlockPos;
@@ -45,8 +42,8 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
    * sneaking".
    */
   protected final @Nullable Boolean includesFluid;
-  private static final int OUTLINE_COLOR_MIDORI = ARGB.colorFromFloat(0.8f, 0, 1, 0);
-  private static final int OUTLINE_COLOR_MIDORI_LIGHT = ARGB.colorFromFloat(0.5f, 0, 1, 0.5f);
+  private static final int OUTLINE_COLOR_GREEN = ARGB.colorFromFloat(0.8f, 0, 1, 0);
+  private static final int OUTLINE_COLOR_LIGHT_GREEN = ARGB.colorFromFloat(0.5f, 0, 1, 0.5f);
 
   public BlockToolItem(Properties settings, @Nullable Boolean includesFluid) {
     super(settings);
@@ -155,34 +152,29 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
       ItemStack itemStack,
       LevelRenderContext context,
       BlockOutlineRenderState outlineRenderState) {
-    final MultiBufferSource consumers = context.bufferSource();
-    if (consumers == null) return true;
-    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderTypes.LINES);
     final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
-    final BlockPos blockPos = outlineRenderState.pos();
+    final BlockPos blockPos = outlineRenderState.pos(); // todo 这两个变量不需要了？
 
     if (!(context.levelState().getData(MISHANG_BLOCK_OUTLINE) instanceof final BlockToolState state)) {
       return false;
     }
-    ShapeRenderer.renderShape(
+    context.submitNodeCollector().submitShapeOutline(
         context.poseStack(),
-        vertexConsumer,
         outlineRenderState.shape(),
-        blockPos.getX() - cameraPos.x(),
-        blockPos.getY() - cameraPos.y(),
-        blockPos.getZ() - cameraPos.z(),
-        OUTLINE_COLOR_MIDORI,
-        Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+        RenderTypes.lines(),
+        OUTLINE_COLOR_GREEN,
+        Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
+        outlineRenderState.isTranslucent() // todo 检查这里的 NPE
+    );
     if (state.lightGreenPos != null && state.lightGreenShape != null) {
-      ShapeRenderer.renderShape(
+      context.submitNodeCollector().submitShapeOutline(
           context.poseStack(),
-          vertexConsumer,
           state.lightGreenShape,
-          blockPos.getX() - cameraPos.x(),
-          blockPos.getY() - cameraPos.y(),
-          blockPos.getZ() - cameraPos.z(),
-          OUTLINE_COLOR_MIDORI_LIGHT,
-          Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+          RenderTypes.lines(),
+          OUTLINE_COLOR_LIGHT_GREEN,
+          Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
+          true
+      );
     }
     return false;
   }

@@ -1,11 +1,15 @@
 package pers.solid.mishang.uc.blocks;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.references.BlockItemId;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ColorCollection;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
@@ -23,6 +27,9 @@ import pers.solid.mishang.uc.mixin.ItemsAccessor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.ToIntFunction;
@@ -99,31 +106,42 @@ public class MishangucBlocks {
       final Class<?> fieldType = field.getType();
       if (Modifier.isFinal(modifier)
           && Modifier.isStatic(modifier)
-          && Block.class.isAssignableFrom(fieldType)) {
+          && (Block.class.isAssignableFrom(fieldType) || ColorCollection.class.isAssignableFrom(fieldType))) {
         try {
 
           // 注册方块。
-          Block value = (Block) field.get(null);
-          String path;
-          if (field.isAnnotationPresent(CustomId.class)) {
-            final CustomId annotation = field.getAnnotation(CustomId.class);
-            path = annotation.path();
-          } else {
-            path = field.getName().toLowerCase();
+          final List<Block> blocks;
+          switch (field.get(null)) {
+            case Block block -> blocks = Collections.singletonList(block);
+            case ColorCollection<?> colorCollection -> blocks = colorCollection.asList().stream().map(o -> o instanceof Block block ? block : null).filter(Objects::nonNull).toList();
+            default -> {
+              continue;
+            }
           }
-          final Item.Properties settings = new Item.Properties();
-          if (path.contains("netherite")) {
-            settings.fireResistant();
+
+          for (Block block : blocks) {
+            String path;
+            if (field.isAnnotationPresent(CustomId.class)) {
+              final CustomId annotation = field.getAnnotation(CustomId.class);
+              path = annotation.path();
+            } else {
+              path = field.getName().toLowerCase();
+
+            }
+            final Item.Properties settings = new Item.Properties();
+            if (path.contains("netherite")) {
+              settings.fireResistant();
+            }
+            final BiFunction<Block, Item.Properties, Item> biFunction =
+                block instanceof HungSignBlock
+                    ? HungSignBlockItem::new
+                    : block instanceof WallSignBlock
+                    ? WallSignBlockItem::new
+                    : block instanceof StandingSignBlock
+                    ? StandingSignBlockItem::new
+                    : NamedBlockItem::new;
+            ItemsAccessor.callRegisterBlock(blockItemId(block), block, biFunction, settings);
           }
-          final BiFunction<Block, Item.Properties, Item> biFunction =
-              value instanceof HungSignBlock
-                  ? HungSignBlockItem::new
-                  : value instanceof WallSignBlock
-                  ? WallSignBlockItem::new
-                  : value instanceof StandingSignBlock
-                  ? StandingSignBlockItem::new
-                  : NamedBlockItem::new;
-          ItemsAccessor.callRegisterBlock(value, biFunction, settings);
         } catch (IllegalAccessException e) {
           Mishanguc.MISHANG_LOGGER.error("Error when registering blocks:", e);
         }
@@ -155,5 +173,10 @@ public class MishangucBlocks {
 
   public static <T extends Block> T register(String name, Function<BlockBehaviour.Properties, T> factory, Block copySettingsFrom) {
     return register(name, factory, BlockBehaviour.Properties.ofFullCopy(copySettingsFrom));
+  }
+
+  static BlockItemId blockItemId(Block block) {
+    final Identifier id = BuiltInRegistries.BLOCK.getKey(block);
+    return BlockItemId.create(id, id);
   }
 }

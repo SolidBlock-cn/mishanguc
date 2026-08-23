@@ -10,6 +10,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ColorCollection;
 import org.apache.commons.lang3.ObjectUtils;
 import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.ColorToolItem;
@@ -18,8 +19,6 @@ import pers.solid.mishang.uc.item.FastBuildingToolItem;
 import pers.solid.mishang.uc.item.MishangucItems;
 import pers.solid.mishang.uc.util.ColorfulBlockRegistry;
 
-import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public class MishangucItemGroups {
@@ -54,27 +53,9 @@ public class MishangucItemGroups {
           entries.accept(item);
         }
       })).title(Component.translatable("itemGroup.mishanguc.tools")).build());
-  public static final CreativeModeTab DECORATIONS = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Mishanguc.id("decorations"), FabricCreativeModeTab.builder().icon(() -> new ItemStack(HandrailBlocks.SIMPLE_ORANGE_CONCRETE_HANDRAIL)).displayItems((displayContext, entries) -> MishangUtils.instanceStream(HandrailBlocks.class, Block.class).forEach(addEntries(entries))).title(Component.translatable("itemGroup.mishanguc.decorations")).build());
+  public static final CreativeModeTab DECORATIONS = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Mishanguc.id("decorations"), FabricCreativeModeTab.builder().icon(() -> new ItemStack(HandrailBlocks.SIMPLE_CONCRETE_HANDRAIL.orange())).displayItems((displayContext, entries) -> MishangUtils.instanceStream(HandrailBlocks.class, Block.class).forEach(addEntries(entries))).title(Component.translatable("itemGroup.mishanguc.decorations")).build());
 
   public static final CreativeModeTab COLORED_BLOCKS = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Mishanguc.id("colored_blocks"), FabricCreativeModeTab.builder().icon(() -> new ItemStack(ColoredBlocks.COLORED_WOOL)).displayItems((displayContext, entries) -> MishangUtils.instanceStream(ColoredBlocks.class, Block.class).forEach(addEntries(entries))).title(Component.translatable("itemGroup.mishanguc.colored_blocks")).build());
-  public static final List<DyeColor> FANCY_COLORS = List.of(
-      DyeColor.WHITE,
-      DyeColor.LIGHT_GRAY,
-      DyeColor.GRAY,
-      DyeColor.BLACK,
-      DyeColor.BROWN,
-      DyeColor.RED,
-      DyeColor.ORANGE,
-      DyeColor.YELLOW,
-      DyeColor.LIME,
-      DyeColor.GREEN,
-      DyeColor.CYAN,
-      DyeColor.LIGHT_BLUE,
-      DyeColor.BLUE,
-      DyeColor.PURPLE,
-      DyeColor.MAGENTA,
-      DyeColor.PINK
-  );
 
   public static void init() {
     Preconditions.checkState(ObjectUtils.allNotNull(ROADS, LIGHTS, SIGNS, TOOLS, DECORATIONS, COLORED_BLOCKS));
@@ -83,11 +64,9 @@ public class MishangucItemGroups {
   private static <T extends Block> Consumer<T> addEntries(CreativeModeTab.Output entries) {
     return t -> {
       if (ColorfulBlockRegistry.WHITE_TO_COLORFUL.containsKey(t)) {
-        final Map<DyeColor, ? extends Block> map = ColorfulBlockRegistry.WHITE_TO_COLORFUL.get(t);
-        for (DyeColor color : FANCY_COLORS) {
-          if (map.containsKey(color)) {
-            entries.accept(map.get(color));
-          }
+        final ColorCollection<? extends Block> colorCollection = ColorfulBlockRegistry.WHITE_TO_COLORFUL.get(t);
+        for (DyeColor color : MishangUtils.DYE_COLORS) {
+          entries.accept(colorCollection.pick(color));
         }
       } else if (!ColorfulBlockRegistry.COLORFUL_BLOCKS.contains(t)) {
         entries.accept(t);

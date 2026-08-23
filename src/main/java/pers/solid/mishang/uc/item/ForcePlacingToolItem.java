@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
@@ -10,8 +9,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
@@ -195,63 +192,54 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     }
 
     final PoseStack matrices = context.poseStack();
-    final VertexConsumer vertexConsumer = context.bufferSource().getBuffer(RenderTypes.lines());
     final Vec3 cameraPos = worldRenderState.cameraRenderState.pos;
     double cameraX = cameraPos.x;
     double cameraY = cameraPos.y;
     double cameraZ = cameraPos.z;
     if (state.cyanShape != null && state.cyanPos != null) {
-      ShapeRenderer.renderShape(
+      context.submitNodeCollector().submitShapeOutline(
           matrices,
-          vertexConsumer,
           state.cyanShape,
-          state.cyanPos.getX() - cameraX,
-          state.cyanPos.getY() - cameraY,
-          state.cyanPos.getZ() - cameraZ,
+          RenderTypes.lines(),
           ARGB.colorFromFloat(0.8f, 0,
               1,
               1),
-          Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+          Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
+          outlineRenderState.isTranslucent());
     }
 
     if (state.blueShape != null && state.bluePos != null) {
-      ShapeRenderer.renderShape(
+      context.submitNodeCollector().submitShapeOutline(
           matrices,
-          vertexConsumer,
           state.blueShape,
-          state.bluePos.getX() - cameraX,
-          state.bluePos.getY() - cameraY,
-          state.bluePos.getZ() - cameraZ,
+          RenderTypes.lines(),
           ARGB.colorFromFloat(0.5f, 0,
               0.5f,
               1),
-          Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+          Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
+          outlineRenderState.isTranslucent());
     }
     if (state.redShape != null && state.redPos != null) {
-      ShapeRenderer.renderShape(
+      context.submitNodeCollector().submitShapeOutline(
           matrices,
-          vertexConsumer,
           state.redShape,
-          state.redPos.getX() - cameraX,
-          state.redPos.getY() - cameraY,
-          state.redPos.getZ() - cameraZ,
+          RenderTypes.lines(),
           ARGB.colorFromFloat(0.8f, 1,
               0,
               0),
-          Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+          Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
+          outlineRenderState.isTranslucent());
     }
     if (state.yellowShape != null && state.yellowPos != null) {
-      ShapeRenderer.renderShape(
+      context.submitNodeCollector().submitShapeOutline(
           matrices,
-          vertexConsumer,
           state.yellowShape,
-          state.yellowPos.getX() - cameraX,
-          state.yellowPos.getY() - cameraY,
-          state.yellowPos.getZ() - cameraZ,
+          RenderTypes.lines(),
           ARGB.colorFromFloat(0.5f, 1,
               0.5f,
               0),
-          Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+          Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
+          outlineRenderState.isTranslucent());
 
     }
     return false;
@@ -296,17 +284,14 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
   public void renderBeforeOutline(LocalPlayer player, ItemStack stack, LevelRenderContext context) {
     // 只在使用主手持有此物品时进行渲染。
     final PoseStack matrices = context.poseStack();
-    final MultiBufferSource consumers = context.bufferSource();
-    if (consumers == null) return;
-    final VertexConsumer vertexConsumer = consumers.getBuffer(RenderTypes.lines());
 
     if (!(context.levelState().getData(MishangRenderStateProvider.MISHANG_BLOCK_OUTLINE) instanceof ForcePlacingToolState state)) {
       return;
     }
 
-    final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
+    final Vec3 cameraPos = context.levelState().cameraRenderState.pos; // 检查 cameraPos 是否需要
     if (state.hitEntityBoundingBox != null) {
-      ShapeRenderer.renderShape(matrices, vertexConsumer, Shapes.create(state.hitEntityBoundingBox), -cameraPos.x, -cameraPos.y, -cameraPos.z, ARGB.colorFromFloat(0.8f, 1.0f, 0f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+      context.submitNodeCollector().submitShapeOutline(matrices, Shapes.create(state.hitEntityBoundingBox), RenderTypes.lines(), ARGB.colorFromFloat(0.8f, 1.0f, 0f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain
     }
   }
 }

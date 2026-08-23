@@ -11,10 +11,7 @@ import net.minecraft.data.recipes.*;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStackTemplate;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -73,7 +70,8 @@ public class MishangucRecipeGenerator extends RecipeProvider {
     addRecipeForGlassHandrail(HandrailBlocks.COLORED_DECORATED_COBBLESTONE_HANDRAIL, Items.COBBLESTONE, ColoredBlocks.COLORED_CONCRETE, Items.COBBLESTONE, 6, null);
     addRecipeForGlassHandrail(HandrailBlocks.COLORED_DECORATED_MOSSY_COBBLESTONE_HANDRAIL, Items.MOSSY_COBBLESTONE, ColoredBlocks.COLORED_CONCRETE, Items.MOSSY_COBBLESTONE, 6, null);
 
-    HandrailBlocks.DECORATED_IRON_HANDRAILS.forEach((dyeColor, glassHandrailBlock) -> {
+    for (DyeColor dyeColor : DyeColor.values()) {
+      final GlassHandrailBlock glassHandrailBlock = HandrailBlocks.DECORATED_IRON_HANDRAIL.pick(dyeColor);
       final TagKey<Item> dyeKey = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(TagUtil.C_TAG_NAMESPACE, "dyes/" + dyeColor.getSerializedName()));
       shaped(RecipeCategory.DECORATIONS, glassHandrailBlock, 4)
           .pattern("XXX")
@@ -89,7 +87,7 @@ public class MishangucRecipeGenerator extends RecipeProvider {
           .unlockedBy(RecipeProvider.getHasName(Items.IRON_NUGGET), has(Items.IRON_NUGGET))
           .group("mishanguc:decorated_iron_handrail")
           .save(this.output);
-    });
+    }
 
     addRecipeForGlassHandrail(HandrailBlocks.COLORED_DECORATED_IRON_HANDRAIL, ConventionalItemTags.IRON_INGOTS, "has_iron_ingot", ColoredBlocks.COLORED_CONCRETE, Items.IRON_NUGGET, 4);
     addRecipeForGlassHandrail(HandrailBlocks.COLORED_DECORATED_GOLD_HANDRAIL, ConventionalItemTags.GOLD_INGOTS, "has_gold_ingot", ColoredBlocks.COLORED_CONCRETE, Items.GOLD_NUGGET, 4);

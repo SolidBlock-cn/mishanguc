@@ -7,7 +7,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -77,17 +76,15 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
       if (mainHandStackItem instanceof final BlockItem blockItem
           && INVISIBLE_BLOCKS.contains(blockItem.getBlock())) {
         boolean glowing = state.isGlowingBlock;
-        queue.submitCustomGeometry(matrices, RenderTypes.LINES, (matricesEntry, vertexConsumer) -> ShapeRenderer.renderShape(
+        queue.submitShapeOutline(
             matrices,
-            vertexConsumer,
             state.voxelShape,
-            pos.getX() - cameraState.pos.x,
-            pos.getY() - cameraState.pos.y,
-            pos.getZ() - cameraState.pos.z,
+            RenderTypes.lines(),
             ARGB.colorFromFloat(0.9f, glowing ? 0.9f : 0.3f,
                 0.8f,
                 glowing ? 0.3f : 0.9f),
-            Minecraft.getInstance().getWindow().getAppropriateLineWidth())
+            Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
+            true // todo 检查 afterTerrain 参数
         );
       }
     }

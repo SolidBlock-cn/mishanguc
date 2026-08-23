@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -54,7 +55,7 @@ public class MishangucItemTagProvider extends FabricTagsProvider.ItemTagsProvide
   }
 
   protected MishangucTagBuilder<Item> getMishangucTagBuilder(TagKey<Item> tag) {
-    return new MishangucTagBuilder<>(tag, valueLookupBuilder(tag));
+    return new MishangucTagBuilder<>(tag, builder(tag), item -> BuiltInRegistries.ITEM.getResourceKey(item).orElseThrow());
   }
 
   protected void tools() {
@@ -121,7 +122,7 @@ public class MishangucItemTagProvider extends FabricTagsProvider.ItemTagsProvide
     MishangUtils.blocks().stream().filter(Predicates.instanceOf(ColoredBlock.class)).map(Block::asItem).distinct().forEach(colored::add);
 
     itemTag("omnipotent_repair_items").add(Items.BEDROCK);
-    itemTag("road_materials").add(Items.WHITE_CONCRETE, Items.GRAY_CONCRETE, Items.LIGHT_GRAY_CONCRETE, Items.BLACK_CONCRETE);
+    itemTag("road_materials").add(Items.CONCRETE.white(), Items.CONCRETE.gray(), Items.CONCRETE.lightGray(), Items.CONCRETE.black());
   }
 
   protected MishangucTagBuilder<Item> itemTag(TagKey<Item> tagKey) {

@@ -1,19 +1,16 @@
 package pers.solid.mishang.uc.blocks;
 
 import com.google.common.annotations.Beta;
-import com.google.common.collect.ImmutableMap;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ColorCollection;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.block.*;
 import pers.solid.mishang.uc.data.MishangucRecipeGenerator;
-
-import java.util.Map;
 
 /**
  * <h1>告示牌类方块</h1>
@@ -212,363 +209,49 @@ public final class HungSignBlocks extends MishangucBlocks {
 
   // 混凝土告示牌部分
 
-  public static final HungSignBlock WHITE_CONCRETE_HUNG_SIGN = register("white_concrete_hung_sign", Blocks.WHITE_CONCRETE);
-
-  public static final HungSignBlock ORANGE_CONCRETE_HUNG_SIGN = register("orange_concrete_hung_sign", Blocks.ORANGE_CONCRETE);
-
-  public static final HungSignBlock MAGENTA_CONCRETE_HUNG_SIGN = register("magenta_concrete_hung_sign", Blocks.MAGENTA_CONCRETE);
-
-  public static final HungSignBlock LIGHT_BLUE_CONCRETE_HUNG_SIGN = register("light_blue_concrete_hung_sign", Blocks.LIGHT_BLUE_CONCRETE);
-
-  public static final HungSignBlock YELLOW_CONCRETE_HUNG_SIGN = register("yellow_concrete_hung_sign", Blocks.YELLOW_CONCRETE);
-
-  public static final HungSignBlock LIME_CONCRETE_HUNG_SIGN = register("lime_concrete_hung_sign", Blocks.LIME_CONCRETE);
-
-  public static final HungSignBlock PINK_CONCRETE_HUNG_SIGN = register("pink_concrete_hung_sign", Blocks.PINK_CONCRETE);
-
-  public static final HungSignBlock GRAY_CONCRETE_HUNG_SIGN = register("gray_concrete_hung_sign", Blocks.GRAY_CONCRETE);
-
-  public static final HungSignBlock LIGHT_GRAY_CONCRETE_HUNG_SIGN = register("light_gray_concrete_hung_sign", Blocks.LIGHT_GRAY_CONCRETE);
-
-  public static final HungSignBlock CYAN_CONCRETE_HUNG_SIGN = register("cyan_concrete_hung_sign", Blocks.CYAN_CONCRETE);
-
-  public static final HungSignBlock PURPLE_CONCRETE_HUNG_SIGN = register("purple_concrete_hung_sign", Blocks.PURPLE_CONCRETE);
-
-  public static final HungSignBlock BLUE_CONCRETE_HUNG_SIGN = register("blue_concrete_hung_sign", Blocks.BLUE_CONCRETE);
-
-  public static final HungSignBlock BROWN_CONCRETE_HUNG_SIGN = register("brown_concrete_hung_sign", Blocks.BROWN_CONCRETE);
-
-  public static final HungSignBlock GREEN_CONCRETE_HUNG_SIGN = register("green_concrete_hung_sign", Blocks.GREEN_CONCRETE);
-
-  public static final HungSignBlock RED_CONCRETE_HUNG_SIGN = register("red_concrete_hung_sign", Blocks.RED_CONCRETE);
-
-  public static final HungSignBlock BLACK_CONCRETE_HUNG_SIGN = register("black_concrete_hung_sign", Blocks.BLACK_CONCRETE);
+  public static final ColorCollection<HungSignBlock> CONCRETE_HUNG_SIGN = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> register(s + "_concrete_hung_sign", Blocks.CONCRETE.pick(dyeColor)));
 
   /**
    * 自定义颜色的混凝土悬挂告示牌。
    */
   public static final ColoredHungSignBlock COLORED_CONCRETE_HUNG_SIGN = registerColored("colored_concrete_hung_sign", ColoredBlocks.COLORED_CONCRETE);
 
-  /**
-   * 由所有混凝土告示牌组成的映射。
-   */
-  public static final ImmutableMap<DyeColor, HungSignBlock> CONCRETE_HUNG_SIGNS = new ImmutableMap.Builder<DyeColor, HungSignBlock>()
-      .put(DyeColor.WHITE, WHITE_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.ORANGE, ORANGE_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.MAGENTA, MAGENTA_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.LIGHT_BLUE, LIGHT_BLUE_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.YELLOW, YELLOW_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.LIME, LIME_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.PINK, PINK_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.GRAY, GRAY_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.LIGHT_GRAY, LIGHT_GRAY_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.CYAN, CYAN_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.PURPLE, PURPLE_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.BLUE, BLUE_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.BROWN, BROWN_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.GREEN, GREEN_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.RED, RED_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.BLACK, BLACK_CONCRETE_HUNG_SIGN)
-      .build();
-
   // 混凝土告示牌杆
-
-  public static final HungSignBarBlock WHITE_CONCRETE_HUNG_SIGN_BAR = registerBar("white_concrete_hung_sign_bar", Blocks.WHITE_CONCRETE);
-
-  public static final HungSignBarBlock ORANGE_CONCRETE_HUNG_SIGN_BAR = registerBar("orange_concrete_hung_sign_bar", Blocks.ORANGE_CONCRETE);
-
-  public static final HungSignBarBlock MAGENTA_CONCRETE_HUNG_SIGN_BAR = registerBar("magenta_concrete_hung_sign_bar", Blocks.MAGENTA_CONCRETE);
-
-  public static final HungSignBarBlock LIGHT_BLUE_CONCRETE_HUNG_SIGN_BAR = registerBar("light_blue_concrete_hung_sign_bar", Blocks.LIGHT_BLUE_CONCRETE);
-
-  public static final HungSignBarBlock YELLOW_CONCRETE_HUNG_SIGN_BAR = registerBar("yellow_concrete_hung_sign_bar", Blocks.YELLOW_CONCRETE);
-
-  public static final HungSignBarBlock LIME_CONCRETE_HUNG_SIGN_BAR = registerBar("lime_concrete_hung_sign_bar", Blocks.LIME_CONCRETE);
-
-  public static final HungSignBarBlock PINK_CONCRETE_HUNG_SIGN_BAR = registerBar("pink_concrete_hung_sign_bar", Blocks.PINK_CONCRETE);
-
-  public static final HungSignBarBlock GRAY_CONCRETE_HUNG_SIGN_BAR = registerBar("gray_concrete_hung_sign_bar", Blocks.GRAY_CONCRETE);
-
-  public static final HungSignBarBlock LIGHT_GRAY_CONCRETE_HUNG_SIGN_BAR = registerBar("light_gray_concrete_hung_sign_bar", Blocks.LIGHT_GRAY_CONCRETE);
-
-  public static final HungSignBarBlock CYAN_CONCRETE_HUNG_SIGN_BAR = registerBar("cyan_concrete_hung_sign_bar", Blocks.CYAN_CONCRETE);
-
-  public static final HungSignBarBlock PURPLE_CONCRETE_HUNG_SIGN_BAR = registerBar("purple_concrete_hung_sign_bar", Blocks.PURPLE_CONCRETE);
-
-  public static final HungSignBarBlock BLUE_CONCRETE_HUNG_SIGN_BAR = registerBar("blue_concrete_hung_sign_bar", Blocks.BLUE_CONCRETE);
-
-  public static final HungSignBarBlock BROWN_CONCRETE_HUNG_SIGN_BAR = registerBar("brown_concrete_hung_sign_bar", Blocks.BROWN_CONCRETE);
-
-  public static final HungSignBarBlock GREEN_CONCRETE_HUNG_SIGN_BAR = registerBar("green_concrete_hung_sign_bar", Blocks.GREEN_CONCRETE);
-
-  public static final HungSignBarBlock RED_CONCRETE_HUNG_SIGN_BAR = registerBar("red_concrete_hung_sign_bar", Blocks.RED_CONCRETE);
-
-  public static final HungSignBarBlock BLACK_CONCRETE_HUNG_SIGN_BAR = registerBar("black_concrete_hung_sign_bar", Blocks.BLACK_CONCRETE);
+  public static final ColorCollection<HungSignBarBlock> CONCRETE_HUNG_SIGN_BAR = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> registerBar(s + "_concrete_hung_sign_bar", Blocks.CONCRETE.pick(dyeColor)));
 
   /**
    * 自定义颜色的混凝土悬挂告示牌杆。
    */
   public static final HungSignBarBlock COLORED_CONCRETE_HUNG_SIGN_BAR = registerColoredBar("colored_concrete_hung_sign_bar", ColoredBlocks.COLORED_CONCRETE);
 
-  /**
-   * 由所有混凝土告示牌杆组成的映射。
-   */
-  @ApiStatus.AvailableSince("0.1.7")
-  public static final ImmutableMap<DyeColor, HungSignBarBlock> CONCRETE_HUNG_SIGN_BARS = new ImmutableMap.Builder<DyeColor, HungSignBarBlock>()
-      .put(DyeColor.WHITE, WHITE_CONCRETE_HUNG_SIGN_BAR)
-      .put(DyeColor.ORANGE, ORANGE_CONCRETE_HUNG_SIGN_BAR)
-      .put(DyeColor.MAGENTA, MAGENTA_CONCRETE_HUNG_SIGN_BAR)
-      .put(DyeColor.LIGHT_BLUE, LIGHT_BLUE_CONCRETE_HUNG_SIGN_BAR)
-      .put(DyeColor.YELLOW, YELLOW_CONCRETE_HUNG_SIGN_BAR)
-      .put(DyeColor.LIME, LIME_CONCRETE_HUNG_SIGN_BAR)
-      .put(DyeColor.PINK, PINK_CONCRETE_HUNG_SIGN_BAR)
-      .put(DyeColor.GRAY, GRAY_CONCRETE_HUNG_SIGN_BAR)
-      .put(DyeColor.LIGHT_GRAY, LIGHT_GRAY_CONCRETE_HUNG_SIGN_BAR)
-      .put(DyeColor.CYAN, CYAN_CONCRETE_HUNG_SIGN_BAR)
-      .put(DyeColor.PURPLE, PURPLE_CONCRETE_HUNG_SIGN_BAR)
-      .put(DyeColor.BLUE, BLUE_CONCRETE_HUNG_SIGN_BAR)
-      .put(DyeColor.BROWN, BROWN_CONCRETE_HUNG_SIGN_BAR)
-      .put(DyeColor.GREEN, GREEN_CONCRETE_HUNG_SIGN_BAR)
-      .put(DyeColor.RED, RED_CONCRETE_HUNG_SIGN_BAR)
-      .put(DyeColor.BLACK, BLACK_CONCRETE_HUNG_SIGN_BAR)
-      .build();
 
   // 陶瓦告示牌部分
 
-  public static final HungSignBlock WHITE_TERRACOTTA_HUNG_SIGN = register("white_terracotta_hung_sign", Blocks.WHITE_TERRACOTTA);
-
-  public static final HungSignBlock ORANGE_TERRACOTTA_HUNG_SIGN = register("orange_terracotta_hung_sign", Blocks.ORANGE_TERRACOTTA);
-
-  public static final HungSignBlock MAGENTA_TERRACOTTA_HUNG_SIGN = register("magenta_terracotta_hung_sign", Blocks.MAGENTA_TERRACOTTA);
-
-  public static final HungSignBlock LIGHT_BLUE_TERRACOTTA_HUNG_SIGN = register("light_blue_terracotta_hung_sign", Blocks.LIGHT_BLUE_TERRACOTTA);
-
-  public static final HungSignBlock YELLOW_TERRACOTTA_HUNG_SIGN = register("yellow_terracotta_hung_sign", Blocks.YELLOW_TERRACOTTA);
-
-  public static final HungSignBlock LIME_TERRACOTTA_HUNG_SIGN = register("lime_terracotta_hung_sign", Blocks.LIME_TERRACOTTA);
-
-  public static final HungSignBlock PINK_TERRACOTTA_HUNG_SIGN = register("pink_terracotta_hung_sign", Blocks.PINK_TERRACOTTA);
-
-  public static final HungSignBlock GRAY_TERRACOTTA_HUNG_SIGN = register("gray_terracotta_hung_sign", Blocks.GRAY_TERRACOTTA);
-
-  public static final HungSignBlock LIGHT_GRAY_TERRACOTTA_HUNG_SIGN = register("light_gray_terracotta_hung_sign", Blocks.LIGHT_GRAY_TERRACOTTA);
-
-  public static final HungSignBlock CYAN_TERRACOTTA_HUNG_SIGN = register("cyan_terracotta_hung_sign", Blocks.CYAN_TERRACOTTA);
-
-  public static final HungSignBlock PURPLE_TERRACOTTA_HUNG_SIGN = register("purple_terracotta_hung_sign", Blocks.PURPLE_TERRACOTTA);
-
-  public static final HungSignBlock BLUE_TERRACOTTA_HUNG_SIGN = register("blue_terracotta_hung_sign", Blocks.BLUE_TERRACOTTA);
-
-  public static final HungSignBlock BROWN_TERRACOTTA_HUNG_SIGN = register("brown_terracotta_hung_sign", Blocks.BROWN_TERRACOTTA);
-
-  public static final HungSignBlock GREEN_TERRACOTTA_HUNG_SIGN = register("green_terracotta_hung_sign", Blocks.GREEN_TERRACOTTA);
-
-  public static final HungSignBlock RED_TERRACOTTA_HUNG_SIGN = register("red_terracotta_hung_sign", Blocks.RED_TERRACOTTA);
-
-  public static final HungSignBlock BLACK_TERRACOTTA_HUNG_SIGN = register("black_terracotta_hung_sign", Blocks.BLACK_TERRACOTTA);
+  public static final ColorCollection<HungSignBlock> DYED_TERRACOTTA_HUNG_SIGN = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> register(s + "_terracotta_hung_sign", Blocks.DYED_TERRACOTTA.pick(dyeColor)));
 
   @Beta
   public static final ColoredHungSignBlock COLORED_TERRACOTTA_HUNG_SIGN = registerColored("colored_terracotta_hung_sign", ColoredBlocks.COLORED_TERRACOTTA);
 
-  /**
-   * 由所有陶瓦告示牌组成的映射。
-   */
-  public static final ImmutableMap<DyeColor, HungSignBlock> TERRACOTTA_HUNG_SIGNS = new ImmutableMap.Builder<DyeColor, HungSignBlock>()
-      .put(DyeColor.WHITE, WHITE_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.ORANGE, ORANGE_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.MAGENTA, MAGENTA_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.LIGHT_BLUE, LIGHT_BLUE_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.YELLOW, YELLOW_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.LIME, LIME_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.PINK, PINK_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.GRAY, GRAY_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.LIGHT_GRAY, LIGHT_GRAY_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.CYAN, CYAN_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.PURPLE, PURPLE_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.BLUE, BLUE_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.BROWN, BROWN_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.GREEN, GREEN_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.RED, RED_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.BLACK, BLACK_TERRACOTTA_HUNG_SIGN)
-      .build();
-
   // 陶瓦告示牌杆
 
-  public static final HungSignBarBlock WHITE_TERRACOTTA_HUNG_SIGN_BAR = registerBar("white_terracotta_hung_sign_bar", Blocks.WHITE_TERRACOTTA);
-
-  public static final HungSignBarBlock ORANGE_TERRACOTTA_HUNG_SIGN_BAR = registerBar("orange_terracotta_hung_sign_bar", Blocks.ORANGE_TERRACOTTA);
-
-  public static final HungSignBarBlock MAGENTA_TERRACOTTA_HUNG_SIGN_BAR = registerBar("magenta_terracotta_hung_sign_bar", Blocks.MAGENTA_TERRACOTTA);
-
-  public static final HungSignBarBlock LIGHT_BLUE_TERRACOTTA_HUNG_SIGN_BAR = registerBar("light_blue_terracotta_hung_sign_bar", Blocks.LIGHT_BLUE_TERRACOTTA);
-
-  public static final HungSignBarBlock YELLOW_TERRACOTTA_HUNG_SIGN_BAR = registerBar("yellow_terracotta_hung_sign_bar", Blocks.YELLOW_TERRACOTTA);
-
-  public static final HungSignBarBlock LIME_TERRACOTTA_HUNG_SIGN_BAR = registerBar("lime_terracotta_hung_sign_bar", Blocks.LIME_TERRACOTTA);
-
-  public static final HungSignBarBlock PINK_TERRACOTTA_HUNG_SIGN_BAR = registerBar("pink_terracotta_hung_sign_bar", Blocks.PINK_TERRACOTTA);
-
-  public static final HungSignBarBlock GRAY_TERRACOTTA_HUNG_SIGN_BAR = registerBar("gray_terracotta_hung_sign_bar", Blocks.GRAY_TERRACOTTA);
-
-  public static final HungSignBarBlock LIGHT_GRAY_TERRACOTTA_HUNG_SIGN_BAR = registerBar("light_gray_terracotta_hung_sign_bar", Blocks.LIGHT_GRAY_TERRACOTTA);
-
-  public static final HungSignBarBlock CYAN_TERRACOTTA_HUNG_SIGN_BAR = registerBar("cyan_terracotta_hung_sign_bar", Blocks.CYAN_TERRACOTTA);
-
-  public static final HungSignBarBlock PURPLE_TERRACOTTA_HUNG_SIGN_BAR = registerBar("purple_terracotta_hung_sign_bar", Blocks.PURPLE_TERRACOTTA);
-
-  public static final HungSignBarBlock BLUE_TERRACOTTA_HUNG_SIGN_BAR = registerBar("blue_terracotta_hung_sign_bar", Blocks.BLUE_TERRACOTTA);
-
-  public static final HungSignBarBlock BROWN_TERRACOTTA_HUNG_SIGN_BAR = registerBar("brown_terracotta_hung_sign_bar", Blocks.BROWN_TERRACOTTA);
-
-  public static final HungSignBarBlock GREEN_TERRACOTTA_HUNG_SIGN_BAR = registerBar("green_terracotta_hung_sign_bar", Blocks.GREEN_TERRACOTTA);
-
-  public static final HungSignBarBlock RED_TERRACOTTA_HUNG_SIGN_BAR = registerBar("red_terracotta_hung_sign_bar", Blocks.RED_TERRACOTTA);
-
-  public static final HungSignBarBlock BLACK_TERRACOTTA_HUNG_SIGN_BAR = registerBar("black_terracotta_hung_sign_bar", Blocks.BLACK_TERRACOTTA);
+  public static final ColorCollection<HungSignBarBlock> DYED_TERRACOTTA_HUNG_SIGN_BAR = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> registerBar(s + "_terracotta_hung_sign_bar", Blocks.DYED_TERRACOTTA.pick(dyeColor)));
 
   @Beta
   public static final ColoredHungSignBarBlock COLORED_TERRACOTTA_HUNG_SIGN_BAR = registerColoredBar("colored_terracotta_hung_sign_bar", ColoredBlocks.COLORED_TERRACOTTA);
 
-  /**
-   * 由所有陶瓦告示牌杆组成的映射。
-   */
-  @ApiStatus.AvailableSince("0.1.7")
-  public static final ImmutableMap<DyeColor, HungSignBarBlock> TERRACOTTA_HUNG_SIGN_BARS = new ImmutableMap.Builder<DyeColor, HungSignBarBlock>()
-      .put(DyeColor.WHITE, WHITE_TERRACOTTA_HUNG_SIGN_BAR)
-      .put(DyeColor.ORANGE, ORANGE_TERRACOTTA_HUNG_SIGN_BAR)
-      .put(DyeColor.MAGENTA, MAGENTA_TERRACOTTA_HUNG_SIGN_BAR)
-      .put(DyeColor.LIGHT_BLUE, LIGHT_BLUE_TERRACOTTA_HUNG_SIGN_BAR)
-      .put(DyeColor.YELLOW, YELLOW_TERRACOTTA_HUNG_SIGN_BAR)
-      .put(DyeColor.LIME, LIME_TERRACOTTA_HUNG_SIGN_BAR)
-      .put(DyeColor.PINK, PINK_TERRACOTTA_HUNG_SIGN_BAR)
-      .put(DyeColor.GRAY, GRAY_TERRACOTTA_HUNG_SIGN_BAR)
-      .put(DyeColor.LIGHT_GRAY, LIGHT_GRAY_TERRACOTTA_HUNG_SIGN_BAR)
-      .put(DyeColor.CYAN, CYAN_TERRACOTTA_HUNG_SIGN_BAR)
-      .put(DyeColor.PURPLE, PURPLE_TERRACOTTA_HUNG_SIGN_BAR)
-      .put(DyeColor.BLUE, BLUE_TERRACOTTA_HUNG_SIGN_BAR)
-      .put(DyeColor.BROWN, BROWN_TERRACOTTA_HUNG_SIGN_BAR)
-      .put(DyeColor.GREEN, GREEN_TERRACOTTA_HUNG_SIGN_BAR)
-      .put(DyeColor.RED, RED_TERRACOTTA_HUNG_SIGN_BAR)
-      .put(DyeColor.BLACK, BLACK_TERRACOTTA_HUNG_SIGN_BAR)
-      .build();
-
   // 发光的混凝土告示牌
 
-  public static final GlowingHungSignBlock GLOWING_WHITE_CONCRETE_HUNG_SIGN = registerGlowing("glowing_white_concrete_hung_sign", Blocks.WHITE_CONCRETE);
-
-  public static final GlowingHungSignBlock GLOWING_ORANGE_CONCRETE_HUNG_SIGN = registerGlowing("glowing_orange_concrete_hung_sign", Blocks.ORANGE_CONCRETE);
-
-  public static final GlowingHungSignBlock GLOWING_MAGENTA_CONCRETE_HUNG_SIGN = registerGlowing("glowing_magenta_concrete_hung_sign", Blocks.MAGENTA_CONCRETE);
-
-  public static final GlowingHungSignBlock GLOWING_LIGHT_BLUE_CONCRETE_HUNG_SIGN = registerGlowing("glowing_light_blue_concrete_hung_sign", Blocks.LIGHT_BLUE_CONCRETE);
-
-  public static final GlowingHungSignBlock GLOWING_YELLOW_CONCRETE_HUNG_SIGN = registerGlowing("glowing_yellow_concrete_hung_sign", Blocks.YELLOW_CONCRETE);
-
-  public static final GlowingHungSignBlock GLOWING_LIME_CONCRETE_HUNG_SIGN = registerGlowing("glowing_lime_concrete_hung_sign", Blocks.LIME_CONCRETE);
-
-  public static final GlowingHungSignBlock GLOWING_PINK_CONCRETE_HUNG_SIGN = registerGlowing("glowing_pink_concrete_hung_sign", Blocks.PINK_CONCRETE);
-
-  public static final GlowingHungSignBlock GLOWING_GRAY_CONCRETE_HUNG_SIGN = registerGlowing("glowing_gray_concrete_hung_sign", Blocks.GRAY_CONCRETE);
-
-  public static final GlowingHungSignBlock GLOWING_LIGHT_GRAY_CONCRETE_HUNG_SIGN = registerGlowing("glowing_light_gray_concrete_hung_sign", Blocks.LIGHT_GRAY_CONCRETE);
-
-  public static final GlowingHungSignBlock GLOWING_CYAN_CONCRETE_HUNG_SIGN = registerGlowing("glowing_cyan_concrete_hung_sign", Blocks.CYAN_CONCRETE);
-
-  public static final GlowingHungSignBlock GLOWING_PURPLE_CONCRETE_HUNG_SIGN = registerGlowing("glowing_purple_concrete_hung_sign", Blocks.PURPLE_CONCRETE);
-
-  public static final GlowingHungSignBlock GLOWING_BLUE_CONCRETE_HUNG_SIGN = registerGlowing("glowing_blue_concrete_hung_sign", Blocks.BLUE_CONCRETE);
-
-  public static final GlowingHungSignBlock GLOWING_BROWN_CONCRETE_HUNG_SIGN = registerGlowing("glowing_brown_concrete_hung_sign", Blocks.BROWN_CONCRETE);
-
-  public static final GlowingHungSignBlock GLOWING_GREEN_CONCRETE_HUNG_SIGN = registerGlowing("glowing_green_concrete_hung_sign", Blocks.GREEN_CONCRETE);
-
-  public static final GlowingHungSignBlock GLOWING_RED_CONCRETE_HUNG_SIGN = registerGlowing("glowing_red_concrete_hung_sign", Blocks.RED_CONCRETE);
-
-  public static final GlowingHungSignBlock GLOWING_BLACK_CONCRETE_HUNG_SIGN = registerGlowing("glowing_black_concrete_hung_sign", Blocks.BLACK_CONCRETE);
+  public static final ColorCollection<GlowingHungSignBlock> GLOWING_CONCRETE_HUNG_SIGN = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> registerGlowing("glowing_" + s + "_concrete_hung_sign", Blocks.CONCRETE.pick(dyeColor)));
 
   @ApiStatus.AvailableSince("1.0.2")
   public static final ColoredGlowingHungSignBlock COLORED_GLOWING_CONCRETE_HUNG_SIGN = registerColoredGlowing("colored_glowing_concrete_hung_sign", ColoredBlocks.COLORED_CONCRETE);
 
-  /**
-   * 由发光的混凝土告示牌组成的映射。
-   */
-  public static final ImmutableMap<DyeColor, GlowingHungSignBlock> GLOWING_CONCRETE_HUNG_SIGNS = new ImmutableMap.Builder<DyeColor, GlowingHungSignBlock>()
-      .put(DyeColor.WHITE, GLOWING_WHITE_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.ORANGE, GLOWING_ORANGE_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.MAGENTA, GLOWING_MAGENTA_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.LIGHT_BLUE, GLOWING_LIGHT_BLUE_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.YELLOW, GLOWING_YELLOW_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.LIME, GLOWING_LIME_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.PINK, GLOWING_PINK_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.GRAY, GLOWING_GRAY_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.LIGHT_GRAY, GLOWING_LIGHT_GRAY_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.CYAN, GLOWING_CYAN_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.PURPLE, GLOWING_PURPLE_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.BLUE, GLOWING_BLUE_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.BROWN, GLOWING_BROWN_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.GREEN, GLOWING_GREEN_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.RED, GLOWING_RED_CONCRETE_HUNG_SIGN)
-      .put(DyeColor.BLACK, GLOWING_BLACK_CONCRETE_HUNG_SIGN)
-      .build();
-
   // 发光的陶瓦告示牌
 
-  public static final GlowingHungSignBlock GLOWING_WHITE_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_white_terracotta_hung_sign", Blocks.WHITE_TERRACOTTA);
-
-  public static final GlowingHungSignBlock GLOWING_ORANGE_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_orange_terracotta_hung_sign", Blocks.ORANGE_TERRACOTTA);
-
-  public static final GlowingHungSignBlock GLOWING_MAGENTA_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_magenta_terracotta_hung_sign", Blocks.MAGENTA_TERRACOTTA);
-
-  public static final GlowingHungSignBlock GLOWING_LIGHT_BLUE_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_light_blue_terracotta_hung_sign", Blocks.LIGHT_BLUE_TERRACOTTA);
-
-  public static final GlowingHungSignBlock GLOWING_YELLOW_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_yellow_terracotta_hung_sign", Blocks.YELLOW_TERRACOTTA);
-
-  public static final GlowingHungSignBlock GLOWING_LIME_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_lime_terracotta_hung_sign", Blocks.LIME_TERRACOTTA);
-
-  public static final GlowingHungSignBlock GLOWING_PINK_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_pink_terracotta_hung_sign", Blocks.PINK_TERRACOTTA);
-
-  public static final GlowingHungSignBlock GLOWING_GRAY_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_gray_terracotta_hung_sign", Blocks.GRAY_TERRACOTTA);
-
-  public static final GlowingHungSignBlock GLOWING_LIGHT_GRAY_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_light_gray_terracotta_hung_sign", Blocks.LIGHT_GRAY_TERRACOTTA);
-
-  public static final GlowingHungSignBlock GLOWING_CYAN_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_cyan_terracotta_hung_sign", Blocks.CYAN_TERRACOTTA);
-
-  public static final GlowingHungSignBlock GLOWING_PURPLE_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_purple_terracotta_hung_sign", Blocks.PURPLE_TERRACOTTA);
-
-  public static final GlowingHungSignBlock GLOWING_BLUE_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_blue_terracotta_hung_sign", Blocks.BLUE_TERRACOTTA);
-
-  public static final GlowingHungSignBlock GLOWING_BROWN_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_brown_terracotta_hung_sign", Blocks.BROWN_TERRACOTTA);
-
-  public static final GlowingHungSignBlock GLOWING_GREEN_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_green_terracotta_hung_sign", Blocks.GREEN_TERRACOTTA);
-
-  public static final GlowingHungSignBlock GLOWING_RED_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_red_terracotta_hung_sign", Blocks.RED_TERRACOTTA);
-
-  public static final GlowingHungSignBlock GLOWING_BLACK_TERRACOTTA_HUNG_SIGN = registerGlowing("glowing_black_terracotta_hung_sign", Blocks.BLACK_TERRACOTTA);
+  public static final ColorCollection<GlowingHungSignBlock> GLOWING_DYED_TERRACOTTA_HUNG_SIGN = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> registerGlowing("glowing_" + s + "_terracotta_hung_sign", Blocks.DYED_TERRACOTTA.pick(dyeColor)));
 
   @ApiStatus.AvailableSince("1.0.2")
   public static final ColoredGlowingHungSignBlock COLORED_GLOWING_TERRACOTTA_HUNG_SIGN = registerColoredGlowing("colored_glowing_terracotta_hung_sign", ColoredBlocks.COLORED_TERRACOTTA);
-
-  /**
-   * 由发光的陶瓦告示牌组成的映射。
-   */
-  public static final Map<DyeColor, GlowingHungSignBlock> GLOWING_TERRACOTTA_HUNG_SIGNS = new ImmutableMap.Builder<DyeColor, GlowingHungSignBlock>()
-      .put(DyeColor.WHITE, GLOWING_WHITE_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.ORANGE, GLOWING_ORANGE_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.MAGENTA, GLOWING_MAGENTA_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.LIGHT_BLUE, GLOWING_LIGHT_BLUE_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.YELLOW, GLOWING_YELLOW_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.LIME, GLOWING_LIME_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.PINK, GLOWING_PINK_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.GRAY, GLOWING_GRAY_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.LIGHT_GRAY, GLOWING_LIGHT_GRAY_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.CYAN, GLOWING_CYAN_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.PURPLE, GLOWING_PURPLE_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.BLUE, GLOWING_BLUE_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.BROWN, GLOWING_BROWN_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.GREEN, GLOWING_GREEN_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.RED, GLOWING_RED_TERRACOTTA_HUNG_SIGN)
-      .put(DyeColor.BLACK, GLOWING_BLACK_TERRACOTTA_HUNG_SIGN)
-      .build();
 
   // 以下是比较杂项的一些发光悬挂告示牌方块。
 

@@ -10,7 +10,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -83,6 +82,17 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
     final ItemStack offhandStack = player == null ? ItemStack.EMPTY : player.getOffhandItem();
     for (Entity entity : world.getEntitiesOfClass(Entity.class, AABB.ofSize(center, 9, 9, 9))) {
       switch (entity) {
+//        case AbstractCubeMob abstractCubeMob -> {
+//          final int prevSize = abstractCubeMob.getSize();
+//          if (isPositive) {
+//            abstractCubeMob.setSize(Math.clamp(prevSize, 16, prevSize * 2), false);
+//          } else {
+//            abstractCubeMob.setSize(prevSize / 2, false);
+//          }
+//          createParticle(world, entity.position(), isPositive);
+//          damage += 1;
+//        }
+        // todo 检查对岩浆怪、史莱姆、硫方怪是否适用，以及对硫方怪的冻龄。
         case AgeableMob passiveEntity -> {
           if (AgeableMob.canUseGoldenDandelion(offhandStack, true, 0, passiveEntity) && passiveEntity.isAgeLocked() == isPositive) {
             AgeableMob.setAgeLocked(passiveEntity, passiveEntity::isAgeLocked, player, offhandStack, mob -> {
@@ -103,16 +113,6 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
             passiveEntity.setAge(isPositive ? 0 : AgeableMob.BABY_START_AGE);
             damage += 1;
           }
-        }
-        case Slime slimeEntity -> {
-          final int prevSize = slimeEntity.getSize();
-          if (isPositive) {
-            slimeEntity.setSize(Math.clamp(prevSize, 16, prevSize * 2), false);
-          } else {
-            slimeEntity.setSize(prevSize / 2, false);
-          }
-          createParticle(world, entity.position(), isPositive);
-          damage += 1;
         }
         case Mob mobEntity -> {
           if (mobEntity.isBaby() == isPositive) {
@@ -159,7 +159,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
 
   @Override
   public ItemStack dispense(BlockSource pointer, ItemStack stack) {
-    final int damage = apply(null, pointer.level(), pointer.pos().relative(pointer.state().getValue(DispenserBlock.FACING), 4).getCenter(), true);
+    final int damage = apply(null, pointer.level(), Vec3.atCenterOf(pointer.pos().relative(pointer.state().getValue(DispenserBlock.FACING), 4)), true);
     stack.hurtAndBreak(damage, pointer.level(), null, item -> {});
     return stack;
   }

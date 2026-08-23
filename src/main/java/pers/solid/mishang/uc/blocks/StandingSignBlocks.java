@@ -2,9 +2,9 @@ package pers.solid.mishang.uc.blocks;
 
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ColorCollection;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
@@ -133,154 +133,21 @@ public final class StandingSignBlocks extends MishangucBlocks {
       .put(WoodType.MANGROVE, MANGROVE_STANDING_SIGN)
       .build();
 
-  public static final StandingSignBlock WHITE_CONCRETE_STANDING_SIGN = register("white_concrete_standing_sign", Blocks.WHITE_CONCRETE);
-  public static final StandingSignBlock ORANGE_CONCRETE_STANDING_SIGN = register("orange_concrete_standing_sign", Blocks.ORANGE_CONCRETE);
-  public static final StandingSignBlock MAGENTA_CONCRETE_STANDING_SIGN = register("magenta_concrete_standing_sign", Blocks.MAGENTA_CONCRETE);
-  public static final StandingSignBlock LIGHT_BLUE_CONCRETE_STANDING_SIGN = register("light_blue_concrete_standing_sign", Blocks.LIGHT_BLUE_CONCRETE);
-  public static final StandingSignBlock YELLOW_CONCRETE_STANDING_SIGN = register("yellow_concrete_standing_sign", Blocks.YELLOW_CONCRETE);
-  public static final StandingSignBlock LIME_CONCRETE_STANDING_SIGN = register("lime_concrete_standing_sign", Blocks.LIME_CONCRETE);
-  public static final StandingSignBlock PINK_CONCRETE_STANDING_SIGN = register("pink_concrete_standing_sign", Blocks.PINK_CONCRETE);
-  public static final StandingSignBlock GRAY_CONCRETE_STANDING_SIGN = register("gray_concrete_standing_sign", Blocks.GRAY_CONCRETE);
-  public static final StandingSignBlock LIGHT_GRAY_CONCRETE_STANDING_SIGN = register("light_gray_concrete_standing_sign", Blocks.LIGHT_GRAY_CONCRETE);
-  public static final StandingSignBlock CYAN_CONCRETE_STANDING_SIGN = register("cyan_concrete_standing_sign", Blocks.CYAN_CONCRETE);
-  public static final StandingSignBlock PURPLE_CONCRETE_STANDING_SIGN = register("purple_concrete_standing_sign", Blocks.PURPLE_CONCRETE);
-  public static final StandingSignBlock BLUE_CONCRETE_STANDING_SIGN = register("blue_concrete_standing_sign", Blocks.BLUE_CONCRETE);
-  public static final StandingSignBlock BROWN_CONCRETE_STANDING_SIGN = register("brown_concrete_standing_sign", Blocks.BROWN_CONCRETE);
-  public static final StandingSignBlock GREEN_CONCRETE_STANDING_SIGN = register("green_concrete_standing_sign", Blocks.GREEN_CONCRETE);
-  public static final StandingSignBlock RED_CONCRETE_STANDING_SIGN = register("red_concrete_standing_sign", Blocks.RED_CONCRETE);
-  public static final StandingSignBlock BLACK_CONCRETE_STANDING_SIGN = register("black_concrete_standing_sign", Blocks.BLACK_CONCRETE);
+  public static final ColorCollection<StandingSignBlock> CONCRETE_STANDING_SIGN = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> register(s + "_concrete_standing_sign", Blocks.CONCRETE.pick(dyeColor)));
 
   public static final ColoredStandingSignBlock COLORED_CONCRETE_STANDING_SIGN = registerColored("colored_concrete_standing_sign", ColoredBlocks.COLORED_CONCRETE);
 
-  public static final ImmutableMap<DyeColor, StandingSignBlock> CONCRETE_STANDING_SIGNS = new ImmutableMap.Builder<DyeColor, StandingSignBlock>()
-      .put(DyeColor.WHITE, WHITE_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.ORANGE, ORANGE_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.MAGENTA, MAGENTA_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.LIGHT_BLUE, LIGHT_BLUE_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.YELLOW, YELLOW_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.LIME, LIME_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.PINK, PINK_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.GRAY, GRAY_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.LIGHT_GRAY, LIGHT_GRAY_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.CYAN, CYAN_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.PURPLE, PURPLE_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.BLUE, BLUE_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.BROWN, BROWN_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.GREEN, GREEN_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.RED, RED_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.BLACK, BLACK_CONCRETE_STANDING_SIGN)
-      .build();
-  public static final StandingSignBlock WHITE_TERRACOTTA_STANDING_SIGN = register("white_terracotta_standing_sign", Blocks.WHITE_TERRACOTTA);
-  public static final StandingSignBlock ORANGE_TERRACOTTA_STANDING_SIGN = register("orange_terracotta_standing_sign", Blocks.ORANGE_TERRACOTTA);
-  public static final StandingSignBlock MAGENTA_TERRACOTTA_STANDING_SIGN = register("magenta_terracotta_standing_sign", Blocks.MAGENTA_TERRACOTTA);
-  public static final StandingSignBlock LIGHT_BLUE_TERRACOTTA_STANDING_SIGN = register("light_blue_terracotta_standing_sign", Blocks.LIGHT_BLUE_TERRACOTTA);
-  public static final StandingSignBlock YELLOW_TERRACOTTA_STANDING_SIGN = register("yellow_terracotta_standing_sign", Blocks.YELLOW_TERRACOTTA);
-  public static final StandingSignBlock LIME_TERRACOTTA_STANDING_SIGN = register("lime_terracotta_standing_sign", Blocks.LIME_TERRACOTTA);
-  public static final StandingSignBlock PINK_TERRACOTTA_STANDING_SIGN = register("pink_terracotta_standing_sign", Blocks.PINK_TERRACOTTA);
-  public static final StandingSignBlock GRAY_TERRACOTTA_STANDING_SIGN = register("gray_terracotta_standing_sign", Blocks.GRAY_TERRACOTTA);
-  public static final StandingSignBlock LIGHT_GRAY_TERRACOTTA_STANDING_SIGN = register("light_gray_terracotta_standing_sign", Blocks.LIGHT_GRAY_TERRACOTTA);
-  public static final StandingSignBlock CYAN_TERRACOTTA_STANDING_SIGN = register("cyan_terracotta_standing_sign", Blocks.CYAN_TERRACOTTA);
-  public static final StandingSignBlock PURPLE_TERRACOTTA_STANDING_SIGN = register("purple_terracotta_standing_sign", Blocks.PURPLE_TERRACOTTA);
-  public static final StandingSignBlock BLUE_TERRACOTTA_STANDING_SIGN = register("blue_terracotta_standing_sign", Blocks.BLUE_TERRACOTTA);
-  public static final StandingSignBlock BROWN_TERRACOTTA_STANDING_SIGN = register("brown_terracotta_standing_sign", Blocks.BROWN_TERRACOTTA);
-  public static final StandingSignBlock GREEN_TERRACOTTA_STANDING_SIGN = register("green_terracotta_standing_sign", Blocks.GREEN_TERRACOTTA);
-  public static final StandingSignBlock RED_TERRACOTTA_STANDING_SIGN = register("red_terracotta_standing_sign", Blocks.RED_TERRACOTTA);
-  public static final StandingSignBlock BLACK_TERRACOTTA_STANDING_SIGN = register("black_terracotta_standing_sign", Blocks.BLACK_TERRACOTTA);
+  public static final ColorCollection<StandingSignBlock> DYED_TERRACOTTA_STANDING_SIGN = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> register(s + "_terracotta_standing_sign", Blocks.DYED_TERRACOTTA.pick(dyeColor)));
 
   public static final ColoredStandingSignBlock COLORED_TERRACOTTA_STANDING_SIGN = registerColored("colored_terracotta_standing_sign", ColoredBlocks.COLORED_TERRACOTTA);
 
-  public static final ImmutableMap<DyeColor, StandingSignBlock> TERRACOTTA_STANDING_SIGNS = new ImmutableMap.Builder<DyeColor, StandingSignBlock>()
-      .put(DyeColor.WHITE, WHITE_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.ORANGE, ORANGE_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.MAGENTA, MAGENTA_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.LIGHT_BLUE, LIGHT_BLUE_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.YELLOW, YELLOW_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.LIME, LIME_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.PINK, PINK_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.GRAY, GRAY_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.LIGHT_GRAY, LIGHT_GRAY_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.CYAN, CYAN_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.PURPLE, PURPLE_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.BLUE, BLUE_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.BROWN, BROWN_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.GREEN, GREEN_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.RED, RED_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.BLACK, BLACK_TERRACOTTA_STANDING_SIGN)
-      .build();
-  public static final GlowingStandingSignBlock GLOWING_WHITE_CONCRETE_STANDING_SIGN = registerGlowing("glowing_white_concrete_standing_sign", Blocks.WHITE_CONCRETE);
-  public static final GlowingStandingSignBlock GLOWING_ORANGE_CONCRETE_STANDING_SIGN = registerGlowing("glowing_orange_concrete_standing_sign", Blocks.ORANGE_CONCRETE);
-  public static final GlowingStandingSignBlock GLOWING_MAGENTA_CONCRETE_STANDING_SIGN = registerGlowing("glowing_magenta_concrete_standing_sign", Blocks.MAGENTA_CONCRETE);
-  public static final GlowingStandingSignBlock GLOWING_LIGHT_BLUE_CONCRETE_STANDING_SIGN = registerGlowing("glowing_light_blue_concrete_standing_sign", Blocks.LIGHT_BLUE_CONCRETE);
-  public static final GlowingStandingSignBlock GLOWING_YELLOW_CONCRETE_STANDING_SIGN = registerGlowing("glowing_yellow_concrete_standing_sign", Blocks.YELLOW_CONCRETE);
-  public static final GlowingStandingSignBlock GLOWING_LIME_CONCRETE_STANDING_SIGN = registerGlowing("glowing_lime_concrete_standing_sign", Blocks.LIME_CONCRETE);
-  public static final GlowingStandingSignBlock GLOWING_PINK_CONCRETE_STANDING_SIGN = registerGlowing("glowing_pink_concrete_standing_sign", Blocks.PINK_CONCRETE);
-  public static final GlowingStandingSignBlock GLOWING_GRAY_CONCRETE_STANDING_SIGN = registerGlowing("glowing_gray_concrete_standing_sign", Blocks.GRAY_CONCRETE);
-  public static final GlowingStandingSignBlock GLOWING_LIGHT_GRAY_CONCRETE_STANDING_SIGN = registerGlowing("glowing_light_gray_concrete_standing_sign", Blocks.LIGHT_GRAY_CONCRETE);
-  public static final GlowingStandingSignBlock GLOWING_CYAN_CONCRETE_STANDING_SIGN = registerGlowing("glowing_cyan_concrete_standing_sign", Blocks.CYAN_CONCRETE);
-  public static final GlowingStandingSignBlock GLOWING_PURPLE_CONCRETE_STANDING_SIGN = registerGlowing("glowing_purple_concrete_standing_sign", Blocks.PURPLE_CONCRETE);
-  public static final GlowingStandingSignBlock GLOWING_BLUE_CONCRETE_STANDING_SIGN = registerGlowing("glowing_blue_concrete_standing_sign", Blocks.BLUE_CONCRETE);
-  public static final GlowingStandingSignBlock GLOWING_BROWN_CONCRETE_STANDING_SIGN = registerGlowing("glowing_brown_concrete_standing_sign", Blocks.BROWN_CONCRETE);
-  public static final GlowingStandingSignBlock GLOWING_GREEN_CONCRETE_STANDING_SIGN = registerGlowing("glowing_green_concrete_standing_sign", Blocks.GREEN_CONCRETE);
-  public static final GlowingStandingSignBlock GLOWING_RED_CONCRETE_STANDING_SIGN = registerGlowing("glowing_red_concrete_standing_sign", Blocks.RED_CONCRETE);
-  public static final GlowingStandingSignBlock GLOWING_BLACK_CONCRETE_STANDING_SIGN = registerGlowing("glowing_black_concrete_standing_sign", Blocks.BLACK_CONCRETE);
+  public static final ColorCollection<GlowingStandingSignBlock> GLOWING_CONCRETE_STANDING_SIGN = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> registerGlowing("glowing_" + s + "_concrete_standing_sign", Blocks.CONCRETE.pick(dyeColor)));
 
   public static final ColoredGlowingStandingSignBlock COLORED_GLOWING_CONCRETE_STANDING_SIGN = registerColoredGlowing("colored_glowing_concrete_standing_sign", ColoredBlocks.COLORED_CONCRETE);
 
-  public static final ImmutableMap<DyeColor, StandingSignBlock> GLOWING_CONCRETE_STANDING_SIGNS = new ImmutableMap.Builder<DyeColor, StandingSignBlock>()
-      .put(DyeColor.WHITE, GLOWING_WHITE_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.ORANGE, GLOWING_ORANGE_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.MAGENTA, GLOWING_MAGENTA_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.LIGHT_BLUE, GLOWING_LIGHT_BLUE_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.YELLOW, GLOWING_YELLOW_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.LIME, GLOWING_LIME_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.PINK, GLOWING_PINK_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.GRAY, GLOWING_GRAY_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.LIGHT_GRAY, GLOWING_LIGHT_GRAY_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.CYAN, GLOWING_CYAN_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.PURPLE, GLOWING_PURPLE_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.BLUE, GLOWING_BLUE_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.BROWN, GLOWING_BROWN_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.GREEN, GLOWING_GREEN_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.RED, GLOWING_RED_CONCRETE_STANDING_SIGN)
-      .put(DyeColor.BLACK, GLOWING_BLACK_CONCRETE_STANDING_SIGN)
-      .build();
-  public static final GlowingStandingSignBlock GLOWING_WHITE_TERRACOTTA_STANDING_SIGN = registerGlowing("glowing_white_terracotta_standing_sign", Blocks.WHITE_TERRACOTTA);
-  public static final GlowingStandingSignBlock GLOWING_ORANGE_TERRACOTTA_STANDING_SIGN = registerGlowing("glowing_orange_terracotta_standing_sign", Blocks.ORANGE_TERRACOTTA);
-  public static final GlowingStandingSignBlock GLOWING_MAGENTA_TERRACOTTA_STANDING_SIGN = registerGlowing("glowing_magenta_terracotta_standing_sign", Blocks.MAGENTA_TERRACOTTA);
-  public static final GlowingStandingSignBlock GLOWING_LIGHT_BLUE_TERRACOTTA_STANDING_SIGN = registerGlowing("glowing_light_blue_terracotta_standing_sign", Blocks.LIGHT_BLUE_TERRACOTTA);
-  public static final GlowingStandingSignBlock GLOWING_YELLOW_TERRACOTTA_STANDING_SIGN = registerGlowing("glowing_yellow_terracotta_standing_sign", Blocks.YELLOW_TERRACOTTA);
-  public static final GlowingStandingSignBlock GLOWING_LIME_TERRACOTTA_STANDING_SIGN = registerGlowing("glowing_lime_terracotta_standing_sign", Blocks.LIME_TERRACOTTA);
-  public static final GlowingStandingSignBlock GLOWING_PINK_TERRACOTTA_STANDING_SIGN = registerGlowing("glowing_pink_terracotta_standing_sign", Blocks.PINK_TERRACOTTA);
-  public static final GlowingStandingSignBlock GLOWING_GRAY_TERRACOTTA_STANDING_SIGN = registerGlowing("glowing_gray_terracotta_standing_sign", Blocks.GRAY_TERRACOTTA);
-  public static final GlowingStandingSignBlock GLOWING_LIGHT_GRAY_TERRACOTTA_STANDING_SIGN = registerGlowing("glowing_light_gray_terracotta_standing_sign", Blocks.LIGHT_GRAY_TERRACOTTA);
-  public static final GlowingStandingSignBlock GLOWING_CYAN_TERRACOTTA_STANDING_SIGN = registerGlowing("glowing_cyan_terracotta_standing_sign", Blocks.CYAN_TERRACOTTA);
-  public static final GlowingStandingSignBlock GLOWING_PURPLE_TERRACOTTA_STANDING_SIGN = registerGlowing("glowing_purple_terracotta_standing_sign", Blocks.PURPLE_TERRACOTTA);
-  public static final GlowingStandingSignBlock GLOWING_BLUE_TERRACOTTA_STANDING_SIGN = registerGlowing("glowing_blue_terracotta_standing_sign", Blocks.BLUE_TERRACOTTA);
-  public static final GlowingStandingSignBlock GLOWING_BROWN_TERRACOTTA_STANDING_SIGN = registerGlowing("glowing_brown_terracotta_standing_sign", Blocks.BROWN_TERRACOTTA);
-  public static final GlowingStandingSignBlock GLOWING_GREEN_TERRACOTTA_STANDING_SIGN = registerGlowing("glowing_green_terracotta_standing_sign", Blocks.GREEN_TERRACOTTA);
-  public static final GlowingStandingSignBlock GLOWING_RED_TERRACOTTA_STANDING_SIGN = registerGlowing("glowing_red_terracotta_standing_sign", Blocks.RED_TERRACOTTA);
-  public static final GlowingStandingSignBlock GLOWING_BLACK_TERRACOTTA_STANDING_SIGN = registerGlowing("glowing_black_terracotta_standing_sign", Blocks.BLACK_TERRACOTTA);
+  public static final ColorCollection<GlowingStandingSignBlock> GLOWING_DYED_TERRACOTTA_STANDING_SIGN = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> registerGlowing("glowing_" + s + "_terracotta_standing_sign", Blocks.DYED_TERRACOTTA.pick(dyeColor)));
 
   public static final ColoredGlowingStandingSignBlock COLORED_GLOWING_TERRACOTTA_STANDING_SIGN = registerColoredGlowing("colored_glowing_terracotta_standing_sign", ColoredBlocks.COLORED_TERRACOTTA);
-
-  public static final ImmutableMap<DyeColor, StandingSignBlock> GLOWING_TERRACOTTA_STANDING_SIGNS = new ImmutableMap.Builder<DyeColor, StandingSignBlock>()
-      .put(DyeColor.WHITE, GLOWING_WHITE_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.ORANGE, GLOWING_ORANGE_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.MAGENTA, GLOWING_MAGENTA_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.LIGHT_BLUE, GLOWING_LIGHT_BLUE_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.YELLOW, GLOWING_YELLOW_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.LIME, GLOWING_LIME_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.PINK, GLOWING_PINK_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.GRAY, GLOWING_GRAY_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.LIGHT_GRAY, GLOWING_LIGHT_GRAY_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.CYAN, GLOWING_CYAN_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.PURPLE, GLOWING_PURPLE_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.BLUE, GLOWING_BLUE_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.BROWN, GLOWING_BROWN_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.GREEN, GLOWING_GREEN_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.RED, GLOWING_RED_TERRACOTTA_STANDING_SIGN)
-      .put(DyeColor.BLACK, GLOWING_BLACK_TERRACOTTA_STANDING_SIGN)
-      .build();
 
   // 以下是一些比较杂项的。
   /// 石头

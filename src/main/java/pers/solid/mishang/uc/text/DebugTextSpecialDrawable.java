@@ -2,7 +2,7 @@ package pers.solid.mishang.uc.text;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.feature.TextFeatureRenderer;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -11,9 +11,9 @@ import org.joml.Matrix4f;
 
 public record DebugTextSpecialDrawable(String text, TextContext textContext) implements SpecialDrawable {
   @Override
-  public void drawInternal(Matrix4f matricesEntry, MultiBufferSource.BufferSource vertexConsumers, int light, float x, float y) {
+  public void drawInternal(Matrix4f matricesEntry, TextFeatureRenderer textFeatureRenderer, int light, float x, float y) {
     final Font textRenderer = Minecraft.getInstance().font;
-    textRenderer.drawInBatch(text, x, y, textContext.color, textContext.shadow, matricesEntry, vertexConsumers, Font.DisplayMode.NORMAL, 0, light);
+//    textRenderer.drawInBatch(text, x, y, textContext.color, textContext.shadow, matricesEntry, textFeatureRenderer, Font.DisplayMode.NORMAL, 0, light); todo 重新实现
   }
 
   @Override

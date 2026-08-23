@@ -8,7 +8,7 @@ public final class LightBlocks extends MishangucBlocks {
 
   // 白色灯部分
 
-  public static final FullLightBlock WHITE_LIGHT = register("white_light", settings -> new FullLightBlock(settings, Items.WHITE_DYE, Items.WHITE_CONCRETE), WHITE_LIGHT_SETTINGS);
+  public static final FullLightBlock WHITE_LIGHT = register("white_light", settings -> new FullLightBlock(settings, Items.DYE.white(), Items.CONCRETE.white()), WHITE_LIGHT_SETTINGS);
   @ApiStatus.AvailableSince("1.1.0")
   public static final LightSlabBlock WHITE_LIGHT_SLAB = register("white_light_slab", settings -> new LightSlabBlock(WHITE_LIGHT, settings), WHITE_LIGHT_SETTINGS);
   @ApiStatus.AvailableSince("1.1.0")
@@ -65,7 +65,7 @@ public final class LightBlocks extends MishangucBlocks {
 
   // 黄色灯部分
 
-  public static final FullLightBlock YELLOW_LIGHT = register("yellow_light", settings -> new FullLightBlock(settings, Items.YELLOW_DYE, Items.YELLOW_CONCRETE), YELLOW_LIGHT_SETTINGS);
+  public static final FullLightBlock YELLOW_LIGHT = register("yellow_light", settings -> new FullLightBlock(settings, Items.DYE.yellow(), Items.CONCRETE.yellow()), YELLOW_LIGHT_SETTINGS);
   @ApiStatus.AvailableSince("1.1.0")
   public static final LightSlabBlock YELLOW_LIGHT_SLAB = register("yellow_light_slab", settings -> new LightSlabBlock(YELLOW_LIGHT, settings), YELLOW_LIGHT_SETTINGS);
   @ApiStatus.AvailableSince("1.1.0")
@@ -122,7 +122,7 @@ public final class LightBlocks extends MishangucBlocks {
 
   // 橙色灯部分
 
-  public static final FullLightBlock ORANGE_LIGHT = register("orange_light", settings -> new FullLightBlock(settings, Items.ORANGE_DYE, Items.ORANGE_CONCRETE), ORANGE_LIGHT_SETTINGS);
+  public static final FullLightBlock ORANGE_LIGHT = register("orange_light", settings -> new FullLightBlock(settings, Items.DYE.orange(), Items.CONCRETE.orange()), ORANGE_LIGHT_SETTINGS);
   public static final LightSlabBlock ORANGE_LIGHT_SLAB = register("orange_light_slab", settings -> new LightSlabBlock(ORANGE_LIGHT, settings), ORANGE_LIGHT_SETTINGS);
   public static final LightCoverBlock ORANGE_LIGHT_COVER = register("orange_light_cover", settings -> new LightCoverBlock("orange", settings), ORANGE_LIGHT_SETTINGS);
 
@@ -168,7 +168,7 @@ public final class LightBlocks extends MishangucBlocks {
 
   // 绿色灯部分
 
-  public static final FullLightBlock GREEN_LIGHT = register("green_light", settings -> new FullLightBlock(settings, Items.LIME_DYE, Items.LIME_CONCRETE), GREEN_LIGHT_SETTINGS);
+  public static final FullLightBlock GREEN_LIGHT = register("green_light", settings -> new FullLightBlock(settings, Items.DYE.lime(), Items.CONCRETE.lime()), GREEN_LIGHT_SETTINGS);
   public static final LightSlabBlock GREEN_LIGHT_SLAB = register("green_light_slab", settings -> new LightSlabBlock(GREEN_LIGHT, settings), GREEN_LIGHT_SETTINGS);
   public static final LightCoverBlock GREEN_LIGHT_COVER = register("green_light_cover", settings -> new LightCoverBlock("green", settings), GREEN_LIGHT_SETTINGS);
 
@@ -214,7 +214,7 @@ public final class LightBlocks extends MishangucBlocks {
 
   // 青色灯部分
 
-  public static final FullLightBlock CYAN_LIGHT = register("cyan_light", settings -> new FullLightBlock(settings, Items.CYAN_DYE, Items.CYAN_CONCRETE), CYAN_LIGHT_SETTINGS);
+  public static final FullLightBlock CYAN_LIGHT = register("cyan_light", settings -> new FullLightBlock(settings, Items.DYE.cyan(), Items.CONCRETE.cyan()), CYAN_LIGHT_SETTINGS);
   @ApiStatus.AvailableSince("1.1.0")
   public static final LightSlabBlock CYAN_LIGHT_SLAB = register("cyan_light_slab", settings -> new LightSlabBlock(CYAN_LIGHT, settings), CYAN_LIGHT_SETTINGS);
   @ApiStatus.AvailableSince("1.1.0")
@@ -271,7 +271,7 @@ public final class LightBlocks extends MishangucBlocks {
 
   // 粉色灯部分
 
-  public static final FullLightBlock PINK_LIGHT = register("pink_light", settings -> new FullLightBlock(settings, Items.PINK_DYE, Items.PINK_CONCRETE), PINK_LIGHT_SETTINGS);
+  public static final FullLightBlock PINK_LIGHT = register("pink_light", settings -> new FullLightBlock(settings, Items.DYE.pink(), Items.CONCRETE.pink()), PINK_LIGHT_SETTINGS);
   public static final LightSlabBlock PINK_LIGHT_SLAB = register("pink_light_slab", settings -> new LightSlabBlock(PINK_LIGHT, settings), PINK_LIGHT_SETTINGS);
   public static final LightCoverBlock PINK_LIGHT_COVER = register("pink_light_cover", settings -> new LightCoverBlock("pink", settings), PINK_LIGHT_SETTINGS);
 

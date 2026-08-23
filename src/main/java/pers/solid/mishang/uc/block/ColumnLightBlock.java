@@ -165,7 +165,7 @@ public class ColumnLightBlock extends Block implements SimpleWaterloggedBlock, M
       final @NotNull Item tube = BuiltInRegistries.ITEM.getOptional(tubeId).orElseThrow(() -> new IllegalArgumentException(String.format("Can't generate recipes: %s does not have a corresponding tube block (with id [%s])", this, tubeId)));
       return recipeGenerator.shapeless(RecipeCategory.DECORATIONS, this, 1)
           .requires(tube)
-          .requires(Items.GRAY_CONCRETE)
+          .requires(Items.CONCRETE.gray())
           .unlockedBy(RecipeProvider.getHasName(tube), recipeGenerator.has(tube));
     }
   }

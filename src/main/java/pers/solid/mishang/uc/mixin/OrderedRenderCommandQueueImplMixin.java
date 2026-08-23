@@ -17,7 +17,7 @@ import pers.solid.mishang.uc.text.SpecialDrawable;
 @Mixin(SubmitNodeStorage.class)
 public abstract class OrderedRenderCommandQueueImplMixin implements RenderCommandQueueExtension {
   @Shadow
-  public abstract SubmitNodeCollection order(int i);
+  public abstract SubmitNodeCollection order(int order);
 
   @Override
   public void submitSpecialDrawable$mishang(PoseStack matrixStack, SpecialDrawable specialDrawable, int light, float x, float y) {

@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
@@ -11,7 +10,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
 import net.minecraft.core.BlockPos;
@@ -29,6 +27,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragonPart;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
@@ -260,7 +259,7 @@ public class CarryingToolItem extends BlockToolItem
       if (world.isClientSide()) {
         return InteractionResult.SUCCESS;
       }
-      final FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(EntityType.FALLING_BLOCK, world);
+      final FallingBlockEntity fallingBlockEntity = new FallingBlockEntity(EntityTypes.FALLING_BLOCK, world);
       CompoundTag nbt = new CompoundTag();
       nbt.store("BlockState", BlockState.CODEC, state);
       TypedEntityData.of(fallingBlockEntity.getType(), nbt).loadInto(fallingBlockEntity);
@@ -405,23 +404,22 @@ public class CarryingToolItem extends BlockToolItem
     if (!(data instanceof CarryingToolState state)) return true;
 
     final PoseStack matrices = context.poseStack();
-    final VertexConsumer vertexConsumer = context.bufferSource().getBuffer(RenderTypes.lines());
     final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
 
     if (state.cyanShape != null && state.cyanPos != null) {
-      ShapeRenderer.renderShape(matrices, vertexConsumer, state.cyanShape, state.cyanPos.getX() - cameraPos.x, state.cyanPos.getY() - cameraPos.y, state.cyanPos.getZ() - cameraPos.z, OUTLINE_COLOR_CYAN, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+      context.submitNodeCollector().submitShapeOutline(matrices, state.cyanShape, RenderTypes.lines(), OUTLINE_COLOR_CYAN, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), outlineRenderState.isTranslucent());
     }
 
     if (state.blueShape != null && state.bluePos != null) {
-      ShapeRenderer.renderShape(matrices, vertexConsumer, state.blueShape, state.bluePos.getX() - cameraPos.x, state.bluePos.getY() - cameraPos.y, state.bluePos.getZ() - cameraPos.z, OUTLINE_COLOR_AO, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+      context.submitNodeCollector().submitShapeOutline(matrices, state.blueShape, RenderTypes.lines(), OUTLINE_COLOR_AO, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), outlineRenderState.isTranslucent());
     }
 
     if (state.redShape != null && state.redPos != null) {
-      ShapeRenderer.renderShape(matrices, vertexConsumer, state.redShape, state.redPos.getX() - cameraPos.x, state.redPos.getY() - cameraPos.y, state.redPos.getZ() - cameraPos.z, OUTLINE_COLOR_AKA, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+      context.submitNodeCollector().submitShapeOutline(matrices, state.redShape, RenderTypes.lines(), OUTLINE_COLOR_AKA, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), outlineRenderState.isTranslucent());
     }
 
     if (state.redShape != null && state.orangePos != null) {
-      ShapeRenderer.renderShape(matrices, vertexConsumer, state.orangeShape, state.orangePos.getX() - cameraPos.x, state.orangePos.getY() - cameraPos.y, state.orangePos.getZ() - cameraPos.z, OUTLINE_COLOR_ORANGE, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+      context.submitNodeCollector().submitShapeOutline(matrices, state.orangeShape, RenderTypes.lines(), OUTLINE_COLOR_ORANGE, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), outlineRenderState.isTranslucent());
     }
 
     return false;
@@ -435,17 +433,16 @@ public class CarryingToolItem extends BlockToolItem
     if (!(data instanceof CarryingToolState state)) return;
 
     final PoseStack matrices = context.poseStack();
-    final VertexConsumer vertexConsumer = context.bufferSource().getBuffer(RenderTypes.lines());
     final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
 
     if (state.cyanEntityPos != null) {
       final float width = state.cyanEntityWidth;
       final float height = state.cyanEntityHeight;
       final Vec3 pos = state.cyanEntityPos;
-      ShapeRenderer.renderShape(matrices, vertexConsumer, Shapes.box(pos.x - width / 2, pos.y, pos.z - width / 2, pos.x + width / 2, pos.y + height, pos.z + width / 2), -cameraPos.x, -cameraPos.y, -cameraPos.z, OUTLINE_COLOR_CYAN, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+      context.submitNodeCollector().submitShapeOutline(matrices, Shapes.box(pos.x - width / 2, pos.y, pos.z - width / 2, pos.x + width / 2, pos.y + height, pos.z + width / 2), RenderTypes.lines(), OUTLINE_COLOR_CYAN, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain 参数（下同）
     }
     if (state.redEntityShape != null) {
-      ShapeRenderer.renderShape(matrices, vertexConsumer, state.redEntityShape, -cameraPos.x, -cameraPos.y, -cameraPos.z, OUTLINE_COLOR_AKA, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+      context.submitNodeCollector().submitShapeOutline(matrices, state.redEntityShape, RenderTypes.lines(), OUTLINE_COLOR_AKA, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true);
     }
   }
 }

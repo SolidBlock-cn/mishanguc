@@ -480,22 +480,8 @@ public class Mishanguc implements ModInitializer {
     final Object2ObjectMap<TagKey<Block>, Block> tagMap = ColoredBlock.BASE_TAG_TO_COLORED;
     tagMap.put(BlockTags.WOOL, ColoredBlocks.COLORED_WOOL);
     tagMap.put(BlockTags.TERRACOTTA, ColoredBlocks.COLORED_TERRACOTTA);
-    blockMap.put(Blocks.WHITE_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
-    blockMap.put(Blocks.ORANGE_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
-    blockMap.put(Blocks.MAGENTA_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
-    blockMap.put(Blocks.LIGHT_BLUE_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
-    blockMap.put(Blocks.YELLOW_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
-    blockMap.put(Blocks.LIME_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
-    blockMap.put(Blocks.PINK_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
-    blockMap.put(Blocks.GRAY_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
-    blockMap.put(Blocks.LIGHT_GRAY_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
-    blockMap.put(Blocks.CYAN_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
-    blockMap.put(Blocks.PURPLE_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
-    blockMap.put(Blocks.BLUE_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
-    blockMap.put(Blocks.BROWN_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
-    blockMap.put(Blocks.GREEN_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
-    blockMap.put(Blocks.RED_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
-    blockMap.put(Blocks.BLACK_CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+
+    Blocks.CONCRETE.forEach(block -> blockMap.put(block, ColoredBlocks.COLORED_CONCRETE));
 
     // 下面的木制方块不含任何下界方块和竹制方块
     List.of(Blocks.OAK_PLANKS, Blocks.SPRUCE_PLANKS, Blocks.BIRCH_PLANKS, Blocks.JUNGLE_PLANKS, Blocks.ACACIA_PLANKS, Blocks.DARK_OAK_PLANKS, Blocks.PALE_OAK_PLANKS, Blocks.MANGROVE_PLANKS, Blocks.CHERRY_PLANKS).forEach(block -> blockMap.put(block, ColoredBlocks.COLORED_PLANKS));
@@ -541,39 +527,10 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(LightBlocks.YELLOW_LIGHT, ColoredBlocks.COLORED_LIGHT);
     blockMap.put(LightBlocks.CYAN_LIGHT, ColoredBlocks.COLORED_LIGHT);
     blockMap.put(Blocks.GLASS, ColoredBlocks.COLORED_GLASS);
-    blockMap.put(Blocks.WHITE_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
-    blockMap.put(Blocks.ORANGE_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
-    blockMap.put(Blocks.MAGENTA_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
-    blockMap.put(Blocks.LIGHT_BLUE_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
-    blockMap.put(Blocks.YELLOW_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
-    blockMap.put(Blocks.LIME_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
-    blockMap.put(Blocks.PINK_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
-    blockMap.put(Blocks.GRAY_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
-    blockMap.put(Blocks.LIGHT_GRAY_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
-    blockMap.put(Blocks.CYAN_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
-    blockMap.put(Blocks.PURPLE_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
-    blockMap.put(Blocks.BLUE_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
-    blockMap.put(Blocks.BROWN_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
-    blockMap.put(Blocks.GREEN_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
-    blockMap.put(Blocks.RED_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
-    blockMap.put(Blocks.BLACK_STAINED_GLASS, ColoredBlocks.COLORED_GLASS);
+
+    Blocks.STAINED_GLASS.forEach(block -> blockMap.put(block, ColoredBlocks.COLORED_GLASS));
     blockMap.put(Blocks.GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
-    blockMap.put(Blocks.WHITE_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
-    blockMap.put(Blocks.ORANGE_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
-    blockMap.put(Blocks.MAGENTA_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
-    blockMap.put(Blocks.LIGHT_BLUE_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
-    blockMap.put(Blocks.YELLOW_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
-    blockMap.put(Blocks.LIME_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
-    blockMap.put(Blocks.PINK_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
-    blockMap.put(Blocks.GRAY_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
-    blockMap.put(Blocks.LIGHT_GRAY_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
-    blockMap.put(Blocks.CYAN_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
-    blockMap.put(Blocks.PURPLE_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
-    blockMap.put(Blocks.BLUE_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
-    blockMap.put(Blocks.BROWN_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
-    blockMap.put(Blocks.GREEN_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
-    blockMap.put(Blocks.RED_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
-    blockMap.put(Blocks.BLACK_STAINED_GLASS_PANE, ColoredBlocks.COLORED_GLASS_PANE);
+    Blocks.STAINED_GLASS_PANE.forEach(block -> blockMap.put(block, ColoredBlocks.COLORED_GLASS_PANE));
     blockMap.put(Blocks.ICE, ColoredBlocks.COLORED_ICE);
     blockMap.put(Blocks.SNOW_BLOCK, ColoredBlocks.COLORED_SNOW_BLOCK);
     blockMap.put(Blocks.PACKED_ICE, ColoredBlocks.COLORED_PACKED_ICE);
@@ -589,7 +546,7 @@ public class Mishanguc implements ModInitializer {
     blockMap.put(Blocks.BRICKS, ColoredBlocks.COLORED_BRICKS);
     blockMap.put(Blocks.BRICK_STAIRS, ColoredBlocks.COLORED_BRICK_STAIRS);
     blockMap.put(Blocks.BRICK_SLAB, ColoredBlocks.COLORED_BRICK_SLAB);
-    for (GlassHandrailBlock block : HandrailBlocks.DECORATED_IRON_HANDRAILS.values()) {
+    for (GlassHandrailBlock block : HandrailBlocks.DECORATED_IRON_HANDRAIL.asList()) {
       blockMap.put(block, HandrailBlocks.COLORED_DECORATED_IRON_HANDRAIL);
       blockMap.put(block.corner(), HandrailBlocks.COLORED_DECORATED_IRON_HANDRAIL.corner());
       blockMap.put(block.central(), HandrailBlocks.COLORED_DECORATED_IRON_HANDRAIL.central());
@@ -671,25 +628,25 @@ public class Mishanguc implements ModInitializer {
   }
 
   private static void registerColorfulBlocks() {
-    ColorfulBlockRegistry.registerColorfulBlocks(HandrailBlocks.DECORATED_IRON_HANDRAILS);
-    ColorfulBlockRegistry.registerColorfulBlocks(HandrailBlocks.SIMPLE_CONCRETE_HANDRAILS);
-    ColorfulBlockRegistry.registerColorfulBlocks(HandrailBlocks.SIMPLE_TERRACOTTA_HANDRAILS);
-    ColorfulBlockRegistry.registerColorfulBlocks(HandrailBlocks.SIMPLE_STAINED_GLASS_HANDRAILS);
-    ColorfulBlockRegistry.registerColorfulBlocks(HungSignBlocks.CONCRETE_HUNG_SIGNS);
-    ColorfulBlockRegistry.registerColorfulBlocks(HungSignBlocks.CONCRETE_HUNG_SIGN_BARS);
-    ColorfulBlockRegistry.registerColorfulBlocks(HungSignBlocks.TERRACOTTA_HUNG_SIGNS);
-    ColorfulBlockRegistry.registerColorfulBlocks(HungSignBlocks.TERRACOTTA_HUNG_SIGN_BARS);
-    ColorfulBlockRegistry.registerColorfulBlocks(HungSignBlocks.GLOWING_CONCRETE_HUNG_SIGNS);
-    ColorfulBlockRegistry.registerColorfulBlocks(HungSignBlocks.GLOWING_TERRACOTTA_HUNG_SIGNS);
-    ColorfulBlockRegistry.registerColorfulBlocks(StandingSignBlocks.CONCRETE_STANDING_SIGNS);
-    ColorfulBlockRegistry.registerColorfulBlocks(StandingSignBlocks.GLOWING_CONCRETE_STANDING_SIGNS);
-    ColorfulBlockRegistry.registerColorfulBlocks(StandingSignBlocks.TERRACOTTA_STANDING_SIGNS);
-    ColorfulBlockRegistry.registerColorfulBlocks(StandingSignBlocks.GLOWING_TERRACOTTA_STANDING_SIGNS);
-    ColorfulBlockRegistry.registerColorfulBlocks(WallSignBlocks.CONCRETE_WALL_SIGNS);
-    ColorfulBlockRegistry.registerColorfulBlocks(WallSignBlocks.GLOWING_CONCRETE_WALL_SIGNS);
-    ColorfulBlockRegistry.registerColorfulBlocks(WallSignBlocks.TERRACOTTA_WALL_SIGNS);
-    ColorfulBlockRegistry.registerColorfulBlocks(WallSignBlocks.GLOWING_TERRACOTTA_WALL_SIGNS);
-    ColorfulBlockRegistry.registerColorfulBlocks(WallSignBlocks.FULL_CONCRETE_WALL_SIGNS);
-    ColorfulBlockRegistry.registerColorfulBlocks(WallSignBlocks.FULL_TERRACOTTA_WALL_SIGNS);
+    ColorfulBlockRegistry.registerColorfulBlocks(HandrailBlocks.DECORATED_IRON_HANDRAIL);
+    ColorfulBlockRegistry.registerColorfulBlocks(HandrailBlocks.SIMPLE_CONCRETE_HANDRAIL);
+    ColorfulBlockRegistry.registerColorfulBlocks(HandrailBlocks.SIMPLE_DYED_TERRACOTTA_HANDRAIL);
+    ColorfulBlockRegistry.registerColorfulBlocks(HandrailBlocks.SIMPLE_STAINED_GLASS_HANDRAIL);
+    ColorfulBlockRegistry.registerColorfulBlocks(HungSignBlocks.CONCRETE_HUNG_SIGN);
+    ColorfulBlockRegistry.registerColorfulBlocks(HungSignBlocks.CONCRETE_HUNG_SIGN_BAR);
+    ColorfulBlockRegistry.registerColorfulBlocks(HungSignBlocks.DYED_TERRACOTTA_HUNG_SIGN);
+    ColorfulBlockRegistry.registerColorfulBlocks(HungSignBlocks.DYED_TERRACOTTA_HUNG_SIGN_BAR);
+    ColorfulBlockRegistry.registerColorfulBlocks(HungSignBlocks.GLOWING_CONCRETE_HUNG_SIGN);
+    ColorfulBlockRegistry.registerColorfulBlocks(HungSignBlocks.GLOWING_DYED_TERRACOTTA_HUNG_SIGN);
+    ColorfulBlockRegistry.registerColorfulBlocks(StandingSignBlocks.CONCRETE_STANDING_SIGN);
+    ColorfulBlockRegistry.registerColorfulBlocks(StandingSignBlocks.GLOWING_CONCRETE_STANDING_SIGN);
+    ColorfulBlockRegistry.registerColorfulBlocks(StandingSignBlocks.DYED_TERRACOTTA_STANDING_SIGN);
+    ColorfulBlockRegistry.registerColorfulBlocks(StandingSignBlocks.GLOWING_DYED_TERRACOTTA_STANDING_SIGN);
+    ColorfulBlockRegistry.registerColorfulBlocks(WallSignBlocks.CONCRETE_WALL_SIGN);
+    ColorfulBlockRegistry.registerColorfulBlocks(WallSignBlocks.GLOWING_CONCRETE_WALL_SIGN);
+    ColorfulBlockRegistry.registerColorfulBlocks(WallSignBlocks.DYED_TERRACOTTA_WALL_SIGN);
+    ColorfulBlockRegistry.registerColorfulBlocks(WallSignBlocks.GLOWING_DYED_TERRACOTTA_WALL_SIGN);
+    ColorfulBlockRegistry.registerColorfulBlocks(WallSignBlocks.FULL_CONCRETE_WALL_SIGN);
+    ColorfulBlockRegistry.registerColorfulBlocks(WallSignBlocks.FULL_DYED_TERRACOTTA_WALL_SIGN);
   }
 }

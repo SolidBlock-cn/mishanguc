@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.data;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMap;
@@ -10,13 +9,13 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
+import net.minecraft.tags.*;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ColorCollection;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 import pers.solid.mishang.uc.MishangUtils;
@@ -68,7 +67,7 @@ public class MishangucBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
   }
 
   protected MishangucTagBuilder<Block> getMishangucTagBuilder(TagKey<Block> tag) {
-    return new MishangucTagBuilder<>(tag, valueLookupBuilder(tag));
+    return new MishangucTagBuilder<>(tag, builder(tag), block -> BuiltInRegistries.BLOCK.getResourceKey(block).orElseThrow());
   }
 
   protected MishangucTagBuilder<Block> blockTagOnly(TagKey<Block> blockTagKey) {
@@ -80,10 +79,13 @@ public class MishangucBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
   }
 
   protected MishangucTagBuilder<Block> blockTagWithItem(TagKey<Block> blockTagKey, TagKey<Item> itemTagKey) {
-    Preconditions.checkArgument(blockTagKey.location().equals(itemTagKey.location()));
     final var tag = getMishangucTagBuilder(blockTagKey);
     blockTagsWithItem.put(blockTagKey, itemTagKey);
     return tag;
+  }
+
+  protected MishangucTagBuilder<Block> blockTagWithItem(BlockItemTagId blockItemTagId) {
+    return blockTagWithItem(blockItemTagId.block(), blockItemTagId.item());
   }
 
   protected MishangucTagBuilder<Block> blockTagWithItem(String path) {
@@ -258,10 +260,10 @@ public class MishangucBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
     });
 
 
-    configureColoredTags(HandrailBlocks.SIMPLE_CONCRETE_HANDRAILS);
-    configureColoredTags(HandrailBlocks.SIMPLE_TERRACOTTA_HANDRAILS);
-    configureColoredTags(HandrailBlocks.SIMPLE_STAINED_GLASS_HANDRAILS);
-    configureColoredTags(HandrailBlocks.DECORATED_IRON_HANDRAILS);
+    configureColoredTags(HandrailBlocks.SIMPLE_CONCRETE_HANDRAIL);
+    configureColoredTags(HandrailBlocks.SIMPLE_DYED_TERRACOTTA_HANDRAIL);
+    configureColoredTags(HandrailBlocks.SIMPLE_STAINED_GLASS_HANDRAIL);
+    configureColoredTags(HandrailBlocks.DECORATED_IRON_HANDRAIL);
 
     axeMineable.addTag(simpleWoodenHandrails);
     pickaxeMineable.addTag(simpleConcreteHandrails);
@@ -452,10 +454,10 @@ public class MishangucBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
       }
     });
 
-    configureColoredTags(StandingSignBlocks.CONCRETE_STANDING_SIGNS);
-    configureColoredTags(StandingSignBlocks.TERRACOTTA_STANDING_SIGNS);
-    configureColoredTags(StandingSignBlocks.GLOWING_CONCRETE_STANDING_SIGNS);
-    configureColoredTags(StandingSignBlocks.GLOWING_TERRACOTTA_STANDING_SIGNS);
+    configureColoredTags(StandingSignBlocks.CONCRETE_STANDING_SIGN);
+    configureColoredTags(StandingSignBlocks.DYED_TERRACOTTA_STANDING_SIGN);
+    configureColoredTags(StandingSignBlocks.GLOWING_CONCRETE_STANDING_SIGN);
+    configureColoredTags(StandingSignBlocks.GLOWING_DYED_TERRACOTTA_STANDING_SIGN);
 
     axeMineable.addTag(woodenStandingSigns);
     pickaxeMineable.addTag(concreteStandingSigns, glowingConcreteStandingSigns, terracottaStandingSigns, glowingTerracottaStandingSigns);
@@ -520,14 +522,14 @@ public class MishangucBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
         }
       }
     });
-    configureColoredTags(HungSignBlocks.CONCRETE_HUNG_SIGNS);
-    configureColoredTags(HungSignBlocks.CONCRETE_HUNG_SIGN_BARS);
-    configureColoredTags(HungSignBlocks.GLOWING_CONCRETE_HUNG_SIGNS);
-    configureColoredTags(HungSignBlocks.CONCRETE_HUNG_SIGN_BARS);
-    configureColoredTags(HungSignBlocks.TERRACOTTA_HUNG_SIGNS);
-    configureColoredTags(HungSignBlocks.TERRACOTTA_HUNG_SIGN_BARS);
-    configureColoredTags(HungSignBlocks.GLOWING_TERRACOTTA_HUNG_SIGNS);
-    configureColoredTags(HungSignBlocks.TERRACOTTA_HUNG_SIGN_BARS);
+    configureColoredTags(HungSignBlocks.CONCRETE_HUNG_SIGN);
+    configureColoredTags(HungSignBlocks.CONCRETE_HUNG_SIGN_BAR);
+    configureColoredTags(HungSignBlocks.GLOWING_CONCRETE_HUNG_SIGN);
+    configureColoredTags(HungSignBlocks.CONCRETE_HUNG_SIGN_BAR);
+    configureColoredTags(HungSignBlocks.DYED_TERRACOTTA_HUNG_SIGN);
+    configureColoredTags(HungSignBlocks.DYED_TERRACOTTA_HUNG_SIGN_BAR);
+    configureColoredTags(HungSignBlocks.GLOWING_DYED_TERRACOTTA_HUNG_SIGN);
+    configureColoredTags(HungSignBlocks.DYED_TERRACOTTA_HUNG_SIGN_BAR);
 
     axeMineable.addTag(woodenHungSigns, woodenHungSignBars);
     pickaxeMineable.addTag(concreteHungSigns, concreteHungSignBars, glowingConcreteHungSigns, terracottaHungSigns, terracottaHungSignBars, glowingTerracottaHungSigns);
@@ -589,12 +591,12 @@ public class MishangucBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
       }
     });
 
-    configureColoredTags(WallSignBlocks.CONCRETE_WALL_SIGNS);
-    configureColoredTags(WallSignBlocks.GLOWING_CONCRETE_WALL_SIGNS);
-    configureColoredTags(WallSignBlocks.FULL_CONCRETE_WALL_SIGNS);
-    configureColoredTags(WallSignBlocks.TERRACOTTA_WALL_SIGNS);
-    configureColoredTags(WallSignBlocks.GLOWING_TERRACOTTA_WALL_SIGNS);
-    configureColoredTags(WallSignBlocks.FULL_TERRACOTTA_WALL_SIGNS);
+    configureColoredTags(WallSignBlocks.CONCRETE_WALL_SIGN);
+    configureColoredTags(WallSignBlocks.GLOWING_CONCRETE_WALL_SIGN);
+    configureColoredTags(WallSignBlocks.FULL_CONCRETE_WALL_SIGN);
+    configureColoredTags(WallSignBlocks.DYED_TERRACOTTA_WALL_SIGN);
+    configureColoredTags(WallSignBlocks.GLOWING_DYED_TERRACOTTA_WALL_SIGN);
+    configureColoredTags(WallSignBlocks.FULL_DYED_TERRACOTTA_WALL_SIGN);
 
     axeMineable.addTag(woodenWallSigns);
     pickaxeMineable.addTag(concreteWallSigns, fullConcreteWallSigns, glowingConcreteWallSigns, terracottaWallSigns, fullTerracottaWallSigns, glowingTerracottaWallSigns);
@@ -642,15 +644,16 @@ public class MishangucBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
     }
   }
 
-  protected void configureColoredTags(Map<DyeColor, ? extends Block> map) {
-    map.forEach((dyeColor, block) -> {
+  protected <B extends Block> void configureColoredTags(ColorCollection<B> colorCollection) {
+    for (DyeColor dyeColor : DyeColor.values()) {
+      final B block = colorCollection.pick(dyeColor);
       if (block instanceof HandrailBlock handrailBlock) {
         blockTagOnly(dyedBlockTags.get(dyeColor)).add(handrailBlock.selfAndVariants());
       } else {
         blockTagOnly(dyedBlockTags.get(dyeColor)).add(block);
       }
       coloredItems.put(dyeColor, block.asItem());
-    });
+    }
   }
 
   @Override
@@ -662,8 +665,8 @@ public class MishangucBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
     handrails();
     coloredBlocks();
 
-    blockTagWithItem(BlockTags.STAIRS, ItemTags.STAIRS).add(blocks().stream().filter(block -> block instanceof StairBlock).toArray(Block[]::new));
-    blockTagWithItem(BlockTags.SLABS, ItemTags.SLABS).add(blocks().stream().filter(block -> block instanceof SlabBlock).toArray(Block[]::new));
+    blockTagWithItem(BlockItemTags.STAIRS).add(blocks().stream().filter(block -> block instanceof StairBlock).toArray(Block[]::new));
+    blockTagWithItem(BlockItemTags.SLABS).add(blocks().stream().filter(block -> block instanceof SlabBlock).toArray(Block[]::new));
 
     blockTagOnly("incorrect_for_omnipotent_tool");
   }

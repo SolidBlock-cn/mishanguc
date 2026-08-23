@@ -128,14 +128,14 @@ public class DataTagToolItem extends BlockToolItemWithEntity implements Interact
         // 由于此处仅限客户端执行，因此可以放心调用 Block#getName。
         final CompoundTag blockData = payload.data();
         client.execute(() -> {
-          client.gui.getChat().addClientSystemMessage(
+          client.gui.hud.getChat().addClientSystemMessage(
               Component.translatable("debug.mishanguc.dataTag.block.header", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), block.getName().withStyle(ChatFormatting.BOLD))
                   .withStyle(ChatFormatting.YELLOW));
-          client.gui.getChat().addClientSystemMessage(NbtPrettyPrinter.serialize(blockData));
+          client.gui.hud.getChat().addClientSystemMessage(NbtPrettyPrinter.serialize(blockData));
         });
       } else {
         // 此时认为该方块没有数据。
-        client.execute(() -> client.gui.getChat().addClientSystemMessage(
+        client.execute(() -> client.gui.hud.getChat().addClientSystemMessage(
             Component.translatable("debug.mishanguc.dataTag.block.null", String.format("%s %s %s", blockPos.getX(), blockPos.getY(), blockPos.getZ()), block.getName().withStyle(ChatFormatting.BOLD))
                 .withStyle(ChatFormatting.RED)));
       }
@@ -154,10 +154,10 @@ public class DataTagToolItem extends BlockToolItemWithEntity implements Interact
       final BlockPos entityPos = payload.blockPos();
       final CompoundTag entityNbt = payload.entityNbt();
       final Minecraft client = context.client();
-      client.gui.getChat().addClientSystemMessage(Component.translatable("debug.mishanguc.dataTag.entity.entity", String.format(
+      client.gui.hud.getChat().addClientSystemMessage(Component.translatable("debug.mishanguc.dataTag.entity.entity", String.format(
               "%s %s %s", entityPos.getX(), entityPos.getY(), entityPos.getZ()), Component.literal("").append(entityName).withStyle(ChatFormatting.BOLD))
           .withStyle(ChatFormatting.YELLOW));
-      client.gui.getChat().addClientSystemMessage(NbtPrettyPrinter.serialize(entityNbt));
+      client.gui.hud.getChat().addClientSystemMessage(NbtPrettyPrinter.serialize(entityNbt));
     }
   }
 }
