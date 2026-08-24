@@ -1,5 +1,24 @@
 {
   "values": [
+    "mishanguc:colored_terracotta",
+    "mishanguc:colored_concrete",
+    "mishanguc:colored_cobblestone",
+    "mishanguc:colored_andesite",
+    "mishanguc:colored_diorite",
+    "mishanguc:colored_calcite",
+    "mishanguc:colored_tuff",
+    "mishanguc:colored_stone",
+    "mishanguc:colored_stone_bricks",
+    "mishanguc:colored_bricks",
+    "mishanguc:colored_quartz_block",
+    "mishanguc:colored_chiseled_quartz_block",
+    "mishanguc:colored_quartz_bricks",
+    "mishanguc:colored_smooth_quartz",
+    "mishanguc:colored_quartz_pillar",
+    "mishanguc:colored_purpur_block",
+    "mishanguc:colored_purpur_pillar",
+    "mishanguc:colored_end_stone",
+    "mishanguc:colored_end_stone_bricks",
     "#mishanguc:road_blocks"
   ]
 }
