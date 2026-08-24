@@ -96,7 +96,7 @@ public final class ColoredBlocks extends MishangucBlocks {
   public static final ColoredStairsBlock COLORED_SMOOTH_QUARTZ_STAIRS = register("colored_smooth_quartz_stairs", settings -> new ColoredStairsBlock(COLORED_SMOOTH_QUARTZ, settings), Blocks.SMOOTH_QUARTZ_STAIRS);
   public static final ColoredSlabBlock COLORED_SMOOTH_QUARTZ_SLAB = register("colored_smooth_quartz_slab", settings -> new ColoredSlabBlock(COLORED_SMOOTH_QUARTZ, settings), Blocks.SMOOTH_QUARTZ_SLAB);
 
-  public static final ColoredPillarBlock COLORED_QUARTZ_PILLAR = register("colored_quartz_pillar", settings -> new ColoredPillarBlock(settings, TextureMapReference.sideEnd(Identifier.withDefaultNamespace("block/quartz_pillar"), Identifier.withDefaultNamespace("block/quartz_pillar_top"))), Blocks.QUARTZ_PILLAR);
+  public static final ColoredPillarBlock COLORED_QUARTZ_PILLAR = register("colored_quartz_pillar", settings -> new ColoredPillarBlock(settings, TextureMapReference.sideEnd(Identifier.withDefaultNamespace("block/quartz_pillar_side"), Identifier.withDefaultNamespace("block/quartz_pillar_top"))), Blocks.QUARTZ_PILLAR);
 
   @MiningLevel(level = MiningLevel.Level.STONE)
   public static final ColoredCubeBlock COLORED_IRON_BLOCK = register("colored_iron_block", settings -> ColoredCubeBlock.cubeAll(settings, "block/iron_block"), Blocks.IRON_BLOCK);
