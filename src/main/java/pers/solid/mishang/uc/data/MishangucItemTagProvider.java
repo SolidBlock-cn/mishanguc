@@ -19,7 +19,9 @@ import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.block.ColoredBlock;
 import pers.solid.mishang.uc.block.GlassHandrailBlock;
 import pers.solid.mishang.uc.block.SimpleHandrailBlock;
+import pers.solid.mishang.uc.blocks.ColoredBlocks;
 import pers.solid.mishang.uc.blocks.HandrailBlocks;
+import pers.solid.mishang.uc.blocks.LightBlocks;
 import pers.solid.mishang.uc.item.MishangucItems;
 
 import java.lang.reflect.Field;
@@ -112,17 +114,30 @@ public class MishangucItemTagProvider extends FabricTagsProvider.ItemTagsProvide
     });
   }
 
+  protected void sulfurCubeArchetypes() {
+    itemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_BOUNCY).add(ColoredBlocks.COLORED_PLANKS.asItem());
+
+    itemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_SLOW_FLAT).add(ColoredBlocks.COLORED_IRON_BLOCK.asItem());
+
+    itemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_REGULAR).add(ColoredBlocks.COLORED_DIRT.asItem(), LightBlocks.WHITE_LIGHT.asItem(), LightBlocks.YELLOW_LIGHT.asItem(), LightBlocks.ORANGE_LIGHT.asItem(), LightBlocks.GREEN_LIGHT.asItem(), LightBlocks.CYAN_LIGHT.asItem(), LightBlocks.PINK_LIGHT.asItem(), ColoredBlocks.COLORED_LIGHT.asItem(), ColoredBlocks.COLORED_PURE_BLOCK.asItem(), ColoredBlocks.COLORED_PURE_BLOCK_WITHOUT_SHADE.asItem(), ColoredBlocks.COLORED_PURE_LIGHT.asItem(), ColoredBlocks.COLORED_PURE_LIGHT_WITHOUT_SHADE.asItem());
+
+    itemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_LIGHT).add(ColoredBlocks.COLORED_WOOL.asItem());
+
+    itemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_FAST_SLIDING).add(ColoredBlocks.COLORED_SNOW_BLOCK.asItem(), ColoredBlocks.COLORED_PACKED_ICE.asItem());
+
+    itemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_SLOW_BOUNCY).add(ColoredBlocks.COLORED_TERRACOTTA.asItem(), ColoredBlocks.COLORED_CONCRETE.asItem(), ColoredBlocks.COLORED_COBBLESTONE.asItem(), ColoredBlocks.COLORED_ANDESITE.asItem(), ColoredBlocks.COLORED_DIORITE.asItem(), ColoredBlocks.COLORED_CALCITE.asItem(), ColoredBlocks.COLORED_TUFF.asItem(), ColoredBlocks.COLORED_STONE.asItem(), ColoredBlocks.COLORED_STONE_BRICKS.asItem(), ColoredBlocks.COLORED_BRICKS.asItem(), ColoredBlocks.COLORED_QUARTZ_BLOCK.asItem(), ColoredBlocks.COLORED_CHISELED_QUARTZ_BLOCK.asItem(), ColoredBlocks.COLORED_QUARTZ_BRICKS.asItem(), ColoredBlocks.COLORED_SMOOTH_QUARTZ.asItem(), ColoredBlocks.COLORED_QUARTZ_PILLAR.asItem(), ColoredBlocks.COLORED_PURPUR_BLOCK.asItem(), ColoredBlocks.COLORED_PURPUR_PILLAR.asItem(), ColoredBlocks.COLORED_END_STONE.asItem(), ColoredBlocks.COLORED_END_STONE_BRICKS.asItem()).addTag(TagKey.create(Registries.ITEM, Mishanguc.id("road_blocks")));
+  }
+
   @Override
   protected void addTags(HolderLookup.Provider lookup) {
     tools();
     handrailItems();
     coloredItems();
+    sulfurCubeArchetypes();
     blockTagProvider.blockTagsWithItem.forEach(this::copy);
     final MishangucTagBuilder<Item> colored = itemTag("colored"); // 因为涉及染色栏杆的要特殊处理，所以这里先这样。
     MishangUtils.blocks().stream().filter(Predicates.instanceOf(ColoredBlock.class)).map(Block::asItem).distinct().forEach(colored::add);
 
-    final MishangucTagBuilder<Item> slowBouncy = itemTag(ItemTags.SULFUR_CUBE_ARCHETYPE_SLOW_BOUNCY);
-    slowBouncy.addTag(TagKey.create(Registries.ITEM, Mishanguc.id("road_blocks")));
 
     itemTag("omnipotent_repair_items").add(Items.BEDROCK);
     itemTag("road_materials").add(Items.CONCRETE.white(), Items.CONCRETE.gray(), Items.CONCRETE.lightGray(), Items.CONCRETE.black());
