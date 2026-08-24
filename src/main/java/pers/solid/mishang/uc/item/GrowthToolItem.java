@@ -148,11 +148,15 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
   }
 
   @Override
-  public InteractionResult interactLivingEntity(ItemStack itemStack, Player player, LivingEntity target, InteractionHand type) {
+  public InteractionResult useEntityCallback(Player player, Level world, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult) {
     if (player instanceof LocalPlayer) return InteractionResult.CONSUME;
-    final int damage = apply(player, player.level(), target.position(), !player.isShiftKeyDown());
-    player.getItemInHand(type).hurtAndBreak(damage, player, type.asEquipmentSlot());
-    return damage > 0 ? InteractionResult.SUCCESS_SERVER : InteractionResult.FAIL;
+    final int damage = apply(player, player.level(), entity.position(), !player.isShiftKeyDown());
+    player.getItemInHand(hand).hurtAndBreak(damage, player, hand.asEquipmentSlot());
+    if (damage > 0) {
+      // 由于在 Fabric API 中，返回 SUCCESS_SERVER 并不会使玩家真正挥手，故这里手动调用以特殊处理。
+      player.swing(hand, true);
+    }
+    return damage > 0 ? InteractionResult.SUCCESS : InteractionResult.FAIL;
   }
 
   @Override
