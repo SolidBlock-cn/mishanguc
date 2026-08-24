@@ -38,6 +38,7 @@
     "OrderedRenderCommandQueueImplMixin",
     "RenderCommandQueueMixin",
     "ScreenMixin",
+    "SulfurCubeRendererMixin",
     "TextFeatureRendererMixin",
     "TextRendererAccessor"
   ],
