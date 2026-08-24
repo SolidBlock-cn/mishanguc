@@ -7,7 +7,15 @@ Note: Not all versions in this update log have been published yet. Please refer 
 - Fixed the issue that the default text size in the texture presets is 8 and 4 instead of 6 and 3.
 - Fixed the issue that the tooltips of presets show their names instead of their IDs in the `/mishanguc:signpreset list` command.
 - Fixed the issue of incorrect focus in the sign edit screen in 26.1.2 when adding and removing text lines.
-- Further optimized the implementation of Color Tool, Text Copy Tool, and Carrying Tool. The validation logic is now executed on the client, which will neither swing the player's hand nor send a request to the server when validation fails. The server will still perform the validation.
+- Further optimized the implementation of Color Tool, Text Copy Tool, and Carrying Tool. The validation logic now runs on the client. When validation fails, it neither swings the player's hand nor sends a request to the server. The server still performs the validation.
+- Improved the implementation of Growth Tool. If no mobs are affected (including when their age is modified, frozen, or unfrozen), no hand-swing animation will be displayed.
+- Adjusted how Growth Tool handles slimes, magma cubes, and sulfur cubes. Each use now increases or decreases their size by 1 instead of doubling or halving it, and their size can be set to at most 8. Sulfur cubes are set to their baby form only when their size is set to 1.
+- Improved the rendering of entity outlines for Data Tag Tool, Carrying Tool, and Force Placing Tool when targeting entities. Now, when an entity moves, its rendered outline follows the movement smoothly.
+- For 26.2 versions:
+    - The sulfur cube archetype for full light blocks is `regular`.
+    - The sulfur cube archetype for road blocks is `slow_bouncy`.
+    - Custom colored blocks (except transparent, translucent and incomplete blocks) have the same sulfur cube archetype as their base blocks.
+    - When the custom colored block is put into a sulfur cube, the color will be identical as in the inventory. If the color is not specified, it varies with time. If color is set, the color is used.
 
 ### 1.6.5-alpha.2
 
@@ -35,7 +43,7 @@ Note: Not all versions in this update log have been published yet. Please refer 
 ### 1.6.3-beta.5
 
 - Now the dyeing logic of color tool runs only on the server.
-- Fixed the issue of failure of launching server in versions 26.1 and above.
+- Fixed the issue that prevented the server from launching in versions 26.1 and above.
 
 ### 1.6.3-beta.4
 
@@ -105,45 +113,45 @@ Note: Not all versions in this update log have been published yet. Please refer 
 
 - For Minecraft 1.21.10 and above: adjust text rendering to ensure special texts can also be treated as rendered text by mods like Iris, so the special texts can have some special attributes like normal texts when shaders are enabled.
 - For Minecraft 1.21.10 and above: fixed the issue that the data generator failed to run.
-- Adjusted the `-texture` interaction logic in the signs: in the signs, even if a missing texture id is inputted, it can normally take effect, rendering black-purple checkerboards without outputting warns.
-- Added a special text type: `debug_text`, usage: input `-debug_text <any text content>` to test the rendering of text. Please no that the rendering position of text will not be sure to be correct.
-- Removed some redundant codes.
+- Adjusted the `-texture` interaction logic in signs: even if a missing texture ID is entered, it can take effect normally, rendering black-and-purple checkerboards without outputting warnings.
+- Added a special text type: `debug_text`. Use `-debug_text <any text content>` to test text rendering. Please note that the text's rendering position may not be correct.
+- Removed some redundant code.
 - Fixed the issue that the game rules do not synchronize.
 
 ### 1.6.0-beta.3
 
 - Now it is possible to modify the text preset of signs. When editing the sign texts, if no text is added, all available presets will be displayed.
-    - There are currently 6 builtin sign presets:
+  - There are currently 6 built-in sign presets:
         - left arrow + 1 line of text (`left_arrow_one_line`)
         - 1 line of text (`one_line`)
         - right arrow + 1 line of text (`right_arrow_one_line`)
         - left arrow + 2 lines of text (`left_arrow_two_lines`)
         - 2 lines of text (`two_lines`)
         - right arrow + 2 lines of text (`right_arrow_two_lines`)
-        - The "two lines of text" in the presets above, are one line with size 6, and one line with size 3. The arrows can be used in direction indicates such as subway.
+      - The "two lines of text" in the presets above consist of one line with size 6 and one line with size 3. The arrows can be used for directional signs such as subway signs.
   - The sign presets (excluding built-in presets) are stored in `configs/mishanguc_sign_presets/<id>.json`, where `<id>` can be any valid filename, may contain Chinese characters, but cannot contain certain special characters and cannot include subfolders. Each file uses the `json` format and supports the following fields:
-      - `order`: Integer, optional; defaults to 0. Used to control the order in which sign presets are displayed. The lower the value, the higher the priority. The six built-in presets have values from -6 to -1, respectively.
-        - `name`: Text component. Optional. The display name of the preset in the interface. If not specified, the translation key `signPreset.mishanguc.<id>.name` will be used, and the id will be displayed directly as a fallback if the translation key does not exist.
-      - `description`: Text component. Optional. The description of the preset. In the sign edit screen, the description will be displayed when the cursor hovers over the button or when the button receives focus.
-      - `text_contexts`: The text list. Required. The format of each item is equivalent to the format of each text in the sign.
-        - `initial_focus`: Integer. Optional. By default, 0. This value indicates which line of text will be automatically selected when the preset is applied. For example, if the value of `initial_focus` is 2, upon applying the preset the third line of text will be automatically selected. The value of this field must be lower than the amount of elements of text list, but when the text list is empty (amount is 0), this value can be 0.
+    - `order`: Integer, optional; defaults to 0. Used to control the order in which sign presets are displayed. The lower the value, the higher the priority. The six built-in presets have values from -6 to -1, respectively.
+      - `name`: Text component. Optional. The display name of the preset in the interface. If not specified, the translation key `signPreset.mishanguc.<id>.name` will be used, and the id will be displayed directly as a fallback if the translation key does not exist.
+    - `description`: Text component. Optional. The description of the preset. In the sign edit screen, the description will be displayed when the cursor hovers over the button or when the button receives focus.
+    - `text_contexts`: The text list. Required. The format of each item is equivalent to the format of each text in the sign.
+      - `initial_focus`: Integer. Optional. By default, 0. This value indicates which line of text will be automatically selected when the preset is applied. For example, if the value of `initial_focus` is 2, upon applying the preset the third line of text will be automatically selected. The value of this field must be lower than the amount of elements of text list, but when the text list is empty (amount is 0), this value can be 0.
   - Added corresponding commands to handle sign presets. All commands are executed on the client side, not the server side, and take effect immediately; the relevant files will be updated. All file I/O operations are executed on a separate thread.
-      - `/mishanguc:signpreset path`: Shows the path where the sign presets are stored. When the path exists, click the relevant message to show it in Explorer.
-        - `/mishanguc:signpreset list`: Show a list of all current presets.
-        - `/mishanguc:signpreset reload`: Reload sign presets from the disk. Note: `/reload` command will not reload sign presets.
-        - `/mishanguc:signpreset save <id> [args]`: Store the sign presets. When executing, you need to locate your crosshair on a sign block of Mishang Urban Construction mod. You can specify some extra arguments (`[args]`), in the NBT object format, supporting the following fields:
-            - `force`: False by default. If true, the preset will still be saved when a preset file with the same name exists or when a built-in preset with the same name exists. If false, the command will not execute in these cases. In addition, if the sign text is empty (not a single line), the command will not execute when `force` is false.
-            - `order`: Integer.
-            - `initial_focus`: Integer.
-            - `name`: Text component.
-            - `description`: Text component.
-        - `/mishanguc:signpreset delete <id>`: Delete a sign preset. If deleting a non-builtin sign preset, the file `<id>.json` will be tried to delete. If deleting a builtin sign preset, the file `<id>.json` will be created with an empty JSON, marking this builtin sign preset not to be loaded.
-        - `/mishanguc:signpreset reset <id>`: Resets a sign preset. For non-built-in sign presets, it will be deleted (equivalent to `/mishanguc:signpreset delete <id>`). For built-in sign presets, whether they are overridden or marked not to load, the file `<id>.json` will be deleted to restore the built-in preset.
-        - `/mishanguc:signpreset reset`: Reset all sign presets, and restore all builtin sign presets. All JSON files in `config/mishanguc_sign_presets` will be deleted.
+    - `/mishanguc:signpreset path`: Shows the path where the sign presets are stored. When the path exists, click the relevant message to show it in Explorer.
+      - `/mishanguc:signpreset list`: Show a list of all current presets.
+      - `/mishanguc:signpreset reload`: Reload sign presets from the disk. Note: `/reload` command will not reload sign presets.
+      - `/mishanguc:signpreset save <id> [args]`: Store the sign presets. When executing, you need to locate your crosshair on a sign block of Mishang Urban Construction mod. You can specify some extra arguments (`[args]`), in the NBT object format, supporting the following fields:
+        - `force`: False by default. If true, the preset will still be saved when a preset file with the same name exists or when a built-in preset with the same name exists. If false, the command will not execute in these cases. In addition, if the sign text is empty (not a single line), the command will not execute when `force` is false.
+        - `order`: Integer.
+        - `initial_focus`: Integer.
+        - `name`: Text component.
+        - `description`: Text component.
+      - `/mishanguc:signpreset delete <id>`: Delete a sign preset. When deleting a non-built-in sign preset, the file `<id>.json` will be deleted if possible. When deleting a built-in sign preset, an empty `<id>.json` file will be created to mark this built-in sign preset as not to be loaded.
+      - `/mishanguc:signpreset reset <id>`: Reset a sign preset. For non-built-in sign presets, it will be deleted (equivalent to `/mishanguc:signpreset delete <id>`). For built-in sign presets, whether they are overridden or marked not to load, the file `<id>.json` will be deleted to restore the built-in preset.
+      - `/mishanguc:signpreset reset`: Reset all sign presets and restore all built-in sign presets. All JSON files in `config/mishanguc_sign_presets` will be deleted.
   - Note: The positions of all presets will be adjusted automatically when applied, even if not adjusted when saved. If you do not need this adjustment, set the relevant text lines to absolute mode.
-    - The size of builtin sign presets is now 6 and 3 (for two lines) for all blocks. Formerly, the size of builtin sign presets is 8 and 4 for full wall sign blocks; note that the default text size will still depend on the sign itself, and for full wall sign the default text size is 8 and for other blocks it is 6.
+    - The size of built-in sign presets is now 6 and 3 (for two lines) for all blocks. Formerly, the size of built-in sign presets was 8 and 4 for full wall sign blocks. Note that the default text size still depends on the sign itself: it is 8 for full wall signs and 6 for other blocks.
 - Simplified the data format for sign texts. For situations where text is white (by default) and there is no outline, the fields will be removed.
-- Improved the `-pattern` for sign texts. Now all pattern use canonical names while supporting some abbreviated names as aliases:
+- Improved the `-pattern` option for sign texts. Now all patterns use canonical names while supporting some abbreviated names as aliases:
     - `empty`
     - `arrow-left`, alias: `al`
     - `arrow-right`, alias: `ar`
@@ -180,8 +188,8 @@ Note: Not all versions in this update log have been published yet. Please refer 
     - `square-slant-medium`, alias: `medium-slant-square`
     - `square-slant-large`, alias: `large-slant-square`
     - Note: Specifying custom patterns is not supported. To use more complicated patterns, it is recommended to use `-texture` format, or use the vanilla sprite component (example: `-nbt {sprite: xxx}`).
-    - When the mod stores patterns in the chunk data, canonical names (such as `arrow-left`) are used not, the abbreviated names (such as `al`) of chunk data stored when using old version mod will be converted automatically and it will no longer be compatible to old version mods. Therefore, it is recommended to make a backup when entering the world with the new version mod.
-- Now the texts in the sign supports `-nbt`, similar to `-json`, but it represents text components using NBT, and the syntax has some small differences from JSON. The texts specified with `-json` will be automatically converted to `-nbt`.
+    - When the mod stores patterns in chunk data, it uses canonical names (such as `arrow-left`) instead of abbreviated names (such as `al`). Abbreviated names in chunk data saved by older versions of the mod will be converted automatically, and the data will no longer be compatible with older versions. Therefore, making a backup before entering the world with the new version is recommended.
+- Text in signs now supports `-nbt`, similar to `-json`, but it represents text components using NBT, and its syntax has some small differences from JSON. Text specified with `-json` will be automatically converted to `-nbt`.
 
 ### 1.6.0-beta.2
 
@@ -243,7 +251,7 @@ Note: Not all versions in this update log have been published yet. Please refer 
 - Adjusted the placing rule of the wall light block and corner light block. The light can be placed only when the block has a sides shape or collision at the center of the surface, avoiding placing the light on the side where the center is empty.
 - Fixed the incorrect behavior of hung sign bars.
 - Fixed the issue that in the sign edit screen, when there are too many edit boxes and some boxes are not displayed, those edit boxes not displayed will still influence the interaction of other buttons.
-- Introduced the utility of simplifying the sign edit screen. Hold Shift and click the "hide" button to enable or disable simplified ode. In simplified mode, even if there are many texts, the text editing interface will still display in a smaller area, leaving more room for displaying the actual effect while editing the text. To adjust the height of the text area, hold Shift down, hover the mouse on the "hide" button and scroll the mouse wheel, or when the "hide" button has a focus, hold Shift and press the up/down arrow key.
+- Introduced a simplified mode for the sign edit screen. Hold Shift and click the "hide" button to enable or disable simplified mode. In simplified mode, even if there are many texts, the text editing interface will still display in a smaller area, leaving more room for displaying the actual effect while editing the text. To adjust the height of the text area, hold Shift, hover the mouse over the "hide" button, and scroll the mouse wheel; alternatively, when the "hide" button has focus, hold Shift and press the up/down arrow key.
 
 ### 1.4.4
 
@@ -251,7 +259,7 @@ Note: Not all versions in this update log have been published yet. Please refer 
 
 ### 1.4.3.1
 
-The fix update exclusive for 1.19.4.
+This is a fix update exclusively for 1.19.4.
 
 - Adjusted the placing rule of the wall light block and corner light block. The light can be placed only when the block has a sides shape or collision at the center of the surface, avoiding placing the light on the side where the center is empty.
 - Fixed the incorrect texture of the side of some road blocks.
@@ -262,7 +270,7 @@ The fix update exclusive for 1.19.4.
 
 ### 1.4.3
 
-- Fit 1.21.4.
+- Updated for 1.21.4.
 - Fixed the issue that blocks in this mod incorrectly influence mobs' pathfinding.
 - Fixed the wrong name of column light blocks in versions since 1.21.3.
 - Fixed the issue that Color Tool can convert nether wood planks into custom-colored planks (which can be flamed). Now only vanilla flammable planks (not including bamboo planks) can be converted.
@@ -270,12 +278,12 @@ The fix update exclusive for 1.19.4.
 
 ### 1.4.2
 
-- Fit 1.21.3.
+- Updated for 1.21.3.
 - Fixed the issue of incorrect top textures in wooden hung signs.
 - Fixed the incorrect English translation for `block.mishanguc.glass_dark_oak_handrail`.
 - Now specifying opacity is supported when setting custom text or outline color, and the following hex formats are supported: `#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`. For example, `#f80` and `#ff8800` means orange, `#0ff8` and `#00ffff88` means translucent cyan.
     - When displaying the hex format of transparent color, the two bits indicating alpha are also displayed at the end.
-    - Please note, when texts in translucent colors are bolded, or texts are outlined in translucent colors, z-fighting may happen.
+  - Please note that z-fighting may occur when text in translucent colors is bolded or outlined in translucent colors.
   - The opacities of the outline and text are separate. When the outline color is determined automatically, the same opacity as the text will be used. When a custom outline color is specified, it will not be affected by the text opacity.
   - Translucent text may cause translucent objects behind it (such as stained glass, water, or clouds) to disappear, so please use it with caution.
 - Fixed the severe issue that some tags disappear.
@@ -342,7 +350,7 @@ The fix update exclusive for 1.19.4.
 
 ### 1.3.3.1-beta.1
 
-The fix update exclusive for 1.19.4.
+This is a fix update exclusively for 1.19.4.
 
 - Adjusted the placing rule of the wall light block and corner light block. The light can be placed only when the block has a sides shape or collision at the center of the surface, avoiding placing the light on the side where the center is empty.
 - Now all standing signs and sign bars have the block tag `#wall_post_override` so that the standing signs placed on the walls make the wall posts visible.
