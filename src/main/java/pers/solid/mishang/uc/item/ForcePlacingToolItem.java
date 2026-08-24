@@ -9,11 +9,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.VertexRendering;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.state.OutlineRenderState;
 import net.minecraft.client.render.state.WorldRenderState;
 import net.minecraft.client.util.math.MatrixStack;
@@ -41,6 +39,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
+import net.minecraft.world.tick.TickManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -139,7 +138,12 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     final ForcePlacingToolState state = new ForcePlacingToolState();
 
     if (result instanceof EntityHitResult entityHitResult) {
-      state.hitEntityBoundingBox = entityHitResult.getEntity().getBoundingBox();
+      final Entity entity = entityHitResult.getEntity();
+      state.hitEntityPos = entity.getEntityPos();
+      final RenderTickCounter deltaTracker = MinecraftClient.getInstance().getRenderTickCounter();
+      final TickManager tickRateManager = context.world().getTickManager();
+      final float tickProgress = deltaTracker.getTickProgress(!tickRateManager.shouldSkipTick(entity));
+      state.hitEntityBoundingBox = entity.getBoundingBox().offset(entity.getLerpedPos(tickProgress).subtract(state.hitEntityPos));
     }
 
     final BlockHitResult blockHitResult;
@@ -298,8 +302,8 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     }
 
     final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
-    if (state.hitEntityBoundingBox != null) {
-      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(state.hitEntityBoundingBox), -cameraPos.x, -cameraPos.y, -cameraPos.z, ColorHelper.fromFloats(0.8f, 1.0f, 0f, 0f));
+    if (state.hitEntityPos != null && state.hitEntityBoundingBox != null) {
+      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(state.hitEntityBoundingBox.offset(-state.hitEntityPos.x, -state.hitEntityPos.y, -state.hitEntityPos.z)), state.hitEntityPos.x - cameraPos.x, state.hitEntityPos.y - cameraPos.y, state.hitEntityPos.z - cameraPos.z, ColorHelper.fromFloats(0.8f, 1.0f, 0f, 0f));
     }
   }
 }
