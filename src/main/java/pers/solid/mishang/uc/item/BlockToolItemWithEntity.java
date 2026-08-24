@@ -7,6 +7,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -16,6 +17,7 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.TickRateManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
@@ -49,7 +51,11 @@ public abstract class BlockToolItemWithEntity extends BlockToolItem implements R
       state.lightGreenPos = blockPos;
     } else if (result instanceof EntityHitResult entityHitResult && !player.isSpectator()) {
       final Entity entity = entityHitResult.getEntity();
-      state.greenEntityShape = Shapes.create(entity.getBoundingBox());
+      final DeltaTracker deltaTracker = Minecraft.getInstance().getDeltaTracker();
+      final TickRateManager tickRateManager = context.world().tickRateManager();
+      float entityPartialTicks = deltaTracker.getGameTimeDeltaPartialTick(!tickRateManager.isEntityFrozen(entity));
+      final Vec3 position = entity.getPosition(entityPartialTicks);
+      state.greenEntityShape = Shapes.create(entity.getBoundingBox().move(position.subtract(entity.position())));
     }
 
     return state;
@@ -69,6 +75,6 @@ public abstract class BlockToolItemWithEntity extends BlockToolItem implements R
     if (consumers == null) return;
     final VertexConsumer vertexConsumer = consumers.getBuffer(RenderTypes.lines());
     final Vec3 cameraPos = context.worldState().cameraRenderState.pos;
-    ShapeRenderer.renderShape(matrices, vertexConsumer, state.greenEntityShape, -cameraPos.x, -cameraPos.y, -cameraPos.z, ARGB.colorFromFloat(0.8f, 0f, 1f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+    ShapeRenderer.renderShape(matrices, vertexConsumer, state.greenEntityShape.move(-cameraPos.x, -cameraPos.y, -cameraPos.z), 0, 0, 0, ARGB.colorFromFloat(0.8f, 0f, 1f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth());
   }
 }
