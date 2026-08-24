@@ -8,6 +8,7 @@ import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -26,6 +27,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.TickRateManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
@@ -70,8 +72,8 @@ public class CarryingToolItem extends BlockToolItem
     implements MishangucItem, InteractsWithEntity, RendersBeforeOutline, WithMishangTooltip {
 
   private static final int OUTLINE_COLOR_CYAN = ARGB.colorFromFloat(0.8f, 0, 1, 1);
-  private static final int OUTLINE_COLOR_AO = ARGB.colorFromFloat(0.5f, 0, 0.5f, 1);
-  private static final int OUTLINE_COLOR_AKA = ARGB.colorFromFloat(0.8f, 1, 0, 0);
+  private static final int OUTLINE_COLOR_BLUE = ARGB.colorFromFloat(0.5f, 0, 0.5f, 1);
+  private static final int OUTLINE_COLOR_RED = ARGB.colorFromFloat(0.8f, 1, 0, 0);
   private static final int OUTLINE_COLOR_ORANGE = ARGB.colorFromFloat(0.5f, 1, 0.5f, 0);
 
   public CarryingToolItem(Properties settings, @Nullable Boolean includesFluid) {
@@ -382,6 +384,8 @@ public class CarryingToolItem extends BlockToolItem
     if (hand != InteractionHand.MAIN_HAND || player.isSpectator()) { // hasAccess 已经在前面检查过
       return state;
     }
+
+
     if (result != null && result.getType() == HitResult.Type.BLOCK && carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
       state.cyanEntityWidth = holdingEntity.width();
       state.cyanEntityHeight = holdingEntity.height();
@@ -390,9 +394,14 @@ public class CarryingToolItem extends BlockToolItem
     if (!player.isCreative() && (carryingToolData != null)) {
       return state;
     }
+
+    final DeltaTracker deltaTracker = Minecraft.getInstance().getDeltaTracker();
+    final TickRateManager tickRateManager = context.level().tickRateManager();
     if (result instanceof EntityHitResult entityHitResult) {
       final Entity entity = entityHitResult.getEntity();
-      state.redEntityShape = Shapes.create(entity.getBoundingBox());
+      state.redEntityPos = entity.position();
+      float entityPartialTicks = deltaTracker.getGameTimeDeltaPartialTick(!tickRateManager.isEntityFrozen(entity));
+      state.redEntityBoundingBox = entity.getBoundingBox().move(entity.getPosition(entityPartialTicks).subtract(entity.position()));
     }
 
     return state;
@@ -413,11 +422,11 @@ public class CarryingToolItem extends BlockToolItem
     }
 
     if (state.blueShape != null && state.bluePos != null) {
-      ShapeRenderer.renderShape(matrices, vertexConsumer, state.blueShape, state.bluePos.getX() - cameraPos.x, state.bluePos.getY() - cameraPos.y, state.bluePos.getZ() - cameraPos.z, OUTLINE_COLOR_AO, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+      ShapeRenderer.renderShape(matrices, vertexConsumer, state.blueShape, state.bluePos.getX() - cameraPos.x, state.bluePos.getY() - cameraPos.y, state.bluePos.getZ() - cameraPos.z, OUTLINE_COLOR_BLUE, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
 
     if (state.redShape != null && state.redPos != null) {
-      ShapeRenderer.renderShape(matrices, vertexConsumer, state.redShape, state.redPos.getX() - cameraPos.x, state.redPos.getY() - cameraPos.y, state.redPos.getZ() - cameraPos.z, OUTLINE_COLOR_AKA, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+      ShapeRenderer.renderShape(matrices, vertexConsumer, state.redShape, state.redPos.getX() - cameraPos.x, state.redPos.getY() - cameraPos.y, state.redPos.getZ() - cameraPos.z, OUTLINE_COLOR_RED, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
 
     if (state.orangeShape != null && state.orangePos != null) {
@@ -442,10 +451,10 @@ public class CarryingToolItem extends BlockToolItem
       final float width = state.cyanEntityWidth;
       final float height = state.cyanEntityHeight;
       final Vec3 pos = state.cyanEntityPos;
-      ShapeRenderer.renderShape(matrices, vertexConsumer, Shapes.box(pos.x - width / 2, pos.y, pos.z - width / 2, pos.x + width / 2, pos.y + height, pos.z + width / 2), -cameraPos.x, -cameraPos.y, -cameraPos.z, OUTLINE_COLOR_CYAN, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+      ShapeRenderer.renderShape(matrices, vertexConsumer, Shapes.box(-width / 2, 0, -width / 2, width / 2, height, width / 2), pos.x - cameraPos.x, pos.y - cameraPos.y, pos.z - cameraPos.z, OUTLINE_COLOR_CYAN, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
-    if (state.redEntityShape != null) {
-      ShapeRenderer.renderShape(matrices, vertexConsumer, state.redEntityShape, -cameraPos.x, -cameraPos.y, -cameraPos.z, OUTLINE_COLOR_AKA, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+    if (state.redEntityBoundingBox != null) {
+      ShapeRenderer.renderShape(matrices, vertexConsumer, Shapes.create(state.redEntityBoundingBox.move(-state.redEntityPos.x, -state.redEntityPos.y, -state.redEntityPos.z)), state.redEntityPos.x - cameraPos.x, state.redEntityPos.y - cameraPos.y, state.redEntityPos.z - cameraPos.z, OUTLINE_COLOR_RED, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
   }
 }
