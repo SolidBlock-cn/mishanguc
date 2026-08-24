@@ -5,11 +5,9 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.VertexRendering;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -22,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.tick.TickManager;
 import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
 import pers.solid.mishang.uc.render.state.BlockToolStateWithEntity;
@@ -48,7 +47,11 @@ public abstract class BlockToolItemWithEntity extends BlockToolItem implements R
       state.lightGreenPos = blockPos;
     } else if (result instanceof EntityHitResult entityHitResult && !player.isSpectator()) {
       final Entity entity = entityHitResult.getEntity();
-      state.greenEntityShape = VoxelShapes.cuboid(entity.getBoundingBox());
+      final RenderTickCounter deltaTracker = MinecraftClient.getInstance().getRenderTickCounter();
+      final TickManager tickRateManager = context.world().getTickManager();
+      final float tickProgress = deltaTracker.getTickProgress(!tickRateManager.shouldSkipTick(entity));
+      final Vec3d position = entity.getLerpedPos(tickProgress);
+      state.greenEntityShape = VoxelShapes.cuboid(entity.getBoundingBox().offset(position.subtract(entity.getEntityPos())));
     }
 
     return state;
@@ -68,6 +71,6 @@ public abstract class BlockToolItemWithEntity extends BlockToolItem implements R
     if (consumers == null) return;
     final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.getLines());
     final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
-    VertexRendering.drawOutline(matrices, vertexConsumer, state.greenEntityShape, -cameraPos.x, -cameraPos.y, -cameraPos.z, ColorHelper.fromFloats(0.8f, 0f, 1f, 0f));
+    VertexRendering.drawOutline(matrices, vertexConsumer, state.greenEntityShape.offset(-cameraPos.x, -cameraPos.y, -cameraPos.z), 0, 0, 0, ColorHelper.fromFloats(0.8f, 0f, 1f, 0f));
   }
 }
