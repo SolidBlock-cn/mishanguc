@@ -11,6 +11,7 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
@@ -34,6 +35,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
+import net.minecraft.world.tick.TickManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -271,7 +273,10 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     final Vec3d cameraPos = context.camera().getPos();
     if (hitResult instanceof EntityHitResult entityHitResult) {
       final Entity entity = entityHitResult.getEntity();
-      WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, 1.0f, 0f, 0f, 0.8f);
+      final RenderTickCounter deltaTracker = MinecraftClient.getInstance().getRenderTickCounter();
+      final TickManager tickRateManager = context.world().getTickManager();
+      final float tickProgress = deltaTracker.getTickDelta(!tickRateManager.shouldSkipTick(entity));
+      WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox().offset(entity.getLerpedPos(tickProgress).subtract(entity.getPos()))), -cameraPos.x, -cameraPos.y, -cameraPos.z, 1.0f, 0f, 0f, 0.8f);
     }
   }
 }
