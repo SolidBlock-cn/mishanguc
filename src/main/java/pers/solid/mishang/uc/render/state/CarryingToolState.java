@@ -3,6 +3,7 @@ package pers.solid.mishang.uc.render.state;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -10,9 +11,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class CarryingToolState implements MishangRenderState {
   public VoxelShape cyanShape, blueShape, redShape, orangeShape;
   public BlockPos cyanPos, bluePos, redPos, orangePos;
-  public Vec3 cyanEntityPos;
+  public Vec3 cyanEntityPos, redEntityPos;
   public float cyanEntityWidth, cyanEntityHeight;
-  public VoxelShape redEntityShape;
+  public AABB redEntityBoundingBox;
 
   @Override
   public void clear() {
@@ -27,6 +28,7 @@ public class CarryingToolState implements MishangRenderState {
     cyanEntityPos = null;
     cyanEntityWidth = 0;
     cyanEntityHeight = 0;
-    redEntityShape = null;
+    redEntityPos = null;
+    redEntityBoundingBox = null;
   }
 }

@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 @Environment(EnvType.CLIENT)
@@ -16,6 +17,7 @@ public class ForcePlacingToolState implements MishangRenderState {
   public BlockPos redPos;
   public VoxelShape yellowShape;
   public BlockPos yellowPos;
+  public Vec3 hitEntityPos;
   public AABB hitEntityBoundingBox;
 
   @Override
@@ -28,6 +30,7 @@ public class ForcePlacingToolState implements MishangRenderState {
     redPos = null;
     yellowShape = null;
     yellowPos = null;
+    hitEntityPos = null;
     hitEntityBoundingBox = null;
   }
 }
