@@ -1,6 +1,7 @@
 package pers.solid.mishang.uc.item;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
@@ -47,7 +48,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
 
   @Override
   public InteractionResult use(Level world, Player user, InteractionHand hand) {
-    if (world.isClientSide()) return InteractionResult.SUCCESS;
+    if (world.isClientSide()) return InteractionResult.PASS;
     final HitResult raycast = user.pick(64, 0, true);
     if (raycast.getType() == HitResult.Type.MISS) {
       return InteractionResult.FAIL;
@@ -55,7 +56,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
     final Vec3 center = raycast.getLocation();
     final int damage = apply(user, world, center, !user.isShiftKeyDown());
     user.getItemInHand(hand).hurtAndBreak(damage, user, hand.asEquipmentSlot());
-    return InteractionResult.SUCCESS;
+    return damage > 0 ? InteractionResult.SUCCESS_SERVER : InteractionResult.FAIL;
   }
 
   @Override
@@ -81,21 +82,27 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
       }
     }
     final ItemStack offhandStack = player == null ? ItemStack.EMPTY : player.getOffhandItem();
-    for (Entity entity : world.getEntitiesOfClass(Entity.class, AABB.ofSize(center, 9, 9, 9))) {
+    final List<Entity> entities = world.getEntitiesOfClass(Entity.class, AABB.ofSize(center, 9, 9, 9));
+    for (Entity entity : entities) {
       switch (entity) {
         case AgeableMob ageableMob -> {
           boolean shouldDamage = false;
           if (ageableMob instanceof AbstractCubeMob abstractCubeMob) {
             final int prevSize = abstractCubeMob.getSize();
+            final int newSize;
             if (isPositive) {
-              abstractCubeMob.setSize(Math.clamp(prevSize + 1, 1, 8), false);
+              newSize = Math.min(prevSize + 1, 8);
             } else {
-              abstractCubeMob.setSize(Math.max(0, prevSize - 1), false);
+              newSize = Math.max(1, prevSize - 1);
             }
-            createParticle(world, entity.position(), isPositive);
-            shouldDamage = true;
+            if (prevSize != newSize) {
+              abstractCubeMob.setSize(newSize, true);
+              createParticle(world, entity.position(), isPositive);
+              shouldDamage = true;
+            }
           }
-          if (AgeableMob.canUseGoldenDandelion(offhandStack, true, 0, ageableMob) && ageableMob.isAgeLocked() == isPositive) {
+          final boolean isUsingGoldenDandelion = AgeableMob.canUseGoldenDandelion(offhandStack, true, 0, ageableMob) && ageableMob.isAgeLocked() == isPositive;
+          if (isUsingGoldenDandelion) {
             AgeableMob.setAgeLocked(ageableMob, ageableMob::isAgeLocked, player, offhandStack, mob -> {
               if (!(mob instanceof AgeableMob ageableMob0)) return;
               ((AgeableMobAccessor) ageableMob0).callSetAgeLockedData();
@@ -107,11 +114,12 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
             if (world instanceof ServerLevel serverLevel) {
               serverLevel.sendParticles(isAgeLocked ? ParticleTypes.PAUSE_MOB_GROWTH : ParticleTypes.RESET_MOB_GROWTH, spawnPosition.x, spawnPosition.y, spawnPosition.z, 16, 1, 1, 1, 0);
             }
-          } else {
-            createParticle(world, entity.position(), isPositive);
           }
           if (ageableMob.isBaby() == isPositive) {
-            ageableMob.setAge(isPositive ? 0 : AgeableMob.BABY_START_AGE);
+            ageableMob.setAge((ageableMob instanceof AbstractCubeMob cube ? cube.getSize() > 1 : isPositive) ? 0 : AgeableMob.BABY_START_AGE);
+            if (!isUsingGoldenDandelion) {
+              createParticle(world, entity.position(), isPositive);
+            }
             shouldDamage = true;
           }
 
@@ -139,16 +147,12 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
     }
   }
 
-
   @Override
-  public InteractionResult useEntityCallback(Player player, Level world, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult) {
-    final InteractionResult actionResult = InteractsWithEntity.super.useEntityCallback(player, world, hand, entity, hitResult);
-    if (actionResult == InteractionResult.PASS && !world.isClientSide()) {
-      final int damage = apply(player, world, hitResult == null ? entity.position() : hitResult.getLocation(), !player.isShiftKeyDown());
-      player.getItemInHand(hand).hurtAndBreak(damage, player, hand.asEquipmentSlot());
-      return InteractionResult.SUCCESS;
-    }
-    return actionResult;
+  public InteractionResult interactLivingEntity(ItemStack itemStack, Player player, LivingEntity target, InteractionHand type) {
+    if (player instanceof LocalPlayer) return InteractionResult.CONSUME;
+    final int damage = apply(player, player.level(), target.position(), !player.isShiftKeyDown());
+    player.getItemInHand(type).hurtAndBreak(damage, player, type.asEquipmentSlot());
+    return damage > 0 ? InteractionResult.SUCCESS_SERVER : InteractionResult.FAIL;
   }
 
   @Override
