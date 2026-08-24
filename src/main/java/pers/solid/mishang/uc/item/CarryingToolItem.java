@@ -8,10 +8,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.VertexRendering;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
@@ -34,6 +31,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
+import net.minecraft.world.tick.TickManager;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,8 +53,8 @@ public class CarryingToolItem extends BlockToolItem
     implements MishangucItem, InteractsWithEntity, RendersBeforeOutline, WithMishangTooltip {
 
   private static final int OUTLINE_COLOR_CYAN = ColorHelper.fromFloats(0.8f, 0, 1, 1);
-  private static final int OUTLINE_COLOR_AO = ColorHelper.fromFloats(0.5f, 0, 0.5f, 1);
-  private static final int OUTLINE_COLOR_AKA = ColorHelper.fromFloats(0.8f, 1, 0, 0);
+  private static final int OUTLINE_COLOR_BLUE = ColorHelper.fromFloats(0.5f, 0, 0.5f, 1);
+  private static final int OUTLINE_COLOR_RED = ColorHelper.fromFloats(0.8f, 1, 0, 0);
   private static final int OUTLINE_COLOR_ORANGE = ColorHelper.fromFloats(0.5f, 1, 0.5f, 0);
 
   public CarryingToolItem(Settings settings, @Nullable Boolean includesFluid) {
@@ -359,14 +357,14 @@ public class CarryingToolItem extends BlockToolItem
         VertexRendering.drawOutline(matrices, vertexConsumer, blockPlacementContext
             .stateToPlace
             .getFluidState()
-            .getShape(blockPlacementContext.world, blockPlacementContext.posToPlace), blockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(), blockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(), blockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(), OUTLINE_COLOR_AO);
+            .getShape(blockPlacementContext.world, blockPlacementContext.posToPlace), blockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(), blockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(), blockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(), OUTLINE_COLOR_BLUE);
       }
     }
     if (hand == Hand.MAIN_HAND && (carryingToolData == null || player.isCreative())) {
       final BlockState hitState = worldRenderContext.world().getBlockState(pos);
       // 只有当主手持有此物品时，才绘制红色边框。
       VertexRendering.drawOutline(matrices, vertexConsumer, hitState.getOutlineShape(
-          worldRenderContext.world(), pos, ShapeContext.of(player)), pos.getX() - blockOutlineContext.cameraX(), pos.getY() - blockOutlineContext.cameraY(), pos.getZ() - blockOutlineContext.cameraZ(), OUTLINE_COLOR_AKA);
+          worldRenderContext.world(), pos, ShapeContext.of(player)), pos.getX() - blockOutlineContext.cameraX(), pos.getY() - blockOutlineContext.cameraY(), pos.getZ() - blockOutlineContext.cameraZ(), OUTLINE_COLOR_RED);
       VertexRendering.drawOutline(matrices, vertexConsumer, hitState
           .getFluidState()
           .getShape(worldRenderContext.world(), pos), pos.getX() - blockOutlineContext.cameraX(), pos.getY() - blockOutlineContext.cameraY(), pos.getZ() - blockOutlineContext.cameraZ(), OUTLINE_COLOR_ORANGE);
@@ -392,13 +390,16 @@ public class CarryingToolItem extends BlockToolItem
       final float width = holdingEntity.width();
       final float height = holdingEntity.height();
       final Vec3d pos = hitResult.getPos();
-      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(pos.x - width / 2, pos.y, pos.z - width / 2, pos.x + width / 2, pos.y + height, pos.z + width / 2), -cameraPos.x, -cameraPos.y, -cameraPos.z, OUTLINE_COLOR_CYAN);
+      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(-width / 2, 0, -width / 2, width / 2, height, width / 2), pos.x - cameraPos.x, pos.y - cameraPos.y, pos.z - cameraPos.z, OUTLINE_COLOR_CYAN);
     }
     if (!player.isCreative() && (carryingToolData != null))
       return;
     if (hitResult instanceof EntityHitResult entityHitResult) {
       final Entity entity = entityHitResult.getEntity();
-      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, OUTLINE_COLOR_AKA);
+      final RenderTickCounter deltaTracker = MinecraftClient.getInstance().getRenderTickCounter();
+      final TickManager tickRateManager = context.world().getTickManager();
+      final float tickProgress = deltaTracker.getTickProgress(!tickRateManager.shouldSkipTick(entity));
+      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox().offset(entity.getLerpedPos(tickProgress).subtract(entity.getPos()))), -cameraPos.x, -cameraPos.y, -cameraPos.z, OUTLINE_COLOR_RED);
     }
   }
 }
