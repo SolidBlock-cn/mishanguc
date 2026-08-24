@@ -468,13 +468,14 @@ public class CarryingToolItem extends BlockToolItem
       final float width = nbt.getFloat("holdingEntityWidth");
       final float height = nbt.getFloat("holdingEntityHeight");
       final Vec3d pos = hitResult.getPos();
-      WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(pos.x - width / 2, pos.y, pos.z - width / 2, pos.x + width / 2, pos.y + height, pos.z + width / 2), -cameraPos.x, -cameraPos.y, -cameraPos.z, 0, 1, 1, 0.8f);
+      WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(-width / 2, 0, -width / 2, width / 2, height, width / 2), pos.x - cameraPos.x, pos.y - cameraPos.y, pos.z - cameraPos.z, 0, 1, 1, 0.8f);
     }
     if (!player.isCreative() && (hasHoldingBlockState(stack) || hasHoldingEntity(stack)))
       return;
     if (hitResult instanceof EntityHitResult entityHitResult) {
       final Entity entity = entityHitResult.getEntity();
-      WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox()), -cameraPos.x, -cameraPos.y, -cameraPos.z, 1.0f, 0f, 0f, 0.8f);
+      final float tickProgress = MinecraftClient.getInstance().getTickDelta();
+      WorldRendererInvoker.drawCuboidShapeOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox().offset(entity.getLerpedPos(tickProgress).subtract(entity.getPos()))), -cameraPos.x, -cameraPos.y, -cameraPos.z, 1.0f, 0f, 0f, 0.8f);
     }
   }
 }
