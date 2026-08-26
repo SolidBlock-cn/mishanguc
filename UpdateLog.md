@@ -9,6 +9,13 @@
 - 修复在 26.1.2 版本的编辑告示牌界面中增减文本行时焦点异常的问题。
 - 进一步优化了文本工具、颜色工具和搬运工具的实现方式，现在判断逻辑在客户端执行，执行失败时没有摇手动作且不会转交至服务器。服务器执行时依然会执行判断逻辑。
 
+### 1.6.5-alpha.1
+
+- 修复模组在 1.20.1 与 1.21.1 中与 Forge/NeoForge 和 Sinytra Connector 不兼容的问题。
+    - 在 1.21.1 中，在 mixin 注解的 `method` 方法中，无论单独指定方法名称 `findCrosshairTarget`（Yarn 映射）还是指定完整的方法签名，经 Yarn 重新映射后的中间名仅有方法名称 `method_56153`，再经 Sinytra Connector 重映射为官方映射后的方法名称为 `pick`。在 Yarn 映射中，`GameRenderer` 类中名称为 `findCrosshairTarget` 的方法只有一个，而在官方映射中，`GameRenderer` 类中名称为 `pick` 的方法不止一个（对应 Yarn 映射中的 `findCrosshairTarget` 和 `updateCrosshairTarget`），无法正确定位目标，导致 mixin 出现错误。为解决此问题，在代码中加入了 `target = @Desc(...)` 以帮助游戏正确找到要 mixin 的方法。
+    - 在 1.20.1 中，在 Yarn 和官方映射中，`BeaconBlockEntity` 类中名为 `tick` 的方法只有一个，Yarn 将其正确地重映射为 `method_16896`，但是在经 Sinytra Connector 重映射后的模组中，方法名称仍为 `method_16896`，在 Forge 中不正常。为解决此问题，为相关的 mixin 设置了静默忽略，这样在遇到异常时不会报错，有关的 mixin 也不会运行。这也就意味着，在 1.20.1 中，使用 Forge/NeoForge 和 Sinytra Connector 运行的迷上城建模组中，自定义染色的玻璃等方块不能染色信标光柱，若未来 Sinytra Connector 有更新，此问题可能会解决。
+- 请注意：该版本是在模组版本 1.6.5 开发过程中临时发布的，因此会有模组的 1.6.5 版本中的部分更新，这一部分内容不保证稳定。
+
 ### 1.6.4
 
 - 修复方块中间的栏杆方块轮廓形状异常的问题。
