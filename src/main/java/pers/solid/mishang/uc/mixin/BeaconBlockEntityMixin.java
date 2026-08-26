@@ -29,7 +29,7 @@ public abstract class BeaconBlockEntityMixin {
   @Unique
   private static final TagKey<Block> TINTS_BEACON_BEAMS = TagKey.of(RegistryKeys.BLOCK, new Identifier("mishanguc", "tints_beacon_beams"));
 
-  @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;getBlock()Lnet/minecraft/block/Block;", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
+  @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;getBlock()Lnet/minecraft/block/Block;", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT, require = 0)
   private static void acceptColoredBlocksInTick(World world, BlockPos pos, BlockState state, BeaconBlockEntity blockEntity, CallbackInfo ci, int i, int j, int k, BlockPos blockPos, BeaconBlockEntity.BeamSegment beamSegment, int l, int m, BlockState blockState, @Share("is_colored") LocalBooleanRef localBooleanRef, @Local LocalRef<BeaconBlockEntity.BeamSegment> beamSegmentLocalRef) {
     final List<BeaconBlockEntity.BeamSegment> checkingBeamSegments = ((BeaconBlockEntityAccessor) blockEntity).getCheckingBeamSegments();
     if (world.getBlockEntity(blockPos) instanceof ColoredBlockEntity coloredBlockEntity && blockState.isIn(TINTS_BEACON_BEAMS)) {
@@ -55,7 +55,7 @@ public abstract class BeaconBlockEntityMixin {
     }
   }
 
-  @WrapWithCondition(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/entity/BeaconBlockEntity$BeamSegment;increaseHeight()V"))
+  @WrapWithCondition(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/entity/BeaconBlockEntity$BeamSegment;increaseHeight()V"), require = 0)
   private static boolean wrappedIncreaseHeight(BeaconBlockEntity.BeamSegment instance, @Share("is_colored") LocalBooleanRef localBooleanRef) {
     return !localBooleanRef.get();
   }
