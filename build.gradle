@@ -162,7 +162,6 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     mainFile.addEnvironment 'Client', 'Server'
 
     mainFile.addRelations 'requiredDependency', 'fabric-api'
-    mainFile.withAdditionalFile(sourcesJar)
 }
 
 modrinth {
