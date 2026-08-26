@@ -3,13 +3,16 @@ package pers.solid.mishang.uc.mixin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
+import net.minecraft.util.hit.HitResult;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Desc;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import pers.solid.mishang.uc.item.BlockToolItem;
 
@@ -21,6 +24,7 @@ public class GameRendererMixin {
 
   @ModifyArg(
       method = "updateTargetedEntity(F)V",
+      target = @Desc(id = "updateTargetedEntity_yarn", value = "updateTargetedEntity", args = float.class ),
       at =
       @At(
           value = "INVOKE",
@@ -28,7 +32,6 @@ public class GameRendererMixin {
               "Lnet/minecraft/entity/Entity;raycast(DFZ)Lnet/minecraft/util/hit/HitResult;"),
       index = 2)
   private boolean modifyRaycastCall(boolean includeFluids) {
-    //        return true;
     final ClientPlayerEntity player = this.client.player;
     if (player == null) {
       return includeFluids;
