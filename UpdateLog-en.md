@@ -9,6 +9,12 @@ Note: Not all versions in this update log are already published. Please refer to
 - Fixed the issue of incorrect focus in the sign edit screen in 26.1.2 when adding and removing text lines.
 - Further optimized the implementation of Color Tool, Text Copy Tool and Carrying Tool. Now the judgment logic is executed on the client, and will neither perform hand-swinging nor send to server when it fails. The execution on the server will still execute the judgment logic.
 
+### 1.6.5-alpha.1
+
+- Fixed the issue that the mod is incompatible with Forge/NeoForge and Sinytra Connector in 1.20.1 and 1.21.1.
+    - In 1.21.1, in the `method` method in the mixin annotation, no matter the specified value is a single method name `findCrosshairTarget` (Yarn mapping), or a full method signature, the intermediary name remapped by Yarn only contains method name `method_56153`, and then when remapped by Sinytra Connector into official mapping, the method name is `pick`. In Yarn mapping, in the `GameRenderer` class, the method named `findCrosshairTarget` is only one, but in the official mapping, in the `GameRenderer` class, the methods named `pick` are more than one (corresponding to `findCrosshairTarget` and `updateCrosshairTarget` in the Yarn mapping), so the target cannot be correctly located, causing the mixin to encounter errors. To solve this issue, I added `target = @Desc(...)` into the code to help the game correctly find the method to apply mixin.
+    - In 1.20.1, in Yarn and official mappings, the method named `tick` in `BeaconBlockEntity` class is only one, and Yarn correctly remaps it to `method_16896`. However, in the mod remapped by Sinytra Connector, the method name is still `method_16896`, which is abnormal in Forge. To solve this issue, the relevant mixins has been set 'silent ignoring' so exceptions will not be thrown when found, and the relevant mixins will not be applied in this case. This also means, in 1.20.1, when using Forge/NeoForge and Sinytra Connector to run Mishang Urban Construction mod, the custom colored glass blocks and other blocks cannot tint beacon beams. If Sinytra Connector should be updated in the future, the issue would be perhaps solved.
+
 ### 1.6.4
 
 - Fixed the issue of wrong outline shape of handrail block of the central shape.
