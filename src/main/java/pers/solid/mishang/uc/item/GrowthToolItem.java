@@ -101,7 +101,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
               shouldDamage = true;
             }
           }
-          final boolean isUsingGoldenDandelion = AgeableMob.canUseGoldenDandelion(offhandStack, true, 0, ageableMob) && ageableMob.isAgeLocked() == isPositive;
+          final boolean isUsingGoldenDandelion = !(ageableMob instanceof AbstractCubeMob cube && cube.getSize() > 1 != isPositive) && AgeableMob.canUseGoldenDandelion(offhandStack, true, 0, ageableMob) && ageableMob.isAgeLocked() == isPositive;
           if (isUsingGoldenDandelion) {
             AgeableMob.setAgeLocked(ageableMob, ageableMob::isAgeLocked, player, offhandStack, mob -> {
               if (!(mob instanceof AgeableMob ageableMob0)) return;
