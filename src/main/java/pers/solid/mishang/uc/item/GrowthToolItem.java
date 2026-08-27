@@ -96,6 +96,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
           if (prevSize != newSize) {
             slimeEntity.setSize(newSize, true);
             createParticle(world, entity.position(), isPositive);
+            damage += 1;
           }
         }
 
