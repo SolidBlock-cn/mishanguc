@@ -75,6 +75,11 @@ public class RoadConnectionStateDebuggingToolItem extends BlockToolItem implemen
   }
 
   @Override
+  public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+    return false;
+  }
+
+  @Override
   public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
     super.appendTooltip(stack, context, tooltip, type);
     tooltip.add(TextBridge.translatable("item.mishanguc.road_connection_state_debugging_tool.tooltip.1").formatted(Formatting.GRAY));

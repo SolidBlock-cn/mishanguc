@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -80,6 +81,11 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
       ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!world.isClient) return getBlockDataOf((ServerPlayerEntity) player, (ServerWorld) world, pos);
     else return ActionResult.SUCCESS;
+  }
+
+  @Override
+  public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+    return false;
   }
 
   public ActionResult getBlockDataOf(ServerPlayerEntity player, ServerWorld world, BlockPos blockPos) {

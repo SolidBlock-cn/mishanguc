@@ -191,6 +191,11 @@ public class ColorToolItem extends BlockToolItem implements MishangucItem {
     return ActionResult.SUCCESS;
   }
 
+  @Override
+  public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+    return false;
+  }
+
   public void appendToEntries(ItemGroup.Entries entries) {
     entries.add(createStack(1f, ColorMixtureType.NORMAL, null));
     entries.add(createStack(0.5f, ColorMixtureType.NORMAL, null));

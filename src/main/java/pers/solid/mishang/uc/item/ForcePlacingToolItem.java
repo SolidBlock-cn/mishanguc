@@ -94,6 +94,11 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     return ActionResult.success(world.isClient);
   }
 
+  @Override
+  public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+    return false;
+  }
+
   private static int getFlags(ItemStack stack) {
     return 0b11010;
   }

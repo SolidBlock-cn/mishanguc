@@ -96,7 +96,7 @@ public class BlockStateToolItem extends BlockToolItem implements MishangucItem {
 
   @Override
   public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
-    return super.canMine(state, world, pos, miner);
+    return false;
   }
 
   public ActionResult getBlockStateOf(

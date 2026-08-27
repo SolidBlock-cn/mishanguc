@@ -298,6 +298,11 @@ public class TextCopyToolItem extends BlockToolItem implements MishangucItem {
     }
   }
 
+  @Override
+  public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+    return false;
+  }
+
   @Environment(EnvType.CLIENT)
   @Override
   public boolean renderBlockOutline(PlayerEntity player, ItemStack itemStack, WorldRenderContext worldRenderContext, WorldRenderContext.BlockOutlineContext blockOutlineContext, Hand hand) {

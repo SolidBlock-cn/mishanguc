@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.item;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.OperatorBlock;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
@@ -73,6 +74,11 @@ public class RotatingToolItem extends BlockToolItem implements MishangucItem {
       stack.damage(1, player, LivingEntity.getSlotForHand(hand));
     }
     return result;
+  }
+
+  @Override
+  public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+    return false;
   }
 
   @Override

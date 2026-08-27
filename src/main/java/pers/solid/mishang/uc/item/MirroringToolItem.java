@@ -80,6 +80,11 @@ public class MirroringToolItem extends BlockToolItem implements MishangucItem {
   }
 
   @Override
+  public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+    return false;
+  }
+
+  @Override
   public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
     super.appendTooltip(stack, context, tooltip, type);
     tooltip.add(

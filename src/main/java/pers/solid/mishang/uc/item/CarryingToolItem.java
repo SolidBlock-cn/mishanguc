@@ -232,6 +232,10 @@ public class CarryingToolItem extends BlockToolItem
     return ActionResult.SUCCESS;
   }
 
+  @Override
+  public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+    return false;
+  }
 
   @Override
   public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
