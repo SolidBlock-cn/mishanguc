@@ -235,7 +235,7 @@ public class CarryingToolItem extends BlockToolItem
     }
     if (!world.isClientSide()) {
       if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
-        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.picked_overriding", holdingEntity.name()), true);
+        player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.picked_overriding", removed.getBlock().getName(), holdingEntity.name()), true);
       } else if (carryingToolData instanceof CarryingToolData.HoldingBlockState holdingBlockState) {
         player.displayClientMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.picked_overriding", removed.getBlock().getName(), holdingBlockState.state().getBlock().getName()), true);
       } else {
