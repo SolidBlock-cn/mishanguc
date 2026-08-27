@@ -114,6 +114,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
             if (world instanceof ServerLevel serverLevel) {
               serverLevel.sendParticles(isAgeLocked ? ParticleTypes.PAUSE_MOB_GROWTH : ParticleTypes.RESET_MOB_GROWTH, spawnPosition.x, spawnPosition.y, spawnPosition.z, 16, 1, 1, 1, 0);
             }
+            shouldDamage = true;
           }
           if (ageableMob.isBaby() == isPositive) {
             ageableMob.setAge((ageableMob instanceof AbstractCubeMob cube ? cube.getSize() > 1 : isPositive) ? 0 : AgeableMob.BABY_START_AGE);
