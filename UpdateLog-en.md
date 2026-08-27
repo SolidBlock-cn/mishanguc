@@ -11,6 +11,7 @@ Note: Not all versions in this update log have been published yet. Please refer 
 - Improved the implementation of Growth Tool. If no mobs are affected (including when their age is modified, frozen, or unfrozen), no hand-swing animation will be displayed.
 - Adjusted how Growth Tool handles slimes, magma cubes, and sulfur cubes. Each use now increases or decreases their size by 1 instead of doubling or halving it, and their size can be set to at most 8. Sulfur cubes are set to their baby form only when their size is set to 1.
 - Improved the rendering of entity outlines for Data Tag Tool, Carrying Tool, and Force Placing Tool when targeting entities. Now, when an entity moves, its rendered outline follows the movement smoothly.
+- Fixed the issue of incorrect overlay messages when obtaining blocks and overriding obtained entities using Carrying Tool.
 - For 26.2 versions:
     - The sulfur cube archetype for full light blocks is `regular`.
     - The sulfur cube archetype for road blocks is `slow_bouncy`.
@@ -99,6 +100,7 @@ Note: Not all versions in this update log have been published yet. Please refer 
 - Fixed the issue where sign preset names containing special characters (such as symbols or spaces) caused commands to be invalid. Suggestions now add quotation marks around sign preset names.
 - Improved the operation of sign edit screen, and the width of text fields will be automatically determined based on whether the scroll bar is rendered.
 - Fixed the issue that when the field `textJson` of NBT of text is invalid, the translation key of the returned text component `message.mishanguc.invalid_json` does not exist. Besides, this text will be displayed in red.
+- Fixed the outline rendering issue of invisible signs when holding invisible signs in hand in versions 1.21.10.
 
 ### 1.6.0-beta.5
 
