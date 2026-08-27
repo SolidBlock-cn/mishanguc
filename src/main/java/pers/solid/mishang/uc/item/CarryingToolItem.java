@@ -296,10 +296,10 @@ public class CarryingToolItem extends BlockToolItem
       world.syncWorldEvent(2001, pos, Block.getRawIdFromState(removed));
     }
     if (!world.isClient) {
-      if (alreadyHolding == null) {
+      if (alreadyHolding == null && !alreadyHoldingEntity) {
         player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick", removed.getBlock().getName()), true);
       } else if (alreadyHoldingEntity) {
-        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.pick_overriding", getEntityName(stack)), true);
+        player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.picked_overriding", removed.getBlock().getName(), getEntityName(stack)), true);
       } else {
         player.sendMessage(TextBridge.translatable("item.mishanguc.carrying_tool.message.picked_overriding", removed.getBlock().getName(), alreadyHolding.getName()), true);
       }
