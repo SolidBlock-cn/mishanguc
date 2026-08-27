@@ -9,6 +9,10 @@ Note: Not all versions in this update log have been published yet. Please refer 
 - Fixed the issue of incorrect focus in the sign edit screen in 26.1.2 when adding and removing text lines.
 - Further optimized the implementation of Color Tool, Text Copy Tool, and Carrying Tool. The validation logic is now executed on the client, which will neither swing the player's hand nor send a request to the server when validation fails. The server will still perform the validation.
 
+### 1.6.5-alpha.2
+
+- Fixed the issue that in 1.21.1 when using NeoForge and Sinytra Connector, blocks may be broken accidentally when left-clicking while using some tools (for example, ID Checker Tool, Data Tag Tool, Color Tool).
+
 ### 1.6.5-alpha.1
 
 - Fixed the issue that the mod is incompatible with Forge/NeoForge and Sinytra Connector in 1.20.1 and 1.21.1.
