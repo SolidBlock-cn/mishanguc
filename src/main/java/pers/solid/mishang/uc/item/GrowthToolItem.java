@@ -101,6 +101,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
         }
 
         case AgeableMob passiveEntity -> {
+          boolean shouldDamage = false;
           final boolean isUsingGoldenDandelion = AgeableMob.canUseGoldenDandelion(offhandStack, true, 0, passiveEntity) && passiveEntity.isAgeLocked() == isPositive;
           if (isUsingGoldenDandelion) {
             AgeableMob.setAgeLocked(passiveEntity, passiveEntity::isAgeLocked, player, offhandStack, mob -> {
@@ -114,12 +115,17 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
             if (world instanceof ServerLevel serverLevel) {
               serverLevel.sendParticles(isAgeLocked ? ParticleTypes.PAUSE_MOB_GROWTH : ParticleTypes.RESET_MOB_GROWTH, spawnPosition.x, spawnPosition.y, spawnPosition.z, 16, 1, 1, 1, 0);
             }
+            shouldDamage = true;
           }
           if (passiveEntity.isBaby() == isPositive) {
             passiveEntity.setAge(isPositive ? 0 : AgeableMob.BABY_START_AGE);
             if (!isUsingGoldenDandelion) {
               createParticle(world, entity.position(), isPositive);
             }
+            shouldDamage = true;
+          }
+
+          if (shouldDamage) {
             damage += 1;
           }
         }
