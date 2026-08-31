@@ -8,7 +8,6 @@ Note: Not all versions in this update log have been published yet. Please refer 
 - Fixed the issue that the tooltips of presets show their names instead of their IDs in the `/mishanguc:signpreset list` command.
 - Fixed the issue of incorrect focus in the sign edit screen in 26.1.2 when adding and removing text lines.
 - Further optimized the implementation of Color Tool, Text Copy Tool, and Carrying Tool. The validation logic now runs on the client. When validation fails, it neither swings the player's hand nor sends a request to the server. The server still performs the validation.
-- Improved the implementation of Growth Tool. If no mobs are affected (including when their age is modified, frozen, or unfrozen), no hand-swing animation will be displayed.
 - Adjusted how Growth Tool handles slimes, magma cubes, and sulfur cubes. Each use now increases or decreases their size by 1 instead of doubling or halving it, and their size can be set to at most 8. Sulfur cubes are set to their baby form only when their size is set to 1.
 - Improved the rendering of entity outlines for Data Tag Tool, Carrying Tool, and Force Placing Tool when targeting entities. Now, when an entity moves, its rendered outline follows the movement smoothly.
 - Fixed the issue of incorrect translation args in overlay messages when obtaining blocks and overriding obtained entities using Carrying Tool.
@@ -22,6 +21,7 @@ Note: Not all versions in this update log have been published yet. Please refer 
     - The sulfur cube archetype for road blocks is `slow_bouncy`.
     - Custom colored blocks (except transparent, translucent and incomplete blocks) have the same sulfur cube archetype as their base blocks.
     - When the custom colored block is put into a sulfur cube, the color will be identical as in the inventory. If the color is not specified, it varies with time. If color is set, the color is used.
+- For some changes, please see the update log of 1.6.4, 1.6.3 and relevant beta versions.
 
 ### 1.6.5-alpha.2
 
