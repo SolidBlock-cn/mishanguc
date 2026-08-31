@@ -8,14 +8,20 @@ Note: Not all versions in this update log have been published yet. Please refer 
 - Fixed the issue that the tooltips of presets show their names instead of their IDs in the `/mishanguc:signpreset list` command.
 - Fixed the issue of incorrect focus in the sign edit screen in 26.1.2 when adding and removing text lines.
 - Further optimized the implementation of Color Tool, Text Copy Tool, and Carrying Tool. The validation logic now runs on the client. When validation fails, it neither swings the player's hand nor sends a request to the server. The server still performs the validation.
-- Improved the implementation of Growth Tool. If no mobs are affected (including when their age is modified, frozen, or unfrozen), no hand-swing animation will be displayed.
 - Adjusted how Growth Tool handles slimes, magma cubes, and sulfur cubes. Each use now increases or decreases their size by 1 instead of doubling or halving it, and their size can be set to at most 8. Sulfur cubes are set to their baby form only when their size is set to 1.
 - Improved the rendering of entity outlines for Data Tag Tool, Carrying Tool, and Force Placing Tool when targeting entities. Now, when an entity moves, its rendered outline follows the movement smoothly.
+- Fixed the issue of incorrect translation args in overlay messages when obtaining blocks and overriding obtained entities using Carrying Tool.
+- Fixed the issue when catching and placing blocks with block entities, the block entity data may not be loaded or the data is loaded but overridden by irrelevant item components.
+- Fixed the issue of Column Building Tool were not correctly using block entity data when holding a block with block entity data on the offhand.
+    - Now, when holding a block with block entity data (such as a banner with patterns, a sign with texts on, a custom-colored block with a specified color), or holding a Carrying Tool with a block caught, and using Force Placing Tool, Fast Building Tool or Column Building Tool on the mainhand, the block entity data of the block on the offhand is normally used.
+    - Please note: if the block on the offhand is a custom-colored block with an automatic color (such as ones fetched in the creative inventory), the blocks placed with the tools above may not be colored correctly.
+    - Column Building Tool may have slight changes.
 - For 26.2 versions:
     - The sulfur cube archetype for full light blocks is `regular`.
     - The sulfur cube archetype for road blocks is `slow_bouncy`.
     - Custom colored blocks (except transparent, translucent and incomplete blocks) have the same sulfur cube archetype as their base blocks.
     - When the custom colored block is put into a sulfur cube, the color will be identical as in the inventory. If the color is not specified, it varies with time. If color is set, the color is used.
+- For some changes, please see the update log of 1.6.4, 1.6.3 and relevant beta versions.
 
 ### 1.6.5-alpha.2
 
@@ -121,7 +127,7 @@ Note: Not all versions in this update log have been published yet. Please refer 
 ### 1.6.0-beta.3
 
 - Now it is possible to modify the text preset of signs. When editing the sign texts, if no text is added, all available presets will be displayed.
-  - There are currently 6 built-in sign presets:
+    - There are currently 6 built-in sign presets:
         - left arrow + 1 line of text (`left_arrow_one_line`)
         - 1 line of text (`one_line`)
         - right arrow + 1 line of text (`right_arrow_one_line`)
@@ -129,27 +135,27 @@ Note: Not all versions in this update log have been published yet. Please refer 
         - 2 lines of text (`two_lines`)
         - right arrow + 2 lines of text (`right_arrow_two_lines`)
       - The "two lines of text" in the presets above consist of one line with size 6 and one line with size 3. The arrows can be used for directional signs such as subway signs.
-  - The sign presets (excluding built-in presets) are stored in `configs/mishanguc_sign_presets/<id>.json`, where `<id>` can be any valid filename, may contain Chinese characters, but cannot contain certain special characters and cannot include subfolders. Each file uses the `json` format and supports the following fields:
-    - `order`: Integer, optional; defaults to 0. Used to control the order in which sign presets are displayed. The lower the value, the higher the priority. The six built-in presets have values from -6 to -1, respectively.
-      - `name`: Text component. Optional. The display name of the preset in the interface. If not specified, the translation key `signPreset.mishanguc.<id>.name` will be used, and the id will be displayed directly as a fallback if the translation key does not exist.
-    - `description`: Text component. Optional. The description of the preset. In the sign edit screen, the description will be displayed when the cursor hovers over the button or when the button receives focus.
-    - `text_contexts`: The text list. Required. The format of each item is equivalent to the format of each text in the sign.
-      - `initial_focus`: Integer. Optional. By default, 0. This value indicates which line of text will be automatically selected when the preset is applied. For example, if the value of `initial_focus` is 2, upon applying the preset the third line of text will be automatically selected. The value of this field must be lower than the amount of elements of text list, but when the text list is empty (amount is 0), this value can be 0.
-  - Added corresponding commands to handle sign presets. All commands are executed on the client side, not the server side, and take effect immediately; the relevant files will be updated. All file I/O operations are executed on a separate thread.
-    - `/mishanguc:signpreset path`: Shows the path where the sign presets are stored. When the path exists, click the relevant message to show it in Explorer.
-      - `/mishanguc:signpreset list`: Show a list of all current presets.
-      - `/mishanguc:signpreset reload`: Reload sign presets from the disk. Note: `/reload` command will not reload sign presets.
-      - `/mishanguc:signpreset save <id> [args]`: Store the sign presets. When executing, you need to locate your crosshair on a sign block of Mishang Urban Construction mod. You can specify some extra arguments (`[args]`), in the NBT object format, supporting the following fields:
-        - `force`: False by default. If true, the preset will still be saved when a preset file with the same name exists or when a built-in preset with the same name exists. If false, the command will not execute in these cases. In addition, if the sign text is empty (not a single line), the command will not execute when `force` is false.
-        - `order`: Integer.
-        - `initial_focus`: Integer.
-        - `name`: Text component.
-        - `description`: Text component.
-      - `/mishanguc:signpreset delete <id>`: Delete a sign preset. When deleting a non-built-in sign preset, the file `<id>.json` will be deleted if possible. When deleting a built-in sign preset, an empty `<id>.json` file will be created to mark this built-in sign preset as not to be loaded.
-      - `/mishanguc:signpreset reset <id>`: Reset a sign preset. For non-built-in sign presets, it will be deleted (equivalent to `/mishanguc:signpreset delete <id>`). For built-in sign presets, whether they are overridden or marked not to load, the file `<id>.json` will be deleted to restore the built-in preset.
-      - `/mishanguc:signpreset reset`: Reset all sign presets and restore all built-in sign presets. All JSON files in `config/mishanguc_sign_presets` will be deleted.
-  - Note: The positions of all presets will be adjusted automatically when applied, even if not adjusted when saved. If you do not need this adjustment, set the relevant text lines to absolute mode.
-    - The size of built-in sign presets is now 6 and 3 (for two lines) for all blocks. Formerly, the size of built-in sign presets was 8 and 4 for full wall sign blocks. Note that the default text size still depends on the sign itself: it is 8 for full wall signs and 6 for other blocks.
+    - The sign presets (excluding built-in presets) are stored in `configs/mishanguc_sign_presets/<id>.json`, where `<id>` can be any valid filename, may contain Chinese characters, but cannot contain certain special characters and cannot include subfolders. Each file uses the `json` format and supports the following fields:
+        - `order`: Integer, optional; defaults to 0. Used to control the order in which sign presets are displayed. The lower the value, the higher the priority. The six built-in presets have values from -6 to -1, respectively.
+            - `name`: Text component. Optional. The display name of the preset in the interface. If not specified, the translation key `signPreset.mishanguc.<id>.name` will be used, and the id will be displayed directly as a fallback if the translation key does not exist.
+        - `description`: Text component. Optional. The description of the preset. In the sign edit screen, the description will be displayed when the cursor hovers over the button or when the button receives focus.
+        - `text_contexts`: The text list. Required. The format of each item is equivalent to the format of each text in the sign.
+            - `initial_focus`: Integer. Optional. By default, 0. This value indicates which line of text will be automatically selected when the preset is applied. For example, if the value of `initial_focus` is 2, upon applying the preset the third line of text will be automatically selected. The value of this field must be lower than the amount of elements of text list, but when the text list is empty (amount is 0), this value can be 0.
+    - Added corresponding commands to handle sign presets. All commands are executed on the client side, not the server side, and take effect immediately; the relevant files will be updated. All file I/O operations are executed on a separate thread.
+        - `/mishanguc:signpreset path`: Shows the path where the sign presets are stored. When the path exists, click the relevant message to show it in Explorer.
+            - `/mishanguc:signpreset list`: Show a list of all current presets.
+            - `/mishanguc:signpreset reload`: Reload sign presets from the disk. Note: `/reload` command will not reload sign presets.
+            - `/mishanguc:signpreset save <id> [args]`: Store the sign presets. When executing, you need to locate your crosshair on a sign block of Mishang Urban Construction mod. You can specify some extra arguments (`[args]`), in the NBT object format, supporting the following fields:
+                - `force`: False by default. If true, the preset will still be saved when a preset file with the same name exists or when a built-in preset with the same name exists. If false, the command will not execute in these cases. In addition, if the sign text is empty (not a single line), the command will not execute when `force` is false.
+                - `order`: Integer.
+                - `initial_focus`: Integer.
+                - `name`: Text component.
+                - `description`: Text component.
+            - `/mishanguc:signpreset delete <id>`: Delete a sign preset. When deleting a non-built-in sign preset, the file `<id>.json` will be deleted if possible. When deleting a built-in sign preset, an empty `<id>.json` file will be created to mark this built-in sign preset as not to be loaded.
+            - `/mishanguc:signpreset reset <id>`: Reset a sign preset. For non-built-in sign presets, it will be deleted (equivalent to `/mishanguc:signpreset delete <id>`). For built-in sign presets, whether they are overridden or marked not to load, the file `<id>.json` will be deleted to restore the built-in preset.
+            - `/mishanguc:signpreset reset`: Reset all sign presets and restore all built-in sign presets. All JSON files in `config/mishanguc_sign_presets` will be deleted.
+    - Note: The positions of all presets will be adjusted automatically when applied, even if not adjusted when saved. If you do not need this adjustment, set the relevant text lines to absolute mode.
+        - The size of built-in sign presets is now 6 and 3 (for two lines) for all blocks. Formerly, the size of built-in sign presets was 8 and 4 for full wall sign blocks. Note that the default text size still depends on the sign itself: it is 8 for full wall signs and 6 for other blocks.
 - Simplified the data format for sign texts. For situations where text is white (by default) and there is no outline, the fields will be removed.
 - Improved the `-pattern` option for sign texts. Now all patterns use canonical names while supporting some abbreviated names as aliases:
     - `empty`
@@ -177,18 +183,18 @@ Note: Not all versions in this update log have been published yet. Please refer 
     - `u-turn-left-down`, alias: `u-turn-left-bottom`, `uld`, `ulb`
     - `u-turn-right-down`, alias: `u-turn-right-bottom`, `urd`, `urb`
   - `u-turn-left-up`, alias: `u-turn-left-top`, `ulu`, `ult`
-    - `u-turn-right-up`, alias: `u-turn-right-top`, `uru`, `urt`
-    - `cross-small`, alias: `small-scross`
-    - `cross-medium`, alias: `medium-cross`, `cross`, `X`
-    - `cross-large`, alias: `large-cross`
-    - `square-small`, alias: `small-square`
-    - `square-medium`, alias: `medium-square`, `square`
-    - `square-large`, alias: `large-square`
-    - `square-slant-small`, alias: `small-slant-square`
-    - `square-slant-medium`, alias: `medium-slant-square`
-    - `square-slant-large`, alias: `large-slant-square`
-    - Note: Specifying custom patterns is not supported. To use more complicated patterns, it is recommended to use `-texture` format, or use the vanilla sprite component (example: `-nbt {sprite: xxx}`).
-    - When the mod stores patterns in chunk data, it uses canonical names (such as `arrow-left`) instead of abbreviated names (such as `al`). Abbreviated names in chunk data saved by older versions of the mod will be converted automatically, and the data will no longer be compatible with older versions. Therefore, making a backup before entering the world with the new version is recommended.
+      - `u-turn-right-up`, alias: `u-turn-right-top`, `uru`, `urt`
+      - `cross-small`, alias: `small-scross`
+      - `cross-medium`, alias: `medium-cross`, `cross`, `X`
+      - `cross-large`, alias: `large-cross`
+      - `square-small`, alias: `small-square`
+      - `square-medium`, alias: `medium-square`, `square`
+      - `square-large`, alias: `large-square`
+      - `square-slant-small`, alias: `small-slant-square`
+      - `square-slant-medium`, alias: `medium-slant-square`
+      - `square-slant-large`, alias: `large-slant-square`
+      - Note: Specifying custom patterns is not supported. To use more complicated patterns, it is recommended to use `-texture` format, or use the vanilla sprite component (example: `-nbt {sprite: xxx}`).
+      - When the mod stores patterns in chunk data, it uses canonical names (such as `arrow-left`) instead of abbreviated names (such as `al`). Abbreviated names in chunk data saved by older versions of the mod will be converted automatically, and the data will no longer be compatible with older versions. Therefore, making a backup before entering the world with the new version is recommended.
 - Text in signs now supports `-nbt`, similar to `-json`, but it represents text components using NBT, and its syntax has some small differences from JSON. Text specified with `-json` will be automatically converted to `-nbt`.
 
 ### 1.6.0-beta.2
@@ -321,18 +327,18 @@ This is a fix update exclusively for 1.19.4.
         - `invert`: Sets block color to an opposite color.
       - `hue`: Sets the hue of the block color to that of a specified color while retaining its saturation and luminosity.
       - `hue_and_saturation`: Sets the hue and saturation of the block color to those of a specified color while retaining its luminosity.
-        - `hue_rotate`: Rotates the hue of block color. When using while holding Shift, the rotation will be in an opposite direction.
-        - `saturation_change`: Increases the saturation of block color. When using while holding Shift, the saturation will be decreased.
-        - `brightness_change`: Increases the luminosity of block color. When using while holding Shift, the luminosity will be decreased.
-        - In the inventory, except for `normal` which provides multiple tools with different opacity, each of the above provides one tool.
+          - `hue_rotate`: Rotates the hue of block color. When using while holding Shift, the rotation will be in an opposite direction.
+          - `saturation_change`: Increases the saturation of block color. When using while holding Shift, the saturation will be decreased.
+          - `brightness_change`: Increases the luminosity of block color. When using while holding Shift, the luminosity will be decreased.
+          - In the inventory, except for `normal` which provides multiple tools with different opacity, each of the above provides one tool.
   - The amount of color modification is controlled by the `mishanguc:color_change_amount` component, whose type is float. It specifies the amount by which the hue, saturation, or luminosity is modified. For items in the creative inventory, the default hue rotation amount is 1/24, while the default saturation and luminosity modification amount is 0.1.
   - Note: When a non-custom-colored block is converted to a custom-colored block, the *map color* of the original block is used as the initial color. Therefore, it is normal for its color to differ from the color displayed by custom-colored blocks.
-    - Note: If you decrease the saturation to 0 (gray) with color tool that modifies saturation, or change the luminosity to 0 (black) or 1 (white) with color tool that modifies luminosity, then the color's hue will be 0 or 1 (red), and saturation will be 0. For example, if you decrease the saturation to 0, and then increase it, it will only be red. If you change luminosity to 0 or 1 and then increase or decrease it, it will be only gray.
+      - Note: If you decrease the saturation to 0 (gray) with color tool that modifies saturation, or change the luminosity to 0 (black) or 1 (white) with color tool that modifies luminosity, then the color's hue will be 0 or 1 (red), and saturation will be 0. For example, if you decrease the saturation to 0, and then increase it, it will only be red. If you change luminosity to 0 or 1 and then increase or decrease it, it will be only gray.
 - Now you can select multiple lines when editing signs.
     - Select text box while holding Ctrl to multi-select. Select selected text box while holding Ctrl to deselect it.
     - Select text box while holding Shift to select continuous multiple text boxes at once.
   - Multiple lines can be operated on at once, including adding, deleting, modifying styles, and entering text. If you increase or decrease their size, position coordinate, rotation, the modification is applied relatively to multiple lines. For properties such as color, or setting custom values, multiple lines will be set the same value.
-    - The Tab-key behavior when selecting multiple lines may be unstable.
+      - The Tab-key behavior when selecting multiple lines may be unstable.
 - Fixed the issue that players in Adventure Mode using slab tools with `CanDestroy` NBT tag (or component) cannot destroy blocks correctly.
 
 ### 1.3.5-beta.2
@@ -536,7 +542,7 @@ Updated the following content:
     - integers, such as `16777215`.
     - texts indicating the text color, such as `"red"`.
   - arrays in RGBA order, such as `[0, 255, 0]`.
-    - objects, such as `{signColor: red}`, `{fireworkColor: red}`, and `{mapColor: red}`.
+      - objects, such as `{signColor: red}`, `{fireworkColor: red}`, and `{mapColor: red}`.
 - Optimized the code, including code related to data generation and block registration.
 - Roads with automatic lines can handle line offsets more intelligently.
 - When generating lines, roads with automatic lines can catch any exceptions that are thrown.
