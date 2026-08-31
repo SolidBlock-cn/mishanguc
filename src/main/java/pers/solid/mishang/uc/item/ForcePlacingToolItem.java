@@ -29,7 +29,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShapes;
@@ -166,9 +165,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
         blockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(),
         blockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(),
         blockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(),
-        ColorHelper.fromFloats(0.8f, 0,
-            1,
-            1));
+        OUTLINE_COLOR_CYAN);
     if (includesFluid) {
       VertexRendering.drawOutline(
           matrices,
@@ -180,9 +177,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           blockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(),
           blockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(),
           blockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(),
-          ColorHelper.fromFloats(0.5f, 0,
-              0.5f,
-              1));
+          OUTLINE_COLOR_BLUE);
     }
     if (hand == Hand.MAIN_HAND) {
       // 只有当主手持有此物品时，才绘制红色边框。
@@ -194,9 +189,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           blockPlacementContext.blockPos.getX() - blockOutlineContext.cameraX(),
           blockPlacementContext.blockPos.getY() - blockOutlineContext.cameraY(),
           blockPlacementContext.blockPos.getZ() - blockOutlineContext.cameraZ(),
-          ColorHelper.fromFloats(0.8f, 1,
-              0,
-              0));
+          OUTLINE_COLOR_RED);
       if (includesFluid) {
         VertexRendering.drawOutline(
             matrices,
@@ -208,9 +201,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
             blockPlacementContext.blockPos.getX() - blockOutlineContext.cameraX(),
             blockPlacementContext.blockPos.getY() - blockOutlineContext.cameraY(),
             blockPlacementContext.blockPos.getZ() - blockOutlineContext.cameraZ(),
-            ColorHelper.fromFloats(0.5f, 1,
-                0.5f,
-                0));
+            OUTLINE_COLOR_ORANGE);
       }
     }
     return false;
@@ -265,7 +256,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       final RenderTickCounter deltaTracker = MinecraftClient.getInstance().getRenderTickCounter();
       final TickManager tickRateManager = context.world().getTickManager();
       final float tickProgress = deltaTracker.getTickDelta(!tickRateManager.shouldSkipTick(entity));
-      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox().offset(entity.getLerpedPos(tickProgress).subtract(entity.getPos()))), -cameraPos.x, -cameraPos.y, -cameraPos.z, ColorHelper.fromFloats(0.8f, 1.0f, 0f, 0f));
+      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox().offset(entity.getLerpedPos(tickProgress).subtract(entity.getPos()))), -cameraPos.x, -cameraPos.y, -cameraPos.z, OUTLINE_COLOR_RED);
     }
   }
 }

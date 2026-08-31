@@ -28,7 +28,10 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
@@ -51,11 +54,6 @@ import java.util.UUID;
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
 public class CarryingToolItem extends BlockToolItem
     implements MishangucItem, InteractsWithEntity, RendersBeforeOutline {
-
-  private static final int OUTLINE_COLOR_CYAN = ColorHelper.fromFloats(0.8f, 0, 1, 1);
-  private static final int OUTLINE_COLOR_BLUE = ColorHelper.fromFloats(0.5f, 0, 0.5f, 1);
-  private static final int OUTLINE_COLOR_RED = ColorHelper.fromFloats(0.8f, 1, 0, 0);
-  private static final int OUTLINE_COLOR_ORANGE = ColorHelper.fromFloats(0.5f, 1, 0.5f, 0);
 
   public CarryingToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
