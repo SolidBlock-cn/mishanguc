@@ -234,6 +234,8 @@ public class BlockPlacementContext {
           TypedEntityData.of(entityToPlace.getType(), holdingBlockState.blockEntityTag().get()).loadInto(entityToPlace, world.registryAccess());
           entityToPlace.setChanged();
         }
+      } else {
+        entityToPlace.applyComponentsFromItemStack(stackInHand);
       }
       // 从指定的物品堆对应的方块中读取组件
       BlockItem.updateCustomBlockEntityTag(world, player, posToPlace, stackInHand);
