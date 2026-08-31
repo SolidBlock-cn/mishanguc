@@ -32,6 +32,12 @@ import java.util.Objects;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBlockOutline.class)
 public abstract class BlockToolItem extends Item implements RendersBlockOutline {
+  public static final int OUTLINE_COLOR_CYAN = ColorHelper.fromFloats(0.8f, 0, 1, 1);
+  public static final int OUTLINE_COLOR_BLUE = ColorHelper.fromFloats(0.5f, 0, 0.5f, 1);
+  public static final int OUTLINE_COLOR_RED = ColorHelper.fromFloats(0.8f, 1, 0, 0);
+  public static final int OUTLINE_COLOR_ORANGE = ColorHelper.fromFloats(0.5f, 1, 0.5f, 0);
+  public static final int OUTLINE_COLOR_GREEN = ColorHelper.fromFloats(0.8f, 0, 1, 0);
+  public static final int OUTLINE_COLOR_LIGHT_GREEN = ColorHelper.fromFloats(0.5f, 0, 1, 0.5f);
   /**
    * 该物品是否包括流体。<br>
    * 如果该值为 <code>null</code>，则一般表示“视情况”，通常情况下是仅潜行时包括流体。 Whether fluids are included.<br>
@@ -39,8 +45,6 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
    * sneaking".
    */
   protected final @Nullable Boolean includesFluid;
-  private static final int OUTLINE_COLOR_MIDORI = ColorHelper.fromFloats(0.8f, 0, 1, 0);
-  private static final int OUTLINE_COLOR_MIDORI_LIGHT = ColorHelper.fromFloats(0.5f, 0, 1, 0.5f);
 
   public BlockToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings);
@@ -145,7 +149,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
         blockPos.getX() - blockOutlineContext.cameraX(),
         blockPos.getY() - blockOutlineContext.cameraY(),
         blockPos.getZ() - blockOutlineContext.cameraZ(),
-        OUTLINE_COLOR_MIDORI);
+        OUTLINE_COLOR_GREEN);
     if (includesFluid(itemStack, player.isSneaking())) {
       VertexRendering.drawOutline(
           worldRenderContext.matrixStack(),
@@ -154,7 +158,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
           blockPos.getX() - blockOutlineContext.cameraX(),
           blockPos.getY() - blockOutlineContext.cameraY(),
           blockPos.getZ() - blockOutlineContext.cameraZ(),
-          OUTLINE_COLOR_MIDORI_LIGHT);
+          OUTLINE_COLOR_LIGHT_GREEN);
     }
     return false;
   }
