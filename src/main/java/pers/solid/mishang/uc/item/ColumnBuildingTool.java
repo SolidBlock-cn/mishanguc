@@ -15,13 +15,11 @@ import net.minecraft.client.renderer.state.BlockOutlineRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.permissions.Permissions;
 import net.minecraft.util.Mth;
-import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -33,10 +31,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.GameMasterBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -97,36 +93,29 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
     final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, originBlockPos, player, stack, blockHitResult, fluidIncluded);
     final int length = this.getLength(stack);
     boolean soundPlayed = false;
-    final BlockPos.MutableBlockPos posToPlace = new BlockPos.MutableBlockPos().set(blockPlacementContext.posToPlace);
+    final BlockPos.MutableBlockPos posToRely = new BlockPos.MutableBlockPos().set(originBlockPos);
     if (blockPlacementContext.canPlace()) {
       for (int i = 0; i < length; i++) {
-        if (world.getBlockState(posToPlace).canBeReplaced(blockPlacementContext.placementContext)) {
+        final BlockPlacementContext offsetBlockPlacementContext = new BlockPlacementContext(blockPlacementContext, posToRely);
+        if (offsetBlockPlacementContext.canReplace()) {
           if (!world.isClientSide()) {
-            world.setBlock(posToPlace, blockPlacementContext.stateToPlace, 0b1011);
-            BlockEntity entityToPlace = world.getBlockEntity(posToPlace);
-            if (blockPlacementContext.stackInHand != null) {
-              BlockItem.updateCustomBlockEntityTag(world, player, posToPlace, blockPlacementContext.stackInHand);
-            } else if (blockPlacementContext.hitEntity != null && entityToPlace != null) {
-              final CompoundTag nbt = blockPlacementContext.hitEntity.saveWithoutMetadata(world.registryAccess());
-              entityToPlace.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, world.registryAccess(), nbt));
-              entityToPlace.setChanged();
-              world.sendBlockUpdated(posToPlace, entityToPlace.getBlockState(), entityToPlace.getBlockState(), Block.UPDATE_ALL);
-            }
+            offsetBlockPlacementContext.setBlockState(0b1011);
+            offsetBlockPlacementContext.setBlockEntity();
           }
           if (!soundPlayed) blockPlacementContext.playSound();
           soundPlayed = true;
         } else {
-          posToPlace.move(side, -1);
+          posToRely.move(side, -1);
           break;
         }
-        posToPlace.move(side);
+        posToRely.move(side);
       } // end for
     }
     if (soundPlayed) {
       if (!world.isClientSide()) {
-        tempMemory.put(((ServerPlayer) player), Triple.of(((ServerLevel) world), blockPlacementContext.stateToPlace.getBlock(), BoundingBox.fromCorners(blockPlacementContext.posToPlace, posToPlace.immutable())));
+        tempMemory.put(((ServerPlayer) player), Triple.of(((ServerLevel) world), blockPlacementContext.stateToPlace.getBlock(), BoundingBox.fromCorners(blockPlacementContext.posToPlace, posToRely.immutable())));
       } else if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-        clientTempMemory = Triple.of(((ClientLevel) world), blockPlacementContext.stateToPlace.getBlock(), BoundingBox.fromCorners(blockPlacementContext.posToPlace, posToPlace.immutable()));
+        clientTempMemory = Triple.of(((ClientLevel) world), blockPlacementContext.stateToPlace.getBlock(), BoundingBox.fromCorners(blockPlacementContext.posToPlace, posToRely.immutable()));
       }
     }
     return InteractionResult.SUCCESS;
