@@ -4,14 +4,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.command.BlockDataObject;
 import net.minecraft.command.EntityDataObject;
 import net.minecraft.entity.Entity;
@@ -29,14 +25,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
-import net.minecraft.world.tick.TickManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,7 +41,7 @@ import pers.solid.mishang.uc.util.WithMishangTooltip;
 import java.util.List;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
-public class DataTagToolItem extends BlockToolItem implements InteractsWithEntity, RendersBeforeOutline, WithMishangTooltip {
+public class DataTagToolItem extends BlockToolItemWithEntity implements InteractsWithEntity, RendersBeforeOutline, WithMishangTooltip {
   public DataTagToolItem(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
@@ -121,23 +112,6 @@ public class DataTagToolItem extends BlockToolItem implements InteractsWithEntit
       @Nullable EntityHitResult hitResult) {
     if (!world.isClient && !player.isSpectator()) return getEntityDataOf((ServerPlayerEntity) player, entity);
     else return ActionResult.SUCCESS;
-  }
-
-  @Environment(EnvType.CLIENT)
-  @Override
-  public void renderBeforeOutline(WorldRenderContext context, HitResult hitResult, ClientPlayerEntity player, Hand hand) {
-    if (hitResult instanceof EntityHitResult entityHitResult && !player.isSpectator()) {
-      final Entity entity = entityHitResult.getEntity();
-      final MatrixStack matrices = context.matrixStack();
-      final VertexConsumerProvider consumers = context.consumers();
-      if (consumers == null) return;
-      final VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.getLines());
-      final Vec3d cameraPos = context.camera().getPos();
-      final RenderTickCounter deltaTracker = MinecraftClient.getInstance().getRenderTickCounter();
-      final TickManager tickRateManager = context.world().getTickManager();
-      final float tickProgress = deltaTracker.getTickProgress(!tickRateManager.shouldSkipTick(entity));
-      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox().offset(entity.getLerpedPos(tickProgress).subtract(entity.getPos()))), -cameraPos.x, -cameraPos.y, -cameraPos.z, ColorHelper.fromFloats(0.8f, 0f, 1f, 0f));
-    }
   }
 
   /**
