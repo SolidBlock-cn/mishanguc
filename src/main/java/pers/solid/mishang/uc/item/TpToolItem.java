@@ -34,7 +34,9 @@ public class TpToolItem extends Item implements MishangucItem {
   @Override
   public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
     final TypedActionResult<ItemStack> data = super.use(world, user, hand);
-    if (world.isClient()) return TypedActionResult.consume(data.getValue());
+    if (world.isClient()) {
+      return TypedActionResult.success(data.getValue());
+    }
     final Vec3d oldPos = user.getPos();
     final HitResult raycast = user.raycast(256, 0, user.isSneaking());
     if (raycast.getType() == HitResult.Type.MISS) {

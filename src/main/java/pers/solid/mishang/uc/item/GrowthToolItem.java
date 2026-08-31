@@ -55,7 +55,9 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
   @Override
   public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
     final TypedActionResult<ItemStack> use = super.use(world, user, hand);
-    if (world.isClient) return TypedActionResult.pass(use.getValue());
+    if (world.isClient) {
+      return TypedActionResult.success(use.getValue());
+    }
     final HitResult raycast = user.raycast(64, 0, true);
     if (raycast.getType() == HitResult.Type.MISS) {
       return TypedActionResult.fail(use.getValue());
