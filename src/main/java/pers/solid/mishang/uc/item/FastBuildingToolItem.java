@@ -72,8 +72,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
     final Direction side = blockHitResult.getSide();
     final BlockPos centerBlockPos = blockHitResult.getBlockPos();
     final BlockState centerState = world.getBlockState(centerBlockPos);
-    final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(
-        world, centerBlockPos, player, stack, blockHitResult, fluidIncluded);
+    final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, centerBlockPos, player, stack, blockHitResult, fluidIncluded);
     final FastBuildingToolData data = stack.getOrDefault(MishangucComponents.FAST_BUILDING_TOOL_DATA, FastBuildingToolData.DEFAULT);
     final int range = data.range();
     final BlockMatchingRule matchingRule = data.matchingRule();
@@ -81,8 +80,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
     for (BlockPos pos : matchingRule.getPlainValidBlockPoss(world, centerBlockPos, side, range)) {
       BlockState state = world.getBlockState(pos);
       if (matchingRule.match(centerState, state)) {
-        final BlockPlacementContext offsetBlockPlacementContext =
-            new BlockPlacementContext(blockPlacementContext, pos);
+        final BlockPlacementContext offsetBlockPlacementContext = new BlockPlacementContext(blockPlacementContext, pos);
         if (offsetBlockPlacementContext.canPlace() && offsetBlockPlacementContext.canReplace()) {
           if (!world.isClient) {
             offsetBlockPlacementContext.setBlockState(0b1011);
