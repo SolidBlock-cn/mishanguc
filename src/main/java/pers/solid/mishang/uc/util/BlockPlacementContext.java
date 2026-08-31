@@ -226,11 +226,11 @@ public class BlockPlacementContext {
         if (holdingBlockState.blockEntityTag().isPresent()) {
           // 手持 Carrying Tool 时，可能使用该工作的方块实体数据，这一数据并非存储在 block_entity_data 数组组件中。
           TypedEntityData.create(entityToPlace.getType(), holdingBlockState.blockEntityTag().get()).applyToBlockEntity(entityToPlace, world.getRegistryManager());
+          entityToPlace.markDirty();
         }
       }
       // 从指定的物品堆对应的方块中读取组件
       BlockItem.writeNbtToBlockEntity(world, player, posToPlace, stackInHand);
-      entityToPlace.readComponents(stackInHand);
     } else if (hitEntity != null && entityToPlace != null) {
       final NbtCompound nbt = hitEntity.createNbt(world.getRegistryManager());
       TypedEntityData.create(entityToPlace.getType(), nbt).applyToBlockEntity(entityToPlace, world.getRegistryManager());
