@@ -57,8 +57,9 @@ public class IceSnowTool extends Item implements MishangucItem, DispenseItemBeha
   @Override
   public InteractionResult use(Level world, Player user, InteractionHand hand) {
     final ItemStack stack = user.getItemInHand(hand);
-    if (!(world instanceof ServerLevel serverWorld))
+    if (!(world instanceof ServerLevel serverWorld)) {
       return InteractionResult.SUCCESS;
+    }
     final HitResult hitResult = user.pick(64, 0, false);
     if (hitResult.getType() == HitResult.Type.MISS)
       return InteractionResult.FAIL;
