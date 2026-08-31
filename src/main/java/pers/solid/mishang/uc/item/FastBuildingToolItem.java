@@ -26,7 +26,6 @@ import net.minecraft.util.collection.Int2ObjectBiMap;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -187,10 +186,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
             offsetBlockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(),
             offsetBlockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(),
             offsetBlockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(),
-            ColorHelper.fromFloats(0.8f,
-                0,
-                1,
-                1));
+            BlockToolItem.OUTLINE_COLOR_CYAN);
         if (includesFluid) {
           VertexRendering.drawOutline(
               worldRenderContext.matrixStack(),
@@ -199,10 +195,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
               offsetBlockPlacementContext.posToPlace.getX() - blockOutlineContext.cameraX(),
               offsetBlockPlacementContext.posToPlace.getY() - blockOutlineContext.cameraY(),
               offsetBlockPlacementContext.posToPlace.getZ() - blockOutlineContext.cameraZ(),
-              ColorHelper.fromFloats(0.5f,
-                  0,
-                  0.5f,
-                  1));
+              BlockToolItem.OUTLINE_COLOR_BLUE);
         }
       }
       if (hand == Hand.MAIN_HAND && !(state.getBlock() instanceof OperatorBlock && !player.hasPermissionLevel(2))) {
@@ -214,10 +207,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
             pos.getX() - blockOutlineContext.cameraX(),
             pos.getY() - blockOutlineContext.cameraY(),
             pos.getZ() - blockOutlineContext.cameraZ(),
-            ColorHelper.fromFloats(0.8f,
-                1,
-                0,
-                0));
+            BlockToolItem.OUTLINE_COLOR_RED);
         if (includesFluid) {
           VertexRendering.drawOutline(
               worldRenderContext.matrixStack(),
@@ -226,10 +216,7 @@ public class FastBuildingToolItem extends BlockToolItem implements HotbarScrollI
               pos.getX() - blockOutlineContext.cameraX(),
               pos.getY() - blockOutlineContext.cameraY(),
               pos.getZ() - blockOutlineContext.cameraZ(),
-              ColorHelper.fromFloats(0.5f,
-                  1,
-                  0.5f,
-                  0));
+              BlockToolItem.OUTLINE_COLOR_ORANGE);
         }
       }
     }

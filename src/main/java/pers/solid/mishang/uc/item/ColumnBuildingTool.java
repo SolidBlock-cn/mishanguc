@@ -14,7 +14,6 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
 import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -28,7 +27,10 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockBox;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.Nullable;
@@ -200,9 +202,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
               posToPlace.getX() - blockOutlineContext.cameraX(),
               posToPlace.getY() - blockOutlineContext.cameraY(),
               posToPlace.getZ() - blockOutlineContext.cameraZ(),
-              ColorHelper.fromFloats(0.8f, 0,
-                  1,
-                  1));
+              BlockToolItem.OUTLINE_COLOR_CYAN);
           if (includesFluid) {
             VertexRendering.drawOutline(
                 worldRenderContext.matrixStack(),
@@ -211,9 +211,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
                 posToPlace.getX() - blockOutlineContext.cameraX(),
                 posToPlace.getY() - blockOutlineContext.cameraY(),
                 posToPlace.getZ() - blockOutlineContext.cameraZ(),
-                ColorHelper.fromFloats(0.5f, 0,
-                    0.5f,
-                    1));
+                BlockToolItem.OUTLINE_COLOR_BLUE);
           }
         } else {
           posToPlace.move(side, -1);
@@ -238,9 +236,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
               posToRemove.getX() - blockOutlineContext.cameraX(),
               posToRemove.getY() - blockOutlineContext.cameraY(),
               posToRemove.getZ() - blockOutlineContext.cameraZ(),
-              ColorHelper.fromFloats(0.8f, 1,
-                  0,
-                  0));
+              BlockToolItem.OUTLINE_COLOR_RED);
           if (includesFluid) {
             VertexRendering.drawOutline(
                 worldRenderContext.matrixStack(),
@@ -249,9 +245,7 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
                 posToRemove.getX() - blockOutlineContext.cameraX(),
                 posToRemove.getY() - blockOutlineContext.cameraY(),
                 posToRemove.getZ() - blockOutlineContext.cameraZ(),
-                ColorHelper.fromFloats(0.5f, 1,
-                    0.5f,
-                    0));
+                BlockToolItem.OUTLINE_COLOR_ORANGE);
           }
         }
       }
