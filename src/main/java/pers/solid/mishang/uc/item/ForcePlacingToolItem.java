@@ -62,7 +62,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       boolean fluidIncluded) {
     if (!hasAccess(player, world, true)) {
       // 仅限特定情况下使用。
-      return ActionResult.PASS;
+      return ActionResult.CONSUME;
     }
     BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, blockHitResult.getBlockPos(), player, player.getStackInHand(hand), blockHitResult, fluidIncluded);
     blockPlacementContext.playSound();
@@ -82,7 +82,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!hasAccess(player, world, true)) {
       // 仅限特定情况下使用。
-      return ActionResult.PASS;
+      return ActionResult.CONSUME;
     }
     final BlockState blockState = world.getBlockState(pos);
     world.syncWorldEvent(player, 2001, pos, Block.getRawIdFromState(world.getBlockState(pos)));

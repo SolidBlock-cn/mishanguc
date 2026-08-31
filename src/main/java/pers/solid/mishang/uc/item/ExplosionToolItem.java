@@ -45,7 +45,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       return TypedActionResult.fail(stack);
     }
     if (world.isClient) {
-      return TypedActionResult.consume(stack);
+      return TypedActionResult.success(stack);
     }
     if (!world.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).get().hasAccess(user, true)) {
       return TypedActionResult.pass(super.use(world, user, hand).getValue());

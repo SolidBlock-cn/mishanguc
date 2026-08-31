@@ -267,7 +267,7 @@ public class CarryingToolItem extends BlockToolItem
   @Override
   public ActionResult beginAttackBlock(ItemStack stack, PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!hasAccess(player, world, true)) {
-      return ActionResult.FAIL;
+      return ActionResult.CONSUME;
     }
     final Block alreadyHolding = getHoldingBlock(stack);
     if (alreadyHolding != null && !player.isCreative()) {

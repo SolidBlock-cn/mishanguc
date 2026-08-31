@@ -55,8 +55,9 @@ public class IceSnowTool extends Item implements MishangucItem, DispenserBehavio
   @Override
   public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
     final ItemStack stack = user.getStackInHand(hand);
-    if (!(world instanceof ServerWorld serverWorld))
+    if (!(world instanceof ServerWorld serverWorld)) {
       return TypedActionResult.success(stack);
+    }
     final HitResult hitResult = user.raycast(64, 0, false);
     if (hitResult.getType() == HitResult.Type.MISS)
       return TypedActionResult.fail(stack);
