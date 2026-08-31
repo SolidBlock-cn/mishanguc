@@ -6,9 +6,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.ARGB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import pers.solid.mishang.uc.item.BlockToolItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +38,7 @@ public class BuildingToolState implements MishangRenderState {
           poseStack,
           pair.right(),
           RenderTypes.lines(),
-          ARGB.colorFromFloat(0.8f,
-              0,
-              1,
-              1),
+          BlockToolItem.OUTLINE_COLOR_CYAN,
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
           true);// todo 检查 afterTerrain 参数（下同）
       poseStack.popPose();
@@ -55,10 +52,7 @@ public class BuildingToolState implements MishangRenderState {
           poseStack,
           pair.right(),
           RenderTypes.lines(),
-          ARGB.colorFromFloat(0.5f,
-              0,
-              0.5f,
-              1),
+          BlockToolItem.OUTLINE_COLOR_BLUE,
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
           true);
       poseStack.popPose();
@@ -72,10 +66,7 @@ public class BuildingToolState implements MishangRenderState {
           poseStack,
           pair.right(),
           RenderTypes.lines(),
-          ARGB.colorFromFloat(0.5f,
-              1,
-              0,
-              0),
+          BlockToolItem.OUTLINE_COLOR_RED,
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
           true);
       poseStack.popPose();
@@ -89,10 +80,7 @@ public class BuildingToolState implements MishangRenderState {
           poseStack,
           pair.right(),
           RenderTypes.lines(),
-          ARGB.colorFromFloat(0.8f,
-              1f,
-              0.5f,
-              0),
+          BlockToolItem.OUTLINE_COLOR_ORANGE,
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
           true);
       poseStack.popPose();

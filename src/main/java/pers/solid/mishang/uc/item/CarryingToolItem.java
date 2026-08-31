@@ -20,7 +20,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.permissions.Permissions;
-import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
@@ -69,11 +68,6 @@ import java.util.UUID;
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
 public class CarryingToolItem extends BlockToolItem
     implements MishangucItem, InteractsWithEntity, RendersBeforeOutline, WithMishangTooltip {
-
-  private static final int OUTLINE_COLOR_CYAN = ARGB.colorFromFloat(0.8f, 0, 1, 1);
-  private static final int OUTLINE_COLOR_BLUE = ARGB.colorFromFloat(0.5f, 0, 0.5f, 1);
-  private static final int OUTLINE_COLOR_RED = ARGB.colorFromFloat(0.8f, 1, 0, 0);
-  private static final int OUTLINE_COLOR_ORANGE = ARGB.colorFromFloat(0.5f, 1, 0.5f, 0);
 
   public CarryingToolItem(Properties settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);

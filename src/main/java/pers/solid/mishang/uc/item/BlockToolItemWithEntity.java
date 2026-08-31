@@ -29,6 +29,9 @@ import pers.solid.mishang.uc.render.state.BlockToolStateWithEntity;
  */
 @EnvironmentInterface(itf = RendersBeforeOutline.class, value = EnvType.CLIENT)
 public abstract class BlockToolItemWithEntity extends BlockToolItem implements RendersBeforeOutline {
+
+  private static final int OUTLINE_COLOR_GREEN = ARGB.colorFromFloat(0.8f, 0f, 1f, 0f);
+
   public BlockToolItemWithEntity(Properties settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
@@ -65,7 +68,7 @@ public abstract class BlockToolItemWithEntity extends BlockToolItem implements R
     final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
     poseStack.pushPose();
     poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-    context.submitNodeCollector().submitShapeOutline(poseStack, state.greenEntityShape, RenderTypes.lines(), ARGB.colorFromFloat(0.8f, 0f, 1f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain 参数
+    context.submitNodeCollector().submitShapeOutline(poseStack, state.greenEntityShape, RenderTypes.lines(), OUTLINE_COLOR_GREEN, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain 参数
     poseStack.popPose();
   }
 }

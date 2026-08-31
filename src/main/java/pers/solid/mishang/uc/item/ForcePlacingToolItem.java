@@ -18,7 +18,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.ARGB;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.TickRateManager;
@@ -206,9 +205,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           poseStack,
           state.cyanShape,
           RenderTypes.lines(),
-          ARGB.colorFromFloat(0.8f, 0,
-              1,
-              1),
+          OUTLINE_COLOR_CYAN,
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
           outlineRenderState.isTranslucent());
       poseStack.popPose();
@@ -221,9 +218,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           poseStack,
           state.blueShape,
           RenderTypes.lines(),
-          ARGB.colorFromFloat(0.5f, 0,
-              0.5f,
-              1),
+          OUTLINE_COLOR_BLUE,
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
           outlineRenderState.isTranslucent());
       poseStack.popPose();
@@ -235,9 +230,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           poseStack,
           state.redShape,
           RenderTypes.lines(),
-          ARGB.colorFromFloat(0.8f, 1,
-              0,
-              0),
+          OUTLINE_COLOR_RED,
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
           outlineRenderState.isTranslucent());
       poseStack.popPose();
@@ -249,9 +242,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           poseStack,
           state.yellowShape,
           RenderTypes.lines(),
-          ARGB.colorFromFloat(0.5f, 1,
-              0.5f,
-              0),
+          OUTLINE_COLOR_ORANGE,
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
           outlineRenderState.isTranslucent());
       poseStack.popPose();
@@ -307,7 +298,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     if (state.hitEntityPos != null && state.hitEntityBoundingBox != null) {
       poseStack.pushPose();
       poseStack.translate(state.hitEntityPos.x - cameraPos.x, state.hitEntityPos.y - cameraPos.y, state.hitEntityPos.z - cameraPos.z);
-      context.submitNodeCollector().submitShapeOutline(poseStack, Shapes.create(state.hitEntityBoundingBox.move(-state.hitEntityPos.x, -state.hitEntityPos.y, -state.hitEntityPos.z)), RenderTypes.lines(), ARGB.colorFromFloat(0.8f, 1.0f, 0f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain
+      context.submitNodeCollector().submitShapeOutline(poseStack, Shapes.create(state.hitEntityBoundingBox.move(-state.hitEntityPos.x, -state.hitEntityPos.y, -state.hitEntityPos.z)), RenderTypes.lines(), OUTLINE_COLOR_RED, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain
       poseStack.popPose();
     }
   }
