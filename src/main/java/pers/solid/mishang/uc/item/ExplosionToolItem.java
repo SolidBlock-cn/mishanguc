@@ -50,7 +50,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       return ActionResult.FAIL;
     }
     if (!(world instanceof ServerWorld serverWorld)) {
-      return ActionResult.CONSUME;
+      return ActionResult.SUCCESS;
     }
     if (!serverWorld.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).get().hasAccess(user, true)) {
       return ActionResult.PASS;
@@ -81,7 +81,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     if (user.isCreative()) {
       booleanRule.set(backup, null);
     }
-    return ActionResult.SUCCESS_SERVER;
+    return ActionResult.SUCCESS;
   }
 
   @Override
