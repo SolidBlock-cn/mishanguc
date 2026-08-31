@@ -47,7 +47,9 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
 
   @Override
   public InteractionResult use(Level world, Player user, InteractionHand hand) {
-    if (world.isClientSide()) return InteractionResult.CONSUME;
+    if (world.isClientSide()) {
+      return InteractionResult.SUCCESS;
+    }
     final HitResult raycast = user.pick(64, 0, true);
     if (raycast.getType() == HitResult.Type.MISS) {
       return InteractionResult.FAIL;
@@ -55,7 +57,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
     final Vec3 center = raycast.getLocation();
     final int damage = apply(world, center, !user.isShiftKeyDown());
     user.getItemInHand(hand).hurtAndBreak(damage, user, hand.asEquipmentSlot());
-    return damage > 0 ? InteractionResult.SUCCESS_SERVER : InteractionResult.FAIL;
+    return damage > 0 ? InteractionResult.SUCCESS : InteractionResult.FAIL;
   }
 
   @Override

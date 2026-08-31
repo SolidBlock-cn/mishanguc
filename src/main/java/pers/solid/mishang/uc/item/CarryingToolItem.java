@@ -201,7 +201,7 @@ public class CarryingToolItem extends BlockToolItem
   @Override
   public InteractionResult beginAttackBlock(ItemStack stack, Player player, Level world, InteractionHand hand, BlockPos pos, Direction direction, boolean fluidIncluded) {
     if (!hasAccess(player, world, true)) {
-      return InteractionResult.FAIL;
+      return InteractionResult.CONSUME;
     }
     final CarryingToolData carryingToolData = stack.get(MishangucComponents.CARRYING_TOOL_DATA);
     if (carryingToolData instanceof CarryingToolData.HoldingBlockState holdingBlockState && !player.isCreative()) {

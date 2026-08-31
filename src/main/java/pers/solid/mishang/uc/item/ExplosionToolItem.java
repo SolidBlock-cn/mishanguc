@@ -56,7 +56,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       return InteractionResult.FAIL;
     }
     if (!(world instanceof ServerLevel serverWorld)) {
-      return InteractionResult.CONSUME;
+      return InteractionResult.SUCCESS;
     }
     if (!serverWorld.getGameRules().get(MishangucRules.EXPLOSION_TOOL_ACCESS).hasAccess(user, true)) {
       return InteractionResult.PASS;
@@ -86,7 +86,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     if (user.isCreative()) {
       serverWorld.getGameRules().set(GameRules.BLOCK_DROPS, backup, null);
     }
-    return InteractionResult.SUCCESS_SERVER;
+    return InteractionResult.SUCCESS;
   }
 
   @Override
