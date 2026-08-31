@@ -1,6 +1,11 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "mishanguc:block/colored_stone"
+    "model": "mishanguc:block/colored_stone",
+    "tints": [
+      {
+        "type": "mishanguc:color"
+      }
+    ]
   }
 }
