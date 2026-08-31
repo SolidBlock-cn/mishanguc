@@ -34,7 +34,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShapes;
@@ -209,9 +208,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           state.cyanPos.getX() - cameraX,
           state.cyanPos.getY() - cameraY,
           state.cyanPos.getZ() - cameraZ,
-          ColorHelper.fromFloats(0.8f, 0,
-              1,
-              1));
+          OUTLINE_COLOR_CYAN);
     }
 
     if (state.blueShape != null && state.bluePos != null) {
@@ -222,9 +219,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           state.bluePos.getX() - cameraX,
           state.bluePos.getY() - cameraY,
           state.bluePos.getZ() - cameraZ,
-          ColorHelper.fromFloats(0.5f, 0,
-              0.5f,
-              1));
+          OUTLINE_COLOR_BLUE);
     }
     if (state.redShape != null && state.redPos != null) {
       VertexRendering.drawOutline(
@@ -234,9 +229,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           state.redPos.getX() - cameraX,
           state.redPos.getY() - cameraY,
           state.redPos.getZ() - cameraZ,
-          ColorHelper.fromFloats(0.8f, 1,
-              0,
-              0));
+          OUTLINE_COLOR_RED);
     }
     if (state.yellowShape != null && state.yellowPos != null) {
       VertexRendering.drawOutline(
@@ -246,9 +239,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           state.yellowPos.getX() - cameraX,
           state.yellowPos.getY() - cameraY,
           state.yellowPos.getZ() - cameraZ,
-          ColorHelper.fromFloats(0.5f, 1,
-              0.5f,
-              0));
+          OUTLINE_COLOR_ORANGE);
 
     }
     return false;
@@ -303,7 +294,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
 
     final Vec3d cameraPos = context.worldState().cameraRenderState.pos;
     if (state.hitEntityPos != null && state.hitEntityBoundingBox != null) {
-      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(state.hitEntityBoundingBox.offset(-state.hitEntityPos.x, -state.hitEntityPos.y, -state.hitEntityPos.z)), state.hitEntityPos.x - cameraPos.x, state.hitEntityPos.y - cameraPos.y, state.hitEntityPos.z - cameraPos.z, ColorHelper.fromFloats(0.8f, 1.0f, 0f, 0f));
+      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(state.hitEntityBoundingBox.offset(-state.hitEntityPos.x, -state.hitEntityPos.y, -state.hitEntityPos.z)), state.hitEntityPos.x - cameraPos.x, state.hitEntityPos.y - cameraPos.y, state.hitEntityPos.z - cameraPos.z, OUTLINE_COLOR_RED);
     }
   }
 }

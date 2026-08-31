@@ -10,6 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
+import pers.solid.mishang.uc.item.BlockToolItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +43,7 @@ public class BuildingToolState implements MishangRenderState {
           mutable.getX() - cameraPos.getX(),
           mutable.getY() - cameraPos.getY(),
           mutable.getZ() - cameraPos.getZ(),
-          ColorHelper.fromFloats(0.8f,
-              0,
-              1,
-              1));
+          BlockToolItem.OUTLINE_COLOR_CYAN);
     }
     for (LongObjectPair<VoxelShape> pair : state.blueShapes) {
       mutable.set(pair.leftLong());
@@ -57,10 +55,7 @@ public class BuildingToolState implements MishangRenderState {
           mutable.getX() - cameraPos.getX(),
           mutable.getY() - cameraPos.getY(),
           mutable.getZ() - cameraPos.getZ(),
-          ColorHelper.fromFloats(0.5f,
-              0,
-              0.5f,
-              1));
+          BlockToolItem.OUTLINE_COLOR_BLUE);
     }
     for (LongObjectPair<VoxelShape> pair : state.redShapes) {
       mutable.set(pair.leftLong());
@@ -72,10 +67,7 @@ public class BuildingToolState implements MishangRenderState {
           mutable.getX() - cameraPos.getX(),
           mutable.getY() - cameraPos.getY(),
           mutable.getZ() - cameraPos.getZ(),
-          ColorHelper.fromFloats(0.5f,
-              1,
-              0,
-              0));
+          BlockToolItem.OUTLINE_COLOR_RED);
     }
     for (LongObjectPair<VoxelShape> pair : state.orangeShapes) {
       mutable.set(pair.leftLong());
@@ -87,10 +79,7 @@ public class BuildingToolState implements MishangRenderState {
           mutable.getX() - cameraPos.getX(),
           mutable.getY() - cameraPos.getY(),
           mutable.getZ() - cameraPos.getZ(),
-          ColorHelper.fromFloats(0.8f,
-              1f,
-              0.5f,
-              0));
+          BlockToolItem.OUTLINE_COLOR_ORANGE);
     }
 
     return state.showVanillaOutline;
