@@ -91,6 +91,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
    * @since 1.0.3 用于协调处理 canMine 与 performBreak。服务器不知道客户端的 crosshairTarget，需要由客户端发送。服务器先判断为允许挖掘，再根据这里面的内容还原该方块。
    */
   private static final Map<Pair<ServerWorld, BlockPos>, Runnable> SERVER_BLOCK_BREAKING_BRIDGE = new Object2ObjectOpenHashMap<>();
+  private static final int OUTLINE_COLOR_TRANSLUCENT_BLACK = ColorHelper.fromFloats(0.4f, 0.0F, 0.0F, 0.0F);
 
   public SlabToolItem(Settings settings) {
     super(settings);
@@ -258,9 +259,7 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
           (double) blockPos.getX() - blockOutlineContext.cameraX(),
           (double) blockPos.getY() - blockOutlineContext.cameraY(),
           (double) blockPos.getZ() - blockOutlineContext.cameraZ(),
-          ColorHelper.fromFloats(0.4f, 0.0F,
-              0.0F,
-              0.0F));
+          OUTLINE_COLOR_TRANSLUCENT_BLACK);
       return false;
     }
     return true;

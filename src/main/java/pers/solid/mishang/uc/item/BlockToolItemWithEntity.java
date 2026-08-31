@@ -21,6 +21,9 @@ import pers.solid.mishang.uc.render.RendersBeforeOutline;
 
 @EnvironmentInterface(itf = RendersBeforeOutline.class, value = EnvType.CLIENT)
 public abstract class BlockToolItemWithEntity extends BlockToolItem implements RendersBeforeOutline {
+
+  private static final int OUTLINE_COLOR_GREEN = ColorHelper.fromFloats(0.8f, 0f, 1f, 0f);
+
   public BlockToolItemWithEntity(Settings settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
@@ -38,7 +41,7 @@ public abstract class BlockToolItemWithEntity extends BlockToolItem implements R
       final RenderTickCounter deltaTracker = MinecraftClient.getInstance().getRenderTickCounter();
       final TickManager tickRateManager = context.world().getTickManager();
       final float tickProgress = deltaTracker.getTickProgress(!tickRateManager.shouldSkipTick(entity));
-      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox().offset(entity.getLerpedPos(tickProgress).subtract(entity.getPos()))), -cameraPos.x, -cameraPos.y, -cameraPos.z, ColorHelper.fromFloats(0.8f, 0f, 1f, 0f));
+      VertexRendering.drawOutline(matrices, vertexConsumer, VoxelShapes.cuboid(entity.getBoundingBox().offset(entity.getLerpedPos(tickProgress).subtract(entity.getPos()))), -cameraPos.x, -cameraPos.y, -cameraPos.z, OUTLINE_COLOR_GREEN);
     }
   }
 }
