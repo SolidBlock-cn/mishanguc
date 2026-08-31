@@ -34,6 +34,9 @@ import pers.solid.mishang.uc.render.state.BlockToolStateWithEntity;
  */
 @EnvironmentInterface(itf = RendersBeforeOutline.class, value = EnvType.CLIENT)
 public abstract class BlockToolItemWithEntity extends BlockToolItem implements RendersBeforeOutline {
+
+  private static final int OUTLINE_COLOR_GREEN = ARGB.colorFromFloat(0.8f, 0f, 1f, 0f);
+
   public BlockToolItemWithEntity(Properties settings, @Nullable Boolean includesFluid) {
     super(settings, includesFluid);
   }
@@ -75,6 +78,6 @@ public abstract class BlockToolItemWithEntity extends BlockToolItem implements R
     if (consumers == null) return;
     final VertexConsumer vertexConsumer = consumers.getBuffer(RenderTypes.lines());
     final Vec3 cameraPos = context.worldState().cameraRenderState.pos;
-    ShapeRenderer.renderShape(matrices, vertexConsumer, state.greenEntityShape.move(-cameraPos.x, -cameraPos.y, -cameraPos.z), 0, 0, 0, ARGB.colorFromFloat(0.8f, 0f, 1f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+    ShapeRenderer.renderShape(matrices, vertexConsumer, state.greenEntityShape.move(-cameraPos.x, -cameraPos.y, -cameraPos.z), 0, 0, 0, OUTLINE_COLOR_GREEN, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
   }
 }

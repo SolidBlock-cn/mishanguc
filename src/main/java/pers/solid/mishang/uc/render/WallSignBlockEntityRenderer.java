@@ -41,6 +41,8 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
    */
   private static final @Unmodifiable Collection<Block> INVISIBLE_BLOCKS =
       ImmutableSet.of(WallSignBlocks.INVISIBLE_WALL_SIGN, WallSignBlocks.INVISIBLE_GLOWING_WALL_SIGN);
+  private static final int OUTLINE_COLOR_GLOWING = ARGB.colorFromFloat(0.9f, 0.9f, 0.8f, 0.3f);
+  private static final int OUTLINE_COLOR_ORDINAL = ARGB.colorFromFloat(0.9f, 0.3f, 0.8f, 0.9f);
 
   private final BlockEntityRendererProvider.Context ctx;
 
@@ -80,9 +82,7 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
             pos.getX() - cameraState.pos.x,
             pos.getY() - cameraState.pos.y,
             pos.getZ() - cameraState.pos.z,
-            ARGB.colorFromFloat(0.9f, glowing ? 0.9f : 0.3f,
-                0.8f,
-                glowing ? 0.3f : 0.9f),
+            glowing ? OUTLINE_COLOR_GLOWING : OUTLINE_COLOR_ORDINAL,
             Minecraft.getInstance().getWindow().getAppropriateLineWidth())
         );
       }

@@ -38,6 +38,12 @@ import java.util.Objects;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBlockOutline.class)
 public abstract class BlockToolItem extends Item implements RendersBlockOutline {
+  public static final int OUTLINE_COLOR_CYAN = ARGB.colorFromFloat(0.8f, 0, 1, 1);
+  public static final int OUTLINE_COLOR_BLUE = ARGB.colorFromFloat(0.5f, 0, 0.5f, 1);
+  public static final int OUTLINE_COLOR_RED = ARGB.colorFromFloat(0.8f, 1, 0, 0);
+  public static final int OUTLINE_COLOR_ORANGE = ARGB.colorFromFloat(0.5f, 1, 0.5f, 0);
+  public static final int OUTLINE_COLOR_GREEN = ARGB.colorFromFloat(0.8f, 0, 1, 0);
+  public static final int OUTLINE_COLOR_LIGHT_GREEN = ARGB.colorFromFloat(0.5f, 0, 1, 0.5f);
   /**
    * 该物品是否包括流体。<br>
    * 如果该值为 <code>null</code>，则一般表示“视情况”，通常情况下是仅潜行时包括流体。 Whether fluids are included.<br>
@@ -45,8 +51,6 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
    * sneaking".
    */
   protected final @Nullable Boolean includesFluid;
-  private static final int OUTLINE_COLOR_MIDORI = ARGB.colorFromFloat(0.8f, 0, 1, 0);
-  private static final int OUTLINE_COLOR_MIDORI_LIGHT = ARGB.colorFromFloat(0.5f, 0, 1, 0.5f);
 
   public BlockToolItem(Properties settings, @Nullable Boolean includesFluid) {
     super(settings);
@@ -171,7 +175,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
         blockPos.getX() - cameraPos.x(),
         blockPos.getY() - cameraPos.y(),
         blockPos.getZ() - cameraPos.z(),
-        OUTLINE_COLOR_MIDORI,
+        OUTLINE_COLOR_GREEN,
         Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     if (state.lightGreenPos != null && state.lightGreenShape != null) {
       ShapeRenderer.renderShape(
@@ -181,7 +185,7 @@ public abstract class BlockToolItem extends Item implements RendersBlockOutline 
           blockPos.getX() - cameraPos.x(),
           blockPos.getY() - cameraPos.y(),
           blockPos.getZ() - cameraPos.z(),
-          OUTLINE_COLOR_MIDORI_LIGHT,
+          OUTLINE_COLOR_LIGHT_GREEN,
           Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
     return false;

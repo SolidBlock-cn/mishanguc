@@ -21,7 +21,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.ARGB;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.TickRateManager;
@@ -212,9 +211,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           state.cyanPos.getX() - cameraX,
           state.cyanPos.getY() - cameraY,
           state.cyanPos.getZ() - cameraZ,
-          ARGB.colorFromFloat(0.8f, 0,
-              1,
-              1),
+          OUTLINE_COLOR_CYAN,
           Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
 
@@ -226,9 +223,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           state.bluePos.getX() - cameraX,
           state.bluePos.getY() - cameraY,
           state.bluePos.getZ() - cameraZ,
-          ARGB.colorFromFloat(0.5f, 0,
-              0.5f,
-              1),
+          OUTLINE_COLOR_BLUE,
           Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
     if (state.redShape != null && state.redPos != null) {
@@ -239,9 +234,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           state.redPos.getX() - cameraX,
           state.redPos.getY() - cameraY,
           state.redPos.getZ() - cameraZ,
-          ARGB.colorFromFloat(0.8f, 1,
-              0,
-              0),
+          OUTLINE_COLOR_RED,
           Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
     if (state.yellowShape != null && state.yellowPos != null) {
@@ -252,9 +245,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
           state.yellowPos.getX() - cameraX,
           state.yellowPos.getY() - cameraY,
           state.yellowPos.getZ() - cameraZ,
-          ARGB.colorFromFloat(0.5f, 1,
-              0.5f,
-              0),
+          OUTLINE_COLOR_ORANGE,
           Minecraft.getInstance().getWindow().getAppropriateLineWidth());
 
     }
@@ -310,7 +301,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
 
     final Vec3 cameraPos = context.worldState().cameraRenderState.pos;
     if (state.hitEntityPos != null && state.hitEntityBoundingBox != null) {
-      ShapeRenderer.renderShape(matrices, vertexConsumer, Shapes.create(state.hitEntityBoundingBox.move(-state.hitEntityPos.x, -state.hitEntityPos.y, -state.hitEntityPos.z)), state.hitEntityPos.x - cameraPos.x, state.hitEntityPos.y - cameraPos.y, state.hitEntityPos.z - cameraPos.z, ARGB.colorFromFloat(0.8f, 1.0f, 0f, 0f), Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+      ShapeRenderer.renderShape(matrices, vertexConsumer, Shapes.create(state.hitEntityBoundingBox.move(-state.hitEntityPos.x, -state.hitEntityPos.y, -state.hitEntityPos.z)), state.hitEntityPos.x - cameraPos.x, state.hitEntityPos.y - cameraPos.y, state.hitEntityPos.z - cameraPos.z, OUTLINE_COLOR_RED, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
     }
   }
 }
