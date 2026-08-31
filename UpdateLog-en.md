@@ -16,6 +16,7 @@ Note: Not all versions in this update log have been published yet. Please refer 
     - Now, when holding a block with block entity data (such as a banner with patterns, a sign with texts on, a custom-colored block with a specified color), or holding a Carrying Tool with a block caught, and using Force Placing Tool, Fast Building Tool or Column Building Tool on the mainhand, the block entity data of the block on the offhand is normally used.
     - Please note: if the block on the offhand is a custom-colored block with an automatic color (such as ones fetched in the creative inventory), the blocks placed with the tools above may not be colored correctly.
     - Column Building Tool may have slight changes.
+- Now under circumstances where the player has no access to Force Placing Tool, trying to use Force Placing Tool on the mainhand will not use the item on the offhand, and will also not trigger regular block mining.
 - For 26.2 versions:
     - The sulfur cube archetype for full light blocks is `regular`.
     - The sulfur cube archetype for road blocks is `slow_bouncy`.
