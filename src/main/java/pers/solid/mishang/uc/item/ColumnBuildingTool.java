@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -84,35 +83,29 @@ public class ColumnBuildingTool extends BlockToolItem implements HotbarScrollInt
     final BlockPlacementContext blockPlacementContext = new BlockPlacementContext(world, originBlockPos, player, stack, blockHitResult, fluidIncluded);
     final int length = this.getLength(stack);
     boolean soundPlayed = false;
-    final BlockPos.Mutable posToPlace = new BlockPos.Mutable().set(blockPlacementContext.posToPlace);
+    final BlockPos.Mutable posToRely = new BlockPos.Mutable().set(originBlockPos);
     if (blockPlacementContext.canPlace()) {
       for (int i = 0; i < length; i++) {
-        if (world.getBlockState(posToPlace).canReplace(blockPlacementContext.placementContext)) {
-          if (!world.isClient) {
-            world.setBlockState(posToPlace, blockPlacementContext.stateToPlace, 0b1011);
-            BlockEntity entityToPlace = world.getBlockEntity(posToPlace);
-            if (blockPlacementContext.stackInHand != null) {
-              BlockItem.writeNbtToBlockEntity(world, player, posToPlace, blockPlacementContext.stackInHand);
-            } else if (blockPlacementContext.hitEntity != null && entityToPlace != null) {
-              entityToPlace.read(blockPlacementContext.hitEntity.createNbt(world.getRegistryManager()), world.getRegistryManager());
-              entityToPlace.markDirty();
-              world.updateListeners(posToPlace, entityToPlace.getCachedState(), entityToPlace.getCachedState(), Block.NOTIFY_ALL);
-            }
+        final BlockPlacementContext offsetBlockPlacementContext = new BlockPlacementContext(blockPlacementContext, posToRely);
+        if (offsetBlockPlacementContext.canReplace()) {
+          if (!world.isClient()) {
+            offsetBlockPlacementContext.setBlockState(0b1011);
+            offsetBlockPlacementContext.setBlockEntity();
           }
           if (!soundPlayed) blockPlacementContext.playSound();
           soundPlayed = true;
         } else {
-          posToPlace.move(side, -1);
+          posToRely.move(side, -1);
           break;
         }
-        posToPlace.move(side);
+        posToRely.move(side);
       } // end for
     }
     if (soundPlayed) {
       if (!world.isClient) {
-        tempMemory.put(((ServerPlayerEntity) player), Triple.of(((ServerWorld) world), blockPlacementContext.stateToPlace.getBlock(), BlockBox.create(blockPlacementContext.posToPlace, posToPlace.toImmutable())));
+        tempMemory.put(((ServerPlayerEntity) player), Triple.of(((ServerWorld) world), blockPlacementContext.stateToPlace.getBlock(), BlockBox.create(blockPlacementContext.posToPlace, posToRely.toImmutable())));
       } else if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-        clientTempMemory = Triple.of(((ClientWorld) world), blockPlacementContext.stateToPlace.getBlock(), BlockBox.create(blockPlacementContext.posToPlace, posToPlace.toImmutable()));
+        clientTempMemory = Triple.of(((ClientWorld) world), blockPlacementContext.stateToPlace.getBlock(), BlockBox.create(blockPlacementContext.posToPlace, posToRely.toImmutable()));
       }
     }
     return ActionResult.SUCCESS;
