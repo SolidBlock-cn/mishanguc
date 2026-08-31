@@ -225,7 +225,8 @@ public class BlockPlacementContext {
    */
   public void setBlockEntity() {
     BlockEntity entityToPlace = world.getBlockEntity(posToPlace);
-    if (stackInHand != null) {
+    if (stackInHand != null && entityToPlace != null) {
+      // 从指定的物品堆对应的方块中读取组件
       BlockItem.writeNbtToBlockEntity(world, player, posToPlace, stackInHand);
     } else if (hitEntity != null && entityToPlace != null) {
       entityToPlace.readNbt(hitEntity.createNbt());
