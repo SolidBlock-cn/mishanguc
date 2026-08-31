@@ -226,6 +226,8 @@ public class BlockPlacementContext {
           entityToPlace.read(holdingBlockState.blockEntityTag().get(), world.getRegistryManager());
           entityToPlace.markDirty();
         }
+      } else {
+        entityToPlace.readComponents(stackInHand);
       }
       // 从指定的物品堆对应的方块中读取组件
       BlockItem.writeNbtToBlockEntity(world, player, posToPlace, stackInHand);
