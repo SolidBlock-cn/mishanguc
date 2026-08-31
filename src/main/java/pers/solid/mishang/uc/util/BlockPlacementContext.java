@@ -17,6 +17,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.components.CarryingToolData;
+import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.item.CarryingToolItem;
 import pers.solid.mishang.uc.mixin.BucketItemAccessor;
 import pers.solid.mishang.uc.mixin.ItemUsageContextInvoker;
@@ -217,7 +219,15 @@ public class BlockPlacementContext {
    */
   public void setBlockEntity() {
     BlockEntity entityToPlace = world.getBlockEntity(posToPlace);
-    if (stackInHand != null) {
+    if (stackInHand != null && entityToPlace != null) {
+      if (stackInHand.get(MishangucComponents.CARRYING_TOOL_DATA) instanceof CarryingToolData.HoldingBlockState holdingBlockState) {
+        if (holdingBlockState.blockEntityTag().isPresent()) {
+          // 手持 Carrying Tool 时，可能使用该工作的方块实体数据，这一数据并非存储在 block_entity_data 数组组件中。
+          entityToPlace.read(holdingBlockState.blockEntityTag().get(), world.getRegistryManager());
+          entityToPlace.markDirty();
+        }
+      }
+      // 从指定的物品堆对应的方块中读取组件
       BlockItem.writeNbtToBlockEntity(world, player, posToPlace, stackInHand);
     } else if (hitEntity != null && entityToPlace != null) {
       entityToPlace.read(hitEntity.createNbt(world.getRegistryManager()), world.getRegistryManager());
