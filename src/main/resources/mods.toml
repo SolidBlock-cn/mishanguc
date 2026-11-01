@@ -1,0 +1,28 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="LGPLv3"
+
+[[mods]]
+modId="mishanguc"
+version="1.0.0" # Replace with your actual port version
+displayName="Mishang Urban Construction"
+displayURL="https://github.com/SolidBlock-cn/mishanguc"
+logoFile="assets/mishanguc/icon.png"
+authors="SolidBlock"
+description='''
+The mod provides an amount of blocks and items that make a beautiful city, which includes roads, signs, lights, handrails, colored blocks and some useful tools. Thank you for using this mod. I'm looking forward to your suggestions.
+'''
+
+[[dependencies.mishanguc]]
+modId="forge"
+mandatory=true
+versionRange="[47.0.0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.mishanguc]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.20.2)"
+ordering="NONE"
+side="BOTH"
