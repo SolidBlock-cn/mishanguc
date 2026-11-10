@@ -174,6 +174,7 @@ public class WallSignBlock extends FaceAttachedHorizontalDirectionalBlock implem
   protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
     final InteractionResult actionResult = super.useWithoutItem(state, world, pos, player, hit);
     if (actionResult != InteractionResult.PASS) return actionResult;
+
     // 在服务端触发打开告示牌编辑界面。Open the edit interface, triggered in the server side.
     final BlockEntity blockEntity = world.getBlockEntity(pos);
     if (!(blockEntity instanceof final WallSignBlockEntity entity)) {
@@ -182,6 +183,10 @@ public class WallSignBlock extends FaceAttachedHorizontalDirectionalBlock implem
       // 冒险模式玩家无权编辑。Adventure players have no permission to edit.
       return InteractionResult.FAIL;
     } else if (world.isClientSide()) {
+      return InteractionResult.SUCCESS;
+    } else if (entity.waxed) {
+      // 涂蜡的告示牌不应该进行操作。
+      world.playSound(null, blockEntity.getBlockPos(), SoundEvents.WAXED_SIGN_INTERACT_FAIL, SoundSource.BLOCKS);
       return InteractionResult.SUCCESS;
     }
 
@@ -230,8 +235,6 @@ public class WallSignBlock extends FaceAttachedHorizontalDirectionalBlock implem
         }
       }
       if (entity.waxed) {
-        // 涂蜡的告示牌不应该进行操作。
-        world.playSound(null, entity.getBlockPos(), SoundEvents.WAXED_SIGN_INTERACT_FAIL, SoundSource.BLOCKS);
         return InteractionResult.TRY_WITH_EMPTY_HAND;
       } else if (stack.is(Items.MAGMA_CREAM)) {
         MishangUtils.rearrange(entity.textContexts);
