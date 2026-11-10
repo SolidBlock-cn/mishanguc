@@ -5,6 +5,14 @@
 ### 1.6.6
 
 - 修复涂蜡的告示牌仍可编辑的问题（[拉取请求 25](https://github.com/SolidBlock-cn/mishanguc/pull/25)）。
+- 补齐 1.4.2 中的以下修复：修复 `block.mishanguc.glass_dark_oak_handrail` 的英文错误。
+
+### 1.3.3.2
+
+专为 1.19.2 的更新。
+
+- 完善告示牌的渲染机制，修复渲染纹理时可能导致的内存溢出的问题（[议题 23](https://github.com/SolidBlock-cn/mishanguc/issues/23)）。
+- 补齐 1.4.2 中的以下修复：修复 `block.mishanguc.glass_dark_oak_handrail` 的英文错误；修复染色的角落栏杆只掉落一个物品的问题。
 
 ### 1.6.5
 
