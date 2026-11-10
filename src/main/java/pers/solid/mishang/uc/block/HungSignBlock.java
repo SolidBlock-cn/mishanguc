@@ -326,6 +326,10 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
       return InteractionResult.FAIL;
     } else if (world.isClientSide()) {
       return InteractionResult.SUCCESS;
+    } else if (entity.waxed.contains(side)) {
+      // 涂蜡的告示牌不应该进行操作。
+      world.playSound(null, entity.getBlockPos(), SoundEvents.WAXED_SIGN_INTERACT_FAIL, SoundSource.BLOCKS);
+      return InteractionResult.SUCCESS;
     }
 
     entity.checkEditorValidity();
@@ -378,7 +382,6 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
       }
       if (entity.waxed.contains(side)) {
         // 涂蜡的告示牌不应该进行操作。
-        world.playSound(null, entity.getBlockPos(), SoundEvents.WAXED_SIGN_INTERACT_FAIL, SoundSource.BLOCKS);
         return InteractionResult.TRY_WITH_EMPTY_HAND;
       } else if (stack.is(Items.MAGMA_CREAM)) {
         // 玩家手持岩浆膏时，可快速进行重整。
