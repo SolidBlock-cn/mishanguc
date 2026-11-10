@@ -596,6 +596,7 @@
   "direction.mishanguc.south_west": "Southwest",
   "direction.mishanguc.up": "Up",
   "direction.mishanguc.west": "West",
+  "gamerule.category.mishanguc.mishanguc": "Mishang Urban Construction",
   "gamerule.mishanguc.carrying_tool_access": "Carrying Tool Access",
   "gamerule.mishanguc.carrying_tool_access.description": "Determine which type of players are allowed to use carrying tool.",
   "gamerule.mishanguc.explosion_tool_access": "Explosion Tool Access",

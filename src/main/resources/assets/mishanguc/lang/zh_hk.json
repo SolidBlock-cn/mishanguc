@@ -596,6 +596,7 @@
   "direction.mishanguc.south_west": "西南",
   "direction.mishanguc.up": "上",
   "direction.mishanguc.west": "西",
+  "gamerule.category.mishanguc.mishanguc": "迷上城建",
   "gamerule.mishanguc.carrying_tool_access": "搬運工具權限",
   "gamerule.mishanguc.carrying_tool_access.description": "決定哪類玩家可以使用搬運工具。",
   "gamerule.mishanguc.explosion_tool_access": "爆炸工具權限",
