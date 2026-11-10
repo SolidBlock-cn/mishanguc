@@ -2,6 +2,10 @@
 
 Note: Not all versions in this update log have been published yet. Please refer to the relevant pages on CurseForge and Modrinth, or the "Releases" section on GitHub.
 
+### 1.6.6
+
+- Fixed the issue that waxed signs are still editable ([pull request 25](https://github.com/SolidBlock-cn/mishanguc/pull/25)).
+
 ### 1.6.5
 
 - Fixed the issue that the default text size in the texture presets is 8 and 4 instead of 6 and 3.
