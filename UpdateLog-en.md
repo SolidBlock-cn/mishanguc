@@ -4,10 +4,12 @@ Note: Not all versions in this update log have been published yet. Please refer 
 
 ### 1.6.7-beta.1
 
-- Fit 26.2.
+- Fit 26.2 and 26.3.
 - Now when carrying and throwing a custom-colored block in the form of falling blocks with the carrying tool, the falling block will also be normally tinted to this color.
     - When the falling block of custom-colored block fails to land normally and turn into a dropped item, the item is currently not of the fixed color. This issue may be fixed in the future.
 - Please note that custom-colored blocks placed in the sulfur cube can also be tinted normally. See the update log for 1.6.5.
+- Fixed the issue of missing game rule category name.
+- Known issue: the particle color of custom colored blocks may be incorrect when carried by a carrying tool; in 26.3, custom colored poplar leaves currently use the yellow texture and may be changed in the future.
 
 ### 1.6.6
 
