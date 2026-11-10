@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerator;
@@ -47,7 +45,6 @@ import java.util.List;
  * @param <T> 基础方块类型。
  */
 public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoadSlabBlock {
-  public static final MapCodec<SmartRoadSlabBlock<?>> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_block").forGetter(o -> o.baseBlock), propertiesCodec()).apply(instance, (block, settings) -> new SmartRoadSlabBlock<>((AbstractRoadBlock) block, settings)));
   private static Block cachedBaseBlock;
   public final T baseBlock;
 
@@ -157,11 +154,6 @@ public class SmartRoadSlabBlock<T extends AbstractRoadBlock> extends AbstractRoa
   public SingleItemRecipeBuilder getStonecuttingRecipe(RecipeProvider recipeGenerator) {
     return SingleItemRecipeBuilder.stonecutting(Ingredient.of(baseBlock), RecipeCategory.BUILDING_BLOCKS, this, 2)
         .unlockedBy(RecipeProvider.getHasName(baseBlock), recipeGenerator.has(baseBlock));
-  }
-
-  @Override
-  public MapCodec<? extends SmartRoadSlabBlock<?>> codec() {
-    return CODEC;
   }
 
   @Override

@@ -1,8 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.math.Quadrant;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -65,7 +63,6 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
   }
 
   class Impl extends RoadWithAngleLine.Impl implements RoadWithDiffAngleLine {
-    public static final MapCodec<RoadWithDiffAngleLine.Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(propertiesCodec(), lineColorFieldCodec(), LineColor.CODEC.fieldOf("line_color2").forGetter(b -> b.lineColor2), lineTypeFieldCodec(), LineType.CODEC.fieldOf("line_type2").forGetter(b -> b.lineType2), RoadWithAngleLine.isBevelCodec()).apply(i, (settings, lineColor, lineColor2, lineType, lineType2, isBevel) -> new RoadWithDiffAngleLine.Impl(settings, lineColor, lineColor2, lineType, lineType2, isBevel, null, null)));
     public final LineColor lineColor2;
     public final LineType lineType2;
     private final String lineSide2;
@@ -131,11 +128,6 @@ public interface RoadWithDiffAngleLine extends RoadWithAngleLine {
                     .with(VariantMutator.Y_ROT.withValue(axisRotation)));
       }
       blockStateModelGenerator.blockStateOutput.accept(road.composeState(MultiVariantGenerator.dispatch(road).with(map)));
-    }
-
-    @Override
-    protected MapCodec<? extends RoadWithDiffAngleLine.Impl> codec() {
-      return CODEC;
     }
 
     private static final String[] NORMAL_PATTERN = {

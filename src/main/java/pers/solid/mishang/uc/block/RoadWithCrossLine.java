@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -35,8 +33,6 @@ public interface RoadWithCrossLine extends Road {
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithCrossLine {
-    public static final MapCodec<Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(propertiesCodec(), lineColorFieldCodec()).apply(i, Impl::new));
-
     public Impl(Properties settings, LineColor lineColor) {
       super(settings, lineColor, LineType.NORMAL);
     }
@@ -56,11 +52,6 @@ public interface RoadWithCrossLine extends Road {
       blockStateModelGenerator.blockStateOutput.accept(road.composeState(MultiVariantGenerator.dispatch(road, BlockModelGenerators.createRotatedVariants(BlockModelGenerators.plainModel(modelId)))));
     }
 
-
-    @Override
-    protected MapCodec<? extends Impl> codec() {
-      return CODEC;
-    }
 
     @Override
     public RecipeBuilder getPaintingRecipe(Block base, Block self, RecipeProvider recipeGenerator) {

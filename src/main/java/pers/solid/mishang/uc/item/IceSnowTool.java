@@ -82,7 +82,7 @@ public class IceSnowTool extends Item implements MishangucItem, DispenseItemBeha
     final float probability = getProbability(strength);
     final int range = getRange(strength);
     final BlockPos centerBlockPos = BlockPos.containing(pos);
-    for (final BlockPos blockPos : BlockPos.withinManhattan(centerBlockPos, range, 0, range)) {
+    for (final BlockPos blockPos : BlockPos.withinBoxByManhattanDistance(centerBlockPos, range, 0, range)) {
       if (world.getRandom().nextFloat() > probability) {
         continue;
       }
@@ -121,7 +121,7 @@ public class IceSnowTool extends Item implements MishangucItem, DispenseItemBeha
   public void applyHeat(ServerLevel world, Vec3 pos, int strength) {
     final float probability = getProbability(strength);
     final int range = getRange(strength);
-    for (BlockPos blockPos : BlockPos.withinManhattan(BlockPos.containing(pos), range, range, range)) {
+    for (BlockPos blockPos : BlockPos.withinBoxByManhattanDistance(BlockPos.containing(pos), range, range, range)) {
       if (world.getRandom().nextFloat() > probability) {
         continue;
       }

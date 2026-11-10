@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -10,8 +9,10 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 import pers.solid.mishang.uc.block.HungSignBlock;
 import pers.solid.mishang.uc.blockentity.HungSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
@@ -58,7 +59,7 @@ public class HungSignBlockEntityRenderer<T extends HungSignBlockEntity> implemen
       }
       final boolean glowing = state.glowing.contains(direction);
       matrices.pushPose();
-      matrices.mulPose(Axis.YP.rotationDegrees(-direction.toYRot()));
+      matrices.mulPose(new Matrix4f().rotateY(Mth.DEG_TO_RAD * -direction.toYRot())); // todo 检查旋转方向
       matrices.translate(0, 0, 1.0125 / 32f);
       matrices.scale(1 / 16f, -1 / 16f, 1 / 16f);
       for (TextContext textContext : textContexts) {

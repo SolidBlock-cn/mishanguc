@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -32,8 +31,6 @@ import java.util.List;
 
 @ApiStatus.AvailableSince("1.0.2")
 public class ColoredNetherPortalBlock extends NetherPortalBlock implements ColoredBlock {
-  public static final MapCodec<NetherPortalBlock> CODEC = simpleCodec(ColoredNetherPortalBlock::new);
-
   public ColoredNetherPortalBlock(Properties settings) {
     super(settings);
   }
@@ -77,10 +74,5 @@ public class ColoredNetherPortalBlock extends NetherPortalBlock implements Color
   @Override
   public LootTable.Builder getLootTable(BlockLootSubProvider blockLootTableGenerator) {
     return LootTable.lootTable();
-  }
-
-  @Override
-  public MapCodec<NetherPortalBlock> codec() {
-    return CODEC;
   }
 }

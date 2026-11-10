@@ -1,9 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.math.Quadrant;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -105,7 +102,6 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
   int offsetOutwards();
 
   class Impl extends RoadWithAngleLine.Impl implements RoadWithAngleLineWithOnePartOffset {
-    public static final MapCodec<RoadWithAngleLineWithOnePartOffset.Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(propertiesCodec(), lineColorFieldCodec(), RoadWithAngleLine.isBevelCodec(), Codec.INT.fieldOf("offset_outwards").forGetter(b -> b.offsetOutwards)).apply(i, (settings, lineColor, isBevel, offsetOutwards) -> new RoadWithAngleLineWithOnePartOffset.Impl(settings, lineColor, isBevel, null, null, offsetOutwards)));
     private final String lineSide2;
     private final int offsetOutwards;
 
@@ -152,11 +148,6 @@ public interface RoadWithAngleLineWithOnePartOffset extends RoadWithAngleLine {
             BlockModelGenerators.plainVariant(mirroredModelId).with(VariantMutator.Y_ROT.withValue(axisRotation)));
       }
       blockStateModelGenerator.blockStateOutput.accept(road.composeState(MultiVariantGenerator.dispatch(road).with(map)));
-    }
-
-    @Override
-    protected MapCodec<? extends RoadWithAngleLineWithOnePartOffset.Impl> codec() {
-      return CODEC;
     }
 
     @Override

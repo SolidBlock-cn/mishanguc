@@ -1,8 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -108,7 +105,6 @@ public interface RoadWithOffsetStraightLine extends Road {
   int offsetLevel();
 
   class Impl extends AbstractRoadBlock implements RoadWithOffsetStraightLine {
-    public static final MapCodec<Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(propertiesCodec(), lineColorFieldCodec(), lineTypeFieldCodec(), Codec.INT.fieldOf("offset_level").forGetter(b -> b.offsetLevel)).apply(i, (settings, lineColor, lineTYpe, offsetLevel) -> new Impl(settings, lineColor, lineTYpe, null, offsetLevel)));
     private final String lineTexture;
     private final int offsetLevel;
 
@@ -177,11 +173,6 @@ public interface RoadWithOffsetStraightLine extends Road {
     @Override
     public int offsetLevel() {
       return offsetLevel;
-    }
-
-    @Override
-    protected MapCodec<? extends Impl> codec() {
-      return CODEC;
     }
   }
 }

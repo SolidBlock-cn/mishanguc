@@ -182,8 +182,8 @@ public class SlabToolItem extends Item implements RendersBlockOutline, Mishanguc
       block.playerWillDestroy(world, pos, brokenState, user);
       if (bl1) {
         block.destroy(world, pos, brokenState);
-        if (!user.isCreative()) {
-          block.playerDestroy(world, user, pos, brokenState, world.getBlockEntity(pos), user.getMainHandItem().copy());
+        if (!user.isCreative() && world instanceof ServerLevel serverLevel && user instanceof ServerPlayer serverPlayer) { // todo 现在只在服务器执行了，效果是否有变
+          block.playerDestroy(serverLevel, serverPlayer, pos, brokenState, world.getBlockEntity(pos), user.getMainHandItem().copy());
         }
         user.getItemInHand(InteractionHand.MAIN_HAND).hurtAndBreak(1, user, EquipmentSlot.MAINHAND);
       }

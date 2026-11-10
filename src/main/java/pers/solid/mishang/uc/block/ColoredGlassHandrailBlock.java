@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.network.chat.Component;
@@ -52,7 +51,6 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
   }
 
   public static class ColoredCentral extends CentralBlock implements ColoredBlock {
-    public static final MapCodec<ColoredCentral> CODEC = createSubCodec(b -> b.baseHandrail, ColoredCentral::new);
 
     protected ColoredCentral(GlassHandrailBlock baseRail, Properties settings) {
       super(baseRail, settings);
@@ -86,7 +84,6 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
   }
 
   public static class ColoredCorner extends CornerBlock implements ColoredBlock {
-    public static final MapCodec<ColoredCorner> CODEC = createSubCodec(b -> b.baseHandrail, ColoredCorner::new);
 
     protected ColoredCorner(GlassHandrailBlock baseRail, Properties settings) {
       super(baseRail, settings);
@@ -114,18 +111,12 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
     }
 
     @Override
-    protected MapCodec<? extends ColoredCorner> codec() {
-      return CODEC;
-    }
-
-    @Override
     public String customRecipeCategory() {
       return "handrails";
     }
   }
 
   public static class ColoredOuter extends OuterBlock implements ColoredBlock {
-    public static final MapCodec<ColoredOuter> CODEC = createSubCodec(b -> b.baseHandrail, ColoredOuter::new);
 
     protected ColoredOuter(GlassHandrailBlock baseRail, Properties settings) {
       super(baseRail, settings);
@@ -159,7 +150,6 @@ public class ColoredGlassHandrailBlock extends GlassHandrailBlock implements Col
   }
 
   public static class ColoredStair extends StairBlock implements ColoredBlock {
-    public static final MapCodec<ColoredStair> CODEC = createSubCodec(b -> b.baseHandrail, ColoredStair::new);
 
     protected ColoredStair(GlassHandrailBlock baseRail, Properties settings) {
       super(baseRail, settings);

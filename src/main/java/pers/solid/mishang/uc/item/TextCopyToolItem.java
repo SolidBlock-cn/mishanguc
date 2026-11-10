@@ -113,16 +113,16 @@ public class TextCopyToolItem extends BlockToolItem implements MishangucItem, Wi
     try {
       if (blockEntity instanceof SignBlockEntity signBlockEntity) {
         if (world.isClientSide()) return InteractionResult.SUCCESS;
-        final SignText textFacing = signBlockEntity.isFacingFrontText(player) ? signBlockEntity.getFrontText() : signBlockEntity.getBackText();
-        final Component[] messagesUnfiltered = textFacing.getMessages(false);
-        Arrays.fill(messagesUnfiltered, CommonComponents.EMPTY);
+        final SignText textFacing = signBlockEntity.getText(signBlockEntity.getSlotPlayerIsFacing(player));
+        final List<Component> messagesUnfiltered = textFacing.getMessages(false);
+        Collections.fill(messagesUnfiltered, CommonComponents.EMPTY);
         @Nullable DyeColor color = null;
         for (int i = 0; i < textContexts.size(); i++) {
           final TextContext textContext = textContexts.get(i);
           final MutableComponent styledText = textContext.asStyledText();
-          if (i < messagesUnfiltered.length) {
+          if (i < messagesUnfiltered.size()) {
             // 设置告示牌文字
-            messagesUnfiltered[i] = styledText;
+            messagesUnfiltered.set(i, styledText);
 
             // 设置告示牌颜色
             final DyeColor possibleColor = MishangUtils.colorBySignColor(textContext.color);
@@ -132,10 +132,10 @@ public class TextCopyToolItem extends BlockToolItem implements MishangucItem, Wi
               }
             }
           } else {
-            player.sendSystemMessage(Component.translatable("item.mishanguc.text_copy_tool.message.warn.outOfBound", styledText, messagesUnfiltered.length).withStyle(ChatFormatting.YELLOW));
+            player.sendSystemMessage(Component.translatable("item.mishanguc.text_copy_tool.message.warn.outOfBound", styledText, messagesUnfiltered.size()).withStyle(ChatFormatting.YELLOW));
           }
         }
-        signBlockEntity.setText(color == null ? textFacing : textFacing.setColor(color), signBlockEntity.isFacingFrontText(player));
+        signBlockEntity.setText(color == null ? textFacing : textFacing.withColor(color), signBlockEntity.getSlotPlayerIsFacing(player));
         blockEntity.setChanged();
         world.sendBlockUpdated(blockPos, blockState, blockState, 3);
         player.sendOverlayMessage(Component.translatable("item.mishanguc.text_copy_tool.message.success.paste", Math.min(textContexts.size(), 4)));
@@ -217,10 +217,10 @@ public class TextCopyToolItem extends BlockToolItem implements MishangucItem, Wi
       }
       // 原版的告示牌
       final List<TextContext> textContexts = new ArrayList<>();
-      final SignText textFacing = signBlockEntity.isFacingFrontText(player) ? signBlockEntity.getFrontText() : signBlockEntity.getBackText();
+      final SignText textFacing = signBlockEntity.getText(signBlockEntity.getSlotPlayerIsFacing(player));
       for (int i = 0; i < 4; i++) {
         final TextContext textContext = new TextContext();
-        textContext.text = textFacing.getMessage(i, false).copy();
+        textContext.text = textFacing.getMessages(false).get(i).copy();// 检查调用是否出错
         final ComponentContents content = textContext.text.getContents();
         if (content == PlainTextContents.EMPTY || content instanceof final PlainTextContents plainTextContent && plainTextContent.text().isEmpty()) {
           continue;

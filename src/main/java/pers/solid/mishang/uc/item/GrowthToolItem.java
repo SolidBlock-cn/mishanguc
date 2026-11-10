@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.SwingAnimation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -72,7 +73,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
 
   public static int apply(@Nullable Player player, Level world, Vec3 center, boolean isPositive) {
     int damage = 0;
-    for (BlockPos pos : BlockPos.withinManhattan(BlockPos.containing(center), 4, 4, 4)) {
+    for (BlockPos pos : BlockPos.withinBoxByManhattanDistance(BlockPos.containing(center), 4, 4, 4)) { // 检查
       final BlockState blockState = world.getBlockState(pos);
       if (blockState.getBlock().getStateDefinition().getProperty("age") instanceof IntegerProperty intProperty) {
         final Integer target = isPositive ? Collections.max(intProperty.getPossibleValues()) : Collections.min(intProperty.getPossibleValues());
@@ -157,7 +158,7 @@ public class GrowthToolItem extends Item implements InteractsWithEntity, Mishang
     player.getItemInHand(hand).hurtAndBreak(damage, player, hand.asEquipmentSlot());
     if (damage > 0) {
       // 由于在 Fabric API 中，返回 SUCCESS_SERVER 并不会使玩家真正挥手，故这里手动调用以特殊处理。
-      player.swing(hand, true);
+      player.swing(hand, SwingAnimation.DEFAULT, true);
     }
     return damage > 0 ? InteractionResult.SUCCESS : InteractionResult.FAIL;
   }

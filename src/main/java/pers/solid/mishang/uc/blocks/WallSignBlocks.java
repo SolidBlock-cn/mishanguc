@@ -45,7 +45,7 @@ public final class WallSignBlocks extends MishangucBlocks {
 
   @ApiStatus.AvailableSince("1.2.4")
   public static final WallSignBlock MANGROVE_WOOD_WALL_SIGN = register("mangrove_wood_wall_sign", Blocks.MANGROVE_WOOD);
-  public static final WallSignBlock POPLAR_WOOD_WALL_SIGN = register("mangrove_wood_wall_sign", Blocks.POPLAR_WOOD);
+  public static final WallSignBlock POPLAR_WOOD_WALL_SIGN = register("poplar_wood_wall_sign", Blocks.POPLAR_WOOD);
 
   public static final WallSignBlock CRIMSON_HYPHAE_WALL_SIGN = register("crimson_hyphae_wall_sign", Blocks.CRIMSON_HYPHAE);
 

@@ -27,7 +27,7 @@ import net.minecraft.util.Util;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Quaternionf;
+import org.joml.Matrix4f;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.util.HorizontalAlign;
 import pers.solid.mishang.uc.util.VerticalAlign;
@@ -304,7 +304,7 @@ public class TextContext implements Cloneable {
     matrixStack.translate(offsetX, offsetY, offsetZ);
     // 处理文本的旋转
     if (rotationX != 0 || rotationY != 0 || rotationZ != 0) {
-      matrixStack.mulPose(new Quaternionf().rotateXYZ(Mth.DEG_TO_RAD * rotationX, Mth.DEG_TO_RAD * rotationY, Mth.DEG_TO_RAD * rotationZ));
+      matrixStack.mulPose(new Matrix4f().rotateXYZ(Mth.DEG_TO_RAD * rotationX, Mth.DEG_TO_RAD * rotationY, Mth.DEG_TO_RAD * rotationZ));
     }
 
     // 处理文本在 x 和 y 方向的对齐

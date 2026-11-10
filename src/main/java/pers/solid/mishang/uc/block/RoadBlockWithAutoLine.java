@@ -1,8 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -34,7 +31,6 @@ import static pers.solid.mishang.uc.blocks.RoadBlocks.*;
  * 具有自动连接功能的道路方块。关于本模组的所有道路方块，请参见 {@link pers.solid.mishang.uc.blocks.RoadBlocks}。
  */
 public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWithAutoLine {
-  public static final MapCodec<RoadBlockWithAutoLine> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(propertiesCodec(), RoadAutoLineType.CODEC.fieldOf("type").forGetter(b -> b.type), Codec.STRING.fieldOf("texture").forGetter(b -> b.texture)).apply(i, RoadBlockWithAutoLine::new));
   /**
    * 该自动连接方块在一些特定情况下，应该产生直角还是斜线。
    */
@@ -518,11 +514,6 @@ public class RoadBlockWithAutoLine extends AbstractRoadBlock implements RoadWith
 
   @Override
   public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
-  }
-
-  @Override
-  protected MapCodec<? extends RoadBlockWithAutoLine> codec() {
-    return CODEC;
   }
 
   @Override

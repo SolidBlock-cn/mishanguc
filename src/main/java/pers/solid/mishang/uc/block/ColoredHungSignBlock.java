@@ -1,8 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.annotations.Beta;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.network.chat.Component;
@@ -21,8 +19,6 @@ import java.util.List;
 
 @Beta
 public class ColoredHungSignBlock extends HungSignBlock implements ColoredBlock {
-  public static final MapCodec<ColoredHungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, (block, properties) -> new ColoredHungSignBlock(block.orElse(null), properties)));
-
   public ColoredHungSignBlock(@Nullable Block baseBlock, Properties settings) {
     super(baseBlock, settings);
   }

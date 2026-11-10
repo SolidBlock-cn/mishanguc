@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.network.chat.Component;
@@ -19,7 +17,6 @@ import pers.solid.mishang.uc.blockentity.ColoredWallSignBlockEntity;
 import java.util.List;
 
 public class ColoredWallSignBlock extends WallSignBlock implements ColoredBlock {
-  public static final MapCodec<ColoredWallSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec(), propertiesCodec()).apply(instance, ColoredWallSignBlock::new));
 
   public ColoredWallSignBlock(Block baseBlock, Properties settings) {
     super(baseBlock, settings);

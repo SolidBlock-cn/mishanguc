@@ -1,8 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.math.Quadrant;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
@@ -60,8 +58,6 @@ public class RoadMarkBlock extends Block implements SimpleWaterloggedBlock, Mish
   protected final Identifier texture;
   private static final VoxelShape SHAPE_TOP_MASK = box(0, 15.5, 0, 16, 16, 16);
   private static final VoxelShape SHAPE_SLAB_TOP_MASK = box(0, 7.5, 0, 16, 8, 16);
-
-  public static final MapCodec<RoadMarkBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(Identifier.CODEC.fieldOf("texture").forGetter(b -> b.texture), propertiesCodec()).apply(i, RoadMarkBlock::new));
 
   public RoadMarkBlock(Identifier texture, Properties settings) {
     super(settings);
@@ -138,11 +134,6 @@ public class RoadMarkBlock extends Block implements SimpleWaterloggedBlock, Mish
   }
 
   @Override
-  protected MapCodec<? extends RoadMarkBlock> codec() {
-    return CODEC;
-  }
-
-  @Override
   public RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
     return SingleItemRecipeBuilder.stonecutting(recipeGenerator.tag(ConventionalItemTags.WHITE_DYES), RecipeCategory.DECORATIONS, this, 1)
         .unlockedBy("has_white_dye", recipeGenerator.has(ConventionalItemTags.WHITE_DYES));
@@ -168,7 +159,6 @@ public class RoadMarkBlock extends Block implements SimpleWaterloggedBlock, Mish
   }
 
   protected static class AxisFacing extends RoadMarkBlock {
-    public static final MapCodec<AxisFacing> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(Identifier.CODEC.fieldOf("texture").forGetter(b -> b.texture), propertiesCodec()).apply(i, AxisFacing::new));
     public static final EnumProperty<FourHorizontalAxis> AXIS = EnumProperty.create("axis", FourHorizontalAxis.class);
 
     protected AxisFacing(Identifier texture, Properties settings) {
@@ -238,14 +228,9 @@ public class RoadMarkBlock extends Block implements SimpleWaterloggedBlock, Mish
       blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.plainModel(itemModelId));
     }
 
-    @Override
-    protected MapCodec<? extends AxisFacing> codec() {
-      return CODEC;
-    }
   }
 
   protected static class DirectionalFacing extends RoadMarkBlock {
-    public static final MapCodec<DirectionalFacing> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(Identifier.CODEC.fieldOf("texture").forGetter(b -> b.texture), propertiesCodec()).apply(i, DirectionalFacing::new));
     public static final EnumProperty<EightHorizontalDirection> FACING = EnumProperty.create("facing", EightHorizontalDirection.class);
 
     public DirectionalFacing(Identifier texture, Properties settings) {
@@ -322,9 +307,5 @@ public class RoadMarkBlock extends Block implements SimpleWaterloggedBlock, Mish
       blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.plainModel(itemModelId));
     }
 
-    @Override
-    protected MapCodec<? extends DirectionalFacing> codec() {
-      return CODEC;
-    }
   }
 }

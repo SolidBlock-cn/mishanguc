@@ -81,8 +81,6 @@ public interface RoadWithTwoBevelAngleLines extends Road {
   }
 
   class ImplWithTwoLayerTexture extends AbstractRoadBlock implements RoadWithTwoBevelAngleLines {
-    public static final MapCodec<ImplWithTwoLayerTexture> CODEC = RoadWithTwoBevelAngleLines.createCodec(propertiesCodec(), ImplWithTwoLayerTexture::new);
-
     public ImplWithTwoLayerTexture(Properties settings, LineColor lineColor, LineType lineType) {
       super(settings, lineColor, lineType);
       registerDefaultState(defaultBlockState().setValue(FACING, Direction.SOUTH));
@@ -114,12 +112,6 @@ public interface RoadWithTwoBevelAngleLines extends Road {
     public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
       tooltip.add(Component.translatable("lineType.biBevelAngleLine", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
     }
-
-    @Override
-    protected MapCodec<? extends ImplWithTwoLayerTexture> codec() {
-      return CODEC;
-    }
-
     @Override
     public RecipeBuilder getPaintingRecipe(Block base, Block self, RecipeProvider recipeGenerator) {
       return recipeGenerator.shaped(RecipeCategory.BUILDING_BLOCKS, self, 3)
@@ -134,7 +126,6 @@ public interface RoadWithTwoBevelAngleLines extends Road {
   }
 
   class ImplWithThreeLayerTexture extends AbstractRoadBlock implements RoadWithTwoBevelAngleLines {
-    public static final MapCodec<ImplWithThreeLayerTexture> CODEC = RoadWithTwoBevelAngleLines.createCodec(propertiesCodec(), ImplWithThreeLayerTexture::new);
 
     public ImplWithThreeLayerTexture(Properties settings, LineColor lineColor, LineType lineType) {
       super(settings, lineColor, lineType);
@@ -166,11 +157,6 @@ public interface RoadWithTwoBevelAngleLines extends Road {
     @Override
     public void appendDescriptionTooltip(List<Component> tooltip, TooltipContext options) {
       tooltip.add(Component.translatable("lineType.biBevelAngleLine", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
-    }
-
-    @Override
-    protected MapCodec<? extends ImplWithThreeLayerTexture> codec() {
-      return CODEC;
     }
 
     @Override

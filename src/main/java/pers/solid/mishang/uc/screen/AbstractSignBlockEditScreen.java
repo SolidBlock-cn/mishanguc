@@ -1151,30 +1151,30 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
       hideButton.updateTooltip();
     }
     if (input.hasControlDown() && !input.hasShiftDown() && !input.hasAltDown()) {
-        /*if (keyCode == GLFW.GLFW_KEY_B) {
+        /*if (keyCode == InputConstants.KEY_B) {
           boldButton.onPress();
           return true;
           Ctrl + B 与复述功能冲突。
         } else */
-      if (keyCode == GLFW.GLFW_KEY_I) {
+      if (keyCode == InputConstants.KEY_I) {
         italicButton.onPress(input);
         return true;
-      } else if (keyCode == GLFW.GLFW_KEY_U) {
+      } else if (keyCode == InputConstants.KEY_U) {
         underlineButton.onPress(input);
         return true;
-      } else if (keyCode == GLFW.GLFW_KEY_S) {
+      } else if (keyCode == InputConstants.KEY_S) {
         strikethroughButton.onPress(input);
         return true;
-      } else if (keyCode == GLFW.GLFW_KEY_O) {
+      } else if (keyCode == InputConstants.KEY_O) {
         obfuscatedButton.onPress(input);
         return true;
-      } else if (keyCode == GLFW.GLFW_KEY_MINUS || keyCode == GLFW.GLFW_KEY_KP_SUBTRACT) {
+      } else if (keyCode == InputConstants.KEY_MINUS) {
         removeTextButton.onPress(input);
         return true;
-      } else if (keyCode == GLFW.GLFW_KEY_KP_ADD) {
+      } else if (keyCode == InputConstants.KEY_ADD) {
         addTextButton.onPress(input);
         return true;
-      } else if (keyCode == GLFW.GLFW_KEY_E && !isAcceptingCustomValue && !hidden) {
+      } else if (keyCode == InputConstants.KEY_E && !isAcceptingCustomValue && !hidden) {
         final GuiEventListener focused = getFocused();
         if (focused instanceof FloatButtonWidget floatButtonWidget && focused != horizontalAlignButton && focused != verticalAlignButton) {
           customValueStartAccepting(floatButtonWidget);
@@ -1184,25 +1184,25 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         return true;
       }
     } else if (input.hasControlDown() && input.hasShiftDown() && !input.hasAltDown()) {
-      if (keyCode == GLFW.GLFW_KEY_EQUAL) {
+      if (keyCode == InputConstants.KEY_EQUALS) {
         addTextButton.onPress(input);
         return true;
-      } else if (keyCode == GLFW.GLFW_KEY_UP) {
+      } else if (keyCode == InputConstants.KEY_UP) {
         moveUpButton.onPress(input);
         return true;
-      } else if (keyCode == GLFW.GLFW_KEY_DOWN) {
+      } else if (keyCode == InputConstants.KEY_DOWN) {
         moveDownButton.onPress(input);
         return true;
       }
     }
     if (isAcceptingCustomValue) {
-      if (keyCode == GLFW.GLFW_KEY_ESCAPE || (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) && getFocused() == customValueTextField) {
+      if (keyCode == InputConstants.KEY_ESCAPE || (keyCode == InputConstants.KEY_RETURN || keyCode == InputConstants.KEY_NUMPADENTER) && getFocused() == customValueTextField) {
         customValueStopAccepting();
         changed = true;
         return true;
       }
     } else if (isSelectingButtonToSetCustom) {
-      if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+      if (keyCode == InputConstants.KEY_ESCAPE) {
         isSelectingButtonToSetCustom = false;
         rebuildWidgets();
         return true;
@@ -1213,17 +1213,17 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
           return true;
         }
       }
-    } else if (getFocused() == null && (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER)) {
+    } else if (getFocused() == null && (keyCode == InputConstants.KEY_RETURN || keyCode == InputConstants.KEY_NUMPADENTER)) { // todo 检查，是 enter 吗
       final TextFieldListWidget.Entry newEntry = textFieldListWidget.addEmptyTextField(-1);
       textFieldListWidget.setFocusedAndSelected(newEntry, false, false);
       setFocused(textFieldListWidget);
       return true;
     } else if (textFieldListWidget.isSimplified() && getFocused() == hideButton) {
-      if (keyCode == GLFW.GLFW_KEY_UP) {
+      if (keyCode == InputConstants.KEY_UP) {
         textFieldListWidget.increaseHeight(-8);
         hideButton.updateTooltip();
         return true;
-      } else if (keyCode == GLFW.GLFW_KEY_DOWN || keyCode == GLFW.GLFW_HAT_DOWN || keyCode == GLFW.GLFW_GAMEPAD_BUTTON_DPAD_DOWN) {
+      } else if (keyCode == InputConstants.KEY_DOWN) {
         textFieldListWidget.increaseHeight(8);
         hideButton.updateTooltip();
         return true;

@@ -100,7 +100,7 @@ public abstract class BlockMatchingRule implements StringRepresentable {
       Level world, BlockPos centerPos, Direction side, int range) {
     final LinkedHashSet<BlockPos> set = Sets.newLinkedHashSet();
     final Direction.Axis axis = side.getAxis();
-    for (BlockPos pos : BlockPos.withinManhattan(
+    for (BlockPos pos : BlockPos.withinBoxByManhattanDistance(
         centerPos,
         axis == Direction.Axis.X ? 0 : range,
         axis == Direction.Axis.Y ? 0 : range,
@@ -118,7 +118,7 @@ public abstract class BlockMatchingRule implements StringRepresentable {
         set.add(pos.immutable());
         continue;
       }
-      for (BlockPos pos1 : BlockPos.withinManhattan(
+      for (BlockPos pos1 : BlockPos.withinBoxByManhattanDistance( // todo 检查现在的曼哈顿距离
           pos,
           axis == Direction.Axis.X ? 0 : 1,
           axis == Direction.Axis.Y ? 0 : 1,

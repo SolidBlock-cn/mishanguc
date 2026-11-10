@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -16,7 +14,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.ParticleUtils;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
@@ -25,8 +22,9 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.FallingParticlesLeavesBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.sounds.AmbientLeavesBlockSoundPlayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.ApiStatus;
@@ -38,20 +36,23 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 @ApiStatus.AvailableSince("0.2.4")
-public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock {
+public class ColoredLeavesBlock extends FallingParticlesLeavesBlock implements ColoredBlock {
   private final @Nullable BiFunction<Block, BlockLootSubProvider, LootTable.Builder> lootBuilder;
   private final Identifier texture;
 
-  public static final MapCodec<ColoredLeavesBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(ExtraCodecs.floatRange(0.0F, 1.0F).fieldOf("leaf_particle_chance").forGetter((block) -> block.leafParticleChance), propertiesCodec(), Identifier.CODEC.fieldOf("texture").forGetter(o -> o.texture)).apply(instance, (chance, settings1, s) -> new ColoredLeavesBlock(chance, settings1, null, s)));
 
-  public ColoredLeavesBlock(float leaveParticleChance, Properties settings, @Nullable BiFunction<Block, BlockLootSubProvider, LootTable.Builder> lootBuilder, Identifier texture) {
-    super(leaveParticleChance, settings);
+  public ColoredLeavesBlock(final float leafParticleChance, final AmbientLeavesBlockSoundPlayer ambientLeavesBlockSoundPlayer, Properties settings, @Nullable BiFunction<Block, BlockLootSubProvider, LootTable.Builder> lootBuilder, Identifier texture) {
+    super(leafParticleChance, ambientLeavesBlockSoundPlayer, settings);
     this.lootBuilder = lootBuilder;
     this.texture = texture;
   }
 
-  public ColoredLeavesBlock(float leafParticleChance, Properties settings, @Nullable BiFunction<Block, BlockLootSubProvider, LootTable.Builder> lootBuilder, String texture) {
-    this(leafParticleChance, settings, lootBuilder, Identifier.parse(texture));
+  public ColoredLeavesBlock(final float leafParticleChance, final AmbientLeavesBlockSoundPlayer ambientLeavesBlockSoundPlayer, Properties settings, @Nullable BiFunction<Block, BlockLootSubProvider, LootTable.Builder> lootBuilder, String texture) {
+    this(leafParticleChance, ambientLeavesBlockSoundPlayer, settings, lootBuilder, Identifier.parse(texture));
+  }
+
+  public ColoredLeavesBlock(final float leafParticleChance, Properties settings, @Nullable BiFunction<Block, BlockLootSubProvider, LootTable.Builder> lootBuilder, String texture) {
+    this(leafParticleChance, AmbientLeavesBlockSoundPlayer.noAmbientSound(), settings, lootBuilder, Identifier.parse(texture));
   }
 
   @Override
@@ -85,12 +86,7 @@ public class ColoredLeavesBlock extends LeavesBlock implements ColoredBlock {
     return (lootBuilder.apply(this, blockLootTableGenerator).apply(COPY_COLOR_LOOT_FUNCTION));
   }
 
-  @Override
-  public MapCodec<? extends ColoredLeavesBlock> codec() {
-    return CODEC;
-  }
-
-  @Override
+  //  @Override todo 被什么替代了？
   protected void spawnFallingLeavesParticle(Level world, BlockPos pos, RandomSource random) {
     ColorParticleOption entityEffectParticleEffect = ColorParticleOption.create(ParticleTypes.TINTED_LEAVES, world.getClientLeafTintColor(pos));
     ParticleUtils.spawnParticleBelow(world, pos, random, entityEffectParticleEffect);

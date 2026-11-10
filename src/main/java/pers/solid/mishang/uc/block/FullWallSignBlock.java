@@ -1,8 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.ImmutableMap;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -37,7 +35,6 @@ import pers.solid.mishang.uc.data.ModelHelper;
 import java.util.Map;
 
 public class FullWallSignBlock extends WallSignBlock {
-  public static final MapCodec<FullWallSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec(), propertiesCodec()).apply(instance, FullWallSignBlock::new));
 
   public static final Map<Direction, VoxelShape> SHAPES_WHEN_WALL =
       MishangUtils.createHorizontalDirectionToShape(0, 0, 0, 16, 16, 1);

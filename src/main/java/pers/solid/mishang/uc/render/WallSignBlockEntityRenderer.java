@@ -2,7 +2,6 @@ package pers.solid.mishang.uc.render;
 
 import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -16,6 +15,7 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -25,6 +25,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import org.joml.Matrix4f;
 import pers.solid.mishang.uc.block.WallSignBlock;
 import pers.solid.mishang.uc.blockentity.WallSignBlockEntity;
 import pers.solid.mishang.uc.blocks.WallSignBlocks;
@@ -92,12 +93,12 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
     matrices.translate(0.5, 0.5, 0.5);
     final Direction facing = state.facing;
     final AttachFace face = state.face;
-    matrices.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
-    matrices.mulPose(
-        Axis.XP.rotationDegrees(
-            face == AttachFace.CEILING ? 90 : face == AttachFace.FLOOR ? -90 : 0));
+    matrices.mulPose(new Matrix4f()
+        .rotateX( // todo 可能需要化为弧度
+            Mth.DEG_TO_RAD * (face == AttachFace.CEILING ? 90 : face == AttachFace.FLOOR ? -90 : 0))
+        .rotateY(Mth.DEG_TO_RAD * -facing.toYRot()));
     if (face != AttachFace.WALL) {
-      matrices.mulPose(Axis.ZP.rotationDegrees(180));
+      matrices.mulPose(new Matrix4f().rotateZ(Mth.PI));
     }
     matrices.scale(1 / 16f, -1 / 16f, 1 / 16f);
     matrices.translate(0, 0, (state.invisible ? -8 : -7) + .0125);

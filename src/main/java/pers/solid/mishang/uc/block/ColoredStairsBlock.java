@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -33,10 +31,6 @@ import pers.solid.mishang.uc.item.ColoredTintSource;
 import java.util.List;
 
 public class ColoredStairsBlock extends StairBlock implements ColoredBlock {
-  public static final MapCodec<ColoredStairsBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-      BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_block").forGetter(o -> o.baseBlock),
-      propertiesCodec()
-  ).apply(i, ColoredStairsBlock::new));
   public final Block baseBlock;
 
   public ColoredStairsBlock(Block baseBlock, Properties settings) {
@@ -81,8 +75,4 @@ public class ColoredStairsBlock extends StairBlock implements ColoredBlock {
         .unlockedBy(RecipeProvider.getHasName(baseBlock), recipeGenerator.has(baseBlock));
   }
 
-  @Override
-  public MapCodec<? extends ColoredStairsBlock> codec() {
-    return CODEC;
-  }
 }

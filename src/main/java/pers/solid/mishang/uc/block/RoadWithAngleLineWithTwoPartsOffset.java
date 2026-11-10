@@ -1,8 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -44,8 +41,6 @@ public interface RoadWithAngleLineWithTwoPartsOffset extends RoadWithAngleLine {
     protected final @Nullable String lineSide2;
     private final int offsetOutwards;
 
-    public static final MapCodec<RoadWithAngleLineWithTwoPartsOffset.Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(propertiesCodec(), lineColorFieldCodec(), lineTypeFieldCodec(), RoadWithAngleLine.isBevelCodec(), Codec.INT.fieldOf("offset_outwards").forGetter(b -> b.offsetOutwards)).apply(i, (settings, lineColor, lineType, isBevel, offsetOutwards) -> new RoadWithAngleLineWithTwoPartsOffset.Impl(settings, lineColor, lineType, isBevel, null, null, null, offsetOutwards)));
-
     public Impl(Properties settings, LineColor lineColor, LineType lineType, boolean isBevel, @Nullable String lineTop, @Nullable String lineSide, @Nullable String lineSide2, int offsetOutwards) {
       super(settings, lineColor, lineType, isBevel, lineTop);
       this.lineSide = lineSide;
@@ -67,11 +62,6 @@ public interface RoadWithAngleLineWithTwoPartsOffset extends RoadWithAngleLine {
           .lineTop(lineTop);
       final Identifier modelId = road.uploadModel("_with_angle_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_SIDE2, MishangucTextureKeys.LINE_TOP);
       blockStateModelGenerator.blockStateOutput.accept(road.composeState(MultiVariantGenerator.dispatch(road, BlockModelGenerators.plainVariant(modelId)).with(PropertyDispatch.modify(FACING).generate(direction -> VariantMutator.Y_ROT.withValue(direction.asAxisRotationCCW45())))));
-    }
-
-    @Override
-    protected MapCodec<? extends RoadWithAngleLineWithTwoPartsOffset.Impl> codec() {
-      return CODEC;
     }
 
 

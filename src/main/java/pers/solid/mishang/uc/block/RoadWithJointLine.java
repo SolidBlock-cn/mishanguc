@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -99,8 +97,6 @@ public interface RoadWithJointLine extends Road {
     protected final String lineSide;
     protected final String lineSide2;
 
-    public static final MapCodec<Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(propertiesCodec(), lineColorFieldCodec(), LineColor.CODEC.fieldOf("line_color_side").forGetter(b -> b.lineColorSide), lineTypeFieldCodec(), LineType.CODEC.fieldOf("line_type_side").forGetter(b -> b.lineTypeSide)).apply(i, (settings, lineColor, lineColorSide, lineType, lineTypeSide) -> new Impl(settings, lineColor, lineColorSide, lineType, lineTypeSide, null)));
-
     public Impl(
         Properties settings,
         LineColor lineColor,
@@ -150,11 +146,6 @@ public interface RoadWithJointLine extends Road {
       final FasterTextureMap textures = new FasterTextureMap().base("asphalt").lineSide(lineSide).lineSide2(lineSide2).lineTop(lineTop);
       final Identifier modelId = road.uploadModel("_with_joint_line", textures, blockStateModelGenerator, MishangucTextureKeys.BASE, MishangucTextureKeys.LINE_SIDE, MishangucTextureKeys.LINE_TOP, MishangucTextureKeys.LINE_SIDE2);
       blockStateModelGenerator.blockStateOutput.accept(road.composeState(MultiVariantGenerator.dispatch(road, BlockModelGenerators.plainVariant(modelId)).with(BlockStateModelGeneratorAccessor.getROTATION_HORIZONTAL_FACING_ALT())));
-    }
-
-    @Override
-    protected MapCodec<? extends Impl> codec() {
-      return CODEC;
     }
 
     @Override

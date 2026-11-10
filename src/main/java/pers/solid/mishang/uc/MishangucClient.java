@@ -159,7 +159,7 @@ public class MishangucClient implements ClientModInitializer {
           int accumulatedRed = 0;
           int accumulatedGreen = 0;
           int accumulatedBlue = 0;
-          for (BlockPos outPos : BlockPos.withinManhattan(pos, 1, 1, 1)) {
+          for (BlockPos outPos : BlockPos.withinBoxByManhattanDistance(pos, 1, 1, 1)) {
             if (outPos.equals(pos)) continue;
             if (level.getBlockEntity(outPos) instanceof ColoredBlockEntity coloredBlockEntity) {
               final int color = coloredBlockEntity.getColor();

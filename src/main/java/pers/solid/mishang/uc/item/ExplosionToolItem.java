@@ -77,7 +77,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
     for (ServerPlayer serverPlayerEntity : serverWorld.players()) {
       if (serverPlayerEntity.distanceToSqr(pos) < 4096.0) {
         Optional<Vec3> optional = Optional.ofNullable(explosionImpl.getHitPlayers().get(serverPlayerEntity));
-        serverPlayerEntity.connection.send(new ClientboundExplodePacket(pos, explosionImpl.radius(), blocksCount, optional, particleEffect, SoundEvents.GENERIC_EXPLODE, EXPLOSION_BLOCK_PARTICLES));
+        serverPlayerEntity.connection.send(new ClientboundExplodePacket(pos, explosionImpl.radius(), blocksCount, optional, particleEffect, SoundEvents.GENERIC_EXPLODE, EXPLOSION_BLOCK_PARTICLES, true));
       }
     }
 
@@ -163,7 +163,7 @@ public class ExplosionToolItem extends Item implements HotbarScrollInteraction, 
       for (ServerPlayer serverPlayerEntity : serverWorld.players()) {
         if (serverPlayerEntity.distanceToSqr(Vec3.atCenterOf(pos)) < 4096.0) {
           Optional<Vec3> optional = Optional.ofNullable(explosionImpl.getHitPlayers().get(serverPlayerEntity));
-          serverPlayerEntity.connection.send(new ClientboundExplodePacket(Vec3.atCenterOf(pos), explosionImpl.radius(), blockCount, optional, particleEffect, SoundEvents.GENERIC_EXPLODE, EXPLOSION_BLOCK_PARTICLES));
+          serverPlayerEntity.connection.send(new ClientboundExplodePacket(Vec3.atCenterOf(pos), explosionImpl.radius(), blockCount, optional, particleEffect, SoundEvents.GENERIC_EXPLODE, EXPLOSION_BLOCK_PARTICLES, true));
         }
       }
       stack.hurtAndBreak((int) component.power(), serverWorld, null, item -> {});

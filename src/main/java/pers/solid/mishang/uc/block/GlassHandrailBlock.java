@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -116,7 +115,6 @@ public class GlassHandrailBlock extends HandrailBlock {
   }
 
   public static class CentralBlock extends HandrailCentralBlock<GlassHandrailBlock> {
-    public static final MapCodec<CentralBlock> CODEC = createSubCodec(b -> b.baseHandrail, CentralBlock::new);
 
     protected CentralBlock(GlassHandrailBlock baseRail, Properties settings) {
       super(baseRail, settings);
@@ -140,7 +138,6 @@ public class GlassHandrailBlock extends HandrailBlock {
   }
 
   public static class CornerBlock extends HandrailCornerBlock<GlassHandrailBlock> {
-    public static final MapCodec<CornerBlock> CODEC = createSubCodec(b -> b.baseHandrail, CornerBlock::new);
 
     protected CornerBlock(GlassHandrailBlock baseRail, Properties settings) {
       super(baseRail, settings);
@@ -158,14 +155,9 @@ public class GlassHandrailBlock extends HandrailBlock {
       blockStateModelGenerator.blockStateOutput.accept(createBlockStates(modelId));
     }
 
-    @Override
-    protected MapCodec<? extends CornerBlock> codec() {
-      return CODEC;
-    }
   }
 
   public static class StairBlock extends HandrailStairBlock<GlassHandrailBlock> {
-    public static final MapCodec<StairBlock> CODEC = createSubCodec(b -> b.baseHandrail, StairBlock::new);
 
     protected StairBlock(GlassHandrailBlock baseRail, Properties settings) {
       super(baseRail, settings);
@@ -192,7 +184,6 @@ public class GlassHandrailBlock extends HandrailBlock {
   }
 
   public static class OuterBlock extends HandrailOuterBlock<GlassHandrailBlock> {
-    public static final MapCodec<OuterBlock> CODEC = createSubCodec(b -> b.baseHandrail, OuterBlock::new);
 
     protected OuterBlock(GlassHandrailBlock baseRail, Properties settings) {
       super(baseRail, settings);

@@ -1,8 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -12,7 +9,6 @@ import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.resources.model.sprite.Material;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -29,14 +25,10 @@ import org.jetbrains.annotations.Nullable;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.data.MishangucModels;
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
 /**
  * 简单的栏杆方块。基本上都是采用相同的纹理，如有使用也可以采用不同的纹理。其形状都是最基本的图形。
  */
 public class SimpleHandrailBlock extends HandrailBlock {
-  public static final MapCodec<SimpleHandrailBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_block").forGetter(b -> b.baseBlock), propertiesCodec()).apply(instance, (block, settings1) -> new SimpleHandrailBlock(block, settings1, BuiltInRegistries.BLOCK.getKey(block), false)));
   /**
    * 该栏杆的基础方块。
    */
@@ -147,12 +139,7 @@ public class SimpleHandrailBlock extends HandrailBlock {
     } else return super.getName();
   }
 
-  protected static <B extends Block> MapCodec<B> createSubCodec(Function<B, SimpleHandrailBlock> baseGetter, BiFunction<SimpleHandrailBlock, Properties, B> function) {
-    return RecordCodecBuilder.mapCodec(instance -> instance.group(BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_rail").flatXmap(block -> block instanceof SimpleHandrailBlock simpleHandrailBlock ? DataResult.success(simpleHandrailBlock) : DataResult.error(() -> block + "not instance of SimpleHandrailBlock"), DataResult::success).forGetter(baseGetter), propertiesCodec()).apply(instance, function));
-  }
-
   public static class CentralBlock extends HandrailCentralBlock<SimpleHandrailBlock> {
-    public static final MapCodec<CentralBlock> CODEC = createSubCodec(b -> b.baseHandrail, CentralBlock::new);
 
     public CentralBlock(SimpleHandrailBlock baseBlock, Properties settings) {
       super(baseBlock, settings);
@@ -176,7 +163,6 @@ public class SimpleHandrailBlock extends HandrailBlock {
   }
 
   public static class CornerBlock extends HandrailCornerBlock<SimpleHandrailBlock> {
-    public static final MapCodec<CornerBlock> CODEC = createSubCodec(b -> b.baseHandrail, CornerBlock::new);
 
     public CornerBlock(SimpleHandrailBlock baseHandrail, Properties settings) {
       super(baseHandrail, settings);
@@ -195,14 +181,9 @@ public class SimpleHandrailBlock extends HandrailBlock {
       return block == null ? super.getName() : Component.translatable("block.mishanguc.simple_handrail_corner", block.getName());
     }
 
-    @Override
-    protected MapCodec<? extends CornerBlock> codec() {
-      return CODEC;
-    }
   }
 
   public static class StairBlock extends HandrailStairBlock<SimpleHandrailBlock> {
-    public static final MapCodec<StairBlock> CODEC = createSubCodec(b -> b.baseHandrail, StairBlock::new);
 
     public StairBlock(SimpleHandrailBlock baseRail, Properties settings) {
       super(baseRail, settings);
@@ -230,7 +211,6 @@ public class SimpleHandrailBlock extends HandrailBlock {
   }
 
   public static class OuterBlock extends HandrailOuterBlock<SimpleHandrailBlock> {
-    public static final MapCodec<OuterBlock> CODEC = createSubCodec(b -> b.baseHandrail, OuterBlock::new);
 
     public OuterBlock(SimpleHandrailBlock baseRail, Properties settings) {
       super(baseRail, settings);

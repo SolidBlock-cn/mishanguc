@@ -1,8 +1,11 @@
 package pers.solid.mishang.uc.blocks;
 
 import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.sounds.AmbientLeavesBlockSoundPlayer;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.MiningLevel;
 import pers.solid.mishang.uc.block.*;
@@ -160,13 +163,13 @@ public final class ColoredBlocks extends MishangucBlocks {
   public static final ColoredLeavesBlock COLORED_JUNGLE_LEAVES = register("colored_jungle_leaves", settings -> new ColoredLeavesBlock(0.01F, settings, (block, blockLootTableGenerator) -> blockLootTableGenerator.createLeavesDrops(block, Blocks.JUNGLE_SAPLING, 0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F), "block/jungle_leaves"), Blocks.JUNGLE_LEAVES);
 
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_SPRUCE_LEAVES = register("colored_spruce_leaves", settings -> new ColoredLeavesBlock(0.01F, settings, (block, blockLootTableGenerator) -> blockLootTableGenerator.createLeavesDrops(block, Blocks.SPRUCE_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/spruce_leaves"), Blocks.SPRUCE_LEAVES);
+  public static final ColoredLeavesBlock COLORED_SPRUCE_LEAVES = register("colored_spruce_leaves", settings -> new ColoredLeavesBlock(0.01F, settings, (block, blockLootTableGenerator) -> blockLootTableGenerator.createLeavesDrops(block, Blocks.SPRUCE_SAPLING, 0.05F, 0.0625F, 0.083333336F, 0.1F), "block/spruce_leaves"), Blocks.SPRUCE_LEAVES); // 没有落叶可能需要单独处理
 
   @MiningLevel(MiningLevel.Tool.HOE)
   public static final ColoredLeavesBlock COLORED_MANGROVE_LEAVES = register("colored_mangrove_leaves", settings -> new ColoredLeavesBlock(0.01F, settings, (leaves, blockLootTableGenerator) -> blockLootTableGenerator.createMangroveLeavesDrops(leaves), "block/mangrove_leaves"), Blocks.MANGROVE_LEAVES);
 
   @MiningLevel(MiningLevel.Tool.HOE)
-  public static final ColoredLeavesBlock COLORED_POPLAR_LEAVES = register("colored_poplar_leaves", settings -> new ColoredLeavesBlock(0.01F, settings, (leaves, blockLootTableGenerator) -> blockLootTableGenerator.createLeavesDrops(leaves, Blocks.POPLAR_SAPLING), "block/yellow_poplar_leaves"), Blocks.YELLOW_POPLAR_LEAVES); // todo 检查树叶参数，且需要白色杨树树叶
+  public static final ColoredLeavesBlock COLORED_POPLAR_LEAVES = register("colored_poplar_leaves", settings -> new ColoredLeavesBlock(0.01F, AmbientLeavesBlockSoundPlayer.of(SoundEvents.POPLAR_LEAVES_AMBIENT, BlockTags.REQUIRED_FOR_POPLAR_LEAF_AMBIENCE), settings, (leaves, blockLootTableGenerator) -> blockLootTableGenerator.createLeavesDrops(leaves, Blocks.POPLAR_SAPLING, 0.02F, 0.022222223F, 0.025F, 0.033333335F, 0.1F), "block/yellow_poplar_leaves"), Blocks.YELLOW_POPLAR_LEAVES); // todo 需要白色杨树树叶
 
   @MiningLevel(MiningLevel.Tool.NONE)
   public static final ColoredCubeBlock COLORED_PURE_BLOCK = register("colored_pure_block", settings -> ColoredCubeBlock.cubeAll(settings.mapColor(DyeColor.WHITE).strength(0.2f), "mishanguc:block/white_pure"));

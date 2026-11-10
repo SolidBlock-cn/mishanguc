@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.booleans.BooleanSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -10,9 +9,11 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 import pers.solid.mishang.uc.block.StandingSignBlock;
 import pers.solid.mishang.uc.blockentity.StandingSignBlockEntity;
 import pers.solid.mishang.uc.text.TextContext;
@@ -26,7 +27,7 @@ public record StandingSignBlockEntityRenderer<T extends StandingSignBlockEntity>
     final BooleanSet glowing = state.glowing;
     matrices.translate(0.5, 0.75, 0.5);
     final int rotation = state.rotation;
-    matrices.mulPose(Axis.YP.rotationDegrees(-rotation * 22.5f));
+    matrices.mulPose(new Matrix4f().rotateY(Mth.DEG_TO_RAD * -rotation * 22.5f));
     matrices.scale(1 / 16f, -1 / 16f, 1 / 16f);
 
     matrices.pushPose();
@@ -37,7 +38,7 @@ public record StandingSignBlockEntityRenderer<T extends StandingSignBlockEntity>
     matrices.popPose();
     matrices.pushPose();
     matrices.translate(0, 0, -0.5125);
-    matrices.mulPose(Axis.YP.rotationDegrees(180));
+    matrices.mulPose(new Matrix4f().rotateY(Mth.PI));
     for (TextContext textContext : state.backTexts) {
       textContext.draw(ctx.font(), matrices, queue, glowing.contains(true) ? 15728880 : state.lightCoords, 16, state.height);
     }

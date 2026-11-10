@@ -1,9 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.math.Quadrant;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -53,7 +50,6 @@ import static net.minecraft.world.level.material.Fluids.WATER;
 
 public class CornerLightBlock extends HorizontalDirectionalBlock
     implements SimpleWaterloggedBlock, LightConnectable, MishangucBlock {
-  public static final MapCodec<CornerLightBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.STRING.fieldOf("light_color").forGetter(b -> b.lightColor), propertiesCodec()).apply(instance, CornerLightBlock::new));
   private static final EnumProperty<Half> BLOCK_HALF = BlockStateProperties.HALF;
   private static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
   private static final Map<Direction, VoxelShape> SHAPE_PER_DIRECTION_WHEN_BOTTOM = MishangUtils.createDirectionToUnionShape(

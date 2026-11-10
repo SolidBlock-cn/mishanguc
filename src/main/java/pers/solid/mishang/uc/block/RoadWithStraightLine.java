@@ -1,8 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.math.Quadrant;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -90,7 +88,6 @@ public interface RoadWithStraightLine extends Road {
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithStraightLine {
-    public static final MapCodec<Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(propertiesCodec(), lineColorFieldCodec(), lineTypeFieldCodec()).apply(i, (s, c, t) -> new Impl(s, c, t, null)));
     private final String lineTexture;
 
     public Impl(Properties settings, LineColor lineColor, LineType lineType, String lineTexture) {
@@ -141,11 +138,6 @@ public interface RoadWithStraightLine extends Road {
           .define('X', base)
           .unlockedBy("has_paint", recipeGenerator.has(lineColor.getIngredient()))
           .unlockedBy(RecipeProvider.getHasName(base), recipeGenerator.has(base));
-    }
-
-    @Override
-    protected MapCodec<? extends Impl> codec() {
-      return CODEC;
     }
   }
 }

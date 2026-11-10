@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -97,8 +96,6 @@ public interface RoadWithAngleLine extends Road {
   }
 
   class Impl extends AbstractRoadBlock implements RoadWithAngleLine {
-    public static final MapCodec<Impl> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(propertiesCodec(), lineColorFieldCodec(), lineTypeFieldCodec(), isBevelCodec()).apply(i, (settings, lineColor, lineType, isBevel) -> new Impl(settings, lineColor, lineType, null, isBevel, null)));
-
 
     private final boolean isBevel;
     protected final @Nullable String lineSide;
@@ -136,11 +133,6 @@ public interface RoadWithAngleLine extends Road {
         tooltip.add(Component.translatable("lineType.angle.right").withStyle(ChatFormatting.BLUE));
       }
       tooltip.add(Component.translatable("lineType.angle.composed", lineColor.getName(), lineType.getName()).withStyle(ChatFormatting.BLUE));
-    }
-
-    @Override
-    protected MapCodec<? extends Impl> codec() {
-      return CODEC;
     }
 
     private static final String[] NORMAL_BEVEL_PATTERN = {
