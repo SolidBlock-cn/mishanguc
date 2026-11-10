@@ -360,7 +360,7 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
     } else if (entity.waxed.contains(isFront.booleanValue())) {
       // 涂蜡的告示牌不应该进行操作。
       world.playSound(null, entity.getPos(), SoundEvents.BLOCK_SIGN_WAXED_INTERACT_FAIL, SoundCategory.BLOCKS);
-      return ActionResult.FAIL;
+      return ActionResult.SUCCESS;
     }
 
     entity.checkEditorValidity();
@@ -412,30 +412,31 @@ public class StandingSignBlock extends Block implements BlockEntityProvider, Wat
           return ItemActionResult.SUCCESS;
         }
       }
-      if (!entity.waxed.contains(isFront.booleanValue())) {
-        if (stackInHand.isOf(Items.MAGMA_CREAM)) {
-          // 玩家手持岩浆膏时，可快速进行重整。
-          MishangUtils.rearrange(entity.getTextsOnSide(isFront));
+      if (entity.waxed.contains(isFront.booleanValue())) {
+        // 涂蜡的告示牌不应该进行操作。
+        return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+      } else if (stackInHand.isOf(Items.MAGMA_CREAM)) {
+        // 玩家手持岩浆膏时，可快速进行重整。
+        MishangUtils.rearrange(entity.getTextsOnSide(isFront));
+        entity.markDirtyAndUpdate();
+        return ItemActionResult.SUCCESS;
+      } else if (stackInHand.getItem() instanceof GlowInkSacItem) {
+        if (!entity.glowing.contains(isFront.booleanValue())) {
+          entity.glowing = addToSet(entity.glowing, isFront);
+          player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_ON, true);
+          world.playSound(null, entity.getPos(), SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
           entity.markDirtyAndUpdate();
+          if (!player.isCreative()) stackInHand.decrement(1);
           return ItemActionResult.SUCCESS;
-        } else if (stackInHand.getItem() instanceof GlowInkSacItem) {
-          if (!entity.glowing.contains(isFront.booleanValue())) {
-            entity.glowing = addToSet(entity.glowing, isFront);
-            player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_ON, true);
-            world.playSound(null, entity.getPos(), SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            entity.markDirtyAndUpdate();
-            if (!player.isCreative()) stackInHand.decrement(1);
-            return ItemActionResult.SUCCESS;
-          }
-        } else if (stackInHand.getItem() instanceof InkSacItem) {
-          if (entity.glowing.contains(isFront.booleanValue())) {
-            entity.glowing = removeFromSet(entity.glowing, isFront);
-            player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_OFF, true);
-            world.playSound(null, entity.getPos(), SoundEvents.ITEM_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            entity.markDirtyAndUpdate();
-            if (!player.isCreative()) stackInHand.decrement(1);
-            return ItemActionResult.SUCCESS;
-          }
+        }
+      } else if (stackInHand.getItem() instanceof InkSacItem) {
+        if (entity.glowing.contains(isFront.booleanValue())) {
+          entity.glowing = removeFromSet(entity.glowing, isFront);
+          player.sendMessage(BlockEntityWithText.MESSAGE_GLOW_OFF, true);
+          world.playSound(null, entity.getPos(), SoundEvents.ITEM_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+          entity.markDirtyAndUpdate();
+          if (!player.isCreative()) stackInHand.decrement(1);
+          return ItemActionResult.SUCCESS;
         }
       }
     }
