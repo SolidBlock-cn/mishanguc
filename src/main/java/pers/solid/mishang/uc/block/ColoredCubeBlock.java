@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -38,7 +36,6 @@ import java.util.List;
 public class ColoredCubeBlock extends Block implements ColoredBlock {
   protected final ModelReference model;
   protected final TextureMapReference textures;
-  public static final MapCodec<ColoredCubeBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(propertiesCodec()).apply(instance, (settings1) -> new ColoredCubeBlock(settings1, null, TextureMapReference.EMPTY)));
 
   @ApiStatus.Internal
   public ColoredCubeBlock(Properties settings, ModelReference model, TextureMapReference textures) {
@@ -96,11 +93,6 @@ public class ColoredCubeBlock extends Block implements ColoredBlock {
       blockStateModelGenerator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(this, BlockModelGenerators.plainVariant(modelId)));
     }
     blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.tintedModel(modelId, ColoredTintSource.INSTANCE));
-  }
-
-  @Override
-  protected MapCodec<? extends ColoredCubeBlock> codec() {
-    return CODEC;
   }
 
   @Environment(EnvType.CLIENT)

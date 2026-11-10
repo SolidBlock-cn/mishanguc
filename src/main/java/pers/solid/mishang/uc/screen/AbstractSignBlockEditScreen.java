@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.screen;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Streams;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -32,7 +33,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
-import org.lwjgl.glfw.GLFW;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.blockentity.BlockEntityWithText;
@@ -1146,7 +1146,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   @Override
   public boolean keyPressed(KeyEvent input) {
     final int keyCode = input.input();
-    if (keyCode == GLFW.GLFW_KEY_LEFT_SHIFT || keyCode == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+    if (keyCode == InputConstants.KEY_LSHIFT || keyCode == InputConstants.KEY_RSHIFT) {
       // 因技术限制，在修改高度以及按下/松开 shift 后需要更新。
       hideButton.updateTooltip();
     }
@@ -1234,7 +1234,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
 
   @Override
   public boolean keyReleased(KeyEvent input) {
-    if (input.key() == GLFW.GLFW_KEY_LEFT_SHIFT || input.key() == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+    if (input.key() == InputConstants.KEY_LSHIFT || input.key() == InputConstants.KEY_RSHIFT) {
       // 因技术限制，在修改高度以及按下/松开 shift 后需要更新。
       hideButton.updateTooltip();
     }

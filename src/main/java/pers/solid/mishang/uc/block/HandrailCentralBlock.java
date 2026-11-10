@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.math.Quadrant;
-import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -208,9 +207,6 @@ public abstract class HandrailCentralBlock<T extends HandrailBlock> extends Cros
   public boolean connectsIn(BlockState blockState, Direction direction, @Nullable Direction offsetFacing) {
     return offsetFacing == null && direction.getAxis().isHorizontal() && blockState.getValue(PROPERTY_BY_DIRECTION.get(direction));
   }
-
-  @Override
-  protected abstract MapCodec<? extends HandrailCentralBlock<?>> codec();
 
   @Override
   protected boolean isPathfindable(BlockState state, PathComputationType type) {

@@ -43,6 +43,7 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final StandingSignBlock PALE_OAK_WOOD_STANDING_SIGN = register("pale_oak_wood_standing_sign", Blocks.PALE_OAK_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
   public static final StandingSignBlock MANGROVE_WOOD_STANDING_SIGN = register("mangrove_wood_standing_sign", Blocks.MANGROVE_WOOD);
+  public static final StandingSignBlock POPLAR_WOOD_STANDING_SIGN = register("poplar_wood_standing_sign", Blocks.POPLAR_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
   public static final StandingSignBlock CRIMSON_HYPHAE_STANDING_SIGN = register("crimson_hyphae_standing_sign", Blocks.CRIMSON_HYPHAE);
   @ApiStatus.AvailableSince("1.2.4")
@@ -65,6 +66,7 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final StandingSignBlock STRIPPED_PALE_OAK_WOOD_STANDING_SIGN = register("stripped_pale_oak_wood_standing_sign", Blocks.STRIPPED_PALE_OAK_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
   public static final StandingSignBlock STRIPPED_MANGROVE_WOOD_STANDING_SIGN = register("stripped_mangrove_wood_standing_sign", Blocks.STRIPPED_MANGROVE_WOOD, Block.Properties.ofFullCopy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.COLOR_RED));
+  public static final StandingSignBlock STRIPPED_POPLAR_WOOD_STANDING_SIGN = register("stripped_poplar_wood_standing_sign", Blocks.STRIPPED_POPLAR_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
   public static final StandingSignBlock STRIPPED_CRIMSON_HYPHAE_STANDING_SIGN = register("stripped_crimson_hyphae_standing_sign", Blocks.STRIPPED_CRIMSON_HYPHAE);
   @ApiStatus.AvailableSince("1.2.4")
@@ -80,6 +82,7 @@ public final class StandingSignBlocks extends MishangucBlocks {
   public static final StandingSignBlock DARK_OAK_STANDING_SIGN = register("dark_oak_standing_sign", Blocks.DARK_OAK_PLANKS);
   public static final StandingSignBlock PALE_OAK_STANDING_SIGN = register("pale_oak_standing_sign", Blocks.PALE_OAK_PLANKS);
   public static final StandingSignBlock MANGROVE_STANDING_SIGN = register("mangrove_standing_sign", Blocks.MANGROVE_PLANKS);
+  public static final StandingSignBlock POPLAR_STANDING_SIGN = register("poplar_standing_sign", Blocks.POPLAR_PLANKS);
   public static final StandingSignBlock CRIMSON_STANDING_SIGN = register("crimson_standing_sign", Blocks.CRIMSON_PLANKS);
   public static final StandingSignBlock WARPED_STANDING_SIGN = register("warped_standing_sign", Blocks.WARPED_PLANKS);
 
@@ -103,6 +106,7 @@ public final class StandingSignBlocks extends MishangucBlocks {
     DARK_OAK_WOOD_STANDING_SIGN.baseTexture = DARK_OAK_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/dark_oak_log");
     PALE_OAK_WOOD_STANDING_SIGN.baseTexture = PALE_OAK_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/pale_oak_log");
     MANGROVE_WOOD_STANDING_SIGN.baseTexture = MANGROVE_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/mangrove_log");
+    POPLAR_WOOD_STANDING_SIGN.baseTexture = POPLAR_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/poplar_log");
     CRIMSON_HYPHAE_STANDING_SIGN.baseTexture = CRIMSON_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/crimson_stem");
     WARPED_HYPHAE_STANDING_SIGN.baseTexture = WARPED_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/warped_stem");
     STRIPPED_OAK_WOOD_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_oak_log");
@@ -114,6 +118,7 @@ public final class StandingSignBlocks extends MishangucBlocks {
     STRIPPED_DARK_OAK_WOOD_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_dark_oak_log");
     STRIPPED_PALE_OAK_WOOD_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_pale_oak_log");
     STRIPPED_MANGROVE_WOOD_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_mangrove_log");
+    STRIPPED_POPLAR_WOOD_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_poplar_log");
     STRIPPED_CRIMSON_HYPHAE_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_crimson_stem");
     STRIPPED_WARPED_HYPHAE_STANDING_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_warped_stem");
     BAMBOO_PLANK_STANDING_SIGN.barTexture = BAMBOO_MOSAIC_STANDING_SIGN.barTexture = Identifier.withDefaultNamespace("block/bamboo_block");
@@ -131,6 +136,7 @@ public final class StandingSignBlocks extends MishangucBlocks {
       .put(WoodType.CRIMSON, CRIMSON_STANDING_SIGN)
       .put(WoodType.WARPED, WARPED_STANDING_SIGN)
       .put(WoodType.MANGROVE, MANGROVE_STANDING_SIGN)
+      .put(WoodType.POPLAR, POPLAR_STANDING_SIGN)
       .build();
 
   public static final ColorCollection<StandingSignBlock> CONCRETE_STANDING_SIGN = ColorCollection.zipMap(ColorCollection.NAMES, ColorCollection.VALUES, (s, dyeColor) -> register(s + "_concrete_standing_sign", Blocks.CONCRETE.pick(dyeColor)));

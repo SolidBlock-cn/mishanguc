@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -33,7 +31,6 @@ import java.util.Optional;
  * 发光的直立告示牌。
  */
 public class GlowingStandingSignBlock extends StandingSignBlock {
-  public static final MapCodec<GlowingStandingSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, GlowingStandingSignBlock::new));
   protected static final Identifier DEFAULT_GLOW_TEXTURE = Mishanguc.id("block/white_light");
   public Identifier glowTexture = DEFAULT_GLOW_TEXTURE;
 
@@ -102,8 +99,4 @@ public class GlowingStandingSignBlock extends StandingSignBlock {
         .group(getRecipeGroup());
   }
 
-  @Override
-  protected MapCodec<? extends GlowingStandingSignBlock> codec() {
-    return CODEC;
-  }
 }

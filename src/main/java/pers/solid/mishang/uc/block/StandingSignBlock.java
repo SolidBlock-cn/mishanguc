@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.mojang.math.Quadrant;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.booleans.BooleanArraySet;
 import it.unimi.dsi.fastutil.booleans.BooleanSet;
@@ -83,7 +82,6 @@ import java.util.Optional;
  */
 @ApiStatus.AvailableSince("1.0.2")
 public class StandingSignBlock extends Block implements EntityBlock, SimpleWaterloggedBlock, MishangucBlock, WithMishangTooltip {
-  public static final MapCodec<StandingSignBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(baseBlockCodec(), propertiesCodec()).apply(i, StandingSignBlock::new));
 
   public static final IntegerProperty ROTATION = BlockStateProperties.ROTATION_16;
   public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -432,7 +430,7 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
         if (!entity.waxed.contains(isFront.booleanValue())) {
           entity.waxed = addToSet(entity.waxed, isFront);
           player.sendOverlayMessage(BlockEntityWithText.MESSAGE_WAX_ON);
-          world.levelEvent(null, LevelEvent.PARTICLES_AND_SOUND_WAX_ON, entity.getBlockPos(), 0);
+          world.levelEvent(null, LevelEvent.PARTICLES_WAX_ON, entity.getBlockPos(), 0); // 检查本模组所有对 wax_on 相关字段的调用，原版是不是修复了涂蜡声音相关问题
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stackInHand.shrink(1);
           return InteractionResult.SUCCESS;
@@ -473,11 +471,6 @@ public class StandingSignBlock extends Block implements EntityBlock, SimpleWater
       }
     }
     return InteractionResult.TRY_WITH_EMPTY_HAND;
-  }
-
-  @Override
-  protected MapCodec<? extends StandingSignBlock> codec() {
-    return CODEC;
   }
 
   private static BooleanSet addToSet(BooleanSet set, boolean element) {

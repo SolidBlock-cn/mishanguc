@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -26,7 +25,6 @@ import pers.solid.mishang.uc.util.TextureMapReference;
 import java.util.List;
 
 public class ColoredGlassBlock extends TransparentBlock implements ColoredBlock {
-  public static final MapCodec<ColoredGlassBlock> CODEC = simpleCodec(settings1 -> new ColoredGlassBlock(settings1, TextureMapReference.EMPTY));
   private final TextureMapReference textures;
 
   public ColoredGlassBlock(Properties settings, TextureMapReference textures) {
@@ -60,10 +58,5 @@ public class ColoredGlassBlock extends TransparentBlock implements ColoredBlock 
     final Identifier modelId = MishangucModels.COLORED_CUBE_ALL.create(this, textures.getTextureMap(), blockStateModelGenerator.modelOutput);
     blockStateModelGenerator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(this, BlockModelGenerators.plainVariant(modelId)));
     blockStateModelGenerator.itemModelOutput.accept(asItem(), ItemModelUtils.tintedModel(modelId, ColoredTintSource.INSTANCE));
-  }
-
-  @Override
-  protected MapCodec<? extends ColoredGlassBlock> codec() {
-    return CODEC;
   }
 }

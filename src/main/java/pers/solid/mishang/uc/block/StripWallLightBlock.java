@@ -160,8 +160,4 @@ public class StripWallLightBlock extends WallLightBlock implements LightConnecta
     blockStateModelGenerator.blockStateOutput.accept(MultiVariantGenerator.dispatch(this).with(map).with(BlockModelGenerators.UV_LOCK));
   }
 
-  @Override
-  protected MapCodec<? extends StripWallLightBlock> codec() {
-    return CODEC;
-  }
 }

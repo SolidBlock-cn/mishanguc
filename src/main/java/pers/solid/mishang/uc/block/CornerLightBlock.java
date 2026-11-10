@@ -201,9 +201,4 @@ public class CornerLightBlock extends HorizontalDirectionalBlock
         .requires(wall)
         .unlockedBy(RecipeProvider.getHasName(wall), recipeGenerator.has(wall));
   }
-
-  @Override
-  protected MapCodec<? extends CornerLightBlock> codec() {
-    return CODEC;
-  }
 }

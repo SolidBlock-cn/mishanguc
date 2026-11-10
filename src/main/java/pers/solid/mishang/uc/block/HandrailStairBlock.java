@@ -2,7 +2,6 @@ package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
-import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -259,9 +258,6 @@ public abstract class HandrailStairBlock<T extends HandrailBlock> extends Horizo
     final Block block = baseBlock();
     return block == null ? super.getName() : Component.translatable("block.mishanguc.handrail_stair", block.getName());
   }
-
-  @Override
-  protected abstract MapCodec<? extends HandrailStairBlock<?>> codec();
 
   @Override
   protected boolean isPathfindable(BlockState state, PathComputationType type) {

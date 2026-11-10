@@ -1,7 +1,6 @@
 package pers.solid.mishang.uc.block;
 
 import com.google.common.collect.Maps;
-import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerator;
@@ -136,9 +135,6 @@ public abstract class HandrailOuterBlock<T extends HandrailBlock> extends Block 
   public BlockModelDefinitionGenerator createBlockStates(Identifier modeId) {
     return ModelHelper.stateForHorizontalCornerFacingBlock(this, modeId, true);
   }
-
-  @Override
-  protected abstract MapCodec<? extends HandrailOuterBlock<?>> codec();
 
   @Override
   protected boolean isPathfindable(BlockState state, PathComputationType type) {

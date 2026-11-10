@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -49,7 +48,6 @@ import java.util.Map;
  * 悬挂的告示牌上面的专用的悬挂物方块。其方块状态会与其下方的悬挂告示牌方块同步。
  */
 public class HungSignBarBlock extends Block implements SimpleWaterloggedBlock, MishangucBlock {
-  public static final MapCodec<ColoredHungSignBarBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec(), propertiesCodec()).apply(instance, ColoredHungSignBarBlock::new));
 
   protected static <B extends HungSignBarBlock> RecordCodecBuilder<B, Block> createBaseBlockCodec() {
     return BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_block").forGetter(b -> b.baseBlock);
@@ -320,11 +318,6 @@ public class HungSignBarBlock extends Block implements SimpleWaterloggedBlock, M
             20)
         .unlockedBy("has_base_block", recipeGenerator.has(baseBlock))
         .group(getRecipeGroup());
-  }
-
-  @Override
-  protected MapCodec<? extends HungSignBarBlock> codec() {
-    return CODEC;
   }
 
   @Override

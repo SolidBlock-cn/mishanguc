@@ -4,14 +4,19 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.fabricmc.fabric.api.tag.convention.v2.TagUtil;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.recipes.*;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.SingleItemRecipeBuilder;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -28,8 +33,8 @@ import java.util.List;
 
 public class MishangucRecipeGenerator extends RecipeProvider {
 
-  protected MishangucRecipeGenerator(HolderLookup.Provider registries, RecipeOutput exporter) {
-    super(registries, exporter);
+  protected MishangucRecipeGenerator(BootstrapContext<Recipe<?>> recipeOutput, BootstrapContext<Advancement> advancementOutput) {
+    super(recipeOutput, advancementOutput);
   }
 
   public void buildRecipes() {
@@ -118,6 +123,7 @@ public class MishangucRecipeGenerator extends RecipeProvider {
         HandrailBlocks.GLASS_DARK_OAK_HANDRAIL,
         HandrailBlocks.GLASS_PALE_OAK_HANDRAIL,
         HandrailBlocks.GLASS_MANGROVE_HANDRAIL,
+        HandrailBlocks.GLASS_POPLAR_HANDRAIL,
         HandrailBlocks.GLASS_CRIMSON_HANDRAIL,
         HandrailBlocks.GLASS_WARPED_HANDRAIL)) {
       final Item wood = output.baseBlock().asItem();
@@ -136,6 +142,7 @@ public class MishangucRecipeGenerator extends RecipeProvider {
         HandrailBlocks.COLORED_DECORATED_DARK_OAK_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_PALE_OAK_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_MANGROVE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_POPLAR_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_CRIMSON_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_WARPED_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_BAMBOO_HANDRAIL,
@@ -148,6 +155,7 @@ public class MishangucRecipeGenerator extends RecipeProvider {
         HandrailBlocks.COLORED_DECORATED_STRIPPED_DARK_OAK_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_STRIPPED_PALE_OAK_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_STRIPPED_MANGROVE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_POPLAR_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_STRIPPED_CRIMSON_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_STRIPPED_WARPED_HANDRAIL,
         HandrailBlocks.COLORED_DECORATED_STRIPPED_BAMBOO_HANDRAIL

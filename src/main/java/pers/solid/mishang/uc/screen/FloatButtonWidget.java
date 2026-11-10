@@ -21,7 +21,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 import pers.solid.mishang.uc.MishangUtils;
 
 import java.util.function.BiConsumer;
@@ -185,9 +184,8 @@ public class FloatButtonWidget extends Button.Plain implements TooltipUpdated {
     if (!input.isSelection()) {
       if (this.sliderFocused) {
         boolean decreases = input.isLeft() || input.isDown();
-        final var window = Minecraft.getInstance().getWindow();
-        if (input.isLeft() && InputConstants.isKeyDown(window, GLFW.GLFW_KEY_RIGHT)
-            || input.isRight() && InputConstants.isKeyDown(window, InputConstants.KEY_LEFT)) {
+        if (input.isLeft() && InputConstants.isKeyDown(InputConstants.KEY_RIGHT)
+            || input.isRight() && InputConstants.isKeyDown(InputConstants.KEY_LEFT)) {
           // 当同时按下左右时，设为默认值。
           setAllSameValue(defaultValue);
           return true;

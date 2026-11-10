@@ -29,7 +29,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -108,7 +108,7 @@ public abstract class HandrailCornerBlock<T extends HandrailBlock> extends Block
 
   @Override
   public LootTable.Builder getLootTable(BlockLootSubProvider blockLootTableGenerator) {
-    return blockLootTableGenerator.createSingleItemTable(this, ConstantValue.exactly(2));
+    return blockLootTableGenerator.createSingleItemTable(this, ContextIntProviders.exactly(2));
   }
 
   @Override

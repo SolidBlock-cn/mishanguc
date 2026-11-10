@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -267,9 +266,6 @@ public abstract class HandrailBlock extends HorizontalDirectionalBlock implement
   public boolean connectsIn(BlockState blockState, Direction direction, @Nullable Direction offsetFacing) {
     return offsetFacing != null && blockState.getValue(FACING) == offsetFacing && direction.getAxis() != offsetFacing.getAxis();
   }
-
-  @Override
-  protected abstract MapCodec<? extends HandrailBlock> codec();
 
   @Override
   protected boolean isPathfindable(BlockState state, PathComputationType type) {

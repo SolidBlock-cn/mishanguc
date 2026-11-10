@@ -46,8 +46,4 @@ public class ColoredWallSignBlock extends WallSignBlock implements ColoredBlock 
     return blockLootTableGenerator.createSingleItemTable(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
-  @Override
-  protected MapCodec<? extends ColoredWallSignBlock> codec() {
-    return CODEC;
-  }
 }

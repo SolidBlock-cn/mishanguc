@@ -42,6 +42,7 @@ public final class HungSignBlocks extends MishangucBlocks {
   public static final HungSignBlock PALE_OAK_WOOD_HUNG_SIGN = register("pale_oak_wood_hung_sign", Blocks.PALE_OAK_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
   public static final HungSignBlock MANGROVE_WOOD_HUNG_SIGN = register("mangrove_wood_hung_sign", Blocks.MANGROVE_WOOD);
+  public static final HungSignBlock POPLAR_WOOD_HUNG_SIGN = register("poplar_wood_hung_sign", Blocks.POPLAR_WOOD);
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBlock CRIMSON_HYPHAE_HUNG_SIGN = register("crimson_hyphae_hung_sign", Blocks.CRIMSON_HYPHAE);
   @ApiStatus.AvailableSince("0.1.7")
@@ -63,6 +64,7 @@ public final class HungSignBlocks extends MishangucBlocks {
   public static final HungSignBlock STRIPPED_PALE_OAK_WOOD_HUNG_SIGN = register("stripped_pale_oak_wood_hung_sign", Blocks.STRIPPED_PALE_OAK_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
   public static final HungSignBlock STRIPPED_MANGROVE_WOOD_HUNG_SIGN = register("stripped_mangrove_wood_hung_sign", Blocks.STRIPPED_MANGROVE_WOOD, Block.Properties.ofFullCopy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.COLOR_RED));
+  public static final HungSignBlock STRIPPED_POPLAR_WOOD_HUNG_SIGN = register("stripped_poplar_wood_hung_sign", Blocks.STRIPPED_POPLAR_WOOD);
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBlock STRIPPED_CRIMSON_HYPHAE_HUNG_SIGN = register("stripped_crimson_hyphae_hung_sign", Blocks.STRIPPED_CRIMSON_HYPHAE);
   @ApiStatus.AvailableSince("0.1.7")
@@ -85,6 +87,7 @@ public final class HungSignBlocks extends MishangucBlocks {
   public static final HungSignBlock PALE_OAK_HUNG_SIGN = register("pale_oak_hung_sign", Blocks.PALE_OAK_PLANKS);
   @ApiStatus.AvailableSince("0.2.0-mc1.19")
   public static final HungSignBlock MANGROVE_HUNG_SIGN = register("mangrove_hung_sign", Blocks.MANGROVE_PLANKS);
+  public static final HungSignBlock POPLAR_HUNG_SIGN = register("poplar_hung_sign", Blocks.POPLAR_PLANKS);
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBlock CRIMSON_HUNG_SIGN = register("crimson_hung_sign", Blocks.CRIMSON_PLANKS);
   @ApiStatus.AvailableSince("0.1.7")
@@ -118,6 +121,7 @@ public final class HungSignBlocks extends MishangucBlocks {
   public static final HungSignBarBlock PALE_OAK_HUNG_SIGN_BAR = registerBar("pale_oak_hung_sign_bar", Blocks.PALE_OAK_WOOD);
   @ApiStatus.AvailableSince("0.2.0-mc1.19")
   public static final HungSignBarBlock MANGROVE_HUNG_SIGN_BAR = registerBar("mangrove_hung_sign_bar", Blocks.MANGROVE_WOOD);
+  public static final HungSignBarBlock POPLAR_HUNG_SIGN_BAR = registerBar("poplar_hung_sign_bar", Blocks.POPLAR_WOOD);
   @ApiStatus.AvailableSince("0.1.7")
   public static final HungSignBarBlock CRIMSON_HUNG_SIGN_BAR = registerBar("crimson_hung_sign_bar", Blocks.CRIMSON_HYPHAE);
   @ApiStatus.AvailableSince("0.1.7")
@@ -139,6 +143,7 @@ public final class HungSignBlocks extends MishangucBlocks {
   public static final HungSignBarBlock STRIPPED_PALE_OAK_HUNG_SIGN_BAR = registerBar("stripped_pale_oak_hung_sign_bar", Blocks.STRIPPED_PALE_OAK_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
   public static final HungSignBarBlock STRIPPED_MANGROVE_HUNG_SIGN_BAR = registerBar("stripped_mangrove_hung_sign_bar", Blocks.STRIPPED_MANGROVE_WOOD, Block.Properties.ofFullCopy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.COLOR_RED));
+  public static final HungSignBarBlock STRIPPED_POPLAR_HUNG_SIGN_BAR = registerBar("stripped_poplar_hung_sign_bar", Blocks.STRIPPED_POPLAR_WOOD);
   @ApiStatus.AvailableSince("1.2.4")
   public static final HungSignBarBlock STRIPPED_CRIMSON_HUNG_SIGN_BAR = registerBar("stripped_crimson_hung_sign_bar", Blocks.STRIPPED_CRIMSON_HYPHAE);
   @ApiStatus.AvailableSince("1.2.4")
@@ -158,6 +163,7 @@ public final class HungSignBlocks extends MishangucBlocks {
     DARK_OAK_WOOD_HUNG_SIGN.baseTexture = DARK_OAK_WOOD_HUNG_SIGN.barTexture = DARK_OAK_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/dark_oak_log");
     PALE_OAK_WOOD_HUNG_SIGN.baseTexture = PALE_OAK_WOOD_HUNG_SIGN.barTexture = PALE_OAK_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/pale_oak_log");
     MANGROVE_WOOD_HUNG_SIGN.baseTexture = MANGROVE_WOOD_HUNG_SIGN.barTexture = MANGROVE_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/mangrove_log");
+    POPLAR_WOOD_HUNG_SIGN.baseTexture = POPLAR_WOOD_HUNG_SIGN.barTexture = POPLAR_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/poplar_log");
     CRIMSON_HYPHAE_HUNG_SIGN.baseTexture = CRIMSON_HYPHAE_HUNG_SIGN.barTexture = CRIMSON_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/crimson_stem");
     WARPED_HYPHAE_HUNG_SIGN.baseTexture = WARPED_HYPHAE_HUNG_SIGN.barTexture = WARPED_HUNG_SIGN.barTexture = Identifier.withDefaultNamespace("block/warped_stem");
     STRIPPED_OAK_WOOD_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_oak_log");
@@ -169,6 +175,7 @@ public final class HungSignBlocks extends MishangucBlocks {
     STRIPPED_DARK_OAK_WOOD_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_dark_oak_log");
     STRIPPED_PALE_OAK_WOOD_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_pale_oak_log");
     STRIPPED_MANGROVE_WOOD_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_mangrove_log");
+    STRIPPED_POPLAR_WOOD_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_poplar_log");
     STRIPPED_CRIMSON_HYPHAE_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_crimson_stem");
     STRIPPED_WARPED_HYPHAE_HUNG_SIGN.baseTexture = Identifier.withDefaultNamespace("block/stripped_warped_stem");
     OAK_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/oak_log");
@@ -180,6 +187,7 @@ public final class HungSignBlocks extends MishangucBlocks {
     DARK_OAK_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/dark_oak_log");
     PALE_OAK_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/pale_oak_log");
     MANGROVE_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/mangrove_log");
+    POPLAR_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/poplar_log");
     CRIMSON_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/crimson_stem");
     WARPED_HUNG_SIGN.textureTop = Identifier.withDefaultNamespace("block/warped_stem");
     OAK_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/oak_log");
@@ -191,6 +199,7 @@ public final class HungSignBlocks extends MishangucBlocks {
     DARK_OAK_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/dark_oak_log");
     PALE_OAK_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/pale_oak_log");
     MANGROVE_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/mangrove_log");
+    POPLAR_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/poplar_log");
     CRIMSON_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/crimson_stem");
     WARPED_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/warped_stem");
     STRIPPED_OAK_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_oak_log");
@@ -202,6 +211,7 @@ public final class HungSignBlocks extends MishangucBlocks {
     STRIPPED_DARK_OAK_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_dark_oak_log");
     STRIPPED_PALE_OAK_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_pale_oak_log");
     STRIPPED_MANGROVE_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_mangrove_log");
+    STRIPPED_POPLAR_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_poplar_log");
     STRIPPED_CRIMSON_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_crimson_stem");
     STRIPPED_WARPED_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/stripped_warped_stem");
     BAMBOO_HUNG_SIGN.barTexture = BAMBOO_HUNG_SIGN.textureTop = BAMBOO_PLANK_HUNG_SIGN.barTexture = BAMBOO_PLANK_HUNG_SIGN.textureTop = BAMBOO_MOSAIC_HUNG_SIGN.barTexture = BAMBOO_MOSAIC_HUNG_SIGN.textureTop = BAMBOO_HUNG_SIGN_BAR.texture = Identifier.withDefaultNamespace("block/bamboo_block");

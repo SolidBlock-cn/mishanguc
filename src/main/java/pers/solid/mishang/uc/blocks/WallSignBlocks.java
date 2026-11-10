@@ -45,6 +45,7 @@ public final class WallSignBlocks extends MishangucBlocks {
 
   @ApiStatus.AvailableSince("1.2.4")
   public static final WallSignBlock MANGROVE_WOOD_WALL_SIGN = register("mangrove_wood_wall_sign", Blocks.MANGROVE_WOOD);
+  public static final WallSignBlock POPLAR_WOOD_WALL_SIGN = register("mangrove_wood_wall_sign", Blocks.POPLAR_WOOD);
 
   public static final WallSignBlock CRIMSON_HYPHAE_WALL_SIGN = register("crimson_hyphae_wall_sign", Blocks.CRIMSON_HYPHAE);
 
@@ -67,6 +68,7 @@ public final class WallSignBlocks extends MishangucBlocks {
 
   @ApiStatus.AvailableSince("1.2.4")
   public static final WallSignBlock STRIPPED_MANGROVE_WOOD_WALL_SIGN = register("stripped_mangrove_wood_wall_sign", Blocks.STRIPPED_MANGROVE_WOOD, Block.Properties.ofFullCopy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.COLOR_RED));
+  public static final WallSignBlock STRIPPED_POPLAR_WOOD_WALL_SIGN = register("stripped_poplar_wood_wall_sign", Blocks.STRIPPED_POPLAR_WOOD);
 
   public static final WallSignBlock STRIPPED_CRIMSON_HYPHAE_WALL_SIGN = register("stripped_crimson_hyphae_wall_sign", Blocks.STRIPPED_CRIMSON_HYPHAE);
 
@@ -82,6 +84,7 @@ public final class WallSignBlocks extends MishangucBlocks {
     DARK_OAK_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/dark_oak_log");
     PALE_OAK_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/pale_oak_log");
     MANGROVE_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/mangrove_log");
+    POPLAR_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/poplar_log");
     CRIMSON_HYPHAE_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/crimson_stem");
     WARPED_HYPHAE_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/warped_stem");
     STRIPPED_OAK_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_oak_log");
@@ -93,6 +96,7 @@ public final class WallSignBlocks extends MishangucBlocks {
     STRIPPED_DARK_OAK_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_dark_oak_log");
     STRIPPED_PALE_OAK_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_pale_oak_log");
     STRIPPED_MANGROVE_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_mangrove_log");
+    STRIPPED_POPLAR_WOOD_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_poplar_log");
     STRIPPED_CRIMSON_HYPHAE_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_crimson_stem");
     STRIPPED_WARPED_HYPHAE_WALL_SIGN.texture = Identifier.withDefaultNamespace("block/stripped_warped_stem");
   }
@@ -115,6 +119,7 @@ public final class WallSignBlocks extends MishangucBlocks {
 
   @ApiStatus.AvailableSince("0.2.0-mc1.19")
   public static final WallSignBlock MANGROVE_WALL_SIGN = register("mangrove_wall_sign", Blocks.MANGROVE_PLANKS);
+  public static final WallSignBlock POPLAR_WALL_SIGN = register("poplar_wall_sign", Blocks.POPLAR_PLANKS);
 
   public static final WallSignBlock CRIMSON_WALL_SIGN = register("crimson_wall_sign", Blocks.CRIMSON_PLANKS);
 

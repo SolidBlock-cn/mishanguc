@@ -46,8 +46,4 @@ public class ColoredStandingSignBlock extends StandingSignBlock implements Color
     return blockLootTableGenerator.createSingleItemTable(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
-  @Override
-  protected MapCodec<? extends ColoredStandingSignBlock> codec() {
-    return CODEC;
-  }
 }

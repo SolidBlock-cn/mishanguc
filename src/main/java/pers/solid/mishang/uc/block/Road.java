@@ -16,6 +16,7 @@ import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.Prediction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -183,7 +184,7 @@ public interface Road extends MishangucBlock, WithMishangTooltip {
           } else if (player.getInventory().add(itemStack)) {
             player.inventoryMenu.sendAllDataToRemote();
           } else {
-            player.drop(itemStack, false);
+            player.drop(itemStack, false, Prediction.PREDICTED); // todo 检查predict参数
           }
           LayeredCauldronBlock.lowerFillLevel(state, world, pos);
         }

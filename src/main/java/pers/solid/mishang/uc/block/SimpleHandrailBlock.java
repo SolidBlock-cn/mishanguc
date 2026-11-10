@@ -151,11 +151,6 @@ public class SimpleHandrailBlock extends HandrailBlock {
     return RecordCodecBuilder.mapCodec(instance -> instance.group(BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_rail").flatXmap(block -> block instanceof SimpleHandrailBlock simpleHandrailBlock ? DataResult.success(simpleHandrailBlock) : DataResult.error(() -> block + "not instance of SimpleHandrailBlock"), DataResult::success).forGetter(baseGetter), propertiesCodec()).apply(instance, function));
   }
 
-  @Override
-  protected MapCodec<? extends SimpleHandrailBlock> codec() {
-    return CODEC;
-  }
-
   public static class CentralBlock extends HandrailCentralBlock<SimpleHandrailBlock> {
     public static final MapCodec<CentralBlock> CODEC = createSubCodec(b -> b.baseHandrail, CentralBlock::new);
 
@@ -178,10 +173,6 @@ public class SimpleHandrailBlock extends HandrailBlock {
       return block == null ? super.getName() : Component.translatable("block.mishanguc.simple_handrail_central", block.getName());
     }
 
-    @Override
-    protected MapCodec<? extends CentralBlock> codec() {
-      return CODEC;
-    }
   }
 
   public static class CornerBlock extends HandrailCornerBlock<SimpleHandrailBlock> {
@@ -236,10 +227,6 @@ public class SimpleHandrailBlock extends HandrailBlock {
       return block == null ? super.getName() : Component.translatable("block.mishanguc.simple_handrail_stair", block.getName());
     }
 
-    @Override
-    protected MapCodec<? extends StairBlock> codec() {
-      return CODEC;
-    }
   }
 
   public static class OuterBlock extends HandrailOuterBlock<SimpleHandrailBlock> {
@@ -262,10 +249,6 @@ public class SimpleHandrailBlock extends HandrailBlock {
       return block == null ? super.getName() : Component.translatable("block.mishanguc.simple_handrail_outer", block.getName());
     }
 
-    @Override
-    protected MapCodec<? extends OuterBlock> codec() {
-      return CODEC;
-    }
   }
 
   @Nullable

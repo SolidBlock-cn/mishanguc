@@ -165,6 +165,9 @@ public final class ColoredBlocks extends MishangucBlocks {
   @MiningLevel(MiningLevel.Tool.HOE)
   public static final ColoredLeavesBlock COLORED_MANGROVE_LEAVES = register("colored_mangrove_leaves", settings -> new ColoredLeavesBlock(0.01F, settings, (leaves, blockLootTableGenerator) -> blockLootTableGenerator.createMangroveLeavesDrops(leaves), "block/mangrove_leaves"), Blocks.MANGROVE_LEAVES);
 
+  @MiningLevel(MiningLevel.Tool.HOE)
+  public static final ColoredLeavesBlock COLORED_POPLAR_LEAVES = register("colored_poplar_leaves", settings -> new ColoredLeavesBlock(0.01F, settings, (leaves, blockLootTableGenerator) -> blockLootTableGenerator.createLeavesDrops(leaves, Blocks.POPLAR_SAPLING), "block/yellow_poplar_leaves"), Blocks.YELLOW_POPLAR_LEAVES); // todo 检查树叶参数，且需要白色杨树树叶
+
   @MiningLevel(MiningLevel.Tool.NONE)
   public static final ColoredCubeBlock COLORED_PURE_BLOCK = register("colored_pure_block", settings -> ColoredCubeBlock.cubeAll(settings.mapColor(DyeColor.WHITE).strength(0.2f), "mishanguc:block/white_pure"));
   @MiningLevel(MiningLevel.Tool.NONE)

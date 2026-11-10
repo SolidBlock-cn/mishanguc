@@ -1,8 +1,6 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -12,7 +10,6 @@ import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.resources.model.sprite.Material;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -26,11 +23,9 @@ import pers.solid.mishang.uc.data.MishangucModels;
 import pers.solid.mishang.uc.item.ColoredTintSource;
 
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 @ApiStatus.AvailableSince("0.2.4")
 public class GlassHandrailBlock extends HandrailBlock {
-  public static final MapCodec<GlassHandrailBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_block").forGetter(GlassHandrailBlock::baseBlock), propertiesCodec()).apply(instance, (block, settings1) -> new GlassHandrailBlock(block, settings1, null, null, BuiltInRegistries.BLOCK.getKey(block), false)));
   public final Identifier decorationTexture;
   private final CentralBlock central;
   private final CornerBlock corner;
@@ -63,10 +58,6 @@ public class GlassHandrailBlock extends HandrailBlock {
     corner = cornerProvider.apply(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_corner"))));
     stair = stairProvider.apply(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_stair"))));
     outer = outerProvider.apply(this, Properties.ofFullCopy(this).setId(ResourceKey.create(Registries.BLOCK, identifier.withSuffix("_outer"))));
-  }
-
-  protected static <B extends Block> MapCodec<B> createSubCodec(Function<B, GlassHandrailBlock> baseGetter, BiFunction<GlassHandrailBlock, Properties, B> function) {
-    return RecordCodecBuilder.mapCodec(instance -> instance.group(BuiltInRegistries.BLOCK.byNameCodec().fieldOf("base_rail").flatXmap(block -> block instanceof GlassHandrailBlock glassHandrailBlock ? DataResult.success(glassHandrailBlock) : DataResult.error(() -> block + " not instance of " + GlassHandrailBlock.class.getName()), DataResult::success).forGetter(baseGetter), propertiesCodec()).apply(instance, function));
   }
 
   @Environment(EnvType.CLIENT)
@@ -114,11 +105,6 @@ public class GlassHandrailBlock extends HandrailBlock {
     return baseBlock;
   }
 
-  @Override
-  protected MapCodec<? extends GlassHandrailBlock> codec() {
-    return CODEC;
-  }
-
   @Environment(EnvType.CLIENT)
   public static class TextureKeys {
     public static final TextureSlot FRAME = TextureSlot.create("frame");
@@ -151,10 +137,6 @@ public class GlassHandrailBlock extends HandrailBlock {
       blockStateModelGenerator.blockStateOutput.accept(createBlockStates(postModelId, postSideModelId, sideModelId));
     }
 
-    @Override
-    protected MapCodec<? extends CentralBlock> codec() {
-      return CODEC;
-    }
   }
 
   public static class CornerBlock extends HandrailCornerBlock<GlassHandrailBlock> {
@@ -207,10 +189,6 @@ public class GlassHandrailBlock extends HandrailBlock {
       blockStateModelGenerator.blockStateOutput.accept(createBlockStates(baseModelId));
     }
 
-    @Override
-    protected MapCodec<? extends StairBlock> codec() {
-      return CODEC;
-    }
   }
 
   public static class OuterBlock extends HandrailOuterBlock<GlassHandrailBlock> {
@@ -232,9 +210,5 @@ public class GlassHandrailBlock extends HandrailBlock {
       blockStateModelGenerator.blockStateOutput.accept(createBlockStates(modelId));
     }
 
-    @Override
-    protected MapCodec<? extends OuterBlock> codec() {
-      return CODEC;
-    }
   }
 }

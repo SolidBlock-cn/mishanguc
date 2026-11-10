@@ -39,11 +39,6 @@ public class LightCoverBlock extends WallLightBlock {
   }
 
   @Override
-  protected MapCodec<? extends LightCoverBlock> codec() {
-    return CODEC;
-  }
-
-  @Override
   public RecipeBuilder getCraftingRecipe(RecipeProvider recipeGenerator) {
     final Identifier itemId = BuiltInRegistries.ITEM.getKey(asItem());
     final @NotNull Item fullLight = getBaseLight(itemId.getNamespace(), lightColor, this);

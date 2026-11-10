@@ -49,11 +49,6 @@ public class ColumnWallLightBlock extends WallLightBlock {
   }
 
   @Override
-  protected MapCodec<? extends ColumnWallLightBlock> codec() {
-    return CODEC;
-  }
-
-  @Override
   protected boolean isPathfindable(BlockState state, PathComputationType type) {
     return false;
   }

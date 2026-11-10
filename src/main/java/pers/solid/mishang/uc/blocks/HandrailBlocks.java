@@ -57,6 +57,7 @@ public final class HandrailBlocks extends MishangucBlocks {
   public static final SimpleHandrailBlock SIMPLE_PALE_OAK_HANDRAIL = registerSimpleHandrail("simple_pale_oak_handrail", Blocks.PALE_OAK_WOOD);
   @ApiStatus.AvailableSince("0.2.0-mc1.19")
   public static final SimpleHandrailBlock SIMPLE_MANGROVE_HANDRAIL = registerSimpleHandrail("simple_mangrove_handrail", Blocks.MANGROVE_WOOD);
+  public static final SimpleHandrailBlock SIMPLE_POPLAR_HANDRAIL = registerSimpleHandrail("simple_poplar_handrail", Blocks.POPLAR_WOOD);
   public static final SimpleHandrailBlock SIMPLE_CRIMSON_HANDRAIL = registerSimpleHandrail("simple_crimson_handrail", Blocks.CRIMSON_HYPHAE);
   public static final SimpleHandrailBlock SIMPLE_WARPED_HANDRAIL = registerSimpleHandrail("simple_warped_handrail", Blocks.WARPED_HYPHAE);
   public static final SimpleHandrailBlock SIMPLE_OAK_PLANK_HANDRAIL = registerSimpleHandrail("simple_oak_plank_handrail", Blocks.OAK_PLANKS);
@@ -70,6 +71,7 @@ public final class HandrailBlocks extends MishangucBlocks {
   public static final SimpleHandrailBlock SIMPLE_PALE_OAK_PLANK_HANDRAIL = registerSimpleHandrail("simple_pale_oak_plank_handrail", Blocks.PALE_OAK_PLANKS);
   @ApiStatus.AvailableSince("0.2.0-mc1.19")
   public static final SimpleHandrailBlock SIMPLE_MANGROVE_PLANK_HANDRAIL = registerSimpleHandrail("simple_mangrove_plank_handrail", Blocks.MANGROVE_PLANKS);
+  public static final SimpleHandrailBlock SIMPLE_POPLAR_PLANK_HANDRAIL = registerSimpleHandrail("simple_poplar_plank_handrail", Blocks.POPLAR_PLANKS);
   public static final SimpleHandrailBlock SIMPLE_CRIMSON_PLANK_HANDRAIL = registerSimpleHandrail("simple_crimson_plank_handrail", Blocks.CRIMSON_PLANKS);
   public static final SimpleHandrailBlock SIMPLE_WARPED_PLANK_HANDRAIL = registerSimpleHandrail("simple_warped_plank_handrail", Blocks.WARPED_PLANKS);
 
@@ -94,6 +96,7 @@ public final class HandrailBlocks extends MishangucBlocks {
     SIMPLE_DARK_OAK_HANDRAIL.texture = Identifier.withDefaultNamespace("block/dark_oak_log");
     SIMPLE_PALE_OAK_HANDRAIL.texture = Identifier.withDefaultNamespace("block/pale_oak_log");
     SIMPLE_MANGROVE_HANDRAIL.texture = Identifier.withDefaultNamespace("block/mangrove_log");
+    SIMPLE_POPLAR_HANDRAIL.texture = Identifier.withDefaultNamespace("block/poplar_log");
     SIMPLE_CRIMSON_HANDRAIL.texture = Identifier.withDefaultNamespace("block/crimson_stem");
     SIMPLE_WARPED_HANDRAIL.texture = Identifier.withDefaultNamespace("block/warped_stem");
     SIMPLE_BAMBOO_HANDRAIL.texture = Identifier.withDefaultNamespace("block/bamboo_block");
@@ -203,6 +206,8 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(MiningLevel.Tool.AXE)
   public static final GlassHandrailBlock GLASS_MANGROVE_HANDRAIL = registerGlassHandrail("glass_mangrove_handrail", Blocks.MANGROVE_WOOD, Block.Properties.ofFullCopy(Blocks.MANGROVE_WOOD).strength(1.0f), "block/mangrove_log", "block/mangrove_planks");
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final GlassHandrailBlock GLASS_POPLAR_HANDRAIL = registerGlassHandrail("glass_poplar_handrail", Blocks.MANGROVE_WOOD, Block.Properties.ofFullCopy(Blocks.POPLAR_WOOD).strength(1.0f), "block/poplar_log", "block/poplar_planks");
   @ApiStatus.AvailableSince("1.2.4")
   @MiningLevel(MiningLevel.Tool.AXE)
   public static final GlassHandrailBlock GLASS_CRIMSON_HANDRAIL = registerGlassHandrail("glass_crimson_handrail", Blocks.CRIMSON_HYPHAE, Block.Properties.ofFullCopy(Blocks.CRIMSON_HYPHAE).strength(1.0f), "block/crimson_stem", "block/crimson_planks");
@@ -238,6 +243,8 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("0.2.4")
   @MiningLevel(MiningLevel.Tool.AXE)
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_MANGROVE_HANDRAIL = registerColoredGlassHandrail("colored_decorated_mangrove_handrail", Blocks.MANGROVE_WOOD, Block.Properties.ofFullCopy(Blocks.MANGROVE_WOOD).strength(1.0f), "block/mangrove_log", "mishanguc:block/pale_planks");
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_POPLAR_HANDRAIL = registerColoredGlassHandrail("colored_decorated_poplar_handrail", Blocks.POPLAR_WOOD, Block.Properties.ofFullCopy(Blocks.POPLAR_WOOD).strength(1.0f), "block/poplar_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.2.4")
   @MiningLevel(MiningLevel.Tool.AXE)
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_CRIMSON_HANDRAIL = registerColoredGlassHandrail("colored_decorated_crimson_handrail", Blocks.CRIMSON_HYPHAE, Block.Properties.ofFullCopy(Blocks.CRIMSON_HYPHAE).strength(1.0f), "block/crimson_stem", "mishanguc:block/pale_planks");
@@ -273,6 +280,8 @@ public final class HandrailBlocks extends MishangucBlocks {
   @ApiStatus.AvailableSince("1.4.0")
   @MiningLevel(MiningLevel.Tool.AXE)
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_MANGROVE_HANDRAIL = registerColoredGlassHandrail("colored_decorated_stripped_mangrove_handrail", Blocks.STRIPPED_MANGROVE_WOOD, Block.Properties.ofFullCopy(Blocks.STRIPPED_MANGROVE_WOOD).mapColor(MapColor.COLOR_RED).strength(1.0f), "block/stripped_mangrove_log", "mishanguc:block/pale_planks");
+  @MiningLevel(MiningLevel.Tool.AXE)
+  public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_POPLAR_HANDRAIL = registerColoredGlassHandrail("colored_decorated_stripped_poplar_handrail", Blocks.STRIPPED_POPLAR_WOOD, Block.Properties.ofFullCopy(Blocks.STRIPPED_POPLAR_WOOD).mapColor(MapColor.COLOR_RED).strength(1.0f), "block/stripped_poplar_log", "mishanguc:block/pale_planks");
   @ApiStatus.AvailableSince("1.4.0")
   @MiningLevel(MiningLevel.Tool.AXE)
   public static final ColoredGlassHandrailBlock COLORED_DECORATED_STRIPPED_CRIMSON_HANDRAIL = registerColoredGlassHandrail("colored_decorated_stripped_crimson_handrail", Blocks.STRIPPED_CRIMSON_HYPHAE, Block.Properties.ofFullCopy(Blocks.STRIPPED_CRIMSON_HYPHAE).strength(1.0f), "block/stripped_crimson_stem", "mishanguc:block/pale_planks");

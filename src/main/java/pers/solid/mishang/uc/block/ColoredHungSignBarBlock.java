@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.network.chat.Component;
@@ -21,7 +19,6 @@ import pers.solid.mishang.uc.blockentity.SimpleColoredBlockEntity;
 import java.util.List;
 
 public class ColoredHungSignBarBlock extends HungSignBarBlock implements EntityBlock, ColoredBlock {
-  public static final MapCodec<ColoredHungSignBarBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec(), propertiesCodec()).apply(instance, ColoredHungSignBarBlock::new));
 
   public ColoredHungSignBarBlock(Block baseBlock, Properties settings) {
     super(baseBlock, settings);
@@ -53,8 +50,4 @@ public class ColoredHungSignBarBlock extends HungSignBarBlock implements EntityB
     return blockLootTableGenerator.createSingleItemTable(this).apply(COPY_COLOR_LOOT_FUNCTION);
   }
 
-  @Override
-  protected MapCodec<? extends ColoredHungSignBarBlock> codec() {
-    return CODEC;
-  }
 }

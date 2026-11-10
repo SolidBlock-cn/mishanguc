@@ -131,8 +131,4 @@ public class FullWallSignBlock extends WallSignBlock {
     }
   }
 
-  @Override
-  protected MapCodec<? extends FullWallSignBlock> codec() {
-    return CODEC;
-  }
 }

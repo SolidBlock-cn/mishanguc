@@ -1,6 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,6 +34,7 @@ import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.entity.SignTextSlot;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -98,8 +98,6 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
   private static final VoxelShape SHAPE_WIDENED_X = box(6.5, 5, 0, 9.5, 16, 16);
   private static final VoxelShape SHAPE_WIDENED_Z = box(0, 5, 6.5, 16, 16, 9.5);
   protected static final RecordCodecBuilder<HungSignBlock, Optional<Block>> BASE_BLOCK_CODEC = BuiltInRegistries.BLOCK.byNameCodec().optionalFieldOf("base_block").forGetter(b -> Optional.ofNullable(b.baseBlock));
-
-  public static final MapCodec<HungSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(baseBlockCodec(), propertiesCodec()).apply(instance, HungSignBlock::new));
 
   @SuppressWarnings("unchecked")
   protected static <B extends HungSignBlock> RecordCodecBuilder<B, Optional<Block>> baseBlockCodec() {
@@ -306,10 +304,10 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
   /**
    * 点击告示牌方块时，允许玩家对告示牌进行编辑。冒险模式的玩家无权进行编辑。 <br>
    * 本方法在编写时，适当参照了 {@link net.minecraft.world.item.SignItem#updateCustomBlockEntityTag(BlockPos, Level, Player,
-   * ItemStack, BlockState)}。<br>
+   * ItemStack, BlockState)}。<br> todo 检查此引用
    * 告示牌界面的打开逻辑又可以参考 {@link
-   * net.minecraft.client.player.LocalPlayer#openTextEdit(SignBlockEntity, boolean)} 和 {@link
-   * net.minecraft.server.level.ServerPlayer#openTextEdit(SignBlockEntity, boolean)}。
+   * net.minecraft.client.player.LocalPlayer#openTextEdit(SignBlockEntity, SignTextSlot)} 和 {@link
+   * net.minecraft.server.level.ServerPlayer#openTextEdit(SignBlockEntity, SignTextSlot)}。
    */
   @Override
   protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
@@ -368,7 +366,7 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
         if (!entity.waxed.contains(side)) {
           entity.waxed = addToSet(entity.waxed, side);
           player.sendOverlayMessage(BlockEntityWithText.MESSAGE_WAX_ON);
-          world.levelEvent(null, LevelEvent.PARTICLES_AND_SOUND_WAX_ON, entity.getBlockPos(), 0);
+          world.levelEvent(null, LevelEvent.PARTICLES_WAX_ON, entity.getBlockPos(), 0);
           entity.markDirtyAndUpdate();
           if (!player.isCreative()) stack.shrink(1);
           return InteractionResult.SUCCESS;
@@ -511,11 +509,6 @@ public class HungSignBlock extends Block implements SimpleWaterloggedBlock, Enti
     } else {
       return super.skipRendering(state, stateFrom, direction);
     }
-  }
-
-  @Override
-  protected MapCodec<? extends HungSignBlock> codec() {
-    return CODEC;
   }
 
   /**

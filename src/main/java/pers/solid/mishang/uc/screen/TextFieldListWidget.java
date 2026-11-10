@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Runnables;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.JsonOps;
@@ -39,7 +40,6 @@ import net.minecraft.util.parsing.packrat.commands.Grammar;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
-import org.lwjgl.glfw.GLFW;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.mixin.ContainerWidgetAccessor;
 import pers.solid.mishang.uc.mixin.EntryListWidgetAccessor;
@@ -590,7 +590,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
     @Override
     public boolean keyPressed(KeyEvent input) {
       switch (input.input()) {
-        case GLFW.GLFW_KEY_ENTER -> {
+        case InputConstants.KEY_RETURN -> { // todo this is enter?
           final List<Entry> children = TextFieldListWidget.this.children();
           final int index = children.indexOf(this);
           if (index + 1 < children.size()) {
@@ -600,7 +600,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
             TextFieldListWidget.this.setFocusedAndSelected(entry, false, false);
           }
         }
-        case GLFW.GLFW_KEY_BACKSPACE -> {
+        case InputConstants.KEY_BACKSPACE -> {
           if (textFieldWidget.getValue().isEmpty()) {
             final int index = TextFieldListWidget.this.children().indexOf(this);
             if (index >= 0) {

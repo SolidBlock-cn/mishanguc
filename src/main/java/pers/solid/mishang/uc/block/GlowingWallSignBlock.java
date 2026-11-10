@@ -1,7 +1,5 @@
 package pers.solid.mishang.uc.block;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -27,7 +25,6 @@ import pers.solid.mishang.uc.data.MishangucTextureKeys;
 import pers.solid.mishang.uc.item.ColoredTintSource;
 
 public class GlowingWallSignBlock extends WallSignBlock {
-  public static final MapCodec<GlowingWallSignBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(createBaseBlockCodec(), propertiesCodec()).apply(instance, GlowingWallSignBlock::new));
   @ApiStatus.AvailableSince("0.1.7")
   protected static final Identifier DEFAULT_GLOW_TEXTURE = Mishanguc.id("block/white_light");
   /**
@@ -77,8 +74,4 @@ public class GlowingWallSignBlock extends WallSignBlock {
     }
   }
 
-  @Override
-  protected MapCodec<? extends GlowingWallSignBlock> codec() {
-    return CODEC;
-  }
 }
