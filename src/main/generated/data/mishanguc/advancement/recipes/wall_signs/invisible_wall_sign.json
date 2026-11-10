@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:invisible_wall_sign"
+        "recipes": "mishanguc:invisible_wall_sign"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

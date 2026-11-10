@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:crimson_hyphae_wall_sign"
+        "recipes": "mishanguc:crimson_hyphae_wall_sign"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

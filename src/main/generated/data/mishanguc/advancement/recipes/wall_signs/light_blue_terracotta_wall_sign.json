@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:light_blue_terracotta_wall_sign"
+        "recipes": "mishanguc:light_blue_terracotta_wall_sign"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

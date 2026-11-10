@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:green_wall_light_rhombus_decoration"
+        "recipes": "mishanguc:green_wall_light_rhombus_decoration"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

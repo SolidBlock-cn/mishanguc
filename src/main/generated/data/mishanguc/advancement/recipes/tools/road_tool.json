@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:road_tool"
+        "recipes": "mishanguc:road_tool"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

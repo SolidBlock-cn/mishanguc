@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:simple_brown_concrete_handrail"
+        "recipes": "mishanguc:simple_brown_concrete_handrail"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

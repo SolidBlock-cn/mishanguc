@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:cyan_light"
+        "recipes": "mishanguc:cyan_light"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

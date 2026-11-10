@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:acacia_standing_sign"
+        "recipes": "mishanguc:acacia_standing_sign"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

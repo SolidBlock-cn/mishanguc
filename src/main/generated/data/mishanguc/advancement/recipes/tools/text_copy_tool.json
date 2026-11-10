@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:text_copy_tool"
+        "recipes": "mishanguc:text_copy_tool"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "minecraft:poplar_planks",
+  "result": {
+    "count": 5,
+    "id": "mishanguc:simple_poplar_plank_handrail"
+  }
+}

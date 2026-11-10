@@ -43,7 +43,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:glass_bamboo_handrail"
+        "recipes": "mishanguc:glass_bamboo_handrail"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

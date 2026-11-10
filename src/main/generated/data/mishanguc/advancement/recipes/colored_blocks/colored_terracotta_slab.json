@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:colored_terracotta_slab"
+        "recipes": "mishanguc:colored_terracotta_slab"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

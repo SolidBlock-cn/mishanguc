@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:simple_stone_handrail"
+        "recipes": "mishanguc:simple_stone_handrail"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

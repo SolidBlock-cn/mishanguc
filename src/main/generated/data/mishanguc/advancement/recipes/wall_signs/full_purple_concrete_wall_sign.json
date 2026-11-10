@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:full_purple_concrete_wall_sign"
+        "recipes": "mishanguc:full_purple_concrete_wall_sign"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

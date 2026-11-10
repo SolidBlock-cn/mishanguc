@@ -1,0 +1,7 @@
+{
+  "parent": "mishanguc:block/standing_sign_2",
+  "textures": {
+    "bar": "minecraft:block/poplar_log",
+    "texture": "minecraft:block/poplar_planks"
+  }
+}

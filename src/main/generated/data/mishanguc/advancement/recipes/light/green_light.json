@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:green_light"
+        "recipes": "mishanguc:green_light"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

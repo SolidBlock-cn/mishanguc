@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "#": "minecraft:stripped_poplar_wood",
+    "-": "mishanguc:invisible_wall_sign"
+  },
+  "pattern": [
+    "---",
+    "###",
+    "---"
+  ],
+  "result": {
+    "count": 6,
+    "id": "mishanguc:stripped_poplar_wood_wall_sign"
+  }
+}

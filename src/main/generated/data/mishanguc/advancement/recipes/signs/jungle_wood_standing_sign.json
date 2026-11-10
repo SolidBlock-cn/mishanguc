@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:jungle_wood_standing_sign"
+        "recipes": "mishanguc:jungle_wood_standing_sign"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

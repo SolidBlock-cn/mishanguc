@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:cyan_double_strip_wall_light_tube"
+        "recipes": "mishanguc:cyan_double_strip_wall_light_tube"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

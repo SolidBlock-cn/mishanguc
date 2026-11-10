@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:road_block_from_paling"
+        "recipes": "mishanguc:road_block_from_paling"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

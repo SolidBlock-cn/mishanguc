@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:simple_mangrove_handrail"
+        "recipes": "mishanguc:simple_mangrove_handrail"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

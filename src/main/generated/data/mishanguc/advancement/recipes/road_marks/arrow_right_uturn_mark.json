@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:arrow_right_uturn_mark"
+        "recipes": "mishanguc:arrow_right_uturn_mark"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

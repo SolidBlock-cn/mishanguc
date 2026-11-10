@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:nether_brick_hung_sign_bar"
+        "recipes": "mishanguc:nether_brick_hung_sign_bar"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

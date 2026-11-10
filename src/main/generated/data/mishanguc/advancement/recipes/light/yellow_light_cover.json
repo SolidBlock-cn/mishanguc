@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:yellow_light_cover"
+        "recipes": "mishanguc:yellow_light_cover"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

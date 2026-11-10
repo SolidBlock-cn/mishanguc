@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:pink_thick_strip_wall_light"
+        "recipes": "mishanguc:pink_thick_strip_wall_light"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

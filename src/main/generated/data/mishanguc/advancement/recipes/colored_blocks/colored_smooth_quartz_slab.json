@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:colored_smooth_quartz_slab"
+        "recipes": "mishanguc:colored_smooth_quartz_slab"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

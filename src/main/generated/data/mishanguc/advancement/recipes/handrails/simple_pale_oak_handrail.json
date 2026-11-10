@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:simple_pale_oak_handrail"
+        "recipes": "mishanguc:simple_pale_oak_handrail"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

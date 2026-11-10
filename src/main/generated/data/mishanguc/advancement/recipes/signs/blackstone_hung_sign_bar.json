@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:blackstone_hung_sign_bar"
+        "recipes": "mishanguc:blackstone_hung_sign_bar"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:yellow_light_slab"
+        "recipes": "mishanguc:yellow_light_slab"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

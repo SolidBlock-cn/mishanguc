@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:crimson_hyphae_hung_sign"
+        "recipes": "mishanguc:crimson_hyphae_hung_sign"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

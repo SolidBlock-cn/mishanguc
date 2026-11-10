@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:simple_blue_stained_glass_handrail"
+        "recipes": "mishanguc:simple_blue_stained_glass_handrail"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

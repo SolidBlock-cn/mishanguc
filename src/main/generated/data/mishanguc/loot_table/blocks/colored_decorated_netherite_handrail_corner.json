@@ -1,32 +1,30 @@
 {
   "type": "minecraft:block",
-  "functions": [
-    {
-      "function": "minecraft:copy_components",
-      "include": [
-        "mishanguc:color"
-      ],
-      "source": "block_entity"
-    }
-  ],
+  "modifier": {
+    "type": "minecraft:copy_components",
+    "include": [
+      "mishanguc:color"
+    ],
+    "source": "block_entity"
+  },
   "pools": [
     {
       "entries": [
         {
           "type": "minecraft:item",
-          "functions": [
+          "modifier": [
             {
-              "count": 2.0,
-              "function": "minecraft:set_count"
+              "type": "minecraft:set_count",
+              "count": 2
             },
             {
-              "function": "minecraft:explosion_decay"
+              "type": "minecraft:explosion_decay"
             }
           ],
           "name": "mishanguc:colored_decorated_netherite_handrail"
         }
       ],
-      "rolls": 1.0
+      "rolls": 1
     }
   ]
 }

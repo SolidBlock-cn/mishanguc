@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:simple_warped_handrail"
+        "recipes": "mishanguc:simple_warped_handrail"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

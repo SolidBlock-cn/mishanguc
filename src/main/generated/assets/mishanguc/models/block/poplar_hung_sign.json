@@ -1,0 +1,8 @@
+{
+  "parent": "mishanguc:block/hung_sign",
+  "textures": {
+    "bar": "minecraft:block/poplar_log",
+    "texture": "minecraft:block/poplar_planks",
+    "texture_top": "minecraft:block/poplar_log"
+  }
+}

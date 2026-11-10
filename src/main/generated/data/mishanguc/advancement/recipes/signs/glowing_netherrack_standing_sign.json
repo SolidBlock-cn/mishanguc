@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:glowing_netherrack_standing_sign"
+        "recipes": "mishanguc:glowing_netherrack_standing_sign"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

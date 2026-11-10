@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:deceleration_crossroads_mark"
+        "recipes": "mishanguc:deceleration_crossroads_mark"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

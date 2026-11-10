@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:rotating_tool"
+        "recipes": "mishanguc:rotating_tool"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:white_wall_light_point_decoration"
+        "recipes": "mishanguc:white_wall_light_point_decoration"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:cyan_thick_column_light"
+        "recipes": "mishanguc:cyan_thick_column_light"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

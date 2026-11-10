@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:road_slab_with_w_yd_ra_line"
+        "recipes": "mishanguc:road_slab_with_w_yd_ra_line"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

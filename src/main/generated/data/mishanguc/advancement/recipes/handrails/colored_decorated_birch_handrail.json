@@ -43,7 +43,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:colored_decorated_birch_handrail"
+        "recipes": "mishanguc:colored_decorated_birch_handrail"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

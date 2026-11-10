@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:yellow_thick_column_light"
+        "recipes": "mishanguc:yellow_thick_column_light"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

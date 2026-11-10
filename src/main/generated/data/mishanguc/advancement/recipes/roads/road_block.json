@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:road_block"
+        "recipes": "mishanguc:road_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

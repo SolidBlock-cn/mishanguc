@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:green_light_slab"
+        "recipes": "mishanguc:green_light_slab"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

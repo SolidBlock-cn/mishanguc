@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:obsidian_hung_sign_bar"
+        "recipes": "mishanguc:obsidian_hung_sign_bar"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:colored_glowing_stone_wall_sign"
+        "recipes": "mishanguc:colored_glowing_stone_wall_sign"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

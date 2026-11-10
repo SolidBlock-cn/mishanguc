@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:magma_decorated_obsidian_handrail"
+        "recipes": "mishanguc:magma_decorated_obsidian_handrail"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:simple_white_terracotta_handrail"
+        "recipes": "mishanguc:simple_white_terracotta_handrail"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

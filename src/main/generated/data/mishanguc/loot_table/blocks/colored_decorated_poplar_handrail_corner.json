@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:block",
+  "modifier": {
+    "type": "minecraft:copy_components",
+    "include": [
+      "mishanguc:color"
+    ],
+    "source": "block_entity"
+  },
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "count": 2
+            },
+            {
+              "type": "minecraft:explosion_decay"
+            }
+          ],
+          "name": "mishanguc:colored_decorated_poplar_handrail"
+        }
+      ],
+      "rolls": 1
+    }
+  ]
+}

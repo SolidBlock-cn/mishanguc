@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "#": "minecraft:poplar_planks",
+    "-": "mishanguc:invisible_wall_sign",
+    "|": "minecraft:stick"
+  },
+  "pattern": [
+    "---",
+    "###",
+    " | "
+  ],
+  "result": {
+    "count": 4,
+    "id": "mishanguc:poplar_standing_sign"
+  }
+}

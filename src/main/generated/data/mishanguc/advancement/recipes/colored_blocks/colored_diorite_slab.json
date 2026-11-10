@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:colored_diorite_slab"
+        "recipes": "mishanguc:colored_diorite_slab"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

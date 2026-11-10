@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "glass_wooden_handrail",
+  "key": {
+    "M": "minecraft:mangrove_planks",
+    "X": "minecraft:mangrove_wood",
+    "n": "minecraft:stick",
+    "o": "minecraft:glass_pane"
+  },
+  "pattern": [
+    "XXX",
+    "oMo",
+    "nnn"
+  ],
+  "result": {
+    "count": 6,
+    "id": "mishanguc:glass_poplar_handrail"
+  }
+}

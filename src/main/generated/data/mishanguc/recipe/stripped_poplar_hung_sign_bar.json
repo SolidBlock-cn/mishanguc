@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "minecraft:stripped_poplar_wood",
+  "result": {
+    "count": 20,
+    "id": "mishanguc:stripped_poplar_hung_sign_bar"
+  }
+}

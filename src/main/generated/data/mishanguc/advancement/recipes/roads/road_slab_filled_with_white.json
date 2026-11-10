@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:road_slab_filled_with_white"
+        "recipes": "mishanguc:road_slab_filled_with_white"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:road_slab_with_w_y_ra_line_from_stonecutting"
+        "recipes": "mishanguc:road_slab_with_w_y_ra_line_from_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

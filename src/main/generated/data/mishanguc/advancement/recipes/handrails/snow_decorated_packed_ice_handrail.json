@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:snow_decorated_packed_ice_handrail"
+        "recipes": "mishanguc:snow_decorated_packed_ice_handrail"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

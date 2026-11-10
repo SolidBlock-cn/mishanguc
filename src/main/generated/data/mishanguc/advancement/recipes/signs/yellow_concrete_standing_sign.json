@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:yellow_concrete_standing_sign"
+        "recipes": "mishanguc:yellow_concrete_standing_sign"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

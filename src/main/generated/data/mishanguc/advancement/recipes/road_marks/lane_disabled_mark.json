@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:lane_disabled_mark"
+        "recipes": "mishanguc:lane_disabled_mark"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

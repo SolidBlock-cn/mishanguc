@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:diamond_wall_sign"
+        "recipes": "mishanguc:diamond_wall_sign"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

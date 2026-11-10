@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:colored_tuff_stairs"
+        "recipes": "mishanguc:colored_tuff_stairs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

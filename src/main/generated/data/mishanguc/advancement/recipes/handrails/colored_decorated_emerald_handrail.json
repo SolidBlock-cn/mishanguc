@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:colored_decorated_emerald_handrail"
+        "recipes": "mishanguc:colored_decorated_emerald_handrail"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

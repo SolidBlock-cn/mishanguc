@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:birch_wall_sign"
+        "recipes": "mishanguc:birch_wall_sign"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

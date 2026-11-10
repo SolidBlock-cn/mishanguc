@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:colored_andesite_stairs"
+        "recipes": "mishanguc:colored_andesite_stairs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

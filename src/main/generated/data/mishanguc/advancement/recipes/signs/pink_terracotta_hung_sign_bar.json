@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:pink_terracotta_hung_sign_bar"
+        "recipes": "mishanguc:pink_terracotta_hung_sign_bar"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

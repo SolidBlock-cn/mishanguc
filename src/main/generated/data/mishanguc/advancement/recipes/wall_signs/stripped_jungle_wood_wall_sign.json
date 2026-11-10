@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:stripped_jungle_wood_wall_sign"
+        "recipes": "mishanguc:stripped_jungle_wood_wall_sign"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:green_thin_strip_wall_light_tube"
+        "recipes": "mishanguc:green_thin_strip_wall_light_tube"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

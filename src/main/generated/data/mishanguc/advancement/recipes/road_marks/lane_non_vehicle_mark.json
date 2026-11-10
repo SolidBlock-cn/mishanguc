@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:lane_non_vehicle_mark"
+        "recipes": "mishanguc:lane_non_vehicle_mark"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

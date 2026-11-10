@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:pink_thin_strip_corner_light_tube"
+        "recipes": "mishanguc:pink_thin_strip_corner_light_tube"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

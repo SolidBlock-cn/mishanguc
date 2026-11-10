@@ -1,14 +1,12 @@
 {
   "type": "minecraft:block",
-  "functions": [
-    {
-      "function": "minecraft:copy_components",
-      "include": [
-        "mishanguc:color"
-      ],
-      "source": "block_entity"
-    }
-  ],
+  "modifier": {
+    "type": "minecraft:copy_components",
+    "include": [
+      "mishanguc:color"
+    ],
+    "source": "block_entity"
+  },
   "pools": [
     {
       "entries": [
@@ -17,38 +15,20 @@
           "children": [
             {
               "type": "minecraft:item",
-              "conditions": [
-                {
-                  "condition": "minecraft:match_tool",
-                  "predicate": {
-                    "predicates": {
-                      "minecraft:enchantments": [
-                        {
-                          "enchantments": "minecraft:silk_touch",
-                          "levels": {
-                            "min": 1
-                          }
-                        }
-                      ]
-                    }
-                  }
-                }
-              ],
+              "condition": "minecraft:tool/can_silk_touch",
               "name": "mishanguc:colored_stone"
             },
             {
               "type": "minecraft:item",
-              "conditions": [
-                {
-                  "condition": "minecraft:survives_explosion"
-                }
-              ],
+              "condition": {
+                "type": "minecraft:survives_explosion"
+              },
               "name": "mishanguc:colored_cobblestone"
             }
           ]
         }
       ],
-      "rolls": 1.0
+      "rolls": 1
     }
   ]
 }

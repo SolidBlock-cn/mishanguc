@@ -1,0 +1,23 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "mishanguc:block/colored_decorated_stripped_poplar_handrail",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=north": {
+      "model": "mishanguc:block/colored_decorated_stripped_poplar_handrail",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=south": {
+      "model": "mishanguc:block/colored_decorated_stripped_poplar_handrail",
+      "uvlock": true
+    },
+    "facing=west": {
+      "model": "mishanguc:block/colored_decorated_stripped_poplar_handrail",
+      "uvlock": true,
+      "y": 90
+    }
+  }
+}

@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:colored_decorated_stone_handrail"
+        "recipes": "mishanguc:colored_decorated_stone_handrail"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

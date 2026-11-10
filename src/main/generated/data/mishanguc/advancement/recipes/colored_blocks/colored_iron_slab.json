@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:colored_iron_slab"
+        "recipes": "mishanguc:colored_iron_slab"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

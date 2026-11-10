@@ -43,7 +43,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:black_decorated_iron_handrail"
+        "recipes": "mishanguc:black_decorated_iron_handrail"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

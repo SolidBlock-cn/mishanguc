@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:acacia_hung_sign_bar"
+        "recipes": "mishanguc:acacia_hung_sign_bar"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

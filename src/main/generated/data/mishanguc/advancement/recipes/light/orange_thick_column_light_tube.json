@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:orange_thick_column_light_tube"
+        "recipes": "mishanguc:orange_thick_column_light_tube"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

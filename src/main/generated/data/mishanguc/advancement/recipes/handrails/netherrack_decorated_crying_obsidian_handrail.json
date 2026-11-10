@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:netherrack_decorated_crying_obsidian_handrail"
+        "recipes": "mishanguc:netherrack_decorated_crying_obsidian_handrail"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:road_with_white_cross_line_from_painting"
+        "recipes": "mishanguc:road_with_white_cross_line_from_painting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:glowing_colored_decorated_diamond_handrail"
+        "recipes": "mishanguc:glowing_colored_decorated_diamond_handrail"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

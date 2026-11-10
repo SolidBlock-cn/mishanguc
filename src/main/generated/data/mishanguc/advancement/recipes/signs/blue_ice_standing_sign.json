@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mishanguc:blue_ice_standing_sign"
+        "recipes": "mishanguc:blue_ice_standing_sign"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
