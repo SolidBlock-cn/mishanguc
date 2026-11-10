@@ -115,15 +115,15 @@ public class MishangucClient implements ClientModInitializer {
           if (blockEntity instanceof final HungSignBlockEntity hungSignBlockEntity) {
             final Direction direction = payload.direction().orElseThrow();
             client.execute(() ->
-                client.setScreenAndShow(new HungSignBlockEditScreen(client.level.registryAccess(), blockPos, direction, hungSignBlockEntity)));
+                client.gui.setScreen(new HungSignBlockEditScreen(client.level.registryAccess(), blockPos, direction, hungSignBlockEntity)));
           } else if (blockEntity instanceof final WallSignBlockEntity wallSignBlockEntity) {
             client.execute(() ->
-                client.setScreenAndShow(new WallSignBlockEditScreen(client.level.registryAccess(), wallSignBlockEntity, blockPos)));
+                client.gui.setScreen(new WallSignBlockEditScreen(client.level.registryAccess(), wallSignBlockEntity, blockPos)));
           } else if (blockEntity instanceof final StandingSignBlockEntity standingSignBlockEntity) {
             final BlockHitResult blockHitResult = payload.blockHitResult().orElseThrow();
             final Boolean isFront = StandingSignBlock.getHitSide(blockEntity.getBlockState(), blockHitResult);
             if (isFront != null) {
-              client.execute(() -> client.setScreenAndShow(new StandingSignBlockEditScreen(client.level.registryAccess(), standingSignBlockEntity, blockPos, isFront)));
+              client.execute(() -> client.gui.setScreen(new StandingSignBlockEditScreen(client.level.registryAccess(), standingSignBlockEntity, blockPos, isFront)));
             }
           }
         });
@@ -144,6 +144,9 @@ public class MishangucClient implements ClientModInitializer {
 
       @Override
       public int colorInWorld(BlockState state, BlockAndTintGetter level, BlockPos pos) {
+        if (level instanceof MovingBlockRenderStateExtension ext && ext.hasCustomColor$mishang()) {
+          return ext.customColor$mishang();
+        }
         BlockEntity entity = level.getBlockEntity(pos);
         // 考虑到玩家掉落产生粒子时，坐标会向上偏离一格。
         if (entity == null) entity = level.getBlockEntity(pos.below());

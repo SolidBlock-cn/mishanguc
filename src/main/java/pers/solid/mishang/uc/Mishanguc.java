@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.rendering.v1.FeatureRendererRegistry;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
@@ -52,6 +53,7 @@ import pers.solid.mishang.uc.blocks.*;
 import pers.solid.mishang.uc.item.*;
 import pers.solid.mishang.uc.mixin.PoiTypesAccessor;
 import pers.solid.mishang.uc.networking.*;
+import pers.solid.mishang.uc.render.SpecialDrawableFeatureRenderer;
 import pers.solid.mishang.uc.text.SpecialDrawableTypes;
 import pers.solid.mishang.uc.util.BlockMatchingRule;
 import pers.solid.mishang.uc.util.ColorfulBlockRegistry;
@@ -625,6 +627,9 @@ public class Mishanguc implements ModInitializer {
     registerColorfulBlocks();
 
     PoiTypesAccessor.callRegister(BuiltInRegistries.POINT_OF_INTEREST_TYPE, ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, id("nether_portal")), ImmutableSet.copyOf(ColoredBlocks.COLORED_NETHER_PORTAL.getStateDefinition().getPossibleStates()), 0, 1);
+
+    FeatureRendererRegistry.register(SpecialDrawableFeatureRenderer.SpecialDrawableSubmit.TYPE, SpecialDrawableFeatureRenderer::new);
+    MishangucEntityData.init();
   }
 
   private static void registerColorfulBlocks() {

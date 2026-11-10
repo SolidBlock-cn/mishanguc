@@ -40,7 +40,7 @@ public class BuildingToolState implements MishangRenderState {
           RenderTypes.lines(),
           BlockToolItem.OUTLINE_COLOR_CYAN,
           Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
-          true);// todo 检查 afterTerrain 参数（下同）
+          true);
       poseStack.popPose();
     }
     for (LongObjectPair<VoxelShape> pair : state.blueShapes) {

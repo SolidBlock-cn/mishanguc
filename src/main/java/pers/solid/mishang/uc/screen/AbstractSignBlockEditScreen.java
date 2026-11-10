@@ -772,7 +772,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   public void cancelEditing() {
     changed = false;
     if (this.minecraft != null) {
-      this.minecraft.setScreenAndShow(null);
+      this.minecraft.gui.setScreen(null);
     }
   }
 
@@ -1255,7 +1255,7 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
   private void finishEditing() {
     this.entity.setChanged();
     if (this.minecraft != null) {
-      this.minecraft.setScreenAndShow(null);
+      this.minecraft.gui.setScreen(null);
     }
   }
 

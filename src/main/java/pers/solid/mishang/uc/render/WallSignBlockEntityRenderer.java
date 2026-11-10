@@ -84,7 +84,7 @@ public class WallSignBlockEntityRenderer<T extends WallSignBlockEntity> implemen
             RenderTypes.lines(),
             glowing ? OUTLINE_COLOR_GLOWING : OUTLINE_COLOR_ORDINAL,
             Minecraft.getInstance().getWindow().getAppropriateLineWidth(),
-            true // todo 检查 afterTerrain 参数
+            true
         );
       }
     }

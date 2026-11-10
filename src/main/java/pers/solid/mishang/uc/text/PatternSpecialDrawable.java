@@ -12,7 +12,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.mixin.TextRendererAccessor;
 
@@ -28,12 +28,18 @@ public record PatternSpecialDrawable(TextContext textContext, RectanglePattern r
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void drawInternal(Matrix4f matricesEntry, TextFeatureRenderer textFeatureRenderer, int light, float x, float y) {
+  public void drawInternal(Matrix4fc pose, TextFeatureRenderer textFeatureRenderer, Font.GlyphVisitor glyphVisitor, int light, float x, float y) {
     int color = this.textContext.color;
     final Font textRenderer = Minecraft.getInstance().font;
     final float sizeMultiplier = 1;
     final Font.DisplayMode textLayerType = this.textContext.outlineColorType != OutlineColorType.NONE ? Font.DisplayMode.POLYGON_OFFSET : this.textContext.seeThrough ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL;
-//    final Font.GlyphVisitor glyphDrawer = Font.GlyphVisitor.forMultiBufferSource(textFeatureRenderer, matricesEntry, textLayerType, light);
+    try {
+      GlyphRendererReflections.poseField.set(glyphVisitor, pose);
+      GlyphRendererReflections.lightCoordsField.set(glyphVisitor, light);
+      GlyphRendererReflections.displayModeField.set(glyphVisitor, textLayerType);
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(e);
+    }
 
     // 文本是否存在阴影。
     final boolean shadow = this.textContext.outlineColorType == OutlineColorType.NONE && this.textContext.shadow;
@@ -59,13 +65,12 @@ public record PatternSpecialDrawable(TextContext textContext, RectanglePattern r
       final int outlineAlpha = ((outlineColor & 0xFC000000) == 0) ? 255 : (outlineColor >> 24 & 0xFF);
       outlineColor = ARGB.color(outlineAlpha, outlineColor);
       for (float[] rectangle : outlineRectangles) {
-//        glyphDrawer.acceptEffect(rectangleGlyph.createEffect(rectangle[0], rectangle[1], rectangle[2], rectangle[3], 0, outlineColor, 0, 0));
+        glyphVisitor.acceptEffect(rectangleGlyph.createEffect(rectangle[0], rectangle[1], rectangle[2], rectangle[3], 0, outlineColor, 0, 0));
       }
     }
     for (float[] rectangle : mainRectangles) {
-//      glyphDrawer.acceptEffect(rectangleGlyph.createEffect(rectangle[0], rectangle[1], rectangle[2], rectangle[3], this.textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, color, shadow ? ARGB.scaleRGB(color, 0.25f) : 0, 1));
+      glyphVisitor.acceptEffect(rectangleGlyph.createEffect(rectangle[0], rectangle[1], rectangle[2], rectangle[3], this.textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, color, shadow ? ARGB.scaleRGB(color, 0.25f) : 0, 1));
     }
-    // todo 考虑如何重新实现
   }
 
   @Override

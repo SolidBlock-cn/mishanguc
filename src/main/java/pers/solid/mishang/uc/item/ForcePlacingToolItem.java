@@ -298,7 +298,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
     if (state.hitEntityPos != null && state.hitEntityBoundingBox != null) {
       poseStack.pushPose();
       poseStack.translate(state.hitEntityPos.x - cameraPos.x, state.hitEntityPos.y - cameraPos.y, state.hitEntityPos.z - cameraPos.z);
-      context.submitNodeCollector().submitShapeOutline(poseStack, Shapes.create(state.hitEntityBoundingBox.move(-state.hitEntityPos.x, -state.hitEntityPos.y, -state.hitEntityPos.z)), RenderTypes.lines(), OUTLINE_COLOR_RED, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain
+      context.submitNodeCollector().submitShapeOutline(poseStack, Shapes.create(state.hitEntityBoundingBox.move(-state.hitEntityPos.x, -state.hitEntityPos.y, -state.hitEntityPos.z)), RenderTypes.lines(), OUTLINE_COLOR_RED, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), false);
       poseStack.popPose();
     }
   }

@@ -11,7 +11,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import org.joml.Matrix4f;
+import net.minecraft.util.ARGB;
+import org.joml.Matrix4fc;
 import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.mixin.TextRendererAccessor;
 
@@ -26,20 +27,26 @@ public record RectSpecialDrawable(float width, float height, TextContext textCon
 
   @Environment(EnvType.CLIENT)
   @Override
-  public void drawInternal(Matrix4f matricesEntry, TextFeatureRenderer textFeatureRenderer, int light, float x, float y) {
+  public void drawInternal(Matrix4fc pose, TextFeatureRenderer textFeatureRenderer, Font.GlyphVisitor glyphVisitor, int light, float x, float y) {
     final int color = textContext.color;
     final boolean shadow = this.textContext.outlineColorType == OutlineColorType.NONE && this.textContext.shadow;
     final Font textRenderer = Minecraft.getInstance().font;
     final Font.DisplayMode textLayerType = this.textContext.outlineColorType != OutlineColorType.NONE ? Font.DisplayMode.POLYGON_OFFSET : this.textContext.seeThrough ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL;
-//    final Font.GlyphVisitor glyphDrawer = Font.GlyphVisitor.forMultiBufferSource(textFeatureRenderer, matricesEntry, textLayerType, light); todo 重新实现
     final EffectGlyph rectangleGlyph = ((TextRendererAccessor) textRenderer).getProvider().effect();
+    try {
+      GlyphRendererReflections.poseField.set(glyphVisitor, pose);
+      GlyphRendererReflections.lightCoordsField.set(glyphVisitor, light);
+      GlyphRendererReflections.displayModeField.set(glyphVisitor, textLayerType);
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(e);
+    }
     if (this.textContext.outlineColorType != OutlineColorType.NONE) {
       // 绘制轮廓
       int outlineColor = this.textContext.outlineColorType == OutlineColorType.AUTO ? MishangUtils.toSignOutlineColor(color) : this.textContext.outlineColor;
       final int outlineAlpha = ((outlineColor & 0xfc000000) == 0) ? 255 : (outlineColor >> 24 & 0xFF);
-//      glyphDrawer.acceptEffect(rectangleGlyph.createEffect(x - 1, y - 1, (width + x) + 1, y + height + 1, 0, ARGB.color(outlineAlpha, outlineColor), 0, 0));
+      glyphVisitor.acceptEffect(rectangleGlyph.createEffect(x - 1, y - 1, (width + x) + 1, y + height + 1, 0, ARGB.color(outlineAlpha, outlineColor), 0, 0));
     }
-//    glyphDrawer.acceptEffect(rectangleGlyph.createEffect(x, y, (width + x), height + y, this.textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, color, shadow ? ARGB.scaleRGB(color, 0.25f) : 0, 1));
+    glyphVisitor.acceptEffect(rectangleGlyph.createEffect(x, y, (width + x), height + y, this.textContext.outlineColorType != OutlineColorType.NONE ? 0.02f : 0, color, shadow ? ARGB.scaleRGB(color, 0.25f) : 0, 1));
   }
 
 

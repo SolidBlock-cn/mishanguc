@@ -11,8 +11,12 @@ import java.util.List;
  * @since Minecraft 1.21.10
  */
 @Environment(EnvType.CLIENT)
-public interface BatchingRenderCommandQueueExtension {
-  default List<SpecialDrawableCommand> getSpecialDrawableCommands$mishang() {
+public interface SubmitNodeCollectionExtension extends OrderedSubmitNodeCollectorExtension {
+  default void clearSpecialDrawableSubmits$mishang() {
+    throw new AssertionError();
+  }
+
+  default List<SpecialDrawableFeatureRenderer.SpecialDrawableSubmit> getSpecialDrawableSubmits$mishang() {
     throw new AssertionError();
   }
 }

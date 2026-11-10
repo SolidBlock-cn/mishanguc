@@ -15,8 +15,8 @@ import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
-import pers.solid.mishang.uc.render.RenderCommandQueueExtension;
+import org.joml.Matrix4fc;
+import pers.solid.mishang.uc.render.OrderedSubmitNodeCollectorExtension;
 
 import java.util.Collection;
 
@@ -38,7 +38,7 @@ public interface SpecialDrawable extends Cloneable {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void drawInternal(Matrix4f matricesEntry, TextFeatureRenderer textFeatureRenderer, int light, float x, float y) {
+    public void drawInternal(Matrix4fc pose, TextFeatureRenderer textFeatureRenderer, Font.GlyphVisitor glyphVisitor, int light, float x, float y) {
 
     }
 
@@ -65,11 +65,11 @@ public interface SpecialDrawable extends Cloneable {
    */
   @Environment(EnvType.CLIENT)
   default void drawExtra(Font textRenderer, PoseStack matrixStack, SubmitNodeCollector queue, int light, float x, float y) {
-    ((RenderCommandQueueExtension) queue).submitSpecialDrawable$mishang(matrixStack, this, light, x, y);
+    ((OrderedSubmitNodeCollectorExtension) queue).submitSpecialDrawable$mishang(matrixStack, this, light, x, y);
   }
 
   @Environment(EnvType.CLIENT)
-  void drawInternal(Matrix4f matricesEntry, TextFeatureRenderer textFeatureRenderer, int light, float x, float y);
+  void drawInternal(Matrix4fc pose, TextFeatureRenderer textFeatureRenderer, Font.GlyphVisitor glyphVisitor, int light, float x, float y);
 
   /**
    * 这一类 SpecialDrawable 对象的 id，通常是一个字符串，并且应该要被 {@link #fromNbt} 和 {@link #fromStringArgs} 识别。同一类对象返回的 id 应该相同，因此覆盖此方法时，通常是返回一个常量。

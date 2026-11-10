@@ -68,7 +68,7 @@ public abstract class BlockToolItemWithEntity extends BlockToolItem implements R
     final Vec3 cameraPos = context.levelState().cameraRenderState.pos;
     poseStack.pushPose();
     poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-    context.submitNodeCollector().submitShapeOutline(poseStack, state.greenEntityShape, RenderTypes.lines(), OUTLINE_COLOR_GREEN, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain 参数
+    context.submitNodeCollector().submitShapeOutline(poseStack, state.greenEntityShape, RenderTypes.lines(), OUTLINE_COLOR_GREEN, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true);
     poseStack.popPose();
   }
 }

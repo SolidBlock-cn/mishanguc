@@ -17,6 +17,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.permissions.Permissions;
@@ -51,8 +52,11 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import pers.solid.mishang.uc.MishangUtils;
 import pers.solid.mishang.uc.MishangucClient;
+import pers.solid.mishang.uc.MishangucEntityData;
 import pers.solid.mishang.uc.MishangucRules;
+import pers.solid.mishang.uc.block.ColoredBlock;
 import pers.solid.mishang.uc.components.CarryingToolData;
 import pers.solid.mishang.uc.components.MishangucComponents;
 import pers.solid.mishang.uc.render.RendersBeforeOutline;
@@ -63,6 +67,7 @@ import pers.solid.mishang.uc.util.WithMishangTooltip;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.UUID;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = RendersBeforeOutline.class)
@@ -264,6 +269,12 @@ public class CarryingToolItem extends BlockToolItem
       fallingBlockEntity.setDeltaMovement(Vec3.directionFromRotation(user.getXRot(), user.getYRot()).scale(2).add(user.getDeltaMovement()));
       fallingBlockEntity.dropItem = true;
       fallingBlockEntity.blockData = blockEntityTag.orElse(null);
+      if (state.getBlock() instanceof ColoredBlock && blockEntityTag.isPresent()) {
+        final Tag color = blockEntityTag.get().get("color");
+        if (color != null) {
+          fallingBlockEntity.getEntityData().set(MishangucEntityData.FALLING_BLOCK_COLOR, OptionalInt.of(MishangUtils.readColorFromNbtElement(color)));
+        }
+      }
       fallingBlockEntity.setHurtsEntities(state.getBlock().getExplosionResistance(), Integer.MAX_VALUE);
       final boolean spawnEntity = world.addFreshEntity(fallingBlockEntity);
       if (spawnEntity) {
@@ -459,7 +470,7 @@ public class CarryingToolItem extends BlockToolItem
       final Vec3 pos = state.cyanEntityPos;
       poseStack.pushPose();
       poseStack.translate(pos.x - cameraPos.x, pos.y - cameraPos.y, pos.z - cameraPos.z);
-      context.submitNodeCollector().submitShapeOutline(poseStack, Shapes.box(-width / 2, 0, -width / 2, width / 2, height, width / 2), RenderTypes.lines(), OUTLINE_COLOR_CYAN, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true); // todo 检查 afterTerrain 参数（下同）
+      context.submitNodeCollector().submitShapeOutline(poseStack, Shapes.box(-width / 2, 0, -width / 2, width / 2, height, width / 2), RenderTypes.lines(), OUTLINE_COLOR_CYAN, Minecraft.getInstance().getWindow().getAppropriateLineWidth(), true);
       poseStack.popPose();
     }
     if (state.redEntityBoundingBox != null) {
