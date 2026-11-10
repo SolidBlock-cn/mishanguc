@@ -5,6 +5,14 @@ Note: Not all versions in this update log have been published yet. Please refer 
 ### 1.6.6
 
 - Fixed the issue that waxed signs are still editable ([pull request 25](https://github.com/SolidBlock-cn/mishanguc/pull/25)).
+- Completed the following fix in 1.4.2: Fixed the incorrect English translation of `block.mishanguc.glass_dark_oak_handrail`.
+
+### 1.3.3.2
+
+The update for 1.19.2
+
+- Improved the rendering mechanism of signs, and fixed the potential issue of memory overflow when rendering textures ([Issue 23](https://github.com/SolidBlock-cn/mishanguc/issues/23)).
+- Completed the following fix in 1.4.2: Fixed the incorrect English translation of `block.mishanguc.glass_dark_oak_handrail`; fixed the issue that colored corner handrail only drops one item.
 
 ### 1.6.5
 
