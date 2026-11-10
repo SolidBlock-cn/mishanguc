@@ -2,6 +2,10 @@
 
 注意：更新记录中的版本并不一定都已发布。具体请以 CurseForge、Modrinth 中的下载页面或 GitHub 中的“releases”为准。
 
+### 1.6.6
+
+- 修复涂蜡的告示牌仍可编辑的问题（[拉取请求 25](https://github.com/SolidBlock-cn/mishanguc/pull/25)）。
+
 ### 1.6.5
 
 - 修复文本预设中的默认文本大小为 8 和 4 而非 6 和 3 的问题。
