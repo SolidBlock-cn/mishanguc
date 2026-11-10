@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.15-SNAPSHOT'
+    id 'fabric-loom' version '1.19-SNAPSHOT'
     id 'maven-publish'
 
     id "com.modrinth.minotaur" version "2.+"
@@ -13,7 +13,7 @@ import net.darkhax.curseforgegradle.TaskPublishCurseForge
 base {
     archivesName = project.archives_base_name
 }
-version = project.mod_version + '-' + project.minecraft_version
+version = project.mod_version + '+mc' + project.minecraft_version
 group = project.maven_group
 
 repositories {
@@ -83,7 +83,7 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.base.archivesName}" }
+        rename { "${it}_${project.base.archivesName.get()}" }
     }
 }
 
@@ -103,15 +103,6 @@ publishing {
         // Notice: This block does NOT have the same function as the block in the top level.
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
-    }
-}
-
-
-loom {
-    runs {
-        client {
-            programArg "-username=Solid"
-        }
     }
 }
 
@@ -156,14 +147,13 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     }
 
     mainFile.addRelations 'requiredDependency', 'fabric-api', 'better-runtime-resource-pack'
-    mainFile.withAdditionalFile(sourcesJar)
 }
 
 modrinth {
     println "Modrinth 令牌：${token.get() instanceof String ? token.get().replaceAll("^(.+?)(.{0,6})\$", (s, a, b) -> a.replaceAll(".", "*") + b) : token.get()}"
 
     projectId = "rItLmRo4" // 迷上城建模组的 Modrinth ID
-    versionNumber = project.mod_version + '-' + project.minecraft_version
+    versionNumber = project.mod_version + '+mc' + project.minecraft_version
     versionType = project.mod_version.contains('-') ? 'beta' : 'release'  // until release of MC
     uploadFile = remapJar
     gameVersions = Arrays.asList(project.supported_minecraft_versions.split(','))
@@ -186,6 +176,7 @@ githubRelease {
     repo = "mishanguc"
     tagName = "v$project.mod_version"
     targetCommitish = "1.19.2"
+    releaseName = "v$project.mod_version"
     body = content
     draft = true
     prerelease = false
@@ -196,4 +187,8 @@ githubRelease {
 
 publish {
     dependsOn tasks.curseforge, tasks.modrinth, tasks.githubRelease
+}
+
+fabricApi {
+    configureDataGeneration()
 }
