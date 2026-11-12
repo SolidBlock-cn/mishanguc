@@ -55,6 +55,10 @@ public class ColoredLeavesBlock extends FallingParticlesLeavesBlock implements C
     this(leafParticleChance, AmbientLeavesBlockSoundPlayer.noAmbientSound(), settings, lootBuilder, Identifier.parse(texture));
   }
 
+  public ColoredLeavesBlock(final float leafParticleChance, Properties settings, @Nullable BiFunction<Block, BlockLootSubProvider, LootTable.Builder> lootBuilder, Identifier texture) {
+    this(leafParticleChance, AmbientLeavesBlockSoundPlayer.noAmbientSound(), settings, lootBuilder, texture);
+  }
+
   @Override
   public ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state, boolean includeData) {
     return getColoredPickStack(world, pos, state, includeData, super::getCloneItemStack);

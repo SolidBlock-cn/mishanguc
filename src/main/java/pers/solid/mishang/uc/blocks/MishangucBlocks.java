@@ -1,5 +1,7 @@
 package pers.solid.mishang.uc.blocks;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.references.BlockItemId;
@@ -13,9 +15,12 @@ import net.minecraft.world.level.block.ColorCollection;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProvider;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import org.jetbrains.annotations.ApiStatus;
 import pers.solid.mishang.uc.Mishanguc;
 import pers.solid.mishang.uc.annotations.CustomId;
+import pers.solid.mishang.uc.block.HandrailBlock;
 import pers.solid.mishang.uc.block.HungSignBlock;
 import pers.solid.mishang.uc.block.StandingSignBlock;
 import pers.solid.mishang.uc.block.WallSignBlock;
@@ -27,9 +32,7 @@ import pers.solid.mishang.uc.mixin.ItemsAccessor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.ToIntFunction;
@@ -132,6 +135,12 @@ public class MishangucBlocks {
             if (path.contains("netherite")) {
               settings.fireResistant();
             }
+            if (BlockCollection.woodenSignBlocks.contains(block) || BlockCollection.woodenHandrails.contains(block)) {
+              settings.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_ITEMS_EXTRA_SMALL);
+            }
+            if (BlockCollection.blockFuels.containsKey(block)) {
+              settings.cookingFuel(BlockCollection.blockFuels.get(block));
+            }
             final BiFunction<Block, Item.Properties, Item> biFunction =
                 block instanceof HungSignBlock
                     ? HungSignBlockItem::new
@@ -178,5 +187,201 @@ public class MishangucBlocks {
   static BlockItemId blockItemId(Block block) {
     final Identifier id = BuiltInRegistries.BLOCK.getKey(block);
     return BlockItemId.create(id, id);
+  }
+
+  public static final class BlockCollection {
+    public static final Set<Block> woodenSignBlocks = ImmutableSet.of(
+        HungSignBlocks.OAK_HUNG_SIGN,
+        HungSignBlocks.SPRUCE_HUNG_SIGN,
+        HungSignBlocks.BIRCH_HUNG_SIGN,
+        HungSignBlocks.JUNGLE_HUNG_SIGN,
+        HungSignBlocks.ACACIA_HUNG_SIGN,
+        HungSignBlocks.CHERRY_HUNG_SIGN,
+        HungSignBlocks.DARK_OAK_HUNG_SIGN,
+        HungSignBlocks.PALE_OAK_HUNG_SIGN,
+        HungSignBlocks.MANGROVE_HUNG_SIGN,
+        HungSignBlocks.POPLAR_HUNG_SIGN,
+        HungSignBlocks.OAK_WOOD_HUNG_SIGN,
+        HungSignBlocks.SPRUCE_WOOD_HUNG_SIGN,
+        HungSignBlocks.BIRCH_WOOD_HUNG_SIGN,
+        HungSignBlocks.JUNGLE_WOOD_HUNG_SIGN,
+        HungSignBlocks.ACACIA_WOOD_HUNG_SIGN,
+        HungSignBlocks.CHERRY_WOOD_HUNG_SIGN,
+        HungSignBlocks.DARK_OAK_WOOD_HUNG_SIGN,
+        HungSignBlocks.PALE_OAK_WOOD_HUNG_SIGN,
+        HungSignBlocks.MANGROVE_WOOD_HUNG_SIGN,
+        HungSignBlocks.POPLAR_WOOD_HUNG_SIGN,
+        HungSignBlocks.STRIPPED_OAK_WOOD_HUNG_SIGN,
+        HungSignBlocks.STRIPPED_SPRUCE_WOOD_HUNG_SIGN,
+        HungSignBlocks.STRIPPED_BIRCH_WOOD_HUNG_SIGN,
+        HungSignBlocks.STRIPPED_JUNGLE_WOOD_HUNG_SIGN,
+        HungSignBlocks.STRIPPED_ACACIA_WOOD_HUNG_SIGN,
+        HungSignBlocks.STRIPPED_CHERRY_WOOD_HUNG_SIGN,
+        HungSignBlocks.STRIPPED_DARK_OAK_WOOD_HUNG_SIGN,
+        HungSignBlocks.STRIPPED_PALE_OAK_WOOD_HUNG_SIGN,
+        HungSignBlocks.STRIPPED_MANGROVE_WOOD_HUNG_SIGN,
+        HungSignBlocks.STRIPPED_POPLAR_WOOD_HUNG_SIGN,
+        HungSignBlocks.BAMBOO_HUNG_SIGN,
+        HungSignBlocks.BAMBOO_PLANK_HUNG_SIGN,
+        HungSignBlocks.BAMBOO_MOSAIC_HUNG_SIGN,
+        HungSignBlocks.OAK_HUNG_SIGN_BAR,
+        HungSignBlocks.SPRUCE_HUNG_SIGN_BAR,
+        HungSignBlocks.BIRCH_HUNG_SIGN_BAR,
+        HungSignBlocks.JUNGLE_HUNG_SIGN_BAR,
+        HungSignBlocks.ACACIA_HUNG_SIGN_BAR,
+        HungSignBlocks.CHERRY_HUNG_SIGN_BAR,
+        HungSignBlocks.DARK_OAK_HUNG_SIGN_BAR,
+        HungSignBlocks.PALE_OAK_HUNG_SIGN_BAR,
+        HungSignBlocks.MANGROVE_HUNG_SIGN_BAR,
+        HungSignBlocks.POPLAR_HUNG_SIGN_BAR,
+        HungSignBlocks.BAMBOO_HUNG_SIGN_BAR,
+        HungSignBlocks.STRIPPED_OAK_HUNG_SIGN_BAR,
+        HungSignBlocks.STRIPPED_SPRUCE_HUNG_SIGN_BAR,
+        HungSignBlocks.STRIPPED_BIRCH_HUNG_SIGN_BAR,
+        HungSignBlocks.STRIPPED_JUNGLE_HUNG_SIGN_BAR,
+        HungSignBlocks.STRIPPED_ACACIA_HUNG_SIGN_BAR,
+        HungSignBlocks.STRIPPED_CHERRY_HUNG_SIGN_BAR,
+        HungSignBlocks.STRIPPED_DARK_OAK_HUNG_SIGN_BAR,
+        HungSignBlocks.STRIPPED_PALE_OAK_HUNG_SIGN_BAR,
+        HungSignBlocks.STRIPPED_MANGROVE_HUNG_SIGN_BAR,
+        HungSignBlocks.STRIPPED_POPLAR_HUNG_SIGN_BAR,
+        WallSignBlocks.OAK_WOOD_WALL_SIGN,
+        WallSignBlocks.SPRUCE_WOOD_WALL_SIGN,
+        WallSignBlocks.BIRCH_WOOD_WALL_SIGN,
+        WallSignBlocks.JUNGLE_WOOD_WALL_SIGN,
+        WallSignBlocks.ACACIA_WOOD_WALL_SIGN,
+        WallSignBlocks.CHERRY_WOOD_WALL_SIGN,
+        WallSignBlocks.DARK_OAK_WOOD_WALL_SIGN,
+        WallSignBlocks.PALE_OAK_WOOD_WALL_SIGN,
+        WallSignBlocks.MANGROVE_WOOD_WALL_SIGN,
+        WallSignBlocks.POPLAR_WOOD_WALL_SIGN,
+        WallSignBlocks.STRIPPED_OAK_WOOD_WALL_SIGN,
+        WallSignBlocks.STRIPPED_SPRUCE_WOOD_WALL_SIGN,
+        WallSignBlocks.STRIPPED_BIRCH_WOOD_WALL_SIGN,
+        WallSignBlocks.STRIPPED_JUNGLE_WOOD_WALL_SIGN,
+        WallSignBlocks.STRIPPED_ACACIA_WOOD_WALL_SIGN,
+        WallSignBlocks.STRIPPED_CHERRY_WOOD_WALL_SIGN,
+        WallSignBlocks.STRIPPED_DARK_OAK_WOOD_WALL_SIGN,
+        WallSignBlocks.STRIPPED_PALE_OAK_WOOD_WALL_SIGN,
+        WallSignBlocks.STRIPPED_MANGROVE_WOOD_WALL_SIGN,
+        WallSignBlocks.STRIPPED_POPLAR_WOOD_WALL_SIGN,
+        WallSignBlocks.OAK_WALL_SIGN,
+        WallSignBlocks.SPRUCE_WALL_SIGN,
+        WallSignBlocks.BIRCH_WALL_SIGN,
+        WallSignBlocks.JUNGLE_WALL_SIGN,
+        WallSignBlocks.ACACIA_WALL_SIGN,
+        WallSignBlocks.CHERRY_WALL_SIGN,
+        WallSignBlocks.DARK_OAK_WALL_SIGN,
+        WallSignBlocks.PALE_OAK_WALL_SIGN,
+        WallSignBlocks.MANGROVE_WALL_SIGN,
+        WallSignBlocks.POPLAR_WALL_SIGN,
+        WallSignBlocks.BAMBOO_WALL_SIGN,
+        WallSignBlocks.BAMBOO_PLANK_WALL_SIGN,
+        WallSignBlocks.BAMBOO_MOSAIC_WALL_SIGN,
+        WallSignBlocks.COLORED_WOODEN_WALL_SIGN,
+        StandingSignBlocks.OAK_STANDING_SIGN,
+        StandingSignBlocks.SPRUCE_STANDING_SIGN,
+        StandingSignBlocks.BIRCH_STANDING_SIGN,
+        StandingSignBlocks.ACACIA_STANDING_SIGN,
+        StandingSignBlocks.CHERRY_STANDING_SIGN,
+        StandingSignBlocks.JUNGLE_STANDING_SIGN,
+        StandingSignBlocks.DARK_OAK_STANDING_SIGN,
+        StandingSignBlocks.PALE_OAK_STANDING_SIGN,
+        StandingSignBlocks.MANGROVE_STANDING_SIGN,
+        StandingSignBlocks.POPLAR_STANDING_SIGN,
+        StandingSignBlocks.OAK_WOOD_STANDING_SIGN,
+        StandingSignBlocks.SPRUCE_WOOD_STANDING_SIGN,
+        StandingSignBlocks.BIRCH_WOOD_STANDING_SIGN,
+        StandingSignBlocks.ACACIA_WOOD_STANDING_SIGN,
+        StandingSignBlocks.CHERRY_WOOD_STANDING_SIGN,
+        StandingSignBlocks.JUNGLE_WOOD_STANDING_SIGN,
+        StandingSignBlocks.DARK_OAK_WOOD_STANDING_SIGN,
+        StandingSignBlocks.PALE_OAK_WOOD_STANDING_SIGN,
+        StandingSignBlocks.MANGROVE_WOOD_STANDING_SIGN,
+        StandingSignBlocks.POPLAR_WOOD_STANDING_SIGN,
+        StandingSignBlocks.STRIPPED_OAK_WOOD_STANDING_SIGN,
+        StandingSignBlocks.STRIPPED_SPRUCE_WOOD_STANDING_SIGN,
+        StandingSignBlocks.STRIPPED_BIRCH_WOOD_STANDING_SIGN,
+        StandingSignBlocks.STRIPPED_ACACIA_WOOD_STANDING_SIGN,
+        StandingSignBlocks.STRIPPED_CHERRY_WOOD_STANDING_SIGN,
+        StandingSignBlocks.STRIPPED_JUNGLE_WOOD_STANDING_SIGN,
+        StandingSignBlocks.STRIPPED_DARK_OAK_WOOD_STANDING_SIGN,
+        StandingSignBlocks.STRIPPED_PALE_OAK_WOOD_STANDING_SIGN,
+        StandingSignBlocks.STRIPPED_MANGROVE_WOOD_STANDING_SIGN,
+        StandingSignBlocks.STRIPPED_POPLAR_WOOD_STANDING_SIGN,
+        StandingSignBlocks.BAMBOO_STANDING_SIGN,
+        StandingSignBlocks.BAMBOO_PLANK_STANDING_SIGN,
+        StandingSignBlocks.BAMBOO_MOSAIC_STANDING_SIGN
+    );
+
+    public static final Collection<HandrailBlock> woodenHandrailSets = ImmutableSet.of(
+        HandrailBlocks.SIMPLE_OAK_HANDRAIL,
+        HandrailBlocks.SIMPLE_SPRUCE_HANDRAIL,
+        HandrailBlocks.SIMPLE_BIRCH_HANDRAIL,
+        HandrailBlocks.SIMPLE_JUNGLE_HANDRAIL,
+        HandrailBlocks.SIMPLE_ACACIA_HANDRAIL,
+        HandrailBlocks.SIMPLE_CHERRY_HANDRAIL,
+        HandrailBlocks.SIMPLE_DARK_OAK_HANDRAIL,
+        HandrailBlocks.SIMPLE_PALE_OAK_HANDRAIL,
+        HandrailBlocks.SIMPLE_MANGROVE_HANDRAIL,
+        HandrailBlocks.SIMPLE_POPLAR_HANDRAIL,
+        HandrailBlocks.SIMPLE_OAK_PLANK_HANDRAIL,
+        HandrailBlocks.SIMPLE_SPRUCE_PLANK_HANDRAIL,
+        HandrailBlocks.SIMPLE_BIRCH_PLANK_HANDRAIL,
+        HandrailBlocks.SIMPLE_JUNGLE_PLANK_HANDRAIL,
+        HandrailBlocks.SIMPLE_ACACIA_PLANK_HANDRAIL,
+        HandrailBlocks.SIMPLE_CHERRY_PLANK_HANDRAIL,
+        HandrailBlocks.SIMPLE_DARK_OAK_PLANK_HANDRAIL,
+        HandrailBlocks.SIMPLE_PALE_OAK_PLANK_HANDRAIL,
+        HandrailBlocks.SIMPLE_MANGROVE_PLANK_HANDRAIL,
+        HandrailBlocks.SIMPLE_POPLAR_PLANK_HANDRAIL,
+        HandrailBlocks.SIMPLE_BAMBOO_HANDRAIL,
+        HandrailBlocks.SIMPLE_BAMBOO_PLANK_HANDRAIL,
+        HandrailBlocks.SIMPLE_BAMBOO_MOSAIC_HANDRAIL,
+        HandrailBlocks.GLASS_OAK_HANDRAIL,
+        HandrailBlocks.GLASS_SPRUCE_HANDRAIL,
+        HandrailBlocks.GLASS_BIRCH_HANDRAIL,
+        HandrailBlocks.GLASS_JUNGLE_HANDRAIL,
+        HandrailBlocks.GLASS_ACACIA_HANDRAIL,
+        HandrailBlocks.GLASS_CHERRY_HANDRAIL,
+        HandrailBlocks.GLASS_DARK_OAK_HANDRAIL,
+        HandrailBlocks.GLASS_PALE_OAK_HANDRAIL,
+        HandrailBlocks.GLASS_MANGROVE_HANDRAIL,
+        HandrailBlocks.GLASS_POPLAR_HANDRAIL,
+        HandrailBlocks.GLASS_BAMBOO_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_OAK_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_SPRUCE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_BIRCH_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_JUNGLE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_ACACIA_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_CHERRY_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_DARK_OAK_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_PALE_OAK_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_MANGROVE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_POPLAR_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_BAMBOO_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_OAK_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_SPRUCE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_BIRCH_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_JUNGLE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_ACACIA_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_CHERRY_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_DARK_OAK_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_PALE_OAK_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_MANGROVE_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_POPLAR_HANDRAIL,
+        HandrailBlocks.COLORED_DECORATED_STRIPPED_BAMBOO_HANDRAIL
+    );
+
+    public static final Collection<Block> woodenHandrails = woodenHandrailSets.stream().flatMap(handrailBlock -> Arrays.stream(handrailBlock.selfAndVariants())).collect(ImmutableSet.toImmutableSet());
+
+    public static final Map<Block, ResourceKey<ContextIntProvider>> blockFuels = ImmutableMap.of(
+        ColoredBlocks.COLORED_PLANKS, ContextIntProviders.COOKING_TIME_WOOD_BLOCKS,
+        ColoredBlocks.COLORED_PLANK_STAIRS, ContextIntProviders.COOKING_TIME_WOOD_BLOCKS,
+        ColoredBlocks.COLORED_PLANK_SLAB, ContextIntProviders.COOKING_TIME_WOOD_SLABS,
+        ColoredBlocks.COLORED_WOOL, ContextIntProviders.COOKING_TIME_WOOL,
+        ColoredBlocks.COLORED_WOOL_STAIRS, ContextIntProviders.COOKING_TIME_WOOL,
+        ColoredBlocks.COLORED_WOOL_SLAB, ContextIntProviders.COOKING_TIME_WOOL_SLABS
+    );
   }
 }

@@ -286,10 +286,15 @@ public class MishangucBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
     blockTagWithItem(BlockTags.LEAVES, ItemTags.LEAVES).add(MishangUtils.instanceStream(ColoredBlocks.class, ColoredLeavesBlock.class).toArray(Block[]::new));
     blockTagOnly(BlockTags.PORTALS).add(ColoredBlocks.COLORED_NETHER_PORTAL);
     blockTagOnly(BlockTags.SCULK_REPLACEABLE).add(ColoredBlocks.COLORED_DIRT, ColoredBlocks.COLORED_TERRACOTTA, ColoredBlocks.COLORED_END_STONE, ColoredBlocks.COLORED_END_STONE_STAIRS, ColoredBlocks.COLORED_END_STONE_SLAB);
+
     blockTagOnly(BlockTags.SNAPS_GOAT_HORN).add(ColoredBlocks.COLORED_STONE);
-    blockTagOnly(BlockTags.TERRACOTTA).add(ColoredBlocks.COLORED_TERRACOTTA);
-    blockTagOnly(ConventionalBlockTags.CONCRETES).add(ColoredBlocks.COLORED_CONCRETE);
-    blockTagOnly(BlockTags.WOOL).add(ColoredBlocks.COLORED_WOOL);
+    blockTagWithItem(BlockItemTags.TERRACOTTA).add(ColoredBlocks.COLORED_TERRACOTTA);
+    blockTagWithItem(BlockItemTags.CONCRETE).add(ColoredBlocks.COLORED_CONCRETE);
+    blockTagWithItem(BlockItemTags.CONCRETE_STAIRS).add(ColoredBlocks.COLORED_CONCRETE_STAIRS);
+    blockTagWithItem(BlockItemTags.CONCRETE_SLABS).add(ColoredBlocks.COLORED_CONCRETE_SLAB);
+    blockTagWithItem(BlockItemTags.WOOL).add(ColoredBlocks.COLORED_WOOL);
+    blockTagWithItem(BlockItemTags.WOOL_STAIRS).add(ColoredBlocks.COLORED_WOOL_STAIRS);
+    blockTagWithItem(BlockItemTags.WOOL_SLABS).add(ColoredBlocks.COLORED_WOOL_SLAB);
 
     blockTagOnly("tints_beacon_beams").add(ColoredBlocks.COLORED_GLASS, ColoredBlocks.COLORED_GLASS_PANE, ColoredBlocks.COLORED_ICE, ColoredBlocks.COLORED_NETHER_PORTAL);
   }

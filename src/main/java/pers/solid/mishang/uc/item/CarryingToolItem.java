@@ -41,6 +41,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.GameMasterBlock;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueOutput;
@@ -227,11 +228,11 @@ public class CarryingToolItem extends BlockToolItem
     } else {
       stack.set(MishangucComponents.CARRYING_TOOL_DATA, new CarryingToolData.HoldingBlockState(removed, Optional.empty()));
     }
+    if (world.isClientSide()) {
+      world.levelEvent(LevelEvent.PARTICLES_AND_SOUND_DESTROY_BLOCK, pos, Block.getId(removed));
+    }
     world.removeBlockEntity(pos);
     world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-    if (world.isClientSide()) {
-      world.levelEvent(2001, pos, Block.getId(removed));
-    }
     if (!world.isClientSide()) {
       if (carryingToolData instanceof CarryingToolData.HoldingEntity holdingEntity) {
         player.sendOverlayMessage(Component.translatable("item.mishanguc.carrying_tool.message.picked_overriding", removed.getBlock().getName(), holdingEntity.name()));

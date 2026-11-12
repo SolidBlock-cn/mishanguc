@@ -32,6 +32,7 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -88,7 +89,7 @@ public class ForcePlacingToolItem extends BlockToolItem implements InteractsWith
       return InteractionResult.CONSUME;
     }
     final BlockState blockState = world.getBlockState(pos);
-    world.levelEvent(player, 2001, pos, Block.getId(world.getBlockState(pos)));
+    world.levelEvent(player, LevelEvent.PARTICLES_AND_SOUND_DESTROY_BLOCK, pos, Block.getId(world.getBlockState(pos)));
     FluidState fluidState = blockState.getFluidState();
     // 在破坏时，直接先将其内容清除。
     world.removeBlockEntity(pos);
