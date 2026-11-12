@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_colored_wool": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mishanguc:colored_wool"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "mishanguc:colored_wool_slab"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_colored_wool"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mishanguc:colored_wool_slab"
+    ]
+  }
+}

@@ -1,5 +1,4 @@
 // 26.3	-999999999-01-01T00:00:00	Mishang Urban Construction/Tags for minecraft:block
-d4c1003e315fa3407f75bcbf008e63fb09422eeb data/c/tags/block/concretes.json
 d113a8e017c3341c6e56fd63441e3b0994e030ca data/c/tags/block/dyed/black.json
 ff32eb69617c502dd1bd4217e2aa305f008257ba data/c/tags/block/dyed/blue.json
 062390a62efdc09296f2676aa16db53356a3b379 data/c/tags/block/dyed/brown.json
@@ -20,6 +19,9 @@ c0ea90b5ac41f344b38a603ec8f90a1c988fe787 data/c/tags/block/dyed/white.json
 c994e55cc42120986eaf1460aee48823e1848320 data/c/tags/block/glass_panes.json
 c18669c60251380696d186a10a92618e3b1f79f1 data/minecraft/tags/block/azalea_root_replaceable.json
 94f174ea4f1434807146c7af933795f2770ae06a data/minecraft/tags/block/beacon_base_blocks.json
+d4c1003e315fa3407f75bcbf008e63fb09422eeb data/minecraft/tags/block/concrete.json
+c39ff226ccfd19b3f6e4af344e6146dfe7b3faf4 data/minecraft/tags/block/concrete_slabs.json
+29ce4a2dc0697ab69da6e03393526fe19202fc53 data/minecraft/tags/block/concrete_stairs.json
 e6e0662a18358d856ecc70c97cb7de2eb16fef54 data/minecraft/tags/block/dragon_immune.json
 37d131145533985b1c63b0473c590cf025d73f95 data/minecraft/tags/block/goats_spawnable_on.json
 72b962d87249f54e1ad6728a1423b4922c75bb59 data/minecraft/tags/block/hoglin_repellents.json
@@ -33,15 +35,17 @@ f4da4ad7aa9bfc282d1edbd2077dc98a422069ea data/minecraft/tags/block/needs_iron_to
 f265dbdfa7cddda9fc606bcdae6e64c4095315d1 data/minecraft/tags/block/needs_stone_tool.json
 72b962d87249f54e1ad6728a1423b4922c75bb59 data/minecraft/tags/block/portals.json
 805e2c7a5704be34eeb6805797c6a801639c09e9 data/minecraft/tags/block/sculk_replaceable.json
-55a87d6ad5615f0bec9ebe827e5ed95ede11df90 data/minecraft/tags/block/slabs.json
+5a4de94f7dfb0fa6da0e80615b3fcc07850d3b7b data/minecraft/tags/block/slabs.json
 37d131145533985b1c63b0473c590cf025d73f95 data/minecraft/tags/block/snaps_goat_horn.json
-92e8765ba46866793479df0e269e7cba5a6feca4 data/minecraft/tags/block/stairs.json
+01f2d178780dbe14e8441f311ff87f69b1d80871 data/minecraft/tags/block/stairs.json
 24e16c7d5146c71ebce21b3de9256a75d34e21e5 data/minecraft/tags/block/support_override_snow_layer.json
 58f41f8ea2e28c92c0c0c9e1e0547280665627ee data/minecraft/tags/block/terracotta.json
 364912b8118c746c451915c888b1ba920f67d017 data/minecraft/tags/block/wall_post_override.json
 f67709a0ee92eb08f67a41fd6b1cc1a2ac998966 data/minecraft/tags/block/wool.json
+59ee0e7ad57c28833722896d03e8fd83b51a9cb2 data/minecraft/tags/block/wool_slabs.json
+6cefa31349580f3231722db8eff21280a99c218e data/minecraft/tags/block/wool_stairs.json
 e5d85ad4db97860d2eb15d7345fd9c8b9b916c17 data/mishanguc/tags/block/central_handrails.json
-cc552beaa862b0756377a9b00b3c2817ea6f6033 data/mishanguc/tags/block/colored.json
+83ee4d63119a7c00ed5c828cdfe179d75e8228a0 data/mishanguc/tags/block/colored.json
 71a822760ad0d84ad8c2282b86c5af740e6e8deb data/mishanguc/tags/block/column_lights.json
 21c5c7898ec4aeb3de12ad1fcbe1c9249f3614d4 data/mishanguc/tags/block/concrete_hung_sign_bars.json
 70cbaabfb9b0b0b3e45bb8d8c9def7003d8a7f15 data/mishanguc/tags/block/concrete_hung_signs.json

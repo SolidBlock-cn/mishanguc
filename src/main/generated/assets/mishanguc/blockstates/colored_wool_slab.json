@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "mishanguc:block/colored_wool_slab"
+    },
+    "type=double": {
+      "model": "mishanguc:block/colored_wool"
+    },
+    "type=top": {
+      "model": "mishanguc:block/colored_wool_slab_top"
+    }
+  }
+}
