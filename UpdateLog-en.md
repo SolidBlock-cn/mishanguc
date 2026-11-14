@@ -2,6 +2,19 @@
 
 Note: Not all versions in this update log have been published yet. Please refer to the relevant pages on CurseForge and Modrinth, or the "Releases" section on GitHub.
 
+### 1.6.7-beta.2
+
+- Added custom-colored wool stairs and wool slabs, and added them to relevant`#concrete_stairs`, `#concrete_slabs`, `#wool_stairs`, `#wool_slabs` block and item tags.
+    - In 26.3, using Color Tool can convert vanilla wool slabs, wool stairs, concrete stairs, concrete slabs into custom-colored relevant blocks.
+- Fixed the issue that some items cannot be used as furnace fuels in 26.3.
+- Added custom-colored terracotta block to item tag `#terracotta` while it's already added to the relevant block tag.
+- Added custom-colored wool block to item tag `#wool` while it's already added to the relevant item tag.
+- Added custom-colored terracotta blocks to `#concrete` block and item tags, and no longer added to `#c:concretes` item tag.
+- Fixed the issue that the particle is not tinted correctly when holding a custom-colored tool with Holding Tool.
+- For versions where `#concrete` block tag exists, now Color Tool converting concrete blocks to custom-colored concrete blocks depends on `#concrete` block tag.
+- Now using Colored Tool can convert the terracotta slabs and terracotta slabs into custom-colored colors.
+- In 26.3, changed the texture of custom-colored poplar leaves.
+
 ### 1.6.7-beta.1
 
 - Fit 26.2 and 26.3.
