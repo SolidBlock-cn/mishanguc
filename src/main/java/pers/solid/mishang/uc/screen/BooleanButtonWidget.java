@@ -1,5 +1,6 @@
 package pers.solid.mishang.uc.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -122,7 +123,7 @@ public class BooleanButtonWidget extends Button.Plain implements TooltipUpdated 
 
   @Override
   public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
-    if (this.active && this.visible && isMouseOver(click.x(), click.y()) && click.button() == 2) {
+    if (this.active && this.visible && isMouseOver(click.x(), click.y()) && click.button() == InputConstants.MOUSE_BUTTON_MIDDLE) {
       this.playDownSound(Minecraft.getInstance().getSoundManager());
       setValue(defaultValue);
       return true;
@@ -134,7 +135,7 @@ public class BooleanButtonWidget extends Button.Plain implements TooltipUpdated 
   @Override
   protected boolean isValidClickButton(MouseButtonInfo input) {
     final int button = input.button();
-    return button == 0 || button == 1;
+    return button == InputConstants.MOUSE_BUTTON_LEFT || button == InputConstants.MOUSE_BUTTON_RIGHT;
   }
 
   @Override

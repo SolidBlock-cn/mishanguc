@@ -2,6 +2,7 @@ package pers.solid.mishang.uc.screen;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Streams;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -964,7 +965,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         } else {
           setFocused(textFieldListWidget);
         }
-        if (click.button() == 0) {
+
+        // 在 26.3 中，鼠标左键表示的 button 为 1
+        if (click.button() == InputConstants.MOUSE_BUTTON_LEFT) {
           this.setDragging(true);
         }
       }
