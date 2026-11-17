@@ -19,9 +19,9 @@ import pers.solid.mishang.uc.util.TextureMapReference;
 public final class ColoredBlocks extends MishangucBlocks {
   @MiningLevel(MiningLevel.Tool.NONE)
   public static final ColoredCubeBlock COLORED_WOOL = register("colored_wool", settings -> ColoredCubeBlock.cubeAll(settings, "block/white_wool"), Blocks.WOOL.white());
-  @MiningLevel(MiningLevel.Tool.NONE)
+  @MiningLevel(MiningLevel.Tool.SHEARS)
   public static final ColoredStairsBlock COLORED_WOOL_STAIRS = register("colored_wool_stairs", settings -> new ColoredStairsBlock(COLORED_WOOL, settings), Blocks.WOOL.white());
-  @MiningLevel(MiningLevel.Tool.NONE)
+  @MiningLevel(MiningLevel.Tool.SHEARS)
   public static final ColoredSlabBlock COLORED_WOOL_SLAB = register("colored_wool_slab", settings -> new ColoredSlabBlock(COLORED_WOOL, settings), Blocks.WOOL.white());
 
 
