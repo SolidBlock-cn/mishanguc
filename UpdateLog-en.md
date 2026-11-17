@@ -2,6 +2,13 @@
 
 Note: Not all versions in this update log have been published yet. Please refer to the relevant pages on CurseForge and Modrinth, or the "Releases" section on GitHub.
 
+### 1.6.7-beta.3
+
+- Fixed the issue that Color Tool wrongly uses `#wooden_slabs` tag when dyeing wool slabs in 26.3.
+- Fixed the issue of failure of dragging to select texts and dragging scrollbars, and the incorrect behavior when left-clicking or right-clicking on floating-point number buttons in the sign edit screen in 26.3. This issue is caused by the vanilla change to constants in `InputConstants` class.
+- In 26.2, added custom-colored wool stairs and slabs. Since there are no vanilla wool stairs and slabs in versions 26.2 and below, Color Tool will apply on relevant blocks of Extended Block Shapes mod.
+- In 26.2, applied the 3rd to 8th entries in the update log of 1.6.7-beta.2.
+
 ### 1.6.7-beta.2
 
 - Added custom-colored wool stairs and wool slabs, and added them to relevant`#concrete_stairs`, `#concrete_slabs`, `#wool_stairs`, `#wool_slabs` block and item tags.
