@@ -34,10 +34,10 @@ public class BooleanButtonWidget extends Button.Plain implements TooltipUpdated 
   private final Function<BooleanButtonWidget, @Nullable Boolean> valueGetter;
 
   private final BooleanConsumer valueSetter;
-  public Function<@Nullable Boolean, net.minecraft.network.chat.Component> renderedNameSupplier = null;
-  public @Nullable Function<@Nullable Boolean, net.minecraft.network.chat.@Nullable Component> tooltipSupplier = null;
-  public @Nullable net.minecraft.network.chat.Component keyboardShortcut = null;
-  private Supplier<net.minecraft.network.chat.Component> summaryTextSupplier = null;
+  public @Nullable Function<@Nullable Boolean, Component> renderedNameSupplier = null;
+  public @Nullable Function<@Nullable Boolean, @Nullable Component> tooltipSupplier = null;
+  public @Nullable Component keyboardShortcut = null;
+  private @Nullable Supplier<Component> summaryTextSupplier = null;
 
   /**
    * 用于布尔值的按钮。
@@ -51,51 +51,51 @@ public class BooleanButtonWidget extends Button.Plain implements TooltipUpdated 
    * @param valueSetter 如何设置布尔值？
    * @param onPress     按钮按下去的反应。通常为空。
    */
-  public BooleanButtonWidget(int x, int y, int width, int height, net.minecraft.network.chat.Component message, Function<BooleanButtonWidget, @Nullable Boolean> valueGetter, BooleanConsumer valueSetter, OnPress onPress) {
+  public BooleanButtonWidget(int x, int y, int width, int height, Component message, Function<BooleanButtonWidget, @Nullable Boolean> valueGetter, BooleanConsumer valueSetter, OnPress onPress) {
     super(x, y, width, height, message, onPress, Button.DEFAULT_NARRATION);
     this.valueGetter = valueGetter;
     this.valueSetter = valueSetter;
     updateTooltip();
   }
 
-  public BooleanButtonWidget setSummaryTextSupplier(Supplier<net.minecraft.network.chat.Component> summaryTextSupplier) {
+  public BooleanButtonWidget setSummaryTextSupplier(Supplier<Component> summaryTextSupplier) {
     this.summaryTextSupplier = summaryTextSupplier;
     return this;
   }
 
-  public BooleanButtonWidget setRenderedNameSupplier(Function<@Nullable Boolean, net.minecraft.network.chat.Component> renderedNameSupplier) {
+  public BooleanButtonWidget setRenderedNameSupplier(Function<@Nullable Boolean, Component> renderedNameSupplier) {
     this.renderedNameSupplier = renderedNameSupplier;
     return this;
   }
 
-  public BooleanButtonWidget setRenderedName(net.minecraft.network.chat.Component renderedName) {
+  public BooleanButtonWidget setRenderedName(Component renderedName) {
     this.renderedNameSupplier = ignore -> renderedName;
     return this;
   }
 
-  public BooleanButtonWidget setTooltipSupplier(Function<@Nullable Boolean, net.minecraft.network.chat.@Nullable Component> tooltipSupplier) {
+  public BooleanButtonWidget setTooltipSupplier(Function<@Nullable Boolean, @Nullable Component> tooltipSupplier) {
     this.tooltipSupplier = tooltipSupplier;
     return this;
   }
 
-  public BooleanButtonWidget setTooltip(net.minecraft.network.chat.Component tooltip) {
+  public BooleanButtonWidget setTooltip(Component tooltip) {
     this.tooltipSupplier = ignore -> tooltip;
     return this;
   }
 
-  public BooleanButtonWidget setKeyboardShortcut(net.minecraft.network.chat.Component text) {
+  public BooleanButtonWidget setKeyboardShortcut(Component text) {
     this.keyboardShortcut = text;
     return this;
   }
 
-  public net.minecraft.network.chat.Component getSummaryMessage() {
+  public Component getSummaryMessage() {
     return summaryTextSupplier == null ? super.getMessage() : summaryTextSupplier.get(); // 忽略 renderMessage
   }
 
   @Override
   public void updateTooltip() {
     final Boolean value = getValue();
-    final net.minecraft.network.chat.Component tooltip = tooltipSupplier == null ? null : tooltipSupplier.apply(value);
+    final Component tooltip = tooltipSupplier == null ? null : tooltipSupplier.apply(value);
     final MutableComponent content;
     content = value == null ? Component.empty().append(getSummaryMessage()) : CommonComponents.optionStatus(getSummaryMessage(), value);
     final MutableComponent narration;
@@ -158,8 +158,8 @@ public class BooleanButtonWidget extends Button.Plain implements TooltipUpdated 
   }
 
   @Override
-  public net.minecraft.network.chat.Component getMessage() {
-    final net.minecraft.network.chat.Component renderedName = renderedNameSupplier == null ? super.getMessage() : renderedNameSupplier.apply(getValue());
+  public Component getMessage() {
+    final Component renderedName = renderedNameSupplier == null ? super.getMessage() : renderedNameSupplier.apply(getValue());
     final @Nullable Boolean value = getValue();
     return value == null ? renderedName : Component.empty()
         .append(renderedName)

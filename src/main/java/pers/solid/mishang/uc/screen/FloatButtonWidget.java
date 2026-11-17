@@ -75,7 +75,7 @@ public class FloatButtonWidget extends Button.Plain implements TooltipUpdated {
   };
   private Float2ObjectFunction<MutableComponent> valueToText = DEFAULT_VALUE_NARRATOR;
 
-  public FloatButtonWidget(int x, int y, int width, int height, net.minecraft.network.chat.Component message, Function<FloatButtonWidget, Float> valueGetter, ValueConsumer valueSetter, OnPress onPress) {
+  public FloatButtonWidget(int x, int y, int width, int height, Component message, Function<FloatButtonWidget, Float> valueGetter, ValueConsumer valueSetter, OnPress onPress) {
     super(x, y, width, height, message, onPress, Button.DEFAULT_NARRATION);
     this.valueGetter = valueGetter;
     this.valueSetter = valueSetter;
@@ -209,10 +209,10 @@ public class FloatButtonWidget extends Button.Plain implements TooltipUpdated {
   }
 
   @Override
-  public net.minecraft.network.chat.Component getMessage() {
+  public Component getMessage() {
     final Float value = getValue();
     if (renderedNameSupplier != null) {
-      final net.minecraft.network.chat.Component apply = renderedNameSupplier.apply(value, valueToText.apply(value));
+      final Component apply = renderedNameSupplier.apply(value, valueToText.apply(value));
       if (apply != null) return apply;
     }
     if (value == null || value == defaultValue) {
@@ -223,13 +223,13 @@ public class FloatButtonWidget extends Button.Plain implements TooltipUpdated {
   }
 
   @Environment(EnvType.CLIENT)
-  public interface NameRenderer extends BiFunction<@Nullable Float, net.minecraft.network.chat.Component, net.minecraft.network.chat.@Nullable Component> {
+  public interface NameRenderer extends BiFunction<@Nullable Float, Component, @Nullable Component> {
     @Override
     @Nullable
-    net.minecraft.network.chat.Component apply(@Nullable Float value, net.minecraft.network.chat.Component valueText);
+    Component apply(@Nullable Float value, Component valueText);
   }
 
-  public NameRenderer renderedNameSupplier = null;
+  public @Nullable NameRenderer renderedNameSupplier = null;
 
   public FloatButtonWidget setRenderedNameSupplier(NameRenderer renderedNameSupplier) {
     this.renderedNameSupplier = renderedNameSupplier;
@@ -237,7 +237,7 @@ public class FloatButtonWidget extends Button.Plain implements TooltipUpdated {
   }
 
 
-  public net.minecraft.network.chat.Component getSummaryMessage() {
+  public Component getSummaryMessage() {
     return super.getMessage();
   }
 
