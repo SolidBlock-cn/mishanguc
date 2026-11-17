@@ -629,7 +629,7 @@ public class TextFieldListWidget extends ObjectSelectionList<TextFieldListWidget
 
     @Override
     public boolean mouseDragged(MouseButtonEvent click, double offsetX, double offsetY) {
-      if (click.button() == 0 && click.x() >= scrollBarX() && click.x() < scrollBarX() + 6) {
+      if (click.button() == InputConstants.MOUSE_BUTTON_LEFT && click.x() >= scrollBarX() && click.x() < scrollBarX() + 6) {
         return false;
       }
       return super.mouseDragged(click, offsetX, offsetY)

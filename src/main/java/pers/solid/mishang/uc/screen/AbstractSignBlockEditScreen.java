@@ -964,7 +964,9 @@ public abstract class AbstractSignBlockEditScreen<T extends BlockEntityWithText>
         } else {
           setFocused(textFieldListWidget);
         }
-        if (click.button() == 0) {
+
+        // 在 26.3 中，鼠标左键表示的 button 为 1
+        if (click.button() == InputConstants.MOUSE_BUTTON_LEFT) {
           this.setDragging(true);
         }
       }

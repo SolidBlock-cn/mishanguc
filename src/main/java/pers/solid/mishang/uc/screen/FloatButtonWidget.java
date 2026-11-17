@@ -144,12 +144,12 @@ public class FloatButtonWidget extends Button.Plain implements TooltipUpdated {
     if (input instanceof MouseButtonEvent click) {
       final int button = click.button();
       switch (button) { // 这种情况下直接采用了 onPress，所以直接略。
-        case 0, 1 -> setValue(value -> value
-            + (input.hasShiftDown() || button == 1 ? -1 : 1)
+        case InputConstants.MOUSE_BUTTON_LEFT, InputConstants.MOUSE_BUTTON_RIGHT -> setValue(value -> value
+            + (input.hasShiftDown() || button == InputConstants.MOUSE_BUTTON_RIGHT ? -1 : 1)
             * step
             * (input.hasControlDown() ? 8 : 1)
             * (input.hasAltDown() ? 0.125f : 1));
-        case 2 -> setAllSameValue(defaultValue);
+        case InputConstants.MOUSE_BUTTON_MIDDLE -> setAllSameValue(defaultValue);
       }
     }
   }
