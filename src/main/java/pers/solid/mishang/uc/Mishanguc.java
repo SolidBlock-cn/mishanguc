@@ -481,9 +481,16 @@ public class Mishanguc implements ModInitializer {
     final Object2ObjectMap<Block, Block> blockMap = ColoredBlock.BASE_TO_COLORED;
     final Object2ObjectMap<TagKey<Block>, Block> tagMap = ColoredBlock.BASE_TAG_TO_COLORED;
     tagMap.put(BlockTags.WOOL, ColoredBlocks.COLORED_WOOL);
-    tagMap.put(BlockTags.TERRACOTTA, ColoredBlocks.COLORED_TERRACOTTA);
+    tagMap.put(TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("extshape", "woolen_stairs")), ColoredBlocks.COLORED_WOOL_STAIRS);
+    tagMap.put(TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("extshape", "woolen_slabs")), ColoredBlocks.COLORED_WOOL_SLAB);
 
-    Blocks.CONCRETE.forEach(block -> blockMap.put(block, ColoredBlocks.COLORED_CONCRETE));
+    tagMap.put(BlockTags.TERRACOTTA, ColoredBlocks.COLORED_TERRACOTTA);
+    tagMap.put(TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("extshape", "terracotta_stairs")), ColoredBlocks.COLORED_TERRACOTTA_STAIRS);
+    tagMap.put(TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("extshape", "terracotta_slabs")), ColoredBlocks.COLORED_TERRACOTTA_SLAB);
+
+    tagMap.put(BlockTags.CONCRETE, ColoredBlocks.COLORED_CONCRETE);
+    tagMap.put(TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("extshape", "concrete_stairs")), ColoredBlocks.COLORED_CONCRETE_STAIRS);
+    tagMap.put(TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("extshape", "concrete_slabs")), ColoredBlocks.COLORED_CONCRETE_SLAB);
 
     // 下面的木制方块不含任何下界方块和竹制方块
     List.of(Blocks.OAK_PLANKS, Blocks.SPRUCE_PLANKS, Blocks.BIRCH_PLANKS, Blocks.JUNGLE_PLANKS, Blocks.ACACIA_PLANKS, Blocks.DARK_OAK_PLANKS, Blocks.PALE_OAK_PLANKS, Blocks.MANGROVE_PLANKS, Blocks.CHERRY_PLANKS).forEach(block -> blockMap.put(block, ColoredBlocks.COLORED_PLANKS));
