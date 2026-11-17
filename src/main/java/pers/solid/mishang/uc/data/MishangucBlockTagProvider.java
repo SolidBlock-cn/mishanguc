@@ -56,6 +56,7 @@ public class MishangucBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
   protected MishangucTagBuilder<Block> shovelMineable;
   protected MishangucTagBuilder<Block> axeMineable;
   protected MishangucTagBuilder<Block> hoeMineable;
+  protected MishangucTagBuilder<Block> shearsMineable;
   protected MishangucTagBuilder<Block> needsStoneTool;
   protected MishangucTagBuilder<Block> needsIronTool;
   protected MishangucTagBuilder<Block> needsDiamondTool;
@@ -100,6 +101,7 @@ public class MishangucBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
     shovelMineable = blockTagOnly(BlockTags.MINEABLE_WITH_SHOVEL);
     axeMineable = blockTagOnly(BlockTags.MINEABLE_WITH_AXE);
     hoeMineable = blockTagOnly(BlockTags.MINEABLE_WITH_HOE);
+    shearsMineable = blockTagOnly(BlockTags.SHEARS_MAJOR_BREAKING_SPEED);
     needsStoneTool = blockTagOnly(BlockTags.NEEDS_STONE_TOOL);
     needsIronTool = blockTagOnly(BlockTags.NEEDS_IRON_TOOL);
     needsDiamondTool = blockTagOnly(BlockTags.NEEDS_DIAMOND_TOOL);
@@ -618,6 +620,7 @@ public class MishangucBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
         case SHOVEL -> shovelMineable.add(block);
         case AXE -> axeMineable.add(block);
         case HOE -> hoeMineable.add(block);
+        case SHEARS -> shearsMineable.add(block);
       }
       final MiningLevel.Level level = annotation.level();
       switch (level) {

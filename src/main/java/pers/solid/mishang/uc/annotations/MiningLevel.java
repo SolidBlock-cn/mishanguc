@@ -10,7 +10,7 @@ public @interface MiningLevel {
   Level level() default Level.NONE;
 
   enum Tool {
-    PICKAXE, SHOVEL, AXE, HOE, NONE
+    PICKAXE, SHOVEL, AXE, HOE, NONE, SHEARS
   }
 
   enum Level {
