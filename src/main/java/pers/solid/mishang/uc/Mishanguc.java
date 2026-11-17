@@ -283,7 +283,7 @@ public class Mishanguc implements ModInitializer {
     final Object2ObjectMap<TagKey<Block>, Block> tagMap = ColoredBlock.BASE_TAG_TO_COLORED;
     tagMap.put(BlockTags.WOOL, ColoredBlocks.COLORED_WOOL);
     tagMap.put(BlockTags.WOOL_STAIRS, ColoredBlocks.COLORED_WOOL_STAIRS);
-    tagMap.put(BlockTags.WOODEN_SLABS, ColoredBlocks.COLORED_WOOL_SLAB);
+    tagMap.put(BlockTags.WOOL_SLABS, ColoredBlocks.COLORED_WOOL_SLAB);
 
     tagMap.put(BlockTags.TERRACOTTA, ColoredBlocks.COLORED_TERRACOTTA);
     tagMap.put(TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("extshape", "terracotta_stairs")), ColoredBlocks.COLORED_TERRACOTTA_STAIRS);
