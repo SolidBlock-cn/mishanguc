@@ -33,6 +33,7 @@ f4da4ad7aa9bfc282d1edbd2077dc98a422069ea data/minecraft/tags/block/needs_iron_to
 f265dbdfa7cddda9fc606bcdae6e64c4095315d1 data/minecraft/tags/block/needs_stone_tool.json
 72b962d87249f54e1ad6728a1423b4922c75bb59 data/minecraft/tags/block/portals.json
 805e2c7a5704be34eeb6805797c6a801639c09e9 data/minecraft/tags/block/sculk_replaceable.json
+3663982cb5e0c113079515de78072368b1d255a3 data/minecraft/tags/block/shears_major_breaking_speed.json
 5a4de94f7dfb0fa6da0e80615b3fcc07850d3b7b data/minecraft/tags/block/slabs.json
 37d131145533985b1c63b0473c590cf025d73f95 data/minecraft/tags/block/snaps_goat_horn.json
 01f2d178780dbe14e8441f311ff87f69b1d80871 data/minecraft/tags/block/stairs.json
